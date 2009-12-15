@@ -581,7 +581,7 @@ void DataWizard::finished() {
 
   // check for sufficient memory
   unsigned long memoryRequested = 0, memoryAvailable = 1024*1024*1024; // 1GB
-  unsigned long frames;
+  double frames;
 #ifdef __linux__
   meminfo();
   memoryAvailable = S(kb_main_free + kb_main_buffers + kb_main_cached);

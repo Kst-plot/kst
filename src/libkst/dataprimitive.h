@@ -31,7 +31,7 @@ class DataPrimitive
 {
 public:
     DataPrimitive();
-    ~DataPrimitive();
+    virtual ~DataPrimitive();
 
     /** return the name of the file */
     QString filename() const;

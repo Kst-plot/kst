@@ -758,6 +758,8 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
             compute.y(),
             projectionRect().width(),
             compute.height()));
+    } else {
+      update();
     }
   }
   setLabelsDirty();
@@ -2525,7 +2527,7 @@ bool PlotItem::tryShortcut(const QString &keySequence) {
 
 
 void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
-  if (!(_projectionRect == rect || rect.isEmpty() || !rect.isValid())) {
+  if (!(/*_projectionRect == rect ||*/ rect.isEmpty() || !rect.isValid())) {
 #if DEBUG_ZOOM
     qDebug() << "=== setProjectionRect() ======================>\n"
       << "before:" << _projectionRect << "\n"

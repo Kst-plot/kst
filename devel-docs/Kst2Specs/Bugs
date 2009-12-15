@@ -40,17 +40,18 @@ plots is way too small to be readable.
 
 --------------------
 
-With the live data, the UI is sluggish.  I have the plot update timer
-set to 200ms, but clearly the data only updates at about 2Hz (and it's
-kinda random), and between updates drawing things on the plots (like
-zoom rectangles) is choppy (updating when the data does).  The dialog
-boxes are also sluggish.  kst2 must not be multi-threaded.
-
---------------------
-
 Windows MEMleak
 
 --------------------
 
 Windows ascii performance
+
+-------------------
+
+Change data sample range dialog: add all note enabled at first.
+
+------------------
+
+Cleanup layout totally sucks!
+
 

@@ -89,3 +89,8 @@ best.
 Perhaps unrelated to kst, but the new symbolic link name in defile
 (replacing the defile.cur indirect file) is retarded.  It slows me down
 and the double extension is pointless.  
+
+--------------------
+
+Thread kst2
+

@@ -114,7 +114,7 @@ int ApplicationSettings::referenceViewWidth() const {
 #ifdef Q_WS_X11
     dpiScale = QX11Info::appDpiX();
 #endif
-  return (_refViewWidth * dpiScale * 0.3937008);
+  return int(_refViewWidth * dpiScale * 0.3937008);
 }
 
 
@@ -135,7 +135,7 @@ int ApplicationSettings::referenceViewHeight() const {
 #ifdef Q_WS_X11
     dpiScale = QX11Info::appDpiY();
 #endif
-  return (_refViewHeight * dpiScale * 0.3937008);
+  return int(_refViewHeight * dpiScale * 0.3937008);
 }
 
 

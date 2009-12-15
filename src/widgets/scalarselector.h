@@ -40,7 +40,7 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
 
     QString selectedScalarString();
 
-    void setDefaultValue(double value);
+    //void setDefaultValue(double value);
 
     virtual bool event(QEvent * event);
 

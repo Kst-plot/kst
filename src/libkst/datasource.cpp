@@ -312,11 +312,18 @@ bool DataSource::validSource(const QString& filename) {
     return false;
   }
 
-  // Use a local version of the store, we don't want to save this.
-  ObjectStore store;
-  if (DataSourcePtr dataSource = findPluginFor(&store, fn, QString::null)) {
-    return true;
+  DataSource::init();
+
+  PluginList info = _pluginList;
+
+  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
+    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
+      if ((p->understands(settingsObject, filename)) > 0) {
+        return true;
+      }
+    }
   }
+
   return false;
 }
 
@@ -462,7 +469,7 @@ QStringList DataSource::fieldListForSource(const QString& filename, const QStrin
   return rc;
 }
 
-
+# if 0
 QStringList DataSource::matrixListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
   if (filename == "stdin" || filename == "-") {
     return QStringList();
@@ -492,6 +499,7 @@ QStringList DataSource::matrixListForSource(const QString& filename, const QStri
 
   return rc;
 }
+#endif
 
 QStringList DataSource::scalarListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
   if (filename == "stdin" || filename == "-") {

@@ -257,7 +257,7 @@ class KST_EXPORT DataSource : public Object {
     /************************************************************/
     /* Methods for Matrixes                                     */
     /************************************************************/
-    static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+    //static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
     /** Returns the list of fields that support readMatrix **/
     virtual QStringList matrixList() const;
