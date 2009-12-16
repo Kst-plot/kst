@@ -63,11 +63,11 @@ void ScalarSelector::emitSelectionChanged() {
 }
 
 
-//void ScalarSelector::setDefaultValue(double value) {
-//  QString string = QString::number(value);
-//  _scalar->addItem(string, qVariantFromValue(NULL));
-//  _scalar->setCurrentIndex(_scalar->findText(string));
-//}
+void ScalarSelector::setDefaultValue(double value) {
+ QString string = QString::number(value);
+ _scalar->addItem(string, qVariantFromValue(NULL));
+ _scalar->setCurrentIndex(_scalar->findText(string));
+}
 
 
 ScalarPtr ScalarSelector::selectedScalar() {
