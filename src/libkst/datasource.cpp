@@ -201,6 +201,7 @@ class PluginSortContainer {
 
 
 static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
+
   QList<PluginSortContainer> bestPlugins;
   DataSource::init();
 
@@ -231,6 +232,7 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
   }
 
   qSort(bestPlugins);
+
   return bestPlugins;
 }
 
@@ -239,17 +241,22 @@ static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, 
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
-    if (plugin) {
-      return plugin;
-    }
-  }
+  DataSourcePtr plugin = bestPlugins.at(0).plugin->create(store, settingsObject, filename, QString::null, e);
+
+  return plugin;
+
+  //for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
+  //  DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
+  //  if (plugin) {
+  //    return plugin;
+  //  }
+  //}
   return 0L;
 }
 
 
 DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename, const QString& type) {
+
 #ifndef Q_WS_WIN32
   //if (filename == "stdin" || filename == "-") {
     // FIXME: what store do we put this in?
@@ -273,6 +280,7 @@ DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename
 
 DataSourcePtr DataSource::findOrLoadSource(ObjectStore *store, const QString& filename) {
   Q_ASSERT(store);
+
   DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(filename);
 
   if (!dataSource) {

@@ -319,6 +319,7 @@ bool AsciiSource::initRowIndex() {
 
 #define MAXBUFREADLEN 32768
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
+
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
@@ -358,7 +359,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
   char tmpbuf[MAXBUFREADLEN+1];
   QByteArray delbytes = _config->_delimiters.toLatin1();
   const char *del = delbytes.constData();
-  
+
+  bool first_read = (_numFrames==0);
   do {
     /* Read the tmpbuffer, starting at row_index[_numFrames] */
     if (_byteLength - _rowIndex[_numFrames] > MAXBUFREADLEN) {
@@ -396,7 +398,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
         has_dat = true;
       }
     }
-  } while (bufread == MAXBUFREADLEN);
+  } while ((bufread == MAXBUFREADLEN) && (!first_read));
 
   file.close();
 
@@ -966,6 +968,7 @@ Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,
                                             const QString &filename,
                                             const QString &type,
                                             const QDomElement &element) const {
+
   return new AsciiSource(store, cfg, filename, type, element);
 }
 

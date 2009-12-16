@@ -408,7 +408,15 @@ QStringList QImageSourcePlugin::fieldList(QSettings *cfg,
 
 int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) const {
   Q_UNUSED(cfg)
+
+  timespec t;
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
+  qDebug() << "*** qimage::understands checkpoint A: " << 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
+
   QString ftype( QImageReader::imageFormat( filename ) );
+
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
+  qDebug() << "*** qimage::understands checkpoint B: " << 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
 
   if ( ftype.isEmpty() ) 
     return 0;
@@ -423,6 +431,7 @@ int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) con
   if ( ftype == "pcx" ) {
     if ( !filename.toLower().endsWith(".pcx") ) return 0;
   }
+
 
   return 90;
 }
