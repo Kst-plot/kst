@@ -41,7 +41,7 @@ Commiting
      git commit "message" -a
      ...
      
- Commit to public svn repositors
+ Commit to public svn repository
  
      git svn dcommit
 
