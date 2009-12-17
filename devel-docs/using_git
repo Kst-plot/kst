@@ -1,0 +1,47 @@
+Using Git as subversion client
+
+http://git-scm.com/
+
+
+Set up git repository, done only once
+--------------------------------------
+Init your git repository with the svn path
+    
+    git svn init svn+ssh://YOU_USERNAME@svn.kde.org/home/kde/branches/work/kst/portto4
+
+Get an old revision as starting point (git slang: basepoint)
+e.g http://mail.kde.org/pipermail/kst/2008-January/015217.html
+
+    git svn fetch -r768342
+
+(without the revision it starts checking for commit at revsion 100,
+but also only getting all changes from january takes a while)
+
+
+Update
+------
+Update your local clone
+
+    git svn fetch
+    
+Update your local actual branch 'master' (move to basepoint to HEAD of the fetched data)
+
+    git svn rebase
+    
+
+History
+-------
+Browse history offline with a git-GUI gitk, gitg, qgit, ...
+
+
+Commiting
+----------
+ Commit your changes to your local repository
+ 
+     git commit "message" -a
+     ...
+     
+ Commit to public svn repositors
+ 
+     git svn dcommit
+
