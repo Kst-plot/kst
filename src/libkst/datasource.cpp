@@ -241,16 +241,13 @@ static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, 
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
-  DataSourcePtr plugin = bestPlugins.at(0).plugin->create(store, settingsObject, filename, QString::null, e);
-
-  return plugin;
-
-  //for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-  //  DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
-  //  if (plugin) {
-  //    return plugin;
-  //  }
-  //}
+  // we don't actually iterate here, unless the first plugin fails.  (Not sure this helps at all.)
+  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
+    DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
+    if (plugin) {
+      return plugin;
+    }
+  }
   return 0L;
 }
 

@@ -81,6 +81,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _pageValid = true;
 
   _dataSource = DataSource::findOrLoadSource(_store, filename);
+  _fileType->setText(_dataSource->fileType());
 
   _dataSource->readLock();
   _configureSource->setEnabled(_dataSource->hasConfigWidget());
@@ -98,6 +99,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
 
 void DataWizardPageDataSource::sourceChanged(const QString& file) {
   _pageValid = false;
+  _fileType->setText(QString());
   _configureSource->setEnabled(false);
   emit completeChanged();
 

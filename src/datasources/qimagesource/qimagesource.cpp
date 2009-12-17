@@ -409,29 +409,34 @@ QStringList QImageSourcePlugin::fieldList(QSettings *cfg,
 int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) const {
   Q_UNUSED(cfg)
 
-  timespec t;
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-  qDebug() << "*** qimage::understands checkpoint A: " << 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
+  QList<QByteArray> formats = QImageReader::supportedImageFormats();
+
+  bool matches = false;
+  foreach (QByteArray ext, formats) {
+    if (filename.toLower().endsWith(ext.toLower())) {
+      matches = true;
+      break;
+    }
+  }
+  if (!matches) {
+    return 0;
+  }
 
   QString ftype( QImageReader::imageFormat( filename ) );
-
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-  qDebug() << "*** qimage::understands checkpoint B: " << 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
 
   if ( ftype.isEmpty() ) 
     return 0;
 
-  if ( ftype == "TIFF" ) {
-    if ( !filename.toLower().endsWith(".tif") ) return 0;
-  }
+  //QImageReader is incorrectly identifying some ascii files with
+  // images.  Enforce filenames (may not be needed anymore, since
+  // we already know that the extension matches *some* image format.
 
-
-  //QImageReader is incorrectly identifying a single column ascii file with
-  // the first row blank as a pcx file... so... enforce filename...
-  if ( ftype == "pcx" ) {
-    if ( !filename.toLower().endsWith(".pcx") ) return 0;
-  }
-
+  //if ( ftype == "TIFF" ) {
+  //  if ( !filename.toLower().endsWith(".tif") ) return 0;
+  //}
+  //if ( ftype == "pcx" ) {
+  //  if ( !filename.toLower().endsWith(".pcx") ) return 0;
+  //}
 
   return 90;
 }
