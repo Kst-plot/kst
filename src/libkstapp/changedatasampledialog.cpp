@@ -61,6 +61,7 @@ ChangeDataSampleDialog::~ChangeDataSampleDialog() {
 
 void ChangeDataSampleDialog::show() {
   updateCurveListDialog();
+  updateButtons();
   QDialog::show();
 }
 
