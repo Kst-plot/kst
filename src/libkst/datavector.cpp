@@ -317,6 +317,7 @@ void DataVector::reset() { // must be called with a lock
   _dirty = true;
   _resetFieldMetadata();
 
+  Object::reset();
 }
 
 
@@ -587,24 +588,10 @@ void DataVector::reload() {
 
   if (_file) {
     _file->writeLock();
-    if (_file->reset()) { // try the efficient way first
-      reset();
-    } else { // the inefficient way
-      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
-      assert(newsrc != _file);
-      if (newsrc) {
-        _file->unlock();
-        if (store()) {
-          store()->removeObject(_file);
-        }
-        _dontUseSkipAccel = false;
-        _file = newsrc;
-        _file->writeLock();
-        reset();
-      }
-    }
-    _resetFieldMetadata();
+    _file->reset();
     _file->unlock();
+    reset();
+    _resetFieldMetadata();
     registerChange();
   }
 }

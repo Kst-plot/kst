@@ -39,6 +39,9 @@ QString Object::type() {
   return staticMetaObject.className();
 }
 
+void Object::reset() {
+  _serial = _serialOfLastChange = Forced;
+}
 
 const QString& Object::typeString() const {
   return staticTypeString;

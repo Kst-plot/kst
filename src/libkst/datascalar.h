@@ -69,7 +69,7 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
     virtual QString propertyString() const;
     bool isValid() const;
 
-    void reset();
+    virtual void reset();
     void reload();
 };
 

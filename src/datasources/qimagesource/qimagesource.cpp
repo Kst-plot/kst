@@ -74,9 +74,9 @@ const QString& QImageSource::typeString() const {
 }
 
 
-bool QImageSource::reset() {
+void QImageSource::reset() {
   init();
-  return true;
+  Object::reset();
 }
 
 

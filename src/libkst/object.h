@@ -52,6 +52,8 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
     virtual UpdateType objectUpdate(qint64 newSerial);
     virtual void registerChange() {_serial = Forced;}
 
+    virtual void reset();
+
     qint64 serial() const {return _serial;}
     qint64 serialOfLastChange() const {return _serialOfLastChange;}
 

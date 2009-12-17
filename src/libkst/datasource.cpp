@@ -889,8 +889,8 @@ bool DataSource::isEmpty() const {
 }
 
 
-bool DataSource::reset() {
-  return false;
+void DataSource::reset() {
+  Object::reset();
 }
 
 

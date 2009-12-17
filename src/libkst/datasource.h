@@ -137,7 +137,7 @@ class KST_EXPORT DataSource : public Object {
     /** Reset to initial state of the source, just as though no data had been
      *  read and the file had just been opened.  Return true on success.
      */
-    virtual bool reset();
+    virtual void reset();
 
     virtual void deleteDependents();
 

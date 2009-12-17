@@ -38,6 +38,8 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
+    virtual void reset(); // must be called with a lock
+
     /** change the properties of a DataVector */
     void change(DataSourcePtr file, const QString &field,
                 int f0, int n, int skip,
@@ -144,8 +146,6 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
 
     int N_AveReadBuf;
     double *AveReadBuf;
-
-    void reset(); // must be called with a lock
 
     void checkIntegrity(); // must be called with a lock
 

@@ -25,7 +25,7 @@ class SampleDatasourceSource : public Kst::DataSource {
     ~SampleDatasourceSource();
 
     bool init();
-    bool reset();
+    virtual void reset();
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 

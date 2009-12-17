@@ -407,23 +407,9 @@ void DataMatrix::reload() {
 
   if (_file) {
     _file->writeLock();
-    if (_file->reset()) { // try the efficient way first
-      reset();
-    } else { // the inefficient way
-      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
-      assert(newsrc != _file);
-      if (newsrc) {
-        _file->unlock();
-        // FIXME: need to writelock store?
-        if (store()) {
-          store()->removeObject(_file);
-        }
-        _file = newsrc;
-        _file->writeLock();
-        reset();
-      }
-    }
+    _file->reset();
     _file->unlock();
+    reset();
   }
 }
 

@@ -52,7 +52,7 @@ class DirFileSource : public Kst::DataSource {
 
     bool isEmpty() const;
 
-    bool reset();
+    virtual void reset();
 
     class Config;
 

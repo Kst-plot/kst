@@ -25,7 +25,7 @@ class QImageSource : public Kst::DataSource {
     ~QImageSource();
 
     bool init();
-    bool reset();
+    virtual void reset();
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 

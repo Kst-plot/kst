@@ -75,9 +75,9 @@ SampleDatasourceSource::~SampleDatasourceSource() {
 }
 
 
-bool SampleDatasourceSource::reset() {
+void SampleDatasourceSource::reset() {
   init();
-  return true;
+  Object::reset();
 }
 
 

@@ -239,7 +239,7 @@ AsciiSource::~AsciiSource() {
 }
 
 
-bool AsciiSource::reset() {
+void AsciiSource::reset() {
   if (_tmpBuf) {
     free(_tmpBuf);
     _tmpBuf = 0L;
@@ -259,10 +259,7 @@ bool AsciiSource::reset() {
   _matrixList.clear();
   _stringList.clear();
 
-  registerChange();
-  internalDataSourceUpdate();
-
-  return true;
+  Object::reset();
 }
 
 
@@ -319,7 +316,6 @@ bool AsciiSource::initRowIndex() {
 
 #define MAXBUFREADLEN 32768
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
-
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
@@ -401,7 +397,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
   } while ((bufread == MAXBUFREADLEN) && (!first_read));
 
   file.close();
-
   return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
 

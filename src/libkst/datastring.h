@@ -51,7 +51,7 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
 
     void reload();
 
-    void reset();
+    virtual void reset();
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;

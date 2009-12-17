@@ -356,7 +356,6 @@ void Vector::blank() {
 
 
 bool Vector::resize(int sz, bool init) {
-  //qDebug() << "resizing to: " << sz;
   if (sz > 0) {
     _v = static_cast<double*>(realloc(_v, sz*sizeof(double)));
     if (!_v) {

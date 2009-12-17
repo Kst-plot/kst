@@ -1064,6 +1064,7 @@ void MainWindow::back() {
 
 void MainWindow::reload() {
   document()->objectStore()->rebuildDataSourceList();
+  UpdateManager::self()->doUpdates(true);
   document()->setChanged(true);
 }
 

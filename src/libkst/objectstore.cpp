@@ -115,7 +115,21 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
 }
 
 void ObjectStore::rebuildDataSourceList() {
+  cleanUpDataSourceList();
+  foreach (DataSourcePtr ds, _dataSourceList) {
+    ds->writeLock();
+    ds->reset();
+    ds->unlock();
+  }
+  foreach (ObjectPtr object, _list) {
+    object->writeLock();
+    object->reset();
+    object->unlock();
+  }
+}
 
+#if 0
+void ObjectStore::rebuildDataSourceList() {
   DataSourceList dataSourceList;
 
   for (int i=0; i<_list.count(); i++) {
@@ -174,6 +188,7 @@ void ObjectStore::rebuildDataSourceList() {
 
   cleanUpDataSourceList();
 }
+#endif
 
 void ObjectStore::cleanUpDataSourceList() {
   DataSourceList currentSourceList;

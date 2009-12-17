@@ -83,7 +83,7 @@ DirFileSource::~DirFileSource() {
 }
 
 
-bool DirFileSource::reset() {
+void DirFileSource::reset() {
   disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
   disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   if (_dirfile) {
@@ -94,7 +94,7 @@ bool DirFileSource::reset() {
   _watcher = 0L;
 
   init();
-  return true;
+  Object::reset();
 }
 
 

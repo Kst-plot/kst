@@ -61,7 +61,7 @@ class AsciiSource : public Kst::DataSource {
 
     int readString(QString &S, const QString& string);
 
-    bool reset();
+    virtual void reset();
 
     virtual const QString& typeString() const;
 

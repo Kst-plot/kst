@@ -161,21 +161,9 @@ void DataString::reload() {
 
   if (_file) {
     _file->writeLock();
-    if (_file->reset()) { // try the efficient way first
-      reset();
-    } else { // the inefficient way
-      DataSourcePtr newsrc = DataSource::loadSource(store(), _file->fileName(), _file->fileType());
-      if (newsrc) {
-        _file->unlock();
-        if (store()) {
-          store()->removeObject(_file);
-        }
-        _file = newsrc;
-        _file->writeLock();
-        reset();
-      }
-    }
+    _file->reset();
     _file->unlock();
+    reset();
     registerChange();
   }
 }

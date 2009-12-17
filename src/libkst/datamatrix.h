@@ -67,6 +67,7 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
 
     // reload contents of DataMatrix from file
     void reload();
+    virtual void reset();
 
     // change the datasource for this matrix
     void changeFile(DataSourcePtr file);
@@ -98,8 +99,6 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
 
     void doUpdateSkip(int realXStart, int realYStart);
     void doUpdateNoSkip(int realXStart, int realYStart);
-
-    void reset();
 
     // values requested; may be different from actual matrix range
     int _reqXStart, _reqYStart, _reqNX, _reqNY;
