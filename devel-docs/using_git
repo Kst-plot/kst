@@ -24,8 +24,10 @@ Update your local clone
 
     git svn fetch
     
-Update your local actual branch 'master' (move to basepoint to HEAD of the fetched data)
+Update your local branch 'master' (git slang: move basepoint of master 
+to HEAD of the fetched data)
 
+    git checkout master
     git svn rebase
     
 
@@ -39,7 +41,6 @@ Commiting
  Commit your changes to your local repository
  
      git commit "message" -a
-     ...
      
  Commit to public svn repository
  
