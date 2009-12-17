@@ -1,6 +1,8 @@
 Using Git as subversion client
 
 http://git-scm.com/
+(Newer packages for Ubuntu:
+http://ppa.launchpad.net/pdoes/ppa/ubuntu karmic main)
 
 
 Set up git repository, done only once
