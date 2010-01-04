@@ -416,7 +416,7 @@ void PlotItem::createActions() {
   connect(_zoomXAutoBorder, SIGNAL(triggered()), this, SLOT(zoomXAutoBorder()));
 
   _zoomXNoSpike = new QAction(tr("X-Zoom Spike Insensitive"), this);
-  _zoomXNoSpike->setShortcut(Qt::CTRL+Qt::Key_S);
+  //_zoomXNoSpike->setShortcut(Qt::CTRL+Qt::Key_S);
   registerShortcut(_zoomXNoSpike);
   connect(_zoomXNoSpike, SIGNAL(triggered()), this, SLOT(zoomXNoSpike()));
 
