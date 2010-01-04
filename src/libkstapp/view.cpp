@@ -636,7 +636,7 @@ void View::edit() {
 
 
 void View::viewChanged() {
-  kstApp->mainWindow()->document()->setChanged(true);
+  //kstApp->mainWindow()->document()->setChanged(true);
 }
 
 }

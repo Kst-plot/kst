@@ -1152,3 +1152,8 @@ Printing from the command line.  This existed in 1.x
   Note: printing still requires parts of Qt which require a window session, so pure scripted 
   headless prints are not possible :-(
 
+--------------------
+
+When you plot 48 plots on one screen, the default text size for the
+plots is way too small to be readable.  
+

@@ -49,7 +49,7 @@ Application::Application(int &argc, char **argv)
 
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
   _mainWindow->show();
-  _mainWindow->hide();
+  //_mainWindow->hide();
 }
 
 

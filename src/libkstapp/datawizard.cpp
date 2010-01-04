@@ -998,9 +998,9 @@ void DataWizard::finished() {
     }
   }
 
-  QApplication::restoreOverrideCursor();
   UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
+  QApplication::restoreOverrideCursor();
   accept();
 
 }

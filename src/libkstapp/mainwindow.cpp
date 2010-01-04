@@ -241,6 +241,7 @@ bool MainWindow::initFromCommandLine() {
     printFromCommandLine(P.printFile());
     ok = false;
   }
+  _doc->setChanged(false);
   return ok;
 }
 
@@ -1065,7 +1066,7 @@ void MainWindow::back() {
 void MainWindow::reload() {
   document()->objectStore()->rebuildDataSourceList();
   UpdateManager::self()->doUpdates(true);
-  document()->setChanged(true);
+  //document()->setChanged(true);
 }
 
 void MainWindow::showDataManager() {

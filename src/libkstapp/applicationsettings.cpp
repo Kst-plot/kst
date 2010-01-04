@@ -53,7 +53,7 @@ ApplicationSettings::ApplicationSettings() {
   _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(16)).toDouble();
   _refViewHeight = _settings->value("general/referenceviewheight", QVariant(12)).toDouble();
   _refFontSize = _settings->value("general/referencefontsize", QVariant(16)).toInt();
-  _minFontSize = _settings->value("general/minimumfontsize", QVariant(5)).toInt();
+  _minFontSize = _settings->value("general/minimumfontsize", QVariant(7)).toInt();
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
 
   _showGrid = _settings->value("grid/showgrid", QVariant(false)).toBool();
