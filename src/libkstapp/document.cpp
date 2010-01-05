@@ -134,6 +134,8 @@ bool Document::save(const QString& to) {
 
 bool Document::initFromCommandLine(CommandLineParser *P) {
 
+  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
   bool ok;
   bool dataPlotted = P->processCommandLine(&ok);
 
@@ -141,8 +143,15 @@ bool Document::initFromCommandLine(CommandLineParser *P) {
     QString kstfile = P->kstFileName();
     if (!kstfile.isEmpty()) {
       dataPlotted = open(kstfile);
+
+      if (dataPlotted) {
+        UpdateManager::self()->doUpdates(true);
+        setChanged(false);
+      }
     }
   }
+  QApplication::restoreOverrideCursor();
+
   return ok;
 }
 
