@@ -1157,3 +1157,9 @@ Printing from the command line.  This existed in 1.x
 When you plot 48 plots on one screen, the default text size for the
 plots is way too small to be readable.  
 
+--------------------
+
+In zoom plot mode (hit 'z' when mouseover a plot) the text does not
+increase size as the plot expands.  This doesn't look proportioned
+correctly.  
+

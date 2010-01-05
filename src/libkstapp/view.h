@@ -102,6 +102,8 @@ class KST_EXPORT View : public QGraphicsView
 
     void configurePlotFontDefaults(PlotItem *plot);
 
+    void setFontRescale(double rescale) {_fontRescale = rescale;}
+    double fontRescale() const {return _fontRescale;}
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -152,6 +154,7 @@ class KST_EXPORT View : public QGraphicsView
     bool _plotBordersDirty;
     bool _printing;
     bool _dataMode;
+    double _fontRescale;
 };
 
 }

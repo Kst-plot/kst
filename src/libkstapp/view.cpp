@@ -51,7 +51,8 @@ View::View()
     _snapToGridVertical(false),
     _plotBordersDirty(false),
     _printing(false),
-    _dataMode(false) {
+    _dataMode(false),
+    _fontRescale(1.0) {
   _undoStack = new QUndoStack(this);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -537,6 +538,7 @@ QFont View::defaultFont(double scale) const {
   fontSize *= scale;
   fontSize += font.pixelSize();
 
+  fontSize *= _fontRescale;
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
@@ -544,7 +546,6 @@ QFont View::defaultFont(double scale) const {
   if (fontSize > 0) {
     font.setPixelSize(fontSize);
   }
-
   return font;
 }
 

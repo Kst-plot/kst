@@ -2694,6 +2694,7 @@ void PlotItem::plotMaximize() {
     setPos(_plotMaximizedSourcePosition);
     setViewRect(_plotMaximizedSourceRect);
     setZValue(_plotMaximizedSourceZValue);
+    parentView()->setFontRescale(1.0);
   } else {
     _plotMaximized = true;
     _plotMaximizedSourcePosition = pos();
@@ -2706,7 +2707,13 @@ void PlotItem::plotMaximize() {
     setViewRect(parentView()->sceneRect());
     setZValue(PLOT_MAXIMIZED_ZORDER);
     PlotItemManager::self()->setFocusPlot(this);
+
+    double rescale = double(parentView()->sceneRect().width() +
+                            parentView()->sceneRect().height())/
+                     double(_plotMaximizedSourceRect.width() + _plotMaximizedSourceRect.height());
+    parentView()->setFontRescale(rescale);
   }
+  setPlotBordersDirty();
 }
 
 

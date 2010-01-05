@@ -74,12 +74,6 @@ seem to be only available through the data manager.
 
 --------------------
 
-In zoom plot mode (hit 'z' when mouseover a plot) the text does not
-increase size as the plot expands.  This doesn't look proportioned
-correctly.  
-
---------------------
-
 When looking at dirfile data, if the symlink changes, kst doesn't notice
 and one has to hit reload to get it to update.  This is annoying at
 best.
