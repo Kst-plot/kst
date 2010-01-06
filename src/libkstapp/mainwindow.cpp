@@ -50,6 +50,8 @@
 #include "datavector.h"
 #include "commandlineparser.h"
 
+#include "dialoglauncher.h"
+
 #include <QtGui>
 
 // Enable Demo Vector Model 0 Disabled 1 Enabled.
@@ -212,6 +214,20 @@ void MainWindow::saveAs() {
   setWindowTitle("Kst - " + fn);
 }
 
+
+void MainWindow::newDoc() {
+  if (!_doc->isChanged() || promptSave()) {
+    delete _doc;
+    _doc = new Document(this);
+  }
+  tabWidget()->createView();
+
+  int i=tabWidget()->count()-1;
+  while (i>=0) {
+    tabWidget()->closeCurrentView();
+    i--;
+  }
+}
 
 void MainWindow::open() {
   if (_doc->isChanged() && !promptSave()) {
@@ -557,6 +573,29 @@ void MainWindow::createLayout() {
   }
 }
 
+void MainWindow::createCurve() {
+  DialogLauncher::self()->showCurveDialog();
+}
+
+void MainWindow::createPSD() {
+  DialogLauncher::self()->showPowerSpectrumDialog();
+}
+
+void MainWindow::createEquation() {
+  DialogLauncher::self()->showEquationDialog();
+}
+
+void MainWindow::createHistogram() {
+  DialogLauncher::self()->showHistogramDialog();
+}
+
+void MainWindow::createImage() {
+  DialogLauncher::self()->showImageDialog();
+}
+
+void MainWindow::createSpectogram() {
+  DialogLauncher::self()->showCSDDialog();
+}
 
 void MainWindow::demoModel() {
 #if DEMO_VECTOR_MODEL
@@ -727,6 +766,11 @@ void MainWindow::createActions() {
   _openAct->setShortcut(tr("Ctrl+O"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
+  _newAct = new QAction(tr("&New..."), this);
+  _newAct->setStatusTip(tr("Clear current session"));
+  _newAct->setShortcut(tr("Ctrl+N"));
+  connect(_newAct, SIGNAL(triggered()), this, SLOT(newDoc()));
+
   _printAct = new QAction(tr("&Print..."), this);
   _printAct->setStatusTip(tr("Print the current view"));
   connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
@@ -813,11 +857,33 @@ void MainWindow::createActions() {
   _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
+  // ****************************************************************************** //
+
+  // ************************ New Data Object Actions ************************** //
+  _newCurveAct = new QAction(tr("New &Curve"), this);
+  connect(_newCurveAct, SIGNAL(triggered()), this, SLOT(createCurve()));
+
+  _newPSDAct = new QAction(tr("New &Spectrum"), this);
+  connect(_newPSDAct, SIGNAL(triggered()), this, SLOT(createPSD()));
+
+  _newEquationAct = new QAction(tr("New &Equation"), this);
+  connect(_newEquationAct, SIGNAL(triggered()), this, SLOT(createEquation()));
+
+  _newHistogramAct = new QAction(tr("New &Histogram"), this);
+  connect(_newHistogramAct, SIGNAL(triggered()), this, SLOT(createHistogram()));
+
+  _newImageAct = new QAction(tr("New &Image"), this);
+  connect(_newImageAct, SIGNAL(triggered()), this, SLOT(createImage()));
+
+  _newSpectrogramAct = new QAction(tr("New &Spectrogram"), this);
+  connect(_newSpectrogramAct, SIGNAL(triggered()), this, SLOT(createSpectogram()));
+
 }
 
 
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
+  _fileMenu->addAction(_newAct);
   _fileMenu->addAction(_newTabAct);
   _fileMenu->addAction(_openAct);
   _fileMenu->addAction(_saveAct);
@@ -835,6 +901,13 @@ void MainWindow::createMenus() {
 
   _dataMenu = menuBar()->addMenu(tr("&Data"));
   _dataMenu->addAction(_dataManagerAct);
+  _dataMenu->addSeparator();
+  _dataMenu->addAction(_newCurveAct);
+  _dataMenu->addAction(_newEquationAct);
+  _dataMenu->addAction(_newPSDAct);
+  _dataMenu->addAction(_newHistogramAct);
+  _dataMenu->addAction(_newImageAct);
+  _dataMenu->addAction(_newSpectrogramAct);
   _dataMenu->addSeparator();
   _dataMenu->addAction(_vectorEditorAct);
   _dataMenu->addAction(_scalarEditorAct);
@@ -898,6 +971,9 @@ void MainWindow::createToolBars() {
   _dataToolBar->addAction(_pauseAct);
   _dataToolBar->addAction(_readFromEndAct);
   _dataToolBar->addAction(_reloadAct);
+  _dataToolBar->addAction(_changeDataSampleDialogAct);
+  _dataToolBar->addAction(_changeFileDialogAct);
+
 
 //   _layoutToggleToolBar = addToolBar(tr("Mode"));
 

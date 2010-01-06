@@ -79,6 +79,7 @@ class MainWindow : public QMainWindow
     void save();
     void saveAs();
     void open();
+    void newDoc();
     void openFile(const QString &file);
     void print();
     void printToPrinter(QPrinter *printer);
@@ -105,6 +106,13 @@ class MainWindow : public QMainWindow
     void createSvg();
     void createLayout();
     void createSharedAxisBox();
+
+    void createCurve();
+    void createPSD();
+    void createEquation();
+    void createHistogram();
+    void createImage();
+    void createSpectogram();
 
     void demoModel();
 
@@ -185,6 +193,7 @@ class MainWindow : public QMainWindow
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_newTabAct;
+    QAction *_newAct;
     QAction *_openAct;
     QAction *_printAct;
     QAction *_saveAct;
@@ -211,6 +220,14 @@ class MainWindow : public QMainWindow
     QAction *_backAct;
     QAction *_forwardAct;
     QAction *_reloadAct;
+
+    QAction *_newCurveAct;
+    QAction *_newEquationAct;
+    QAction *_newPSDAct;
+    QAction *_newHistogramAct;
+    QAction *_newImageAct;
+    QAction *_newSpectrogramAct;
+
 };
 
 }

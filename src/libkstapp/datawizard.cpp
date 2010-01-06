@@ -718,6 +718,10 @@ void DataWizard::finished() {
   PlotItem *plotItem = 0;
   bool relayout = true;
   int plotsInPage = _document->currentView()->scene()->items().count();
+  bool separate_plots =
+      ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
+       && _pageDataPresentation->plotData());
+
   switch (_pagePlot->curvePlacement()) {
     case DataWizardPagePlot::ExistingPlot:
     {
@@ -744,10 +748,6 @@ void DataWizard::finished() {
     }
     case DataWizardPagePlot::MultiplePlots:
     {
-      bool separate_plots =
-          ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
-           && _pageDataPresentation->plotData());
-
       int nplots = vectors.count() * (_pageDataPresentation->plotPSD() + _pageDataPresentation->plotData());
 
       if (separate_plots)
@@ -949,6 +949,9 @@ void DataWizard::finished() {
   double fontScale;
   if (plotsInPage==0) {
     plotsInPage = plotList.count();
+    if (separate_plots) {
+      plotsInPage/=2;
+    }
     if (plotsInPage==0) plotsInPage = 1;
     fontScale = ApplicationSettings::self()->referenceFontSize()/sqrt((double)plotsInPage)-
                        ApplicationSettings::self()->referenceFontSize() +

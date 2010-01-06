@@ -85,9 +85,9 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     _frequency = 1.0;
   }
 
-  _outMatrix->setLabel(i18n("Power [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
-  _outMatrix->setXLabel(i18n("%1 [%2]").arg(vecName).arg(_vectorUnits));
-  _outMatrix->setYLabel(i18n("Frequency [%1]").arg(_rateUnits));
+  _outMatrix->setLabel(i18n("Power \\[%1/%2^{1/2 }\\]").arg(_vectorUnits).arg(_rateUnits));
+  _outMatrix->setXLabel(i18n("Time \\[s\\]"));
+  _outMatrix->setYLabel(i18n("Frequency \\[%1\\]").arg(_rateUnits));
 
   updateMatrixLabels();
 }
@@ -139,7 +139,7 @@ void CSD::internalUpdate() {
 
   double frequencyStep = .5*_frequency/(double)(tempOutputLen-1);
 
-  _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize, frequencyStep);
+  _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize/_frequency, frequencyStep);
 
   unlockInputsAndOutputs();
 
@@ -348,21 +348,25 @@ DataObjectPtr CSD::makeDuplicate() {
 }
 
 void CSD::updateMatrixLabels(void) {
-    switch (_outputType) {
-    default:
-    case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      _outMatrix->setLabel(i18n("ASD [%1/%2^{1/2}]").arg(_vectorUnits).arg(_rateUnits));
-      break;
-    case 1: // power spectral density [V^2/Hz]
-      _outMatrix->setLabel(i18n("PSD [%1^2/%2]").arg(_vectorUnits).arg(_rateUnits));
-      break;
-    case 2: // amplitude spectrum [V]
-      _outMatrix->setLabel(i18n("Amplitude Spectrum [%1]").arg(_vectorUnits));
-      break;
-    case 3: // power spectrum [V^2]
-      _outMatrix->setLabel(i18n("Power Spectrum [%1^2]").arg(_vectorUnits));
-      break;
+  QString label;
+  switch (_outputType) {
+  default:
+  case 0: // amplitude spectral density (default) [V/Hz^1/2]
+    label = i18n("ASD \\[%1/%2^{1/2} \\]").arg(_vectorUnits).arg(_rateUnits);
+    break;
+  case 1: // power spectral density [V^2/Hz]
+    label = i18n("PSD \\[%1^2/%2\\]").arg(_vectorUnits).arg(_rateUnits);
+    break;
+  case 2: // amplitude spectrum [V]
+    label = i18n("Amplitude Spectrum \\[%1\\]").arg(_vectorUnits);
+    break;
+  case 3: // power spectrum [V^2]
+    label = i18n("Power Spectrum \\[%1^2\\]").arg(_vectorUnits);
+    break;
   }
+  label += " of " + _inputVectors[INVECTOR]->descriptiveName();
+  _outMatrix->setLabel(label);
+
 }
 
 QString CSD::_automaticDescriptiveName() const {
