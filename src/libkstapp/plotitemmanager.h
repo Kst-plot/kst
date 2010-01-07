@@ -35,7 +35,7 @@ class PlotItemManager : public QObject
     static QList<ViewItem*> tiedZoomViewItems(PlotItem* plotItem);
     static PlotItemManager *self();
 
-    void setAllTiedZoom(View *view, bool tiedZoom);
+    void toggleAllTiedZoom(View *view);
 
   Q_SIGNALS:
     void tiedZoomRemoved();

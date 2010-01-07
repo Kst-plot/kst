@@ -467,6 +467,10 @@ void SharedAxisBoxItem::zoomMaximum(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomMaximum" << endl;
 #endif
+  if (!originPlotItem) {
+    originPlotItem = keyPlot();
+  }
+
   _xAxisZoomMode = PlotAxis::Auto;
   _yAxisZoomMode = PlotAxis::AutoBorder;
   originPlotItem->zoomMaximum(true);

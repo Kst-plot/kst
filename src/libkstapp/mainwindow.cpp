@@ -145,8 +145,8 @@ void MainWindow::setDataMode(bool dataMode) {
 }
 
 
-void MainWindow::setTiedZoom(bool tiedZoom) {
-  PlotItemManager::self()->setAllTiedZoom(tabWidget()->currentView(), tiedZoom);
+void MainWindow::toggleTiedZoom() {
+  PlotItemManager::self()->toggleAllTiedZoom(tabWidget()->currentView());
 }
 
 
@@ -838,8 +838,8 @@ void MainWindow::createActions() {
   _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
   _tiedZoomAct->setIcon(QPixmap(":kst_zoomtie.png"));
-  _tiedZoomAct->setCheckable(true);
-  connect(_tiedZoomAct, SIGNAL(triggered(bool)), this, SLOT(setTiedZoom(bool)));
+  //_tiedZoomAct->setCheckable(true);
+  connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
   _dataModeAct = new QAction(tr("&Data Mode"), this);
   _dataModeAct->setStatusTip(tr("Toggle the current view's data mode"));

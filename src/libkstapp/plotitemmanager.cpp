@@ -121,14 +121,29 @@ void PlotItemManager::checkAllTied(View* view) {
 }
 
 
-void PlotItemManager::setAllTiedZoom(View *view, bool tiedZoom) {
-  if (_plotLists.contains(view)) {
-    foreach(PlotItem* plot, _plotLists[view]) {
-      if (plot->supportsTiedZoom()) {
-        plot->setTiedZoom(tiedZoom, tiedZoom, false);
+void PlotItemManager::toggleAllTiedZoom(View *view) {
+
+  bool tiedZoom;
+
+  // vote on if we should tie all, or untie all
+  int n_plots=0, n_tied=0;
+  if (_viewItemLists.contains(view)) {
+    foreach(ViewItem* viewItem, _viewItemLists[view]) {
+      if (viewItem->supportsTiedZoom()) {
+        ++n_plots;
+        if (viewItem->isTiedZoom()) {
+          ++n_tied;
+        }
       }
     }
   }
+
+  if (double(n_tied) > (double)n_plots*0.5) {
+    tiedZoom = false;
+  } else {
+    tiedZoom = true;
+  }
+
   if (_viewItemLists.contains(view)) {
     foreach(ViewItem* viewItem, _viewItemLists[view]) {
       if (viewItem->supportsTiedZoom()) {

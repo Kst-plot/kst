@@ -41,6 +41,7 @@ LegendItem::LegendItem(PlotItem *parent)
 
   _initializeShortName();
 
+  setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ /*| Rotate*/ /*| Scale*/);
 
   setViewRect(0.0, 0.0, 0.0, 0.0);

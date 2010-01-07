@@ -120,7 +120,7 @@ class MainWindow : public QMainWindow
     void cleanup();
 
     void setLayoutMode(bool layoutMode);
-    void setTiedZoom(bool tiedZoom);
+    void toggleTiedZoom();
 
     void setDataMode(bool dataMode);
 

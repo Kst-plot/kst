@@ -18,7 +18,6 @@ Smarter ASCII reader:
 Fixup line/arrow dimensions tab:
   x,y instead of length/angle
 
-
 ----------
 
 Tooltips/whats this where helpful.
@@ -60,17 +59,7 @@ the mouse, to allow it to be dragged around until placed by a click.
 
 ---------
 
-Change Data Sample Ranges doesn't have an icon on the menu bar (that I
-found); it was very convienient there.
-
---------------------
-
 The data manager doesn't have a purge button.
-
---------------------
-
-New Equation (or new pretty much anything) is harder to find as they
-seem to be only available through the data manager.  
 
 --------------------
 
