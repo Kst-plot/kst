@@ -251,6 +251,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void saveAsDialogDefaults() const;
     void applyDefaults();
 
+    bool maskedByMaximization() {return (parentView()->childMaximized() && !_plotMaximized);}
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
@@ -317,7 +318,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void setBottomLabelDirty() { _bottomLabel.dirty = true; setPlotPixmapDirty(); }
     void setLabelsDirty() { _leftLabel.dirty = true; _rightLabel.dirty = true; _topLabel.dirty = true; _bottomLabel.dirty = true; setPlotPixmapDirty(); }
 
-    void setPlotPixmapDirty(bool dirty = true) { _plotPixmapDirty = dirty; }
+    void setPlotPixmapDirty(bool dirty = true) {_plotPixmapDirty = dirty; }
     void setAxisLabelsDirty(bool dirty = true) { _axisLabelsDirty = dirty; }
 
   private:

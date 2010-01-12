@@ -118,7 +118,9 @@ const QString& Vector::typeString() const {
                                             \
   double fj = in_i * double(_size - 1) / double(ns_i-1); /* scaled index */ \
                                             \
-  int j = int(floor(fj)); /* index of sample one lower */ \
+  /*int j = int(floor(fj));*/ /* index of sample one lower */ \
+  int j = int(fj); /* index of sample one lower */ \
+  /*assert(j==int(floor(fj)));*/ \
   assert(j+1 < _size && j >= 0);            \
   if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) { \
     return NOPOINT;                    \

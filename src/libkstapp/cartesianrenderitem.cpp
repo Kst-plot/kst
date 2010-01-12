@@ -40,7 +40,6 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
   painter->translate(normalRect.x(), normalRect.y());
 
   foreach (RelationPtr relation, relationList()) {
-    //FIXME static_cast to kstvcurve and take advantage of extra api
 
     CurveRenderContext context;
     context.painter = painter;

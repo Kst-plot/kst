@@ -104,6 +104,9 @@ class KST_EXPORT View : public QGraphicsView
 
     void setFontRescale(double rescale) {_fontRescale = rescale;}
     double fontRescale() const {return _fontRescale;}
+
+    void setChildMaximized(bool isMax) { _childMaximized = isMax;}
+    bool childMaximized() const {return _childMaximized;}
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -155,6 +158,7 @@ class KST_EXPORT View : public QGraphicsView
     bool _printing;
     bool _dataMode;
     double _fontRescale;
+    bool _childMaximized;
 };
 
 }

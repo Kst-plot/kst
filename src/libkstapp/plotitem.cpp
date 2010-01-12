@@ -813,6 +813,10 @@ void PlotItem::updatePlotPixmap() {
   QTime bench_time;
   bench_time.start();
 #endif
+  if (maskedByMaximization()) {
+    _plotPixmapDirty = false;
+    return;
+  }
   _plotPixmapDirty = false;
 
   QPixmap pixmap(rect().width()+1, rect().height()+1);
@@ -850,7 +854,6 @@ void PlotItem::paint(QPainter *painter) {
     painter->setPen(Qt::NoPen);
     painter->drawRect(rect());
     painter->restore();
-
     painter->drawPixmap(rect().topLeft(), _plotPixmap);
   }
 #if BENCHMARK
@@ -1996,7 +1999,6 @@ void PlotItem::generateLeftLabel() {
   if (!_leftLabel.dirty) {
     return;
   }
-
   _leftLabel.valid = false;
   _leftLabel.dirty = false;
   Label::Parsed *parsed = Label::parse(leftLabel());
@@ -2694,6 +2696,7 @@ void PlotItem::plotMaximize() {
     setPos(_plotMaximizedSourcePosition);
     setViewRect(_plotMaximizedSourceRect);
     setZValue(_plotMaximizedSourceZValue);
+    parentView()->setChildMaximized(false);
     parentView()->setFontRescale(1.0);
   } else {
     _plotMaximized = true;
@@ -2711,6 +2714,7 @@ void PlotItem::plotMaximize() {
     double rescale = double(parentView()->sceneRect().width() +
                             parentView()->sceneRect().height())/
                      double(_plotMaximizedSourceRect.width() + _plotMaximizedSourceRect.height());
+    parentView()->setChildMaximized(true);
     parentView()->setFontRescale(rescale);
   }
   setPlotBordersDirty();

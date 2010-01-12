@@ -52,7 +52,8 @@ View::View()
     _plotBordersDirty(false),
     _printing(false),
     _dataMode(false),
-    _fontRescale(1.0) {
+    _fontRescale(1.0),
+    _childMaximized(false) {
   _undoStack = new QUndoStack(this);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

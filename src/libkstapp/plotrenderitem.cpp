@@ -237,7 +237,12 @@ void PlotRenderItem::paint(QPainter *painter) {
   if (!rect().isValid()) {
     return;
   }
+  if (plotItem()->maskedByMaximization()) {
+    return;
+  }
+
   painter->setRenderHint(QPainter::Antialiasing, false);
+
 
 #ifdef CURVE_DRAWING_TIME
   QTime time;
