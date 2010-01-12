@@ -813,11 +813,11 @@ void PlotItem::updatePlotPixmap() {
   QTime bench_time;
   bench_time.start();
 #endif
+
+  _plotPixmapDirty = false;
   if (maskedByMaximization()) {
-    _plotPixmapDirty = false;
     return;
   }
-  _plotPixmapDirty = false;
 
   QPixmap pixmap(rect().width()+1, rect().height()+1);
   pixmap.fill(Qt::transparent);
