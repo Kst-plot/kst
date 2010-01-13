@@ -133,7 +133,7 @@ class KST_EXPORT Relation : public Object {
     virtual void updatePaintObjects(const CurveRenderContext& context) = 0;
 
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(QPainter *p, const QRect& bound) = 0;
+    virtual void paintLegendSymbol(QPainter *p, const QRectF& bound) = 0;
 
     virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
 

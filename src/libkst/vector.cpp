@@ -118,7 +118,6 @@ const QString& Vector::typeString() const {
                                             \
   double fj = in_i * double(_size - 1) / double(ns_i-1); /* scaled index */ \
                                             \
-  /*int j = int(floor(fj));*/ /* index of sample one lower */ \
   int j = int(fj); /* index of sample one lower */ \
   /*assert(j==int(floor(fj)));*/ \
   assert(j+1 < _size && j >= 0);            \
@@ -131,8 +130,6 @@ const QString& Vector::typeString() const {
   return _v[j + 1] * fdj + _v[j] * (1.0 - fdj);
 
 
-// FIXME: optimize me - possible that floor() (especially) and isnan() are
-//        expensive here.
 /** Return v[i], i is sample number, interpolated to have ns_i total
     samples in vector */
 double Vector::interpolate(int in_i, int ns_i) const {
@@ -205,7 +202,7 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
     }                                       \
     return left + (right - left) * double(in_i - leftIndex) / double(rightIndex - leftIndex); \
   }                                         \
-  abort(); /* FIXME */                      \
+  abort(); /* FIXME; this is effectivly assert(ns_i == _size) */                      \
   double indexScaleFactor = double(_size - 1) / double(ns_i - 1); \
   double fj = in_i * indexScaleFactor; /* scaled index */ \
                                             \

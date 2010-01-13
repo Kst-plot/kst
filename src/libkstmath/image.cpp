@@ -730,7 +730,7 @@ void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-void Image::paintLegendSymbol(QPainter *p, const QRect& bound) {
+void Image::paintLegendSymbol(QPainter *p, const QRectF& bound) {
   if (hasColorMap() && !_pal.paletteData().isEmpty()) {
     int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
     // draw the color palette

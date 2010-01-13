@@ -138,7 +138,7 @@ class KST_EXPORT Curve: public Relation {
     void updatePaintObjects(const CurveRenderContext& context);
 
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(QPainter *p, const QRect& bound);
+    virtual void paintLegendSymbol(QPainter *p, const QRectF& bound);
 
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
@@ -179,11 +179,11 @@ class KST_EXPORT Curve: public Relation {
     QStack<bool> _hasPointsStack;
     QStack<bool> _hasLinesStack;
     QStack<int> _pointDensityStack;
-    QVector<QPolygon> _polygons;
-    QVector<QLine> _lines;
-    QVector<QPoint> _points;
-    QVector<QRect> _filledRects;
-    QVector<QRect> _rects;
+    QVector<QPolygonF> _polygons;
+    QVector<QLineF> _lines;
+    QVector<QPointF> _points;
+    QVector<QRectF> _filledRects;
+    QVector<QRectF> _rects;
     int _width;
 };
 

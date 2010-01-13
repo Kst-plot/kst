@@ -73,6 +73,10 @@ inline int d2i(double x) {
   return int(floor(x+0.5));
 }
 
+inline bool samePixel(double x1, double x2) {
+  //return (int(floor(x1)) == int(floor(x2)));
+  return (int(x1) == int(x2));
+}
 
 #if defined(__SVR4) && defined(__sun)
 inline int isinf(double x) { return x == x && !finite(x); }

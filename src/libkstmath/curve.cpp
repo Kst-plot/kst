@@ -18,7 +18,7 @@
 // includes for KDE
 #include "kst_i18n.h"
 #include <qdebug.h>
-#include <QPolygon>
+#include <QPolygonF>
 #include <QXmlStreamWriter>
 
 // application specific includes
@@ -31,10 +31,10 @@
 #include "datavector.h"
 #include "curve.h"
 #include "ksttimers.h"
-
 #include "objectstore.h"
 
 #include <time.h>
+#include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
 // #define BENCHMARK
@@ -655,22 +655,22 @@ void Curve::paintObjects(const CurveRenderContext& context) {
       p->setPen(QPen(color(), _width, style));
     }
 
-    foreach(QRect rect, _filledRects) {
+    foreach(QRectF rect, _filledRects) {
         p->fillRect(rect, color());
     }
   }
   p->setPen(QPen(color(), _width, style));
 
-  foreach(QPolygon poly, _polygons) {
+  foreach(QPolygonF poly, _polygons) {
     p->drawPolyline(poly);
   }
-  foreach(QLine line, _lines) {
+  foreach(QLineF line, _lines) {
     p->drawLine(line);
   }
-  foreach(QRect rect, _rects) {
+  foreach(QRectF rect, _rects) {
     p->drawRect(rect);
   }
-  foreach(QPoint point, _points) {
+  foreach(QPointF point, _points) {
     CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
   }
   p->restore();
@@ -745,9 +745,11 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
     clock_t linesStart = clock();
 #endif
     if (hasLines()) {
-      QPolygon points(MAX_NUM_POLYLINES);
-      int lastPlottedX = 0;
-      int lastPlottedY = 0;
+      QPolygonF points;
+      points.reserve(MAX_NUM_POLYLINES);
+
+      double lastPlottedX = 0;
+      double lastPlottedY = 0;
       int index = 0;
       int i0Start = i0;
 
@@ -804,18 +806,13 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
         }
 
         if (KDE_ISUNLIKELY(foundNan)) {
-          if (index > 0) {
-            QPolygon poly;
-            poly.putPoints(0, index, points);
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawPolyline" << poly << endl;
-#endif
+          if (points.size()>0) {
+            _polygons.append(points);
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+            ++numberOfLinesDrawn;
 #endif
-            _polygons.append(poly);
           }
-          index = 0;
+          points.resize(0);
           if (overlap) {
             if (X2 >= Lx && X2 <= Hx) {
               if (maxY > Hy && minY <= Hy)
@@ -823,13 +820,10 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
               if (minY < Ly && maxY >= Ly)
                 minY = Ly;
               if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
-#endif
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+                ++numberOfLinesDrawn;
 #endif
-                _lines.append(QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)));
+                _lines.append(QLineF(X2, minY, X2, maxY));
               }
             }
             overlap = false;
@@ -848,9 +842,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         last_y1 = Y1;
 
         if (KDE_ISLIKELY(!foundNan)) {
-          int X1i = d2i(X1);
-          int X2i = d2i(X2);
-          if (KDE_ISLIKELY(X1i == X2i)) {
+          if (KDE_ISLIKELY(samePixel(X1, X2))) {
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISUNLIKELY(Y1 > maxY)) {
                 maxY = Y1;
@@ -872,54 +864,32 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
             if (KDE_ISLIKELY(overlap)) {
               if (KDE_ISLIKELY(X2 >= Lx && X2 <= Hx)) {
                 if (KDE_ISUNLIKELY(maxY <= Hy && minY >= Ly)) {
-                  int Y2i = d2i(Y2);
-                  int maxYi = d2i(maxY);
-                  int minYi = d2i(minY);
 
-                  if (index >= MAX_NUM_POLYLINES-2) {
-                    QPolygon poly;
-                    poly.putPoints(0, index, points);
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawPolyline" << poly << endl;
-#endif
+                  if (points.size()>MAX_NUM_POLYLINES-2) {
+                    _polygons.append(points);
+                    points.resize(0);
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+                    ++numberOfLinesDrawn;
 #endif
-                    _polygons.append(poly);
-                    index = 0;
                   }
-                  if (KDE_ISUNLIKELY(minYi == maxYi)) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                    points.setPoint(index++, X2i, maxYi);
+
+                  if (KDE_ISUNLIKELY(minY == maxY)) {
+                    points.append(QPointF(X2, maxY));
                   } else if (KDE_ISUNLIKELY(Y2 == minY)) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                    points.setPoint(index++, X2i, maxYi);
-                    points.setPoint(index++, X2i, minYi);
+                    points.append(QPointF(X2, maxY));
+                    points.append(QPointF(X2, minY));
                   } else if (KDE_ISUNLIKELY(Y2 == maxY)) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                    points.setPoint(index++, X2i, minYi);
-                    points.setPoint(index++, X2i, maxYi);
+                    points.append(QPointF(X2, minY));
+                    points.append(QPointF(X2, maxY));
                   } else {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                    points.setPoint(index++, X2i, minYi);
-                    points.setPoint(index++, X2i, maxYi);
+                    points.append(QPointF(X2, minY));
+                    points.append(QPointF(X2, maxY));
                     if (KDE_ISLIKELY(Y2 >= Ly && Y2 <= Hy)) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                      points.setPoint(index++, X2i, Y2i);
+                      points.append(QPointF(X2, Y2));
                     }
                   }
-                  lastPlottedX = X2i;
-                  lastPlottedY = Y2i;
+                  lastPlottedX = X2;
+                  lastPlottedY = Y2;
                 } else {
                   if (KDE_ISUNLIKELY(maxY > Hy && minY <= Hy)) {
                     maxY = Hy;
@@ -928,25 +898,17 @@ qDebug() << __LINE__ << "index++" << index << endl;
                     minY = Ly;
                   }
                   if (KDE_ISUNLIKELY(minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy)) {
-                    if (index > 0) {
-                      QPolygon poly;
-                      poly.putPoints(0, index, points);
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawPolyline" << poly << endl;
-#endif
+                    if (points.size()>0) {
+                      _polygons.append(points);
+                      points.resize(0);
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+                      ++numberOfLinesDrawn;
 #endif
-                      _polygons.append(poly);
-                      index = 0;
                     }
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(X2i, d2i(minY), X2i, d2i(maxY)) << endl;
-#endif
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    _lines.append(QLine(X2i, d2i(minY), X2i, d2i(maxY)));
+                    _lines.append(QLineF(X2, minY, X2, maxY));
                   }
                 }
               }
@@ -1047,49 +1009,28 @@ qDebug() << "y not in bounds"
 
               if (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx &&
                   Y1 >= Ly && Y1 <= Hy && Y2 >= Ly && Y2 <= Hy) {
-                int X1i = d2i(X1);
-                int Y1i = d2i(Y1);
-                int X2i = d2i(X2);
-                int Y2i = d2i(Y2);
 
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << "MY POINTS ARE GOOD!!" << index << endl;
-#endif
 
-                if (KDE_ISUNLIKELY(index == 0)) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                  points.setPoint(index++, X2i, Y2i);
-                  points.setPoint(index++, X1i, Y1i);
-                } else if (lastPlottedX == X2i &&
-                    lastPlottedY == Y2i &&
+                if (KDE_ISUNLIKELY(points.size()==0)) {
+                    points.append(QPointF(X2, Y2));
+                    points.append(QPointF(X1, Y1));
+                } else if (samePixel(lastPlottedX, X2) &&
+                    samePixel(lastPlottedY,Y2) &&
                     index < MAX_NUM_POLYLINES) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                  points.setPoint(index++, X1i, Y1i);
+                  points.append(QPointF(X1, Y1));
                 } else {
-                  if (KDE_ISLIKELY(index > 1)) {
-                    QPolygon poly;
-                    poly.putPoints(0, index, points);
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawPolyline" << poly << endl;
-#endif
+                  if (KDE_ISLIKELY(points.size()>1)) {
+                    _polygons.append(points);
+                    points.resize(0);
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+                    ++numberOfLinesDrawn;
 #endif
-                    _polygons.append(poly);
                   }
-                  index = 0;
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "index++" << index << endl;
-#endif
-                  points.setPoint(index++, X2i, Y2i);
-                  points.setPoint(index++, X1i, Y1i);
+                  points.append(QPointF(X2, Y2));
+                  points.append(QPointF(X1, Y1));
                 }
-                lastPlottedX = X1i;
-                lastPlottedY = Y1i;
+                lastPlottedX = X1;
+                lastPlottedY = Y1;
               }
             }
           } // end if (X1 == X2)
@@ -1097,17 +1038,12 @@ qDebug() << __LINE__ << "index++" << index << endl;
       } // end while
 
       // we might a have polyline left undrawn...
-      if (index > 1) {
-        QPolygon poly;
-        poly.putPoints(0, index, points);
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawPolyline" << poly << endl;
-#endif
+      if (points.size()>1) {
+        _polygons.append(points);
+        points.resize(0);
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+        ++numberOfLinesDrawn;
 #endif
-        _polygons.append(poly);
-        index = 0;
       }
 
       // we might have some overlapping points still unplotted...
@@ -1120,13 +1056,10 @@ qDebug() << __LINE__ << "drawPolyline" << poly << endl;
             minY = Ly;
           }
           if (minY >= Ly && minY <= Hy && maxY >= Ly && maxY <= Hy) {
-#ifdef DEBUG_VECTOR_CURVE
-qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)) << endl;
-#endif
 #ifdef BENCHMARK
-  ++numberOfLinesDrawn;
+            ++numberOfLinesDrawn;
 #endif
-           _lines.append(QLine(d2i(X2), d2i(minY), d2i(X2), d2i(maxY)));
+           _lines.append(QLineF(X2, minY, X2, maxY));
           }
         }
         overlap = false;
@@ -1134,7 +1067,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
     } // end if hasLines()
 #ifdef BENCHMARK
     clock_t linesEnd = clock();
-    qDebug() << "        Lines clocks: " << (linesEnd - linesStart) << endl;
+    std::cout << "\n        Lines clocks: " << (linesEnd - linesStart) << "\n";
     b_1 = benchtmp.elapsed();
 #endif
 
@@ -1147,7 +1080,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
       bool visible = true;
       double rX2 = 0.0;
       double drX = 0.0;
-      QRect lastRect;
+      QRectF lastRect;
 
       if (!exv) {
         // determine the bar position width. NOTE: This is done
@@ -1199,7 +1132,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (visible) {
-          QRect rect(d2i(X1), d2i(Y1), d2i(X2) - d2i(X1), d2i(Y2) - d2i(Y1));
+          QRectF rect(X1, Y1, X2 - X1, Y2 - Y1);
           if (!lastRect.contains(rect)) {
             if (barStyle() == 1) { // filled
               _filledRects.append(rect);
@@ -1208,7 +1141,7 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
             }
             lastRect = rect;
 #ifdef BENCHMARK
-  ++numberOfBarsDrawn;
+            ++numberOfBarsDrawn;
 #endif
           }
         }
@@ -1228,8 +1161,8 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         size = int(qMax(w, h)) / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()));
       }
 
-      QRect rect((int)Lx, (int)Ly, (int)w, (int)h);
-      QPoint pt, lastPt;
+      QRectF rect(Lx, Ly, w, h);
+      QPointF pt, lastPt;
 
       for (i_pt = i0; i_pt <= iN; ++i_pt) {
         rX = xv->interpolate(i_pt, NS);
@@ -1241,11 +1174,12 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
           rY = logYLo(rY, yLogBase);
         }
 
-        pt.setX(d2i(m_X * rX + b_X));
-        pt.setY(d2i(m_Y * rY + b_Y));
-        if (rect.contains(pt) && pt != lastPt && (lastPt.isNull() || !((abs(pt.x() - lastPt.x()) < size) || (abs(pt.y() - lastPt.y()) < size)))) {
+        pt.setX(m_X * rX + b_X);
+        pt.setY(m_Y * rY + b_Y);
+        if (rect.contains(pt) && pt != lastPt &&
+            (lastPt.isNull() || !((abs(pt.x() - lastPt.x()) < size) || (abs(pt.y() - lastPt.y()) < size)))) {
 #ifdef BENCHMARK
-  ++numberOfPointsDrawn;
+          ++numberOfPointsDrawn;
 #endif
             lastPt = pt;
             _points.append(pt);
@@ -1336,15 +1270,12 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (X1 >= Lx && X2 <= Hx && Y1 >= Ly && Y1 <= Hy) {
-          int X1i = d2i(X1);
-          int X2i = d2i(X2);
-          int Y1i = d2i(Y1);
-          _lines.append(QLine(X1i, Y1i, X2i, Y1i));
+          _lines.append(QLineF(X1, Y1, X2, Y1));
           if (do_low_flag) {
-            _lines.append(QLine(X1i, Y1i + pointDim, X1i, Y1i - pointDim));
+            _lines.append(QLineF(X1, Y1 + pointDim, X1, Y1 - pointDim));
           }
           if (do_high_flag) {
-            _lines.append(QLine(X2i, Y1i + pointDim, X2i, Y1i - pointDim));
+            _lines.append(QLineF(X2, Y1 + pointDim, X2, Y1 - pointDim));
           }
         }
       }
@@ -1429,15 +1360,12 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
         }
 
         if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y2 <= Hy) {
-          int X1i = d2i(X1);
-          int Y1i = d2i(Y1);
-          int Y2i = d2i(Y2);
-          _lines.append(QLine(X1i, Y1i, X1i, Y2i));
+          _lines.append(QLineF(X1, Y1, X1, Y2));
           if (do_low_flag) {
-          _lines.append(QLine(X1i + pointDim, Y1i, X1i - pointDim, Y1i));
+          _lines.append(QLineF(X1 + pointDim, Y1, X1 - pointDim, Y1));
           }
           if (do_high_flag) {
-          _lines.append(QLine(X1i + pointDim, Y2i, X1i - pointDim, Y2i));
+          _lines.append(QLineF(X1 + pointDim, Y2, X1 - pointDim, Y2));
           }
         }
       }
@@ -1450,15 +1378,20 @@ qDebug() << __LINE__ << "drawLine" << QLine(d2i(X2), d2i(minY), d2i(X2), d2i(max
 
 #ifdef BENCHMARK
   int i = bench_time.elapsed();
-  qDebug() << endl << "Plotting curve " << (void *)this << ": " << i << "ms";
-  qDebug() << "    Without locks: " << b_4 << "ms";
-  qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn;
-  qDebug() << "    Number of points drawn:" << numberOfPointsDrawn;
-  qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn;
-  if (b_1 > 0)       qDebug() << "            Lines: " << b_1 << "ms";
-  if (b_2 - b_1 > 0) qDebug() << "             Bars: " << (b_2 - b_1) << "ms";
-  if (b_3 - b_2 > 0) qDebug() << "           Points: " << (b_3 - b_2) << "ms";
-  if (b_4 - b_3 > 0) qDebug() << "           Errors: " << (b_4 - b_3) << "ms";
+  //qDebug() << endl << "Plotting curve " << (void *)this << ": " << i << "ms";
+  //qDebug() << "    Without locks: " << b_4 << "ms";
+  //qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn;
+  //qDebug() << "    Number of points drawn:" << numberOfPointsDrawn;
+  //qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn;
+  std::cout << "\nPlotting curve " << (void *)this << ": " << i << "ms";
+  std::cout << "\n    Without locks: " << b_4 << "ms";
+  std::cout << "\n    Number of lines drawn:" << numberOfLinesDrawn;
+  std::cout << "\n    Number of points drawn:" << numberOfPointsDrawn;
+  std::cout << "\n    Number of bars drawn:" << numberOfBarsDrawn;
+  if (b_1 > 0)       std::cout << "\n            Lines: " << b_1 << "ms\n";
+  if (b_2 - b_1 > 0) std::cout << "\n             Bars: " << (b_2 - b_1) << "ms\n";
+  if (b_3 - b_2 > 0) std::cout << "\n           Points: " << (b_3 - b_2) << "ms\n";
+  if (b_4 - b_3 > 0) std::cout << "\n           Errors: " << (b_4 - b_3) << "ms\n";
 #endif
 }
 
@@ -1578,7 +1511,7 @@ double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Curve::paintLegendSymbol(QPainter *p, const QRect& bound) {
+void Curve::paintLegendSymbol(QPainter *p, const QRectF& bound) {
   int width;
   
   if (lineWidth() == 0) {
@@ -1591,13 +1524,13 @@ void Curve::paintLegendSymbol(QPainter *p, const QRect& bound) {
   if (hasLines()) {
     // draw a line from left to right centered vertically
     p->setPen(QPen(color(), width, Kst::LineStyle[lineStyle()]));
-    p->drawLine(bound.left(), bound.top() + bound.height()/2,
-                bound.right(), bound.top() + bound.height()/2);
+    p->drawLine(QLineF(bound.left(), bound.top() + bound.height()*.5,
+                bound.right(), bound.top() + bound.height()*.5));
   }
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()/2, bound.top() + bound.height()/2, width, 600);
+    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, width, 600);
   }
   p->restore();
 }

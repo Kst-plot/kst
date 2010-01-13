@@ -24,10 +24,10 @@ namespace Kst {
 
 namespace CurvePointSymbol {
 
-void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
+void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
   Q_UNUSED(size)
   
-  int s;
+  double s;
 
   if (Type < 0 || Type > KSTPOINT_MAXTYPE) {
     Type = 0;
@@ -41,12 +41,12 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
 
   switch (Type) {
     case 0:
-      p->drawLine(x-s, y-s, x+s, y+s);
-      p->drawLine(x-s, y+s, x+s, y-s);
+      p->drawLine(QLineF(x-s, y-s, x+s, y+s));
+      p->drawLine(QLineF(x-s, y+s, x+s, y-s));
       break;
     case 1:
       p->setBrush(Qt::NoBrush);
-      p->drawRect(x-s, y-s, 2*s+1, 2*s+1);
+      p->drawRect(QRectF(x-s, y-s, 2*s+1, 2*s+1));
       break;
     case 2:
       p->setBrush(Qt::NoBrush);
@@ -76,17 +76,17 @@ void draw(int Type, QPainter *p, int x, int y, int lineSize, int size) {
       break;
     case 6:
       p->setBrush(Qt::SolidPattern);
-      p->drawRect(x-s, y-s, 2*s+1, 2*s+1);
+      p->drawRect(QRectF(x-s, y-s, 2*s+1, 2*s+1));
       break;
     case 7:
-      p->drawLine(x-s, y, x+s, y);
-      p->drawLine(x, y-s, x, y+s);
+      p->drawLine(QLineF(x-s, y, x+s, y));
+      p->drawLine(QLineF(x, y-s, x, y+s));
       break;
     case 8:
-      p->drawLine(x-s, y-s, x+s, y+s);
-      p->drawLine(x-s, y+s, x+s, y-s);
-      p->drawLine(x-s, y, x+s, y);
-      p->drawLine(x, y-s, x, y+s);
+      p->drawLine(QLineF(x-s, y-s, x+s, y+s));
+      p->drawLine(QLineF(x-s, y+s, x+s, y-s));
+      p->drawLine(QLineF(x-s, y, x+s, y));
+      p->drawLine(QLineF(x, y-s, x, y+s));
       break;    
     case 9:
       {
