@@ -822,7 +822,9 @@ void PlotItem::updatePlotPixmap() {
   QPixmap pixmap(rect().width()+1, rect().height()+1);
   pixmap.fill(Qt::transparent);
   QPainter pixmapPainter(&pixmap);
-  
+
+  //pixmapPainter.setRenderHint(QPainter::Antialiasing);
+
   pixmapPainter.save();
   if (rect().topLeft() != QPointF(0, 0)) {
     pixmapPainter.translate(-rect().topLeft());

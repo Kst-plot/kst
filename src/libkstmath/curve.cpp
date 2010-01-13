@@ -646,6 +646,7 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   QPainter *p = context.painter;
   p->save();
 
+  //p->setRenderHint(QPainter::Antialiasing);
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 
   if (hasBars()) {
