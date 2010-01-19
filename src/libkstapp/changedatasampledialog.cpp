@@ -118,22 +118,67 @@ void ChangeDataSampleDialog::modified() {
   updateButtons();
 }
 
-
 void ChangeDataSampleDialog::updateCurveListDialog() {
-  _vectorList->clear();
-  _selectedVectorList->clear();
-  DataVectorList dataVectors = _store->getObjects<DataVector>();
 
+  DataVectorList dataVectors = _store->getObjects<DataVector>();
   _vectorList->blockSignals(true);
-  for (DataVectorList::ConstIterator i = dataVectors.begin(); i != dataVectors.end(); ++i) {
-    DataVectorPtr vector = *i;
-    vector->readLock();
-    QListWidgetItem *wi = new QListWidgetItem(vector->Name());
-    wi->setToolTip(vector->descriptionTip());
-    vector->unlock();
-    _vectorList->addItem(wi);
+
+  _vectorList->clearSelection();
+  _selectedVectorList->clearSelection();
+
+  // make sure all items in _vectorList exist in the store; remove if they don't.
+  for (int i_item = 0; i_item < _vectorList->count(); i_item++) {
+    bool exists=false;
+    for (int i_vector = 0; i_vector<dataVectors.count(); i_vector++) {
+      if (dataVectors.at(i_vector)->Name() == _vectorList->item(i_item)->text()) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      QListWidgetItem *item = _vectorList->takeItem(i_item);
+      delete item;
+    }
   }
 
+  // make sure all items in _selectedVectorList exist in the store; remove if they don't.
+  for (int i_item = 0; i_item<_selectedVectorList->count(); i_item++) {
+    bool exists=false;
+    for (int i_vector = 0; i_vector<dataVectors.count(); i_vector++) {
+      if (dataVectors.at(i_vector)->Name() == _selectedVectorList->item(i_item)->text()) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      QListWidgetItem *item = _selectedVectorList->takeItem(i_item);
+      delete item;
+    }
+  }
+
+  // insert into _vectorList all items in store not in one of the lists.
+  for (int i_vector = 0; i_vector<dataVectors.count(); i_vector++) {
+    bool listed = false;
+    for (int i_item = 0; i_item<_selectedVectorList->count(); i_item++) {
+      if (dataVectors.at(i_vector)->Name() == _selectedVectorList->item(i_item)->text()) {
+        _selectedVectorList->item(i_item)->setToolTip(dataVectors.at(i_vector)->descriptionTip());
+        listed = true;
+        break;
+      }
+    }
+    for (int i_item = 0; i_item<_vectorList->count(); i_item++) {
+      if (dataVectors.at(i_vector)->Name() == _vectorList->item(i_item)->text()) {
+        _vectorList->item(i_item)->setToolTip(dataVectors.at(i_vector)->descriptionTip());
+        listed = true;
+        break;
+      }
+    }
+    if (!listed) {
+      QListWidgetItem *wi = new QListWidgetItem(dataVectors.at(i_vector)->Name());
+      _vectorList->addItem(wi);
+      wi->setToolTip(dataVectors.at(i_vector)->descriptionTip());
+    }
+  }
   _vectorList->blockSignals(false);
 }
 

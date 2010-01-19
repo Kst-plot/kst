@@ -1163,3 +1163,12 @@ In zoom plot mode (hit 'z' when mouseover a plot) the text does not
 increase size as the plot expands.  This doesn't look proportioned
 correctly.  
 
+--------------------
+
+Change data samples range is clumsy to use.  I don't think that it
+should default to having none of the vectors selected.  Rather, I think
+it should default to all preselected (or better, all preselected if
+you've never used the dialog before, but to remember which were selected
+from before and default to those).  Certainly, when you make some
+changes and hit apply (without closing the dialog box), the vectors you
+have selected shouldn't become unselected; they should remain.  

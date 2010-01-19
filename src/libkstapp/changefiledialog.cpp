@@ -14,6 +14,9 @@
 #include "datacollection.h"
 #include "datavector.h"
 #include "datamatrix.h"
+#include "datascalar.h"
+#include "datastring.h"
+#include "vscalar.h"
 
 #include "plotitem.h"
 
@@ -133,28 +136,97 @@ void ChangeFileDialog::fileNameChanged(const QString &file) {
 
 
 void ChangeFileDialog::updatePrimitiveList() {
+  /* Make list of data primitives */
   DataVectorList dataVectorList = _store->getObjects<DataVector>();
   DataMatrixList dataMatrixList = _store->getObjects<DataMatrix>();
+  DataScalarList dataScalarList = _store->getObjects<DataScalar>();
+  DataStringList dataStringList = _store->getObjects<DataString>();
+  VScalarList vScalarList = _store->getObjects<VScalar>();
   QStringList fileNameList;
-  int i;
 
-  _changeFilePrimitiveList->clear();
-  _selectedFilePrimitiveList->clear();
+  ObjectList<Primitive> primitives;
 
-  for (i = 0; i < (int)dataVectorList.count(); i++) {
-    dataVectorList[i]->readLock();
-    _changeFilePrimitiveList->addItem(dataVectorList[i]->Name());
-    fileNameList.push_back(dataVectorList[i]->filename());
-    dataVectorList[i]->unlock();
+  foreach (DataVectorPtr V, dataVectorList) {
+    PrimitivePtr P = kst_cast<Primitive>(V);
+    primitives.append(P);
+    fileNameList.append(V->filename());
+  }
+  foreach (DataMatrixPtr M, dataMatrixList) {
+    PrimitivePtr P = kst_cast<Primitive>(M);
+    primitives.append(P);
+    fileNameList.append(M->filename());
+  }
+  foreach (DataScalarPtr S, dataScalarList) {
+    PrimitivePtr P = kst_cast<Primitive>(S);
+    primitives.append(P);
+    fileNameList.append(S->filename());
+  }
+  foreach (DataStringPtr S, dataStringList) {
+    PrimitivePtr P = kst_cast<Primitive>(S);
+    primitives.append(P);
+    fileNameList.append(S->filename());
+  }
+  foreach (VScalarPtr V, vScalarList) {
+    PrimitivePtr P = kst_cast<Primitive>(V);
+    primitives.append(P);
+    fileNameList.append(V->filename());
   }
 
-  for (i = 0; i < (int)dataMatrixList.count(); i++) {
-    dataMatrixList[i]->readLock();
-    _changeFilePrimitiveList->addItem(dataMatrixList[i]->Name());
-    fileNameList.push_back(dataMatrixList[i]->filename());
-    dataMatrixList[i]->unlock();
+  // make sure all items in _changeFilePrimitiveList exist in the store; remove if they don't.
+  for (int i_item = 0; i_item < _changeFilePrimitiveList->count(); i_item++) {
+    bool exists=false;
+    for (int i_primitive = 0; i_primitive<primitives.count(); i_primitive++) {
+      if (primitives.at(i_primitive)->Name() == _changeFilePrimitiveList->item(i_item)->text()) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      QListWidgetItem *item = _changeFilePrimitiveList->takeItem(i_item);
+      delete item;
+    }
   }
 
+  // make sure all items in _selectedFilePrimitiveList exist in the store; remove if they don't.
+  for (int i_item = 0; i_item < _selectedFilePrimitiveList->count(); i_item++) {
+    bool exists=false;
+    for (int i_primitive = 0; i_primitive<primitives.count(); i_primitive++) {
+      if (primitives.at(i_primitive)->Name() == _selectedFilePrimitiveList->item(i_item)->text()) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      QListWidgetItem *item = _selectedFilePrimitiveList->takeItem(i_item);
+      delete item;
+    }
+  }
+
+  // insert into _changeFilePrimitiveList all items in store not in one of the lists.
+  for (int i_primitive = 0; i_primitive<primitives.count(); i_primitive++) {
+    bool listed = false;
+    for (int i_item = 0; i_item<_changeFilePrimitiveList->count(); i_item++) {
+      if (primitives.at(i_primitive)->Name() == _changeFilePrimitiveList->item(i_item)->text()) {
+        _changeFilePrimitiveList->item(i_item)->setToolTip(primitives.at(i_primitive)->descriptionTip());
+        listed = true;
+        break;
+      }
+    }
+    for (int i_item = 0; i_item<_selectedFilePrimitiveList->count(); i_item++) {
+      if (primitives.at(i_primitive)->Name() == _selectedFilePrimitiveList->item(i_item)->text()) {
+        _selectedFilePrimitiveList->item(i_item)->setToolTip(primitives.at(i_primitive)->descriptionTip());
+        listed = true;
+        break;
+      }
+    }
+    if (!listed) {
+      QListWidgetItem *wi = new QListWidgetItem(primitives.at(i_primitive)->Name());
+      _changeFilePrimitiveList->addItem(wi);
+      wi->setToolTip(primitives.at(i_primitive)->descriptionTip());
+    }
+  }
+
+  // fill _files
   QString currentFile = _files->currentText();
   _files->clear();
 
