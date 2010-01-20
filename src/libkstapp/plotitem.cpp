@@ -1091,13 +1091,16 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
       }
     }
 
-    if (rect().left() > bound.left()) bound.setLeft(rect().left());
-    if (rect().right() < bound.right()) bound.setRight(rect().right());
+    if (rect().left() > bound.left()) {
+      bound.setLeft(rect().left());
+    }
 
-    CachedPlotLabel label;
-    label.bound = bound;
-    label.value = xLabelIt.value();
-    _xPlotLabels.append(label);
+    if (rect().right() >= bound.right()) { // if no overflow to the right...
+      CachedPlotLabel label;
+      label.bound = bound;
+      label.value = xLabelIt.value();
+      _xPlotLabels.append(label);
+    }
   }
   painter->restore();
 
@@ -2433,11 +2436,7 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
   }
 
   _calculatedAxisMarginHeight = xLabelRect.height();
-  if (xLabelRect.right() > plotRect().right()) {
-    _calculatedAxisMarginROverflow = qMax(ViewItem::sizeOfGrip().width(), xLabelRect.right() - plotRect().right());
-  } else {
-    _calculatedAxisMarginROverflow = ViewItem::sizeOfGrip().width();
-  }
+  _calculatedAxisMarginROverflow = 2*ViewItem::sizeOfGrip().width();
 
   painter->restore();
 }
