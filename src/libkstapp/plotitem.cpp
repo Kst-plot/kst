@@ -956,9 +956,9 @@ void PlotItem::paintPlot(QPainter *painter, bool xUpdated, bool yUpdated) {
   }
   if (isUseAxisScale()) {
     QFont font(painter->font());
-    int pixelSize = qMax((int)(font.pixelSize() * _numberAxisLabelScaleFactor), ApplicationSettings::self()->minimumFontSize());
+    qreal pointSize = qMax((font.pointSizeF() * _numberAxisLabelScaleFactor), ApplicationSettings::self()->minimumFontSize());
     
-    font.setPixelSize(pixelSize);
+    font.setPointSizeF(pointSize);
     painter->setFont(font);
   }
 
@@ -3295,9 +3295,9 @@ PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
   _fontUseGlobal(true),
   _isAuto(true) {
 
-  _font = _plotItem->parentView()->defaultFont();
   _fontColor = ApplicationSettings::self()->defaultFontColor();
   _fontScale = ApplicationSettings::self()->defaultFontScale();
+  _font = _plotItem->parentView()->defaultFont(_fontScale);
 }
 
 
@@ -3324,10 +3324,10 @@ QFont PlotLabel::calculatedFont() {
   QFont tempFont;
   if (fontUseGlobal()) {
     tempFont = _plotItem->globalFont();
-    tempFont.setPixelSize(_plotItem->parentView()->defaultFont(_plotItem->globalFontScale()).pixelSize());
+    tempFont.setPointSizeF(_plotItem->parentView()->defaultFont(_plotItem->globalFontScale()).pointSizeF());
   } else {
     tempFont = font();
-    tempFont.setPixelSize(_plotItem->parentView()->defaultFont(fontScale()).pixelSize());
+    tempFont.setPointSizeF(_plotItem->parentView()->defaultFont(fontScale()).pointSizeF());
   }
   return tempFont;
 }

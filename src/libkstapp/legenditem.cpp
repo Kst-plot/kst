@@ -82,7 +82,7 @@ void LegendItem::paint(QPainter *painter) {
   QSize legendSize(0, 0);
 
   QFont font(_font);
-  font.setPixelSize(parentView()->defaultFont(_fontScale).pixelSize());
+  font.setPointSizeF(parentView()->defaultFont(_fontScale).pointSizeF());
 
   foreach(RelationPtr relation, legendItems) {
     DrawnLegendItem item;

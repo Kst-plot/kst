@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>739</width>
+    <width>660</width>
     <height>653</height>
    </rect>
   </property>
@@ -229,7 +229,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Font Si&amp;ze Offset</string>
+         <string>Font Si&amp;ze:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

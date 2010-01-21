@@ -519,33 +519,29 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
 }
 
 
+// the view's default font size will be the application's default font size,
+// scaled by the size of the window compared to the reference plot size.
 void View::updateFont() {
-  qreal fontSize = (qreal)(height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
-  fontSize *= ApplicationSettings::self()->referenceFontSize();
-
-  if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
-    fontSize = ApplicationSettings::self()->minimumFontSize();
-  }
-
   _defaultFont = ApplicationSettings::self()->defaultFont();
-  _defaultFont.setPixelSize(fontSize);
 }
 
 
-QFont View::defaultFont(double scale) const {
+// returns a font of size pointSize, rescaled if the window size
+// is different than the reference window size.
+QFont View::defaultFont(double pointSize) const {
   QFont font(_defaultFont);
 
-  qreal fontSize = (qreal)(height() + width()) / (ApplicationSettings::self()->referenceViewHeight() + ApplicationSettings::self()->referenceViewWidth());
-  fontSize *= scale;
-  fontSize += font.pixelSize();
+  qreal fontSize = (qreal)(height() + width()) /
+                   (ApplicationSettings::self()->referenceViewHeight() +
+                    ApplicationSettings::self()->referenceViewWidth()) *
+                   pointSize * _fontRescale;
 
-  fontSize *= _fontRescale;
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
   if (fontSize > 0) {
-    font.setPixelSize(fontSize);
+    font.setPointSizeF(fontSize);
   }
   return font;
 }

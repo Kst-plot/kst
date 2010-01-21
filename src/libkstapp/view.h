@@ -67,7 +67,7 @@ class KST_EXPORT View : public QGraphicsView
     bool showGrid() const { return _showGrid; }
     void setShowGrid(bool showGrid);
 
-    QFont defaultFont(double scale = 1.0) const;
+    QFont defaultFont(double pointSize) const;
 
     QSizeF gridSpacing() const { return _gridSpacing; }
     void setGridSpacing(const QSizeF &gridSpacing);

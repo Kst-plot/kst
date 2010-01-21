@@ -32,9 +32,9 @@ LabelItem::LabelItem(View *parent, const QString& txt)
   setTypeName("Label");
   setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
-  _font = parentView()->defaultFont();
-  _color = ApplicationSettings::self()->defaultFontColor();
   _scale = ApplicationSettings::self()->defaultFontScale();
+  _color = ApplicationSettings::self()->defaultFontColor();
+  _font = parentView()->defaultFont(_scale);
 }
 
 
@@ -54,7 +54,7 @@ void LabelItem::generateLabel() {
     _dirty = false;
     QRectF box = rect();
     QFont font(_font);
-    font.setPixelSize(parentView()->defaultFont(_scale).pixelSize());
+    font.setPointSizeF(parentView()->defaultFont(_scale).pointSizeF());
     QFontMetrics fm(font);
     _paintTransform.reset();
     _paintTransform.translate(box.x(), box.y() + fm.ascent());
@@ -76,6 +76,7 @@ void LabelItem::paint(QPainter *painter) {
   if (_dirty) {
     generateLabel();
   }
+
   if (_labelRc) {
     painter->save();
     painter->setTransform(_paintTransform, true);

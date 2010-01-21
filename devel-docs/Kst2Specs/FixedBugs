@@ -1172,3 +1172,13 @@ you've never used the dialog before, but to remember which were selected
 from before and default to those).  Certainly, when you make some
 changes and hit apply (without closing the dialog box), the vectors you
 have selected shouldn't become unselected; they should remain.  
+
+
+--------------------
+
+Plot widths with live data are variable depending on the axis numbers
+position.  If, for example, you're plotting live data as a function of
+INDEX and INDEX is in the hundreds of thousands, when the major tick for
+INDEX is near the edge of the plot, the plot will get narrower so that
+the axis number can fit in the window.  I don't think that plots should
+change size at all when data is live.  

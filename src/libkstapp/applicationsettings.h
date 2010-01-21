@@ -40,11 +40,8 @@ class ApplicationSettings : public QObject
     double referenceViewHeightCM() const;
     void setReferenceViewHeightCM(const double height);
 
-    int referenceFontSize() const;
-    void setReferenceFontSize(const int points);
-
-    int minimumFontSize() const;
-    void setMinimumFontSize(const int points);
+    double minimumFontSize() const;
+    void setMinimumFontSize(const double points);
 
     QFont defaultFont() const;
     void setDefaultFont(const QFont &font);
@@ -94,8 +91,7 @@ class ApplicationSettings : public QObject
     bool _useOpenGL;
     double _refViewWidth;
     double _refViewHeight;
-    int _refFontSize;
-    int _minFontSize;
+    double _minFontSize;
     QString _defaultFontFamily;
     QFont _defaultFont;
     qreal _defaultFontScale;

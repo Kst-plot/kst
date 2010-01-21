@@ -93,7 +93,6 @@ void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setUseOpenGL(ApplicationSettings::self()->useOpenGL());
   _generalTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidthCM());
   _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
-  _generalTab->setReferenceFontSize(ApplicationSettings::self()->referenceFontSize());
   _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
   _generalTab->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
 }
@@ -145,7 +144,6 @@ void ApplicationSettingsDialog::generalChanged() {
   ApplicationSettings::self()->setUseOpenGL(_generalTab->useOpenGL());
   ApplicationSettings::self()->setReferenceViewWidthCM(_generalTab->referenceViewWidth());
   ApplicationSettings::self()->setReferenceViewHeightCM(_generalTab->referenceViewHeight());
-  ApplicationSettings::self()->setReferenceFontSize(_generalTab->referenceFontSize());
   ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
   ApplicationSettings::self()->setMinimumUpdatePeriod(_generalTab->minimumUpdatePeriod());
   ApplicationSettings::self()->blockSignals(false);

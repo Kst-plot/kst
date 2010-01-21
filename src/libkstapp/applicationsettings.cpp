@@ -50,10 +50,9 @@ ApplicationSettings::ApplicationSettings() {
   // several seconds delay when opening application on my system.
   _useOpenGL = _settings->value("general/opengl", QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
-  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(16)).toDouble();
-  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(12)).toDouble();
-  _refFontSize = _settings->value("general/referencefontsize", QVariant(16)).toInt();
-  _minFontSize = _settings->value("general/minimumfontsize", QVariant(7)).toInt();
+  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(17)).toDouble();
+  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(13)).toDouble();
+  _minFontSize = _settings->value("general/minimumfontsize", QVariant(7.0)).toDouble();
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
 
   _showGrid = _settings->value("grid/showgrid", QVariant(false)).toBool();
@@ -78,9 +77,10 @@ ApplicationSettings::ApplicationSettings() {
     _backgroundBrush = QBrush(gradient);
   }
 
+  // FIXME: should use 'set as default' checkbox in label dialog, not here.
   QString fontString = _settings->value("defaultlabelproperties/defaultfont", QFont()).toString();
   _defaultFont.fromString(fontString);
-  _defaultFontScale = _settings->value("defaultlabelproperties/defaultfontscale", QVariant(0)).toDouble();
+  _defaultFontScale = _settings->value("defaultlabelproperties/defaultfontscale", QVariant(16)).toDouble();
   _defaultFontColor = QColor(_settings->value("defaultlabelproperties/defaultfontcolor", "black").toString());
 
   _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
@@ -151,24 +151,12 @@ void ApplicationSettings::setReferenceViewHeightCM(const double height) {
 }
 
 
-int ApplicationSettings::referenceFontSize() const {
-  return _refFontSize;
-}
-
-
-void ApplicationSettings::setReferenceFontSize(int points) {
-  _refFontSize = points;
-  _settings->setValue("general/referencefontsize", points);
-  emit modified();
-}
-
-
-int ApplicationSettings::minimumFontSize() const {
+double ApplicationSettings::minimumFontSize() const {
   return _minFontSize;
 }
 
 
-void ApplicationSettings::setMinimumFontSize(int points) {
+void ApplicationSettings::setMinimumFontSize(double points) {
   _minFontSize = points;
   _settings->setValue("general/minimumfontsize", points);
   emit modified();

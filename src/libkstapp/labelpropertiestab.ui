@@ -1,10 +1,11 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>LabelPropertiesTab</class>
- <widget class="QWidget" name="LabelPropertiesTab" >
-  <property name="windowModality" >
+ <widget class="QWidget" name="LabelPropertiesTab">
+  <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -12,100 +13,107 @@
     <height>229</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="Kst::LabelBuilder" native="1" name="_labelText" />
+    <widget class="Kst::LabelBuilder" name="_labelText" native="true"/>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" >
-     <item row="0" column="0" >
-      <widget class="QLabel" name="_Label_11" >
-       <property name="text" >
-        <string>Font &amp;size offset:</string>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="_Label_11">
+       <property name="text">
+        <string>Font &amp;size:</string>
        </property>
-       <property name="alignment" >
+       <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
-       <property name="buddy" >
+       <property name="buddy">
         <cstring>_labelFontScale</cstring>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2" >
-      <widget class="QDoubleSpinBox" name="_labelFontScale" >
-       <property name="decimals" >
+     <item row="0" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="_labelFontScale">
+       <property name="decimals">
         <number>1</number>
        </property>
-       <property name="minimum" >
+       <property name="minimum">
         <double>-25.000000000000000</double>
        </property>
-       <property name="singleStep" >
+       <property name="singleStep">
         <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" >
-      <widget class="QLabel" name="_Label_12" >
-       <property name="text" >
+     <item row="1" column="0">
+      <widget class="QLabel" name="_Label_12">
+       <property name="text">
         <string>Font famil&amp;y:</string>
        </property>
-       <property name="alignment" >
+       <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
-       <property name="buddy" >
+       <property name="buddy">
         <cstring>_family</cstring>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" colspan="5" >
-      <widget class="QFontComboBox" name="_family" />
+     <item row="1" column="1" colspan="6">
+      <widget class="QFontComboBox" name="_family"/>
      </item>
-     <item row="0" column="3" >
-      <widget class="QPushButton" name="_bold" >
-       <property name="toolTip" >
-        <string>Bold</string>
-       </property>
-       <property name="text" >
-        <string/>
-       </property>
-       <property name="shortcut" >
-        <string>Alt+B</string>
-       </property>
-       <property name="checkable" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4" >
-      <widget class="QPushButton" name="_italic" >
-       <property name="toolTip" >
+     <item row="0" column="5">
+      <widget class="QPushButton" name="_italic">
+       <property name="toolTip">
         <string>Italic</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="shortcut" >
+       <property name="shortcut">
         <string>Alt+I</string>
        </property>
-       <property name="checkable" >
+       <property name="checkable">
         <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item row="0" column="5" >
-      <widget class="Kst::ColorButton" name="_labelColor" />
+     <item row="0" column="6">
+      <widget class="Kst::ColorButton" name="_labelColor"/>
+     </item>
+     <item row="0" column="4">
+      <widget class="QPushButton" name="_bold">
+       <property name="toolTip">
+        <string>Bold</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="shortcut">
+        <string>Alt+B</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string> points</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>131</height>

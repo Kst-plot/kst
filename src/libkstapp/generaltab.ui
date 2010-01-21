@@ -6,25 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>363</width>
-    <height>247</height>
+    <width>587</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout">
-   <item row="0" column="0" colspan="2">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <widget class="QCheckBox" name="_useOpenGL">
      <property name="text">
       <string>Use Open&amp;GL</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="2" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Reference View &amp;Width (cm):</string>
+      <string>Custom Reference Size (cm):</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -34,7 +34,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="2" column="1">
     <widget class="QDoubleSpinBox" name="_refViewWidth">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -47,10 +47,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="2" column="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Reference View &amp;Height (cm):</string>
+      <string>x</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -60,7 +60,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="3">
     <widget class="QDoubleSpinBox" name="_refViewHeight">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -73,30 +73,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>&amp;Reference Font Size (points):</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>_refFontSize</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QSpinBox" name="_refFontSize">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>&amp;Minimum Font Size (points):</string>
@@ -109,7 +86,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="3" column="1" colspan="3">
     <widget class="QSpinBox" name="_minFontSize">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -119,10 +96,10 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
+   <item row="4" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>&amp;Period Between Updates (ms)</string>
+      <string>&amp;Period Between Updates (ms):</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -132,7 +109,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
+   <item row="4" column="1" colspan="3">
     <widget class="QSpinBox" name="_maxUpdate">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -154,7 +131,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="5" column="0">
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -166,6 +143,19 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="QComboBox" name="_referenceViewSizeCombo"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Reference View Size:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
