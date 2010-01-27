@@ -407,19 +407,39 @@ void PSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      _sVector->setLabel(i18n("ASD \\[%1/%2^{1/2} \\]", _vectorUnits, _rateUnits));
+      if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
+        _sVector->setLabel(i18n("Spectral Density"));
+      } else {
+        _sVector->setLabel(i18n("Spectral Density \\[%1/%2^{1/2} \\]", _vectorUnits, _rateUnits));
+      }
       break;
     case 1: // power spectral density [V^2/Hz]
-      _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vectorUnits, _rateUnits));
+      if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
+        _sVector->setLabel(i18n("PSD"));
+      } else {
+        _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vectorUnits, _rateUnits));
+      }
       break;
     case 2: // amplitude spectrum [V]
-      _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vectorUnits));
+      if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
+        _sVector->setLabel(i18n("Amplitude Spectrum"));
+      } else {
+        _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vectorUnits));
+      }
       break;
     case 3: // power spectrum [V^2]
-      _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vectorUnits));
+      if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
+        _sVector->setLabel(i18n("Power Spectrum"));
+      } else {
+        _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vectorUnits));
+      }
       break;
   }
-  _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
+  if (_rateUnits.isEmpty()) {
+    _fVector->setLabel(i18n("Frequency"));
+  } else {
+    _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
+  }
 }
 
 QString PSD::_automaticDescriptiveName() const {

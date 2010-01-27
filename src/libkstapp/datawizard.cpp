@@ -944,19 +944,12 @@ void DataWizard::finished() {
 
   double fontScale;
   if (plotsInPage==0) {
-    plotsInPage = plotList.count();
-    if (separate_plots) {
-      plotsInPage/=2;
-    }
-    if (plotsInPage==0) plotsInPage = 1;
-    fontScale = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble()/sqrt((double)plotsInPage);
-    foreach (PlotItem* plot, plotList) {
-      plot->setGlobalFontScale(fontScale);
-      plot->leftLabelDetails()->setFontScale(fontScale);
-      plot->rightLabelDetails()->setFontScale(fontScale);
-      plot->topLabelDetails()->setFontScale(fontScale);
-      plot->bottomLabelDetails()->setFontScale(fontScale);
-      plot->numberLabelDetails()->setFontScale(fontScale);
+    int np = plotList.count();
+    if (np > 0) {
+      plotList.at(0)->parentView()->resetPlotFontSizes(); // set font sizes on first page.
+      if (plotList.at(np-1)->parentView() != plotList.at(0)->parentView()) { // and second, if there is one.
+        plotList.at(np-1)->parentView()->resetPlotFontSizes();
+      }
     }
   } else {
     foreach (PlotItem* plot, plotList) {

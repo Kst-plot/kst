@@ -334,6 +334,9 @@ ObjectPtr EquationDialog::createNewDataObject() {
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_equationTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
       break;
     }
   default:

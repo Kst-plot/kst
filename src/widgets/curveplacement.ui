@@ -62,7 +62,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="1" column="2" colspan="2">
        <widget class="QComboBox" name="_plotList">
         <property name="enabled">
          <bool>false</bool>
@@ -182,6 +182,16 @@
        <widget class="QCheckBox" name="_newTab">
         <property name="text">
          <string>In ne&amp;w tab</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="_scaleFonts">
+        <property name="text">
+         <string>Scale fonts</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

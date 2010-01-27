@@ -59,7 +59,6 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
         rc.size = Kst::ApplicationSettings::self()->minimumFontSize();
       }
     }
-
     QFont f = rc.font();
     if (rc.fontSize() != rc.size) {
       f.setPointSizeF(rc.size);

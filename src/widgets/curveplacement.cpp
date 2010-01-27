@@ -71,6 +71,9 @@ void CurvePlacement::setPlace(CurvePlacement::Place place) {
   }
 }
 
+bool CurvePlacement::scaleFonts() const {
+  return _scaleFonts->isChecked();
+}
 
 CurvePlacement::Layout CurvePlacement::layout() const {
   if (_autoLayout->isChecked())

@@ -256,6 +256,9 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_powerSpectrumTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
       break;
     }
   default:

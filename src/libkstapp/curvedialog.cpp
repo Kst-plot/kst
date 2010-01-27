@@ -416,6 +416,9 @@ ObjectPtr CurveDialog::createNewDataObject() {
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_curveTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
       break;
     }
   default:

@@ -16,9 +16,6 @@
     <height>16777215</height>
    </size>
   </property>
-  <property name="whatsThis">
-   <string>Select a string to utilize.  If you wish to create a new string, select the icon to the right.</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
     <number>0</number>

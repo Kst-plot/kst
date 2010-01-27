@@ -472,6 +472,9 @@ ObjectPtr ImageDialog::createNewDataObject() {
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_imageTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
       break;
     }
   default:

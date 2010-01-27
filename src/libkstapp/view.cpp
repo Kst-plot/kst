@@ -546,7 +546,30 @@ QFont View::defaultFont(double pointSize) const {
   return font;
 }
 
+// Set the font sizes of all plots in the view to a default size, scaled
+// by the default global font scale, and the application minimum font scale.
+void View::resetPlotFontSizes(double pointSize) {
+  if (pointSize < 0.1) {
+    pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
+  }
+  double count = PlotItemManager::self()->plotsForView(this).count();
+  double newPointSize = pointSize/sqrt(count) + ApplicationSettings::self()->minimumFontSize();
+  if (newPointSize<pointSize) {
+    pointSize = newPointSize;
+  }
 
+  foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
+    plotItem->setGlobalFontScale(pointSize);
+    plotItem->rightLabelDetails()->setFontScale(pointSize);
+    plotItem->leftLabelDetails()->setFontScale(pointSize);
+    plotItem->bottomLabelDetails()->setFontScale(pointSize);
+    plotItem->topLabelDetails()->setFontScale(pointSize);
+    plotItem->numberLabelDetails()->setFontScale(pointSize);
+  }
+}
+
+// copy the font settings of the first plotItem in the view into
+// plot, then break.
 void View::configurePlotFontDefaults(PlotItem *plot) {
   if (plot) {
     bool configured = false;

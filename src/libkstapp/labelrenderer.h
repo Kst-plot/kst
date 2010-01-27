@@ -72,7 +72,7 @@ class RenderContext : public QObject {
 
   inline void setFont(const QFont& f_in) {
     QFont f = f_in;
-    _fontSize = f.pixelSize();
+    _fontSize = f.pointSize();
 
     if (p) {
       p->setFont(f);

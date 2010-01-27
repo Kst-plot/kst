@@ -400,6 +400,9 @@ ObjectPtr HistogramDialog::createNewDataObject() {
       cmd->createItem();
 
       plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_histogramTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
       break;
     }
   default:
