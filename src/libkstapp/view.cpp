@@ -557,6 +557,7 @@ void View::resetPlotFontSizes(double pointSize) {
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }
+  double legendPointSize = qMax(pointSize*0.6, ApplicationSettings::self()->minimumFontSize());
 
   foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
     plotItem->setGlobalFontScale(pointSize);
@@ -565,6 +566,9 @@ void View::resetPlotFontSizes(double pointSize) {
     plotItem->bottomLabelDetails()->setFontScale(pointSize);
     plotItem->topLabelDetails()->setFontScale(pointSize);
     plotItem->numberLabelDetails()->setFontScale(pointSize);
+    if (plotItem->showLegend()) {
+      plotItem->legend()->setFontScale(legendPointSize);
+    }
   }
 }
 

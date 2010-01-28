@@ -114,11 +114,10 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
     bool PSDLogX() const;
     bool PSDLogY() const;
 
-    bool xAxisLabels() const;
-    bool yAxisLabels() const;
-
     bool legendsOn() const;
     bool legendsAuto() const;
+
+    bool rescaleFonts() const;
 
     CurvePlotPlacement curvePlacement() const;
     PlotItemInterface *existingPlot() const;

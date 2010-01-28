@@ -154,8 +154,7 @@ void PlotItem::applyDefaults() {
   QFont globalfont;
   globalfont.fromString(_dialogDefaults->value("plot/globalFontFamily",globalfont.toString()).toString());
   setGlobalFont(globalfont);
-  setGlobalFontScale(_dialogDefaults->value("plot/globalFontScale",
-                                                  ApplicationSettings::self()->defaultFontScale()).toDouble());
+  setGlobalFontScale(ApplicationSettings::self()->defaultFontScale());
   QColor color;
   color = _dialogDefaults->value("plot/globalFontColor", QColor(Qt::black)).value<QColor>();
   setGlobalFontColor(color);
@@ -3245,7 +3244,7 @@ void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 
 void PlotItem::saveAsDialogDefaults() const {
   _dialogDefaults->setValue("plot/globalFontFamily", QVariant(globalFont()).toString());
-  _dialogDefaults->setValue("plot/globalFontScale", globalFontScale());
+  ApplicationSettings::self()->setDefaultFontScale(globalFontScale());
   _dialogDefaults->setValue("plot/globalFontColor", QVariant(globalFontColor()).toString());
 
   leftLabelDetails()->saveAsDialogDefaults(QString("plot/leftFont"));

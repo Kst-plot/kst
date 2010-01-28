@@ -28,21 +28,9 @@ class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
     bool useOpenGL() const;
     void setUseOpenGL(const bool useOpenGL);
 
-    double referenceViewWidth() const;
-    void setReferenceViewWidth(const double width);
-
-    double referenceViewHeight() const;
-    void setReferenceViewHeight(const double height);
-
-    int minimumFontSize() const;
-    void setMinimumFontSize(const int points);
-
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int Period);
 
-    void checkSizeDefaults();
-  public Q_SLOTS:
-    void referenceViewSizeComboChanged(int i);
 };
 
 }

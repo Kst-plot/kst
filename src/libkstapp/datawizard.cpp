@@ -355,16 +355,6 @@ bool DataWizardPagePlot::PSDLogY() const {
 }
 
 
-bool DataWizardPagePlot::xAxisLabels() const {
-  return _xAxisLabels->isChecked();
-}
-
-
-bool DataWizardPagePlot::yAxisLabels() const {
-  return _yAxisLabels->isChecked();
-}
-
-
 bool DataWizardPagePlot::legendsOn() const {
   return _legendsOn->isChecked();
 }
@@ -374,6 +364,9 @@ bool DataWizardPagePlot::legendsAuto() const {
   return _legendsAuto->isChecked();
 }
 
+bool DataWizardPagePlot::rescaleFonts() const {
+  return _rescaleFonts->isChecked();
+}
 
 int DataWizardPagePlot::plotCount() const {
   return _plotNumber->value();
@@ -938,12 +931,8 @@ void DataWizard::finished() {
     }
   }
 
-  // legends and labels
-  bool xLabels = _pagePlot->xAxisLabels();
-  bool yLabels = _pagePlot->yAxisLabels();
-
   double fontScale;
-  if (plotsInPage==0) {
+  if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
     int np = plotList.count();
     if (np > 0) {
       plotList.at(0)->parentView()->resetPlotFontSizes(); // set font sizes on first page.
@@ -958,20 +947,11 @@ void DataWizard::finished() {
   }
 
   foreach (PlotItem* plot, plotList) {
-    if (!xLabels) {
-      plot->leftLabelDetails()->setText(QString(" "));
-      plot->rightLabelDetails()->setText(QString(" "));
-    }
-    if (!yLabels) {
-      plot->topLabelDetails()->setText(QString(" "));
-      plot->bottomLabelDetails()->setText(QString(" "));
-    }
-
     plot->update();
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
 
   }
-  fontScale = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble()/sqrt((double)plotsInPage);
+  fontScale = ApplicationSettings::self()->defaultFontScale();
 
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {

@@ -33,6 +33,20 @@ class KST_EXPORT DefaultLabelPropertiesTab : public DialogTab, Ui_DefaultLabelPr
 
     QFont labelFont() const;
     void setLabelFont(const QFont &font);
+
+    double referenceViewWidth() const;
+    void setReferenceViewWidth(const double width);
+
+    double referenceViewHeight() const;
+    void setReferenceViewHeight(const double height);
+
+    int minimumFontSize() const;
+    void setMinimumFontSize(const int points);
+
+    void checkSizeDefaults();
+
+  public Q_SLOTS:
+    void referenceViewSizeComboChanged(int i);
 };
 
 }

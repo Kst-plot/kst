@@ -49,6 +49,11 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   general->addDialogTab(_generalTab);
   addDialogPage(general);
 
+  DialogPage *defaultLabelProperties = new DialogPage(this);
+  defaultLabelProperties->setPageTitle(tr("Fonts"));
+  defaultLabelProperties->addDialogTab(_defaultLabelPropertiesTab);
+  addDialogPage(defaultLabelProperties);
+
   DialogPage *grid = new DialogPage(this);
   grid->setPageTitle(tr("Grid"));
   grid->addDialogTab(_gridTab);
@@ -63,11 +68,6 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   layout->setPageTitle(tr("Default Layout Properties"));
   layout->addDialogTab(_layoutTab);
   addDialogPage(layout);
-
-  DialogPage *defaultLabelProperties = new DialogPage(this);
-  defaultLabelProperties->setPageTitle(tr("Default Label Properties"));
-  defaultLabelProperties->addDialogTab(_defaultLabelPropertiesTab);
-  addDialogPage(defaultLabelProperties);
 
 //   DialogPage *childViewOptions = new DialogPage(this);
 //   childViewOptions->setPageTitle(tr("Child View Options"));
@@ -91,9 +91,6 @@ ApplicationSettingsDialog::~ApplicationSettingsDialog() {
 
 void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setUseOpenGL(ApplicationSettings::self()->useOpenGL());
-  _generalTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidthCM());
-  _generalTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
-  _generalTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
   _generalTab->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
 }
 
@@ -127,6 +124,9 @@ void ApplicationSettingsDialog::setupDefaultLabelProperties() {
   _defaultLabelPropertiesTab->setLabelFont(ApplicationSettings::self()->defaultFont());
   _defaultLabelPropertiesTab->setLabelScale(ApplicationSettings::self()->defaultFontScale());
   _defaultLabelPropertiesTab->setLabelColor(ApplicationSettings::self()->defaultFontColor());
+  _defaultLabelPropertiesTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidthCM());
+  _defaultLabelPropertiesTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
+  _defaultLabelPropertiesTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
 }
 
 
@@ -142,9 +142,6 @@ void ApplicationSettingsDialog::generalChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
   ApplicationSettings::self()->setUseOpenGL(_generalTab->useOpenGL());
-  ApplicationSettings::self()->setReferenceViewWidthCM(_generalTab->referenceViewWidth());
-  ApplicationSettings::self()->setReferenceViewHeightCM(_generalTab->referenceViewHeight());
-  ApplicationSettings::self()->setMinimumFontSize(_generalTab->minimumFontSize());
   ApplicationSettings::self()->setMinimumUpdatePeriod(_generalTab->minimumUpdatePeriod());
   ApplicationSettings::self()->blockSignals(false);
 
@@ -191,6 +188,9 @@ void ApplicationSettingsDialog::defaultLabelPropertiesChanged() {
   ApplicationSettings::self()->setDefaultFontScale(_defaultLabelPropertiesTab->labelScale());
   ApplicationSettings::self()->setDefaultFontColor(_defaultLabelPropertiesTab->labelColor());
   ApplicationSettings::self()->blockSignals(false);
+  ApplicationSettings::self()->setReferenceViewWidthCM(_defaultLabelPropertiesTab->referenceViewWidth());
+  ApplicationSettings::self()->setReferenceViewHeightCM(_defaultLabelPropertiesTab->referenceViewHeight());
+  ApplicationSettings::self()->setMinimumFontSize(_defaultLabelPropertiesTab->minimumFontSize());
 
   emit ApplicationSettings::self()->modified();
 }

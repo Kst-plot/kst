@@ -334,7 +334,19 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'o':
       x = 0x20;
     case 'O':
-      if (txt.mid(from + 1).startsWith("micron")) {
+      if (txt.mid(from + 1).startsWith("verline{")) {
+        if ((*tail)->group) {
+          *tail = new Chunk(*tail, Chunk::None, false, true);
+        }
+        Chunk *working = new Chunk(*tail, Chunk::None, true, true);
+        dumpattr(working, "start group for overline");
+        uint parseStart = from + 9;
+        working->attributes.overline = true;
+        parseInternal(working, txt, parseStart, txt.length(), interpretNewLine);
+        *skip = parseStart - from + 1;
+        dumpattr(working, "end group for overline");
+        return true;
+      } else if (txt.mid(from + 1).startsWith("micron")) {
         *skip = 7;
         setNormalChar(QChar(0x39F+x), tail);
         return true;

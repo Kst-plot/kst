@@ -43,11 +43,12 @@ typedef quint8  KstLVJustifyType;
 
 namespace Label {
   struct KST_EXPORT ChunkAttributes {
-    ChunkAttributes() : bold(false), italic(false), underline(false) {}
-    inline bool empty() const { return !bold && !italic && !underline && !color.isValid(); }
+    ChunkAttributes() : bold(false), italic(false), underline(false), overline(false) {}
+    inline bool empty() const { return !bold && !italic && !underline && !overline && !color.isValid(); }
     bool bold;
     bool italic;
     bool underline;
+    bool overline;
     QColor color;
   };
 

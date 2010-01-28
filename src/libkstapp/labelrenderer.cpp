@@ -67,6 +67,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
     f.setBold(fi->attributes.bold);
     f.setItalic(fi->attributes.italic);
     f.setUnderline(fi->attributes.underline);
+    f.setOverline(fi->attributes.overline);
 
     QPen pen = rc.pen;
     if (fi->attributes.color.isValid()) {
@@ -162,7 +163,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
     } else if (fi->tab) {
       const int tabWidth = rc.fontWidth("MMMM");
       const int toSkip = tabWidth - (rc.x - rc.xStart) % tabWidth;
-      if (rc.p && fi->attributes.underline) {
+      if (rc.p && (fi->attributes.underline || fi->attributes.overline)) {
         const int spaceWidth = rc.fontWidth(" ");
         const int spacesToSkip = tabWidth / spaceWidth + (tabWidth % spaceWidth > 0 ? 1 : 0);
         QString txt(QString().fill(' ', spacesToSkip));
