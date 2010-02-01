@@ -10,6 +10,7 @@ Artifacts when resizing large arrowheads.
 Curves are rendered slightly above where they should be.  Take a plot
 that it is of very boring data (like always exactly zero) and it'll be
 drawn one pixel above the axis tick mark for zero.  
+  (Ticks and curves use different rounding)
 
 --------------------
 
@@ -40,5 +41,3 @@ Windows MEMleak
 ------------------
 
 Cleanup layout totally sucks!
-
-

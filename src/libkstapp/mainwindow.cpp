@@ -254,7 +254,7 @@ bool MainWindow::initFromCommandLine() {
     ok = false;
   }
   if (!P.printFile().isEmpty()) {
-    printFromCommandLine(P.printFile());
+    printFromCommandLine(P.printFile(), P.landscape());
     ok = false;
   }
   if (!P.kstFileName().isEmpty()) {
@@ -378,9 +378,15 @@ void MainWindow::printToPrinter(QPrinter *printer) {
   }
 }
 
-void MainWindow::printFromCommandLine(const QString &printFileName) {
+void MainWindow::printFromCommandLine(const QString &printFileName, bool landscape) {
   QPrinter printer(QPrinter::ScreenResolution);
   printer.setOutputFileName(printFileName);
+  if (landscape) {
+    printer.setOrientation(QPrinter::Landscape);
+  } else {
+    printer.setOrientation(QPrinter::Portrait);
+  }
+
   printer.setPrintRange(QPrinter::AllPages);
   printToPrinter(&printer);
 }
@@ -393,7 +399,7 @@ void MainWindow::print() {
 
   QPrintDialog pd(&printer, this);
   pd.setOption(QPrintDialog::PrintToFile);
-  pd.setOption(QPrintDialog::PrintPageRange, false);
+  pd.setOption(QPrintDialog::PrintPageRange, true);
 
   if (pd.exec() == QDialog::Accepted) {
 

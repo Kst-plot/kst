@@ -79,7 +79,8 @@ public:
     };
 
     // name system: see object names devel doc
-    QString Name() const; // eg GYRO1:V1
+    QString Name() const; // eg GYRO1 (V1)
+    QString CleanedName() const; // all \_ replaced with _
     QString descriptiveName() const; // eg GYRO1: automatic or manual
     QString shortName() const; // eg V1: always automatically generated
     virtual QString descriptionTip() const = 0; // description for tooltips

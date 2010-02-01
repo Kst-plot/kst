@@ -83,7 +83,7 @@ class MainWindow : public QMainWindow
     void openFile(const QString &file);
     void print();
     void printToPrinter(QPrinter *printer);
-    void printFromCommandLine(const QString &printFileName);
+    void printFromCommandLine(const QString &printFileName, bool landscape);
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
     void clearDrawingMarker();

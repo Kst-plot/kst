@@ -31,6 +31,12 @@
      </item>
      <item row="3" column="1" colspan="5">
       <widget class="QDoubleSpinBox" name="_labelFontScale">
+       <property name="toolTip">
+        <string>Size of default font when page is displayed at 'Reference View Size'.</string>
+       </property>
+       <property name="whatsThis">
+        <string>Fonts are scaled with the size of window or page.  This is the default font size when the window or page is resized to 'Reverence View Size'.</string>
+       </property>
        <property name="decimals">
         <number>1</number>
        </property>
@@ -95,6 +101,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string>On window resize, fonts will be displayed at least this large.</string>
+       </property>
       </widget>
      </item>
      <item row="5" column="0">
@@ -108,7 +117,14 @@
       </widget>
      </item>
      <item row="5" column="1" colspan="5">
-      <widget class="QComboBox" name="_referenceViewSizeCombo"/>
+      <widget class="QComboBox" name="_referenceViewSizeCombo">
+       <property name="toolTip">
+        <string>When the window is this large, fonts will have stated size.</string>
+       </property>
+       <property name="whatsThis">
+        <string>Fonts are scaled with the window or print size.  When the window/print is this large, the font sizes stated will be accurate.</string>
+       </property>
+      </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label">

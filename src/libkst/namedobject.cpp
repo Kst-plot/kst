@@ -41,11 +41,17 @@ NamedObject::~NamedObject() {
 }
 
 
-// new Name system
 QString NamedObject::Name() const {
   return descriptiveName()+" ("+shortName()+")";
 }
 
+
+QString NamedObject::CleanedName() const {
+  QString clean_name = Name();
+  clean_name.replace("\\_","_");
+
+  return clean_name;
+}
 
 QString NamedObject::descriptiveName() const {
   if (_manualDescriptiveName.isEmpty()) {

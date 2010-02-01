@@ -75,3 +75,29 @@ When you have many plots on a window (like 35), and the numbers in
 the axis labels are large, they often overwrite each other (so you can't
 tell any of the numbers apart).  
 
+--------------------
+
+1. When the x axis set to to interpret as standard C time, the time is
+displayed correctly on the axis labels, but just displays as the raw
+value in the status bar (on the lower left of the window).  This is both
+in "normal mode" and in "data mode".
+
+--------------------
+
+3. Data mode no longer easily finds the point nearest the cursor.
+In kst 1.x, you could easily get datamode to locate points on a spike or
+other outlier on a dense curve, but now it actually seems to pick the
+point at the current x value, even if the cursor is significantly closer
+to a different point.  
+
+--------------------
+
+4. When displaying an axis as time, "offset mode" turns on (good), but
+only displays offsets in seconds (bad).  When a day's worth of data is
+on the screen, the unit shouldn't be seconds, or even minutes.  
+
+--------------------
+
+5. When displaying an axis as time and offset mode is on, the offset
+steps should be natural for the type of units.  100 seconds is not
+natural (120 would be, or better, 2 minutes; see the bug above).  

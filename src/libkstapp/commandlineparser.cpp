@@ -48,6 +48,10 @@ namespace Kst {
 "kst datasource OPTIONS [datasource OPTIONS []]\n"
 "\n"
 "OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.\n"
+"Output Options:\n"
+"      --print <filename>       Print to file and exit.\n"
+"      --landscape              Pring in landscape mode (default is portrait).\n"
+"      --png <filename>         Render to a png image, and exit.\n"
 "File Options:\n"
 "      -f <startframe>          default: 'end' counts from end.\n"
 "      -n <numframes>           default: 'end' reads to end of file\n"
@@ -130,7 +134,7 @@ CommandLineParser::CommandLineParser(Document *doc):
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
-      _pngFile(QString()), _plotItem(0) {
+      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0) {
 
   Q_ASSERT(QCoreApplication::instance());
   _arguments = QCoreApplication::instance()->arguments();
@@ -547,6 +551,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = _setStringArg(_pngFile, i18n("Usage: --png <filename>\n"));
     } else if (arg == "--print") {
       *ok = _setStringArg(_printFile, i18n("Usage: --print <filename>\n"));
+    } else if (arg == "--landscape") {
+      _landscape = true;
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         _fileNames.clear();

@@ -13,7 +13,6 @@
 
 namespace Kst {
 
-
 const double USLetterWidth = (11.0 - 1.0)*2.54; // 11 inches with a 1/2" margin in cm
 const double USLetterHeight = ((8.5 - 1)*2.54); // 8.5 inches, with a 1/2" margin, in cm.
 const double A4Width = (29.7 - 3.0); //  A4 with a 1.5 cm margin;

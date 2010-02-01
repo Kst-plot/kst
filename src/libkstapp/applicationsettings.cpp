@@ -25,6 +25,9 @@
 
 namespace Kst {
 
+const double A4Width = (29.7 - 3.0); //  A4 with a 1.5 cm margin;
+const double A4Height = (21.0 - 3.0); // A4 with a 1.5 cm margin;
+
 static ApplicationSettings *_self = 0;
 void ApplicationSettings::cleanup() {
   delete _self;
@@ -50,9 +53,6 @@ ApplicationSettings::ApplicationSettings() {
   // several seconds delay when opening application on my system.
   _useOpenGL = _settings->value("general/opengl", QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
-  _refViewWidth = _settings->value("general/referenceviewwidth", QVariant(17)).toDouble();
-  _refViewHeight = _settings->value("general/referenceviewheight", QVariant(13)).toDouble();
-  _minFontSize = _settings->value("general/minimumfontsize", QVariant(7.0)).toDouble();
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
 
   _showGrid = _settings->value("grid/showgrid", QVariant(false)).toBool();
@@ -77,11 +77,13 @@ ApplicationSettings::ApplicationSettings() {
     _backgroundBrush = QBrush(gradient);
   }
 
-  // FIXME: should use 'set as default' checkbox in label dialog, not here.
-  QString fontString = _settings->value("defaultlabelproperties/defaultfont", QFont()).toString();
+  QString fontString = _settings->value("fonts/defaultfont", QFont()).toString();
   _defaultFont.fromString(fontString);
-  _defaultFontScale = _settings->value("defaultlabelproperties/defaultfontscale", QVariant(16)).toDouble();
-  _defaultFontColor = QColor(_settings->value("defaultlabelproperties/defaultfontcolor", "black").toString());
+  _defaultFontScale = _settings->value("fonts/defaultfontscale", QVariant(13)).toDouble();
+  _defaultFontColor = QColor(_settings->value("fonts/defaultfontcolor", "black").toString());
+  _refViewWidth = _settings->value("fonts/referenceviewwidth", QVariant(A4Width)).toDouble();
+  _refViewHeight = _settings->value("fonts/referenceviewheight", QVariant(A4Height)).toDouble();
+  _minFontSize = _settings->value("fonts/minimumfontsize", QVariant(4.0)).toDouble();
 
   _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
 

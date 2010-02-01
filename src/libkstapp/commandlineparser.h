@@ -28,8 +28,9 @@ public:
 
   bool processCommandLine(bool *ok);
   QString kstFileName();
-  QString pngFile() {return _pngFile;}
-  QString printFile() {return _printFile;}
+  QString pngFile() const {return _pngFile;}
+  QString printFile() const {return _printFile;}
+  bool landscape() const {return _landscape;}
 private:
   bool _doAve;
   bool _doSkip;
@@ -48,6 +49,7 @@ private:
   QString _xField;
   QString _pngFile;
   QString _printFile;
+  bool _landscape;
 
   QStringList _fileNames;
   QStringList _arguments;

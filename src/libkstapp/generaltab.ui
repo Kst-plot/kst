@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>&amp;Period Between Updates (ms):</string>
@@ -27,13 +27,19 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="2">
+   <item row="1" column="1" colspan="2">
     <widget class="QSpinBox" name="_maxUpdate">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Dynamic files update this fast,. or slower.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Minimum time between updates when looking at dynamic files.  If there is a lot of processing, it might take longer.</string>
      </property>
      <property name="minimum">
       <number>10</number>
@@ -49,7 +55,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -62,21 +68,14 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QComboBox" name="_referenceViewSizeCombo"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Reference View Size:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QCheckBox" name="_useOpenGL">
+     <property name="toolTip">
+      <string>Render using openGL.  This is not always better.</string>
+     </property>
+     <property name="whatsThis">
+      <string>Rendering using OpenGL is faster on some architectures, but very buggy on others (depending on the video driver).  This might help, or might cause things to go horribly wrong.</string>
+     </property>
      <property name="text">
       <string>Use Open&amp;GL</string>
      </property>

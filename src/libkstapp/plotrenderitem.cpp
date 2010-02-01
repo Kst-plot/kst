@@ -574,7 +574,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
           matchedPoint = QPointF(x, y);
           bFirst = false;
           minDistance = distance;
-          curveName = curve->Name();
+          curveName = curve->CleanedName();
           if (curve->color() == Qt::black) {
             _invertHighlight = true;
           }
@@ -582,7 +582,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
       } else if (Image* image = kst_cast<Image>(relation)) {
         if (!bFoundImage && image->getNearestZ(position.x(), position.y(), imageZ)) {
           bFoundImage = true;
-          imageName = image->Name();
+          imageName = image->CleanedName();
         }
       }
     }
