@@ -627,6 +627,8 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverLeaveEvent(event);
 
+  _highlightPointActive = false;
+
   if (parentView()->viewMode() != View::Data) {
     event->ignore();
     return;

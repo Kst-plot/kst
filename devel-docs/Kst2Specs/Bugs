@@ -20,14 +20,6 @@ that looks blurry (even out of focus).
 
 --------------------
 
-If you turn on data mode, the data mode indicator on the plot (grey
-filled circle) remains, even after you scroll your mouse to a new plot.
-If in "live" mode, the indicator will scroll with the plot until it
-disappears off the edge.  If you turn off datamode all shown indicators
-disappear, but if you turn it on, those ones reappear.  
-
---------------------
-
 When in data mode, the position of the data mode indicator and the
 values in the bottom status bar only update if you move the mouse.  When
 live data is scrolling by and the mouse is still, the data mode
