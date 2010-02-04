@@ -82,8 +82,10 @@ class MainWindow : public QMainWindow
     void newDoc();
     void openFile(const QString &file);
     void print();
+    void setPrinterDefaults(QPrinter *printer);
+    void savePrinterDefaults(QPrinter *printer);
     void printToPrinter(QPrinter *printer);
-    void printFromCommandLine(const QString &printFileName, bool landscape);
+    void printFromCommandLine(const QString &printFileName);
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
 
     void clearDrawingMarker();

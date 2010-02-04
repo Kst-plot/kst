@@ -49,6 +49,7 @@
 #include "aboutdialog.h"
 #include "datavector.h"
 #include "commandlineparser.h"
+#include "dialogdefaults.h"
 
 #include "dialoglauncher.h"
 
@@ -254,7 +255,7 @@ bool MainWindow::initFromCommandLine() {
     ok = false;
   }
   if (!P.printFile().isEmpty()) {
-    printFromCommandLine(P.printFile(), P.landscape());
+    printFromCommandLine(P.printFile());
     ok = false;
   }
   if (!P.kstFileName().isEmpty()) {
@@ -378,17 +379,42 @@ void MainWindow::printToPrinter(QPrinter *printer) {
   }
 }
 
-void MainWindow::printFromCommandLine(const QString &printFileName, bool landscape) {
+void MainWindow::printFromCommandLine(const QString &printFileName) {
   QPrinter printer(QPrinter::ScreenResolution);
   printer.setOutputFileName(printFileName);
-  if (landscape) {
-    printer.setOrientation(QPrinter::Landscape);
-  } else {
-    printer.setOrientation(QPrinter::Portrait);
-  }
+  setPrinterDefaults(&printer);
 
   printer.setPrintRange(QPrinter::AllPages);
   printToPrinter(&printer);
+}
+
+void MainWindow::setPrinterDefaults(QPrinter *printer) {
+  if (_dialogDefaults->value("print/landscape",true).toBool()) {
+    printer->setOrientation(QPrinter::Landscape);
+  } else {
+    printer->setOrientation(QPrinter::Portrait);
+  }
+
+  printer->setPaperSize(QPrinter::PaperSize(_dialogDefaults->value("print/paperSize", QPrinter::Letter).toInt()));
+
+  QPointF topLeft =_dialogDefaults->value("print/topLeftMargin", QPointF(15.0,15.0)).toPointF();
+  QPointF bottomRight =_dialogDefaults->value("print/bottomRightMargin", QPointF(15.0,15.0)).toPointF();
+
+  printer->setPageMargins(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y(), QPrinter::Millimeter);
+  // Apparent Qt bug: setting the page margins here doesn't set the correspoding values in the print
+  // dialog->printer-options sub-dialog under linux.  If you don't open the printer-options sub-dialog,
+  // the values here are honored.
+}
+
+void MainWindow::savePrinterDefaults(QPrinter *printer) {
+  _dialogDefaults->setValue("print/landscape", printer->orientation() == QPrinter::Landscape);
+  _dialogDefaults->setValue("print/paperSize", int(printer->paperSize()));
+
+  double left, top, right, bottom;
+  printer->getPageMargins(&left, &top, &right, &bottom, QPrinter::Millimeter);
+  _dialogDefaults->setValue("print/topLeftMargin", QPointF(left, top));
+  _dialogDefaults->setValue("print/bottomRightMargin", QPointF(right, bottom));
+
 }
 
 void MainWindow::print() {
@@ -397,15 +423,18 @@ void MainWindow::print() {
   QPrinter printer(QPrinter::ScreenResolution);
   //QPrinter printer(QPrinter::HighResolution);
 
+  setPrinterDefaults(&printer);
+
   QPrintDialog pd(&printer, this);
   pd.setOption(QPrintDialog::PrintToFile);
   pd.setOption(QPrintDialog::PrintPageRange, true);
+  pd.setOption(QAbstractPrintDialog::PrintShowPageSize,true);
 
   if (pd.exec() == QDialog::Accepted) {
-
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     printToPrinter(&printer);
     QApplication::restoreOverrideCursor();
+    savePrinterDefaults(&printer);
   }
 }
 
@@ -816,6 +845,7 @@ void MainWindow::createActions() {
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
   _pauseAct->setIcon(QPixmap(":kst_pause.png"));
   _pauseAct->setCheckable(true);
+  _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
   _backAct = new QAction(tr("Back One Screen..."), this);

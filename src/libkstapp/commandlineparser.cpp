@@ -26,6 +26,7 @@
 #include "palette.h"
 #include "kst_i18n.h"
 #include "updatemanager.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -50,7 +51,10 @@ namespace Kst {
 "OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.\n"
 "Output Options:\n"
 "      --print <filename>       Print to file and exit.\n"
-"      --landscape              Pring in landscape mode (default is portrait).\n"
+"      --landscape              Print in landscape mode.\n"
+"      --portrait               Print in portrait mode.\n"
+"      --Letter                 Print to Letter sized paper.\n"
+"      --A4                     Print to A4 sized paper.\n"
 "      --png <filename>         Render to a png image, and exit.\n"
 "File Options:\n"
 "      -f <startframe>          default: 'end' counts from end.\n"
@@ -346,6 +350,14 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   bool new_fileList=true;
   bool dataPlotted = false;
 
+  // set paper settings to match defaults.
+  _paperSize = QPrinter::PaperSize(_dialogDefaults->value("print/paperSize", QPrinter::Letter).toInt());
+  if (_dialogDefaults->value("print/landscape",true).toBool()) {
+    _landscape = true;
+  } else {
+    _landscape = false;
+  }
+
   while (*ok) {
     if (_arguments.count()<1) break;
 
@@ -553,6 +565,12 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = _setStringArg(_printFile, i18n("Usage: --print <filename>\n"));
     } else if (arg == "--landscape") {
       _landscape = true;
+    } else if (arg == "--portrait") {
+      _landscape = false;
+    } else if (arg == "--A4") {
+      _paperSize = QPrinter::A4;
+    } else if (arg == "--letter") {
+      _paperSize = QPrinter::Letter;
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         _fileNames.clear();
@@ -561,6 +579,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _fileNames.append(arg);
     }
   }
+
+  // set defaults to match what has been set.
+  _dialogDefaults->setValue("print/landscape", _landscape);
+  _dialogDefaults->setValue("print/paperSize", int(_paperSize));
+
   if (_plotItem) {
     _plotItem->parentView()->resetPlotFontSizes();
   }

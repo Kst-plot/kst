@@ -101,3 +101,7 @@ on the screen, the unit shouldn't be seconds, or even minutes.
 5. When displaying an axis as time and offset mode is on, the offset
 steps should be natural for the type of units.  100 seconds is not
 natural (120 would be, or better, 2 minutes; see the bug above).  
+
+-------------------
+
+in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
