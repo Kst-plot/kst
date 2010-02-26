@@ -137,15 +137,20 @@ class PlotAxis : public QObject
     void setTicksUpdated() { _ticksUpdated = true; }
 
   private:
-
-    QString interpretLabel(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double lastValue);
+    void getTimeUnits(QString &units, double &units_per_day,
+                      AxisInterpretationType axisInterpretation,
+                      AxisDisplayType axisDisplay, double base, double lastValue);
+    QString interpretLabel(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay,
+                           double base, QString time_units, double units_per_day);
     double convertTimeValueToJD(AxisInterpretationType axisInterpretation, double valueIn);
     QString convertJDToDateString(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double dJD);
     double convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn);
-    double interpretOffset(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double base, double value);
+    double interpretOffset(AxisInterpretationType axisInterpretation,
+                           double base, double value, double units_per_day);
 
     qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
-    void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
+    //void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
+    void updateLogTicks(MajorTickMode tickMode);
 
     MajorTickMode convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode = VeryFine);
 

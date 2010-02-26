@@ -4,11 +4,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
+#include <sys/time.h>
 
 struct DFEntryType {
   char field[17];
   int spf;
   int fp;
+  char type;
 };
 
 #define NDF 15
@@ -17,24 +19,25 @@ struct DFEntryType {
 #define SINE 2
 #define SSINE 3
 #define COS 4
-#define EXTRA 5
+#define TIME 5
+#define EXTRA 6
 
 struct DFEntryType df[NDF] = {
-  {"scount", 1, -1},
-  {"fcount", 20, -1},
-  {"sine", 20, -1},
-  {"ssine", 1, -1},
-  {"cos", 20, -1},
-  {"E0", 20, -1},
-  {"E1", 20, -1},
-  {"E2", 20, -1},
-  {"E3", 20, -1},
-  {"E4", 20, -1},
-  {"E5", 20, -1},
-  {"E6", 20, -1},
-  {"E7", 20, -1},
-  {"E8", 20, -1},
-  {"E9", 20, -1}
+  {"scount", 1, -1, 'f'},
+  {"fcount", 20, -1, 'f'},
+  {"sine", 20, -1, 'f'},
+  {"ssine", 1, -1, 'f'},
+  {"cos", 20, -1, 'f'},
+  {"time", 20, -1, 'd'},
+  {"E0", 20, -1, 'f'},
+  {"E1", 20, -1, 'f'},
+  {"E2", 20, -1, 'f'},
+  {"E3", 20, -1, 'f'},
+  {"E4", 20, -1, 'f'},
+  {"E5", 20, -1, 'f'},
+  {"E6", 20, -1, 'f'},
+  {"E7", 20, -1, 'f'},
+  {"E8", 20, -1, 'f'}
 };
   
 int main() {
@@ -44,7 +47,10 @@ int main() {
   int i, count = 0;
   int j;
   float x;
-
+  double dx;
+  
+  struct timeval tv;
+  
   sprintf(dirfilename, "%d.dm", time(NULL));
 
   printf("Writing dirfile %s\n", dirfilename);
@@ -63,7 +69,7 @@ int main() {
   fpf = fopen(tmpstr,"w");
   
   for (i=0; i<NDF; i++) {
-    fprintf(fpf,"%s RAW f %d\n", df[i].field, df[i].spf);
+    fprintf(fpf,"%s RAW %c %d\n", df[i].field, df[i].type, df[i].spf);
     sprintf(tmpstr,"%s/%s", dirfilename, df[i].field);
     df[i].fp = open(tmpstr, O_WRONLY|O_CREAT, 00644);
   }
@@ -82,10 +88,6 @@ int main() {
   fclose(fpf);
 
   while (1) {
-    /* write 'count' */
-    x = count;
-    write(df[SCOUNT].fp, &x, sizeof(float));
-
     /* write 'fcount' */
     for (i=0; i<df[FCOUNT].spf; i++) {
       x = count*df[FCOUNT].spf+i;
@@ -112,14 +114,25 @@ int main() {
       x = cos(2.0*M_PI*x/100.0);
       write(df[COS].fp, &x, sizeof(float));
     }
-
+  
+    gettimeofday(&tv, 0);
+    for (i=0; i<df[TIME].spf; i++) {
+      dx = (double)tv.tv_sec +( double)(tv.tv_usec)/1000000.0 + (double)i/100.0;
+      write(df[TIME].fp, &dx, sizeof(double));
+    }
+    
     /* write extras */
-    for (j=5; j<NDF; j++) {
+    for (j=6; j<NDF; j++) {
       for (i=0; i<df[j].spf; i++) {
         x = (double)rand()/(double)RAND_MAX;
         write(df[j].fp, &x, sizeof(float));
       }
     }
+
+    /* write 'count' */
+    x = count;
+    write(df[SCOUNT].fp, &x, sizeof(float));
+
 
     printf("writing frame %d  \r", count);
     fflush(stdout);

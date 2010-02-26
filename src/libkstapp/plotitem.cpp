@@ -1346,21 +1346,6 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   }
   painter->restore();
 
-#if DEBUG_LABEL_REGION
-  QRectF xLabelRect;
-  foreach(CachedPlotLabel label, _xPlotLabels) {
-    if (xLabelRect.isValid()) {
-      xLabelRect = xLabelRect.united(label.bound);
-    } else {
-      xLabelRect = label.bound;
-    }
-  }
-  painter->save();
-  painter->setOpacity(0.3);
-  qDebug() << "Bottom Tick Labels - xLabelRect:" << xLabelRect;
-  painter->fillRect(xLabelRect, Qt::green);
-  painter->restore();
-#endif
 }
 
 
@@ -2046,23 +2031,6 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
     Label::paintLabel(*_leftLabel.rc, painter);
     painter->restore();
   }
-#if DEBUG_LABEL_REGION
-  painter->save();
-  QTransform t;
-  t.rotate(90.0);
-  painter->rotate(-90.0);
-
-  QRectF leftLabel = leftLabelRect();
-  leftLabel.moveTopRight(plotAxisRect().topLeft());
-
-  painter->save();
-  painter->setOpacity(0.3);
-  qDebug() << "leftLabel:" << t.mapRect(leftLabel)<< endl;
-  painter->fillRect(t.mapRect(leftLabel), Qt::red);
-  painter->restore();
-
-  painter->restore();
-#endif
 }
 
 
@@ -2530,11 +2498,6 @@ bool PlotItem::tryShortcut(const QString &keySequence) {
 
 void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
   if (!(/*_projectionRect == rect ||*/ rect.isEmpty() || !rect.isValid())) {
-#if DEBUG_ZOOM
-    qDebug() << "=== setProjectionRect() ======================>\n"
-      << "before:" << _projectionRect << "\n"
-      << "after:" << rect << endl;
-#endif
 
     _projectionRect = rect;
     setPlotBordersDirty(true);
