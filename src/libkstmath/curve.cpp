@@ -656,22 +656,22 @@ void Curve::paintObjects(const CurveRenderContext& context) {
       p->setPen(QPen(color(), _width, style));
     }
 
-    foreach(QRectF rect, _filledRects) {
+    foreach(const QRectF& rect, _filledRects) {
         p->fillRect(rect, color());
     }
   }
   p->setPen(QPen(color(), _width, style));
 
-  foreach(QPolygonF poly, _polygons) {
+  foreach(const QPolygonF& poly, _polygons) {
     p->drawPolyline(poly);
   }
-  foreach(QLineF line, _lines) {
+  foreach(const QLineF& line, _lines) {
     p->drawLine(line);
   }
-  foreach(QRectF rect, _rects) {
+  foreach(const QRectF& rect, _rects) {
     p->drawRect(rect);
   }
-  foreach(QPointF point, _points) {
+  foreach(const QPointF& point, _points) {
     CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
   }
   p->restore();
