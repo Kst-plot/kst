@@ -126,9 +126,9 @@ void Equation::internalUpdate() {
 
   _isValid = FillY(true);
 
-  // these should be updated by the update manager
-  //_yOutVector->update();
-  //_xOutVector->update();
+  //  should this be updated by the update manager?
+  _yOutVector->internalUpdate();
+  _xOutVector->internalUpdate();
 
   unlockInputsAndOutputs();
 

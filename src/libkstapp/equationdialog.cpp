@@ -292,7 +292,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   }
 
   equation->writeLock();
-  equation->registerChange();
+  equation->internalUpdate();
   equation->unlock();
 
   CurvePtr curve = _document->objectStore()->createObject<Curve>();
@@ -311,7 +311,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 
   curve->writeLock();
-  curve->registerChange();
+  curve->internalUpdate();
   curve->unlock();
 
   _equationTab->curveAppearance()->setWidgetDefaults();
