@@ -61,6 +61,12 @@ static const QString asciiTypeString = I18N_NOOP("ASCII file");
 //const QString AsciiSource::staticTypeString = I18N_NOOP("Ascii Source");
 //const QString AsciiSource::staticTypeTag = I18N_NOOP("source");
 
+
+
+//
+// AsciiSource::Config
+//
+
 class AsciiSource::Config {
   public:
     Config();
@@ -91,124 +97,132 @@ class AsciiSource::Config {
 
 
 AsciiSource::Config::Config() {
-      _indexInterpretation = Unknown;
-      _indexVector = "INDEX";
-      _delimiters = DEFAULT_DELIMITERS;
-      _columnType = Whitespace;
-      _columnWidth = DEFAULT_COLUMN_WIDTH;
-      _dataLine = 0;
-      _readFields = false;
-      _fieldsLine = 0;
-      _useDot = true;
-      _localSeparator = QLocale().decimalPoint().toAscii();
-    }
-
-    void AsciiSource::Config::read(QSettings *cfg, const QString& fileName) {
-      cfg->beginGroup(asciiTypeString);
-      _fileNamePattern = cfg->value("Filename Pattern").toString();
-      _delimiters = cfg->value("Comment Delimiters", "#/c!;").toString().toLatin1();
-      _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)Unknown).toInt();
-      _columnType = (ColumnType)cfg->value("Column Type", (int)Whitespace).toInt();
-      _columnDelimiter = cfg->value("Column Delimiter", QString()).toString().toLatin1();
-      _columnWidth = cfg->value("Column Width", DEFAULT_COLUMN_WIDTH).toInt();
-      _dataLine = cfg->value("Data Start", 0).toInt();
-      _readFields = cfg->value("Read Fields", false).toBool();
-      _useDot = cfg->value("Use Dot", true).toBool();
-      _fieldsLine = cfg->value("Fields Line", 0).toInt();
-      if (!fileName.isEmpty()) {
-        cfg->beginGroup(fileName);
-        _delimiters = cfg->value("Comment Delimiters", _delimiters).toString().toLatin1();
-        _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)_indexInterpretation).toInt();
-        _columnType = (ColumnType)cfg->value("Column Type", (int)_columnType).toInt();
-        _columnDelimiter = cfg->value("Column Delimiter", _columnDelimiter).toString().toLatin1();
-        _columnWidth = cfg->value("Column Width", _columnWidth).toInt();
-        _dataLine = cfg->value("Data Start", _dataLine).toInt();
-        _readFields = cfg->value("Read Fields", _readFields).toBool();
-        _useDot = cfg->value("Use Dot", _useDot).toBool();
-        _fieldsLine = cfg->value("Fields Line", _fieldsLine).toInt();
-        cfg->endGroup();
-      }
-      _delimiters = QRegExp::escape(_delimiters).toLatin1();
-      cfg->endGroup();
-    }
+  _indexInterpretation = Unknown;
+  _indexVector = "INDEX";
+  _delimiters = DEFAULT_DELIMITERS;
+  _columnType = Whitespace;
+  _columnWidth = DEFAULT_COLUMN_WIDTH;
+  _dataLine = 0;
+  _readFields = false;
+  _fieldsLine = 0;
+  _useDot = true;
+  _localSeparator = QLocale().decimalPoint().toAscii();
+}
 
 
-    void AsciiSource::Config::save(QXmlStreamWriter& s) {
-      s.writeStartElement("properties");
-      if (_indexInterpretation != AsciiSource::Config::Unknown) {
-        s.writeAttribute("vector", _indexVector);
-        s.writeAttribute("interpretation", QString::number(int(_indexInterpretation)));
-      }
-      s.writeAttribute("delimiters", _delimiters);
+void AsciiSource::Config::read(QSettings *cfg, const QString& fileName) {
+  cfg->beginGroup(asciiTypeString);
+  _fileNamePattern = cfg->value("Filename Pattern").toString();
+  _delimiters = cfg->value("Comment Delimiters", "#/c!;").toString().toLatin1();
+  _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)Unknown).toInt();
+  _columnType = (ColumnType)cfg->value("Column Type", (int)Whitespace).toInt();
+  _columnDelimiter = cfg->value("Column Delimiter", QString()).toString().toLatin1();
+  _columnWidth = cfg->value("Column Width", DEFAULT_COLUMN_WIDTH).toInt();
+  _dataLine = cfg->value("Data Start", 0).toInt();
+  _readFields = cfg->value("Read Fields", false).toBool();
+  _useDot = cfg->value("Use Dot", true).toBool();
+  _fieldsLine = cfg->value("Fields Line", 0).toInt();
+  if (!fileName.isEmpty()) {
+    cfg->beginGroup(fileName);
+    _delimiters = cfg->value("Comment Delimiters", _delimiters).toString().toLatin1();
+    _indexInterpretation = (Interpretation)cfg->value("Default INDEX Interpretation", (int)_indexInterpretation).toInt();
+    _columnType = (ColumnType)cfg->value("Column Type", (int)_columnType).toInt();
+    _columnDelimiter = cfg->value("Column Delimiter", _columnDelimiter).toString().toLatin1();
+    _columnWidth = cfg->value("Column Width", _columnWidth).toInt();
+    _dataLine = cfg->value("Data Start", _dataLine).toInt();
+    _readFields = cfg->value("Read Fields", _readFields).toBool();
+    _useDot = cfg->value("Use Dot", _useDot).toBool();
+    _fieldsLine = cfg->value("Fields Line", _fieldsLine).toInt();
+    cfg->endGroup();
+  }
+  _delimiters = QRegExp::escape(_delimiters).toLatin1();
+  cfg->endGroup();
+}
 
-      s.writeAttribute("columntype", QString::number(int(_columnType)));
-      if (_columnType == Fixed) {
-        s.writeAttribute("columnwidth", QString::number(_columnWidth));
-      } else if (_columnType == Custom) {
-        s.writeAttribute("columndelimiters", _columnDelimiter);
-      }
 
-      s.writeAttribute("headerstart", QString::number(_dataLine));
-      s.writeAttribute("fields", QString::number(_fieldsLine));
-      s.writeAttribute("readfields", QVariant(_readFields).toString());
-      s.writeAttribute("usedot", QVariant(_useDot).toString());
-      s.writeEndElement();
-    }
+void AsciiSource::Config::save(QXmlStreamWriter& s) {
+  s.writeStartElement("properties");
+  if (_indexInterpretation != AsciiSource::Config::Unknown) {
+    s.writeAttribute("vector", _indexVector);
+    s.writeAttribute("interpretation", QString::number(int(_indexInterpretation)));
+  }
+  s.writeAttribute("delimiters", _delimiters);
 
-    void AsciiSource::Config::parseProperties(QXmlStreamAttributes &properties) {
-      _indexVector = properties.value("vector").toString();
-      _indexInterpretation = (Interpretation)properties.value("interpretation").toString().toInt();
+  s.writeAttribute("columntype", QString::number(int(_columnType)));
+  if (_columnType == Fixed) {
+    s.writeAttribute("columnwidth", QString::number(_columnWidth));
+  } else if (_columnType == Custom) {
+    s.writeAttribute("columndelimiters", _columnDelimiter);
+  }
 
-      _delimiters = properties.value("delimiters").toString();
-      _columnType = (ColumnType)properties.value("columntype").toString().toInt();
-      _columnDelimiter = properties.value("columndelimiters").toString().toInt();
+  s.writeAttribute("headerstart", QString::number(_dataLine));
+  s.writeAttribute("fields", QString::number(_fieldsLine));
+  s.writeAttribute("readfields", QVariant(_readFields).toString());
+  s.writeAttribute("usedot", QVariant(_useDot).toString());
+  s.writeEndElement();
+}
 
-      _dataLine = properties.value("headerstart").toString().toInt();
-      _fieldsLine = properties.value("fields").toString().toInt();
-      _readFields = QVariant(properties.value("readfields").toString()).toBool();
-      _useDot = QVariant(properties.value("usedot").toString()).toBool();
-    }
 
-    void AsciiSource::Config::load(const QDomElement& e) {
-       QDomNode n = e.firstChild();
-       while (!n.isNull()) {
-         QDomElement e = n.toElement();
-         if (!e.isNull()) {
-           if (e.tagName() == "index") {
-             if (e.hasAttribute("vector")) {
-               _indexVector = e.attribute("vector");
-             }
-             if (e.hasAttribute("interpretation")) {
-               _indexInterpretation = Interpretation(e.attribute("interpretation").toInt());
-             }
-           } else if (e.tagName() == "comment") {
-             if (e.hasAttribute("delimiters")) {
-               _delimiters = e.attribute("delimiters").toLatin1();
-             }
-           } else if (e.tagName() == "columns") {
-             if (e.hasAttribute("type")) {
-               _columnType = ColumnType(e.attribute("type").toInt());
-             }
-             if (e.hasAttribute("width")) {
-               _columnWidth = e.attribute("width").toInt();
-             }
-             if (e.hasAttribute("delimiters")) {
-               _columnDelimiter = e.attribute("delimiters").toLatin1();
-             }
-           } else if (e.tagName() == "header") {
-             if (e.hasAttribute("start")) {
-               _dataLine = e.attribute("start").toInt();
-             }
-             if (e.hasAttribute("fields")) {
-               _fieldsLine = e.attribute("fields").toInt();
-             }
-           }
+void AsciiSource::Config::parseProperties(QXmlStreamAttributes &properties) {
+  _indexVector = properties.value("vector").toString();
+  _indexInterpretation = (Interpretation)properties.value("interpretation").toString().toInt();
+
+  _delimiters = properties.value("delimiters").toString();
+  _columnType = (ColumnType)properties.value("columntype").toString().toInt();
+  _columnDelimiter = properties.value("columndelimiters").toString().toInt();
+
+  _dataLine = properties.value("headerstart").toString().toInt();
+  _fieldsLine = properties.value("fields").toString().toInt();
+  _readFields = QVariant(properties.value("readfields").toString()).toBool();
+  _useDot = QVariant(properties.value("usedot").toString()).toBool();
+}
+
+
+void AsciiSource::Config::load(const QDomElement& e) {
+   QDomNode n = e.firstChild();
+   while (!n.isNull()) {
+     QDomElement e = n.toElement();
+     if (!e.isNull()) {
+       if (e.tagName() == "index") {
+         if (e.hasAttribute("vector")) {
+           _indexVector = e.attribute("vector");
          }
-         n = n.nextSibling();
+         if (e.hasAttribute("interpretation")) {
+           _indexInterpretation = Interpretation(e.attribute("interpretation").toInt());
+         }
+       } else if (e.tagName() == "comment") {
+         if (e.hasAttribute("delimiters")) {
+           _delimiters = e.attribute("delimiters").toLatin1();
+         }
+       } else if (e.tagName() == "columns") {
+         if (e.hasAttribute("type")) {
+           _columnType = ColumnType(e.attribute("type").toInt());
+         }
+         if (e.hasAttribute("width")) {
+           _columnWidth = e.attribute("width").toInt();
+         }
+         if (e.hasAttribute("delimiters")) {
+           _columnDelimiter = e.attribute("delimiters").toLatin1();
+         }
+       } else if (e.tagName() == "header") {
+         if (e.hasAttribute("start")) {
+           _dataLine = e.attribute("start").toInt();
+         }
+         if (e.hasAttribute("fields")) {
+           _fieldsLine = e.attribute("fields").toInt();
+         }
        }
-    }
+     }
+     n = n.nextSibling();
+   }
+}
 
 
+
+
+//
+// AsciiSource
+//
 
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type, File), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
