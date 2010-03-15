@@ -845,26 +845,39 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
 
 class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig {
   public:
-    ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() { setupUi(this); }
+    ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() {
+      setupUi(this);
+    }
 };
 
 
 class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
   public:
-    ConfigWidgetAscii() : Kst::DataSourceConfigWidget() {
+    ConfigWidgetAscii();
+    ~ConfigWidgetAscii();
+
+    void setConfig(QSettings *cfg);
+    void load();
+    void save();
+
+    ConfigWidgetAsciiInternal *_ac;
+  };
+
+
+  ConfigWidgetAscii::ConfigWidgetAscii() : Kst::DataSourceConfigWidget() {
       QGridLayout *layout = new QGridLayout(this);
       _ac = new ConfigWidgetAsciiInternal(this);
       layout->addWidget(_ac, 0, 0);
       layout->activate();
     }
 
-    ~ConfigWidgetAscii() {}
+  ConfigWidgetAscii::~ConfigWidgetAscii() {}
 
-    void setConfig(QSettings *cfg) {
+    void ConfigWidgetAscii::setConfig(QSettings *cfg) {
       Kst::DataSourceConfigWidget::setConfig(cfg);
     }
 
-    void load() {
+    void ConfigWidgetAscii::load() {
       _cfg->beginGroup(asciiTypeString);
       _ac->_delimiters->setText(_cfg->value("Comment Delimiters", DEFAULT_DELIMITERS).toString());
       _ac->_fileNamePattern->setText(_cfg->value("Filename Pattern").toString());
@@ -924,7 +937,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
       _cfg->endGroup();
     }
 
-    void save() {
+    void ConfigWidgetAscii::save() {
       assert(_cfg);
       _cfg->beginGroup(asciiTypeString);
       if (_ac->_applyDefault->isChecked()) {
@@ -977,9 +990,6 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
         src->reset();
       }
     }
-
-    ConfigWidgetAsciiInternal *_ac;
-};
 
 
 QString AsciiPlugin::pluginName() const { return "ASCII File Reader"; }
