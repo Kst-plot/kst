@@ -1,4 +1,6 @@
-include($$PWD/../../kst.pri)
+TOPOUT_REL=../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
+
 QT += gui \
     network \
     svg \
@@ -7,7 +9,7 @@ TEMPLATE = lib
 TARGET = $$qtLibraryTarget(kst2app)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-!isEmpty(INSTALL_PREFIX) { 
+!isEmpty(INSTALL_PREFIX) {
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
 }
@@ -15,8 +17,9 @@ INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
     $$TOPLEVELDIR/src/widgets \
-    $$OUTPUT_DIR/src/widgets \
-    $$OUTPUT_DIR/src/libkstapp/tmp
+    $$TOPOUTDIR/src/widgets \
+    $$TOPOUTDIR/src/libkstapp/tmp
+
 win32:LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
     -l$$qtLibraryTarget(kst2widgets) \
@@ -286,5 +289,5 @@ FORMS += aboutdialog.ui \
     vectortab.ui \
     viewmatrixdialog.ui \
     viewprimitivedialog.ui \
-    viewvectordialog.ui 
+    viewvectordialog.ui
 RESOURCES += $$TOPLEVELDIR/src/images/images.qrc

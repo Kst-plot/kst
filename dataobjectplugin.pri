@@ -1,4 +1,4 @@
-QT += xml 
+QT += xml
 
 TEMPLATE = lib
 CONFIG += plugin
@@ -17,7 +17,7 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
     $$TOPLEVELDIR/src/widgets \
-    $$OUTPUT_DIR/src/widgets \
+    $$TOPOUTDIR/src/widgets \
 
 win32:LIBS  += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -l$$qtLibraryTarget(kst2app) -l$$qtLibraryTarget(kst2widgets) -l$$qtLibraryTarget(kst2math) -l$$qtLibraryTarget(kst2lib)
 !win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2lib -lkst2math -lkst2widgets -lkst2app

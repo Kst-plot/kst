@@ -1,5 +1,6 @@
-include($$PWD/../../../kst.pri)
-include($$PWD/../../../dataobjectplugin.pri)
+TOPOUT_REL=../../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
+include($$PWD/$$TOPOUT_REL/dataobjectplugin.pri)
 
 TARGET = $$qtLibraryTarget(kstplugin_sampleplugin)
 

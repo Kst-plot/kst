@@ -1,5 +1,4 @@
-include($$PWD/../../../../../kst.pri)
-include($$PWD/../../../../../dataobjectplugin.pri)
+include(../../../plugins_subsub.pri)
 
 TARGET = $$qtLibraryTarget(kstplugin_csplineperiodic)
 LIBS += -lgsl

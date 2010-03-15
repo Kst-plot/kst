@@ -1,5 +1,4 @@
-include($$PWD/../../../../kst.pri)
-include($$PWD/../../../../dataobjectplugin.pri)
+include(../../plugins_sub.pri)
 
 TARGET = $$qtLibraryTarget(kstplugin_fitgradient_unweighted)
 LIBS += -lgsl

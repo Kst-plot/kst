@@ -1,4 +1,5 @@
-include($$PWD/../../kst.pri)
+TOPOUT_REL=../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
 
 TEMPLATE = app
 TARGET = $$kstlib(kst2)
@@ -16,6 +17,7 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/widgets \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
+
 
 win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -l$$kstlib(kst2app) -l$$kstlib(kst2widgets) -l$$kstlib(kst2math) -l$$kstlib(kst2lib)
 !win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2lib -lkst2math -lkst2widgets -lkst2app

@@ -1,9 +1,11 @@
-include($$PWD/../../kst.pri)
+TOPOUT_REL=../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
+
 TEMPLATE = lib
 TARGET = $$qtLibraryTarget(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-!isEmpty(INSTALL_PREFIX) { 
+!isEmpty(INSTALL_PREFIX) {
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
 }
@@ -49,7 +51,7 @@ SOURCES += builtindatasources.cpp \
     updatemanager.cpp \
     vector.cpp \
     vectorfactory.cpp \
-    vscalar.cpp 
+    vscalar.cpp
 # !win32:SOURCES += stdinsource.cpp
 !macx:!win32:SOURCES += sysinfo.c \
     psversion.c
@@ -106,4 +108,4 @@ HEADERS += builtindatasources.h \
     updatemanager.h \
     vector.h \
     vectorfactory.h \
-    vscalar.h 
+    vscalar.h

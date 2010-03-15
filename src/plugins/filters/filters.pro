@@ -1,9 +1,10 @@
 include($$PWD/../../../config.pri)
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    despike 
+    despike
 
 LibExists(gsl) {
      message(GSL configured.  Filter plugins will be built.)

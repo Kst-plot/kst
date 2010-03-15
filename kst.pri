@@ -1,6 +1,11 @@
-OUTPUT_DIR = $$(OUTPUT_DIR)
-isEmpty(OUTPUT_DIR):OUTPUT_DIR=$$PWD/build
 
+TOPOUTDIR=$$OUT_PWD/$$TOPOUT_REL
+!exists($$TOPOUTDIR/build):system(mkdir $$TOPOUTDIR/build)
+OUTPUT_DIR=$$TOPOUTDIR/build
+
+#message(----------------------------------------------------------)
+#message($$OUTPUT_DIR)
+#message(----------------------------------------------------------)
 
 
 INSTALL_PREFIX = $$(INSTALL_PREFIX)
@@ -56,7 +61,7 @@ defineReplace(kstlib) {
    CONFIG(debug, debug|release) {
       !debug_and_release|build_pass {
           mac:RET = $$member(LIBRARY_NAME, 0)_debug
-   	      else:win32:RET = $$member(LIBRARY_NAME, 0)d
+          else:win32:RET = $$member(LIBRARY_NAME, 0)d
       }
    }
    isEmpty(RET):RET = $$LIBRARY_NAME

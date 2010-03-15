@@ -1,4 +1,5 @@
-include($$PWD/../../kst.pri)
+TOPOUT_REL=../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
 
 TEMPLATE = app
 TARGET = $$kstlib(d2asc)

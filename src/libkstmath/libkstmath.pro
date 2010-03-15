@@ -1,4 +1,5 @@
-include($$PWD/../../kst.pri)
+TOPOUT_REL=../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
 
 TEMPLATE = lib
 TARGET = $$qtLibraryTarget(kst2math)
@@ -61,7 +62,7 @@ SOURCES += \
     psdfactory.cpp \
     relation.cpp \
     relationfactory.cpp \
-    settings.cpp 
+    settings.cpp
 
 HEADERS += \
     basicplugin.h \
@@ -101,7 +102,7 @@ HEADERS += \
     psdcalculator.h \
     relation.h \
     relationfactory.h \
-    settings.h 
+    settings.h
 
 #LEXSOURCES += escan.l
 #YACCSOURCES += eparse.y

@@ -1,5 +1,7 @@
-include($$PWD/../../../kst.pri)
+TOPOUT_REL=../../..
+include($$PWD/$$TOPOUT_REL/kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
+
 TARGET = $$qtLibraryTarget(kst2data_ascii)
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/ascii/tmp
 SOURCES += ascii.cpp
