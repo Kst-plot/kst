@@ -63,7 +63,34 @@ static const QString asciiTypeString = I18N_NOOP("ASCII file");
 
 class AsciiSource::Config {
   public:
-    Config() {
+    Config();
+
+    void read(QSettings *cfg, const QString& fileName = QString::null);
+    void save(QXmlStreamWriter& s);
+    void parseProperties(QXmlStreamAttributes &properties);
+    void load(const QDomElement& e);
+
+    QString _delimiters;
+    QString _indexVector;
+    QString _fileNamePattern;
+
+    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, IntEnd = 0xffff };
+    Interpretation _indexInterpretation;
+
+    enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
+    ColumnType _columnType;
+
+    QString _columnDelimiter;
+    int _columnWidth;
+    int _dataLine;
+    bool _readFields;
+    int _fieldsLine;
+    bool _useDot;
+    char _localSeparator;
+  };
+
+
+AsciiSource::Config::Config() {
       _indexInterpretation = Unknown;
       _indexVector = "INDEX";
       _delimiters = DEFAULT_DELIMITERS;
@@ -76,7 +103,7 @@ class AsciiSource::Config {
       _localSeparator = QLocale().decimalPoint().toAscii();
     }
 
-    void read(QSettings *cfg, const QString& fileName = QString::null) {
+    void AsciiSource::Config::read(QSettings *cfg, const QString& fileName) {
       cfg->beginGroup(asciiTypeString);
       _fileNamePattern = cfg->value("Filename Pattern").toString();
       _delimiters = cfg->value("Comment Delimiters", "#/c!;").toString().toLatin1();
@@ -105,22 +132,8 @@ class AsciiSource::Config {
       cfg->endGroup();
     }
 
-    QString _delimiters;
-    QString _indexVector;
-    QString _fileNamePattern;
-    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, IntEnd = 0xffff };
-    Interpretation _indexInterpretation;
-    enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
-    ColumnType _columnType;
-    QString _columnDelimiter;
-    int _columnWidth;
-    int _dataLine;
-    bool _readFields;
-    int _fieldsLine;
-    bool _useDot;
-    char _localSeparator;
 
-    void save(QXmlStreamWriter& s) {
+    void AsciiSource::Config::save(QXmlStreamWriter& s) {
       s.writeStartElement("properties");
       if (_indexInterpretation != AsciiSource::Config::Unknown) {
         s.writeAttribute("vector", _indexVector);
@@ -142,7 +155,7 @@ class AsciiSource::Config {
       s.writeEndElement();
     }
 
-    void parseProperties(QXmlStreamAttributes &properties) {
+    void AsciiSource::Config::parseProperties(QXmlStreamAttributes &properties) {
       _indexVector = properties.value("vector").toString();
       _indexInterpretation = (Interpretation)properties.value("interpretation").toString().toInt();
 
@@ -156,7 +169,7 @@ class AsciiSource::Config {
       _useDot = QVariant(properties.value("usedot").toString()).toBool();
     }
 
-    void load(const QDomElement& e) {
+    void AsciiSource::Config::load(const QDomElement& e) {
        QDomNode n = e.firstChild();
        while (!n.isNull()) {
          QDomElement e = n.toElement();
@@ -194,7 +207,7 @@ class AsciiSource::Config {
          n = n.nextSibling();
        }
     }
-};
+
 
 
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
@@ -280,7 +293,7 @@ int AsciiSource::readFullLine(QFile &file, QByteArray &str) {
 
   return str.size();
 }
- 
+
 
 bool AsciiSource::initRowIndex() {
   if (!_rowIndex) {
@@ -349,7 +362,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
   }
 
   _valid = true;
-  
+
   int bufstart, bufread;
   bool new_data = false;
   char tmpbuf[MAXBUFREADLEN+1];
@@ -369,11 +382,11 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
     file.seek(bufstart); // expensive?
     file.read(tmpbuf, bufread);
     tmpbuf[bufread] = '\0';
-    
+
     bool is_comment = false, has_dat = false;
     char *comment = strpbrk(tmpbuf, del);
-    for (int i = 0; i < bufread; i++) {      
-      if (comment == &(tmpbuf[i])) {    
+    for (int i = 0; i < bufread; i++) {
+      if (comment == &(tmpbuf[i])) {
         is_comment = true;
       } else if (tmpbuf[i] == '\n' || tmpbuf[i] == '\r') {
         if (has_dat) {
@@ -435,7 +448,7 @@ struct NumberLocale
       setlocale(LC_NUMERIC, orig.constData());
     }
   }
-  
+
   void useDot() {
     use_dot = true;
     orig = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
@@ -556,7 +569,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
       int i_col = 0;
 
       v[i] = Kst::NOPOINT;
-      for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {     
+      for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
         if (isspace(_tmpBuf[ch])) {
           if (_tmpBuf[ch] == '\n' || _tmpBuf[ch] == '\r') {
             break;
@@ -686,9 +699,9 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSource::Conf
 
   bool done = false;
   int skip = cfg->_dataLine;
-  //FIXME This is a hack which should eventually be fixed by specifying 
+  //FIXME This is a hack which should eventually be fixed by specifying
   // the starting frame of the data when calling KstDataSource::fieldListForSource
-  // and KstDataSource::fieldList.  If the skip value is not specified, then 
+  // and KstDataSource::fieldList.  If the skip value is not specified, then
   // we scan a few lines and take the maximum number of fields that we find.
   int maxcnt;
   if (skip > 0) {
@@ -931,7 +944,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
           ct = AsciiSource::Config::Fixed;
         else if (_ac->_custom->isChecked())
           ct = AsciiSource::Config::Custom;
-        else 
+        else
           ct = AsciiSource::Config::Whitespace;
         _cfg->setValue("Column Type", (int)ct);
         _cfg->setValue("Column Delimiter", _ac->_columnDelimiter->text());
