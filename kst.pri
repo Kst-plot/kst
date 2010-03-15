@@ -1,11 +1,6 @@
 
 TOPOUTDIR=$$OUT_PWD/$$TOPOUT_REL
-!exists($$TOPOUTDIR/build):system(mkdir $$TOPOUTDIR/build)
 OUTPUT_DIR=$$TOPOUTDIR/build
-
-#message(----------------------------------------------------------)
-#message($$OUTPUT_DIR)
-#message(----------------------------------------------------------)
 
 
 INSTALL_PREFIX = $$(INSTALL_PREFIX)
