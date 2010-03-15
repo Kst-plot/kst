@@ -21,7 +21,13 @@
 
 #include <QSemaphore>
 
-#include <qdebug.h>
+//#define KST_DEBUG_SHARED
+#ifdef KST_DEBUG_SHARED
+#include <QDebug>
+#define KST_DBG if (true)
+#else
+#define KST_DBG if (false)
+#endif
 
 // NOTE: In order to preserve binary compatibility with plugins, you must
 //       not add, remove, or change member variables or virtual functions.
@@ -56,9 +62,8 @@ public:
     * Increases the reference count by one.
     */
    void _KShared_ref() const {
-	   sem.acquire(1);
-//	   qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
-//	   qDebug() << kstdBacktrace() << endl;
+     sem.acquire(1);
+     KST_DBG qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
    }
 
    /**
@@ -66,10 +71,9 @@ public:
     * the count goes to 0, this object will delete itself.
     */
    void _KShared_unref() const {
-	   sem.release(1);
-//	   qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
-//	   qDebug() << kstdBacktrace() << endl;
-	   if (SEMAPHORE_COUNT == sem.available()) delete this;
+     sem.release(1);
+     KST_DBG qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
+     if (SEMAPHORE_COUNT == sem.available()) delete this;
    }
 
    /**
@@ -81,9 +85,11 @@ public:
 
 protected:
    virtual ~Shared() { }
+
 private:
    mutable QSemaphore sem;
 };
+
 
 template< class T >
 struct SharedPtr
@@ -93,6 +99,7 @@ public:
    * Creates a null pointer.
    */
   SharedPtr() : ptr(0) { }
+
   /**
    * Creates a new pointer.
    * @param t the pointer
@@ -104,10 +111,10 @@ public:
    * @param p the pointer to copy
    */
   SharedPtr( const SharedPtr& p )
-	  : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
+    : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
 
   template<class Y> SharedPtr(SharedPtr<Y>& p)
-	  : ptr(p.data()) { if (ptr) ptr->_KShared_ref(); }
+    : ptr(p.data()) { if (ptr) ptr->_KShared_ref(); }
 
   /**
    * Unreferences the object that this pointer points to. If it was
@@ -139,6 +146,7 @@ public:
     if ( ptr ) ptr->_KShared_ref();
     return *this;
   }
+
   bool operator== ( const SharedPtr<T>& p ) const { return ( ptr == p.ptr ); }
   bool operator!= ( const SharedPtr<T>& p ) const { return ( ptr != p.ptr ); }
   bool operator== ( const T* p ) const { return ( ptr == p ); }
@@ -168,6 +176,7 @@ public:
    * @return the number of references
    */
   int count() const { return ptr->_KShared_count(); } // for debugging purposes
+
 private:
   T* ptr;
 };
@@ -177,6 +186,7 @@ template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
   return qobject_cast<T*>(object.data());
 }
+
 // FIXME: make this safe
 template <typename T>
 inline SharedPtr<T> kst_cast(QObject *object) {
