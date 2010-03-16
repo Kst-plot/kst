@@ -1,8 +1,8 @@
 /***************************************************************************
-                     asciiplugin.cpp  -  ASCII file data source
+                     asciiplugin.cpp
                              -------------------
-    begin                : Fri Oct 17 2003
-    copyright            : (C) 2003 The University of Toronto
+    begin                :  Mar 16 2010
+    copyright            : (C) 2010 The University of Toronto
     email                :
  ***************************************************************************/
 
@@ -17,43 +17,30 @@
 
 #include "asciiplugin.h"
 #include "asciisource_p.h"
-
-#include <assert.h>
-#include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
-
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
-#include <qregexp.h>
-#include <qspinbox.h>
-#include <qtextdocument.h>
-
-
-#include <math_kst.h>
-#include <kst_inf.h>
 #include "ui_asciiconfig.h"
-#include "kst_i18n.h"
-#include "measuretime.h"
+
+#include <QFile>
+#include <QFileInfo>
+
+
 
 //
 // ConfigWidgetAsciiInternal
 //
 
-class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig {
+class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
+{
   public:
-    ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() {
-      setupUi(this);
-    }
+    ConfigWidgetAsciiInternal(QWidget *parent);
 
     AsciiSource::Config config();
     void setConfig(const AsciiSource::Config&);
 };
+
+
+ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() {
+  setupUi(this);
+}
 
 
 AsciiSource::Config ConfigWidgetAsciiInternal::config()
@@ -79,17 +66,18 @@ AsciiSource::Config ConfigWidgetAsciiInternal::config()
   return config;
 }
 
+
 void ConfigWidgetAsciiInternal::setConfig(const AsciiSource::Config& config)
 {
-  _delimiters->setText(config._delimiters);// settings().value("Comment Delimiters", DEFAULT_DELIMITERS).toString());
-  _fileNamePattern->setText(config._fileNamePattern); // settings().value("Filename Pattern").toString());
-  _columnDelimiter->setText(config._columnDelimiter); // settings().value("Column Delimiter").toString());
-  _columnWidth->setValue(config._columnWidth); //settings().value("Column Width", DEFAULT_COLUMN_WIDTH).toInt());
-  _startLine->setValue(config._dataLine); //settings().value("Data Start", 0).toInt());
-  _readFields->setChecked(config._readFields); //settings().value("Read Fields", false).toBool());
-  _useDot->setChecked(config._useDot); //settings().value("Use Dot", true).toBool());
-  _fieldsLine->setValue(config._fieldsLine); //settings().value("Fields Line", 0).toInt());
-  AsciiSource::Config::ColumnType ct = config._columnType; //(AsciiSource::Config::ColumnType)settings().value("Column Type", 0).toInt();
+  _delimiters->setText(config._delimiters);
+  _fileNamePattern->setText(config._fileNamePattern);
+  _columnDelimiter->setText(config._columnDelimiter);
+  _columnWidth->setValue(config._columnWidth);
+  _startLine->setValue(config._dataLine);
+  _readFields->setChecked(config._readFields);
+  _useDot->setChecked(config._useDot);
+  _fieldsLine->setValue(config._fieldsLine);
+  AsciiSource::Config::ColumnType ct = config._columnType;
   if (ct == AsciiSource::Config::Fixed) {
     _fixed->setChecked(true);
   } else if (ct == AsciiSource::Config::Custom) {
@@ -104,7 +92,8 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSource::Config& config)
 // ConfigWidgetAscii
 //
 
-class ConfigWidgetAscii : public Kst::DataSourceConfigWidget {
+class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
+{
   public:
     ConfigWidgetAscii(QSettings&);
     ~ConfigWidgetAscii();
@@ -129,7 +118,6 @@ ConfigWidgetAscii::~ConfigWidgetAscii() {
 
 
 void ConfigWidgetAscii::load() {
-
   AsciiSource::Config config;
   if (hasInstance())
     config.readGroup(settings(), instance()->fileName());
@@ -179,6 +167,10 @@ void ConfigWidgetAscii::save() {
 
 
 
+//
+// AsciiPlugin
+//
+
 QString AsciiPlugin::pluginName() const { return "ASCII File Reader"; }
 QString AsciiPlugin::pluginDescription() const { return "ASCII File Reader"; }
 
@@ -191,15 +183,15 @@ Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,
   return new AsciiSource(store, cfg, filename, type, element);
 }
 
+
 QStringList AsciiPlugin::matrixList(QSettings *cfg,
                                              const QString& filename,
                                              const QString& type,
                                              QString *typeSuggestion,
                                              bool *complete) const {
 
-
   if (typeSuggestion) {
-    *typeSuggestion = AsciiSource::Config::asciiTypeKey();
+    *typeSuggestion = AsciiSource::asciiTypeKey();
   }
   if ((!type.isEmpty() && !provides().contains(type)) ||
       0 == understands(cfg, filename)) {
@@ -210,6 +202,7 @@ QStringList AsciiPlugin::matrixList(QSettings *cfg,
   }
   return QStringList();
 }
+
 
 QStringList AsciiPlugin::fieldList(QSettings *cfg,
                                             const QString& filename,
@@ -226,7 +219,7 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = AsciiSource::Config::asciiTypeKey();
+    *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
   AsciiSource::Config config;
@@ -240,6 +233,7 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
   return rc;
 
 }
+
 
 QStringList AsciiPlugin::scalarList(QSettings *cfg,
                                     const QString& filename,
@@ -256,7 +250,7 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = AsciiSource::Config::asciiTypeKey();
+    *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
   AsciiSource::Config config;
@@ -270,6 +264,7 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
   return rc;
 
 }
+
 
 QStringList AsciiPlugin::stringList(QSettings *cfg,
                                     const QString& filename,
@@ -286,7 +281,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
   }
 
   if (typeSuggestion) {
-    *typeSuggestion = AsciiSource::Config::asciiTypeKey();
+    *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
   AsciiSource::Config config;
@@ -300,6 +295,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
   return rc;
 
 }
+
 
 int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   AsciiSource::Config config;
@@ -377,7 +373,7 @@ bool AsciiPlugin::supportsTime(QSettings *cfg, const QString& filename) const {
 
 QStringList AsciiPlugin::provides() const {
   QStringList rc;
-  rc += AsciiSource::Config::asciiTypeKey();
+  rc += AsciiSource::asciiTypeKey();
   return rc;
 }
 

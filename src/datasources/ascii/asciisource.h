@@ -23,7 +23,8 @@
 
 class QFile;
 
-class AsciiSource : public Kst::DataSource {
+class AsciiSource : public Kst::DataSource
+{
   Q_OBJECT
 
   public:
@@ -64,6 +65,8 @@ class AsciiSource : public Kst::DataSource {
     virtual void reset();
 
     virtual const QString& typeString() const;
+
+    static const QString asciiTypeKey();
 
     class Config;
     static QStringList fieldListFor(const QString& filename, Config *cfg);

@@ -1,7 +1,7 @@
 /***************************************************************************
                      namedparameter.h  -
                              -------------------
-    begin                : Oct 15 2010
+    begin                : Mar 15 2010
     copyright            : (C) 2010 The University of Toronto
     email                :
  ***************************************************************************/
@@ -25,11 +25,11 @@
 
 
 template<class T, const char* Key, const char* Tag>
-class Parameter
+class NamedParameter
 {
 public:
   // this is not nice, it sets not the value but its default
-  Parameter(const T& default_value) :
+  NamedParameter(const T& default_value) :
       _default_value(default_value),
       _value_set(false) {
   }
@@ -69,7 +69,7 @@ public:
     return value();
   }
 
-  Parameter& operator=(const T& t) {
+  NamedParameter& operator=(const T& t) {
     setValue(t);
     return *this;
   }

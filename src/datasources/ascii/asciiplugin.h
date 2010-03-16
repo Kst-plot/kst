@@ -23,9 +23,11 @@
 #include <dataplugin.h>
 
 
-class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface {
+class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
+{
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
+
   public:
     virtual ~AsciiPlugin() {}
 

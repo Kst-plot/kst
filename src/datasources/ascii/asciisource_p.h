@@ -50,8 +50,6 @@ class AsciiSource::Config {
   public:
     Config();
 
-    static const QString asciiTypeKey();
-
     void saveGroup(QSettings& cfg, const QString& fileName = QString());
     void readGroup(QSettings& cfg, const QString& fileName = QString());
 
@@ -60,22 +58,21 @@ class AsciiSource::Config {
 
     void load(const QDomElement& e);
 
-    Parameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
-    Parameter<QString, Key_indexVector, Tag_indexVector> _indexVector;
-    Parameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
-
     enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, IntEnd = 0xffff };
-    Parameter<Interpretation, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
-
     enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
-    Parameter<ColumnType, Key_columnType, Tag_columnType> _columnType;
 
-    Parameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
-    Parameter<int, Key_columnWidth, Tag_columnWidth> _columnWidth;
-    Parameter<int, Key_dataLine, Tag_dataLine> _dataLine;
-    Parameter<bool, Key_readFields, Tag_readFields> _readFields;
-    Parameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
-    Parameter<bool, Key_useDot, Tag_useDot> _useDot;
+    NamedParameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
+    NamedParameter<QString, Key_indexVector, Tag_indexVector> _indexVector;
+    NamedParameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
+    NamedParameter<Interpretation, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
+    NamedParameter<ColumnType, Key_columnType, Tag_columnType> _columnType;
+    NamedParameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
+    NamedParameter<int, Key_columnWidth, Tag_columnWidth> _columnWidth;
+    NamedParameter<int, Key_dataLine, Tag_dataLine> _dataLine;
+    NamedParameter<bool, Key_readFields, Tag_readFields> _readFields;
+    NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
+    NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
+
 
     char _localSeparator;
 

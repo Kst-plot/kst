@@ -7,6 +7,7 @@ INCLUDEPATH += $$OUTPUT_DIR/src/datasources/ascii/tmp
 
 SOURCES += \
   asciisource.cpp \
+  asciisource_p.cpp \
   asciiplugin.cpp
 
 win32:SOURCES += kst_atof.cpp
