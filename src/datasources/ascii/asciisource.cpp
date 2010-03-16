@@ -114,6 +114,19 @@ void AsciiSource::Config::save(QSettings& cfg) {
 }
 
 
+void AsciiSource::Config::saveGroup(QSettings& cfg, const QString& fileName) {
+  cfg.beginGroup(asciiTypeString);
+  if (fileName.isEmpty()) {
+    save(cfg);
+  } else {
+    cfg.beginGroup(fileName);
+    save(cfg);
+    cfg.endGroup();
+  }
+  cfg.endGroup();
+}
+
+
 void AsciiSource::Config::read(QSettings& cfg) {
   _fileNamePattern << cfg;
   _indexVector << cfg;
@@ -131,8 +144,9 @@ void AsciiSource::Config::read(QSettings& cfg) {
 
 void AsciiSource::Config::readGroup(QSettings& cfg, const QString& fileName) {
   cfg.beginGroup(asciiTypeString);
-  read(cfg);
-  if (!fileName.isEmpty()) {
+  if (fileName.isEmpty()) {
+    read(cfg);
+  } else {
     cfg.beginGroup(fileName);
     read(cfg);
     cfg.endGroup();

@@ -130,29 +130,26 @@ ConfigWidgetAscii::~ConfigWidgetAscii() {
 
 void ConfigWidgetAscii::load() {
 
-  settings().beginGroup(AsciiSource::Config::asciiTypeKey());
   AsciiSource::Config config;
-  config.readGroup(settings());
+  if (hasInstance())
+    config.readGroup(settings(), instance()->fileName());
+  else
+    config.readGroup(settings());
+
   _ac->setConfig(config);
 
+  // Now handle index
   _ac->_indexVector->clear();
   if (hasInstance()) {
-    _ac->_indexVector->addItems(instance()->fieldList());
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
-    assert(src);
-    _ac->_indexType->setCurrentIndex(src->_config->_indexInterpretation - 1);
-    if (instance()->fieldList().contains(src->_config->_indexVector)) {
+    _ac->_indexVector->addItems(src->fieldList());
+    _ac->_indexVector->setCurrentIndex(src->_config->_indexInterpretation - 1);
+    if (src->fieldList().contains(src->_config->_indexVector)) {
       _ac->_indexVector->setEditText(src->_config->_indexVector);
     }
-
-    settings().beginGroup(src->fileName());
-    _ac->setConfig(config);
-    settings().endGroup();
-
   } else {
     _ac->_indexVector->addItem("INDEX");
-
-    int x = config._indexInterpretation; //settings().value("Default INDEX Interpretation", (int)AsciiSource::Config::INDEX).toInt();
+    int x = config._indexInterpretation;
     if (x > 0 && x <= _ac->_indexType->count()) {
       _ac->_indexType->setCurrentIndex(x - 1);
     } else {
@@ -160,29 +157,22 @@ void ConfigWidgetAscii::load() {
     }
   }
   _ac->_indexVector->setEnabled(hasInstance());
-
-  settings().endGroup();
 }
 
+
 void ConfigWidgetAscii::save() {
-  settings().beginGroup(AsciiSource::Config::asciiTypeKey());
-  if (_ac->_applyDefault->isChecked()) {
-    _ac->config().save(settings());
-  }
+  if (hasInstance()) {
+    Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
+    if (_ac->_applyDefault->isChecked()) {
+      _ac->config().saveGroup(settings());
+    }
+    _ac->config().saveGroup(settings(), src->fileName());
 
-  // If we have an instance, save settings for that instance as well
-  Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
-  if (src) {
-    settings().beginGroup(src->fileName());
-    _ac->config().save(settings());
-    settings().endGroup();
-  }
-  settings().endGroup();
-
-  // Update the instance from our new settings
-  if (src && src->reusable()) {
-    src->_config->readGroup(settings(), src->fileName());
-    src->reset();
+    // Update the instance from our new settings
+    if (src->reusable()) {
+      src->_config->readGroup(settings(), src->fileName());
+      src->reset();
+    }
   }
 }
 

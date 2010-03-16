@@ -52,8 +52,7 @@ class AsciiSource::Config {
 
     static const QString asciiTypeKey();
 
-    void save(QSettings& cfg);
-    void read(QSettings& cfg);
+    void saveGroup(QSettings& cfg, const QString& fileName = QString());
     void readGroup(QSettings& cfg, const QString& fileName = QString());
 
     void save(QXmlStreamWriter& s);
@@ -80,7 +79,9 @@ class AsciiSource::Config {
 
     char _localSeparator;
 
-
+  private:
+    void save(QSettings& cfg);
+    void read(QSettings& cfg);
 };
 
 Q_DECLARE_METATYPE(AsciiSource::Config::Interpretation)
