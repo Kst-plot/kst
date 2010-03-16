@@ -21,6 +21,8 @@
 #include "datasource.h"
 #include "dataplugin.h"
 
+
+class AsciiSourceConfig;
 class QFile;
 
 class AsciiSource : public Kst::DataSource
@@ -68,10 +70,9 @@ class AsciiSource : public Kst::DataSource
 
     static const QString asciiTypeKey();
 
-    class Config;
-    static QStringList fieldListFor(const QString& filename, Config *cfg);
-    static QStringList scalarListFor(const QString& filename, Config *cfg);
-    static QStringList stringListFor(const QString& filename, Config *cfg);
+    static QStringList fieldListFor(const QString& filename, AsciiSourceConfig *cfg);
+    static QStringList scalarListFor(const QString& filename, AsciiSourceConfig *cfg);
+    static QStringList stringListFor(const QString& filename, AsciiSourceConfig *cfg);
 
   private:
     int *_rowIndex;
@@ -79,7 +80,7 @@ class AsciiSource : public Kst::DataSource
     int _numFrames;
     int _byteLength;
     friend class ConfigWidgetAscii;
-    mutable Config *_config;
+    mutable AsciiSourceConfig *_config;
     char *_tmpBuf;
     uint _tmpBufSize;
     bool _haveHeader;

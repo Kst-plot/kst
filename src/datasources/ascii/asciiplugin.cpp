@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "asciiplugin.h"
-#include "asciisource_p.h"
+#include "asciisourceconfig.h"
 #include "ui_asciiconfig.h"
 
 #include <QFile>
@@ -33,8 +33,8 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
   public:
     ConfigWidgetAsciiInternal(QWidget *parent);
 
-    AsciiSource::Config config();
-    void setConfig(const AsciiSource::Config&);
+    AsciiSourceConfig config();
+    void setConfig(const AsciiSourceConfig&);
 };
 
 
@@ -43,17 +43,17 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(
 }
 
 
-AsciiSource::Config ConfigWidgetAsciiInternal::config()
+AsciiSourceConfig ConfigWidgetAsciiInternal::config()
 {
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   config._fileNamePattern = _fileNamePattern->text();
-  config._indexInterpretation = (AsciiSource::Config::Interpretation) (1 + _indexType->currentIndex());
+  config._indexInterpretation = (AsciiSourceConfig::Interpretation) (1 + _indexType->currentIndex());
   config._delimiters = _delimiters->text();
-  AsciiSource::Config::ColumnType ct = AsciiSource::Config::Whitespace;
+  AsciiSourceConfig::ColumnType ct = AsciiSourceConfig::Whitespace;
   if (_fixed->isChecked()) {
-    ct = AsciiSource::Config::Fixed;
+    ct = AsciiSourceConfig::Fixed;
   } else if (_custom->isChecked()) {
-    ct = AsciiSource::Config::Custom;
+    ct = AsciiSourceConfig::Custom;
   }
   config._columnType = ct;
   config._columnDelimiter = _columnDelimiter->text();
@@ -67,7 +67,7 @@ AsciiSource::Config ConfigWidgetAsciiInternal::config()
 }
 
 
-void ConfigWidgetAsciiInternal::setConfig(const AsciiSource::Config& config)
+void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
 {
   _delimiters->setText(config._delimiters);
   _fileNamePattern->setText(config._fileNamePattern);
@@ -77,10 +77,10 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSource::Config& config)
   _readFields->setChecked(config._readFields);
   _useDot->setChecked(config._useDot);
   _fieldsLine->setValue(config._fieldsLine);
-  AsciiSource::Config::ColumnType ct = config._columnType;
-  if (ct == AsciiSource::Config::Fixed) {
+  AsciiSourceConfig::ColumnType ct = config._columnType;
+  if (ct == AsciiSourceConfig::Fixed) {
     _fixed->setChecked(true);
-  } else if (ct == AsciiSource::Config::Custom) {
+  } else if (ct == AsciiSourceConfig::Custom) {
     _custom->setChecked(true);
   } else {
     _whitespace->setChecked(true);
@@ -118,7 +118,7 @@ ConfigWidgetAscii::~ConfigWidgetAscii() {
 
 
 void ConfigWidgetAscii::load() {
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   if (hasInstance())
     config.readGroup(settings(), instance()->fileName());
   else
@@ -222,7 +222,7 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
     *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
   QStringList rc = AsciiSource::fieldListFor(filename, &config);
 
@@ -253,7 +253,7 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
     *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
   QStringList rc = AsciiSource::scalarListFor(filename, &config);
 
@@ -284,7 +284,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
     *typeSuggestion = AsciiSource::asciiTypeKey();
   }
 
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
   QStringList rc = AsciiSource::stringListFor(filename, &config);
 
@@ -298,7 +298,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
 
 
 int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
-  AsciiSource::Config config;
+  AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
 
   if (!QFile::exists(filename) || QFileInfo(filename).isDir()) {
@@ -320,7 +320,7 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     bool done = false;
 
     QRegExp commentRE, dataRE;
-    if (config._columnType == AsciiSource::Config::Custom && !config._columnDelimiter.value().isEmpty()) {
+    if (config._columnType == AsciiSourceConfig::Custom && !config._columnDelimiter.value().isEmpty()) {
       commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters));
       dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter)));
     } else {

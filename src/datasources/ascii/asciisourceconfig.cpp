@@ -16,11 +16,11 @@
  ***************************************************************************/
 
 
-#include "asciisource_p.h"
+#include "asciisourceconfig.h"
 
 
 //
-// AsciiSource::Config
+// AsciiSourceConfig
 //
 
 
@@ -28,31 +28,31 @@
 #define DEFAULT_COLUMN_WIDTH 16
 
 
-const char AsciiSource::Config::Key_fileNamePattern[] = "Filename Pattern";
-const char AsciiSource::Config::Tag_fileNamePattern[] = "filenamepattern";
-const char AsciiSource::Config::Key_delimiters[] = "Comment Delimiters";
-const char AsciiSource::Config::Tag_delimiters[] = "delimiters";
-const char AsciiSource::Config::Key_indexVector[] ="Index";
-const char AsciiSource::Config::Tag_indexVector[] ="vector";
-const char AsciiSource::Config::Key_indexInterpretation[] = "Default INDEX Interpretation";
-const char AsciiSource::Config::Tag_indexInterpretation[] = "interpretation";
-const char AsciiSource::Config::Key_columnType[] = "Column Type";
-const char AsciiSource::Config::Tag_columnType[] = "columntype";
-const char AsciiSource::Config::Key_columnDelimiter[] = "Column Delimiter";
-const char AsciiSource::Config::Tag_columnDelimiter[] = "columndelimiter";
-const char AsciiSource::Config::Key_columnWidth[] = "Column Width";
-const char AsciiSource::Config::Tag_columnWidth[] = "columnwidth";
-const char AsciiSource::Config::Key_dataLine[] = "Data Start";
-const char AsciiSource::Config::Tag_dataLine[] = "headerstart";
-const char AsciiSource::Config::Key_readFields[] = "Read Fields";
-const char AsciiSource::Config::Tag_readFields[] = "readfields";
-const char AsciiSource::Config::Key_useDot[] = "Use Dot";
-const char AsciiSource::Config::Tag_useDot[] = "usedot";
-const char AsciiSource::Config::Key_fieldsLine[] = "Fields Line";
-const char AsciiSource::Config::Tag_fieldsLine[] = "fields";
+const char AsciiSourceConfig::Key_fileNamePattern[] = "Filename Pattern";
+const char AsciiSourceConfig::Tag_fileNamePattern[] = "filenamepattern";
+const char AsciiSourceConfig::Key_delimiters[] = "Comment Delimiters";
+const char AsciiSourceConfig::Tag_delimiters[] = "delimiters";
+const char AsciiSourceConfig::Key_indexVector[] ="Index";
+const char AsciiSourceConfig::Tag_indexVector[] ="vector";
+const char AsciiSourceConfig::Key_indexInterpretation[] = "Default INDEX Interpretation";
+const char AsciiSourceConfig::Tag_indexInterpretation[] = "interpretation";
+const char AsciiSourceConfig::Key_columnType[] = "Column Type";
+const char AsciiSourceConfig::Tag_columnType[] = "columntype";
+const char AsciiSourceConfig::Key_columnDelimiter[] = "Column Delimiter";
+const char AsciiSourceConfig::Tag_columnDelimiter[] = "columndelimiter";
+const char AsciiSourceConfig::Key_columnWidth[] = "Column Width";
+const char AsciiSourceConfig::Tag_columnWidth[] = "columnwidth";
+const char AsciiSourceConfig::Key_dataLine[] = "Data Start";
+const char AsciiSourceConfig::Tag_dataLine[] = "headerstart";
+const char AsciiSourceConfig::Key_readFields[] = "Read Fields";
+const char AsciiSourceConfig::Tag_readFields[] = "readfields";
+const char AsciiSourceConfig::Key_useDot[] = "Use Dot";
+const char AsciiSourceConfig::Tag_useDot[] = "usedot";
+const char AsciiSourceConfig::Key_fieldsLine[] = "Fields Line";
+const char AsciiSourceConfig::Tag_fieldsLine[] = "fields";
 
 
-AsciiSource::Config::Config() :
+AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_DELIMITERS),
   _indexVector("INDEX"),
   _fileNamePattern(""),
@@ -70,7 +70,7 @@ AsciiSource::Config::Config() :
 
 
 
-void AsciiSource::Config::save(QSettings& cfg) {
+void AsciiSourceConfig::save(QSettings& cfg) {
   _fileNamePattern >> cfg;
   _indexVector >> cfg;
   _delimiters >> cfg;
@@ -85,7 +85,7 @@ void AsciiSource::Config::save(QSettings& cfg) {
 }
 
 
-void AsciiSource::Config::saveGroup(QSettings& cfg, const QString& fileName) {
+void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
   if (fileName.isEmpty()) {
     save(cfg);
@@ -98,7 +98,7 @@ void AsciiSource::Config::saveGroup(QSettings& cfg, const QString& fileName) {
 }
 
 
-void AsciiSource::Config::read(QSettings& cfg) {
+void AsciiSourceConfig::read(QSettings& cfg) {
   _fileNamePattern << cfg;
   _indexVector << cfg;
   _delimiters << cfg;
@@ -113,7 +113,7 @@ void AsciiSource::Config::read(QSettings& cfg) {
 }
 
 
-void AsciiSource::Config::readGroup(QSettings& cfg, const QString& fileName) {
+void AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
   if (fileName.isEmpty()) {
     read(cfg);
@@ -127,9 +127,9 @@ void AsciiSource::Config::readGroup(QSettings& cfg, const QString& fileName) {
 }
 
 
-void AsciiSource::Config::save(QXmlStreamWriter& s) {
+void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   s.writeStartElement("properties");
-  if (_indexInterpretation != AsciiSource::Config::Unknown) {
+  if (_indexInterpretation != AsciiSourceConfig::Unknown) {
     _indexVector >> s;
     _indexInterpretation >> s;
   }
@@ -151,7 +151,7 @@ void AsciiSource::Config::save(QXmlStreamWriter& s) {
 }
 
 
-void AsciiSource::Config::parseProperties(QXmlStreamAttributes& attributes) {
+void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _fileNamePattern << attributes;
   _indexVector << attributes;
   _delimiters << attributes;
@@ -166,7 +166,7 @@ void AsciiSource::Config::parseProperties(QXmlStreamAttributes& attributes) {
 }
 
 
-void AsciiSource::Config::load(const QDomElement& e) {
+void AsciiSourceConfig::load(const QDomElement& e) {
   // TODO use tags
    QDomNode n = e.firstChild();
    while (!n.isNull()) {

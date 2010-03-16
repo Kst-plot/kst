@@ -14,14 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef KST_ASCII_SOUTCE_P_H
-#define KST_ASCII_SOUTCE_P_H
+#ifndef KST_ASCII_SOURCE_CONFIG_H
+#define KST_ASCII_SOURCE_CONFIG_H
 
 #include "asciisource.h"
 #include "namedparameter.h"
 
-
-class AsciiSource::Config {
+class AsciiSourceConfig {
 
     // TODO translate keys?
     static const char Key_fileNamePattern[];
@@ -48,7 +47,7 @@ class AsciiSource::Config {
     static const char Tag_fieldsLine[];
 
   public:
-    Config();
+    AsciiSourceConfig();
 
     void saveGroup(QSettings& cfg, const QString& fileName = QString());
     void readGroup(QSettings& cfg, const QString& fileName = QString());
@@ -81,7 +80,7 @@ class AsciiSource::Config {
     void read(QSettings& cfg);
 };
 
-Q_DECLARE_METATYPE(AsciiSource::Config::Interpretation)
-Q_DECLARE_METATYPE(AsciiSource::Config::ColumnType)
+Q_DECLARE_METATYPE(AsciiSourceConfig::Interpretation)
+Q_DECLARE_METATYPE(AsciiSourceConfig::ColumnType)
 
 #endif
