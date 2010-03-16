@@ -19,7 +19,7 @@
 #define ASCII_PLUGIN_H
 
 
-#include <ascii.h>
+#include <asciisource.h>
 #include <dataplugin.h>
 
 

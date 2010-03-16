@@ -17,7 +17,7 @@
 #ifndef KST_ASCII_SOUTCE_P_H
 #define KST_ASCII_SOUTCE_P_H
 
-#include "ascii.h"
+#include "asciisource.h"
 #include "namedparameter.h"
 
 

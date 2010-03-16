@@ -6,13 +6,13 @@ TARGET = $$qtLibraryTarget(kst2data_ascii)
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/ascii/tmp
 
 SOURCES += \
-  ascii.cpp \
+  asciisource.cpp \
   asciiplugin.cpp
 
 win32:SOURCES += kst_atof.cpp
 
 HEADERS += \
-  ascii.h \
+  asciisource.h \
   asciisource_p.h \
   asciiplugin.h \
   namedparameter.h \

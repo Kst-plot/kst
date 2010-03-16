@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 
-#include "ascii.h"
+#include "asciisource.h"
 #include "asciisource_p.h"
 
 #include "math_kst.h"

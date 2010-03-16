@@ -37,7 +37,6 @@
 
 #include <math_kst.h>
 #include <kst_inf.h>
-#include "ascii.h"
 #include "ui_asciiconfig.h"
 #include "kst_i18n.h"
 #include "measuretime.h"
