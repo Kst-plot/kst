@@ -172,6 +172,7 @@ void ConfigWidgetAscii::save() {
     if (src->reusable()) {
       src->_config->readGroup(settings(), src->fileName());
       src->reset();
+      src->internalDataSourceUpdate();
     }
   }
 }
