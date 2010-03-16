@@ -221,7 +221,7 @@ class KST_EXPORT DataSource : public Object {
     /** Returns a list of scalars associated with a field by the data source.
         These could be sample rate, calibrations, etc.  This list must be
         complete the very first time it is called and must never change its
-        order or size, because readFieldScalars counts on its order and size. 
+        order or size, because readFieldScalars counts on its order and size.
         */
     virtual QStringList fieldScalars(const QString& field);
 
@@ -229,29 +229,29 @@ class KST_EXPORT DataSource : public Object {
         every time the vector is updated, so it needs to be kept very cheap.
         Returns the number of scalars returned, and 0 on failure. V must
         be pre allocated to the right size as given by the length of the list
-        returned by fieldScalars(). 
-        Most data sources will never change the the field scalars once they have 
-        been initialized.  In order to keep this case as fast as possible, the data 
-        source can chose to only update v[] if init is true.  
-        Note: datavector currently assumes these never change, and only gets them once! */ 
+        returned by fieldScalars().
+        Most data sources will never change the the field scalars once they have
+        been initialized.  In order to keep this case as fast as possible, the data
+        source can chose to only update v[] if init is true.
+        Note: datavector currently assumes these never change, and only gets them once! */
     virtual int readFieldScalars(QList<double> &v, const QString& field, bool init);
 
     /** Returns a list of strings associated with a field by the data source.
         These could be units, notes, etc.  This list must be
         complete the very first time it is called and must never change its
-        order or size, because readFieldScalars counts on its order and size. 
+        order or size, because readFieldScalars counts on its order and size.
         In order to remain fast, the data source can additionally assume that
         readField() has already been called on the field, so the updating
         of string values can be done there instead and cached for read by this
         call.  */
     virtual QStringList fieldStrings(const QString& field);
 
-    /** Read the values of the field strings.  This is called 
+    /** Read the values of the field strings.  This is called
         every time the vector is updated, so it needs to be kept very cheap.
-        Returns the number of strings returned, and 0 on failure. 
-        Most data sources will never change the the field strings once they have 
-        been initialized.  In order to keep this case as fast as possible, the data 
-        source can chose to only update v if init is true.  */ 
+        Returns the number of strings returned, and 0 on failure.
+        Most data sources will never change the the field strings once they have
+        been initialized.  In order to keep this case as fast as possible, the data
+        source can chose to only update v if init is true.  */
     virtual int readFieldStrings(QStringList &v, const QString& field, bool init);
 
     /************************************************************/
@@ -267,7 +267,7 @@ class KST_EXPORT DataSource : public Object {
         yStart - starting y *frame*
         xNumSteps - number of *frames* to read in x direction; -1 to read 1 *sample* from xStart
         yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
-        Will skip according to the parameter, but it may not be implemented.  If return value is -9999, 
+        Will skip according to the parameter, but it may not be implemented.  If return value is -9999,
         use the non-skip version instead.
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read **/
@@ -424,28 +424,32 @@ class DataSourceList : public QList<DataSourcePtr> {
 
 
 // @since 1.1.0
-class DataSourceConfigWidget : public QWidget {
+class KST_EXPORT DataSourceConfigWidget : public QWidget
+{
   Q_OBJECT
-  friend class DataSource;
+
   public:
-    DataSourceConfigWidget(); // will be reparented later
+    DataSourceConfigWidget(QSettings&); // will be reparented later
     virtual ~DataSourceConfigWidget();
 
-    virtual void setConfig(QSettings*);
+    QSettings& settings() const;
 
-    KST_EXPORT void setInstance(DataSourcePtr inst);
-    KST_EXPORT DataSourcePtr instance() const;
-
-  public slots:
-    virtual void load();
-    virtual void save();
-
-  protected:
-    QSettings *_cfg;
     // If _instance is nonzero, then your settings are to be saved for this
     // particular instance of the source, as opposed to globally.
+    void setInstance(DataSourcePtr inst);
+    DataSourcePtr instance() const;
+    bool hasInstance() const;
+
+  public slots:
+    virtual void load() = 0;
+    virtual void save() = 0;
+
+  private:
     DataSourcePtr _instance;
-} KST_EXPORT;
+    QSettings& _cfg;
+    friend class DataSource;
+};
+
 
 class KST_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
 {

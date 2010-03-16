@@ -122,7 +122,7 @@ static void scanPlugins() {
     //try a cast
     if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
       tmpList.append(ds);
-    } 
+    }
   }
 
   QStringList pluginPaths;
@@ -956,25 +956,12 @@ QString DataSource::descriptionTip() const {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-DataSourceConfigWidget::DataSourceConfigWidget()
-: QWidget(0L), _cfg(0L) {
+DataSourceConfigWidget::DataSourceConfigWidget(QSettings& settings)
+: QWidget(0L), _cfg(settings) {
 }
 
 
 DataSourceConfigWidget::~DataSourceConfigWidget() {
-}
-
-
-void DataSourceConfigWidget::save() {
-}
-
-
-void DataSourceConfigWidget::load() {
-}
-
-
-void DataSourceConfigWidget::setConfig(QSettings *cfg) {
-  _cfg = cfg;
 }
 
 
@@ -988,7 +975,17 @@ DataSourcePtr DataSourceConfigWidget::instance() const {
 }
 
 
-ValidateDataSourceThread::ValidateDataSourceThread(const QString& file, const int requestID) : QRunnable(), 
+QSettings& DataSourceConfigWidget::settings() const {
+  return _cfg;
+}
+
+
+bool DataSourceConfigWidget::hasInstance() const {
+  return _instance != 0L;
+}
+
+
+ValidateDataSourceThread::ValidateDataSourceThread(const QString& file, const int requestID) : QRunnable(),
   _file(file),
   _requestID(requestID) {
 }
