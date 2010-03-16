@@ -29,7 +29,7 @@
 
 
 const char AsciiSource::Config::Key_fileNamePattern[] = "Filename Pattern";
-const char AsciiSource::Config::Tag_fileNamePattern[] = "filenameattern";
+const char AsciiSource::Config::Tag_fileNamePattern[] = "filenamepattern";
 const char AsciiSource::Config::Key_delimiters[] = "Comment Delimiters";
 const char AsciiSource::Config::Tag_delimiters[] = "delimiters";
 const char AsciiSource::Config::Key_indexVector[] ="Index";
