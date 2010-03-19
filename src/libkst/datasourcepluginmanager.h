@@ -24,7 +24,7 @@ class ObjectStore;
 typedef ObjectList<PluginInterface> PluginList;
 
 
-class KST_EXPORT DataSourcePluginManager 
+class KST_EXPORT DataSourcePluginManager
 {
   public:
 
@@ -57,8 +57,5 @@ class KST_EXPORT DataSourcePluginManager
 
 }
 
-
-Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
 
 #endif

@@ -42,7 +42,7 @@ class DataSourcePluginInterface : public PluginInterface {
     virtual ~DataSourcePluginInterface() {}
 
     virtual DataSource *create(ObjectStore *store,
-			                      QSettings *cfg,
+                            QSettings *cfg,
                                   const QString &filename,
                                   const QString &type,
                                   const QDomElement &element) const = 0;
@@ -83,8 +83,11 @@ class DataSourcePluginInterface : public PluginInterface {
 };
 
 
-
 }
+
+
+Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
 
 
 #endif
