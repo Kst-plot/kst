@@ -12,6 +12,7 @@
 #include "datasourceselectordialog.h"
 
 #include "datasource.h"
+#include "datasourcepluginmanager.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -45,15 +46,15 @@ void DataSourceSelectorDialog::currentChanged(const QString &current) {
   } else {
     QFileInfo fileInfo(current);
     if (fileInfo.isDir()) {
-//       qDebug() << "Directory Selected - valid?" << DataSource::validSource(current);
-      if (DataSource::validSource(current)) {
+//       qDebug() << "Directory Selected - valid?" << DataSourcePluginManager::validSource(current);
+      if (DataSourcePluginManager::validSource(current)) {
         setFileMode(QFileDialog::Directory);
       } else {
         setFileMode(QFileDialog::ExistingFile);
       }
     } else if (fileInfo.exists()) {
-//       qDebug() << "File Selected - valid?" << DataSource::validSource(current);
-      if (DataSource::validSource(current)) {
+//       qDebug() << "File Selected - valid?" << DataSourcePluginManager::validSource(current);
+      if (DataSourcePluginManager::validSource(current)) {
         setFileMode(QFileDialog::ExistingFile);
       } else {
         setFileMode(QFileDialog::Directory);

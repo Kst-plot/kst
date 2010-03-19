@@ -32,6 +32,8 @@
 #include "object.h"
 #include "dateparser.h"
 #include "objectlist.h"
+
+
 //#include "scalar.h"
 //#include "string_kst.h"
 
@@ -63,24 +65,7 @@ class KST_EXPORT DataSource : public Object {
 
   public:
     enum UpdateCheckType { Timer, File, None };
-
-    static void init();
-    static void cleanupForExit();
-    static void initPlugins();
-
-    /** Returns a list of plugins found on the system. */
-    static QStringList pluginList();
-
-    static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString::null);
-    static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);
-    static SharedPtr<DataSource> findOrLoadSource(ObjectStore *store, const QString& filename);
-    static bool validSource(const QString& filename);
-
-    static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
-    static DataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
-
-    static bool pluginHasConfigWidget(const QString& plugin);
-    static DataSourceConfigWidget *configWidgetForPlugin(const QString& plugin);
+    
 
     DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType = File);
     virtual ~DataSource();

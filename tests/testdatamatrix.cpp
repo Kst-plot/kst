@@ -13,11 +13,12 @@
 
 #include <QtTest>
 
-#include <datamatrix.h>
-#include <datasource.h>
-#include <math_kst.h>
-#include <datacollection.h>
-#include <objectstore.h>
+#include "datamatrix.h"
+#include "datasource.h"
+#include "math_kst.h"
+#include "datacollection.h"
+#include "objectstore.h"
+#include "datasourcepluginmanager.h"
 
 #include <QXmlStreamAttributes>
 
@@ -31,7 +32,7 @@ void TestDataMatrix::cleanupTestCase() {
 void TestDataMatrix::testDataMatrix() {
   bool ok = true;
 
-  QStringList _plugins = Kst::DataSource::pluginList();
+  QStringList _plugins = Kst::DataSourcePluginManager::pluginList();
 
   //basic default constructor values
   Kst::DataMatrixPtr m1 = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());
@@ -57,7 +58,7 @@ void TestDataMatrix::testDataMatrix() {
 
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
-  Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
+  Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, imageFile);
   dsp->internalUpdate();
 
   QVERIFY(dsp);

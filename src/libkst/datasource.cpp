@@ -43,249 +43,15 @@
 
 #include "dataplugin.h"
 
+// TODO DataSource should not need the plugin code
+#include "datasourcepluginmanager.h"
+
 #define DATASOURCE_UPDATE_TIMER_LENGTH 1000
 
 namespace Kst {
 
 const QString DataSource::staticTypeString = I18N_NOOP("Data Source");
 const QString DataSource::staticTypeTag = I18N_NOOP("source");
-
-static QSettings *settingsObject = 0L;
-static QMap<QString,QString> urlMap;
-void DataSource::init() {
-  if (!settingsObject) {
-    QSettings *settingsObj = new QSettings("kst", "data");
-    settingsObject = settingsObj;
-  }
-  initPlugins();
-}
-
-void DataSource::_initializeShortName() {
-}
-
-static PluginList _pluginList;
-void DataSource::cleanupForExit() {
-  _pluginList.clear();
-  qDebug() << "cleaning up for exit in datasource";
-  delete settingsObject;
-  settingsObject = 0L;
-//   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
-//     KIO::NetAccess::removeTempFile(i.value());
-//   }
-  urlMap.clear();
-}
-
-
-static QString obtainFile(const QString& source) {
-  QUrl url;
-
-  if (QFile::exists(source) && QFileInfo(source).isRelative()) {
-    url.setPath(source);
-  } else {
-    url = QUrl(source);
-  }
-
-//   if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {
-    return source;
-//   }
-
-  if (urlMap.contains(source)) {
-    return urlMap[source];
-  }
-
-  // FIXME: come up with a way to indicate the "widget" and fill it in here so
-  //        that KIO dialogs are associated with the proper window
-//   if (!KIO::NetAccess::exists(url, true, 0L)) {
-//     return QString::null;
-//   }
-
-  QString tmpFile;
-  // FIXME: come up with a way to indicate the "widget" and fill it in here so
-  //        that KIO dialogs are associated with the proper window
-//   if (!KIO::NetAccess::download(url, tmpFile, 0L)) {
-//     return QString::null;
-//   }
-
-  urlMap[source] = tmpFile;
-
-  return tmpFile;
-}
-
-
-// Scans for plugins and stores the information for them in "_pluginList"
-static void scanPlugins() {
-  PluginList tmpList;
-
-  Debug::self()->log(i18n("Scanning for data-source plugins."));
-
-  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
-    //try a cast
-    if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
-      tmpList.append(ds);
-    }
-  }
-
-  QStringList pluginPaths;
-  pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
-  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
-
-  QDir rootDir = QApplication::applicationDirPath();
-  rootDir.cdUp();
-  QString pluginPath = rootDir.canonicalPath();
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String(INSTALL_LIBDIR);
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String("kst");
-  pluginPaths << pluginPath;
-
-  foreach (QString pluginPath, pluginPaths) {
-    QDir d(pluginPath);
-    foreach (QString fileName, d.entryList(QDir::Files)) {
-#ifdef Q_OS_WIN
-        if (!fileName.endsWith(".dll"))
-            continue;
-#endif
-        QPluginLoader loader(d.absoluteFilePath(fileName));
-        QObject *plugin = loader.instance();
-        if (plugin) {
-          if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
-            tmpList.append(ds);
-            Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
-          }
-        } else {
-            Debug::self()->log(QString("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
-        }
-    }
-  }
-
-  // This cleans up plugins that have been uninstalled and adds in new ones.
-  // Since it is a shared pointer it can't dangle anywhere.
-  _pluginList.clear();
-  _pluginList = tmpList;
-}
-
-void DataSource::initPlugins() {
-  if (_pluginList.isEmpty()) {
-      scanPlugins();
-  }
-}
-
-
-QStringList DataSource::pluginList() {
-  QStringList plugins;
-
-  // Ensure state.  When using kstapp MainWindow calls init.
-  init();
-
-  for (PluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
-    plugins += (*it)->pluginName();
-  }
-
-  return plugins;
-}
-
-
-namespace {
-class PluginSortContainer {
-  public:
-    SharedPtr<DataSourcePluginInterface> plugin;
-    int match;
-    int operator<(const PluginSortContainer& x) const {
-      return match > x.match; // yes, this is by design.  biggest go first
-    }
-    int operator==(const PluginSortContainer& x) const {
-      return match == x.match;
-    }
-};
-}
-
-
-static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
-
-  QList<PluginSortContainer> bestPlugins;
-  DataSource::init();
-
-  PluginList info = _pluginList;
-
-  if (!type.isEmpty()) {
-    for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-      if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-        if (p->provides(type)) {
-          PluginSortContainer psc;
-          psc.match = 100;
-          psc.plugin = p;
-          bestPlugins.append(psc);
-          return bestPlugins;
-        }
-      }
-    }
-  }
-
-  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-    PluginSortContainer psc;
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-      if ((psc.match = p->understands(settingsObject, filename)) > 0) {
-        psc.plugin = p;
-        bestPlugins.append(psc);
-      }
-    }
-  }
-
-  qSort(bestPlugins);
-
-  return bestPlugins;
-}
-
-
-static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
-
-  // we don't actually iterate here, unless the first plugin fails.  (Not sure this helps at all.)
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
-    if (plugin) {
-      return plugin;
-    }
-  }
-  return 0L;
-}
-
-
-DataSourcePtr DataSource::loadSource(ObjectStore *store, const QString& filename, const QString& type) {
-
-#ifndef Q_WS_WIN32
-  //if (filename == "stdin" || filename == "-") {
-    // FIXME: what store do we put this in?
-  //  return new StdinSource(0, settingsObject);
-  //}
-#endif
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return 0L;
-  }
-
-  DataSourcePtr dataSource = findPluginFor(store, fn, type);
-  if (dataSource) {
-    store->addObject<DataSource>(dataSource);
-  }
-
-  return dataSource;
-
-}
-
-
-DataSourcePtr DataSource::findOrLoadSource(ObjectStore *store, const QString& filename) {
-  Q_ASSERT(store);
-
-  DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(filename);
-
-  if (!dataSource) {
-    dataSource = DataSource::loadSource(store, filename);
-  }
-
-  return dataSource;
-}
 
 
 Kst::Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
@@ -305,36 +71,13 @@ Kst::Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
   return updated;
 }
 
-
-bool DataSource::validSource(const QString& filename) {
-#ifndef Q_WS_WIN32
-//  if (filename == "stdin" || filename == "-") {
-//    return true;
-//  }
-#endif
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return false;
-  }
-
-  DataSource::init();
-
-  PluginList info = _pluginList;
-
-  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-      if ((p->understands(settingsObject, filename)) > 0) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+void DataSource::_initializeShortName() {
 }
 
 
+
 bool DataSource::hasConfigWidget() const {
-  return sourceHasConfigWidget(_filename, fileType());
+    return DataSourcePluginManager::sourceHasConfigWidget(_filename, fileType());
 }
 
 
@@ -342,7 +85,7 @@ DataSourceConfigWidget* DataSource::configWidget() {
   if (!hasConfigWidget())
     return 0;
 
-  DataSourceConfigWidget *w = configWidgetForSource(_filename, fileType());
+  DataSourceConfigWidget *w = DataSourcePluginManager::configWidgetForSource(_filename, fileType());
   Q_ASSERT(w);
 
   //This is still ugly to me...
@@ -352,251 +95,6 @@ DataSourceConfigWidget* DataSource::configWidget() {
 }
 
 
-bool DataSource::pluginHasConfigWidget(const QString& plugin) {
-  initPlugins();
-
-  PluginList info = _pluginList;
-
-  for (PluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
-    if ((*it)->pluginName() == plugin) {
-      return (*it)->hasConfigWidget();
-    }
-  }
-
-  return false;
-}
-
-
-DataSourceConfigWidget* DataSource::configWidgetForPlugin(const QString& plugin) {
-  initPlugins();
-
-  PluginList info = _pluginList;
-
-  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-      if (p->pluginName() == plugin) {
-        return p->configWidget(settingsObject, QString::null);
-      }
-    }
-  }
-
-  return 0L;
-}
-
-
-bool DataSource::sourceHasConfigWidget(const QString& filename, const QString& type) {
-  if (filename == "stdin" || filename == "-") {
-    return 0L;
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return 0L;
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    return (*i).plugin->hasConfigWidget();
-  }
-
-  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
-  return false;
-}
-
-
-DataSourceConfigWidget* DataSource::configWidgetForSource(const QString& filename, const QString& type) {
-  if (filename == "stdin" || filename == "-") {
-    return 0L;
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return 0L;
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourceConfigWidget *w = (*i).plugin->configWidget(settingsObject, fn);
-    // Don't iterate.
-    return w;
-  }
-
-  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
-  return 0L;
-}
-
-
-bool DataSource::supportsTime(const QString& filename, const QString& type) {
-  if (filename.isEmpty() || filename == "stdin" || filename == "-") {
-    return false;
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return false;
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  if (bestPlugins.isEmpty()) {
-    return false;
-  }
-  return (*bestPlugins.begin()).plugin->supportsTime(settingsObject, fn);
-}
-
-
-QStringList DataSource::fieldListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
-  if (filename == "stdin" || filename == "-") {
-    return QStringList();
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return QStringList();
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  QStringList rc;
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    QString typeSuggestion;
-    rc = (*i).plugin->fieldList(settingsObject, fn, QString::null, &typeSuggestion, complete);
-    if (!rc.isEmpty()) {
-      if (outType) {
-        if (typeSuggestion.isEmpty()) {
-          *outType = (*i).plugin->provides()[0];
-        } else {
-          *outType = typeSuggestion;
-        }
-      }
-      break;
-    }
-  }
-
-  return rc;
-}
-
-# if 0
-QStringList DataSource::matrixListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
-  if (filename == "stdin" || filename == "-") {
-    return QStringList();
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return QStringList();
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  QStringList rc;
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    QString typeSuggestion;
-    rc = (*i).plugin->matrixList(settingsObject, fn, QString::null, &typeSuggestion, complete);
-    if (!rc.isEmpty()) {
-      if (outType) {
-        if (typeSuggestion.isEmpty()) {
-          *outType = (*i).plugin->provides()[0];
-        } else {
-          *outType = typeSuggestion;
-        }
-      }
-      break;
-    }
-  }
-
-  return rc;
-}
-#endif
-
-QStringList DataSource::scalarListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
-  if (filename == "stdin" || filename == "-") {
-    return QStringList();
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return QStringList();
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  QStringList rc;
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    QString typeSuggestion;
-    rc = (*i).plugin->scalarList(settingsObject, fn, QString::null, &typeSuggestion, complete);
-    if (!rc.isEmpty()) {
-      if (outType) {
-        if (typeSuggestion.isEmpty()) {
-          *outType = (*i).plugin->provides()[0];
-        } else {
-          *outType = typeSuggestion;
-        }
-      }
-      break;
-    }
-  }
-
-  return rc;
-}
-
-
-QStringList DataSource::stringListForSource(const QString& filename, const QString& type, QString *outType, bool *complete) {
-  if (filename == "stdin" || filename == "-") {
-    return QStringList();
-  }
-
-  QString fn = obtainFile(filename);
-  if (fn.isEmpty()) {
-    return QStringList();
-  }
-
-  QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
-  QStringList rc;
-  for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    QString typeSuggestion;
-    rc = (*i).plugin->stringList(settingsObject, fn, QString::null, &typeSuggestion, complete);
-    if (!rc.isEmpty()) {
-      if (outType) {
-        if (typeSuggestion.isEmpty()) {
-          *outType = (*i).plugin->provides()[0];
-        } else {
-          *outType = typeSuggestion;
-        }
-      }
-      break;
-    }
-  }
-
-  return rc;
-}
-
-
-DataSourcePtr DataSource::loadSource(ObjectStore *store, QDomElement& e) {
-  QString filename, type, tag;
-
-  QDomNode n = e.firstChild();
-  while (!n.isNull()) {
-    QDomElement e = n.toElement();
-    if (!e.isNull()) {
-      if (e.tagName() == "filename") {
-        filename = obtainFile(e.text());
-      } else if (e.tagName() == "type") {
-        type = e.text();
-      }
-    }
-    n = n.nextSibling();
-  }
-
-  if (filename.isEmpty()) {
-    return 0L;
-  }
-
-#ifndef Q_WS_WIN32
-  //if (filename == "stdin" || filename == "-") {
-    // FIXME: what store do we put this in?
-  //  return new StdinSource(0, settingsObject);
-  //}
-#endif
-
-  return findPluginFor(store, filename, type, e);
-}
 
 DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType)
     : Object(), _filename(filename), _cfg(cfg), _updateCheckType(updateType) {
@@ -769,6 +267,7 @@ int DataSource::frameCount(const QString& field) const {
 
 QString DataSource::fileName() const {
   // Look to see if it was a URL and save the URL instead
+  const QMap<QString,QString> urlMap = DataSourcePluginManager::urlMap();
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     if (i.value() == _filename) {
       return i.key();
@@ -826,7 +325,6 @@ QString DataSource::fileType() const {
   return QString::null;
 }
 
-
 void DataSource::save(QXmlStreamWriter &s) {
   Q_UNUSED(s)
 }
@@ -835,6 +333,7 @@ void DataSource::save(QXmlStreamWriter &s) {
 void DataSource::saveSource(QXmlStreamWriter &s) {
   QString name = _filename;
   // Look to see if it was a URL and save the URL instead
+  const QMap<QString,QString> urlMap = DataSourcePluginManager::urlMap();
   for (QMap<QString,QString>::ConstIterator i = urlMap.begin(); i != urlMap.end(); ++i) {
     if (i.value() == _filename) {
       name = i.key();
@@ -847,6 +346,7 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   save(s);
   s.writeEndElement();
 }
+
 
 
 void DataSource::parseProperties(QXmlStreamAttributes &properties) {
@@ -998,7 +498,7 @@ void ValidateDataSourceThread::run() {
     return;
   }
 
-  if (!DataSource::validSource(_file)) {
+  if (!DataSourcePluginManager::validSource(_file)) {
     emit dataSourceInvalid(_requestID);
     return;
   }

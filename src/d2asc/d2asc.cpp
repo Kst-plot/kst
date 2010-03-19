@@ -22,6 +22,7 @@
 #include "datacollection.h"
 #include "coredocument.h"
 #include "objectstore.h"
+#include "datasourcepluginmanager.h"
 
 static Kst::CoreDocument _document;
 
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
   Kst::DataSourcePtr file;
   int i;
 
-  Kst::DataSource::init();
+  Kst::DataSourcePluginManager::init();
 
   char field_list[40][120], filename[180];
   bool do_hex[40];
@@ -91,7 +92,7 @@ int main(int argc, char *argv[]) {
 
   if (!do_skip) do_ave = false;
 
-  file = Kst::DataSource::loadSource(_document.objectStore(), filename);
+  file = Kst::DataSourcePluginManager::loadSource(_document.objectStore(), filename);
   if (!file || !file->isValid() || file->isEmpty()) {
     fprintf(stderr, "d2asc error: file %s has no data\n", filename);
     return -2;

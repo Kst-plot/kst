@@ -38,6 +38,7 @@
 #include "view.h"
 #include "applicationsettings.h"
 #include "updatemanager.h"
+#include "datasourcepluginmanager.h"
 
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
@@ -116,7 +117,7 @@ void MainWindow::performHeavyStartupActions() {
   // Set the timer for the UpdateManager.
   UpdateManager::self()->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
   DataObject::init();
-  DataSource::init();
+  DataSourcePluginManager::init();
 }
 
 

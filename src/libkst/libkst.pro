@@ -20,6 +20,7 @@ SOURCES += builtindatasources.cpp \
     datasource.cpp \
     datasourcefactory.cpp \
     datasourcepluginfactory.cpp \
+    datasourcepluginmanager.cpp \
     datavector.cpp \
     datascalar.cpp \
     datastring.cpp \
@@ -65,6 +66,7 @@ HEADERS += builtindatasources.h \
     datasource.h \
     datasourcefactory.h \
     datasourcepluginfactory.h \
+    datasourcepluginmanager.h \
     datavector.h \
     datascalar.h \
     datastring.h \

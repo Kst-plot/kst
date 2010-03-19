@@ -25,6 +25,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "updatemanager.h"
+#include "datasourcepluginmanager.h"
 
 #include <QDir>
 #include <QMessageBox>
@@ -119,7 +120,7 @@ void ChangeFileDialog::sourceValid(QString filename, int requestID) {
   if (_requestID != requestID) {
     return;
   }
-  _dataSource = DataSource::findOrLoadSource(_store, filename);
+  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
   updateButtons();
 }
 

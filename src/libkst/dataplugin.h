@@ -21,7 +21,8 @@
 namespace Kst {
 
 class ObjectStore;
-
+class DataSource;
+class DataSourceConfigWidget;
 
 class PluginInterface : public Shared {
   public:
@@ -82,11 +83,8 @@ class DataSourcePluginInterface : public PluginInterface {
 };
 
 
-typedef ObjectList<PluginInterface> PluginList;
 
 }
 
-Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
 
 #endif

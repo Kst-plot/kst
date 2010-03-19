@@ -16,6 +16,7 @@
 #include "datascalar.h"
 #include "vscalar.h"
 #include "objectstore.h"
+#include "datasourcepluginmanager.h"
 
 namespace Kst {
 
@@ -126,7 +127,7 @@ PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStream
   }
 
   Q_ASSERT(store);
-  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
+  DataSourcePtr dataSource = DataSourcePluginManager::findOrLoadSource(store, file);
 
   if (!dataSource) {
     return 0; //Couldn't find a suitable datasource
@@ -195,7 +196,7 @@ PrimitivePtr VScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRea
   }
 
   Q_ASSERT(store);
-  DataSourcePtr dataSource = DataSource::findOrLoadSource(store, file);
+  DataSourcePtr dataSource = DataSourcePluginManager::findOrLoadSource(store, file);
 
   if (!dataSource) {
     return 0; //Couldn't find a suitable datasource

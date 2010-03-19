@@ -18,21 +18,22 @@
 #include <QSettings>
 #include <QTemporaryFile>
 
-#include <math_kst.h>
-#include <kst_inf.h>
+#include "math_kst.h"
+#include "kst_inf.h"
 
-#include <datacollection.h>
-#include <objectstore.h>
+#include "datacollection.h"
+#include "objectstore.h"
 
-#include <datavector.h>
-#include <datamatrix.h>
+#include "datavector.h"
+#include "datamatrix.h"
+#include "datasourcepluginmanager.h"
 
 
 static Kst::ObjectStore _store;
 
 void TestDataSource::initTestCase() {
-  Kst::DataSource::init();
-  _plugins = Kst::DataSource::pluginList();
+  Kst::DataSourcePluginManager::init();
+  _plugins = Kst::DataSourcePluginManager::pluginList();
 }
 
 
@@ -59,7 +60,7 @@ void TestDataSource::testAscii() {
     ts << ".2" << endl;
     ts.flush();
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -117,7 +118,7 @@ void TestDataSource::testAscii() {
     ts << "inf\t1" << endl;
     ts << "0.000000000000000000000000000000000000000000000000 0" << endl;
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -179,7 +180,7 @@ void TestDataSource::testAscii() {
     QTextStream ts(&tf);
     ts << "2 4" << endl;
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->isValid());
@@ -233,7 +234,7 @@ void TestDataSource::testAscii() {
     QTextStream ts(&tf);
     ts << ";" << endl;
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
     QVERIFY(dsp);
     QVERIFY(dsp->hasConfigWidget());
@@ -249,7 +250,7 @@ void TestDataSource::testAscii() {
       ts << i << " " <<  i + 100 << " " << i + 1000 << endl;
     }
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, tf.fileName());
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
     dsp->internalUpdate();
 
     QVERIFY(dsp);
@@ -330,7 +331,7 @@ void TestDataSource::testDirfile() {
     }
     printf("Opening dirfile = %s for test.\n", fifteen.toLatin1().data());
 
-    Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, fifteen);
+    Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, fifteen);
     dsp->internalUpdate();
 
     QVERIFY(dsp);
@@ -524,7 +525,7 @@ void TestDataSource::testQImageSource() {
 
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
-  Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
+  Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, imageFile);
   dsp->internalUpdate();
 
   QVERIFY(dsp);
@@ -628,7 +629,7 @@ void TestDataSource::testFITSImage() {
 
   printf("Opening image = %s for test.\n", imageFile.toLatin1().data());
 
-  Kst::DataSourcePtr dsp = Kst::DataSource::loadSource(&_store, imageFile);
+  Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, imageFile);
   dsp->internalUpdate();
 
   QVERIFY(dsp);

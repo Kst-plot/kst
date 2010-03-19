@@ -15,6 +15,7 @@
 #include "datasource.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "datasourcepluginmanager.h"
 
 namespace Kst {
 
@@ -63,7 +64,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     return 0;
   }
 
-  DataSourcePtr dataSource = DataSource::loadSource(store, fileName, fileType);
+  DataSourcePtr dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
   if (dataSource) {
     dataSource->parseProperties(propertyAttributes);
   }

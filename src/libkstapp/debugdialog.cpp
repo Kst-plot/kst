@@ -11,11 +11,11 @@
 
 #include "debugdialog.h"
 #include "logwidget.h"
-#include <debug.h>
-#include <events.h>
-#include <logevents.h>
-#include <datasource.h>
-
+#include "debug.h"
+#include "events.h"
+#include "logevents.h"
+#include "datasource.h"
+#include "datasourcepluginmanager.h"
 #include "kst_i18n.h"
 
 #include <QDebug>
@@ -77,7 +77,7 @@ void DebugDialog::show() {
   Q_ASSERT(_store);
   _dataSources->clear();
 
-  const QStringList& pl = DataSource::pluginList();
+  const QStringList& pl = DataSourcePluginManager::pluginList();
   foreach (QString pluginName, pl) {
     new QTreeWidgetItem(_dataSources, QStringList(pluginName));
   }

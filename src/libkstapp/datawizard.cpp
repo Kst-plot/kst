@@ -31,6 +31,8 @@
 #include "settings.h"
 #include "applicationsettings.h"
 #include "updatemanager.h"
+#include "datasourcepluginmanager.h"
+
 
 namespace Kst {
 
@@ -80,7 +82,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   }
   _pageValid = true;
 
-  _dataSource = DataSource::findOrLoadSource(_store, filename);
+  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
   _fileType->setText(_dataSource->fileType());
 
   _dataSource->readLock();

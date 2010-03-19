@@ -18,6 +18,7 @@
 #include <qapplication.h>
 #include <qdebug.h>
 #include "kst_i18n.h"
+#include "datasourcepluginmanager.h"
 
 #include "ksttimers.h"
 
@@ -68,7 +69,7 @@ int Debug::limit() const {
 
 
 QStringList Debug::dataSourcePlugins() const {
-  return DataSource::pluginList();
+  return DataSourcePluginManager::pluginList();
 }
 
 

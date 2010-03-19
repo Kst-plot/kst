@@ -18,6 +18,7 @@
 #include "datascalar.h"
 #include "vscalar.h"
 #include "dialogdefaults.h"
+#include "datasourcepluginmanager.h"
 
 #include <QPushButton>
 #include <QThreadPool>
@@ -180,7 +181,7 @@ void ScalarTab::sourceValid(QString filename, int requestID) {
   if (_requestID != requestID) {
     return;
   }
-  _dataSource = DataSource::findOrLoadSource(_store, filename);
+  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
 
   _field->setEnabled(true);
   _fieldRV->setEnabled(true);

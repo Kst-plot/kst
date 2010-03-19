@@ -27,6 +27,7 @@
 #include "kst_i18n.h"
 #include "updatemanager.h"
 #include "dialogdefaults.h"
+#include "datasourcepluginmanager.h"
 
 namespace Kst {
 
@@ -420,7 +421,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           break;
         }
 
-        DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+        DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
@@ -463,7 +464,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
             break;
           }
 
-          DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+          DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
 
           DataVectorPtr pv = createOrFindDataVector(field, ds);
 
@@ -504,7 +505,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
             break;
           }
 
-          DataSourcePtr ds = DataSource::findOrLoadSource ( _document->objectStore(), file );
+          DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource ( _document->objectStore(), file );
 
           DataVectorPtr hv = createOrFindDataVector ( field, ds );
           Q_ASSERT ( _document && _document->objectStore() );
@@ -544,7 +545,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
             break;
           }
 
-          DataSourcePtr ds = DataSource::findOrLoadSource(_document->objectStore(), file);
+          DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
 
           DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
 

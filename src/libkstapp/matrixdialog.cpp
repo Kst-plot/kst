@@ -24,7 +24,7 @@
 
 #include "document.h"
 #include "objectstore.h"
-
+#include "datasourcepluginmanager.h"
 #include "dialogdefaults.h"
 
 #include <QDir>
@@ -494,7 +494,7 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
   if (_requestID != requestID) {
     return;
   }
-  _dataSource = DataSource::findOrLoadSource(_store, filename);
+  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
 
   _field->setEnabled(true);
 
