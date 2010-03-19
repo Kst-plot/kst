@@ -96,8 +96,8 @@ DataSourceConfigWidget* DataSource::configWidget() {
 
 
 
-DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType)
-    : Object(), _filename(filename), _cfg(cfg), _updateCheckType(updateType) {
+DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
+: Object(), _filename(filename), _cfg(cfg), _updateCheckType(File) {
   Q_UNUSED(type)
   Q_UNUSED(store)
   _valid = false;
@@ -134,6 +134,11 @@ DataSource::~DataSource() {
 
 }
 
+
+void DataSource::setUpdateType(UpdateCheckType updateType)
+{
+_updateCheckType = updateType;
+}
 
 
 void DataSource::checkUpdate() {

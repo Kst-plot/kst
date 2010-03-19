@@ -64,18 +64,39 @@ class KST_EXPORT DataSource : public Object {
   Q_OBJECT
 
   public:
-    enum UpdateCheckType { Timer, File, None };
+    DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type);
+    virtual ~DataSource();
     
 
-    DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const UpdateCheckType updateType = File);
-    virtual ~DataSource();
-
-    virtual UpdateType objectUpdate(qint64 newSerial);
-
+    /************************************************************/
+    /* Dynamic type system                                      */
+    /************************************************************/
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
+
+    /************************************************************/
+    /* Methods for update system                                */
+    /************************************************************/
+
+    enum UpdateCheckType { Timer, File, None };
+    void setUpdateType(UpdateCheckType updateType);
+    virtual UpdateType objectUpdate(qint64 newSerial);
+
+    void internalUpdate() {return;}
+    qint64 minInputSerial() const {return 0;}
+    qint64 minInputSerialOfLastChange() const {return 0;}
+
+   /** Updates number of samples.
+      For ascii files, it also reads and writes to a temporary binary file.
+      It must be implemented by the datasource. */
+    virtual UpdateType internalDataSourceUpdate() = 0;
+
+
+    /************************************************************/
+    /* UI TODO leave here?                                      */
+    /************************************************************/
     bool hasConfigWidget() const;
     DataSourceConfigWidget *configWidget();
     virtual void parseProperties(QXmlStreamAttributes &properties);
@@ -84,18 +105,9 @@ class KST_EXPORT DataSource : public Object {
     void disableReuse();
 
     virtual bool isValid() const; // generally you don't need to change this
-    // returns _valid;
 
-    // these are not used by datasources
-    void internalUpdate() {return;}
-    qint64 minInputSerial() const {return 0;}
-    qint64 minInputSerialOfLastChange() const {return 0;}
 
-   /** Updates number of samples.
-      For ascii files, it also reads and writes to a temporary binary file.
-      It must be implemented by the datasource. */
 
-    virtual UpdateType internalDataSourceUpdate() = 0;
 
     virtual QString fileName() const;
 
