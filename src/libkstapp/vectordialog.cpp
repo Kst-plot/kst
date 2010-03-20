@@ -219,11 +219,11 @@ void VectorTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->readLock();
 
-  _field->addItems(_dataSource->fieldList());
+  _field->addItems(_dataSource->vector().list());
   if (!_initField.isEmpty()) {
     setField(_initField);
   }
-  _field->setEditable(!_dataSource->fieldListIsComplete());
+  _field->setEditable(!_dataSource->vector().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();

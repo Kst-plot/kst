@@ -130,9 +130,9 @@ void ConfigWidgetAscii::load() {
   _ac->_indexVector->clear();
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
-    _ac->_indexVector->addItems(src->fieldList());
+    _ac->_indexVector->addItems(src->vector().list());
     _ac->_indexVector->setCurrentIndex(src->_config->_indexInterpretation - 1);
-    if (src->fieldList().contains(src->_config->_indexVector)) {
+    if (src->vector().list().contains(src->_config->_indexVector)) {
       _ac->_indexVector->setEditText(src->_config->_indexVector);
     }
   } else {

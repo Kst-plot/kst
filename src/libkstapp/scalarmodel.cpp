@@ -192,12 +192,12 @@ void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent
   data << dataSource->shortName();
   ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
 
-  QStringList scalars = dataSource->scalarList();
+  QStringList scalars = dataSource->scalar().list();
   scalars.sort();
   foreach(QString scalar, scalars) {
     QList<QVariant> data;
     double value;
-    dataSource->readScalar(value, scalar);
+    dataSource->scalar().read(scalar, DataScalar::Param(&value));
     data << scalar << value;
     new ScalarTreeItem(data, item);
   }
@@ -227,7 +227,7 @@ void ScalarModel::createTree() {
     }
   }
   foreach(DataSource* ds, _store->dataSourceList()) {
-    if (!ds->scalarList().isEmpty()) {
+    if (!ds->scalar().list().isEmpty()) {
       objectMap.insert(ds->shortName(), ds);
     }
   }

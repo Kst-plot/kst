@@ -18,55 +18,76 @@
 #ifndef DATASOURCE_H
 #define DATASOURCE_H
 
-#include <qhash.h>
-#include <qdom.h>
-#include <qpointer.h>
-#include <qstring.h>
-#include <qtextstream.h>
-#include <qwidget.h>
-#include <QRunnable>
-
-#include <qsettings.h>
-
 #include "kst_export.h"
 #include "object.h"
 #include "dateparser.h"
 #include "objectlist.h"
 
+#include "datascalar.h"
+#include "datastring.h"
+#include "datavector.h"
+#include "datamatrix.h"
 
-//#include "scalar.h"
-//#include "string_kst.h"
+#include <QRunnable>
+#include <QWidget>
+#include <QMap>
 
+class QSettings;
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
-
-namespace KST {
-  class DataSourcePlugin;
-}
-
 class QFileSystemWatcher;
 
 namespace Kst {
 
-struct MatrixData {
-  double xMin;
-  double yMin;
-  double xStepSize;
-  double yStepSize;
-  double *z; // the data
-};
-
-class String;
-class Scalar;
 class DataSourceConfigWidget;
+class DataSourcePlugin;
 
-class KST_EXPORT DataSource : public Object {
+
+class KST_EXPORT DataSource : public Object
+{
   Q_OBJECT
 
   public:
     DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type);
     virtual ~DataSource();
-    
+
+    /************************************************************/
+    /* Same interface for all supported Primitives              */
+    /************************************************************/
+
+    template<class T>
+    struct DataInterface
+    {
+
+      // read one element
+      virtual int read(const QString& name, const typename T::Param&) = 0;
+
+      // named elements
+      virtual QStringList list() const = 0;
+      virtual bool isListComplete() const = 0;
+      virtual bool isValid(const QString& name) const = 0;
+
+      // T specific
+      virtual const typename T::Optional optional(const QString& name) const = 0;
+      virtual void setOptional(const QString& name, const typename T::Optional&) = 0;
+
+      // meta data
+      virtual QMap<QString, double> metaScalars(const QString& name) = 0;
+      virtual QMap<QString, QString> metaStrings(const QString& name) = 0;
+    };
+
+
+    DataInterface<DataScalar>& scalar() {Q_ASSERT(interf_scalar); return *interf_scalar; }
+    DataInterface<DataString>& string() {Q_ASSERT(interf_string); return *interf_string; }
+    DataInterface<DataVector>& vector() {Q_ASSERT(interf_vector); return *interf_vector; }
+    DataInterface<DataMatrix>& matrix() {Q_ASSERT(interf_matrix); return *interf_matrix; }
+
+    const DataInterface<DataScalar>& scalar() const {Q_ASSERT(interf_scalar); return *interf_scalar; }
+    const DataInterface<DataString>& string() const {Q_ASSERT(interf_string); return *interf_string; }
+    const DataInterface<DataVector>& vector() const {Q_ASSERT(interf_vector); return *interf_vector; }
+    const DataInterface<DataMatrix>& matrix() const {Q_ASSERT(interf_matrix); return *interf_matrix; }
+
+
 
     /************************************************************/
     /* Dynamic type system                                      */
@@ -95,6 +116,27 @@ class KST_EXPORT DataSource : public Object {
 
 
     /************************************************************/
+    /* Methods for handling time in vectors.                    */
+    /* not currently used - may be reworked (remove this note   */
+    /* if you use it)                                           */
+    /************************************************************/
+    static bool supportsTime(const QString& plugin, const QString& type = QString::null);
+
+    /** Does it support time conversion of sample numbers, in general? */
+    virtual bool supportsTimeConversions() const;
+
+    virtual int sampleForTime(const QDateTime& time, bool *ok = 0L);
+
+    virtual int sampleForTime(double milliseconds, bool *ok = 0L);
+
+    virtual QDateTime timeForSample(int sample, bool *ok = 0L);
+
+    // in (ms)
+    virtual double relativeTimeForSample(int sample, bool *ok = 0L);
+
+
+
+    /************************************************************/
     /* UI TODO leave here?                                      */
     /************************************************************/
     bool hasConfigWidget() const;
@@ -104,10 +146,15 @@ class KST_EXPORT DataSource : public Object {
     bool reusable() const;
     void disableReuse();
 
+
+
+
+    /************************************************************/
+    /* File/data specific                                      */
+    /************************************************************/
+
+
     virtual bool isValid() const; // generally you don't need to change this
-
-
-
 
     virtual QString fileName() const;
 
@@ -140,194 +187,13 @@ class KST_EXPORT DataSource : public Object {
 
     virtual QString descriptionTip() const;
 
-    /************************************************************/
-    /* Methods for writing                                      */
-    /* only used by d2d - may be reworked (remove this note     */
-    /* if you use it)                                           */
-    /************************************************************/
-    virtual bool isWritable() const;
-
-    /** Write a field to the file.
-     * Data is in the double Array v[]
-     * s is the starting frame
-     * n is the number of frames to write
-     *
-     * return the number of -samples- written or -1 if writing fails or is not supported.
-     */
-    virtual int writeField(const double *v, const QString& field, int s, int n);
-    /** Returns the file name. It is updated each time the fn is called. */
-
-    /************************************************************/
-    /* Methods for handling time in vectors.                    */
-    /* not currently used - may be reworked (remove this note   */
-    /* if you use it)                                           */
-    /************************************************************/
-    static bool supportsTime(const QString& plugin, const QString& type = QString::null);
-
-    /** Does it support time conversion of sample numbers, in general? */
-    virtual bool supportsTimeConversions() const;
-
-    virtual int sampleForTime(const QDateTime& time, bool *ok = 0L);
-
-    virtual int sampleForTime(double milliseconds, bool *ok = 0L);
-
-    virtual QDateTime timeForSample(int sample, bool *ok = 0L);
-
-    // in (ms)
-    virtual double relativeTimeForSample(int sample, bool *ok = 0L);
-
-    /************************************************************/
-    /* Methods for Vectors (which, for historical reasons, are  */
-    /* referred to as fields in data sources                    */
-    /************************************************************/
-    static QStringList fieldListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
-
-    /** Returns true if the field list is complete, therefore the user should
-      not be able to edit the field combobox.  Default is true. */
-    virtual bool fieldListIsComplete() const;
-
-    virtual QStringList fieldList() const;
-
-    /** Reads a field from the file.  Data is returned in the
-      double Array v[]
-      s is the starting frame
-      n is the number of frames to read
-      if n is -1, it means to read 1 -sample- from frame s.
-      return the number of -samples- read.
-     */
-    virtual int readField(double *v, const QString& field, int s, int n);
-
-    /** Reads a field from the file.  Data is returned in the
-      double Array v[].  Will skip according to the parameter, but it may not
-      be implemented.  If it returns -9999, use the non-skip version instead. */
-    virtual int readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead = 0L);
-
-    /** Returns true if the field is valid, or false if it is not */
-    virtual bool isValidField(const QString& field) const;
-
-    /** Returns samples per frame for field <field>.  For ascii column data,
-      this is always 1.  For frame data this could greater than 1. */
-    virtual int samplesPerFrame(const QString& field);
-
-    /** Returns the size of the file (in frames) as of last update.
-      Field is optional, but you might not get back what you expect if you
-      don't provide it as the data source may have different frame counts
-      for different fields.  When implementing this, field may be ignored. */
-    virtual int frameCount(const QString& field = QString::null) const;
-
-    /** Returns a list of scalars associated with a field by the data source.
-        These could be sample rate, calibrations, etc.  This list must be
-        complete the very first time it is called and must never change its
-        order or size, because readFieldScalars counts on its order and size.
-        */
-    virtual QStringList fieldScalars(const QString& field);
-
-    /** Read the values of the field scalars.  This is called for every field scalar
-        every time the vector is updated, so it needs to be kept very cheap.
-        Returns the number of scalars returned, and 0 on failure. V must
-        be pre allocated to the right size as given by the length of the list
-        returned by fieldScalars().
-        Most data sources will never change the the field scalars once they have
-        been initialized.  In order to keep this case as fast as possible, the data
-        source can chose to only update v[] if init is true.
-        Note: datavector currently assumes these never change, and only gets them once! */
-    virtual int readFieldScalars(QList<double> &v, const QString& field, bool init);
-
-    /** Returns a list of strings associated with a field by the data source.
-        These could be units, notes, etc.  This list must be
-        complete the very first time it is called and must never change its
-        order or size, because readFieldScalars counts on its order and size.
-        In order to remain fast, the data source can additionally assume that
-        readField() has already been called on the field, so the updating
-        of string values can be done there instead and cached for read by this
-        call.  */
-    virtual QStringList fieldStrings(const QString& field);
-
-    /** Read the values of the field strings.  This is called
-        every time the vector is updated, so it needs to be kept very cheap.
-        Returns the number of strings returned, and 0 on failure.
-        Most data sources will never change the the field strings once they have
-        been initialized.  In order to keep this case as fast as possible, the data
-        source can chose to only update v if init is true.  */
-    virtual int readFieldStrings(QStringList &v, const QString& field, bool init);
-
-    /************************************************************/
-    /* Methods for Matrixes                                     */
-    /************************************************************/
-    //static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
-
-    /** Returns the list of fields that support readMatrix **/
-    virtual QStringList matrixList() const;
-
-    /** Read the specified sub-range of the matrix, flat-packed in z in row-major order
-        xStart - starting x *frame*
-        yStart - starting y *frame*
-        xNumSteps - number of *frames* to read in x direction; -1 to read 1 *sample* from xStart
-        yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
-        Will skip according to the parameter, but it may not be implemented.  If return value is -9999,
-        use the non-skip version instead.
-        The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
-        Returns the number of *samples* read **/
-    virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
-
-    /** Read the specified sub-range of the matrix, flat-packed in z in row-major order (non-skipping)
-        xStart - starting x *frame*
-        yStart - starting y *frame*
-        xNumSteps - number of *frames* to read in x direction; -1 to read 1 *sample* from xStart
-        yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
-        The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
-        Returns the number of *samples* read **/
-    virtual int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-
-    /** Returns true if the matrix is valid, or false if it is not */
-    virtual bool isValidMatrix(const QString& field) const;
-
-    /** Return the current dimensions of the matrix: xDim*yDim <= total frames **/
-    virtual bool matrixDimensions(const QString& matrix, int* xDim, int* yDim);
-
-    /************************************************************/
-    /* Methods for Scalars                                      */
-    /* see also fieldScalars                                    */
-    /************************************************************/
-    static QStringList scalarListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
-
-    /** Returns true if the scalar list is complete, therefore the user should
-        not be able to edit the scalar combobox.  Default is true. */
-    virtual bool scalarListIsComplete() const;
-
-    /** Returns the list of fields that support readScalar **/
-    virtual QStringList scalarList() const;
-
-    /** Read the specified scalar **/
-    virtual int readScalar(double &S, const QString& scalar);
-
-    /** Returns true if the scalar is valid, or false if it is not */
-    virtual bool isValidScalar(const QString& field) const;
-
-    /************************************************************/
-    /* Methods for Strings                                      */
-    /************************************************************/
-    static QStringList stringListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
-
-    /** Returns true if the string list is complete, therefore the user should
-        not be able to edit the scalar combobox.  Default is true. */
-    virtual bool stringListIsComplete() const;
-
-    /** Returns the list of fields that support readString **/
-    virtual QStringList stringList() const;
-
-    /** Read the specified string **/
-    virtual int readString(QString &S, const QString& string);
-
-    /** Returns true if the string is valid, or false if it is not */
-    virtual bool isValidString(const QString& field) const;
-
 
   public Q_SLOTS:
     virtual void checkUpdate();
 
   Q_SIGNALS:
     void sourceUpdated(ObjectPtr sourceObject);
+
 
   protected:
 
@@ -338,17 +204,7 @@ class KST_EXPORT DataSource : public Object {
 
     bool _writable;
 
-    /** Place to store the list of fields.  Base implementation returns this. */
-    QStringList _fieldList;
 
-    /** Place to store the list of matrices.  Base implementation returns this. */
-    QStringList _matrixList;
-
-    /** Place to store the list of scalars.  Base implementation returns this. */
-    QStringList _scalarList;
-
-    /** Place to store the list of strings.  Base implementation returns this. */
-    QStringList _stringList;
 
     /** The filename.  Populated by the base class constructor.  */
     QString _filename;
@@ -367,12 +223,23 @@ class KST_EXPORT DataSource : public Object {
 
     QFileSystemWatcher *_watcher;
 
+    void setInterface(DataInterface<DataScalar>*);
+    void setInterface(DataInterface<DataString>*);
+    void setInterface(DataInterface<DataVector>*);
+    void setInterface(DataInterface<DataMatrix>*);
+
+  private:
+    DataInterface<DataScalar>* interf_scalar;
+    DataInterface<DataString>* interf_string;
+    DataInterface<DataVector>* interf_vector;
+    DataInterface<DataMatrix>* interf_matrix;
+
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };
 
 
-typedef SharedPtr<DataSource> DataSourcePtr;
+
 
 class DataSourceList : public QList<DataSourcePtr> {
   public:
@@ -465,6 +332,7 @@ class KST_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
     QString _file;
     int _requestID;
 };
+
 
 }
 #endif

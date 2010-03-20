@@ -18,6 +18,8 @@
 
 #include "dataprimitive.h"
 
+#include "datasource.h"
+
 namespace Kst {
 
 DataPrimitive::DataPrimitive()

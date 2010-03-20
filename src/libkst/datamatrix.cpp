@@ -176,7 +176,7 @@ QString DataMatrix::fileLabel() const {
 bool DataMatrix::isValid() const {
   if (_file) {
     _file->readLock();
-    bool fieldValid = _file->isValidMatrix(_field);
+    bool fieldValid = _file->matrix().isValid(_field);
     _file->unlock();
     return fieldValid;
   }
@@ -206,7 +206,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     // try to use the datasource's read with skip function - it will automatically
     // enlarge each pixel to correct for the skipping
     matData.z=_z;
-    _NS = _file->readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, _skip);
+    _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, _skip);
 
     // -9999 means the skipping function is not supported by datasource
     if (_NS != -9999) {
@@ -232,7 +232,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     for (int i = 0; i < _nX; i++) {
       for (int j = 0; j < _nY; j++) {
         // read one buffer size in
-        _file->readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, _skip, _skip);
+        readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, _skip, _skip, -1);
         // take average of the buffer
         double bufferAverage = 0;
         for (int k = 0; k < _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip; k++) {
@@ -259,7 +259,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     for (int i = 0; i < _nX; i++) {
       for (int j = 0; j < _nY; j++) {
         // read one sample
-        int samples = _file->readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, -1, -1);
+        int samples = readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, -1, -1, -1);
         matData.z += samples;
         _NS += samples;
         if (first) {
@@ -289,7 +289,7 @@ void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart) {
   MatrixData matData;
   matData.z=_z;
 
-  _NS = _file->readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY);
+  _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, -1);
 
   // set the recommended translate and scaling
   _minX = matData.xMin;
@@ -325,9 +325,11 @@ void DataMatrix::internalUpdate() {
   }
 
   // first get the real start and end range
-  int xSize, ySize, realXStart, realYStart;
+  int realXStart;
+  int realYStart;
 
-  _file->matrixDimensions(_field, &xSize, &ySize);
+  int xSize = _file->matrix().optional(_field).xSize;
+  int ySize = _file->matrix().optional(_field).ySize;
 
   if (_reqXStart < 0) {
     // counting from end
@@ -454,7 +456,7 @@ void DataMatrix::commonConstructor(DataSourcePtr file, const QString &field,
   if (!_file) {
     Debug::self()->log(i18n("Data file for matrix %1 was not opened.", Name()), Debug::Warning);
   } else {
-    _samplesPerFrameCache = _file->samplesPerFrame(_field);
+    _samplesPerFrameCache = _file->matrix().optional(_field).samplesPerFrame;
   }
 
   _aveReadBuffer = 0L;
@@ -473,7 +475,7 @@ void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (_file) {
-    _samplesPerFrameCache = _file->samplesPerFrame(_field);
+    _samplesPerFrameCache = _file->matrix().optional(_field).samplesPerFrame;
   }
   resizeZ(0);
   _NS = 0;
@@ -530,6 +532,14 @@ QString DataMatrix::descriptionTip() const {
 QString DataMatrix::propertyString() const {
   return i18n("%1 of %2").arg(field()).arg(dataSource()->fileName());
 }
+
+
+int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip)
+{
+  Param p = { data, xStart, yStart, xNumSteps, yNumSteps, skip};
+  return _file->matrix().read(matrix, p);
+}
+
 
 }
 // vim: ts=2 sw=2 et

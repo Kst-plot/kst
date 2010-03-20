@@ -24,6 +24,7 @@
 
 class AsciiSourceConfig;
 class QFile;
+class DataInterfaceAsciiVector;
 
 class AsciiSource : public Kst::DataSource
 {
@@ -41,9 +42,6 @@ class AsciiSource : public Kst::DataSource
 
     int readField(double *v, const QString &field, int s, int n);
 
-    int samplesPerFrame(const QString &field);
-
-    int frameCount(const QString& field = QString::null) const;
 
     QString fileType() const;
 
@@ -58,11 +56,6 @@ class AsciiSource : public Kst::DataSource
 
     int sampleForTime(const QDateTime& time, bool *ok);
 
-    bool fieldListIsComplete() const;
-
-    int readScalar(double &S, const QString& scalar);
-
-    int readString(QString &S, const QString& string);
 
     virtual void reset();
 
@@ -85,6 +78,15 @@ class AsciiSource : public Kst::DataSource
     uint _tmpBufSize;
     bool _haveHeader;
     bool _fieldListComplete;
+
+    QStringList _scalarList;
+    QStringList _stringList;
+    QStringList _fieldList;
+
+    DataInterfaceAsciiVector* iv;
+
+    // TODO remove
+    friend class DataInterfaceAsciiVector;
 };
 
 

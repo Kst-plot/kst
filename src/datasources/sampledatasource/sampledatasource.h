@@ -29,28 +29,15 @@ class SampleDatasourceSource : public Kst::DataSource {
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 
-    // Optional function that must be implemented if this datasource supports matricies.
-    bool matrixDimensions( const QString& matrix, int* xDim, int* yDim);
-    int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-    bool isValidMatrix(const QString& field) const;
-
-    int readField(double *v, const QString &field, int s, int n);
-    bool isValidField(const QString &field) const;
-
-    int samplesPerFrame(const QString &field);
-    int frameCount(const QString& field = QString::null) const;
-    bool isEmpty() const;
+ 
     QString fileType() const;
 
     void save(QXmlStreamWriter &streamWriter);
 
     class Config;
 
-    int readScalar(double &S, const QString& scalar);
-    int readString(QString &S, const QString& string);
 
   private:
-    int _frameCount;
     mutable Config *_config;
 };
 

@@ -500,8 +500,8 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->readLock();
 
-  _field->addItems(_dataSource->matrixList());
-  _field->setEditable(!_dataSource->fieldListIsComplete() && !_dataSource->matrixList().empty());
+  _field->addItems(_dataSource->matrix().list());
+  _field->setEditable(!_dataSource->matrix().isListComplete() && !_dataSource->matrix().list().empty());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();

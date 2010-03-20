@@ -22,6 +22,8 @@
 #include <QFileSystemWatcher>
 #include <QDir>
 
+using namespace Kst;
+
 static const QString dirfileTypeString = I18N_NOOP("Directory of Binary Files");
 
 class DirFileSource::Config {
@@ -45,8 +47,93 @@ class DirFileSource::Config {
 };
 
 
-DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
+//
+// Vector interface
+//
+
+class DataInterfaceDirFileVector : public DataSource::DataInterface<DataVector>
+{
+public:
+  DataInterfaceDirFileVector(DirFileSource& d) : dir(d) {}
+
+  // read one element
+  int read(const QString&, const DataVector::Param&);
+
+  // named elements
+  QStringList list() const { return dir._fieldList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString& field) const { return dir._fieldList.contains( field ); }
+
+  // T specific
+  const DataVector::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataVector::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&);
+  QMap<QString, QString> metaStrings(const QString&);
+
+
+  DirFileSource& dir;
+};
+
+
+
+const DataVector::Optional DataInterfaceDirFileVector::optional(const QString &field) const
+{
+  DataVector::Optional opt = {-1, -1, -1};
+  if (!dir._fieldList.contains(field))
+    return opt;
+
+  opt.samplesPerFrame = dir.samplesPerFrame(field);
+  opt.frameCount = dir._frameCount;
+  return opt;
+}
+
+
+int DataInterfaceDirFileVector::read(const QString& field, const DataVector::Param& p)
+{
+  return dir.readField(p.data, field, p.startingFrame, p.numberOfFrames);
+}
+
+
+QMap<QString, double> DataInterfaceDirFileVector::metaScalars(const QString& field)
+{
+  QStringList keys = dir.fieldScalars(field);
+  QList<double> values;
+  int scalars = dir.readFieldScalars(values, field, true);
+  QMap<QString, double> m;
+  for (int i = 0; i < scalars; i++) {
+    if (values.size() > i && keys.size() > i)
+      m[keys.at(i)] = values.at(i);
+  }
+  return m;
+}
+
+
+QMap<QString, QString> DataInterfaceDirFileVector::metaStrings(const QString& field)
+{
+  QStringList keys = dir.fieldStrings(field);
+  QStringList values;
+  int strings = dir.readFieldStrings(values, field, true);
+  QMap<QString, QString> m;
+  for (int i = 0; i < strings; i++) {
+    if (values.size() > i && keys.size() > i)
+      m[keys.at(i)] = values.at(i);
+  }
+  return m;
+}
+
+//
+// DirFileSource
+//
+
+DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
+    Kst::DataSource(store, cfg, filename, type), _config(0L),
+    iv(new DataInterfaceDirFileVector(*this))
+{
+  setInterface(iv);
+
+  setUpdateType(None);
 
   _valid = false;
   if (!type.isEmpty() && type != dirfileTypeString) {
@@ -101,7 +188,6 @@ void DirFileSource::reset() {
 bool DirFileSource::init() {
   _fieldList.clear();
   _scalarList.clear();
-  _matrixList.clear();
   _stringList.clear();
 
   _frameCount = 0;
@@ -170,7 +256,7 @@ int DirFileSource::readField(double *v, const QString& field, int s, int n) {
 
 // int DirFileSource::writeField(const double *v, const QString& field, int s, int n) {
 //   int err = 0;
-// 
+//
 //   return PutData(_directoryName.toLatin1(), field.left(FIELD_LENGTH).toLatin1(),
 //       s, 0, /* 1st sframe, 1st samp */
 //       n, 0, /* num sframes, num samps */
@@ -399,7 +485,7 @@ QStringList DirFilePlugin::fieldList(QSettings *cfg,
                                             bool *complete) const {
   Q_UNUSED(cfg);
   Q_UNUSED(type)
-  
+
   QStringList fieldList;
 
   Dirfile dirfile(getDirectory(filename).toLatin1(), GD_RDONLY);

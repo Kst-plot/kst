@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 #include "dialogdefaults.h"
+#include "datasource.h"
 
 namespace Kst {
   QSettings *_dialogDefaults;

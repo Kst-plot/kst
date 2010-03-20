@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
   QList<Kst::DataVector*> vlist;
 
   for (i=0; i<n_field; i++) {
-    if (!file->isValidField(field_list[i])) {
+    if (!file->vector().isValid(field_list[i])) {
       fprintf(stderr, "d2asc error: field %s in file %s is not valid\n",
               field_list[i], filename);
       return -3;

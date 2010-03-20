@@ -59,7 +59,7 @@ const QString& DataString::typeString() const {
 bool DataString::isValid() const {
   if (_file) {
     _file->readLock();
-    bool rc = _file->isValidString(_field);
+    bool rc = _file->string().isValid(_field);
     _file->unlock();
     return rc;
   }
@@ -102,7 +102,7 @@ void DataString::save(QXmlStreamWriter &s) {
 void DataString::internalUpdate() {
   if (_file) {
     _file->writeLock();
-    _file->readString(_value, _field);
+    _file->string().read(_field, Param(&_value));
     _file->unlock();
   }
 }
@@ -169,7 +169,7 @@ void DataString::reload() {
 }
 
 void DataString::reset() {
-  _file->readString(_value, _field);
+  _file->string().read(_field, Param(&_value));
 }
 
 }

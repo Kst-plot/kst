@@ -58,7 +58,7 @@ const QString& DataScalar::typeString() const {
 bool DataScalar::isValid() const {
   if (_file) {
     _file->readLock();
-    bool rc = _file->isValidScalar(_field);
+    bool rc = _file->scalar().isValid(_field);
     _file->unlock();
     return rc;
   }
@@ -101,7 +101,7 @@ void DataScalar::save(QXmlStreamWriter &s) {
 void DataScalar::internalUpdate() {
   if (_file) {
     _file->writeLock();
-    _file->readScalar(_value, _field);
+    _file->scalar().read(_field, Param(&_value));
     _file->unlock();
   }
 }
@@ -166,7 +166,7 @@ void DataScalar::reload() {
 }
 
 void DataScalar::reset() {
-  _file->readScalar(_value, _field);
+    _file->scalar().read(_field, Param(&_value));
 }
 
 }

@@ -16,7 +16,11 @@
 #include <datasource.h>
 #include <dataplugin.h>
 
-class QImageSource : public Kst::DataSource {
+class DataInterfaceQImageVector;
+class DataInterfaceQImageMatrix;
+  
+class QImageSource : public Kst::DataSource 
+{
   Q_OBJECT
 
   public:
@@ -29,15 +33,6 @@ class QImageSource : public Kst::DataSource {
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 
-    bool matrixDimensions( const QString& matrix, int* xDim, int* yDim);
-    int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-    bool isValidMatrix(const QString& field) const;
-
-    int readField(double *v, const QString &field, int s, int n);
-    bool isValidField(const QString &field) const;
-
-    int samplesPerFrame(const QString &field);
-    int frameCount(const QString& field = QString::null) const;
     bool isEmpty() const;
     QString fileType() const;
 
@@ -47,13 +42,15 @@ class QImageSource : public Kst::DataSource {
 
     class Config;
 
-    int readScalar(double &S, const QString& scalar);
-    int readString(QString &S, const QString& string);
+    //int readScalar(double &S, const QString& scalar);
+    //int readString(QString &S, const QString& string);
 
   private:
-    int _frameCount;
     QImage _image;
     mutable Config *_config;
+
+    DataInterfaceQImageVector* iv;
+    DataInterfaceQImageMatrix* im;
 };
 
 

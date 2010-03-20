@@ -25,6 +25,7 @@
 using namespace GetData;
 
 class QFileSystemWatcher;
+class DataInterfaceDirFileVector;
 
 class DirFileSource : public Kst::DataSource {
   Q_OBJECT
@@ -78,8 +79,17 @@ class DirFileSource : public Kst::DataSource {
     QString _directoryName;
     Dirfile *_dirfile;
 
+    QStringList _scalarList;
+    QStringList _stringList;
+    QStringList _fieldList;
+
     int _frameCount;
     mutable Config *_config;
+
+    DataInterfaceDirFileVector* iv;
+
+    // TODO remove
+    friend class DataInterfaceDirFileVector;
 };
 
 

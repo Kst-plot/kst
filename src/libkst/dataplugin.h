@@ -14,6 +14,7 @@
 
 #include <QtPlugin>
 #include <QSettings>
+#include <QDomElement>
 
 #include "sharedptr.h"
 #include "datasource.h"

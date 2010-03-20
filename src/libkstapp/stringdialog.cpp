@@ -158,8 +158,8 @@ void StringTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->readLock();
 
-  _field->addItems(_dataSource->stringList());
-  _field->setEditable(!_dataSource->stringListIsComplete());
+  _field->addItems(_dataSource->string().list());
+  _field->setEditable(!_dataSource->string().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();

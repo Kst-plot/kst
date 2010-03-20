@@ -18,10 +18,9 @@
 #ifndef DATASCALAR_H
 #define DATASCALAR_H
 
-#include "scalar.h"
-#include "datasource.h"
 #include "kst_export.h"
 #include "dataprimitive.h"
+#include "scalar.h"
 
 class QXmlStreamWriter;
 
@@ -48,6 +47,14 @@ class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
   public:
     virtual ~DataScalar();
+
+    struct Param {
+      Param(double* d) : value(d) {}
+      double* value;
+    };
+
+    struct Optional {
+    };
 
     virtual void internalUpdate();
     virtual const QString& typeString() const;

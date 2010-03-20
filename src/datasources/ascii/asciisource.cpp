@@ -44,6 +44,69 @@
 #define atof(X, Y) atof(X)
 #endif
 
+using namespace Kst;
+
+
+//
+// Vector interface
+//
+
+class DataInterfaceAsciiVector : public DataSource::DataInterface<DataVector>
+{
+public:
+  DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
+
+  // read one element
+  int read(const QString&, const DataVector::Param&);
+
+  // named elements
+  QStringList list() const { return ascii._fieldList; }
+  bool isListComplete() const { return ascii._fieldListComplete; }
+  bool isValid(const QString& field) const { return ascii._fieldList.contains( field ); }
+
+  // T specific
+  const DataVector::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataVector::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&);
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  AsciiSource& ascii;
+};
+
+
+
+const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &field) const
+{
+  DataVector::Optional opt = {-1, -1, -1};
+  if (!ascii._fieldList.contains(field))
+    return opt;
+
+  opt.samplesPerFrame = 1;
+  opt.frameCount = ascii._numFrames;
+  return opt;
+}
+
+
+int DataInterfaceAsciiVector::read(const QString& field, const DataVector::Param& p)
+{
+  return ascii.readField(p.data, field, p.startingFrame, p.numberOfFrames);
+}
+
+
+// TODO FRAMES only in vector?
+QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
+{
+  QMap<QString, double> m;
+  m["FRAMES"] = ascii._numFrames;;
+  return m;
+}
+
+
+
+
 
 //
 // AsciiSource
@@ -57,8 +120,15 @@ const QString AsciiSource::asciiTypeKey()
 }
 
 
-AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type), _rowIndex(0L), _config(0L), _tmpBuf(0L), _tmpBufSize(0) {
+AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
+  Kst::DataSource(store, cfg, filename, type),
+    _rowIndex(0L),
+    _config(0L),
+    _tmpBuf(0L),
+    _tmpBufSize(0),
+    iv(new DataInterfaceAsciiVector(*this))
+{
+  setInterface(iv);
 
   //TIME_IN_SCOPE(Ctor_AsciiSource);
 
@@ -118,7 +188,6 @@ void AsciiSource::reset() {
   _fieldListComplete = false;
   _fieldList.clear();
   _scalarList.clear();
-  _matrixList.clear();
   _stringList.clear();
 
   Object::reset();
@@ -263,20 +332,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
 }
 
 
-bool AsciiSource::fieldListIsComplete() const {
-  return _fieldListComplete;
-}
 
 
-int AsciiSource::readScalar(double &S, const QString& scalar) {
-  if (scalar == "FRAMES") {
-    S = _numFrames;
-    return 1;
-  }
-  return 0;
-}
 
-
+/* TODO needed?
 int AsciiSource::readString(QString &S, const QString& string) {
   if (string == "FILE") {
     S = _filename;
@@ -284,6 +343,7 @@ int AsciiSource::readString(QString &S, const QString& string) {
   }
   return 0;
 }
+*/
 
 
 struct NumberLocale
@@ -335,7 +395,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
     return n;
   }
 
-  QStringList fieldList = this->fieldList();
+  QStringList fieldList = _fieldList;
   int col = 0;
   for (QStringList::ConstIterator i = fieldList.begin(); i != fieldList.end(); ++i) {
     if (*i == field) {
@@ -451,16 +511,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   return n;
 }
 
-int AsciiSource::samplesPerFrame(const QString &field) {
-  Q_UNUSED(field)
-  return 1;
-}
-
-
-int AsciiSource::frameCount(const QString& field) const {
-  Q_UNUSED(field)
-  return _numFrames;
-}
 
 
 QString AsciiSource::fileType() const {

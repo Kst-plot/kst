@@ -10,12 +10,14 @@
  ***************************************************************************/
 
 #include "qimagesource.h"
+#include "kst_i18n.h"
 
 #include <QXmlStreamWriter>
 #include <QImageReader>
-#include <qcolor.h>
+#include <QColor>
 
-#include "kst_i18n.h"
+
+using namespace Kst;
 
 static const QString qimageTypeString = I18N_NOOP("QImage image");
 
@@ -40,9 +42,267 @@ class QImageSource::Config {
 };
 
 
-QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type), _config(0L) {
-  
+
+//
+// Vector interface
+//
+
+class DataInterfaceQImageVector : public DataSource::DataInterface<DataVector>
+{
+public:
+  DataInterfaceQImageVector(QImage* img) : _image(img) {}
+
+  // read one element
+  int read(const QString&, const DataVector::Param&);
+
+  // named elements
+  QStringList list() const { return _vectorList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataVector::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataVector::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&);
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  // no interface
+
+  QImage* _image;
+  QStringList _vectorList;
+  int _frameCount;
+
+  void init();
+  void clear();
+};
+
+
+void DataInterfaceQImageVector::clear()
+{
+  _vectorList.clear();
+  _frameCount = 0;
+}
+
+
+void DataInterfaceQImageVector::init()
+{
+  _vectorList.append( "GRAY" );
+  _vectorList.append( "RED" );
+  _vectorList.append( "GREEN" );
+  _vectorList.append( "BLUE" );
+}
+
+
+const DataVector::Optional DataInterfaceQImageVector::optional(const QString &field) const
+{
+  DataVector::Optional opt = {-1, -1, -1};
+  if (!_vectorList.contains(field))
+    return opt;
+
+  opt.samplesPerFrame = 1;
+  opt.frameCount = _frameCount;
+  opt.vectorframeCount = -1;
+
+  return opt;
+}
+
+
+
+int DataInterfaceQImageVector::read(const QString& field, const DataVector::Param& p)
+{
+  int i;
+  int s = p.startingFrame;
+  int n = p.numberOfFrames;
+
+  if ( field=="INDEX" ) {
+    for ( i=0; i<n; i++ ) {
+      p.data[i] = i + s;
+    }
+  } else if ( field=="GRAY" ) {
+    for ( i = s; i<s+n; i++ ) {
+      int px = i%_image->width();
+      int py = i/_image->width();
+      p.data[i-s] = qGray( _image->pixel( px, py ) );
+    }
+  } else if ( field=="RED" ) {
+    for ( i=s; i<s+n; i++ ) {
+      int px = i%_image->width();
+      int py = i/_image->width();
+      p.data[i-s] = qRed( _image->pixel( px, py ) );
+    }
+  } else if ( field=="GREEN" ) {
+    for ( i=s; i<s+n; i++ ) {
+      int px = i%_image->width();
+      int py = i/_image->width();
+      p.data[i-s] = qGreen( _image->pixel( px, py ) );
+    }
+  } else if ( field=="BLUE" ) {
+    for ( i=s; i<s+n; i++ ) {
+      int px = i%_image->width();
+      int py = i/_image->width();
+      p.data[i-s] = qBlue( _image->pixel( px, py ) );
+    }
+  }
+
+  return i;
+}
+
+
+bool DataInterfaceQImageVector::isValid(const QString& field) const {
+  return  _vectorList.contains( field );
+}
+
+// TODO FRAMES only in vector?
+QMap<QString, double> DataInterfaceQImageVector::metaScalars(const QString&)
+{
+  QMap<QString, double> m;
+  m["FRAMES"] = _frameCount;
+  return m;
+}
+
+
+//
+// Matrix interface
+//
+
+class DataInterfaceQImageMatrix : public DataSource::DataInterface<DataMatrix>
+{
+public:
+
+  DataInterfaceQImageMatrix(QImage* img) : _image(img) {}
+
+  // read one element
+  int read(const QString&, const DataMatrix::Param&);
+
+  // named elements
+  QStringList list() const { return _matrixList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataMatrix::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataMatrix::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  // no interface
+  QImage* _image;
+  QStringList _matrixList;
+
+  void init();
+  void clear();
+};
+
+void DataInterfaceQImageMatrix::clear()
+{
+  _matrixList.clear();
+}
+
+void DataInterfaceQImageMatrix::init()
+{
+  _matrixList.append( "GRAY" );
+  _matrixList.append( "RED" );
+  _matrixList.append( "GREEN" );
+  _matrixList.append( "BLUE" );
+}
+
+
+
+const DataMatrix::Optional DataInterfaceQImageMatrix::optional(const QString& matrix) const
+{
+  DataMatrix::Optional opt = {-1, -1, -1};
+  if ( !_image || _image->isNull() || !_matrixList.contains( matrix ) ) {
+    return opt;
+  }
+
+  opt.xSize = _image->width();
+  opt.ySize = _image->height();
+
+  return opt;
+}
+
+
+int DataInterfaceQImageMatrix::read(const QString& field, const DataMatrix::Param& p)
+{
+  if ( _image->isNull() ) {
+    return 0;
+  }
+
+  int y0 = p.yStart;
+  int y1 = p.yStart + p.yNumSteps;
+  int x0 = p.xStart;
+  int x1 = p.xStart + p.xNumSteps;
+  double* z = p.data->z;
+
+  int i = 0;
+
+  if ( field=="GRAY") {
+    for (int px = p.xStart; px<x1; px++ ) {
+      for (int py=y1-1; py>=p.yStart; py-- ) {
+        z[i] = qGray( _image->pixel( px, py ) );
+        i++;
+      }
+    }
+  } else if ( field=="RED" ) {
+    for (int px = p.xStart; px<x1; px++ ) {
+      for (int py=y1-1; py>=p.yStart; py-- ) {
+        z[i] = qRed( _image->pixel( px, py ) );
+        i++;
+      }
+    }
+  } else if ( field=="GREEN" ) {
+    for (int px = p.xStart; px<x1; px++ ) {
+      for (int py=y1-1; py>=p.yStart; py-- ) {
+        z[i] = qGreen( _image->pixel( px, py ) );
+        i++;
+      }
+    }
+  } else if ( field=="BLUE" ) {
+    for (int px = p.xStart; px<x1; px++ ) {
+      for (int py=y1-1; py>=p.yStart; py-- ) {
+        z[i] = qBlue( _image->pixel( px, py ) );
+        i++;
+      }
+    }
+  }
+
+    // set the suggested matrix transform params: pixel index....
+  p.data->xMin = x0;
+  p.data->yMin = y0;
+  p.data->xStepSize = 1;
+  p.data->yStepSize = 1;
+
+  return i;
+}
+
+
+bool DataInterfaceQImageMatrix::isValid(const QString& field) const {
+  return  _matrixList.contains( field );
+}
+
+
+
+
+
+//
+// QImageSource
+//
+
+QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
+  Kst::DataSource(store, cfg, filename, type),
+  _config(0L),
+  iv(new DataInterfaceQImageVector(&_image)),
+  im(new DataInterfaceQImageMatrix(&_image))
+{
+  setInterface(iv);
+  setInterface(im);
+
   setUpdateType(None);
 
   _valid = false;
@@ -60,10 +320,8 @@ QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   if (init()) {
     _valid = true;
   }
-
   registerChange();
 }
-
 
 
 QImageSource::~QImageSource() {
@@ -83,176 +341,34 @@ void QImageSource::reset() {
 }
 
 
-bool QImageSource::init() {
+bool QImageSource::init()
+{
   _image = QImage();
-  _matrixList.clear();
-  _fieldList.clear();
-  _frameCount = 0;
-  if ( _image.load( _filename ) ) {
-    _fieldList.append("INDEX");
-    _fieldList.append( "GRAY" );
-    _fieldList.append( "RED" );
-    _fieldList.append( "GREEN" );
-    _fieldList.append( "BLUE" );
-    _matrixList.append( "GRAY" );
-    _matrixList.append( "RED" );
-    _matrixList.append( "GREEN" );
-    _matrixList.append( "BLUE" );
-    registerChange();
-    return true;
-  } else {
-    _image = QImage();
+  iv->clear();
+  im->clear();
+  if (!_image.load( _filename ) ) {
     return false;
   }
+  iv->init();
+  im->init();
+  registerChange();
+  return true;
 }
 
 
-Kst::Object::UpdateType QImageSource::internalDataSourceUpdate() {
+Kst::Object::UpdateType QImageSource::internalDataSourceUpdate()
+{
   int newNF = _image.width()*_image.height();
-  bool isnew = newNF != _frameCount;
+  bool isnew = newNF != iv->_frameCount;
 
-  _frameCount = newNF;
+  iv->_frameCount = newNF;
 
   return (isnew ? Kst::Object::Updated : Kst::Object::NoChange);
 }
 
 
-bool QImageSource::matrixDimensions( const QString& matrix, int* xDim, int* yDim) {
-  if ( _image.isNull() ) {
-    return false;
-  }
-
-  if ( !_matrixList.contains( matrix ) ) {
-    return false;
-  }
-
-  *xDim = _image.width();
-  *yDim = _image.height();
-  return true;
-}
-
-
-int QImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int xStart,
-                                     int yStart, int xNumSteps,
-                                     int yNumSteps) {
-  int i,  px, py;
-  int y0, y1, x0, x1;
-  double *z;
-
-  if ( _image.isNull() ) {
-    return 0;
-  }
-
-  y0 = yStart;
-  y1 = yStart+yNumSteps;
-
-  x0 = xStart;
-  x1 = xStart+xNumSteps;
-
-  i=0;
-
-  z = data->z;
-  if ( field=="GRAY") {
-    for ( px = xStart; px<x1; px++ ) {
-      for ( py=y1-1; py>=yStart; py-- ) {
-        z[i] = qGray( _image.pixel( px, py ) );
-        i++;
-      }
-    }
-  } else if ( field=="RED" ) {
-    for ( px = xStart; px<x1; px++ ) {
-      for ( py=y1-1; py>=yStart; py-- ) {
-        z[i] = qRed( _image.pixel( px, py ) );
-        i++;
-      }
-    }
-  } else if ( field=="GREEN" ) {
-    for ( px = xStart; px<x1; px++ ) {
-      for ( py=y1-1; py>=yStart; py-- ) {
-        z[i] = qGreen( _image.pixel( px, py ) );
-        i++;
-      }
-    }
-  } else if ( field=="BLUE" ) {
-    for ( px = xStart; px<x1; px++ ) {
-      for ( py=y1-1; py>=yStart; py-- ) {
-        z[i] = qBlue( _image.pixel( px, py ) );
-        i++;
-      }
-    }
-  }
-
-    // set the suggested matrix transform params: pixel index....
-  data->xMin = x0;
-  data->yMin = y0;
-  data->xStepSize = 1;
-  data->yStepSize = 1;
-
-  return( i );
-}
-
-
-int QImageSource::readField(double *v, const QString& field, int s, int n) {
-  int i=0, px,  py;
-
-  if ( field=="INDEX" ) {
-    for ( i=0; i<n; i++ ) {
-      v[i] = i+s;
-    }
-  } else if ( field=="GRAY" ) {
-    for ( i=s; i<s+n; i++ ) {
-      px = i%_image.width();
-      py = i/_image.width();
-      v[i-s] = qGray( _image.pixel( px, py ) );
-    }
-  } else if ( field=="RED" ) {
-    for ( i=s; i<s+n; i++ ) {
-      px = i%_image.width();
-      py = i/_image.width();
-      v[i-s] = qRed( _image.pixel( px, py ) );
-    }
-  } else if ( field=="GREEN" ) {
-    for ( i=s; i<s+n; i++ ) {
-      px = i%_image.width();
-      py = i/_image.width();
-      v[i-s] = qGreen( _image.pixel( px, py ) );
-    }
-  } else if ( field=="BLUE" ) {
-    for ( i=s; i<s+n; i++ ) {
-      px = i%_image.width();
-      py = i/_image.width();
-      v[i-s] = qBlue( _image.pixel( px, py ) );
-    }
-  }
-
-  return( i );
-}
-
-
-bool QImageSource::isValidField(const QString& field) const {
-  return  _fieldList.contains( field );
-}
-
-
-bool QImageSource::isValidMatrix(const QString& field) const {
-  return  _matrixList.contains( field );
-}
-
-
-int QImageSource::samplesPerFrame(const QString &field) {
-  Q_UNUSED(field)
-  return 1;
-}
-
-
-int QImageSource::frameCount(const QString& field) const {
-  Q_UNUSED(field)
-  return _frameCount;
-}
-
-
 bool QImageSource::isEmpty() const {
-  return _frameCount < 1;
+  return iv->_frameCount < 1;
 }
 
 
@@ -265,7 +381,7 @@ void QImageSource::save(QXmlStreamWriter &streamWriter) {
   Kst::DataSource::save(streamWriter);
 }
 
-
+/* TODO needed?
 int QImageSource::readScalar(double &S, const QString& scalar) {
   if (scalar == "FRAMES") {
     S = _frameCount;
@@ -282,7 +398,14 @@ int QImageSource::readString(QString &S, const QString& string) {
   }
   return 0;
 }
+*/
 
+
+
+
+//
+// QImageSourcePlugin
+//
 
 QString QImageSourcePlugin::pluginName() const { return "QImage Source Reader"; }
 QString QImageSourcePlugin::pluginDescription() const { return "QImage Source Reader"; }
@@ -427,7 +550,7 @@ int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) con
 
   QString ftype( QImageReader::imageFormat( filename ) );
 
-  if ( ftype.isEmpty() ) 
+  if ( ftype.isEmpty() )
     return 0;
 
   //QImageReader is incorrectly identifying some ascii files with

@@ -18,10 +18,9 @@
 #ifndef DATASTRING_H
 #define DATASTRING_H
 
-#include "string_kst.h"
-#include "datasource.h"
 #include "kst_export.h"
 #include "dataprimitive.h"
+#include "string_kst.h"
 
 class QXmlStreamWriter;
 
@@ -48,6 +47,15 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
   public:
     virtual ~DataString();
     virtual void internalUpdate();
+
+    struct Param {
+      Param(QString* s) : value(s) {}
+      QString* value;
+    };
+
+    struct Optional {
+    };
+
 
     void reload();
 

@@ -20,10 +20,10 @@
 #define SharedPTR_H
 
 #include <QSemaphore>
+#include <QDebug>
 
 //#define KST_DEBUG_SHARED
 #ifdef KST_DEBUG_SHARED
-#include <QDebug>
 #define KST_DBG if (true)
 #else
 #define KST_DBG if (false)

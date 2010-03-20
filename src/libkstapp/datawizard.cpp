@@ -65,7 +65,7 @@ DataSourcePtr DataWizardPageDataSource::dataSource() const {
 
 
 QStringList DataWizardPageDataSource::dataSourceFieldList() const {
-  return _dataSource->fieldList();
+  return _dataSource->vector().list();
 }
 
 
@@ -591,15 +591,15 @@ void DataWizard::finished() {
   // only add to memory requirement if xVector is to be created
   if (_pageDataPresentation->createXAxisFromField()) {
     if (_pageDataPresentation->dataRange()->readToEnd()) {
-      frames = ds->frameCount(_pageDataPresentation->vectorField()) - startOffset;
+      frames = ds->vector().optional(_pageDataPresentation->vectorField()).frameCount - startOffset;
     } else {
-      frames = qMin(rangeCount,double(ds->frameCount(_pageDataPresentation->vectorField())));
+      frames = qMin(rangeCount,double(ds->vector().optional(_pageDataPresentation->vectorField()).frameCount));
     }
 
     if (_pageDataPresentation->dataRange()->doSkip() && _pageDataPresentation->dataRange()->skip() > 0) {
       memoryRequested += frames / _pageDataPresentation->dataRange()->skip() * sizeof(double);
     } else {
-      memoryRequested += frames * ds->samplesPerFrame(_pageDataPresentation->vectorField())*sizeof(double);
+      memoryRequested += frames * ds->vector().optional(_pageDataPresentation->vectorField()).samplesPerFrame * sizeof(double);
     }
   }
 
@@ -610,18 +610,19 @@ void DataWizard::finished() {
       QString field = _pageVectors->plotVectors()->item(i)->text();
 
       if (_pageDataPresentation->dataRange()->readToEnd()) {
-        frames = ds->frameCount(field) - startOffset;
+        frames = ds->vector().optional(field).frameCount - startOffset;
       } else {
         frames = rangeCount;
-        if (frames > (unsigned long)ds->frameCount(field)) {
-          frames = ds->frameCount();
+        int fc = ds->vector().optional(field).frameCount;
+        if (frames > (unsigned long) fc) {
+          frames = fc;
         }
       }
 
       if (_pageDataPresentation->dataRange()->doSkip() && _pageDataPresentation->dataRange()->skip() > 0) {
         memoryRequested += frames / _pageDataPresentation->dataRange()->skip()*sizeof(double);
       } else {
-        memoryRequested += frames * ds->samplesPerFrame(field)*sizeof(double);
+        memoryRequested += frames * ds->vector().optional(field).samplesPerFrame * sizeof(double);
       }
       if (_pageDataPresentation->plotPSD()) {
         memoryRequested += fftLen * 6;

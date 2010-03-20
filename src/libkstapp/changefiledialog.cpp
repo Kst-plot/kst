@@ -311,7 +311,7 @@ void ChangeFileDialog::apply() {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems[i]->text()))) {
       vector->writeLock();
       _dataSource->readLock();
-      bool valid = _dataSource->isValidField(vector->field());
+      bool valid = _dataSource->vector().isValid(vector->field());
       _dataSource->unlock();
       if (!valid) {
         if (invalid > 0) {
@@ -345,7 +345,7 @@ void ChangeFileDialog::apply() {
     } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems[i]->text()))) {
       matrix->writeLock();
       _dataSource->readLock();
-      bool valid = _dataSource->isValidMatrix(matrix->field());
+      bool valid = _dataSource->matrix().isValid(matrix->field());
       _dataSource->unlock();
       if (!valid) {
         if (invalid > 0) {

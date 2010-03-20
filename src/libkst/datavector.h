@@ -18,11 +18,11 @@
 #ifndef DATAVECTOR_H
 #define DATAVECTOR_H
 
+#include "kst_export.h"
+#include "dataprimitive.h"
 #include "vector.h"
 
-#include "datasource.h"
-#include "dataprimitive.h"
-#include "kst_export.h"
+
 
 namespace Kst {
 
@@ -34,6 +34,33 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
   Q_OBJECT
 
   public:
+
+    /** Parameters for reading vectors a field from a file.  Data is returned in the data;
+      data points to aloocated array which should be filled
+      startingFrame is the starting frame
+      numberOfFrames is the number of frames to read
+        if numberOfFrames is -1, it means to read 1 -sample- from startingFrame.
+      skipFrame skip this frame      
+      returns the number of samples read.
+      If it returns -9999, use the skipFrame= -1. 
+     */
+
+    struct Param {
+      double*  data;
+      int startingFrame;
+      int numberOfFrames;
+      int skipFrame;
+      int *lastFrameRead;
+    };
+
+    struct Optional {
+      int samplesPerFrame;
+      int frameCount;
+      int vectorframeCount;
+    };
+
+
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
@@ -150,6 +177,10 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     void checkIntegrity(); // must be called with a lock
 
     bool _dontUseSkipAccel;
+
+    // wrappers around DataSource interface functions
+    int readField(double *v, const QString& field, int s, int n, int skip = -1, int *lastFrameRead = 0L);
+    const Optional opt(const QString& field) const;
 
     QHash<QString, ScalarPtr> _fieldScalars;
     QHash<QString, StringPtr> _fieldStrings;

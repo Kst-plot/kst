@@ -13,18 +13,51 @@
 #ifndef DATAMATRIX_H
 #define DATAMATRIX_H
 
-#include "matrix.h"
-#include "sharedptr.h"
-#include "datasource.h"
 #include "kst_export.h"
 #include "dataprimitive.h"
+#include "matrix.h"
 
 namespace Kst {
+
+class MatrixData {
+public:
+  double xMin;
+  double yMin;
+  double xStepSize;
+  double yStepSize;
+  double *z; // the data
+};
 
 class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
   Q_OBJECT
 
   public:
+
+   /** Read the specified sub-range of the matrix, flat-packed in z in row-major order
+        xStart - starting x *frame*
+        yStart - starting y *frame*
+        xNumSteps - number of *frames* to read in x direction; -1 to read 1 *sample* from xStart
+        yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
+        Will skip according to the parameter, but it may not be implemented.  If return value is -9999,
+        use the non-skip version instead.
+        The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
+        Returns the number of *samples* read 
+    **/
+    struct Param {
+      MatrixData* data;
+      int xStart;
+      int yStart;
+      int xNumSteps;
+      int yNumSteps;
+      int skip;
+    };
+
+    struct Optional {
+      int samplesPerFrame;
+      int xSize;
+      int ySize;
+    };
+
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
@@ -118,6 +151,8 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
     bool _doSkip : 1;
     int _skip;
     int _samplesPerFrameCache; // cache the samples per frame of the field in datasource
+
+    int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
 };
 
 typedef SharedPtr<DataMatrix> DataMatrixPtr;

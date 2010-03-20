@@ -118,12 +118,13 @@ void VScalar::internalUpdate() {
   if (_file) {
     int f0;
     if (_f0<0) { 
-      f0 = _file->frameCount(_field);
+      f0 = _file->vector().optional(_field).frameCount;
     } else {
       f0 = _f0;
     }
     _file->writeLock();
-    _file->readField(&_value, _field, f0, -1);
+    DataVector::Param p = {&_value, f0, -1, -1, 0};
+    _file->vector().read(_field, p);
     _file->unlock();
   }
 }
@@ -181,7 +182,7 @@ QString VScalar::descriptionTip() const {
 bool VScalar::isValid() const {
   if (_file) {
     _file->readLock();
-    bool rc = _file->isValidField(_field);
+    bool rc = _file->vector().isValid(_field);
     _file->unlock();
     return rc;
   }

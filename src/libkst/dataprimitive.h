@@ -20,12 +20,16 @@
 #ifndef DATAPRIMITIVE_H
 #define DATAPRIMITIVE_H
 
+#include "sharedptr.h"
+
 #include <QString>
 
 
-#include "datasource.h"
-
 namespace Kst {
+
+class DataSource;
+typedef SharedPtr<DataSource> DataSourcePtr;
+
 
 class DataPrimitive
 {

@@ -66,19 +66,19 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
-    QVERIFY(dsp->isValidField("INDEX"));
-    QVERIFY(dsp->isValidField("1"));
-    QVERIFY(!dsp->isValidField("0"));
-    QVERIFY(!dsp->isValidField("2"));
-    QCOMPARE(dsp->samplesPerFrame(QString::null), 1);
-    QCOMPARE(dsp->samplesPerFrame("INDEX"), 1);
-    QCOMPARE(dsp->samplesPerFrame("1"), 1);
-    QCOMPARE(dsp->frameCount(QString::null), 3);
-    QCOMPARE(dsp->frameCount("1"), 3);
-    QCOMPARE(dsp->frameCount("INDEX"), 3);
+    QVERIFY(dsp->vector().isValid("INDEX"));
+    QVERIFY(dsp->vector().isValid("1"));
+    QVERIFY(!dsp->vector().isValid("0"));
+    QVERIFY(!dsp->vector().isValid("2"));
+    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 3);
+    QCOMPARE(dsp->vector().optional("1").frameCount, 3);
+    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 3);
     QCOMPARE(dsp->fileName(), tf.fileName());
-    QCOMPARE(dsp->fieldList().count(), 2);
-    QVERIFY(dsp->fieldListIsComplete());
+    QCOMPARE(dsp->vector().list().count(), 2);
+    QVERIFY(dsp->vector().isListComplete());
     QVERIFY(!dsp->isEmpty());
 
     Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
@@ -124,20 +124,20 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
-    QVERIFY(dsp->isValidField("INDEX"));
-    QVERIFY(dsp->isValidField("1"));
-    QVERIFY(!dsp->isValidField("0"));
-    QVERIFY(dsp->isValidField("2"));
-    QVERIFY(!dsp->isValidField("3"));
-    QCOMPARE(dsp->samplesPerFrame(QString::null), 1);
-    QCOMPARE(dsp->samplesPerFrame("INDEX"), 1);
-    QCOMPARE(dsp->samplesPerFrame("1"), 1);
-    QCOMPARE(dsp->samplesPerFrame("2"), 1);
-    QCOMPARE(dsp->frameCount(QString::null), 4);
-    QCOMPARE(dsp->frameCount("1"), 4);
-    QCOMPARE(dsp->frameCount("2"), 4);
-    QCOMPARE(dsp->frameCount("INDEX"), 4);
-    QCOMPARE(dsp->fieldList().count(), 3);
+    QVERIFY(dsp->vector().isValid("INDEX"));
+    QVERIFY(dsp->vector().isValid("1"));
+    QVERIFY(!dsp->vector().isValid("0"));
+    QVERIFY(dsp->vector().isValid("2"));
+    QVERIFY(!dsp->vector().isValid("3"));
+    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("2").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 4);
+    QCOMPARE(dsp->vector().optional("1").frameCount, 4);
+    QCOMPARE(dsp->vector().optional("2").frameCount, 4);
+    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 4);
+    QCOMPARE(dsp->vector().list().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
     Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
@@ -186,20 +186,20 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
-    QVERIFY(dsp->isValidField("INDEX"));
-    QVERIFY(dsp->isValidField("1"));
-    QVERIFY(!dsp->isValidField("0"));
-    QVERIFY(dsp->isValidField("2"));
-    QVERIFY(!dsp->isValidField("3"));
-    QCOMPARE(dsp->samplesPerFrame(QString::null), 1);
-    QCOMPARE(dsp->samplesPerFrame("INDEX"), 1);
-    QCOMPARE(dsp->samplesPerFrame("1"), 1);
-    QCOMPARE(dsp->samplesPerFrame("2"), 1);
-    QCOMPARE(dsp->frameCount(QString::null), 1);
-    QCOMPARE(dsp->frameCount("1"), 1);
-    QCOMPARE(dsp->frameCount("2"), 1);
-    QCOMPARE(dsp->frameCount("INDEX"), 1);
-    QCOMPARE(dsp->fieldList().count(), 3);
+    QVERIFY(dsp->vector().isValid("INDEX"));
+    QVERIFY(dsp->vector().isValid("1"));
+    QVERIFY(!dsp->vector().isValid("0"));
+    QVERIFY(dsp->vector().isValid("2"));
+    QVERIFY(!dsp->vector().isValid("3"));
+    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional("2").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 1);
+    QCOMPARE(dsp->vector().optional("1").frameCount, 1);
+    QCOMPARE(dsp->vector().optional("2").frameCount, 1);
+    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 1);
+    QCOMPARE(dsp->vector().list().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
 
@@ -257,12 +257,12 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
-    QCOMPARE(dsp->frameCount(QString::null), 39000);
-    QCOMPARE(dsp->frameCount("1"), 39000);
-    QCOMPARE(dsp->frameCount("2"), 39000);
-    QCOMPARE(dsp->frameCount("3"), 39000);
-    QCOMPARE(dsp->frameCount("INDEX"), 39000);
-    QCOMPARE(dsp->fieldList().count(), 4);
+    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 39000);
+    QCOMPARE(dsp->vector().optional("1").frameCount, 39000);
+    QCOMPARE(dsp->vector().optional("2").frameCount, 39000);
+    QCOMPARE(dsp->vector().optional("3").frameCount, 39000);
+    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 39000);
+    QCOMPARE(dsp->vector().list().count(), 4);
     QVERIFY(!dsp->isEmpty());
 
     Kst::DataVectorPtr rvp = Kst::kst_cast<Kst::DataVector>(_store.createObject<Kst::DataVector>());
@@ -338,20 +338,20 @@ void TestDataSource::testDirfile() {
     QVERIFY(dsp->isValid());
     QVERIFY(!dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("Directory of Binary Files"));
-    QVERIFY(dsp->isValidField("INDEX"));
-    QCOMPARE(dsp->frameCount("INDEX"), 17);
-    QVERIFY(dsp->isValidField("cos"));
-    QVERIFY(dsp->isValidField("fcount"));
-    QVERIFY(dsp->isValidField("scount"));
-    QVERIFY(dsp->isValidField("sine"));
-    QVERIFY(dsp->isValidField("ssine"));
-    QVERIFY(!dsp->isValidField("foo"));
+    QVERIFY(dsp->vector().isValid("INDEX"));
+    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 17);
+    QVERIFY(dsp->vector().isValid("cos"));
+    QVERIFY(dsp->vector().isValid("fcount"));
+    QVERIFY(dsp->vector().isValid("scount"));
+    QVERIFY(dsp->vector().isValid("sine"));
+    QVERIFY(dsp->vector().isValid("ssine"));
+    QVERIFY(!dsp->vector().isValid("foo"));
 
     //TODO test samples per frame?
 
     QCOMPARE(dsp->fileName(), fifteen);
-    QCOMPARE(dsp->fieldList().count(), 6);
-    QVERIFY(dsp->fieldListIsComplete());
+    QCOMPARE(dsp->vector().list().count(), 6);
+    QVERIFY(dsp->vector().isListComplete());
 
     QVERIFY(!dsp->isEmpty());
 
@@ -532,27 +532,27 @@ void TestDataSource::testQImageSource() {
   QVERIFY(dsp->isValid());
   QVERIFY(!dsp->hasConfigWidget());
   QCOMPARE(dsp->fileType(), QLatin1String("QImage image"));
-  QVERIFY(dsp->isValidField("INDEX"));
-  QCOMPARE(dsp->frameCount("INDEX"), 1024);
-  QVERIFY(dsp->isValidField("RED"));
-  QVERIFY(dsp->isValidField("BLUE"));
-  QVERIFY(dsp->isValidField("GREEN"));
-  QVERIFY(dsp->isValidField("GRAY"));
-  QVERIFY(!dsp->isValidField("foo"));
+  QVERIFY(dsp->vector().isValid("INDEX"));
+  QCOMPARE(dsp->vector().optional("INDEX").frameCount, 1024);
+  QVERIFY(dsp->vector().isValid("RED"));
+  QVERIFY(dsp->vector().isValid("BLUE"));
+  QVERIFY(dsp->vector().isValid("GREEN"));
+  QVERIFY(dsp->vector().isValid("GRAY"));
+  QVERIFY(!dsp->vector().isValid("foo"));
 
   //TODO test samples per frame?
 
   QCOMPARE(dsp->fileName(), imageFile);
-  QCOMPARE(dsp->fieldList().count(), 5);
-  QVERIFY(dsp->fieldListIsComplete());
+  QCOMPARE(dsp->vector().list().count(), 5);
+  QVERIFY(dsp->vector().isListComplete());
 
   QVERIFY(!dsp->isEmpty());
 
-  QVERIFY(dsp->isValidMatrix("RED"));
-  QVERIFY(dsp->isValidMatrix("BLUE"));
-  QVERIFY(dsp->isValidMatrix("GREEN"));
-  QVERIFY(dsp->isValidMatrix("GRAY"));
-  QVERIFY(!dsp->isValidMatrix("foo"));
+  QVERIFY(dsp->matrix().isValid("RED"));
+  QVERIFY(dsp->matrix().isValid("BLUE"));
+  QVERIFY(dsp->matrix().isValid("GREEN"));
+  QVERIFY(dsp->matrix().isValid("GRAY"));
+  QVERIFY(!dsp->matrix().isValid("foo"));
 
   {
     Kst::DataMatrixPtr matrix = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());
@@ -636,21 +636,21 @@ void TestDataSource::testFITSImage() {
   QVERIFY(dsp->isValid());
   QVERIFY(!dsp->hasConfigWidget());
   QCOMPARE(dsp->fileType(), QLatin1String("FITS image"));
-  QVERIFY(dsp->isValidField("INDEX"));
-  QCOMPARE(dsp->frameCount("INDEX"), 58800);
-  QVERIFY(dsp->isValidField("1"));
-  QVERIFY(!dsp->isValidField("foo"));
+  QVERIFY(dsp->vector().isValid("INDEX"));
+  QCOMPARE(dsp->vector().optional("INDEX").frameCount, 58800);
+  QVERIFY(dsp->vector().isValid("1"));
+  QVERIFY(!dsp->vector().isValid("foo"));
 
   //TODO test samples per frame?
 
   QCOMPARE(dsp->fileName(), imageFile);
-  QCOMPARE(dsp->fieldList().count(), 2);
-  QVERIFY(dsp->fieldListIsComplete());
+  QCOMPARE(dsp->vector().list().count(), 2);
+  QVERIFY(dsp->vector().isListComplete());
 
   QVERIFY(!dsp->isEmpty());
 
-  QVERIFY(dsp->isValidMatrix("1"));
-  QVERIFY(!dsp->isValidMatrix("foo"));
+  QVERIFY(dsp->matrix().isValid("1"));
+  QVERIFY(!dsp->matrix().isValid("foo"));
 
   {
     Kst::DataMatrixPtr matrix = Kst::kst_cast<Kst::DataMatrix>(_store.createObject<Kst::DataMatrix>());

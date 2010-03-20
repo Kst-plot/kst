@@ -86,10 +86,6 @@ void SampleDatasourceSource::reset() {
 
 // If the datasource has any predefined fields they should be populated here.
 bool SampleDatasourceSource::init() {
-  _matrixList.clear();
-  _fieldList.clear();
-  _frameCount = 0;
-
   registerChange();
   return true; // false if something went wrong
 }
@@ -102,68 +98,9 @@ Kst::Object::UpdateType SampleDatasourceSource::internalDataSourceUpdate() {
 }
 
 
-// Optional function.  Used when the datasource supports Matrices to provide the dimensions.
-bool SampleDatasourceSource::matrixDimensions( const QString& matrix, int* xDim, int* yDim) {
-  Q_UNUSED(matrix);
-  Q_UNUSED(xDim);
-  Q_UNUSED(yDim);
-  return false;
-}
+// TODO a DataSource::DataInterface implementation as example
 
 
-// Optional function.  Used when the datasource supports Matrices to provide the matrix details.
-int SampleDatasourceSource::readMatrix(Kst::MatrixData* data, const QString& field, int xStart,
-                                     int yStart, int xNumSteps,
-                                     int yNumSteps) {
-  Q_UNUSED(data);
-  Q_UNUSED(field);
-  Q_UNUSED(xStart);
-  Q_UNUSED(yStart);
-  Q_UNUSED(xNumSteps);
-  Q_UNUSED(yNumSteps);
-  return -1;
-}
-
-
-// Primary read function for vectors.  Must return the value from the requested field.
-int SampleDatasourceSource::readField(double *v, const QString& field, int s, int n) {
-  Q_UNUSED(v);
-  Q_UNUSED(field);
-  Q_UNUSED(s);
-  Q_UNUSED(n);
-  return -1;
-}
-
-
-// Checks the validatity of the Field.  Typically done by checking against the field list.
-bool SampleDatasourceSource::isValidField(const QString& field) const {
-  Q_UNUSED(field)
-  return false;
-}
-
-
-// Checks the validatity of the Matrix.  Typically done by checking against the matrix list.
-bool SampleDatasourceSource::isValidMatrix(const QString& field) const {
-  Q_UNUSED(field)
-  return false;
-}
-
-
-int SampleDatasourceSource::samplesPerFrame(const QString &field) {
-  Q_UNUSED(field)
-  return 1;
-}
-
-
-int SampleDatasourceSource::frameCount(const QString& field) const {
-  Q_UNUSED(field)
-  return 0;
-}
-
-
-bool SampleDatasourceSource::isEmpty() const {
-  return _frameCount < 1;
-}
 
 
 QString SampleDatasourceSource::fileType() const {
@@ -176,24 +113,7 @@ void SampleDatasourceSource::save(QXmlStreamWriter &streamWriter) {
 }
 
 
-// Returns the value of the provided scalar if it exists.
-int SampleDatasourceSource::readScalar(double &S, const QString& scalar) {
-  if (scalar == "FRAMES") {
-    S = _frameCount;
-    return 1;
-  }
-  return 0;
-}
 
-
-// Returns the value of the provided string if it exists.
-int SampleDatasourceSource::readString(QString &S, const QString& string) {
-  if (string == "FILE") {
-    S = _filename;
-    return 1;
-  }
-  return 0;
-}
 
 
 // Name used to identify the plugin.  Used when loading the plugin.

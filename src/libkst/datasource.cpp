@@ -48,13 +48,35 @@
 
 #define DATASOURCE_UPDATE_TIMER_LENGTH 1000
 
-namespace Kst {
+
+using namespace Kst;
+
+template<class T>
+struct NotSupportedImp : public DataSource::DataInterface<T>
+{
+  // read one element
+  int read(const QString&, const typename T::Param&) { return -1; }
+
+  // named elements
+  QStringList list() const { return QStringList(); }
+  bool isListComplete() const { return false; }
+  bool isValid(const QString&) const { return false; }
+
+  // T specific
+  const typename T::Optional optional(const QString&) const { return typename T::Optional(); }
+  void setOptional(const QString&, const typename T::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+};
+
 
 const QString DataSource::staticTypeString = I18N_NOOP("Data Source");
 const QString DataSource::staticTypeTag = I18N_NOOP("source");
 
 
-Kst::Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
+Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
   if (_serial==newSerial) {
     return NoChange;
   }
@@ -71,9 +93,13 @@ Kst::Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
   return updated;
 }
 
+
 void DataSource::_initializeShortName() {
 }
 
+bool DataSource::isValid() const {
+  return _valid;
+}
 
 
 bool DataSource::hasConfigWidget() const {
@@ -96,8 +122,16 @@ DataSourceConfigWidget* DataSource::configWidget() {
 
 
 
-DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type)
-: Object(), _filename(filename), _cfg(cfg), _updateCheckType(File) {
+DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type) :
+  Object(),
+  _filename(filename),
+  _cfg(cfg),
+  _updateCheckType(File),
+  interf_scalar(new NotSupportedImp<DataScalar>),
+  interf_string(new NotSupportedImp<DataString>),
+  interf_vector(new NotSupportedImp<DataVector>),
+  interf_matrix(new NotSupportedImp<DataMatrix>)
+{
   Q_UNUSED(type)
   Q_UNUSED(store)
   _valid = false;
@@ -132,7 +166,33 @@ DataSource::~DataSource() {
     _watcher = 0L;
   }
 
+  delete interf_scalar;
+  delete interf_string;
+  delete interf_vector;
+  delete interf_matrix;
 }
+
+
+void DataSource::setInterface(DataInterface<DataScalar>* i) {
+  delete interf_scalar;
+  interf_scalar = i;
+}
+
+void DataSource::setInterface(DataInterface<DataString>* i) {
+  delete interf_string;
+  interf_string = i;
+}
+
+void DataSource::setInterface(DataInterface<DataVector>* i) {
+  delete interf_vector;
+  interf_vector = i;
+}
+
+void DataSource::setInterface(DataInterface<DataMatrix>* i) {
+  delete interf_matrix;
+  interf_matrix = i;
+}
+
 
 
 void DataSource::setUpdateType(UpdateCheckType updateType)
@@ -160,114 +220,8 @@ const QString& DataSource::typeString() const {
   return staticTypeString;
 }
 
-int DataSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
-  Q_UNUSED(v)
-  Q_UNUSED(field)
-  Q_UNUSED(s)
-  Q_UNUSED(n)
-  Q_UNUSED(skip)
-  Q_UNUSED(lastFrameRead)
-  return -9999; // unsupported
-}
 
 
-int DataSource::readField(double *v, const QString& field, int s, int n) {
-  Q_UNUSED(v)
-  Q_UNUSED(field)
-  Q_UNUSED(s)
-  Q_UNUSED(n)
-  return -1;
-}
-
-bool DataSource::isWritable() const {
-  return _writable;
-}
-
-int DataSource::writeField(const double *v, const QString& field, int s, int n) {
-  Q_UNUSED(v)
-  Q_UNUSED(field)
-  Q_UNUSED(s)
-  Q_UNUSED(n)
-  return -1;
-}
-
-int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip) {
-  Q_UNUSED(data)
-  Q_UNUSED(matrix)
-  Q_UNUSED(xStart)
-  Q_UNUSED(yStart)
-  Q_UNUSED(xNumSteps)
-  Q_UNUSED(yNumSteps)
-  Q_UNUSED(skip)
-  return -9999;
-}
-
-int DataSource::readScalar(double &S, const QString& scalar) {
-  Q_UNUSED(scalar)
-  S = -9999;
-  return 1;
-}
-
-int DataSource::readString(QString &S, const QString& field) {
-  Q_UNUSED(field)
-  S = QString();
-  return 1;
-}
-
-int DataSource::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps) {
-  Q_UNUSED(data)
-  Q_UNUSED(matrix)
-  Q_UNUSED(xStart)
-  Q_UNUSED(yStart)
-  Q_UNUSED(xNumSteps)
-  Q_UNUSED(yNumSteps)
-  return -1;
-}
-
-
-bool DataSource::matrixDimensions(const QString& matrix, int* xDim, int* yDim) {
-  Q_UNUSED(matrix)
-  Q_UNUSED(xDim)
-  Q_UNUSED(yDim)
-  return false;
-}
-
-
-bool DataSource::isValid() const {
-  return _valid;
-}
-
-
-bool DataSource::isValidField(const QString& field) const {
-  return fieldList().contains(field);
-}
-
-
-bool DataSource::isValidMatrix(const QString& field) const {
-  return matrixList().contains(field);
-}
-
-
-bool DataSource::isValidScalar(const QString& field) const {
-  return scalarList().contains(field);
-}
-
-
-bool DataSource::isValidString(const QString& field) const {
-  return stringList().contains(field);
-}
-
-
-int DataSource::samplesPerFrame(const QString &field) {
-  Q_UNUSED(field)
-  return 0;
-}
-
-
-int DataSource::frameCount(const QString& field) const {
-  Q_UNUSED(field)
-  return 0;
-}
 
 
 QString DataSource::fileName() const {
@@ -282,49 +236,14 @@ QString DataSource::fileName() const {
 }
 
 
-QStringList DataSource::fieldList() const {
-  return _fieldList;
-}
 
 
-QStringList DataSource::fieldScalars(const QString& field) {
-  Q_UNUSED(field)
-  return QStringList();
-}
-
-int DataSource::readFieldScalars(QList<double> &v, const QString& field, bool init) {
-  Q_UNUSED(v)
-  Q_UNUSED(field)
-  Q_UNUSED(init)
-  return (0);
-}
 
 
-QStringList DataSource::fieldStrings(const QString& field) {
-  Q_UNUSED(field)
-  return QStringList();
-}
 
 
-int DataSource::readFieldStrings(QStringList &v, const QString& field, bool init) {
-  Q_UNUSED(v)
-  Q_UNUSED(field)
-  Q_UNUSED(init)
-  return (0);
-}
 
 
-QStringList DataSource::matrixList() const {
-  return _matrixList;
-}
-
-QStringList DataSource::scalarList() const {
-  return _scalarList;
-}
-
-QStringList DataSource::stringList() const {
-  return _stringList;
-}
 
 QString DataSource::fileType() const {
   return QString::null;
@@ -374,19 +293,7 @@ void *DataSource::bufferRealloc(void *ptr, size_t size) {
 }
 
 
-bool DataSource::fieldListIsComplete() const {
-  return true;
-}
 
-
-bool DataSource::scalarListIsComplete() const {
-  return true;
-}
-
-
-bool DataSource::stringListIsComplete() const {
-  return true;
-}
 
 
 bool DataSource::isEmpty() const {
@@ -511,5 +418,7 @@ void ValidateDataSourceThread::run() {
   emit dataSourceValid(_file, _requestID);
 }
 
-}
+
 // vim: ts=2 sw=2 et
+
+

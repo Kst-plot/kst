@@ -28,6 +28,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "datavector.h"
+#include "datasource.h"
 #include "math_kst.h"
 #include "objectstore.h"
 #include "updatemanager.h"
@@ -80,7 +81,7 @@ const QString& DataVector::typeString() const {
 bool DataVector::isValid() const {
   if (_file) {
     _file->readLock();
-    bool rc = _file->isValidField(_field);
+    bool rc = _file->vector().isValid(_field);
     _file->unlock();
     return rc;
   }
@@ -309,7 +310,7 @@ void DataVector::reset() { // must be called with a lock
 
   _dontUseSkipAccel = false;
   if (_file) {
-    SPF = _file->samplesPerFrame(_field);
+    SPF = opt(_field).samplesPerFrame;
   }
   F0 = NF = 0;
   resize(0);
@@ -331,7 +332,8 @@ void DataVector::checkIntegrity() {
   }
 
   // if it looks like we have a new file, reset
-  if (_file && (SPF != _file->samplesPerFrame(_field) || _file->frameCount(_field) < NF)) {
+  const Optional op = opt(_field);
+  if (_file && (SPF != op.samplesPerFrame || op.frameCount < NF)) {
     reset();
   }
 
@@ -379,6 +381,7 @@ void DataVector::internalUpdate() {
     return;
   }
 
+  const Optional op = opt(_field);
   checkIntegrity();
 
   if (DoSkip && Skip < 2 && SPF == 1) {
@@ -387,7 +390,7 @@ void DataVector::internalUpdate() {
 
 
   // set new_nf and new_f0
-  int fc = _file->frameCount(_field);
+  int fc = op.frameCount;
   if (ReqNF < 1) { // read to end of file
     new_f0 = ReqF0;
     new_nf = fc - new_f0;
@@ -455,7 +458,7 @@ void DataVector::internalUpdate() {
         // We don't support boxcar inside data sources yet.
         _dontUseSkipAccel = true;
       } else {
-        rc = _file->readField(_v + _numSamples, _field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
+        rc = readField(_v + _numSamples, _field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
         if (rc != -9999) {
           if (rc >= 0) {
             n_read = rc;
@@ -482,7 +485,7 @@ void DataVector::internalUpdate() {
               // FIXME: handle failed resize
             }
           }
-          ave_nread = _file->readField(AveReadBuf, _field, new_f0+i, Skip);
+          ave_nread = readField(AveReadBuf, _field, new_f0+i, Skip);
           for (k = 1; k < ave_nread; k++) {
             AveReadBuf[0] += AveReadBuf[k];
           }
@@ -494,7 +497,7 @@ void DataVector::internalUpdate() {
         }
       } else {
         for (i = NF; new_nf_Skip >= i; i += Skip) {
-          n_read += _file->readField(t++, _field, new_f0 + i, -1);
+          n_read += readField(t++, _field, new_f0 + i, -1);
         }
       }
     }
@@ -516,15 +519,15 @@ void DataVector::internalUpdate() {
     if (start_past_eof) {
       _v[0] = NOPOINT;
       n_read = 1;
-    } else if (_file->samplesPerFrame(_field) > 1) {
+    } else if (op.samplesPerFrame > 1) {
       assert(new_f0 + NF >= 0);
       assert(new_f0 + new_nf - 1 >= 0);
-      n_read = _file->readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
-      n_read += _file->readField(_v+(new_nf-1)*SPF, _field, new_f0 + new_nf - 1, -1);
+      n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
+      n_read += readField(_v+(new_nf-1)*SPF, _field, new_f0 + new_nf - 1, -1);
     } else {
       assert(new_f0 + NF >= 0);
       if (new_nf - NF > 0 || new_nf - NF == -1) {
-        n_read = _file->readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF);
+        n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF);
       }
     }
   }
@@ -571,10 +574,8 @@ int DataVector::samplesPerFrame() const {
 
 
 int DataVector::fileLength() const {
-  if (_file) {
-    _file->readLock();
-    int rc = _file->frameCount(_field);
-    _file->unlock();
+  if (_file) {    
+    int rc = opt(_field).vectorframeCount;    
 
     return rc;
   }
@@ -605,18 +606,15 @@ void DataVector::_resetFieldStrings() {
   // Note: this does not necessarily preserve order if the
   // datasource or field have been changed.  If dynamic
   // fieldScalars are ever wanted, this should be fixed.
-  QStringList string_names = dataSource()->fieldStrings(field());
-  QStringList string_values;
-  dataSource()->readFieldStrings(string_values, field(), true);
-  StringPtr sp;
-  QString key;
+  const QMap<QString, QString> meta_strings = _file->vector().metaStrings(_field);  
+  
 
   QStringList fieldStringKeys = _fieldStrings.keys();
   // remove field strings that no longer need to exist
   readLock();
   for (int i=0; i<fieldStringKeys.count(); i++) {
-    key = fieldStringKeys.at(i);
-    if (!string_names.contains(key)) {
+    QString key = fieldStringKeys.at(i);
+    if (!meta_strings.contains(key)) {
       StringPtr sp = _fieldStrings[key];
       _strings.remove(key);
       _fieldStrings.remove(key);
@@ -624,18 +622,21 @@ void DataVector::_resetFieldStrings() {
     }
   }
   // find or insert strings, to set their value
-  for (int i=0; i<string_names.count(); i++) {
-    key = string_names.at(i);
+  QMapIterator<QString, QString> it(meta_strings);
+  while (it.hasNext()) {
+    it.next();
+    QString key = it.key();
+    StringPtr sp;
     if (!_fieldStrings.contains(key)) { // insert a new one
       _strings.insert(key, sp = store()->createObject<String>());
       _fieldStrings.insert(key, sp);
       sp->setProvider(this);
-      sp->setSlaveName(string_names.at(i));
+      sp->setSlaveName(key);
       sp->_KShared_ref();
     } else {  // find it
       sp = _fieldStrings[key];
     }
-    sp->setValue(string_values[i]);
+    sp->setValue(it.value());
   }
   unlock();
 }
@@ -645,19 +646,15 @@ void DataVector::_resetFieldScalars() {
   // Note: this does not necessarily preseve order if the 
   // datasource or field have been changed.  If dynamic
   // fieldScalars are ever wanted, this should be fixed.
-  QStringList scalar_names = dataSource()->fieldScalars(field());
-  QList<double> scalar_values;
-  dataSource()->readFieldScalars(scalar_values, field(), true);
+  const QMap<QString, double> meta_scalars = _file->vector().metaScalars(_field);
 
-  ScalarPtr sp;
-  QString key;
 
   QStringList fieldScalarKeys = _fieldScalars.keys();
   // remove field scalars that no longer need to exist
   readLock();
   for (int i=0; i<fieldScalarKeys.count(); i++) {
-    key = fieldScalarKeys.at(i);
-    if (!scalar_names.contains(key)) {
+    QString key = fieldScalarKeys.at(i);
+    if (!meta_scalars.contains(key)) {
       ScalarPtr sp = _fieldScalars[key];
       _scalars.remove(key);
       _fieldScalars.remove(key);
@@ -665,18 +662,21 @@ void DataVector::_resetFieldScalars() {
     }
   }
   // find or insert scalars, to set their value
-  for (int i=0; i<scalar_names.count(); i++) {
-    key = scalar_names.at(i);
+  QMapIterator<QString, double> it(meta_scalars);
+  while (it.hasNext()) {
+    it.next();
+    QString key = it.key();
+    ScalarPtr sp;
     if (!_fieldScalars.contains(key)) { // insert a new one
       _scalars.insert(key, sp = store()->createObject<Scalar>());
       _fieldScalars.insert(key, sp);
       sp->setProvider(this);
-      sp->setSlaveName(scalar_names.at(i));
+      sp->setSlaveName(key);
       sp->_KShared_ref();
     } else {  // find it
       sp = _fieldScalars[key];
     }
-    sp->setValue(scalar_values[i]);
+    sp->setValue(it.value());
   }
   unlock();
 }
@@ -733,6 +733,22 @@ QString DataVector::descriptionTip() const {
 
 QString DataVector::propertyString() const {
   return i18n("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(field()).arg(startFrame()).arg(numFrames());
+}
+
+
+int DataVector::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead)
+{
+  const Param par = {v, s, n, skip, lastFrameRead};
+  return _file->vector().read(field, par);
+}
+
+
+const DataVector::Optional DataVector::opt(const QString& field) const
+{
+  _file->readLock();
+  const Optional op = _file->vector().optional(field);
+  _file->readLock();
+  return op;
 }
 
 }

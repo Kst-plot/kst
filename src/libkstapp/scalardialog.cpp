@@ -188,10 +188,10 @@ void ScalarTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->readLock();
 
-  _field->addItems(_dataSource->scalarList());
-  _field->setEditable(!_dataSource->scalarListIsComplete());
-  _fieldRV->addItems(_dataSource->fieldList());
-  _fieldRV->setEditable(!_dataSource->fieldListIsComplete());
+  _field->addItems(_dataSource->scalar().list());
+  _field->setEditable(!_dataSource->scalar().isListComplete());
+  _fieldRV->addItems(_dataSource->vector().list());
+  _fieldRV->setEditable(!_dataSource->vector().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();
