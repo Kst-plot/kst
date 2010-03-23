@@ -68,106 +68,36 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
 PlotAxis::~PlotAxis() {
 }
 
-void PlotAxis::getTimeUnits(QString &units, double &dayToUnit,
-                            AxisInterpretationType axisInterpretation,
-                            AxisDisplayType axisDisplay, double base, double lastValue) {
-  double value = convertTimeValueToJD(axisInterpretation, base);
-  double days = convertTimeValueToJD(axisInterpretation, lastValue) - value;
-
-  switch (axisDisplay) {
+double PlotAxis::convertJDtoDisplayTime(double T) {
+  switch (_axisDisplay) {
     case AXIS_DISPLAY_YEAR:
-      dayToUnit = 1.0/365.25;
-      units = i18n(" [years]");
-      break;
-    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      if( days > 10.0*365.0) {
-        units = i18n(" [years]");
-        dayToUnit = 1.0/365.0;
-      } else if( days > 10.0) {
-        units = i18n(" [days]");
-        dayToUnit = 1.0;
-      } else if( days > 10.0/24.0) {
-        dayToUnit = 24.0;
-        units = i18n(" [hours]");
-      } else if( days > 10.0/24.0/60.0 ) {
-        dayToUnit = 24.0*60.0;
-        units = i18n(" [minutes]");
-      } else {
-        dayToUnit = 24.0*60.0*60.0;
-        units = i18n(" [seconds]");
-      }
+      T -= JD1900 + 0.5;
+      T *= 1.0/365.25; // FIXME: make sure this is right
+      T += 1900.0;
       break;
     case AXIS_DISPLAY_JD:
-    case AXIS_DISPLAY_MJD:
-    case AXIS_DISPLAY_RJD:
-      dayToUnit = 1.0;
-      units = i18n(" [days]");
-      break;
-  }
-}
-
-QString PlotAxis::interpretLabel(AxisInterpretationType axisInterpretation,
-                                 AxisDisplayType axisDisplay, double base,
-                                 QString units, double units_per_day) {
-  double value = convertTimeValueToJD(axisInterpretation, base);
-  QString label;
-
-  // print value in appropriate format
-  switch (axisDisplay) {
-    case AXIS_DISPLAY_YEAR:
-      value -= JD1900 + 0.5;
-      value *= units_per_day;
-      value += 1900.0;
-      label = i18n("J");
-      label += QString::number(value, 'g', FULL_PRECISION-2);
-      break;
-    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      label = convertJDToDateString(axisInterpretation, axisDisplay, value);
-      break;
-    case AXIS_DISPLAY_JD:
-      label = i18n("JD");
-      label += QString::number(value, 'g', FULL_PRECISION-2);
       break;
     case AXIS_DISPLAY_MJD:
-      value -= JD_MJD;
-      label = i18n("MJD");
-      label += QString::number(value, 'g', FULL_PRECISION-2);
+      T -= JD_MJD;
       break;
     case AXIS_DISPLAY_RJD:
-      value -= JD_RJD;
-      label = i18n("RJD");
-      label += QString::number(value, 'g', FULL_PRECISION-2);
+      T -= JD_RJD;
+      break;
+    default:
       break;
   }
-  label += units;
-  return label;
+
+  return T;
 }
 
 
-double PlotAxis::interpretOffset(AxisInterpretationType axisInterpretation,
-                                 double base, double value, double units_per_day) {
-  double offset;
-  offset = value - base;
-
-  offset = convertTimeDiffValueToDays(axisInterpretation, offset) * units_per_day;
-
-  return offset;
-}
-
-
-double PlotAxis::convertTimeValueToJD(AxisInterpretationType axisInterpretation, double valueIn) {
+double PlotAxis::convertTimeValueToJD(double valueIn) {
   double value = valueIn;
 
-  switch (axisInterpretation) {
+  switch (_axisInterpretation) {
     case AXIS_INTERP_YEAR:
       value -= 1900.0;
-      value *= 365.25;
+      value *= 365.25;  // FIXME: seems wrong
       value += JD1900 + 0.5;
       break;
     case AXIS_INTERP_CTIME:
@@ -198,44 +128,18 @@ double PlotAxis::convertTimeValueToJD(AxisInterpretationType axisInterpretation,
 }
 
 
-double PlotAxis::convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn) {
-  double offset = offsetIn;
-
-  switch (axisInterpretation) {
-    case AXIS_INTERP_YEAR:
-      offset *= 365.25;
-      break;
-    case AXIS_INTERP_CTIME:
-      offset /= 24.0 * 60.0 * 60.0;
-      break;
-    case AXIS_INTERP_JD:
-    case AXIS_INTERP_MJD:
-    case AXIS_INTERP_RJD:
-      break;
-    case AXIS_INTERP_AIT:
-      offset /= 24.0 * 60.0 * 60.0;
-      break;
-    default:
-      break;
-  }
-
-  return offset;
-}
-
-
-QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double dJD) {
+QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   QString label;
   QDate date;
 
   int accuracy;
-  double xdelta = (plotItem()->projectionRect().right()-plotItem()->projectionRect().left())/double(plotItem()->projectionRect().width());
-  xdelta = convertTimeDiffValueToDays(axisInterpretation, xdelta);
-  xdelta *= 24.0 * 60.0 * 60.0;
+  range_jd *= 24.0 * 60.0 * 60.0;
 
-  if (xdelta == 0.0) {
+
+  if (range_jd == 0.0) {
     accuracy = FULL_PRECISION;
   } else {
-    accuracy = 1 - int(log10(xdelta));
+    accuracy = 1 - int(log10(range_jd));
     if (accuracy < 0) {
       accuracy = 0;
     }
@@ -244,23 +148,23 @@ QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretatio
   // utcOffset() is returned in seconds... as it must be since
   //  some time zones are not an integer number of hours offset
   //  from UTC...
-  dJD += double(Settings::globalSettings()->utcOffset()) / 86400.0;
+  jd += double(Settings::globalSettings()->utcOffset()) / 86400.0;
 
   // get the date from the Julian day number
-  double dJDDay = floor(dJD);
-  double dJDFraction = dJD - dJDDay;
+  double jd_day = floor(jd);
+  double jd_fraction = jd - jd_day;
 
   // gregorian calendar correction
-  if (dJD >= 2299160.5) {
-    double tmp = int( ( (dJDDay - 1867216.0) - 0.25 ) / 36524.25 );
-    dJDDay += 1.0 + tmp - floor(0.25*tmp);
+  if (jd >= 2299160.5) {
+    double tmp = int( ( (jd_day - 1867216.0) - 0.25 ) / 36524.25 );
+    jd_day += 1.0 + tmp - floor(0.25*tmp);
   }
 
   // correction for half day offset
-  double dDayFraction = dJDFraction + 0.5;
+  double dDayFraction = jd_fraction + 0.5;
   if (dDayFraction >= 1.0) {
     dDayFraction -= 1.0;
-    dJDDay += 1.0;
+    jd_day += 1.0;
   }
 
   // get time of day from day fraction
@@ -285,7 +189,7 @@ QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretatio
     }
   }
 
-  double j2 = dJDDay + 1524.0;
+  double j2 = jd_day + 1524.0;
   double j3 = floor(6680.0 + ( (j2 - 2439870.0) - 122.1 )/365.25);
   double j4 = floor(j3 * 365.25);
   double j5 = floor((j2 - j4)/30.6001);
@@ -323,8 +227,8 @@ QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretatio
   QString seconds;
   QString hourminute;
   hourminute.sprintf(" %02d:%02d:", hour, minute);
-  seconds.sprintf(" %02.*f", accuracy, second);
-  switch (axisDisplay) {
+  seconds.sprintf("%02.*f", accuracy, second);
+  switch (_axisDisplay) {
     case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
       label.sprintf("%d/%02d/%02d", year, month, day);
       label += hourminute + seconds;
@@ -344,6 +248,7 @@ QString PlotAxis::convertJDToDateString(AxisInterpretationType axisInterpretatio
       label += hourminute + seconds;
       break;
     default:
+      label = QString::number(convertJDtoDisplayTime(jd), 'G', FULL_PRECISION-2);
       break;
   }
   return label;
@@ -659,76 +564,6 @@ void PlotAxis::setAxisLabelRotation(const int rotation) {
   }
 }
 
-void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
-  QMap<qreal, QString> labels;
-  QList<qreal> ticks;
-  QList<qreal> minTicks;
-  const int format_precision = 5;
-
-  qreal min = _orientation == Qt::Horizontal ? plotItem()->xMin() : plotItem()->yMin();
-  qreal max = _orientation == Qt::Horizontal ? plotItem()->xMax() : plotItem()->yMax();
-
-  qreal tick;
-  if (max - min <= (double)tickMode*1.5) {
-    // show in logarithmic mode with major ticks nicely labelled and the
-    // specified number of minor ticks between each major label
-    tick = 1.0;
-  } else {
-    // show in logarithmic mode with major ticks nicely labelled and no minor ticks
-    tick = floor((max - min) / (double)tickMode);
-  }
-
-  int Low = ceil(min);
-  int High = floor(max)+1;
-  bool minorLabels = ((High - Low) <= 1);
-  for (int i = Low - 1; i <= High; i+=tick) {
-    qreal majorPoint = pow(10.0, i);
-    if (majorPoint == 0) majorPoint = -350;
-    if (i >= min && i <= max) {
-      ticks << majorPoint;
-      labels.insert(majorPoint, QString::number(majorPoint, 'g', format_precision));
-    }
-
-    if (tick == 1.0) {
-      // draw minor lines
-      bool first = true;
-      qreal powMin = pow(10, min), powMax = pow(10, max);
-      for (int j = 2; j < 10; j++) {
-        qreal minorPoint = majorPoint * j;
-        if (minorPoint >= powMin && minorPoint <= powMax) {
-          minTicks << minorPoint;
-          if (minorLabels && first) {
-            labels.insert(minorPoint, QString::number(minorPoint, 'g', format_precision));
-            first = false;
-          }
-        }
-      }
-    }
-  }
-  if (minorLabels && minTicks.isEmpty()) {
-    qreal lastMinorTick = minTicks.last();
-    if (ticks.isEmpty() || ticks.last() < lastMinorTick) {
-      if (labels.contains(lastMinorTick)) {
-        labels.insert(lastMinorTick, QString::number(lastMinorTick, 'g', format_precision));
-      }
-    }
-  }
-
-  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks && !_dirty) {
-    return;
-  }
-
-  _dirty = false;
-
-  _axisMajorTicks = ticks;
-  _axisMinorTicks = minTicks;
-  _ticksUpdated = true;
-
-  _axisLabels = labels;
-  _baseLabel.clear();
-}
-
-
 // Function validates that the labels will not overlap.  Only functions for x Axis.
 void PlotAxis::validateDrawingRegion(QPainter *painter) {
   // Always try to use the settings requested.
@@ -821,76 +656,327 @@ PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount, PlotAxis
 }
 
 
-void PlotAxis::updateTicks(bool useOverrideTicks) {
-  MajorTickMode majorTickCount;
-  if (useOverrideTicks) {
-    majorTickCount = _axisOverrideMajorTicks;
-  } else {
-    _axisOverrideMajorTicks = _axisMajorTickMode;
-    majorTickCount = _axisMajorTickMode;
-    _axisBaseOffsetOverride = false;
-  }
-
-  plotItem()->updateScale();
-
-  if (_axisLog) {
-    updateLogTicks(majorTickCount);
-    return;
-  }
-
+void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
   QMap<qreal, QString> labels;
   QList<qreal> ticks;
   QList<qreal> minTicks;
-  QString time_units;
-  double time_units_per_day = 1.0;
+  const int format_precision = 5;
 
-  if (_axisLog) {
+  qreal min = _orientation == Qt::Horizontal ? plotItem()->xMin() : plotItem()->yMin();
+  qreal max = _orientation == Qt::Horizontal ? plotItem()->xMax() : plotItem()->yMax();
+
+  qreal tick;
+  if (max - min <= (double)tickMode*1.5) {
+    // show in logarithmic mode with major ticks nicely labelled and the
+    // specified number of minor ticks between each major label
+    tick = 1.0;
   } else {
-    qreal min = _orientation == Qt::Horizontal ? plotItem()->projectionRect().left() : plotItem()->projectionRect().top();
-    qreal max = _orientation == Qt::Horizontal ? plotItem()->projectionRect().right() : plotItem()->projectionRect().bottom();
-    qreal majorTickSpacing = computedMajorTickSpacing(majorTickCount, _orientation);
-//FIXME: decide on tick spacing based on interpretation!
-//FIXME: decide on scale factor, and units... (min, hours, days, weeks, years)
-    qreal firstTick = ceil(min / majorTickSpacing) * majorTickSpacing;
+    // show in logarithmic mode with major ticks nicely labelled and no minor ticks
+    tick = floor((max - min) / (double)tickMode);
+  }
 
-    int i = 0;
-    qreal nextTick = firstTick;
-    while (1) {
-      nextTick = firstTick + i++ * majorTickSpacing;
-      if (fabs(nextTick)<majorTickSpacing*0.5) { // fix roundoff...
-        nextTick = 0.0;
-      }
-      if (nextTick > max)
-        break;
-      ticks << nextTick;
-      // FULL_PRECISION - 2 because round off errors mean you never actually quite get
-      // full precision...
-      labels.insert(nextTick, QString::number(nextTick, 'g', FULL_PRECISION-2));
+  int Low = ceil(min);
+  int High = floor(max)+1;
+  bool minorLabels = ((High - Low) <= 1);
+  for (int i = Low - 1; i <= High; i+=tick) {
+    qreal majorPoint = pow(10.0, i);
+    if (majorPoint == 0) majorPoint = -350;
+    if (i >= min && i <= max) {
+      ticks << majorPoint;
+      labels.insert(majorPoint, QString::number(majorPoint, 'g', format_precision));
     }
 
-    qreal minorTickSpacing = 0;
-    int desiredTicks;
-    if (_automaticMinorTicks) {
-      desiredTicks = _automaticMinorTickCount;
-    } else {
-      desiredTicks = _axisMinorTickCount;
-    }
-    if (desiredTicks > 0) {
-      minorTickSpacing = majorTickSpacing / desiredTicks;
-    }
-
-    if (minorTickSpacing != 0) {
-      qreal firstMinorTick = (firstTick - majorTickSpacing) + minorTickSpacing;
-
-      i = 0;
-      qreal nextMinorTick = firstMinorTick;
-      while (1) {
-        nextMinorTick = firstMinorTick + (i++ * minorTickSpacing);
-        if (nextMinorTick > max)
-          break;
-        if (!ticks.contains(nextMinorTick) && nextMinorTick > min) {
-          minTicks << nextMinorTick;
+    if (tick == 1.0) {
+      // draw minor lines
+      bool first = true;
+      qreal powMin = pow(10, min), powMax = pow(10, max);
+      for (int j = 2; j < 10; j++) {
+        qreal minorPoint = majorPoint * j;
+        if (minorPoint >= powMin && minorPoint <= powMax) {
+          minTicks << minorPoint;
+          if (minorLabels && first) {
+            labels.insert(minorPoint, QString::number(minorPoint, 'g', format_precision));
+            first = false;
+          }
         }
+      }
+    }
+  }
+  if (minorLabels && minTicks.isEmpty()) {
+    qreal lastMinorTick = minTicks.last();
+    if (ticks.isEmpty() || ticks.last() < lastMinorTick) {
+      if (labels.contains(lastMinorTick)) {
+        labels.insert(lastMinorTick, QString::number(lastMinorTick, 'g', format_precision));
+      }
+    }
+  }
+
+  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks && !_dirty) {
+    return;
+  }
+
+  _dirty = false;
+
+  _axisMajorTicks = ticks;
+  _axisMinorTicks = minTicks;
+  _ticksUpdated = true;
+
+  _axisLabels = labels;
+  _baseLabel.clear();
+}
+
+// returns true if axis is linear ticks
+// with no specially formatted time.
+bool PlotAxis::isLinearTickMode() {
+  if (_axisLog) {
+    return false;
+  }
+
+  if (_axisInterpret) {
+    switch (_axisDisplay) {
+    case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
+    case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
+    case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
+    case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
+      return false;
+    default:
+      return true;
+    }
+  }
+  return true;
+}
+
+void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
+  double min;
+  double max;
+
+  if (_orientation == Qt::Horizontal) {
+    min = plotItem()->projectionRect().left();
+    max = plotItem()->projectionRect().right();
+  } else {
+    min = plotItem()->projectionRect().top();
+    max = plotItem()->projectionRect().bottom();
+  }
+
+  double range = max - min;
+  double min_jd = convertTimeValueToJD(min);
+  double max_jd = convertTimeValueToJD(max);
+  double range_jd = fabs(max_jd - min_jd);
+  double base_jd;
+  double range_u;
+  double tickspacing_u;
+  double tickspacing;
+  QString units;
+
+  double minimum_units = tickMode;
+
+  // find base_jd, range_u, units
+  if (range_jd > minimum_units*365.0) {
+    // use years
+    range_u = range_jd/365.25;
+    units = i18n(" [Years]");
+    tickspacing_u = computeMajorTickSpacing(tickMode, range_u);
+    // round base to year;
+    base_jd = floor((min_jd - (JD1900 + 0.5))/365.25) * 365.25 + (JD1900 + 0.5) + 1.0;
+  } else if (range_jd > minimum_units) {
+    // use days
+    range_u = range_jd;
+    units = i18n(" [Days]");
+    tickspacing_u = computeMajorTickSpacing(tickMode, range_u);
+    // round base to day
+    base_jd = floor(min_jd)+1.0;
+  } else if (range_jd > minimum_units/24.0) {
+    // use hours
+    range_u = range_jd*24.0;
+    units = i18n(" [Hours]");
+    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Hour);
+    // round base to hour
+    double d_jd = min_jd - floor(min_jd);
+    base_jd = floor(min_jd) + (floor(d_jd*24.0/tickspacing_u)+1.0)/(24.0/tickspacing_u);
+  } else if (range_jd > minimum_units/(24.0*60.0)) {
+    // use minutes
+    range_u = range_jd*24.0*60.0;
+    units = i18n(" [Minutes]");
+    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Minute);
+    double d_jd = min_jd - floor(min_jd);
+    base_jd = floor(min_jd) + (floor(d_jd*24.0*60.0/tickspacing_u)+1.0)/(24.0*60.0/tickspacing_u);
+  } else {
+    // use seconds
+    range_u = range_jd*24.0*3600.0;
+    units = i18n(" [Seconds]");
+    double d_jd = min_jd - floor(min_jd);
+    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Second);
+    base_jd = floor(min_jd) + (floor(d_jd*24.0*3600.0/tickspacing_u)+1.0)/(24.0*3600.0/tickspacing_u);
+    if (base_jd < min_jd) base_jd = min_jd;
+    if (base_jd > max_jd) base_jd = min_jd;
+  }
+  tickspacing = tickspacing_u * range/range_u;
+
+  double base = (base_jd - min_jd) * range/range_jd + min;
+
+  int i0 = -floor((base-min)/tickspacing);
+
+  double tick;
+  double first_tick;
+  QMap<qreal, QString> labels;
+  QList<qreal> ticks;
+  QList<qreal> minTicks;
+
+  QString tick_label;
+  first_tick = base+i0*tickspacing;
+  for (int i_tick = i0; base + i_tick*tickspacing<=max; i_tick++) {
+    tick = base+i_tick*tickspacing;
+    ticks << tick;
+    tick_label = "[" + QString::number(i_tick*tickspacing_u, 'g', FULL_PRECISION-2) + "]";
+    labels.insert(tick, tick_label);
+  }
+
+  double minorTickSpacing = 0.0;
+  int desiredTicks;
+  if (_automaticMinorTicks) {
+    desiredTicks = _automaticMinorTickCount;
+  } else {
+    desiredTicks = _axisMinorTickCount;
+  }
+  if (desiredTicks > 0) {
+    minorTickSpacing = tickspacing / double(desiredTicks);
+  }
+
+  if (minorTickSpacing != 0) {
+    double firstMinorTick = (first_tick - tickspacing) + minorTickSpacing;
+
+    int i_minor = 0;
+    double nextMinorTick = firstMinorTick;
+    while (1) {
+      nextMinorTick = firstMinorTick + (i_minor++ * minorTickSpacing);
+      if (nextMinorTick > max)
+        break;
+      if (!ticks.contains(nextMinorTick) && (nextMinorTick > min)) {
+        minTicks << nextMinorTick;
+      }
+    }
+  }
+
+  if (_axisMajorTicks == ticks && _axisMinorTicks == minTicks && !_dirty) {
+    _ticksUpdated = false;
+    return;
+  }
+
+  _axisLabels = labels;
+  _axisMinorTicks = minTicks;
+  _axisMajorTicks = ticks;
+  _baseLabel = convertJDToDateString(base_jd, range_jd) + units;
+  _dirty = false;
+  _ticksUpdated = true;
+
+}
+
+QString PlotAxis::statusBarString(double X) {
+  if (_axisInterpret) {
+    double X_jd = convertTimeValueToJD(X);
+    double min;
+    double max;
+
+    if (_orientation == Qt::Horizontal) {
+      min = plotItem()->projectionRect().left();
+      max = plotItem()->projectionRect().right();
+    } else {
+      min = plotItem()->projectionRect().top();
+      max = plotItem()->projectionRect().bottom();
+    }
+
+    double min_jd = convertTimeValueToJD(min);
+    double max_jd = convertTimeValueToJD(max);
+    double range_jd = fabs(max_jd - min_jd);
+
+    return convertJDToDateString(X_jd, range_jd/100.0);
+  } else {
+    return QString::number(X, 'G', FULL_PRECISION-2);
+  }
+}
+
+
+void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
+  QMap<qreal, QString> labels;
+  QList<qreal> ticks;
+  QList<qreal> minTicks;
+  qreal min;
+  qreal max;
+  qreal R;
+  qreal uR; // range in interpreted units
+  qreal uMin; // min and max in interpreted units
+  qreal uMax;
+  qreal drdu = 1.0; // interpreted units per raw units;
+  qreal rOffset = 0.0; // r = drdu*u + rOffset;
+  qreal uMajorTickSpacing; // major Tick spacing in iterpreted units
+  qreal nextTick;
+
+  if (_orientation == Qt::Horizontal) {
+    min = plotItem()->projectionRect().left();
+    max = plotItem()->projectionRect().right();
+    R = plotItem()->projectionRect().width();
+  } else {
+    min = plotItem()->projectionRect().top();
+    max = plotItem()->projectionRect().bottom();
+    R = plotItem()->projectionRect().height();
+  }
+
+  if (_axisInterpret) {
+    uMin = convertJDtoDisplayTime(convertTimeValueToJD(min));
+    uMax = convertJDtoDisplayTime(convertTimeValueToJD(max));
+    uR = fabs(uMax - uMin);
+    drdu = (max - min)/(uMax - uMin);
+    rOffset = min - drdu * uMin;
+  } else {
+    uR = R;
+    uMin = min;
+    uMax = max;
+  }
+
+  uMajorTickSpacing = computeMajorTickSpacing(tickMode, uR);
+
+  qreal uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
+  qreal firstTick = uFirstTick*drdu + rOffset;
+  qreal majorTickSpacing = uMajorTickSpacing * drdu;
+
+  int i = 0;
+  qreal uNextTick = uFirstTick;
+  while (1) {
+    uNextTick = uFirstTick + i++ * uMajorTickSpacing;
+    if (fabs(uNextTick)<uMajorTickSpacing*0.5) { // fix roundoff...
+      uNextTick = 0.0;
+    }
+    if (uNextTick > uMax)
+      break;
+    nextTick = uNextTick * drdu + rOffset;
+    ticks << nextTick;
+    // FULL_PRECISION - 2 because round off errors mean you never actually quite get
+    // full precision...
+    labels.insert(nextTick, QString::number(uNextTick, 'g', FULL_PRECISION-2));
+  }
+
+  qreal minorTickSpacing = 0;
+  int desiredTicks;
+  if (_automaticMinorTicks) {
+    desiredTicks = _automaticMinorTickCount;
+  } else {
+    desiredTicks = _axisMinorTickCount;
+  }
+  if (desiredTicks > 0) {
+    minorTickSpacing = majorTickSpacing / desiredTicks;
+  }
+
+  if (minorTickSpacing != 0) {
+    qreal firstMinorTick = (firstTick - majorTickSpacing) + minorTickSpacing;
+
+    i = 0;
+    qreal nextMinorTick = firstMinorTick;
+    while (1) {
+      nextMinorTick = firstMinorTick + (i++ * minorTickSpacing);
+      if (nextMinorTick > max)
+        break;
+      if (!ticks.contains(nextMinorTick) && nextMinorTick > min) {
+        minTicks << nextMinorTick;
       }
     }
   }
@@ -925,22 +1011,13 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
 
   // (shortest > 3) so that you don't use automatic base/offset mode when
   // it wouldn't actually take up less space.
-  if (_axisBaseOffset || _axisInterpret || ((longest > _axisSignificantDigits)&&(shortest>3)) || _axisBaseOffsetOverride ) {
-    if (_axisInterpret) {
-      getTimeUnits(time_units, time_units_per_day, _axisInterpretation, _axisDisplay, (_axisMajorTicks).first(), (_axisMajorTicks).last());
-      _baseLabel = interpretLabel(_axisInterpretation, _axisDisplay, base, time_units, time_units_per_day);
-    } else {
-      _baseLabel = QString::number(base);
-    }
+  if (_axisBaseOffset || ((longest > _axisSignificantDigits)&&(shortest>3)) || _axisBaseOffsetOverride ) {
+    _baseLabel = QString::number(base, 'g', FULL_PRECISION-2);
     QMapIterator<qreal, QString> i(labels);
     while (i.hasNext()) {
       i.next();
       qreal offset;
-      if (_axisInterpret) {
-        offset = interpretOffset(_axisInterpretation, base, i.key(), time_units_per_day);
-      } else {
-        offset = i.key() - base;
-      }
+      offset = i.key() - base;
       QString label, num;
       if (offset < 0) {
         label += "-[";
@@ -965,6 +1042,30 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
   }
 }
 
+void PlotAxis::updateTicks(bool useOverrideTicks) {
+  MajorTickMode majorTickCount;
+  if (useOverrideTicks) {
+    majorTickCount = _axisOverrideMajorTicks;
+  } else {
+    _axisOverrideMajorTicks = _axisMajorTickMode;
+    majorTickCount = _axisMajorTickMode;
+    _axisBaseOffsetOverride = false;
+  }
+
+  plotItem()->updateScale();
+
+  if (_axisLog) {
+    updateLogTicks(majorTickCount);
+    return;
+  } else if (isLinearTickMode()) {
+    updateLinearTicks(majorTickCount);
+    return;
+  } else {
+    updateInterpretTicks(majorTickCount);
+    return;
+  }
+}
+
 
 /*
  * Major ticks are always spaced by D = A*10^B where B is an integer,
@@ -975,8 +1076,7 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
  * on the axis (but at least 2). The value of M is set by the requested
  * MajorTickMode.
  */
-qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation) {
-  qreal R = orientation == Qt::Horizontal ? plotItem()->projectionRect().width() : plotItem()->projectionRect().height();
+double PlotAxis::computeMajorTickSpacing(MajorTickMode majorTickCount, double R) {
   qreal M = majorTickCount;
   qreal B = floor(log10(R/M));
 
@@ -1010,6 +1110,55 @@ qreal PlotAxis::computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orien
       return d5;
     }
   }
+}
+
+// compute the major ticks for hours (base = 24) or min/sec (base = 60)
+double PlotAxis::computeMajorTickSpacing(MajorTickMode majorTickCount, double R, timeUnits time_units) {
+  double base60list[] =     {1.0,2.0,5.0,10.0,20.0,30.0,60.0};
+  int minorlist_minutes[] = {  6,  4,  5,   5,   4,   6,   4};
+  int minorlist_seconds[] = {  5,  4,  5,   5,   4,   6,   6};
+  int n60 = 7;
+  double base24list[] =   {1.0,2.0,4.0,6.0,12.0,24.0};
+  int minorlist_hours[] = {  4,  4,  4,  6,   6,   6};
+  int n24 = 6;
+  double *baselist;
+  int *minorlist;
+  double n;
+
+  if (R <= majorTickCount) {
+    return computeMajorTickSpacing(majorTickCount, R);
+  }
+
+  if (time_units == Hour) {
+    baselist = base24list;
+    minorlist = minorlist_hours;
+    n = n24;
+  } else if (time_units == Minute) {
+    baselist = base60list;
+    minorlist = minorlist_minutes;
+    n = n60;
+  } else if (time_units == Second) {
+    baselist = base60list;
+    minorlist = minorlist_seconds;
+    n = n60;
+  } else { // unknown base - use base 10;
+    return computeMajorTickSpacing(majorTickCount, R);
+  }
+
+  int best_i;
+  double best_err = 1E88;
+  double err;
+  for (int i=0; i<n; i++) {
+    err = fabs(double(majorTickCount) - R/baselist[i]);
+    if (err < best_err) {
+      best_err = err;
+      best_i = i;
+    }
+  }
+
+  _automaticMinorTickCount = minorlist[best_i];
+  return baselist[best_i];
+
 }
 
 void PlotAxis::copyProperties(PlotAxis *source) {

@@ -1190,3 +1190,21 @@ the status bar should render the names (with subscripts and
 superscripts, for example).  The status bar should certainly not show
 escaping backslashes.  
 
+--------------------
+
+4. When displaying an axis as time, "offset mode" turns on (good), but
+only displays offsets in seconds (bad).  When a day's worth of data is
+on the screen, the unit shouldn't be seconds, or even minutes.  
+
+--------------------
+
+5. When displaying an axis as time and offset mode is on, the offset
+steps should be natural for the type of units.  100 seconds is not
+natural (120 would be, or better, 2 minutes; see the bug above).  
+
+--------------------
+
+1. When the x axis set to to interpret as standard C time, the time is
+displayed correctly on the axis labels, but just displays as the raw
+value in the status bar (on the lower left of the window).  This is both
+in "normal mode" and in "data mode".

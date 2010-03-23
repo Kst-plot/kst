@@ -33,6 +33,7 @@ class PlotAxis : public QObject
     };
 
     enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
+    enum timeUnits {Hour, Minute, Second};
 
     PlotAxis(PlotItem *plotItem, Qt::Orientation orientation);
     ~PlotAxis();
@@ -132,26 +133,24 @@ class PlotAxis : public QObject
 
     void saveAsDialogDefaults(const QString &group) const;
 
+    QString statusBarString(double X);
+
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
     void setTicksUpdated() { _ticksUpdated = true; }
 
   private:
-    void getTimeUnits(QString &units, double &units_per_day,
-                      AxisInterpretationType axisInterpretation,
-                      AxisDisplayType axisDisplay, double base, double lastValue);
-    QString interpretLabel(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay,
-                           double base, QString time_units, double units_per_day);
-    double convertTimeValueToJD(AxisInterpretationType axisInterpretation, double valueIn);
-    QString convertJDToDateString(AxisInterpretationType axisInterpretation, AxisDisplayType axisDisplay, double dJD);
-    double convertTimeDiffValueToDays(AxisInterpretationType axisInterpretation, double offsetIn);
-    double interpretOffset(AxisInterpretationType axisInterpretation,
-                           double base, double value, double units_per_day);
+    double convertTimeValueToJD(double valueIn);
+    double convertJDtoDisplayTime(double T);
+    QString convertJDToDateString(double jday, double range_jd);
 
-    qreal computedMajorTickSpacing(MajorTickMode majorTickCount, Qt::Orientation orientation);
-    //void computeLogTicks(QList<qreal> *MajorTicks, QList<qreal> *MinorTicks, QMap<qreal, QString> *Labels, qreal min, qreal max, MajorTickMode tickMode);
+    double computeMajorTickSpacing(MajorTickMode majorTickCount, double range);
+    double computeMajorTickSpacing(MajorTickMode majorTickCount, double range, timeUnits time_units);
+
     void updateLogTicks(MajorTickMode tickMode);
-
+    void updateInterpretTicks(MajorTickMode tickMode);
+    void updateLinearTicks(MajorTickMode tickMode);
+    bool isLinearTickMode();
     MajorTickMode convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode = VeryFine);
 
   private:

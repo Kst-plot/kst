@@ -1,4 +1,4 @@
-include(../fits.pri)
+include(../../plugins_sub.pri)
 
 TARGET = $$qtLibraryTarget(kstplugin_fitlinear_unweighted)
 LIBS += -lgsl

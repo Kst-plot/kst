@@ -538,7 +538,10 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     highlightNearestDataPoint(point);
   } else {
     _highlightPointActive = false;
-    QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G')).arg(QString::number(point.y()));
+    //QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G', 13)).arg(QString::number(point.y()));
+    QString message = QString("(%1, %2)").
+                      arg(plotItem()->xAxis()->statusBarString(point.x())).
+                      arg(QString::number(point.y()));
     if (_referencePointMode) {
       message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
     }
@@ -588,7 +591,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
     }
     if (!curveName.isEmpty()) {
       QString message = curveName + QString(" (%1, %2)").
-                        arg(QString::number(matchedPoint.x(), 'G')).
+                        arg(plotItem()->xAxis()->statusBarString(matchedPoint.x())).
                         arg(QString::number(matchedPoint.y()));
       if (_referencePointMode) {
         message += QString(" [Offset: %1, %2]").
@@ -600,7 +603,10 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
       update();
     } else if (!imageName.isEmpty()) {
-      QString message = imageName + QString(" (%1, %2, %3)").arg(QString::number(position.x(), 'G')).arg(QString::number(position.y())).arg(QString::number(imageZ, 'G'));
+      QString message = imageName + QString(" (%1, %2, %3)").
+                        arg(plotItem()->xAxis()->statusBarString(position.x())).
+                        arg(QString::number(position.y())).
+                        arg(QString::number(imageZ, 'G'));
       kstApp->mainWindow()->statusBar()->showMessage(message);
     }
   }
@@ -619,10 +625,11 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   updateCursor(event->pos());
 
   const QPointF p = plotItem()->mapToProjection(event->pos());
-  QString message = QString("(%1, %2)").arg(QString::number(p.x())).arg(QString::number(p.y()));
+  QString message = QString("(%1, %2)").
+                    arg(plotItem()->xAxis()->statusBarString(p.x())).
+                    arg(QString::number(p.y()));
   kstApp->mainWindow()->statusBar()->showMessage(message);
 }
-
 
 void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverLeaveEvent(event);
