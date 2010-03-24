@@ -46,8 +46,6 @@ MainWindow::updateViewItems(serial): update plotitems and then views
 
 --------------
 ToDo/shortcomings
--The system does not currently honor the update rate system settings.  This needs to go into
- doUpdates(). 
 
 -The object loop in doUpdates is inefficient, in that it may have to go through the loop
  up to D times, where D is the heirarchy depth.  The loop could instead re-sort the objects as it
