@@ -117,11 +117,11 @@ void UpdateManager::doUpdates(bool forceImmediate) {
       if (retval == Object::Updated) n_updated++;
       else if (retval == Object::Deferred) n_deferred++;
       else if (retval == Object::NoChange) n_unchanged++;
-      maxloop = qMin(maxloop,n_deferred);
     }
+    maxloop = qMin(maxloop,n_deferred);
     //qDebug() << "loop: " << i_loop << " obj up: " << n_updated << "  obj def: " << n_deferred << " obj_no: " << n_unchanged;
     i_loop++;
-  } while ((retval>0) && (i_loop<=maxloop));
+  } while ((n_deferred + n_updated > 0) && (i_loop<=maxloop));
 
   emit objectsUpdated(_serial);
 }

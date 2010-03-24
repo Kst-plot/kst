@@ -747,7 +747,7 @@ const DataVector::Optional DataVector::opt(const QString& field) const
 {
   _file->readLock();
   const Optional op = _file->vector().optional(field);
-  _file->readLock();
+  _file->unlock();
   return op;
 }
 
