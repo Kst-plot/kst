@@ -168,11 +168,6 @@ QString DataMatrix::label() const {
 }
 
 
-QString DataMatrix::fileLabel() const {
-  return filename();
-}
-
-
 bool DataMatrix::isValid() const {
   if (_file) {
     _file->readLock();

@@ -742,7 +742,6 @@ int DataVector::readField(double *v, const QString& field, int s, int n, int ski
   return _file->vector().read(field, par);
 }
 
-
 const DataVector::Optional DataVector::opt(const QString& field) const
 {
   _file->readLock();

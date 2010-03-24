@@ -258,6 +258,7 @@ void Equation::updateVectorLabels() {
 
   _xOutVector->setLabel(xl);
   _yOutVector->setLabel(yl);
+  _yOutVector->setDescriptiveLabel(yl);
 }
 
 void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
@@ -590,7 +591,7 @@ bool Equation::uses(ObjectPtr p) const {
 }
 
 QString Equation::_automaticDescriptiveName() const {
-  return reparsedEquation();
+  return _yOutVector->label();
 }
 
 QString Equation::descriptionTip() const {

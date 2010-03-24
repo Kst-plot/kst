@@ -64,6 +64,7 @@ Vector::Vector(ObjectStore *store)
     _size = size;
   }
   _is_rising = false;
+  _descriptiveLabel.clear();
 
   CreateScalars(store);
   blank();
@@ -528,9 +529,12 @@ QString Vector::label() const {
   return _label; // default
 }
 
-
-QString Vector::fileLabel() const {
-  return QString::null;
+QString Vector::descriptiveLabel() const {
+  if (_descriptiveLabel.isEmpty()) {
+    return descriptiveName();
+  } else {
+    return _descriptiveLabel;
+  }
 }
 
 
@@ -547,6 +551,9 @@ void Vector::setLabel(const QString& label_in) {
   _label = label_in;
 }
 
+void Vector::setDescriptiveLabel(const QString& label_in) {
+  _descriptiveLabel = label_in;
+}
 
 int Vector::getUsage() const {
   int adj = 0;

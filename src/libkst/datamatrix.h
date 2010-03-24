@@ -93,7 +93,6 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
 
     // labels for this matrix
     virtual QString label() const;
-    virtual QString fileLabel() const;
 
     // returns true if the file and field is valid; false otherwise
     bool isValid() const;

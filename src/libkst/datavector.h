@@ -105,7 +105,6 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
 
     /** return a sensible label for this vector */
     virtual QString label() const;
-    virtual QString fileLabel() const { return filename(); }
 
     /** return the length of the file */
     int fileLength() const;

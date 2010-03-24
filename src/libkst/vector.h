@@ -106,9 +106,6 @@ class Vector : public Primitive {
     /** reset New Samples and Shifted samples */
     void newSync();
 
-    /** return a sensible top label.... */
-    virtual QString fileLabel() const;
-
     virtual bool resize(int sz, bool init = true);
 
     virtual void setNewAndShift(int inNew, int inShift);
@@ -123,7 +120,10 @@ class Vector : public Primitive {
     void updateScalars();
 
     /** return a sensible label for this vector */
+    void setLabel(const QString& label_in);
+    void setDescriptiveLabel(const QString& label_in);
     virtual QString label() const;
+    virtual QString descriptiveLabel() const;
 
     virtual int getUsage() const;
 
@@ -138,8 +138,6 @@ class Vector : public Primitive {
 
     const QHash<QString, ScalarPtr>& scalars() const;
     const QHash<QString, StringPtr>& strings() const; // used by datavector
-
-    void setLabel(const QString& label_in);
 
     bool saveable() const;
 
@@ -205,6 +203,7 @@ class Vector : public Primitive {
     virtual void deleteDependents();
 
     QString _label;
+    QString _descriptiveLabel;
 
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);

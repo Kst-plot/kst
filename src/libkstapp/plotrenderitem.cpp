@@ -506,7 +506,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   }
 }
 
-
+//FIXME: store event or pos, and re-call this when window is redrawn
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverMoveEvent(event);
 
@@ -538,7 +538,6 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     highlightNearestDataPoint(point);
   } else {
     _highlightPointActive = false;
-    //QString message = QString("(%1, %2)").arg(QString::number(point.x(), 'G', 13)).arg(QString::number(point.y()));
     QString message = QString("(%1, %2)").
                       arg(plotItem()->xAxis()->statusBarString(point.x())).
                       arg(QString::number(point.y()));

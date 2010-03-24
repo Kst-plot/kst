@@ -373,7 +373,7 @@ QString Curve::yLabel() const {
 
 
 QString Curve::topLabel() const {
-  return _inputVectors[YVECTOR]->descriptiveName();
+  return _inputVectors[YVECTOR]->descriptiveLabel();
 }
 
 
