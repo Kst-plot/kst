@@ -51,6 +51,7 @@ class MainWindow : public QMainWindow
     QProgressBar *progressBar() const;
     bool initFromCommandLine();
     bool isDataMode() { return _dataMode; }
+    void setStatusMessage(QString message);
 
   public Q_SLOTS:
     void showDataManager();
@@ -154,6 +155,7 @@ class MainWindow : public QMainWindow
     AboutDialog* _aboutDialog;
 
     QPointer<QProgressBar> _progressBar;
+    QLabel *_messageLabel;
 
     bool _dataMode;
 

@@ -114,10 +114,11 @@ class PlotRenderItem : public ViewItem
 
     void highlightNearestDataPoint(const QPointF& position);
     void setReferencePoint(const QPointF& point);
-
+    void processHoverMoveEvent(const QPointF& p);
   private:
     RenderType _type;
     QPointF _lastPos;
+    QPointF _hoverPos;
     bool _referencePointMode;
     QPointF _referencePoint;
     bool _highlightPointActive;

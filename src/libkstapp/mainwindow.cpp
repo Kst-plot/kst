@@ -1012,6 +1012,10 @@ void MainWindow::createToolBars() {
 
 
 void MainWindow::createStatusBar() {
+  _messageLabel = new QLabel(statusBar());
+  statusBar()->addWidget(_messageLabel);
+  setStatusMessage(tr("Ready"));
+
   _progressBar = new QProgressBar(statusBar());
   _progressBar->hide();
   statusBar()->addPermanentWidget(_progressBar);
@@ -1022,9 +1026,11 @@ void MainWindow::createStatusBar() {
   connect(_debugDialog, SIGNAL(notifyOfError()), dn, SLOT(reanimate()));
   connect(_debugDialog, SIGNAL(notifyAllClear()), dn, SLOT(close()));
   statusBar()->addPermanentWidget(dn);
-  statusBar()->showMessage(tr("Ready"));
 }
 
+void MainWindow::setStatusMessage(QString message) {
+  _messageLabel->setText(message);
+}
 
 QProgressBar *MainWindow::progressBar() const {
   return _progressBar;

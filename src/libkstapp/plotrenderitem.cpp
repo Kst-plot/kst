@@ -22,7 +22,6 @@
 
 #include <QTime>
 #include <QMenu>
-#include <QStatusBar>
 #include <QMainWindow>
 #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -263,6 +262,10 @@ void PlotRenderItem::paint(QPainter *painter) {
   paintRelations(painter);
 
   painter->restore();
+
+  if (!parentView()->isPrinting()) {
+    processHoverMoveEvent(_hoverPos);
+  }
 
   paintReferencePoint(painter);
   paintHighlightPoint(painter);
@@ -508,6 +511,7 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 //FIXME: store event or pos, and re-call this when window is redrawn
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+
   ViewItem::hoverMoveEvent(event);
 
   if (parentView()->viewMode() != View::Data) {
@@ -515,7 +519,8 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     return;
   }
 
-  const QPointF p = event->pos();
+  QPointF p = event->pos();
+  _hoverPos = p;
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
     _lastPos = p;
@@ -531,9 +536,21 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     update(); //FIXME should optimize instead of redrawing entire curve!
   } else {
     resetSelectionRect();
-    updateCursor(event->pos());
+    updateCursor(p);
   }
-  const QPointF point = plotItem()->mapToProjection(event->pos());
+
+  processHoverMoveEvent(p);
+
+  if (kstApp->mainWindow()->isDataMode()) update();
+}
+
+void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
+
+  if (p.isNull()) {
+    return;
+  }
+
+  const QPointF point = plotItem()->mapToProjection(p);
   if (kstApp->mainWindow()->isDataMode()) {
     highlightNearestDataPoint(point);
   } else {
@@ -544,7 +561,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
     if (_referencePointMode) {
       message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
     }
-    kstApp->mainWindow()->statusBar()->showMessage(message);
+    kstApp->mainWindow()->setStatusMessage(message);
   }
 }
 
@@ -569,6 +586,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
 
     foreach(RelationPtr relation, relationList()) {
       if (Curve* curve = kst_cast<Curve>(relation)) {
+        //FIXME: set dxPerPix to something sensible!
         int index = curve->getIndexNearXY(position.x(), 0, position.y());
         curve->point(index, x, y);
         distance = fabs(position.y() - y);
@@ -597,16 +615,15 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
                    arg(QString::number(matchedPoint.x() - _referencePoint.x(), 'G')).
                    arg(QString::number(matchedPoint.y() - _referencePoint.y()));
       }
-      kstApp->mainWindow()->statusBar()->showMessage(message);
+      kstApp->mainWindow()->setStatusMessage(message);
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
-      update();
     } else if (!imageName.isEmpty()) {
       QString message = imageName + QString(" (%1, %2, %3)").
                         arg(plotItem()->xAxis()->statusBarString(position.x())).
                         arg(QString::number(position.y())).
                         arg(QString::number(imageZ, 'G'));
-      kstApp->mainWindow()->statusBar()->showMessage(message);
+      kstApp->mainWindow()->setStatusMessage(message);
     }
   }
 }
@@ -627,11 +644,13 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   QString message = QString("(%1, %2)").
                     arg(plotItem()->xAxis()->statusBarString(p.x())).
                     arg(QString::number(p.y()));
-  kstApp->mainWindow()->statusBar()->showMessage(message);
+  kstApp->mainWindow()->setStatusMessage(message);
 }
 
 void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverLeaveEvent(event);
+
+  _hoverPos = QPointF(0,0);
 
   _highlightPointActive = false;
 
@@ -645,7 +664,7 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
   updateCursor(event->pos());
 
-  kstApp->mainWindow()->statusBar()->showMessage(QString());
+  kstApp->mainWindow()->setStatusMessage(QString());
 }
 
 
