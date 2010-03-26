@@ -9,27 +9,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "../libkstapp/tabwidget.h"
 #include "updatemanager.h"
 
 #include "primitive.h"
 #include "datasource.h"
 #include "objectstore.h"
-//#include "application.h"
-//#include "document.h"
 
 #include <QCoreApplication>
 #include <QTimer>
 #include <QDebug>
 
-#define MAX_UPDATES 2000
-
-#define BENCHMARK 0
-
-#if BENCHMARK
-  QTime bench_time, benchtmp;
-  int b1 = 0, b2 = 0;
-#endif
+#define DEFAULT_MIN_UPDATE_PERIOD 2000
 
 namespace Kst {
 
@@ -51,10 +41,11 @@ UpdateManager *UpdateManager::self() {
 
 UpdateManager::UpdateManager() {
   _serial = 0;
-  _maxUpdate = MAX_UPDATES;
+  _minUpdatePeriod = DEFAULT_MIN_UPDATE_PERIOD;
   _paused = false;
   _store = 0;
   _delayedUpdateScheduled = false;
+  _updateInProgress = false;
   _time.start();
 }
 
@@ -68,6 +59,10 @@ void UpdateManager::delayedUpdates() {
 }
 
 void UpdateManager::doUpdates(bool forceImmediate) {
+  if (_delayedUpdateScheduled && !forceImmediate) {
+    return;
+  }
+
   if (!_store) {
     return;
   }
@@ -77,13 +72,18 @@ void UpdateManager::doUpdates(bool forceImmediate) {
   }
 
   int dT = _time.elapsed();
-  if ((dT<_maxUpdate) && (!forceImmediate)) {
+  if (((dT<_minUpdatePeriod) || (_updateInProgress)) && (!forceImmediate)) {
     if (!_delayedUpdateScheduled) {
       _delayedUpdateScheduled = true;
-      QTimer::singleShot(_maxUpdate-dT, this, SLOT(delayedUpdates()));
+      int deferTime = _minUpdatePeriod-dT;
+      if (deferTime <= 0) {
+        deferTime = 20; // if an update is already in progess, wait this long to check again.
+      }
+      QTimer::singleShot(deferTime, this, SLOT(delayedUpdates()));
     }
     return;
   }
+  _updateInProgress = true;
   _time.restart();
 
   _serial++;

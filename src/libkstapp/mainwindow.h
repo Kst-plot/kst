@@ -116,8 +116,6 @@ class MainWindow : public QMainWindow
     void createImage();
     void createSpectogram();
 
-    void demoModel();
-
     void performHeavyStartupActions();
     void cleanup();
 

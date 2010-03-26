@@ -19,7 +19,6 @@
 
 namespace Kst {
 class ObjectStore;
-class TabWidget;
 
 class UpdateManager : public QObject
 {
@@ -27,18 +26,19 @@ class UpdateManager : public QObject
   public:
     static UpdateManager *self();
 
-    void setMinimumUpdatePeriod(const int period) { _maxUpdate = period; }
-    int minimumUpdatePeriod() { return _maxUpdate; }
+    void setMinimumUpdatePeriod(const int period) { _minUpdatePeriod = period; }
+    int minimumUpdatePeriod() { return _minUpdatePeriod; }
 
     void setPaused(bool paused) { _paused = paused;}
     bool paused() { return _paused; }
 
     void setStore(ObjectStore *store) {_store = store;}
-    void setTabWidget(TabWidget *tabWidget) {_tabWidget = tabWidget;}
+
 
   public Q_SLOTS:
     void doUpdates(bool forceImmediate = false);
     void delayedUpdates();
+    void viewItemUpdateFinished() { _updateInProgress = false; }
 
   Q_SIGNALS:
     void objectsUpdated(qint64 serial);
@@ -51,12 +51,12 @@ class UpdateManager : public QObject
 
   private:
     bool _delayedUpdate;
-    int _maxUpdate;
+    int _minUpdatePeriod;
     bool _paused;
     bool _delayedUpdateScheduled;
+    bool _updateInProgress;
     qint64 _serial;
     ObjectStore *_store;
-    TabWidget *_tabWidget;
 };
 
 }

@@ -56,14 +56,6 @@
 
 #include <QtGui>
 
-// Enable Demo Vector Model 0 Disabled 1 Enabled.
-#define DEMO_VECTOR_MODEL 0
-
-#if DEMO_VECTOR_MODEL
-#include "equation.h"
-#include "generatedvector.h"
-#endif
-
 
 namespace Kst {
 
@@ -633,23 +625,6 @@ void MainWindow::createSpectogram() {
   DialogLauncher::self()->showCSDDialog();
 }
 
-void MainWindow::demoModel() {
-#if DEMO_VECTOR_MODEL
-  Q_ASSERT(document() && document()->objectStore());
-  GeneratedVectorPtr gv = kst_cast<GeneratedVector>(document()->objectStore()->createObject<GeneratedVector>());
-  Q_ASSERT(gv);
-  gv->changeRange(0, 100, 1000);
-  EquationPtr ep = kst_cast<Equation>(document()->objectStore()->createObject<Equation>());
-  Q_ASSERT(ep);
-  ep->setExistingXVector(VectorPtr(gv), false);
-  ep->setEquation("x^2");
-  ep->writeLock();
-  ep->update();
-  ep->unlock();
-#endif
-}
-
-
 void MainWindow::createActions() {
   _undoAct = _undoGroup->createUndoAction(this);
   _undoAct->setShortcut(tr("Ctrl+Z"));
@@ -987,13 +962,6 @@ void MainWindow::createMenus() {
   _helpMenu->addSeparator();
   _helpMenu->addAction(_aboutAct);
 
-#if DEMO_VECTOR_MODEL
-  QMenu *demoMenu = menuBar()->addMenu("&Demo");
-
-  QAction *demoModel = new QAction("Vector model", this);
-  connect(demoModel, SIGNAL(triggered()), this, SLOT(demoModel()));
-  demoMenu->addAction(demoModel);
-#endif
 }
 
 
@@ -1214,6 +1182,7 @@ void MainWindow::updateViewItems(qint64 serial) {
     _tabWidget->currentView()->update();
   }
 
+  QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished()));
 }
 
 void MainWindow::showVectorEditor() {

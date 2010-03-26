@@ -14,12 +14,6 @@ drawn one pixel above the axis tick mark for zero.
 
 --------------------
 
-Text for labels and axes is rendered (anti-aliased) non-uniformly.  One
-plot may look sharp whereas the plot immediately below it will have text
-that looks blurry (even out of focus).  
-
---------------------
-
 When in data mode, the position of the data mode indicator and the
 values in the bottom status bar only update if you move the mouse.  When
 live data is scrolling by and the mouse is still, the data mode
