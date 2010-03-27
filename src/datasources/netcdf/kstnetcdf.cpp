@@ -16,21 +16,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "netcdf_source.h" // Local header for the kst netCDF datasource
+#include "kstnetcdf.h"
+#include "kst_i18n.h"
+#include "debug.h"
 
-#include <ksdebug.h>
-
-#include <qfile.h>
-#include <qfileinfo.h>
+#include <QFile>
+#include <QFileInfo>
 
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "kststring.h"
+
+using namespace Kst;
+
+static const QString netCdfTypeString = I18N_NOOP("netCDF Files");
 
 
-NetcdfSource::NetcdfSource(KConfig *cfg, const QString& filename, const QString& type)
-: KstDataSource(cfg, filename, type), _ncfile(0L) {
+NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element) :
+  Kst::DataSource(store, cfg, filename, type),
+  _ncfile(0L)
+{
+  setUpdateType(None);
+
   if (!type.isEmpty() && type != "netCDF") {
     return;
   }
@@ -50,18 +57,18 @@ NetcdfSource::~NetcdfSource() {
 }
 
 
-bool NetcdfSource::reset() {
+void NetcdfSource::reset() {
   delete _ncfile;
   _ncfile = 0L;
   _maxFrameCount = 0;
-  return _valid = initFile();
+  _valid = initFile();
 }
 
 
 bool NetcdfSource::initFile() {
-  _ncfile = new NcFile(_filename.latin1(), NcFile::ReadOnly);
+  _ncfile = new NcFile(_filename.toLatin1(), NcFile::ReadOnly);
   if (!_ncfile->is_valid()) {
-      kstdDebug() << _filename << ": failed to open in initFile()" << endl;
+      qDebug() << _filename << ": failed to open in initFile()" << endl;
       return false;
     }
 
@@ -78,7 +85,7 @@ bool NetcdfSource::initFile() {
     NcVar *var = _ncfile->get_var(i);
     _fieldList += var->name();
     int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = QMAX(_maxFrameCount, fc);
+    _maxFrameCount = qMax(_maxFrameCount, fc);
     _frameCounts[var->name()] = fc;
   }
 
@@ -92,22 +99,26 @@ bool NetcdfSource::initFile() {
       char *attString = att->as_string(0);
       QString attrValue = QString(att->as_string(0));
       delete[] attString;
-      KstString *ms = new KstString(KstObjectTag(attrName, tag()), this, attrValue);
-      _metaData.insert(attrName, ms);
+      //TODO port
+      //KstString *ms = new KstString(KstObjectTag(attrName, tag()), this, attrValue);
+      _metaData.insert(attrName, attrValue);
     }
     delete att;
   }
-  
-  update(); // necessary?  slows down initial loading
+
+  // TODO update(); // necessary?  slows down initial loading
   return true;
 }
 
 
 
-KstObject::UpdateType NetcdfSource::update(int u) {
+Kst::Object::UpdateType NetcdfSource::internalDataSourceUpdate() {
+  //TODO port
+  /*
   if (KstObject::checkUpdateCounter(u)) {
     return lastUpdateResult();
   }
+  */
 
   _ncfile->sync();
 
@@ -118,11 +129,11 @@ KstObject::UpdateType NetcdfSource::update(int u) {
   for (int j = 0; j < nb_vars; j++) {
     NcVar *var = _ncfile->get_var(j);
     int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = QMAX(_maxFrameCount, fc);
+    _maxFrameCount = qMax(_maxFrameCount, fc);
     updated = updated || (_frameCounts[var->name()] != fc);
     _frameCounts[var->name()] = fc;
   }
-  return setLastUpdateResult(updated ? KstObject::UPDATE : KstObject::NO_CHANGE);
+  return updated ? Object::Updated : Object::NoChange;
 }
 
 
@@ -135,7 +146,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   // kstdDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
 
   /* For INDEX field */
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
       return 1;
@@ -147,9 +158,10 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   /* For a variable from the netCDF file */
-  NcVar *var = _ncfile->get_var(field.latin1());  // var is owned by _ncfile
+  QByteArray bytes = field.toLatin1();
+  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
   if (!var) {
-    kstdDebug() << "Queried field " << field << " which can't be read" << endl;
+    //kstdDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
@@ -178,7 +190,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
             delete record;
           }
         }
-      }	
+      }
       break;
 
     case ncInt:
@@ -215,10 +227,10 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
             delete record;
           }
         }
-      } 
+      }
       break;
 
-    case ncDouble: 
+    case ncDouble:
       {
         if (oneSample) {
           record = var->get_rec(s);
@@ -237,7 +249,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
       break;
 
     default:
-      kstdDebug() << field << ": wrong datatype for kst, no values read" << endl;
+      //kstdDebug() << field << ": wrong datatype for kst, no values read" << endl;
       return -1;
       break;
 
@@ -250,17 +262,18 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
 
 
-bool NetcdfSource::isValidField(const QString& field) const {  
+bool NetcdfSource::isValidField(const QString& field) const {
   return _fieldList.contains(field);
 }
 
 
 
 int NetcdfSource::samplesPerFrame(const QString& field) {
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     return 1;
   }
-  NcVar *var = _ncfile->get_var(field.latin1());
+  QByteArray bytes = field.toLatin1();
+  NcVar *var = _ncfile->get_var(bytes.constData());
   if (!var) {
     return 0;
   }
@@ -270,9 +283,9 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
 
 
 int NetcdfSource::frameCount(const QString& field) const {
-  if (field.isEmpty() || field.lower() == "index") {
+  if (field.isEmpty() || field.toLower() == "index") {
     return _maxFrameCount;
-  } else { 
+  } else {
     return _frameCounts[field];
   }
 }
@@ -285,10 +298,6 @@ QString NetcdfSource::fileType() const {
 
 
 
-void NetcdfSource::save(QTextStream &ts, const QString& indent) {
-  KstDataSource::save(ts, indent);
-}
-
 
 
 bool NetcdfSource::isEmpty() const {
@@ -297,31 +306,126 @@ bool NetcdfSource::isEmpty() const {
 
 
 
-extern "C" {
-  KstDataSource *create_netcdf(KConfig *cfg, const QString& filename, const QString& type) {
-    return new NetcdfSource(cfg, filename, type);
-  }
+
+//
+// NetCdfPlugin
+//
+
+QString NetCdfPlugin::pluginName() const { return "netCDF Reader"; }
+QString NetCdfPlugin::pluginDescription() const { return "netCDF Reader"; }
 
 
-  QStringList provides_netcdf() {
-    QStringList rc;
-    rc += "netCDF";
-    return rc;
-  }
+Kst::DataSource *NetCdfPlugin::create(Kst::ObjectStore *store,
+                                            QSettings *cfg,
+                                            const QString &filename,
+                                            const QString &type,
+                                            const QDomElement &element) const
+{
+  return new NetcdfSource(store, cfg, filename, type, element);
+}
+
+
+
+QStringList NetCdfPlugin::matrixList(QSettings *cfg,
+                                             const QString& filename,
+                                             const QString& type,
+                                             QString *typeSuggestion,
+                                             bool *complete) const
+{
+  return QStringList();
+}
+
+
+const QString& NetcdfSource::typeString() const
+{
+  return netCdfTypeString;
+}
+
+
+
+QStringList NetCdfPlugin::scalarList(QSettings *cfg,
+                                            const QString& filename,
+                                            const QString& type,
+                                            QString *typeSuggestion,
+                                            bool *complete) const
+{
+
+  Q_UNUSED(cfg);
+  Q_UNUSED(type)
+  QStringList scalarList;
+  return scalarList;
+}
+
+QStringList NetCdfPlugin::stringList(QSettings *cfg,
+                                      const QString& filename,
+                                      const QString& type,
+                                      QString *typeSuggestion,
+                                      bool *complete) const {
+  Q_UNUSED(cfg);
+  Q_UNUSED(type)
+  QStringList stringList;
+
+  // TODO port
+
+  return stringList;
+}
+
+QStringList NetCdfPlugin::fieldList(QSettings *cfg,
+                                            const QString& filename,
+                                            const QString& type,
+                                            QString *typeSuggestion,
+                                            bool *complete) const {
+  Q_UNUSED(cfg);
+  Q_UNUSED(type)
+
+  QStringList fieldList;
+  //TODO port
+  return fieldList;
+}
+
+
+
+
+
+bool NetCdfPlugin::supportsTime(QSettings *cfg, const QString& filename) const {
+  //FIXME
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
+  return true;
+}
+
+
+QStringList NetCdfPlugin::provides() const
+{
+  return QStringList() << netCdfTypeString;
+}
+
+
+Kst::DataSourceConfigWidget *NetCdfPlugin::configWidget(QSettings *cfg, const QString& filename) const {
+
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
+  return 0;;
+
+}
+
+
 
 
   /** understands_netcdf: returns true if:
     - the file is readable (!)
     - the file can be opened by the netcdf library **/
-  int understands_netcdf(KConfig*, const QString& filename) {
+int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
+{
     QFile f(filename);
 
-    if (!f.open(IO_ReadOnly)) {
-      kstdDebug() << "Unable to read file !" << endl;
+    if (!f.open(QFile::ReadOnly)) {
+      //kstdDebug() << "Unable to read file !" << endl;
       return 0;
     }
 
-    NcFile *ncfile = new NcFile(filename.latin1());
+    QByteArray bytes = filename.toLatin1();
+    NcFile *ncfile = new NcFile(bytes.constData());
     if (ncfile->is_valid()) {
       // kstdDebug() << filename << " looks like netCDF !" << endl;
       delete ncfile;
@@ -332,7 +436,5 @@ extern "C" {
     }
   }
 
-}
 
-KST_KEY_DATASOURCE_PLUGIN(netcdf)
-
+Q_EXPORT_PLUGIN2(kstdata_netcdfsource, NetCdfPlugin)
