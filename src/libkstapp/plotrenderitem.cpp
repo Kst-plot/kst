@@ -587,7 +587,6 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
 
     foreach(RelationPtr relation, relationList()) {
       if (Curve* curve = kst_cast<Curve>(relation)) {
-        //FIXME: set dxPerPix to something sensible!
         int index = curve->getIndexNearXY(position.x(), dxPerPix, position.y());
         curve->point(index, x, y);
         distance = fabs(position.y() - y);
