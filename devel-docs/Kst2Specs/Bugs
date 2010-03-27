@@ -14,14 +14,6 @@ drawn one pixel above the axis tick mark for zero.
 
 --------------------
 
-When in data mode, the position of the data mode indicator and the
-values in the bottom status bar only update if you move the mouse.  When
-live data is scrolling by and the mouse is still, the data mode
-indicator scrolls off the plot with the data (until you jiggle the
-mouse).
-
---------------------
-
 Windows MEMleak
 
 ------------------

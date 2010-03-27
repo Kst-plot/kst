@@ -583,11 +583,12 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
     qreal x, y;
     QPointF matchedPoint;
     qreal imageZ;
+    qreal dxPerPix = double(projectionRect().width())/double(rect().width());
 
     foreach(RelationPtr relation, relationList()) {
       if (Curve* curve = kst_cast<Curve>(relation)) {
         //FIXME: set dxPerPix to something sensible!
-        int index = curve->getIndexNearXY(position.x(), 0, position.y());
+        int index = curve->getIndexNearXY(position.x(), dxPerPix, position.y());
         curve->point(index, x, y);
         distance = fabs(position.y() - y);
         if (bFirst || distance < minDistance) {

@@ -77,12 +77,4 @@ tell any of the numbers apart).
 
 --------------------
 
-3. Data mode no longer easily finds the point nearest the cursor.
-In kst 1.x, you could easily get datamode to locate points on a spike or
-other outlier on a dense curve, but now it actually seems to pick the
-point at the current x value, even if the cursor is significantly closer
-to a different point.  
-
--------------------
-
 in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
