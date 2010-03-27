@@ -26,6 +26,8 @@
 #include <netcdfcpp.h>
 
 
+class DataInterfaceNetCdf;
+
 class NetcdfSource : public Kst::DataSource {
   public:
     NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element);
@@ -41,8 +43,6 @@ class NetcdfSource : public Kst::DataSource {
 
 
     int readField(double *v, const QString& field, int s, int n);
-
-    bool isValidField(const QString& field) const;
 
     int samplesPerFrame(const QString& field);
 
@@ -64,6 +64,9 @@ class NetcdfSource : public Kst::DataSource {
 
     QMap<QString, QString> _metaData;
     QStringList _fieldList;
+
+    friend class DataInterfaceNetCdf;
+    DataInterfaceNetCdf* iv;
 };
 
 

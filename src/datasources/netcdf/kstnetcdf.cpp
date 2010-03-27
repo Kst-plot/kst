@@ -32,10 +32,78 @@ using namespace Kst;
 static const QString netCdfTypeString = I18N_NOOP("netCDF Files");
 
 
+
+//
+// Vector interface
+//
+
+class DataInterfaceNetCdf : public DataSource::DataInterface<DataVector>
+{
+public:
+  DataInterfaceNetCdf(NetcdfSource& s) : netcdf(s) {}
+
+  // read one element
+  int read(const QString&, const DataVector::Param&);
+
+  // named elements
+  QStringList list() const { return netcdf._fieldList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataVector::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataVector::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  NetcdfSource& netcdf;
+};
+
+
+const DataVector::Optional DataInterfaceNetCdf::optional(const QString &field) const
+{
+  DataVector::Optional opt = {-1, -1, -1};
+  if (!netcdf._fieldList.contains(field))
+    return opt;
+
+  opt.samplesPerFrame = netcdf.samplesPerFrame(field);
+  opt.frameCount = netcdf.frameCount(field);
+  opt.vectorframeCount = -1;
+
+  return opt;
+}
+
+
+
+int DataInterfaceNetCdf::read(const QString& field, const DataVector::Param& p)
+{
+  return netcdf.readField(p.data, field, p.startingFrame, p.numberOfFrames);
+}
+
+
+bool DataInterfaceNetCdf::isValid(const QString& field) const
+{
+  return  netcdf._fieldList.contains( field );
+}
+
+
+
+
+//
+// NetcdfSource
+//
+
 NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element) :
   Kst::DataSource(store, cfg, filename, type),
-  _ncfile(0L)
+  _ncfile(0L),
+  iv(new DataInterfaceNetCdf(*this))
 {
+  setInterface(iv);
+
   setUpdateType(None);
 
   if (!type.isEmpty() && type != "netCDF") {
@@ -48,7 +116,6 @@ NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   _filename = filename;
   _valid = initFile();
 }
-
 
 
 NetcdfSource::~NetcdfSource() {
@@ -262,9 +329,6 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
 
 
-bool NetcdfSource::isValidField(const QString& field) const {
-  return _fieldList.contains(field);
-}
 
 
 
@@ -365,8 +429,6 @@ QStringList NetCdfPlugin::stringList(QSettings *cfg,
   Q_UNUSED(type)
   QStringList stringList;
 
-  // TODO port
-
   return stringList;
 }
 
@@ -379,7 +441,7 @@ QStringList NetCdfPlugin::fieldList(QSettings *cfg,
   Q_UNUSED(type)
 
   QStringList fieldList;
-  //TODO port
+
   return fieldList;
 }
 
