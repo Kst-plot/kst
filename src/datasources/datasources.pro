@@ -20,3 +20,11 @@ LibExists(getdata) {
     CONFIG += link_pkgconfig
     PKGCONFIG += getdata
 }
+
+LibExists(netcdf) {
+    message(netCDF configured.  Plugins will be built.)
+    SUBDIRS += netcdf
+    CONFIG += link_pkgconfig
+    PKGCONFIG += netcdf
+}
+

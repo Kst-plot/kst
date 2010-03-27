@@ -16,23 +16,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef NETCDF_H
-#define NETCDF_H
+#ifndef KST_NETCDF_H
+#define KST_NETCDF_H
 
-#include <kstdatasource.h>
+#include "datasource.h"
+#include "dataplugin.h"
+
 #include <netcdf.h>
 #include <netcdfcpp.h>
 
 
-class NetcdfSource : public KstDataSource {
+class NetcdfSource : public Kst::DataSource {
   public:
-    NetcdfSource(KConfig *cfg, const QString& filename, const QString& type);
+    NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element);
 
     ~NetcdfSource();
 
     bool initFile();
 
-    KstObject::UpdateType update(int = -1);
+    Kst::Object::UpdateType internalDataSourceUpdate();
+
+
+    virtual const QString& typeString() const;
+
 
     int readField(double *v, const QString& field, int s, int n);
 
@@ -48,13 +54,72 @@ class NetcdfSource : public KstDataSource {
 
     bool isEmpty() const;
 
-    bool reset();
+    void  reset();
 
   private:
-    QMap<QString,long> _frameCounts;
-    long _maxFrameCount;
+    QMap<QString, int> _frameCounts;
+
+    int _maxFrameCount;
     NcFile *_ncfile;
+
+    QMap<QString, QString> _metaData;
+    QStringList _fieldList;
 };
+
+
+
+class NetCdfPlugin : public QObject, public Kst::DataSourcePluginInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(Kst::DataSourcePluginInterface)
+
+  public:
+    virtual ~NetCdfPlugin() {}
+
+    virtual QString pluginName() const;
+    virtual QString pluginDescription() const;
+
+    virtual bool hasConfigWidget() const { return false; }
+
+    virtual Kst::DataSource *create(Kst::ObjectStore *store,
+                                  QSettings *cfg,
+                                  const QString &filename,
+                                  const QString &type,
+                                  const QDomElement &element) const;
+
+    virtual QStringList matrixList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList fieldList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList scalarList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual QStringList stringList(QSettings *cfg,
+                                  const QString& filename,
+                                  const QString& type,
+                                  QString *typeSuggestion,
+                                  bool *complete) const;
+
+    virtual int understands(QSettings *cfg, const QString& filename) const;
+
+    virtual bool supportsTime(QSettings *cfg, const QString& filename) const;
+
+    virtual QStringList provides() const;
+
+    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
+};
+
 
 
 #endif
