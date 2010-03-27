@@ -22,6 +22,7 @@ LibExists(getdata) {
 }
 
 !win32:LibExists(netcdf) {
+    # mbe sure you link against netcdf and netcdf_c++
     message(netCDF configured.  Plugins will be built.)
     SUBDIRS += netcdf
     CONFIG += link_pkgconfig
