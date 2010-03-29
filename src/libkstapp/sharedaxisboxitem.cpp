@@ -412,7 +412,9 @@ void SharedAxisBoxItem::zoomFixedExpression(const QRectF &projection, PlotItem* 
 #endif
   _xAxisZoomMode = PlotAxis::FixedExpression;
   _yAxisZoomMode = PlotAxis::FixedExpression;
-  originPlotItem->zoomFixedExpression(projection, true);
+  if (originPlotItem) {
+    originPlotItem->zoomFixedExpression(projection, true);
+  }
   applyZoom(projection, originPlotItem);
 }
 
@@ -473,7 +475,9 @@ void SharedAxisBoxItem::zoomMaximum(PlotItem* originPlotItem) {
 
   _xAxisZoomMode = PlotAxis::Auto;
   _yAxisZoomMode = PlotAxis::AutoBorder;
-  originPlotItem->zoomMaximum(true);
+  if (originPlotItem) {
+    originPlotItem->zoomMaximum(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::AutoBorder), originPlotItem);
 }
 
@@ -484,7 +488,9 @@ void SharedAxisBoxItem::zoomMaxSpikeInsensitive(PlotItem* originPlotItem) {
 #endif
   _xAxisZoomMode = PlotAxis::Auto;
   _yAxisZoomMode = PlotAxis::SpikeInsensitive;
-  originPlotItem->zoomMaxSpikeInsensitive(true);
+  if (originPlotItem) {
+    originPlotItem->zoomMaxSpikeInsensitive(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::SpikeInsensitive), originPlotItem);
 }
 
@@ -502,7 +508,9 @@ void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
   qDebug() << "zoomYMeanCentered" << endl;
 #endif
   _yAxisZoomMode = PlotAxis::MeanCentered;
-  originPlotItem->zoomYMeanCentered(true);
+  if (originPlotItem) {
+    originPlotItem->zoomYMeanCentered(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
 }
 
@@ -511,7 +519,9 @@ void SharedAxisBoxItem::zoomXMeanCentered(PlotItem* originPlotItem) {
   qDebug() << "zoomXMeanCentered" << endl;
 #endif
   _xAxisZoomMode = PlotAxis::MeanCentered;
-  originPlotItem->zoomXMeanCentered(true);
+  if (originPlotItem) {
+    originPlotItem->zoomXMeanCentered(true);
+  }
   applyZoom(computeRect(PlotAxis::MeanCentered, PlotAxis::MeanCentered), originPlotItem, true, false);
 }
 
@@ -520,7 +530,9 @@ void SharedAxisBoxItem::zoomXMaximum(PlotItem* originPlotItem) {
   qDebug() << "zoomXMaximum" << endl;
 #endif
   _xAxisZoomMode = PlotAxis::Auto;
-  originPlotItem->zoomXMaximum(true);
+  if (originPlotItem) {
+    originPlotItem->zoomXMaximum(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::Auto), originPlotItem, true, false);
 }
 
@@ -530,7 +542,9 @@ void SharedAxisBoxItem::zoomXNoSpike(PlotItem* originPlotItem) {
   qDebug() << "zoomXNoSpike" << endl;
 #endif
   _xAxisZoomMode = PlotAxis::SpikeInsensitive;
-  originPlotItem->zoomXNoSpike(true);
+  if (originPlotItem) {
+    originPlotItem->zoomXNoSpike(true);
+  }
   applyZoom(computeRect(PlotAxis::SpikeInsensitive, PlotAxis::Auto), originPlotItem, true, false);
 }
 
@@ -540,7 +554,9 @@ void SharedAxisBoxItem::zoomXAutoBorder(PlotItem* originPlotItem) {
   qDebug() << "zoomXAutoBorder" << endl;
 #endif
   _xAxisZoomMode = PlotAxis::AutoBorder;
-  originPlotItem->zoomXAutoBorder(true);
+  if (originPlotItem) {
+    originPlotItem->zoomXAutoBorder(true);
+  }
   applyZoom(computeRect(PlotAxis::AutoBorder, PlotAxis::Auto), originPlotItem, true, false);
 }
 
@@ -681,7 +697,9 @@ void SharedAxisBoxItem::zoomNormalizeXtoY(PlotItem* originPlotItem) {
       }
     }
     _xAxisZoomMode = PlotAxis::FixedExpression;
-    originPlotItem->zoomNormalizeXtoY(true);
+    if (originPlotItem) {
+      originPlotItem->zoomNormalizeXtoY(true);
+    }
     applyZoom(computedRect, originPlotItem, true, false);
   }
 }
@@ -746,7 +764,9 @@ void SharedAxisBoxItem::zoomYLocalMaximum(PlotItem* originPlotItem) {
       }
     }
     _yAxisZoomMode = PlotAxis::FixedExpression;
-    originPlotItem->zoomYLocalMaximum(true);
+    if (originPlotItem) {
+      originPlotItem->zoomYLocalMaximum(true);
+    }
     applyZoom(computedRect, originPlotItem, false, true);
   }
 }
@@ -757,7 +777,9 @@ void SharedAxisBoxItem::zoomYMaximum(PlotItem* originPlotItem) {
   qDebug() << "zoomYMaximum" << endl;
 #endif
   _yAxisZoomMode = PlotAxis::Auto;
-  originPlotItem->zoomYMaximum(true);
+  if (originPlotItem) {
+    originPlotItem->zoomYMaximum(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::Auto), originPlotItem, false, true);
 }
 
@@ -767,7 +789,9 @@ void SharedAxisBoxItem::zoomYNoSpike(PlotItem* originPlotItem) {
   qDebug() << "zoomYNoSpike" << endl;
 #endif
   _yAxisZoomMode = PlotAxis::SpikeInsensitive;
-  originPlotItem->zoomYNoSpike(true);
+  if (originPlotItem) {
+    originPlotItem->zoomYNoSpike(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::SpikeInsensitive), originPlotItem, false, true);
 }
 
@@ -777,7 +801,9 @@ void SharedAxisBoxItem::zoomYAutoBorder(PlotItem* originPlotItem) {
   qDebug() << "zoomYAutoBorder" << endl;
 #endif
   _yAxisZoomMode = PlotAxis::AutoBorder;
-  originPlotItem->zoomYAutoBorder(true);
+  if (originPlotItem) {
+    originPlotItem->zoomYAutoBorder(true);
+  }
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::AutoBorder), originPlotItem, false, true);
 }
 
@@ -891,6 +917,9 @@ void SharedAxisBoxItem::zoomYIn(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomNormalizeYtoX(PlotItem* originPlotItem) {
+  if (!originPlotItem) {
+    return;
+  }
 #if DEBUG_ZOOM
   qDebug() << "zoomNormalizeYtoX" << endl;
 #endif

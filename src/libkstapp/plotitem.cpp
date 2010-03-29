@@ -762,7 +762,6 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
     }
   }
   setLabelsDirty();
-  //update();
 
   return true;
 }
