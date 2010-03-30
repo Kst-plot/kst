@@ -574,8 +574,9 @@ int DataVector::samplesPerFrame() const {
 
 
 int DataVector::fileLength() const {
+
   if (_file) {    
-    int rc = opt(_field).vectorframeCount;    
+    int rc = opt(_field).frameCount;
 
     return rc;
   }

@@ -86,6 +86,7 @@ const DataVector::Optional DataInterfaceDirFileVector::optional(const QString &f
 
   opt.samplesPerFrame = dir.samplesPerFrame(field);
   opt.frameCount = dir._frameCount;
+
   return opt;
 }
 

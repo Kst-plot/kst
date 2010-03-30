@@ -210,10 +210,21 @@ void MainWindow::saveAs() {
 
 
 void MainWindow::newDoc() {
-  if (!_doc->isChanged() || promptSave()) {
+  bool clearApproved = false;
+  if (_doc->isChanged()) {
+    clearApproved = promptSave();
+  } else {
+    int rc = QMessageBox::warning(this, tr("Kst"), tr("Delete everything?"), QMessageBox::Ok, QMessageBox::Cancel);
+    clearApproved = (rc == QMessageBox::Ok);
+  }
+
+  if (clearApproved) {
     delete _doc;
     _doc = new Document(this);
+  } else {
+    return;
   }
+
   tabWidget()->createView();
 
   int i=tabWidget()->count()-1;
@@ -777,9 +788,8 @@ void MainWindow::createActions() {
   _openAct->setShortcut(tr("Ctrl+O"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-  _newAct = new QAction(tr("&New..."), this);
+  _newAct = new QAction(tr("&Clear Session"), this);
   _newAct->setStatusTip(tr("Clear current session"));
-  _newAct->setShortcut(tr("Ctrl+N"));
   connect(_newAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _printAct = new QAction(tr("&Print..."), this);
@@ -1147,7 +1157,6 @@ void MainWindow::back() {
       if (f0<0) {
         f0 = 0;
       }
-
       v->writeLock(); 
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
       v->registerChange();
