@@ -80,13 +80,10 @@ public:
 
 const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &field) const
 {
-  DataVector::Optional opt = {-1, -1, -1};
   if (!ascii._fieldList.contains(field))
-    return opt;
+    return DataVector::Optional();
 
-  opt.samplesPerFrame = 1;
-  opt.frameCount = ascii._numFrames;
-  return opt;
+  return DataVector::Optional(ascii._numFrames, 1);
 }
 
 

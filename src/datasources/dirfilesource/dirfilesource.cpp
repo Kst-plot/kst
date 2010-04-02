@@ -80,14 +80,10 @@ public:
 
 const DataVector::Optional DataInterfaceDirFileVector::optional(const QString &field) const
 {
-  DataVector::Optional opt = {-1, -1, -1};
   if (!dir._fieldList.contains(field))
-    return opt;
+    return DataVector::Optional();
 
-  opt.samplesPerFrame = dir.samplesPerFrame(field);
-  opt.frameCount = dir._frameCount;
-
-  return opt;
+  return DataVector::Optional(dir._frameCount, dir.samplesPerFrame(field));
 }
 
 

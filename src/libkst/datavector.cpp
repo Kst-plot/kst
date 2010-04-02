@@ -48,6 +48,20 @@ namespace Kst {
 const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
 const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
+
+DataVector::Optional::Optional() :
+    frameCount(-1),
+    samplesPerFrame(-1)
+{
+}
+
+
+DataVector::Optional::Optional(int fc, int spf) :
+    frameCount(fc),
+    samplesPerFrame(spf)
+{
+}
+
 /** Create a DataVector: raw data from a file */
 DataVector::DataVector(ObjectStore *store)
 : Vector(store), DataPrimitive() {

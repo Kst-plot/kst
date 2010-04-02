@@ -52,11 +52,16 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
       int skip;
     };
 
-    struct Optional {
+
+    struct Optional
+    {
+      Optional();
+
       int samplesPerFrame;
       int xSize;
       int ySize;
     };
+
 
     virtual const QString& typeString() const;
     static const QString staticTypeString;

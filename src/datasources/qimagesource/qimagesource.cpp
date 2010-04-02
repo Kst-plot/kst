@@ -98,15 +98,10 @@ void DataInterfaceQImageVector::init()
 
 const DataVector::Optional DataInterfaceQImageVector::optional(const QString &field) const
 {
-  DataVector::Optional opt = {-1, -1, -1};
   if (!_vectorList.contains(field))
-    return opt;
+    return DataVector::Optional();
 
-  opt.samplesPerFrame = 1;
-  opt.frameCount = _frameCount;
-  opt.vectorframeCount = -1;
-
-  return opt;
+  return DataVector::Optional(_frameCount, 1);
 }
 
 
@@ -216,11 +211,12 @@ void DataInterfaceQImageMatrix::init()
 
 const DataMatrix::Optional DataInterfaceQImageMatrix::optional(const QString& matrix) const
 {
-  DataMatrix::Optional opt = {-1, -1, -1};
   if ( !_image || _image->isNull() || !_matrixList.contains( matrix ) ) {
-    return opt;
+    return DataMatrix::Optional();
   }
 
+  DataMatrix::Optional opt;
+  opt.samplesPerFrame = 1;
   opt.xSize = _image->width();
   opt.ySize = _image->height();
 

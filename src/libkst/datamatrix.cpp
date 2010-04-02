@@ -33,6 +33,18 @@ namespace Kst {
 const QString DataMatrix::staticTypeString = I18N_NOOP("Data Matrix");
 const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
 
+
+
+DataMatrix::Optional::Optional() :
+    samplesPerFrame(-1),
+    xSize(-1),
+    ySize(-1)
+{
+}
+
+
+
+
 DataMatrix::DataMatrix(ObjectStore *store)
   : Matrix(store) {
 }

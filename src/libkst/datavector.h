@@ -53,10 +53,14 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
       int *lastFrameRead;
     };
 
-    struct Optional {
-      int samplesPerFrame;
+
+    struct Optional
+    {
+      Optional();
+      Optional(int frameCount, int samplesPerFrame);
+
       int frameCount;
-      int vectorframeCount;
+      int samplesPerFrame;
     };
 
 
