@@ -731,28 +731,40 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
 
   _serialOfLastChange = serial;
 
+  QRectF compute = computedProjectionRect();
+  QRectF newProjectionRec = projectionRect();
+
   if (isInSharedAxisBox()) {
     // Need to update the box's projectionRect.
     sharedAxisBox()->updateZoomForDataUpdate();
-  } else {
-    if ((xAxis()->axisZoomMode() == PlotAxis::Auto) ||
+  }
+  if ((xAxis()->axisZoomMode() == PlotAxis::Auto) ||
         (xAxis()->axisZoomMode() == PlotAxis::MeanCentered) ||
         (xAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
         (xAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive)) {
-      if ((yAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
-          (yAxis()->axisZoomMode() == PlotAxis::Auto) ||
-          (yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive) ||
-          (yAxis()->axisZoomMode() == PlotAxis::MeanCentered)) {
-        setProjectionRect(computedProjectionRect());
-      } else {
-        QRectF compute = computedProjectionRect();
+
+    newProjectionRec.setLeft(compute.x());
+    newProjectionRec.setWidth(compute.width());
+  }
+
+  if ((yAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
+      (yAxis()->axisZoomMode() == PlotAxis::Auto) ||
+      (yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive) ||
+      (yAxis()->axisZoomMode() == PlotAxis::MeanCentered)) {
+    newProjectionRec.setTop(compute.y());
+    newProjectionRec.setHeight(compute.height());
+  }
+
+  setProjectionRect(newProjectionRec);
+
+#if 0
+  else {
         setProjectionRect(QRectF(compute.x(),
               projectionRect().y(),
               compute.width(),
               projectionRect().height()));
       }
     } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
-      QRectF compute = computedProjectionRect();
       setProjectionRect(QRectF(projectionRect().x(),
             compute.y(),
             projectionRect().width(),
@@ -761,6 +773,8 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
       update();
     }
   }
+#endif
+
   setLabelsDirty();
 
   return true;

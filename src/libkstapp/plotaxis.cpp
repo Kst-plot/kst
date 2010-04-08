@@ -702,7 +702,7 @@ void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
       }
     }
   }
-  if (minorLabels && minTicks.isEmpty()) {
+  if (minorLabels && !minTicks.isEmpty()) {
     qreal lastMinorTick = minTicks.last();
     if (ticks.isEmpty() || ticks.last() < lastMinorTick) {
       if (labels.contains(lastMinorTick)) {

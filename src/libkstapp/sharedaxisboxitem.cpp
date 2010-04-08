@@ -207,6 +207,8 @@ void SharedAxisBoxItem::breakShare() {
       plotItem->setPos(mapToParent(plotItem->pos()));
       plotItem->setSharedAxisBox(0);
       plotItem->setLabelsVisible(true);
+      plotItem->xAxis()->setAxisZoomMode(xAxisZoomMode());
+      plotItem->yAxis()->setAxisZoomMode(yAxisZoomMode());
       plotItem->update();
     }
   }
@@ -342,15 +344,22 @@ bool SharedAxisBoxItem::tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMou
 }
 
 
+QList<PlotItem*> SharedAxisBoxItem::getAllPlots() {
+  QList<PlotItem*> plots = _sharedPlots;
+  //plots << PlotItemManager::tiedZoomPlotsForView(parentView());
+
+  return plots;
+}
+
 QList<PlotItem*> SharedAxisBoxItem::getSharedPlots() {
   return _sharedPlots;
 }
 
+QList<PlotItem*> SharedAxisBoxItem::getTiedPlots(PlotItem* originPlotItem) {
+  QList<PlotItem*> plots;
 
-QList<PlotItem*> SharedAxisBoxItem::getTiedPlots() {
-  QList<PlotItem*> plots = getSharedPlots();
-  if (isTiedZoom()) {
-    plots << PlotItemManager::tiedZoomPlotsForView(parentView());
+  if (originPlotItem) {
+    return PlotItemManager::tiedZoomPlotsForView(parentView());
   }
   return plots;
 }
@@ -379,18 +388,48 @@ QRectF SharedAxisBoxItem::computeRect(PlotAxis::ZoomMode xZoomMode, PlotAxis::Zo
 
 
 void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlotItem, bool applyX, bool applyY) {
-  QList<PlotItem*> allPlots = getTiedPlots();
+  QList<PlotItem*> allPlots = getAllPlots();
   QList<PlotItem*> plotTied;
-  if (originPlotItem && originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
+  if (originPlotItem && 
+      originPlotItem->isTiedZoom() && 
+      originPlotItem->isInSharedAxisBox() && 
+      (originPlotItem->sharedAxisBox() == this)) {
     plotTied = PlotItemManager::tiedZoomPlotsForView(parentView());
+    foreach (PlotItem* plotItem, plotTied) {      
+      // tie only changes the unshared axis for shared plots
+      if (!_shareX || !plotItem->isInSharedAxisBox()) {
+        switch (xAxisZoomMode()) {
+          case PlotAxis::Auto:
+            plotItem->zoomXMaximum(true);
+            break;
+          case PlotAxis::AutoBorder:
+            plotItem->zoomXAutoBorder(true);
+            break;
+          case PlotAxis::SpikeInsensitive:
+            plotItem->zoomXNoSpike(true);
+            break;
+          default:
+            plotItem->zoomXRange(projection,true);
+            break;
 
-    foreach (PlotItem* plotItem, plotTied) {
-      if ((originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) && (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom())) {
-        plotItem->zoomFixedExpression(projection, true);
-      } else if (originPlotItem->isXTiedZoom() && plotItem->isXTiedZoom()) {
-        plotItem->zoomFixedExpression(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
-      } else if (originPlotItem->isYTiedZoom() && plotItem->isYTiedZoom()) {
-        plotItem->zoomFixedExpression(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
+        }
+      }
+
+      if (!_shareY || !plotItem->isInSharedAxisBox()) {
+        switch (yAxisZoomMode()) {
+          case PlotAxis::Auto:
+            plotItem->zoomYMaximum(true);
+            break;
+          case PlotAxis::AutoBorder:
+            plotItem->zoomYAutoBorder(true);
+            break;
+          case PlotAxis::SpikeInsensitive:
+            plotItem->zoomYNoSpike(true);
+            break;
+          default:
+            plotItem->zoomYRange(projection,true);
+            break;
+        }
       }
     }
   }
@@ -398,9 +437,9 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
     if ((applyX && applyY) && ((_shareX && _shareY) || (isXTiedZoom() && isYTiedZoom()))) {
       plotItem->zoomFixedExpression(projection, true);
     } else if (applyX && (_shareX || isXTiedZoom() || (plotItem == originPlotItem))) {
-      plotItem->zoomFixedExpression(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
+      plotItem->zoomXRange(QRectF(projection.x(), plotItem->projectionRect().y(), projection.width(), plotItem->projectionRect().height()), true);
     } else if (applyY && (_shareY || isYTiedZoom() || (plotItem == originPlotItem))) {
-      plotItem->zoomFixedExpression(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
+      plotItem->zoomYRange(QRectF(plotItem->projectionRect().x(), projection.y(), plotItem->projectionRect().width(), projection.height()), true);
     }
   }
 }
@@ -565,8 +604,19 @@ void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXRight" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareX || isXTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareX) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomXRight(true);
     }
@@ -593,8 +643,19 @@ void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXLeft" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareX || isXTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareX) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomXLeft(true);
     }
@@ -620,8 +681,19 @@ void SharedAxisBoxItem::zoomXOut(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXOut" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareX || isXTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareX) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomXOut(true);
     }
@@ -648,8 +720,19 @@ void SharedAxisBoxItem::zoomXIn(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomXIn" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareX || isXTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareX) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomXIn(true);
     }
@@ -709,14 +792,25 @@ void SharedAxisBoxItem::zoomLogX(PlotItem* originPlotItem, bool autoEnable, bool
 #if DEBUG_ZOOM
   qDebug() << "zoomLogX" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
   bool enableLog;
   if (autoEnable && originPlotItem) {
     enableLog = !originPlotItem->xAxis()->axisLog();
   } else {
     enableLog = enable;
   }
-  if (!(_shareX || isXTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareX) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomLogX(true, false, enableLog);
     }
@@ -741,7 +835,14 @@ void SharedAxisBoxItem::zoomYLocalMaximum(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYLocalMaximum" << endl;
 #endif
-  if (!(_shareY || isYTiedZoom())) {
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomYLocalMaximum(true);
     }
@@ -812,8 +913,19 @@ void SharedAxisBoxItem::zoomYUp(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYUp" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareY || isYTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareY) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
     if (originPlotItem) {
       originPlotItem->zoomYUp(true);
     }
@@ -839,8 +951,20 @@ void SharedAxisBoxItem::zoomYDown(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYDown" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareY || isYTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareY) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomYDown(true);
     }
@@ -866,8 +990,20 @@ void SharedAxisBoxItem::zoomYOut(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYOut" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareY || isYTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareY) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomYOut(true);
     }
@@ -893,8 +1029,20 @@ void SharedAxisBoxItem::zoomYIn(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomYIn" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
-  if (!(_shareY || isYTiedZoom())) {
+  QList<PlotItem*> allPlots;
+  if (_shareY) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomYIn(true);
     }
@@ -923,7 +1071,14 @@ void SharedAxisBoxItem::zoomNormalizeYtoX(PlotItem* originPlotItem) {
 #if DEBUG_ZOOM
   qDebug() << "zoomNormalizeYtoX" << endl;
 #endif
-  if (!(_shareY || isYTiedZoom())) {
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomNormalizeXtoY(true);
     }
@@ -955,7 +1110,12 @@ void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool
 #if DEBUG_ZOOM
   qDebug() << "zoomLogY" << endl;
 #endif
-  QList<PlotItem*> allPlots = getTiedPlots();
+  QList<PlotItem*> allPlots;
+  if (_shareY) {
+    allPlots = getSharedPlots();
+  } else {
+    allPlots = getTiedPlots(originPlotItem);
+  }
   bool enableLog;
   if (autoEnable && originPlotItem) {
     enableLog = !originPlotItem->yAxis()->axisLog();
@@ -963,7 +1123,14 @@ void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool
     enableLog = enable;
   }
 
-  if (!(_shareY || isYTiedZoom())) {
+
+  bool origin_tied = false;
+  if (originPlotItem) {
+    origin_tied = originPlotItem->isTiedZoom();
+  }
+
+  if (!(_shareY || origin_tied)) {
+
     if (originPlotItem) {
       originPlotItem->zoomLogY(true, false, enableLog);
     }
@@ -985,11 +1152,7 @@ void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool
 
 
 void SharedAxisBoxItem::updateZoomForDataUpdate() {
-  if (xAxisZoomMode() == PlotAxis::Auto && yAxisZoomMode() == PlotAxis::AutoBorder) {
-    zoomMaximum(0);
-  } else if (xAxisZoomMode() == PlotAxis::Auto && yAxisZoomMode() == PlotAxis::SpikeInsensitive) {
-    zoomMaxSpikeInsensitive(0);
-  } else {
+  if (_shareX) {
     switch (xAxisZoomMode()) {
       case PlotAxis::Auto:
         zoomXMaximum(0);
@@ -1003,6 +1166,8 @@ void SharedAxisBoxItem::updateZoomForDataUpdate() {
       default:
         break;
     }
+  }
+  if (_shareY) {
     switch (yAxisZoomMode()) {
       case PlotAxis::Auto:
         zoomYMaximum(0);

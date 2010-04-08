@@ -103,7 +103,8 @@ class SharedAxisBoxItem : public ViewItem
     void applyZoom(const QRectF &projection, PlotItem* originPlotItem, bool applyX = true, bool applyY = true);
 
     QList<PlotItem*> getSharedPlots();
-    QList<PlotItem*> getTiedPlots();
+    QList<PlotItem*> getTiedPlots(PlotItem* originPlotItem);
+    QList<PlotItem*> getAllPlots();
 
     QAction *_breakAction;
 

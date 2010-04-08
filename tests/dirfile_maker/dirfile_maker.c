@@ -96,22 +96,22 @@ int main() {
 
     /* write 'sine' */
     for (i=0; i<df[SINE].spf; i++) {
-      x = count*df[SINE].spf+i;
-      x = sin(2.0*M_PI*x/100.0);
+      dx = count*df[SINE].spf+i;
+      x = sin(2.0*M_PI*dx/100.0);
       write(df[SINE].fp, &x, sizeof(float));
     }
     
     /* write 'ssine' */
     for (i=0; i<df[SSINE].spf; i++) {
-      x = count*df[SSINE].spf+i;
-      x = sin(2.0*M_PI*x/100.0);
+      dx = count*df[SSINE].spf+i;
+      x = sin(2.0*M_PI*dx/100.0);
       write(df[SSINE].fp, &x, sizeof(float));
     }
     
     /* write 'cos' */
     for (i=0; i<df[COS].spf; i++) {
-      x = count*df[COS].spf+i;
-      x = cos(2.0*M_PI*x/100.0);
+      dx = count*df[COS].spf+i;
+      x = cos(2.0*M_PI*dx/100.0);
       write(df[COS].fp, &x, sizeof(float));
     }
   

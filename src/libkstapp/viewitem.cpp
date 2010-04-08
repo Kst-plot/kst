@@ -1850,7 +1850,7 @@ void ViewItem::setSupportsTiedZoom(const bool supports) {
 
 void ViewItem::setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied) {
   Q_UNUSED(checkAllTied)
-
+qDebug() << "setting tied zoom: " << tiedXZoom << " " << tiedYZoom;
   if ((_isXTiedZoom == tiedXZoom) && (_isYTiedZoom == tiedYZoom))
     return;
 
