@@ -1208,3 +1208,7 @@ natural (120 would be, or better, 2 minutes; see the bug above).
 displayed correctly on the axis labels, but just displays as the raw
 value in the status bar (on the lower left of the window).  This is both
 in "normal mode" and in "data mode".
+
+------------------
+
+Cleanup layout totally sucks!

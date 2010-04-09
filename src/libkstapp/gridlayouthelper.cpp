@@ -55,7 +55,7 @@ with our layouts and items.*/
 #include <math.h>
 #include <QDebug>
 
-// #define DEBUG_GRID_BUILDING 1
+#define DEBUG_GRID_BUILDING 0
 
 namespace Kst {
 
@@ -71,6 +71,8 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
     // the item layout.
     // -----------------------------------------------------------------
 
+    // modified by cbn to have a tolerance of 1/8 the size of the smallest object
+
     // We need a list of both start and stop values for x- & y-axis
     QVector<int> x( itemList.count()*2 );
     QVector<int> y( itemList.count()*2 );
@@ -78,6 +80,8 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
     // Using push_back would look nicer, but operator[] is much faster
     int index  = 0;
     ViewItem* v = 0;
+    int minWidth = itemList.at(0)->viewRect().width();
+    int minHeight = itemList.at(0)->viewRect().height();
     for (int i = 0; i < itemList.size(); ++i) {
         v = itemList.at(i);
         QRect itemPos = QRect(v->pos().toPoint(), v->viewRect().size().toSize());
@@ -85,6 +89,12 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
         x[index+1] = itemPos.right();
         y[index]   = itemPos.top();
         y[index+1] = itemPos.bottom();
+        if (itemPos.width() < minWidth) {
+          minWidth = itemPos.width();
+        }
+        if (itemPos.height() < minHeight) {
+          minHeight = itemPos.height();
+        }
         index += 2;
     }
 
@@ -95,7 +105,7 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
     if ( !x.empty() ) {
         for (QVector<int>::iterator current = x.begin() ;
              (current != x.end()) && ((current+1) != x.end()) ; )
-            if ( (*current == *(current+1)) )
+            if ( abs(*current - *(current+1)) < minWidth/8 )
                 x.erase(current+1);
             else
                 current++;
@@ -105,7 +115,7 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
     if ( !y.empty() ) {
         for (QVector<int>::iterator current = y.begin() ;
              (current != y.end()) && ((current+1) != y.end()) ; )
-            if ( (*current == *(current+1)) )
+            if ( abs(*current - *(current+1)) < minHeight/8 )
                 y.erase(current+1);
             else
                 current++;
@@ -129,17 +139,17 @@ Grid *Grid::buildGrid(const QList<ViewItem*> &itemList)
 
         // From left til right (not including)
         for (int cw=0; cw<x.size(); cw++) {
-            if (x[cw] == itemPos.left())
+            if (abs(x[cw] - itemPos.left()) <= minWidth/8)
                 c.setLeft(cw);
-            if (x[cw] <  itemPos.right())
+            if (x[cw] <  itemPos.right()+ minWidth/8)
                 c.setRight(cw);
         }
 
         // From top til bottom (not including)
         for (int ch=0; ch<y.size(); ch++) {
-            if (y[ch] == itemPos.top()   )
+            if (abs(y[ch] - itemPos.top()) < minHeight/8  )
                 c.setTop(ch);
-            if (y[ch] <  itemPos.bottom())
+            if (y[ch] <  itemPos.bottom() + minHeight/8)
                 c.setBottom(ch);
         }
 
@@ -164,8 +174,8 @@ void Grid::setCells(QRect c, ViewItem* w) {
 #endif
     QVector<int> skippedRows;
     QVector<int> skippedColumns;
-    for (int rows = c.bottom()-c.top(); rows >= 0; rows--)
-        for (int cols = c.right()-c.left(); cols >= 0; cols--) {
+    for (int rows = c.bottom()-c.top()-1; rows >= 0; rows--)
+        for (int cols = c.right()-c.left()-1; cols >= 0; cols--) {
             if (!(skippedRows.contains(c.top()+rows) || skippedColumns.contains(c.left()+cols))) {
               if (!setCell(c.top()+rows, c.left()+cols, w)) {
                 skippedRows.append(c.top()+rows);

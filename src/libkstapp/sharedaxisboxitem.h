@@ -104,7 +104,6 @@ class SharedAxisBoxItem : public ViewItem
 
     QList<PlotItem*> getSharedPlots();
     QList<PlotItem*> getTiedPlots(PlotItem* originPlotItem);
-    QList<PlotItem*> getAllPlots();
 
     QAction *_breakAction;
 

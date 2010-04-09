@@ -2008,8 +2008,9 @@ void LayoutCommand::createLayout(int columns) {
 
 
 void AppendLayoutCommand::undo() {
-  Q_ASSERT(_layout);
-  _layout->reset();
+  if (_layout) {
+    _layout->reset();
+  }
 }
 
 

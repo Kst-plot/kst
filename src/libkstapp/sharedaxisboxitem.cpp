@@ -149,7 +149,8 @@ bool SharedAxisBoxItem::acceptItems() {
     QList<QGraphicsItem*> list = parentView()->items();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-      if (!viewItem || !viewItem->isVisible() || viewItem == this ||  viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
+      if (!viewItem || !viewItem->isVisible() || viewItem == this ||
+          viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
         continue;
       }
 
@@ -344,13 +345,6 @@ bool SharedAxisBoxItem::tryMousePressEvent(ViewItem* viewItem, QGraphicsSceneMou
 }
 
 
-QList<PlotItem*> SharedAxisBoxItem::getAllPlots() {
-  QList<PlotItem*> plots = _sharedPlots;
-  //plots << PlotItemManager::tiedZoomPlotsForView(parentView());
-
-  return plots;
-}
-
 QList<PlotItem*> SharedAxisBoxItem::getSharedPlots() {
   return _sharedPlots;
 }
@@ -388,7 +382,7 @@ QRectF SharedAxisBoxItem::computeRect(PlotAxis::ZoomMode xZoomMode, PlotAxis::Zo
 
 
 void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlotItem, bool applyX, bool applyY) {
-  QList<PlotItem*> allPlots = getAllPlots();
+  QList<PlotItem*> allPlots = getSharedPlots();
   QList<PlotItem*> plotTied;
   if (originPlotItem && 
       originPlotItem->isTiedZoom() && 
