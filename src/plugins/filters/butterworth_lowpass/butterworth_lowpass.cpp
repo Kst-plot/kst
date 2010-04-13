@@ -94,7 +94,7 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
   public slots:
     virtual void save() {
       if (_cfg) {
-        _cfg->beginGroup("Filter Butterworth Low Pass Plugin");
+        _cfg->beginGroup("Filter Low Pass Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Cutoff / Spacing Scalar", _scalarCutoff->selectedScalar()->Name());
@@ -104,7 +104,7 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
 
     virtual void load() {
       if (_cfg && _store) {
-        _cfg->beginGroup("Filter Butterworth Low Pass Plugin");
+        _cfg->beginGroup("Filter Low Pass Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();
         Kst::Object* object = _store->retrieveObject(vectorName);
         Kst::Vector* vector = static_cast<Kst::Vector*>(object);
@@ -143,7 +143,7 @@ FilterButterworthLowPassSource::~FilterButterworthLowPassSource() {
 
 
 QString FilterButterworthLowPassSource::_automaticDescriptiveName() const {
-  return QString("Butterworth Low Pass Filtered Object");
+  return QString(vector()->descriptiveName() + " Low Pass");
 }
 
 
@@ -239,8 +239,8 @@ void FilterButterworthLowPassSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString ButterworthLowPassPlugin::pluginName() const { return "Butterworth Low Pass Filter"; }
-QString ButterworthLowPassPlugin::pluginDescription() const { return "Filters a set of data with a zero phase Butterworth low pass filter."; }
+QString ButterworthLowPassPlugin::pluginName() const { return "Low Pass Filter"; }
+QString ButterworthLowPassPlugin::pluginDescription() const { return "Filters a vector with a zero phase low pass filter with a butterworth amplitude response."; }
 
 
 Kst::DataObject *ButterworthLowPassPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -17,7 +17,7 @@
 static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_NSIGMA_IN = "NSigma Scalar";
 static const QString& SCALAR_SPACING_IN = "Spacing Scalar";
-static const QString& VECTOR_OUT = "Despiked";
+static const QString& VECTOR_OUT = "Filtered";
 
 class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, public Ui_FilterDespikeConfig {
   public:
@@ -140,9 +140,18 @@ FilterDespikeSource::~FilterDespikeSource() {
 
 
 QString FilterDespikeSource::_automaticDescriptiveName() const {
-  return QString("Despike Filtered Object");
+  return QString(vector()->descriptiveName() + " Despike");
 }
 
+
+QString FilterDespikeSource::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Despike Filter: %1\n  Spacing: %2\n  NSigma: %3").arg(Name()).arg(spacingScalar()->value()).arg(nSigmaScalar()->value());
+
+  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  return tip;
+}
 
 void FilterDespikeSource::change(Kst::DataObjectConfigWidget *configWidget) {
   if (ConfigWidgetFilterDespikePlugin* config = static_cast<ConfigWidgetFilterDespikePlugin*>(configWidget)) {

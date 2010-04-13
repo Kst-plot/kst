@@ -23,6 +23,8 @@ class FilterDespikeSource : public Kst::BasicPlugin {
   public:
     virtual QString _automaticDescriptiveName() const;
 
+    virtual QString descriptionTip() const;
+
     Kst::VectorPtr vector() const;
     Kst::ScalarPtr nSigmaScalar() const;
     Kst::ScalarPtr spacingScalar() const;

@@ -93,7 +93,7 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
   public slots:
     virtual void save() {
       if (_cfg) {
-        _cfg->beginGroup("Filter Butterworth High Pass Plugin");
+        _cfg->beginGroup("Filter High Pass Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Cutoff / Spacing Scalar", _scalarCutoff->selectedScalar()->Name());
@@ -103,7 +103,7 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
 
     virtual void load() {
       if (_cfg && _store) {
-        _cfg->beginGroup("Filter Butterworth High Pass Plugin");
+        _cfg->beginGroup("Filter High Pass Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();
         Kst::Object* object = _store->retrieveObject(vectorName);
         Kst::Vector* vector = static_cast<Kst::Vector*>(object);
@@ -142,7 +142,7 @@ FilterButterworthHighPassSource::~FilterButterworthHighPassSource() {
 
 
 QString FilterButterworthHighPassSource::_automaticDescriptiveName() const {
-  return QString("Butterworth High Pass Filtered Object");
+  return QString(vector()->descriptiveName() + " High Pass");
 }
 
 
@@ -242,8 +242,8 @@ void FilterButterworthHighPassSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString ButterworthHighPassPlugin::pluginName() const { return "Butterworth High Pass Filter"; }
-QString ButterworthHighPassPlugin::pluginDescription() const { return "Filters a set of data with a zero phase Butterworth high pass filter."; }
+QString ButterworthHighPassPlugin::pluginName() const { return "High Pass Filter"; }
+QString ButterworthHighPassPlugin::pluginDescription() const { return "Filters a vector with a zero phase high pass filter with a butterworth amplitude response."; }
 
 
 Kst::DataObject *ButterworthHighPassPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

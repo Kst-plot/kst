@@ -36,9 +36,9 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
       _scalarOrder->setObjectStore(store);
       _scalarRate->setObjectStore(store);
       _scalarBandwidth->setObjectStore(store);
-      _scalarOrder->setDefaultValue(0);
-      _scalarRate->setDefaultValue(1);
-      _scalarBandwidth->setDefaultValue(1);
+      _scalarOrder->setDefaultValue(4);
+      _scalarRate->setDefaultValue(.2);
+      _scalarBandwidth->setDefaultValue(.02);
     }
 
     void setupSlots(QWidget* dialog) {
@@ -101,7 +101,7 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
   public slots:
     virtual void save() {
       if (_cfg) {
-        _cfg->beginGroup("Filter Butterworth Band Stop Plugin");
+        _cfg->beginGroup("Filter Band Stop Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Central Frequency / Sample Rate Scalar", _scalarRate->selectedScalar()->Name());
@@ -112,7 +112,7 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
 
     virtual void load() {
       if (_cfg && _store) {
-        _cfg->beginGroup("Filter Butterworth Band Stop Plugin");
+        _cfg->beginGroup("Filter Band Stop Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();
         Kst::Object* object = _store->retrieveObject(vectorName);
         Kst::Vector* vector = static_cast<Kst::Vector*>(object);
@@ -157,7 +157,7 @@ FilterButterworthBandStopSource::~FilterButterworthBandStopSource() {
 
 
 QString FilterButterworthBandStopSource::_automaticDescriptiveName() const {
-  return QString("Butterworth Band Stop Filtered Object");
+  return QString(vector()->descriptiveName() + " Band Stop");
 }
 
 
@@ -272,8 +272,8 @@ void FilterButterworthBandStopSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString ButterworthBandStopPlugin::pluginName() const { return "Butterworth Band Stop Filter"; }
-QString ButterworthBandStopPlugin::pluginDescription() const { return "Filters a set of data with a zero phase Butterworth band stop filter."; }
+QString ButterworthBandStopPlugin::pluginName() const { return "Band Stop Filter"; }
+QString ButterworthBandStopPlugin::pluginDescription() const { return "Filters a vector with a zero phase band stop filter with a butterworth amplitude response."; }
 
 
 Kst::DataObject *ButterworthBandStopPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

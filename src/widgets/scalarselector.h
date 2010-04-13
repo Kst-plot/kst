@@ -57,6 +57,7 @@ class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
   private:
     ScalarListSelector* _scalarListSelector;
     ObjectStore *_store;
+    bool _defaultsSet;
 };
 
 }

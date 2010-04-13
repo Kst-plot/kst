@@ -78,3 +78,8 @@ tell any of the numbers apart).
 --------------------
 
 in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
+
+--------------------
+
+fit dialog should have curve placement options: overplot, replace, new plot.
+

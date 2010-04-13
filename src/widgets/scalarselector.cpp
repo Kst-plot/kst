@@ -22,6 +22,7 @@ namespace Kst {
 ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   : QWidget(parent), _store(store) {
 
+  _defaultsSet = false;
   setupUi(this);
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
@@ -67,6 +68,7 @@ void ScalarSelector::setDefaultValue(double value) {
  QString string = QString::number(value);
  _scalar->addItem(string, qVariantFromValue(NULL));
  _scalar->setCurrentIndex(_scalar->findText(string));
+ _defaultsSet = true;
 }
 
 
@@ -149,7 +151,7 @@ void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   Q_ASSERT(i != -1);
 
   _scalar->setCurrentIndex(i);
-
+  _defaultsSet = false;
 }
 
 
@@ -227,7 +229,13 @@ void ScalarSelector::fillScalars() {
 
 bool ScalarSelector::event(QEvent * event) {
   if (event->type() == QEvent::WindowActivate) {
-    fillScalars();
+    if (_defaultsSet) {
+      QString defaultText = _scalar->currentText();
+      fillScalars();
+      setDefaultValue(defaultText.toDouble());
+    } else {
+      fillScalars();
+    }
   }
   return QWidget::event(event);
 }
