@@ -66,15 +66,10 @@ private:
 
 const DataVector::Optional DataInterfaceNetCdf::optional(const QString &field) const
 {
-  DataVector::Optional opt = {-1, -1, -1};
   if (!netcdf._fieldList.contains(field))
-    return opt;
+    return DataVector::Optional();
 
-  opt.samplesPerFrame = netcdf.samplesPerFrame(field);
-  opt.frameCount = netcdf.frameCount(field);
-  opt.vectorframeCount = -1;
-
-  return opt;
+  return DataVector::Optional(netcdf.frameCount(field), netcdf.samplesPerFrame(field));
 }
 
 
