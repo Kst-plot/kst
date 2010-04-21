@@ -242,7 +242,7 @@ void MainWindow::open() {
   if (fn.isEmpty()) {
     return;
   }
-
+  QDir::setCurrent(fn.left(fn.lastIndexOf("/")));
   openFile(fn);
   setWindowTitle("Kst - " + fn);
 }
