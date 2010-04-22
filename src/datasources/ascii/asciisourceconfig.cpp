@@ -115,9 +115,8 @@ void AsciiSourceConfig::read(QSettings& cfg) {
 
 void AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
-  if (fileName.isEmpty()) {
-    read(cfg);
-  } else {
+  read(cfg);
+  if (!fileName.isEmpty()) {
     cfg.beginGroup(fileName);
     read(cfg);
     cfg.endGroup();

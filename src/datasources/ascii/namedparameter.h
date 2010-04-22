@@ -40,9 +40,7 @@ public:
 
   void operator<<(QSettings& settings) {
     const QVariant var = settings.value(Key);
-    if (var.isNull())
-      setValue(_default_value);
-    else
+    if (!var.isNull())
       setValue(var.value<T>());
   }
 
