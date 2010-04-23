@@ -77,7 +77,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _readFields->setChecked(config._readFields);
   _useDot->setChecked(config._useDot);
   _fieldsLine->setValue(config._fieldsLine);
-  AsciiSourceConfig::ColumnType ct = config._columnType;
+  AsciiSourceConfig::ColumnType ct = (AsciiSourceConfig::ColumnType) config._columnType.value();
   if (ct == AsciiSourceConfig::Fixed) {
     _fixed->setChecked(true);
   } else if (ct == AsciiSourceConfig::Custom) {

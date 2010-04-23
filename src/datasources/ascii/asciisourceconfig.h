@@ -63,8 +63,8 @@ class AsciiSourceConfig {
     NamedParameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
     NamedParameter<QString, Key_indexVector, Tag_indexVector> _indexVector;
     NamedParameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
-    NamedParameter<Interpretation, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
-    NamedParameter<ColumnType, Key_columnType, Tag_columnType> _columnType;
+    NamedParameter<int, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
+    NamedParameter<int, Key_columnType, Tag_columnType> _columnType;
     NamedParameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
     NamedParameter<int, Key_columnWidth, Tag_columnWidth> _columnWidth;
     NamedParameter<int, Key_dataLine, Tag_dataLine> _dataLine;

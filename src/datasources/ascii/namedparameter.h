@@ -35,13 +35,16 @@ public:
   }
 
   void operator>>(QSettings& settings) {
-    settings.setValue(Key, value());
+    const QVariant var = QVariant::fromValue<T>(value());
+    settings.setValue(Key, var);
   }
 
   void operator<<(QSettings& settings) {
     const QVariant var = settings.value(Key);
-    if (!var.isNull())
+    if (!var.isNull()) {
+      Q_ASSERT(var.canConvert<T>());
       setValue(var.value<T>());
+    }
   }
 
   void operator>>(QXmlStreamWriter& xml) {
