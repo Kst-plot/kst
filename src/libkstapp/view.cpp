@@ -540,9 +540,18 @@ QFont View::defaultFont(double pointSize) const {
     fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
-  if (fontSize > 0) {
-    font.setPointSizeF(fontSize);
-  }
+  if (fontSize < 0)
+    return font;
+
+#ifdef Q_OS_WIN
+  // On Windows more and more memory gets allocated when fontsize
+  // is to detailed, somewhere some strange caching happens.
+  const double fontPrecision = 4;
+  fontSize = floor(fontSize * fontPrecision + 0.5) / fontPrecision;
+#endif
+
+  font.setPointSizeF(fontSize); 
+  
   return font;
 }
 
