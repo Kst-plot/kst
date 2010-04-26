@@ -29,22 +29,19 @@ void DialogLauncher::cleanup() {
 
 
 DialogLauncher *DialogLauncher::self() {
-  if (!_self) {
-    _self = new DialogLauncher;
-    qAddPostRoutine(DialogLauncher::cleanup);
-  }
+  Q_ASSERT(_self);
   return _self;
 }
 
 
 void DialogLauncher::replaceSelf(DialogLauncher *newInstance) {
-  delete _self;
-  _self = 0L;
+  cleanup();
   _self = newInstance;
 }
 
 
 DialogLauncher::DialogLauncher() {
+  qAddPostRoutine(DialogLauncher::cleanup);
 }
 
 

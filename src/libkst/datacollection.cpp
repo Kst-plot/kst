@@ -66,22 +66,19 @@ void Data::cleanup() {
 
 
 Data *Data::self() {
-  if (!_self) {
-    _self = new Data;
-    qAddPostRoutine(Data::cleanup);
-  }
+  Q_ASSERT(_self);
   return _self;
 }
 
 
 void Data::replaceSelf(Data *newInstance) {
-  delete _self;
-  _self = 0L;
+  cleanup();
   _self = newInstance;
 }
 
 
 Data::Data() {
+  qAddPostRoutine(Data::cleanup);
 }
 
 

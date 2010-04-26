@@ -176,6 +176,8 @@ class KST_EXPORT DataObject : public Object {
     QString _library;
 
   private:
+    static QSettings settingsObject;
+    static QMap<QString,QString> url_map;
     static void scanPlugins();
 };
 

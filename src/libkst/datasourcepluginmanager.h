@@ -17,6 +17,10 @@
 #include "sharedptr.h"
 #include "datasource.h"
 
+#include <QSettings>
+#include <QMap>
+
+
 namespace Kst {
 
 class ObjectStore;
@@ -53,6 +57,19 @@ class KST_EXPORT DataSourcePluginManager
     static QStringList stringListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
 
 
+  private:
+    static QSettings settingsObject;
+    static QMap<QString,QString> url_map;
+    static QString obtainFile(const QString& source);
+    
+    struct PluginSortContainer {
+      SharedPtr<DataSourcePluginInterface> plugin;
+      int match;
+      int operator<(const PluginSortContainer& x) const;
+      int operator==(const PluginSortContainer& x) const;
+    };
+    static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type);
+    static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
 };
 
 }

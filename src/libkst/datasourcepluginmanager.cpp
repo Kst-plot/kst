@@ -45,19 +45,15 @@
 using namespace Kst;
 
 
+QSettings DataSourcePluginManager::settingsObject("kst", "data");
+QMap<QString,QString> DataSourcePluginManager::url_map;
 
-static QSettings *settingsObject = 0L;
-static QMap<QString,QString> url_map;
 
 const QMap<QString,QString> DataSourcePluginManager::urlMap() {
   return url_map;
 }
 
 void DataSourcePluginManager::init() {
-  if (!settingsObject) {
-    QSettings *settingsObj = new QSettings("kst", "data");
-    settingsObject = settingsObj;
-  }
   initPlugins();
 }
 
@@ -67,8 +63,6 @@ static PluginList _pluginList;
 void DataSourcePluginManager::cleanupForExit() {
   _pluginList.clear();
   qDebug() << "cleaning up for exit in datasource";
-  delete settingsObject;
-  settingsObject = 0L;
 //   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
 //     KIO::NetAccess::removeTempFile(i.value());
 //   }
@@ -76,7 +70,7 @@ void DataSourcePluginManager::cleanupForExit() {
 }
 
 
-static QString obtainFile(const QString& source) {
+QString DataSourcePluginManager::obtainFile(const QString& source) {
   QUrl url;
 
   if (QFile::exists(source) && QFileInfo(source).isRelative()) {
@@ -185,22 +179,17 @@ QStringList DataSourcePluginManager::pluginList() {
 }
 
 
-namespace {
-class PluginSortContainer {
-  public:
-    SharedPtr<DataSourcePluginInterface> plugin;
-    int match;
-    int operator<(const PluginSortContainer& x) const {
-      return match > x.match; // yes, this is by design.  biggest go first
-    }
-    int operator==(const PluginSortContainer& x) const {
-      return match == x.match;
-    }
-};
+
+int DataSourcePluginManager::PluginSortContainer::operator<(const PluginSortContainer& x) const {
+  return match > x.match; // yes, this is by design.  biggest go first
+}
+int DataSourcePluginManager::PluginSortContainer::operator==(const PluginSortContainer& x) const {
+  return match == x.match;
 }
 
 
-static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type) {
+
+QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bestPluginsForSource(const QString& filename, const QString& type) {
 
   QList<PluginSortContainer> bestPlugins;
   DataSourcePluginManager::init();
@@ -224,7 +213,7 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
     if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-      if ((psc.match = p->understands(settingsObject, filename)) > 0) {
+      if ((psc.match = p->understands(&settingsObject, filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
       }
@@ -237,13 +226,13 @@ static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, 
 }
 
 
-static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e = QDomElement()) {
+DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e) {
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
 
   // we don't actually iterate here, unless the first plugin fails.  (Not sure this helps at all.)
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourcePtr plugin = (*i).plugin->create(store, settingsObject, filename, QString::null, e);
+    DataSourcePtr plugin = (*i).plugin->create(store, &settingsObject, filename, QString::null, e);
     if (plugin) {
       return plugin;
     }
@@ -305,7 +294,7 @@ bool DataSourcePluginManager::validSource(const QString& filename) {
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
-      if ((p->understands(settingsObject, filename)) > 0) {
+      if ((p->understands(&settingsObject, filename)) > 0) {
         return true;
       }
     }
@@ -339,7 +328,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForPlugin(const QSt
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).data())) {
       if (p->pluginName() == plugin) {
-        return p->configWidget(settingsObject, QString::null);
+        return p->configWidget(&settingsObject, QString::null);
       }
     }
   }
@@ -380,7 +369,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForSource(const QSt
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourceConfigWidget *w = (*i).plugin->configWidget(settingsObject, fn);
+    DataSourceConfigWidget *w = (*i).plugin->configWidget(&settingsObject, fn);
     // Don't iterate.
     return w;
   }
@@ -471,7 +460,7 @@ QStringList DataSourcePluginManager::scalarListForSource(const QString& filename
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->scalarList(settingsObject, fn, QString::null, &typeSuggestion, complete);
+    rc = (*i).plugin->scalarList(&settingsObject, fn, QString::null, &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -502,7 +491,7 @@ QStringList DataSourcePluginManager::stringListForSource(const QString& filename
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->stringList(settingsObject, fn, QString::null, &typeSuggestion, complete);
+    rc = (*i).plugin->stringList(&settingsObject, fn, QString::null, &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {

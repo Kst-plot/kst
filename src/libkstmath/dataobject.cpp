@@ -40,14 +40,11 @@
 
 namespace Kst {
 
-static QSettings *settingsObject = 0L;
-static QMap<QString,QString> urlMap;
-void DataObject::init() {
-  if (!settingsObject) {
-    QSettings *settingsObj = new QSettings("kst", "data");
-    settingsObject = settingsObj;
-  }
+QSettings DataObject::settingsObject("kst", "data");
+QMap<QString,QString> DataObject::url_map;
 
+
+void DataObject::init() {
   initPlugins();
 }
 
@@ -202,7 +199,7 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
-        return (*it)->configWidget(settingsObject);
+        return (*it)->configWidget(&settingsObject);
       }
       break;
     }
