@@ -25,7 +25,7 @@
 
 namespace Kst {
 
-class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
+class PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
   Q_OBJECT
   public:
     PowerSpectrumTab(QWidget *parent = 0);
@@ -51,7 +51,7 @@ class KST_EXPORT PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     void vectorChanged();
 };
 
-class KST_EXPORT PowerSpectrumDialog : public DataDialog {
+class PowerSpectrumDialog : public DataDialog {
   Q_OBJECT
   public:
     PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent = 0);

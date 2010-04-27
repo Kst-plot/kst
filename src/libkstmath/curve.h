@@ -21,7 +21,7 @@
 #include "relation.h"
 #include "painter.h"
 #include "curvepointsymbol.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 #include <QStack>
 
@@ -31,8 +31,9 @@
 
 namespace Kst {
 
-class KST_EXPORT Curve: public Relation {
-  Q_OBJECT
+class KSTMATH_EXPORT Curve: public Relation 
+{
+    Q_OBJECT
 
   public:
     static const QString staticTypeString;

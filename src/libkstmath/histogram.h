@@ -23,13 +23,13 @@
 #define HISTOGRAM_H
 
 #include "dataobject.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT Histogram : public DataObject {
+class KSTMATH_EXPORT Histogram : public DataObject {
   Q_OBJECT
 
 public:

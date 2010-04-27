@@ -22,7 +22,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCurvesDialog
+class DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCurvesDialog
 {
   Q_OBJECT
   public:

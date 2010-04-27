@@ -15,13 +15,13 @@
 #include <QWidget>
 #include "ui_datarange.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 //FIXME Need to add time related methods/functionality
 
-class  KST_EXPORT DataRange : public QWidget, public Ui::DataRange {
+class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
   Q_OBJECT
   public:
     DataRange(QWidget *parent = 0);

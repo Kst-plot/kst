@@ -12,11 +12,11 @@
 #ifndef BUILTINOBJECTS_H
 #define BUILTINOBJECTS_H
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
   namespace Builtins {
-    KST_EXPORT void initObjects();
+    KSTMATH_EXPORT void initObjects();
   }
 }
 

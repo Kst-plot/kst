@@ -31,7 +31,7 @@ class DialogPageTab;
 class PlotAxis;
 class PlotMarkers;
 
-class KST_EXPORT PlotItemDialog : public ViewItemDialog
+class PlotItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:

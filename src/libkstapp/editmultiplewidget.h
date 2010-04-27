@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
+class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
   Q_OBJECT
   public:
     EditMultipleWidget(QWidget *parent = 0);

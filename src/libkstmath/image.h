@@ -15,7 +15,7 @@
 
 #include "matrix.h"
 #include "relation.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include "palette.h"
 
 #include <QHash>
@@ -36,7 +36,7 @@ class CoutourLineDetails {
 /**A class for handling images for Kst
  *@author University of British Columbia
  */
-class KST_EXPORT Image : public Relation {
+class KSTMATH_EXPORT Image : public Relation {
   Q_OBJECT
 
   public:

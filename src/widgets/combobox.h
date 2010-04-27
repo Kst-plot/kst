@@ -14,7 +14,7 @@
 
 #include <QComboBox>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 /*
 FIXME!! This class needs to be rewritten to give completion...
@@ -22,7 +22,7 @@ FIXME!! This class needs to be rewritten to give completion...
 
 namespace Kst {
 
-class  KST_EXPORT ComboBox : public QComboBox {
+class  KSTWIDGETS_EXPORT ComboBox : public QComboBox {
   Q_OBJECT
   public:
     ComboBox(QWidget *parent=0);

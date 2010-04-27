@@ -15,11 +15,11 @@
 #include <QWidget>
 #include "ui_curveappearance.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
+class KSTWIDGETS_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
   Q_OBJECT
   public:
     CurveAppearance(QWidget *parent = 0);

@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_syncbin)
+TARGET = $$kstlib(kstplugin_syncbin)
 
 SOURCES += \
     syncbin.cpp

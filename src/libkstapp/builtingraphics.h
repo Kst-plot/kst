@@ -16,7 +16,7 @@
 
 namespace Kst {
   namespace Builtins {
-    KST_EXPORT void initGraphics();
+    void initGraphics();
   }
 }
 

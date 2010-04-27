@@ -33,7 +33,7 @@ class ObjectStore;
 class PlotItemInterface;
 class ValidateDataSourceThread;
 
-class KST_EXPORT DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSource
+class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSource
 {
   Q_OBJECT
   public:
@@ -60,7 +60,7 @@ class KST_EXPORT DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPa
     int _requestID;
 };
 
-class KST_EXPORT DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors
+class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors
 {
   Q_OBJECT
   public:
@@ -84,7 +84,7 @@ class KST_EXPORT DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageV
 
 };
 
-class KST_EXPORT DataWizardPageFilters : public QWizardPage, Ui::DataWizardPageFilters
+class DataWizardPageFilters : public QWizardPage, Ui::DataWizardPageFilters
 {
   Q_OBJECT
   public:
@@ -93,7 +93,7 @@ class KST_EXPORT DataWizardPageFilters : public QWizardPage, Ui::DataWizardPageF
 
 };
 
-class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
+class DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 {
   Q_OBJECT
   public:
@@ -131,7 +131,7 @@ class KST_EXPORT DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
     void updateButtons();
 };
 
-class KST_EXPORT DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDataPresentation
+class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDataPresentation
 {
   Q_OBJECT
   public:
@@ -166,7 +166,7 @@ class KST_EXPORT DataWizardPageDataPresentation : public QWizardPage, Ui::DataWi
     bool validOptions();
 };
 
-class KST_EXPORT DataWizard : public QWizard
+class DataWizard : public QWizard
 {
   Q_OBJECT
   public:

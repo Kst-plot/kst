@@ -26,7 +26,7 @@ namespace Equations {
 
 namespace Kst {
 
-class EventMonitorEntry : public DataObject {
+class KSTMATH_EXPORT EventMonitorEntry : public DataObject {
   Q_OBJECT
   public:
     static const QString staticTypeString;

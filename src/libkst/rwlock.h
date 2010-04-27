@@ -31,7 +31,7 @@
 //       variables or virtual functions, or when you remove or change
 //       non-virtual functions.
 
-class KST_EXPORT KstRWLock {
+class KSTCORE_EXPORT KstRWLock {
   public:
     KstRWLock();
     virtual ~KstRWLock();
@@ -63,7 +63,7 @@ class KST_EXPORT KstRWLock {
 };
 
 
-class KST_EXPORT KstReadLocker {
+class KSTCORE_EXPORT KstReadLocker {
   public:
     KstReadLocker(KstRWLock *l) : _l(l) { _l->readLock(); }
     ~KstReadLocker() { _l->unlock(); }
@@ -72,7 +72,7 @@ class KST_EXPORT KstReadLocker {
 };
 
 
-class KST_EXPORT KstWriteLocker {
+class KSTCORE_EXPORT KstWriteLocker {
   public:
     KstWriteLocker(KstRWLock *l) : _l(l) { _l->writeLock(); }
     ~KstWriteLocker() { _l->unlock(); }

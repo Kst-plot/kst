@@ -21,7 +21,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT ContentTab : public DialogTab, Ui::ContentTab {
+class ContentTab : public DialogTab, Ui::ContentTab {
   Q_OBJECT
   public:
     ContentTab(QWidget *parent = 0);

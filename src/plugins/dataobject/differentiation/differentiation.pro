@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_differentiation)
+TARGET = $$kstlib(kstplugin_differentiation)
 
 SOURCES += \
     differentiation.cpp

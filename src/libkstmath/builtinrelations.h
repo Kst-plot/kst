@@ -12,11 +12,11 @@
 #ifndef BUILTINRELATIONS_H
 #define BUILTINRELATIONS_H
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
   namespace Builtins {
-    KST_EXPORT void initRelations();
+    KSTMATH_EXPORT void initRelations();
   }
 }
 

@@ -28,7 +28,7 @@ class BoxItem : public ViewItem
     virtual void paint(QPainter *painter);
 };
 
-class KST_EXPORT CreateBoxCommand : public CreateCommand
+class CreateBoxCommand : public CreateCommand
 {
   public:
     CreateBoxCommand() : CreateCommand(QObject::tr("Create Box")) {}

@@ -14,11 +14,11 @@
 
 #include <QFileDialog>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT DataSourceSelectorDialog : public QFileDialog {
+class KSTWIDGETS_EXPORT DataSourceSelectorDialog : public QFileDialog {
   Q_OBJECT
   public:
     DataSourceSelectorDialog(QString &file, QWidget *parent = 0);

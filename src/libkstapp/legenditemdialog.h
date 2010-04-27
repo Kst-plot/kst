@@ -22,7 +22,7 @@ class LegendTab;
 class LegendItem;
 class ObjectStore;
 
-class KST_EXPORT LegendItemDialog : public ViewItemDialog
+class LegendItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:

@@ -2,7 +2,7 @@ TOPOUT_REL=../../..
 include($$PWD/$$TOPOUT_REL/kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
-TARGET = $$qtLibraryTarget(kst2data_dirfilesource)
+TARGET = $$kstlib(kst2data_dirfilesource)
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/dirfilesource/tmp
 

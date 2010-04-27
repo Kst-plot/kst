@@ -23,11 +23,14 @@
 #include <QPointer>
 #include <QString>
 
+#include "kst_export.h"
+
 namespace Kst {
 
 class ObjectStore;
 
-class CoreDocument {
+class KSTCORE_EXPORT CoreDocument 
+{
   public:
     CoreDocument();
     virtual ~CoreDocument();

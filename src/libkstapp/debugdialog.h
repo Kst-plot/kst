@@ -23,7 +23,7 @@ namespace Kst {
 
 class LogWidget;
 
-class KST_EXPORT DebugDialog : public QDialog, Ui::DebugDialog
+class DebugDialog : public QDialog, Ui::DebugDialog
 {
   Q_OBJECT
   public:

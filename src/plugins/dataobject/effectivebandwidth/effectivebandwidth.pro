@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_effectivebandwidth)
+TARGET = $$kstlib(kstplugin_effectivebandwidth)
 
 SOURCES += \
     effectivebandwidth.cpp

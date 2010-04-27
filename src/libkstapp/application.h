@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-class KST_EXPORT Application : public QApplication
+class Application : public QApplication
 {
   Q_OBJECT
   public:

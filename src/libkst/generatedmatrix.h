@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-class KST_EXPORT GeneratedMatrix : public Matrix {
+class KSTCORE_EXPORT GeneratedMatrix : public Matrix {
   Q_OBJECT
 
   public:

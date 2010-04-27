@@ -17,13 +17,13 @@
 
 #include <matrix.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
+class KSTWIDGETS_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelector {
   Q_OBJECT
   public:
     MatrixSelector(QWidget *parent = 0, ObjectStore *store = 0);

@@ -2,15 +2,21 @@ TOPOUT_REL=../..
 include($$PWD/$$TOPOUT_REL/kst.pri)
 
 TEMPLATE = lib
-TARGET = $$qtLibraryTarget(kst2lib)
+CONFIG += dll
+DEFINES += BUILD_KSTCORE
+TARGET = $$kstlib(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
-win32:CONFIG += staticlib
+DLLDESTDIR = $$OUTPUT_DIR/bin
+
+
 !isEmpty(INSTALL_PREFIX) {
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
 }
+
 INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/libkst/tmp
+
 SOURCES += builtindatasources.cpp \
     builtinprimitives.cpp \
     coredocument.cpp \
@@ -53,9 +59,11 @@ SOURCES += builtindatasources.cpp \
     vector.cpp \
     vectorfactory.cpp \
     vscalar.cpp
-# !win32:SOURCES += stdinsource.cpp
+	
+#!win32:SOURCES += stdinsource.cpp
 !macx:!win32:SOURCES += sysinfo.c \
     psversion.c
+	
 HEADERS += builtindatasources.h \
     builtinprimitives.h \
     coredocument.h \

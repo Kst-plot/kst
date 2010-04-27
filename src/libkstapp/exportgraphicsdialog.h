@@ -22,7 +22,7 @@ namespace Kst {
 
 class MainWindow;
 
-class KST_EXPORT ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
+class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
 {
   Q_OBJECT
   public:

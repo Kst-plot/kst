@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_akima)
+TARGET = $$kstlib(kstplugin_akima)
 LIBS += -lgsl
 
 SOURCES += \

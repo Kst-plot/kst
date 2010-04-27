@@ -20,7 +20,7 @@ namespace Kst {
 
 class View;
 
-class KST_EXPORT Scene : public QGraphicsScene
+class Scene : public QGraphicsScene
 {
   Q_OBJECT
   public:

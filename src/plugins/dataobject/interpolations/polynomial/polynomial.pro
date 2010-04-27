@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_polynomialinterpolation)
+TARGET = $$kstlib(kstplugin_polynomialinterpolation)
 LIBS += -lgsl
 
 SOURCES += \

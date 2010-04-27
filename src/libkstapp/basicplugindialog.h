@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class KST_EXPORT BasicPluginTab : public DataTab, Ui::BasicPluginTab {
+class BasicPluginTab : public DataTab, Ui::BasicPluginTab {
   Q_OBJECT
   public:
     BasicPluginTab(QString& pluginName, QWidget *parent = 0);
@@ -39,7 +39,7 @@ class KST_EXPORT BasicPluginTab : public DataTab, Ui::BasicPluginTab {
 
 };
 
-class KST_EXPORT BasicPluginDialog : public DataDialog {
+class BasicPluginDialog : public DataDialog {
   Q_OBJECT
   public:
     BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent = 0);

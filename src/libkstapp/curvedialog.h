@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
+class CurveTab : public DataTab, Ui::CurveTab {
   Q_OBJECT
   public:
     CurveTab(QWidget *parent = 0);
@@ -78,7 +78,7 @@ class KST_EXPORT CurveTab : public DataTab, Ui::CurveTab {
     void updateVectorCombos();
 };
 
-class KST_EXPORT CurveDialog : public DataDialog {
+class CurveDialog : public DataDialog {
   Q_OBJECT
   public:
     CurveDialog(ObjectPtr dataObject, QWidget *parent = 0);

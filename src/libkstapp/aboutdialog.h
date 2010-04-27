@@ -20,7 +20,7 @@
 
 namespace Kst {
 
-class KST_EXPORT AboutDialog : public QDialog, Ui::AboutDialog
+class AboutDialog : public QDialog, Ui::AboutDialog
 {
   Q_OBJECT
   public:

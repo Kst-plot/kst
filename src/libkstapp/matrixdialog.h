@@ -27,7 +27,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
+class MatrixTab : public DataTab, Ui::MatrixTab {
   Q_OBJECT
   public:
     enum MatrixMode { DataMatrix, GeneratedMatrix };
@@ -156,7 +156,7 @@ class KST_EXPORT MatrixTab : public DataTab, Ui::MatrixTab {
     int _requestID;
 };
 
-class KST_EXPORT MatrixDialog : public DataDialog {
+class MatrixDialog : public DataDialog {
   Q_OBJECT
   public:
     MatrixDialog(ObjectPtr dataObject, QWidget *parent = 0);

@@ -24,13 +24,13 @@
 
 #include "dataobject.h"
 #include "psdcalculator.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT PSD : public DataObject {
+class KSTMATH_EXPORT PSD : public DataObject {
   Q_OBJECT
 
   public:

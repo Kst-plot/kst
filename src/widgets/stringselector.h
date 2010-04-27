@@ -17,13 +17,13 @@
 
 #include <string_kst.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
+class KSTWIDGETS_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
   Q_OBJECT
   public:
     StringSelector(QWidget *parent = 0, ObjectStore *store = 0);

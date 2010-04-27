@@ -22,7 +22,7 @@
 
 #include "dataobject.h"
 #include "painter.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include "labelparser.h"
 
 /**A class for handling curves for kst
@@ -71,7 +71,7 @@ class CurveRenderContext {
 class ObjectStore;
 class Relation;
 
-class KST_EXPORT Relation : public Object {
+class KSTMATH_EXPORT Relation : public Object {
   Q_OBJECT
 
   public:

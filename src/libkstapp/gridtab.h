@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT GridTab : public DialogTab, Ui::GridTab {
+class GridTab : public DialogTab, Ui::GridTab {
   Q_OBJECT
   public:
     GridTab(QWidget *parent = 0);

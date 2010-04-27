@@ -37,7 +37,7 @@ class SvgItem : public ViewItem
 };
 
 
-class KST_EXPORT CreateSvgCommand : public CreateCommand
+class CreateSvgCommand : public CreateCommand
 {
   public:
     CreateSvgCommand() : CreateCommand(QObject::tr("Create Svg")) {}

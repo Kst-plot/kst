@@ -27,7 +27,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
+class VectorTab : public DataTab, Ui::VectorTab {
   Q_OBJECT
 
   public:
@@ -90,7 +90,7 @@ class KST_EXPORT VectorTab : public DataTab, Ui::VectorTab {
     int _requestID;
 };
 
-class KST_EXPORT VectorDialog : public DataDialog {
+class VectorDialog : public DataDialog {
   Q_OBJECT
   public:
     VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);

@@ -30,7 +30,7 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
-class KST_EXPORT Matrix : public Primitive {
+class KSTCORE_EXPORT Matrix : public Primitive {
   Q_OBJECT
 
   public:

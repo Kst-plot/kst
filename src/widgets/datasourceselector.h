@@ -15,14 +15,14 @@
 #include <QWidget>
 #include <QFileDialog>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 class QLineEdit;
 class QToolButton;
 
 namespace Kst {
 
-class KST_EXPORT DataSourceSelector : public QWidget {
+class KSTWIDGETS_EXPORT DataSourceSelector : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QString file READ file WRITE setFile USER true)
   public:

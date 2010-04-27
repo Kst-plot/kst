@@ -38,12 +38,12 @@
 #include "objectstore.h"
 #include "doublecompare.h"
 
-extern /*"C"*/ int yyparse(Kst::ObjectStore *store);
-extern /*"C"*/ void *ParsedEquation;
-extern /*"C"*/ struct yy_buffer_state *yy_scan_string(const char*);
-extern /*"C"*/ struct yy_buffer_state *yy_scan_bytes(const char*, int);
+KSTMATH_EXPORT int yyparse(Kst::ObjectStore *store);
+KSTMATH_EXPORT extern void *ParsedEquation;
+KSTMATH_EXPORT/*"C"*/ struct yy_buffer_state *yy_scan_string(const char*);
+KSTMATH_EXPORT struct yy_buffer_state *yy_scan_bytes(const char*, int);
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
-extern /*"C"*/ void yy_delete_buffer(YY_BUFFER_STATE);
+KSTMATH_EXPORT void yy_delete_buffer(YY_BUFFER_STATE);
 
 using namespace Equations;
 using namespace Kst;

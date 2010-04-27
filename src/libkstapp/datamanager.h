@@ -25,7 +25,7 @@ namespace Kst {
 
 class Document;
 
-class KST_EXPORT DataManager : public QDialog, Ui::DataManager
+class DataManager : public QDialog, Ui::DataManager
 {
   Q_OBJECT
   public:

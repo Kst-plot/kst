@@ -34,7 +34,7 @@ class PictureItem : public ViewItem
 };
 
 
-class KST_EXPORT CreatePictureCommand : public CreateCommand
+class CreatePictureCommand : public CreateCommand
 {
   public:
     CreatePictureCommand() : CreateCommand(QObject::tr("Create Picture")) {}

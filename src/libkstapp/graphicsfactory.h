@@ -31,7 +31,7 @@ class GraphicsFactory {
     // This takes ownership
     static void registerFactory(const QString& node, GraphicsFactory *factory);
     static void registerFactory(const QStringList& nodes, GraphicsFactory *factory);
-    KST_EXPORT static ViewItem *parse(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0);
+    static ViewItem *parse(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0);
     virtual ViewItem *generateGraphics(QXmlStreamReader& stream, ObjectStore *store, View *view, ViewItem *parent = 0) = 0;
 };
 

@@ -22,7 +22,7 @@ namespace Kst {
 class Dialog;
 class DialogTab;
 
-class KST_EXPORT DialogPage : public QWidget
+class DialogPage : public QWidget
 {
   Q_OBJECT
   public:
@@ -54,7 +54,7 @@ class KST_EXPORT DialogPage : public QWidget
     QWidget* _widget;
 };
 
-class KST_EXPORT DialogPageTab : public DialogPage
+class DialogPageTab : public DialogPage
 {
   Q_OBJECT
   public:

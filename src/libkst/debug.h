@@ -24,7 +24,7 @@
 namespace Kst {
 
 // This class has to be threadsafe
-class KST_EXPORT Debug : public QObject {
+class KSTCORE_EXPORT Debug : public QObject {
   Q_OBJECT
   public:
     enum LogLevel { Unknown = 0, Notice = 1, Warning = 2, Error = 4, DebugLog = 8, None = 16384 };

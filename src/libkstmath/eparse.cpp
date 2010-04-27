@@ -136,7 +136,7 @@
 
 #include "eparse-eh.h"
 extern int yylex(Kst::ObjectStore *store);
-void *ParsedEquation = 0L;
+KSTMATH_EXPORT void *ParsedEquation = 0L;
 
 
 
@@ -1234,7 +1234,7 @@ int yyparse ();
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (Kst::ObjectStore *store);
+KSTMATH_EXPORT int yyparse (Kst::ObjectStore *store);
 #else
 int yyparse ();
 #endif

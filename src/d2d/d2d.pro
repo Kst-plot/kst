@@ -13,8 +13,13 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-win32:LIBS += -l$$kstlib(kst2app) -l$$kstlib(kst2widgets) -l$$kstlib(kst2math) -l$$kstlib(kst2lib)
-!win32:LIBS += -lkst2lib -lkst2math -lkst2widgets -lkst2app
+LIBS += \
+		-L$$OUTPUT_DIR/lib \
+		-L$$OUTPUT_DIR/plugin \
+		-l$$kstlib(kst2app) \
+		-l$$kstlib(kst2widgets) \
+		-l$$kstlib(kst2math) \
+		-l$$kstlib(kst2lib)
 
 SOURCES += \
     d2d.cpp

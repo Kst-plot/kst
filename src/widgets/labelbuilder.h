@@ -17,13 +17,13 @@
 
 #include <string_kst.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
+class KSTWIDGETS_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
   Q_OBJECT
   public:
     LabelBuilder(QWidget *parent = 0, ObjectStore *store = 0);

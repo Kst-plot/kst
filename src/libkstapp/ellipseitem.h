@@ -29,7 +29,7 @@ class EllipseItem : public ViewItem
     virtual void paint(QPainter *painter);
 };
 
-class KST_EXPORT CreateEllipseCommand : public CreateCommand
+class CreateEllipseCommand : public CreateCommand
 {
   public:
     CreateEllipseCommand() : CreateCommand(QObject::tr("Create Ellipse")) {}

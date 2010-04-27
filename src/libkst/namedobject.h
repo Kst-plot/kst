@@ -22,41 +22,43 @@
 
 #include <QString>
 #include <QXmlStreamWriter>
+#include "kst_export.h"
 
 namespace Kst {
 
 // short name index variables
-extern int _vnum; // vectors
-extern int _pnum; // plugins
-extern int _csdnum; // csd
-extern int _cnum; // curves
-extern int _enum; // equations
-extern int _hnum; // histograms
-extern int _inum; // images
-extern int _psdnum; // psd
-extern int _xnum; // scalars
-extern int _tnum; // text string
-extern int _mnum; // matrix
-extern int _plotnum; // plot item
-extern int _lnum; // legend
-extern int _dnum; // view item (drawable)
+KSTCORE_EXPORT extern int _vnum; // vectors
+KSTCORE_EXPORT extern int _pnum; // plugins
+KSTCORE_EXPORT extern int _csdnum; // csd
+KSTCORE_EXPORT extern int _cnum; // curves
+KSTCORE_EXPORT extern int _enum; // equations
+KSTCORE_EXPORT extern int _hnum; // histograms
+KSTCORE_EXPORT extern int _inum; // images
+KSTCORE_EXPORT extern int _psdnum; // psd
+KSTCORE_EXPORT extern int _xnum; // scalars
+KSTCORE_EXPORT extern int _tnum; // text string
+KSTCORE_EXPORT extern int _mnum; // matrix
+KSTCORE_EXPORT extern int _plotnum; // plot item
+KSTCORE_EXPORT extern int _lnum; // legend
+KSTCORE_EXPORT extern int _dnum; // view item (drawable)
 
-extern int max_vnum; // vectors
-extern int max_pnum; // plugins
-extern int max_csdnum; // csd
-extern int max_cnum; // curves
-extern int max_enum; // equations
-extern int max_hnum; // histograms
-extern int max_inum; // images
-extern int max_psdnum; // psd
-extern int max_xnum; // scalars
-extern int max_tnum; // string
-extern int max_mnum; // matrix
-extern int max_plotnum; // plot item
-extern int max_lnum; // legend
-extern int max_dnum; // view item
+KSTCORE_EXPORT extern int max_vnum; // vectors
+KSTCORE_EXPORT extern int max_pnum; // plugins
+KSTCORE_EXPORT extern int max_csdnum; // csd
+KSTCORE_EXPORT extern int max_cnum; // curves
+KSTCORE_EXPORT extern int max_enum; // equations
+KSTCORE_EXPORT extern int max_hnum; // histograms
+KSTCORE_EXPORT extern int max_inum; // images
+KSTCORE_EXPORT extern int max_psdnum; // psd
+KSTCORE_EXPORT extern int max_xnum; // scalars
+KSTCORE_EXPORT extern int max_tnum; // string
+KSTCORE_EXPORT extern int max_mnum; // matrix
+KSTCORE_EXPORT extern int max_plotnum; // plot item
+KSTCORE_EXPORT extern int max_lnum; // legend
+KSTCORE_EXPORT extern int max_dnum; // view item
 
-class NamedObject {
+class KSTCORE_EXPORT NamedObject 
+{
 public: 
      NamedObject();
      virtual ~NamedObject();

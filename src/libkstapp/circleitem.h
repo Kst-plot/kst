@@ -29,7 +29,7 @@ class CircleItem : public ViewItem
     virtual void creationPolygonChanged(View::CreationEvent event);
 };
 
-class KST_EXPORT CreateCircleCommand : public CreateCommand
+class CreateCircleCommand : public CreateCommand
 {
   public:
     CreateCircleCommand() : CreateCommand(QObject::tr("Create Circle")) {}

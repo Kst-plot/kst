@@ -28,7 +28,7 @@ class PrimitiveFactory {
     // This takes ownership
     static void registerFactory(const QString& node, PrimitiveFactory *factory);
     static void registerFactory(const QStringList& nodes, PrimitiveFactory *factory);
-    KST_EXPORT static PrimitivePtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    KSTCORE_EXPORT static PrimitivePtr parse(ObjectStore *store, QXmlStreamReader& stream);
     virtual PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 

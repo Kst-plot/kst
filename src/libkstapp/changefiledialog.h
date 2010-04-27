@@ -26,7 +26,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
+class ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 {
   Q_OBJECT
   public:

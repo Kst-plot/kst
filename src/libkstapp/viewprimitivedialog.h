@@ -22,7 +22,7 @@ namespace Kst {
 
 class Document;
 
-class KST_EXPORT ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
+class ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
 {
   Q_OBJECT
 

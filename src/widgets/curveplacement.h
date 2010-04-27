@@ -15,13 +15,13 @@
 #include <QWidget>
 #include "ui_curveplacement.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class PlotItemInterface;
 
-class KST_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
+class KSTWIDGETS_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlacement {
   Q_OBJECT
   public:
     enum Place { NewPlot, ExistingPlot, NoPlot, NewPlotNewTab };

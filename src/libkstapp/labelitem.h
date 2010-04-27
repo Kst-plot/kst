@@ -65,7 +65,7 @@ class LabelItem : public ViewItem {
 };
 
 
-class KST_EXPORT CreateLabelCommand : public CreateCommand {
+class CreateLabelCommand : public CreateCommand {
   public:
     CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
     CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}

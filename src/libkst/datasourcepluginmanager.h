@@ -28,7 +28,7 @@ class ObjectStore;
 typedef ObjectList<PluginInterface> PluginList;
 
 
-class KST_EXPORT DataSourcePluginManager
+class KSTCORE_EXPORT DataSourcePluginManager
 {
   public:
 

@@ -14,10 +14,11 @@
 
 #include <QString>
 #include <QMetaType>
+#include "kst_export.h"
 
 namespace Kst {
 
-class PlotItemInterface
+class KSTCORE_EXPORT PlotItemInterface
 {
   public:
     static const qint64 Forced = -1;

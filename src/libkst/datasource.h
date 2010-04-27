@@ -43,7 +43,7 @@ class DataSourceConfigWidget;
 class DataSourcePlugin;
 
 
-class KST_EXPORT DataSource : public Object
+class KSTCORE_EXPORT DataSource : public Object
 {
   Q_OBJECT
 
@@ -288,7 +288,7 @@ class DataSourceList : public QList<DataSourcePtr> {
 
 
 // @since 1.1.0
-class KST_EXPORT DataSourceConfigWidget : public QWidget
+class KSTCORE_EXPORT DataSourceConfigWidget : public QWidget
 {
   Q_OBJECT
 
@@ -315,7 +315,7 @@ class KST_EXPORT DataSourceConfigWidget : public QWidget
 };
 
 
-class KST_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
+class KSTCORE_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
 {
   Q_OBJECT
 

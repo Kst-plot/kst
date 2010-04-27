@@ -16,7 +16,7 @@
 #include <QStringList>
 
 #include "dataobject.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
@@ -30,7 +30,7 @@ class ObjectFactory {
     // This takes ownership
     static void registerFactory(const QString& node, ObjectFactory *factory);
     static void registerFactory(const QStringList& nodes, ObjectFactory *factory);
-    KST_EXPORT static DataObjectPtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    KSTMATH_EXPORT static DataObjectPtr parse(ObjectStore *store, QXmlStreamReader& stream);
     virtual DataObjectPtr generateObject(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 

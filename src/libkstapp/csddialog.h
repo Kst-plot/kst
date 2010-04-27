@@ -25,7 +25,7 @@
 
 namespace Kst {
 
-class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
+class CSDTab : public DataTab, Ui::CSDTab {
   Q_OBJECT
   public:
     CSDTab(QWidget *parent = 0);
@@ -55,7 +55,7 @@ class KST_EXPORT CSDTab : public DataTab, Ui::CSDTab {
     void optionsChanged();
 };
 
-class KST_EXPORT CSDDialog : public DataDialog {
+class CSDDialog : public DataDialog {
   Q_OBJECT
   public:
     CSDDialog(ObjectPtr dataObject, QWidget *parent = 0);

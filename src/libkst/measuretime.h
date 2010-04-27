@@ -15,7 +15,7 @@
 #include <QString>
 
 
-class KST_EXPORT MeasureTime
+class KSTCORE_EXPORT MeasureTime
 {
   public:
     MeasureTime(const QString& name);    

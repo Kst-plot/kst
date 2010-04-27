@@ -14,12 +14,12 @@
 #ifndef LINESTYLE_H
 #define LINESTYLE_H
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
-KST_EXPORT extern const unsigned int LINESTYLE_MAXTYPE;
-KST_EXPORT extern Qt::PenStyle LineStyle[];
+KSTMATH_EXPORT extern const unsigned int LINESTYLE_MAXTYPE;
+KSTMATH_EXPORT extern Qt::PenStyle LineStyle[];
 
 #define POINTDENSITY_MAXTYPE 4
 #define LINEWIDTH_MAX        5

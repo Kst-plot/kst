@@ -25,7 +25,7 @@ class QXmlStreamWriter;
 namespace Kst {
 
 /** The base class for all scalars. */
-class KST_EXPORT Scalar : public Primitive {
+class KSTCORE_EXPORT Scalar : public Primitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   Q_PROPERTY(double value READ value WRITE setValue)

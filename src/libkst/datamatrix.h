@@ -28,8 +28,9 @@ public:
   double *z; // the data
 };
 
-class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
-  Q_OBJECT
+class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive 
+{
+    Q_OBJECT
 
   public:
 
@@ -43,7 +44,7 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read 
     **/
-    struct Param {
+    struct KSTCORE_EXPORT Param {
       MatrixData* data;
       int xStart;
       int yStart;
@@ -53,7 +54,7 @@ class KST_EXPORT DataMatrix : public Matrix, public DataPrimitive {
     };
 
 
-    struct Optional
+    struct KSTCORE_EXPORT Optional
     {
       Optional();
 

@@ -67,7 +67,7 @@ static double nan__()
 #endif
 
 
-KST_EXPORT extern const double NOPOINT;
+KSTCORE_EXPORT extern const double NOPOINT;
 
 inline int d2i(double x) {
   return int(floor(x+0.5));

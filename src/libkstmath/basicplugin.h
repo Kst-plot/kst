@@ -13,13 +13,13 @@
 #define BASICPLUGIN_H
 
 #include "dataobject.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT BasicPlugin : public DataObject {
+class KSTMATH_EXPORT BasicPlugin : public DataObject {
   Q_OBJECT
 
   public:

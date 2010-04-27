@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
+class EquationTab : public DataTab, Ui::EquationTab {
   Q_OBJECT
   public:
     EquationTab(QWidget *parent = 0);
@@ -64,7 +64,7 @@ class KST_EXPORT EquationTab : public DataTab, Ui::EquationTab {
     void populateFunctionList();
 };
 
-class KST_EXPORT EquationDialog : public DataDialog {
+class EquationDialog : public DataDialog {
   Q_OBJECT
   public:
     EquationDialog(ObjectPtr dataObject, QWidget *parent = 0);

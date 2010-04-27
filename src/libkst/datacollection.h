@@ -31,7 +31,8 @@ namespace Kst {
 class Relation;
 class PlotItemInterface;
 
-class Data {
+class KSTCORE_EXPORT Data 
+{
   protected:
     static Data *_self;
     static void cleanup();
@@ -56,11 +57,12 @@ class Data {
       * -1 if not in layout.
       */
     virtual int columns() const;
-} KST_EXPORT;
+};
 
-    /** Bad choice for location - maybe move it later */
-    KST_EXPORT void *malloc(size_t size);
-    KST_EXPORT void *realloc(void *ptr, size_t size);
+/** Bad choice for location - maybe move it later */
+KSTCORE_EXPORT void *malloc(size_t size);
+KSTCORE_EXPORT void *realloc(void *ptr, size_t size);
+
 }
 
 #endif

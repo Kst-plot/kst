@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
+class EventMonitorTab : public DataTab, Ui::EventMonitorTab {
   Q_OBJECT
   public:
     EventMonitorTab(QWidget *parent = 0);
@@ -77,7 +77,7 @@ class KST_EXPORT EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     bool _logLevelDirty;
 };
 
-class KST_EXPORT EventMonitorDialog : public DataDialog {
+class EventMonitorDialog : public DataDialog {
   Q_OBJECT
   public:
     EventMonitorDialog(ObjectPtr dataObject, QWidget *parent = 0);

@@ -23,7 +23,7 @@ namespace Kst {
 class Document;
 class MatrixModel;
 
-class KST_EXPORT ViewMatrixDialog : public QDialog, Ui::ViewMatrixDialog
+class ViewMatrixDialog : public QDialog, Ui::ViewMatrixDialog
 {
   Q_OBJECT
   public:

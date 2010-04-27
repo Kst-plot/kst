@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_crossspectrum)
+TARGET = $$kstlib(kstplugin_crossspectrum)
 
 SOURCES += \
     fftsg_h.c \

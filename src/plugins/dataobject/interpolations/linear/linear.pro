@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_linearinterpolation)
+TARGET = $$kstlib(kstplugin_linearinterpolation)
 LIBS += -lgsl
 
 SOURCES += \

@@ -17,7 +17,7 @@
 
 namespace Kst {
 
-class KST_EXPORT EditableMatrix : public Matrix {
+class KSTCORE_EXPORT EditableMatrix : public Matrix {
   Q_OBJECT
 
   public:

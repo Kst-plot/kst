@@ -23,7 +23,7 @@
 
 #include "dataobject.h"
 #include "objectfactory.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 #define MAX_DIV_REG 100
 
@@ -37,7 +37,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT Equation : public DataObject {
+class KSTMATH_EXPORT Equation : public DataObject {
   Q_OBJECT
 
   public:

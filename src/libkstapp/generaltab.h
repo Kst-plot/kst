@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT GeneralTab : public DialogTab, Ui::GeneralTab {
+class GeneralTab : public DialogTab, Ui::GeneralTab {
   Q_OBJECT
   public:
     GeneralTab(QWidget *parent = 0);

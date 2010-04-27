@@ -1,4 +1,7 @@
-namespace Kst {
+#include "namedobject.h"
+
+namespace Kst 
+{
   int _vnum = 1; // vectors
   int _pnum = 1; // plugins
   int _csdnum = 1; // csd

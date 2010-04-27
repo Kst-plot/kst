@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_chop)
+TARGET = $$kstlib(kstplugin_chop)
 
 SOURCES += \
     chop.cpp

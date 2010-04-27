@@ -19,7 +19,7 @@
 namespace Kst {
 class View;
 
-class KST_EXPORT ViewCommand : public QUndoCommand
+class ViewCommand : public QUndoCommand
 {
 public:
   ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);

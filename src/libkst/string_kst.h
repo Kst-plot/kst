@@ -24,7 +24,7 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
-class KST_EXPORT String : public Primitive {
+class KSTCORE_EXPORT String : public Primitive {
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
 

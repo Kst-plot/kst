@@ -24,7 +24,7 @@
 
 namespace Kst {
 
-class KST_EXPORT StringTab : public DataTab, Ui::StringTab {
+class StringTab : public DataTab, Ui::StringTab {
   Q_OBJECT
   public:
     enum StringMode { DataString, GeneratedString };
@@ -71,7 +71,7 @@ class KST_EXPORT StringTab : public DataTab, Ui::StringTab {
     int _requestID;
 };
 
-class KST_EXPORT StringDialog : public DataDialog {
+class StringDialog : public DataDialog {
   Q_OBJECT
   public:
     StringDialog(ObjectPtr dataObject, QWidget *parent = 0);

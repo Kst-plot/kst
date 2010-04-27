@@ -29,7 +29,7 @@ class LayoutTab;
 class DimensionsTab;
 class EditMultipleWidget;
 
-class KST_EXPORT ViewItemDialog : public Dialog
+class ViewItemDialog : public Dialog
 {
   Q_OBJECT
   public:

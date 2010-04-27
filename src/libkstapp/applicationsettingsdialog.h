@@ -27,7 +27,7 @@ class ChildViewOptionsTab;
 class DefaultLabelPropertiesTab;
 class LayoutTab;
 
-class KST_EXPORT ApplicationSettingsDialog : public Dialog
+class ApplicationSettingsDialog : public Dialog
 {
   Q_OBJECT
   public:

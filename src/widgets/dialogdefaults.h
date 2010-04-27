@@ -23,16 +23,17 @@
 #include "generatedvector.h"
 #include "datamatrix.h"
 #include "histogram.h"
+#include "kstwidgets_export.h"
 
 class QSettings;
 
 namespace Kst {
-  extern QSettings *_dialogDefaults;
+  KSTWIDGETS_EXPORT extern QSettings *_dialogDefaults;
 
-  void setDataVectorDefaults(DataVectorPtr);
-  void setGenVectorDefaults(GeneratedVectorPtr V);
-  void setDataMatrixDefaults(DataMatrixPtr M);
-  void setHistogramDefaults(HistogramPtr H);
+  KSTWIDGETS_EXPORT void setDataVectorDefaults(DataVectorPtr);
+  KSTWIDGETS_EXPORT void setGenVectorDefaults(GeneratedVectorPtr V);
+  KSTWIDGETS_EXPORT void setDataMatrixDefaults(DataMatrixPtr M);
+  KSTWIDGETS_EXPORT void setHistogramDefaults(HistogramPtr H);
 }
 
 #endif

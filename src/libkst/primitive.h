@@ -27,9 +27,10 @@
 
 namespace Kst {
 
-class KST_EXPORT Primitive : public Object {
-  Q_OBJECT
-  Q_PROPERTY(Object* provider READ provider WRITE setProvider)
+class KSTCORE_EXPORT Primitive : public Object 
+{
+    Q_OBJECT
+    Q_PROPERTY(Object* provider READ provider WRITE setProvider)
 
   public:
     virtual const QString& typeString() const;

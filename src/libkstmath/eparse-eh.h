@@ -22,11 +22,11 @@
 
 #ifdef __cplusplus
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include <QStringList>
 
 namespace Equations {
-   KST_EXPORT extern QStringList errorStack;
+   KSTMATH_EXPORT extern QStringList errorStack;
 }
 
 namespace Kst {

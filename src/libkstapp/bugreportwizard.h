@@ -22,7 +22,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT BugReportWizard : public QDialog, Ui::BugReportWizard
+class BugReportWizard : public QDialog, Ui::BugReportWizard
 {
   Q_OBJECT
   public:

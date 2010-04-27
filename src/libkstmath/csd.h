@@ -18,11 +18,11 @@
 
 #include "dataobject.h"
 #include "psdcalculator.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
-class KST_EXPORT CSD : public DataObject {
+class KSTMATH_EXPORT CSD : public DataObject {
   Q_OBJECT
 
   public:

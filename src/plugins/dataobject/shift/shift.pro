@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_shift)
+TARGET = $$kstlib(kstplugin_shift)
 
 SOURCES += \
     shift.cpp

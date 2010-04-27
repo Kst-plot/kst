@@ -14,11 +14,11 @@
 
 #include <QToolButton>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT ColorButton : public QToolButton {
+class KSTWIDGETS_EXPORT ColorButton : public QToolButton {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor USER true)
   public:

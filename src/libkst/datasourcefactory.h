@@ -30,7 +30,7 @@ class DataSourceFactory {
     // This takes ownership
     static void registerFactory(const QString& node, DataSourceFactory *factory);
     static void registerFactory(const QStringList& nodes, DataSourceFactory *factory);
-    KST_EXPORT static DataSourcePtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    KSTCORE_EXPORT static DataSourcePtr parse(ObjectStore *store, QXmlStreamReader& stream);
     virtual DataSourcePtr generateDataSource(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 

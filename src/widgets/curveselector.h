@@ -17,13 +17,13 @@
 
 #include <curve.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT CurveSelector : public QWidget, public Ui::CurveSelector {
+class KSTWIDGETS_EXPORT CurveSelector : public QWidget, public Ui::CurveSelector {
   Q_OBJECT
   public:
     CurveSelector(QWidget *parent = 0, ObjectStore *store = 0);

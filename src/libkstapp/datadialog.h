@@ -28,7 +28,7 @@ class DataTab;
 class Document;
 class EditMultipleWidget;
 
-class KST_EXPORT DataDialog : public Dialog {
+class DataDialog : public Dialog {
   Q_OBJECT
   public:
     enum EditMode { New, Edit, EditMultiple };

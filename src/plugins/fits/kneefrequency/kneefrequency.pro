@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_fitkneefrequency)
+TARGET = $$kstlib(kstplugin_fitkneefrequency)
 LIBS += -lgsl
 
 SOURCES += \

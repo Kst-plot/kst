@@ -27,7 +27,7 @@ class ViewItem;
 class LayoutBoxItem;
 class PlotItem;
 
-class KST_EXPORT View : public QGraphicsView
+class View : public QGraphicsView
 {
   Q_OBJECT
   public:

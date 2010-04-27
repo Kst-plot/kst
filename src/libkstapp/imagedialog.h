@@ -27,7 +27,7 @@ namespace Kst {
 
   class ObjectStore;
 
-class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
+class ImageTab : public DataTab, Ui::ImageTab {
   Q_OBJECT
   public:
     ImageTab(QWidget *parent = 0);
@@ -103,7 +103,7 @@ class KST_EXPORT ImageTab : public DataTab, Ui::ImageTab {
     bool _modeDirty;
 };
 
-class KST_EXPORT ImageDialog : public DataDialog {
+class ImageDialog : public DataDialog {
   Q_OBJECT
   public:
     ImageDialog(ObjectPtr dataObject, QWidget *parent = 0);

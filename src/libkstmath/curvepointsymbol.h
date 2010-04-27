@@ -18,7 +18,7 @@
 #ifndef CURVEPOINTSYMBOL_H
 #define CURVEPOINTSYMBOL_H
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include <qpainter.h>
 
 #define KSTPOINT_MAXTYPE 13
@@ -27,9 +27,9 @@ namespace Kst {
 
 namespace  CurvePointSymbol {
     /** draw the point on a painter the scale of the point is based on size */
-    KST_EXPORT void draw(int type, QPainter *p, double x, double y, int lineSize = 0, int size = -1);
+    KSTMATH_EXPORT void draw(int type, QPainter *p, double x, double y, int lineSize = 0, int size = -1);
     /** Get the dimension of a point */
-    KST_EXPORT int dim(const QRect &window);
+    KSTMATH_EXPORT int dim(const QRect &window);
 }
 
 }

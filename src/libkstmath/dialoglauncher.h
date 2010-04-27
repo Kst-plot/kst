@@ -25,11 +25,11 @@
 #include "matrix.h"
 #include "plotiteminterface.h"
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
-class KST_EXPORT DialogLauncher : public QObject {
+class KSTMATH_EXPORT DialogLauncher : public QObject {
   Q_OBJECT
   protected:
     static DialogLauncher *_self;

@@ -15,11 +15,12 @@
 
 #include <qpainter.h>
 
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
-class Painter : public QPainter {
+class KSTMATH_EXPORT Painter : public QPainter 
+{
   public:
     // KstPaintType - hints to paint to allow optimizations
     // P_PAINT: Neither 'data' nor 'plot' needs to change
@@ -53,7 +54,7 @@ class Painter : public QPainter {
     bool _drawInlineUI;
     bool _makingMask;
     QRegion _uiMask;
-} KST_EXPORT;
+};
 
 }
 #endif

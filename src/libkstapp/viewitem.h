@@ -35,7 +35,7 @@ class ViewItem;
 
 typedef QList<ViewItem *> ViewItemList;
 
-class KST_EXPORT ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
+class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 {
   Q_OBJECT
   public:
@@ -318,10 +318,10 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::ActiveGrips)
 
 #ifndef QT_NO_DEBUG_STREAM
-KST_EXPORT QDebug operator<<(QDebug, ViewItem*);
+QDebug operator<<(QDebug, ViewItem*);
 #endif
 
-class KST_EXPORT ViewItemCommand : public QUndoCommand
+class ViewItemCommand : public QUndoCommand
 {
   public:
     ViewItemCommand(ViewItem *item, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
@@ -331,7 +331,7 @@ class KST_EXPORT ViewItemCommand : public QUndoCommand
     QPointer<ViewItem> _item;
 };
 
-class KST_EXPORT CreateCommand : public QObject, public ViewCommand
+class CreateCommand : public QObject, public ViewCommand
 {
   Q_OBJECT
   public:
@@ -352,7 +352,7 @@ class KST_EXPORT CreateCommand : public QObject, public ViewCommand
     QPointer<ViewItem> _item;
 };
 
-class KST_EXPORT LayoutCommand : public ViewItemCommand
+class LayoutCommand : public ViewItemCommand
 {
   public:
     LayoutCommand(ViewItem *item)
@@ -368,7 +368,7 @@ class KST_EXPORT LayoutCommand : public ViewItemCommand
     QPointer<ViewGridLayout> _layout;
 };
 
-class KST_EXPORT AppendLayoutCommand : public ViewItemCommand
+class AppendLayoutCommand : public ViewItemCommand
 {
   public:
     AppendLayoutCommand(ViewItem *item)
@@ -384,7 +384,7 @@ class KST_EXPORT AppendLayoutCommand : public ViewItemCommand
     QPointer<ViewGridLayout> _layout;
 };
 
-class KST_EXPORT MoveCommand : public ViewItemCommand
+class MoveCommand : public ViewItemCommand
 {
   public:
     MoveCommand(ViewItem *item, const QPointF &originalPos, const QPointF &newPos)
@@ -402,7 +402,7 @@ class KST_EXPORT MoveCommand : public ViewItemCommand
     QPointF _newPos;
 };
 
-class KST_EXPORT ResizeCommand : public ViewItemCommand
+class ResizeCommand : public ViewItemCommand
 {
   public:
     ResizeCommand(ViewItem *item, const QRectF &originalRect, const QRectF &newRect)
@@ -420,7 +420,7 @@ class KST_EXPORT ResizeCommand : public ViewItemCommand
     QRectF _newRect;
 };
 
-class KST_EXPORT RemoveCommand : public ViewItemCommand
+class RemoveCommand : public ViewItemCommand
 {
   public:
     RemoveCommand(ViewItem *item)
@@ -432,7 +432,7 @@ class KST_EXPORT RemoveCommand : public ViewItemCommand
     virtual void redo();
 };
 
-class KST_EXPORT RaiseCommand : public ViewItemCommand
+class RaiseCommand : public ViewItemCommand
 {
   public:
     RaiseCommand(ViewItem *item)
@@ -444,7 +444,7 @@ class KST_EXPORT RaiseCommand : public ViewItemCommand
     virtual void redo();
 };
 
-class KST_EXPORT LowerCommand : public ViewItemCommand
+class LowerCommand : public ViewItemCommand
 {
   public:
     LowerCommand(ViewItem *item)
@@ -456,7 +456,7 @@ class KST_EXPORT LowerCommand : public ViewItemCommand
     virtual void redo();
 };
 
-class KST_EXPORT TransformCommand : public ViewItemCommand
+class TransformCommand : public ViewItemCommand
 {
   public:
     TransformCommand(ViewItem *item, const QTransform &originalTransform,
@@ -474,7 +474,7 @@ class KST_EXPORT TransformCommand : public ViewItemCommand
     QTransform _newTransform;
 };
 
-class KST_EXPORT ScaleCommand : public TransformCommand
+class ScaleCommand : public TransformCommand
 {
   public:
     ScaleCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)
@@ -483,7 +483,7 @@ class KST_EXPORT ScaleCommand : public TransformCommand
     virtual ~ScaleCommand() {}
 };
 
-class KST_EXPORT RotateCommand : public TransformCommand
+class RotateCommand : public TransformCommand
 {
   public:
     RotateCommand(ViewItem *item, const QTransform &originalTransform, const QTransform &newTransform)

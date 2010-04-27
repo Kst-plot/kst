@@ -21,7 +21,7 @@ namespace Kst {
 class ArrowPropertiesTab;
 class ArrowItem;
 
-class KST_EXPORT ArrowItemDialog : public ViewItemDialog
+class ArrowItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:

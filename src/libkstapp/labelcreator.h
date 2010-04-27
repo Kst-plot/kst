@@ -22,7 +22,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT LabelCreator : public QDialog, Ui::LabelCreator
+class LabelCreator : public QDialog, Ui::LabelCreator
 {
   Q_OBJECT
   public:

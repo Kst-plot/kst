@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_linefit)
+TARGET = $$kstlib(kstplugin_linefit)
 
 SOURCES += \
     linefit.cpp

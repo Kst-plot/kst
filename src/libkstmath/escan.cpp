@@ -1,3 +1,4 @@
+#include "kstmath_export.h"
 
 #line 3 "lex.yy.c"
 
@@ -302,7 +303,7 @@ static void yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 #define YY_FLUSH_BUFFER yy_flush_buffer(YY_CURRENT_BUFFER )
 
 YY_BUFFER_STATE yy_scan_buffer (char *base,yy_size_t size  );
-YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
+KSTMATH_EXPORT YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
 YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,int len  );
 
 void *yyalloc (yy_size_t  );

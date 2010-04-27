@@ -533,7 +533,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     friend class ViewGridLayout;
 };
 
-class KST_EXPORT CreatePlotCommand : public CreateCommand
+class CreatePlotCommand : public CreateCommand
 {
   public:
     CreatePlotCommand() : CreateCommand(QObject::tr("Create Plot")) {}
@@ -542,7 +542,7 @@ class KST_EXPORT CreatePlotCommand : public CreateCommand
     virtual void createItem();
 };
 
-class KST_EXPORT CreatePlotForCurve : public CreateCommand
+class CreatePlotForCurve : public CreateCommand
 {
   public:
     CreatePlotForCurve()
@@ -561,7 +561,7 @@ class PlotItemFactory : public GraphicsFactory {
 };
 
 
-class KST_EXPORT ZoomCommand : public ViewItemCommand
+class ZoomCommand : public ViewItemCommand
 {
   public:
     ZoomCommand(PlotItem *item, const QString &text, bool forced = false);
@@ -581,7 +581,7 @@ class KST_EXPORT ZoomCommand : public ViewItemCommand
 };
 
 
-class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
+class ZoomFixedExpressionCommand : public ZoomCommand
 {
   public:
     ZoomFixedExpressionCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
@@ -596,7 +596,7 @@ class KST_EXPORT ZoomFixedExpressionCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
+class ZoomXRangeCommand : public ZoomCommand
 {
   public:
     ZoomXRangeCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
@@ -611,7 +611,7 @@ class KST_EXPORT ZoomXRangeCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
+class ZoomYRangeCommand : public ZoomCommand
 {
   public:
     ZoomYRangeCommand(PlotItem *item, const QRectF &fixed, bool forced = false)
@@ -626,7 +626,7 @@ class KST_EXPORT ZoomYRangeCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
+class ZoomMaximumCommand : public ZoomCommand
 {
   public:
     ZoomMaximumCommand(PlotItem *item, bool forced = false)
@@ -637,7 +637,7 @@ class KST_EXPORT ZoomMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
+class ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 {
   public:
     ZoomMaxSpikeInsensitiveCommand(PlotItem *item, bool forced = false)
@@ -648,7 +648,7 @@ class KST_EXPORT ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomMeanCenteredCommand : public ZoomCommand
+class ZoomMeanCenteredCommand : public ZoomCommand
 {
   public:
     ZoomMeanCenteredCommand(PlotItem *item, bool forced = false)
@@ -660,7 +660,7 @@ class KST_EXPORT ZoomMeanCenteredCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomXMeanCenteredCommand : public ZoomCommand
+class ZoomXMeanCenteredCommand : public ZoomCommand
 {
   public:
     ZoomXMeanCenteredCommand(PlotItem *item, qreal dX, bool forced = false)
@@ -674,7 +674,7 @@ class KST_EXPORT ZoomXMeanCenteredCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
+class ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
     ZoomYMeanCenteredCommand(PlotItem *item, qreal dY, bool forced = false)
@@ -688,7 +688,7 @@ class KST_EXPORT ZoomYMeanCenteredCommand : public ZoomCommand
 };
 
 
-class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
+class ZoomXMaximumCommand : public ZoomCommand
 {
   public:
     ZoomXMaximumCommand(PlotItem *item, bool forced = false)
@@ -699,7 +699,7 @@ class KST_EXPORT ZoomXMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXAutoBorderCommand : public ZoomCommand
+class ZoomXAutoBorderCommand : public ZoomCommand
 {
   public:
     ZoomXAutoBorderCommand(PlotItem *item, bool forced = false)
@@ -710,7 +710,7 @@ class KST_EXPORT ZoomXAutoBorderCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXNoSpikeCommand : public ZoomCommand
+class ZoomXNoSpikeCommand : public ZoomCommand
 {
   public:
     ZoomXNoSpikeCommand(PlotItem *item, bool forced = false)
@@ -721,7 +721,7 @@ class KST_EXPORT ZoomXNoSpikeCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXRightCommand : public ZoomCommand
+class ZoomXRightCommand : public ZoomCommand
 {
   public:
     ZoomXRightCommand(PlotItem *item, bool forced = false)
@@ -732,7 +732,7 @@ class KST_EXPORT ZoomXRightCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
+class ZoomXLeftCommand : public ZoomCommand
 {
   public:
     ZoomXLeftCommand(PlotItem *item, bool forced = false)
@@ -743,7 +743,7 @@ class KST_EXPORT ZoomXLeftCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXOutCommand : public ZoomCommand
+class ZoomXOutCommand : public ZoomCommand
 {
   public:
     ZoomXOutCommand(PlotItem *item, bool forced = false)
@@ -754,7 +754,7 @@ class KST_EXPORT ZoomXOutCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXInCommand : public ZoomCommand
+class ZoomXInCommand : public ZoomCommand
 {
   public:
     ZoomXInCommand(PlotItem *item, bool forced = false)
@@ -765,7 +765,7 @@ class KST_EXPORT ZoomXInCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
+class ZoomNormalizeXToYCommand : public ZoomCommand
 {
   public:
     ZoomNormalizeXToYCommand(PlotItem *item, bool forced = false)
@@ -776,7 +776,7 @@ class KST_EXPORT ZoomNormalizeXToYCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
+class ZoomYLocalMaximumCommand : public ZoomCommand
 {
   public:
     ZoomYLocalMaximumCommand(PlotItem *item, bool forced = false)
@@ -787,7 +787,7 @@ class KST_EXPORT ZoomYLocalMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
+class ZoomYMaximumCommand : public ZoomCommand
 {
   public:
     ZoomYMaximumCommand(PlotItem *item, bool forced = false)
@@ -798,7 +798,7 @@ class KST_EXPORT ZoomYMaximumCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYAutoBorderCommand : public ZoomCommand
+class ZoomYAutoBorderCommand : public ZoomCommand
 {
   public:
     ZoomYAutoBorderCommand(PlotItem *item, bool forced = false)
@@ -809,7 +809,7 @@ class KST_EXPORT ZoomYAutoBorderCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYNoSpikeCommand : public ZoomCommand
+class ZoomYNoSpikeCommand : public ZoomCommand
 {
   public:
     ZoomYNoSpikeCommand(PlotItem *item, bool forced = false)
@@ -820,7 +820,7 @@ class KST_EXPORT ZoomYNoSpikeCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYUpCommand : public ZoomCommand
+class ZoomYUpCommand : public ZoomCommand
 {
   public:
     ZoomYUpCommand(PlotItem *item, bool forced = false)
@@ -831,7 +831,7 @@ class KST_EXPORT ZoomYUpCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYDownCommand : public ZoomCommand
+class ZoomYDownCommand : public ZoomCommand
 {
   public:
     ZoomYDownCommand(PlotItem *item, bool forced = false)
@@ -842,7 +842,7 @@ class KST_EXPORT ZoomYDownCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYOutCommand : public ZoomCommand
+class ZoomYOutCommand : public ZoomCommand
 {
   public:
     ZoomYOutCommand(PlotItem *item, bool forced = false)
@@ -853,7 +853,7 @@ class KST_EXPORT ZoomYOutCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomYInCommand : public ZoomCommand
+class ZoomYInCommand : public ZoomCommand
 {
   public:
     ZoomYInCommand(PlotItem *item, bool forced = false)
@@ -864,7 +864,7 @@ class KST_EXPORT ZoomYInCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
+class ZoomNormalizeYToXCommand : public ZoomCommand
 {
   public:
     ZoomNormalizeYToXCommand(PlotItem *item, bool forced = false)
@@ -875,7 +875,7 @@ class KST_EXPORT ZoomNormalizeYToXCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
-class KST_EXPORT ZoomXLogCommand : public ZoomCommand
+class ZoomXLogCommand : public ZoomCommand
 {
   public:
     ZoomXLogCommand(PlotItem *item, bool enableLog, bool forced = false)
@@ -889,7 +889,7 @@ class KST_EXPORT ZoomXLogCommand : public ZoomCommand
     bool _enableLog;
 };
 
-class KST_EXPORT ZoomYLogCommand : public ZoomCommand
+class ZoomYLogCommand : public ZoomCommand
 {
   public:
     ZoomYLogCommand(PlotItem *item, bool enableLog, bool forced = false)

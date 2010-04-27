@@ -19,7 +19,7 @@
 #define LABELPARSER_H
 
 #include "string_kst.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 #include <qcolor.h>
 
@@ -42,7 +42,7 @@ typedef quint8  KstLVJustifyType;
 
 
 namespace Label {
-  struct KST_EXPORT ChunkAttributes {
+  struct KSTMATH_EXPORT ChunkAttributes {
     ChunkAttributes() : bold(false), italic(false), underline(false), overline(false) {}
     inline bool empty() const { return !bold && !italic && !underline && !overline && !color.isValid(); }
     bool bold;
@@ -52,7 +52,7 @@ namespace Label {
     QColor color;
   };
 
-  struct KST_EXPORT Chunk {
+  struct KSTMATH_EXPORT Chunk {
     enum VOffset { None = 0, Up = 1, Down = 2 };
     Chunk(Chunk *parent, VOffset = None, bool isGroup = false, bool inherit = false);
     ~Chunk();
@@ -74,7 +74,7 @@ namespace Label {
   };
 
 
-  struct KST_EXPORT Parsed {
+  struct KSTMATH_EXPORT Parsed {
     Parsed();
     ~Parsed();
 
@@ -82,7 +82,7 @@ namespace Label {
   };
 
 
-  extern KST_EXPORT Parsed *parse(const QString&, bool interpret = true, bool interpretNewLine = true);
+  extern KSTMATH_EXPORT Parsed *parse(const QString&, bool interpret = true, bool interpretNewLine = true);
 }
 
 #endif

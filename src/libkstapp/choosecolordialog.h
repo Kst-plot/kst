@@ -25,7 +25,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
+class ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 {
   Q_OBJECT
   public:

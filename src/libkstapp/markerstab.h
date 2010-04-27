@@ -20,7 +20,7 @@
 
 namespace Kst {
 
-class KST_EXPORT MarkersTab : public DialogTab, Ui::MarkersTab {
+class MarkersTab : public DialogTab, Ui::MarkersTab {
   Q_OBJECT
   public:
     MarkersTab(QWidget *parent = 0);

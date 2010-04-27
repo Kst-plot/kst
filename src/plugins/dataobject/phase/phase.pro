@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_phase)
+TARGET = $$kstlib(kstplugin_phase)
 
 SOURCES += \
     phase.cpp

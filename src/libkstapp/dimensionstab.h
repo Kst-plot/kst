@@ -26,7 +26,7 @@
 
 namespace Kst {
 
-class KST_EXPORT DimensionsTab : public DialogTab, Ui::DimensionsTab {
+class DimensionsTab : public DialogTab, Ui::DimensionsTab {
   Q_OBJECT
   public:
     DimensionsTab(ViewItem* viewItem, QWidget *parent = 0);

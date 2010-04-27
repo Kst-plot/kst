@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT ChildViewOptionsTab : public DialogTab, Ui_ChildViewOptionsTab {
+class ChildViewOptionsTab : public DialogTab, Ui_ChildViewOptionsTab {
   Q_OBJECT
   public:
     ChildViewOptionsTab(QWidget *parent = 0);

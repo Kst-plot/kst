@@ -17,13 +17,13 @@
 
 #include <vector.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
+class KSTWIDGETS_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
   Q_OBJECT
   public:
     VectorSelector(QWidget *parent = 0, ObjectStore *store = 0);

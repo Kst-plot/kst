@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT StrokeTab : public DialogTab, Ui::StrokeTab {
+class StrokeTab : public DialogTab, Ui::StrokeTab {
   Q_OBJECT
   public:
     StrokeTab(QWidget *parent = 0);

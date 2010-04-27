@@ -23,9 +23,9 @@ namespace Kst {
   All times represented as doubles are the number of milliseconds since Jan 01
   1970 00:00:00.  Negative times are before then.
   */
-  KST_EXPORT extern QDateTime parsePlanckDate(const QString& dateString);
-  KST_EXPORT extern double extDateTimeToMilliseconds(const QDateTime& edt);
-  KST_EXPORT extern QDateTime millisecondsToQDateTime(double ms);
+  KSTCORE_EXPORT extern QDateTime parsePlanckDate(const QString& dateString);
+  KSTCORE_EXPORT extern double extDateTimeToMilliseconds(const QDateTime& edt);
+  KSTCORE_EXPORT extern QDateTime millisecondsToQDateTime(double ms);
 }
 
 #endif

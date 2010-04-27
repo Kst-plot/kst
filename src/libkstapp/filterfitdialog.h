@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
+class FilterFitTab : public DataTab, Ui::FilterFitTab {
   Q_OBJECT
   public:
     FilterFitTab(QString& pluginName, QWidget *parent = 0);
@@ -58,7 +58,7 @@ class KST_EXPORT FilterFitTab : public DataTab, Ui::FilterFitTab {
 
 };
 
-class KST_EXPORT FilterFitDialog : public DataDialog {
+class FilterFitDialog : public DataDialog {
   Q_OBJECT
   public:
     FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent = 0);

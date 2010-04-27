@@ -165,8 +165,8 @@ class RenderContext : public QObject {
 };
 
 struct Chunk;
-KST_EXPORT void renderLabel(RenderContext& rc, Chunk *fi, bool cache = true);
-KST_EXPORT void paintLabel(RenderContext& rc, QPainter *p);
+void renderLabel(RenderContext& rc, Chunk *fi, bool cache = true);
+void paintLabel(RenderContext& rc, QPainter *p);
 }
 
 #endif

@@ -50,7 +50,7 @@ class TimezonesPrivate;
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT TimezoneSource :
+class KSTCORE_EXPORT TimezoneSource :
     public Shared
 {
 public:
@@ -84,7 +84,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT Timezone
+class KSTCORE_EXPORT Timezone
 {
 public:
     /**
@@ -221,7 +221,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT TimezoneDetails
+class KSTCORE_EXPORT TimezoneDetails
 {
 public:
     TimezoneDetails();
@@ -292,7 +292,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KST_EXPORT Timezones
+class KSTCORE_EXPORT Timezones
 {
 public:
     Timezones();

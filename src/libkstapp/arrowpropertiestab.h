@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT ArrowPropertiesTab : public DialogTab, Ui::ArrowPropertiesTab {
+class ArrowPropertiesTab : public DialogTab, Ui::ArrowPropertiesTab {
   Q_OBJECT
   public:
     ArrowPropertiesTab(QWidget *parent = 0);

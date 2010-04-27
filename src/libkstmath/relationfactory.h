@@ -16,7 +16,7 @@
 #include <QStringList>
 
 #include "relation.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
@@ -30,7 +30,7 @@ class RelationFactory {
     // This takes ownership
     static void registerFactory(const QString& node, RelationFactory *factory);
     static void registerFactory(const QStringList& nodes, RelationFactory *factory);
-    KST_EXPORT static RelationPtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    KSTMATH_EXPORT static RelationPtr parse(ObjectStore *store, QXmlStreamReader& stream);
     virtual RelationPtr generateRelation(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 

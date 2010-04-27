@@ -25,7 +25,7 @@ class FillTab;
 class GridTab;
 class ChildViewOptionsTab;
 
-class KST_EXPORT ViewDialog : public Dialog
+class ViewDialog : public Dialog
 {
   Q_OBJECT
   public:

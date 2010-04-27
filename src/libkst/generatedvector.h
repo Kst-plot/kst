@@ -26,7 +26,7 @@ namespace Kst {
 /**A vector from x0 to x1 with n pts
  *@author cbn
  */
-class KST_EXPORT GeneratedVector : public Vector {
+class KSTCORE_EXPORT GeneratedVector : public Vector {
   Q_OBJECT
 
   public:

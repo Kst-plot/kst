@@ -19,6 +19,11 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/widgets \
     $$TOPOUTDIR/src/widgets
 
-win32:LIBS  += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -l$$qtLibraryTarget(kst2app) -l$$qtLibraryTarget(kst2widgets) -l$$qtLibraryTarget(kst2math) -l$$qtLibraryTarget(kst2lib)
-!win32:LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin -lkst2lib -lkst2math -lkst2widgets -lkst2app
+LIBS  += \
+			-L$$OUTPUT_DIR/lib \
+			-L$$OUTPUT_DIR/plugin \
+			-l$$kstlib(kst2widgets) \
+			-l$$kstlib(kst2math) \
+			-l$$kstlib(kst2lib)
+
 

@@ -120,7 +120,7 @@ class SharedAxisBoxItem : public ViewItem
     PlotAxis::ZoomMode _xAxisZoomMode, _yAxisZoomMode;
 };
 
-class KST_EXPORT CreateSharedAxisBoxCommand : public CreateCommand
+class CreateSharedAxisBoxCommand : public CreateCommand
 {
   Q_OBJECT
   public:

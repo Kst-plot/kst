@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class KST_EXPORT AxisTab : public DialogTab, Ui::AxisTab {
+class AxisTab : public DialogTab, Ui::AxisTab {
   Q_OBJECT
   public:
     AxisTab(QWidget *parent = 0);

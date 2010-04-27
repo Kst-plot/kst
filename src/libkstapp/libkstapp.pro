@@ -6,7 +6,7 @@ QT += gui \
     svg \
     opengl
 TEMPLATE = lib
-TARGET = $$qtLibraryTarget(kst2app)
+TARGET = $$kstlib(kst2app)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
 !isEmpty(INSTALL_PREFIX) {
@@ -20,16 +20,13 @@ INCLUDEPATH += tmp \
     $$TOPOUTDIR/src/widgets \
     $$TOPOUTDIR/src/libkstapp/tmp
 
-win32:LIBS += -L$$OUTPUT_DIR/lib \
+LIBS += \
+    -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
-    -l$$qtLibraryTarget(kst2widgets) \
-    -l$$qtLibraryTarget(kst2math) \
-    -l$$qtLibraryTarget(kst2lib)
-!win32:LIBS += -L$$OUTPUT_DIR/lib \
-    -L$$OUTPUT_DIR/plugin \
-    -lkst2lib \
-    -lkst2math \
-    -lkst2widgets
+    -l$$kstlib(kst2widgets) \
+    -l$$kstlib(kst2math) \
+    -l$$kstlib(kst2lib)
+
 SOURCES += aboutdialog.cpp \
     application.cpp \
     applicationsettings.cpp \
@@ -134,6 +131,7 @@ SOURCES += aboutdialog.cpp \
     viewmatrixdialog.cpp \
     viewprimitivedialog.cpp \
     viewvectordialog.cpp
+
 HEADERS += \
     aboutdialog.h \
     application.h \

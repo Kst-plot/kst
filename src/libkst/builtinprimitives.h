@@ -18,7 +18,7 @@ namespace Kst {
   class ObjectStore;
 
   namespace Builtins {
-    KST_EXPORT void initPrimitives();
+    KSTCORE_EXPORT void initPrimitives();
   }
 }
 

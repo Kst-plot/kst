@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_fitgradient_unweighted)
+TARGET = $$kstlib(kstplugin_fitgradient_unweighted)
 LIBS += -lgsl
 
 SOURCES += \

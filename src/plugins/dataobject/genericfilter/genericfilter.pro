@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_genericfilter)
+TARGET = $$kstlib(kstplugin_genericfilter)
 
 SOURCES += \
     genericfilter.cpp

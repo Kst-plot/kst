@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-class KST_EXPORT DialogLauncherGui : public DialogLauncher {
+class DialogLauncherGui : public DialogLauncher {
   public:
     DialogLauncherGui();
     virtual ~DialogLauncherGui();

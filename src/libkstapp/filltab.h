@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT FillTab : public DialogTab, Ui::FillTab {
+class FillTab : public DialogTab, Ui::FillTab {
   Q_OBJECT
   public:
     FillTab(QWidget *parent = 0);

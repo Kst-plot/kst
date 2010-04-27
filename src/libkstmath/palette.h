@@ -14,13 +14,14 @@
 
 #include <QColor>
 #include <QHash>
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
 typedef QHash<int, QColor> PaletteData;
 
-class Palette {
+class KSTMATH_EXPORT Palette 
+{
   public:
     static QStringList getPaletteList();
     Palette();

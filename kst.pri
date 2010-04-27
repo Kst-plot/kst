@@ -39,7 +39,8 @@ TOPLEVELDIR = $$PWD
 INCLUDEPATH += $$TOPLEVELDIR
 
 LIBS += -L$$OUTPUT_DIR/lib -L$$OUTPUT_DIR/plugin
-VERSION = 2.0.0
+#If VERSION is set qmake appends '2' to each dll, but we don't need this numbering.
+#VERSION = 2.0.0
 
 # use precompiled headers
 PRECOMPILED_HEADER = $$TOPLEVELDIR/pch.h

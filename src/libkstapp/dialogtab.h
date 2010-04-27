@@ -23,7 +23,7 @@ class DialogPage;
 
 //FIXME maybe we should really have a model...
 
-class KST_EXPORT DialogTab : public QWidget
+class DialogTab : public QWidget
 {
   Q_OBJECT
   public:

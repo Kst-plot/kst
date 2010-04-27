@@ -40,8 +40,9 @@ class Object;
 typedef SharedPtr<Object> ObjectPtr;
 
 
-class Object : public QObject, public Shared, public KstRWLock, public NamedObject {
-  Q_OBJECT
+class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, public NamedObject 
+{
+    Q_OBJECT
 
   public:
     static QString type();
@@ -69,6 +70,8 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
     virtual void deleteDependents();
 
     virtual void internalUpdate() = 0;
+
+
   protected:
     Object();
     virtual ~Object();
@@ -81,8 +84,7 @@ class Object : public QObject, public Shared, public KstRWLock, public NamedObje
 
     qint64 _serial;
     qint64 _serialOfLastChange;
-
-} KST_EXPORT;
+};
 
 
 }

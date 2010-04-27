@@ -16,11 +16,11 @@
 #include <QWidget>
 #include <QGradient>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT GradientEditor : public QWidget {
+class KSTWIDGETS_EXPORT GradientEditor : public QWidget {
   Q_OBJECT
 public:
   GradientEditor(QWidget *parent = 0);

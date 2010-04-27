@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_cumulativesum)
+TARGET = $$kstlib(kstplugin_cumulativesum)
 
 SOURCES += \
     cumulativesum.cpp

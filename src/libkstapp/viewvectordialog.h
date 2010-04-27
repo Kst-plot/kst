@@ -23,7 +23,7 @@ namespace Kst {
 class Document;
 class VectorModel;
 
-class KST_EXPORT ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
+class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 {
   Q_OBJECT
   public:

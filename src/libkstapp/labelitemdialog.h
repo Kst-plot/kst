@@ -21,7 +21,7 @@ namespace Kst {
 class LabelPropertiesTab;
 class LabelItem;
 
-class KST_EXPORT LabelItemDialog : public ViewItemDialog
+class LabelItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:

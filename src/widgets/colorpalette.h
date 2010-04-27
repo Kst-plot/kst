@@ -15,12 +15,13 @@
 #include <QWidget>
 #include "ui_colorpalette.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class ColorPalette : public QWidget, public Ui::ColorPalette {
-  Q_OBJECT
+class KSTWIDGETS_EXPORT ColorPalette : public QWidget, public Ui::ColorPalette 
+{
+    Q_OBJECT
 
   public:
     ColorPalette(QWidget *parent = 0);
@@ -40,7 +41,7 @@ class ColorPalette : public QWidget, public Ui::ColorPalette {
   Q_SIGNALS:
     void selectionChanged();
 
-} KST_EXPORT;
+};
 
 }
 #endif

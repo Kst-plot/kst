@@ -21,7 +21,7 @@ class QMainWindow;
 
 namespace Kst {
 
-class KST_EXPORT Extension : public QObject {
+class KSTCORE_EXPORT Extension : public QObject {
   Q_OBJECT
   public:
     Extension(QObject *parent, const QStringList&);

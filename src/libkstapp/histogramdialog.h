@@ -25,7 +25,7 @@
 
 namespace Kst {
 
-class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
+class HistogramTab : public DataTab, Ui::HistogramTab {
   Q_OBJECT
   public:
     HistogramTab(QWidget *parent = 0);
@@ -78,7 +78,7 @@ class KST_EXPORT HistogramTab : public DataTab, Ui::HistogramTab {
     bool _normalizationDirty;
 };
 
-class KST_EXPORT HistogramDialog : public DataDialog {
+class HistogramDialog : public DataDialog {
   Q_OBJECT
   public:
     HistogramDialog(ObjectPtr dataObject, QWidget *parent = 0);

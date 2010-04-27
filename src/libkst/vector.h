@@ -39,8 +39,8 @@ namespace Kst {
 class KstDataObject;
 
 // KST::interpolate is still too polluting
-extern double kstInterpolate(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
-extern double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i) KST_EXPORT;
+KSTCORE_EXPORT double kstInterpolate(double *v, int _size, int in_i, int ns_i);
+KSTCORE_EXPORT double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i);
 
 class Vector;
 typedef SharedPtr<Vector> VectorPtr;
@@ -48,13 +48,15 @@ typedef SharedPtr<Vector> VectorPtr;
 /**A class for handling data vectors for kst.
  *@author cbn
  */
-class Vector : public Primitive {
-  Q_OBJECT
+class KSTCORE_EXPORT Vector : public Primitive 
+{
+    Q_OBJECT
 
   public:
     virtual const QString& typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
+
 
   protected:
     Vector(ObjectStore *store);
@@ -63,6 +65,8 @@ class Vector : public Primitive {
     friend class ObjectStore; 
 
     virtual void _initializeShortName();
+
+
   public:
     void change(QByteArray& data);
 
@@ -152,6 +156,8 @@ class Vector : public Primitive {
     virtual QString sizeString() const;
 
     virtual void internalUpdate();
+
+
   protected:
     /** current number of samples */
     int _size;
@@ -207,7 +213,7 @@ class Vector : public Primitive {
 
     friend class DataObject;
     virtual double* realloced(double *memptr, int newSize);
-} KST_EXPORT;
+};
 
 
 typedef ObjectList<Vector> VectorList;

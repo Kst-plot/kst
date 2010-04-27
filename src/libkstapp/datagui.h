@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-class KST_EXPORT DataGui : public Data {
+class DataGui : public Data {
   public:
     DataGui();
     virtual ~DataGui();

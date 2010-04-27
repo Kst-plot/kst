@@ -19,13 +19,13 @@
 
 #include <scalar.h>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
+class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
   Q_OBJECT
   public:
     ScalarSelector(QWidget *parent = 0, ObjectStore *store = 0);

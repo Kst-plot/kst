@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_convolve)
+TARGET = $$kstlib(kstplugin_convolve)
 LIBS += -lgsl
 
 SOURCES += \

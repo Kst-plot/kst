@@ -25,7 +25,7 @@
 #include "objectlist.h"
 #include "vector.h"
 #include "matrix.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 #include <QWidget>
 #include <QSettings>
@@ -43,8 +43,9 @@ typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObject> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 
-class KST_EXPORT DataObject : public Object {
-  Q_OBJECT
+class KSTMATH_EXPORT DataObject : public Object 
+{
+    Q_OBJECT
 
   public:
     enum Kind { Generic, Primitive, Fit, Filter };
@@ -182,9 +183,10 @@ class KST_EXPORT DataObject : public Object {
 };
 
 
-class DataObjectConfigWidget : public QWidget {
-  Q_OBJECT
-  friend class DataObject;
+class KSTMATH_EXPORT DataObjectConfigWidget : public QWidget 
+{
+    Q_OBJECT
+
   public:
     DataObjectConfigWidget(QSettings*); // will be reparented later
     virtual ~DataObjectConfigWidget();
@@ -198,8 +200,8 @@ class DataObjectConfigWidget : public QWidget {
 
     virtual bool configurePropertiesFromXml(ObjectStore *store, QXmlStreamAttributes& attrs);
 
-    KST_EXPORT void setInstance(DataObjectPtr inst);
-    KST_EXPORT DataObjectPtr instance() const;
+    void setInstance(DataObjectPtr inst);
+    DataObjectPtr instance() const;
 
     virtual void setObjectStore(ObjectStore* store);
 
@@ -209,7 +211,11 @@ class DataObjectConfigWidget : public QWidget {
 
   protected:
     QSettings *_cfg;
-} KST_EXPORT;
+
+  private:
+    friend class DataObject;
+};
+
 
 }
 

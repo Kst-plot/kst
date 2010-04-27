@@ -18,7 +18,17 @@
 #ifndef KST_EXPORT_H
 #define KST_EXPORT_H
 
-#define KST_EXPORT
+#include <qglobal.h>
+
+#if (defined(Q_OS_WIN32) || defined(Q_OS_WIN64))
+#  if defined(BUILD_KSTCORE)
+#    define KSTCORE_EXPORT Q_DECL_EXPORT
+#  else
+#    define KSTCORE_EXPORT Q_DECL_IMPORT
+#  endif
+#else
+#  define KSTCORE_EXPORT
+#endif
 
 #endif
 

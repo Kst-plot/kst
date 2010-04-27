@@ -14,26 +14,27 @@
 
 #include <qcolor.h>
 #include "curve.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 class KPalette;
 
 namespace Kst {
 
-class ColorSequence {
+class KSTMATH_EXPORT ColorSequence 
+{
   public:
     enum ColorMode { MonoChrome, GrayScale, Color };
-    KST_EXPORT void createPalette();
-    static KST_EXPORT QColor next();
-    static KST_EXPORT QColor current();
-    static KST_EXPORT QColor next(const QColor& badColor);
-    static KST_EXPORT QColor next(const CurveList& Curves, const QColor& badColor);
-    static KST_EXPORT bool colorsTooClose(const QColor& color, const QColor& badColor);
-    static KST_EXPORT ColorMode colorMode();
-    static KST_EXPORT void setColorMode(ColorMode mode);
-    static KST_EXPORT int count();
-    static KST_EXPORT void reset();
-    static KST_EXPORT QColor entry(int ptr);
+    void createPalette();
+    static QColor next();
+    static QColor current();
+    static QColor next(const QColor& badColor);
+    static QColor next(const CurveList& Curves, const QColor& badColor);
+    static bool colorsTooClose(const QColor& color, const QColor& badColor);
+    static ColorMode colorMode();
+    static void setColorMode(ColorMode mode);
+    static int count();
+    static void reset();
+    static QColor entry(int ptr);
     
   private:
     ColorSequence();

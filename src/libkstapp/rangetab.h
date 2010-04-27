@@ -26,7 +26,7 @@
 
 namespace Kst {
 
-class KST_EXPORT RangeTab : public DialogTab, Ui::RangeTab {
+class RangeTab : public DialogTab, Ui::RangeTab {
   Q_OBJECT
   public:
     RangeTab(PlotItem* plotItem, QWidget *parent = 0);

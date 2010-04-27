@@ -19,11 +19,11 @@
 #include <QStringList>
 
 #include "kst_i18n.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include "objectstore.h"
 
 namespace Equations {
-  KST_EXPORT QStringList errorStack;
+  KSTMATH_EXPORT QStringList errorStack;
 }
 
 /*extern "C"*/ const char *EParseErrorEmpty = I18N_NOOP("Equations is empty.");

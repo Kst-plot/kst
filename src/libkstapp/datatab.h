@@ -21,7 +21,7 @@ namespace Kst {
 class DataDialog;
 class ObjectStore;
 
-class KST_EXPORT DataTab : public DialogTab
+class DataTab : public DialogTab
 {
   Q_OBJECT
   public:

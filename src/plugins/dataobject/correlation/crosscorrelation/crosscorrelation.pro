@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_crosscorrelation)
+TARGET = $$kstlib(kstplugin_crosscorrelation)
 
 LIBS += -lgsl
 

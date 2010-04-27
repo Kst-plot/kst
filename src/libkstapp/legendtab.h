@@ -21,7 +21,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT LegendTab : public DialogTab, Ui::LegendTab {
+class LegendTab : public DialogTab, Ui::LegendTab {
   Q_OBJECT
   public:
     LegendTab(QWidget *parent = 0);

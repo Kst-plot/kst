@@ -20,7 +20,7 @@
 
 #include "string_kst.h"
 #include "vector.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 #include "objectstore.h"
 
 #define EQ_FALSE 0.0
@@ -29,14 +29,15 @@
 namespace Equations {
 
   /* Global lock for the parser */
-  KST_EXPORT QMutex& mutex();
+  KSTMATH_EXPORT QMutex& mutex();
 
   /*    Evaluate the expression @p txt and returns the value as a double.
    *    Returns the value, or 0.0 and sets ok = false on error.
    */
-  KST_EXPORT double interpret(Kst::ObjectStore *store, const char *txt, bool *ok = 0L, int len = -1);
+  KSTMATH_EXPORT double interpret(Kst::ObjectStore *store, const char *txt, bool *ok = 0L, int len = -1);
 
-  class Context {
+  class KSTMATH_EXPORT Context 
+  {
     public:
       Context() : i(0), x(0.0), xVector(0L), noPoint(0.0), sampleCount(0) {}
       ~Context() {}
@@ -50,7 +51,7 @@ namespace Equations {
 
   class NodeVisitor;
 
-  class Node {
+  class KSTMATH_EXPORT Node {
     public:
       Node();
       virtual ~Node();
@@ -67,9 +68,9 @@ namespace Equations {
 
     protected:
       bool _parentheses;
-  } KST_EXPORT;
+  };
 
-  class BinaryNode : public Node {
+  class KSTMATH_EXPORT BinaryNode : public Node {
     public:
       BinaryNode(Node *left, Node *right);
       virtual ~BinaryNode();
@@ -89,7 +90,7 @@ namespace Equations {
   };
 
 
-  class ArgumentList : public Node {
+  class KSTMATH_EXPORT ArgumentList : public Node {
     friend class Function;
     public:
       ArgumentList();
@@ -113,7 +114,7 @@ namespace Equations {
   };
 
 
-  class Function : public Node {
+  class KSTMATH_EXPORT Function : public Node {
     public:
       Function(char *name, ArgumentList *args);
       ~Function();
@@ -142,7 +143,8 @@ namespace Equations {
   };
 
 
-  class Number : public Node {
+  class KSTMATH_EXPORT Number : public Node 
+  {
     public:
       Number(double n);
       ~Number();
@@ -153,10 +155,11 @@ namespace Equations {
 
     protected:
       double _n;
-  } KST_EXPORT;
+  };
 
 
-  class Identifier : public Node {
+  class KSTMATH_EXPORT Identifier : public Node 
+  {
     public:
       Identifier(char *name);
       ~Identifier();
@@ -172,7 +175,7 @@ namespace Equations {
   };
 
 
-  class DataNode : public Node {
+  class KSTMATH_EXPORT DataNode : public Node {
     friend class Function;
     public:
       DataNode(Kst::ObjectStore *store, char *name);
@@ -195,7 +198,7 @@ namespace Equations {
       QString _vectorIndex;
   };
 
-  class NodeVisitor {
+  class KSTMATH_EXPORT NodeVisitor {
     public:
       NodeVisitor();
       virtual ~NodeVisitor();
@@ -205,7 +208,7 @@ namespace Equations {
   };
 
 
-  class KST_EXPORT FoldVisitor : public NodeVisitor {
+  class KSTMATH_EXPORT FoldVisitor : public NodeVisitor {
     public:
       FoldVisitor(Context*, Node**);
       ~FoldVisitor();
@@ -218,7 +221,7 @@ namespace Equations {
   };
 
 
-  class Negation : public Node {
+  class KSTMATH_EXPORT Negation : public Node {
     public:
       Negation(Node *node);
       ~Negation();
@@ -230,7 +233,7 @@ namespace Equations {
       Node *_n;
   };
 
-  class LogicalNot : public Node {
+  class KSTMATH_EXPORT LogicalNot : public Node {
     public:
       LogicalNot(Node *node);
       ~LogicalNot();
@@ -243,7 +246,7 @@ namespace Equations {
   };
 
 #define CreateNode(x)                     \
-  class x : public BinaryNode {           \
+  class KSTMATH_EXPORT x : public BinaryNode {           \
     public:                               \
       x(Node *left, Node *right);         \
       ~x();                               \

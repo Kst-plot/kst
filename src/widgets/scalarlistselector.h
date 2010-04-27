@@ -15,11 +15,11 @@
 #include <QWidget>
 #include "ui_scalarlistselector.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT ScalarListSelector : public QDialog, public Ui::ScalarListSelector {
+class KSTWIDGETS_EXPORT ScalarListSelector : public QDialog, public Ui::ScalarListSelector {
   Q_OBJECT
   public:
     ScalarListSelector(QWidget *parent = 0);

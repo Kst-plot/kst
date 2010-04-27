@@ -17,12 +17,13 @@
 
 #include "psd.h"
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class FFTOptions : public QWidget, public Ui::FFTOptions {
-  Q_OBJECT
+class KSTWIDGETS_EXPORT FFTOptions : public QWidget, public Ui::FFTOptions 
+{
+    Q_OBJECT
 
   public:
     FFTOptions(QWidget *parent = 0);
@@ -91,7 +92,7 @@ class FFTOptions : public QWidget, public Ui::FFTOptions {
 
   private:
     void init();
-} KST_EXPORT;
+};
 
 }
 #endif

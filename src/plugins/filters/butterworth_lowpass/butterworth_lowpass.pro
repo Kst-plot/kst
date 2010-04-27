@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_filterbutterworthlowpass)
+TARGET = $$kstlib(kstplugin_filterbutterworthlowpass)
 LIBS += -lgsl -lgslcblas
 
 SOURCES += \

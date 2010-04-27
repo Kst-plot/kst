@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_filterdespike)
+TARGET = $$kstlib(kstplugin_filterdespike)
 
 SOURCES += \
     filterdespike.cpp

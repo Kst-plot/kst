@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
+class OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
   Q_OBJECT
   public:
     OverrideLabelTab(QString title, QWidget *parent = 0);

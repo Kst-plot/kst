@@ -31,7 +31,7 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a data file. */
-class KST_EXPORT DataScalar : public Scalar, public DataPrimitive {
+class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
   Q_OBJECT
 
   protected:

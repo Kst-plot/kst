@@ -30,8 +30,9 @@ namespace Kst {
  *@author cbn
  */
 
-class KST_EXPORT DataVector : public Vector, public DataPrimitive {
-  Q_OBJECT
+class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive 
+{
+    Q_OBJECT
 
   public:
 
@@ -45,7 +46,7 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
       If it returns -9999, use the skipFrame= -1. 
      */
 
-    struct Param {
+    struct KSTCORE_EXPORT Param {
       double*  data;
       int startingFrame;
       int numberOfFrames;
@@ -54,7 +55,7 @@ class KST_EXPORT DataVector : public Vector, public DataPrimitive {
     };
 
 
-    struct Optional
+    struct KSTCORE_EXPORT Optional
     {
       Optional();
       Optional(int frameCount, int samplesPerFrame);

@@ -15,7 +15,7 @@
 #include <qcolor.h>
 
 #include "plotdefines.h"
-#include "kst_export.h"
+#include "kstmath_export.h"
 
 namespace Kst {
 
@@ -36,18 +36,18 @@ enum EMailAuthentication {
 
 class Settings {
   public:
-    KST_EXPORT Settings();
-    KST_EXPORT Settings(const Settings&);
-    KST_EXPORT Settings& operator=(const Settings&);
+    KSTMATH_EXPORT Settings();
+    KSTMATH_EXPORT Settings(const Settings&);
+    KSTMATH_EXPORT Settings& operator=(const Settings&);
 
     // do not delete this object
-    KST_EXPORT static Settings *globalSettings();
-    KST_EXPORT static void setGlobalSettings(const Settings *settings);
-    KST_EXPORT static void checkUpdates();
-    KST_EXPORT void save();
+    KSTMATH_EXPORT static Settings *globalSettings();
+    KSTMATH_EXPORT static void setGlobalSettings(const Settings *settings);
+    KSTMATH_EXPORT static void checkUpdates();
+    KSTMATH_EXPORT void save();
     void reload();
     
-    KST_EXPORT void setPrintingDefaults(); // set printing settings to default
+    KSTMATH_EXPORT void setPrintingDefaults(); // set printing settings to default
 
     long plotUpdateTimer;
     long plotFontSize;
@@ -86,7 +86,7 @@ class Settings {
     EMailEncryption emailEncryption;
     EMailAuthentication emailAuthentication;
 
-    KST_EXPORT int utcOffset();
+    KSTMATH_EXPORT int utcOffset();
     QString timezone;
     int offsetSeconds;
 

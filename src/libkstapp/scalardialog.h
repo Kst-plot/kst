@@ -24,7 +24,7 @@
 
 namespace Kst {
 
-class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
+class ScalarTab : public DataTab, Ui::ScalarTab {
   Q_OBJECT
   public:
     enum ScalarMode { DataScalar, GeneratedScalar, RVectorScalar };
@@ -76,7 +76,7 @@ class KST_EXPORT ScalarTab : public DataTab, Ui::ScalarTab {
     int _requestID;
 };
 
-class KST_EXPORT ScalarDialog : public DataDialog {
+class ScalarDialog : public DataDialog {
   Q_OBJECT
   public:
     ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);

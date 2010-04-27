@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT LabelPropertiesTab : public DialogTab, Ui::LabelPropertiesTab {
+class LabelPropertiesTab : public DialogTab, Ui::LabelPropertiesTab {
   Q_OBJECT
   public:
     LabelPropertiesTab(QWidget *parent = 0);

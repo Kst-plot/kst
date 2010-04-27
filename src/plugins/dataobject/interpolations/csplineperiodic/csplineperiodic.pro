@@ -1,6 +1,6 @@
 include(../../../plugins_subsub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_csplineperiodic)
+TARGET = $$kstlib(kstplugin_csplineperiodic)
 LIBS += -lgsl
 
 SOURCES += \

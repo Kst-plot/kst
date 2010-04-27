@@ -52,7 +52,7 @@ class LineItem : public ViewItem
     bool _created;
 };
 
-class KST_EXPORT CreateLineCommand : public CreateCommand
+class CreateLineCommand : public CreateCommand
 {
   public:
     CreateLineCommand() : CreateCommand(QObject::tr("Create Line")) {}

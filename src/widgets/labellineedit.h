@@ -15,11 +15,11 @@
 #include <QWidget>
 #include <QLineEdit>
 
-#include "kst_export.h"
+#include "kstwidgets_export.h"
 
 namespace Kst {
 
-class KST_EXPORT LabelLineEdit : public QLineEdit {
+class KSTWIDGETS_EXPORT LabelLineEdit : public QLineEdit {
   Q_OBJECT
   public:
     LabelLineEdit(QWidget *parent = 0);

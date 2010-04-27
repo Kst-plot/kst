@@ -20,7 +20,7 @@
 
 namespace Kst {
 
-class KST_EXPORT LabelTab : public DialogTab, Ui::LabelTab {
+class LabelTab : public DialogTab, Ui::LabelTab {
   Q_OBJECT
   public:
     LabelTab(PlotItem* plotItem, QWidget *parent = 0);

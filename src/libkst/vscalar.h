@@ -31,7 +31,7 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a vector field in a data file. */
-class KST_EXPORT VScalar : public Scalar {
+class KSTCORE_EXPORT VScalar : public Scalar {
   Q_OBJECT
 
   protected:

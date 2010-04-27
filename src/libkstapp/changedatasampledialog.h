@@ -22,7 +22,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KST_EXPORT ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
+class ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
 {
   Q_OBJECT
   public:

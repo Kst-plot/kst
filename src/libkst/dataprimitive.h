@@ -21,6 +21,7 @@
 #define DATAPRIMITIVE_H
 
 #include "sharedptr.h"
+#include "kst_export.h"
 
 #include <QString>
 
@@ -31,7 +32,7 @@ class DataSource;
 typedef SharedPtr<DataSource> DataSourcePtr;
 
 
-class DataPrimitive
+class KSTCORE_EXPORT DataPrimitive
 {
 public:
     DataPrimitive();
@@ -54,7 +55,7 @@ public:
 
   protected:
     /** file to read for rvectors */
-    DataSourcePtr _file;
+    DataSource* _file;
 
     /** For the scalar field in the data source */
     QString _field;

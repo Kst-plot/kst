@@ -20,7 +20,7 @@
 namespace Kst {
 class ObjectStore;
 
-class UpdateManager : public QObject
+class KSTCORE_EXPORT UpdateManager : public QObject
 {
   Q_OBJECT
   public:

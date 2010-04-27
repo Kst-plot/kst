@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_statistics)
+TARGET = $$kstlib(kstplugin_statistics)
 
 SOURCES += \
     statistics.cpp

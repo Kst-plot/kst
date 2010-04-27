@@ -24,7 +24,7 @@ class QDialogButtonBox;
 
 namespace Kst {
 
-class KST_EXPORT DataSourceDialog : public QDialog
+class DataSourceDialog : public QDialog
 {
   Q_OBJECT
   public:

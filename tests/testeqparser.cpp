@@ -20,9 +20,9 @@
 #include <objectstore.h>
 #include <generatedvector.h>
 
-extern /*"C"*/ int yyparse(Kst::ObjectStore *store);
-extern /*"C"*/ void *ParsedEquation;
-extern /*"C"*/ struct yy_buffer_state *yy_scan_string(const char*);
+KSTMATH_EXPORT extern /*"C"*/ int yyparse(Kst::ObjectStore *store);
+KSTMATH_EXPORT extern /*"C"*/ void *ParsedEquation;
+KSTMATH_EXPORT extern /*"C"*/ struct yy_buffer_state *yy_scan_string(const char*);
 
 bool optimizerFailed = false;
 

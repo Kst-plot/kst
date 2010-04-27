@@ -25,7 +25,7 @@ namespace Kst {
 
 class DialogPage;
 
-class KST_EXPORT Dialog : public QDialog, public Ui::Dialog
+class Dialog : public QDialog, public Ui::Dialog
 {
   Q_OBJECT
   public:

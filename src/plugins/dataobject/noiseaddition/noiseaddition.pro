@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_noiseaddition)
+TARGET = $$kstlib(kstplugin_noiseaddition)
 LIBS += -lgsl
 
 SOURCES += \

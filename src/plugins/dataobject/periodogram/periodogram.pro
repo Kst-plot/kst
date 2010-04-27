@@ -1,6 +1,6 @@
 include(../../plugins_sub.pri)
 
-TARGET = $$qtLibraryTarget(kstplugin_periodogram)
+TARGET = $$kstlib(kstplugin_periodogram)
 
 SOURCES += \
     periodogram.cpp

@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-class KST_EXPORT LogWidget : public QTextBrowser
+class LogWidget : public QTextBrowser
 {
   Q_OBJECT
   public:

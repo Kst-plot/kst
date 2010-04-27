@@ -31,7 +31,7 @@ namespace Kst {
  */
 
 /** A string which gets its value from a data file. */
-class KST_EXPORT DataString : public String, public DataPrimitive {
+class KSTCORE_EXPORT DataString : public String, public DataPrimitive {
   Q_OBJECT
 
   protected:
@@ -48,12 +48,14 @@ class KST_EXPORT DataString : public String, public DataPrimitive {
     virtual ~DataString();
     virtual void internalUpdate();
 
-    struct Param {
+    struct KSTCORE_EXPORT Param 
+    {
       Param(QString* s) : value(s) {}
       QString* value;
     };
 
-    struct Optional {
+    struct KSTCORE_EXPORT Optional 
+    {
     };
 
 

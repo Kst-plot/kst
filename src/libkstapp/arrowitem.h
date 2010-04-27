@@ -52,7 +52,7 @@ class ArrowItem : public LineItem
     QPolygonF start, end;
 };
 
-class KST_EXPORT CreateArrowCommand : public CreateCommand
+class CreateArrowCommand : public CreateCommand
 {
   public:
     CreateArrowCommand() : CreateCommand(QObject::tr("Create Arrow")) {}
