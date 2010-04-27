@@ -14,6 +14,8 @@
 
 #include <QMainWindow>
 #include <QPointer>
+#include <QLabel>
+
 
 class QMenu;
 class QAction;
