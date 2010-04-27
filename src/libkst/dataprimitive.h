@@ -55,10 +55,15 @@ public:
 
   protected:
     /** file to read for rvectors */
-    DataSource* _file;
+    DataSourcePtr& file();
+    DataSourcePtr& file() const;
 
     /** For the scalar field in the data source */
     QString _field;
+
+  private:
+    struct Private;
+    Private& d;
 
 };
 

@@ -22,24 +22,35 @@
 
 namespace Kst {
 
-DataPrimitive::DataPrimitive()
+
+struct DataPrimitive::Private
 {
-  _file = 0L;
+  DataSourcePtr _file;
+};
+
+
+
+DataPrimitive::DataPrimitive() : d(*new Private)
+{
+  d._file = 0;
+  _field = QString::null;
 }
 
 
 DataPrimitive::~DataPrimitive() {
-  _file = 0;
+  _field = QString::null;
+  d._file = 0;
+  delete &d;
 }
 
 
 /** return the name of the file */
 QString DataPrimitive::filename() const {
   QString rc;
-  if (_file) {
-    _file->readLock();
-    rc = _file->fileName();
-    _file->unlock();
+  if (d._file) {
+    d._file->readLock();
+    rc = d._file->fileName();
+    d._file->unlock();
   }
   return rc;
 }
@@ -52,7 +63,15 @@ const QString& DataPrimitive::field() const {
 
 
 DataSourcePtr DataPrimitive::dataSource() const {
-  return _file;
+  return d._file;
+}
+
+DataSourcePtr& DataPrimitive::file() {
+  return d._file;
+}
+
+DataSourcePtr& DataPrimitive::file() const {
+  return d._file;
 }
 
 }
