@@ -19,10 +19,10 @@
 
 static const QString& VECTOR_IN_X = "X Vector";
 static const QString& VECTOR_IN_Y = "Y Vector";
-static const QString& VECTOR_OUT_Y_FITTED = "Y Fitted Vector";
-static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals Vector";
+static const QString& VECTOR_OUT_Y_FITTED = "Fit";
+static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals";
 static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
-static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance Vector";
+static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance";
 static const QString& VECTOR_OUT_Y_LO = "Lo Vector";
 static const QString& VECTOR_OUT_Y_HI = "Hi Vector";
 static const QString& SCALAR_OUT = "chi^2/nu";
@@ -134,7 +134,7 @@ FitGradientUnweightedSource::~FitGradientUnweightedSource() {
 
 
 QString FitGradientUnweightedSource::_automaticDescriptiveName() const {
-  return QString("Fit Gradient Plugin");
+    return vectorY()->descriptiveName() + i18n(" Unweighted Gradient");
 }
 
 

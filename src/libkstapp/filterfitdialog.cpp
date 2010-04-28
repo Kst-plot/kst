@@ -18,6 +18,7 @@
 #include "basicplugin.h"
 #include "objectstore.h"
 #include "curve.h"
+#include "labelitem.h"
 
 #include <QMessageBox>
 
@@ -227,6 +228,17 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
+
+    dataObject->writeLock();
+    dataObject->internalUpdate();
+    dataObject->unlock();
+
+    if (dataObject->hasParameterVector()) {
+      CreateLabelCommand *cmd = new CreateLabelCommand;
+      QString *tmpstring = new QString(dataObject->label(9));
+
+      cmd->createItem(tmpstring);
+    }
     _plotItem->update();
   }
 

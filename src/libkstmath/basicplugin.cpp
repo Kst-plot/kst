@@ -243,12 +243,12 @@ void BasicPlugin::internalUpdate() {
 }
 
 
-// FIXME: BasicPlugin should not know about fit scalars!!
+// If a plugin provides a Parameters Vector, then scalars will be created, as well as a label.
 void BasicPlugin::createScalars() {
   // Assumes that this is called with a write lock in place on this object
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_outputVectors.contains("Parameters Vector")) {
+  if (hasParameterVector()) {
     VectorPtr vectorParam = _outputVectors["Parameters Vector"];
     if (vectorParam) {
       QString paramName;
@@ -282,23 +282,22 @@ QString BasicPlugin::parameterName(int /*index*/) const {
 
 
 QString BasicPlugin::label(int precision) const {
+  Q_UNUSED(precision)
   QString label;
+  QString paramName;
 
-  label = i18n("%1: %2").arg(name()).arg(Name());
-  if ((outputVectors())["Parameters"]) {
-    QString strParamName;
-    QString strValue;
-    int length = (outputVectors())["Parameters"]->length();
-    int i = 0;
+  label = Name();
 
-    for (strParamName = parameterName(0);
-        !strParamName.isEmpty() && i < length;
-        strParamName = parameterName(++i)) {
-      ScalarPtr scalar = outputScalars()[strParamName];
-      if (scalar) {
-        strValue = QString::number(scalar->value(), 'g', precision);
-        label += i18n("\n%1: %2").arg(strParamName).arg(strValue);
-      }
+  if (hasParameterVector()) {
+    VectorPtr vectorParam = _outputVectors["Parameters Vector"];
+    int length = vectorParam->length();
+    int i=0;
+    for (paramName = parameterName(i);
+         !paramName.isEmpty() && i < length;
+         paramName = parameterName(++i)) {
+        if (_outputScalars.contains(paramName)) {
+          label += QString("\n%1: [%2]").arg(paramName).arg(_outputScalars[paramName]->Name());
+        }
     }
   }
 
@@ -394,34 +393,8 @@ void BasicPlugin::updateOutput() const {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
       vectorRealloced(o, o->value(), o->length()); // why here?
       o->setNewAndShift(o->length(), o->numShift()); // why here?
-      // outputs should get updated by the update manager.
-      //o->update();
     }
   }
-
-  //output scalars... Nothing to do...
-  // this can be deleted if plugins are working.
-  //QStringList os = outputScalarList();
-  //QStringList::ConstIterator osI = os.begin();
-  //for (; osI != os.end(); ++osI) {
-    //if (ScalarPtr o = outputScalar(*osI)) {
-      //Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      //outputs should get updated by the update manager.
-      //o->update();
-    //}
-  //}
-
-  //output strings...
-  // this can be deleted if plugins are working.
-  //QStringList ostr = outputStringList();
-  //QStringList::ConstIterator ostrI = ostr.begin();
-  //for (; ostrI != ostr.end(); ++ostrI) {
-    //if (StringPtr o = outputString(*ostrI)) {
-      //Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      //outputs should get updated by the update manager.
-      //o->update();
-    //}
-  //}
 }
 
 QString BasicPlugin::descriptionTip() const {

@@ -92,6 +92,7 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     QString label(int precision) const;
 
     virtual void internalUpdate();
+    virtual bool hasParameterVector() const { return _outputVectors.contains("Parameters Vector");}
   protected:
     BasicPlugin(ObjectStore *store);
     virtual ~BasicPlugin();

@@ -22,10 +22,10 @@
 
 static const QString& VECTOR_IN_X = "X Vector";
 static const QString& VECTOR_IN_Y = "Y Vector";
-static const QString& VECTOR_OUT_Y_FITTED = "Y Fitted Vector";
-static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals Vector";
+static const QString& VECTOR_OUT_Y_FITTED = "Fit";
+static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals";
 static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
-static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance Vector";
+static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance";
 static const QString& SCALAR_OUT = "chi^2/nu";
 
 class ConfigWidgetFitLorentzianUnweightedPlugin : public Kst::DataObjectConfigWidget, public Ui_FitLorentzian_UnweightedConfig {
@@ -136,7 +136,7 @@ FitLorentzianUnweightedSource::~FitLorentzianUnweightedSource() {
 
 
 QString FitLorentzianUnweightedSource::_automaticDescriptiveName() const {
-  return QString("Fit Lorentzian Plugin");
+  return vectorY()->descriptiveName() + i18n(" Lorentzian");
 }
 
 

@@ -186,24 +186,29 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
 }
 
 
-void CreateLabelCommand::createItem() {
-  bool ok = false;
-  QString text;
-  LabelCreator dialog;
-  if (dialog.exec() == QDialog::Accepted) {
-    text = dialog.labelText();
-    ok = true;
-  }
+void CreateLabelCommand::createItem(QString *inText) {
 
-  if (!ok || text.isEmpty()) {
-    return;
-  }
+  if (inText) {
+    _item = new LabelItem(_view, *inText);
+  } else {
+    bool ok = false;
+    QString text;
+    LabelCreator dialog;
+    if (dialog.exec() == QDialog::Accepted) {
+      text = dialog.labelText();
+      ok = true;
+    }
 
-  _item = new LabelItem(_view, text);
-  LabelItem *label = qobject_cast<LabelItem*>(_item);
-  label->setLabelScale(dialog.labelScale());
-  label->setLabelColor(dialog.labelColor());
-  label->setLabelFont(dialog.labelFont());
+    if (!ok || text.isEmpty()) {
+      return;
+    }
+
+    _item = new LabelItem(_view, text);
+    LabelItem *label = qobject_cast<LabelItem*>(_item);
+    label->setLabelScale(dialog.labelScale());
+    label->setLabelColor(dialog.labelColor());
+    label->setLabelFont(dialog.labelFont());
+  }
 
   _view->setCursor(Qt::IBeamCursor);
 

@@ -62,8 +62,8 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
     if (_firstPaint && _loaded) {
       sharePlots(painter, true);
       _firstPaint = false;
-    } else {
-      sharePlots(painter, false);
+    //} else {
+      //sharePlots(painter, false);
     }
     updatePlotTiedZoomSupport();
     _keyPlot = 0;
