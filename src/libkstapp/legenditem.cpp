@@ -30,7 +30,7 @@
 namespace Kst {
 
 struct DrawnLegendItem {
-  QPixmap *pixmap;
+  QPixmap pixmap;
   QSize size;
 };
 
@@ -86,8 +86,8 @@ void LegendItem::paint(QPainter *painter) {
 
   foreach(RelationPtr relation, legendItems) {
     DrawnLegendItem item;
-    item.pixmap = new QPixmap(LEGENDITEMMAXWIDTH, LEGENDITEMMAXHEIGHT);
-    item.size = paintRelation(relation, item.pixmap, font);
+    item.pixmap = QPixmap(LEGENDITEMMAXWIDTH, LEGENDITEMMAXHEIGHT);
+    item.size = paintRelation(relation, &item.pixmap, font);
 
     if (_verticalDisplay) {
       legendSize.setWidth(qMax(legendSize.width(), item.size.width()));
@@ -141,7 +141,7 @@ void LegendItem::paint(QPainter *painter) {
   painter->drawRect(rect());
 
   foreach(DrawnLegendItem item, legendPixmaps) {
-    painter->drawPixmap(QPoint(x, y), *(item.pixmap), QRect(0, 0, item.size.width(), item.size.height()));
+    painter->drawPixmap(QPoint(x, y), item.pixmap, QRect(0, 0, item.size.width(), item.size.height()));
     if (_verticalDisplay) {
       y += item.size.height();
     } else {
