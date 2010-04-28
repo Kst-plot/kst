@@ -20,7 +20,8 @@ class View;
 
 class TabWidget : public QTabWidget
 {
-  Q_OBJECT
+    Q_OBJECT
+
   public:
     TabWidget(QWidget *parent);
     ~TabWidget();
@@ -36,9 +37,9 @@ class TabWidget : public QTabWidget
   private Q_SLOTS:
     void viewDestroyed(QObject *object);
     void contextMenu(const QPoint&);
+
   private:
     int _cnt;
-
 };
 
 }

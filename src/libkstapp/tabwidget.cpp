@@ -78,7 +78,9 @@ void TabWidget::closeCurrentView() {
     createView();
     setCurrentIndex(0);
   }
-  delete currentView();
+  QWidget* tab = currentView();
+  removeTab(indexOf(tab));
+  delete tab;
 }
 
 

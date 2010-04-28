@@ -275,17 +275,13 @@ void MainWindow::openFile(const QString &file) {
   _doc = new Document(this);
 
   bool ok = _doc->open(file);
-  if (!ok) {
-    QApplication::restoreOverrideCursor();
+  QApplication::restoreOverrideCursor();
 
+  if (!ok) {
     QMessageBox::critical(this, tr("Kst"), tr("Error opening document '%1':\n%2").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
-  } else {
-    UpdateManager::self()->doUpdates(true);
-    _doc->setChanged(false);
-    QApplication::restoreOverrideCursor();
-  }
+  } 
 }
 
 
