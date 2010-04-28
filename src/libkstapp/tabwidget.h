@@ -28,14 +28,17 @@ class TabWidget : public QTabWidget
 
     View *currentView() const;
     QList<View*> views() const;
+    // pass tab name as objectName
+    void addView(View*);
+    void deleteView(View* view);
+    void clear();
 
   public Q_SLOTS:
     View *createView();
     void renameCurrentView();
     void closeCurrentView();
 
-  private Q_SLOTS:
-    void viewDestroyed(QObject *object);
+    private Q_SLOTS:
     void contextMenu(const QPoint&);
 
   private:

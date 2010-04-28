@@ -168,14 +168,8 @@ bool Document::open(const QString& file) {
   // If we move this into the <graphics> block then we could, if desired, open
   // .kst files that contained only data and basically "merge" that data into
   // the current session
-
-  // Clear out old tabs.  We will be left with one to delete later.
-  int i=_win->tabWidget()->count();
-  while (i>0) {
-    _win->tabWidget()->closeCurrentView();
-    i--;
-  }
-  View *currentView = 0;
+  
+  View *loadedView = 0;
   QRectF currentSceneRect;
 
   QXmlStreamReader xml;
@@ -230,13 +224,11 @@ bool Document::open(const QString& file) {
           case Graphics:
             {
               if (n == "view") {
-                currentView = _win->tabWidget()->createView();
+                loadedView = new Kst::View(0);
+                _win->tabWidget()->clear();
+                _win->tabWidget()->addView(loadedView);
                 QXmlStreamAttributes attrs = xml.attributes();
-                QStringRef nm = attrs.value("name");
-                if (!nm.isNull()) {
-                  int idx = _win->tabWidget()->indexOf(currentView);
-                  _win->tabWidget()->setTabText(idx, nm.toString());
-                }
+                loadedView->setObjectName(attrs.value("name").toString());
                 qreal width = 1.0, height = 1.0;
                 QStringRef string = attrs.value("width");
                 if (!string.isNull()) {
@@ -255,9 +247,9 @@ bool Document::open(const QString& file) {
             break;
           case View:
             {
-              ViewItem *i = GraphicsFactory::parse(xml, objectStore(), currentView);
+              ViewItem *i = GraphicsFactory::parse(xml, objectStore(), loadedView);
               if (i) {
-                currentView->scene()->addItem(i);
+                loadedView->scene()->addItem(i);
               }
             }
             break;
@@ -283,8 +275,8 @@ bool Document::open(const QString& file) {
         }
         break;
       } else if (n == "view") {
-        if (currentView->sceneRect() != currentSceneRect) {
-          currentView->forceChildResize(currentSceneRect, currentView->sceneRect());
+        if (loadedView->sceneRect() != currentSceneRect) {
+          loadedView->forceChildResize(currentSceneRect, loadedView->sceneRect());
         }
         state = Graphics;
       } else if (n == "data") {
@@ -320,9 +312,6 @@ bool Document::open(const QString& file) {
   _tnum = max_tnum+1;
   _mnum = max_mnum+1;
 
-  // delete the empty tab
-  _win->tabWidget()->setCurrentIndex(0);
-  _win->tabWidget()->closeCurrentView();
 
   UpdateManager::self()->doUpdates(true);
   setChanged(false);

@@ -40,20 +40,31 @@
 
 namespace Kst {
 
-View::View()
-  : QGraphicsView(kstApp->mainWindow()),
-    _viewMode(Data),
-    _mouseMode(Default),
-    _layoutBoxItem(0),
-    _gridSpacing(QSizeF(20,20)),
-    _showGrid(false),
-    _snapToGridHorizontal(false),
-    _snapToGridVertical(false),
-    _plotBordersDirty(false),
-    _printing(false),
-    _dataMode(false),
-    _fontRescale(1.0),
-    _childMaximized(false) {
+View::View() : QGraphicsView(kstApp->mainWindow())
+{
+  init();
+}
+
+View::View(QWidget* parent) : QGraphicsView(parent)
+{
+  init();
+}
+
+
+void View::init()
+{
+  _viewMode = Data;
+  _mouseMode = Default;
+  _layoutBoxItem = 0;
+  _gridSpacing = QSizeF(20,20);
+  _showGrid = false;
+  _snapToGridHorizontal = false;
+  _snapToGridVertical = false;
+  _plotBordersDirty = false;
+  _printing = false;
+  _dataMode = false;
+  _fontRescale = 1.0;
+  _childMaximized = false;
   _undoStack = new QUndoStack(this);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

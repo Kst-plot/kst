@@ -35,7 +35,12 @@ TabWidget::~TabWidget() {
 
 View *TabWidget::createView() {
   View *view = new View;
-  connect(view, SIGNAL(destroyed(QObject*)), this, SLOT(viewDestroyed(QObject*)));
+  addView(view);
+  return view;
+}
+
+
+void TabWidget::addView(View* view) {
   MainWindow *parent = qobject_cast<MainWindow*>(this->parent());
   if (parent) {
     parent->undoGroup()->addStack(view->undoStack());
@@ -48,7 +53,6 @@ View *TabWidget::createView() {
 
   addTab(view, label);
   setCurrentWidget(view);
-  return view;
 }
 
 
@@ -66,21 +70,29 @@ QList<View*> TabWidget::views() const {
 }
 
 
-void TabWidget::viewDestroyed(QObject *object) {
-  View *view = qobject_cast<View*>(object);
+void TabWidget::deleteView(View* view) {
+  MainWindow *parent = qobject_cast<MainWindow*>(this->parent());
+  if (parent) {
+    parent->undoGroup()->removeStack(view->undoStack());
+  }
   removeTab(indexOf(view));
+  delete view;
+}
+
+
+void TabWidget::clear() {
+  QList<View*> tabs = views();
+  foreach(View* view, tabs) {
+    deleteView(view);
+  }
+  _cnt = 0;
 }
 
 
 void TabWidget::closeCurrentView() {
-  if (count() == 1) {
-    _cnt = 0;
+  deleteView(currentView());
+  if (count() == 0)
     createView();
-    setCurrentIndex(0);
-  }
-  QWidget* tab = currentView();
-  removeTab(indexOf(tab));
-  delete tab;
 }
 
 

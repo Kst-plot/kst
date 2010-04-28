@@ -42,7 +42,10 @@ class View : public QGraphicsView
     Q_DECLARE_FLAGS(CreationEvents, CreationEvent)
 
     View();
+    View(QWidget* parent);
     virtual ~View();
+
+    void init();
 
     virtual void save(QXmlStreamWriter &xml);
 

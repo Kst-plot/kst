@@ -225,13 +225,8 @@ void MainWindow::newDoc() {
     return;
   }
 
+  tabWidget()->clear();
   tabWidget()->createView();
-
-  int i=tabWidget()->count()-1;
-  while (i>=0) {
-    tabWidget()->closeCurrentView();
-    i--;
-  }
 }
 
 void MainWindow::open() {
@@ -439,6 +434,8 @@ void MainWindow::print() {
 }
 
 void MainWindow::currentViewChanged() {
+  if(!_tabWidget->currentView())
+    return;
   _undoGroup->setActiveStack(_tabWidget->currentView()->undoStack());
   _layoutModeAct->setChecked(_tabWidget->currentView()->viewMode() == View::Layout);
 }
