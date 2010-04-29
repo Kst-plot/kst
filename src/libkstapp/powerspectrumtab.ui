@@ -41,8 +41,6 @@
        </layout>
       </item>
      </layout>
-     <zorder>_vectorLabel</zorder>
-     <zorder></zorder>
     </widget>
    </item>
    <item>
@@ -60,14 +58,14 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Kst::CurvePlacement</class>
-   <extends>QWidget</extends>
-   <header>curveplacement.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>
    <header>vectorselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::CurvePlacement</class>
+   <extends>QWidget</extends>
+   <header>curveplacement.h</header>
   </customwidget>
   <customwidget>
    <class>Kst::CurveAppearance</class>

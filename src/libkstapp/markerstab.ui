@@ -209,7 +209,7 @@
      <property name="title">
       <string>Automatic Markers</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout2">
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="_curveMarkers">
         <property name="text">
