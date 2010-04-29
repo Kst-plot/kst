@@ -1,5 +1,9 @@
 #include "kstmath_export.h"
 
+#ifdef Q_CC_MSVC
+#define strdup _strdup
+#endif
+
 #line 3 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
@@ -336,7 +340,7 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
-#define yywrap(n) 1
+#define yywrap() 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;
@@ -527,7 +531,7 @@ extern int yywrap (void );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  );
+//static void yyunput (int c,char *buf_ptr  );
     
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int );
@@ -1175,7 +1179,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), num_to_read );
+			(yy_n_chars), (size_t)num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -1265,6 +1269,9 @@ static int yy_get_next_buffer (void)
 	return yy_is_jam ? 0 : yy_current_state;
 }
 
+
+#if 0
+// Not used
     static void yyunput (int c, register char * yy_bp )
 {
 	register char *yy_cp;
@@ -1301,6 +1308,7 @@ static int yy_get_next_buffer (void)
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
 }
+#endif
 
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
