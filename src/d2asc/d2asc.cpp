@@ -132,6 +132,7 @@ int main(int argc, char *argv[]) {
     }
     printf("\n");
   }
+  return 0;
 }
 
 // vim: ts=2 sw=2 et
