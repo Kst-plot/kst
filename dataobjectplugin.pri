@@ -1,7 +1,7 @@
 QT += xml
 
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += plugin warn_on
 CONFIG -= precompile_header
 !win32:OBJECTS_DIR = tmp
 !win32:MOC_DIR = tmp
