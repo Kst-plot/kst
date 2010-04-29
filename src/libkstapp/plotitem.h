@@ -445,6 +445,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool _plotMaximized;
     QPointF _plotMaximizedSourcePosition;
     QRectF _plotMaximizedSourceRect;
+    QRectF _plotMaximizedSourceParentRect;
     qreal _plotMaximizedSourceZValue;
     ViewItem* _plotMaximizedSourceParent;
 

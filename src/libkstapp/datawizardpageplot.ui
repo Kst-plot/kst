@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
-    <height>394</height>
+    <width>616</width>
+    <height>360</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="0">
+   <item row="0" column="0" rowspan="2">
     <widget class="QGroupBox" name="_plotGroup">
      <property name="title">
       <string>Curve Placement</string>
@@ -107,7 +107,7 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="1" colspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Plot Placement (Tabs)</string>
@@ -140,7 +140,40 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="buttonGroup7">
+     <property name="title">
+      <string>Legends</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_legendsOn">
+        <property name="text">
+         <string>O&amp;n</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="_legendsOff">
+        <property name="text">
+         <string>&amp;Off</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="_legendsAuto">
+        <property name="text">
+         <string>A&amp;uto</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" rowspan="2">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Plot Layout</string>
@@ -197,30 +230,16 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="buttonGroup7">
+   <item row="2" column="1">
+    <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Legends</string>
+      <string>Labels</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <widget class="QRadioButton" name="_legendsOn">
+       <widget class="QCheckBox" name="_rescaleFonts">
         <property name="text">
-         <string>O&amp;n</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="_legendsOff">
-        <property name="text">
-         <string>&amp;Off</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="_legendsAuto">
-        <property name="text">
-         <string>A&amp;uto</string>
+         <string>Rescale all labels on tab</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -230,7 +249,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1" rowspan="2">
+   <item row="2" column="2" rowspan="2">
     <widget class="QGroupBox" name="buttonGroup1">
      <property name="title">
       <string>Cur&amp;ve Style</string>
@@ -263,7 +282,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="2" rowspan="2">
+   <item row="3" column="1">
     <widget class="QGroupBox" name="_psdAxisGroup">
      <property name="title">
       <string>Spectrum Axis Mode</string>
@@ -286,26 +305,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Labels</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="_rescaleFonts">
-        <property name="text">
-         <string>Rescale all labels on tab</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="1">
+   <item row="4" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

@@ -2666,6 +2666,16 @@ void PlotItem::plotMaximize() {
   }
 
   if (_plotMaximized) {
+    double x_rescale;
+    double y_rescale;
+
+    x_rescale = parentView()->sceneRect().width()/_plotMaximizedSourceParentRect.width();
+    y_rescale = parentView()->sceneRect().height()/_plotMaximizedSourceParentRect.height();
+    _plotMaximizedSourceRect.setWidth(_plotMaximizedSourceRect.width()*x_rescale);
+    _plotMaximizedSourceRect.setHeight(_plotMaximizedSourceRect.height()*y_rescale);
+    _plotMaximizedSourcePosition.setX(_plotMaximizedSourcePosition.x()*x_rescale);
+    _plotMaximizedSourcePosition.setY(_plotMaximizedSourcePosition.y()*y_rescale);
+
     _plotMaximized = false;
     PlotItemManager::self()->removeFocusPlot(this);
     setParent(_plotMaximizedSourceParent);
@@ -2680,6 +2690,7 @@ void PlotItem::plotMaximize() {
     _plotMaximizedSourceRect = viewRect();
     _plotMaximizedSourceZValue = zValue();
     _plotMaximizedSourceParent = parentViewItem();
+    _plotMaximizedSourceParentRect = parentView()->sceneRect();
 
     setParent(0);
     setPos(0, 0);
