@@ -1,14 +1,14 @@
 This folder contains files needed for building GSL on Windows.
 
 
-Build instructins:
+Build instructions:
 
 - Get GSL source code from http://www.gnu.org/software/gsl/
   (latest tested release: 1.14, 2010/04) 
   
 - Copy CMakeLists.txt and config.h to the GSL folder.
 
-- Patch GSL with gsl-msvc.patch.
+- Patch GSL with gsl-msvc.patch or gsl-mingw.patch (for MinGW 4.4.0).
 
 - Extract GSL sources, eg. c:\gsl-sources
 - Make a build folder, eg. c:\gsl-build
@@ -26,4 +26,4 @@ Build instructins:
 - qmake will detect GSL on enables GSL on Windows.
 
 
-TODO: check config.h (copied from http://david.geldreich.free.fr/dev.html)
+TODO: Do real checks for config.h 

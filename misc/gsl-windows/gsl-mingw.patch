@@ -1,0 +1,15 @@
+diff --git a/gsl_inline.h b/gsl_inline.h
+index 2172201..75e4b16 100644
+--- a/gsl_inline.h
++++ b/gsl_inline.h
+@@ -51,8 +51,8 @@
+ #    define INLINE_DECL inline  /* use C99 inline */
+ #    define INLINE_FUN inline
+ #  else
+-#    define INLINE_DECL         /* use GNU extern inline */
+-#    define INLINE_FUN extern inline
++#    define INLINE_DECL static inline
++#    define INLINE_FUN static inline
+ #  endif
+ #else
+ #  define INLINE_DECL /* */
