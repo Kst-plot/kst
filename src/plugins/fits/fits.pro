@@ -21,6 +21,6 @@ LibExists(gsl) {
       polynomial_weighted \
       sinusoid_unweighted \
       sinusoid_weighted
-    CONFIG += link_pkgconfig
-    PKGCONFIG += gsl
+    !win32:CONFIG += link_pkgconfig
+    !win32:PKGCONFIG += gsl
 }

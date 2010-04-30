@@ -1,7 +1,7 @@
 include(../../../plugins_subsub.pri)
 
 TARGET = $$kstlib(kstplugin_deconvolve)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     deconvolve.cpp

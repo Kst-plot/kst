@@ -1,7 +1,7 @@
 include(../../plugins_sub.pri)
 
 TARGET = $$kstlib(kstplugin_fitgradient_unweighted)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     fitgradient_unweighted.cpp

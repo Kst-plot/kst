@@ -1,3 +1,5 @@
+include(config.pri)
+
 QT += xml
 
 TEMPLATE = lib
@@ -27,3 +29,7 @@ LIBS  += \
 			-l$$kstlib(kst2lib)
 
 
+win32:LibExists(gsl) {
+	INCLUDEPATH += $$(GSLDIR)/include
+	LIBS += -L$$(GSLDIR)/lib
+}

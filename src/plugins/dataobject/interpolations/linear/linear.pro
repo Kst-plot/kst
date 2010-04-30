@@ -1,7 +1,7 @@
 include(../../../plugins_subsub.pri)
 
 TARGET = $$kstlib(kstplugin_linearinterpolation)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     linear.cpp

@@ -1,7 +1,7 @@
 include(../../../plugins_subsub.pri)
 
 TARGET = $$kstlib(kstplugin_polynomialinterpolation)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     polynomial.cpp

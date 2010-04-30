@@ -1,7 +1,7 @@
 include(../../plugins_sub.pri)
 
 TARGET = $$kstlib(kstplugin_filterbutterworthbandpass)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     butterworth_bandpass.cpp

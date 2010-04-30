@@ -1,7 +1,7 @@
 include(../../plugins_sub.pri)
 
 TARGET = $$kstlib(kstplugin_fitgaussian_unweighted)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     fitgaussian_unweighted.cpp

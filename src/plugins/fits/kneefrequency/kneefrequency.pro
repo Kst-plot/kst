@@ -1,7 +1,7 @@
 include(../../plugins_sub.pri)
 
 TARGET = $$kstlib(kstplugin_fitkneefrequency)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     fitkneefrequency.cpp

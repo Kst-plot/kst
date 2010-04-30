@@ -46,8 +46,13 @@ unix {
   return(true)
 } }
 
+
 contains(lib, gsl) {
-  contains(HAVE_GSL, 1) {
+  GSLDIR = $$(GSLDIR)
+  win32:!isEmpty(GSLDIR) {
+    return(true)
+  }
+  !win32:contains(HAVE_GSL, 1) {
     return(true)
   }
   return(false)

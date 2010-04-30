@@ -1,7 +1,7 @@
 include(../../plugins_sub.pri)
 
 TARGET = $$kstlib(kstplugin_fitpolynomial_unweighted)
-LIBS += -lgsl
+LIBS += -l$$kstlib(gsl)
 
 SOURCES += \
     fitpolynomial_unweighted.cpp

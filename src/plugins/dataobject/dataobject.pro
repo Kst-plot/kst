@@ -1,4 +1,5 @@
 include($$PWD/../../../config.pri)
+
 TEMPLATE = subdirs
 CONFIG += ordered
 
@@ -23,6 +24,6 @@ SUBDIRS += \
                 correlation \
                 interpolations \
                 noiseaddition
-     CONFIG += link_pkgconfig
-     PKGCONFIG += gsl
+     !win32:CONFIG += link_pkgconfig
+     !win32:PKGCONFIG += gsl
   }

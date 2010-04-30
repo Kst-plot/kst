@@ -1,0 +1,30 @@
+
+diff --git a/bspline/bspline.h b/bspline/bspline.h
+index f80e03e..67d000a 100644
+diff --git a/templates_on.h b/templates_on.h
+index cd32eff..dde02c3 100644
+--- a/templates_on.h
++++ b/templates_on.h
+@@ -20,6 +20,10 @@
+ #define BASE_EPSILON GSL_DBL_EPSILON
+ 
+ #elif defined(BASE_GSL_COMPLEX)
++#ifdef _MSC_VER
++    #define VCPP_MATH_COMPLEX complex // Workaround of problems caused by complex,  defined as _complex in Math.h of MS-VC++ 
++    #undef complex
++#endif
+ #define BASE gsl_complex
+ #define SHORT complex
+ #define SHORT_REAL
+@@ -32,6 +36,11 @@
+ #define ZERO {{0.0,0.0}}
+ #define ONE {{1.0,0.0}}
+ #define BASE_EPSILON GSL_DBL_EPSILON
++#ifdef _MSC_VER
++    #undef complex
++    #define complex VCPP_MATH_COMPLEX
++#endif
++
+ 
+ #elif defined(BASE_GSL_COMPLEX_FLOAT)
+ #define BASE gsl_complex_float
