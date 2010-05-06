@@ -246,7 +246,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>_start</tabstop>
   <tabstop>_startUnits</tabstop>

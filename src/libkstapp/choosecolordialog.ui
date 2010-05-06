@@ -83,7 +83,6 @@
   <zorder>vectorGroup</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>_xVector</tabstop>
   <tabstop>_yVector</tabstop>
