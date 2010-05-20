@@ -726,6 +726,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
 //            << endl;
 
   Q_ASSERT(_document && _document->objectStore());
+
   DataMatrixPtr matrix = _document->objectStore()->createObject<DataMatrix>();
   matrix->change(dataSource, field,
       xStart, yStart,

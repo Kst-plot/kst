@@ -26,6 +26,9 @@ void setGenVectorDefaults(GeneratedVectorPtr V) {
 }
 
 void setDataMatrixDefaults(DataMatrixPtr M) {
+  //qDebug() << "M...filename: " << M->dataSource()->fileName();
+
+  // FIXME: data source filename isn't valid...
   _dialogDefaults->setValue("matrix/datasource",M->dataSource()->fileName());
 
   _dialogDefaults->setValue("matrix/xCountFromEnd",M->xCountFromEnd());

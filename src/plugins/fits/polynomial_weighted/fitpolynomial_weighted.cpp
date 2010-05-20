@@ -21,10 +21,10 @@
 static const QString& VECTOR_IN_X = "X Vector";
 static const QString& VECTOR_IN_Y = "Y Vector";
 static const QString& VECTOR_IN_WEIGHTS = "Weights Vector";
-static const QString& VECTOR_OUT_Y_FITTED = "Y Fitted Vector";
-static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals Vector";
+static const QString& VECTOR_OUT_Y_FITTED = "Fit";
+static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals";
 static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
-static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance Vector";
+static const QString& VECTOR_OUT_Y_COVARIANCE = "Covariance";
 static const QString& SCALAR_IN = "Order Scalar";
 static const QString& SCALAR_OUT = "chi^2/nu";
 
@@ -162,7 +162,7 @@ FitPolynomialWeightedSource::~FitPolynomialWeightedSource() {
 
 
 QString FitPolynomialWeightedSource::_automaticDescriptiveName() const {
-  return QString("Fit Polynomial Weighted Plugin");
+  return vectorY()->descriptiveName() + i18n(" Weighted Polynomial");
 }
 
 

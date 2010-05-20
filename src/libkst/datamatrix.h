@@ -87,7 +87,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     int reqYStart() const;
     int reqXNumSteps() const;
     int reqYNumSteps() const;
-    QString filename() const;
+    //QString filename() const;
     const QString& field() const;
     bool xReadToEnd() const;
     bool yReadToEnd() const;
