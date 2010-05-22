@@ -133,6 +133,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   if (ReqNF <= 0 && ReqF0 < 0) {
     ReqF0 = 0;
   }
+  registerChange();
 }
 
 qint64 DataVector::minInputSerial() const {
@@ -193,6 +194,7 @@ void DataVector::changeFrames(int in_f0, int in_n,
   if (ReqNF <= 0 && ReqF0 < 0) {
     ReqF0 = 0;
   }
+  registerChange();
 }
 
 
@@ -206,6 +208,7 @@ void DataVector::setFromEnd() {
       ReqF0 = 0;
     }
   }
+  registerChange();
 }
 
 

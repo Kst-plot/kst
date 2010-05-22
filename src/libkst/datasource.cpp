@@ -81,11 +81,15 @@ Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
     return NoChange;
   }
 
-  // update the datasource
-  UpdateType updated = internalDataSourceUpdate();
+  UpdateType updated = NoChange;
 
-  if (updated == Updated) {
-    _serialOfLastChange = newSerial; // tell data objects it is new
+  if (!UpdateManager::self()->paused()) {
+    // update the datasource
+    updated = internalDataSourceUpdate();
+
+    if (updated == Updated) {
+      _serialOfLastChange = newSerial; // tell data objects it is new
+    }
   }
 
   _serial = newSerial;
