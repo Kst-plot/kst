@@ -170,6 +170,7 @@ bool Document::open(const QString& file) {
   // the current session
   
   View *loadedView = 0;
+  bool firstView = true;
   QRectF currentSceneRect;
 
   QXmlStreamReader xml;
@@ -225,7 +226,10 @@ bool Document::open(const QString& file) {
             {
               if (n == "view") {
                 loadedView = new Kst::View(0);
-                _win->tabWidget()->clear();
+                if (firstView) {
+                  _win->tabWidget()->clear();
+                  firstView = false;
+                }
                 _win->tabWidget()->addView(loadedView);
                 QXmlStreamAttributes attrs = xml.attributes();
                 loadedView->setObjectName(attrs.value("name").toString());
@@ -247,6 +251,7 @@ bool Document::open(const QString& file) {
             break;
           case View:
             {
+
               ViewItem *i = GraphicsFactory::parse(xml, objectStore(), loadedView);
               if (i) {
                 loadedView->scene()->addItem(i);
