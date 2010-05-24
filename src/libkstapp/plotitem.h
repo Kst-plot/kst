@@ -407,6 +407,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     qreal _calculatedLeftLabelMargin;
     qreal _calculatedRightLabelMargin;
     qreal _calculatedTopLabelMargin;
+    qreal _calculatedTopLabelHeight;
     qreal _calculatedBottomLabelMargin;
     qreal _calculatedLabelMarginWidth;
     qreal _calculatedLabelMarginHeight;

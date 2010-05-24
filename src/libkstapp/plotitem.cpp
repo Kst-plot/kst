@@ -919,10 +919,6 @@ void PlotItem::paintPixmap(QPainter *painter) {
   //  qDebug() << "=============> rightLabel:" << rightLabel() << endl;
 #endif
   paintRightLabel(painter);
-#if DEBUG_LABEL_REGION
-  //  qDebug() << "=============> topLabel:" << topLabel() << endl;
-#endif
-  paintTopLabel(painter);
 #if BENCHMARK
     b_2 = benchtmp.elapsed();
 #endif
@@ -938,6 +934,12 @@ void PlotItem::paintPixmap(QPainter *painter) {
 #endif
 
   paintPlotMarkers(painter);
+
+#if DEBUG_LABEL_REGION
+  //  qDebug() << "=============> topLabel:" << topLabel() << endl;
+#endif
+  paintTopLabel(painter);
+
 #if BENCHMARK
     b_5 = benchtmp.elapsed();
 #endif
@@ -1978,7 +1980,11 @@ qreal PlotItem::bottomLabelMargin() const {
 
 
 QRectF PlotItem::topLabelRect() const {
-  return QRectF(0.0, 0.0, width() - leftLabelMargin() - rightLabelMargin(), topLabelMargin());
+  if (topLabelMargin()>0) {
+    return QRectF(0.0, 0.0, width() - leftLabelMargin() - rightLabelMargin(), topLabelMargin());
+  } else {
+    return QRectF(0.0, 0.0, width() - leftLabelMargin() - rightLabelMargin(), _calculatedTopLabelHeight);
+  }
 }
 
 
@@ -2269,7 +2275,11 @@ void PlotItem::generateTopLabel() {
     Label::renderLabel(*rc, parsed->chunk);
 
     QTransform t;
-    t.translate(plotRect().center().x() - rc->x / 2, rect().top());
+    if (_topLabelDetails->isVisible()) {
+      t.translate(plotRect().center().x() - rc->x / 2, rect().top());
+    } else {
+      t.translate(plotRect().center().x() - rc->x / 2, rect().top() + topLabelRect().height()/2);
+    }
     connect(rc, SIGNAL(labelDirty()), this, SLOT(setTopLabelDirty()));
     connect(rc, SIGNAL(labelDirty()), this, SLOT(redrawPlot()));
 
@@ -2283,11 +2293,10 @@ void PlotItem::generateTopLabel() {
 
 
 void PlotItem::paintTopLabel(QPainter *painter) {
-  if (!_topLabelDetails->isVisible() || topLabel().isEmpty())
+  if (topLabel().isEmpty())
     return;
 
   generateTopLabel();
-
   if (_topLabel.valid) {
     painter->save();
     painter->setTransform(_topLabel.transform, true);
@@ -2314,18 +2323,21 @@ void PlotItem::paintTopLabel(QPainter *painter) {
 
 
 void PlotItem::calculateTopLabelMargin(QPainter *painter) {
+
+  painter->save();
+
+  painter->setFont(topLabelDetails()->calculatedFont());
+
+  QRectF topLabelBound = painter->boundingRect(topLabelRect(),
+      Qt::AlignCenter, topLabel());
+
+  painter->restore();
+
+  _calculatedTopLabelHeight = topLabelBound.height();
+
   if (!_topLabelDetails->isVisible()) {
     _calculatedTopLabelMargin = 0;
   } else {
-    painter->save();
-
-    painter->setFont(topLabelDetails()->calculatedFont());
-
-    QRectF topLabelBound = painter->boundingRect(topLabelRect(),
-        Qt::AlignCenter, topLabel());
-
-    painter->restore();
-
     _calculatedTopLabelMargin = qMax(_calculatedAxisMarginTOverflow, topLabelBound.height());
 
     //No more than 1/4 the height of the plot

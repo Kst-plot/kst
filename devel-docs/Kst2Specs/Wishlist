@@ -20,10 +20,6 @@ Fixup line/arrow dimensions tab:
 
 ----------
 
-Tooltips/whats this where helpful.
-
-----------
-
 Scientific notation (instead of C's %e notation) for extreme axis numbers
 
 --------
@@ -33,6 +29,7 @@ Edit multiple for other view objects (arrow, line, label...)
 --------
 
 Edit multiple for vectors
+(or get rid of the option in the dialog)
 
 --------
 
@@ -81,5 +78,13 @@ in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
 
 --------------------
 
+Tied zoom icon should be a mag glass + paper clip
+Replace layout mode icon with zoom icon, and invert sense
+
+--------------------
+
 fit dialog should have curve placement options: overplot, replace, new plot.
 
+--------------------
+
+Legends can get larger than the plot if there are enought things in them.  This should not be.  Requires chewing of the cud...
