@@ -25,7 +25,7 @@ BugReportWizard::BugReportWizard(QWidget *parent)
 
   setupUi(this);
 
-  _kstVersion->setText(i18n("%1").arg(KSTVERSION));
+  _kstVersion->setText(KSTVERSION);
 
 #if defined(Q_OS_MAC9)
   _OS->setText("Mac OS 9");

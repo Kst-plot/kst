@@ -114,7 +114,7 @@ namespace Kst {
 static void printUsage(QString t) { // No console on Windows.
     QString displayText(usageMessage);
     if (!t.isEmpty()) {
-      displayText += "\n";
+      displayText += '\n';
       displayText += t;
     }
     QMessageBox box(QMessageBox::Information, "Kst", displayText);

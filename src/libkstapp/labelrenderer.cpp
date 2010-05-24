@@ -88,7 +88,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
     }
 
     if (!rc.substitute && (fi->scalar || fi->vector)) {
-      QString txt = QString("[") + fi->text + "]";
+      QString txt = QString('[') + fi->text + ']';
       if (rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }

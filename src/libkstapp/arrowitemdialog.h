@@ -25,7 +25,7 @@ class ArrowItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:
-    ArrowItemDialog(ArrowItem *item, QWidget *parent = 0);
+    explicit ArrowItemDialog(ArrowItem *item, QWidget *parent = 0);
     virtual ~ArrowItemDialog();
 
   private Q_SLOTS:

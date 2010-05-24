@@ -281,9 +281,9 @@ void ApplicationSettings::setBackgroundBrush(const QBrush brush) {
       _gradientStops.append(qMakePair(point, color));
 
       stopList += QString::number(point);
-      stopList += ",";
+      stopList += ',';
       stopList += color.name();
-      stopList += ",";
+      stopList += ',';
     }
   }
   _settings->setValue("fill/gradient", stopList);
