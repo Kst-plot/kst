@@ -9,9 +9,10 @@ Artifacts when resizing large arrowheads.
 
 Curves are rendered slightly above where they should be.  Take a plot
 that it is of very boring data (like always exactly zero) and it'll be
-drawn one pixel above the axis tick mark for zero.  
-  (Ticks and curves use different rounding)
+drawn one pixel above the axis tick mark for zero.  (This is not always the same - sometimes above, sometimes below, sometimes right.)
+So: it appears that ticks and curves use different rounding
 
+Probably related bug: points don't always appear centered on the line.
 --------------------
 
 Windows MEMleak
@@ -47,13 +48,9 @@ With live data, add a label which contains a scalar showing the
 scalar will indicate a value strikingly similar to the "Min" (or perhaps
 "First") value on the plot rather than the Last value.
 
-------------------------
+----------------------
 
-Resizing with shared axis box doesn't resize borders
-
--------------------------
-
-Loading a file with a shared axis box:
-  background black
-  no 'break shared axis' option in menu
-
+'z' mode with shared axis messes up:
+  -still draws unneeded plots
+  -doesn't draw hidden axis.
+  

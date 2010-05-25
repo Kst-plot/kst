@@ -22,6 +22,8 @@ class SharedAxisBoxItem : public ViewItem
 {
   Q_OBJECT
   public:
+    friend class SharedAxisBoxItemFactory;
+
     SharedAxisBoxItem(View *parent);
     virtual ~SharedAxisBoxItem();
 

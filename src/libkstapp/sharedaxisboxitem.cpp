@@ -1270,7 +1270,9 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {
           ViewItem *i = GraphicsFactory::parse(xml, store, view, rc);
-          if (!i) {
+          if (PlotItem *plotItem = qobject_cast<PlotItem*>(i)) {
+            plotItem->setSharedAxisBox(rc);
+            rc->_sharedPlots << plotItem;
           }
         }
       }

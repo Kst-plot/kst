@@ -353,7 +353,6 @@ void View::appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int col
 
 }
 
-
 void View::processResize(QSize size) {
 
   setPlotBordersDirty(true);

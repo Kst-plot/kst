@@ -234,9 +234,7 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
       if (!viewItem || !viewItem->isVisible())
         continue;
       if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-        if (!plotItem->isInSharedAxisBox()) {  // Let the box worry about itself.
-          plotItems.append(plotItem);
-        }
+        plotItems.append(plotItem);
       }
     }
   }
