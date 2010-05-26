@@ -676,7 +676,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
 
-  if (!parentView()->isPrinting()) {
+  if (!parentView()->isPrinting() && !parentView()->childMaximized()) {
     painter->save();
     painter->setPen(Qt::DotLine);
     painter->setBrush(Qt::NoBrush);

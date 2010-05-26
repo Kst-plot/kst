@@ -853,6 +853,10 @@ void PlotItem::updatePlotPixmap() {
 
 
 void PlotItem::paint(QPainter *painter) {
+  if (maskedByMaximization()) {
+    return;
+  }
+
 #if BENCHMARK
   QTime bench_time;
   bench_time.start();
@@ -2687,7 +2691,12 @@ void PlotItem::plotMaximize() {
     _plotMaximizedSourceRect.setHeight(_plotMaximizedSourceRect.height()*y_rescale);
     _plotMaximizedSourcePosition.setX(_plotMaximizedSourcePosition.x()*x_rescale);
     _plotMaximizedSourcePosition.setY(_plotMaximizedSourcePosition.y()*y_rescale);
-
+    xAxis()->setAxisVisible(_plotMaximizedBottomVisible);
+    yAxis()->setAxisVisible(_plotMaximizedLeftVisible);
+    _leftLabelDetails->setVisible(_plotMaximizedLeftVisible);
+    _bottomLabelDetails->setVisible(_plotMaximizedBottomVisible);
+    _rightLabelDetails->setVisible(_plotMaximizedRightVisible);
+    _topLabelDetails->setVisible(_plotMaximizedTopVisible);
     _plotMaximized = false;
     PlotItemManager::self()->removeFocusPlot(this);
     setParent(_plotMaximizedSourceParent);
@@ -2697,6 +2706,16 @@ void PlotItem::plotMaximize() {
     parentView()->setChildMaximized(false);
     parentView()->setFontRescale(1.0);
   } else {
+    _plotMaximizedBottomVisible = _bottomLabelDetails->isVisible();
+    xAxis()->setAxisVisible(true);
+    _bottomLabelDetails->setVisible(true);
+    _plotMaximizedLeftVisible = _leftLabelDetails->isVisible();
+    yAxis()->setAxisVisible(true);
+    _leftLabelDetails->setVisible(true);
+    _plotMaximizedRightVisible = _rightLabelDetails->isVisible();
+    _rightLabelDetails->setVisible(true);
+    _plotMaximizedTopVisible = _topLabelDetails->isVisible();
+    _topLabelDetails->setVisible(true);
     _plotMaximized = true;
     _plotMaximizedSourcePosition = pos();
     _plotMaximizedSourceRect = viewRect();
@@ -2715,6 +2734,9 @@ void PlotItem::plotMaximize() {
                      double(_plotMaximizedSourceRect.width() + _plotMaximizedSourceRect.height());
     parentView()->setChildMaximized(true);
     parentView()->setFontRescale(rescale);
+  }
+  if (isInSharedAxisBox()) {
+    parentView()->setPlotBordersDirty(true);
   }
   setPlotBordersDirty();
 }
