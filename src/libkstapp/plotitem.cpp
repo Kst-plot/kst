@@ -622,7 +622,7 @@ void PlotItem::createFitMenu() {
 
 void PlotItem::createSharedAxisBoxMenu() {
   if (_sharedAxisBoxMenu) {
-    delete _shareBoxShareX;
+    delete _sharedAxisBoxMenu;
   }
   _sharedAxisBoxMenu = new QMenu;
   _sharedAxisBoxMenu->setTitle(tr("Shared Axis Box Settings"));
