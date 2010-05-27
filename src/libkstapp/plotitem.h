@@ -264,6 +264,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void updateAxes();
     void triggerRedraw();
 
+    void breakShareTriggered();
+    void shareXAxisTriggered();
+    void shareYAxisTriggered();
+
   public Q_SLOTS:
     void zoomFixedExpression(const QRectF &projection, bool force = false);
     void zoomXRange(const QRectF &projection, bool force = false);
@@ -495,6 +499,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QMenu *_sharedAxisBoxMenu;
     QAction *_shareBoxShareX;
     QAction *_shareBoxShareY;
+    QAction *_breakSharedBox;
 
     SharedAxisBoxItem * _sharedBox;
 

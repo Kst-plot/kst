@@ -169,6 +169,10 @@ bool SharedAxisBoxItem::acceptItems() {
         plotItem->setSharedAxisBox(this);
 
         _sharedPlots << plotItem;
+        connect(plotItem, SIGNAL(breakShareTriggered()), this, SLOT(breakShare()));
+        connect(plotItem, SIGNAL(shareXAxisTriggered()), this, SLOT(shareXAxis()));
+        connect(plotItem, SIGNAL(shareYAxisTriggered()), this, SLOT(shareYAxis()));
+
         child = plotItem;
         if (!maxSize.contains(plotItem->mapToParent(plotItem->viewRect().topLeft()))) {
           maxSize.setTop(qMin(plotItem->mapToParent(plotItem->viewRect().topLeft()).y(), maxSize.top()));
@@ -198,20 +202,14 @@ bool SharedAxisBoxItem::acceptItems() {
 
 void SharedAxisBoxItem::breakShare() {
   _loaded = false;
-  QList<QGraphicsItem*> list = QGraphicsItem::children();
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem)
-      continue;
-
-    if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-      plotItem->setPos(mapToParent(plotItem->pos()));
-      plotItem->setSharedAxisBox(0);
-      plotItem->setLabelsVisible(true);
-      plotItem->xAxis()->setAxisZoomMode(xAxisZoomMode());
-      plotItem->yAxis()->setAxisZoomMode(yAxisZoomMode());
-      plotItem->update();
-    }
+  QList<PlotItem*> list = getSharedPlots();
+  foreach (PlotItem *plotItem, list) {
+    plotItem->setPos(mapToParent(plotItem->pos()));
+    plotItem->setSharedAxisBox(0);
+    plotItem->setLabelsVisible(true);
+    plotItem->xAxis()->setAxisZoomMode(xAxisZoomMode());
+    plotItem->yAxis()->setAxisZoomMode(yAxisZoomMode());
+    plotItem->update();
   }
   if (_layout) {
     _layout->reset();

@@ -514,8 +514,23 @@ void PlotItem::createActions() {
   registerShortcut(_plotMaximize);
   connect(_plotMaximize, SIGNAL(triggered()), this, SLOT(plotMaximize()));
 
-  _shareBoxShareX = 0;
-  _shareBoxShareY = 0;
+  
+  _shareBoxShareX = new QAction(tr("Share Plots on X-Axis"), this);
+  _shareBoxShareX->setShortcut(Qt::Key_X);
+  _shareBoxShareX->setCheckable(true);
+  registerShortcut(_shareBoxShareX);
+  connect(_shareBoxShareX, SIGNAL(triggered()), this, SIGNAL(shareXAxisTriggered()));
+
+  _shareBoxShareY = new QAction(tr("Share Plots on Y-Axis"), this);
+  _shareBoxShareY->setShortcut(Qt::Key_Y);
+  _shareBoxShareY->setCheckable(true);
+  registerShortcut(_shareBoxShareY);
+  connect(_shareBoxShareY, SIGNAL(triggered()), this, SIGNAL(shareYAxisTriggered()));
+
+  _breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
+  _breakSharedBox->setShortcut(Qt::Key_B);
+  registerShortcut(_breakSharedBox);
+  connect(_breakSharedBox, SIGNAL(triggered()), this, SIGNAL(breakShareTriggered()));
 }
 
 
@@ -608,24 +623,11 @@ void PlotItem::createFitMenu() {
 void PlotItem::createSharedAxisBoxMenu() {
   if (_sharedAxisBoxMenu) {
     delete _shareBoxShareX;
-    delete _shareBoxShareY;
-    delete _sharedAxisBoxMenu;
   }
   _sharedAxisBoxMenu = new QMenu;
   _sharedAxisBoxMenu->setTitle(tr("Shared Axis Box Settings"));
 
-  _shareBoxShareX = new QAction(tr("Share Plots on X-Axis"), this);
-  _shareBoxShareX->setShortcut(Qt::Key_X);
-  connect(_shareBoxShareX, SIGNAL(triggered()), _sharedBox, SLOT(shareXAxis()));
-  _shareBoxShareX->setCheckable(true);
-  registerShortcut(_shareBoxShareX);
   _sharedAxisBoxMenu->addAction(_shareBoxShareX);
-
-  _shareBoxShareY = new QAction(tr("Share Plots on Y-Axis"), this);
-  _shareBoxShareY->setShortcut(Qt::Key_Y);
-  connect(_shareBoxShareY, SIGNAL(triggered()), _sharedBox, SLOT(shareYAxis()));
-  _shareBoxShareY->setCheckable(true);
-  registerShortcut(_shareBoxShareY);
   _sharedAxisBoxMenu->addAction(_shareBoxShareY);
 }
 
@@ -638,10 +640,7 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
       menu.addMenu(_sharedAxisBoxMenu);
 
-      QAction *breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
-      breakSharedBox->setShortcut(Qt::Key_B);
-      connect(breakSharedBox, SIGNAL(triggered()), _sharedBox, SLOT(breakShare()));
-      menu.addAction(breakSharedBox);
+      menu.addAction(_breakSharedBox);
 
       _shareBoxShareX->setChecked(_sharedBox->isXAxisShared());
       _shareBoxShareY->setChecked(_sharedBox->isYAxisShared());
