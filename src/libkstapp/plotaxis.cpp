@@ -909,7 +909,6 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
   qreal drdu = 1.0; // interpreted units per raw units;
   qreal rOffset = 0.0; // r = drdu*u + rOffset;
   qreal uMajorTickSpacing; // major Tick spacing in iterpreted units
-  qreal nextTick;
 
   if (_orientation == Qt::Horizontal) {
     min = plotItem()->projectionRect().left();
@@ -940,15 +939,18 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
   qreal majorTickSpacing = uMajorTickSpacing * drdu;
 
   int i = 0;
-  qreal uNextTick = uFirstTick;
-  while (1) {
-    uNextTick = uFirstTick + i++ * uMajorTickSpacing;
+  qreal lastTick = 12345678;
+  while (1) {    
+    qreal uNextTick = uFirstTick + i++ * uMajorTickSpacing;
     if (fabs(uNextTick)<uMajorTickSpacing*0.5) { // fix roundoff...
       uNextTick = 0.0;
     }
     if (uNextTick > uMax)
+      break;    
+    qreal nextTick = uNextTick * drdu + rOffset;
+    if (lastTick == uNextTick) // prevent endless loop
       break;
-    nextTick = uNextTick * drdu + rOffset;
+    lastTick = nextTick;
     ticks << nextTick;
     // FULL_PRECISION - 2 because round off errors mean you never actually quite get
     // full precision...
