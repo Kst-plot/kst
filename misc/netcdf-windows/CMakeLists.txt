@@ -25,7 +25,7 @@ if(MSVC)
 	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/stdint.h ${CMAKE_BINARY_DIR}/stdint.h COPYONLY)
 endif()
 
-if(WIN32 AND NOT MSVC)
+if(MINGW)
 	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-mingw.h ${CMAKE_BINARY_DIR}/config.h COPYONLY)
 endif()
 
