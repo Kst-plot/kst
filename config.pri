@@ -69,4 +69,16 @@ contains(lib, getdata) {
   }
   return(false)
 }
+contains(lib, netcdf) {
+  NETCDFDIR = $$(NETCDFDIR)
+  win32:!isEmpty(NETCDFDIR) {
+    return(true)
+  }
+  !win32:contains(HAVE_NETCDFDIR, 1) {
+    return(true)
+  }
+  return(false)
+}
+
+
 }

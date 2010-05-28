@@ -21,10 +21,10 @@ LibExists(getdata) {
     PKGCONFIG += getdata
 }
 
-!win32:LibExists(netcdf) {
+LibExists(netcdf) {
     message(netCDF configured.  Plugins will be built.)
     SUBDIRS += netcdf
-    CONFIG += link_pkgconfig
-    PKGCONFIG += netcdf
+    !win32:CONFIG += link_pkgconfig
+    !win32:PKGCONFIG += netcdf
 }
 
