@@ -13,7 +13,7 @@ win32{
 	LIBS += -L$$(NETCDFDIR)/lib
 }
 
-LIBS += -l$$kstlib(netcdf) -l$$kstlib(netcdf_c++)
+LIBS += -l$$kstlib(netcdf_c++) -l$$kstlib(netcdf) 
 
 SOURCES += \
     kstnetcdf.cpp

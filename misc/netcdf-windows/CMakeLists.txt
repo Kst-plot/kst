@@ -18,11 +18,19 @@ if(MSVC)
 		"${CMAKE_C_FLAGS_DEBUG} /Wp64 ${MSVC_W_ERROR} ${MSVC_W_DISABLE}")
 	set(CMAKE_C_FLAGS_RELEASE
 		"${CMAKE_C_FLAGS_RELEASE} /Wp64 ${MSVC_W_ERROR} ${MSVC_W_DISABLE}")
-		
-	add_definitions(-D_FILE_OFFSET_BITS=64)
-	include_directories(.)
+	
 	set(CMAKE_DEBUG_POSTFIX d)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-msvc.h ${CMAKE_BINARY_DIR}/config.h COPYONLY)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/inttypes.h ${CMAKE_BINARY_DIR}/inttypes.h COPYONLY)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/stdint.h ${CMAKE_BINARY_DIR}/stdint.h COPYONLY)
 endif()
+
+if(WIN32 AND NOT MSVC)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-mingw.h ${CMAKE_BINARY_DIR}/config.h COPYONLY)
+endif()
+
+add_definitions(-D_FILE_OFFSET_BITS=64)	
+include_directories(${CMAKE_BINARY_DIR})
 
 set(NETCDF_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/installed)
 
