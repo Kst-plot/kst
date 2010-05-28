@@ -23,7 +23,7 @@ Build instructions:
 - Set environment variable GSLDIR to 'installed' folder:
     set GSLDIR=c:\gsl-build\installed
    
-- qmake will detect GSL on enables GSL on Windows.
+- qmake will detect GSL and enables GSL on Windows.
 
 
 TODO: Do real checks for config.h 
