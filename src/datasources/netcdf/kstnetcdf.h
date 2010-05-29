@@ -26,7 +26,9 @@
 #include <netcdfcpp.h>
 
 
-class DataInterfaceNetCdf;
+class DataInterfaceNetCdfScalar;
+class DataInterfaceNetCdfVector;
+class DataInterfaceNetCdfMatrix;
 
 class NetcdfSource : public Kst::DataSource {
   public:
@@ -73,11 +75,12 @@ class NetcdfSource : public Kst::DataSource {
     QStringList _fieldList;
     QStringList _matrixList;
 
+
     friend class DataInterfaceNetCdfScalar;
-    friend class DataInterfaceNetCdf;
+    friend class DataInterfaceNetCdfVector;
     friend class DataInterfaceNetCdfMatrix;
     DataInterfaceNetCdfScalar* is;
-    DataInterfaceNetCdf* iv;
+    DataInterfaceNetCdfVector* iv;
     DataInterfaceNetCdfMatrix* im;
 };
 

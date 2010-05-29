@@ -87,10 +87,10 @@ bool DataInterfaceNetCdfScalar::isValid(const QString& scalar) const
 // Vector interface
 //
 
-class DataInterfaceNetCdf : public DataSource::DataInterface<DataVector>
+class DataInterfaceNetCdfVector : public DataSource::DataInterface<DataVector>
 {
 public:
-  DataInterfaceNetCdf(NetcdfSource& s) : netcdf(s) {}
+  DataInterfaceNetCdfVector(NetcdfSource& s) : netcdf(s) {}
 
   // read one element
   int read(const QString&, const DataVector::Param&);
@@ -114,7 +114,7 @@ private:
 };
 
 
-const DataVector::Optional DataInterfaceNetCdf::optional(const QString &field) const
+const DataVector::Optional DataInterfaceNetCdfVector::optional(const QString &field) const
 {
   if (!netcdf._fieldList.contains(field))
     return DataVector::Optional();
@@ -124,13 +124,13 @@ const DataVector::Optional DataInterfaceNetCdf::optional(const QString &field) c
 
 
 
-int DataInterfaceNetCdf::read(const QString& field, const DataVector::Param& p)
+int DataInterfaceNetCdfVector::read(const QString& field, const DataVector::Param& p)
 {
   return netcdf.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }
 
 
-bool DataInterfaceNetCdf::isValid(const QString& field) const
+bool DataInterfaceNetCdfVector::isValid(const QString& field) const
 {
   return  netcdf._fieldList.contains( field );
 }
@@ -217,7 +217,7 @@ NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   Kst::DataSource(store, cfg, filename, type),
   _ncfile(0L),
   is(new DataInterfaceNetCdfScalar(*this)),
-  iv(new DataInterfaceNetCdf(*this)),
+  iv(new DataInterfaceNetCdfVector(*this)),
   im(new DataInterfaceNetCdfMatrix(*this))
 {
   setInterface(is);
