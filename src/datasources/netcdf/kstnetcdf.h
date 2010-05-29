@@ -42,7 +42,11 @@ class NetcdfSource : public Kst::DataSource {
     virtual const QString& typeString() const;
 
 
+    int readScalar(double *v, const QString& field);
+
     int readField(double *v, const QString& field, int s, int n);
+
+    int readMatrix(double *v, const QString& field);
 
     int samplesPerFrame(const QString& field);
 
@@ -60,13 +64,21 @@ class NetcdfSource : public Kst::DataSource {
     QMap<QString, int> _frameCounts;
 
     int _maxFrameCount;
-    NcFile *_ncfile;
+    NcFile *_ncfile;    
 
     QMap<QString, QString> _metaData;
-    QStringList _fieldList;
 
+    // TODO remove friend
+    QStringList _scalarList;
+    QStringList _fieldList;
+    QStringList _matrixList;
+
+    friend class DataInterfaceNetCdfScalar;
     friend class DataInterfaceNetCdf;
+    friend class DataInterfaceNetCdfMatrix;
+    DataInterfaceNetCdfScalar* is;
     DataInterfaceNetCdf* iv;
+    DataInterfaceNetCdfMatrix* im;
 };
 
 

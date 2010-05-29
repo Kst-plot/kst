@@ -16,6 +16,10 @@
  *                                                                         *
  ***************************************************************************/
 
+// TODO move
+//#define KST_DEBUG_SHARED
+#include "sharedptr.h"
+
 #include "kstnetcdf.h"
 #include "kst_i18n.h"
 #include "debug.h"
@@ -30,6 +34,52 @@
 using namespace Kst;
 
 static const QString netCdfTypeString = I18N_NOOP("netCDF Files");
+
+
+//
+// Scalar interface
+//
+
+class DataInterfaceNetCdfScalar : public DataSource::DataInterface<DataScalar>
+{
+public:
+  DataInterfaceNetCdfScalar(NetcdfSource& s) : netcdf(s) {}
+
+  // read one element
+  int read(const QString&, const DataScalar::Param&);
+
+  // named elements
+  QStringList list() const { return netcdf._scalarList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataScalar::Optional optional(const QString&) const { return DataScalar::Optional(); }
+  void setOptional(const QString&, const DataScalar::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  NetcdfSource& netcdf;
+};
+
+
+int DataInterfaceNetCdfScalar::read(const QString& scalar, const DataScalar::Param& p)
+{
+  return netcdf.readScalar(p.value, scalar);
+}
+
+
+bool DataInterfaceNetCdfScalar::isValid(const QString& scalar) const
+{
+  return  netcdf._scalarList.contains( scalar );
+}
+
+
+
 
 
 
@@ -86,6 +136,77 @@ bool DataInterfaceNetCdf::isValid(const QString& field) const
 }
 
 
+//
+// Matrix interface
+//
+
+class DataInterfaceNetCdfMatrix : public DataSource::DataInterface<DataMatrix>
+{
+public:
+
+  DataInterfaceNetCdfMatrix(NetcdfSource& s) : netcdf(s) {}
+
+  // read one element
+  int read(const QString&, const DataMatrix::Param&);
+
+  // named elements
+  QStringList list() const { return netcdf._matrixList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataMatrix::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataMatrix::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  NetcdfSource& netcdf;
+};
+
+
+const DataMatrix::Optional DataInterfaceNetCdfMatrix::optional(const QString& matrix) const
+{
+  if (!netcdf._matrixList.contains( matrix ) ) {
+    return DataMatrix::Optional();
+  }
+
+  QByteArray bytes = matrix.toLatin1();
+  NcVar *var = netcdf._ncfile->get_var(bytes.constData());  // var is owned by _ncfile
+
+  if (var->num_dims() != 2) {
+    return DataMatrix::Optional();
+  }
+
+  DataMatrix::Optional opt;
+  opt.samplesPerFrame = 1;
+  // TODO is this right?
+  opt.xSize = var->get_dim(0)->size();
+  opt.ySize = var->get_dim(1)->size();
+
+  return opt;
+}
+
+
+int DataInterfaceNetCdfMatrix::read(const QString& field, const DataMatrix::Param& p)
+{
+  int count = netcdf.readMatrix(p.data->z, field);
+
+  p.data->xMin = 0;
+  p.data->yMin = 0;
+  p.data->xStepSize = 1;
+  p.data->yStepSize = 1;
+
+  return count;
+}
+
+
+bool DataInterfaceNetCdfMatrix::isValid(const QString& field) const {
+  return  netcdf._matrixList.contains( field );
+}
 
 
 //
@@ -95,9 +216,13 @@ bool DataInterfaceNetCdf::isValid(const QString& field) const
 NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element) :
   Kst::DataSource(store, cfg, filename, type),
   _ncfile(0L),
-  iv(new DataInterfaceNetCdf(*this))
+  is(new DataInterfaceNetCdfScalar(*this)),
+  iv(new DataInterfaceNetCdf(*this)),
+  im(new DataInterfaceNetCdfMatrix(*this))
 {
+  setInterface(is);
   setInterface(iv);
+  setInterface(im);
 
   setUpdateType(None);
 
@@ -134,21 +259,27 @@ bool NetcdfSource::initFile() {
       return false;
     }
 
-  // kstdDebug() << _filename << ": building field list" << endl;
+  KST_DBG qDebug() << _filename << ": building field list" << endl;
   _fieldList.clear();
   _fieldList += "INDEX";
 
   int nb_vars = _ncfile->num_vars();
-  // kstdDebug() << nb_vars << " vars found in total" << endl;
+  KST_DBG qDebug() << nb_vars << " vars found in total" << endl;
 
   _maxFrameCount = 0;
 
   for (int i = 0; i < nb_vars; i++) {
     NcVar *var = _ncfile->get_var(i);
-    _fieldList += var->name();
-    int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = qMax(_maxFrameCount, fc);
-    _frameCounts[var->name()] = fc;
+    if (var->num_dims() == 0) {
+      _scalarList += var->name();
+    } else if (var->num_dims() == 1) {
+      _fieldList += var->name();
+      int fc = var->num_vals() / var->rec_size();
+      _maxFrameCount = qMax(_maxFrameCount, fc);
+      _frameCounts[var->name()] = fc;
+    } else if (var->num_dims() == 2) {
+      _matrixList += var->name();
+    }
   }
 
   // Get metadata
@@ -199,13 +330,22 @@ Kst::Object::UpdateType NetcdfSource::internalDataSourceUpdate() {
 }
 
 
+int NetcdfSource::readScalar(double *v, const QString& field)
+{
+  // TODO error handling
+  QByteArray bytes = field.toLatin1();
+  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
+  var->get(v);
+  return 1;
+}
+
 
 int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   NcType dataType = ncNoType; /* netCDF data type */
   /* Values for one record */
   NcValues *record = 0;// = new NcValues(dataType,numFrameVals);
 
-  // kstdDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+  KST_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
 
   /* For INDEX field */
   if (field.toLower() == "index") {
@@ -223,7 +363,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
   if (!var) {
-    //kstdDebug() << "Queried field " << field << " which can't be read" << endl;
+    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
@@ -264,7 +404,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
         } else {
           for (int i = 0; i < n; i++) {
             record = var->get_rec(i+s);
-            // kstdDebug() << "Read record " << i+s << endl;
+            KST_DBG qDebug() << "Read record " << i+s << endl;
             for (int j = 0; j < recSize; j++) {
               v[i*recSize + j] = record->as_int(j);
             }
@@ -311,16 +451,41 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
       break;
 
     default:
-      //kstdDebug() << field << ": wrong datatype for kst, no values read" << endl;
+      KST_DBG qDebug() << field << ": wrong datatype for kst, no values read" << endl;
       return -1;
       break;
 
   }
 
-  // kstdDebug() << "Finished reading " << field << endl;
+  KST_DBG qDebug() << "Finished reading " << field << endl;
 
   return oneSample ? 1 : n * recSize;
 }
+
+
+
+
+
+int NetcdfSource::readMatrix(double *v, const QString& field) 
+{
+  /* For a variable from the netCDF file */
+  QByteArray bytes = field.toLatin1();
+  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
+  if (!var) {
+    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    return -1;
+  }
+
+  int xSize = var->get_dim(0)->size();
+  int ySize = var->get_dim(1)->size();
+
+  var->get(v, xSize, ySize);
+
+ 
+  return  xSize * ySize;
+}
+
+
 
 
 
@@ -477,14 +642,14 @@ int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
     QFile f(filename);
 
     if (!f.open(QFile::ReadOnly)) {
-      //kstdDebug() << "Unable to read file !" << endl;
+      KST_DBG qDebug() << "Unable to read file !" << endl;
       return 0;
     }
 
     QByteArray bytes = filename.toLatin1();
     NcFile *ncfile = new NcFile(bytes.constData());
     if (ncfile->is_valid()) {
-      // kstdDebug() << filename << " looks like netCDF !" << endl;
+      KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
       delete ncfile;
       return 80;
     } else {
