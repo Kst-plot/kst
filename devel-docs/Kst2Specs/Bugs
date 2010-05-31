@@ -15,10 +15,6 @@ So: it appears that ticks and curves use different rounding
 Probably related bug: points don't always appear centered on the line.
 --------------------
 
-Windows MEMleak
-
-------------------
-
 Missing defaults for ascii files
 erase all kst config files to simulate running kst for the first time.
 Open an ascii file
