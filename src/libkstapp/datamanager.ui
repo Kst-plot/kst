@@ -1,43 +1,44 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DataManager</class>
- <widget class="QDialog" name="DataManager" >
-  <property name="geometry" >
+ <widget class="QDialog" name="DataManager">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>347</height>
+    <height>235</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Data Manager</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <item>
-    <widget class="QSplitter" name="_splitter" >
-     <property name="layoutDirection" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="3">
+    <widget class="QSplitter" name="_splitter">
+     <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="childrenCollapsible" >
+     <property name="childrenCollapsible">
       <bool>false</bool>
      </property>
-     <widget class="QToolBox" name="_objects" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+     <widget class="QToolBox" name="_objects">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="currentIndex" >
+      <property name="currentIndex">
        <number>-1</number>
       </property>
      </widget>
-     <widget class="QTreeView" name="_session" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+     <widget class="QTreeView" name="_session">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -45,12 +46,38 @@
      </widget>
     </widget>
    </item>
-   <item>
-    <widget class="QDialogButtonBox" name="_buttonBox" >
-     <property name="orientation" >
+   <item row="1" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>601</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="_purge">
+     <property name="text">
+      <string>Purge</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QDialogButtonBox" name="_buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
@@ -65,11 +92,11 @@
    <receiver>DataManager</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>248</x>
      <y>254</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -81,11 +108,11 @@
    <receiver>DataManager</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>316</x>
      <y>260</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

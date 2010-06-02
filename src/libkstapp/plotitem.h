@@ -19,7 +19,6 @@
 
 #include <QHash>
 
-#include "relation.h"
 #include "plotrenderitem.h"
 #include "plotiteminterface.h"
 #include "plotdefines.h"

@@ -68,7 +68,6 @@ void PlotItemManager::addViewItem(ViewItem *viewItem) {
 void PlotItemManager::removePlot(PlotItem *plotItem) {
   if (!_plotLists.contains(plotItem->parentView()))
     return;
-
   QList<PlotItem*> list = _plotLists.value(plotItem->parentView());
   list.removeAll(plotItem);
   _plotLists.insert(plotItem->parentView(), list);

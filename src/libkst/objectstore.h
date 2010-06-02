@@ -70,6 +70,14 @@ class KSTCORE_EXPORT ObjectStore
     /** locking */
     KstRWLock& lock() const { return _lock; }
 
+    /** clear the 'used' flag on all objects in list */
+    void clearUsedFlags();
+
+    /** delete everything that doesn't have the used flag set.
+      * Note: the caller is responsible to make sure that the
+      * used flags are set properly.  It is not done here! */
+    bool deleteUnsetUsedFlags();
+
   private:
     Q_DISABLE_COPY(ObjectStore)
 

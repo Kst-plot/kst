@@ -103,6 +103,8 @@ void View::init()
 
 
 View::~View() {
+  delete _undoStack;
+  delete _layoutBoxItem;
 }
 
 

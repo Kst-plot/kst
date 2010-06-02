@@ -46,6 +46,7 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual QString propertyString() const;
     virtual QString  sizeString() const;
 
+    virtual bool used() const;
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
 

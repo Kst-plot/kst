@@ -183,6 +183,10 @@ QVariant SessionModel::primitiveData(PrimitivePtr p, const QModelIndex& index) c
       rc = p->typeString();
       break;
     case 2:
+      // this is very fragile and depends on how the smart pointers are being carried around.
+      // we should consider a different approach (?).  Keep it now for debugging...
+      // It doesn't know, for instance, if a plot has been 'deleted'.
+      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
       break;
     case 3:
       rc = p->sizeString();
@@ -215,6 +219,9 @@ QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index)
       p->unlock();
       break;
     case 2:
+      // this is very fragile and depends on how the smart pointers are being carried around.
+      // we should consider a different approach or delete(?).   Keep it now for debugging...
+      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
       break;
     case 3:
       p->readLock();
@@ -251,6 +258,9 @@ QVariant SessionModel::relationData(RelationPtr p, const QModelIndex& index) con
       p->unlock();
       break;
     case 2:
+      // this is very fragile and depends on how the smart pointers are being carried around.
+      // we should consider a different approach or delete (?).  Keep it now for debugging...
+      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
       break;
     case 3:
       p->readLock();

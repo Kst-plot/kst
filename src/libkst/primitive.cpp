@@ -85,6 +85,13 @@ QString Primitive::sizeString() const {
   return QString("Base Class Size String");
 }
 
+bool Primitive::used() const {
+  if (_provider) {
+    return true;
+  } else {
+    return Object::used();
+  }
+}
 }
 
 // vim: et sw=2 ts=2

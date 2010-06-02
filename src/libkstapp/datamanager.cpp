@@ -46,6 +46,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setModel(doc->session());
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
+  _session->setUniformRowHeights(true);
   connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
           this, SLOT(showContextMenu(const QPoint &)));
   connect(_session, SIGNAL(doubleClicked(const QModelIndex &)),
@@ -145,6 +146,8 @@ DataManager::DataManager(QWidget *parent, Document *doc)
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _filters->addAction(action);
   }
+
+  connect(_purge, SIGNAL(clicked()), this, SLOT(purge()));
 }
 
 
@@ -464,6 +467,106 @@ void DataManager::removeFromPlot(QAction* action) {
       plotItem->update();
     }
   }
+}
+
+void DataManager::setUsedFlags() {
+  _doc->objectStore()->clearUsedFlags();
+
+  // for each relation used in an unhidden plot mark 'used' - O(N)
+  QList<PlotItem*> plotlist = ViewItem::getItems<PlotItem>();
+  foreach (PlotItem *plot, plotlist) {
+    if (plot->isVisible()) {
+      foreach (PlotRenderItem *renderer, plot->renderItems()) {
+        foreach (RelationPtr relation, renderer->relationList()) {
+          relation->setUsed(true);
+        }
+      }
+    }
+  }
+
+  // TODO: for each primitive used in an unhidden label mark 'used' - O(N)
+
+  // for each primitive used by a relation mark 'used' - O(N)
+  ObjectList<Relation> relationList = _doc->objectStore()->getObjects<Relation>();
+  foreach (RelationPtr object, relationList) {
+    object->readLock();
+    //set used all input and output primitives
+    foreach (VectorPtr v, object->inputVectors()) {
+      v->setUsed(true);
+      if (v->provider()) {
+        v->provider()->setUsed(true);
+      }
+    }
+    foreach (VectorPtr v, object->outputVectors()) {
+      v->setUsed(true);
+    }
+    foreach (ScalarPtr s, object->inputScalars()) {
+      s->setUsed(true);
+      if (s->provider()) {
+        s->provider()->setUsed(true);
+      }
+    }
+    foreach (ScalarPtr s, object->outputScalars()) {
+      s->setUsed(true);
+    }
+    foreach (StringPtr s, object->inputStrings()) {
+      s->setUsed(true);
+      if (s->provider()) {
+        s->provider()->setUsed(true);
+      }
+    }
+    foreach (StringPtr s, object->outputStrings()) {
+      s->setUsed(true);
+    }
+    foreach (MatrixPtr m, object->inputMatrices()) {
+      m->setUsed(true);
+      if (m->provider()) {
+        m->provider()->setUsed(true);
+      }
+    }
+    foreach (MatrixPtr m, object->outputMatrices()) {
+      m->setUsed(true);
+    }
+    object->unlock();
+  }
+
+  ObjectList<DataObject> dataObjectList = _doc->objectStore()->getObjects<DataObject>();
+  foreach (DataObjectPtr object, dataObjectList) {
+    object->readLock();
+    //set used all input and output primitives
+    foreach (VectorPtr v, object->inputVectors()) {
+      v->setUsed(true);
+    }
+    foreach (VectorPtr v, object->outputVectors()) {
+      v->setUsed(true);
+    }
+    foreach (ScalarPtr s, object->inputScalars()) {
+      s->setUsed(true);
+    }
+    foreach (ScalarPtr s, object->outputScalars()) {
+      s->setUsed(true);
+    }
+    foreach (StringPtr s, object->inputStrings()) {
+      s->setUsed(true);
+    }
+    foreach (StringPtr s, object->outputStrings()) {
+      s->setUsed(true);
+    }
+    foreach (MatrixPtr m, object->inputMatrices()) {
+      m->setUsed(true);
+    }
+    foreach (MatrixPtr m, object->outputMatrices()) {
+      m->setUsed(true);
+    }
+    object->unlock();
+  }
+}
+
+void DataManager::purge() {
+  do {
+    setUsedFlags();
+  } while (_doc->objectStore()->deleteUnsetUsedFlags());
+  _session->reset();
 }
 
 }

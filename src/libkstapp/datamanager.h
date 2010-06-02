@@ -59,6 +59,9 @@ class DataManager : public QDialog, Ui::DataManager
 
     virtual bool event(QEvent * event);
 
+    void setUsedFlags();
+    void purge();
+
   private:
     Document *_doc;
 

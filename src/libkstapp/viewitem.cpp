@@ -2125,6 +2125,9 @@ void RemoveCommand::undo() {
 void RemoveCommand::redo() {
   Q_ASSERT(_item);
   _item->hide();
+  // hmmm... view items aren't really deleted!!  if we delete them,
+  // then we run into trouble with the undo stack.  If we don't, then
+  // they keep holding onto the curves, preventing purge.
 }
 
 

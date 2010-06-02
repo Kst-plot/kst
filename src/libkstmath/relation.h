@@ -144,6 +144,28 @@ class KSTMATH_EXPORT Relation : public Object {
     // Compare the cached the context to the provided one.
     bool redrawRequired(const CurveRenderContext& context); 
 
+    // If you use these, you must lock() and unlock() the object as long as you
+    // hold the reference
+    const VectorMap& inputVectors()  const { return _inputVectors;  }
+    const VectorMap& outputVectors() const { return _outputVectors; }
+    VectorMap& inputVectors() { return _inputVectors;  }
+    VectorMap& outputVectors() { return _outputVectors; }
+
+    const ScalarMap& inputScalars()  const { return _inputScalars;  }
+    const ScalarMap& outputScalars() const { return _outputScalars; }
+    ScalarMap& inputScalars() { return _inputScalars;  }
+    ScalarMap& outputScalars() { return _outputScalars; }
+
+    const StringMap& inputStrings()  const { return _inputStrings;  }
+    const StringMap& outputStrings() const { return _outputStrings; }
+    StringMap& inputStrings() { return _inputStrings;  }
+    StringMap& outputStrings() { return _outputStrings; }
+
+    const MatrixMap& inputMatrices() const { return _inputMatrices; }
+    const MatrixMap& outputMatrices() const { return _outputMatrices; }
+    MatrixMap& inputMatrices() { return _inputMatrices; }
+    MatrixMap& outputMatrices() { return _outputMatrices; }
+
   protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;

@@ -237,5 +237,23 @@ QList<ObjectPtr> ObjectStore::objectList() {
   return _list;
 }
 
+void ObjectStore::clearUsedFlags() {
+  foreach (ObjectPtr p, _list) {
+    p->setUsed(false);
+  }
+}
+
+bool ObjectStore::deleteUnsetUsedFlags() {
+  QList<ObjectPtr> list = _list;
+  bool some_deleted = false;
+  foreach (ObjectPtr p, list) {
+    if (!p->used()) {
+      removeObject(p);
+      some_deleted = true;
+    }
+  }
+  return some_deleted;
+}
+
 }
 // vim: ts=2 sw=2 et
