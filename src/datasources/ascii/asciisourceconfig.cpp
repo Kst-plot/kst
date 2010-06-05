@@ -58,7 +58,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _fileNamePattern(""),
   _indexInterpretation(Unknown),
   _columnType(Whitespace),
-  _columnDelimiter(""),
+  _columnDelimiter(","),
   _columnWidth(DEFAULT_COLUMN_WIDTH),
   _dataLine(0),
   _readFields(false),

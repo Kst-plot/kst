@@ -61,8 +61,11 @@ public:
   }
 
   const T& value() const {
-    if (!_value_set)
-      qDebug() << "Using unset value " << Key;
+    if (!_value_set) {
+      //qDebug() << "Using unset value " << Key << "  using default: " << _default_value;
+      return _default_value;
+    }
+
     return _value;
   }
 
