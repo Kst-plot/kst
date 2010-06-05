@@ -2747,8 +2747,14 @@ void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
   qDebug() << "zoomFixedExpression" << projection << "current" << projectionRect();
 #endif
   if (projection.isValid()) {
-    if (isInSharedAxisBox() && !force) {
-      sharedAxisBox()->zoomFixedExpression(projection, this);
+    if (isInSharedAxisBox()) {
+      if (!force) {
+        sharedAxisBox()->zoomFixedExpression(projection, this);
+      } else {
+        yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+        xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+        setProjectionRect(QRectF(projection.x(), projection.y(), projection.width(), projection.height()));
+      }
     } else {
       ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection, force);
       _undoStack->push(cmd);
@@ -2763,8 +2769,14 @@ void PlotItem::zoomXRange(const QRectF &projection, bool force) {
   qDebug() << "zoomXRange" << projection << endl;
 #endif
   if (projection.isValid()) {
-    if (isInSharedAxisBox() && !force) {
-      sharedAxisBox()->zoomXRange(projection, this);
+    if (isInSharedAxisBox()) {
+      if (!force) {
+        qDebug() << "zoom X range: telling shared axis box";
+        sharedAxisBox()->zoomXRange(projection, this);
+      } else {
+        xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+        setProjectionRect(QRectF(projection.x(), projectionRect().y(), projection.width(), projectionRect().height()));
+      }
     } else {
       ZoomCommand *cmd = new ZoomXRangeCommand(this, projection, force);
       _undoStack->push(cmd);
@@ -2779,8 +2791,13 @@ void PlotItem::zoomYRange(const QRectF &projection, bool force) {
   qDebug() << "zoomYRange" << projection << endl;
 #endif
   if (projection.isValid()) {
-    if (isInSharedAxisBox() && !force) {
-      sharedAxisBox()->zoomYRange(projection, this);
+    if (isInSharedAxisBox()) {
+      if (!force) {
+        sharedAxisBox()->zoomYRange(projection, this);
+      } else {
+        yAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+        setProjectionRect(QRectF(projectionRect().x(), projection.y(), projectionRect().width(), projection.height()));
+      }
     } else {
       ZoomCommand *cmd = new ZoomYRangeCommand(this, projection, force);
       _undoStack->push(cmd);
@@ -2794,7 +2811,7 @@ void PlotItem::zoomMaximum(bool force) {
 #if DEBUG_ZOOM
   qDebug() << "zoomMaximum" << endl;
 #endif
-  if (isInSharedAxisBox() && !force) {
+  if (isInSharedAxisBox() && (!force)) {
     sharedAxisBox()->zoomMaximum(this);
   } else {
     ZoomCommand *cmd = new ZoomMaximumCommand(this, force);

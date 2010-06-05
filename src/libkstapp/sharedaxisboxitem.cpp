@@ -371,7 +371,6 @@ QRectF SharedAxisBoxItem::computeRect(PlotAxis::ZoomMode xZoomMode, PlotAxis::Zo
     } else {
       computedRect = plot->computedProjectionRect();
     }
-    
     plot->xAxis()->setAxisZoomMode(existingXMode);
     plot->yAxis()->setAxisZoomMode(existingYMode);
   }
