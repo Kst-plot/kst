@@ -730,13 +730,14 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
 
   _serialOfLastChange = serial;
 
+  if (isInSharedAxisBox()) {
+    // Need to update the box's projectionRect.
+    sharedAxisBox()->updateZoomForDataUpdate(serial);
+  }
+
   QRectF compute = computedProjectionRect();
   QRectF newProjectionRec = projectionRect();
 
-  if (isInSharedAxisBox()) {
-    // Need to update the box's projectionRect.
-    sharedAxisBox()->updateZoomForDataUpdate();
-  }
   if ((xAxis()->axisZoomMode() == PlotAxis::Auto) ||
         (xAxis()->axisZoomMode() == PlotAxis::MeanCentered) ||
         (xAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
@@ -2525,8 +2526,7 @@ bool PlotItem::tryShortcut(const QString &keySequence) {
 
 
 void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
-  if (!(/*_projectionRect == rect ||*/ rect.isEmpty() || !rect.isValid())) {
-
+  if (!(rect.isEmpty() || !rect.isValid())) {
     _projectionRect = rect;
     setPlotBordersDirty(true);
     emit updateAxes();

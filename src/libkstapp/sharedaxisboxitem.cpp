@@ -1142,7 +1142,11 @@ void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool
 }
 
 
-void SharedAxisBoxItem::updateZoomForDataUpdate() {
+void SharedAxisBoxItem::updateZoomForDataUpdate(qint64 serial) {
+  if (serial == _serialOfLastChange) {
+    return;
+  }
+  _serialOfLastChange = serial;
   if (_shareX) {
     switch (xAxisZoomMode()) {
       case PlotAxis::Auto:

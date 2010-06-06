@@ -48,7 +48,7 @@ class SharedAxisBoxItem : public ViewItem
     PlotAxis::ZoomMode yAxisZoomMode() const { return _yAxisZoomMode; }
     void setYAxisZoomMode(PlotAxis::ZoomMode mode);
 
-    void updateZoomForDataUpdate();
+    void updateZoomForDataUpdate(qint64 serial);
 
     PlotItem* keyPlot() { return _keyPlot; };
 
@@ -118,6 +118,7 @@ class SharedAxisBoxItem : public ViewItem
     bool _firstPaint;
     bool _dirty;
     bool _shareX, _shareY;
+    qint64 _serialOfLastChange;
 
     PlotAxis::ZoomMode _xAxisZoomMode, _yAxisZoomMode;
 };
