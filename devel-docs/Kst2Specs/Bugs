@@ -15,23 +15,6 @@ So: it appears that ticks and curves use different rounding
 Probably related bug: points don't always appear centered on the line.
 --------------------
 
-Missing defaults for ascii files
-erase all kst config files to simulate running kst for the first time.
-Open an ascii file
-The following debug comments are spewed:
-Using unset value  Comment Delimiters 
-Using unset value  Filename Pattern 
-Using unset value  Column Delimiter 
-Using unset value  Column Width 
-Using unset value  Data Start 
-Using unset value  Read Fields 
-Using unset value  Use Dot 
-...etc
-
-Opening the dialog has no defaults set for these.  There should be.
-
---------------------
-
 With live data, occasionally the last few (several) samples show as a
 flat-line (at about the value of the last sample at the previous update)
 which magically fixes itself upon the next update.  I think I have
