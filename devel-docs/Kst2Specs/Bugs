@@ -27,9 +27,4 @@ With live data, add a label which contains a scalar showing the
 scalar will indicate a value strikingly similar to the "Min" (or perhaps
 "First") value on the plot rather than the Last value.
 
-----------------------
 
-'z' mode with shared axis messes up:
-  -still draws unneeded plots
-  -doesn't draw hidden axis.
-  
