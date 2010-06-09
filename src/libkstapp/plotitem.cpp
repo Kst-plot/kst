@@ -67,6 +67,7 @@ PlotItem::PlotItem(View *parent)
   _calculatedRightLabelMargin(0.0),
   _calculatedTopLabelMargin(0.0),
   _calculatedBottomLabelMargin(0.0),
+  _calculatedBottomLabelWidth(0.0),
   _calculatedLabelMarginWidth(0.0),
   _calculatedLabelMarginHeight(0.0),
   _calculatedAxisMarginWidth(0.0),
@@ -806,13 +807,14 @@ PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
 
 
 void PlotItem::calculateBorders(QPainter *painter) {
-  calculateBottomTickLabelBound(painter);
-  calculateLeftTickLabelBound(painter);
 
   calculateLeftLabelMargin(painter);
   calculateRightLabelMargin(painter);
   calculateTopLabelMargin(painter);
   calculateBottomLabelMargin(painter);
+
+  calculateBottomTickLabelBound(painter);
+  calculateLeftTickLabelBound(painter);
 
   calculateMargins();
 
@@ -2158,6 +2160,7 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
     painter->restore();
 
     _calculatedBottomLabelMargin = bottomLabelBound.height();
+    _calculatedBottomLabelWidth = bottomLabelBound.width();
 
     //No more than 1/4 the height of the plot
     if (height() < _calculatedBottomLabelMargin * 4)
@@ -2422,10 +2425,14 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
       }
     }
   }
+
   xLabelRect.setHeight(xLabelRect.height() + _calculatedAxisMarginVLead);
 
   if (!_xAxis->baseLabel().isEmpty()) {
     qreal height = painter->boundingRect(QRectF(), flags, _xAxis->baseLabel()).height();
+    if (painter->boundingRect(QRectF(), flags, _xAxis->baseLabel()).width() + _calculatedBottomLabelWidth/2 + xLabelRect.height()/2 > plotRect().width()/2) {
+      height += bottomLabelMargin();
+    }
     if (bottomLabelMargin() < height) {
       xLabelRect.setHeight(xLabelRect.height() + (height - bottomLabelMargin()));
     }
