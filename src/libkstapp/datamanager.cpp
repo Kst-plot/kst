@@ -157,13 +157,12 @@ DataManager::~DataManager() {
   // ought to delete all of our actions before we exit)
 }
 
-
 void DataManager::showContextMenu(const QPoint &position) {
   QList<QAction *> actions;
   if (_session->indexAt(position).isValid()) {
     SessionModel *model = static_cast<SessionModel*>(_session->model());
     if (!model->parent(_session->indexAt(position)).isValid()) {
-      _currentObject = model->generateObjectList().at(_session->indexAt(position).row());
+      _currentObject = model->objectList()->at(_session->indexAt(position).row());
       if (_currentObject) {
         QAction *action = new QAction(_currentObject->Name(), this);
         action->setEnabled(false);
@@ -254,7 +253,7 @@ void DataManager::showContextMenu(const QPoint &position) {
         actions.append(action);
       }
     } else {
-      DataObjectPtr dataObject = kst_cast<DataObject>(model->generateObjectList().at(_session->indexAt(position).parent().row()));
+      DataObjectPtr dataObject = kst_cast<DataObject>(model->objectList()->at(_session->indexAt(position).parent().row()));
       if (dataObject) {
         if (dataObject->outputVectors().count() > _session->indexAt(position).row()) {
           _currentObject = dataObject->outputVectors().values()[_session->indexAt(position).row()];
@@ -306,7 +305,7 @@ void DataManager::showEditDialog(QModelIndex qml) {
   if (!qml.parent().isValid()) { // don't edit slave objects
     SessionModel *model = static_cast<SessionModel*>(_session->model());
 
-    _currentObject = model->generateObjectList().at(qml.row());
+    _currentObject = model->objectList()->at(qml.row());
 
     showEditDialog();
   }
@@ -318,7 +317,7 @@ void DataManager::showEditDialog() {
 
 
 bool DataManager::event(QEvent * event) {
-  if (event->type() == QEvent::WindowActivate) {
+  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Show)) {
     _doc->session()->triggerReset();
   }
   return QDialog::event(event);

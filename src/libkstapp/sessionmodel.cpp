@@ -26,6 +26,7 @@ namespace Kst {
 
 SessionModel::SessionModel(ObjectStore *store)
 : QAbstractItemModel(), _store(store) {
+  generateObjectList();
 }
 
 
@@ -40,40 +41,39 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 
 
 void SessionModel::triggerReset() {
+  generateObjectList();
   reset();
 }
 
 
-const ObjectList<Object> SessionModel::generateObjectList() const {
-  ObjectList<Object> ol;
+void SessionModel::generateObjectList() {
   ObjectList<Primitive> pol = _store->getObjects<Primitive>();
   ObjectList<Relation> rol = _store->getObjects<Relation>();
   ObjectList<DataObject> dol = _store->getObjects<DataObject>();
+  _objectList.clear();
 
   foreach(Primitive* P, pol) {
     if (!P->provider()) {
-      ol.append(P);
+      _objectList.append(P);
     }
   }
 
   foreach(Relation* relation, rol) {
-    ol.append(relation);
+    _objectList.append(relation);
   }
 
   foreach(DataObject* dataObject, dol) {
-    ol.append(dataObject);
+    _objectList.append(dataObject);
   }
-  return ol;
 }
 
 
 int SessionModel::rowCount(const QModelIndex& parent) const {
   Q_ASSERT(_store);
-  ObjectList<Object> dol = generateObjectList();
-
+  //ObjectList<Object> dol = generateObjectList();
   int rc = 0;
   if (!parent.isValid()) {
-    rc = dol.count();  /* + generated primitives */
+    rc = _objectList.count();  /* + generated primitives */
     return rc;
   }
 
@@ -81,7 +81,7 @@ int SessionModel::rowCount(const QModelIndex& parent) const {
     return rc;
   }
 
-  DataObject *pdo = kst_cast<DataObject>(dol.at(parent.row()));
+  DataObject *pdo = kst_cast<DataObject>(_objectList.at(parent.row()));
   if (pdo) {
     pdo->readLock();
     rc = pdo->outputVectors().count();
@@ -96,7 +96,6 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) {
     return QVariant();
   }
-
   if (role == Qt::UserRole) {
     if (index.parent().isValid()) {
       Q_ASSERT(!index.parent().parent().isValid());
@@ -112,7 +111,7 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
       }
     } else {
       Q_ASSERT(_store);
-      DataObjectPtr p = kst_cast<DataObject>(generateObjectList().at(index.row()));
+      DataObjectPtr p = kst_cast<DataObject>(_objectList.at(index.row()));
       return qVariantFromValue(p.data());
     }
   }
@@ -128,18 +127,18 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
   }
 
   Q_ASSERT(_store);
-  ObjectList<Object> objectList = generateObjectList();
+  //ObjectList<Object> objectList = generateObjectList();
 
   const int row = index.row();
-  if (row >= objectList.count()) {
+  if (row >= _objectList.count()) {
     return QVariant();
   }
 
-  if (DataObjectPtr p = kst_cast<DataObject>(objectList.at(row))) {
+  if (DataObjectPtr p = kst_cast<DataObject>(_objectList.at(row))) {
     return dataObjectData(p, index);
-  } else if (RelationPtr p = kst_cast<Relation>(objectList.at(row))) {
+  } else if (RelationPtr p = kst_cast<Relation>(_objectList.at(row))) {
     return relationData(p, index);
-  } else if (PrimitivePtr p=kst_cast<Primitive>(objectList.at(row))) {
+  } else if (PrimitivePtr p=kst_cast<Primitive>(_objectList.at(row))) {
     return primitiveData(p, index);
   } else {
     return QVariant();
@@ -285,20 +284,20 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
   }
 
   Q_ASSERT(_store);
-  ObjectList<Object> dol = generateObjectList();
+  //ObjectList<Object> dol = generateObjectList();
 
   if (!parent.isValid()) {
-    const int cnt = dol.count();
+    const int cnt = _objectList.count();
     if (row >= cnt) {
       return QModelIndex();
     }
     return createIndex(row, col);
   }
 
-  const int cnt = dol.count();
+  const int cnt = _objectList.count();
   DataObject *p = 0;
   if (parent.row() >= 0 && parent.row() < cnt) { 
-    p = kst_cast<DataObject>(dol.at(parent.row()));
+    p = kst_cast<DataObject>(_objectList.at(parent.row()));
   }
   if (!p) {
     return QModelIndex();
@@ -316,13 +315,14 @@ QModelIndex SessionModel::index(int row, int col, const QModelIndex& parent) con
 
 QModelIndex SessionModel::parent(const QModelIndex& index) const {
   // If it is a primitive and has a provider, return the index of that provider
+
   DataObject *dop = static_cast<DataObject*>(index.internalPointer());
   if (!dop) {
     return QModelIndex();
   }
 
   Q_ASSERT(_store);
-  const int cnt = generateObjectList().indexOf(dop);
+  const int cnt = _objectList.indexOf(dop);
   if (cnt < 0) {
     return QModelIndex();
   }

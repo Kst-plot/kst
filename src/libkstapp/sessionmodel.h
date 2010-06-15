@@ -34,15 +34,16 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  const ObjectList<Object> generateObjectList() const;
-
+  void generateObjectList();
   void triggerReset();
-
+  ObjectList<Object> *objectList() {return &_objectList;}
 private:
   QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
   QVariant primitiveData(PrimitivePtr parent, const QModelIndex& index) const;
   QVariant dataObjectData(DataObjectPtr dataObject, const QModelIndex& index) const;
   QVariant relationData(RelationPtr relation, const QModelIndex& index) const;
+
+  ObjectList<Object> _objectList;
 
   ObjectStore *_store;
 };

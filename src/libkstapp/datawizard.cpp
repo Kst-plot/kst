@@ -229,6 +229,12 @@ void DataWizardPageVectors::down() {
 
 void DataWizardPageVectors::filterVectors(const QString& filter) {
   _vectors->clearSelection();
+
+  if (filter=="*") { // optimization
+    _vectors->selectAll();
+    return;
+  }
+
   QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
   QStringList selected;
   for (int i = 0; i < _vectors->count(); i++) {
