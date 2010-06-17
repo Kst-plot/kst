@@ -121,6 +121,7 @@ class SharedAxisBoxItem : public ViewItem
     qint64 _serialOfLastChange;
 
     PlotAxis::ZoomMode _xAxisZoomMode, _yAxisZoomMode;
+    bool _sharedIsDirty;
 };
 
 class CreateSharedAxisBoxCommand : public CreateCommand

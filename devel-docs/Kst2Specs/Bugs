@@ -27,4 +27,10 @@ With live data, add a label which contains a scalar showing the
 scalar will indicate a value strikingly similar to the "Min" (or perhaps
 "First") value on the plot rather than the Last value.
 
+-----------------------
+
+Create a bunch of plots with same X range but different Y range.
+Put them in a shared axis box.  X is shared as expected.
+rmb-> select share Y axis.  The Y zooms are now tied as expected, but the Y 
+axis are not shared.  They should be.
 

@@ -40,7 +40,8 @@ SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
       _shareX(true),
       _shareY(true),
       _xAxisZoomMode(PlotAxis::Auto),
-      _yAxisZoomMode(PlotAxis::Auto) {
+      _yAxisZoomMode(PlotAxis::Auto),
+      _sharedIsDirty(false) {
   setTypeName("Shared Axis Box");
   setBrush(Qt::transparent);
 
@@ -62,9 +63,10 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
     if (_firstPaint && _loaded) {
       sharePlots(painter, true);
       _firstPaint = false;
-    //} else {
-      //sharePlots(painter, false);
+    } else if (_sharedIsDirty) {
+      sharePlots(painter, false);
     }
+    _sharedIsDirty = false;
     updatePlotTiedZoomSupport();
     _keyPlot = 0;
     foreach (PlotItem* plotItem, _sharedPlots) {
@@ -120,6 +122,7 @@ void SharedAxisBoxItem::setXAxisShared(const bool shared) {
   } else {
     _xAxisZoomMode = PlotAxis::FixedExpression;
   }
+  _sharedIsDirty = true;
 }
 
 
@@ -130,6 +133,7 @@ void SharedAxisBoxItem::setYAxisShared(const bool shared) {
   } else {
     _yAxisZoomMode = PlotAxis::FixedExpression;
   }
+  _sharedIsDirty = true;
 }
 
 

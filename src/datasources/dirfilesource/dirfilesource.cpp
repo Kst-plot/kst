@@ -213,7 +213,6 @@ bool DirFileSource::init() {
     _writable = true;
     _frameCount = _dirfile->NFrames();
   }
-
   _watcher = new QFileSystemWatcher();
   if (_fieldList.count() > 1) {
     QString filePath = _dirfile->ReferenceFilename();
