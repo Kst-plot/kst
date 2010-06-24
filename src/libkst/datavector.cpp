@@ -466,7 +466,12 @@ void DataVector::internalUpdate() {
         // FIXME: handle failed resize
       }
     }
-    // for debugging: _dontUseSkipAccel = true;
+    // FIXME:
+    //   -skip acceleration is not supported by any current data sources.
+    //   -there is no API implemented to report if a data source implements skip accel
+    // so: for now, just say it isn't supported here.  Fix if we ever implement a data source
+    //     where skip accel is important (eg, planck HFI...)
+    _dontUseSkipAccel = true;
     if (!_dontUseSkipAccel) {
       int rc;
       int lastRead = -1;
