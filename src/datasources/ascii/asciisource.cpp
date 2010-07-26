@@ -109,8 +109,6 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
     _rowIndex(0L),
-    _tmpBuf(0L),
-    _tmpBufSize(0),
     iv(new DataInterfaceAsciiVector(*this))
 {
   setInterface(iv);
@@ -137,13 +135,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 }
 
 
-AsciiSource::~AsciiSource() {
-  if (_tmpBuf) {
-    free(_tmpBuf);
-    _tmpBuf = 0L;
-    _tmpBufSize = 0;
-  }
-
+AsciiSource::~AsciiSource() 
+{
   if (_rowIndex) {
     free(_rowIndex);
     _rowIndex = 0L;
@@ -152,12 +145,9 @@ AsciiSource::~AsciiSource() {
 }
 
 
-void AsciiSource::reset() {
-  if (_tmpBuf) {
-    free(_tmpBuf);
-    _tmpBuf = 0L;
-    _tmpBufSize = 0;
-  }
+void AsciiSource::reset() 
+{
+  _tmpBuffer.clear();
 
   if (_rowIndex) {
     free(_rowIndex);
@@ -378,21 +368,20 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     _valid = false;
     return 0;
   }
-
-  if (_tmpBufSize < unsigned(bufread)) {
-    _tmpBuf = static_cast<char*>(realloc(_tmpBuf, _tmpBufSize = bufread));
-    if (!_tmpBuf) {
-      return -1;
-    }
+  
+  _tmpBuffer.reserve(bufread);
+  if(_tmpBuffer.capacity() < bufread) {
+    return -1;
   }
+  char* data = _tmpBuffer.data();
 
-  file.seek(bufstart);
-  file.read(_tmpBuf, bufread);
+  file.seek(bufstart);    
+  file.read(data, bufread);
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
       // Read appropriate column and convert to double
-      v[i] = lexc.toDouble(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
+      v[i] = lexc.toDouble(data + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
     }
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     for (int i = 0; i < n; ++i, ++s) {
@@ -400,21 +389,21 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
       int i_col = 0;
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (_config._columnDelimiter.value().contains(_tmpBuf[ch])) {
+        if (_config._columnDelimiter.value().contains(data[ch])) {
           incol = false;
-        } else if (_tmpBuf[ch] == '\n' || _tmpBuf[ch] == '\r') {
+        } else if (data[ch] == '\n' || data[ch] == '\r') {
           break;
-        } else if (_config._delimiters.value().contains(_tmpBuf[ch])) {
+        } else if (_config._delimiters.value().contains(data[ch])) {
           break;
         } else {
           if (!incol) {
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = lexc.toDouble(_tmpBuf + ch);
-              } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
-                  tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
+              if (isdigit(data[ch]) || data[ch] == '-' || data[ch] == '.' || data[ch] == '+') {
+                v[i] = lexc.toDouble(data + ch);
+              } else if (ch + 2 < bufread && tolower(data[ch]) == 'i' &&
+                  tolower(data[ch + 1]) == 'n' && tolower(data[ch + 2]) == 'f') {
                 v[i] = INF;
               }
               break;
@@ -430,23 +419,23 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (isspace(_tmpBuf[ch])) {
-          if (_tmpBuf[ch] == '\n' || _tmpBuf[ch] == '\r') {
+        if (isspace(data[ch])) {
+          if (data[ch] == '\n' || data[ch] == '\r') {
             break;
           } else {
             incol = false;
           }
-        } else if (_config._delimiters.value().contains(_tmpBuf[ch])) {
+        } else if (_config._delimiters.value().contains(data[ch])) {
           break;
         } else {
           if (!incol) {
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = lexc.toDouble(_tmpBuf + ch);
-              } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
-                  tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
+              if (isdigit(data[ch]) || data[ch] == '-' || data[ch] == '.' || data[ch] == '+') {
+                v[i] = lexc.toDouble(data + ch);
+              } else if (ch + 2 < bufread && tolower(data[ch]) == 'i' &&
+                  tolower(data[ch + 1]) == 'n' && tolower(data[ch + 2]) == 'f') {
                 v[i] = INF;
               }
               break;

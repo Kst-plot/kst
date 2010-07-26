@@ -1,4 +1,5 @@
-/***************************************************************************
+/*************************
+**************************************************
                        ascii.h  -  ASCII data source
                              -------------------
     begin                : Fri Oct 17 2003
@@ -22,6 +23,7 @@
 #include "dataplugin.h"
 #include "asciisourceconfig.h"
 
+#include <QVarLengthArray>
 
 class QFile;
 class DataInterfaceAsciiVector;
@@ -74,8 +76,10 @@ class AsciiSource : public Kst::DataSource
     int _byteLength;
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
-    char *_tmpBuf;
-    uint _tmpBufSize;
+    
+    // TODO Is this too big or should we use even more: 1MB on the stack?
+    QVarLengthArray<char, 1*1024*1024> _tmpBuffer;
+
     bool _haveHeader;
     bool _fieldListComplete;
 
