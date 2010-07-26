@@ -581,9 +581,9 @@ void AsciiSource::save(QXmlStreamWriter &s)
 }
 
 
-void AsciiSource::parseProperties(QXmlStreamAttributes &properties) {
+void AsciiSource::parseProperties(QXmlStreamAttributes &properties) 
+{
   _config.parseProperties(properties);
-  reset();
 }
 
 
