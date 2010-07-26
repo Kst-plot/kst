@@ -120,7 +120,6 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
     _rowIndex(0L),
-    _config(0L),
     _tmpBuf(0L),
     _tmpBufSize(0),
     iv(new DataInterfaceAsciiVector(*this))
@@ -138,10 +137,9 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   if (!type.isEmpty() && type != asciiTypeString) {
     return;
   }
-  _config = new AsciiSourceConfig;
-  _config->readGroup(*cfg, filename);
+  _config.readGroup(*cfg, filename);
   if (!e.isNull()) {
-    _config->load(e);
+    _config.load(e);
   }
 
   _valid = true;
@@ -162,9 +160,6 @@ AsciiSource::~AsciiSource() {
     _rowIndex = 0L;
     _numLinesAlloc = 0;
   }
-
-  delete _config;
-  _config = 0L;
 }
 
 
@@ -219,12 +214,12 @@ bool AsciiSource::initRowIndex() {
   _byteLength = 0;
   _numFrames = 0;
 
-  if (_config->_dataLine > 0) {
+  if (_config._dataLine > 0) {
     QFile file(_filename);
     if (!file.open(QIODevice::ReadOnly)) {
       return false;
     }
-    int left = _config->_dataLine;
+    int left = _config._dataLine;
     int didRead = 0;
     QByteArray ignore;
     while (left > 0) {
@@ -250,12 +245,12 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
       return NoChange;
     }
     // Re-update the field list since we have one now
-    _fieldList = fieldListFor(_filename, _config);
+    _fieldList = fieldListFor(_filename, &_config);
     _fieldListComplete = _fieldList.count() > 1;
 
     // Re-update the scalar list since we have one now
-    _scalarList = scalarListFor(_filename, _config);
-    _stringList = stringListFor(_filename, _config);
+    _scalarList = scalarListFor(_filename, &_config);
+    _stringList = stringListFor(_filename, &_config);
   }
 
   bool forceUpdate = false;
@@ -281,7 +276,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
   int bufstart, bufread;
   bool new_data = false;
   char tmpbuf[MAXBUFREADLEN+1];
-  QByteArray delbytes = _config->_delimiters.value().toLatin1();
+  QByteArray delbytes = _config._delimiters.value().toLatin1();
   const char *del = delbytes.constData();
 
   bool first_read = (_numFrames==0);
@@ -370,9 +365,9 @@ private:
 int AsciiSource::readField(double *v, const QString& field, int s, int n) {
 
   NumberLocale dot;
-  char sep = _config->_localSeparator;
+  char sep = _config._localSeparator;
 
-  if (_config->_useDot) {
+  if (_config._useDot) {
 #ifdef USE_KST_ATOF
     sep = '.';
 #else
@@ -435,22 +430,22 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   file.seek(bufstart);
   file.read(_tmpBuf, bufread);
 
-  if (_config->_columnType == AsciiSourceConfig::Fixed) {
+  if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
       // Read appropriate column and convert to double
-      v[i] = atof(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config->_columnWidth * (col - 1), sep);
+      v[i] = atof(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1), sep);
     }
-  } else if (_config->_columnType == AsciiSourceConfig::Custom) {
+  } else if (_config._columnType == AsciiSourceConfig::Custom) {
     for (int i = 0; i < n; ++i, ++s) {
       bool incol = false;
       int i_col = 0;
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (_config->_columnDelimiter.value().contains(_tmpBuf[ch])) {
+        if (_config._columnDelimiter.value().contains(_tmpBuf[ch])) {
           incol = false;
         } else if (_tmpBuf[ch] == '\n' || _tmpBuf[ch] == '\r') {
           break;
-        } else if (_config->_delimiters.value().contains(_tmpBuf[ch])) {
+        } else if (_config._delimiters.value().contains(_tmpBuf[ch])) {
           break;
         } else {
           if (!incol) {
@@ -482,7 +477,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
           } else {
             incol = false;
           }
-        } else if (_config->_delimiters.value().contains(_tmpBuf[ch])) {
+        } else if (_config._delimiters.value().contains(_tmpBuf[ch])) {
           break;
         } else {
           if (!incol) {
@@ -665,23 +660,23 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 
 void AsciiSource::save(QXmlStreamWriter &s) {
   Kst::DataSource::save(s);
-  _config->save(s);
+  _config.save(s);
 }
 
 
 void AsciiSource::parseProperties(QXmlStreamAttributes &properties) {
-  _config->parseProperties(properties);
+  _config.parseProperties(properties);
   reset();
 }
 
 
 bool AsciiSource::supportsTimeConversions() const {
-  return false; //fieldList().contains(_config->_indexVector) && _config->_indexInterpretation != AsciiSourceConfig::Unknown && _config->_indexInterpretation != AsciiSourceConfig::INDEX;
+  return false; //fieldList().contains(_config._indexVector) && _config._indexInterpretation != AsciiSourceConfig::Unknown && _config._indexInterpretation != AsciiSourceConfig::INDEX;
 }
 
 
 int AsciiSource::sampleForTime(double ms, bool *ok) {
-  switch (_config->_indexInterpretation) {
+  switch (_config._indexInterpretation) {
     case AsciiSourceConfig::Seconds:
       // FIXME: make sure "seconds" exists in _indexVector
       if (ok) {
@@ -706,7 +701,7 @@ const QString& AsciiSource::typeString() const {
 
 
 int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
-  switch (_config->_indexInterpretation) {
+  switch (_config._indexInterpretation) {
     case AsciiSourceConfig::Seconds:
       // FIXME: make sure "time" exists in _indexVector
       if (ok) {

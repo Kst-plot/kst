@@ -17,8 +17,10 @@
 #ifndef KST_ASCII_SOURCE_CONFIG_H
 #define KST_ASCII_SOURCE_CONFIG_H
 
-#include "asciisource.h"
 #include "namedparameter.h"
+
+#include <QDomElement>
+
 
 class AsciiSourceConfig {
 

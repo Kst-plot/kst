@@ -20,9 +20,9 @@
 
 #include "datasource.h"
 #include "dataplugin.h"
+#include "asciisourceconfig.h"
 
 
-class AsciiSourceConfig;
 class QFile;
 class DataInterfaceAsciiVector;
 
@@ -73,7 +73,7 @@ class AsciiSource : public Kst::DataSource
     int _numFrames;
     int _byteLength;
     friend class ConfigWidgetAscii;
-    mutable AsciiSourceConfig *_config;
+    mutable AsciiSourceConfig _config;
     char *_tmpBuf;
     uint _tmpBufSize;
     bool _haveHeader;

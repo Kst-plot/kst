@@ -18,6 +18,7 @@
 
 #include "asciisourceconfig.h"
 
+#include "asciisource.h"
 
 //
 // AsciiSourceConfig

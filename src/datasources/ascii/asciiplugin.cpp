@@ -131,9 +131,9 @@ void ConfigWidgetAscii::load() {
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     _ac->_indexVector->addItems(src->vector().list());
-    _ac->_indexVector->setCurrentIndex(src->_config->_indexInterpretation - 1);
-    if (src->vector().list().contains(src->_config->_indexVector)) {
-      _ac->_indexVector->setEditText(src->_config->_indexVector);
+    _ac->_indexVector->setCurrentIndex(src->_config._indexInterpretation - 1);
+    if (src->vector().list().contains(src->_config._indexVector)) {
+      _ac->_indexVector->setEditText(src->_config._indexVector);
     }
   } else {
     _ac->_indexVector->addItem("INDEX");
@@ -158,7 +158,7 @@ void ConfigWidgetAscii::save() {
 
     // Update the instance from our new settings
     if (src->reusable()) {
-      src->_config->readGroup(settings(), src->fileName());
+      src->_config.readGroup(settings(), src->fileName());
       src->reset();
       src->internalDataSourceUpdate();
     }
