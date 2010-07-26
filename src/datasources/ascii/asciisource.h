@@ -70,15 +70,16 @@ class AsciiSource : public Kst::DataSource
     static QStringList stringListFor(const QString& filename, AsciiSourceConfig *cfg);
 
   private:
-    int *_rowIndex;
-    int _numLinesAlloc;
+    // TODO Is this too big or should we use even more: 1MB on the stack?
+#define KST_PREALLOC 1 * 1024 * 1024
+    QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
+    QVarLengthArray<int, KST_PREALLOC / 4> _rowIndex;
+
     int _numFrames;
     int _byteLength;
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
-    
-    // TODO Is this too big or should we use even more: 1MB on the stack?
-    QVarLengthArray<char, 1*1024*1024> _tmpBuffer;
+       
 
     bool _haveHeader;
     bool _fieldListComplete;
