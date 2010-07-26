@@ -37,7 +37,7 @@ class AsciiSource : public Kst::DataSource
 
     ~AsciiSource();
 
-    static int readFullLine(QFile &file, QByteArray &str);
+
     bool initRowIndex();
 
     virtual UpdateType internalDataSourceUpdate();
@@ -89,6 +89,10 @@ class AsciiSource : public Kst::DataSource
     QStringList _fieldList;
 
     DataInterfaceAsciiVector* iv;
+
+    bool openValidFile(QFile &file);
+
+    static bool openFile(QFile &file);
 
     // TODO remove
     friend class DataInterfaceAsciiVector;

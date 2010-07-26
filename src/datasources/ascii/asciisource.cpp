@@ -113,22 +113,15 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 {
   setInterface(iv);
 
-  // enable all pre-allocated memory
-  _tmpBuffer.resize(_tmpBuffer.capacity());
-  _rowIndex.resize(_rowIndex.capacity());
-
-
-  //TIME_IN_SCOPE(Ctor_AsciiSource);
+  reset();   
 
   setUpdateType(File);
 
-  _valid = false;
-  _haveHeader = false;
-  _fieldListComplete = false;
   _source = asciiTypeString;
   if (!type.isEmpty() && type != asciiTypeString) {
     return;
   }
+
   _config.readGroup(*cfg, filename);
   if (!e.isNull()) {
     _config.load(e);
@@ -149,7 +142,12 @@ void AsciiSource::reset()
 {
   _tmpBuffer.clear();
   _rowIndex.clear();
-  
+  // enable all pre-allocated memory
+  _tmpBuffer.resize(_tmpBuffer.capacity());
+  _rowIndex.resize(_rowIndex.capacity());
+
+
+  _valid = false;
   _numFrames = 0;
   _haveHeader = false;
   _fieldListComplete = false;
@@ -161,22 +159,16 @@ void AsciiSource::reset()
 }
 
 
-int AsciiSource::readFullLine(QFile &file, QByteArray &str) {
-  str = file.readLine(1000);
-  if (str.isEmpty())
-    return str.size();
+bool AsciiSource::openFile(QFile &file) 
+{
+  return file.open(QIODevice::ReadOnly | QIODevice::Text);
+}
 
-  QByteArray strExtra;
-  while (str[str.size()-1] != '\n') {
-    strExtra = file.readLine(1000);
-    if (!strExtra.isEmpty()) {
-      str += strExtra;
-    } else {
-      break;
-    }
-  }
 
-  return str.size();
+bool AsciiSource::openValidFile(QFile &file) 
+{
+  _valid = openFile(file);
+  return _valid;
 }
 
 
@@ -188,18 +180,17 @@ bool AsciiSource::initRowIndex()
 
   if (_config._dataLine > 0) {
     QFile file(_filename);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!openValidFile(file)) {
       return false;
     }
     int left = _config._dataLine;
-    int didRead = 0;
-    QByteArray ignore;
+    int didRead = 0;    
     while (left > 0) {
-      int thisRead = AsciiSource::readFullLine(file, ignore);
-      if (thisRead <= 0 || file.atEnd()) {
+      QByteArray line = file.readLine();
+      if (line.isEmpty() || file.atEnd()) {
         return false;
       }
-      didRead += thisRead;
+      didRead += line.size();
       --left;
     }
     _rowIndex[0] = didRead;
@@ -210,7 +201,8 @@ bool AsciiSource::initRowIndex()
 
 
 #define MAXBUFREADLEN 32768
-Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
+Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
+{
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
@@ -227,23 +219,16 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
 
   bool forceUpdate = false;
   QFile file(_filename);
-  if (file.exists()) {
-    if (uint(_byteLength) != file.size() || !_valid) {
+  if (openValidFile(file)) {
+    // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
+    if (_byteLength != file.size()) {
       forceUpdate = true;
     }
     _byteLength = file.size();
   } else {
-    _valid = false;
     return NoChange;
   }
 
-  if (!file.open(QIODevice::ReadOnly)) {
-    // quietly fail - no data to be had here
-    _valid = false;
-    return NoChange;
-  }
-
-  _valid = true;
 
   int bufstart, bufread;
   bool new_data = false;
@@ -277,7 +262,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
             _rowIndex.resize(_rowIndex.size() + 32768);
             if (_numFrames >= _rowIndex.size()) {
               // TODO where could we report an error;
-              return;
+              return NoChange;
             }
           }
           new_data = true;
@@ -294,7 +279,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() {
     }
   } while ((bufread == MAXBUFREADLEN) && (!first_read));
 
-  file.close();
   return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
 
@@ -360,7 +344,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
 
   QFile file(_filename);
-  if (!file.open(QIODevice::ReadOnly)) {
+  if (!openValidFile(file)) {
     _valid = false;
     return 0;
   }
@@ -441,8 +425,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     }
   }
 
-  file.close();
-
   return n;
 }
 
@@ -457,43 +439,35 @@ bool AsciiSource::isEmpty() const {
   return _numFrames < 1;
 }
 
-QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfig *cfg) {
-  Q_UNUSED(cfg)
+QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfig*) 
+{
   QStringList rc;
   QFile file(filename);
-
-  if (!file.open(QIODevice::ReadOnly)) {
+  if (!openFile(file)) {
     return rc;
   }
-
-  file.close();
-
   rc += "FRAMES";
   return rc;
-
 }
 
-QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig *cfg) {
-  Q_UNUSED(cfg)
+
+QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig*) 
+{
   QStringList rc;
   QFile file(filename);
-
-  if (!file.open(QIODevice::ReadOnly)) {
+  if (!openFile(file)) {
     return rc;
   }
-
-  file.close();
-
   rc += "FILE";
   return rc;
-
 }
 
-QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig *cfg) {
+
+QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig* cfg) 
+{
   QStringList rc;
   QFile file(filename);
-
-  if (!file.open(QIODevice::ReadOnly)) {
+  if (!openFile(file)) {
     return rc;
   }
 
@@ -501,9 +475,9 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 
   if (cfg->_readFields) {
     int l = cfg->_fieldsLine;
-    QByteArray line;
     while (!file.atEnd()) {
-      int r = readFullLine(file, line);
+      const QByteArray line = file.readLine();
+      int r = line.size();
       if (l-- == 0) {
         if (r >= 0) {
           if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
@@ -546,9 +520,9 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   int cnt;
   int nextscan = 0;
   int curscan = 0;
-  QByteArray line;
   while (!file.atEnd() && !done && (nextscan < 200)) {
-    int r = readFullLine(file, line);
+    QByteArray line = file.readLine();
+    int r = line.size();
     if (skip > 0) { //keep skipping until desired line
       --skip;
       if (r < 0) {
@@ -593,7 +567,6 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     }
   }
 
-  file.close();
   for (int i = 1; i <= maxcnt; ++i) {
     rc += i18n("Column %1").arg(i);
   }
@@ -601,7 +574,9 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   return rc;
 }
 
-void AsciiSource::save(QXmlStreamWriter &s) {
+
+void AsciiSource::save(QXmlStreamWriter &s) 
+{
   Kst::DataSource::save(s);
   _config.save(s);
 }

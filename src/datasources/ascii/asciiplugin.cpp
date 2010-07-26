@@ -331,7 +331,8 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     int skip = config._dataLine;
 
     while (!done) {
-      rc = AsciiSource::readFullLine(f, s);
+      QByteArray s = f.readLine();
+      rc = f.size();
       if (skip > 0) {
         --skip;
         if (rc <= 0) {
