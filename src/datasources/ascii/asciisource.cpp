@@ -22,27 +22,16 @@
 #include "math_kst.h"
 #include "kst_inf.h"
 #include "kst_i18n.h"
+#include "kst_atof.h"
 #include "measuretime.h"
 
 #include <QFile>
-#include <QLocale>
 
 #include <assert.h>
 #include <ctype.h>
-#include <math.h>
 #include <stdlib.h>
 
 
-#ifdef Q_OS_WIN
-#define USE_KST_ATOF
-#endif
-
-#ifdef USE_KST_ATOF
-#include "kst_atof.h"
-#define atof(X, Y) kst_atof(X, Y)
-#else
-#define atof(X, Y) atof(X)
-#endif
 
 using namespace Kst;
 
@@ -338,43 +327,13 @@ int AsciiSource::readString(QString &S, const QString& string) {
 */
 
 
-struct NumberLocale
+
+
+
+int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
-  NumberLocale() : use_dot(false) {
-  }
-
-  ~NumberLocale() {
-    if (use_dot) {
-      //printf("original LC_NUMERIC: %s\n", orig.constData());
-      setlocale(LC_NUMERIC, orig.constData());
-    }
-  }
-
-  void useDot() {
-    use_dot = true;
-    orig = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
-    setlocale(LC_NUMERIC, "C");
-  }
-
-private:
-  bool use_dot;
-  QByteArray orig;
-};
-
-
-int AsciiSource::readField(double *v, const QString& field, int s, int n) {
-
-  NumberLocale dot;
-  char sep = _config._localSeparator;
-
-  if (_config._useDot) {
-#ifdef USE_KST_ATOF
-    sep = '.';
-#else
-    (void) sep;
-    dot.useDot();
-#endif
-  }
+  LexicalCast lexc;
+  lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
 
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
@@ -433,7 +392,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
       // Read appropriate column and convert to double
-      v[i] = atof(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1), sep);
+      v[i] = lexc.toDouble(_tmpBuf + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
     }
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     for (int i = 0; i < n; ++i, ++s) {
@@ -453,7 +412,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
             ++i_col;
             if (i_col == col) {
               if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = atof(_tmpBuf + ch, sep);
+                v[i] = lexc.toDouble(_tmpBuf + ch);
               } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
                   tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
                 v[i] = INF;
@@ -485,7 +444,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n) {
             ++i_col;
             if (i_col == col) {
               if (isdigit(_tmpBuf[ch]) || _tmpBuf[ch] == '-' || _tmpBuf[ch] == '.' || _tmpBuf[ch] == '+') {
-                v[i] = atof(_tmpBuf + ch, sep);
+                v[i] = lexc.toDouble(_tmpBuf + ch);
               } else if (ch + 2 < bufread && tolower(_tmpBuf[ch]) == 'i' &&
                   tolower(_tmpBuf[ch + 1]) == 'n' && tolower(_tmpBuf[ch + 2]) == 'f') {
                 v[i] = INF;

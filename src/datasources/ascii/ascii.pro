@@ -8,16 +8,18 @@ INCLUDEPATH += $$OUTPUT_DIR/src/datasources/ascii/tmp
 SOURCES += \
   asciisource.cpp \
   asciisourceconfig.cpp \
-  asciiplugin.cpp
-
-win32:SOURCES += kst_atof.cpp
+  asciiplugin.cpp \
+  kst_atof.cpp
 
 HEADERS += \
   asciisource.h \
   asciisourceconfig.h \
   asciiplugin.h \
   namedparameter.h \
+  kst_atof.h  \
   ../../libkst/kst_inf.h
 
-win32:HEADERS += kst_atof.h
 FORMS += asciiconfig.ui
+
+win32:DEFINES += KST_USE_KST_ATOF  
+

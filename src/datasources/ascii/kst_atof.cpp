@@ -1,13 +1,19 @@
 // patched BSD V7 code
 // http://www.bsdlover.cn/study/UnixTree/V7/usr/src/libc/gen/atof.c.html
 
+#include "kst_atof.h"
+
 #include <math.h>
 #include <ctype.h>
+
+#include <QLocale>
+
 
 #define LOGHUGE 39
 
 
-double kst_atof(const char* p, const char sep)
+#ifdef KST_USE_KST_ATOF
+double LexicalCast::toDouble(const char* p) const
 {
 	int c;
 	double fl, flexp, exp5;
@@ -36,7 +42,7 @@ double kst_atof(const char* p, const char sep)
 		nd++;
 	}
 
-	if (c == sep) {
+	if (c == _separator) {
 		while ((c = *p++), isdigit(c)) {
 			if (fl<big) {
 				fl = 10*fl + (c-'0');
@@ -95,5 +101,34 @@ double kst_atof(const char* p, const char sep)
 		fl = -fl;
 	return(fl);
 }
+#endif
+
+
+LexicalCast::LexicalCast() : _useDot(false) 
+{
+}
+
+
+LexicalCast::~LexicalCast() 
+{
+  if (_useDot) {
+    setlocale(LC_NUMERIC, _originalLocal.constData());
+  }
+}
+
+
+void LexicalCast::setDecimalSeparator(bool useDot, char separator)
+{
+  _useDot = useDot;  
+  if (_useDot) {   
+    _separator = '.';
+    _originalLocal = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
+    setlocale(LC_NUMERIC, "C");
+  } else {
+    _separator = separator;
+  }
+}
+
+
 
 // vim: ts=2 sw=2 et
