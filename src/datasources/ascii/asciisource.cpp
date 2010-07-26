@@ -345,7 +345,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
   QFile file(_filename);
   if (!openValidFile(file)) {
-    _valid = false;
     return 0;
   }
   
