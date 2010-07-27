@@ -88,6 +88,8 @@ class AsciiSource : public Kst::DataSource
     QStringList _stringList;
     QStringList _fieldList;
 
+    int columnOfField(const QString& field) const;
+
     DataInterfaceAsciiVector* iv;
 
     bool openValidFile(QFile &file);

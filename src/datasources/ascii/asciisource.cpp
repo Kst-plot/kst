@@ -303,6 +303,26 @@ int AsciiSource::readString(QString &S, const QString& string) {
 */
 
 
+int AsciiSource::columnOfField(const QString& field) const
+{
+  if (_fieldList.contains(field)) {
+    return _fieldList.indexOf(field);
+  } 
+  
+  if (_fieldListComplete) {
+    return -1;
+  }
+
+  bool ok = false;
+  int col = field.toInt(&ok);
+  if (ok) {
+    return col;
+  }
+
+  return -1;
+}
+
+
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
@@ -320,29 +340,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     return n;
   }
 
-  QStringList fieldList = _fieldList;
-  int col = 0;
-  for (QStringList::ConstIterator i = fieldList.begin(); i != fieldList.end(); ++i) {
-    if (*i == field) {
-      break;
-    }
-    ++col;
-  }
-
-  if (col + 1 > fieldList.count()) {
-    if (_fieldListComplete) {
-      return 0;
-    }
-    bool ok = false;
-    col = field.toInt(&ok);
-    if (!ok) {
-      return 0;
-    }
+  int col = columnOfField(field);
+  if (col == -1) {
+    return 0;
   }
 
   int bufstart = _rowIndex[s];
   int bufread = _rowIndex[s + n] - bufstart;
-
   if (bufread <= 0) {
     return 0;
   }
