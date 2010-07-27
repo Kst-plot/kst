@@ -114,10 +114,10 @@ const QString AsciiSource::asciiTypeKey()
 
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
-  Kst::DataSource(store, cfg, filename, type),
-  iv(new DataInterfaceAsciiVector(*this)),
+  Kst::DataSource(store, cfg, filename, type),  
   _tmpBuffer(),
-  _rowIndex()
+  _rowIndex(),
+  iv(new DataInterfaceAsciiVector(*this))
 {
   setInterface(iv);
 

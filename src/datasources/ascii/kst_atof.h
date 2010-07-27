@@ -2,7 +2,7 @@
 #define KST_ATOF_H
 
 #include <QByteArray>
-#include <math.h>
+#include <stdlib.h>
 
 
 struct LexicalCast
