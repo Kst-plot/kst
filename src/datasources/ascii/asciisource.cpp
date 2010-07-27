@@ -172,6 +172,7 @@ bool AsciiSource::openValidFile(QFile &file)
 
 bool AsciiSource::initRowIndex() 
 {
+  // capacity is at least the pre-allocated memory
   _rowIndex.resize(_rowIndex.capacity());
 
   _rowIndex[0] = 0;
