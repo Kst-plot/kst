@@ -142,15 +142,13 @@ void AsciiSource::reset()
 {
   _tmpBuffer.clear();
   _rowIndex.clear();
-  // enable all pre-allocated memory
-  _tmpBuffer.resize(_tmpBuffer.capacity());
-  _rowIndex.resize(_rowIndex.capacity());
-
 
   _valid = false;
+  _byteLength = 0;
   _numFrames = 0;
   _haveHeader = false;
   _fieldListComplete = false;
+
   _fieldList.clear();
   _scalarList.clear();
   _stringList.clear();
@@ -174,6 +172,8 @@ bool AsciiSource::openValidFile(QFile &file)
 
 bool AsciiSource::initRowIndex() 
 {
+  _rowIndex.resize(_rowIndex.capacity());
+
   _rowIndex[0] = 0;
   _byteLength = 0;
   _numFrames = 0;
@@ -347,7 +347,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (!openValidFile(file)) {
     return 0;
   }
-  
+    
   _tmpBuffer.resize(bufread);
   if(_tmpBuffer.size() < bufread) {
     return -1;
@@ -584,6 +584,8 @@ void AsciiSource::save(QXmlStreamWriter &s)
 void AsciiSource::parseProperties(QXmlStreamAttributes &properties) 
 {
   _config.parseProperties(properties);
+  reset();
+  internalDataSourceUpdate();
 }
 
 

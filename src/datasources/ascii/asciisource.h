@@ -75,12 +75,12 @@ class AsciiSource : public Kst::DataSource
     QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
     QVarLengthArray<int, KST_PREALLOC / 4> _rowIndex;
 
-    int _numFrames;
-    int _byteLength;
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
        
 
+    int _numFrames;
+    int _byteLength;
     bool _haveHeader;
     bool _fieldListComplete;
 
@@ -91,7 +91,6 @@ class AsciiSource : public Kst::DataSource
     DataInterfaceAsciiVector* iv;
 
     bool openValidFile(QFile &file);
-
     static bool openFile(QFile &file);
 
     // TODO remove
