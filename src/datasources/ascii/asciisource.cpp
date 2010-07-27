@@ -201,6 +201,8 @@ bool AsciiSource::initRowIndex()
 }
 
 
+
+
 #define MAXBUFREADLEN 32768
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
 {
@@ -231,28 +233,23 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
   }
 
 
-  int bufstart, bufread;
+  int bufread;
   bool new_data = false;
-  char tmpbuf[MAXBUFREADLEN+1];
+  bool first_read = (_numFrames == 0);
+
   QByteArray delbytes = _config._delimiters.value().toLatin1();
   const char *del = delbytes.constData();
 
-  bool first_read = (_numFrames==0);
   do {
-    /* Read the tmpbuffer, starting at row_index[_numFrames] */
-    if (_byteLength - _rowIndex[_numFrames] > MAXBUFREADLEN) {
-      bufread = MAXBUFREADLEN;
-    } else {
-      bufread = _byteLength - _rowIndex[_numFrames];
-    }
-
-    bufstart = _rowIndex[_numFrames];
-    file.seek(bufstart); // expensive?
-    file.read(tmpbuf, bufread);
+    // Read the tmpbuffer, starting at row_index[_numFrames]
+    QVarLengthArray<char, MAXBUFREADLEN + 1> tmpbuf;
+    tmpbuf.resize(tmpbuf.capacity());
+    int bufstart = _rowIndex[_numFrames];
+    bufread = readFromFile(file, tmpbuf, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
     tmpbuf[bufread] = '\0';
 
     bool is_comment = false, has_dat = false;
-    char *comment = strpbrk(tmpbuf, del);
+    char *comment = strpbrk(tmpbuf.data(), del);
     for (int i = 0; i < bufread; i++) {
       if (comment == &(tmpbuf[i])) {
         is_comment = true;
@@ -273,8 +270,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
         if (comment && comment < &(tmpbuf[i])) {
           comment = strpbrk(&(tmpbuf[i]), del);
         }
-      } else if (!is_comment && !isspace(tmpbuf[i])) {  // FIXME: this breaks
-                                                        // custom delimiters
+      } else if (!is_comment && !isspace(tmpbuf[i])) {  
+        // FIXME: this breaks custom delimiters
         has_dat = true;
       }
     }
@@ -348,14 +345,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (!openValidFile(file)) {
     return 0;
   }
-    
-  _tmpBuffer.resize(bufread);
-  if(_tmpBuffer.size() < bufread) {
-    return -1;
-  }
-
-  file.seek(bufstart);    
-  file.read(&_tmpBuffer[0], bufread);
+  readFromFile(file, _tmpBuffer, bufstart, bufread);    
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {

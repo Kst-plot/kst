@@ -24,8 +24,8 @@
 #include "asciisourceconfig.h"
 
 #include <QVarLengthArray>
+#include <QFile>
 
-class QFile;
 class DataInterfaceAsciiVector;
 
 class AsciiSource : public Kst::DataSource
@@ -92,10 +92,28 @@ class AsciiSource : public Kst::DataSource
 
     bool openValidFile(QFile &file);
     static bool openFile(QFile &file);
+    template<class T>
+    int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
     // TODO remove
     friend class DataInterfaceAsciiVector;
 };
+
+
+template<class T>
+int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
+{    
+  if (maximalBytes == -1) {
+    buffer.resize(bytesToRead);
+  } else {
+    bytesToRead = qMin(bytesToRead, maximalBytes);
+    if (buffer.size() < bytesToRead) {
+      buffer.resize(bytesToRead);
+    }
+  }
+  file.seek(start); // expensive?
+  return file.read(buffer.data(), bytesToRead);
+}
 
 
 #endif
