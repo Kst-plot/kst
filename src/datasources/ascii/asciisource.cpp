@@ -39,6 +39,8 @@ using namespace Kst;
 // Vector interface
 //
 
+
+//-------------------------------------------------------------------------------------------
 class DataInterfaceAsciiVector : public DataSource::DataInterface<DataVector>
 {
 public:
@@ -65,7 +67,7 @@ public:
 };
 
 
-
+//-------------------------------------------------------------------------------------------
 const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &field) const
 {
   if (!ascii._fieldList.contains(field))
@@ -75,12 +77,14 @@ const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &fie
 }
 
 
+//-------------------------------------------------------------------------------------------
 int DataInterfaceAsciiVector::read(const QString& field, const DataVector::Param& p)
 {
   return ascii.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }
 
 
+//-------------------------------------------------------------------------------------------
 // TODO FRAMES only in vector?
 QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
 {
@@ -97,14 +101,18 @@ QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
 // AsciiSource
 //
 
+//-------------------------------------------------------------------------------------------
 static const QString asciiTypeString = I18N_NOOP("ASCII file");
 
+
+//-------------------------------------------------------------------------------------------
 const QString AsciiSource::asciiTypeKey()
 {
   return asciiTypeString;
 }
 
 
+//-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
   iv(new DataInterfaceAsciiVector(*this)),
@@ -133,11 +141,13 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 }
 
 
+//-------------------------------------------------------------------------------------------
 AsciiSource::~AsciiSource() 
 {
 }
 
 
+//-------------------------------------------------------------------------------------------
 void AsciiSource::reset() 
 {
   _tmpBuffer.clear();
@@ -157,12 +167,14 @@ void AsciiSource::reset()
 }
 
 
+//-------------------------------------------------------------------------------------------
 bool AsciiSource::openFile(QFile &file) 
 {
   return file.open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
 
+//-------------------------------------------------------------------------------------------
 bool AsciiSource::openValidFile(QFile &file) 
 {
   _valid = openFile(file);
@@ -170,6 +182,7 @@ bool AsciiSource::openValidFile(QFile &file)
 }
 
 
+//-------------------------------------------------------------------------------------------
 bool AsciiSource::initRowIndex() 
 {
   // capacity is at least the pre-allocated memory
@@ -201,8 +214,7 @@ bool AsciiSource::initRowIndex()
 }
 
 
-
-
+//-------------------------------------------------------------------------------------------
 #define MAXBUFREADLEN 32768
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
 {
@@ -231,7 +243,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
   } else {
     return NoChange;
   }
-
 
   int bufread;
   bool new_data = false;
@@ -280,10 +291,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
   return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
 
-
-
-
-
+//-------------------------------------------------------------------------------------------
 /* TODO needed?
 int AsciiSource::readString(QString &S, const QString& string) {
   if (string == "FILE") {
@@ -295,9 +303,7 @@ int AsciiSource::readString(QString &S, const QString& string) {
 */
 
 
-
-
-
+//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
   LexicalCast lexc;
@@ -353,16 +359,51 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
       v[i] = lexc.toDouble(&_tmpBuffer[0] + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
     }
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
+    const QString delimiters = _config._delimiters.value();
+    const QString columnDelimiter = _config._columnDelimiter.value();
     for (int i = 0; i < n; ++i, ++s) {
       bool incol = false;
       int i_col = 0;
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (_config._columnDelimiter.value().contains(_tmpBuffer[ch])) {
+        if (columnDelimiter.contains(_tmpBuffer[ch])) {
           incol = false;
         } else if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
           break;
-        } else if (_config._delimiters.value().contains(_tmpBuffer[ch])) {
+        } else if (delimiters.contains(_tmpBuffer[ch])) {
+          break;
+        } else {
+          if (!incol) {
+            incol = true;
+            ++i_col;
+            if (i_col == col) {
+              if (isdigit(_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
+                v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
+              } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
+                  tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {
+                v[i] = INF;
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
+    const QString delimiters = _config._delimiters.value();
+    for (int i = 0; i < n; i++, s++) {
+      bool incol = false;
+      int i_col = 0;
+
+      v[i] = Kst::NOPOINT;
+      for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+        if (isspace(_tmpBuffer[ch])) {
+          if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
+            break;
+          } else {
+            incol = false;
+          }
+        } else if (delimiters.contains(_tmpBuffer[ch])) {
           break;
         } else {
           if (!incol) {
@@ -382,53 +423,28 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
       }
     }
   } else {
-    for (int i = 0; i < n; i++, s++) {
-      bool incol = false;
-      int i_col = 0;
-
-      v[i] = Kst::NOPOINT;
-      for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (isspace(_tmpBuffer[ch])) {
-          if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
-            break;
-          } else {
-            incol = false;
-          }
-        } else if (_config._delimiters.value().contains(_tmpBuffer[ch])) {
-          break;
-        } else {
-          if (!incol) {
-            incol = true;
-            ++i_col;
-            if (i_col == col) {
-              if (isdigit(_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
-                v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
-              } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
-                  tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {
-                v[i] = INF;
-              }
-              break;
-            }
-          }
-        }
-      }
-    }
+    return 0;
   }
 
   return n;
 }
 
 
-
-QString AsciiSource::fileType() const {
+//-------------------------------------------------------------------------------------------
+QString AsciiSource::fileType() const 
+{
   return asciiTypeString;
 }
 
 
-bool AsciiSource::isEmpty() const {
+//-------------------------------------------------------------------------------------------
+bool AsciiSource::isEmpty() const 
+{
   return _numFrames < 1;
 }
 
+
+//-------------------------------------------------------------------------------------------
 QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfig*) 
 {
   QStringList rc;
@@ -440,7 +456,7 @@ QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfi
   return rc;
 }
 
-
+//-------------------------------------------------------------------------------------------
 QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig*) 
 {
   QStringList rc;
@@ -453,6 +469,7 @@ QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfi
 }
 
 
+//-------------------------------------------------------------------------------------------
 QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig* cfg) 
 {
   QStringList rc;
@@ -463,6 +480,8 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 
   rc += "INDEX";
 
+  QString columnDelimiter = cfg->_columnDelimiter.value();
+  QRegExp regexColumnDelemiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
   if (cfg->_readFields) {
     int l = cfg->_fieldsLine;
     while (!file.atEnd()) {
@@ -470,8 +489,8 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       int r = line.size();
       if (l-- == 0) {
         if (r >= 0) {
-          if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
-            rc += QString(line).trimmed().split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts);
+          if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
+            rc += QString(line).trimmed().split(regexColumnDelemiter, QString::SkipEmptyParts);
           } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
             int cnt = line.length() / cfg->_columnWidth;
             for (int i = 0; i < cnt; ++i) {
@@ -488,12 +507,14 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     return rc;
   }
 
-  QRegExp re;
-  if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
-    re.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(cfg->_columnDelimiter)).arg(cfg->_delimiters));
+  QRegExp regex;
+  if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
+    regex.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(columnDelimiter)).arg(cfg->_delimiters));
   } else {
-    re.setPattern(QString("^\\s*[%1].*").arg(cfg->_delimiters));
+    regex.setPattern(QString("^\\s*[%1].*").arg(cfg->_delimiters));
   }
+
+  QRegExp regexS("\\s");
 
   bool done = false;
   int skip = cfg->_dataLine;
@@ -522,14 +543,14 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     }
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
-        if (r > 1 && !re.exactMatch(line)) {
+        if (r > 1 && !regex.exactMatch(line)) {
           line = line.trimmed();
-          if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
-            cnt = QString(line).split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts).count();
+          if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
+            cnt = QString(line).split(regexColumnDelemiter, QString::SkipEmptyParts).count();
           } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
             cnt = line.length() / cfg->_columnWidth;
           } else {
-            cnt = QString(line).split(QRegExp("\\s"), QString::SkipEmptyParts).count();
+            cnt = QString(line).split(regexS, QString::SkipEmptyParts).count();
           }
           if (cnt > maxcnt) {
             maxcnt = cnt;
@@ -542,14 +563,14 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       curscan++;
       continue;
     }
-    if (r > 1 && !re.exactMatch(line)) { //at desired line, find count
+    if (r > 1 && !regex.exactMatch(line)) { //at desired line, find count
       line = line.trimmed();
-      if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
-        maxcnt = QString(line).split(QRegExp(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter))), QString::SkipEmptyParts).count();
+      if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
+        maxcnt = QString(line).split(regexColumnDelemiter, QString::SkipEmptyParts).count();
       } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
         maxcnt = line.length() / cfg->_columnWidth;
       } else {
-        maxcnt = QString(line).split(QRegExp("\\s"), QString::SkipEmptyParts).count();
+        maxcnt = QString(line).split(regexS, QString::SkipEmptyParts).count();
       }
       done = true;
     } else if (r < 0) {
@@ -565,6 +586,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 }
 
 
+//-------------------------------------------------------------------------------------------
 void AsciiSource::save(QXmlStreamWriter &s) 
 {
   Kst::DataSource::save(s);
@@ -572,6 +594,7 @@ void AsciiSource::save(QXmlStreamWriter &s)
 }
 
 
+//-------------------------------------------------------------------------------------------
 void AsciiSource::parseProperties(QXmlStreamAttributes &properties) 
 {
   _config.parseProperties(properties);
@@ -579,13 +602,16 @@ void AsciiSource::parseProperties(QXmlStreamAttributes &properties)
   internalDataSourceUpdate();
 }
 
-
-bool AsciiSource::supportsTimeConversions() const {
+//-------------------------------------------------------------------------------------------
+bool AsciiSource::supportsTimeConversions() const 
+{
   return false; //fieldList().contains(_config._indexVector) && _config._indexInterpretation != AsciiSourceConfig::Unknown && _config._indexInterpretation != AsciiSourceConfig::INDEX;
 }
 
 
-int AsciiSource::sampleForTime(double ms, bool *ok) {
+//-------------------------------------------------------------------------------------------
+int AsciiSource::sampleForTime(double ms, bool *ok) 
+{
   switch (_config._indexInterpretation) {
     case AsciiSourceConfig::Seconds:
       // FIXME: make sure "seconds" exists in _indexVector
@@ -605,12 +631,16 @@ int AsciiSource::sampleForTime(double ms, bool *ok) {
 }
 
 
-const QString& AsciiSource::typeString() const {
+//-------------------------------------------------------------------------------------------
+const QString& AsciiSource::typeString() const 
+{
   return asciiTypeString;
 }
 
 
-int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) {
+//-------------------------------------------------------------------------------------------
+int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) 
+{
   switch (_config._indexInterpretation) {
     case AsciiSourceConfig::Seconds:
       // FIXME: make sure "time" exists in _indexVector
