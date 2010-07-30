@@ -6,7 +6,14 @@ TARGET = $$kstlib(kst2data_dirfilesource)
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/dirfilesource/tmp
 
+win32{
+	message(Using GetData C++ binding files from $$(GETDATADIR).)
+	INCLUDEPATH += $$(GETDATADIR)/include
+	LIBS += -L$$(GETDATADIR)/lib
+}
+
 LIBS += -lgetdata++
+win32:LIBS += -lgetdata
 
 SOURCES += \
     dirfilesource.cpp

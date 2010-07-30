@@ -57,18 +57,25 @@ contains(lib, gsl) {
   }
   return(false)
 }
+
 contains(lib, cfitsio) {
   contains(HAVE_CFITSIO, 1) {
     return(true)
   }
   return(false)
 }
+
 contains(lib, getdata) {
-  contains(HAVE_DIRFILE, 1) {
+  !win32:contains(HAVE_DIRFILE, 1) {
+    return(true)
+  }
+  GETDATADIR= = $$(GETDATADIR)
+  win32:!isEmpty(GETDATADIR) {
     return(true)
   }
   return(false)
 }
+
 contains(lib, netcdf) {
   NETCDFDIR = $$(NETCDFDIR)
   win32:!isEmpty(NETCDFDIR) {
