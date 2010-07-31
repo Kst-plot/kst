@@ -14,32 +14,43 @@
 #include <QDesktopServices>
 #include <QDebug>
 
+#include <QStringList>
+
 namespace Kst {
 
 AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
-  // Sorted alphabetically, first group is 2.0 contributors
-  const QString msg = tr(
-  "<qt><h2>Kst 2.0 - A data viewing program.</h2>\n<hr>\n"
-  "Copyright &copy; 2000-2008 Barth Netterfield<br>"
-  "<a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>"
-  "Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>"
-  "Authors:<ul>"
-  "<li>Barth Netterfield</li>"
-  "<li><a href=\"http://www.staikos.net/\">Staikos Computing Services Inc.</a></li>"
-  "<li>Ted Kisner</li>"
-  "<li>The University of Toronto</li>"
-  "</ul><ul>"
-  "<li>Matthew Truch</li>"
-  "<li>Nicolas Brisset</li>"
-  "<li>Rick Chern</li>"
-  "<li>Sumus Technology Limited</li>"
-  "<li>The University of British Columbia</li>"
-  "</ul>"
-  );
-  text->setText(msg);
+    QStringList authors = QStringList()
+    << "Barth Netterfield"
+    << "Matthew Truch"
+    << "Nicolas Brisset"
+    << "Staikos Computing Services Inc."
+    << "Rick Chern"
+    << "Sumus Technology Limited"
+    << "Ted Kisner"
+    << "The University of British Columbia"
+    << "The University of Toronto"
+    << "Andrew Walker"
+    << "Peter Kümmel"
+    << "Zongyi Zang"
+    ;
+
+    authors.sort();
+    authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
+
+  QStringList msg = QStringList()
+  << tr("<qt><h2>Kst 2.0 - A data viewing program.</h2>")
+  << tr("Copyright &copy; 2000-2010 Barth Netterfield<br><hr>")
+  << tr("Homepage: <a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>")
+  << tr("Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>")
+  << tr("<br>Authors and contributors (sorted alphabetically):")
+  << QString("<ul>")
+  << authors
+  << QString("</ul>");
+  
+  text->setText(msg.join("\n"));
   connect(text, SIGNAL(anchorClicked(const QUrl &)), this, SLOT(launchURL(const QUrl&)));
 }
 
