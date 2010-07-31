@@ -37,9 +37,10 @@ FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
     _pluginCombo->addItems(DataObject::fitsPluginList());
   }
 
-  connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
   _curveAppearance->setVisible(false);
-
+  _curvePlacement->setVisible(false);
+  _ignoreAutoScale->setVisible(false);
+  connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
   pluginChanged(pluginName);
 }
 
@@ -72,8 +73,15 @@ void FilterFitTab::setVectorY(VectorPtr vector) {
 }
 
 
-void FilterFitTab::setPlotMode() {
+void FilterFitTab::setPlotMode(PlotItem* plot) {
+
+  _curvePlacement->setPlace(CurvePlacement::ExistingPlot);
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
+  _curvePlacement->setCurrentPlot(plot);
+
   _curveAppearance->setVisible(true);
+  _curvePlacement->setVisible(true);
+  _ignoreAutoScale->setVisible(true);
   lockVectors();
 }
 
@@ -90,6 +98,10 @@ void FilterFitTab::lockVectors() {
 
 CurveAppearance* FilterFitTab::curveAppearance() const {
   return _curveAppearance;
+}
+
+CurvePlacement* FilterFitTab::curvePlacement() const {
+  return _curvePlacement;
 }
 
 
@@ -133,7 +145,7 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
 
 
 FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent), _plotItem(0), _vectorX(0), _vectorY(0) {
+  : DataDialog(dataObject, parent), _vectorX(0), _vectorY(0) {
 
   QString title;
   if (editMode() == Edit)
@@ -181,8 +193,7 @@ void FilterFitDialog::setVectorY(VectorPtr vector) {
 
 
 void FilterFitDialog::setPlotMode(PlotItem* plot) {
-  _plotItem = plot;
-  _filterFitTab->setPlotMode();
+  _filterFitTab->setPlotMode(plot);
 }
 
 
@@ -199,7 +210,34 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
     return 0;
   }
 
-  if (_plotItem) {
+  PlotItem *plotItem = 0;
+  switch (_filterFitTab->curvePlacement()->place()) {
+  case CurvePlacement::NoPlot:
+    break;
+  case CurvePlacement::ExistingPlot:
+    {
+      plotItem = static_cast<PlotItem*>(_filterFitTab->curvePlacement()->existingPlot());
+      break;
+    }
+  case CurvePlacement::NewPlotNewTab:
+    _document->createView();
+    // fall through to case NewPlot.
+  case CurvePlacement::NewPlot:
+    {
+      CreatePlotForCurve *cmd = new CreatePlotForCurve();
+      cmd->createItem();
+
+      plotItem = static_cast<PlotItem*>(cmd->item());
+      if (_filterFitTab->curvePlacement()->scaleFonts()) {
+        plotItem->parentView()->resetPlotFontSizes();
+      }
+      break;
+    }
+  default:
+    break;
+  }
+
+  if (plotItem) {
     CurvePtr curve = _document->objectStore()->createObject<Curve>();
 
     Q_ASSERT(curve);
@@ -226,7 +264,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
     _filterFitTab->curveAppearance()->setWidgetDefaults();
 
-    PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
+    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
 
     dataObject->writeLock();
@@ -239,7 +277,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
       cmd->createItem(tmpstring);
     }
-    _plotItem->update();
+    plotItem->update();
   }
 
   _filterFitTab->configWidget()->save();

@@ -56,7 +56,6 @@ DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
 DataDialog::~DataDialog() {
 }
 
-
 void DataDialog::createGui() {
 
   if (_mode == New) {

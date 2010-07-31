@@ -112,6 +112,14 @@ void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingP
   }
 }
 
+void CurvePlacement::setCurrentPlot(const PlotItemInterface *currentPlot) {
+  if (currentPlot) {
+    int index = _plotList->findText(currentPlot->plotName());
+    if (index >= 0) {
+      _plotList->setCurrentIndex(index);
+    }
+  }
+}
 
 int CurvePlacement::gridColumns() const {
   return _gridColumns->value();

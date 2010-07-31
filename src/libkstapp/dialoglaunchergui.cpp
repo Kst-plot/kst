@@ -177,6 +177,12 @@ void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr obje
       }
     }
     dialog->show();
+    // FIXME: Total hack to make the window appear at a good place.
+    // This is not necessary for other dialogs, and I can't figure out why (!)
+    QRect r = kstApp->mainWindow()->rect();
+    int x = r.x() + 30;
+    int y = r.y() + 30;
+    dialog->move(x,y);
   }
 }
 

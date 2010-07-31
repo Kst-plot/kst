@@ -34,13 +34,14 @@ class FilterFitTab : public DataTab, Ui::FilterFitTab {
     void setVectorY(VectorPtr vector);
 
     CurveAppearance* curveAppearance() const;
+    CurvePlacement* curvePlacement() const;
 
     DataObjectConfigWidget* configWidget() { return _configWidget; }
 
     void loadSettings();
     void saveSettings();
 
-    void setPlotMode();
+    void setPlotMode(PlotItem* plot);
     void lockVectors();
 
     QString pluginName();
@@ -76,7 +77,6 @@ class FilterFitDialog : public DataDialog {
   private:
     void configureTab();
     FilterFitTab *_filterFitTab;
-    PlotItem* _plotItem;
     VectorPtr _vectorX;
     VectorPtr _vectorY;
 };

@@ -4,7 +4,9 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    despike
+    despike \
+    cumulativesum \
+    differentiation
 
 LibExists(gsl) {
      message(GSL configured.  Filter plugins will be built.)

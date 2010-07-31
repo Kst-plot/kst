@@ -36,6 +36,7 @@ class KSTWIDGETS_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlaceme
 
     PlotItemInterface *existingPlot() const;
     void setExistingPlots(const QList<PlotItemInterface*> &existingPlots);
+    void setCurrentPlot(const PlotItemInterface *currentPlot);
 
     Layout layout() const;
     void setLayout(Layout layout);

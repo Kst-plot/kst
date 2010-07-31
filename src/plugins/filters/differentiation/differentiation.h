@@ -9,19 +9,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CUMULATIVESUMPLUGIN_H
-#define CUMULATIVESUMPLUGIN_H
+#ifndef DIFFERENTIATIONPLUGIN_H
+#define DIFFERENTIATIONPLUGIN_H
 
 #include <QFile>
 
 #include <basicplugin.h>
 #include <dataobjectplugin.h>
 
-class CumulativeSumSource : public Kst::BasicPlugin {
+class DifferentiationSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
     virtual QString _automaticDescriptiveName() const;
+
+    virtual QString descriptionTip() const;
 
     Kst::VectorPtr vector() const;
     Kst::ScalarPtr scalarStep() const;
@@ -41,8 +43,8 @@ class CumulativeSumSource : public Kst::BasicPlugin {
     virtual void saveProperties(QXmlStreamWriter &s);
 
   protected:
-    CumulativeSumSource(Kst::ObjectStore *store);
-    ~CumulativeSumSource();
+    DifferentiationSource(Kst::ObjectStore *store);
+    ~DifferentiationSource();
 
   friend class Kst::ObjectStore;
 
@@ -50,16 +52,16 @@ class CumulativeSumSource : public Kst::BasicPlugin {
 };
 
 
-class CumulativeSumPlugin : public QObject, public Kst::DataObjectPluginInterface {
+class DifferentiationPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
   public:
-    virtual ~CumulativeSumPlugin() {}
+    virtual ~DifferentiationPlugin() {}
 
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;
 
-    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Generic; }
+    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Filter; }
 
     virtual bool hasConfigWidget() const { return true; }
 

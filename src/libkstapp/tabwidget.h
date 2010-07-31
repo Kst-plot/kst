@@ -37,6 +37,7 @@ class TabWidget : public QTabWidget
     View *createView();
     void renameCurrentView();
     void closeCurrentView();
+    void setCurrentViewName(QString name);
 
     private Q_SLOTS:
     void contextMenu(const QPoint&);

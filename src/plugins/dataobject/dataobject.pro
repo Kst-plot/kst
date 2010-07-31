@@ -3,15 +3,15 @@ include($$PWD/../../../config.pri)
 TEMPLATE = subdirs
 CONFIG += ordered
 
+DEMOS += \
+    linefit \
+    genericfilter 
+
 SUBDIRS += \
     bin \
     chop \
     crossspectrum \
-    cumulativesum \
-    differentiation \
     effectivebandwidth \
-    genericfilter \
-    linefit \
     periodogram \
     phase \
     shift \

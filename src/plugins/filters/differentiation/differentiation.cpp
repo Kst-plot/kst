@@ -10,27 +10,27 @@
  ***************************************************************************/
 
 
-#include "cumulativesum.h"
+#include "differentiation.h"
 #include "objectstore.h"
-#include "ui_cumulativesumconfig.h"
+#include "ui_differentiationconfig.h"
 
-static const QString& VECTOR_IN = "Vector In";
-static const QString& SCALAR_IN = "Scalar In";
-static const QString& VECTOR_OUT = "Cumulative Sum";
+static const QString& VECTOR_IN = "Y Vector";
+static const QString& SCALAR_IN = "Scale Scalar";
+static const QString& VECTOR_OUT = "dY/dX";
 
-class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_CumulativeSumConfig {
+class ConfigDifferentiationPlugin : public Kst::DataObjectConfigWidget, public Ui_DifferentiationConfig {
   public:
-    ConfigCumulativeSumPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CumulativeSumConfig() {
+    ConfigDifferentiationPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_DifferentiationConfig() {
       setupUi(this);
     }
 
-    ~ConfigCumulativeSumPlugin() {}
+    ~ConfigDifferentiationPlugin() {}
 
     void setObjectStore(Kst::ObjectStore* store) { 
       _store = store; 
       _vector->setObjectStore(store); 
       _scalarStep->setObjectStore(store);
-      _scalarStep->setDefaultValue(0);
+      _scalarStep->setDefaultValue(1.0);
     }
 
     void setupSlots(QWidget* dialog) {
@@ -40,6 +40,18 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
       }
     }
 
+    void setVectorX(Kst::VectorPtr vector) {
+      setSelectedVector(vector);
+    }
+
+    void setVectorY(Kst::VectorPtr vector) {
+      setSelectedVector(vector);
+    }
+
+    void setVectorsLocked(bool locked = true) {
+      _vector->setEnabled(!locked);
+    }
+
     Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
     void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };
 
@@ -47,7 +59,7 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
     void setSelectedScalar(Kst::ScalarPtr scalar) { return _scalarStep->setSelectedScalar(scalar); };
 
     virtual void setupFromObject(Kst::Object* dataObject) {
-      if (CumulativeSumSource* source = static_cast<CumulativeSumSource*>(dataObject)) {
+      if (DifferentiationSource* source = static_cast<DifferentiationSource*>(dataObject)) {
         setSelectedVector(source->vector());
         setSelectedScalar(source->scalarStep());
       }
@@ -71,7 +83,7 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
   public slots:
     virtual void save() {
       if (_cfg) {
-        _cfg->beginGroup("Cumulative Sum DataObject Plugin");
+        _cfg->beginGroup("Differentiation DataObject Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Input Scalar", _scalarStep->selectedScalar()->Name());
         _cfg->endGroup();
@@ -80,7 +92,7 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
 
     virtual void load() {
       if (_cfg && _store) {
-        _cfg->beginGroup("Cumulative Sum DataObject Plugin");
+        _cfg->beginGroup("Differentiation DataObject Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();
         Kst::Object* object = _store->retrieveObject(vectorName);
         Kst::Vector* vector = static_cast<Kst::Vector*>(object);
@@ -103,106 +115,122 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
 };
 
 
-CumulativeSumSource::CumulativeSumSource(Kst::ObjectStore *store)
+DifferentiationSource::DifferentiationSource(Kst::ObjectStore *store)
 : Kst::BasicPlugin(store) {
 }
 
 
-CumulativeSumSource::~CumulativeSumSource() {
+DifferentiationSource::~DifferentiationSource() {
 }
 
 
-QString CumulativeSumSource::_automaticDescriptiveName() const {
-  return QString("Cumulative Sum Plugin Object");
+QString DifferentiationSource::_automaticDescriptiveName() const {
+  return QString(vector()->descriptiveName() + " Derivative");
+}
+
+QString DifferentiationSource::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Derivative: %1\n  dX: %2\n").arg(Name()).arg(scalarStep()->value());
+
+  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  return tip;
 }
 
 
-void CumulativeSumSource::change(Kst::DataObjectConfigWidget *configWidget) {
-  if (ConfigCumulativeSumPlugin* config = static_cast<ConfigCumulativeSumPlugin*>(configWidget)) {
+void DifferentiationSource::change(Kst::DataObjectConfigWidget *configWidget) {
+  if (ConfigDifferentiationPlugin* config = static_cast<ConfigDifferentiationPlugin*>(configWidget)) {
     setInputVector(VECTOR_IN, config->selectedVector());
     setInputScalar(SCALAR_IN, config->selectedScalar());
   }
 }
 
 
-void CumulativeSumSource::setupOutputs() {
+void DifferentiationSource::setupOutputs() {
   setOutputVector(VECTOR_OUT, "");
 }
 
 
-bool CumulativeSumSource::algorithm() {
+bool DifferentiationSource::algorithm() {
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::ScalarPtr inputScalar = _inputScalars[SCALAR_IN];
   Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
 
-  /* Memory allocation */
-  outputVector->resize(inputVector->length()+1, true);
-
-  outputVector->value()[0] = 0.0;
-
-  for (int i = 0; i < inputVector->length(); i++) {
-    outputVector->value()[i+1] = inputVector->value()[i]*inputScalar->value() + outputVector->value()[i];
+  if (inputScalar->value() == 0) {
+    _errorString = "Error:  Input Scalar Step must be not be 0.";
+    return false;
   }
 
+  /* Memory allocation */
+  outputVector->resize(inputVector->length(), true);
+
+  outputVector->value()[0] = (inputVector->value()[1] - inputVector->value()[0]) / inputScalar->value();
+
+  int i = 1;
+  for (; i < inputVector->length()-1; i++) {
+      outputVector->value()[i] = (inputVector->value()[i+1] - inputVector->value()[i-1])/(2*inputScalar->value());
+  }
+
+  outputVector->value()[i] = (inputVector->value()[i] - inputVector->value()[i-1]) / inputScalar->value();
   return true;
 }
 
 
-Kst::VectorPtr CumulativeSumSource::vector() const {
+Kst::VectorPtr DifferentiationSource::vector() const {
   return _inputVectors[VECTOR_IN];
 }
 
 
-Kst::ScalarPtr CumulativeSumSource::scalarStep() const {
+Kst::ScalarPtr DifferentiationSource::scalarStep() const {
   return _inputScalars[SCALAR_IN];
 }
 
 
-QStringList CumulativeSumSource::inputVectorList() const {
+QStringList DifferentiationSource::inputVectorList() const {
   return QStringList( VECTOR_IN );
 }
 
 
-QStringList CumulativeSumSource::inputScalarList() const {
+QStringList DifferentiationSource::inputScalarList() const {
   return QStringList( SCALAR_IN );
 }
 
 
-QStringList CumulativeSumSource::inputStringList() const {
+QStringList DifferentiationSource::inputStringList() const {
   return QStringList( /*STRING_IN*/ );
 }
 
 
-QStringList CumulativeSumSource::outputVectorList() const {
+QStringList DifferentiationSource::outputVectorList() const {
   return QStringList( VECTOR_OUT );
 }
 
 
-QStringList CumulativeSumSource::outputScalarList() const {
+QStringList DifferentiationSource::outputScalarList() const {
   return QStringList( /*SCALAR_OUT*/ );
 }
 
 
-QStringList CumulativeSumSource::outputStringList() const {
+QStringList DifferentiationSource::outputStringList() const {
   return QStringList( /*STRING_OUT*/ );
 }
 
 
-void CumulativeSumSource::saveProperties(QXmlStreamWriter &s) {
+void DifferentiationSource::saveProperties(QXmlStreamWriter &s) {
   Q_UNUSED(s);
 //   s.writeAttribute("value", _configValue);
 }
 
 
-QString CumulativeSumPlugin::pluginName() const { return "Cumulative Sum"; }
-QString CumulativeSumPlugin::pluginDescription() const { return "Computes the cumulative sum (integral) of the input vector."; }
+QString DifferentiationPlugin::pluginName() const { return "Fixed Step Differentiation"; }
+QString DifferentiationPlugin::pluginDescription() const { return "Computes the discrete derivative of an input vector"; }
 
 
-Kst::DataObject *CumulativeSumPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
+Kst::DataObject *DifferentiationPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
 
-  if (ConfigCumulativeSumPlugin* config = static_cast<ConfigCumulativeSumPlugin*>(configWidget)) {
+  if (ConfigDifferentiationPlugin* config = static_cast<ConfigDifferentiationPlugin*>(configWidget)) {
 
-    CumulativeSumSource* object = store->createObject<CumulativeSumSource>();
+    DifferentiationSource* object = store->createObject<DifferentiationSource>();
 
     if (setupInputsOutputs) {
       object->setInputVector(VECTOR_IN, config->selectedVector());
@@ -222,11 +250,11 @@ Kst::DataObject *CumulativeSumPlugin::create(Kst::ObjectStore *store, Kst::DataO
 }
 
 
-Kst::DataObjectConfigWidget *CumulativeSumPlugin::configWidget(QSettings *settingsObject) const {
-  ConfigCumulativeSumPlugin *widget = new ConfigCumulativeSumPlugin(settingsObject);
+Kst::DataObjectConfigWidget *DifferentiationPlugin::configWidget(QSettings *settingsObject) const {
+  ConfigDifferentiationPlugin *widget = new ConfigDifferentiationPlugin(settingsObject);
   return widget;
 }
 
-Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, CumulativeSumPlugin)
+Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, DifferentiationPlugin)
 
 // vim: ts=2 sw=2 et

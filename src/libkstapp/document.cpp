@@ -233,6 +233,7 @@ bool Document::open(const QString& file) {
                 _win->tabWidget()->addView(loadedView);
                 QXmlStreamAttributes attrs = xml.attributes();
                 loadedView->setObjectName(attrs.value("name").toString());
+                _win->tabWidget()->setCurrentViewName(attrs.value("name").toString());
                 qreal width = 1.0, height = 1.0;
                 QStringRef string = attrs.value("width");
                 if (!string.isNull()) {

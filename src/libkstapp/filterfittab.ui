@@ -6,11 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>338</height>
+    <width>1020</width>
+    <height>619</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QGroupBox" name="GroupBox9_3">
      <property name="sizePolicy">
@@ -84,12 +84,35 @@
     </widget>
    </item>
    <item>
-    <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true"/>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true"/>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="_ignoreAutoScale">
+         <property name="text">
+          <string>I&amp;gnore in automatic axes range calculations</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>Kst::CurvePlacement</class>
+   <extends>QWidget</extends>
+   <header>curveplacement.h</header>
+  </customwidget>
   <customwidget>
    <class>Kst::CurveAppearance</class>
    <extends>QWidget</extends>

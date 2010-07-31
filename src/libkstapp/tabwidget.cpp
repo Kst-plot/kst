@@ -106,6 +106,10 @@ void TabWidget::renameCurrentView() {
   }
 }
 
+void TabWidget::setCurrentViewName(QString name) {
+  int idx = tabBar()->currentIndex();
+  tabBar()->setTabText(idx, name);
+}
 
 void TabWidget::contextMenu(const QPoint& pos) {
   QTabBar *tb = tabBar();
