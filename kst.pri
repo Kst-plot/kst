@@ -21,7 +21,8 @@ DEFINES += INSTALL_LIBDIR=\\\"$$INSTALL_LIBDIR\\\"
 
 QT += core xml
 
-CONFIG += silent warn_on
+CONFIG += warn_on
+!win32:CONFIG += silent
 
 DEBUG_MODE = $$(KST_DEBUG_MODE)
 contains(DEBUG_MODE, 1) {

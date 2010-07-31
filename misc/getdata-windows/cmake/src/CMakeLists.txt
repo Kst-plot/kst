@@ -75,7 +75,7 @@ add_library(getdata STATIC ${gd_sources} ${gd_headers})
 
 
 
-install(FILES ${CMAKE_BINARY_DIR}/getdata.h DESTINATION ${GETDATA_INSTALL_DIR}/include)
-install(TARGETS getdata DESTINATION ${GETDATA_INSTALL_DIR}/lib)
+install(FILES ${CMAKE_BINARY_DIR}/getdata.h DESTINATION include)
+install(TARGETS getdata DESTINATION lib)
 
 

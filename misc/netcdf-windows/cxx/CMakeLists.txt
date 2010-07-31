@@ -22,6 +22,6 @@ add_library(netcdf_c++ STATIC ${SOURCES} ${HEADERS})
 
 target_link_libraries(netcdf_c++ netcdf)
 
-install(FILES ${HEADERS} DESTINATION ${NETCDF_INSTALL_DIR}/include)
-install(TARGETS netcdf_c++ DESTINATION ${NETCDF_INSTALL_DIR}/lib)
+install(FILES ${HEADERS} DESTINATION include)
+install(TARGETS netcdf_c++ DESTINATION lib)
 

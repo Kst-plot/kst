@@ -36,6 +36,6 @@ include_directories(${TOP_DIR}/libsrc)
 add_library(netcdf STATIC ${SOURCES} ${HEADERS})
 
 
-install(FILES ${TOP_DIR}/libsrc/netcdf.h DESTINATION ${NETCDF_INSTALL_DIR}/include)
-install(TARGETS netcdf DESTINATION ${NETCDF_INSTALL_DIR}/lib)
+install(FILES ${TOP_DIR}/libsrc/netcdf.h DESTINATION include)
+install(TARGETS netcdf DESTINATION lib)
 

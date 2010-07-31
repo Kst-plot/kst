@@ -669,8 +669,11 @@ include_directories(
 
 add_library(gsl STATIC ${gsl_source_list} ${cblas_source_list} ${gsl_headers})
 
-set(GSL_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/installed)
-install(FILES ${gsl_headers} DESTINATION ${GSL_INSTALL_DIR}/include/gsl)
-install(TARGETS gsl DESTINATION ${GSL_INSTALL_DIR}/lib)
+if (NOT CMAKE_INSTALL_PREFIX)
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/installed)
+endif()
+
+install(FILES ${gsl_headers} DESTINATION include/gsl)
+install(TARGETS gsl DESTINATION lib)
 
 

@@ -32,7 +32,9 @@ endif()
 add_definitions(-D_FILE_OFFSET_BITS=64)	
 include_directories(${CMAKE_BINARY_DIR})
 
-set(NETCDF_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/installed)
+if (NOT CMAKE_INSTALL_PREFIX)
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/installed)
+endif()
 
 add_subdirectory(libsrc)
 add_subdirectory(cxx)

@@ -36,18 +36,16 @@ if(MSVC)
 		-DGD_USE_CPP
 		-DHAVE_STDINT_H
 		)
-		
 	set(CMAKE_DEBUG_POSTFIX d)
         configure_file(inttypes.h ${CMAKE_CURRENT_BINARY_DIR}/inttypes.h COPYONLY)
 endif()
-
 
 if(MINGW)
 	# ALPHA quality!
 	add_definitions(
 			-D__MSVCRT__
 			-DSTDC_HEADER
-			-DHAVE_INTTYPES_H
+			-DSTDC_HEADER
 			-DHAVE_IO_H
 			-DHAVE_STDINT_H
 			-DHAVE_COMPLEX_H
@@ -68,7 +66,9 @@ configure_file(${GETDATA_DIR}/src/getdata.h.in ${CMAKE_BINARY_DIR}/getdata.h COP
 
 include_directories(${GETDATA_DIR}/src ${CMAKE_CURRENT_BINARY_DIR})
 
-set(GETDATA_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/installed)
+if (NOT CMAKE_INSTALL_PREFIX)
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/installed)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(bindings)
