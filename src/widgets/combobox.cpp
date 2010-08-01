@@ -33,6 +33,7 @@ void ComboBox::setupLineEdit() {
 
   QCompleter *currentCompleter = completer();
   currentCompleter->setCompletionMode(QCompleter::PopupCompletion);
+  currentCompleter->setCaseSensitivity(Qt::CaseSensitive);
 }
 
 
