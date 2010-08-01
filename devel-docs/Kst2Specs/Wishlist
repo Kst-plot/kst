@@ -79,8 +79,4 @@ Replace layout mode icon with zoom icon, and invert sense
 
 --------------------
 
-fit dialog should have curve placement options: overplot, replace, new plot.
-
---------------------
-
 Legends can get larger than the plot if there are enought things in them.  This should not be.  Requires chewing of the cud...

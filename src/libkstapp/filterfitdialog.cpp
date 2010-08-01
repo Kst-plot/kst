@@ -231,6 +231,8 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
       if (_filterFitTab->curvePlacement()->scaleFonts()) {
         plotItem->parentView()->resetPlotFontSizes();
       }
+      plotItem->parentView()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
+                                             _filterFitTab->curvePlacement()->gridColumns());
       break;
     }
   default:
@@ -278,6 +280,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
       cmd->createItem(tmpstring);
     }
     plotItem->update();
+
   }
 
   _filterFitTab->configWidget()->save();
