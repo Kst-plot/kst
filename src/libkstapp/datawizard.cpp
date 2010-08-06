@@ -386,14 +386,82 @@ PlotItemInterface *DataWizardPagePlot::existingPlot() const {
 
 
 void DataWizardPagePlot::updatePlotBox() {
+  _plotNumber->setValue(_dialogDefaults->value("wizard/plotCount",2).toInt());
+
+  if (_dialogDefaults->value("wizard/legendsAuto",true).toBool()) {
+    _legendsOn->setChecked(true);
+  } else if (_dialogDefaults->value("wizard/legendsOn",false).toBool()) {
+    _legendsAuto->setChecked(true);
+  } else {
+    _legendsOff->setChecked(true);
+  }
+  _psdLogX->setChecked(_dialogDefaults->value("wizard/logX",false).toBool());
+  _psdLogY->setChecked(_dialogDefaults->value("wizard/logY",false).toBool());
+
+  _legendsOn->setChecked(_dialogDefaults->value("wizard/legendsOn",false).toBool());
+  _legendsAuto->setChecked(_dialogDefaults->value("wizard/legendsAuto",false).toBool());
+
+  _rescaleFonts->setChecked(_dialogDefaults->value("wizard/rescaleFonts", true).toBool());
+
+  if (_dialogDefaults->value("wizard/linesOnly", true).toBool()) {
+    _drawLines->setChecked(true);
+  } else if (_dialogDefaults->value("wizard/pointsOnly", true).toBool()) {
+    _drawPoints->setChecked(true);
+  } else {
+    _drawBoth->setChecked(true);
+  }
+
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
     _existingPlotName->addItem(plot->plotName(), qVariantFromValue(plot));
   }
-
   bool havePlots = _existingPlotName->count() > 0;
   _cycleExisting->setEnabled(havePlots);
   _existingPlot->setEnabled(havePlots);
   _existingPlotName->setEnabled(havePlots && _existingPlot->isChecked());
+
+  CurvePlotPlacement placement = static_cast<CurvePlotPlacement>(_dialogDefaults->value("wizard/curvePlacement",MultiplePlots).toInt());
+  switch (placement) {
+  case OnePlot:
+    _onePlot->setChecked(true);
+    break;
+  case MultiplePlots:
+    _multiplePlots->setChecked(true);
+    break;
+  case CyclePlotCount:
+    _cycleThrough->setChecked(true);
+    break;
+  case CycleExisting:
+    if (havePlots) {
+      _cycleExisting->setChecked(true);
+    } else {
+      _multiplePlots->setChecked(true);
+    }
+    break;
+  case ExistingPlot:
+    if (havePlots) {
+      _existingPlot->setChecked(true);
+    } else {
+      _onePlot->setChecked(true);
+    }
+    break;
+  default:
+    _multiplePlots->setChecked(true);
+    break;
+  }
+  CurvePlacement::Layout layout = static_cast<CurvePlacement::Layout>(_dialogDefaults->value("wizard/plotLayout", CurvePlacement::Auto).toInt());
+  switch (layout) {
+  case CurvePlacement::Auto:
+    _autoLayout->setChecked(true);
+    break;
+  case CurvePlacement::Custom:
+    _customGrid->setChecked(true);
+    break;
+  case CurvePlacement::Protect:
+    _protectLayout->setChecked(true);
+    break;
+  }
+
+  _gridColumns->setValue(_dialogDefaults->value("wizard/gridColumns", CurvePlacement::Auto).toInt());
 }
 
 
@@ -414,6 +482,9 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
   _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots.  FFT Options:"));
   _FFTOptions->GroupBoxFFTOptions->setChecked(false); // fixme: use persistant defaults
+
+  _FFTOptions->GroupBoxFFTOptions->setChecked(_dialogDefaults->value("wizard/doPSD",false).toBool());
+  _xAxisGroup->setChecked(_dialogDefaults->value("wizard/doXY",true).toBool());
 }
 
 
@@ -578,6 +649,22 @@ void DataWizard::finished() {
   uint n_curves = 0;
   uint n_steps = 0;
 
+  _dialogDefaults->setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
+  _dialogDefaults->setValue("wizard/doXY", _pageDataPresentation->plotData());
+  _dialogDefaults->setValue("wizard/curvePlacement", _pagePlot->curvePlacement());
+  _dialogDefaults->setValue("wizard/plotCount", _pagePlot->plotCount());
+
+  _dialogDefaults->setValue("wizard/legendsOn", _pagePlot->legendsOn());
+  _dialogDefaults->setValue("wizard/legendsAuto", _pagePlot->legendsAuto());
+  _dialogDefaults->setValue("wizard/logX", _pagePlot->PSDLogX());
+  _dialogDefaults->setValue("wizard/logY", _pagePlot->PSDLogY());
+
+  _dialogDefaults->setValue("wizard/rescaleFonts", _pagePlot->rescaleFonts());
+
+  _dialogDefaults->setValue("wizard/linesOnly", _pagePlot->drawLines());
+  _dialogDefaults->setValue("wizard/pointsOnly", _pagePlot->drawPoints());
+  _dialogDefaults->setValue("wizard/plotLayout", _pagePlot->layout());
+  _dialogDefaults->setValue("wizard/gridColumns", _pagePlot->gridColumns());
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
   DataSourcePtr ds = _pageDataSource->dataSource();
