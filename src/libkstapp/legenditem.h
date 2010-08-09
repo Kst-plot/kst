@@ -63,6 +63,7 @@ class LegendItem : public ViewItem {
     void applyDefaults();
   public Q_SLOTS:
     virtual void edit();
+    virtual void remove();
 
   protected:
     virtual QString _automaticDescriptiveName() const;

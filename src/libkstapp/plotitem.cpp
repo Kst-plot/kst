@@ -64,6 +64,8 @@ PlotItem::PlotItem(View *parent)
   _isInSharedAxisBox(false),
   _plotRectsDirty(true),
   _calculatedLeftLabelMargin(0.0),
+  _calculatedLeftLabelWidth(0.0),
+  _calculatedLeftBaseOffset(0.0),
   _calculatedRightLabelMargin(0.0),
   _calculatedTopLabelMargin(0.0),
   _calculatedBottomLabelMargin(0.0),
@@ -1249,7 +1251,7 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
 
     QRectF bound = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel());
     bound = QRectF(bound.x(), bound.bottomRight().y() - bound.width(), bound.height(), bound.width());
-    QPointF p = QPointF(rect().left(), plotRect().bottom());
+    QPointF p = QPointF(rect().left() + _calculatedLeftBaseOffset, plotRect().bottom());
     bound.moveBottomLeft(p);
 
     CachedPlotLabel label;
@@ -2074,6 +2076,7 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
     painter->restore();
 
     _calculatedLeftLabelMargin = leftLabelBound.height();
+    _calculatedLeftLabelWidth = leftLabelBound.width();
 
     //No more than 1/4 the width of the plot
     if (width() < _calculatedLeftLabelMargin * 4)
@@ -2487,8 +2490,13 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
   }
 
   yLabelRect.setWidth(yLabelRect.width() + _calculatedAxisMarginHLead);
+  _calculatedLeftBaseOffset = 0.0;
   if (!_yAxis->baseLabel().isEmpty()) {
     qreal height = painter->boundingRect(QRectF(), flags, _yAxis->baseLabel()).height();
+    if (painter->boundingRect(QRectF(), flags, _yAxis->baseLabel()).width() + _calculatedLeftLabelWidth/2 + yLabelRect.width()/2 > plotRect().height()/2) {
+      height += leftLabelMargin();
+      _calculatedLeftBaseOffset = leftLabelMargin();
+    }
     if (leftLabelMargin() < height) {
       yLabelRect.setWidth(yLabelRect.width() + (height - leftLabelMargin()));
     }

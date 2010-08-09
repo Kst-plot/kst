@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2008 The University of Toronto                        *
- *                                                                         *
+ *                   <netterfield@astro.utoronto.ca>                       *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -339,6 +339,14 @@ bool LegendItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 void LegendItem::edit() {
   LegendItemDialog *editDialog = new LegendItemDialog(this);
   editDialog->show();
+}
+
+
+void LegendItem::remove() {
+  if (_plotItem) {
+    _plotItem->setShowLegend(false);
+  }
+  ViewItem::remove();
 }
 
 

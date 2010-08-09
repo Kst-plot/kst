@@ -20,13 +20,14 @@ flat-line (at about the value of the last sample at the previous update)
 which magically fixes itself upon the next update.  I think I have
 reported this before.
 
-----------------------
+and (same bug)
 
 With live data, add a label which contains a scalar showing the
 "Last" value of a vector.  As the data is scrolling by, sometimes this
 scalar will indicate a value strikingly similar to the "Min" (or perhaps
 "First") value on the plot rather than the Last value.
 
+** This appears to be either a BLASTpol defile bug, or a filesystem issue.  **
 -----------------------
 
 Create a bunch of plots with same X range but different Y range.

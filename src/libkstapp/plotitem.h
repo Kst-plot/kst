@@ -408,6 +408,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QRectF _calculatedPlotAxisRect;
 
     qreal _calculatedLeftLabelMargin;
+    qreal _calculatedLeftLabelWidth;
+    qreal _calculatedLeftBaseOffset;
     qreal _calculatedRightLabelMargin;
     qreal _calculatedTopLabelMargin;
     qreal _calculatedTopLabelHeight;
