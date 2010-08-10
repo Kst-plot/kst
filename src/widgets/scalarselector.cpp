@@ -66,7 +66,7 @@ void ScalarSelector::emitSelectionChanged() {
 
 void ScalarSelector::setDefaultValue(double value) {
  QString string = QString::number(value);
- _scalar->addItem(string, qVariantFromValue(NULL));
+ _scalar->addItem(string, qVariantFromValue(0));
  _scalar->setCurrentIndex(_scalar->findText(string));
  _defaultsSet = true;
 }

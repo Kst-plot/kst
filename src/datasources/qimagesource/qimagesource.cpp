@@ -108,7 +108,7 @@ const DataVector::Optional DataInterfaceQImageVector::optional(const QString &fi
 
 int DataInterfaceQImageVector::read(const QString& field, DataVector::ReadInfo& p)
 {
-  int i;
+  int i = 0;
   int s = p.startingFrame;
   int n = p.numberOfFrames;
 
