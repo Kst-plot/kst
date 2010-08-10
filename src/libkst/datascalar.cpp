@@ -100,7 +100,8 @@ void DataScalar::save(QXmlStreamWriter &s) {
 void DataScalar::internalUpdate() {
   if (file()) {
     file()->writeLock();
-    file()->scalar().read(_field, Param(&_value));
+    ReadInfo readInfo(&_value);
+    file()->scalar().read(_field, readInfo);
     file()->unlock();
   }
 }
@@ -165,7 +166,8 @@ void DataScalar::reload() {
 }
 
 void DataScalar::reset() {
-    file()->scalar().read(_field, Param(&_value));
+    ReadInfo readInfo(&_value);
+    file()->scalar().read(_field, readInfo);
 }
 
 }

@@ -46,7 +46,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
       If it returns -9999, use the skipFrame= -1. 
      */
 
-    struct KSTCORE_EXPORT Param {
+    struct KSTCORE_EXPORT ReadInfo {
       double*  data;
       int startingFrame;
       int numberOfFrames;

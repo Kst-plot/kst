@@ -98,7 +98,8 @@ void DataString::save(QXmlStreamWriter &s) {
 void DataString::internalUpdate() {
   if (file()) {
     file()->writeLock();
-    file()->string().read(_field, Param(&_value));
+    ReadInfo readInfo(&_value);
+    file()->string().read(_field, readInfo);
     file()->unlock();
   }
 }
@@ -165,7 +166,8 @@ void DataString::reload() {
 }
 
 void DataString::reset() {
-  file()->string().read(_field, Param(&_value));
+  ReadInfo readInfo(&_value);
+  file()->string().read(_field, readInfo);
 }
 
 }

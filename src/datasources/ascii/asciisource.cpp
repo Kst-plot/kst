@@ -47,7 +47,7 @@ public:
   DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
 
   // read one element
-  int read(const QString&, const DataVector::Param&);
+  int read(const QString&, DataVector::ReadInfo&);
 
   // named elements
   QStringList list() const { return ascii._fieldList; }
@@ -78,7 +78,7 @@ const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &fie
 
 
 //-------------------------------------------------------------------------------------------
-int DataInterfaceAsciiVector::read(const QString& field, const DataVector::Param& p)
+int DataInterfaceAsciiVector::read(const QString& field, DataVector::ReadInfo& p)
 {
   return ascii.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }

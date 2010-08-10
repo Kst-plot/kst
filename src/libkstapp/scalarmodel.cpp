@@ -197,7 +197,8 @@ void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent
   foreach(QString scalar, scalars) {
     QList<QVariant> data;
     double value;
-    dataSource->scalar().read(scalar, DataScalar::Param(&value));
+    DataScalar::ReadInfo readInfo(&value);
+    dataSource->scalar().read(scalar, readInfo);
     data << scalar << value;
     new ScalarTreeItem(data, item);
   }

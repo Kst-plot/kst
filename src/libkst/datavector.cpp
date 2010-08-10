@@ -760,7 +760,7 @@ QString DataVector::propertyString() const {
 
 int DataVector::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead)
 {
-  const Param par = {v, s, n, skip, lastFrameRead};
+  ReadInfo par = {v, s, n, skip, lastFrameRead};
   return file()->vector().read(field, par);
 }
 

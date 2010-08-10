@@ -48,9 +48,9 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive {
     virtual ~DataString();
     virtual void internalUpdate();
 
-    struct KSTCORE_EXPORT Param 
+    struct KSTCORE_EXPORT ReadInfo 
     {
-      Param(QString* s) : value(s) {}
+      ReadInfo(QString* s) : value(s) {}
       QString* value;
     };
 

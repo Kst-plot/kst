@@ -55,7 +55,7 @@ template<class T>
 struct NotSupportedImp : public DataSource::DataInterface<T>
 {
   // read one element
-  int read(const QString&, const typename T::Param&) { return -1; }
+  int read(const QString&, typename T::ReadInfo&) { return -1; }
 
   // named elements
   QStringList list() const { return QStringList(); }

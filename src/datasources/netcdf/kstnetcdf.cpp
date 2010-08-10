@@ -46,7 +46,7 @@ public:
   DataInterfaceNetCdfScalar(NetcdfSource& s) : netcdf(s) {}
 
   // read one element
-  int read(const QString&, const DataScalar::Param&);
+  int read(const QString&, DataScalar::ReadInfo&);
 
   // named elements
   QStringList list() const { return netcdf._scalarList; }
@@ -67,7 +67,7 @@ private:
 };
 
 
-int DataInterfaceNetCdfScalar::read(const QString& scalar, const DataScalar::Param& p)
+int DataInterfaceNetCdfScalar::read(const QString& scalar, DataScalar::ReadInfo& p)
 {
   return netcdf.readScalar(p.value, scalar);
 }
@@ -93,7 +93,7 @@ public:
   DataInterfaceNetCdfVector(NetcdfSource& s) : netcdf(s) {}
 
   // read one element
-  int read(const QString&, const DataVector::Param&);
+  int read(const QString&, DataVector::ReadInfo&);
 
   // named elements
   QStringList list() const { return netcdf._fieldList; }
@@ -124,7 +124,7 @@ const DataVector::Optional DataInterfaceNetCdfVector::optional(const QString &fi
 
 
 
-int DataInterfaceNetCdfVector::read(const QString& field, const DataVector::Param& p)
+int DataInterfaceNetCdfVector::read(const QString& field, DataVector::ReadInfo& p)
 {
   return netcdf.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }
@@ -147,7 +147,7 @@ public:
   DataInterfaceNetCdfMatrix(NetcdfSource& s) : netcdf(s) {}
 
   // read one element
-  int read(const QString&, const DataMatrix::Param&);
+  int read(const QString&, DataMatrix::ReadInfo&);
 
   // named elements
   QStringList list() const { return netcdf._matrixList; }
@@ -191,7 +191,7 @@ const DataMatrix::Optional DataInterfaceNetCdfMatrix::optional(const QString& ma
 }
 
 
-int DataInterfaceNetCdfMatrix::read(const QString& field, const DataMatrix::Param& p)
+int DataInterfaceNetCdfMatrix::read(const QString& field, DataMatrix::ReadInfo& p)
 {
   int count = netcdf.readMatrix(p.data->z, field);
 

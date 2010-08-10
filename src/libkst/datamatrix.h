@@ -44,7 +44,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
         Returns the number of *samples* read 
     **/
-    struct KSTCORE_EXPORT Param {
+    struct KSTCORE_EXPORT ReadInfo {
       MatrixData* data;
       int xStart;
       int yStart;

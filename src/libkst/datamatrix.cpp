@@ -545,7 +545,7 @@ QString DataMatrix::propertyString() const {
 
 int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip)
 {
-  Param p = { data, xStart, yStart, xNumSteps, yNumSteps, skip};
+  ReadInfo p = { data, xStart, yStart, xNumSteps, yNumSteps, skip};
   return file()->matrix().read(matrix, p);
 }
 

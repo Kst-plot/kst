@@ -60,7 +60,7 @@ class KSTCORE_EXPORT DataSource : public Object
     {
 
       // read one element
-      virtual int read(const QString& name, const typename T::Param&) = 0;
+      virtual int read(const QString& name, typename T::ReadInfo&) = 0;
 
       // named elements
       virtual QStringList list() const = 0;

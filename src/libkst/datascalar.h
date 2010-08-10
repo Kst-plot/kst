@@ -48,8 +48,8 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
   public:
     virtual ~DataScalar();
 
-    struct Param {
-      Param(double* d) : value(d) {}
+    struct ReadInfo {
+      ReadInfo(double* d) : value(d) {}
       double* value;
     };
 

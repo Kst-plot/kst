@@ -53,7 +53,7 @@ public:
   DataInterfaceQImageVector(QImage* img) : _image(img) {}
 
   // read one element
-  int read(const QString&, const DataVector::Param&);
+  int read(const QString&, DataVector::ReadInfo&);
 
   // named elements
   QStringList list() const { return _vectorList; }
@@ -106,7 +106,7 @@ const DataVector::Optional DataInterfaceQImageVector::optional(const QString &fi
 
 
 
-int DataInterfaceQImageVector::read(const QString& field, const DataVector::Param& p)
+int DataInterfaceQImageVector::read(const QString& field, DataVector::ReadInfo& p)
 {
   int i;
   int s = p.startingFrame;
@@ -170,7 +170,7 @@ public:
   DataInterfaceQImageMatrix(QImage* img) : _image(img) {}
 
   // read one element
-  int read(const QString&, const DataMatrix::Param&);
+  int read(const QString&, DataMatrix::ReadInfo&);
 
   // named elements
   QStringList list() const { return _matrixList; }
@@ -224,7 +224,7 @@ const DataMatrix::Optional DataInterfaceQImageMatrix::optional(const QString& ma
 }
 
 
-int DataInterfaceQImageMatrix::read(const QString& field, const DataMatrix::Param& p)
+int DataInterfaceQImageMatrix::read(const QString& field, DataMatrix::ReadInfo& p)
 {
   if ( _image->isNull() ) {
     return 0;

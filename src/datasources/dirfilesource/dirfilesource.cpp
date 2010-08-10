@@ -57,7 +57,7 @@ public:
   DataInterfaceDirFileVector(DirFileSource& d) : dir(d) {}
 
   // read one element
-  int read(const QString&, const DataVector::Param&);
+  int read(const QString&, DataVector::ReadInfo&);
 
   // named elements
   QStringList list() const { return dir._fieldList; }
@@ -87,7 +87,7 @@ const DataVector::Optional DataInterfaceDirFileVector::optional(const QString &f
 }
 
 
-int DataInterfaceDirFileVector::read(const QString& field, const DataVector::Param& p)
+int DataInterfaceDirFileVector::read(const QString& field, DataVector::ReadInfo& p)
 {
   return dir.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }
