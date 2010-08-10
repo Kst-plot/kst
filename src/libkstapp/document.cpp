@@ -28,6 +28,7 @@
 #include <QFile>
 #include <QXmlStreamReader>
 
+
 namespace Kst {
 
 Document::Document(MainWindow *window)
@@ -155,6 +156,11 @@ bool Document::initFromCommandLine(CommandLineParser *P) {
   return ok;
 }
 
+
+#define malformed() \
+  return false;
+
+
 bool Document::open(const QString& file) {
   _isOpen = false;
   QFile f(file);
@@ -178,8 +184,6 @@ bool Document::open(const QString& file) {
 
   enum State { Unknown=0, Data, Variables, Objects, Relations, Graphics, View };
   State state = Unknown;
-
-#define malformed()
 
   while (!xml.atEnd()) {
     if (xml.isStartElement()) {
@@ -299,7 +303,6 @@ bool Document::open(const QString& file) {
     }
     xml.readNext();
   }
-#undef malformed
 
   if (xml.hasError()) {
     _lastError = QObject::tr("File is malformed and encountered an error while reading.");
@@ -324,6 +327,9 @@ bool Document::open(const QString& file) {
 
   return _isOpen = true;
 }
+
+#undef malformed
+
 
 void Document::createView() {
   _win->tabWidget()->createView();
