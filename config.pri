@@ -69,7 +69,7 @@ contains(lib, getdata) {
   !win32:contains(HAVE_DIRFILE, 1) {
     return(true)
   }
-  GETDATADIR= = $$(GETDATADIR)
+  GETDATADIR = $$(GETDATADIR)
   win32:!isEmpty(GETDATADIR) {
     return(true)
   }

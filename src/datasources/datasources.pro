@@ -17,8 +17,8 @@ LibExists(cfitsio) {
 LibExists(getdata) {
     message(DIRFILE configured.  Plugins will be built.)
     SUBDIRS += dirfilesource
-    CONFIG += link_pkgconfig
-    PKGCONFIG += getdata
+    !win32:CONFIG += link_pkgconfig
+    !win32:PKGCONFIG += getdata
 }
 
 LibExists(netcdf) {

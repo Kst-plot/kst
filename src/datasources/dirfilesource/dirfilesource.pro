@@ -1,4 +1,5 @@
 TOPOUT_REL=../../..
+include($$PWD/$$TOPOUT_REL/config.pri)
 include($$PWD/$$TOPOUT_REL/kst.pri)
 include($$PWD/../../../datasourceplugin.pri)
 
