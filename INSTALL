@@ -205,8 +205,6 @@ Windows Installation
 
 No installer exists for windows currently.  To distribute / move locations.
 
-1. Create kst/bin and kst/plugin directories
-2. Copy kst.exe mingwm10.dll QtCore4.dll QtGui4.dll QtOpenGL4.dll QtSvg4.dll
-   QtXml4.dll into kst/bin
-3. Copy DataSource and DataObject Plugins to kst/plugin
-4. Package kst directory or use from this location.
+1. Use the build directory with kst/bin and kst/plugin only
+2. Copy mingwm10.dll libgcc_s_dw2-1 QtCore4.dll QtGui4.dll QtOpenGL4.dll QtSvg4.dll QtXml4.dll into kst/bin
+4. Package the build directory or use from this location.
