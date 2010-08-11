@@ -23,6 +23,7 @@ namespace Label {
 namespace Kst {
 
 class PlotItem;
+class PlotRenderItem;
 
 class LegendItem : public ViewItem {
   Q_OBJECT

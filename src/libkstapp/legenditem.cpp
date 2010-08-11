@@ -35,8 +35,8 @@ struct DrawnLegendItem {
 };
 
 
-LegendItem::LegendItem(PlotItem *parent)
-  : ViewItem(parent->parentView()), _plotItem(parent), _auto(true), _verticalDisplay(true) {
+LegendItem::LegendItem(PlotItem *parentPlot)
+  : ViewItem(parentPlot->parentView()), _plotItem(parentPlot), _auto(true), _verticalDisplay(true) {
   setTypeName("Legend");
 
   _initializeShortName();
@@ -46,9 +46,9 @@ LegendItem::LegendItem(PlotItem *parent)
 
   setViewRect(0.0, 0.0, 0.0, 0.0);
   parentView()->scene()->addItem(this);
-  setParent(_plotItem);
+  setParent(_plotItem->renderItem());
 
-  QPointF origin = QPointF(parent->width() * 0.15, parent->height() * 0.15);
+  QPointF origin = QPointF(_plotItem->plotRect().width() * 0.15, _plotItem->plotRect().height() * 0.15);
   setPos(origin);
 
   applyDefaults();

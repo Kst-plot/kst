@@ -157,16 +157,18 @@ void LabelItem::setLabelFont(const QFont &font) {
 
 
 void LabelItem::creationPolygonChanged(View::CreationEvent event) {
-  if (event != View::MouseRelease) {
-    ViewItem::creationPolygonChanged(event);
-    return;
-  }
 
-  if (event == View::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
+  if (event == View::MouseMove) {
+    if (parentView()->creationPolygon(View::MouseMove).size()>0) {
+      const QPointF P = parentView()->creationPolygon(View::MouseMove).last();
+      setPos(P);
+      setDirty();
+    }
+  } else if (event == View::MouseRelease) {
+    const QPointF P = mapFromScene(parentView()->creationPolygon(event).last());
     QRectF newRect(rect().x(), rect().y(),
-                   poly.last().x() - rect().x(),
-                   poly.last().y() - rect().y());
+                   P.x() - rect().x(),
+                   P.y() - rect().y());
 
     if (newRect.isNull()) {
       // Special case for labels that don't need to have a size for creation to ensure proper parenting.
@@ -182,6 +184,8 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
     emit creationComplete();
     setDirty();
     return;
+  } else if (event != View::MousePress) {
+    ViewItem::creationPolygonChanged(event);
   }
 }
 
@@ -205,10 +209,12 @@ void CreateLabelCommand::createItem(QString *inText) {
 
     _item = new LabelItem(_view, text);
     LabelItem *label = qobject_cast<LabelItem*>(_item);
+
     label->setLabelScale(dialog.labelScale());
     label->setLabelColor(dialog.labelColor());
     label->setLabelFont(dialog.labelFont());
   }
+  _item->parentView()->scene()->addItem(_item);
 
   _view->setCursor(Qt::IBeamCursor);
 

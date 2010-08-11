@@ -127,7 +127,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual QString plotName() const; //from PlotItemInterface
 
     QList<PlotRenderItem*> renderItems() const;
-    PlotRenderItem *renderItem(PlotRenderItem::RenderType type);
+    PlotRenderItem *renderItem(PlotRenderItem::RenderType type=PlotRenderItem::First);
 
     virtual void save(QXmlStreamWriter &xml);
 
@@ -206,7 +206,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void setGlobalFontColor(const QColor &color);
 
     bool showLegend() const;
-    void setShowLegend(const bool show);
+    void setShowLegend(const bool show, const bool resetFonts = false);
 
     qreal mapXToPlot(const qreal &x);
     qreal mapYToPlot(const qreal &y);

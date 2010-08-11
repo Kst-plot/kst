@@ -1027,7 +1027,6 @@ void DataWizard::finished() {
     }
   }
 
-  double fontScale;
   if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
     int np = plotList.count();
     if (np > 0) {
@@ -1047,16 +1046,15 @@ void DataWizard::finished() {
     plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
 
   }
+  double fontScale;
   fontScale = ApplicationSettings::self()->defaultFontScale();
 
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {
-      plot->setShowLegend(true);
-      plot->legend()->setFontScale(fontScale);
+      plot->setShowLegend(true, true);
     } else if (_pagePlot->legendsAuto()) {
       if (plot->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
-        plot->setShowLegend(true);
-        plot->legend()->setFontScale(fontScale);
+        plot->setShowLegend(true, true);
       }
     }
   }

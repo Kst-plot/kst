@@ -29,7 +29,7 @@ class PlotRenderItem : public ViewItem
 {
   Q_OBJECT
   public:
-    enum RenderType { Cartesian, Polar, Sinusoidal };
+    enum RenderType {First, Cartesian, Polar, Sinusoidal };
 
     PlotRenderItem(PlotItem *parentItem);
     virtual ~PlotRenderItem();

@@ -790,6 +790,9 @@ QList<PlotRenderItem*> PlotItem::renderItems() const {
 
 
 PlotRenderItem *PlotItem::renderItem(PlotRenderItem::RenderType type) {
+  if ((type == PlotRenderItem::First) && (_renderers.count()>0)) {
+    return _renderers.values().at(0);
+  }
   if (_renderers.contains(type))
     return _renderers.value(type);
 
@@ -2520,17 +2523,20 @@ LegendItem* PlotItem::legend() {
   if (!_legend) {
     _legend = new LegendItem(this);
     _legend->setVisible(false);
-    _legend->setPos(rect().x() + width()*0.15, rect().y() + height()*0.15);
+    _legend->setPos(rect().x() + plotRect().width()*0.05, rect().y() + plotRect().height()*0.15);
     _legend->updateRelativeSize();
   }
   return _legend;
 }
 
 
-void PlotItem::setShowLegend(const bool show) {
+void PlotItem::setShowLegend(const bool show, const bool resetFonts) {
   if (show != _showLegend) {
     legend()->setVisible(show);
     _showLegend = show;
+    if (show && resetFonts) {
+      legend()->setFontScale(qMax(globalFontScale()*0.6, ApplicationSettings::self()->minimumFontSize()));
+    }
   }
 }
 
