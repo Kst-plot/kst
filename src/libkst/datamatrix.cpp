@@ -59,9 +59,7 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
   if (file()) {
     xml.writeStartElement(staticTypeTag);
 
-    file()->readLock();
-    xml.writeAttribute("file", file()->fileName());
-    file()->unlock();
+    saveFilename(xml);
 
     xml.writeAttribute("field", _field);
     xml.writeAttribute("reqxstart", QString::number(_reqXStart));

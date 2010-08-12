@@ -42,7 +42,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
       if (n == DataSource::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         fileType = attrs.value("reader").toString();
-        fileName = attrs.value("file").toString();
+        fileName = DataPrimitive::readFilename(attrs);
       } else if (n == "properties") {
         propertyAttributes = xml.attributes();
         xml.readElementText();

@@ -101,7 +101,7 @@ void VScalar::save(QXmlStreamWriter &s) {
 
     _file->readLock();
     s.writeAttribute("provider", _file->Name());
-    s.writeAttribute("file", _file->fileName());
+    DataPrimitive::saveFilename(_file->fileName(), s);
     _file->unlock();
 
     s.writeAttribute("field", _field);

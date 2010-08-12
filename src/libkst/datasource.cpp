@@ -270,7 +270,7 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   }
   s.writeStartElement("source");
   s.writeAttribute("reader", fileType());
-  s.writeAttribute("file", name);
+  DataPrimitive::saveFilename(name, s);
   save(s);
   s.writeEndElement();
 }

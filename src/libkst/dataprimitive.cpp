@@ -20,6 +20,8 @@
 
 #include "datasource.h"
 
+#include <QXmlStreamWriter>
+
 namespace Kst {
 
 
@@ -53,6 +55,27 @@ QString DataPrimitive::filename() const {
     d._file->unlock();
   }
   return rc;
+}
+
+
+void DataPrimitive::saveFilename(QXmlStreamWriter& s) {
+  if (d._file) {
+    file()->readLock();
+    s.writeAttribute("file", d._file->fileName());
+    file()->unlock();
+  }
+}
+
+
+void DataPrimitive::saveFilename(const QString& fileName, QXmlStreamWriter& s)
+{
+    s.writeAttribute("file", fileName);
+}
+
+
+QString DataPrimitive::readFilename(const QXmlStreamAttributes& attrs)
+{
+    return attrs.value("file").toString();
 }
 
 

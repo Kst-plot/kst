@@ -274,9 +274,7 @@ int DataVector::reqStartFrame() const {
 void DataVector::save(QXmlStreamWriter &s) {
   if (file()) {
     s.writeStartElement("datavector");
-    file()->readLock();
-    s.writeAttribute("file", file()->fileName());
-    file()->unlock();
+    saveFilename(s);
     s.writeAttribute("field", _field);
 
     s.writeAttribute("start", QString::number(ReqF0));

@@ -221,7 +221,7 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         QXmlStreamAttributes attrs = xml.attributes();
 
         //provider = attrs.value("provider").toString();
-        file = attrs.value("file").toString();
+        file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
         start = attrs.value("start").toString().toInt();
         count = attrs.value("count").toString().toInt();

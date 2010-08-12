@@ -85,9 +85,7 @@ void DataScalar::changeFile(DataSourcePtr in_file) {
 void DataScalar::save(QXmlStreamWriter &s) {
   if (file()) {
     s.writeStartElement("datascalar");
-    file()->readLock();
-    s.writeAttribute("file", file()->fileName());
-    file()->unlock();
+    saveFilename(s);
     s.writeAttribute("field", _field);
 
     saveNameInfo(s, XNUM);

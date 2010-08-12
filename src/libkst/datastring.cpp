@@ -83,9 +83,7 @@ void DataString::changeFile(DataSourcePtr in_file) {
 void DataString::save(QXmlStreamWriter &s) {
   if (file()) {
     s.writeStartElement("datastring");
-    file()->readLock();
-    s.writeAttribute("file", file()->fileName());
-    file()->unlock();
+    saveFilename(s);
     s.writeAttribute("field", _field);
 
     saveNameInfo(s, XNUM);

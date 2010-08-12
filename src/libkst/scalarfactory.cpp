@@ -101,7 +101,7 @@ PrimitivePtr DataScalarFactory::generatePrimitive(ObjectStore *store, QXmlStream
       if (n == DataScalar::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         provider = attrs.value("provider").toString();
-        file = attrs.value("file").toString();
+        file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
 
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
@@ -170,7 +170,7 @@ PrimitivePtr VScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRea
       if (n == VScalar::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         provider = attrs.value("provider").toString();
-        file = attrs.value("file").toString();
+        file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
         f0 = attrs.value("f0").toString().toInt();
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {

@@ -25,6 +25,8 @@
 
 #include <QString>
 
+class QXmlStreamWriter;
+class QXmlStreamAttributes;
 
 namespace Kst {
 
@@ -40,6 +42,13 @@ public:
 
     /** return the name of the file */
     QString filename() const;
+
+    /** save filename to xml stream */
+    void saveFilename(QXmlStreamWriter&);
+    static void saveFilename(const QString&, QXmlStreamWriter&);
+
+    static QString readFilename(const QXmlStreamAttributes&);
+
 
     /** return the field name */
     const QString& field() const;

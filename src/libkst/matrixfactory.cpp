@@ -186,7 +186,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
       if (n == DataMatrix::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         provider = attrs.value("provider").toString();
-        file = attrs.value("file").toString();
+        file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
         requestedXStart = attrs.value("reqxstart").toString().toInt();
         requestedYStart = attrs.value("reqystart").toString().toInt();
