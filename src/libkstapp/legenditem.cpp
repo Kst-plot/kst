@@ -123,8 +123,9 @@ void LegendItem::paint(QPainter *painter) {
 
       int startPoint = qMax(0, (legendSize.width() / 2) - (rc.x / 2));
       int paddingValue = fm.height() / 4;
-
+    
       setViewRect(viewRect().x(), viewRect().y(), qMax(rc.x, legendSize.width()), rc.y + legendSize.height() + paddingValue * 3);
+      painter->drawRect(rect());
 
       painter->drawPixmap(QPoint(x + startPoint, y + paddingValue), pixmap, QRect(0, 0, rc.x, fm.height()));
       painter->restore();
@@ -135,10 +136,9 @@ void LegendItem::paint(QPainter *painter) {
   } else {
     // No Title
     setViewRect(viewRect().x(), viewRect().y(), legendSize.width(), legendSize.height());
+    painter->drawRect(rect());
   }
 
-  QRectF box = rect();
-  painter->drawRect(rect());
 
   foreach(DrawnLegendItem item, legendPixmaps) {
     painter->drawPixmap(QPoint(x, y), item.pixmap, QRect(0, 0, item.size.width(), item.size.height()));
