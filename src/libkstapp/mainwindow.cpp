@@ -233,10 +233,17 @@ void MainWindow::open() {
   if (_doc->isChanged() && !promptSave()) {
     return;
   }
-  QString fn = QFileDialog::getOpenFileName(this, tr("Kst: Open File"), _doc->fileName(), tr("Kst Sessions (*.kst)"));
+  QSettings settings("Kst2");
+  const QString lastKey = "lastOpenedKstFile";
+  QString fn = settings.value(lastKey).toString();
+  if (fn.isEmpty()) {
+      fn = _doc->fileName();
+  }
+  fn = QFileDialog::getOpenFileName(this, tr("Kst: Open File"), fn, tr("Kst Sessions (*.kst)"));
   if (fn.isEmpty()) {
     return;
   }
+  settings.setValue(lastKey, fn);
   QDir::setCurrent(fn.left(fn.lastIndexOf("/")));
   openFile(fn);
   setWindowTitle("Kst - " + fn);
