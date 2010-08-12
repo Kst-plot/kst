@@ -1324,18 +1324,19 @@ void MainWindow::showChangeFileDialog() {
 
 
 void MainWindow::readSettings() {
-  QSettings settings;
-  QPoint pos = settings.value("pos", QPoint(20, 20)).toPoint();
-  QSize size = settings.value("size", QSize(800, 600)).toSize();
-  resize(size);
-  move(pos);
+  QSettings settings("Kst2");
+  QByteArray geo = settings.value("geometry").toByteArray();
+  if (!geo.isEmpty()) {
+      restoreGeometry(geo);
+  } else {
+      setGeometry(50, 50, 800, 600);
+  }
 }
 
 
 void MainWindow::writeSettings() {
-  QSettings settings;
-  settings.setValue("pos", pos());
-  settings.setValue("size", size());
+  QSettings settings("Kst2");
+  settings.setValue("geometry", saveGeometry());
 }
 
 }
