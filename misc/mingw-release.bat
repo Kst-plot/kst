@@ -25,6 +25,8 @@ set GETDATADIR=%KSTDEPS%
 set NETCDFDIR=%KSTDEPS%
 set GSLDIR=%KSTDEPS%
 
+rmdir /s/q build
+
 qmake ..\kst\kst.pro CONFIG+=release -r
 
 mingw32-make
