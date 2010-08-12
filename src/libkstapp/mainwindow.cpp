@@ -204,7 +204,10 @@ void MainWindow::saveAs() {
   if (fn.isEmpty()) {
     return;
   }
+  QString restorePath = QDir::currentPath();
+  QDir::setCurrent(fn.left(fn.lastIndexOf("/")));
   _doc->save(fn);
+  QDir::setCurrent(restorePath);
   setWindowTitle("Kst - " + fn);
 }
 

@@ -21,6 +21,8 @@
 #include "datasource.h"
 
 #include <QXmlStreamWriter>
+#include <QDir>
+
 
 namespace Kst {
 
@@ -28,7 +30,24 @@ namespace Kst {
 struct DataPrimitive::Private
 {
   DataSourcePtr _file;
+
+  static void saveFilename(const QString& fn, QXmlStreamWriter& s);
 };
+
+
+void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s) {
+  if (!fn.isEmpty()) {
+    QDir current = QDir::current();
+    QString currentP = QDir::currentPath();
+    QString relFn = current.relativeFilePath(fn);
+    s.writeAttribute("file", fn);
+    if (QDir::isRelativePath(relFn)) { // is absolute if on a differnt disk/network 
+        s.writeAttribute("fileRelative", relFn);
+    }
+  }
+}
+
+
 
 
 
@@ -61,7 +80,7 @@ QString DataPrimitive::filename() const {
 void DataPrimitive::saveFilename(QXmlStreamWriter& s) {
   if (d._file) {
     file()->readLock();
-    s.writeAttribute("file", d._file->fileName());
+    DataPrimitive::Private::saveFilename(d._file->fileName(), s);
     file()->unlock();
   }
 }
@@ -69,7 +88,7 @@ void DataPrimitive::saveFilename(QXmlStreamWriter& s) {
 
 void DataPrimitive::saveFilename(const QString& fileName, QXmlStreamWriter& s)
 {
-    s.writeAttribute("file", fileName);
+    DataPrimitive::Private::saveFilename(fileName, s);
 }
 
 
