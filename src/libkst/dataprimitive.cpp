@@ -37,10 +37,10 @@ struct DataPrimitive::Private
 
 void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s) {
   if (!fn.isEmpty()) {
+    // QDir::current is set to *.kst's file path in mainwindow.cpp
     QDir current = QDir::current();
-    QString currentP = QDir::currentPath();
     QString relFn = current.relativeFilePath(fn);
-    s.writeAttribute("file", fn);
+    s.writeAttribute("file", current.absoluteFilePath(fn));
     if (QDir::isRelativePath(relFn)) { // is absolute if on a differnt disk/network 
         s.writeAttribute("fileRelative", relFn);
     }
@@ -94,6 +94,20 @@ void DataPrimitive::saveFilename(const QString& fileName, QXmlStreamWriter& s)
 
 QString DataPrimitive::readFilename(const QXmlStreamAttributes& attrs)
 {
+    // TODO discuss strategy: 
+    //   - first try relative path
+    //   - fall back to absolute path    
+
+    // QDir::current is set to *.kst's file path in mainwindow.cpp
+    QDir current = QDir::current();
+
+    QString fnRel = attrs.value("fileRelative").toString();    
+
+    if (!fnRel.isEmpty() && current.exists(fnRel)) {
+        // internally only use absolute paths
+        return current.absoluteFilePath(fnRel);
+    }
+
     return attrs.value("file").toString();
 }
 
