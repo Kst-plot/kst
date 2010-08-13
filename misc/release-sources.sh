@@ -13,6 +13,7 @@ fi
 KSTDIR=kst-${1}
 KSTGZ=$KSTDIR.tar.gz
 
+rm -rf $KSTDIR-release
 mkdir $KSTDIR-release
 cd $KSTDIR-release
 
@@ -31,7 +32,7 @@ gzip -9 $KSTDIR.tar
 
 if [ -z ${2} ]
 then
-  exit
+  exit 0
 fi
 
 # checkout website
@@ -44,4 +45,4 @@ svn add $KSTGZ
 
 svn status
 
-echo Commit soucres manually to Kst's www directory
+echo "Commit sources manually to Kst's mirrored www directory"
