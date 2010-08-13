@@ -9,6 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "config.h"
 #include "aboutdialog.h"
 
 #include <QDesktopServices>
@@ -41,7 +42,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
 
   QStringList msg = QStringList()
-  << tr("<qt><h2>Kst 2.0.0 - A data viewing program.</h2>")
+  << tr("<qt><h2>Kst "KSTVERSION" - A data viewing program.</h2>")
   << tr("Copyright &copy; 2000-2010 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>")
   << tr("Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>")

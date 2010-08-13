@@ -36,7 +36,10 @@ DebugDialog::DebugDialog(QWidget *parent)
   connect(_showNotice, SIGNAL(toggled(bool)), _log, SLOT(setShowNotice(bool)));
   connect(_showError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
 
-  _buildInfo->setText(i18n("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
+  if (!Debug::self()->kstRevision().isEmpty())
+    _buildInfo->setText(i18n("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
+  else
+    _buildInfo->setText(i18n("<h1>Kst</h1> Version %1").arg(KSTVERSION));
 }
 
 
