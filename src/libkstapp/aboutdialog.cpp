@@ -45,7 +45,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   << tr("<qt><h2>Kst "KSTVERSION" - A data viewing program.</h2>")
   << tr("Copyright &copy; 2000-2010 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>")
-  << tr("Please report bugs to: <a href=\"http://bugs.kde.org/\">http://bugs.kde.org/</a><br>")
+  << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")
   << tr("<br>Authors and contributors (sorted alphabetically):")
   << QString("<ul>")
   << authors
