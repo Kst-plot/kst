@@ -12,12 +12,15 @@
 #include "fitsimage.h"
 
 #include <QXmlStreamWriter>
-//#include <fitsio.h>
+
 #include <math.h>
 
 #include "kst_i18n.h"
 
+using namespace Kst;
+
 static const QString fitsTypeString = I18N_NOOP("FITS image");
+static const QString DefaultMatrixName = I18N_NOOP("1");
 
 class FitsImageSource::Config {
   public:
@@ -39,141 +42,107 @@ class FitsImageSource::Config {
     }
 };
 
-
-FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
-  _fptr = 0L;
-  _valid = false;
-
-  if (!type.isEmpty() && type != fitsTypeString) {
-    return;
-  }
-
-  _config = new FitsImageSource::Config;
-  _config->read(cfg, filename);
-  if (!e.isNull()) {
-    _config->load(e);
-  }
-
-  if (init()) {
-    _valid = true;
-  }
-
-  update();
-}
+//
+// Matrix interface
+//
 
 
+class DataInterfaceFitsImageMatrix : public DataSource::DataInterface<DataMatrix> {
+public:
 
-FitsImageSource::~FitsImageSource() {
-  int status;
-  if (_fptr) {
-    fits_close_file( _fptr, &status );
-    _fptr = 0L;
-  }
-}
+  DataInterfaceFitsImageMatrix(fitsfile **fitsfileptr) : _fitsfileptr(fitsfileptr) {}
 
-const QString& FitsImageSource::typeString() const {
-  return fitsTypeString;
-}
+  // read one element
+  int read(const QString&, DataMatrix::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return _matrixList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataMatrix::Optional optional(const QString&) const;
+  void setOptional(const QString&, const DataMatrix::Optional&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
 
 
+  // no interface
+  fitsfile **_fitsfileptr;
+  QStringList _matrixList;
 
-bool FitsImageSource::reset() {
-  init();
-  return true;
-}
+  void init();
+  void clear();
+};
 
-
-bool FitsImageSource::init() {
-  int status = 0;
-
+void DataInterfaceFitsImageMatrix::clear()
+{
   _matrixList.clear();
-  _fieldList.clear();
-  _frameCount = 0;
-
-  fits_open_image( &_fptr, _filename.latin1( ), READONLY, &status );
-  if (status == 0) {
-    _fieldList.append("INDEX");
-    _fieldList.append("1");
-    _matrixList.append("1");
-    return update() == Kst::Object::UPDATE;
-  } else {
-    fits_close_file( _fptr, &status );
-    _fptr = 0L;
-  }
-  return false;
 }
 
+void DataInterfaceFitsImageMatrix::init()
+{
+  _matrixList.append(DefaultMatrixName); // FIXME: fits vectirs have real names...
+}
 
-Kst::Object::UpdateType FitsImageSource::update() {
+const DataMatrix::Optional DataInterfaceFitsImageMatrix::optional(const QString& matrix) const
+{
   long n_axes[3];
   int status = 0;
 
-  fits_get_img_size( _fptr,  2,  n_axes,  &status );
-
-  int newNF = n_axes[0]*n_axes[1];
-  bool isnew = newNF != _frameCount;
-
-  _frameCount = newNF;
-
-  return (isnew ? Kst::Object::UPDATE : Kst::Object::NO_CHANGE);
-}
-
-
-bool FitsImageSource::matrixDimensions( const QString& matrix, int* xDim, int* yDim) {
-  long n_axes[3];
-  int status = 0;
-
-  if (!_matrixList.contains(matrix)) {
-    return false;
+  if ( !*_fitsfileptr || !_matrixList.contains( matrix ) ) {
+    return DataMatrix::Optional();
   }
 
-  fits_get_img_size( _fptr,  2,  n_axes,  &status );
+  fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
   if (status) {
-    return false;
+    return DataMatrix::Optional();
   }
 
-  *xDim = n_axes[0];
-  *yDim = n_axes[1];
+  DataMatrix::Optional opt;
+  opt.samplesPerFrame = 1;
+  opt.xSize = n_axes[0];
+  opt.ySize = n_axes[1];
 
-  return true;
+  return opt;
 }
 
+//int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int xStart,
+//                                     int yStart, int xNumSteps, int yNumSteps) {
 
-int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int xStart,
-                                     int yStart, int xNumSteps, int yNumSteps) {
+int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInfo& p) {
   long n_axes[2],  fpixel[2] = {1, 1};
   double nullval = NAN;
   double blank = 0.0;
   long n_elements;
-  int i,  px, py,  anynull,  ni;
-  int y0, y1, x0, x1;
-  double *z;
+  int px, py,  anynull;
   int status = 0;
   double *buffer;
 
-  if (!_matrixList.contains(field)) {
-    return false;
+  if ((!*_fitsfileptr) || (!_matrixList.contains(field))) {
+    return 0;
   }
 
-  fits_get_img_size( _fptr,  2,  n_axes,  &status );
+  fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
   if (status) {
-    return false;
+    return 0;
   }
 
   n_elements = n_axes[0]*n_axes[1];
   buffer = (double*)malloc(n_elements*sizeof(double));
 
-  fits_read_pix( _fptr,  TDOUBLE, fpixel, n_elements, &nullval, buffer, &anynull,  &status );
+  fits_read_pix( *_fitsfileptr,  TDOUBLE, fpixel, n_elements, &nullval, buffer, &anynull,  &status );
 
   // Check to see if the file is using the BLANK keyword
   // to indicate the NULL value for the image.  This is
-  // not correct useage for floating point images, but 
-  // it is used frequently nonetheless... 
+  // not correct useage for floating point images, but
+  // it is used frequently nonetheless...
   char charBlank[] = "BLANK";
-  fits_read_key(_fptr, TDOUBLE, charBlank, &blank, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charBlank, &blank, NULL, &status);
   if (status) { //keyword does not exist, ignore it
     status = 0;
   } else { //keyword is used, replace pixels with this value
@@ -185,19 +154,19 @@ int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int
     }
   }
 
-  y0 = yStart;
-  y1 = yStart+yNumSteps;
+  int y0 = p.yStart;
+  int y1 = p.yStart + p.yNumSteps;
+  int x0 = p.xStart;
+  int x1 = p.xStart + p.xNumSteps;
+  double* z = p.data->z;
 
-  x0 = xStart;
-  x1 = xStart + xNumSteps;
-  ni = xNumSteps * yNumSteps - 1;
+  int ni = p.xNumSteps * p.yNumSteps - 1;
 
-  i = 0;
+  int i = 0;
 
-  z = data->z;
-  if (field=="1") {
-    for (px = xStart; px < x1; px++) {
-      for (py = y1-1; py >= yStart; py--) {
+  if (field==DefaultMatrixName) {
+    for (px = p.xStart; px < x1; px++) {
+      for (py = y1-1; py >= p.yStart; py--) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }
@@ -223,12 +192,12 @@ int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int
 //   fits_read_key(_fptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
 //   fits_read_key(_fptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
 //   fits_read_key(_fptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
-// 
+//
 //   if (status) {
-    data->xMin = x0;
-    data->yMin = y0;
-    data->xStepSize = 1;
-    data->yStepSize = 1;
+    p.data->xMin = x0;
+    p.data->yMin = y0;
+    p.data->xStepSize = 1;
+    p.data->yStepSize = 1;
 //   } else {
 //     dx = fabs(dx);
 //     dy = fabs(dy);
@@ -242,63 +211,100 @@ int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int
 }
 
 
-int FitsImageSource::readField(double *v, const QString& field, int s, int n) {
-  int i = 0;
-
-  if (!_fieldList.contains(field)) {
-    return false;
-  }
-
-  if (field=="INDEX") {
-    for (i = 0; i < n; i++) {
-      v[i] = i+s;
-    }
-  } else if (field=="1") {
-    double *buffer;
-    long fpixel[2] = {1, 1};
-    double nullval = 0;
-    int status = 0, anynull;
-
-    buffer = (double*)malloc(_frameCount*sizeof(double));
-
-    fits_read_pix( _fptr,  TDOUBLE, fpixel, _frameCount, &nullval, buffer, &anynull,  &status );
-
-    for (i = 0; i < n; i++) {
-      v[i] = buffer[i+s];
-    }
-
-    free( buffer );
-
-  }
-
-  return(i);
-}
-
-
-bool FitsImageSource::isValidField(const QString& field) const {
-  return  _fieldList.contains( field );
-}
-
-
-bool FitsImageSource::isValidMatrix(const QString& field) const {
+bool DataInterfaceFitsImageMatrix::isValid(const QString& field) const {
   return  _matrixList.contains( field );
 }
 
 
-int FitsImageSource::samplesPerFrame(const QString &field) {
-  Q_UNUSED(field)
-  return 1;
+FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
+: Kst::DataSource(store, cfg, filename, type), _config(0L),
+  im(new DataInterfaceFitsImageMatrix(&_fptr))
+{
+  setInterface(im);
+
+  setUpdateType(None);
+
+  _fptr = 0L;
+  _valid = false;
+
+  if (!type.isEmpty() && type != fitsTypeString) {
+    return;
+  }
+
+  _config = new FitsImageSource::Config;
+  _config->read(cfg, filename);
+  if (!e.isNull()) {
+    _config->load(e);
+  }
+
+  if (init()) {
+    _valid = true;
+  }
+
+  registerChange();
 }
 
 
-int FitsImageSource::frameCount(const QString& field) const {
-  Q_UNUSED(field)
-  return _frameCount;
+
+FitsImageSource::~FitsImageSource() {
+  int status;
+  if (_fptr) {
+    fits_close_file( _fptr, &status );
+    _fptr = 0L;
+  }
+  delete _config;
+  _config = 0L;
+}
+
+const QString& FitsImageSource::typeString() const {
+  return fitsTypeString;
+}
+
+
+
+void FitsImageSource::reset() {
+  init();
+  Object::reset();
+}
+
+bool FitsImageSource::init() {
+  int status = 0;
+  fits_open_image( &_fptr, _filename.toAscii(), READONLY, &status );
+
+  im->clear();
+  if (status == 0) {
+    im->init();
+
+    registerChange();
+    return true;
+  } else {
+    fits_close_file( _fptr, &status );
+    _fptr = 0L;
+    return false;
+  }
+}
+
+
+Kst::Object::UpdateType FitsImageSource::internalDataSourceUpdate() {
+  /*
+  long n_axes[3];
+  int status = 0;
+
+  fits_get_img_size( _fptr,  2,  n_axes,  &status );
+
+  int newNF = n_axes[0]*n_axes[1];
+  bool isnew = newNF != _frameCount;
+
+  _frameCount = newNF;
+
+  */
+  //return (isnew ? Kst::Object::Updated : Kst::Object::NoChange);
+  return (Kst::Object::NoChange);
 }
 
 
 bool FitsImageSource::isEmpty() const {
-  return _frameCount < 1;
+  return im->optional(DefaultMatrixName).xSize < 1;
 }
 
 
@@ -309,24 +315,6 @@ QString FitsImageSource::fileType() const {
 
 void FitsImageSource::save(QXmlStreamWriter &streamWriter) {
   Kst::DataSource::save(streamWriter);
-}
-
-
-int FitsImageSource::readScalar(double &S, const QString& scalar) {
-  if (scalar == "FRAMES") {
-    S = _frameCount;
-    return 1;
-  }
-  return 0;
-}
-
-
-int FitsImageSource::readString(QString &S, const QString& string) {
-  if (string == "FILE") {
-    S = _filename;
-    return 1;
-  }
-  return 0;
 }
 
 
@@ -361,7 +349,7 @@ QStringList FitsImagePlugin::matrixList(QSettings *cfg,
     *typeSuggestion = fitsTypeString;
   }
   if ( understands(cfg, filename) ) {
-    matrixList.append( "1" );
+    matrixList.append( DefaultMatrixName );
   }
   return matrixList;
 
@@ -433,8 +421,8 @@ QStringList FitsImagePlugin::fieldList(QSettings *cfg,
     *typeSuggestion = fitsTypeString;
   }
   if (understands(cfg, filename)) {
-    fieldList.append("INDEX");
-    fieldList.append( "1" );
+    //fieldList.append("INDEX");
+    //fieldList.append( DefaultMatrixName );
   }
   return fieldList;
 }
@@ -447,7 +435,7 @@ int FitsImagePlugin::understands(QSettings *cfg, const QString& filename) const 
   int ret_val = 0;
   int naxis;
 
-  fits_open_image( &ffits, filename.latin1( ), READONLY, &status );
+  fits_open_image( &ffits, filename.toAscii(), READONLY, &status );
   fits_get_img_dim( ffits, &naxis,  &status);
 
   if ((status == 0) && (naxis > 1)) {

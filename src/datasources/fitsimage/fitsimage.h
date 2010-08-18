@@ -15,7 +15,11 @@
 
 #include <datasource.h>
 #include <dataplugin.h>
-#include <libcfitsio0/fitsio.h>
+
+//#include <libcfitsio0/fitsio.h>
+#include <fitsio.h>
+
+class DataInterfaceFitsImageMatrix;
 
 class FitsImageSource : public Kst::DataSource {
   Q_OBJECT
@@ -26,19 +30,10 @@ class FitsImageSource : public Kst::DataSource {
     ~FitsImageSource();
 
     bool init();
-    bool reset();
+    virtual void reset();
 
-    Kst::Object::UpdateType update();
+    Kst::Object::UpdateType internalDataSourceUpdate();
 
-    bool matrixDimensions( const QString& matrix, int* xDim, int* yDim);
-    int readMatrix(Kst::MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps);
-    bool isValidMatrix(const QString& field) const;
-
-    int readField(double *v, const QString &field, int s, int n);
-    bool isValidField(const QString &field) const;
-
-    int samplesPerFrame(const QString &field);
-    int frameCount(const QString& field = QString::null) const;
     bool isEmpty() const;
     QString fileType() const;
 
@@ -48,13 +43,13 @@ class FitsImageSource : public Kst::DataSource {
 
     class Config;
 
-    int readScalar(double &S, const QString& scalar);
-    int readString(QString &S, const QString& string);
-
   private:
     int _frameCount;
     fitsfile *_fptr;
     mutable Config *_config;
+
+    DataInterfaceFitsImageMatrix* im;
+
 };
 
 

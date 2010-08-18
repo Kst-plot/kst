@@ -179,7 +179,7 @@ class KSTCORE_EXPORT DataSource : public Object
     virtual bool isEmpty() const;
 
     /** Reset to initial state of the source, just as though no data had been
-     *  read and the file had just been opened.  Return true on success.
+     *  read and the file had just been opened.
      */
     virtual void reset();
 
