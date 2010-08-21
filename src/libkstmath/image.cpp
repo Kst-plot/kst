@@ -364,6 +364,21 @@ MatrixPtr Image::matrix() const {
   }
 }
 
+bool Image::invertXHint() const {
+  if (_inputMatrices.contains(THEMATRIX)) {
+    return _inputMatrices[THEMATRIX]->invertXHint();
+  } else {
+    return false;
+  }
+}
+
+bool Image::invertYHint() const {
+  if (_inputMatrices.contains(THEMATRIX)) {
+    return _inputMatrices[THEMATRIX]->invertYHint();
+  } else {
+    return false;
+  }
+}
 
 QString Image::xLabel() const {
   if (_inputMatrices.contains(THEMATRIX)) {

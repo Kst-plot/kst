@@ -42,7 +42,7 @@ const QString Matrix::staticTypeString = I18N_NOOP("Matrix");
 
 Matrix::Matrix(ObjectStore *store)
     : Primitive(store, 0L), _NS(0), _NRealS(0), _nX(1), _nY(0), _minX(0), _minY(0), _stepX(1), _stepY(1),
-      _editable(false), _saveable(false), _z(0L), _zSize(0) {
+      _invertXHint(false), _invertYHint(false), _editable(false), _saveable(false), _z(0L), _zSize(0) {
 
   _initializeShortName();
   createScalars(store);

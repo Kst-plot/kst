@@ -117,6 +117,9 @@ class KSTMATH_EXPORT Image : public Relation {
 
     virtual QString descriptionTip() const;
 
+    virtual bool invertXHint() const;
+    virtual bool invertYHint() const;
+
   protected:
     Image(ObjectStore *store);
     virtual ~Image();

@@ -166,6 +166,9 @@ class KSTMATH_EXPORT Relation : public Object {
     MatrixMap& inputMatrices() { return _inputMatrices; }
     MatrixMap& outputMatrices() { return _outputMatrices; }
 
+    virtual bool invertXHint() const {return false;}
+    virtual bool invertYHint() const {return false;}
+
   protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;

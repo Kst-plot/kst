@@ -127,7 +127,11 @@ RelationList PlotRenderItem::relationList() const {
 void PlotRenderItem::addRelation(RelationPtr relation) {
   if (relation) {
     _relationList.append(relation);
-    plotItem()->zoomMaximum();
+    if (_relationList.count() == 1) {
+      plotItem()->zoomMaximum();
+      plotItem()->xAxis()->setAxisReversed(relation->invertXHint());
+      plotItem()->yAxis()->setAxisReversed(relation->invertYHint());
+    }
   }
 }
 

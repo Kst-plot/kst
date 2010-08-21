@@ -130,6 +130,9 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     int yNumSteps() const { return _nY; }
     double xStepSize() const { return _stepX; }
     double yStepSize() const { return _stepY; }
+    virtual bool invertXHint() const {return _invertXHint; }
+    virtual bool invertYHint() const {return _invertYHint; }
+
     double minX() const { return _minX; }
     double minY() const { return _minY; }
 
@@ -150,6 +153,9 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     double _minY;
     double _stepX;
     double _stepY;
+    bool _invertXHint;
+    bool _invertYHint;
+
     int _numNew; // number of new samples
     QHash<QString, ScalarPtr> _statScalars; // statistics scalars
     bool _editable : 1;

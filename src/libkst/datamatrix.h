@@ -61,6 +61,8 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
       int samplesPerFrame;
       int xSize;
       int ySize;
+      bool invertXHint;
+      bool invertYHint;
     };
 
 

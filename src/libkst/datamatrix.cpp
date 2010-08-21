@@ -38,7 +38,9 @@ const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
 DataMatrix::Optional::Optional() :
     samplesPerFrame(-1),
     xSize(-1),
-    ySize(-1)
+    ySize(-1),
+    invertXHint(false),
+    invertYHint(false)
 {
 }
 
@@ -337,6 +339,9 @@ void DataMatrix::internalUpdate() {
   int xSize = file()->matrix().optional(_field).xSize;
   int ySize = file()->matrix().optional(_field).ySize;
 
+  _invertXHint = file()->matrix().optional(_field).invertXHint;
+  _invertYHint = file()->matrix().optional(_field).invertYHint;
+
   if (_reqXStart < 0) {
     // counting from end
     realXStart = xSize - _reqNX;
@@ -455,6 +460,8 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _minY = minY;
   _stepX = stepX;
   _stepY = stepY;
+  _invertXHint = false;
+  _invertYHint = false;
 
   _saveable = true;
   _editable = true;
@@ -462,7 +469,9 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   if (!file()) {
     Debug::self()->log(i18n("Data file for matrix %1 was not opened.", Name()), Debug::Warning);
   } else {
-    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;
+    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;    
+    _invertXHint = file()->matrix().optional(_field).invertXHint;
+    _invertYHint = file()->matrix().optional(_field).invertYHint;
   }
 
   _aveReadBuffer = 0L;
@@ -482,7 +491,9 @@ void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (file()) {
-    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;
+    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;    
+    _invertXHint = file()->matrix().optional(_field).invertXHint;
+    _invertYHint = file()->matrix().optional(_field).invertYHint;
   }
   resizeZ(0);
   _NS = 0;

@@ -107,11 +107,19 @@ const DataMatrix::Optional DataInterfaceFitsImageMatrix::optional(const QString&
   opt.xSize = n_axes[0];
   opt.ySize = n_axes[1];
 
+  char charCDelt1[] = "CDELT1";
+  char charCDelt2[] = "CDELT2";
+  double dx,dy;
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt1, &dx, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
+
+  if (!status) {
+    opt.invertXHint = (dx<0);
+    opt.invertYHint = (dy<0);
+  }
+
   return opt;
 }
-
-//int FitsImageSource::readMatrix(Kst::MatrixData* data, const QString& field, int xStart,
-//                                     int yStart, int xNumSteps, int yNumSteps) {
 
 int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInfo& p) {
   long n_axes[2],  fpixel[2] = {1, 1};
@@ -125,6 +133,8 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   if ((!*_fitsfileptr) || (!_matrixList.contains(field))) {
     return 0;
   }
+
+  //FIXME: support multiple HDUs
 
   fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
@@ -162,54 +172,70 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
 
   int ni = p.xNumSteps * p.yNumSteps - 1;
 
+  // set the suggested matrix transform params: pixel index....
+  double x, y, dx, dy, cx, cy;
+  char charCRVal1[] = "CRVAL1";
+  char charCRVal2[] = "CRVAL2";
+  char charCDelt1[] = "CDELT1";
+  char charCDelt2[] = "CDELT2";
+  char charCRPix1[] = "CRPIX1";
+  char charCRPix2[] = "CRPIX2";
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCRVal1, &x, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCRVal2, &y, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt1, &dx, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
+  fits_read_key(*_fitsfileptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
+
   int i = 0;
 
-  if (field==DefaultMatrixName) {
+  if ((dx<0) && (dy>0)) {
     for (px = p.xStart; px < x1; px++) {
       for (py = y1-1; py >= p.yStart; py--) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }
     }
+  } else if ((dx>0) && (dy>0)) {
+    for (px = x1-1; px >= p.xStart; px--) {
+      for (py = y1-1; py >= p.yStart; py--) {
+        z[ni - i] = buffer[px + py*n_axes[0]];
+        i++;
+      }
+    }
+  } else if ((dx>0) && (dy<0)) {
+    for (px = x1-1; px >= p.xStart; px--) {
+      for (py = p.yStart; py < y1; py++) {
+        z[ni - i] = buffer[px + py*n_axes[0]];
+        i++;
+      }
+    }
+  } else if ((dx<0) && (dy<0)) {
+    for (px = p.xStart; px < x1; px++) {
+      for (py = p.yStart; py < y1; py++) {
+        z[ni - i] = buffer[px + py*n_axes[0]];
+        i++;
+      }
+    }
   }
-
   free(buffer);
 
-// NOTE: This code results in invalid stepsize / mins.  Should be reviewed.
-// temporarily disabled.
-
-  // set the suggested matrix transform params: pixel index....
-//   double x, y, dx, dy, cx, cy;
-//   char charCRVal1[] = "CRVAL1";
-//   char charCRVal2[] = "CRVAL2";
-//   char charCDelt1[] = "CDELT1";
-//   char charCDelt2[] = "CDELT2";
-//   char charCRPix1[] = "CRPIX1";
-//   char charCRPix2[] = "CRPIX2";
-//   fits_read_key(_fptr, TDOUBLE, charCRVal1, &x, NULL, &status);
-//   fits_read_key(_fptr, TDOUBLE, charCRVal2, &y, NULL, &status);
-//   fits_read_key(_fptr, TDOUBLE, charCDelt1, &dx, NULL, &status);
-//   fits_read_key(_fptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
-//   fits_read_key(_fptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
-//   fits_read_key(_fptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
-//
-//   if (status) {
+  if (status) {
     p.data->xMin = x0;
     p.data->yMin = y0;
     p.data->xStepSize = 1;
     p.data->yStepSize = 1;
-//   } else {
-//     dx = fabs(dx);
-//     dy = fabs(dy);
-//     data->xStepSize = dx;
-//     data->yStepSize = dy;
-//     data->xMin = x - cx*dx;
-//     data->yMin = y - cy*dy;
-//   }
+  } else {
+    dx = fabs(dx);
+    dy = fabs(dy);
+    p.data->xStepSize = dx;
+    p.data->yStepSize = dy;
+    p.data->xMin = x - cx*dx;
+    p.data->yMin = y - cy*dy;
+  }
 
   return(i);
 }
-
 
 bool DataInterfaceFitsImageMatrix::isValid(const QString& field) const {
   return  _matrixList.contains( field );
