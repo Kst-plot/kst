@@ -30,6 +30,9 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
+class Matrix;
+typedef SharedPtr<Matrix> MatrixPtr;
+
 class KSTCORE_EXPORT Matrix : public Primitive {
   Q_OBJECT
 
@@ -185,7 +188,6 @@ class KSTCORE_EXPORT Matrix : public Primitive {
 
 };
 
-typedef SharedPtr<Matrix> MatrixPtr;
 typedef ObjectList<Matrix> MatrixList;
 typedef ObjectMap<Matrix> MatrixMap;
 

@@ -41,23 +41,6 @@ data source text box doesn't recognise initial ~ as a euphemism for
 
 1.x kst file read compatibility...
 
-------------
-
-DECIDE: absolute or relative file names in kst files?
-  kst1.x uses absolute.  This becomes a problem when the directory changes.
-
------------
-
-Easier way to specify reversed axis when loading sky images:
-  -can desire to reverse be gleaned from the fits image?
-  -command line option?
-  -new-image (sticky) option?
-
----------
-
-After the label creation dialog has been applied, attach the label to
-the mouse, to allow it to be dragged around until placed by a click.
-
 ---------
 
 Thread kst2

@@ -144,10 +144,10 @@ QString Image::propertyString() const {
 }
 
 
-QColor Image::getMappedColor(double x, double y) {
+QColor Image::getMappedColor(MatrixPtr m, double x, double y) {
   bool ok;
 
-  double z = _inputMatrices[THEMATRIX]->value(x, y, &ok);
+  double z = m->value(x, y, &ok);
   if (ok) {
     int index;
     if (_zUpper - _zLower != 0) {
@@ -526,6 +526,8 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
 
       // color map
       QColor thisPixel;
+      MatrixPtr m = _inputMatrices.value(THEMATRIX);
+
       if (image->hasColorMap()) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
@@ -544,7 +546,7 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
             } else {
               new_y = (y + 1 + img_Ly_pix - b_Y) / m_Y;
             }
-            thisPixel = image->getMappedColor(new_x, new_y);
+            thisPixel = image->getMappedColor(m, new_x, new_y);
             if (thisPixel.isValid()) {
               scanLine[x] = thisPixel.rgb();
             }

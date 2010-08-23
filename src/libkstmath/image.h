@@ -51,7 +51,7 @@ class KSTMATH_EXPORT Image : public Relation {
     virtual QString propertyString() const;
 
     virtual bool getNearestZ(double x, double y, double& z);
-    virtual QColor getMappedColor(double x, double y);
+    virtual QColor getMappedColor(MatrixPtr m, double x, double y);
     virtual void setPalette(const Palette &pal);
     virtual void setUpperThreshold(double z);
     virtual void setLowerThreshold(double z);
