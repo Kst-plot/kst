@@ -4,7 +4,6 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 LibExists(gsl) {
-  message(GSL configured.  Fits plugins will be built.)
   SUBDIRS += \
       exponential_unweighted \
       exponential_weighted \
@@ -21,6 +20,4 @@ LibExists(gsl) {
       polynomial_weighted \
       sinusoid_unweighted \
       sinusoid_weighted
-    !win32:CONFIG += link_pkgconfig
-    !win32:PKGCONFIG += gsl
 }

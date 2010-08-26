@@ -18,12 +18,9 @@ SUBDIRS += \
     statistics \
     syncbin
 
-  LibExists(gsl) {
-     message(GSL configured.  Data Object plugins will be built.)
+LibExists(gsl) {
      SUBDIRS += convolution \
                 correlation \
                 interpolations \
                 noiseaddition
-     !win32:CONFIG += link_pkgconfig
-     !win32:PKGCONFIG += gsl
-  }
+}
