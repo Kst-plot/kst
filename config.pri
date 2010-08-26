@@ -89,3 +89,11 @@ contains(lib, netcdf) {
 
 
 }
+
+
+defineReplace(pkginclude) {
+    PKGCONFIG_INCLUDE_DIR = $$system(pkg-config --variable includedir $$1)
+    message(Using $$1 headers in $$PKGCONFIG_INCLUDE_DIR)
+    return($$PKGCONFIG_INCLUDE_DIR)
+}
+

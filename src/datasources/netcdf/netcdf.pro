@@ -7,10 +7,12 @@ TARGET = $$kstlib(kst2data_netcdfsource)
 
 INCLUDEPATH += $$OUTPUT_DIR/src/datasources/netcdf/tmp
 
-win32{
+win32 {
 	message(Using netCDF files from $$(NETCDFDIR).)
 	INCLUDEPATH += $$(NETCDFDIR)/include
 	LIBS += -L$$(NETCDFDIR)/lib
+} else {
+	INCLUDEPATH += $$pkginclude(netcdf)
 }
 
 LIBS += -l$$kstlib(netcdf_c++) -l$$kstlib(netcdf) 

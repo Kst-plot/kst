@@ -11,6 +11,8 @@ win32{
 	message(Using GetData C++ binding files from $$(GETDATADIR).)
 	INCLUDEPATH += $$(GETDATADIR)/include
 	LIBS += -L$$(GETDATADIR)/lib
+} else {
+	INCLUDEPATH += $$pkginclude(getdata)
 }
 
 LIBS += -lgetdata++
