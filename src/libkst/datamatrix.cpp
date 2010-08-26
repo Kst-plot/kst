@@ -35,7 +35,7 @@ const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
 
 
 
-DataMatrix::Optional::Optional() :
+DataMatrix::DataInfo::DataInfo() :
     samplesPerFrame(-1),
     xSize(-1),
     ySize(-1),
@@ -336,11 +336,12 @@ void DataMatrix::internalUpdate() {
   int realXStart;
   int realYStart;
 
-  int xSize = file()->matrix().optional(_field).xSize;
-  int ySize = file()->matrix().optional(_field).ySize;
+  const DataInfo info = file()->matrix().dataInfo(_field);
+  int xSize = info.xSize;
+  int ySize = info.ySize;
 
-  _invertXHint = file()->matrix().optional(_field).invertXHint;
-  _invertYHint = file()->matrix().optional(_field).invertYHint;
+  _invertXHint = info.invertXHint;
+  _invertYHint = info.invertYHint;
 
   if (_reqXStart < 0) {
     // counting from end
@@ -469,9 +470,10 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   if (!file()) {
     Debug::self()->log(i18n("Data file for matrix %1 was not opened.", Name()), Debug::Warning);
   } else {
-    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;    
-    _invertXHint = file()->matrix().optional(_field).invertXHint;
-    _invertYHint = file()->matrix().optional(_field).invertYHint;
+    const DataInfo info = file()->matrix().dataInfo(_field);
+    _samplesPerFrameCache = info.samplesPerFrame;
+    _invertXHint = info.invertXHint;
+    _invertYHint = info.invertYHint;
   }
 
   _aveReadBuffer = 0L;
@@ -491,9 +493,10 @@ void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (file()) {
-    _samplesPerFrameCache = file()->matrix().optional(_field).samplesPerFrame;    
-    _invertXHint = file()->matrix().optional(_field).invertXHint;
-    _invertYHint = file()->matrix().optional(_field).invertYHint;
+    const DataInfo info = file()->matrix().dataInfo(_field);
+    _samplesPerFrameCache = info.samplesPerFrame;
+    _invertXHint = info.invertXHint;
+    _invertYHint = info.invertYHint;
   }
   resizeZ(0);
   _NS = 0;

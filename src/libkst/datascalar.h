@@ -53,7 +53,7 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
       double* value;
     };
 
-    struct Optional {
+    struct DataInfo {
     };
 
     virtual void internalUpdate();

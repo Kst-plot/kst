@@ -61,8 +61,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataVector::Optional&) {}
+  const DataVector::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&);
@@ -96,12 +96,12 @@ void DataInterfaceQImageVector::init()
 }
 
 
-const DataVector::Optional DataInterfaceQImageVector::optional(const QString &field) const
+const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &field) const
 {
   if (!_vectorList.contains(field))
-    return DataVector::Optional();
+    return DataVector::DataInfo();
 
-  return DataVector::Optional(_frameCount, 1);
+  return DataVector::DataInfo(_frameCount, 1);
 }
 
 
@@ -178,8 +178,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataMatrix::Optional&) {}
+  const DataMatrix::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -209,18 +209,18 @@ void DataInterfaceQImageMatrix::init()
 
 
 
-const DataMatrix::Optional DataInterfaceQImageMatrix::optional(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceQImageMatrix::dataInfo(const QString& matrix) const
 {
   if ( !_image || _image->isNull() || !_matrixList.contains( matrix ) ) {
-    return DataMatrix::Optional();
+    return DataMatrix::DataInfo();
   }
 
-  DataMatrix::Optional opt;
-  opt.samplesPerFrame = 1;
-  opt.xSize = _image->width();
-  opt.ySize = _image->height();
+  DataMatrix::DataInfo info;
+  info.samplesPerFrame = 1;
+  info.xSize = _image->width();
+  info.ySize = _image->height();
 
-  return opt;
+  return info;
 }
 
 

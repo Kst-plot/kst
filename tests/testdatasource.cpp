@@ -70,12 +70,12 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->vector().isValid("1"));
     QVERIFY(!dsp->vector().isValid("0"));
     QVERIFY(!dsp->vector().isValid("2"));
-    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 3);
-    QCOMPARE(dsp->vector().optional("1").frameCount, 3);
-    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 3);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).frameCount, 3);
+    QCOMPARE(dsp->vector().dataInfo("1").frameCount, 3);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 3);
     QCOMPARE(dsp->fileName(), tf.fileName());
     QCOMPARE(dsp->vector().list().count(), 2);
     QVERIFY(dsp->vector().isListComplete());
@@ -129,14 +129,14 @@ void TestDataSource::testAscii() {
     QVERIFY(!dsp->vector().isValid("0"));
     QVERIFY(dsp->vector().isValid("2"));
     QVERIFY(!dsp->vector().isValid("3"));
-    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("2").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 4);
-    QCOMPARE(dsp->vector().optional("1").frameCount, 4);
-    QCOMPARE(dsp->vector().optional("2").frameCount, 4);
-    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 4);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("2").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).frameCount, 4);
+    QCOMPARE(dsp->vector().dataInfo("1").frameCount, 4);
+    QCOMPARE(dsp->vector().dataInfo("2").frameCount, 4);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 4);
     QCOMPARE(dsp->vector().list().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
@@ -191,14 +191,14 @@ void TestDataSource::testAscii() {
     QVERIFY(!dsp->vector().isValid("0"));
     QVERIFY(dsp->vector().isValid("2"));
     QVERIFY(!dsp->vector().isValid("3"));
-    QCOMPARE(dsp->vector().optional(QString::null).samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("INDEX").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("1").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional("2").samplesPerFrame, 1);
-    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 1);
-    QCOMPARE(dsp->vector().optional("1").frameCount, 1);
-    QCOMPARE(dsp->vector().optional("2").frameCount, 1);
-    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 1);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("1").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo("2").samplesPerFrame, 1);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).frameCount, 1);
+    QCOMPARE(dsp->vector().dataInfo("1").frameCount, 1);
+    QCOMPARE(dsp->vector().dataInfo("2").frameCount, 1);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 1);
     QCOMPARE(dsp->vector().list().count(), 3);
     QVERIFY(!dsp->isEmpty());
 
@@ -257,11 +257,11 @@ void TestDataSource::testAscii() {
     QVERIFY(dsp->isValid());
     QVERIFY(dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("ASCII file"));
-    QCOMPARE(dsp->vector().optional(QString::null).frameCount, 39000);
-    QCOMPARE(dsp->vector().optional("1").frameCount, 39000);
-    QCOMPARE(dsp->vector().optional("2").frameCount, 39000);
-    QCOMPARE(dsp->vector().optional("3").frameCount, 39000);
-    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 39000);
+    QCOMPARE(dsp->vector().dataInfo(QString::null).frameCount, 39000);
+    QCOMPARE(dsp->vector().dataInfo("1").frameCount, 39000);
+    QCOMPARE(dsp->vector().dataInfo("2").frameCount, 39000);
+    QCOMPARE(dsp->vector().dataInfo("3").frameCount, 39000);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 39000);
     QCOMPARE(dsp->vector().list().count(), 4);
     QVERIFY(!dsp->isEmpty());
 
@@ -339,7 +339,7 @@ void TestDataSource::testDirfile() {
     QVERIFY(!dsp->hasConfigWidget());
     QCOMPARE(dsp->fileType(), QLatin1String("Directory of Binary Files"));
     QVERIFY(dsp->vector().isValid("INDEX"));
-    QCOMPARE(dsp->vector().optional("INDEX").frameCount, 17);
+    QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 17);
     QVERIFY(dsp->vector().isValid("cos"));
     QVERIFY(dsp->vector().isValid("fcount"));
     QVERIFY(dsp->vector().isValid("scount"));
@@ -533,7 +533,7 @@ void TestDataSource::testQImageSource() {
   QVERIFY(!dsp->hasConfigWidget());
   QCOMPARE(dsp->fileType(), QLatin1String("QImage image"));
   QVERIFY(dsp->vector().isValid("INDEX"));
-  QCOMPARE(dsp->vector().optional("INDEX").frameCount, 1024);
+  QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 1024);
   QVERIFY(dsp->vector().isValid("RED"));
   QVERIFY(dsp->vector().isValid("BLUE"));
   QVERIFY(dsp->vector().isValid("GREEN"));
@@ -637,7 +637,7 @@ void TestDataSource::testFITSImage() {
   QVERIFY(!dsp->hasConfigWidget());
   QCOMPARE(dsp->fileType(), QLatin1String("FITS image"));
   QVERIFY(dsp->vector().isValid("INDEX"));
-  QCOMPARE(dsp->vector().optional("INDEX").frameCount, 58800);
+  QCOMPARE(dsp->vector().dataInfo("INDEX").frameCount, 58800);
   QVERIFY(dsp->vector().isValid("1"));
   QVERIFY(!dsp->vector().isValid("foo"));
 

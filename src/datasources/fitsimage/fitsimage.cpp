@@ -61,8 +61,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataMatrix::Optional&) {}
+  const DataMatrix::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -87,25 +87,25 @@ void DataInterfaceFitsImageMatrix::init()
   _matrixList.append(DefaultMatrixName); // FIXME: fits vectirs have real names...
 }
 
-const DataMatrix::Optional DataInterfaceFitsImageMatrix::optional(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix) const
 {
   long n_axes[3];
   int status = 0;
 
   if ( !*_fitsfileptr || !_matrixList.contains( matrix ) ) {
-    return DataMatrix::Optional();
+    return DataMatrix::DataInfo();
   }
 
   fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
   if (status) {
-    return DataMatrix::Optional();
+    return DataMatrix::DataInfo();
   }
 
-  DataMatrix::Optional opt;
-  opt.samplesPerFrame = 1;
-  opt.xSize = n_axes[0];
-  opt.ySize = n_axes[1];
+  DataMatrix::DataInfo info;
+  info.samplesPerFrame = 1;
+  info.xSize = n_axes[0];
+  info.ySize = n_axes[1];
 
   char charCDelt1[] = "CDELT1";
   char charCDelt2[] = "CDELT2";
@@ -114,11 +114,11 @@ const DataMatrix::Optional DataInterfaceFitsImageMatrix::optional(const QString&
   fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
 
   if (!status) {
-    opt.invertXHint = (dx<0);
-    opt.invertYHint = (dy<0);
+    info.invertXHint = (dx<0);
+    info.invertYHint = (dy<0);
   }
 
-  return opt;
+  return info;
 }
 
 int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInfo& p) {
@@ -330,7 +330,7 @@ Kst::Object::UpdateType FitsImageSource::internalDataSourceUpdate() {
 
 
 bool FitsImageSource::isEmpty() const {
-  return im->optional(DefaultMatrixName).xSize < 1;
+  return im->dataInfo(DefaultMatrixName).xSize < 1;
 }
 
 

@@ -55,8 +55,8 @@ public:
   bool isValid(const QString& field) const { return ascii._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataVector::Optional&) {}
+  const DataVector::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&);
@@ -68,12 +68,12 @@ public:
 
 
 //-------------------------------------------------------------------------------------------
-const DataVector::Optional DataInterfaceAsciiVector::optional(const QString &field) const
+const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &field) const
 {
   if (!ascii._fieldList.contains(field))
-    return DataVector::Optional();
+    return DataVector::DataInfo();
 
-  return DataVector::Optional(ascii._numFrames, 1);
+  return DataVector::DataInfo(ascii._numFrames, 1);
 }
 
 

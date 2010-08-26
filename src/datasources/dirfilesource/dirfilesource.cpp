@@ -65,8 +65,8 @@ public:
   bool isValid(const QString& field) const { return dir._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataVector::Optional&) {}
+  const DataVector::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&);
@@ -78,12 +78,12 @@ public:
 
 
 
-const DataVector::Optional DataInterfaceDirFileVector::optional(const QString &field) const
+const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &field) const
 {
   if (!dir._fieldList.contains(field))
-    return DataVector::Optional();
+    return DataVector::DataInfo();
 
-  return DataVector::Optional(dir._frameCount, dir.samplesPerFrame(field));
+  return DataVector::DataInfo(dir._frameCount, dir.samplesPerFrame(field));
 }
 
 

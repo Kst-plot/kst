@@ -63,8 +63,8 @@ struct NotSupportedImp : public DataSource::DataInterface<T>
   bool isValid(const QString&) const { return false; }
 
   // T specific
-  const typename T::Optional optional(const QString&) const { return typename T::Optional(); }
-  void setOptional(const QString&, const typename T::Optional&) {}
+  const typename T::DataInfo dataInfo(const QString&) const { return typename T::DataInfo(); }
+  void setDataInfo(const QString&, const typename T::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }

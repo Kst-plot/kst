@@ -54,9 +54,9 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     };
 
 
-    struct KSTCORE_EXPORT Optional
+    struct KSTCORE_EXPORT DataInfo
     {
-      Optional();
+      DataInfo();
 
       int samplesPerFrame;
       int xSize;

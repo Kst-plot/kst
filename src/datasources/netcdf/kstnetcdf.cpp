@@ -54,8 +54,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataScalar::Optional optional(const QString&) const { return DataScalar::Optional(); }
-  void setOptional(const QString&, const DataScalar::Optional&) {}
+  const DataScalar::DataInfo dataInfo(const QString&) const { return DataScalar::DataInfo(); }
+  void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -101,8 +101,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataVector::Optional&) {}
+  const DataVector::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -114,12 +114,12 @@ private:
 };
 
 
-const DataVector::Optional DataInterfaceNetCdfVector::optional(const QString &field) const
+const DataVector::DataInfo DataInterfaceNetCdfVector::dataInfo(const QString &field) const
 {
   if (!netcdf._fieldList.contains(field))
-    return DataVector::Optional();
+    return DataVector::DataInfo();
 
-  return DataVector::Optional(netcdf.frameCount(field), netcdf.samplesPerFrame(field));
+  return DataVector::DataInfo(netcdf.frameCount(field), netcdf.samplesPerFrame(field));
 }
 
 
@@ -155,8 +155,8 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::Optional optional(const QString&) const;
-  void setOptional(const QString&, const DataMatrix::Optional&) {}
+  const DataMatrix::DataInfo dataInfo	(const QString&) const;
+  void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -168,26 +168,26 @@ private:
 };
 
 
-const DataMatrix::Optional DataInterfaceNetCdfMatrix::optional(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& matrix) const
 {
   if (!netcdf._matrixList.contains( matrix ) ) {
-    return DataMatrix::Optional();
+    return DataMatrix::DataInfo();
   }
 
   QByteArray bytes = matrix.toLatin1();
   NcVar *var = netcdf._ncfile->get_var(bytes.constData());  // var is owned by _ncfile
 
   if (var->num_dims() != 2) {
-    return DataMatrix::Optional();
+    return DataMatrix::DataInfo();
   }
 
-  DataMatrix::Optional opt;
-  opt.samplesPerFrame = 1;
+  DataMatrix::DataInfo info;
+  info.samplesPerFrame = 1;
   // TODO is this right?
-  opt.xSize = var->get_dim(0)->size();
-  opt.ySize = var->get_dim(1)->size();
+  info.xSize = var->get_dim(0)->size();
+  info.ySize = var->get_dim(1)->size();
 
-  return opt;
+  return info;
 }
 
 

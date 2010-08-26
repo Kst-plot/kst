@@ -55,10 +55,10 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     };
 
 
-    struct KSTCORE_EXPORT Optional
+    struct KSTCORE_EXPORT DataInfo
     {
-      Optional();
-      Optional(int frameCount, int samplesPerFrame);
+      DataInfo();
+      DataInfo(int frameCount, int samplesPerFrame);
 
       int frameCount;
       int samplesPerFrame;
@@ -184,7 +184,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
     // wrappers around DataSource interface functions
     int readField(double *v, const QString& field, int s, int n, int skip = -1, int *lastFrameRead = 0L);
-    const Optional opt(const QString& field) const;
+    const DataInfo dataInfo(const QString& field) const;
 
     QHash<QString, ScalarPtr> _fieldScalars;
     QHash<QString, StringPtr> _fieldStrings;

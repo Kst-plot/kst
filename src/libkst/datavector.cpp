@@ -49,14 +49,14 @@ const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
 const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
 
 
-DataVector::Optional::Optional() :
+DataVector::DataInfo::DataInfo() :
     frameCount(-1),
     samplesPerFrame(-1)
 {
 }
 
 
-DataVector::Optional::Optional(int fc, int spf) :
+DataVector::DataInfo::DataInfo(int fc, int spf) :
     frameCount(fc),
     samplesPerFrame(spf)
 {
@@ -324,7 +324,7 @@ void DataVector::reset() { // must be called with a lock
 
   _dontUseSkipAccel = false;
   if (file()) {
-    SPF = opt(_field).samplesPerFrame;
+    SPF = dataInfo(_field).samplesPerFrame;
   }
   F0 = NF = 0;
   resize(0);
@@ -346,8 +346,8 @@ void DataVector::checkIntegrity() {
   }
 
   // if it looks like we have a new file, reset
-  const Optional op = opt(_field);
-  if (file() && (SPF != op.samplesPerFrame || op.frameCount < NF)) {
+  const DataInfo info = dataInfo(_field);
+  if (file() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
     reset();
   }
 
@@ -395,7 +395,7 @@ void DataVector::internalUpdate() {
     return;
   }
 
-  const Optional op = opt(_field);
+  const DataInfo info = dataInfo(_field);
   checkIntegrity();
 
   if (DoSkip && Skip < 2 && SPF == 1) {
@@ -404,7 +404,7 @@ void DataVector::internalUpdate() {
 
 
   // set new_nf and new_f0
-  int fc = op.frameCount;
+  int fc = info.frameCount;
   if (ReqNF < 1) { // read to end of file
     new_f0 = ReqF0;
     new_nf = fc - new_f0;
@@ -538,7 +538,7 @@ void DataVector::internalUpdate() {
     if (start_past_eof) {
       _v[0] = NOPOINT;
       n_read = 1;
-    } else if (op.samplesPerFrame > 1) {
+    } else if (info.samplesPerFrame > 1) {
       assert(new_f0 + NF >= 0);
       assert(new_f0 + new_nf - 1 >= 0);
       n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
@@ -595,7 +595,7 @@ int DataVector::samplesPerFrame() const {
 int DataVector::fileLength() const {
 
   if (file()) {    
-    int rc = opt(_field).frameCount;
+    int rc = dataInfo(_field).frameCount;
 
     return rc;
   }
@@ -762,12 +762,12 @@ int DataVector::readField(double *v, const QString& field, int s, int n, int ski
   return file()->vector().read(field, par);
 }
 
-const DataVector::Optional DataVector::opt(const QString& field) const
+const DataVector::DataInfo DataVector::dataInfo(const QString& field) const
 {
   file()->readLock();
-  const Optional op = file()->vector().optional(field);
+  const DataInfo info = file()->vector().dataInfo(field);
   file()->unlock();
-  return op;
+  return info;
 }
 
 }

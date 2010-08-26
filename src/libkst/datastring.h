@@ -54,7 +54,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive {
       QString* value;
     };
 
-    struct KSTCORE_EXPORT Optional 
+    struct KSTCORE_EXPORT DataInfo 
     {
     };
 

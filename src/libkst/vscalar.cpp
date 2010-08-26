@@ -118,7 +118,7 @@ void VScalar::internalUpdate() {
   if (_file) {
     int f0;
     if (_f0<0) { 
-      f0 = _file->vector().optional(_field).frameCount;
+      f0 = _file->vector().dataInfo(_field).frameCount;
     } else {
       f0 = _f0;
     }

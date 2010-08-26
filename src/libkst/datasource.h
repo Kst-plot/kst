@@ -68,8 +68,8 @@ class KSTCORE_EXPORT DataSource : public Object
       virtual bool isValid(const QString& name) const = 0;
 
       // T specific
-      virtual const typename T::Optional optional(const QString& name) const = 0;
-      virtual void setOptional(const QString& name, const typename T::Optional&) = 0;
+      virtual const typename T::DataInfo dataInfo(const QString& name) const = 0;
+      virtual void setDataInfo(const QString& name, const typename T::DataInfo&) = 0;
 
       // meta data
       virtual QMap<QString, double> metaScalars(const QString& name) = 0;
