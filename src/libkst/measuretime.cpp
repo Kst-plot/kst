@@ -66,9 +66,11 @@ void MeasureTime::restart()
   QueryPerformanceCounter(&st);
   started = st.QuadPart * frequency;
 #else
+#ifndef Q_OS_MAC
   timespec t;
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
   started = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;  
+#endif
 #endif
   interval = 0;
 }
@@ -81,9 +83,11 @@ void MeasureTime::measure()
   QueryPerformanceCounter(&st);
   double now = st.QuadPart * frequency;
 #else
+#ifndef Q_OS_MAC  
   timespec t;
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
   double now = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
+#endif
 #endif
   interval += now - started;
   started = now;

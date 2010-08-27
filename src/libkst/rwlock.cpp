@@ -90,7 +90,7 @@ void KstRWLock::writeLock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it != _readLockers.end() && it.value() > 0) {
       // cannot acquire a write lock if I already have a read lock -- ERROR
-      qDebug() << "Thread " << (int)QThread::currentThreadId() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
       return;
     }
   }
@@ -126,7 +126,7 @@ void KstRWLock::unlock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it == _readLockers.end()) {
       // read locked but not by me -- ERROR
-      qDebug() << "Thread " << (int)QThread::currentThreadId() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << endl;
       return;
     } else {
       --_readCount;
