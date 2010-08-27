@@ -31,6 +31,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QInputDialog>
+#include <QDrag>
+#include <QMimeData>
 
 static const double ONE_PI = 3.14159265358979323846264338327950288419717;
 static double TWO_PI = 2.0 * ONE_PI;
@@ -108,6 +110,8 @@ ViewItem::ViewItem(View *parent)
 
   _customLayoutAction = new QAction(tr("Custom"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
+
+  setAcceptDrops(true);
 }
 
 
@@ -915,6 +919,23 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
+  if (event->buttons() & Qt::LeftButton &&
+      (event->pos() - dragStartPosition).manhattanLength() > QApplication::startDragDistance()) {
+
+    QDrag *drag = new QDrag(event->widget());
+    MimeDataViewItem* mimeData = new MimeDataViewItem;
+    mimeData->item = this;
+    drag->setMimeData(mimeData);
+
+    
+    Qt::DropActions dact = Qt::MoveAction;
+    Qt::DropAction dropAction = drag->exec(dact);
+    if (dropAction == Qt::MoveAction) {
+      _autoLayoutAction->trigger();
+    }
+  }
+
+
   if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
@@ -1587,12 +1608,18 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
+  QPointF p = event->pos();
+  if (checkBox().contains(p)) {
+    if (event->buttons() & Qt::LeftButton) {
+       dragStartPosition = p;
+    }
+  }
+
   if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
-
-  QPointF p = event->pos();
+  
   if (isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) {
     setActiveGrip(TopLeftGrip);
   } else if (isAllowed(TopRightGrip) && topRightGrip().contains(p)) {
@@ -2164,6 +2191,16 @@ void TransformCommand::undo() {
 void TransformCommand::redo() {
   Q_ASSERT(_item);
   _item->setTransform(_newTransform);
+}
+
+
+
+
+MimeDataViewItem::MimeDataViewItem() : QMimeData() {
+}
+
+const MimeDataViewItem* MimeDataViewItem::downcast(const QMimeData* m) {
+  return qobject_cast<const MimeDataViewItem*>(m);
 }
 
 }

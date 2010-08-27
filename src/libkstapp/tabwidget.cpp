@@ -12,6 +12,9 @@
 #include "tabwidget.h"
 #include "mainwindow.h"
 #include "view.h"
+#include "viewitem.h"
+#include "curveplacement.h"
+
 
 #include <QInputDialog>
 #include <QMenu>
@@ -21,14 +24,59 @@
 
 namespace Kst {
 
+class TabBar : public QTabBar
+{
+public:
+  TabBar(TabWidget* tabw);
+
+  void dragEnterEvent(QDragEnterEvent* event);
+  void dragMoveEvent(QDragMoveEvent* event);
+  void dropEvent(QDropEvent* event);
+
+  TabWidget* tabWidget;
+};
+
+TabBar::TabBar(TabWidget* tabw) : QTabBar(), tabWidget(tabw)
+{
+  setAcceptDrops(true);
+}
+
+void TabBar::dragEnterEvent(QDragEnterEvent* event)
+{
+  if (MimeDataViewItem::downcast(event->mimeData())) {
+      event->acceptProposedAction();
+  }
+}
+
+void TabBar::dragMoveEvent(QDragMoveEvent* event)
+{  
+  if (MimeDataViewItem::downcast(event->mimeData())) {
+    setCurrentIndex(tabAt(event->pos()));
+    event->acceptProposedAction();
+   }
+}
+
+void TabBar::dropEvent(QDropEvent* event)
+{
+  const MimeDataViewItem* m = MimeDataViewItem::downcast(event->mimeData());
+  if (m && m->item) {       
+    View* view = tabWidget->currentView();
+    view->appendToLayout(CurvePlacement::Auto, m->item);
+    event->acceptProposedAction();
+  }
+}
+
+
+
 TabWidget::TabWidget(QWidget *parent)
 : QTabWidget(parent) {
+  setTabBar(new TabBar(this));
   tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
   _cnt = 0;
-  #if QT_VERSION >= 0x040500
-    tabBar()->setMovable(true);
-  #endif
+#if QT_VERSION >= 0x040500
+  tabBar()->setMovable(true);
+#endif
 }
 
 
@@ -56,6 +104,7 @@ void TabWidget::addView(View* view) {
 
   addTab(view, label);
   setCurrentWidget(view);
+  tabBar()->setAcceptDrops(true);
 }
 
 

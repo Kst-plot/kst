@@ -17,6 +17,7 @@
 #include <QXmlStreamWriter>
 #include <QHash>
 #include <QAction>
+#include <QMimeData>
 
 #include "namedobject.h"
 #include "kst_export.h"
@@ -259,6 +260,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
+
     QAction *_editAction;
     QAction *_deleteAction;
     QAction *_raiseAction;
@@ -309,6 +311,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     qreal _parentRelativeHeight, _parentRelativeWidth;
 
     QSizeF _layoutMargins, _layoutSpacing;
+
+    QPointF dragStartPosition;
 
     friend class View;
     friend class Scene;
@@ -521,6 +525,17 @@ QList<T *> ViewItem::getItems() {
   }
   return tItems;
 }
+
+class MimeDataViewItem : public QMimeData
+{
+  Q_OBJECT
+public:
+  MimeDataViewItem();
+
+  ViewItem* item;
+
+  static const MimeDataViewItem* downcast(const QMimeData*);
+};
 
 }
 
