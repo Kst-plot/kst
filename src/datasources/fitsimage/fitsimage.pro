@@ -8,11 +8,6 @@ INCLUDEPATH += $$OUTPUT_DIR/src/datasources/fitsimage/tmp
 
 LIBS += -lcfitsio
 
-win32 {
-    
-} else {
-    INCLUDEPATH += $$pkginclude(cfitsio)
-}
 
 SOURCES += \
     fitsimage.cpp

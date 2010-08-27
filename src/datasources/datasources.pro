@@ -10,21 +10,15 @@ SUBDIRS += \
 LibExists(cfitsio) {
     message(CFITSIO configured.  Plugins will be built.)
     SUBDIRS += fitsimage 
-    !win32:CONFIG += link_pkgconfig
-    !win32:PKGCONFIG += cfitsio
 }
 
 LibExists(getdata) {
     message(DIRFILE configured.  Plugins will be built.)
     SUBDIRS += dirfilesource
-    !win32:CONFIG += link_pkgconfig
-    !win32:PKGCONFIG += getdata
 }
 
 LibExists(netcdf) {
     message(netCDF configured.  Plugins will be built.)
     SUBDIRS += netcdf
-    !win32:CONFIG += link_pkgconfig
-    !win32:PKGCONFIG += netcdf
 }
 
