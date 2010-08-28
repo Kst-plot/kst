@@ -102,7 +102,7 @@ class KSTCORE_EXPORT DataSource : public Object
     /************************************************************/
 
     enum UpdateCheckType { Timer, File, None };
-    void setUpdateType(UpdateCheckType updateType);
+    void setUpdateType(UpdateCheckType updateType, const QString& file = QString());
     virtual UpdateType objectUpdate(qint64 newSerial);
 
     void internalUpdate() {return;}
@@ -222,8 +222,6 @@ class KSTCORE_EXPORT DataSource : public Object
     virtual QString _automaticDescriptiveName() const;
     void _initializeShortName();
 
-    QFileSystemWatcher *_watcher;
-
     void setInterface(DataInterface<DataScalar>*);
     void setInterface(DataInterface<DataString>*);
     void setInterface(DataInterface<DataVector>*);
@@ -234,6 +232,8 @@ class KSTCORE_EXPORT DataSource : public Object
     DataInterface<DataString>* interf_string;
     DataInterface<DataVector>* interf_vector;
     DataInterface<DataMatrix>* interf_matrix;
+
+    QFileSystemWatcher *_watcher;
 
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.

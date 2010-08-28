@@ -138,7 +138,7 @@ DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QStr
   }
 
   _config = new DirFileSource::Config;
-  _config->read(cfg, filename);
+  _config->read(cfg, _filename);
   if (!e.isNull()) {
     _config->load(e);
   }
@@ -206,13 +206,10 @@ bool DirFileSource::init() {
     _frameCount = _dirfile->NFrames();
   }
 
-  _watcher = new QFileSystemWatcher();
   if (_fieldList.count() > 1) {
     QString filePath = _dirfile->ReferenceFilename();
-    _watcher->addPath(filePath);
+    setUpdateType(File, filePath);
   }
-  connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-  connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
 
   registerChange();
   return true;

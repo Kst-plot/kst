@@ -31,6 +31,7 @@
 #include <QXmlStreamWriter>
 #include <QTimer>
 #include <QFileSystemWatcher>
+#include <QFSFileEngine>
 
 #include "kst_i18n.h"
 #include "datacollection.h"
@@ -133,7 +134,8 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   interf_scalar(new NotSupportedImp<DataScalar>),
   interf_string(new NotSupportedImp<DataString>),
   interf_vector(new NotSupportedImp<DataVector>),
-  interf_matrix(new NotSupportedImp<DataMatrix>)
+  interf_matrix(new NotSupportedImp<DataMatrix>),
+  _watcher(0)
 {
   Q_UNUSED(type)
   Q_UNUSED(store)
@@ -195,7 +197,7 @@ void DataSource::setInterface(DataInterface<DataMatrix>* i) {
 
 
 
-void DataSource::setUpdateType(UpdateCheckType updateType)
+void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
 {
   _updateCheckType = updateType;
   resetFileWatcher();
@@ -203,7 +205,26 @@ void DataSource::setUpdateType(UpdateCheckType updateType)
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
   } else if (_updateCheckType == File) {
     _watcher = new QFileSystemWatcher();
-    _watcher->addPath(_filename);
+    QString usedfile = (file.isEmpty() ? _filename : file);    
+    
+    bool isLocal;
+    // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-13248
+    //islocal = QFSFileEngine(usedfile).fileFlags(QAbstractFileEngine::LocalDiskFlag) & QAbstractFileEngine::LocalDiskFlag;    
+#ifdef Q_OS_WIN
+    // TODO What if the directory is mounted?
+    isLocal = !usedfile.startsWith("//");
+#else
+    // TODO How could we detect if the file is not local.
+    //      Always poll on Linux
+    isLocal = false;
+#endif
+
+    if (!isLocal) {
+      // TODO undocumented Qt feature:
+      // http://bugreports.qt.nokia.com/browse/QTBUG-8351
+      _watcher->setObjectName(QLatin1String("_qt_autotest_force_engine_poller"));      
+    }
+    _watcher->addPath(usedfile);
     connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
     connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   } 
