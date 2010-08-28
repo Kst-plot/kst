@@ -217,6 +217,7 @@ class KSTCORE_EXPORT DataSource : public Object
     QSettings *_cfg;
 
     UpdateCheckType _updateCheckType;
+    void resetFileWatcher();
 
     virtual QString _automaticDescriptiveName() const;
     void _initializeShortName();

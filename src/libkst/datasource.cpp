@@ -130,7 +130,6 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   Object(),
   _filename(filename),
   _cfg(cfg),
-  _updateCheckType(File),
   interf_scalar(new NotSupportedImp<DataScalar>),
   interf_string(new NotSupportedImp<DataString>),
   interf_vector(new NotSupportedImp<DataVector>),
@@ -151,29 +150,26 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   QString tn = i18n("DS-%1", shortFilename);
   _shortName = tn;
 
-  if (_updateCheckType == Timer) {
-    QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
-  } else if (_updateCheckType == File) {
-    _watcher = new QFileSystemWatcher();
-    _watcher->addPath(_filename);
-    connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-    connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
-  }
+  // TODO What is the better default?
+  setUpdateType(File);
+}
+
+DataSource::~DataSource() {
+  resetFileWatcher();
+  delete interf_scalar;
+  delete interf_string;
+  delete interf_vector;
+  delete interf_matrix;
 }
 
 
-DataSource::~DataSource() {
+void DataSource::resetFileWatcher() {
   if (_watcher) {
     disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
     disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
     delete _watcher;
     _watcher = 0L;
   }
-
-  delete interf_scalar;
-  delete interf_string;
-  delete interf_vector;
-  delete interf_matrix;
 }
 
 
@@ -201,7 +197,16 @@ void DataSource::setInterface(DataInterface<DataMatrix>* i) {
 
 void DataSource::setUpdateType(UpdateCheckType updateType)
 {
-_updateCheckType = updateType;
+  _updateCheckType = updateType;
+  resetFileWatcher();
+  if (_updateCheckType == Timer) {    
+    QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
+  } else if (_updateCheckType == File) {
+    _watcher = new QFileSystemWatcher();
+    _watcher->addPath(_filename);
+    connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
+    connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+  } 
 }
 
 
