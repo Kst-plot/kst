@@ -256,8 +256,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     QVarLengthArray<char, MAXBUFREADLEN + 1> tmpbuf;
     tmpbuf.resize(tmpbuf.capacity());
     int bufstart = _rowIndex[_numFrames];
-    bufread = readFromFile(file, tmpbuf, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
-    tmpbuf[bufread] = '\0';
+    bufread = readFromFile(file, tmpbuf, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
 
     bool is_comment = false, has_dat = false;
     char *comment = strpbrk(tmpbuf.data(), del);
@@ -355,7 +354,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (!openValidFile(file)) {
     return 0;
   }
-  readFromFile(file, _tmpBuffer, bufstart, bufread);    
+  bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);    
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
@@ -484,8 +483,8 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 
   rc += "INDEX";
 
-  QString columnDelimiter = cfg->_columnDelimiter.value();
-  QRegExp regexColumnDelemiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
+  const QString columnDelimiter = cfg->_columnDelimiter.value();
+  const QRegExp regexColumnDelemiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
   if (cfg->_readFields) {
     int l = cfg->_fieldsLine;
     while (!file.atEnd()) {
@@ -518,7 +517,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     regex.setPattern(QString("^\\s*[%1].*").arg(cfg->_delimiters));
   }
 
-  QRegExp regexS("\\s");
+  const QRegExp regexS("\\s");
 
   bool done = false;
   int skip = cfg->_dataLine;

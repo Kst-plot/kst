@@ -106,15 +106,20 @@ template<class T>
 int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
 {    
   if (maximalBytes == -1) {
-    buffer.resize(bytesToRead);
+    buffer.resize(bytesToRead + 1);
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer.size() < bytesToRead) {
-      buffer.resize(bytesToRead);
+    if (buffer.size() <= bytesToRead) {
+      buffer.resize(bytesToRead + 1);
     }
   }
   file.seek(start); // expensive?
-  return file.read(buffer.data(), bytesToRead);
+  int bytesRead = file.read(buffer.data(), bytesToRead);
+  if (buffer.size() <= bytesRead) {
+    buffer.resize(bytesRead + 1);
+  }
+  buffer.data()[bytesRead] = '\0';  
+  return bytesRead;
 }
 
 
