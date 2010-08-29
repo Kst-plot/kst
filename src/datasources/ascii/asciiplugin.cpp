@@ -314,12 +314,10 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   }
 
   QFile f(filename);
-  if (f.open(QIODevice::ReadOnly)) {
-    QByteArray s;
-    qint64 rc = 0;
-    bool done = false;
+  if (f.open(QIODevice::ReadOnly)) {    
 
-    QRegExp commentRE, dataRE;
+    QRegExp commentRE;
+    QRegExp dataRE;
     if (config._columnType == AsciiSourceConfig::Custom && !config._columnDelimiter.value().isEmpty()) {
       commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters));
       dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter)));
@@ -329,10 +327,10 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     }
 
     int skip = config._dataLine;
-
+    bool done = false;
     while (!done) {
-      QByteArray s = f.readLine();
-      rc = f.size();
+      const QByteArray line = f.readLine();
+      const qint64 rc = line.size();
       if (skip > 0) {
         --skip;
         if (rc <= 0) {
@@ -344,14 +342,14 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
         done = true;
       } else if (rc == 1) {
         // empty line; do nothing
-      } else if (commentRE.exactMatch(s)) {
+      } else if (commentRE.exactMatch(line)) {
         // comment; do nothing
-      } else if (dataRE.exactMatch(s)) {
+      } else if (dataRE.exactMatch(line)) {
         // a number - this may be an ascii file - assume that it is
         // This line checks for an indirect file and gives that a chance too.
         // Indirect files look like ascii files.
         return 75;
-        //return QFile::exists(s.trimmed()) ? 49 : 75;
+        //return QFile::exists(line.trimmed()) ? 49 : 75;
       } else {
         return 20;
       }
