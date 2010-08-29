@@ -123,6 +123,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
   reset();   
 
+  // TODO only works for local files
   setUpdateType(File);
 
   _source = asciiTypeString;
@@ -232,16 +233,18 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     _stringList = stringListFor(_filename, &_config);
   }
 
-  bool forceUpdate = false;
   QFile file(_filename);
-  if (openValidFile(file)) {
+  if (!openValidFile(file)) {
     // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
-    if (_byteLength != file.size()) {
-      forceUpdate = true;
-    }
-    _byteLength = file.size();
-  } else {
     return NoChange;
+  }
+  
+  bool forceUpdate;
+  if (_byteLength == file.size()) {
+    forceUpdate = false;
+  } else {
+    forceUpdate = true;
+    _byteLength = file.size();
   }
 
   int bufread;
