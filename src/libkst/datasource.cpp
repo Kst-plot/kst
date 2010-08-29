@@ -204,26 +204,11 @@ void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
   if (_updateCheckType == Timer) {    
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
   } else if (_updateCheckType == File) {
+    // TODO only works on local files:
+    // http://bugreports.qt.nokia.com/browse/QTBUG-8351
+    // http://bugreports.qt.nokia.com/browse/QTBUG-13248
     _watcher = new QFileSystemWatcher();
-    QString usedfile = (file.isEmpty() ? _filename : file);    
-    
-    bool isLocal;
-    // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-13248
-    //islocal = QFSFileEngine(usedfile).fileFlags(QAbstractFileEngine::LocalDiskFlag) & QAbstractFileEngine::LocalDiskFlag;    
-#ifdef Q_OS_WIN
-    // TODO What if the directory is mounted?
-    isLocal = !usedfile.startsWith("//");
-#else
-    // TODO How could we detect if the file is not local.
-    //      Always poll on Linux
-    isLocal = false;
-#endif
-
-    if (!isLocal) {
-      // TODO undocumented Qt feature:
-      // http://bugreports.qt.nokia.com/browse/QTBUG-8351
-      _watcher->setObjectName(QLatin1String("_qt_autotest_force_engine_poller"));      
-    }
+    const QString usedfile = (file.isEmpty() ? _filename : file);      
     _watcher->addPath(usedfile);
     connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
     connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
