@@ -1251,7 +1251,7 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
         Q_ASSERT(!rc);
         rc = new SharedAxisBoxItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av = attrs.value("sharex");

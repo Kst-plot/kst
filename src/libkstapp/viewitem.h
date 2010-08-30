@@ -79,8 +79,11 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     const QString typeName() const { return _typeName; }
 
     View *parentView() const;
+    void setParentView(View *parent);
+
     ViewItem *parentViewItem() const;
-    void setParent(ViewItem *parent);
+    void setParentViewItem(ViewItem *parent);
+
     virtual void updateRelativeSize();
     
     qreal relativeHeight() const { return _parentRelativeHeight; }
@@ -313,6 +316,11 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QSizeF _layoutMargins, _layoutSpacing;
 
     QPointF dragStartPosition;
+
+    View *_parentView;
+
+    // use void setParentViewItem(ViewItem *parent);
+    void setParent(ViewItem *parent);    
 
     friend class View;
     friend class Scene;

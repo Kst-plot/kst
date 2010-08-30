@@ -36,7 +36,7 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   : ViewItem(parentItem->parentView()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
 
   setTypeName(tr("Plot Render"));
-  setParent(parentItem);
+  setParentViewItem(parentItem);
   setHasStaticGeometry(true);
   setAllowedGripModes(0);
   setAllowedGrips(0);

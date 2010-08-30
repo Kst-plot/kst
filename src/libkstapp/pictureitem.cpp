@@ -107,7 +107,7 @@ ViewItem* PictureItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStor
         Q_ASSERT(!rc);
         rc = new PictureItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         // Add any new specialized PictureItem Properties here.
       } else if (xml.name().toString() == "data") {

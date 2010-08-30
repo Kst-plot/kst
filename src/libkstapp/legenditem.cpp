@@ -46,7 +46,7 @@ LegendItem::LegendItem(PlotItem *parentPlot)
 
   setViewRect(0.0, 0.0, 0.0, 0.0);
   parentView()->scene()->addItem(this);
-  setParent(_plotItem->renderItem());
+  setParentViewItem(_plotItem->renderItem());
 
   QPointF origin = QPointF(_plotItem->plotRect().width() * 0.15, _plotItem->plotRect().height() * 0.15);
   setPos(origin);

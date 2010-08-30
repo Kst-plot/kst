@@ -1632,7 +1632,7 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
     setInSharedAxisBox(true);
     setAllowedGripModes(0);
     setFlags(0);
-    setParent(parent);
+    setParentViewItem(parent);
     setBrush(Qt::transparent);
 
     _sharedBox = parent;
@@ -1642,7 +1642,7 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
     setInSharedAxisBox(false);
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-    setParent(0);
+    setParentViewItem(0);
     setBrush(Qt::white);
 
     _sharedBox = 0;
@@ -2720,7 +2720,7 @@ void PlotItem::plotMaximize() {
     _topLabelDetails->setVisible(_plotMaximizedTopVisible);
     _plotMaximized = false;
     PlotItemManager::self()->removeFocusPlot(this);
-    setParent(_plotMaximizedSourceParent);
+    setParentViewItem(_plotMaximizedSourceParent);
     setPos(_plotMaximizedSourcePosition);
     setViewRect(_plotMaximizedSourceRect);
     setZValue(_plotMaximizedSourceZValue);
@@ -2744,7 +2744,7 @@ void PlotItem::plotMaximize() {
     _plotMaximizedSourceParent = parentViewItem();
     _plotMaximizedSourceParentRect = parentView()->sceneRect();
 
-    setParent(0);
+    setParentViewItem(0);
     setPos(0, 0);
     setViewRect(parentView()->sceneRect());
     setZValue(PLOT_MAXIMIZED_ZORDER);
@@ -3579,7 +3579,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         Q_ASSERT(!rc);
         rc = new PlotItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;

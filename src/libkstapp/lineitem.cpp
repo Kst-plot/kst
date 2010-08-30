@@ -284,7 +284,7 @@ ViewItem* LineItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         Q_ASSERT(!rc);
         rc = new LineItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         // Add any new specialized LineItem Properties here.
       } else {

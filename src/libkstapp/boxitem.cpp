@@ -70,7 +70,7 @@ ViewItem* BoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *s
         Q_ASSERT(!rc);
         rc = new BoxItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         // Add any new specialized BoxItem Properties here.
       } else {

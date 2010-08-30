@@ -112,7 +112,7 @@ ViewItem* CircleItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore
         Q_ASSERT(!rc);
         rc = new CircleItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         // Add any new specialized CircleItem Properties here.
       } else {

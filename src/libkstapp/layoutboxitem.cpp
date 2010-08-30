@@ -41,7 +41,7 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
   if (item->parentItem() == this)
     return;
 
-  item->setParent(this);
+  item->setParentViewItem(this);
 //   layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
   setPos(parentView()->sceneRect().topLeft());
   setViewRect(parentView()->sceneRect());
@@ -96,7 +96,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
       if (!viewItem || viewItem->parentItem() || !viewItem->isVisible() || viewItem == this)
         continue;
 
-      viewItem->setParent(this);
+      viewItem->setParentViewItem(this);
     }
 
     parentView()->setLayoutBoxItem(this);
@@ -109,7 +109,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
       if (!viewItem)
         continue;
 
-      viewItem->setParent(0);
+      viewItem->setParentViewItem(0);
     }
 
     parentView()->setLayoutBoxItem(0);
@@ -166,7 +166,7 @@ ViewItem* LayoutBoxItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectSt
         Q_ASSERT(!rc);
         rc = new LayoutBoxItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         // Add any specialized BoxItem Properties here.
       } else if (xml.name().toString() == "layoutitem") {

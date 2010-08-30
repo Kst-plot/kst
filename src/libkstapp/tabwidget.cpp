@@ -61,6 +61,8 @@ void TabBar::dropEvent(QDropEvent* event)
   const MimeDataViewItem* m = MimeDataViewItem::downcast(event->mimeData());
   if (m && m->item) {       
     View* view = tabWidget->currentView();
+    m->item->setParentView(view);
+    m->item->setParentViewItem(0);
     view->appendToLayout(CurvePlacement::Auto, m->item);
     event->acceptProposedAction();
   }

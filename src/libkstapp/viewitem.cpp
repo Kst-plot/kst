@@ -43,10 +43,21 @@ static const int DRAWING_ZORDER = 500;
 #define DEBUG_REPARENT 0
 #define DEBUG_CHILD_GEOMETRY 0
 
+
+// Don't mix QObject and QGraphicItem ownership
+// Enabling the macro could have bad side effects, we will see.
+// TODO check for memory leaks when enabled.
+#define KST_DISBALE_QOBJECT_PARENT
+
 namespace Kst {
 
-ViewItem::ViewItem(View *parent)
-  : QObject(parent), NamedObject(),
+ViewItem::ViewItem(View *parentView) :
+#ifdef KST_DISBALE_QOBJECT_PARENT
+    QObject(),
+#else
+    QObject(parentView)
+#endif
+    NamedObject(),
     _isXTiedZoom(false),
     _isYTiedZoom(false),
     _gripMode(Move),
@@ -70,18 +81,19 @@ ViewItem::ViewItem(View *parent)
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _parentRelativeHeight(0),
-    _parentRelativeWidth(0)
+    _parentRelativeWidth(0),
+    _parentView(parentView)
  {
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  connect(parent, SIGNAL(mouseModeChanged(View::MouseMode)),
+  connect(_parentView, SIGNAL(mouseModeChanged(View::MouseMode)),
           this, SLOT(viewMouseModeChanged(View::MouseMode)));
-  connect(parent, SIGNAL(viewModeChanged(View::ViewMode)),
+  connect(_parentView, SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateView()));
 
-  connect(this, SIGNAL(geometryChanged()), parent,SLOT(viewChanged()));
+  connect(this, SIGNAL(geometryChanged()), _parentView, SLOT(viewChanged()));
 
   setLayoutMargins(ApplicationSettings::self()->layoutMargins());
   setLayoutSpacing(ApplicationSettings::self()->layoutSpacing());
@@ -396,12 +408,36 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
 }
 
 View *ViewItem::parentView() const {
+#ifdef KST_DISBALE_QOBJECT_PARENT
+  return _parentView;
+#else
   return qobject_cast<View*>(parent());
+#endif
+}
+
+void ViewItem::setParentView(View* parentView) {
+#ifdef KST_DISBALE_QOBJECT_PARENT
+  _parentView = parentView;  
+#else
+  parentView()->setParent(parent);
+#endif
+  updateRelativeSize();
 }
 
 
 ViewItem *ViewItem::parentViewItem() const {
   return qgraphicsitem_cast<ViewItem*>(parentItem());
+}
+
+
+void ViewItem::setParentViewItem(ViewItem* parent) {
+  setParentItem(parent);
+  updateRelativeSize();
+}
+
+
+void ViewItem::setParent(ViewItem* parent) {
+  setParentViewItem(parent);  
 }
 
 
@@ -1498,12 +1534,6 @@ bool ViewItem::maybeReparent() {
     return true;
   }
   return false;
-}
-
-
-void ViewItem::setParent(ViewItem* parent) {
-  setParentItem(parent);
-  updateRelativeSize();
 }
 
 

@@ -149,7 +149,7 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
         Q_ASSERT(!rc);
         rc = new ArrowItem(view);
         if (parent) {
-          rc->setParent(parent);
+          rc->setParentViewItem(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
         QStringRef av;
