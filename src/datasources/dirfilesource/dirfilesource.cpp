@@ -210,7 +210,7 @@ bool DirFileSource::init() {
     QString filePath = _dirfile->ReferenceFilename();
     //setUpdateType(File, filePath);
   }
-  setUpdateType(Time);
+  setUpdateType(Timer);
 
   registerChange();
   return true;
