@@ -959,11 +959,13 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (event->buttons() & Qt::LeftButton &&
       (event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
 
+    // UNDO tied zoom settings done in PlotItem::mousePressEvent
+    setTiedZoom(false, false);
+
     QDrag *drag = new QDrag(event->widget());
     MimeDataViewItem* mimeData = new MimeDataViewItem;
     mimeData->item = this;
     drag->setMimeData(mimeData);
-
     
     Qt::DropActions dact = Qt::MoveAction;
     Qt::DropAction dropAction = drag->exec(dact);
