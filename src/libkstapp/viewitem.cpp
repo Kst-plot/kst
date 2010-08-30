@@ -957,7 +957,7 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   if (event->buttons() & Qt::LeftButton &&
-      (event->pos() - dragStartPosition).manhattanLength() > QApplication::startDragDistance()) {
+      (event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
 
     QDrag *drag = new QDrag(event->widget());
     MimeDataViewItem* mimeData = new MimeDataViewItem;
