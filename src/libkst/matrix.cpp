@@ -83,10 +83,17 @@ int Matrix::sampleCount() const {
 
 
 double Matrix::value(double x, double y, bool* ok) const {
-  int x_index = (int)floor((x - _minX) / (double)_stepX);
-  int y_index = (int)floor((y - _minY) / (double)_stepY);
+  int x_index = (int)((x - _minX) / (double)_stepX);
+  int y_index = (int)((y - _minY) / (double)_stepY);
+  
+  int index = zIndex(x_index, y_index);
+  if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
+    (*ok) = false;
+    return 0.0;
+  }
+  (*ok) = true;
+  return _z[index];
 
-  return valueRaw(x_index, y_index, ok);
 }
 
 

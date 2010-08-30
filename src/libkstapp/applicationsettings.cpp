@@ -51,7 +51,7 @@ ApplicationSettings::ApplicationSettings() {
   //FIXME Not sure if this is the best test for hardware acceleration
   // but right now opening with QGV with QGLWidget as viewport takes
   // several seconds delay when opening application on my system.
-  _useOpenGL = _settings->value("general/opengl", QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
+  _useOpenGL = _settings->value("general/opengl", false).toBool(); //QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
 

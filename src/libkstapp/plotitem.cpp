@@ -68,6 +68,7 @@ PlotItem::PlotItem(View *parent)
   _calculatedLeftBaseOffset(0.0),
   _calculatedRightLabelMargin(0.0),
   _calculatedTopLabelMargin(0.0),
+  _calculatedTopLabelHeight(0.0),
   _calculatedBottomLabelMargin(0.0),
   _calculatedBottomLabelWidth(0.0),
   _calculatedLabelMarginWidth(0.0),

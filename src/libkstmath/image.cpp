@@ -25,7 +25,7 @@
 
 #include <math.h>
 
-// #define BENCHMARK
+//#define BENCHMARK
 
 namespace Kst {
 
@@ -63,7 +63,7 @@ void Image::save(QXmlStreamWriter &s) {
     s.writeAttribute("matrix", _inputMatrices[THEMATRIX]->Name());
   }
 
-  if (!_pal.paletteData().isEmpty()) {
+  if (_pal.colorCount()>0) {
     s.writeAttribute("palettename", _pal.paletteName());
   }
 
@@ -143,32 +143,20 @@ QString Image::propertyString() const {
   }
 }
 
-
-QColor Image::getMappedColor(MatrixPtr m, double x, double y) {
-  bool ok;
-
-  double z = m->value(x, y, &ok);
-  if (ok) {
-    int index;
-    if (_zUpper - _zLower != 0) {
-      if (z > _zUpper) {
-        index = _pal.paletteData().count() - 1;
-      } else if (z < _zLower) {
-        index = 0;
-      } else {
-          index = (int)floor(((z - _zLower) * (_pal.paletteData().count() - 1)) / (_zUpper - _zLower));
-      }
-    } else {
-      index = 0;
-    }
-    return _pal.paletteData().value(index);
+//FIXME: Inline and optimize!
+QColor Image::getMappedColor(double z) {
+  int index;
+  if (_zUpper - _zLower != 0) {
+    index = (int)(((z - _zLower) * (_pal.colorCount() - 1)) / (_zUpper - _zLower));
+  } else {
+    index = 0;
   }
-  return QColor();
+  return _pal.color(index);
 }
 
 
 void Image::setPalette(const Palette &pal) {
-  _pal = pal;
+  _pal.changePaletteName(pal.paletteName());
 }
 
 
@@ -214,7 +202,7 @@ void Image::changeToColorOnly(MatrixPtr in_matrix, double lowerZ,
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
   if (_pal.paletteName() != paletteName) {
-    _pal = Palette(paletteName);
+    _pal.changePaletteName(paletteName);
   }
   _hasColorMap = true;
   _hasContourMap = false;
@@ -244,7 +232,7 @@ void Image::changeToColorAndContour(MatrixPtr in_matrix,
   _zUpper = upperZ;
   _autoThreshold = autoThreshold;
   if (_pal.paletteName() != paletteName) {
-    _pal = Palette(paletteName);
+    _pal.changePaletteName(paletteName);
   }
   _numContourLines = numContours;
   _contourWeight = contourWeight;
@@ -437,16 +425,20 @@ double Image::distanceToPoint(double xpos, double dx, double ypos) const {
 
 void Image::paintObjects(const CurveRenderContext& context) {
   QPainter* p = context.painter;
-  p->drawImage(_imageLocation, _image);
 
-  QColor lineColor = contourColor();
+  if (hasColorMap()) {
+    p->drawImage(_imageLocation, _image);
+  }
 
-  foreach(CoutourLineDetails lineDetails, _lines) {
-    p->setPen(QPen(lineColor, lineDetails._lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
-    p->drawLine(lineDetails._line);
+  if (hasContourMap()) {
+    QColor lineColor = contourColor();
+
+    foreach(CoutourLineDetails lineDetails, _lines) {
+      p->setPen(QPen(lineColor, lineDetails._lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
+      p->drawLine(lineDetails._line);
+    }
   }
 }
-
 
 void Image::updatePaintObjects(const CurveRenderContext& context) {
   double Lx = context.Lx, Hx = context.Hx, Ly = context.Ly, Hy = context.Hy;
@@ -532,23 +524,52 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
         _image = QImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
-        for (int y = 0; y < _image.height(); ++y) {
+        //_image.fill(0);
+        int ih = _image.height();
+        int iw = _image.width();
+        double m_minX = m->minX();
+        double m_minY = m->minY();
+        double m_numY = m->yNumSteps();
+        double m_stepYr = 1.0/m->yStepSize();
+        double m_stepXr = 1.0/m->xStepSize();
+        int x_index;
+        int y_index;
+        int palCountMinus1 = _pal.colorCount() - 1;
+        double palCountMin1_OverDZ = double(palCountMinus1) / (_zUpper - _zLower);
+
+        for (int y = 0; y < ih; ++y) {
+          bool okY = true;
+
           QRgb *scanLine = (QRgb *)_image.scanLine(y);
-          for (int x = 0; x < _image.width(); ++x) {
-            double new_x, new_y;
+          double new_y;
+          if (yLog) {
+            new_y = pow(yLogBase, (y + 1 + img_Ly_pix - b_Y) / m_Y);
+          } else {
+            new_y = (y + 1 + img_Ly_pix - b_Y) / m_Y;
+          }
+          y_index = (int)((new_y - m_minY)*m_stepYr);
+          if (y_index<0 || y_index>=m_numY) {
+            okY = false;
+          }
+          double A = img_Lx_pix - b_X;
+          double B = 1.0/m_X;
+          for (int x = 0; x < iw; ++x) {
+            bool okX = true;
+            double new_x;
             if (xLog) {
               new_x = pow(xLogBase, (x + img_Lx_pix - b_X) / m_X);
             } else {
-              new_x = (x + img_Lx_pix - b_X) / m_X;
+              new_x = (x + A)*B;
             }
-            if (yLog) {
-              new_y = pow(yLogBase, (y + 1 + img_Ly_pix - b_Y) / m_Y);
+            x_index = (int)((new_x - m_minX)*m_stepXr);
+            double z = m->Z(x_index * m_numY + y_index);
+
+            okX = finite(z);
+
+            if (okX && okY) {
+              scanLine[x] = _pal.rgb((int)(((z - _zLower) * palCountMin1_OverDZ)));
             } else {
-              new_y = (y + 1 + img_Ly_pix - b_Y) / m_Y;
-            }
-            thisPixel = image->getMappedColor(m, new_x, new_y);
-            if (thisPixel.isValid()) {
-              scanLine[x] = thisPixel.rgb();
+              scanLine[x] = 0;
             }
           }
         }
@@ -748,12 +769,12 @@ void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 
 
 void Image::paintLegendSymbol(QPainter *p, const QRectF& bound) {
-  if (hasColorMap() && !_pal.paletteData().isEmpty()) {
+  if (hasColorMap() && (_pal.colorCount()>0)) {
     int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
     // draw the color palette
     for (int i = l; i <= r; i++) {
-      int index = (int)floor(static_cast<double>(((i - l) * (_pal.paletteData().count() - 1))) / (r - l));
-      QColor sliceColor = _pal.paletteData().value(index).rgb();
+      int index = (int)floor(static_cast<double>(((i - l) * (_pal.colorCount() - 1))) / (r - l));
+      QColor sliceColor = _pal.color(index).rgb();
       p->setPen(QPen(sliceColor, 1));
       p->drawLine(i, t, i, b);
     }

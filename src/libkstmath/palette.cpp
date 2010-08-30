@@ -30,79 +30,64 @@ static const char *const KstColors[] = { "red",
                                       "#105010"
                                       };
 static const int KstColorsCount = sizeof(KstColors) / sizeof(char*);
-
 static const QString KstColorsName = "Kst Colors";
-static const QString KstGrayscaleName = "Kst Grayscale";
 
+static const int KstGrayscaleCount = 255;
+static const QString KstGrayscaleName = "Kst Grayscale";
 
 QStringList Palette::getPaletteList() { 
   QStringList paletteList;
 
-  //TODO Populate a shared list of colors to return here.
   paletteList.append(KstGrayscaleName);
   paletteList.append(KstColorsName);
+
+  //TODO: support loading palettes from disk.
 
   return paletteList;
 }
 
-Palette::Palette() {
-  createPalette();
+Palette::Palette(): _colors(0), _count(0) {
+  changePaletteName(KstColorsName);
 }
 
 
-Palette::Palette(const QString &paletteName) {
-  createPalette(paletteName);
+Palette::Palette(const QString &paletteName): _colors(0), _count(0) {
+  changePaletteName(paletteName);
 }
-
 
 Palette::~Palette() {
+  delete[] _colors;
+  delete[] _rgb;
+  _colors = 0;
+  _count = 0;
 }
 
+void Palette::changePaletteName(const QString &paletteName) {
 
-QString Palette::paletteName() const {
-  return _paletteName;
-}
+  if (_count==0) {
+    _colors = new QColor[2048];
+    _rgb = new QRgb[2048];
+  }
 
-  
-int Palette::colorCount() const {
-  return _count;
-}
-
-PaletteData Palette::paletteData() const {
-  return _palette;
-}
-
-QColor Palette::color(const int colorId) const {
-  return _palette[colorId];
-}
-
-
-void Palette::createPalette(const QString &paletteName) {
-  //TODO Get Palette details from a palette name parameter when a shared list exists.
-  _palette.clear();
   if (paletteName.isEmpty()) {
     _paletteName = KstColorsName;
   } else {
-    //TODO when a proper shared list exists, validate that the palette exists.
     _paletteName = paletteName;
   }
 
   if (_paletteName == KstColorsName) {
     for (int i = 0; i < KstColorsCount; i++) {
-      _palette.insert(i, QColor(KstColors[i]));
+      _colors[i] = QColor(KstColors[i]);
+      _rgb[i] = _colors[i].rgb();
     }
+    _count = KstColorsCount;
   } else {
-    for (int i = 0; i < 255; i++) {
-      _palette.insert(i, QColor(i, i, i));
+    for (int i = 0; i < KstGrayscaleCount; i++) {
+      _colors[i] = QColor(i, i, i);
+      _rgb[i] = _colors[i].rgb();
     }
+    _count = KstGrayscaleCount;
   }
-  _count = _palette.count();
-}
-
-
-void Palette::addColor(const QColor& color) {
-  _palette.insert(_count, QColor(color));
-  ++_count;
 }
 
 }

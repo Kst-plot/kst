@@ -273,7 +273,7 @@ FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const 
 
 
 FitsImageSource::~FitsImageSource() {
-  int status;
+  int status = 0;
   if (_fptr) {
     fits_close_file( _fptr, &status );
     _fptr = 0L;

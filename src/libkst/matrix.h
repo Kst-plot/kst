@@ -147,6 +147,7 @@ class KSTCORE_EXPORT Matrix : public Primitive {
 
     virtual void internalUpdate();
 
+    double Z(int i) const {return _z[i];}
   protected:
     int _NS;
     int _NRealS; // number of samples with real values
