@@ -245,6 +245,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     GripMode nextGripMode(GripMode currentMode) const;
     void addTitle(QMenu *menu) const;
     void registerShortcut(QAction *action);
+    void reRegisterShortcut();
 
     QString descriptionTip() const;
 

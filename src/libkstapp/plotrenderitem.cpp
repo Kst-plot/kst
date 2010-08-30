@@ -639,8 +639,11 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     event->ignore();
     return;
   }
-
+  
   setFocus(Qt::MouseFocusReason);
+
+  // Qt bug (Windows only?): http://bugreports.qt.nokia.com/browse/QTBUG-8188
+  //bool foc = hasFocus(); // foc is false in the second tab
 
   updateCursor(event->pos());
 

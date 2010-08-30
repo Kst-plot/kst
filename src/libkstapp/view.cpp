@@ -258,7 +258,13 @@ bool View::event(QEvent *event) {
         if (!viewItem)
           continue;
 
+#ifdef Q_OS_WIN
+        // Qt bug (Windows only?): http://bugreports.qt.nokia.com/browse/QTBUG-8188
+        // also see PlotRenderItem::hoverEnterEvent
+        if (viewItem                         && viewItem->tryShortcut(e->key())) {
+#else
         if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
+#endif
           return true;
         }
       }

@@ -123,7 +123,8 @@ ViewItem::ViewItem(View *parentView) :
   _customLayoutAction = new QAction(tr("Custom"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
-  setAcceptDrops(true);
+  // only drop plots onto TabBar
+  setAcceptDrops(false);
 }
 
 
@@ -416,12 +417,12 @@ View *ViewItem::parentView() const {
 }
 
 void ViewItem::setParentView(View* parentView) {
-#ifdef KST_DISBALE_QOBJECT_PARENT
-  _parentView = parentView;  
-#else
+  _parentView = parentView;
+#ifndef KST_DISBALE_QOBJECT_PARENT  
   parentView()->setParent(parent);
 #endif
-  updateRelativeSize();
+  reRegisterShortcut();
+  updateRelativeSize();  
 }
 
 
@@ -1834,6 +1835,15 @@ void ViewItem::registerShortcut(QAction *action) {
   Q_ASSERT(action->parent() == this);
   parentView()->grabShortcut(action->shortcut());
   _shortcutMap.insert(action->shortcut(), action);
+}
+
+
+void ViewItem::reRegisterShortcut() {
+  QHashIterator<QString, QAction*> it(_shortcutMap);
+  while (it.hasNext()) {
+    it.next();
+    _parentView->grabShortcut(it.key());
+  }
 }
 
 
