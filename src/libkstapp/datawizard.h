@@ -49,6 +49,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     void sourceChanged(const QString&);
     void configureSource();
     void sourceValid(QString filename, int requestID);
+    void updateTypeActivated(int);
 
   Q_SIGNALS:
     void dataSourceChanged();
@@ -58,6 +59,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;
+    void initUpdateBox();
 };
 
 class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors

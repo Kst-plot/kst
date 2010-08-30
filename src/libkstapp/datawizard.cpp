@@ -46,10 +46,49 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
    QString default_source = _dialogDefaults->value("vector/datasource",".").toString();
   _url->setFile(default_source);
   _url->setFocus();
+
+  initUpdateBox();  
+  connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
 }
 
 
 DataWizardPageDataSource::~DataWizardPageDataSource() {
+}
+
+
+void DataWizardPageDataSource::initUpdateBox()
+{
+  _updateBox->clear();
+
+  if (_dataSource) {
+    _updateBox->addItem("Time interval");
+    _updateBox->addItem("Change detection");
+    _updateBox->addItem("Don't update");
+    switch (_dataSource->updateType()) {
+      case DataSource::Timer: _updateBox->setCurrentIndex(0); break;
+      case DataSource::File:  _updateBox->setCurrentIndex(1); break;
+      case DataSource::None:  _updateBox->setCurrentIndex(2); break;
+      default: break;
+    };
+
+  } else {
+    _updateBox->addItem("Unknown");
+    _updateBox->setCurrentIndex(0);
+  }
+}
+
+void DataWizardPageDataSource::updateTypeActivated(int idx)
+{
+  initUpdateBox();
+  if (!_dataSource) {    
+    return;
+  }
+  switch (idx) {
+    case 0: _dataSource->setUpdateType(DataSource::Timer); break;
+    case 1: _dataSource->setUpdateType(DataSource::File);  break;
+    case 2: _dataSource->setUpdateType(DataSource::None);  break;
+    default: break;
+  };
 }
 
 
@@ -83,7 +122,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _pageValid = true;
 
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
-  _fileType->setText(_dataSource->fileType());
+  _fileType->setText(_dataSource->fileType());  
 
   _dataSource->readLock();
   _configureSource->setEnabled(_dataSource->hasConfigWidget());
@@ -93,6 +132,8 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
     DataSourcePtr tmpds = _dataSource; // increase usage count
     _store->cleanUpDataSourceList();
   }
+
+  initUpdateBox();
 
   emit completeChanged();
   emit dataSourceChanged();

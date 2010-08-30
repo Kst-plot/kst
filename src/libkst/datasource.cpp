@@ -196,6 +196,11 @@ void DataSource::setInterface(DataInterface<DataMatrix>* i) {
 }
 
 
+DataSource::UpdateCheckType DataSource::updateType() const
+{
+  return _updateCheckType;
+}
+
 
 void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
 {
