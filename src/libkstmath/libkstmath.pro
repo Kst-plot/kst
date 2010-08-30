@@ -6,7 +6,6 @@ CONFIG += dll
 DEFINES += BUILD_KSTMATH
 TARGET = $$kstlib(kst2math)
 DESTDIR = $$OUTPUT_DIR/lib
-DLLDESTDIR = $$OUTPUT_DIR/bin
 
 
 !isEmpty(INSTALL_PREFIX) {

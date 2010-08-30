@@ -6,7 +6,6 @@ CONFIG += dll
 DEFINES += BUILD_KSTCORE
 TARGET = $$kstlib(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
-DLLDESTDIR = $$OUTPUT_DIR/bin
 
 
 !isEmpty(INSTALL_PREFIX) {

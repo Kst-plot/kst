@@ -9,7 +9,6 @@ DEFINES += BUILD_KSTWIDGETS
 CONFIG += designer
 TARGET = $$kstlib(kst2widgets)
 DESTDIR = $$OUTPUT_DIR/lib
-DLLDESTDIR = $$OUTPUT_DIR/bin
 QT += core xml gui
 
 !isEmpty(INSTALL_PREFIX) {
