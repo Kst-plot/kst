@@ -283,7 +283,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
         if (comment && comment < &(tmpbuf[i])) {
           comment = strpbrk(&(tmpbuf[i]), del);
         }
-      } else if (!is_comment && !isspace(tmpbuf[i])) {  
+      } else if (!is_comment && !isspace((unsigned char)tmpbuf[i])) {  
         // FIXME: this breaks custom delimiters
         has_dat = true;
       }
@@ -383,7 +383,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit(_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
+              if (isdigit((unsigned char)_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
                 v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
               } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
                   tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {
@@ -403,7 +403,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (isspace(_tmpBuffer[ch])) {
+        if (isspace((unsigned char)_tmpBuffer[ch])) {
           if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
             break;
           } else {
@@ -416,7 +416,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit(_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
+              if (isdigit((unsigned char)_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
                 v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
               } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
                   tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {

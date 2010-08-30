@@ -13,9 +13,10 @@
 
 
 #ifdef KST_USE_KST_ATOF
-double LexicalCast::toDouble(const char* p) const
+double LexicalCast::toDouble(const char* signedp) const
 {
-	int c;
+	unsigned char* p = (unsigned char*)signedp;
+	unsigned char c;
 	double fl, flexp, exp5;
 	double big = 72057594037927936.;  /*2^56*/
 	int nd;
