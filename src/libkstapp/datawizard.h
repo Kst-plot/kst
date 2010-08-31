@@ -59,7 +59,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;
-    void initUpdateBox();
+    void updateUpdateBox();
 };
 
 class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors

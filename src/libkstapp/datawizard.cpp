@@ -47,7 +47,10 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   _url->setFile(default_source);
   _url->setFocus();
 
-  initUpdateBox();  
+  _updateBox->addItem("Time interval");
+  _updateBox->addItem("Change detection");
+  _updateBox->addItem("Don't update");
+  updateUpdateBox();
   connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
 }
 
@@ -56,34 +59,28 @@ DataWizardPageDataSource::~DataWizardPageDataSource() {
 }
 
 
-void DataWizardPageDataSource::initUpdateBox()
+void DataWizardPageDataSource::updateUpdateBox()
 {
-  _updateBox->clear();
-
   if (_dataSource) {
-    _updateBox->addItem("Time interval");
-    _updateBox->addItem("Change detection");
-    _updateBox->addItem("Don't update");
+    _updateBox->setEnabled(true);
     switch (_dataSource->updateType()) {
       case DataSource::Timer: _updateBox->setCurrentIndex(0); break;
       case DataSource::File:  _updateBox->setCurrentIndex(1); break;
       case DataSource::None:  _updateBox->setCurrentIndex(2); break;
       default: break;
     };
-
-  } else {
-    _updateBox->addItem("Unknown");
-    _updateBox->setCurrentIndex(0);
+  } else {    _updateBox->setEnabled(false);
   }
 }
 
 void DataWizardPageDataSource::updateTypeActivated(int idx)
 {
-  initUpdateBox();
-  if (!_dataSource) {    
+  if (!_dataSource) {
+    _updateBox->setEnabled(false);
     return;
   }
   switch (idx) {
+    _updateBox->setEnabled(true);
     case 0: _dataSource->setUpdateType(DataSource::Timer); break;
     case 1: _dataSource->setUpdateType(DataSource::File);  break;
     case 2: _dataSource->setUpdateType(DataSource::None);  break;
@@ -133,7 +130,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
     _store->cleanUpDataSourceList();
   }
 
-  initUpdateBox();
+  updateUpdateBox();
 
   emit completeChanged();
   emit dataSourceChanged();
@@ -144,6 +141,7 @@ void DataWizardPageDataSource::sourceChanged(const QString& file) {
   _pageValid = false;
   _fileType->setText(QString());
   _configureSource->setEnabled(false);
+  _updateBox->setEnabled(false);
   emit completeChanged();
 
   _requestID += 1;

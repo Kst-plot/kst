@@ -142,7 +142,7 @@ p, li { white-space: pre-wrap; }
         <widget class="QComboBox" name="_updateBox">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
