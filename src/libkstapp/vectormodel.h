@@ -12,13 +12,13 @@
 #ifndef VECTORMODEL_H
 #define VECTORMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractTableModel >
 #include <QPointer>
 #include <vector.h>
 
 namespace Kst {
 
-class VectorModel : public QAbstractItemModel
+class VectorModel : public QAbstractTableModel
 {
 public:
   VectorModel(Vector *v);
@@ -27,14 +27,13 @@ public:
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex& index) const;
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
-  QPointer<Vector> _v;
+  QPointer<Vector> _vector;
 };
 
 }

@@ -26,7 +26,10 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   Q_ASSERT(_doc && _doc->objectStore());
   setupUi(this);
+  // TODO  ResizeToContents is too expensive
+  //_vectors->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  _vectors->verticalHeader()->hide();
 
   connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
   _vectorSelector->setObjectStore(doc->objectStore());
