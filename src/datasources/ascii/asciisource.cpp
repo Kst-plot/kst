@@ -171,7 +171,9 @@ void AsciiSource::reset()
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::openFile(QFile &file) 
 {
-  return file.open(QIODevice::ReadOnly | QIODevice::Text);
+  // Don't use 'QIODevice::Text'!
+  // Because CR LF line ending breaks row offset calculation
+  return file.open(QIODevice::ReadOnly);
 }
 
 
