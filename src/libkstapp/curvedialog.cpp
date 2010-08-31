@@ -54,6 +54,14 @@ CurveTab::CurveTab(QWidget *parent)
 
   _xVector->setIsX(true);
 
+  int maxComboWidth = 200;
+  _xVector->setMaximumWidth(maxComboWidth);
+  _yVector->setMaximumWidth(maxComboWidth);
+  _xError->setMaximumWidth(maxComboWidth);
+  _yError->setMaximumWidth(maxComboWidth);
+  _xMinusError->setMaximumWidth(maxComboWidth);
+  _yMinusError->setMaximumWidth(maxComboWidth);
+
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_xMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(xCheckboxClicked()));
