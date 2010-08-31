@@ -118,7 +118,7 @@ void Image::internalUpdate() {
     //update the contour lines
     if (hasContourMap()) {
       double min = mp->minValue(), max = mp->maxValue();
-        double contourStep  = (max - min) / (double)(_numContourLines + 1);
+      double contourStep  = (max - min) / (double)(_numContourLines + 1);
       if (contourStep > 0) {
         _contourLines.clear();
         for (int i = 0; i < _numContourLines; i++) {
@@ -433,7 +433,7 @@ void Image::paintObjects(const CurveRenderContext& context) {
   if (hasContourMap()) {
     QColor lineColor = contourColor();
 
-    foreach(CoutourLineDetails lineDetails, _lines) {
+    foreach(const CoutourLineDetails& lineDetails, _lines) {
       p->setPen(QPen(lineColor, lineDetails._lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::MiterJoin));
       p->drawLine(lineDetails._line);
     }
