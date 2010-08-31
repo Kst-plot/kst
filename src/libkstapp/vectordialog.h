@@ -81,6 +81,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
     void fileNameChanged(const QString &file);
     void showConfigWidget();
     void sourceValid(QString filename, int requestID);
+    void updateTypeActivated(int);
 
   private:
     VectorMode _mode;
@@ -88,6 +89,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
     DataSourcePtr _dataSource;
     QString _initField;
     int _requestID;
+    void updateUpdateBox();
 };
 
 class VectorDialog : public DataDialog {

@@ -69,7 +69,8 @@ void DataWizardPageDataSource::updateUpdateBox()
       case DataSource::None:  _updateBox->setCurrentIndex(2); break;
       default: break;
     };
-  } else {    _updateBox->setEnabled(false);
+  } else {
+    _updateBox->setEnabled(false);
   }
 }
 

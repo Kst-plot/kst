@@ -239,8 +239,10 @@ void ChangeDataSampleDialog::apply() {
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       vector->writeLock();
-      vector->changeFrames( (_dataRange->countFromEnd() ? -1 : int(_dataRange->start())),
-                            (_dataRange->readToEnd() ? -1 : int(_dataRange->range())),
+      int from = (_dataRange->countFromEnd() ? -1 : (int)_dataRange->start());
+      int range = (_dataRange->readToEnd() ? -1 : (int)_dataRange->range());
+      vector->changeFrames( from, 
+                            range,
                             _dataRange->skip(),
                             _dataRange->doSkip(),
                             _dataRange->doFilter());

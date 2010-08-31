@@ -54,12 +54,47 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   _dataRange->groupBox2->layout()->setContentsMargins(0,top_margin,0,0); 
 
   _connect->setVisible(false);
+
+  _updateBox->addItem("Time interval");
+  _updateBox->addItem("Change detection");
+  _updateBox->addItem("Don't update");
+  updateUpdateBox();
+  connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
 }
 
 
 VectorTab::~VectorTab() {
 }
 
+void VectorTab::updateUpdateBox()
+{
+  if (_dataSource) {
+    _updateBox->setEnabled(true);
+    switch (_dataSource->updateType()) {
+      case DataSource::Timer: _updateBox->setCurrentIndex(0); break;
+      case DataSource::File:  _updateBox->setCurrentIndex(1); break;
+      case DataSource::None:  _updateBox->setCurrentIndex(2); break;
+      default: break;
+    };
+  } else {
+    _updateBox->setEnabled(false);
+  }
+}
+
+void VectorTab::updateTypeActivated(int idx)
+{
+  if (!_dataSource) {
+    _updateBox->setEnabled(false);
+    return;
+  }
+  switch (idx) {
+    _updateBox->setEnabled(true);
+    case 0: _dataSource->setUpdateType(DataSource::Timer); break;
+    case 1: _dataSource->setUpdateType(DataSource::File);  break;
+    case 2: _dataSource->setUpdateType(DataSource::None);  break;
+    default: break;
+  };
+}
 
 DataSourcePtr VectorTab::dataSource() const {
   return _dataSource;
@@ -225,6 +260,8 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   }
   _field->setEditable(!_dataSource->vector().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
+
+  updateUpdateBox();
 
   _dataSource->unlock();
   emit sourceChanged();
