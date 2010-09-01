@@ -12,7 +12,7 @@
 #ifndef VECTORMODEL_H
 #define VECTORMODEL_H
 
-#include <QAbstractTableModel >
+#include <QAbstractTableModel>
 #include <QPointer>
 #include <vector.h>
 
