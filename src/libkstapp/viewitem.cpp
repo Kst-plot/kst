@@ -959,6 +959,15 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     MimeDataViewItem* mimeData = new MimeDataViewItem;
     mimeData->item = this;
     drag->setMimeData(mimeData);
+
+    QPixmap pixmap(sceneBoundingRect().size().toSize());
+    pixmap.fill(Qt::white);
+    QPainter painter(&pixmap);
+    paint(&painter); // TODO also paint curves
+    painter.end();
+    pixmap.setMask(pixmap.createHeuristicMask());
+    drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
+
     
     Qt::DropActions dact = Qt::MoveAction;
     Qt::DropAction dropAction = drag->exec(dact);
