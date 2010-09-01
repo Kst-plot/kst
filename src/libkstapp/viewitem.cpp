@@ -52,11 +52,7 @@ static const int DRAWING_ZORDER = 500;
 namespace Kst {
 
 ViewItem::ViewItem(View *parentView) :
-#ifdef KST_DISBALE_QOBJECT_PARENT
     QObject(),
-#else
-    QObject(parentView)
-#endif
     NamedObject(),
     _isXTiedZoom(false),
     _isYTiedZoom(false),
@@ -83,7 +79,8 @@ ViewItem::ViewItem(View *parentView) :
     _parentRelativeHeight(0),
     _parentRelativeWidth(0),
     _parentView(parentView)
- {
+{
+  setParentView(parentView);
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
@@ -409,11 +406,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
 }
 
 View *ViewItem::parentView() const {
-#ifdef KST_DISBALE_QOBJECT_PARENT
   return _parentView;
-#else
-  return qobject_cast<View*>(parent());
-#endif
 }
 
 void ViewItem::setParentView(View* parentView) {
