@@ -196,7 +196,7 @@
            <bool>false</bool>
           </property>
           <property name="toolTip" >
-           <string>Input a number, or the format [[[[YYYY:]MM:]DD:]HH:]MM[.SS] for dates.</string>
+           <string>Input a number (starting from 0 for the first value), or the format [[[[YYYY:]MM:]DD:]HH:]MM[.SS] for dates.</string>
           </property>
           <property name="whatsThis" >
            <string>The index of the first data read.  For ASCII files, this is the data row number in the file.  For frame based files, this is the first frame.</string>
