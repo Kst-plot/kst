@@ -947,38 +947,37 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-
-  if (event->buttons() & Qt::LeftButton && parentView()->viewMode() == View::Data &&
-      (event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
-
-    // UNDO tied zoom settings done in PlotItem::mousePressEvent
-    setTiedZoom(false, false);
-
-    QDrag *drag = new QDrag(event->widget());
-    MimeDataViewItem* mimeData = new MimeDataViewItem;
-    mimeData->item = this;
-    drag->setMimeData(mimeData);
-
-    QPixmap pixmap(sceneBoundingRect().size().toSize());
-    pixmap.fill(Qt::white);
-    QPainter painter(&pixmap);
-    paint(&painter); // TODO also paint curves
-    painter.end();
-    pixmap.setMask(pixmap.createHeuristicMask());
-    drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
-
-    
-    Qt::DropActions dact = Qt::MoveAction;
-    Qt::DropAction dropAction = drag->exec(dact);
-    if (dropAction == Qt::MoveAction) {
-      _autoLayoutAction->trigger();
-    }
-  }
-
-
   if (parentView()->viewMode() == View::Data) {
     event->ignore();
     return;
+  }
+
+  if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton)
+    if ((event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
+
+      // UNDO tied zoom settings done in PlotItem::mousePressEvent
+      setTiedZoom(false, false);
+
+      QDrag *drag = new QDrag(event->widget());
+      MimeDataViewItem* mimeData = new MimeDataViewItem;
+      mimeData->item = this;
+      drag->setMimeData(mimeData);
+
+      QPixmap pixmap(sceneBoundingRect().size().toSize());
+      pixmap.fill(Qt::white);
+      QPainter painter(&pixmap);
+      paint(&painter); // TODO also paint curves
+      painter.end();
+      pixmap.setMask(pixmap.createHeuristicMask());
+      drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
+
+      Qt::DropActions dact = Qt::MoveAction;
+      Qt::DropAction dropAction = drag->exec(dact);
+      if (dropAction == Qt::MoveAction) {
+    } else {
+      // we are starting drag$drop
+      return;
+    }
   }
 
   if (parentView()->mouseMode() == View::Default) {
@@ -1641,19 +1640,20 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  if (parentView()->viewMode() == View::Data) {
+    event->ignore();
+    return;
+  }
 
-  QPointF p = event->pos();
-  if (checkBox().contains(p) && parentView()->viewMode() == View::Data) {
+  const QPointF p = event->pos();
+
+  dragStartPosition = QPointF(0, 0);
+  if (checkBox().contains(p)) {
     if (event->buttons() & Qt::LeftButton) {
        dragStartPosition = p;
     }
   }
 
-  if (parentView()->viewMode() == View::Data) {
-    event->ignore();
-    return;
-  }
-  
   if (isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) {
     setActiveGrip(TopLeftGrip);
   } else if (isAllowed(TopRightGrip) && topRightGrip().contains(p)) {
@@ -1724,6 +1724,8 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     event->ignore();
     return;
   }
+
+  dragStartPosition = QPointF(0, 0);
 
   if (parentView()->mouseMode() != View::Default) {
     parentView()->setMouseMode(View::Default);

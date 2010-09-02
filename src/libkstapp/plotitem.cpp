@@ -2628,6 +2628,7 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (checkBox().contains(event->pos())) {
       setTiedZoom(!isTiedZoom(), !isTiedZoom());
+      ViewItem::mousePressEvent(event);
     } else if (parentView()->viewMode() == View::Data) {
       edit();
     } else {
