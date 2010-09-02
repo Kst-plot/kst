@@ -22,19 +22,19 @@ unix {
   contains(lib, gsl) {
     contains(DISABLE_GSL, 1) {
       # Overridden, do not check.
-      return(false);
+      return(false)
     }
   }
   contains(lib, cfitsio) {
     contains(DISABLE_CFITSIO, 1) {
       # Overridden, do not check.
-      return(false);
+      return(false)
     }
   }
   contains(lib, getdata) {
     contains(DISABLE_DIRFILE, 1) {
       # Overridden, do not check.
-      return(false);
+      return(false)
     }
   }
   PKGCONFIGRESULT = $$system(pkg-config --libs $$lib)
