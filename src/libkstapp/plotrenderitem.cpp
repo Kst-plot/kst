@@ -374,12 +374,8 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
     parentView()->setCursor(Qt::SizeVerCursor);
-    _selectionRect.setFrom(QPointF(rect().left(), _lastPos.y()));
-    _selectionRect.setTo(QPointF(rect().right(), _lastPos.y()));
   } else if (modifiers & Qt::ControlModifier) {
     parentView()->setCursor(Qt::SizeHorCursor);
-    _selectionRect.setFrom(QPointF(_lastPos.x(), rect().top()));
-    _selectionRect.setTo(QPointF(_lastPos.x(), rect().bottom()));
   }
 
   ViewItem::keyPressEvent(event);
@@ -399,6 +395,7 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
   } else if (modifiers & Qt::ControlModifier) {
     parentView()->setCursor(Qt::SizeHorCursor);
   } else {
+    parentView()->setCursor(Qt::CrossCursor);
     resetSelectionRect();
   }
   ViewItem::keyReleaseEvent(event);
