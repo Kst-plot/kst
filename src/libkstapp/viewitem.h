@@ -320,8 +320,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     View *_parentView;
 
-    // use void setParentViewItem(ViewItem *parent);
-    void setParent(ViewItem *parent);    
+    // use void setParentView(View *parent);
+    QObject* parent() const;
+    void setParent(QObject*);
 
     friend class View;
     friend class Scene;

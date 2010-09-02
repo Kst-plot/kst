@@ -47,7 +47,7 @@ static const int DRAWING_ZORDER = 500;
 // Don't mix QObject and QGraphicItem ownership
 // Enabling the macro could have bad side effects, we will see.
 // TODO check for memory leaks when enabled.
-#define KST_DISBALE_QOBJECT_PARENT
+//#define KST_DISBALE_QOBJECT_PARENT
 
 namespace Kst {
 
@@ -406,13 +406,17 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
 }
 
 View *ViewItem::parentView() const {
+#ifdef KST_DISBALE_QOBJECT_PARENT
   return _parentView;
+#else
+  return qobject_cast<View*>(QObject::parent());
+#endif
 }
 
 void ViewItem::setParentView(View* parentView) {
   _parentView = parentView;
-#ifndef KST_DISBALE_QOBJECT_PARENT  
-  parentView()->setParent(parent);
+#ifndef KST_DISBALE_QOBJECT_PARENT
+  QObject::setParent(parentView);
 #endif
   reRegisterShortcut();
   updateRelativeSize();  
@@ -427,11 +431,6 @@ ViewItem *ViewItem::parentViewItem() const {
 void ViewItem::setParentViewItem(ViewItem* parent) {
   setParentItem(parent);
   updateRelativeSize();
-}
-
-
-void ViewItem::setParent(ViewItem* parent) {
-  setParentViewItem(parent);  
 }
 
 
@@ -1442,7 +1441,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParent(0);
+    setParentView(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
@@ -1494,7 +1493,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParent(viewItem);
+    setParentViewItem(viewItem);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
@@ -1526,7 +1525,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParent(0);
+    setParentView(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
