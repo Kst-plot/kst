@@ -14,7 +14,8 @@
 #include "view.h"
 #include "viewitem.h"
 #include "curveplacement.h"
-
+#include "plotitem.h"
+#include "plotrenderitem.h"
 
 #include <QInputDialog>
 #include <QMenu>
@@ -62,6 +63,13 @@ void TabBar::dropEvent(QDropEvent* event)
   if (m && m->item) {       
     View* view = tabWidget->currentView();
     m->item->setParentView(view);
+    PlotItem* plotItem = qobject_cast<PlotItem*>(m->item);
+    if (plotItem) {
+      QList<PlotRenderItem*> renderItems = plotItem->renderItems();
+      foreach (PlotRenderItem* renderItem, renderItems) {
+        renderItem->setParentView(view);
+      }
+    }
     m->item->setParentViewItem(0);
     view->appendToLayout(CurvePlacement::Auto, m->item);
     event->acceptProposedAction();
