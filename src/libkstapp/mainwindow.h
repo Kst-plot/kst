@@ -109,7 +109,6 @@ class MainWindow : public QMainWindow
     void createPicture();
     void createPlot();
     void createSvg();
-    void createLayout();
     void createSharedAxisBox();
 
     void createCurve();
@@ -187,7 +186,6 @@ class MainWindow : public QMainWindow
     QAction *_createPictureAct;
     QAction *_createPlotAct;
     QAction *_createSvgAct;
-    QAction *_createLayoutAct;
     QAction *_createSharedAxisBoxAct;
 
     QAction *_aboutAct;

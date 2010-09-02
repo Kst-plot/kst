@@ -606,19 +606,6 @@ void MainWindow::createSvg() {
   }
 }
 
-
-void MainWindow::createLayout() {
-  View *view = tabWidget()->currentView();
-  QList<QGraphicsItem*> selectedItems = view->scene()->selectedItems();
-  if (!selectedItems.isEmpty()) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(selectedItems.first());
-    Q_ASSERT(viewItem);
-    viewItem->createAutoLayout();
-  } else {
-    view->createLayout();
-  }
-}
-
 void MainWindow::createCurve() {
   DialogLauncher::self()->showCurveDialog();
 }
@@ -712,11 +699,6 @@ void MainWindow::createActions() {
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
-  _createLayoutAct = new QAction(tr("&Layout"), this);
-  _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
-  _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
-//   _createLayoutAct->setEnabled(false);
-  connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
 
   _createSharedAxisBoxAct = new QAction(tr("&Shared Axis Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
@@ -1019,7 +1001,6 @@ void MainWindow::createToolBars() {
 
   _layoutToolBar->addSeparator();
 
-  _layoutToolBar->addAction(_createLayoutAct);
   _zoomToolBar->setVisible(true);
   _layoutToolBar->setVisible(true);
 
