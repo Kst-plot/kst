@@ -948,7 +948,7 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (event->buttons() & Qt::LeftButton &&
+  if (event->buttons() & Qt::LeftButton && parentView()->viewMode() == View::Data &&
       (event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
 
     // UNDO tied zoom settings done in PlotItem::mousePressEvent
@@ -1643,7 +1643,7 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   QPointF p = event->pos();
-  if (checkBox().contains(p)) {
+  if (checkBox().contains(p) && parentView()->viewMode() == View::Data) {
     if (event->buttons() & Qt::LeftButton) {
        dragStartPosition = p;
     }
