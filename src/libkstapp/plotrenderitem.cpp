@@ -373,7 +373,8 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
 
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
-    parentView()->setCursor(Qt::SizeVerCursor);
+    // show cursor as Qt::SizeVerCursor only on mouse events
+    // because shift is also used for arrow key controlled zooming
   } else if (modifiers & Qt::ControlModifier) {
     parentView()->setCursor(Qt::SizeHorCursor);
   }
@@ -427,6 +428,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::ShiftModifier) {
+    parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
   } else if (modifiers & Qt::ControlModifier) {
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
