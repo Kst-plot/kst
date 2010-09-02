@@ -650,75 +650,75 @@ void MainWindow::createActions() {
   _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
 
   // ************************** Layout Mode Actions ******************************* //
-  _createLabelAct = new QAction(tr("&Create label"), this);
+  _createLabelAct = new QAction(tr("&Label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
   _createLabelAct->setShortcut(QString("F3"));
   _createLabelAct->setCheckable(true);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
-  _createBoxAct = new QAction(tr("&Create box"), this);
+  _createBoxAct = new QAction(tr("&Box"), this);
   _createBoxAct->setStatusTip(tr("Create a box for the current view"));
   _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
   _createBoxAct->setShortcut(QString("F4"));
   _createBoxAct->setCheckable(true);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
-  _createCircleAct = new QAction(tr("&Create circle"), this);
+  _createCircleAct = new QAction(tr("&Circle"), this);
   _createCircleAct->setStatusTip(tr("Create a circle for the current view"));
   _createCircleAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
   _createCircleAct->setShortcut(QString("F5"));
   _createCircleAct->setCheckable(true);
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
-  _createEllipseAct = new QAction(tr("&Create ellipse"), this);
+  _createEllipseAct = new QAction(tr("&Ellipse"), this);
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view"));
   _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
   _createEllipseAct->setShortcut(QString("F6"));
   _createEllipseAct->setCheckable(true);
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
-  _createLineAct = new QAction(tr("&Create line"), this);
+  _createLineAct = new QAction(tr("&Line"), this);
   _createLineAct->setStatusTip(tr("Create a line for the current view"));
   _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
   _createLineAct->setShortcut(QString("F7"));
   _createLineAct->setCheckable(true);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
-  _createArrowAct = new QAction(tr("&Create arrow"), this);
+  _createArrowAct = new QAction(tr("&Arrow"), this);
   _createArrowAct->setStatusTip(tr("Create a arrow for the current view"));
   _createArrowAct->setIcon(QPixmap(":kst_gfx_arrow.png"));
   _createArrowAct->setShortcut(QString("F8"));
   _createArrowAct->setCheckable(true);
   connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
-  _createPictureAct = new QAction(tr("&Create picture"), this);
+  _createPictureAct = new QAction(tr("&Picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
   _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
   _createPictureAct->setShortcut(QString("F9"));
   _createPictureAct->setCheckable(true);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
-  _createPlotAct = new QAction(tr("&Create plot"), this);
+  _createPlotAct = new QAction(tr("&Plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
   _createPlotAct->setShortcut(QString("F10"));
   _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
-  _createSvgAct = new QAction(tr("&Create svg"), this);
+  _createSvgAct = new QAction(tr("&Svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
   _createSvgAct->setShortcut(QString("F11"));
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
-  _createLayoutAct = new QAction(tr("&Create layout"), this);
+  _createLayoutAct = new QAction(tr("&Layout"), this);
   _createLayoutAct->setStatusTip(tr("Create a layout for the current item"));
   _createLayoutAct->setIcon(QPixmap(":kst_gfx_layout.png"));
 //   _createLayoutAct->setEnabled(false);
   connect(_createLayoutAct, SIGNAL(triggered()), this, SLOT(createLayout()));
 
-  _createSharedAxisBoxAct = new QAction(tr("&Create Shared Axis Box"), this);
+  _createSharedAxisBoxAct = new QAction(tr("&Shared Axis Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
   _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
   _createSharedAxisBoxAct->setCheckable(true);
@@ -728,25 +728,25 @@ void MainWindow::createActions() {
   // ****************************************************************************** //
 
   // ********************* Object Dialog Actions ********************************** //
-  _dataManagerAct = new QAction(tr("Data &Manager..."), this);
+  _dataManagerAct = new QAction(tr("Data &Manager"), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
   _dataManagerAct->setShortcut(QString("d"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
-  _vectorEditorAct = new QAction(tr("&View Vectors..."), this);
+  _vectorEditorAct = new QAction(tr("&Vectors"), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
 
-  _scalarEditorAct = new QAction(tr("View &Scalars..."), this);
+  _scalarEditorAct = new QAction(tr("&Scalars"), this);
   _scalarEditorAct->setStatusTip(tr("Show all scalars in a spreadsheet"));
   connect(_scalarEditorAct, SIGNAL(triggered()), this, SLOT(showScalarEditor()));
 
-  _stringEditorAct = new QAction(tr("View S&trings..."), this);
+  _stringEditorAct = new QAction(tr("S&trings"), this);
   _stringEditorAct->setStatusTip(tr("Show all strings in a spreadsheet"));
   connect(_stringEditorAct, SIGNAL(triggered()), this, SLOT(showStringEditor()));
 
-  _matrixEditorAct = new QAction(tr("View &Matrix..."), this);
+  _matrixEditorAct = new QAction(tr("&Matrices"), this);
   _matrixEditorAct->setStatusTip(tr("Show all matrices in a spreadsheet"));
   connect(_matrixEditorAct, SIGNAL(triggered()), this, SLOT(showMatrixEditor()));
 
@@ -889,22 +889,22 @@ void MainWindow::createActions() {
   // ****************************************************************************** //
 
   // ************************ New Data Object Actions ************************** //
-  _newCurveAct = new QAction(tr("New &Curve"), this);
+  _newCurveAct = new QAction(tr("&Curve"), this);
   connect(_newCurveAct, SIGNAL(triggered()), this, SLOT(createCurve()));
 
-  _newPSDAct = new QAction(tr("New &Spectrum"), this);
+  _newPSDAct = new QAction(tr("&Spectrum"), this);
   connect(_newPSDAct, SIGNAL(triggered()), this, SLOT(createPSD()));
 
-  _newEquationAct = new QAction(tr("New &Equation"), this);
+  _newEquationAct = new QAction(tr("&Equation"), this);
   connect(_newEquationAct, SIGNAL(triggered()), this, SLOT(createEquation()));
 
-  _newHistogramAct = new QAction(tr("New &Histogram"), this);
+  _newHistogramAct = new QAction(tr("&Histogram"), this);
   connect(_newHistogramAct, SIGNAL(triggered()), this, SLOT(createHistogram()));
 
-  _newImageAct = new QAction(tr("New &Image"), this);
+  _newImageAct = new QAction(tr("&Image"), this);
   connect(_newImageAct, SIGNAL(triggered()), this, SLOT(createImage()));
 
-  _newSpectrogramAct = new QAction(tr("New &Spectrogram"), this);
+  _newSpectrogramAct = new QAction(tr("&Spectrogram"), this);
   connect(_newSpectrogramAct, SIGNAL(triggered()), this, SLOT(createSpectogram()));
 
 }
@@ -928,38 +928,37 @@ void MainWindow::createMenus() {
   _editMenu->addAction(_undoAct);
   _editMenu->addAction(_redoAct);
 
-  _dataMenu = menuBar()->addMenu(tr("&Data"));
-  _dataMenu->addAction(_dataManagerAct);
-  _dataMenu->addSeparator();
-  _dataMenu->addAction(_newCurveAct);
-  _dataMenu->addAction(_newEquationAct);
-  _dataMenu->addAction(_newPSDAct);
-  _dataMenu->addAction(_newHistogramAct);
-  _dataMenu->addAction(_newImageAct);
-  _dataMenu->addAction(_newSpectrogramAct);
-  _dataMenu->addSeparator();
-  _dataMenu->addAction(_vectorEditorAct);
-  _dataMenu->addAction(_scalarEditorAct);
-  _dataMenu->addAction(_matrixEditorAct);
-  _dataMenu->addAction(_stringEditorAct);
-
   _viewMenu = menuBar()->addMenu(tr("&View"));
-  _viewMenu->addAction(_tiedZoomAct);
-  _viewMenu->addAction(_dataModeAct);
+  _viewMenu->addAction(_dataManagerAct);
   _viewMenu->addSeparator();
+  _viewMenu->addAction(_vectorEditorAct);
+  _viewMenu->addAction(_scalarEditorAct);
+  _viewMenu->addAction(_matrixEditorAct);
+  _viewMenu->addAction(_stringEditorAct);
 
-  _viewMenu->addAction(_layoutModeAct);
-  _viewMenu->addSeparator();
-  _viewMenu->addAction(_createLabelAct);
-  _viewMenu->addAction(_createBoxAct);
-  _viewMenu->addAction(_createCircleAct);
-  _viewMenu->addAction(_createEllipseAct);
-  _viewMenu->addAction(_createLineAct);
-  _viewMenu->addAction(_createArrowAct);
-  _viewMenu->addAction(_createPictureAct);
-  _viewMenu->addAction(_createPlotAct);
-  _viewMenu->addAction(_createSvgAct);
-  _viewMenu->addAction(_createSharedAxisBoxAct);
+  _createMenu = menuBar()->addMenu(tr("&Create"));
+  _createMenu->addAction(_newCurveAct);
+  _createMenu->addAction(_newEquationAct);
+  _createMenu->addAction(_newPSDAct);
+  _createMenu->addAction(_newHistogramAct);
+  _createMenu->addAction(_newImageAct);
+  _createMenu->addAction(_newSpectrogramAct);
+  _createMenu->addSeparator();
+  _createMenu->addAction(_createLabelAct);
+  _createMenu->addAction(_createBoxAct);
+  _createMenu->addAction(_createCircleAct);
+  _createMenu->addAction(_createEllipseAct);
+  _createMenu->addAction(_createLineAct);
+  _createMenu->addAction(_createArrowAct);
+  _createMenu->addAction(_createPictureAct);
+  _createMenu->addAction(_createPlotAct);
+  _createMenu->addAction(_createSvgAct);
+  _createMenu->addAction(_createSharedAxisBoxAct);
+
+  _modeMenu = menuBar()->addMenu(tr("&Mode"));
+  _modeMenu->addAction(_tiedZoomAct);
+  _modeMenu->addAction(_dataModeAct);
+  _modeMenu->addAction(_layoutModeAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataWizardAct);

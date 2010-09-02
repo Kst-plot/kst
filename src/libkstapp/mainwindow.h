@@ -163,8 +163,9 @@ class MainWindow : public QMainWindow
 
     QMenu *_fileMenu;
     QMenu *_editMenu;
-    QMenu *_dataMenu;
     QMenu *_viewMenu;
+    QMenu *_createMenu;
+    QMenu *_modeMenu;
     QMenu *_toolsMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
