@@ -19,6 +19,7 @@
 #include "sharedaxisboxitem.h"
 #include "application.h"
 #include "image.h"
+#include "debug.h"
 
 #include <QTime>
 #include <QMenu>
@@ -642,8 +643,17 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   setFocus(Qt::MouseFocusReason);
 
   // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-8188
-  // Kst: http://bugs.kde.org/show_bug.cgi?id=247634
-  //bool foc = hasFocus(); // foc is false in the second tab
+  if (!hasFocus()) {
+    QEvent activate(QEvent::WindowActivate);
+    View* view = parentView();
+    if (view) {
+      QApplication::sendEvent(view->scene(), &activate);
+      setFocus(Qt::MouseFocusReason);
+      if (!hasFocus()) {
+        Debug::self()->log("PlotRenderItem::hoverEnterEvent: could not set focus", Debug::Warning);
+      }
+    }
+  }
 
   updateCursor(event->pos());
 

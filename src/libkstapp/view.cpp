@@ -257,11 +257,11 @@ bool View::event(QEvent *event) {
         ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
         if (!viewItem)
           continue;
-	
+
         // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-8188
-        // also see PlotRenderItem::hoverEnterEvent
-        if (viewItem                         && viewItem->tryShortcut(e->key())) {
-        //if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
+        // also see PlotRenderItem::hoverEnterEvent, there is a workaround.
+        //if (viewItem                         && viewItem->tryShortcut(e->key())) {
+        if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
           return true;
         }
       }
