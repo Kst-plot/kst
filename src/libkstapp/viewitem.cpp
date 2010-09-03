@@ -49,6 +49,9 @@ static const int DRAWING_ZORDER = 500;
 // TODO check for memory leaks when enabled.
 //#define KST_DISBALE_QOBJECT_PARENT
 
+// disbale drag & drop
+#define KST_DISABLE_DD
+
 namespace Kst {
 
 ViewItem::ViewItem(View *parentView) :
@@ -945,6 +948,28 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
   Q_UNUSED(menu);
 }
 
+void ViewItem::startDragging(QWidget *widget) {
+  // UNDO tied zoom settings done in PlotItem::mousePressEvent
+  setTiedZoom(false, false);
+
+  QDrag *drag = new QDrag(widget);
+  MimeDataViewItem* mimeData = new MimeDataViewItem;
+  mimeData->item = this;
+  drag->setMimeData(mimeData);
+
+  QPixmap pixmap(sceneBoundingRect().size().toSize());
+  pixmap.fill(Qt::white);
+  QPainter painter(&pixmap);
+  paint(&painter); // TODO also paint curves
+  painter.end();
+  pixmap.setMask(pixmap.createHeuristicMask());
+  drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
+
+  Qt::DropActions dact = Qt::MoveAction;
+  Qt::DropAction dropAction = drag->exec(dact);
+  if (dropAction == Qt::MoveAction) {
+  }
+}
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (parentView()->viewMode() == View::Data) {
@@ -952,33 +977,16 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton)
+#ifndef KST_DISABLE_DD
+  if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton) {
     if ((event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
-
-      // UNDO tied zoom settings done in PlotItem::mousePressEvent
-      setTiedZoom(false, false);
-
-      QDrag *drag = new QDrag(event->widget());
-      MimeDataViewItem* mimeData = new MimeDataViewItem;
-      mimeData->item = this;
-      drag->setMimeData(mimeData);
-
-      QPixmap pixmap(sceneBoundingRect().size().toSize());
-      pixmap.fill(Qt::white);
-      QPainter painter(&pixmap);
-      paint(&painter); // TODO also paint curves
-      painter.end();
-      pixmap.setMask(pixmap.createHeuristicMask());
-      drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
-
-      Qt::DropActions dact = Qt::MoveAction;
-      Qt::DropAction dropAction = drag->exec(dact);
-      if (dropAction == Qt::MoveAction) {
+      startDragging(event->widget());
     } else {
-      // we are starting drag$drop
+      // we are starting drag&drop
       return;
     }
   }
+#endif
 
   if (parentView()->mouseMode() == View::Default) {
     if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {

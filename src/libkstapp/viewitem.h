@@ -283,6 +283,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
+
   private:
     GripMode _gripMode;
     GripModes _allowedGripModes;
@@ -323,6 +324,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     // use void setParentView(View *parent);
     QObject* parent() const;
     void setParent(QObject*);
+
+    void startDragging(QWidget *widget);
 
     friend class View;
     friend class Scene;
