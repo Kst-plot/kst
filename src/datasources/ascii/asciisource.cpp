@@ -31,6 +31,9 @@
 #include <stdlib.h>
 
 
+// Load faster in debug mode:
+// disable QASSERT when using [] on data
+#define KST_DONT_CHECK_INDEX_IN_DEBUG
 
 using namespace Kst;
 
@@ -258,17 +261,25 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
-    QVarLengthArray<char, MAXBUFREADLEN + 1> tmpbuf;
-    tmpbuf.resize(tmpbuf.capacity());
+    QVarLengthArray<char, MAXBUFREADLEN + 1> varBuffer;
+    varBuffer.resize(varBuffer.capacity());
     int bufstart = _rowIndex[_numFrames];
-    bufread = readFromFile(file, tmpbuf, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
+    bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
+
+#ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
+  const char* buffer = varBuffer.constData();
+  const char* bufferData = buffer;
+#else
+  QVarLengthArray<char, MAXBUFREADLEN + 1>& buffer = varBuffer;
+  const char* bufferData = buffer.data();
+#endif
 
     bool is_comment = false, has_dat = false;
-    char *comment = strpbrk(tmpbuf.data(), del);
+    char *comment = strpbrk(const_cast<char*>(bufferData), del);
     for (int i = 0; i < bufread; i++) {
-      if (comment == &(tmpbuf[i])) {
+      if (comment == &(buffer[i])) {
         is_comment = true;
-      } else if (tmpbuf[i] == '\n' || tmpbuf[i] == '\r') {
+      } else if (buffer[i] == '\n' || buffer[i] == '\r') {
         if (has_dat) {
           ++_numFrames;
           if (_numFrames >= _rowIndex.size()) {
@@ -282,10 +293,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
         }
         _rowIndex[_numFrames] = bufstart + i + 1;
         has_dat = is_comment = false;
-        if (comment && comment < &(tmpbuf[i])) {
-          comment = strpbrk(&(tmpbuf[i]), del);
+        if (comment && comment < &(buffer[i])) {
+          comment = strpbrk(const_cast<char*>(&(buffer[i])), del);
         }
-      } else if (!is_comment && !isspace((unsigned char)tmpbuf[i])) {  
+      } else if (!is_comment && !isspace((unsigned char)buffer[i])) {
         // FIXME: this breaks custom delimiters
         has_dat = true;
       }
@@ -359,12 +370,20 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (!openValidFile(file)) {
     return 0;
   }
-  bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);    
+  bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
+
+
+#ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
+  const char* buffer = _tmpBuffer.constData();
+#else
+  const QVarLengthArray<char, KST_PREALLOC>& buffer = _tmpBuffer;
+#endif
+
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     for (int i = 0; i < n; ++i, ++s) {
       // Read appropriate column and convert to double
-      v[i] = lexc.toDouble(&_tmpBuffer[0] + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
+      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
     }
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     const QString delimiters = _config._delimiters.value();
@@ -374,21 +393,21 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
       int i_col = 0;
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (columnDelimiter.contains(_tmpBuffer[ch])) {
+        if (columnDelimiter.contains(buffer[ch])) {
           incol = false;
-        } else if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
+        } else if (buffer[ch] == '\n' || buffer[ch] == '\r') {
           break;
-        } else if (delimiters.contains(_tmpBuffer[ch])) {
+        } else if (delimiters.contains(buffer[ch])) {
           break;
         } else {
           if (!incol) {
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit((unsigned char)_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
-                v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
-              } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
-                  tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {
+              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+') {
+                v[i] = lexc.toDouble(&buffer[0] + ch);
+              } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
+                  tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
                 v[i] = INF;
               }
               break;
@@ -405,23 +424,23 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (isspace((unsigned char)_tmpBuffer[ch])) {
-          if (_tmpBuffer[ch] == '\n' || _tmpBuffer[ch] == '\r') {
+        if (isspace((unsigned char)buffer[ch])) {
+          if (buffer[ch] == '\n' || buffer[ch] == '\r') {
             break;
           } else {
             incol = false;
           }
-        } else if (delimiters.contains(_tmpBuffer[ch])) {
+        } else if (delimiters.contains(buffer[ch])) {
           break;
         } else {
           if (!incol) {
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit((unsigned char)_tmpBuffer[ch]) || _tmpBuffer[ch] == '-' || _tmpBuffer[ch] == '.' || _tmpBuffer[ch] == '+') {
-                v[i] = lexc.toDouble(&_tmpBuffer[0] + ch);
-              } else if (ch + 2 < bufread && tolower(_tmpBuffer[ch]) == 'i' &&
-                  tolower(_tmpBuffer[ch + 1]) == 'n' && tolower(_tmpBuffer[ch + 2]) == 'f') {
+              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+') {
+                v[i] = lexc.toDouble(&buffer[0] + ch);
+              } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
+                  tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
                 v[i] = INF;
               }
               break;
