@@ -79,6 +79,9 @@ bool VectorSelector::selectedVectorDirty() const {
 
 
 void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
+  if (!selectedVector) {
+    return;
+  }
   // "findData can't work here" says the trolls... so we do it 'manually'.
   //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
   int i=-1,j;

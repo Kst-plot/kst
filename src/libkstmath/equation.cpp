@@ -185,7 +185,9 @@ void Equation::save(QXmlStreamWriter &s) {
     ParsedEquation = 0L;
   }
 
-  s.writeAttribute("xvector", _xInVector->Name());
+  if (_xInVector) {
+    s.writeAttribute("xvector", _xInVector->Name());
+  }
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
@@ -248,13 +250,16 @@ void Equation::setEquation(const QString& in_fn) {
 }
 
 void Equation::updateVectorLabels() {
+  if (!_xInVector) {
+    return;
+  }
   QString yl;
   QString xl;
   QRegExp sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
   yl = reparsedEquation();
   yl.replace(sn,"");
 
-  xl = vXIn()->label();
+  xl = _xInVector->label();
 
   _xOutVector->setLabel(xl);
   _yOutVector->setLabel(yl);
@@ -262,6 +267,10 @@ void Equation::updateVectorLabels() {
 }
 
 void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
+  if (!in_xv) {
+    return;
+  }
+
   VectorPtr v = _inputVectors[XINVECTOR];
   if (v == in_xv) {
     return;
@@ -308,6 +317,10 @@ qint64 Equation::minInputSerialOfLastChange() const {
 /*                                                                      */
 /************************************************************************/
 bool Equation::FillY(bool force) {
+  if (!_xInVector) {
+    return false;
+  }
+
   int v_shift=0, v_new;
   int i0=0;
   int ns;
@@ -595,7 +608,10 @@ QString Equation::_automaticDescriptiveName() const {
 }
 
 QString Equation::descriptionTip() const {
-  return i18n("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(vXIn()->descriptionTip());
+  if(!_xInVector) {
+    return QString();
+  }
+  return i18n("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(_xInVector->descriptionTip());
 }
 
 }
