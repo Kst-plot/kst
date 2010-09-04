@@ -49,8 +49,8 @@ static const int DRAWING_ZORDER = 500;
 // TODO check for memory leaks when enabled.
 //#define KST_DISBALE_QOBJECT_PARENT
 
-// disbale drag & drop
-#define KST_DISABLE_DD
+// enable drag & drop
+#define KST_ENABLE_DD
 
 namespace Kst {
 
@@ -948,26 +948,38 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
   Q_UNUSED(menu);
 }
 
-void ViewItem::startDragging(QWidget *widget) {
+void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   // UNDO tied zoom settings done in PlotItem::mousePressEvent
   setTiedZoom(false, false);
 
   QDrag *drag = new QDrag(widget);
   MimeDataViewItem* mimeData = new MimeDataViewItem;
   mimeData->item = this;
+  mimeData->hotSpot = hotspot;
   drag->setMimeData(mimeData);
 
   QPixmap pixmap(sceneBoundingRect().size().toSize());
   pixmap.fill(Qt::white);
   QPainter painter(&pixmap);
   paint(&painter); // TODO also paint curves
+  QList<QGraphicsItem*> children = childItems();
+  foreach(QGraphicsItem* child, children) {
+    ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
+    if (item) {
+      item->paint(&painter);
+    }
+  }
+
   painter.end();
   pixmap.setMask(pixmap.createHeuristicMask());
-  drag->setPixmap(pixmap.scaled(pixmap.size()/1.5));
+  drag->setPixmap(pixmap.scaled(pixmap.size()));
+  drag->setHotSpot(hotspot.toPoint());
 
+  hide();
   Qt::DropActions dact = Qt::MoveAction;
   Qt::DropAction dropAction = drag->exec(dact);
-  if (dropAction == Qt::MoveAction) {
+  if (dropAction != Qt::MoveAction) {
+    show();
   }
 }
 
@@ -977,12 +989,10 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-#ifndef KST_DISABLE_DD
+#ifdef KST_ENABLE_DD
   if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton) {
-    if ((event->pos() - dragStartPosition).toPoint().manhattanLength() > QApplication::startDragDistance()) {
-      startDragging(event->widget());
-    } else {
-      // we are starting drag&drop
+    if (parentView()->mouseMode() == View::Move) {
+      startDragging(event->widget(), dragStartPosition.toPoint());
       return;
     }
   }
@@ -1655,12 +1665,7 @@ void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   const QPointF p = event->pos();
 
-  dragStartPosition = QPointF(0, 0);
-  if (checkBox().contains(p)) {
-    if (event->buttons() & Qt::LeftButton) {
-       dragStartPosition = p;
-    }
-  }
+  dragStartPosition = p;
 
   if (isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) {
     setActiveGrip(TopLeftGrip);
@@ -1813,6 +1818,13 @@ if (change == ItemSelectedChange) {
   return QGraphicsItem::itemChange(change, value);
 }
 
+void ViewItem::moveTo(const QPointF& pos)
+{
+  setPos(parentView()->snapPoint(pos));
+  new MoveCommand(this, _originalPosition, pos);
+  maybeReparent();
+  updateRelativeSize();
+}
 
 void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   if (parentView()->mouseMode() == View::Move) {
@@ -1823,11 +1835,9 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
     _originalRect = rect();
     _originalTransform = transform();
   } else if (oldMode == View::Move && _originalPosition != pos()) {
-    setPos(parentView()->snapPoint(pos()));
-    new MoveCommand(this, _originalPosition, pos());
-
-    maybeReparent();
-    updateRelativeSize();
+#ifndef KST_ENABLE_DD
+    moveTo(pos());
+#endif
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
 

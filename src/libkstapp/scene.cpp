@@ -12,6 +12,9 @@
 #include "scene.h"
 #include "view.h"
 #include "viewitem.h"
+#include "plotitem.h"
+#include "plotrenderitem.h"
+
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -54,6 +57,49 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   }
   QGraphicsScene::contextMenuEvent(event);
 }
+
+
+void Scene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+  if (MimeDataViewItem::downcast(event->mimeData())) {
+      event->acceptProposedAction();
+  }
+}
+
+void Scene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+  if (MimeDataViewItem::downcast(event->mimeData())) {
+      event->acceptProposedAction();
+  }
+}
+
+void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+  const MimeDataViewItem* m = MimeDataViewItem::downcast(event->mimeData());
+  if (m && m->item) {
+    View* view = qobject_cast<View*>(parent());
+    if (view->viewMode() != View::Layout) {
+      view->setViewMode(View::Layout);
+    }
+    if (view != m->item->parentView()) {
+      m->item->setParentView(view);
+      PlotItem* plotItem = qobject_cast<PlotItem*>(m->item);
+      if (plotItem) {
+        QList<PlotRenderItem*> renderItems = plotItem->renderItems();
+        foreach (PlotRenderItem* renderItem, renderItems) {
+          renderItem->setParentView(view);
+        }
+      }
+      m->item->setParentViewItem(0);
+      addItem(m->item);
+    }
+    m->item->show();
+    QPointF viewpos = view->mapFromScene(event->scenePos());
+    m->item->moveTo(viewpos - m->hotSpot);
+    event->acceptProposedAction();
+  }
+}
+
 
 }
 

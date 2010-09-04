@@ -112,6 +112,7 @@ class View : public QGraphicsView
 
     void setChildMaximized(bool isMax) { _childMaximized = isMax;}
     bool childMaximized() const {return _childMaximized;}
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -124,6 +125,7 @@ class View : public QGraphicsView
     void viewChanged();
     void forceChildResize(QRectF oldRect, QRectF newRect);
     void processResize(QSize size);
+
   protected:
     bool event(QEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);

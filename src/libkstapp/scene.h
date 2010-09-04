@@ -29,6 +29,10 @@ class Scene : public QGraphicsScene
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+
+    void dragEnterEvent(QGraphicsSceneDragDropEvent*);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent*);
+    void dropEvent(QGraphicsSceneDragDropEvent*);
 };
 
 }

@@ -28,16 +28,14 @@ namespace Kst {
 class TabBar : public QTabBar
 {
 public:
-  TabBar(TabWidget* tabw);
-
+  TabBar();
   void dragEnterEvent(QDragEnterEvent* event);
   void dragMoveEvent(QDragMoveEvent* event);
   void dropEvent(QDropEvent* event);
-
-  TabWidget* tabWidget;
 };
 
-TabBar::TabBar(TabWidget* tabw) : QTabBar(), tabWidget(tabw)
+
+TabBar::TabBar()
 {
   setAcceptDrops(true);
 }
@@ -45,7 +43,8 @@ TabBar::TabBar(TabWidget* tabw) : QTabBar(), tabWidget(tabw)
 void TabBar::dragEnterEvent(QDragEnterEvent* event)
 {
   if (MimeDataViewItem::downcast(event->mimeData())) {
-      event->acceptProposedAction();
+    setCurrentIndex(tabAt(event->pos()));
+    event->acceptProposedAction();
   }
 }
 
@@ -59,33 +58,21 @@ void TabBar::dragMoveEvent(QDragMoveEvent* event)
 
 void TabBar::dropEvent(QDropEvent* event)
 {
-  const MimeDataViewItem* m = MimeDataViewItem::downcast(event->mimeData());
-  if (m && m->item) {       
-    View* view = tabWidget->currentView();
-    m->item->setParentView(view);
-    PlotItem* plotItem = qobject_cast<PlotItem*>(m->item);
-    if (plotItem) {
-      QList<PlotRenderItem*> renderItems = plotItem->renderItems();
-      foreach (PlotRenderItem* renderItem, renderItems) {
-        renderItem->setParentView(view);
-      }
-    }
-    m->item->setParentViewItem(0);
-    view->appendToLayout(CurvePlacement::Auto, m->item);
-    event->acceptProposedAction();
-  }
+  event->setDropAction(Qt::IgnoreAction);
+  event->accept();
 }
 
 
 
 TabWidget::TabWidget(QWidget *parent)
 : QTabWidget(parent) {
-  setTabBar(new TabBar(this));
+  setTabBar(new TabBar);
   tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(tabBar(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(contextMenu(const QPoint&)));
   _cnt = 0;
 #if QT_VERSION >= 0x040500
   tabBar()->setMovable(true);
+  tabBar()->setExpanding(true);
 #endif
 }
 
@@ -108,13 +95,14 @@ void TabWidget::addView(View* view) {
     parent->undoGroup()->setActiveStack(view->undoStack());
   }
 
+  connect(view, SIGNAL(viewModeChanged(View::ViewMode)), this, SIGNAL(currentViewModeChanged()));
+
   QString label = view->objectName().isEmpty() ?
                   tr("View &%1").arg(++_cnt) :
                   view->objectName();
 
   addTab(view, label);
   setCurrentWidget(view);
-  tabBar()->setAcceptDrops(true);
 }
 
 

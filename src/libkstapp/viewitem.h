@@ -85,6 +85,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setParentViewItem(ViewItem *parent);
 
     virtual void updateRelativeSize();
+
+    void moveTo(const QPointF& pos);
     
     qreal relativeHeight() const { return _parentRelativeHeight; }
     void setRelativeHeight(const qreal height) { _parentRelativeHeight = height; }
@@ -325,7 +327,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QObject* parent() const;
     void setParent(QObject*);
 
-    void startDragging(QWidget *widget);
+    void startDragging(QWidget *widget, const QPointF& hotspot);
+
 
     friend class View;
     friend class Scene;
@@ -546,6 +549,7 @@ public:
   MimeDataViewItem();
 
   ViewItem* item;
+  QPointF hotSpot;
 
   static const MimeDataViewItem* downcast(const QMimeData*);
 };
