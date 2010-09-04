@@ -99,6 +99,7 @@ class MainWindow : public QMainWindow
     void aboutToQuit();
     void about();
     void currentViewChanged();
+    void currentViewModeChanged();
 
     void createBox();
     void createEllipse();
@@ -125,6 +126,7 @@ class MainWindow : public QMainWindow
     void toggleTiedZoom();
 
     void setDataMode(bool dataMode);
+    void setXZoomMode();
 
   protected:
     void closeEvent(QCloseEvent *e);
@@ -192,7 +194,6 @@ class MainWindow : public QMainWindow
     QAction *_closeTabAct;
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
-    QAction *_dataModeAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_newTabAct;
@@ -208,6 +209,9 @@ class MainWindow : public QMainWindow
 
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
+    QAction *_dataModeAct;
+    QAction *_dataXZoomAct;
+    QAction *_dataYZoomAct;
 
     QAction *_settingsDialogAct;
 

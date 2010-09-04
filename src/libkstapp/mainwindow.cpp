@@ -87,6 +87,7 @@ MainWindow::MainWindow() :
 
   setCentralWidget(_tabWidget);
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
+  connect(_tabWidget, SIGNAL(currentViewModeChanged()), this, SLOT(currentViewModeChanged()));
   connect(PlotItemManager::self(), SIGNAL(tiedZoomRemoved()), this, SLOT(tiedZoomRemoved()));
   connect(PlotItemManager::self(), SIGNAL(allPlotsTiedZoom()), this, SLOT(allPlotsTiedZoom()));
 
@@ -138,6 +139,8 @@ void MainWindow::setDataMode(bool dataMode) {
   _dataMode = dataMode;
 }
 
+void MainWindow::setXZoomMode() {
+}
 
 void MainWindow::toggleTiedZoom() {
   PlotItemManager::self()->toggleAllTiedZoom(tabWidget()->currentView());
@@ -451,9 +454,15 @@ void MainWindow::currentViewChanged() {
   if(!_tabWidget->currentView())
     return;
   _undoGroup->setActiveStack(_tabWidget->currentView()->undoStack());
-  _layoutModeAct->setChecked(_tabWidget->currentView()->viewMode() == View::Layout);
+  currentViewModeChanged();
 }
 
+
+void MainWindow::currentViewModeChanged() {
+  if(!_tabWidget->currentView())
+    return;
+  _layoutModeAct->setChecked(_tabWidget->currentView()->viewMode() == View::Layout);
+}
 
 void MainWindow::aboutToQuit() {
   writeSettings();
@@ -858,6 +867,12 @@ void MainWindow::createActions() {
   _dataModeAct->setCheckable(true);
   connect(_dataModeAct, SIGNAL(toggled(bool)), this, SLOT(setDataMode(bool)));
 
+  _dataXZoomAct = new QAction(tr("&X only Zoom"), this);
+  _dataXZoomAct->setStatusTip(tr("Zoom only in X direction"));
+  //_dataModeAct->setIcon(QPixmap(":kst_datamode.png"));
+  //_dataModeAct->setCheckable(true);
+  connect(_dataXZoomAct, SIGNAL(triggered()), this, SLOT(setXZoomMode()));
+
   _newTabAct = new QAction(tr("&New tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
@@ -926,16 +941,17 @@ void MainWindow::createMenus() {
   _createMenu->addAction(_newImageAct);
   _createMenu->addAction(_newSpectrogramAct);
   _createMenu->addSeparator();
-  _createMenu->addAction(_createLabelAct);
-  _createMenu->addAction(_createBoxAct);
-  _createMenu->addAction(_createCircleAct);
-  _createMenu->addAction(_createEllipseAct);
-  _createMenu->addAction(_createLineAct);
-  _createMenu->addAction(_createArrowAct);
-  _createMenu->addAction(_createPictureAct);
-  _createMenu->addAction(_createPlotAct);
-  _createMenu->addAction(_createSvgAct);
-  _createMenu->addAction(_createSharedAxisBoxAct);
+  QMenu* annotations = _createMenu->addMenu("Annotation");
+  annotations->addAction(_createLabelAct);
+  annotations->addAction(_createBoxAct);
+  annotations->addAction(_createCircleAct);
+  annotations->addAction(_createEllipseAct);
+  annotations->addAction(_createLineAct);
+  annotations->addAction(_createArrowAct);
+  annotations->addAction(_createPictureAct);
+  annotations->addAction(_createPlotAct);
+  annotations->addAction(_createSvgAct);
+  annotations->addAction(_createSharedAxisBoxAct);
 
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
   _modeMenu->addAction(_tiedZoomAct);

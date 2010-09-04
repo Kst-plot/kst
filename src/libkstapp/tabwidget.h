@@ -33,13 +33,16 @@ class TabWidget : public QTabWidget
     void deleteView(View* view);
     void clear();
 
+  Q_SIGNALS:
+        void currentViewModeChanged();
+
   public Q_SLOTS:
     View *createView();
     void renameCurrentView();
     void closeCurrentView();
     void setCurrentViewName(QString name);
 
-    private Q_SLOTS:
+  private Q_SLOTS:
     void contextMenu(const QPoint&);
 
   private:
