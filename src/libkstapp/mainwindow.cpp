@@ -253,6 +253,7 @@ void MainWindow::open() {
   }
   settings.setValue(lastKey, fn);
   QDir::setCurrent(fn.left(fn.lastIndexOf("/")) + "/");
+  QDir::setCurrent(fn.left(fn.lastIndexOf("/")));
   openFile(fn);
   setWindowTitle("Kst - " + fn);
 }
@@ -719,7 +720,7 @@ void MainWindow::createActions() {
   // ****************************************************************************** //
 
   // ********************* Object Dialog Actions ********************************** //
-  _dataManagerAct = new QAction(tr("Data &Manager"), this);
+  _dataManagerAct = new QAction(tr("&Data Manager"), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
   _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
   _dataManagerAct->setShortcut(QString("d"));
@@ -786,9 +787,9 @@ void MainWindow::createActions() {
   _openAct->setShortcut(tr("Ctrl+O"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-  _newAct = new QAction(tr("&Clear Session"), this);
-  _newAct->setStatusTip(tr("Clear current session"));
-  connect(_newAct, SIGNAL(triggered()), this, SLOT(newDoc()));
+  _clearSession = new QAction(tr("C&lear Session"), this);
+  _clearSession->setStatusTip(tr("Clear current session"));
+  connect(_clearSession, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _printAct = new QAction(tr("&Print..."), this);
   _printAct->setStatusTip(tr("Print the current view"));
@@ -805,7 +806,7 @@ void MainWindow::createActions() {
   // ****************************************************************************** //
 
   // *********************** -> Help actions ************************************** //
-  _debugDialogAct = new QAction(tr("&Debug Dialog..."), this);
+  _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
   connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
 
@@ -820,29 +821,29 @@ void MainWindow::createActions() {
   // ****************************************************************************** //
 
   // ************************ Data Range 1 click Actions ************************** //
-  _readFromEndAct = new QAction(tr("Read From End..."), this);
+  _readFromEndAct = new QAction(tr("Read From End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
   _readFromEndAct->setIcon(QPixmap(":kst_readFromEnd.png"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
-  _pauseAct = new QAction(tr("Pause..."), this);
+  _pauseAct = new QAction(tr("Pause"), this);
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
   _pauseAct->setIcon(QPixmap(":kst_pause.png"));
   _pauseAct->setCheckable(true);
   _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
-  _backAct = new QAction(tr("Back One Screen..."), this);
+  _backAct = new QAction(tr("Back One Screen"), this);
   _backAct->setStatusTip(tr("Back one screen"));
   _backAct->setIcon(QPixmap(":kst_back.png"));
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
-  _forwardAct = new QAction(tr("Forward One Screen..."), this);
+  _forwardAct = new QAction(tr("Forward One Screen"), this);
   _forwardAct->setStatusTip(tr("Forward one screen"));
   _forwardAct->setIcon(QPixmap(":kst_forward.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
-  _reloadAct = new QAction(tr("Reload all data sources..."), this);
+  _reloadAct = new QAction(tr("Reload all Data Sources"), this);
   _reloadAct->setStatusTip(tr("Reload all data sources"));
   _reloadAct->setIcon(QPixmap(":kst_reload.png"));
   connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
@@ -873,12 +874,12 @@ void MainWindow::createActions() {
   //_dataModeAct->setCheckable(true);
   connect(_dataXZoomAct, SIGNAL(triggered()), this, SLOT(setXZoomMode()));
 
-  _newTabAct = new QAction(tr("&New tab"), this);
+  _newTabAct = new QAction(tr("&New Tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
   connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
 
-  _closeTabAct = new QAction(tr("&Close tab"), this);
+  _closeTabAct = new QAction(tr("&Close Tab"), this);
   _closeTabAct->setStatusTip(tr("Close the current tab"));
   _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
@@ -901,7 +902,7 @@ void MainWindow::createActions() {
   _newImageAct = new QAction(tr("&Image"), this);
   connect(_newImageAct, SIGNAL(triggered()), this, SLOT(createImage()));
 
-  _newSpectrogramAct = new QAction(tr("&Spectrogram"), this);
+  _newSpectrogramAct = new QAction(tr("Spectro&gram"), this);
   connect(_newSpectrogramAct, SIGNAL(triggered()), this, SLOT(createSpectogram()));
 
 }
@@ -909,22 +910,28 @@ void MainWindow::createActions() {
 
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
-  _fileMenu->addAction(_newAct);
-  _fileMenu->addAction(_newTabAct);
+  // File operations
   _fileMenu->addAction(_openAct);
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addSeparator();
+  // Reload, isolate it a bit frmo the other entries to avoid inadvertent triggering
+  _fileMenu->addAction(_reloadAct);
+  _fileMenu->addSeparator();
+  // Print/export
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);
   _fileMenu->addSeparator();
+  // Close/exit 
   _fileMenu->addAction(_closeTabAct);
+  _fileMenu->addAction(_clearSession);
   _fileMenu->addAction(_exitAct);
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
   _editMenu->addAction(_undoAct);
   _editMenu->addAction(_redoAct);
-
+  // Cut/Copy/Paste will come here
+  
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_dataManagerAct);
   _viewMenu->addSeparator();
@@ -933,7 +940,21 @@ void MainWindow::createMenus() {
   _viewMenu->addAction(_matrixEditorAct);
   _viewMenu->addAction(_stringEditorAct);
 
+  _rangeMenu = menuBar()->addMenu(tr("&Range"));
+  _rangeMenu->addAction(_backAct);
+  _rangeMenu->addAction(_forwardAct);
+  _rangeMenu->addSeparator();
+  _rangeMenu->addAction(_readFromEndAct);
+  _rangeMenu->addAction(_pauseAct);
+  _rangeMenu->addSeparator();
+  _rangeMenu->addAction(_changeDataSampleDialogAct);
+
   _createMenu = menuBar()->addMenu(tr("&Create"));
+  // Containers
+  _createMenu->addAction(_newTabAct);
+  _createMenu->addAction(_createPlotAct);
+  _createMenu->addSeparator();
+  // Data objects
   _createMenu->addAction(_newCurveAct);
   _createMenu->addAction(_newEquationAct);
   _createMenu->addAction(_newPSDAct);
@@ -941,7 +962,8 @@ void MainWindow::createMenus() {
   _createMenu->addAction(_newImageAct);
   _createMenu->addAction(_newSpectrogramAct);
   _createMenu->addSeparator();
-  QMenu* annotations = _createMenu->addMenu("Annotation");
+  // Annotation objects
+  QMenu* annotations = _createMenu->addMenu("&Annotation");
   annotations->addAction(_createLabelAct);
   annotations->addAction(_createBoxAct);
   annotations->addAction(_createCircleAct);
@@ -949,19 +971,23 @@ void MainWindow::createMenus() {
   annotations->addAction(_createLineAct);
   annotations->addAction(_createArrowAct);
   annotations->addAction(_createPictureAct);
-  annotations->addAction(_createPlotAct);
   annotations->addAction(_createSvgAct);
-  annotations->addAction(_createSharedAxisBoxAct);
 
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
+  // Zoom/axes stuff
   _modeMenu->addAction(_tiedZoomAct);
+  // Zoom X-only or Y-only will come here
+  // modeMenu->addAction(_dataXZoomAct);
+  // modeMenu->addAction(_dataYZoomAct);
+  _modeMenu->addAction(_createSharedAxisBoxAct);
+  _modeMenu->addSeparator();
+  // Interaction options: data mode on/off, layout mode toggle
   _modeMenu->addAction(_dataModeAct);
   _modeMenu->addAction(_layoutModeAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataWizardAct);
   _toolsMenu->addAction(_changeFileDialogAct);
-  _toolsMenu->addAction(_changeDataSampleDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
 

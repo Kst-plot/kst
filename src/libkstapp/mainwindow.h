@@ -167,6 +167,7 @@ class MainWindow : public QMainWindow
     QMenu *_viewMenu;
     QMenu *_createMenu;
     QMenu *_modeMenu;
+    QMenu *_rangeMenu;
     QMenu *_toolsMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
@@ -197,7 +198,7 @@ class MainWindow : public QMainWindow
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_newTabAct;
-    QAction *_newAct;
+    QAction *_clearSession;
     QAction *_openAct;
     QAction *_printAct;
     QAction *_saveAct;
