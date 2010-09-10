@@ -36,7 +36,7 @@ SessionModel::~SessionModel() {
 
 int SessionModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return 5;
+  return 4;
 }
 
 
@@ -182,15 +182,9 @@ QVariant SessionModel::primitiveData(PrimitivePtr p, const QModelIndex& index) c
       rc = p->typeString();
       break;
     case 2:
-      // this is very fragile and depends on how the smart pointers are being carried around.
-      // we should consider a different approach (?).  Keep it now for debugging...
-      // It doesn't know, for instance, if a plot has been 'deleted'.
-      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
-      break;
-    case 3:
       rc = p->sizeString();
       break;
-    case 4:
+    case 3:
       rc = p->propertyString();
       break;
     default:
@@ -218,16 +212,11 @@ QVariant SessionModel::dataObjectData(DataObjectPtr p, const QModelIndex& index)
       p->unlock();
       break;
     case 2:
-      // this is very fragile and depends on how the smart pointers are being carried around.
-      // we should consider a different approach or delete(?).   Keep it now for debugging...
-      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
-      break;
-    case 3:
       p->readLock();
       rc = p->sampleCount();
       p->unlock();
       break;
-    case 4:
+    case 3:
       p->readLock();
       rc = p->propertyString();
       p->unlock();
@@ -257,16 +246,11 @@ QVariant SessionModel::relationData(RelationPtr p, const QModelIndex& index) con
       p->unlock();
       break;
     case 2:
-      // this is very fragile and depends on how the smart pointers are being carried around.
-      // we should consider a different approach or delete (?).  Keep it now for debugging...
-      rc = QString::number(p.count()-4); //4: object store, session model, cast, local
-      break;
-    case 3:
       p->readLock();
       rc = p->sampleCount();
       p->unlock();
       break;
-    case 4:
+    case 3:
       p->readLock();
       rc = p->propertyString();
       p->unlock();
@@ -340,10 +324,8 @@ QVariant SessionModel::headerData(int section, Qt::Orientation orientation, int 
     case 1:
       return tr("Type");
     case 2:
-      return tr("Used");
-    case 3:
       return tr("Samples");
-    case 4:
+    case 3:
       return tr("Properties");
     default:
       break;

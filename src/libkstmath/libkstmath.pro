@@ -73,6 +73,7 @@ HEADERS += \
     basicpluginfactory.h \
     builtinobjects.h \
     builtinrelations.h \
+    builtinpalettes.h \
     colorsequence.h \
     csd.h \
     csdfactory.h \

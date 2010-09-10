@@ -2,8 +2,8 @@
               objectstore.h: store of Objects
                              -------------------
     begin                : November 22, 2006
-    copyright            : (C) 2006 The University of Toronto
-    email                :
+    copyright            : (C) 2006-2010 The University of Toronto
+    email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
 /***************************************************************************

@@ -3,7 +3,7 @@
                              -------------------
     begin                : November 22, 2006
     copyright            : (C) 2006 The University of Toronto
-    email                :
+    email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
 /***************************************************************************
@@ -43,7 +43,6 @@ ObjectStore::~ObjectStore()
 
 bool ObjectStore::removeObject(Object *o) {
   if (!this) {
-    qDebug() << "tried to remove object in store, but there is no store?\n";
     return false;
   }
 

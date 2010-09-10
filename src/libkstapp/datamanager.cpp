@@ -565,6 +565,7 @@ void DataManager::purge() {
   do {
     setUsedFlags();
   } while (_doc->objectStore()->deleteUnsetUsedFlags());
+  _doc->session()->triggerReset();
   _session->reset();
 }
 

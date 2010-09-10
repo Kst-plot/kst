@@ -29,6 +29,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "updatemanager.h"
+#include "sessionmodel.h"
 
 namespace Kst {
 
@@ -146,13 +147,19 @@ void DataDialog::addDataTab(DataTab *tab) {
 
 void DataDialog::slotApply() {
   Kst::ObjectPtr ptr;
-  if (!dataObject())
+  bool do_session_reset = false;
+  if (!dataObject()) {
     ptr = createNewDataObject();
-  else
+    do_session_reset = true;
+  } else {
     ptr = editExistingDataObject();
+  }
   setDataObject(ptr);
   UpdateManager::self()->doUpdates();
   kstApp->mainWindow()->document()->setChanged(true);
+  if (do_session_reset) {
+    kstApp->mainWindow()->document()->session()->triggerReset();
+  }
   clearModified();
 }
 

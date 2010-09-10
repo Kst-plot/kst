@@ -15,30 +15,19 @@
 #include <QVector>
 #include <qapplication.h>
 #include <math_kst.h>
+#include "builtinpalettes.h"
 
 namespace Kst {
 
-
-// Default palette.
-static const char *const KstColors[] = { "red",
-                                      "blue",
-                                      "green",
-                                      "black",
-                                      "magenta",
-                                      "steelblue",
-                                      "#501010",
-                                      "#105010"
-                                      };
-static const int KstColorsCount = sizeof(KstColors) / sizeof(char*);
-static const QString KstColorsName = "Kst Colors";
-
-static const int KstGrayscaleCount = 255;
-static const QString KstGrayscaleName = "Kst Grayscale";
 
 QStringList Palette::getPaletteList() { 
   QStringList paletteList;
 
   paletteList.append(KstGrayscaleName);
+  paletteList.append(RedTempName);
+  paletteList.append(SpectrumName);
+  paletteList.append(EosAName);
+  paletteList.append(EosBName);
   paletteList.append(KstColorsName);
 
   //TODO: support loading palettes from disk.
@@ -47,7 +36,7 @@ QStringList Palette::getPaletteList() {
 }
 
 Palette::Palette(): _colors(0), _count(0) {
-  changePaletteName(KstColorsName);
+  changePaletteName(DefaultPalette);
 }
 
 
@@ -81,6 +70,30 @@ void Palette::changePaletteName(const QString &paletteName) {
       _rgb[i] = _colors[i].rgb();
     }
     _count = KstColorsCount;
+  } else if (_paletteName == RedTempName) {
+    for (int i = 0; i < RedTempCount; i++) {
+      _colors[i] = QColor(RedTemp[i][0], RedTemp[i][1], RedTemp[i][2]);
+      _rgb[i] = _colors[i].rgb();
+    }
+    _count = RedTempCount;
+  } else if (_paletteName == SpectrumName) {
+    for (int i = 0; i < SpectrumCount; i++) {
+      _colors[i] = QColor(Spectrum[i][0], Spectrum[i][1], Spectrum[i][2]);
+      _rgb[i] = _colors[i].rgb();
+    }
+    _count = SpectrumCount;
+  } else if (_paletteName == EosAName) {
+    for (int i = 0; i < EosACount; i++) {
+      _colors[i] = QColor(EosA[i][0], EosA[i][1], EosA[i][2]);
+      _rgb[i] = _colors[i].rgb();
+    }
+    _count = EosACount;
+  } else if (_paletteName == EosBName) {
+    for (int i = 0; i < EosBCount; i++) {
+      _colors[i] = QColor(EosB[i][0], EosB[i][1], EosB[i][2]);
+      _rgb[i] = _colors[i].rgb();
+    }
+    _count = EosBCount;  
   } else {
     for (int i = 0; i < KstGrayscaleCount; i++) {
       _colors[i] = QColor(i, i, i);

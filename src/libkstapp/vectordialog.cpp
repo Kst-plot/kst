@@ -216,7 +216,7 @@ void VectorTab::hideGeneratedOptions() {
   _dataVectorGroup->setFlat(true);
   int top_margin;
   _dataVectorGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
-  _dataVectorGroup->layout()->setContentsMargins(0,top_margin,0,0); 
+  _dataVectorGroup->layout()->setContentsMargins(0,top_margin,0,0);
 }
 
 
@@ -228,7 +228,7 @@ void VectorTab::hideDataOptions() {
   _generatedVectorGroup->setFlat(true);
   int top_margin;
   _generatedVectorGroup->layout()->getContentsMargins(NULL,&top_margin,NULL,NULL);
-  _generatedVectorGroup->layout()->setContentsMargins(0,top_margin,0,0); 
+  _generatedVectorGroup->layout()->setContentsMargins(0,top_margin,0,0);
 }
 
 

@@ -23,6 +23,7 @@ typedef QHash<int, QColor> PaletteData;
 
 const unsigned int maxColorTableSize = 2048;
 
+const QString DefaultPalette("Kst Grayscale");
 class KSTMATH_EXPORT Palette 
 {
   public:
