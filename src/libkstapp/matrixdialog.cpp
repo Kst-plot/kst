@@ -33,7 +33,7 @@
 namespace Kst {
 
 MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataMatrix), _store(store), _requestID(0) {
+  : DataTab(parent), _mode(DataMatrix), _store(store), _initField(QString()), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Matrix"));
@@ -164,6 +164,7 @@ QString MatrixTab::field() const {
 
 
 void MatrixTab::setField(const QString &field) {
+  _initField = field; // for delayed index setting
   _field->setCurrentIndex(_field->findText(field));
 }
 
@@ -501,6 +502,9 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
   _dataSource->readLock();
 
   _field->addItems(_dataSource->matrix().list());
+  if (!_initField.isEmpty()) {
+    setField(_initField);
+  }
   _field->setEditable(!_dataSource->matrix().isListComplete() && !_dataSource->matrix().list().empty());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 

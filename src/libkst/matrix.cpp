@@ -52,6 +52,7 @@ Matrix::Matrix(ObjectStore *store)
 
 Matrix::~Matrix() {
   if (_z) {
+    _vectors["z"]->setV(0L, 0);
     free(_z);
     _z = 0L;
   }
@@ -66,9 +67,13 @@ void Matrix::_initializeShortName() {
 
 
 void Matrix::deleteDependents() {
-  for (QHash<QString, ScalarPtr>::Iterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     _store->removeObject(it.value());
   }
+  for (QHash<QString, VectorPtr>::Iterator it = _vectors.begin(); it != _vectors.end(); ++it) {
+    _store->removeObject(it.value());
+  }
+  Object::deleteDependents();
 }
 
 
@@ -141,12 +146,12 @@ bool Matrix::setValueRaw(int x, int y, double z) {
 }
 
 double Matrix::minValue() const {
-  return _statScalars["min"]->value();
+  return _scalars["min"]->value();
 }
 
 
 double Matrix::maxValue() const {
-  return _statScalars["max"]->value();
+  return _scalars["max"]->value();
 }
 
 double Matrix::minValueNoSpike() const {
@@ -262,11 +267,11 @@ void Matrix::calcNoSpikeRange(double per) {
 }
 
 double Matrix::meanValue() const {
-  return _statScalars["mean"]->value();
+  return _scalars["mean"]->value();
 }
 
 double Matrix::minValuePositive() const {
-  return _statScalars["minpos"]->value();
+  return _scalars["minpos"]->value();
 }
 
 int Matrix::numNew() const {
@@ -302,7 +307,7 @@ void Matrix::blank() {
 
 int Matrix::getUsage() const {
   int scalarUsage = 0;
-  for (QHash<QString, ScalarPtr>::ConstIterator it = _statScalars.begin(); it != _statScalars.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     scalarUsage += it.value()->getUsage() - 1;
   }
   return Object::getUsage() + scalarUsage;
@@ -347,11 +352,11 @@ void Matrix::internalUpdate() {
         }
       }
     }
-    _statScalars["sum"]->setValue(sum);
-    _statScalars["sumsquared"]->setValue(sumsquared);
-    _statScalars["max"]->setValue(max);
-    _statScalars["min"]->setValue(min);
-    _statScalars["minpos"]->setValue(minpos);
+    _scalars["sum"]->setValue(sum);
+    _scalars["sumsquared"]->setValue(sumsquared);
+    _scalars["max"]->setValue(max);
+    _scalars["min"]->setValue(min);
+    _scalars["minpos"]->setValue(minpos);
 
     updateScalars();
   }
@@ -359,7 +364,7 @@ void Matrix::internalUpdate() {
 
 
 const QHash<QString, ScalarPtr>& Matrix::scalars() const {
-  return _statScalars;
+  return _scalars;
 }
 
 
@@ -401,57 +406,62 @@ void Matrix::setEditable(bool editable) {
 void Matrix::createScalars(ObjectStore *store) {
   Q_ASSERT(store);
   ScalarPtr sp;
+  VectorPtr vp;
 
-  _statScalars.insert("max", sp=store->createObject<Scalar>());
+  _scalars.insert("max", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Max");
-  sp->_KShared_ref();
-  _statScalars.insert("min", sp=store->createObject<Scalar>());
+
+  _scalars.insert("min", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Min");
-  sp->_KShared_ref();
-  _statScalars.insert("mean", sp=store->createObject<Scalar>());
+
+  _scalars.insert("mean", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Mean");
-  sp->_KShared_ref();
-  _statScalars.insert("sigma", sp=store->createObject<Scalar>());
+
+  _scalars.insert("sigma", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Sigma");
-  sp->_KShared_ref();
-  _statScalars.insert("rms", sp=store->createObject<Scalar>());
+
+  _scalars.insert("rms", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Rms");
-  sp->_KShared_ref();
-  _statScalars.insert("ns", sp=store->createObject<Scalar>());
+
+  _scalars.insert("ns", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("NS");
-  sp->_KShared_ref();
-  _statScalars.insert("sum", sp=store->createObject<Scalar>());
+
+  _scalars.insert("sum", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("Sum");
-  sp->_KShared_ref();
-  _statScalars.insert("sumsquared", sp=store->createObject<Scalar>());
+
+  _scalars.insert("sumsquared", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("SumSquared");
-  sp->_KShared_ref();
-  _statScalars.insert("minpos", sp=store->createObject<Scalar>());
+
+  _scalars.insert("minpos", sp=store->createObject<Scalar>());
   sp->setProvider(this);
   sp->setSlaveName("MinPos");
-  sp->_KShared_ref();
+
+  _vectors.insert("z", vp = store->createObject<Vector>());
+  vp->setProvider(this);
+  vp->setSlaveName("Z");
+
 }
 
 
 void Matrix::updateScalars() {
-  _statScalars["ns"]->setValue(_NS);
+  _scalars["ns"]->setValue(_NS);
   if (_NRealS >= 2) {
-    _statScalars["mean"]->setValue(_statScalars["sum"]->value()/double(_NRealS));
-    _statScalars["sigma"]->setValue( sqrt(
-        (_statScalars["sumsquared"]->value() - _statScalars["sum"]->value()*_statScalars["sum"]->value()/double(_NRealS))/ double(_NRealS-1) ) );
-    _statScalars["rms"]->setValue(sqrt(_statScalars["sumsquared"]->value()/double(_NRealS)));
+    _scalars["mean"]->setValue(_scalars["sum"]->value()/double(_NRealS));
+    _scalars["sigma"]->setValue( sqrt(
+        (_scalars["sumsquared"]->value() - _scalars["sum"]->value()*_scalars["sum"]->value()/double(_NRealS))/ double(_NRealS-1) ) );
+    _scalars["rms"]->setValue(sqrt(_scalars["sumsquared"]->value()/double(_NRealS)));
   } else {
-    _statScalars["sigma"]->setValue(_statScalars["max"]->value() - _statScalars["min"]->value());
-    _statScalars["rms"]->setValue(sqrt(_statScalars["sumsquared"]->value()));
-    _statScalars["mean"]->setValue(0);
+    _scalars["sigma"]->setValue(_scalars["max"]->value() - _scalars["min"]->value());
+    _scalars["rms"]->setValue(sqrt(_scalars["sumsquared"]->value()));
+    _scalars["mean"]->setValue(0);
   }
 }
 
@@ -460,6 +470,7 @@ bool Matrix::resizeZ(int sz, bool reinit) {
 //   qDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
     _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    _vectors["z"]->setV(_z, sz);
     if (!_z) {
       return false;
     }
@@ -517,6 +528,7 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
   if (sz > _zSize) {
     // array is getting bigger, so resize before moving
     _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    _vectors["z"]->setV(_z, sz);
     if (!_z) {
       qCritical() << "Matrix resize failed";
       return false;
@@ -541,6 +553,7 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
   if (sz < _zSize) {
     // array is getting smaller, so resize after moving
     _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
+    _vectors["z"]->setV(_z, sz);
     if (!_z) {
       qCritical() << "Matrix resize failed";
       return false;

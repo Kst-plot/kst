@@ -56,6 +56,19 @@ int Object::getUsage() const {
 
 
 void Object::deleteDependents() {
+  QList<ObjectPtr> Objects = _store->objectList();
+  foreach (ObjectPtr object, Objects) {
+    if (object->uses(this)) {
+      _store->removeObject(object);
+    }
+  }
+}
+
+
+bool Object::uses(ObjectPtr p) const {
+   Q_UNUSED(p)
+
+   return false;
 }
 
 

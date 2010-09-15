@@ -74,6 +74,8 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     virtual bool used() const {return _used;}
     void setUsed(bool used_in) {_used = used_in;}
 
+    virtual bool uses(ObjectPtr p) const;
+
   protected:
     Object();
     virtual ~Object();

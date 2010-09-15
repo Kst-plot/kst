@@ -212,7 +212,9 @@ class KSTCORE_EXPORT Vector : public Primitive
     QString _descriptiveLabel;
 
     friend class DataObject;
+    friend class Matrix;
     virtual double* realloced(double *memptr, int newSize);
+    virtual void setV(double *memptr, int newSize);
 };
 
 

@@ -24,6 +24,7 @@
 #include <QHash>
 
 #include "scalar.h"
+#include "vector.h"
 #include "primitive.h"
 
 class QXmlStreamWriter;
@@ -161,7 +162,10 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     bool _invertYHint;
 
     int _numNew; // number of new samples
-    QHash<QString, ScalarPtr> _statScalars; // statistics scalars
+
+    ScalarMap _scalars;
+    VectorMap _vectors;
+
     bool _editable : 1;
     bool _saveable : 1;
 

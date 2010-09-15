@@ -153,6 +153,7 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     MatrixMode _mode;
     DataSourcePtr _dataSource;
     ObjectStore *_store;
+    QString _initField;
     int _requestID;
 };
 

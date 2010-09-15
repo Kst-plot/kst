@@ -87,12 +87,14 @@ Vector::~Vector() {
 
 
 void Vector::deleteDependents() {
+
   for (QHash<QString, ScalarPtr>::Iterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     _store->removeObject(it.value());
   }
   for (QHash<QString, StringPtr>::Iterator it = _strings.begin(); it != _strings.end(); ++it) {
     _store->removeObject(it.value());
   }
+  Object::deleteDependents();
 }
 
 
@@ -336,6 +338,13 @@ double* Vector::realloced(double *memptr, int newSize) {
   _size = newSize;
   updateScalars();
   return old;
+}
+
+
+void Vector::setV(double *memptr, int newSize) {
+  _v = memptr;
+  NumNew = newSize;
+  _size = newSize;
 }
 
 

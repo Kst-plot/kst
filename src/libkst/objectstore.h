@@ -78,6 +78,8 @@ class KSTCORE_EXPORT ObjectStore
       * used flags are set properly.  It is not done here! */
     bool deleteUnsetUsedFlags();
 
+//    void deleteDependentObjects(const Primitive &p);
+
   private:
     Q_DISABLE_COPY(ObjectStore)
 
