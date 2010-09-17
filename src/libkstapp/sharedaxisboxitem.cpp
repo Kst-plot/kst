@@ -246,12 +246,14 @@ void SharedAxisBoxItem::lockItems() {
 
 void SharedAxisBoxItem::shareXAxis() {
   _shareX = !_shareX;
+  _sharedIsDirty = true;
   updateShare();
 }
 
 
 void SharedAxisBoxItem::shareYAxis() {
   _shareY = !_shareY;
+  _sharedIsDirty = true;
   updateShare();
 }
 

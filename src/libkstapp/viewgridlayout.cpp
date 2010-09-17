@@ -376,6 +376,7 @@ void ViewGridLayout::apply() {
 
 void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
 
+
   SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(parentItem());
   if (!shareBox) {
     return;
@@ -711,7 +712,7 @@ void ViewGridLayout::calculateSharing() {
   }
 }
 
-
+// static function
 void ViewGridLayout::updateProjections(ViewItem *item, bool forceXShare, bool forceYShare) {
   bool xMatch = true;
   bool yMatch = true;

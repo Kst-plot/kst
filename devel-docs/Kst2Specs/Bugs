@@ -28,10 +28,4 @@ scalar will indicate a value strikingly similar to the "Min" (or perhaps
 "First") value on the plot rather than the Last value.
 
 ** This appears to be either a BLASTpol defile bug, or a filesystem issue.  **
------------------------
-
-Create a bunch of plots with same X range but different Y range.
-Put them in a shared axis box.  X is shared as expected.
-rmb-> select share Y axis.  The Y zooms are now tied as expected, but the Y 
-axis are not shared.  They should be.
 
