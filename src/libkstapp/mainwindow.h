@@ -118,6 +118,7 @@ class MainWindow : public QMainWindow
     void createHistogram();
     void createImage();
     void createSpectogram();
+    void createEventMonitor();
 
     void performHeavyStartupActions();
     void cleanup();
@@ -172,9 +173,12 @@ class MainWindow : public QMainWindow
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
 
-    QToolBar *_dataToolBar;
-    QToolBar *_zoomToolBar;
-    QToolBar *_layoutToolBar;
+    QToolBar *_fileToolBar;
+    QToolBar *_editToolBar;
+    QToolBar *_rangeToolBar;
+    QToolBar *_modeToolBar;
+    QToolBar *_toolsToolBar;
+    QToolBar *_annotationToolBar;
 
     QAction *_undoAct;
     QAction *_redoAct;
@@ -235,6 +239,7 @@ class MainWindow : public QMainWindow
     QAction *_newHistogramAct;
     QAction *_newImageAct;
     QAction *_newSpectrogramAct;
+    QAction *_newEventMonitorAct;
 
 };
 
