@@ -238,19 +238,16 @@ void EventMonitorEntry::logImmediately(bool sendEvent) {
       } else if (!makeRange && idx == idxOld + 1) {
         makeRange = true;
       } else if (makeRange && idx != idxOld + 1) {
-        rangeString = rangeString + " - ";
-        rangeString += idxOld + ", " + idx;
+        rangeString = rangeString + QString(" - %1, %2").arg(idxOld).arg(idx);
         makeRange = false;
       } else if (idx != idxOld + 1) {
-        rangeString = rangeString + ", ";
-        rangeString += idx;
+        rangeString = rangeString + QString(", %1").arg(idx);
       }
       idxOld = idx;
     }
 
     if (makeRange) {
-        rangeString = rangeString + ", ";
-        rangeString += idx;
+        rangeString = rangeString + QString(", %1").arg(idx);
     }
 
     if (_description.isEmpty()) {
