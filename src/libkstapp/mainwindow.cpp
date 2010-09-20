@@ -660,6 +660,7 @@ void MainWindow::createActions() {
 
   _saveAsAct = new QAction(tr("Save &as..."), this);
   _saveAsAct->setStatusTip(tr("Save the current session"));
+  _saveAsAct->setIcon(QPixmap(":document-save-as.png"));
   connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
   _reloadAct = new QAction(tr("Reload all Data Sources"), this);
@@ -674,15 +675,17 @@ void MainWindow::createActions() {
 
   _exportGraphicsAct = new QAction(tr("&Export..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
+  _exportGraphicsAct->setIcon(QPixmap(":document-export.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
   _closeTabAct = new QAction(tr("&Close Tab"), this);
   _closeTabAct->setStatusTip(tr("Close the current tab"));
-  _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
+  _closeTabAct->setIcon(QPixmap(":tab-close.png"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
   _clearSession = new QAction(tr("C&lear Session"), this);
   _clearSession->setStatusTip(tr("Clear current session"));
+  _clearSession->setIcon(QPixmap(":draw-eraser.png"));
   connect(_clearSession, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _exitAct = new QAction(tr("E&xit"), this);
@@ -702,7 +705,7 @@ void MainWindow::createActions() {
   // ********************* View Actions ********************************** //
   _dataManagerAct = new QAction(tr("&Data Manager"), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
-  _dataManagerAct->setIcon(QPixmap(":kst_datamanager.png"));
+  _dataManagerAct->setIcon(QPixmap(":resource-group.png"));
   _dataManagerAct->setShortcut(QString("d"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
@@ -753,12 +756,12 @@ void MainWindow::createActions() {
   // ************************ Create Actions ************************** //
   _newTabAct = new QAction(tr("&New Tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
-  _newTabAct->setIcon(QPixmap(":kst_newtab.png"));
+  _newTabAct->setIcon(QPixmap(":tab-new.png"));
   connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
 
   _createPlotAct = new QAction(tr("&Plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
-  _createPlotAct->setIcon(QPixmap(":kst_newplot.png"));
+  _createPlotAct->setIcon(QPixmap(":office-chart-area-stacked.png"));
   _createPlotAct->setShortcut(QString("F10"));
   _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
@@ -829,7 +832,7 @@ void MainWindow::createActions() {
 
   _createPictureAct = new QAction(tr("&Picture"), this);
   _createPictureAct->setStatusTip(tr("Create a picture for the current view"));
-  _createPictureAct->setIcon(QPixmap(":kst_gfx_picture.png"));
+  _createPictureAct->setIcon(QPixmap(":image-x-generic.png"));
   _createPictureAct->setShortcut(QString("F9"));
   _createPictureAct->setCheckable(true);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
@@ -870,7 +873,7 @@ void MainWindow::createActions() {
 
   _layoutModeAct = new QAction(tr("&Layout Mode"), this);
   _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
-  _layoutModeAct->setIcon(QPixmap(":kst_layoutmode.png"));
+  _layoutModeAct->setIcon(QPixmap(":transform-move.png"));
   _layoutModeAct->setCheckable(true);
   _layoutModeAct->setShortcut(QString("F2"));
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
@@ -878,40 +881,46 @@ void MainWindow::createActions() {
   // *********************** Tools actions ************************************** //
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
-  _dataWizardAct->setIcon(QPixmap(":kst_datawizard.png"));
+  _dataWizardAct->setIcon(QPixmap(":tools-wizard.png"));
   _dataWizardAct->setShortcut(QString("w"));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
-  _changeFileDialogAct->setIcon(QPixmap(":kst_changefile.png"));
+  _changeFileDialogAct->setIcon(QPixmap(":folder-development.png"));
   _changeFileDialogAct->setShortcut(QString("f"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
   _chooseColorDialogAct = new QAction(tr("Assign &Curve Color per File"), this);
   _chooseColorDialogAct->setStatusTip(tr("Show Kst's Choose Color Dialog"));
+  _chooseColorDialogAct->setIcon(QPixmap(":code-class.png"));
   connect(_chooseColorDialogAct, SIGNAL(triggered()), this, SLOT(showChooseColorDialog()));
 
   _differentiateCurvesDialogAct = new QAction(tr("&Differentiate Curves"), this);
   _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
+  _differentiateCurvesDialogAct->setIcon(QPixmap(":kst_differentiatecurves.png"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
 
   // *********************** Settings actions ************************************** //
   _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
   _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
+  _settingsDialogAct->setIcon(QPixmap(":configure.png"));
   connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
 
   // *********************** Help actions ************************************** //
   _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
+  _debugDialogAct->setIcon(QPixmap(":text-x-log.png"));
   connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
 
   _bugReportWizardAct = new QAction(tr("&Bug Report Wizard"), this);
   _bugReportWizardAct->setStatusTip(tr("Show Kst's Bug Report Wizard"));
+  _bugReportWizardAct->setIcon(QPixmap(":kbugbuster.png"));
   connect(_bugReportWizardAct, SIGNAL(triggered()), this, SLOT(showBugReportWizard()));
 
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
+  _aboutAct->setIcon(QPixmap(":dialog-information.png"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 }
 
