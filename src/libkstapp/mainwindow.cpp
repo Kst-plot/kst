@@ -289,12 +289,12 @@ void MainWindow::openFile(const QString &file) {
   QApplication::restoreOverrideCursor();
 
   if (!ok) {
-    QMessageBox::critical(this, tr("Kst"), 
+    QMessageBox::critical(this, tr("Kst"),
         tr("Error opening document '%1':\n%2\n"
            "Maybe it is a Kst 1 file which could not be read by Kst 2.").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
-  } 
+  }
 }
 
 
@@ -645,53 +645,59 @@ void MainWindow::createEventMonitor() {
 }
 
 void MainWindow::createActions() {
-    // ***************************** File actions ******************************** //
-    _openAct = new QAction(tr("&Open..."), this);
-    _openAct->setStatusTip(tr("Open a new session"));
-    _openAct->setShortcut(tr("Ctrl+O"));
-    connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
+  // ***************************** File actions ******************************** //
+  _openAct = new QAction(tr("&Open..."), this);
+  _openAct->setStatusTip(tr("Open a new session"));
+  _openAct->setShortcut(tr("Ctrl+O"));
+  _openAct->setIcon(QPixmap(":document-open.png"));
+  connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-    _saveAct = new QAction(tr("&Save"), this);
-    _saveAct->setStatusTip(tr("Save the current session"));
-    _saveAct->setShortcut(tr("Ctrl+S"));
-    connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
+  _saveAct = new QAction(tr("&Save"), this);
+  _saveAct->setStatusTip(tr("Save the current session"));
+  _saveAct->setShortcut(tr("Ctrl+S"));
+  _saveAct->setIcon(QPixmap(":document-save.png"));
+  connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-    _saveAsAct = new QAction(tr("Save &as..."), this);
-    _saveAsAct->setStatusTip(tr("Save the current session"));
-    connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+  _saveAsAct = new QAction(tr("Save &as..."), this);
+  _saveAsAct->setStatusTip(tr("Save the current session"));
+  connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-    _reloadAct = new QAction(tr("Reload all Data Sources"), this);
-    _reloadAct->setStatusTip(tr("Reload all data sources"));
-    _reloadAct->setIcon(QPixmap(":kst_reload.png"));
-    connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
+  _reloadAct = new QAction(tr("Reload all Data Sources"), this);
+  _reloadAct->setStatusTip(tr("Reload all data sources"));
+  _reloadAct->setIcon(QPixmap(":kst_reload.png"));
+  connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
 
-    _printAct = new QAction(tr("&Print..."), this);
-    _printAct->setStatusTip(tr("Print the current view"));
-    connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
+  _printAct = new QAction(tr("&Print..."), this);
+  _printAct->setStatusTip(tr("Print the current view"));
+  _printAct->setIcon(QPixmap(":document-print.png"));
+  connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
 
-    _exportGraphicsAct = new QAction(tr("&Export..."), this);
-    _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
-    connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
+  _exportGraphicsAct = new QAction(tr("&Export..."), this);
+  _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
+  connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
-    _closeTabAct = new QAction(tr("&Close Tab"), this);
-    _closeTabAct->setStatusTip(tr("Close the current tab"));
-    _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
-    connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
+  _closeTabAct = new QAction(tr("&Close Tab"), this);
+  _closeTabAct->setStatusTip(tr("Close the current tab"));
+  _closeTabAct->setIcon(QPixmap(":kst_closetab.png"));
+  connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
-    _clearSession = new QAction(tr("C&lear Session"), this);
-    _clearSession->setStatusTip(tr("Clear current session"));
-    connect(_clearSession, SIGNAL(triggered()), this, SLOT(newDoc()));
+  _clearSession = new QAction(tr("C&lear Session"), this);
+  _clearSession->setStatusTip(tr("Clear current session"));
+  connect(_clearSession, SIGNAL(triggered()), this, SLOT(newDoc()));
 
-    _exitAct = new QAction(tr("E&xit"), this);
-    _exitAct->setShortcut(tr("Ctrl+Q"));
-    _exitAct->setStatusTip(tr("Exit the application"));
-    connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
+  _exitAct = new QAction(tr("E&xit"), this);
+  _exitAct->setShortcut(tr("Ctrl+Q"));
+  _exitAct->setStatusTip(tr("Exit the application"));
+  _exitAct->setIcon(QPixmap(":application-exit.png"));
+  connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
   // ************************** Edit Actions ******************************* //
   _undoAct = _undoGroup->createUndoAction(this);
   _undoAct->setShortcut(tr("Ctrl+Z"));
+  _undoAct->setIcon(QPixmap(":edit-undo.png"));
   _redoAct = _undoGroup->createRedoAction(this);
   _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
+  _redoAct->setIcon(QPixmap(":edit-redo.png"));
 
   // ********************* View Actions ********************************** //
   _dataManagerAct = new QAction(tr("&Data Manager"), this);
@@ -830,6 +836,7 @@ void MainWindow::createActions() {
 
   _createSvgAct = new QAction(tr("&Svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
+  _createSvgAct->setIcon(QPixmap(":draw-bezier-curves.png"));
   _createSvgAct->setShortcut(QString("F11"));
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
@@ -923,7 +930,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);
   _fileMenu->addSeparator();
-  // Close/exit 
+  // Close/exit
   _fileMenu->addAction(_closeTabAct);
   _fileMenu->addAction(_clearSession);
   _fileMenu->addAction(_exitAct);
@@ -932,7 +939,7 @@ void MainWindow::createMenus() {
   _editMenu->addAction(_undoAct);
   _editMenu->addAction(_redoAct);
   // Cut/Copy/Paste will come here
-  
+
   _viewMenu = menuBar()->addMenu(tr("&View"));
   _viewMenu->addAction(_dataManagerAct);
   _viewMenu->addSeparator();
@@ -1051,7 +1058,7 @@ void MainWindow::createToolBars() {
   _annotationToolBar->addAction(_createPictureAct);
   _annotationToolBar->addAction(_createPlotAct);
   _annotationToolBar->addAction(_createSvgAct);
-  addToolBar(Qt::LeftToolBarArea, _annotationToolBar);
+  addToolBar(Qt::TopToolBarArea, _annotationToolBar); // Try a side toolbar by default?
   _annotationToolBar->setVisible(true);
 
 }
@@ -1083,7 +1090,7 @@ QProgressBar *MainWindow::progressBar() const {
 }
 
 void MainWindow::readFromEnd() {
-  int nf; 
+  int nf;
   int skip;
   bool do_skip;
   bool do_filter;
@@ -1104,7 +1111,7 @@ void MainWindow::readFromEnd() {
     v->unlock();
   }
   UpdateManager::self()->doUpdates(true);
-} 
+}
 
 void MainWindow::pause(bool pause) {
   UpdateManager::self()->setPaused(pause);
@@ -1139,7 +1146,7 @@ void MainWindow::forward() {
     skip = v->skip();
     do_skip = v->doSkip();
     do_filter = v->doAve();
-    v->unlock(); 
+    v->unlock();
 
     if ((!count_from_end) && (!read_to_end)) {
       f0 += nf;
@@ -1147,7 +1154,7 @@ void MainWindow::forward() {
         f0 = filelength - nf;
       }
 
-      v->writeLock(); 
+      v->writeLock();
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
       v->registerChange();
       v->unlock();
@@ -1179,7 +1186,7 @@ void MainWindow::back() {
     skip = v->skip();
     do_skip = v->doSkip();
     do_filter = v->doAve();
-    v->unlock(); 
+    v->unlock();
 
     if (f0 != 0) {
       if (count_from_end) {
@@ -1193,7 +1200,7 @@ void MainWindow::back() {
       if (f0<0) {
         f0 = 0;
       }
-      v->writeLock(); 
+      v->writeLock();
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
       v->registerChange();
       v->unlock();

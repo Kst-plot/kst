@@ -1,5 +1,5 @@
-<!DOCTYPE RCC><RCC version="1.0">
-    <qresource>
+<RCC>
+    <qresource prefix="/" >
         <file>hi32-mime-kst.png</file>
         <file>kstplot.png</file>
         <file>lo16-app-kst.png</file>
@@ -75,5 +75,12 @@
         <file>kst_bold.png</file>
         <file>kst_italic.png</file>
         <file>kst_reload.png</file>
+        <file>application-exit.png</file>
+        <file>document-open.png</file>
+        <file>document-print.png</file>
+        <file>document-save.png</file>
+        <file>edit-redo.png</file>
+        <file>edit-undo.png</file>
+        <file>draw-bezier-curves.png</file>
     </qresource>
 </RCC>
