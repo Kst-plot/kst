@@ -14,6 +14,7 @@
 #include <QXmlStreamWriter>
 
 #include <math.h>
+#include <QHash>
 
 #include "kst_i18n.h"
 
@@ -56,7 +57,7 @@ public:
   int read(const QString&, DataMatrix::ReadInfo&);
 
   // named elements
-  QStringList list() const { return _matrixList; }
+  QStringList list() const { return _matrixHash.keys(); }
   bool isListComplete() const { return true; }
   bool isValid(const QString&) const;
 
@@ -71,7 +72,7 @@ public:
 
   // no interface
   fitsfile **_fitsfileptr;
-  QStringList _matrixList;
+  QHash<QString,int> _matrixHash;
 
   void init();
   void clear();
@@ -79,22 +80,50 @@ public:
 
 void DataInterfaceFitsImageMatrix::clear()
 {
-  _matrixList.clear();
+  _matrixHash.clear();
 }
 
 void DataInterfaceFitsImageMatrix::init()
 {
-  _matrixList.append(DefaultMatrixName); // FIXME: fits vectirs have real names...
+  int hdu;
+  int nhdu;
+  int status=0;
+  int type;
+  QString name;
+  char instr[32];
+  char tmpstr[1024];
+
+  fits_get_hdu_num(*_fitsfileptr, &hdu);
+
+  _matrixHash.insert(DefaultMatrixName, hdu);
+
+  fits_get_num_hdus(*_fitsfileptr, &nhdu, &status);
+  for (hdu = 1; hdu <= nhdu; ++hdu) {
+    fits_movabs_hdu(*_fitsfileptr, hdu, &type, &status);
+    fits_get_hdu_type(*_fitsfileptr, &type, &status);
+    if (type == IMAGE_HDU) {
+      fits_read_key_str(*_fitsfileptr, "EXTNAME", instr, tmpstr, &status);
+      if (status) {
+        name = QString("HDU%1").arg(hdu);
+      } else {
+        name = QString(instr).trimmed();
+      }
+      _matrixHash.insert(name, hdu);
+    }
+  }
 }
 
 const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix) const
 {
   long n_axes[3];
   int status = 0;
+  int type;
 
-  if ( !*_fitsfileptr || !_matrixList.contains( matrix ) ) {
+  if ( !*_fitsfileptr || !_matrixHash.contains( matrix ) ) {
     return DataMatrix::DataInfo();
   }
+
+  fits_movabs_hdu(*_fitsfileptr, _matrixHash[matrix], &type, &status);
 
   fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
@@ -127,14 +156,14 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   double blank = 0.0;
   long n_elements;
   int px, py,  anynull;
-  int status = 0;
+  int status = 0, type;
   double *buffer;
 
-  if ((!*_fitsfileptr) || (!_matrixList.contains(field))) {
+  if ((!*_fitsfileptr) || (!_matrixHash.contains(field))) {
     return 0;
   }
 
-  //FIXME: support multiple HDUs
+  fits_movabs_hdu(*_fitsfileptr, _matrixHash[field], &type, &status);
 
   fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
 
@@ -238,7 +267,7 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
 }
 
 bool DataInterfaceFitsImageMatrix::isValid(const QString& field) const {
-  return  _matrixList.contains( field );
+  return  _matrixHash.contains( field );
 }
 
 
@@ -312,19 +341,6 @@ bool FitsImageSource::init() {
 
 
 Kst::Object::UpdateType FitsImageSource::internalDataSourceUpdate() {
-  /*
-  long n_axes[3];
-  int status = 0;
-
-  fits_get_img_size( _fptr,  2,  n_axes,  &status );
-
-  int newNF = n_axes[0]*n_axes[1];
-  bool isnew = newNF != _frameCount;
-
-  _frameCount = newNF;
-
-  */
-  //return (isnew ? Kst::Object::Updated : Kst::Object::NoChange);
   return (Kst::Object::NoChange);
 }
 
@@ -374,8 +390,37 @@ QStringList FitsImagePlugin::matrixList(QSettings *cfg,
   if (typeSuggestion) {
     *typeSuggestion = fitsTypeString;
   }
+
   if ( understands(cfg, filename) ) {
+    fitsfile* ffits;
+    int status = 0;
+    int hdu;
+    int nhdu;
+    int type;
+    QString name;
+    char instr[32];
+    char tmpstr[1024];
+
+
+    fits_open_image( &ffits, filename.toAscii(), READONLY, &status );
     matrixList.append( DefaultMatrixName );
+
+    fits_get_num_hdus(ffits, &nhdu, &status);
+    for (hdu = 1; hdu <= nhdu; ++hdu) {
+      fits_movabs_hdu(ffits, hdu, &type, &status);
+      fits_get_hdu_type(ffits, &type, &status);
+      if (type == IMAGE_HDU) {
+        fits_read_key_str(ffits, "EXTNAME", instr, tmpstr, &status);
+        if (status) {
+          name = QString("HDU%1").arg(hdu);
+        } else {
+          name = QString(instr).trimmed();
+        }
+        matrixList.append(name);
+      }
+    }
+
+    fits_close_file( ffits ,  &status );
   }
   return matrixList;
 
@@ -437,6 +482,8 @@ QStringList FitsImagePlugin::fieldList(QSettings *cfg,
                                             QString *typeSuggestion,
                                             bool *complete) const {
   Q_UNUSED(type)
+  Q_UNUSED(cfg)
+  Q_UNUSED(filename)
   QStringList fieldList;
 
   if (complete) {
@@ -446,10 +493,7 @@ QStringList FitsImagePlugin::fieldList(QSettings *cfg,
   if (typeSuggestion) {
     *typeSuggestion = fitsTypeString;
   }
-  if (understands(cfg, filename)) {
-    //fieldList.append("INDEX");
-    //fieldList.append( DefaultMatrixName );
-  }
+
   return fieldList;
 }
 
@@ -482,7 +526,7 @@ bool FitsImagePlugin::supportsTime(QSettings *cfg, const QString& filename) cons
   //FIXME
   Q_UNUSED(cfg)
   Q_UNUSED(filename)
-  return true;
+  return false;
 }
 
 
