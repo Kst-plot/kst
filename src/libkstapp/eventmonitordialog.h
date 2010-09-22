@@ -69,6 +69,8 @@ class EventMonitorTab : public DataTab, Ui::EventMonitorTab {
   private Q_SLOTS:
     void selectionChanged();
     void logLevelChanged();
+    void equationUpdate(const QString& string);
+    void equationOperatorUpdate(const QString& string);
 
   Q_SIGNALS:
     void optionsChanged();

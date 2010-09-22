@@ -29,6 +29,9 @@ EventMonitorTab::EventMonitorTab(QWidget *parent)
   setTabTitle(tr("Event Monitor"));
 
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
+  connect(_equationOperator, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
+  connect(_vectorSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
+  connect(_scalarSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
 
   connect(_debugLog, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
   connect(_emailNotify, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
@@ -58,6 +61,17 @@ void EventMonitorTab::selectionChanged() {
   emit optionsChanged();
 }
 
+void EventMonitorTab::equationUpdate(const QString& string) {
+  QString equation = _equation->text();
+  equation += "[" + string + "]";
+  _equation->setText(equation);
+}
+
+void EventMonitorTab::equationOperatorUpdate(const QString& string) {
+  QString equation = _equation->text();
+  equation += string;
+  _equation->setText(equation);
+}
 
 void EventMonitorTab::logLevelChanged() {
   _logLevelDirty = true;
