@@ -97,5 +97,7 @@
         <file>text-x-log.png</file>
         <file>folder-development.png</file>
         <file>document-export.png</file>
+        <file>revert.png</file>
+        <file>tied-zoom.png</file>
     </qresource>
 </RCC>

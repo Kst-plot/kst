@@ -848,7 +848,7 @@ void MainWindow::createActions() {
   // ************************** Mode Actions ******************************* //
   _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
-  _tiedZoomAct->setIcon(QPixmap(":kst_zoomtie.png"));
+  _tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
   //_tiedZoomAct->setCheckable(true);
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
@@ -888,7 +888,7 @@ void MainWindow::createActions() {
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
-  _changeFileDialogAct->setIcon(QPixmap(":folder-development.png"));
+  _changeFileDialogAct->setIcon(QPixmap(":revert.png"));
   _changeFileDialogAct->setShortcut(QString("f"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
