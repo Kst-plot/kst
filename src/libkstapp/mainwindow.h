@@ -16,7 +16,6 @@
 #include <QPointer>
 #include <QLabel>
 
-
 class QMenu;
 class QAction;
 class QProgressBar;
@@ -70,6 +69,7 @@ class MainWindow : public QMainWindow
     void showChangeFileDialog();
     void showDataWizard();
     void showBugReportWizard();
+    void showPluginDialog(QString &pluginName);
 
     void readFromEnd();
     void pause(bool pause);
@@ -167,6 +167,9 @@ class MainWindow : public QMainWindow
     QMenu *_editMenu;
     QMenu *_viewMenu;
     QMenu *_createMenu;
+    QMenu *_pluginsMenu;
+    QMenu *_fitsPluginsMenu;
+    QMenu *_filterPluginsMenu;
     QMenu *_modeMenu;
     QMenu *_rangeMenu;
     QMenu *_toolsMenu;

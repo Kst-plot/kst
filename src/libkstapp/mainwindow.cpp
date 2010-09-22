@@ -39,6 +39,7 @@
 #include "applicationsettings.h"
 #include "updatemanager.h"
 #include "datasourcepluginmanager.h"
+#include "pluginmenuitemaction.h"
 
 #include "applicationsettingsdialog.h"
 #include "differentiatecurvesdialog.h"
@@ -981,7 +982,7 @@ void MainWindow::createMenus() {
   _createMenu->addAction(_newEventMonitorAct);
   _createMenu->addSeparator();
   // Annotation objects
-  QMenu* annotations = _createMenu->addMenu("&Annotation");
+  QMenu* annotations = _createMenu->addMenu(tr("&Annotation"));
   annotations->addAction(_createLabelAct);
   annotations->addAction(_createBoxAct);
   annotations->addAction(_createCircleAct);
@@ -990,6 +991,27 @@ void MainWindow::createMenus() {
   annotations->addAction(_createArrowAct);
   annotations->addAction(_createPictureAct);
   annotations->addAction(_createSvgAct);
+  _createMenu->addSeparator();
+  // Now, create the dynamic plugins menus
+  QMenu* _pluginsMenu = _createMenu->addMenu(tr("Standard P&lugins"));
+  QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugins"));
+  QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Filter Plu&gins"));
+  PluginMenuItemAction* action;
+  foreach (QString pluginName, DataObject::dataObjectPluginList()) {
+    action = new PluginMenuItemAction(pluginName, this);
+    connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
+    _pluginsMenu->addAction(action);
+  }
+  foreach (QString pluginName, DataObject::fitsPluginList()) {
+    action = new PluginMenuItemAction(pluginName, this);
+    connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
+    _fitPluginsMenu->addAction(action);
+  }
+  foreach (QString pluginName, DataObject::filterPluginList()) {
+    action = new PluginMenuItemAction(pluginName, this);
+    connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
+    _filterPluginsMenu->addAction(action);
+  }
 
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
   // Zoom/axes stuff
@@ -1379,6 +1401,9 @@ void MainWindow::showChangeFileDialog() {
   _changeFileDialog->show();
 }
 
+void MainWindow::showPluginDialog(QString &pluginName) {
+  DialogLauncher::self()->showBasicPluginDialog(pluginName);
+}
 
 void MainWindow::readSettings() {
   QSettings settings("Kst2");

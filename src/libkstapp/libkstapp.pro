@@ -1,6 +1,5 @@
-TOPOUT_REL=../..
+TOPOUT_REL = ../..
 include($$PWD/$$TOPOUT_REL/kst.pri)
-
 QT += gui \
     network \
     svg \
@@ -9,7 +8,7 @@ TEMPLATE = lib
 TARGET = $$kstlib(kst2app)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
-!isEmpty(INSTALL_PREFIX) {
+!isEmpty(INSTALL_PREFIX) { 
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
 }
@@ -19,14 +18,11 @@ INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/widgets \
     $$TOPOUTDIR/src/widgets \
     $$TOPOUTDIR/src/libkstapp/tmp
-
-LIBS += \
-    -L$$OUTPUT_DIR/lib \
+LIBS += -L$$OUTPUT_DIR/lib \
     -L$$OUTPUT_DIR/plugin \
     -l$$kstlib(kst2widgets) \
     -l$$kstlib(kst2math) \
     -l$$kstlib(kst2lib)
-
 SOURCES += aboutdialog.cpp \
     application.cpp \
     applicationsettings.cpp \
@@ -130,10 +126,9 @@ SOURCES += aboutdialog.cpp \
     viewitemdialog.cpp \
     viewmatrixdialog.cpp \
     viewprimitivedialog.cpp \
-    viewvectordialog.cpp
-
-HEADERS += \
-    aboutdialog.h \
+    viewvectordialog.cpp \
+    pluginmenuitemaction.cpp
+HEADERS += aboutdialog.h \
     application.h \
     applicationsettings.h \
     applicationsettingsdialog.h \
@@ -237,7 +232,8 @@ HEADERS += \
     viewitem.h \
     viewmatrixdialog.h \
     viewprimitivedialog.h \
-    viewvectordialog.h
+    viewvectordialog.h \
+    pluginmenuitemaction.h
 FORMS += aboutdialog.ui \
     arrowpropertiestab.ui \
     axistab.ui \

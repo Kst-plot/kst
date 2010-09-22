@@ -25,17 +25,6 @@
      <property name="childrenCollapsible">
       <bool>false</bool>
      </property>
-     <widget class="QToolBox" name="_objects">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-     </widget>
      <widget class="QTreeView" name="_session">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
