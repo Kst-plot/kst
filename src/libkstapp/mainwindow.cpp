@@ -1087,7 +1087,6 @@ void MainWindow::createToolBars() {
   _annotationToolBar->addAction(_createLineAct);
   _annotationToolBar->addAction(_createArrowAct);
   _annotationToolBar->addAction(_createPictureAct);
-  _annotationToolBar->addAction(_createPlotAct);
   _annotationToolBar->addAction(_createSvgAct);
   addToolBar(Qt::TopToolBarArea, _annotationToolBar); // Try a side toolbar by default?
   _annotationToolBar->setVisible(true);
