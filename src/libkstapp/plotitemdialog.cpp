@@ -45,6 +45,13 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   setWindowTitle(tr("Edit Plot Item"));
 
+  _contentTab = new ContentTab(this);
+  connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
+  DialogPage *page = new DialogPage(this);
+  page->setPageTitle(tr("Contents"));
+  page->addDialogTab(_contentTab);
+  addDialogPage(page, true);
+
   _labelTab = new LabelTab(_plotItem, this);
   _topLabelTab = new OverrideLabelTab(tr("Top Font"), this);
   _bottomLabelTab = new OverrideLabelTab(tr("Bottom Font"), this);
@@ -60,7 +67,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   _labelPage->addDialogTab(_leftLabelTab);
   _labelPage->addDialogTab(_rightLabelTab);
   _labelPage->addDialogTab(_axisLabelTab);
-  addDialogPage(_labelPage);
+  addDialogPage(_labelPage, true);
 
   connect(_labelTab, SIGNAL(apply()), this, SLOT(labelsChanged()));
   connect(_labelTab, SIGNAL(globalFontUpdate()), this, SLOT(globalFontUpdate()));
@@ -71,52 +78,44 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(_rightLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useRightDefaultChanged(bool)));
   connect(_axisLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useAxisDefaultChanged(bool)));
 
+  _rangeTab = new RangeTab(_plotItem, this);
+  DialogPage *rangePage = new DialogPage(this);
+  rangePage->setPageTitle(tr("Range/Zoom"));
+  rangePage->addDialogTab(_rangeTab);
+  addDialogPage(rangePage, true);
+  connect(_rangeTab, SIGNAL(apply()), this, SLOT(rangeChanged()));
+
   _xAxisTab = new AxisTab(this);
   DialogPage *xAxisPage = new DialogPage(this);
-  xAxisPage->setPageTitle(tr("x-Axis"));
+  xAxisPage->setPageTitle(tr("X-Axis"));
   xAxisPage->addDialogTab(_xAxisTab);
-  addDialogPage(xAxisPage);
+  addDialogPage(xAxisPage, true);
   connect(_xAxisTab, SIGNAL(apply()), this, SLOT(xAxisChanged()));
 
   _yAxisTab = new AxisTab(this);
   DialogPage *yAxisPage = new DialogPage(this);
-  yAxisPage->setPageTitle(tr("y-Axis"));
+  yAxisPage->setPageTitle(tr("Y-Axis"));
   yAxisPage->addDialogTab(_yAxisTab);
-  addDialogPage(yAxisPage);
+  addDialogPage(yAxisPage, true);
   connect(_yAxisTab, SIGNAL(apply()), this, SLOT(yAxisChanged()));
-
-  _rangeTab = new RangeTab(_plotItem, this);
-  DialogPage *rangePage = new DialogPage(this);
-  rangePage->setPageTitle(tr("Range"));
-  rangePage->addDialogTab(_rangeTab);
-  addDialogPage(rangePage);
-  connect(_rangeTab, SIGNAL(apply()), this, SLOT(rangeChanged()));
 
   _xMarkersTab = new MarkersTab(this);
   DialogPage *xMarkersPage = new DialogPage(this);
-  xMarkersPage->setPageTitle(tr("x-Axis markers"));
+  xMarkersPage->setPageTitle(tr("X-Axis Markers"));
   xMarkersPage->addDialogTab(_xMarkersTab);
-  addDialogPage(xMarkersPage);
+  addDialogPage(xMarkersPage, true);
   _xMarkersTab->setObjectStore(_store);
   connect(_xMarkersTab, SIGNAL(apply()), this, SLOT(xAxisPlotMarkersChanged()));
 
   _yMarkersTab = new MarkersTab(this);
   DialogPage *yMarkersPage = new DialogPage(this);
-  yMarkersPage->setPageTitle(tr("y-Axis markers"));
+  yMarkersPage->setPageTitle(tr("Y-Axis Markers"));
   yMarkersPage->addDialogTab(_yMarkersTab);
-  addDialogPage(yMarkersPage);
+  addDialogPage(yMarkersPage, true);
   _yMarkersTab->setObjectStore(_store);
   connect(yMarkersPage, SIGNAL(apply()), this, SLOT(yAxisPlotMarkersChanged()));
 
-  _contentTab = new ContentTab(this);
-  connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
-
-  DialogPage *page = new DialogPage(this);
-  page->setPageTitle(tr("Content"));
-  page->addDialogTab(_contentTab);
-  addDialogPage(page);
-
-  addRelations();
+  // addRelations(); This tends to clutter the plot dialog, let's test skipping it
 
   setupContent();
   setupAxis();
@@ -143,6 +142,8 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
   connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
+
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding); // Make sure the labels are visible, doesn't work right now :-)
 }
 
 

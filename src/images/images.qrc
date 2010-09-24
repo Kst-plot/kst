@@ -1,15 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>hi32-mime-kst.png</file>
         <file>kstplot.png</file>
-        <file>lo16-app-kst.png</file>
-        <file>lo32-mime-kst.png</file>
-        <file>hi16-mime-kst.png</file>
         <file>plainplot.png</file>
-        <file>lo16-mime-kst.png</file>
         <file>kst.png</file>
-        <file>lo32-app-kst.png</file>
-        <file>kst_advance.png</file>
         <file>kst_blank.png</file>
         <file>kst_changefile.png</file>
         <file>kst_changenpts.png</file>
@@ -38,7 +31,6 @@
         <file>kst_gfx_layout.png</file>
         <file>kst_gfx_sharedaxisbox.png</file>
         <file>kst_gfx_breaklayout.png</file>
-        <file>kst_graphfile.png</file>
         <file>kst_graphics.png</file>
         <file>kst_histogramnew.png</file>
         <file>kst_imagenew.png</file>
@@ -95,9 +87,7 @@
         <file>image-x-generic.png</file>
         <file>dialog-information.png</file>
         <file>text-x-log.png</file>
-        <file>folder-development.png</file>
         <file>document-export.png</file>
-        <file>revert.png</file>
         <file>tied-zoom.png</file>
         <file>change-data-file.png</file>
         <file>data-manager.png</file>
