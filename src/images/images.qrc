@@ -99,5 +99,7 @@
         <file>document-export.png</file>
         <file>revert.png</file>
         <file>tied-zoom.png</file>
+        <file>change-data-file.png</file>
+        <file>data-manager.png</file>
     </qresource>
 </RCC>

@@ -706,7 +706,7 @@ void MainWindow::createActions() {
   // ********************* View Actions ********************************** //
   _dataManagerAct = new QAction(tr("&Data Manager"), this);
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
-  _dataManagerAct->setIcon(QPixmap(":resource-group.png"));
+  _dataManagerAct->setIcon(QPixmap(":data-manager.png"));
   _dataManagerAct->setShortcut(QString("d"));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
@@ -888,7 +888,7 @@ void MainWindow::createActions() {
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog"));
-  _changeFileDialogAct->setIcon(QPixmap(":revert.png"));
+  _changeFileDialogAct->setIcon(QPixmap(":change-data-file.png"));
   _changeFileDialogAct->setShortcut(QString("f"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
@@ -1053,7 +1053,6 @@ void MainWindow::createToolBars() {
   _fileToolBar->addAction(_saveAct);
   _fileToolBar->addAction(_reloadAct);
   _fileToolBar->addAction(_printAct);
-  _fileToolBar->addAction(_exitAct);
 
   _editToolBar = addToolBar(tr("Edit"));
   _editToolBar->addAction(_undoAct);
