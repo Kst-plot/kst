@@ -10,4 +10,5 @@ SUBDIRS += \
     src/kst \
     src/d2asc \
     src/plugins \
-    tests
+    tests \
+    tests/dirfile_maker

@@ -4,11 +4,20 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
+#include <time.h>
+#include <unistd.h>
+#include <string.h>
+
+
+#ifdef _WIN32
+#define mkdir(x, y) mkdir(x)
+#endif
 
 struct DFEntryType {
   char field[17];
   int spf;
   int fp;
+  char filename[150];
 };
 
 int main(int argc, char *argv[]) {
@@ -39,23 +48,23 @@ int main(int argc, char *argv[]) {
     delay = atoi(argv[3]);
     printf("Delay between updates is %d ms\n", delay);
   } else if (maxFrames == -1) {
-    delay = 200;
+    delay = 50;
     printf("No Delay specified, and no max frames, defaulting to 200 ms\n");
   } else {
     printf("No Delay specified running without delay\n");
   }
 
-  struct DFEntryType dfList2[frameTypes];
+  //struct DFEntryType dfList2[frameTypes];
 
   struct DFEntryType dfList[frameTypes];
   for (i=0; i<frameTypes; i++) {
-    char idName[20];
+    //char idName[20];
     sprintf(dfList[i].field, "%dxINDEX", i+1);
     dfList[i].spf = 1;
     dfList[i].fp = -1;
   }
 
-  sprintf(dirfilename, "%d.dm", time(NULL));
+  sprintf(dirfilename, "%d.dm", (int) time(NULL));
 
   printf("Writing dirfile %s\n", dirfilename);
   printf("The fields are:\n");
@@ -75,7 +84,10 @@ int main(int argc, char *argv[]) {
   for (i=0; i<frameTypes; i++) {
     fprintf(fpf,"%s RAW f %d\n", dfList[i].field, dfList[i].spf);
     sprintf(tmpstr,"%s/%s", dirfilename, dfList[i].field);
-    dfList[i].fp = open(tmpstr, O_WRONLY|O_CREAT, 00644);
+#ifndef _WIN32
+    dfList[i].fp = open(tmpstr, O_WRONLY|O_CREAT , 00644);
+#endif
+    strcpy(dfList[i].filename, tmpstr);
   }
 
   fclose(fpf);
@@ -89,7 +101,13 @@ int main(int argc, char *argv[]) {
 
     for (i=0; i<frameTypes; i++) {
       x = count * (i+1);
+#ifndef _WIN32
       write(dfList[i].fp, &x, sizeof(float));
+#else
+      FILE *fd = fopen(dfList[i].filename, "a");
+      fwrite(&x, sizeof(float), 1, fd);
+      fclose(fd);
+#endif
     }
 
     printf("writing frame %d  \r", count);
