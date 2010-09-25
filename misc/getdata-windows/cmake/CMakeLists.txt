@@ -41,23 +41,25 @@ if(MSVC)
 endif()
 
 if(MINGW)
-	# ALPHA quality!
+	#TODO add configure step with cmake!
 	add_definitions(
 			-D__MSVCRT__
-			-DSTDC_HEADER
-			-DSTDC_HEADER
+			-D__MSVCRT_VERSION__=0x0601
+			-DPACKAGE_BUGREPORT=""
+			-DPACKAGE_NAME=""
+			-DPACKAGE_VERSION=""
+			-DSTDC_HEADERS
 			-DHAVE_IO_H
 			-DHAVE_STDINT_H
 			-DHAVE_COMPLEX_H
 			-DHAVE_OFF64_T
-			-DSTDC_HEADERS
 			-DHAVE_LIBGEN_H
 			-DHAVE_STRTOLL
-			-DPACKAGE_BUGREPORT=""
-			-DPACKAGE_NAME=""
-			-DPACKAGE_VERSION=""
 			-DHAVE_DIRENT_H
 			-DHAVE__COMMIT
+			-DHAVE__STAT64
+			-DHAVE_STRUCT___STAT64
+			-DMKDIR_NO_MODE
 			)
 endif()
 
