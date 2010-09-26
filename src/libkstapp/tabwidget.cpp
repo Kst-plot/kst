@@ -88,6 +88,14 @@ View *TabWidget::createView() {
 }
 
 
+void TabWidget::checkedShowTabbar() {
+  if (count() < 2) {
+    tabBar()->hide();
+  } else {
+    tabBar()->show();
+  }
+}
+
 void TabWidget::addView(View* view) {
   MainWindow *parent = qobject_cast<MainWindow*>(this->parent());
   if (parent) {
@@ -102,6 +110,7 @@ void TabWidget::addView(View* view) {
                   view->objectName();
 
   addTab(view, label);
+  checkedShowTabbar();
   setCurrentWidget(view);
 }
 
@@ -127,6 +136,7 @@ void TabWidget::deleteView(View* view) {
   }
   removeTab(indexOf(view));
   delete view;
+  checkedShowTabbar();
 }
 
 
@@ -136,6 +146,7 @@ void TabWidget::clear() {
     deleteView(view);
   }
   _cnt = 0;
+  checkedShowTabbar();
 }
 
 

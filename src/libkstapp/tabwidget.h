@@ -47,6 +47,7 @@ class TabWidget : public QTabWidget
 
   private:
     int _cnt;
+    void checkedShowTabbar();
 };
 
 }
