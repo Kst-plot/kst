@@ -202,6 +202,18 @@ void View::setMouseMode(MouseMode mode) {
   emit mouseModeChanged(oldMode);
 }
 
+void View::setZoomOnly(ZoomOnlyMode zoomMode)
+{
+  QList<PlotItem*> plots = PlotItemManager::plotsForView(this);
+  foreach (PlotItem* plot, plots) {
+   plot->setZoomOnly(zoomMode);
+   // should we overload setZoomOnly?
+   QList<PlotRenderItem*> renderers = plot->renderItems();
+   foreach (PlotRenderItem* renderer, renderers) {
+     renderer->setZoomOnly(zoomMode);
+   }
+  }
+}
 
 QPolygonF View::creationPolygon(CreationEvents events) const {
   if (events == View::MousePress)

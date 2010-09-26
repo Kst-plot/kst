@@ -192,6 +192,10 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual bool supportsTiedZoom() const { return _supportsTiedZoom; }
     virtual void setSupportsTiedZoom(const bool supports);    
 
+
+    View::ZoomOnlyMode zoomOnlyMode() const { return _zoomOnlyMode; }
+    void setZoomOnly(View::ZoomOnlyMode val) { _zoomOnlyMode = val; }
+
     CreationState creationState() const { return _creationState; }
 
     virtual void setItemPen(const QPen & pen) { setPen(pen); };
@@ -291,7 +295,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     GripModes _allowedGripModes;
     CreationState _creationState;
     QString _typeName;
-    bool _supportsTiedZoom;
+    View::ZoomOnlyMode _zoomOnlyMode;
+    bool _supportsTiedZoom;    
     bool _fixedSize;
     bool _lockAspectRatio;
     bool _lockAspectRatioFixed;

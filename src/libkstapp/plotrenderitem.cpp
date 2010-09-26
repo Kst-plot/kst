@@ -373,10 +373,10 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
   }
 
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT) {
     // show cursor as Qt::SizeVerCursor only on mouse events
     // because shift is also used for arrow key controlled zooming
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL) {
     parentView()->setCursor(Qt::SizeHorCursor);
   }
 
@@ -392,9 +392,9 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
     return;
   }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     parentView()->setCursor(Qt::SizeVerCursor);
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     parentView()->setCursor(Qt::SizeHorCursor);
   } else {
     parentView()->setCursor(Qt::CrossCursor);
@@ -428,10 +428,10 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
   } else {
     _selectionRect.setTo(p);
@@ -479,11 +479,11 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     parentView()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
@@ -504,9 +504,9 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   _selectionRect.reset();
 
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     plotItem()->zoomYRange(projection);
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     plotItem()->zoomXRange(projection);
   } else {
     plotItem()->zoomFixedExpression(projection);
@@ -526,13 +526,13 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QPointF p = event->pos();
   _hoverPos = p;
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::ShiftModifier) {
+  if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     _lastPos = p;
     parentView()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
     update(); //FIXME should optimize instead of redrawing entire curve!
-  } else if (modifiers & Qt::ControlModifier) {
+  } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _lastPos = p;
     parentView()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));

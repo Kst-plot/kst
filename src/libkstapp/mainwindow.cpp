@@ -140,7 +140,8 @@ void MainWindow::setDataMode(bool dataMode) {
   _dataMode = dataMode;
 }
 
-void MainWindow::setXZoomMode() {
+void MainWindow::changeZoomOnlyMode(QAction* act) {
+  tabWidget()->currentView()->setZoomOnly((View::ZoomOnlyMode)act->data().toInt());
 }
 
 void MainWindow::toggleTiedZoom() {
@@ -664,6 +665,11 @@ void MainWindow::createActions() {
   _saveAsAct->setIcon(QPixmap(":document-save-as.png"));
   connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
+  _closeAct = new QAction(tr("C&lose"), this);
+  _closeAct->setStatusTip(tr("Close current session"));
+  _closeAct->setIcon(QPixmap(":draw-eraser.png"));
+  connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
+
   _reloadAct = new QAction(tr("Reload all Data Sources"), this);
   _reloadAct->setStatusTip(tr("Reload all data sources"));
   _reloadAct->setIcon(QPixmap(":kst_reload.png"));
@@ -679,15 +685,15 @@ void MainWindow::createActions() {
   _exportGraphicsAct->setIcon(QPixmap(":document-export.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
+  _newTabAct = new QAction(tr("&New Tab"), this);
+  _newTabAct->setStatusTip(tr("Create a new tab"));
+  _newTabAct->setIcon(QPixmap(":tab-new.png"));
+  connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
+
   _closeTabAct = new QAction(tr("&Close Tab"), this);
   _closeTabAct->setStatusTip(tr("Close the current tab"));
   _closeTabAct->setIcon(QPixmap(":tab-close.png"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
-
-  _clearSession = new QAction(tr("C&lear Session"), this);
-  _clearSession->setStatusTip(tr("Clear current session"));
-  _clearSession->setIcon(QPixmap(":draw-eraser.png"));
-  connect(_clearSession, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _exitAct = new QAction(tr("E&xit"), this);
   _exitAct->setShortcut(tr("Ctrl+Q"));
@@ -755,11 +761,6 @@ void MainWindow::createActions() {
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
   // ************************ Create Actions ************************** //
-  _newTabAct = new QAction(tr("&New Tab"), this);
-  _newTabAct->setStatusTip(tr("Create a new tab"));
-  _newTabAct->setIcon(QPixmap(":tab-new.png"));
-  connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
-
   _createPlotAct = new QAction(tr("&Plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":office-chart-area-stacked.png"));
@@ -853,11 +854,33 @@ void MainWindow::createActions() {
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
-  _dataXZoomAct = new QAction(tr("&X only Zoom"), this);
-  _dataXZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  //_dataModeAct->setIcon(QPixmap(":kst_datamode.png"));
-  //_dataModeAct->setCheckable(true);
-  connect(_dataXZoomAct, SIGNAL(triggered()), this, SLOT(setXZoomMode()));
+  QActionGroup* _dataZoomOnlyGroup = new QActionGroup(this);
+
+  _dataZoomOnlyDisabledAct = _dataZoomOnlyGroup->addAction(tr("Free Zoom/Scroll"));
+  _dataZoomOnlyDisabledAct->setStatusTip(tr("Zoom &arbitray in X- or Y-direction"));
+  //TODO _dataZoomOnlyDisabledAct->setShortcut(QString("a"));
+  _dataZoomOnlyDisabledAct->setCheckable(true);
+  _dataZoomOnlyDisabledAct->setData(View::ZoomOnlyDisabled);
+  //TODO _dataZoomOnlyDisabledAct->setIcon(QPixmap(":kst_datamode.png"));
+
+  _dataZoomOnlyXAct = _dataZoomOnlyGroup->addAction(tr("&X-only Zoom"));
+  _dataZoomOnlyXAct->setStatusTip(tr("Zoom only in X direction"));
+  //TODO _dataZoomOnlyXAct->setShortcut(QString("x"));
+  _dataZoomOnlyXAct->setCheckable(true);
+  _dataZoomOnlyXAct->setData(View::ZoomOnlyX);  
+  //TODO _dataZoomOnlyXAct->setIcon(QPixmap(":kst_datamode.png"));
+
+  _dataZoomOnlyYAct = _dataZoomOnlyGroup->addAction(tr("&Y-only Zoom"));
+  _dataZoomOnlyYAct->setStatusTip(tr("Zoom only in X direction"));
+  //TODO _dataZoomOnlyYAct->setShortcut(QString("y"));
+  _dataZoomOnlyYAct->setData(View::ZoomOnlyY);
+  _dataZoomOnlyYAct->setCheckable(true);
+  //TODO _dataZoomOnlyYAct->setIcon(QPixmap(":kst_datamode.png"));
+
+  _dataZoomOnlyGroup->setExclusive(true);
+  _dataZoomOnlyDisabledAct->setChecked(true);
+  connect(_dataZoomOnlyGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeZoomOnlyMode(QAction*)));
+
 
   _createSharedAxisBoxAct = new QAction(tr("&Shared Axis Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
@@ -928,10 +951,11 @@ void MainWindow::createActions() {
 
 void MainWindow::createMenus() {
   _fileMenu = menuBar()->addMenu(tr("&File"));
-  // File operations
+  // Session operations
   _fileMenu->addAction(_openAct);
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
+  _fileMenu->addAction(_closeAct);
   _fileMenu->addSeparator();
   // Reload, isolate it a bit frmo the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
@@ -940,9 +964,11 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);
   _fileMenu->addSeparator();
-  // Close/exit
+  // Tabs
+  _fileMenu->addAction(_newTabAct);
   _fileMenu->addAction(_closeTabAct);
-  _fileMenu->addAction(_clearSession);
+  _fileMenu->addSeparator();
+  // exit  
   _fileMenu->addAction(_exitAct);
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -969,7 +995,6 @@ void MainWindow::createMenus() {
 
   _createMenu = menuBar()->addMenu(tr("&Create"));
   // Containers
-  _createMenu->addAction(_newTabAct);
   _createMenu->addAction(_createPlotAct);
   _createMenu->addSeparator();
   // Data objects
@@ -1016,10 +1041,12 @@ void MainWindow::createMenus() {
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
   // Zoom/axes stuff
   _modeMenu->addAction(_tiedZoomAct);
-  // Zoom X-only or Y-only will come here
-  // modeMenu->addAction(_dataXZoomAct);
-  // modeMenu->addAction(_dataYZoomAct);
   _modeMenu->addAction(_createSharedAxisBoxAct);
+  // Zoom X-only or Y-only will come here
+  _modeMenu->addSeparator()->setText(tr("Zoom only X or Y"));
+  _modeMenu->addAction(_dataZoomOnlyDisabledAct);
+  _modeMenu->addAction(_dataZoomOnlyXAct);
+  _modeMenu->addAction(_dataZoomOnlyYAct);
   _modeMenu->addSeparator();
   // Interaction options: data mode on/off, layout mode toggle
   _modeMenu->addAction(_dataModeAct);
@@ -1067,7 +1094,9 @@ void MainWindow::createToolBars() {
   //   _layoutToggleToolBar = addToolBar(tr("Mode"));
   _modeToolBar = addToolBar(tr("Mode"));
   _modeToolBar->addAction(_tiedZoomAct);
-  // FIXME: add X-only + Y-only here, or in a separate "zoom" toolbar
+  _modeToolBar->addAction(_dataZoomOnlyDisabledAct);
+  _modeToolBar->addAction(_dataZoomOnlyXAct);
+  _modeToolBar->addAction(_dataZoomOnlyYAct);
   _modeToolBar->addAction(_createSharedAxisBoxAct);
   _modeToolBar->addAction(_dataModeAct);
   _modeToolBar->addAction(_layoutModeAct);

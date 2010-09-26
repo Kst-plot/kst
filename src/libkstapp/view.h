@@ -18,6 +18,7 @@
 
 #include "curveplacement.h"
 
+
 class QUndoStack;
 class QXmlStreamWriter;
 
@@ -33,6 +34,7 @@ class View : public QGraphicsView
   public:
     enum ViewMode { Data, Layout };
     enum MouseMode { Default, Move, Create, Resize, Scale, Rotate };
+    enum ZoomOnlyMode { ZoomOnlyDisabled, ZoomOnlyX, ZoomOnlyY };
     enum CreationEvent {
       MousePress = 0x0,
       MouseRelease =0x1,
@@ -125,6 +127,9 @@ class View : public QGraphicsView
     void viewChanged();
     void forceChildResize(QRectF oldRect, QRectF newRect);
     void processResize(QSize size);
+    void setZoomOnly(ZoomOnlyMode);
+
+
 
   protected:
     bool event(QEvent *event);

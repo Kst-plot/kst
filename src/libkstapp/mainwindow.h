@@ -127,7 +127,7 @@ class MainWindow : public QMainWindow
     void toggleTiedZoom();
 
     void setDataMode(bool dataMode);
-    void setXZoomMode();
+    void changeZoomOnlyMode(QAction*);
 
   protected:
     void closeEvent(QCloseEvent *e);
@@ -198,18 +198,18 @@ class MainWindow : public QMainWindow
     QAction *_createSvgAct;
     QAction *_createSharedAxisBoxAct;
 
-    QAction *_aboutAct;
-    QAction *_closeTabAct;
+    QAction *_aboutAct;    
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
-    QAction *_newTabAct;
-    QAction *_clearSession;
-    QAction *_openAct;
-    QAction *_printAct;
+    QAction *_openAct;    
     QAction *_saveAct;
     QAction *_saveAsAct;
+    QAction *_closeAct;
+    QAction *_printAct;
+    QAction *_newTabAct;
+    QAction *_closeTabAct;
     QAction *_scalarEditorAct;
     QAction *_vectorEditorAct;
     QAction *_matrixEditorAct;
@@ -218,8 +218,9 @@ class MainWindow : public QMainWindow
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
     QAction *_dataModeAct;
-    QAction *_dataXZoomAct;
-    QAction *_dataYZoomAct;
+    QAction *_dataZoomOnlyDisabledAct;
+    QAction *_dataZoomOnlyXAct;
+    QAction *_dataZoomOnlyYAct;
 
     QAction *_settingsDialogAct;
 

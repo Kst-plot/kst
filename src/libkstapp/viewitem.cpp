@@ -63,6 +63,7 @@ ViewItem::ViewItem(View *parentView) :
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
     _typeName("View Item"),
+    _zoomOnlyMode(View::ZoomOnlyDisabled),
     _supportsTiedZoom(false),
     _fixedSize(false),
     _lockAspectRatio(false),
