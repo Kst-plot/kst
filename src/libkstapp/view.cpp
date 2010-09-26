@@ -72,6 +72,7 @@ void View::init()
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+  setFrameStyle(QFrame::NoFrame);
 
   setContextMenuPolicy(Qt::DefaultContextMenu);
 
