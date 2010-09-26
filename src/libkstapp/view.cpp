@@ -103,6 +103,10 @@ void View::init()
 
 
 View::~View() {
+  QList<PlotItem*> list = PlotItemManager::plotsForView(this);
+  foreach (PlotItem *plotItem, list) {
+    delete plotItem;
+  }
   delete _undoStack;
   delete _layoutBoxItem;
 }
