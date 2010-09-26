@@ -218,9 +218,9 @@ class MainWindow : public QMainWindow
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
     QAction *_dataModeAct;
-    QAction *_dataZoomOnlyDisabledAct;
-    QAction *_dataZoomOnlyXAct;
-    QAction *_dataZoomOnlyYAct;
+    QAction *_standardZoomAct;
+    QAction *_xOnlyZoomAct;
+    QAction *_yOnlyZoomAct;
 
     QAction *_settingsDialogAct;
 

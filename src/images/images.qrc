@@ -91,5 +91,10 @@
         <file>tied-zoom.png</file>
         <file>change-data-file.png</file>
         <file>data-manager.png</file>
+        <file>kst_gfx_circle.png</file>
+        <file>x-zoom.png</file>
+        <file>y-zoom.png</file>
+        <file>xy-zoom.png</file>
+        <file>document-close.png</file>
     </qresource>
 </RCC>

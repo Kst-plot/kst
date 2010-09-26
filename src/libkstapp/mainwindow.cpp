@@ -667,7 +667,7 @@ void MainWindow::createActions() {
 
   _closeAct = new QAction(tr("C&lose"), this);
   _closeAct->setStatusTip(tr("Close current session"));
-  _closeAct->setIcon(QPixmap(":draw-eraser.png"));
+  _closeAct->setIcon(QPixmap(":document-close.png"));
   connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _reloadAct = new QAction(tr("Reload all Data Sources"), this);
@@ -710,12 +710,6 @@ void MainWindow::createActions() {
   _redoAct->setIcon(QPixmap(":edit-redo.png"));
 
   // ********************* View Actions ********************************** //
-  _dataManagerAct = new QAction(tr("&Data Manager"), this);
-  _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
-  _dataManagerAct->setIcon(QPixmap(":data-manager.png"));
-  _dataManagerAct->setShortcut(QString("d"));
-  connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
-
   _vectorEditorAct = new QAction(tr("&Vectors"), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
   connect(_vectorEditorAct, SIGNAL(triggered()), this, SLOT(showVectorEditor()));
@@ -764,7 +758,7 @@ void MainWindow::createActions() {
   _createPlotAct = new QAction(tr("&Plot"), this);
   _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setIcon(QPixmap(":office-chart-area-stacked.png"));
-  _createPlotAct->setShortcut(QString("F10"));
+  _createPlotAct->setShortcut(QString("F11"));
   _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
@@ -789,7 +783,7 @@ void MainWindow::createActions() {
   _newEventMonitorAct = new QAction(tr("E&vent Monitor"), this);
   connect(_newEventMonitorAct, SIGNAL(triggered()), this, SLOT(createEventMonitor()));
 
-  // Annotations
+  // Advanced layout
   _createLabelAct = new QAction(tr("&Label"), this);
   _createLabelAct->setStatusTip(tr("Create a label for the current view"));
   _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
@@ -806,7 +800,7 @@ void MainWindow::createActions() {
 
   _createCircleAct = new QAction(tr("&Circle"), this);
   _createCircleAct->setStatusTip(tr("Create a circle for the current view"));
-  _createCircleAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
+  _createCircleAct->setIcon(QPixmap(":kst_gfx_circle.png"));
   _createCircleAct->setShortcut(QString("F5"));
   _createCircleAct->setCheckable(true);
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
@@ -842,52 +836,25 @@ void MainWindow::createActions() {
   _createSvgAct = new QAction(tr("&Svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
   _createSvgAct->setIcon(QPixmap(":draw-bezier-curves.png"));
-  _createSvgAct->setShortcut(QString("F11"));
+  _createSvgAct->setShortcut(QString("F10"));
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
-
-  // ************************** Mode Actions ******************************* //
-  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
-  _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
-  _tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
-  //_tiedZoomAct->setCheckable(true);
-  _tiedZoomAct->setShortcut(QString("t"));
-  connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
-
-  QActionGroup* _dataZoomOnlyGroup = new QActionGroup(this);
-
-  _dataZoomOnlyDisabledAct = _dataZoomOnlyGroup->addAction(tr("Free Zoom/Scroll"));
-  _dataZoomOnlyDisabledAct->setStatusTip(tr("Zoom &arbitray in X- or Y-direction"));
-  //TODO _dataZoomOnlyDisabledAct->setShortcut(QString("a"));
-  _dataZoomOnlyDisabledAct->setCheckable(true);
-  _dataZoomOnlyDisabledAct->setData(View::ZoomOnlyDisabled);
-  //TODO _dataZoomOnlyDisabledAct->setIcon(QPixmap(":kst_datamode.png"));
-
-  _dataZoomOnlyXAct = _dataZoomOnlyGroup->addAction(tr("&X-only Zoom"));
-  _dataZoomOnlyXAct->setStatusTip(tr("Zoom only in X direction"));
-  //TODO _dataZoomOnlyXAct->setShortcut(QString("x"));
-  _dataZoomOnlyXAct->setCheckable(true);
-  _dataZoomOnlyXAct->setData(View::ZoomOnlyX);  
-  //TODO _dataZoomOnlyXAct->setIcon(QPixmap(":kst_datamode.png"));
-
-  _dataZoomOnlyYAct = _dataZoomOnlyGroup->addAction(tr("&Y-only Zoom"));
-  _dataZoomOnlyYAct->setStatusTip(tr("Zoom only in X direction"));
-  //TODO _dataZoomOnlyYAct->setShortcut(QString("y"));
-  _dataZoomOnlyYAct->setData(View::ZoomOnlyY);
-  _dataZoomOnlyYAct->setCheckable(true);
-  //TODO _dataZoomOnlyYAct->setIcon(QPixmap(":kst_datamode.png"));
-
-  _dataZoomOnlyGroup->setExclusive(true);
-  _dataZoomOnlyDisabledAct->setChecked(true);
-  connect(_dataZoomOnlyGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeZoomOnlyMode(QAction*)));
-
 
   _createSharedAxisBoxAct = new QAction(tr("&Shared Axis Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
   _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
   _createSharedAxisBoxAct->setCheckable(true);
-//   _createSharedAxisBoxAct->setEnabled(false);
+  //_createSharedAxisBoxAct->setEnabled(false);
   connect(_createSharedAxisBoxAct, SIGNAL(triggered()), this, SLOT(createSharedAxisBox()));
+
+  // ************************** Mode Actions ******************************* //
+  // First, general options
+  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
+  _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
+  _tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
+  _tiedZoomAct->setCheckable(true);
+  _tiedZoomAct->setShortcut(QString("t"));
+  connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
   _dataModeAct = new QAction(tr("&Data Mode"), this);
   _dataModeAct->setStatusTip(tr("Toggle the current view's data mode"));
@@ -895,14 +862,48 @@ void MainWindow::createActions() {
   _dataModeAct->setCheckable(true);
   connect(_dataModeAct, SIGNAL(toggled(bool)), this, SLOT(setDataMode(bool)));
 
-  _layoutModeAct = new QAction(tr("&Layout Mode"), this);
+  // Then, exclusive interaction modes
+  QActionGroup* _interactionModeGroup = new QActionGroup(this);
+
+  _standardZoomAct = _interactionModeGroup->addAction(tr("X-Y Zoom/Scroll"));
+  _standardZoomAct->setStatusTip(tr("Zoom &arbitrary in X- or Y-direction"));
+  //TODO _standardZoomAct->setShortcut(QString("a"));
+  _standardZoomAct->setCheckable(true);
+  _standardZoomAct->setData(View::ZoomOnlyDisabled);
+  _standardZoomAct->setIcon(QPixmap(":xy-zoom.png"));
+
+  _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
+  _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
+  //TODO _xOnlyZoomAct->setShortcut(QString("x"));
+  _xOnlyZoomAct->setCheckable(true);
+  _xOnlyZoomAct->setData(View::ZoomOnlyX);
+  _xOnlyZoomAct->setIcon(QPixmap(":x-zoom.png"));
+
+  _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
+  _yOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
+  //TODO _yOnlyZoomAct->setShortcut(QString("y"));
+  _yOnlyZoomAct->setData(View::ZoomOnlyY);
+  _yOnlyZoomAct->setCheckable(true);
+  _yOnlyZoomAct->setIcon(QPixmap(":y-zoom.png"));
+
+  _layoutModeAct = _interactionModeGroup->addAction(tr("&Layout Mode"));
   _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode"));
   _layoutModeAct->setIcon(QPixmap(":transform-move.png"));
   _layoutModeAct->setCheckable(true);
   _layoutModeAct->setShortcut(QString("F2"));
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
+  _interactionModeGroup->setExclusive(true);
+  _standardZoomAct->setChecked(true);
+  connect(_interactionModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeZoomOnlyMode(QAction*)));
+
   // *********************** Tools actions ************************************** //
+  _dataManagerAct = new QAction(tr("Data &Manager"), this);
+  _dataManagerAct->setStatusTip(tr("Show Kst's data manager window"));
+  _dataManagerAct->setIcon(QPixmap(":data-manager.png"));
+  _dataManagerAct->setShortcut(QString("d"));
+  connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
+
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard"));
   _dataWizardAct->setIcon(QPixmap(":tools-wizard.png"));
@@ -957,7 +958,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addAction(_closeAct);
   _fileMenu->addSeparator();
-  // Reload, isolate it a bit frmo the other entries to avoid inadvertent triggering
+  // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
   _fileMenu->addSeparator();
   // Print/export
@@ -977,8 +978,6 @@ void MainWindow::createMenus() {
   // Cut/Copy/Paste will come here
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
-  _viewMenu->addAction(_dataManagerAct);
-  _viewMenu->addSeparator();
   _viewMenu->addAction(_vectorEditorAct);
   _viewMenu->addAction(_scalarEditorAct);
   _viewMenu->addAction(_matrixEditorAct);
@@ -996,6 +995,7 @@ void MainWindow::createMenus() {
   _createMenu = menuBar()->addMenu(tr("&Create"));
   // Containers
   _createMenu->addAction(_createPlotAct);
+  _createMenu->addAction(_createSharedAxisBoxAct);
   _createMenu->addSeparator();
   // Data objects
   _createMenu->addAction(_newCurveAct);
@@ -1006,21 +1006,10 @@ void MainWindow::createMenus() {
   _createMenu->addAction(_newSpectrogramAct);
   _createMenu->addAction(_newEventMonitorAct);
   _createMenu->addSeparator();
-  // Annotation objects
-  QMenu* annotations = _createMenu->addMenu(tr("&Annotation"));
-  annotations->addAction(_createLabelAct);
-  annotations->addAction(_createBoxAct);
-  annotations->addAction(_createCircleAct);
-  annotations->addAction(_createEllipseAct);
-  annotations->addAction(_createLineAct);
-  annotations->addAction(_createArrowAct);
-  annotations->addAction(_createPictureAct);
-  annotations->addAction(_createSvgAct);
-  _createMenu->addSeparator();
-  // Now, create the dynamic plugins menus
-  QMenu* _pluginsMenu = _createMenu->addMenu(tr("Standard P&lugins"));
-  QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugins"));
-  QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Filter Plu&gins"));
+  // Now, create the dynamic plugin menus
+  QMenu* _pluginsMenu = _createMenu->addMenu(tr("Standard P&lugin"));
+  QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugin"));
+  QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Filter Plu&gin"));
   PluginMenuItemAction* action;
   foreach (QString pluginName, DataObject::dataObjectPluginList()) {
     action = new PluginMenuItemAction(pluginName, this);
@@ -1037,22 +1026,33 @@ void MainWindow::createMenus() {
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _filterPluginsMenu->addAction(action);
   }
+  _createMenu->addSeparator();
+  // Annotation objects
+  QMenu* annotations = _createMenu->addMenu(tr("&Annotation"));
+  annotations->addAction(_createLabelAct);
+  annotations->addAction(_createBoxAct);
+  annotations->addAction(_createCircleAct);
+  annotations->addAction(_createEllipseAct);
+  annotations->addAction(_createLineAct);
+  annotations->addAction(_createArrowAct);
+  annotations->addAction(_createPictureAct);
+  annotations->addAction(_createSvgAct);
 
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
-  // Zoom/axes stuff
-  _modeMenu->addAction(_tiedZoomAct);
-  _modeMenu->addAction(_createSharedAxisBoxAct);
-  // Zoom X-only or Y-only will come here
-  _modeMenu->addSeparator()->setText(tr("Zoom only X or Y"));
-  _modeMenu->addAction(_dataZoomOnlyDisabledAct);
-  _modeMenu->addAction(_dataZoomOnlyXAct);
-  _modeMenu->addAction(_dataZoomOnlyYAct);
-  _modeMenu->addSeparator();
-  // Interaction options: data mode on/off, layout mode toggle
-  _modeMenu->addAction(_dataModeAct);
+  // Interaction mode
+  _modeMenu->addSeparator()->setText(tr("Interaction mode"));
+  _modeMenu->addAction(_standardZoomAct);
+  _modeMenu->addAction(_xOnlyZoomAct);
+  _modeMenu->addAction(_yOnlyZoomAct);
   _modeMenu->addAction(_layoutModeAct);
+  _standardZoomAct->setChecked(true);
+  _modeMenu->addSeparator();
+  // Options
+  _modeMenu->addAction(_tiedZoomAct);
+  _modeMenu->addAction(_dataModeAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  _toolsMenu->addAction(_dataManagerAct);
   _toolsMenu->addAction(_dataWizardAct);
   _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
@@ -1076,38 +1076,44 @@ void MainWindow::createToolBars() {
   setToolButtonStyle(Qt::ToolButtonIconOnly);
 
   _fileToolBar = addToolBar(tr("File"));
+  _fileToolBar->setObjectName("File Toolbar");
   _fileToolBar->addAction(_openAct);
   _fileToolBar->addAction(_saveAct);
   _fileToolBar->addAction(_reloadAct);
   _fileToolBar->addAction(_printAct);
 
   _editToolBar = addToolBar(tr("Edit"));
+  _editToolBar->setObjectName("Edit Toolbar");
   _editToolBar->addAction(_undoAct);
   _editToolBar->addAction(_redoAct);
 
-  _rangeToolBar = addToolBar(tr("Data Range"));
-  _rangeToolBar->addAction(_backAct);
-  _rangeToolBar->addAction(_forwardAct);
-  _rangeToolBar->addAction(_readFromEndAct);
-  _rangeToolBar->addAction(_pauseAct);
-
-  //   _layoutToggleToolBar = addToolBar(tr("Mode"));
-  _modeToolBar = addToolBar(tr("Mode"));
-  _modeToolBar->addAction(_tiedZoomAct);
-  _modeToolBar->addAction(_dataZoomOnlyDisabledAct);
-  _modeToolBar->addAction(_dataZoomOnlyXAct);
-  _modeToolBar->addAction(_dataZoomOnlyYAct);
-  _modeToolBar->addAction(_createSharedAxisBoxAct);
-  _modeToolBar->addAction(_dataModeAct);
-  _modeToolBar->addAction(_layoutModeAct);
-
   _toolsToolBar = addToolBar(tr("Tools"));
+  _toolsToolBar->setObjectName("Tools Toolbar");
   _toolsToolBar->addAction(_dataManagerAct);
   _toolsToolBar->addAction(_dataWizardAct);
   _toolsToolBar->addAction(_changeDataSampleDialogAct);
   _toolsToolBar->addAction(_changeFileDialogAct);
 
-  _annotationToolBar = new QToolBar(tr("Annotation"), this);
+  _rangeToolBar = addToolBar(tr("Data Range"));
+  _rangeToolBar->setObjectName("Data Range Toolbar");
+  _rangeToolBar->addAction(_backAct);
+  _rangeToolBar->addAction(_forwardAct);
+  _rangeToolBar->addAction(_readFromEndAct);
+  _rangeToolBar->addAction(_pauseAct);
+
+  _modeToolBar = addToolBar(tr("Mode"));
+  _modeToolBar->setObjectName("Mode Toolbar");
+  _modeToolBar->addAction(_tiedZoomAct);
+  _modeToolBar->addAction(_dataModeAct);
+  _modeToolBar->addSeparator();
+  _modeToolBar->addAction(_standardZoomAct);
+  _modeToolBar->addAction(_xOnlyZoomAct);
+  _modeToolBar->addAction(_yOnlyZoomAct);
+  _modeToolBar->addAction(_layoutModeAct);
+
+  _annotationToolBar = addToolBar(tr("Advanced Layout"));
+  _annotationToolBar->setObjectName("Advanced Layout Toolbar");
+  _annotationToolBar->addAction(_createSharedAxisBoxAct);
   _annotationToolBar->addAction(_createLabelAct);
   _annotationToolBar->addAction(_createBoxAct);
   _annotationToolBar->addAction(_createCircleAct);
@@ -1116,8 +1122,6 @@ void MainWindow::createToolBars() {
   _annotationToolBar->addAction(_createArrowAct);
   _annotationToolBar->addAction(_createPictureAct);
   _annotationToolBar->addAction(_createSvgAct);
-  addToolBar(Qt::TopToolBarArea, _annotationToolBar); // Try a side toolbar by default?
-  _annotationToolBar->setVisible(true);
 
 }
 
@@ -1440,12 +1444,14 @@ void MainWindow::readSettings() {
   } else {
       setGeometry(50, 50, 800, 600);
   }
+  restoreState(settings.value("toolbarState").toByteArray());
 }
 
 
 void MainWindow::writeSettings() {
   QSettings settings("Kst2");
   settings.setValue("geometry", saveGeometry());
+  settings.setValue("toolbarState", saveState());
 }
 
 }
