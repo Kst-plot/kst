@@ -97,6 +97,7 @@ class View : public QGraphicsView
     void setPrinting(bool printing) { _printing = printing; }
     bool isPrinting() { return _printing; }
 
+    //TODO cleanup/remove
     void setDataMode(bool dataMode) { _dataMode = dataMode; }
     bool isDataMode() { return _dataMode; }
 
