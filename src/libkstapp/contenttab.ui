@@ -286,7 +286,72 @@
   <tabstop>_up</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_deselectAllAvailable</sender>
+   <signal>clicked()</signal>
+   <receiver>_availableRelationList</receiver>
+   <slot>clearSelection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>481</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>76</x>
+     <y>405</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_selectAllAvailable</sender>
+   <signal>clicked()</signal>
+   <receiver>_availableRelationList</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>177</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>433</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_deselectAllDisplayed</sender>
+   <signal>clicked()</signal>
+   <receiver>_displayedRelationList</receiver>
+   <slot>clearSelection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>517</x>
+     <y>487</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>518</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_selectAllDisplayed</sender>
+   <signal>clicked()</signal>
+   <receiver>_displayedRelationList</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>592</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>591</x>
+     <y>447</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
  </buttongroups>
