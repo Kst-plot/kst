@@ -10,5 +10,6 @@ SUBDIRS += \
     src/kst \
     src/d2asc \
     src/plugins \
-    tests \
-    tests/dirfile_maker
+    tests
+
+!win32-msvc*:SUBDIRS += tests/dirfile_maker
