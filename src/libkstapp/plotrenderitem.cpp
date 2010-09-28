@@ -301,7 +301,7 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
 
 
 void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
-  if (_highlightPointActive && kstApp->mainWindow()->isDataMode() && plotItem()->projectionRect().contains(_highlightPoint)) {
+  if (_highlightPointActive && kstApp->mainWindow()->isHighlightPoint() && plotItem()->projectionRect().contains(_highlightPoint)) {
     QPointF point = plotItem()->mapToPlot(_highlightPoint);
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
@@ -545,7 +545,9 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   processHoverMoveEvent(p);
 
-  if (kstApp->mainWindow()->isDataMode()) update();
+  if (kstApp->mainWindow()->isHighlightPoint()) {
+    update();
+  }
 }
 
 void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
@@ -555,7 +557,7 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
   }
 
   const QPointF point = plotItem()->mapToProjection(p);
-  if (kstApp->mainWindow()->isDataMode()) {
+  if (kstApp->mainWindow()->isHighlightPoint()) {
     highlightNearestDataPoint(point);
   } else {
     _highlightPointActive = false;

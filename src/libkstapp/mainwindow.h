@@ -51,7 +51,7 @@ class MainWindow : public QMainWindow
     Document *document() const;
     QProgressBar *progressBar() const;
     bool initFromCommandLine();
-    bool isDataMode() { return _dataMode; }
+    bool isHighlightPoint() { return _highlightPoint; }
     void setStatusMessage(QString message);
 
   public Q_SLOTS:
@@ -126,7 +126,7 @@ class MainWindow : public QMainWindow
     void setLayoutMode(bool layoutMode);
     void toggleTiedZoom();
 
-    void setDataMode(bool dataMode);
+    void setHighlightPoint(bool);
     void changeZoomOnlyMode(QAction*);
 
   protected:
@@ -161,7 +161,7 @@ class MainWindow : public QMainWindow
     QPointer<QProgressBar> _progressBar;
     QLabel *_messageLabel;
 
-    bool _dataMode;
+    bool _highlightPoint;
 
     QMenu *_fileMenu;
     QMenu *_editMenu;
@@ -217,7 +217,7 @@ class MainWindow : public QMainWindow
 
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
-    QAction *_dataModeAct;
+    QAction *_highlightPointAct;
     QAction *_standardZoomAct;
     QAction *_xOnlyZoomAct;
     QAction *_yOnlyZoomAct;

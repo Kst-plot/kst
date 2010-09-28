@@ -70,7 +70,8 @@ MainWindow::MainWindow() :
     _bugReportWizard(0),
     _applicationSettingsDialog(0),
     _aboutDialog(0),
-    _dataMode(false) {
+    _highlightPoint(false) 
+{
   _doc = new Document(this);
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -128,15 +129,17 @@ void MainWindow::setLayoutMode(bool layoutMode) {
 
   if (layoutMode) {
     v->setViewMode(View::Layout);
+    _highlightPointAct->setEnabled(false);
+    _tiedZoomAct->setEnabled(false);
   } else {
     v->setViewMode(View::Data);    
+    _highlightPointAct->setEnabled(true);
+    _tiedZoomAct->setEnabled(true);
   }
-  setDataMode(!layoutMode);
 }
 
-// TODO cleanup _dataMode & Co.: there's also a datamode in View!
-void MainWindow::setDataMode(bool dataMode) {
-  _dataMode = dataMode;
+void MainWindow::setHighlightPoint(bool highlight) {
+  _highlightPoint = highlight;
 }
 
 void MainWindow::changeZoomOnlyMode(QAction* act) {
@@ -860,14 +863,13 @@ void MainWindow::createActions() {
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
-  /*
-  TODO CLEANUP
-  _dataModeAct = new QAction(tr("&Data Mode"), this);
-  _dataModeAct->setStatusTip(tr("Toggle the current view's data mode"));
-  _dataModeAct->setIcon(QPixmap(":kst_datamode.png"));
-  _dataModeAct->setCheckable(true);
-  connect(_dataModeAct, SIGNAL(toggled(bool)), this, SLOT(setDataMode(bool)));
-  */
+  
+  _highlightPointAct = new QAction(tr("&Highlight data point"), this);
+  _highlightPointAct->setStatusTip(tr("Highlight closest data point"));
+  _highlightPointAct->setIcon(QPixmap(":kst_datamode.png"));
+  _highlightPointAct->setCheckable(true);
+  connect(_highlightPointAct, SIGNAL(toggled(bool)), this, SLOT(setHighlightPoint(bool)));
+  
 
   // Then, exclusive interaction modes
   QActionGroup* _interactionModeGroup = new QActionGroup(this);
@@ -1055,7 +1057,7 @@ void MainWindow::createMenus() {
   _modeMenu->addSeparator();
   // Options
   _modeMenu->addAction(_tiedZoomAct);
-  // TODO _modeMenu->addAction(_dataModeAct);
+  _modeMenu->addAction(_highlightPointAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataManagerAct);
@@ -1110,7 +1112,7 @@ void MainWindow::createToolBars() {
   _modeToolBar = addToolBar(tr("Mode"));
   _modeToolBar->setObjectName("Mode Toolbar");
   _modeToolBar->addAction(_tiedZoomAct);
-  // TODO _modeToolBar->addAction(_dataModeAct);
+  _modeToolBar->addAction(_highlightPointAct);
   _modeToolBar->addSeparator();
   _modeToolBar->addAction(_standardZoomAct);
   _modeToolBar->addAction(_xOnlyZoomAct);
