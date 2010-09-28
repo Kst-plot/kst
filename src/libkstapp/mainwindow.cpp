@@ -145,7 +145,7 @@ void MainWindow::setHighlightPoint(bool highlight) {
 void MainWindow::changeZoomOnlyMode(QAction* act) {
   if (act == _layoutModeAct && act->isChecked()) {
     setLayoutMode(true);
-  }  else {
+  } else {
     setLayoutMode(false);
   }
   tabWidget()->currentView()->setZoomOnly((View::ZoomOnlyMode)act->data().toInt());
@@ -864,7 +864,7 @@ void MainWindow::createActions() {
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
   
-  _highlightPointAct = new QAction(tr("&Highlight data point"), this);
+  _highlightPointAct = new QAction(tr("&Highlight Data Points"), this);
   _highlightPointAct->setStatusTip(tr("Highlight closest data point"));
   _highlightPointAct->setIcon(QPixmap(":kst_datamode.png"));
   _highlightPointAct->setCheckable(true);
@@ -874,8 +874,8 @@ void MainWindow::createActions() {
   // Then, exclusive interaction modes
   QActionGroup* _interactionModeGroup = new QActionGroup(this);
 
-  _standardZoomAct = _interactionModeGroup->addAction(tr("X-Y Zoom/Scroll"));
-  _standardZoomAct->setStatusTip(tr("Zoom &arbitrary in X- or Y-direction"));
+  _standardZoomAct = _interactionModeGroup->addAction(tr("X-Y &Zoom/Scroll"));
+  _standardZoomAct->setStatusTip(tr("Zoom arbitrarily in X- or Y-direction"));
   //TODO _standardZoomAct->setShortcut(QString("a"));
   _standardZoomAct->setCheckable(true);
   _standardZoomAct->setData(View::ZoomOnlyDisabled);
@@ -1122,6 +1122,7 @@ void MainWindow::createToolBars() {
   _annotationToolBar = addToolBar(tr("Advanced Layout"));
   _annotationToolBar->setObjectName("Advanced Layout Toolbar");
   _annotationToolBar->addAction(_createSharedAxisBoxAct);
+  _annotationToolBar->addSeparator();
   _annotationToolBar->addAction(_createLabelAct);
   _annotationToolBar->addAction(_createBoxAct);
   _annotationToolBar->addAction(_createCircleAct);

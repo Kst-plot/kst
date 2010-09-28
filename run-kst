@@ -4,5 +4,6 @@ cd `dirname $0`
 
 export SCRIPTDIR=$PWD
 export BUILDDIR=$PWD/build
+export LD_LIBRARY_PATH=$BUILDDIR/lib:$LD_LIBRARY_PATH
 
 $BUILDDIR/bin/kst2 "$@"
