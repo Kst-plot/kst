@@ -119,6 +119,9 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     virtual QString propertyString() const;
     virtual void internalUpdate();
+
+    virtual QString xLabel() const;
+    virtual QString yLabel() const;
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();
@@ -131,6 +134,8 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     virtual QString _automaticDescriptiveName() const;
 
+    virtual void _resetFieldMetadata();
+
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY,
@@ -139,6 +144,10 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     void doUpdateSkip(int realXStart, int realYStart);
     void doUpdateNoSkip(int realXStart, int realYStart);
+
+    virtual void _resetFieldScalars();
+    virtual void _resetFieldStrings();
+
 
     // values requested; may be different from actual matrix range
     int _reqXStart, _reqYStart, _reqNX, _reqNY;
@@ -160,6 +169,10 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     int _samplesPerFrameCache; // cache the samples per frame of the field in datasource
 
     int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
+
+    QHash<QString, ScalarPtr> _fieldScalars;
+    QHash<QString, StringPtr> _fieldStrings;
+
 };
 
 typedef SharedPtr<DataMatrix> DataMatrixPtr;

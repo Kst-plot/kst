@@ -66,8 +66,8 @@ public:
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
-  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
-  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+  QMap<QString, double> metaScalars(const QString &m);
+  QMap<QString, QString> metaStrings(const QString &m);
 
 
   // no interface
@@ -148,6 +148,57 @@ const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString&
   }
 
   return info;
+}
+
+QMap<QString, double> DataInterfaceFitsImageMatrix::metaScalars(const QString &matrix) {
+  qDebug() << "metascalars for " << matrix;
+  QMap<QString, double> M;
+
+  return M;
+}
+
+QMap<QString, QString> DataInterfaceFitsImageMatrix::metaStrings(const QString &matrix) {
+
+  QMap<QString, QString> M;
+  int status = 0;
+  int type;
+  char instr[128];
+
+  M.clear();
+
+  if ( !*_fitsfileptr || !_matrixHash.contains( matrix ) ) {
+    return M;
+  }
+
+  fits_movabs_hdu(*_fitsfileptr, _matrixHash[matrix], &type, &status);
+
+  fits_read_key(*_fitsfileptr, TSTRING, "CTYPE1", instr, NULL, &status);
+  if (!status) {
+    M.insert("x_quantity", QString(instr).trimmed());
+  }
+  status = 0;
+  fits_read_key(*_fitsfileptr, TSTRING, "CTYPE2", instr, NULL, &status);
+  if (!status) {
+    M.insert("y_quantity", QString(instr).trimmed());
+  }
+  status = 0;
+  fits_read_key(*_fitsfileptr, TSTRING, "CRUNIT1", instr, NULL, &status);
+  if (!status) {
+    M.insert("x_units", QString(instr).trimmed());
+  }
+  status = 0;
+  fits_read_key(*_fitsfileptr, TSTRING, "CRUNIT2", instr, NULL, &status);
+  if (!status) {
+    M.insert("y_units", QString(instr).trimmed());
+  }
+  status = 0;
+  fits_read_key(*_fitsfileptr, TSTRING, "BUNIT", instr, NULL, &status);
+  if (!status) {
+    M.insert("z_units", QString(instr).trimmed());
+  }
+  status = 0;
+
+  return M;
 }
 
 int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInfo& p) {

@@ -3001,10 +3001,10 @@ void PlotItem::zoomXAutoBorder(bool force) {
 
 
 void PlotItem::zoomXRight(bool force) {
-  if (zoomOnlyMode() == View::ZoomOnlyX) {
-    zoomXOut(force);
-    return;
-  }
+  //if (zoomOnlyMode() == View::ZoomOnlyX) {
+  //  zoomXOut(force);
+  //  return;
+  //}
 #if DEBUG_ZOOM
   qDebug() << "zoomXRight" << endl;
 #endif
@@ -3019,10 +3019,10 @@ void PlotItem::zoomXRight(bool force) {
 
 
 void PlotItem::zoomXLeft(bool force) {
-  if (zoomOnlyMode() == View::ZoomOnlyX) {
-    zoomXIn(force);
-    return;
-  }
+  //if (zoomOnlyMode() == View::ZoomOnlyX) {
+  //  zoomXIn(force);
+  //  return;
+  //}
 #if DEBUG_ZOOM
   qDebug() << "zoomXLeft" << endl;
 #endif
@@ -3159,10 +3159,10 @@ void PlotItem::zoomYAutoBorder(bool force) {
 
 
 void PlotItem::zoomYUp(bool force) {
-  if (zoomOnlyMode() == View::ZoomOnlyY) {
-    zoomYOut(force);
-    return;
-  }
+  //if (zoomOnlyMode() == View::ZoomOnlyY) {
+  //  zoomYOut(force);
+  //  return;
+  //}
 #if DEBUG_ZOOM
   qDebug() << "zoomYUp" << endl;
 #endif
@@ -3177,10 +3177,10 @@ void PlotItem::zoomYUp(bool force) {
 
 
 void PlotItem::zoomYDown(bool force) {
-  if (zoomOnlyMode() == View::ZoomOnlyY) {
-    zoomYIn(force);
-    return;
-  }
+  //if (zoomOnlyMode() == View::ZoomOnlyY) {
+  //  zoomYIn(force);
+  //  return;
+  //}
 #if DEBUG_ZOOM
   qDebug() << "zoomYDown" << endl;
 #endif

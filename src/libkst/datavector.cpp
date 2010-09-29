@@ -2,8 +2,8 @@
                           datavector.cpp  -  description
                              -------------------
     begin                : Fri Sep 22 2000
-    copyright            : (C) 2000 by cbn
-    email                :
+    copyright            : (C) 2000-2010 by C. Barth Netterfield
+    email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
 /***************************************************************************
@@ -307,7 +307,7 @@ QString DataVector::label() const {
     if (_fieldStrings.contains("units")) {
       QString units = _fieldStrings.value("units")->value();
       if (!units.isEmpty()) {
-        label += "\\[" + units + "\\]";
+        label += " \\[" + units + "\\]";
       }
     }
   } else {
@@ -623,12 +623,8 @@ void DataVector::_resetFieldMetadata() {
 }
 
 void DataVector::_resetFieldStrings() {
-  // Note: this does not necessarily preserve order if the
-  // datasource or field have been changed.  If dynamic
-  // fieldScalars are ever wanted, this should be fixed.
   const QMap<QString, QString> meta_strings = file()->vector().metaStrings(_field);  
   
-
   QStringList fieldStringKeys = _fieldStrings.keys();
   // remove field strings that no longer need to exist
   readLock();
@@ -663,9 +659,6 @@ void DataVector::_resetFieldStrings() {
 
 
 void DataVector::_resetFieldScalars() {
-  // Note: this does not necessarily preseve order if the 
-  // datasource or field have been changed.  If dynamic
-  // fieldScalars are ever wanted, this should be fixed.
   const QMap<QString, double> meta_scalars = file()->vector().metaScalars(_field);
 
 

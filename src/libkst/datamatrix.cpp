@@ -320,6 +320,87 @@ qint64 DataMatrix::minInputSerialOfLastChange() const {
   return LLONG_MAX;
 }
 
+void DataMatrix::_resetFieldMetadata() {
+  _resetFieldScalars();
+  _resetFieldStrings();
+}
+
+void DataMatrix::_resetFieldScalars() {
+
+}
+
+void DataMatrix::_resetFieldStrings() {
+  const QMap<QString, QString> meta_strings = file()->matrix().metaStrings(_field);
+
+  QStringList fieldStringKeys = _fieldStrings.keys();
+  // remove field strings that no longer need to exist
+  readLock();
+  for (int i=0; i<fieldStringKeys.count(); i++) {
+    QString key = fieldStringKeys.at(i);
+    if (!meta_strings.contains(key)) {
+      StringPtr sp = _fieldStrings[key];
+      _fieldStrings.remove(key);
+      sp = 0L;
+    }
+  }
+  // find or insert strings, to set their value
+  QMapIterator<QString, QString> it(meta_strings);
+  while (it.hasNext()) {
+    it.next();
+    QString key = it.key();
+    StringPtr sp;
+    if (!_fieldStrings.contains(key)) { // insert a new one
+      _fieldStrings.insert(key, sp = store()->createObject<String>());
+      sp->setProvider(this);
+      sp->setSlaveName(key);
+      sp->_KShared_ref();
+    } else {  // find it
+      sp = _fieldStrings[key];
+    }
+    sp->setValue(it.value());
+  }
+  unlock();
+}
+
+QString DataMatrix::xLabel() const {
+  QString label;
+
+  if (_fieldStrings.contains("x_quantity")) {
+    label = _fieldStrings.value("x_quantity")->value();
+  }
+
+  if (!label.isEmpty()) {
+    if (_fieldStrings.contains("x_units")) {
+      QString units = _fieldStrings.value("x_units")->value();
+      if (!units.isEmpty()) {
+        label += " \\[" + units + "\\]";
+      }
+    }
+  }
+
+  return label;
+
+}
+
+QString DataMatrix::yLabel() const {
+  QString label;
+
+  if (_fieldStrings.contains("y_quantity")) {
+    label = _fieldStrings.value("y_quantity")->value();
+  }
+
+  if (!label.isEmpty()) {
+    if (_fieldStrings.contains("y_units")) {
+      QString units = _fieldStrings.value("y_units")->value();
+      if (!units.isEmpty()) {
+        label += " \\[" + units + "\\]";
+      }
+    }
+  }
+
+  return label;
+}
+
 void DataMatrix::internalUpdate() {
   if (file()) {
     file()->writeLock();
@@ -486,6 +567,8 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _lastDoSkip = false;;
   _lastSkip = 1;
 
+  _resetFieldMetadata();
+
 }
 
 
@@ -502,6 +585,7 @@ void DataMatrix::reset() { // must be called with a lock
   _NS = 0;
   _nX = 1;
   _nY = 0;
+  _resetFieldMetadata();
 }
 
 
