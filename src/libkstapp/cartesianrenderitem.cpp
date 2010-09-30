@@ -23,7 +23,7 @@ namespace Kst {
 CartesianRenderItem::CartesianRenderItem(PlotItem *parentItem)
   : PlotRenderItem(parentItem) {
   setType(Cartesian);
-  setTypeName(tr("Cartesian Render"));
+  setTypeName(tr("Cartesian Plot"));
 }
 
 
