@@ -54,8 +54,7 @@ class ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 
   private:
     void updatePrimitiveList();
-    void duplicateDependents(VectorPtr oldVector, VectorPtr newVector, QMap<RelationPtr, RelationPtr> &duplicatedRelations);
-    void duplicateDependents(MatrixPtr oldMatrix, MatrixPtr newMatrix, QMap<RelationPtr, RelationPtr> &duplicatedRelations);
+    void duplicateDerivedObjects(QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors, QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices, QMap<RelationPtr, RelationPtr> &duplicatedRelations);
 
     ObjectStore *_store;
     DataSourcePtr _dataSource;

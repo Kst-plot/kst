@@ -317,7 +317,7 @@ void ChangeFileDialog::apply() {
         if (invalid > 0) {
           invalidSources += ", ";
           }
-        invalidSources = vector->field();
+        invalidSources += vector->field();
         ++invalid;
       } else {
         if (_duplicateSelected->isChecked()) {
@@ -327,10 +327,7 @@ void ChangeFileDialog::apply() {
           newVector->changeFile(_dataSource);
           newVector->registerChange();
           newVector->unlock();
-
-          if (_duplicateDependents->isChecked()) {
-             duplicateDependents(VectorPtr(vector), VectorPtr(newVector), duplicatedRelations);
-          }
+          duplicatedVectors[vector] = newVector;
         } else {
           if (!oldSources.contains(vector->dataSource())) {
             oldSources << vector->dataSource();
@@ -351,7 +348,7 @@ void ChangeFileDialog::apply() {
         if (invalid > 0) {
           invalidSources += ", ";
           }
-        invalidSources = matrix->field();
+        invalidSources += matrix->field();
         ++invalid;
       } else {
         if (_duplicateSelected->isChecked()) {
@@ -361,10 +358,7 @@ void ChangeFileDialog::apply() {
           newMatrix->changeFile(_dataSource);
           newMatrix->registerChange();
           newMatrix->unlock();
-
-          if (_duplicateDependents->isChecked()) {
-            duplicateDependents(MatrixPtr(matrix), MatrixPtr(newMatrix), duplicatedRelations);
-          }
+          duplicatedMatrices[matrix] = newMatrix;
         } else {
           if (!oldSources.contains(matrix->dataSource())) {
             oldSources << matrix->dataSource();
@@ -378,6 +372,9 @@ void ChangeFileDialog::apply() {
       matrix->unlock();
     }
   }
+
+  // Now that all new primitives have been created, generate derived objects
+  duplicateDerivedObjects(duplicatedVectors, duplicatedMatrices, duplicatedRelations);
 
   // Plot the items. (Do we need to doUpdates before this?)
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
@@ -413,52 +410,47 @@ void ChangeFileDialog::apply() {
 }
 
 
-void ChangeFileDialog::duplicateDependents(VectorPtr oldVector, VectorPtr newVector, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+void ChangeFileDialog::duplicateDerivedObjects(QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors, QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+  // First, take care of curves ("relations")
   RelationList relations = _store->getObjects<Relation>();
   foreach(RelationPtr relation, relations) {
-    if (relation->uses(oldVector)){
-      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
-      if (newRelation) {
-        newRelation->replaceDependency(oldVector, newVector);
+    relation->readLock();
+    bool relationDuplicated = false;
+    RelationPtr newRelation = NULL;
+    foreach(VectorPtr inputVector, relation->inputVectors().values()) {
+      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
+        if (!relationDuplicated) { // For the first duplicated vector, create the new relation
+          newRelation = relation->makeDuplicate(duplicatedRelations);
+          relationDuplicated = true;
+        }
+        if (newRelation) { // For the others, substitute the duplicated vector to be used in the duplicated relation
+          newRelation->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
+        }
       }
     }
+    relation->unlock();
   }
-
+  // Now data objects (equations, etc...)
   DataObjectList dataObjects = _store->getObjects<DataObject>();
   foreach(DataObjectPtr dataObject, dataObjects) {
-    if (dataObject->uses(oldVector)){
-      DataObjectPtr newObject = dataObject->makeDuplicate();
-      if (newObject) {
-        newObject->replaceDependency(oldVector, newVector);
-        dataObject->duplicateDependents(newObject, duplicatedRelations);
+    dataObject->readLock();
+    bool dataObjectDuplicated = false;
+    DataObjectPtr newDataObject = NULL;
+    foreach(VectorPtr inputVector, dataObject->inputVectors().values()) {
+      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
+        if (!dataObjectDuplicated) {
+          newDataObject = dataObject->makeDuplicate();
+          dataObjectDuplicated = true;
+        }
+        if (newDataObject) { // For the others, substitute the duplicated vector to be used in the duplicated relation
+            newDataObject->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
+        }
       }
     }
+    dataObject->unlock();
   }
 }
 
-
-void ChangeFileDialog::duplicateDependents(MatrixPtr oldMatrix, MatrixPtr newMatrix, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
-  RelationList relations = _store->getObjects<Relation>();
-  foreach(RelationPtr relation, relations) {
-    if (relation->uses(oldMatrix)){
-      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
-      if (newRelation) {
-        newRelation->replaceDependency(oldMatrix, newMatrix);
-      }
-    }
-  }
-
-  DataObjectList dataObjects = _store->getObjects<DataObject>();
-  foreach(DataObjectPtr dataObject, dataObjects) {
-    if (dataObject->uses(oldMatrix)){
-      DataObjectPtr newObject = dataObject->makeDuplicate();
-      if (newObject) {
-        newObject->replaceDependency(oldMatrix, newMatrix);
-        dataObject->duplicateDependents(newObject, duplicatedRelations);
-      }
-    }
-  }
-}
 
 }
 // vim: ts=2 sw=2 et
