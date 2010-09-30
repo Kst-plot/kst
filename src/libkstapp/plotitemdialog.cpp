@@ -47,10 +47,10 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   _contentTab = new ContentTab(this);
   connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
-  DialogPage *page = new DialogPage(this);
-  page->setPageTitle(tr("Contents"));
-  page->addDialogTab(_contentTab);
-  addDialogPage(page, true);
+  DialogPage *contentsPage = new DialogPage(this);
+  contentsPage->setPageTitle(tr("Contents"));
+  contentsPage->addDialogTab(_contentTab);
+  addDialogPage(contentsPage, true);
 
   _labelTab = new LabelTab(_plotItem, this);
   _topLabelTab = new OverrideLabelTab(tr("Top Font"), this);
@@ -137,6 +137,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
     addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot->shortName());
   }
 
+  selectDialogPage(contentsPage);
   _saveAsDefault->show();
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
