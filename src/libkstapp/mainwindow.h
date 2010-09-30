@@ -112,6 +112,10 @@ class MainWindow : public QMainWindow
     void createSvg();
     void createSharedAxisBox();
 
+    void createScalar();
+    void createVector();
+    void createMatrix();
+    void createString();
     void createCurve();
     void createPSD();
     void createEquation();
@@ -237,6 +241,10 @@ class MainWindow : public QMainWindow
     QAction *_forwardAct;
     QAction *_reloadAct;
 
+    QAction *_newScalarAct;
+    QAction *_newVectorAct;
+    QAction *_newMatrixAct;
+    QAction *_newStringAct;
     QAction *_newCurveAct;
     QAction *_newEquationAct;
     QAction *_newPSDAct;

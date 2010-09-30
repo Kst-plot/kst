@@ -529,6 +529,29 @@ void MainWindow::createSharedAxisBox() {
   }
 }
 
+void MainWindow::createVector() {
+  QString tmp;
+  DialogLauncher::self()->showVectorDialog(tmp);
+}
+
+
+void MainWindow::createMatrix() {
+  QString tmp;
+  DialogLauncher::self()->showMatrixDialog(tmp);
+}
+
+
+void MainWindow::createScalar() {
+  QString scalarName;
+  DialogLauncher::self()->showScalarDialog(scalarName);
+}
+
+
+void MainWindow::createString() {
+  QString stringName;
+  DialogLauncher::self()->showStringDialog(stringName);
+}
+
 
 void MainWindow::createCircle() {
   if (_createCircleAct->isChecked()) {
@@ -769,6 +792,18 @@ void MainWindow::createActions() {
   _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
+  _newScalarAct = new QAction(tr("&Scalar"), this);
+  connect(_newScalarAct, SIGNAL(triggered()), this, SLOT(createScalar()));
+
+  _newVectorAct = new QAction(tr("&Vector"), this);
+  connect(_newVectorAct, SIGNAL(triggered()), this, SLOT(createVector()));
+
+  _newMatrixAct = new QAction(tr("&Matrix"), this);
+  connect(_newMatrixAct, SIGNAL(triggered()), this, SLOT(createMatrix()));
+
+  _newStringAct = new QAction(tr("Strin&g"), this);
+  connect(_newStringAct, SIGNAL(triggered()), this, SLOT(createString()));
+
   _newCurveAct = new QAction(tr("&Curve"), this);
   connect(_newCurveAct, SIGNAL(triggered()), this, SLOT(createCurve()));
 
@@ -1004,6 +1039,12 @@ void MainWindow::createMenus() {
   // Containers
   _createMenu->addAction(_createPlotAct);
   _createMenu->addAction(_createSharedAxisBoxAct);
+  _createMenu->addSeparator();
+  // Primitives
+  _createMenu->addAction(_newScalarAct);
+  _createMenu->addAction(_newVectorAct);
+  _createMenu->addAction(_newMatrixAct);
+  _createMenu->addAction(_newStringAct);
   _createMenu->addSeparator();
   // Data objects
   _createMenu->addAction(_newCurveAct);
@@ -1428,7 +1469,6 @@ void MainWindow::showBugReportWizard() {
   }
   _bugReportWizard->show();
 }
-
 
 void MainWindow::showChangeFileDialog() {
   if (!_changeFileDialog) {
