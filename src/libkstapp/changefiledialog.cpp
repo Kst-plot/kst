@@ -411,7 +411,38 @@ void ChangeFileDialog::apply() {
 
 
 void ChangeFileDialog::duplicateDerivedObjects(QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors, QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
-  // First, take care of curves ("relations")
+  // First, data objects (equations, etc...) so that curves derived from them can be handled in the next step.
+  // Dependencies between data objects should be handled fine, assuming that when we iterate the list we get dependents after what they depend on.
+  QMap<DataObjectPtr, DataObjectPtr> duplicatedDataObjects;
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+  foreach(DataObjectPtr dataObject, dataObjects) {
+    dataObject->readLock();
+    bool dataObjectDuplicated = false;
+    DataObjectPtr newDataObject = NULL;
+    foreach(VectorPtr inputVector, dataObject->inputVectors().values()) {
+      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
+        if (!dataObjectDuplicated) {
+          newDataObject = dataObject->makeDuplicate();
+          if (newDataObject) duplicatedDataObjects[dataObject] = newDataObject;
+          dataObjectDuplicated = true;
+        }
+        if (newDataObject) { // For the others, substitute the duplicated vector to be used in the duplicated relation
+          // TODO: Shouldn't we lock the object before making changes?
+          newDataObject->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
+        }
+      }
+    }
+    // If we have created a new data object, its output vectors could be the inputs of further objects, so we store
+    // the mapping of old to new output vectors to be able to clone dependents later in the chain.
+    // I'm assuming the order of output vectors has not changed during the replication.
+    if (newDataObject) {
+      for(int i=0; i<dataObject->outputVectors().count(); ++i) {
+        duplicatedVectors[kst_cast<DataVector>(dataObject->outputVectors().values()[i])] = kst_cast<DataVector>(newDataObject->outputVectors().values()[i]);
+      }
+    }
+    dataObject->unlock();
+  }
+  // Now, take care of curves ("relations")
   RelationList relations = _store->getObjects<Relation>();
   foreach(RelationPtr relation, relations) {
     relation->readLock();
@@ -429,25 +460,6 @@ void ChangeFileDialog::duplicateDerivedObjects(QMap<DataVectorPtr, DataVectorPtr
       }
     }
     relation->unlock();
-  }
-  // Now data objects (equations, etc...)
-  DataObjectList dataObjects = _store->getObjects<DataObject>();
-  foreach(DataObjectPtr dataObject, dataObjects) {
-    dataObject->readLock();
-    bool dataObjectDuplicated = false;
-    DataObjectPtr newDataObject = NULL;
-    foreach(VectorPtr inputVector, dataObject->inputVectors().values()) {
-      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
-        if (!dataObjectDuplicated) {
-          newDataObject = dataObject->makeDuplicate();
-          dataObjectDuplicated = true;
-        }
-        if (newDataObject) { // For the others, substitute the duplicated vector to be used in the duplicated relation
-            newDataObject->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
-        }
-      }
-    }
-    dataObject->unlock();
   }
 }
 
