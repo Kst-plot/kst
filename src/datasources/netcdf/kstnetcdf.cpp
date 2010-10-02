@@ -253,7 +253,7 @@ void NetcdfSource::reset() {
 
 
 bool NetcdfSource::initFile() {
-  _ncfile = new NcFile(_filename.toLatin1(), NcFile::ReadOnly);
+  _ncfile = new NcFile(_filename.toUtf8().data(), NcFile::ReadOnly);
   if (!_ncfile->is_valid()) {
       qDebug() << _filename << ": failed to open in initFile()" << endl;
       return false;
@@ -646,8 +646,7 @@ int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
       return 0;
     }
 
-    QByteArray bytes = filename.toLatin1();
-    NcFile *ncfile = new NcFile(bytes.constData());
+    NcFile *ncfile = new NcFile(filename.toUtf8().data());
     if (ncfile->is_valid()) {
       KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
       delete ncfile;
