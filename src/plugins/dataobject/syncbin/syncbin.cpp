@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+/* bin Y values into N bins from X min to X max, according to their X values.
+   This is like a 1D map, where X specifices the pixel the data go into. */
 
 #include "syncbin.h"
 #include "objectstore.h"

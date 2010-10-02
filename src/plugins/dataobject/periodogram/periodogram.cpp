@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+/* a type of spectrum.  I'm not sure how this relates to the built in
+   power spectrums.  It could be removed from the default build (?) */
 
 #include "periodogram.h"
 #include "objectstore.h"

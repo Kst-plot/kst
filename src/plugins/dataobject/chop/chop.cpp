@@ -10,6 +10,12 @@
  ***************************************************************************/
 
 
+ /* FIXME: rename to something more clear */
+ /* differences even samples from odd samples.  Used for LFI, whose 
+    Dicky-switch produces even samples looking at a cold load, and
+    odd samples looking at the sky */
+
+
 #include "chop.h"
 #include "objectstore.h"
 #include "ui_chopconfig.h"

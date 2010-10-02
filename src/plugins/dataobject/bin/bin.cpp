@@ -9,6 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
+/* 'boxcar decimation filter': not very useful. */
 
 #include "bin.h"
 #include "objectstore.h"

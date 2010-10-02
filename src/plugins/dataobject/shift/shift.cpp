@@ -10,6 +10,8 @@
  ***************************************************************************/
 
 
+/* shift a vector by an integer number of samples */
+
 #include "shift.h"
 #include "objectstore.h"
 #include "ui_shiftconfig.h"

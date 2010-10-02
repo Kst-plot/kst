@@ -1,6 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
+ *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -1244,8 +1245,6 @@ void ViewItem::setBottomRight(const QPointF &point) {
 
 
 void ViewItem::setTop(qreal y) {
-//   qDebug() << "setTop" << x << endl;
-
   QPointF anchor = selectTransform().map(rect().bottomLeft());
 
   QRectF from = selectBoundingRect();
@@ -1409,12 +1408,6 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
   } else {
     o = QPointF(x, y);
   }
-
-//   qDebug() << "lockOffset"
-//             << "ratio:" << ratio
-//             << "offset:" << offset
-//             << "o:" << o
-//             << endl;
 
   return o;
 }
@@ -1941,7 +1934,6 @@ void ViewItem::setSupportsTiedZoom(const bool supports) {
 
 void ViewItem::setTiedZoom(bool tiedXZoom, bool tiedYZoom, bool checkAllTied) {
   Q_UNUSED(checkAllTied)
-qDebug() << "setting tied zoom: " << tiedXZoom << " " << tiedYZoom;
   if ((_isXTiedZoom == tiedXZoom) && (_isYTiedZoom == tiedYZoom))
     return;
 

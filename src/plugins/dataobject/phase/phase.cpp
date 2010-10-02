@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+/* FIXME: figure out what this plugin is supposed to do, and comment
+   accordingly. */
 
 #include "phase.h"
 #include "objectstore.h"
