@@ -6,6 +6,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  *  This file is from the procps project at http://procps.sourceforge.net/ *
+ *  Copyright 1998-2003 Albert Cahalan <albert@users.sf.net>               *
  *                                                                         *
  ***************************************************************************/
 

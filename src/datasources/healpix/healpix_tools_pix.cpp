@@ -19,7 +19,7 @@
  * Some of these pixel tools are based on code from Healpix_cxx 2.00.      *
  * See http://sourceforge.net/projects/healpix/ for the original code      *
  *                                                                         *
- * Healpix 2.00 is copyright 2005 by E. Hivon, M. Reinecke, W. O'Mullane,  *
+ * Healpix 2.00 was developed by by E. Hivon, M. Reinecke, W. O'Mullane,   *
  * H.K. Eriksen, K.M. Gorski, A.J. Banday                                  *
  ***************************************************************************/
  

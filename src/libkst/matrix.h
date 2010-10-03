@@ -1,15 +1,9 @@
 /***************************************************************************
-                     matrix.h: 2D matrix type for kst
-                             -------------------
-    begin                : Mon July 19 2004
-    copyright            : (C) 2004 by University of British Columbia
-    email                : netterfield@astro.utoronto.ca
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
+ *                   netterfield@astro.utoronto.ca                         *
  *   copyright : (C) 2004  University of British Columbia                  *
+ *                   dscott@phas.ubc.ca                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

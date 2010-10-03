@@ -1,6 +1,5 @@
 /*******************************************************************************
  *                                                                             *
- *   copyright : (C) 2007 The University of Toronto                            *
  *   copyright : (C) 2010 C. Barth Netterfield <netterfield@astro.utoronto.ca> *
  *                                                                             *
  *   This program is free software; you can redistribute it and/or modify      *

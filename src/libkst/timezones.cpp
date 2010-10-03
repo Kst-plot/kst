@@ -802,3 +802,4 @@ bool TimezoneSource::parse(const QString &zone, TimezoneDetails &dataReceiver) c
 }
 
 }
+

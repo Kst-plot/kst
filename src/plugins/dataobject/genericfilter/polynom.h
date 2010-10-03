@@ -5,7 +5,9 @@
  *              - the derivative and the integrate.                           *
  *                                                                            *
  *  Copyright 2005, Jean-Paul Petillon                                        *
- *  Released under the terms of the GPL.                                      *
+ *  Released under the terms of the GPL V2, or (at your option) any later     * 
+ *  version                                                                   *
+ *                                                                            *
  ******************************************************************************/
 #ifndef POLYNOM_H
 #define POLYNOM_H

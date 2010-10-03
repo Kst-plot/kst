@@ -1,12 +1,7 @@
-//
-// C++ Interface: dimensionstab
-//
-// Description: 
-//
-//
-// Author: Barth Netterfield <netterfield@physics.utoronto.ca>, (C) 2008
-
 /***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007  Barth Netterfield                               *
+ *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

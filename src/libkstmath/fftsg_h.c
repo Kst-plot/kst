@@ -1,5 +1,4 @@
 /*
-Copyright:
     Copyright(C) 1996-2001 Takuya OOURA
     email: ooura@mmm.t.u-tokyo.ac.jp
     download: http://momonga.t.u-tokyo.ac.jp/~ooura/fft.html

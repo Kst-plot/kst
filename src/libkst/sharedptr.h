@@ -1,6 +1,6 @@
 /* This file is derived from the KDE libraries
    Copyright (c) 1999 Waldo Bastian <bastian@kde.org>
-   Copyright (c) 2004 The University of Toronto
+   Copyright (c) 2004 The University of Toronto <netterfield@astro.utoronto.ca>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public

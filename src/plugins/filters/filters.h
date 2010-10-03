@@ -1,7 +1,20 @@
+/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2007 The University of Toronto                        *
+ *                   netterfield@astro.utoronto.ca                         *
+ *   copyright : (C) 2005  University of British Columbia                  *
+ *                   dscott@phas.ubc.ca                                    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 /*
  *  Generic pass filter plugin for KST.
- *  Copyright 2004, The University of British Columbia
- *  Released under the terms of the GPL.
+ *  Released under the terms of the GPL 
  */
 
 #include <stdlib.h>

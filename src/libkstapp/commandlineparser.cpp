@@ -1,14 +1,15 @@
-//
-// C++ Implementation: CommandLineParser
-//
-// Description: 
-//
-//
-// Author: Barth Netterfield <netterfield@physics.utoronto.ca>, (C) 2008
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/***************************************************************************
+ *                                                                         *
+ *   copyright : (C) 2008  Barth Netterfield                               *
+ *                   netterfield@astro.utoronto.ca                         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 #include "commandlineparser.h"
 #include "datasource.h"
 #include "objectstore.h"

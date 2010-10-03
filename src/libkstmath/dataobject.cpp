@@ -3,7 +3,6 @@
                              -------------------
     begin                : May 20, 2003
     copyright            : (C) 2003 by C. Barth Netterfield
-                           (C) 2003 The University of Toronto
     email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
