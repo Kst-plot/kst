@@ -893,7 +893,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
 
-    maybeReparent();
+    updateViewItemParent();
     _creationState = Completed;
     setZValue(1);
     emit creationComplete();
@@ -1413,7 +1413,7 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 }
 
 
-bool ViewItem::maybeReparent() {
+bool ViewItem::updateViewItemParent() {
   if (lockParent() || skipNextParentCheck()) {
     setSkipNextParentCheck(false);
     return false;
@@ -1425,7 +1425,7 @@ bool ViewItem::maybeReparent() {
   QPointF origin = mapToScene(QPointF(0,0));
 
 #if DEBUG_REPARENT
-  qDebug() << "maybeReparent" << this
+  qDebug() << "updateViewItemParent" << this
            << "topLevel:" << (topLevel ? "true" : "false")
            << "origin:" << origin
            << "rect:" << rect()
@@ -1816,7 +1816,7 @@ void ViewItem::moveTo(const QPointF& pos)
 {
   setPos(parentView()->snapPoint(pos));
   new MoveCommand(this, _originalPosition, pos);
-  maybeReparent();
+  updateViewItemParent();
   updateRelativeSize();
 }
 
@@ -1835,15 +1835,15 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
 
-    maybeReparent();
+    updateViewItemParent();
   } else if (oldMode == View::Scale && _originalTransform != transform()) {
     new ScaleCommand(this, _originalTransform, transform());
 
-    maybeReparent();
+    updateViewItemParent();
   } else if (oldMode == View::Rotate && _originalTransform != transform()) {
     new RotateCommand(this, _originalTransform, transform());
 
-    maybeReparent();
+    updateViewItemParent();
   }
 }
 

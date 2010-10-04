@@ -696,7 +696,7 @@ QPainterPath PlotRenderItem::shape() const {
 }
 
 
-bool PlotRenderItem::maybeReparent() {
+bool PlotRenderItem::updateViewItemParent() {
   return false; //never reparent a plot renderer
 }
 

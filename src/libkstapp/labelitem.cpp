@@ -181,7 +181,7 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
     parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     parentView()->setMouseMode(View::Default);
-    maybeReparent();
+    updateViewItemParent();
     emit creationComplete();
     setDirty();
     return;
