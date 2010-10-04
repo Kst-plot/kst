@@ -51,7 +51,7 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
       if (viewItem->acceptsContextMenuEvents()) {
           event->setPos(viewItem->mapFromScene(event->scenePos()));
-          if (viewItem->sceneEvent(event))
+          if (viewItem->doSceneEvent(event))
             return;
       }
     }

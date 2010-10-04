@@ -204,6 +204,11 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     template<class T> static QList<T *> getItems();
 
+   // TODO: Remove, needed only for a Qt 4.3 bug workaround
+    bool doSceneEvent(QGraphicsSceneContextMenuEvent *event) {
+      return sceneEvent(event);
+    }
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -287,7 +292,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void updateView();
 
   protected:
+  public: // TODO why does View need it?
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
+  protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
 
@@ -338,9 +345,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     void startDragging(QWidget *widget, const QPointF& hotspot);
 
-
-    friend class View;
-    friend class Scene;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)
