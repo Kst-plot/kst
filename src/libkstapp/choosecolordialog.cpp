@@ -29,6 +29,10 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
   : QDialog(parent) {
 
   setupUi(this);
+
+  // Make sure the dialog gets maximize and minimize buttons under Windows
+  QWidget::setWindowFlags((Qt::WindowFlags) Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+
   grid = 0;
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
