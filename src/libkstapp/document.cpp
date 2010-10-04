@@ -33,9 +33,10 @@
 namespace Kst {
 
 Document::Document(MainWindow *window)
-: CoreDocument(), _win(window), _dirty(false), _isOpen(false), _fileName(QString::null) {
+: CoreDocument(), _win(window), _dirty(false), _isOpen(false) {
   _session = new SessionModel(objectStore());
 
+  _fileName.clear();
   UpdateManager::self()->setStore(objectStore());
 }
 

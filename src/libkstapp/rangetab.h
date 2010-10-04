@@ -24,7 +24,7 @@ namespace Kst {
 class RangeTab : public DialogTab, Ui::RangeTab {
   Q_OBJECT
   public:
-    RangeTab(PlotItem* plotItem, QWidget *parent = 0);
+    explicit RangeTab(PlotItem* plotItem, QWidget *parent = 0);
     virtual ~RangeTab();
 
     void setupRange();

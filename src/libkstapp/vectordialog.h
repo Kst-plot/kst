@@ -34,7 +34,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
   public:
     enum VectorMode { DataVector, GeneratedVector };
 
-    VectorTab(ObjectStore *store, QWidget *parent = 0);
+    explicit VectorTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~VectorTab();
 
     VectorMode vectorMode() const { return _mode; }
@@ -96,7 +96,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
 class VectorDialog : public DataDialog {
   Q_OBJECT
   public:
-    VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
 
     void setField(QString field) {_vectorTab->setField(field);}

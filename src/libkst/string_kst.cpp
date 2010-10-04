@@ -28,14 +28,15 @@ const QString String::staticTypeString = I18N_NOOP("String");
 const QString String::staticTypeTag = I18N_NOOP("string");
 
 String::String(ObjectStore *store)
-    : Primitive(store, 0L), _value(QString::null), _orphan(false), _editable(false) {
+    : Primitive(store, 0L), _orphan(false), _editable(false) {
 
+  _value.clear();
   _initializeShortName();
 
 }
 
 void String::_initializeShortName() {
-  _shortName = "T"+QString::number(_tnum);
+  _shortName = 'T'+QString::number(_tnum);
   if (_tnum>max_tnum)
     max_tnum = _tnum;
   _tnum++;

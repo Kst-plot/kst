@@ -31,7 +31,7 @@ class DirFileSource::Config {
     Config() {
     }
 
-    void read(QSettings *cfg, const QString& fileName = QString::null) {
+    void read(QSettings *cfg, const QString& fileName = QString()) {
       Q_UNUSED(fileName);
       cfg->beginGroup(dirfileTypeString);
       cfg->endGroup();
@@ -510,7 +510,7 @@ QString DirFilePlugin::getDirectory(QString filepath) {
     if (file.open(QFile::ReadOnly)) {
       QTextStream stream(&file);
       QString directoryName = stream.readLine();
-      properDirPath += "/";
+      properDirPath += '/';
       properDirPath += directoryName;
     }
   }

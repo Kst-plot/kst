@@ -89,9 +89,9 @@ class KSTMATH_EXPORT Relation : public Object {
 
     virtual int sampleCount() const { return NS; }
 
-    virtual QString xLabel() const   { return QString::null; }
-    virtual QString yLabel() const   { return QString::null; }
-    virtual QString topLabel() const { return QString::null; }
+    virtual QString xLabel() const   { return QString(); }
+    virtual QString yLabel() const   { return QString(); }
+    virtual QString topLabel() const { return QString(); }
 
     virtual void setIgnoreAutoScale(bool ignoreAutoScale);
     virtual bool ignoreAutoScale() const { return _ignoreAutoScale; }

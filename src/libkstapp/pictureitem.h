@@ -22,7 +22,7 @@ class PictureItem : public ViewItem
 {
   Q_OBJECT
   public:
-    PictureItem(View *parent, const QImage &image = QImage());
+    explicit PictureItem(View *parent, const QImage &image = QImage());
     ~PictureItem();
 
     virtual void save(QXmlStreamWriter &xml);

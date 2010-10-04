@@ -26,7 +26,7 @@ class LabelItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:
-    LabelItemDialog(LabelItem *item, QWidget *parent = 0);
+    explicit LabelItemDialog(LabelItem *item, QWidget *parent = 0);
     virtual ~LabelItemDialog();
 
   private Q_SLOTS:

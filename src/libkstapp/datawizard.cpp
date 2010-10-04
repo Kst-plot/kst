@@ -108,9 +108,11 @@ QStringList DataWizardPageDataSource::dataSourceFieldList() const {
 
 
 void DataWizardPageDataSource::configureSource() {
-  DataSourceDialog dialog(DataDialog::New, _dataSource, this);
-  dialog.exec();
-  sourceChanged(_dataSource->fileName());
+  QPointer<DataSourceDialog> dialog = new DataSourceDialog(DataDialog::New, _dataSource, this);
+  if ( dialog->exec() == QDialog::Accepted ) {
+    sourceChanged(_dataSource->fileName());
+  }
+  delete dialog;
 }
 
 
@@ -297,10 +299,10 @@ void DataWizardPageVectors::searchVectors() {
   QString s = _vectorReduction->text();
   if (!s.isEmpty()) {
     if (s[0] != '*') {
-      s = "*" + s;
+      s = '*' + s;
     }
     if (s[s.length()-1] != '*') {
-      s += "*";
+      s += '*';
     }
     _vectorReduction->setText(s);
   }

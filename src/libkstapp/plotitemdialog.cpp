@@ -188,7 +188,7 @@ void PlotItemDialog::editSingle() {
 
 void PlotItemDialog::slotApply() {
   if (editMode() == Single) {
-    _plotItem->setDescriptiveName(tagString().replace(_defaultTagString, QString()));
+    _plotItem->setDescriptiveName(tagString().remove(_defaultTagString));
   }
 
   //FIXME: it is not clear that slotApply must be executed last.

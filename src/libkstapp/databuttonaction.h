@@ -23,7 +23,7 @@ class DataButtonAction : public QWidgetAction
 {
   Q_OBJECT
   public:
-    DataButtonAction(const QString &text, QWidget *parent = 0);
+    explicit DataButtonAction(const QString &text, QWidget *parent = 0);
 
   Q_SIGNALS:
     void triggered(QString &name);

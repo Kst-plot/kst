@@ -134,7 +134,7 @@ ViewItem::~ViewItem() {
 }
 
 void ViewItem::_initializeShortName() {
-  _shortName = "D"+QString::number(_dnum);
+  _shortName = 'D'+QString::number(_dnum);
   if (_dnum>max_dnum)
     max_dnum = _dnum;
   _dnum++;
@@ -194,9 +194,9 @@ void ViewItem::save(QXmlStreamWriter &xml) {
       QColor color = (QColor)stop.second;
 
       stopList += QString::number(point);
-      stopList += ",";
+      stopList += ',';
       stopList += color.name();
-      stopList += ",";
+      stopList += ',';
     }
     xml.writeAttribute("gradient", stopList);
   }

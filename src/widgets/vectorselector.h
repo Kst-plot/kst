@@ -27,7 +27,7 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT VectorSelector : public QWidget, public Ui::VectorSelector {
   Q_OBJECT
   public:
-    VectorSelector(QWidget *parent = 0, ObjectStore *store = 0);
+    explicit VectorSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~VectorSelector();
 
     void setObjectStore(ObjectStore *store);

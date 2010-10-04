@@ -107,7 +107,7 @@ class ImageTab : public DataTab, Ui::ImageTab {
 class ImageDialog : public DataDialog {
   Q_OBJECT
   public:
-    ImageDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit ImageDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~ImageDialog();
 
     void setMatrix(MatrixPtr matrix);

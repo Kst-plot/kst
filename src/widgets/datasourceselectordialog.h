@@ -22,7 +22,7 @@ namespace Kst {
 class KSTWIDGETS_EXPORT DataSourceSelectorDialog : public QFileDialog {
   Q_OBJECT
   public:
-    DataSourceSelectorDialog(QString &file, QWidget *parent = 0);
+    explicit DataSourceSelectorDialog(QString &file, QWidget *parent = 0);
     virtual ~DataSourceSelectorDialog();
 
     QString selectedDataSource();

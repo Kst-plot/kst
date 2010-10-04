@@ -828,7 +828,7 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   for (int i_tick = i0; base + i_tick*tickspacing<=max; i_tick++) {
     tick = base+i_tick*tickspacing;
     ticks << tick;
-    tick_label = "[" + QString::number(i_tick*tickspacing_u, 'g', FULL_PRECISION-2) + "]";
+    tick_label = '[' + QString::number(i_tick*tickspacing_u, 'g', FULL_PRECISION-2) + ']';
     labels.insert(tick, tick_label);
   }
 
@@ -1037,7 +1037,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
         num = QString::number(offset, 'g', 5);
       }
 
-      label = label + num + "]";
+      label = label + num + ']';
       _axisLabels.insert(i.key(), label);
     }
   } else {

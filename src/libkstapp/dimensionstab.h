@@ -25,7 +25,7 @@ namespace Kst {
 class DimensionsTab : public DialogTab, Ui::DimensionsTab {
   Q_OBJECT
   public:
-    DimensionsTab(ViewItem* viewItem, QWidget *parent = 0);
+    explicit DimensionsTab(ViewItem* viewItem, QWidget *parent = 0);
     virtual ~DimensionsTab();
 
     void setupDimensions();

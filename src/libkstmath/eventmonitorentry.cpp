@@ -419,13 +419,13 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
   for (VectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
     const QString oldName = j.value()->Name();
     const QString newName = newObject->outputVectors()[j.key()]->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
   }
 
   for (ScalarMap::ConstIterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
     const QString oldName = j.value()->Name();
     const QString newName = newObject->outputScalars()[j.key()]->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
   }
 
   // and dependencies on vector stats
@@ -435,7 +435,7 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
     while (scalarDictIter.hasNext()) {
       const QString oldName = scalarDictIter.next().value()->Name();
       const QString newName = scalarMap[scalarDictIter.key()]->Name();
-      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+      newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
     }
   }
 
@@ -446,7 +446,7 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
     while (scalarDictIter.hasNext()) {
       const QString oldName = scalarDictIter.next().value()->Name();
       const QString newName = scalarMap[scalarDictIter.key()]->Name();
-      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+      newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
     }
   }
 
@@ -458,14 +458,14 @@ void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr
 
 void EventMonitorEntry::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   // replace all occurences of oldName with newName
-  QString newExp = _event.replace("[" + oldVector->Name() + "]", "[" + newVector->Name() + "]");
+  QString newExp = _event.replace('[' + oldVector->Name() + ']', '[' + newVector->Name() + ']');
 
   // also replace all occurences of vector stats for the oldVector
   QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
   while (scalarDictIter.hasNext()) {
     const QString oldName = scalarDictIter.next().value()->Name();
     const QString newName = newVector->scalars()[scalarDictIter.key()]->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
   }
 
   setEvent(newExp);
@@ -482,7 +482,7 @@ void EventMonitorEntry::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatr
   while (scalarDictIter.hasNext()) {
     const QString oldName = scalarDictIter.next().value()->Name();
     const QString newName = newMatrix->scalars()[scalarDictIter.key()]->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
   }
 
   setEvent(newExp);

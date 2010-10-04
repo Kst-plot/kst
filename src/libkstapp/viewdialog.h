@@ -30,7 +30,7 @@ class ViewDialog : public Dialog
 {
   Q_OBJECT
   public:
-    ViewDialog(View *view, QWidget *parent = 0);
+    explicit ViewDialog(View *view, QWidget *parent = 0);
     virtual ~ViewDialog();
 
   private Q_SLOTS:

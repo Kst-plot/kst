@@ -38,7 +38,7 @@ class Document : public CoreDocument {
     bool initFromCommandLine(CommandLineParser *P);
 
     bool open(const QString& file);
-    bool save(const QString& to = QString::null);
+    bool save(const QString& to = QString());
 
     bool isChanged() const;
     void setChanged(bool changed);

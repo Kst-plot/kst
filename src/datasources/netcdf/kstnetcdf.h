@@ -52,11 +52,11 @@ class NetcdfSource : public Kst::DataSource {
 
     int samplesPerFrame(const QString& field);
 
-    int frameCount(const QString& field = QString::null) const;
+    int frameCount(const QString& field = QString()) const;
 
     QString fileType() const;
 
-    void save(QTextStream &ts, const QString& indent = QString::null);
+    void save(QTextStream &ts, const QString& indent = QString());
 
     bool isEmpty() const;
 

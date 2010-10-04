@@ -25,7 +25,7 @@ namespace Kst {
 class BasicPluginTab : public DataTab, Ui::BasicPluginTab {
   Q_OBJECT
   public:
-    BasicPluginTab(QString& pluginName, QWidget *parent = 0);
+    explicit BasicPluginTab(QString& pluginName, QWidget *parent = 0);
     virtual ~BasicPluginTab();
 
     void setObjectStore(ObjectStore *store);

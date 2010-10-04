@@ -72,7 +72,7 @@ Vector::Vector(ObjectStore *store)
 }
 
 void Vector::_initializeShortName() {
-  _shortName = "V"+QString::number(_vnum);
+  _shortName = 'V'+QString::number(_vnum);
   if (_vnum>max_vnum)
     max_vnum = _vnum;
   _vnum++;

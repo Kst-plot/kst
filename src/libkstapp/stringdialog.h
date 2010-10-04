@@ -30,7 +30,7 @@ class StringTab : public DataTab, Ui::StringTab {
   public:
     enum StringMode { DataString, GeneratedString };
 
-    StringTab(ObjectStore *store, QWidget *parent = 0);
+    explicit StringTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~StringTab();
 
     StringMode stringMode() const { return _mode; }
@@ -75,7 +75,7 @@ class StringTab : public DataTab, Ui::StringTab {
 class StringDialog : public DataDialog {
   Q_OBJECT
   public:
-    StringDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit StringDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~StringDialog();
 
   protected:

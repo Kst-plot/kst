@@ -45,7 +45,7 @@ class DirFileSource : public Kst::DataSource {
 
     int samplesPerFrame(const QString &field);
 
-    int frameCount(const QString& field = QString::null) const;
+    int frameCount(const QString& field = QString()) const;
 
     QString fileType() const;
 

@@ -55,7 +55,7 @@ LegendItem::LegendItem(PlotItem *parentPlot)
 }
 
 void LegendItem::_initializeShortName() {
-  _shortName = "L"+QString::number(_lnum);
+  _shortName = 'L'+QString::number(_lnum);
   if (_lnum>max_lnum)
     max_lnum = _lnum;
   _lnum++;
@@ -253,9 +253,9 @@ void LegendItem::saveAsDialogDefaults() const {
       QColor color = (QColor)stop.second;
 
       stopList += QString::number(point);
-      stopList += ",";
+      stopList += ',';
       stopList += color.name();
-      stopList += ",";
+      stopList += ',';
     }
      _dialogDefaults->setValue("legend/fillBrushGradient", stopList);
    }

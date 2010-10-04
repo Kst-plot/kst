@@ -26,8 +26,8 @@ namespace Kst {
 class  KSTWIDGETS_EXPORT ComboBox : public QComboBox {
   Q_OBJECT
   public:
-    ComboBox(QWidget *parent=0);
-    ComboBox(bool editable, QWidget *parent=0);
+    explicit ComboBox(QWidget *parent=0);
+    explicit ComboBox(bool editable, QWidget *parent=0);
     virtual ~ComboBox();
 
     void setEditable(bool editable);

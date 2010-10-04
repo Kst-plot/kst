@@ -59,7 +59,7 @@ Matrix::~Matrix() {
 }
 
 void Matrix::_initializeShortName() {
-  _shortName = "M"+QString::number(_mnum);
+  _shortName = 'M'+QString::number(_mnum);
   if (_mnum>max_mnum)
     max_mnum = _mnum;
   _mnum++;

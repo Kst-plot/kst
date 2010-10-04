@@ -29,7 +29,7 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
   Q_OBJECT
   public:
-    ScalarSelector(QWidget *parent = 0, ObjectStore *store = 0);
+    explicit ScalarSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~ScalarSelector();
 
     void setObjectStore(ObjectStore *store);

@@ -30,7 +30,7 @@ class ScalarTab : public DataTab, Ui::ScalarTab {
   public:
     enum ScalarMode { DataScalar, GeneratedScalar, RVectorScalar };
 
-    ScalarTab(ObjectStore *store, QWidget *parent = 0);
+    explicit ScalarTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~ScalarTab();
 
     ScalarMode scalarMode() const { return _mode; }
@@ -80,7 +80,7 @@ class ScalarTab : public DataTab, Ui::ScalarTab {
 class ScalarDialog : public DataDialog {
   Q_OBJECT
   public:
-    ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~ScalarDialog();
 
   protected:

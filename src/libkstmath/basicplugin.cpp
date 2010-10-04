@@ -45,7 +45,7 @@ BasicPlugin::~BasicPlugin() {
 }
 
 void BasicPlugin::_initializeShortName() {
-  _shortName = "P"+QString::number(_pnum);
+  _shortName = 'P'+QString::number(_pnum);
   if (_pnum>max_pnum)
     max_pnum = _pnum;
   _pnum++;
@@ -278,7 +278,7 @@ void BasicPlugin::createScalars() {
 
 
 QString BasicPlugin::parameterName(int /*index*/) const {
-    return QString::null;
+    return QString();
 }
 
 

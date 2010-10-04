@@ -262,7 +262,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = 3;
         setNormalChar(QChar(0x2265), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("e")) {
+      } else if (txt.mid(from + 1).startsWith('e')) {
         *skip = 2;
         setNormalChar(QChar(0x2265), tail);
         return true;
@@ -298,7 +298,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = 3;
         setNormalChar(QChar(0x2264), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("e")) {
+      } else if (txt.mid(from + 1).startsWith('e')) {
         *skip = 2;
         setNormalChar(QChar(0x2264), tail);
         return true;
@@ -308,11 +308,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'n':
       x = 0x20;
     case 'N':
-      if (txt.mid(from + 1).startsWith("u")) {
+      if (txt.mid(from + 1).startsWith('u')) {
         *skip = 2;
         setNormalChar(QChar(0x39D+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("e")) {
+      } else if (txt.mid(from + 1).startsWith('e')) {
         *skip = 2;
         setNormalChar(QChar(0x2260), tail);
         return true;
@@ -364,7 +364,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'p':
       x = 0x20;
     case 'P':
-      if (txt.mid(from + 1).startsWith("i")) {
+      if (txt.mid(from + 1).startsWith('i')) {
         *skip = 2;
         setNormalChar(QChar(0x3a0+x), tail);
         return true;
@@ -384,7 +384,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = 4;
         setNormalChar(QChar(0x220F), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("m")) {
+      } else if (txt.mid(from + 1).startsWith('m')) {
         *skip = 2;
         setNormalChar(QChar(0xb1), tail);
         return true;

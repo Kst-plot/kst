@@ -68,7 +68,7 @@ class EquationTab : public DataTab, Ui::EquationTab {
 class EquationDialog : public DataDialog {
   Q_OBJECT
   public:
-    EquationDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit EquationDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~EquationDialog();
 
   protected:

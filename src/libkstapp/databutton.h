@@ -23,7 +23,7 @@ class DataButton : public QPushButton
 {
   Q_OBJECT
   public:
-    DataButton(const QString & text, QWidget * parent = 0);
+    explicit DataButton(const QString & text, QWidget * parent = 0);
     virtual ~DataButton();
 };
 

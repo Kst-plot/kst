@@ -73,7 +73,7 @@ QString EditableVector::_automaticDescriptiveName() const {
     name += ", ...";
   }
 
-  name += ")";
+  name += ')';
 
   return name;
 }

@@ -27,7 +27,7 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT CurveSelector : public QWidget, public Ui::CurveSelector {
   Q_OBJECT
   public:
-    CurveSelector(QWidget *parent = 0, ObjectStore *store = 0);
+    explicit CurveSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~CurveSelector();
 
     void setObjectStore(ObjectStore *store);

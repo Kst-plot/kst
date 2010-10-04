@@ -42,7 +42,7 @@ class KSTCORE_EXPORT DataSourcePluginManager
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
 
-    static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString::null);
+    static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString());
     static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);
     static SharedPtr<DataSource> findOrLoadSource(ObjectStore *store, const QString& filename);
     static bool validSource(const QString& filename);

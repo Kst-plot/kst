@@ -24,7 +24,7 @@ class SvgItem : public ViewItem
 {
   Q_OBJECT
   public:
-    SvgItem(View *parent, const QString &file = QString());
+    explicit SvgItem(View *parent, const QString &file = QString());
     ~SvgItem();
 
     virtual void save(QXmlStreamWriter &xml);

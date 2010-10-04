@@ -77,7 +77,7 @@ void CreatePictureCommand::createItem() {
   for (int i=0; i<formats.size(); i++) {
     filter += " *."+QString(formats.at(i)).toUpper() + " *." + QString(formats.at(i)).toLower();
   }
-  filter += ")";
+  filter += ')';
   QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Image"), start_dir, filter);
   if (file.isEmpty())
     return;

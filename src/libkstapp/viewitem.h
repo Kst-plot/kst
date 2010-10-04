@@ -361,7 +361,7 @@ class CreateCommand : public QObject, public ViewCommand
 {
   Q_OBJECT
   public:
-    CreateCommand(const QString &text, QUndoCommand *parent = 0);
+    explicit CreateCommand(const QString &text, QUndoCommand *parent = 0);
     CreateCommand(View *view, const QString &text, QUndoCommand *parent = 0);
     virtual ~CreateCommand();
 

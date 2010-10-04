@@ -313,7 +313,7 @@ PlotItem::~PlotItem() {
 }
 
 void PlotItem::_initializeShortName() {
-  _shortName = "P"+QString::number(_plotnum);
+  _shortName = 'P'+QString::number(_plotnum);
   if (_plotnum>max_plotnum)
     max_plotnum = _plotnum;
   _plotnum++;
@@ -1917,7 +1917,7 @@ QString PlotItem::autoTopLabel() const {
     for (int i=0; i<count; i++) {
       label += renderItems().at(i)->topLabel();
       if (i<count - 1) {
-        label += " ";
+        label += ' ';
       }
     }
     if (label == leftLabel()) {
@@ -3346,9 +3346,9 @@ void PlotItem::saveAsDialogDefaults() const {
       QColor color = (QColor)stop.second;
 
       stopList += QString::number(point);
-      stopList += ",";
+      stopList += ',';
       stopList += color.name();
-      stopList += ",";
+      stopList += ',';
     }
      _dialogDefaults->setValue("plot/fillBrushGradient", stopList);
    }

@@ -23,7 +23,7 @@ namespace Kst {
 class OverrideLabelTab : public DialogTab, Ui::OverrideLabelTab {
   Q_OBJECT
   public:
-    OverrideLabelTab(QString title, QWidget *parent = 0);
+    explicit OverrideLabelTab(QString title, QWidget *parent = 0);
     virtual ~OverrideLabelTab();
 
     QFont labelFont(QFont ref_font) const;

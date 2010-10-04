@@ -34,7 +34,7 @@ VScalar::VScalar(ObjectStore *store)
 : Scalar(store) {
 
   _file = 0L;
-  _field = QString::null;
+  _field.clear();
 
   setOrphan(true);
 }

@@ -54,7 +54,7 @@ void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s
 DataPrimitive::DataPrimitive() : d(*new Private)
 {
   d._file = 0;
-  _field = QString::null;
+  _field.clear();
 }
 
 

@@ -448,7 +448,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         dataPlotted = true;
       }
 
-      _errorField = QString();
+      _errorField.clear();
       new_fileList = true;
       _overrideStyle = false;
     } else if (arg == "-p") {

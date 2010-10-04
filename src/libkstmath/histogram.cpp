@@ -62,7 +62,7 @@ Histogram::Histogram(ObjectStore *store)
 }
 
 void Histogram::_initializeShortName() {
-  _shortName = "H"+QString::number(_hnum);
+  _shortName = 'H'+QString::number(_hnum);
   if (_hnum>max_hnum)
     max_hnum = _hnum;
   _hnum++;

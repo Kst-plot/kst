@@ -33,7 +33,7 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
   public:
     enum MatrixMode { DataMatrix, GeneratedMatrix };
 
-    MatrixTab(ObjectStore *store, QWidget *parent = 0);
+    explicit MatrixTab(ObjectStore *store, QWidget *parent = 0);
     virtual ~MatrixTab();
 
     MatrixMode matrixMode() const { return _mode; }
@@ -161,7 +161,7 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
 class MatrixDialog : public DataDialog {
   Q_OBJECT
   public:
-    MatrixDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit MatrixDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~MatrixDialog();
 
   protected:

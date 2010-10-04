@@ -83,7 +83,7 @@ class EventMonitorTab : public DataTab, Ui::EventMonitorTab {
 class EventMonitorDialog : public DataDialog {
   Q_OBJECT
   public:
-    EventMonitorDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit EventMonitorDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~EventMonitorDialog();
 
   protected:

@@ -27,7 +27,7 @@ namespace Kst {
 class FilterFitTab : public DataTab, Ui::FilterFitTab {
   Q_OBJECT
   public:
-    FilterFitTab(QString& pluginName, QWidget *parent = 0);
+    explicit FilterFitTab(QString& pluginName, QWidget *parent = 0);
     virtual ~FilterFitTab();
 
     void setObjectStore(ObjectStore *store);

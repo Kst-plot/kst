@@ -290,16 +290,16 @@ void Settings::checkUpdates() {
 void Settings::setPrintingDefaults() {
   printing.pageSize = QString::number((int)QPrinter::Letter);
   printing.orientation = "Landscape";
-  printing.plotDateTimeFooter = "0";
-  printing.maintainAspect = "0";
-  printing.curveWidthAdjust = "0";
-  printing.monochrome = "0";
-  printing.monochromeSettings.enhanceReadability = "0";
-  printing.monochromeSettings.pointStyleOrder = "0";
-  printing.monochromeSettings.lineStyleOrder = "1";
-  printing.monochromeSettings.lineWidthOrder = "2";
-  printing.monochromeSettings.maxLineWidth = "3";
-  printing.monochromeSettings.pointDensity = "2";
+  printing.plotDateTimeFooter = '0';
+  printing.maintainAspect + '0';
+  printing.curveWidthAdjust + '0';
+  printing.monochrome + '0';
+  printing.monochromeSettings.enhanceReadability + '0';
+  printing.monochromeSettings.pointStyleOrder + '0';
+  printing.monochromeSettings.lineStyleOrder = '1';
+  printing.monochromeSettings.lineWidthOrder = '2';
+  printing.monochromeSettings.maxLineWidth = '3';
+  printing.monochromeSettings.pointDensity = '2';
 }
 
 

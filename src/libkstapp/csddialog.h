@@ -59,7 +59,7 @@ class CSDTab : public DataTab, Ui::CSDTab {
 class CSDDialog : public DataDialog {
   Q_OBJECT
   public:
-    CSDDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit CSDDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CSDDialog();
 
     void setVector(VectorPtr vector);

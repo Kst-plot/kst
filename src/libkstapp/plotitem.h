@@ -643,7 +643,7 @@ class ZoomYRangeCommand : public ZoomCommand
 class ZoomMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomMaximumCommand(PlotItem *item, bool forced = false)
+    explicit ZoomMaximumCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Maximum"), forced) {}
     virtual ~ZoomMaximumCommand() {}
 
@@ -654,7 +654,7 @@ class ZoomMaximumCommand : public ZoomCommand
 class ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 {
   public:
-    ZoomMaxSpikeInsensitiveCommand(PlotItem *item, bool forced = false)
+    explicit ZoomMaxSpikeInsensitiveCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Max Spike Insensitive"), forced) {}
     virtual ~ZoomMaxSpikeInsensitiveCommand() {}
 
@@ -665,7 +665,7 @@ class ZoomMaxSpikeInsensitiveCommand : public ZoomCommand
 class ZoomMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomMeanCenteredCommand(PlotItem *item, bool forced = false)
+    explicit ZoomMeanCenteredCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Mean Centered"), forced) {}
     virtual ~ZoomMeanCenteredCommand() {}
 
@@ -677,7 +677,7 @@ class ZoomMeanCenteredCommand : public ZoomCommand
 class ZoomXMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomXMeanCenteredCommand(PlotItem *item, qreal dX, bool forced = false)
+    explicit ZoomXMeanCenteredCommand(PlotItem *item, qreal dX, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X Mean Centered"), forced), _dX(dX)  {}
     virtual ~ZoomXMeanCenteredCommand() {}
 
@@ -691,7 +691,7 @@ class ZoomXMeanCenteredCommand : public ZoomCommand
 class ZoomYMeanCenteredCommand : public ZoomCommand
 {
   public:
-    ZoomYMeanCenteredCommand(PlotItem *item, qreal dY, bool forced = false)
+    explicit ZoomYMeanCenteredCommand(PlotItem *item, qreal dY, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Mean Centered"), forced), _dY(dY) {}
     virtual ~ZoomYMeanCenteredCommand() {}
 
@@ -705,7 +705,7 @@ class ZoomYMeanCenteredCommand : public ZoomCommand
 class ZoomXMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomXMaximumCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXMaximumCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X Maximum"), forced) {}
     virtual ~ZoomXMaximumCommand() {}
 
@@ -716,7 +716,7 @@ class ZoomXMaximumCommand : public ZoomCommand
 class ZoomXAutoBorderCommand : public ZoomCommand
 {
   public:
-    ZoomXAutoBorderCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXAutoBorderCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X Auto Border"), forced) {}
     virtual ~ZoomXAutoBorderCommand() {}
 
@@ -727,7 +727,7 @@ class ZoomXAutoBorderCommand : public ZoomCommand
 class ZoomXNoSpikeCommand : public ZoomCommand
 {
   public:
-    ZoomXNoSpikeCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXNoSpikeCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X No Spike"), forced) {}
     virtual ~ZoomXNoSpikeCommand() {}
 
@@ -738,7 +738,7 @@ class ZoomXNoSpikeCommand : public ZoomCommand
 class ZoomXRightCommand : public ZoomCommand
 {
   public:
-    ZoomXRightCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXRightCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Scroll X Right"), forced) {}
     virtual ~ZoomXRightCommand() {}
 
@@ -749,7 +749,7 @@ class ZoomXRightCommand : public ZoomCommand
 class ZoomXLeftCommand : public ZoomCommand
 {
   public:
-    ZoomXLeftCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXLeftCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Scroll X Left"), forced) {}
     virtual ~ZoomXLeftCommand() {}
 
@@ -760,7 +760,7 @@ class ZoomXLeftCommand : public ZoomCommand
 class ZoomXOutCommand : public ZoomCommand
 {
   public:
-    ZoomXOutCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXOutCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X Out"), forced) {}
     virtual ~ZoomXOutCommand() {}
 
@@ -771,7 +771,7 @@ class ZoomXOutCommand : public ZoomCommand
 class ZoomXInCommand : public ZoomCommand
 {
   public:
-    ZoomXInCommand(PlotItem *item, bool forced = false)
+    explicit ZoomXInCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X In"), forced) {}
     virtual ~ZoomXInCommand() {}
 
@@ -782,7 +782,7 @@ class ZoomXInCommand : public ZoomCommand
 class ZoomNormalizeXToYCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeXToYCommand(PlotItem *item, bool forced = false)
+    explicit ZoomNormalizeXToYCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Normalize X to Y"), forced) {}
     virtual ~ZoomNormalizeXToYCommand() {}
 
@@ -793,7 +793,7 @@ class ZoomNormalizeXToYCommand : public ZoomCommand
 class ZoomYLocalMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYLocalMaximumCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYLocalMaximumCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Local Maximum"), forced) {}
     virtual ~ZoomYLocalMaximumCommand() {}
 
@@ -804,7 +804,7 @@ class ZoomYLocalMaximumCommand : public ZoomCommand
 class ZoomYMaximumCommand : public ZoomCommand
 {
   public:
-    ZoomYMaximumCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYMaximumCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Maximum"), forced) {}
     virtual ~ZoomYMaximumCommand() {}
 
@@ -815,7 +815,7 @@ class ZoomYMaximumCommand : public ZoomCommand
 class ZoomYAutoBorderCommand : public ZoomCommand
 {
   public:
-    ZoomYAutoBorderCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYAutoBorderCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Auto Border"), forced) {}
     virtual ~ZoomYAutoBorderCommand() {}
 
@@ -826,7 +826,7 @@ class ZoomYAutoBorderCommand : public ZoomCommand
 class ZoomYNoSpikeCommand : public ZoomCommand
 {
   public:
-    ZoomYNoSpikeCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYNoSpikeCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y No Spike"), forced) {}
     virtual ~ZoomYNoSpikeCommand() {}
 
@@ -837,7 +837,7 @@ class ZoomYNoSpikeCommand : public ZoomCommand
 class ZoomYUpCommand : public ZoomCommand
 {
   public:
-    ZoomYUpCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYUpCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Up"), forced) {}
     virtual ~ZoomYUpCommand() {}
 
@@ -848,7 +848,7 @@ class ZoomYUpCommand : public ZoomCommand
 class ZoomYDownCommand : public ZoomCommand
 {
   public:
-    ZoomYDownCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYDownCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Down"), forced) {}
     virtual ~ZoomYDownCommand() {}
 
@@ -859,7 +859,7 @@ class ZoomYDownCommand : public ZoomCommand
 class ZoomYOutCommand : public ZoomCommand
 {
   public:
-    ZoomYOutCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYOutCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Out"), forced) {}
     virtual ~ZoomYOutCommand() {}
 
@@ -870,7 +870,7 @@ class ZoomYOutCommand : public ZoomCommand
 class ZoomYInCommand : public ZoomCommand
 {
   public:
-    ZoomYInCommand(PlotItem *item, bool forced = false)
+    explicit ZoomYInCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y In"), forced) {}
     virtual ~ZoomYInCommand() {}
 
@@ -881,7 +881,7 @@ class ZoomYInCommand : public ZoomCommand
 class ZoomNormalizeYToXCommand : public ZoomCommand
 {
   public:
-    ZoomNormalizeYToXCommand(PlotItem *item, bool forced = false)
+    explicit ZoomNormalizeYToXCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Normalize Y to X"), forced) {}
     virtual ~ZoomNormalizeYToXCommand() {}
 
@@ -892,7 +892,7 @@ class ZoomNormalizeYToXCommand : public ZoomCommand
 class ZoomXLogCommand : public ZoomCommand
 {
   public:
-    ZoomXLogCommand(PlotItem *item, bool enableLog, bool forced = false)
+    explicit ZoomXLogCommand(PlotItem *item, bool enableLog, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom X Log"), forced), _enableLog(enableLog) {}
     virtual ~ZoomXLogCommand() {}
 
@@ -906,7 +906,7 @@ class ZoomXLogCommand : public ZoomCommand
 class ZoomYLogCommand : public ZoomCommand
 {
   public:
-    ZoomYLogCommand(PlotItem *item, bool enableLog, bool forced = false)
+    explicit ZoomYLogCommand(PlotItem *item, bool enableLog, bool forced = false)
         : ZoomCommand(item, QObject::tr("Zoom Y Log"), forced), _enableLog(enableLog) {}
     virtual ~ZoomYLogCommand() {}
 

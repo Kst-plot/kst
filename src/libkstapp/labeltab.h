@@ -24,7 +24,7 @@ namespace Kst {
 class LabelTab : public DialogTab, Ui::LabelTab {
   Q_OBJECT
   public:
-    LabelTab(PlotItem* plotItem, QWidget *parent = 0);
+    explicit LabelTab(PlotItem* plotItem, QWidget *parent = 0);
     virtual ~LabelTab();
 
     QString leftLabel() const;

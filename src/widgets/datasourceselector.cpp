@@ -21,6 +21,7 @@
 #include <QFileDialog>
 #include <QDirModel>
 #include <QCompleter>
+#include <QPointer>
 
 #include <QDebug>
 
@@ -82,15 +83,17 @@ void DataSourceSelector::setFile(const QString &file) {
 
 void DataSourceSelector::chooseFile() {
   QString file;
+  QPointer<DataSourceSelectorDialog> dialog = new DataSourceSelectorDialog( _file, this );
 
-  DataSourceSelectorDialog dialog(_file);
-  if (dialog.exec() == QDialog::Accepted) { 
-    file = dialog.selectedDataSource();
+  if (dialog->exec() == QDialog::Accepted) {
+    file = dialog->selectedDataSource();
 
     if (!file.isEmpty()) {
       setFile(file);
     }
   }
+
+  delete dialog;
 }
 
 }

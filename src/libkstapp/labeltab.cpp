@@ -298,7 +298,7 @@ void LabelTab::setAutoScaleNumbers(const bool scale) {
 void LabelTab::labelUpdate(const QString& string) {
   if (_activeLineEdit) {
     QString label = _activeLineEdit->text();
-    label += "[" + string + "]";
+    label += '[' + string + ']';
     _activeLineEdit->setText(label); 
   }
 }

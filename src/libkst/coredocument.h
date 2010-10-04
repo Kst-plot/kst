@@ -38,7 +38,7 @@ class KSTCORE_EXPORT CoreDocument
     virtual ObjectStore *objectStore() const;
 
     virtual bool open(const QString& file);
-    virtual bool save(const QString& to = QString::null);
+    virtual bool save(const QString& to = QString());
 
     virtual bool isChanged() const;
     virtual void setChanged(bool changed);

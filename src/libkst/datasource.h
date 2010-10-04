@@ -122,7 +122,7 @@ class KSTCORE_EXPORT DataSource : public Object
     /* not currently used - may be reworked (remove this note   */
     /* if you use it)                                           */
     /************************************************************/
-    static bool supportsTime(const QString& plugin, const QString& type = QString::null);
+    static bool supportsTime(const QString& plugin, const QString& type = QString());
 
     /** Does it support time conversion of sample numbers, in general? */
     virtual bool supportsTimeConversions() const;

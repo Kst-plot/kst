@@ -27,7 +27,7 @@ class LegendItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:
-    LegendItemDialog(LegendItem *item, QWidget *parent = 0);
+    explicit LegendItemDialog(LegendItem *item, QWidget *parent = 0);
     virtual ~LegendItemDialog();
 
   private Q_SLOTS:

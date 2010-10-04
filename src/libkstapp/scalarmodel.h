@@ -25,7 +25,7 @@ class ObjectStore;
  class ScalarTreeItem
  {
  public:
-     ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent = 0);
+     explicit ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent = 0);
      ~ScalarTreeItem();
 
      void addChild(ScalarTreeItem *child);

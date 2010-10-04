@@ -32,7 +32,7 @@ const QString DataScalar::staticTypeTag = I18N_NOOP("datascalar");
 DataScalar::DataScalar(ObjectStore *store)
 : Scalar(store), DataPrimitive() {
 
-  _field = QString::null;
+  _field.clear();
 
   setOrphan(true);
 }
@@ -44,7 +44,7 @@ DataScalar::~DataScalar() {
 
 QString DataScalar::_automaticDescriptiveName() const {
   QString name = field();
-  return name.replace("_", "\\_");
+  return name.replace('_', "\\_");
 }
 
 

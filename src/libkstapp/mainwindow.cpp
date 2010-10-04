@@ -218,7 +218,7 @@ void MainWindow::saveAs() {
     return;
   }
   QString restorePath = QDir::currentPath();
-  QString kstfiledir = fn.left(fn.lastIndexOf("/")) + "/";
+  QString kstfiledir = fn.left(fn.lastIndexOf('/')) + '/';
   QDir::setCurrent(kstfiledir);
   QString currentP = QDir::currentPath();
   _doc->save(fn);
@@ -262,8 +262,8 @@ void MainWindow::open() {
     return;
   }
   settings.setValue(lastKey, fn);
-  QDir::setCurrent(fn.left(fn.lastIndexOf("/")) + "/");
-  QDir::setCurrent(fn.left(fn.lastIndexOf("/")));
+  QDir::setCurrent(fn.left(fn.lastIndexOf('/')) + '/');
+  QDir::setCurrent(fn.left(fn.lastIndexOf('/')));
   openFile(fn);
   setWindowTitle("Kst - " + fn);
 }
@@ -348,8 +348,8 @@ void MainWindow::exportGraphicsFile(
     if (n_views != 1) {
       QFileInfo QFI(filename);
       file = QFI.completeBaseName() +
-             "_" +
-             QString::number(viewCount+1) + "." +
+             '_' +
+             QString::number(viewCount+1) + '.' +
              QFI.suffix();
     }
 
@@ -448,17 +448,18 @@ void MainWindow::print() {
 
   setPrinterDefaults(&printer);
 
-  QPrintDialog pd(&printer, this);
-  pd.setOption(QPrintDialog::PrintToFile);
-  pd.setOption(QPrintDialog::PrintPageRange, true);
-  pd.setOption(QAbstractPrintDialog::PrintShowPageSize,true);
+  QPointer<QPrintDialog> pd = new QPrintDialog(&printer, this);
+  pd->setOption(QPrintDialog::PrintToFile);
+  pd->setOption(QPrintDialog::PrintPageRange, true);
+  pd->setOption(QAbstractPrintDialog::PrintShowPageSize,true);
 
-  if (pd.exec() == QDialog::Accepted) {
+  if (pd->exec() == QDialog::Accepted) {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     printToPrinter(&printer);
     QApplication::restoreOverrideCursor();
     savePrinterDefaults(&printer);
   }
+  delete pd;
 }
 
 void MainWindow::currentViewChanged() {

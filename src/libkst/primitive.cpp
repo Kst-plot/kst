@@ -55,7 +55,7 @@ void Primitive::setSlaveName(QString slaveName) {
 QString Primitive::_automaticDescriptiveName() const {
   QString name;
   if (_provider) {
-    name = _provider->descriptiveName() + ":";
+    name = _provider->descriptiveName() + ':';
   }
   name += _slaveName;
 

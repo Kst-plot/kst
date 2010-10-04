@@ -529,9 +529,11 @@ void MatrixTab::fileNameChanged(const QString &file) {
 
 
 void MatrixTab::showConfigWidget() {
-  DataSourceDialog dialog(dataDialog()->editMode(), _dataSource, this);
-  dialog.exec();
-  fileNameChanged(_dataSource->fileName());
+  QPointer<DataSourceDialog> dialog = new DataSourceDialog(dataDialog()->editMode(), _dataSource, this);
+  if ( dialog->exec() == QDialog::Accepted ) {
+    fileNameChanged(_dataSource->fileName());
+  }
+  delete dialog;
 }
 
 

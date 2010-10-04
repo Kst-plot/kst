@@ -68,7 +68,7 @@ void EquationTab::selectionChanged() {
 
 void EquationTab::equationUpdate(const QString& string) {
   QString equation = _equation->text();
-  equation += "[" + string + "]";
+  equation += '[' + string + ']';
   _equation->setText(equation); 
 }
 

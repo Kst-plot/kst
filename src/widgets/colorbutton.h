@@ -23,8 +23,8 @@ class KSTWIDGETS_EXPORT ColorButton : public QToolButton {
   Q_OBJECT
   Q_PROPERTY(QColor color READ color WRITE setColor USER true)
   public:
-    ColorButton(QWidget *parent = 0);
-    ColorButton(const QColor &color, QWidget *parent = 0);
+    explicit ColorButton(QWidget *parent = 0);
+    explicit ColorButton(const QColor &color, QWidget *parent = 0);
     virtual ~ColorButton();
 
     QColor color() const;

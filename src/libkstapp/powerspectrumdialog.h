@@ -55,7 +55,7 @@ class PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
 class PowerSpectrumDialog : public DataDialog {
   Q_OBJECT
   public:
-    PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit PowerSpectrumDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~PowerSpectrumDialog();
 
     void setVector(VectorPtr vector);

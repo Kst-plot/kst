@@ -68,7 +68,7 @@ PSD::PSD(ObjectStore *store)
 }
 
 void PSD::_initializeShortName() {
-  _shortName = "S"+QString::number(_psdnum);
+  _shortName = 'S'+QString::number(_psdnum);
   if (_psdnum>max_psdnum)
     max_psdnum = _psdnum;
   _psdnum++;

@@ -64,7 +64,7 @@ void EventMonitorTab::selectionChanged() {
 
 void EventMonitorTab::equationUpdate(const QString& string) {
   QString equation = _equation->text();
-  equation += "[" + string + "]";
+  equation += '[' + string + ']';
   _equation->setText(equation);
 }
 

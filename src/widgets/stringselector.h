@@ -27,7 +27,7 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT StringSelector : public QWidget, public Ui::StringSelector {
   Q_OBJECT
   public:
-    StringSelector(QWidget *parent = 0, ObjectStore *store = 0);
+    explicit StringSelector(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~StringSelector();
 
     void setObjectStore(ObjectStore *store);

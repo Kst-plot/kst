@@ -39,7 +39,7 @@ Scalar::Scalar(ObjectStore *store)
 }
 
 void Scalar::_initializeShortName() {
-  _shortName = "X"+QString::number(_xnum);
+  _shortName = 'X'+QString::number(_xnum);
   if (_xnum>max_xnum)
     max_xnum = _xnum;
   _xnum++;

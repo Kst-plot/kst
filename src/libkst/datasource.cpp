@@ -266,7 +266,7 @@ QString DataSource::fileName() const {
 
 
 QString DataSource::fileType() const {
-  return QString::null;
+  return QString();
 }
 
 void DataSource::save(QXmlStreamWriter &s) {

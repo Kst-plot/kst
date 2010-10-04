@@ -26,7 +26,8 @@
 namespace Kst {
 
 CoreDocument::CoreDocument()
-: _objectStore(new ObjectStore()), _dirty(false), _isOpen(false), _fileName(QString::null) {
+: _objectStore(new ObjectStore()), _dirty(false), _isOpen(false) {
+  _fileName.clear();
 }
 
 

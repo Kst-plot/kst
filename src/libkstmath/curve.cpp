@@ -83,7 +83,7 @@ Curve::Curve(ObjectStore *store)
 }
 
 void Curve::_initializeShortName() {
-  _shortName = "C"+QString::number(_cnum);
+  _shortName = 'C'+QString::number(_cnum);
   if (_cnum>max_cnum)
     max_cnum = _cnum;
   _cnum++;

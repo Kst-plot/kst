@@ -27,7 +27,7 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
   Q_OBJECT
   public:
-    LabelBuilder(QWidget *parent = 0, ObjectStore *store = 0);
+    explicit LabelBuilder(QWidget *parent = 0, ObjectStore *store = 0);
     virtual ~LabelBuilder();
 
     void setObjectStore(ObjectStore *store);

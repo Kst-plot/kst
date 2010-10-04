@@ -21,7 +21,7 @@ class PluginMenuItemAction : public QAction
 {
   Q_OBJECT
   public:
-    PluginMenuItemAction(const QString &text, QWidget *parent = 0);
+    explicit PluginMenuItemAction(const QString &text, QWidget *parent = 0);
 
   Q_SIGNALS:
     void triggered(QString &name);

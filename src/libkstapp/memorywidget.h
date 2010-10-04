@@ -21,7 +21,7 @@ namespace Kst {
 class MemoryWidget : public QLabel {
   Q_OBJECT
   public:
-    MemoryWidget(QWidget *parent, int updateMilliSeconds = 5000);
+    explicit MemoryWidget(QWidget *parent, int updateMilliSeconds = 5000);
     ~MemoryWidget();
 
   public Q_SLOTS:

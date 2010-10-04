@@ -92,7 +92,7 @@ _comboPointSymbol->setIconSize(QSize(rect.width(), rect.height()));
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
     CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, 0, 600);
-    _comboPointSymbol->addItem(QIcon(ppix), QString::null);
+    _comboPointSymbol->addItem(QIcon(ppix), QString());
   }
 
   if (currentItem > 0) {
@@ -343,7 +343,7 @@ void CurveAppearance::populateLineStyleCombo() {
     pp.setPen(pen);
     pp.fillRect( pp.window(), QColor("white"));
     pp.drawLine(1,ppix.height()/2,ppix.width()-1, ppix.height()/2);
-    _comboLineStyle->addItem(QIcon(ppix), QString::null);
+    _comboLineStyle->addItem(QIcon(ppix), QString());
   }
 
   if (currentItem > 0) {

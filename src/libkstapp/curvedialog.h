@@ -82,7 +82,7 @@ class CurveTab : public DataTab, Ui::CurveTab {
 class CurveDialog : public DataDialog {
   Q_OBJECT
   public:
-    CurveDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit CurveDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~CurveDialog();
 
     void setVector(VectorPtr vector);

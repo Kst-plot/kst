@@ -37,7 +37,7 @@ namespace Kst {
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
   : Dialog(parent), _dataObject(dataObject), _modified(false) {
 
-  _dataObjectName = QString();
+  _dataObjectName.clear();
 
   if (_dataObject)
     _mode = Edit;
@@ -128,7 +128,7 @@ void DataDialog::setTagString(const QString &tagString) {
 }
 
 void DataDialog::setShortName(const QString &name) {
-  _shortName->setText("("+name+")");
+  _shortName->setText('('+name+')');
 }
 
 bool DataDialog::tagStringAuto() const {

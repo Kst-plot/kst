@@ -81,7 +81,7 @@ DataVector::DataVector(ObjectStore *store)
   Skip = 1;
   DoSkip = false;
   DoAve = false;
-  _field = QString::null;
+  _field.clear();
 }
 
 
@@ -714,7 +714,7 @@ DataVectorPtr DataVector::makeDuplicate() const {
 QString DataVector::_automaticDescriptiveName() const {
   QString name;
   name = _field;
-  return name.replace("_", "\\_");
+  return name.replace('_', "\\_");
 }
 
 QString DataVector::descriptionTip() const {

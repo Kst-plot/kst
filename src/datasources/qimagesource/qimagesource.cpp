@@ -27,7 +27,7 @@ class QImageSource::Config {
     Config() {
     }
 
-    void read(QSettings *cfg, const QString& fileName = QString::null) {
+    void read(QSettings *cfg, const QString& fileName = QString()) {
       Q_UNUSED(fileName);
       cfg->beginGroup(qimageTypeString);
       cfg->endGroup();

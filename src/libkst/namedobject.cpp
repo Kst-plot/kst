@@ -42,7 +42,7 @@ NamedObject::~NamedObject() {
 
 
 QString NamedObject::Name() const {
-  return descriptiveName()+" ("+shortName()+")";
+  return descriptiveName()+" ("+shortName()+')';
 }
 
 

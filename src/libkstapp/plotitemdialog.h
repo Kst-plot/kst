@@ -36,7 +36,7 @@ class PlotItemDialog : public ViewItemDialog
 {
   Q_OBJECT
   public:
-    PlotItemDialog(PlotItem *item, QWidget *parent = 0);
+    explicit PlotItemDialog(PlotItem *item, QWidget *parent = 0);
     virtual ~PlotItemDialog();
 
   private Q_SLOTS:

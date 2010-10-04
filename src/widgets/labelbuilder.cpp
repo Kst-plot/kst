@@ -65,7 +65,7 @@ void LabelBuilder::setLabelText(const QString &label) {
 
 void LabelBuilder::labelUpdate(const QString& string) {
   QString label = _label->toPlainText();
-  label += "[" + string + "]";
+  label += '[' + string + ']';
   _label->setPlainText(label);
 }
 

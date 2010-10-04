@@ -204,9 +204,9 @@ bool Addition::isConst() {
 
 QString Addition::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "+" + _right->text() + ")";
+    return QString('(') + _left->text() + '+' + _right->text() + ')';
   } else {
-    return _left->text() + "+" + _right->text();
+    return _left->text() + '+' + _right->text();
   }
 }
 
@@ -234,9 +234,9 @@ bool Subtraction::isConst() {
 
 QString Subtraction::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "-" + _right->text() + ")";
+    return QString('(') + _left->text() + '-' + _right->text() + ')';
   } else {
-    return _left->text() + "-" + _right->text();
+    return _left->text() + '-' + _right->text();
   }
 }
 
@@ -264,9 +264,9 @@ bool Multiplication::isConst() {
 
 QString Multiplication::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "*" + _right->text() + ")";
+    return QString('(') + _left->text() + '*' + _right->text() + ')';
   } else {
-    return _left->text() + "*" + _right->text();
+    return _left->text() + '*' + _right->text();
   }
 }
 
@@ -294,9 +294,9 @@ bool Division::isConst() {
 
 QString Division::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "/" + _right->text() + ")";
+    return QString('(') + _left->text() + '/' + _right->text() + ')';
   } else {
-    return _left->text() + "/" + _right->text();
+    return _left->text() + '/' + _right->text();
   }
 }
 
@@ -324,9 +324,9 @@ bool Modulo::isConst() {
 
 QString Modulo::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "%" + _right->text() + ")";
+    return QString('(') + _left->text() + '%' + _right->text() + ')';
   } else {
-    return _left->text() + "%" + _right->text();
+    return _left->text() + '%' + _right->text();
   }
 }
 
@@ -354,9 +354,9 @@ bool Power::isConst() {
 
 QString Power::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + "^" + _right->text() + ")";
+    return QString('(') + _left->text() + '^' + _right->text() + ')';
   } else {
-    return _left->text() + "^" + _right->text();
+    return _left->text() + '^' + _right->text();
   }
 }
 
@@ -491,7 +491,7 @@ bool Function::takeVectors(const Kst::VectorMap& c) {
 
 
 QString Function::text() const {
-  return QString::fromLatin1(_name) + "(" + _args->text() + ")";
+  return QString::fromLatin1(_name) + '(' + _args->text() + ')';
 }
 
 
@@ -716,7 +716,7 @@ double DataNode::value(Context *ctx) {
       } else {
         ParsedEquation = 0L;
         mutex().unlock();
-        _vectorIndex = QString::null;
+        _vectorIndex.clear();
         _vector = 0L;
         return ctx->noPoint;
       }
@@ -794,13 +794,13 @@ Kst::Object::UpdateType DataNode::update(Context *ctx) {
 
 QString DataNode::text() const {
   if (_isEquation) {
-    return QString("[=") + _tagName + "]";
+    return QString("[=") + _tagName + ']';
   } else if (_vector) {
-    return QString("[") + _vector->Name() + QString("]");
+    return QString('[') + _vector->Name() + QString(']');
   } else if (_scalar) {
-    return QString("[") + _scalar->Name() + QString("]");
+    return QString('[') + _scalar->Name() + QString(']');
   } else {
-    return QString::null;
+    return QString();
   }
 }
 
@@ -827,7 +827,7 @@ bool Number::isConst() {
 
 QString Number::text() const {
   if (_parentheses) {
-    return QString("(") + QString::number(_n, 'g', 15) + ")";
+    return QString('(') + QString::number(_n, 'g', 15) + ')';
   } else {
     return QString::number(_n, 'g', 15);
   }
@@ -860,9 +860,9 @@ bool Negation::isConst() {
 
 QString Negation::text() const {
   if (_parentheses) {
-    return QString("(-") + _n->text() + ")";
+    return QString("(-") + _n->text() + ')';
   } else {
-    return QString("-") + _n->text();
+    return QString('-') + _n->text();
   }
 }
 
@@ -893,9 +893,9 @@ bool LogicalNot::isConst() {
 
 QString LogicalNot::text() const {
   if (_parentheses) {
-    return QString("(!") + _n->text() + ")";
+    return QString("(!") + _n->text() + ')';
   } else {
-    return QString("!") + _n->text();
+    return QString('!') + _n->text();
   }
 }
 
@@ -923,9 +923,9 @@ bool BitwiseAnd::isConst() {
 
 QString BitwiseAnd::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("&") + _right->text() + ")";
+    return QString('(') + _left->text() + QString('&') + _right->text() + ')';
   } else {
-    return _left->text() + QString("&") + _right->text();
+    return _left->text() + QString('&') + _right->text();
   }
 }
 
@@ -953,9 +953,9 @@ bool BitwiseOr::isConst() {
 
 QString BitwiseOr::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("|") + _right->text() + ")";
+    return QString('(') + _left->text() + QString('|') + _right->text() + ')';
   } else {
-    return _left->text() + QString("|") + _right->text();
+    return _left->text() + QString('|') + _right->text();
   }
 }
 
@@ -983,7 +983,7 @@ bool LogicalAnd::isConst() {
 
 QString LogicalAnd::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("&&") + _right->text() + ")";
+    return QString('(') + _left->text() + QString("&&") + _right->text() + ')';
   } else {
     return _left->text() + QString("&&") + _right->text();
   }
@@ -1013,7 +1013,7 @@ bool LogicalOr::isConst() {
 
 QString LogicalOr::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("||") + _right->text() + ")";
+    return QString('(') + _left->text() + QString("||") + _right->text() + ')';
   } else {
     return _left->text() + QString("||") + _right->text();
   }
@@ -1043,9 +1043,9 @@ bool LessThan::isConst() {
 
 QString LessThan::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("<") + _right->text() + ")";
+    return QString('(') + _left->text() + QString('<') + _right->text() + ')';
   } else {
-    return _left->text() + QString("<") + _right->text();
+    return _left->text() + QString('<') + _right->text();
   }
 }
 
@@ -1073,7 +1073,7 @@ bool LessThanEqual::isConst() {
 
 QString LessThanEqual::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("<=") + _right->text() + ")";
+    return QString('(') + _left->text() + QString("<=") + _right->text() + ')';
   } else {
     return _left->text() + QString("<=") + _right->text();
   }
@@ -1103,9 +1103,9 @@ bool GreaterThan::isConst() {
 
 QString GreaterThan::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString(">") + _right->text() + ")";
+    return QString('(') + _left->text() + QString('>') + _right->text() + ')';
   } else {
-    return _left->text() + QString(">") + _right->text();
+    return _left->text() + QString('>') + _right->text();
   }
 }
 
@@ -1133,7 +1133,7 @@ bool GreaterThanEqual::isConst() {
 
 QString GreaterThanEqual::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString(">=") + _right->text() + ")";
+    return QString('(') + _left->text() + QString(">=") + _right->text() + ')';
   } else {
     return _left->text() + QString(">=") + _right->text();
   }
@@ -1163,7 +1163,7 @@ bool EqualTo::isConst() {
 
 QString EqualTo::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("==") + _right->text() + ")";
+    return QString('(') + _left->text() + QString("==") + _right->text() + ')';
   } else {
     return _left->text() + QString("==") + _right->text();
   }
@@ -1193,7 +1193,7 @@ bool NotEqualTo::isConst() {
 
 QString NotEqualTo::text() const {
   if (_parentheses) {
-    return QString("(") + _left->text() + QString("!=") + _right->text() + ")";
+    return QString('(') + _left->text() + QString("!=") + _right->text() + ')';
   } else {
     return _left->text() + QString("!=") + _right->text();
   }

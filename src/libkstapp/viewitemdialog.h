@@ -35,7 +35,7 @@ class ViewItemDialog : public Dialog
   Q_OBJECT
   public:
     enum EditMode { Single, Multiple };
-    ViewItemDialog(ViewItem *item, QWidget *parent = 0);
+    explicit ViewItemDialog(ViewItem *item, QWidget *parent = 0);
     virtual ~ViewItemDialog();
 
     void setSupportsMultipleEdit(bool enabled);

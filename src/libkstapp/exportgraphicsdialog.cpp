@@ -118,7 +118,7 @@ void ExportGraphicsDialog::createFile() {
   QString format = _comboBoxFormats->currentText();
   if (_autoExtension->isChecked()) {
     if (QFileInfo(filename).suffix().toLower() != format.toLower()) {
-      filename += "." + format;
+      filename += '.' + format;
     }
   }
   _dialogDefaults->setValue("export/filename", filename);

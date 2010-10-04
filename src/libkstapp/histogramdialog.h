@@ -82,7 +82,7 @@ class HistogramTab : public DataTab, Ui::HistogramTab {
 class HistogramDialog : public DataDialog {
   Q_OBJECT
   public:
-    HistogramDialog(ObjectPtr dataObject, QWidget *parent = 0);
+    explicit HistogramDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~HistogramDialog();
 
     void setVector(VectorPtr vector);

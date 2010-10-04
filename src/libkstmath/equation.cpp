@@ -85,7 +85,7 @@ Equation::~Equation() {
 }
 
 void Equation::_initializeShortName() {
-  _shortName = "E"+QString::number(_enum);
+  _shortName = 'E'+QString::number(_enum);
   if (_enum>max_enum)
     max_enum = _enum;
   _enum++;
@@ -257,7 +257,7 @@ void Equation::updateVectorLabels() {
   QString xl;
   QRegExp sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
   yl = reparsedEquation();
-  yl.replace(sn,"");
+  yl.remove(sn);
 
   xl = _xInVector->label();
 
@@ -494,13 +494,13 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
   for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
     QString oldName = j.value()->Name();
     QString newName = ((newObject->outputVectors())[j.key()])->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
   }
 
   for (ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
     QString oldName = j.value()->Name();
     QString newName = ((newObject->outputScalars())[j.key()])->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
   }
 
   // and dependencies on matrix stats (there won't be matrices themselves in the expression)
@@ -510,7 +510,7 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
       scalarDictIter.next();
       QString oldName = scalarDictIter.value()->Name();
       QString newName = ((((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()])->Name();
-      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+      newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
     }
   }
 
@@ -528,7 +528,7 @@ void Equation::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObjec
       scalarDictIter.next();
       QString oldName = scalarDictIter.value()->Name();
       QString newName = ((((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()])->Name();
-      newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+      newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
     }
   }
 
@@ -541,7 +541,7 @@ void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
   QString newName = newVector->Name();
 
   // replace all occurences of oldName with newName
-  QString newExp = _equation.replace("["+oldName+"]", "["+newName+"]");
+  QString newExp = _equation.replace('['+oldName+'[', '['+newName+'[');
 
   // also replace all occurences of scalar stats for the oldVector
   QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
@@ -549,7 +549,7 @@ void Equation::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
     scalarDictIter.next();
     QString oldName = scalarDictIter.value()->Name();
     QString newName = ((newVector->scalars())[scalarDictIter.key()])->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
   }
 
   setEquation(newExp);
@@ -574,7 +574,7 @@ void Equation::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
     scalarDictIter.next();
     QString oldName = scalarDictIter.value()->Name();
     QString newName = ((newMatrix->scalars())[scalarDictIter.key()])->Name();
-    newExp = newExp.replace("[" + oldName + "]", "[" + newName + "]");
+    newExp = newExp.replace('[' + oldName + '[', '[' + newName + '[');
   }
 
   setEquation(newExp);

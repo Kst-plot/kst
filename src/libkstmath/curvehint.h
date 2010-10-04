@@ -25,7 +25,7 @@ class Relation;
 class CurveHint : public Shared {
   friend class DataObject;
   public:
-    CurveHint(const QString& name = QString::null, const QString& x = QString::null, const QString& y = QString::null);
+    explicit CurveHint(const QString& name = QString(), const QString& x = QString(), const QString& y = QString());
 
     virtual ~CurveHint();
 

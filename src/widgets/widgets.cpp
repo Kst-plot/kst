@@ -55,17 +55,18 @@ QString WidgetPlugin::group() const {
 
 
 QString WidgetPlugin::toolTip() const {
-  return QString::null;
+  return QString();
 }
 
 
 QString WidgetPlugin::whatsThis() const {
-  return QString::null;
+  return QString();
 }
 
 
 QString WidgetPlugin::instanceName() const {
-  QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name().replace("", "");
+  //QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name().replace("", "");
+  QString name = static_cast<const QDesignerCustomWidgetInterface*>(this)->name();
   QChar camel = name.at(0).toLower();
   return name.replace(0,1,camel.toLower());
 }

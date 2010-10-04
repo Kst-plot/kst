@@ -23,7 +23,7 @@ class View;
 class ViewCommand : public QUndoCommand
 {
 public:
-  ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
+  explicit ViewCommand(const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
   ViewCommand(View *view, const QString &text, bool addToStack = true, QUndoCommand *parent = 0);
   virtual ~ViewCommand();
 

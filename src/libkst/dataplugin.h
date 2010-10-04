@@ -32,7 +32,7 @@ class PluginInterface : public Shared {
 
     virtual ~PluginInterface() {}
 
-    virtual QString pluginName() const { return QString::null; }
+    virtual QString pluginName() const { return QString(); }
     virtual QString pluginDescription() const { return QString::null; }
 
     virtual bool hasConfigWidget() const { return false; }

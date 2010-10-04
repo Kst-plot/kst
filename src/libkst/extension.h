@@ -32,7 +32,7 @@ class KSTCORE_EXPORT Extension : public QObject {
 
     // To save state
     virtual void load(const QDomElement& e);
-    virtual void save(QTextStream& ts, const QString& indent = QString::null);
+    virtual void save(QTextStream& ts, const QString& indent = QString());
 
     // Clear internal state
     virtual void clear();

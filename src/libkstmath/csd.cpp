@@ -57,7 +57,7 @@ CSD::CSD(ObjectStore *store)
 }
 
 void CSD::_initializeShortName() {
-  _shortName = "G"+QString::number(_csdnum);
+  _shortName = 'G'+QString::number(_csdnum);
   if (_csdnum>max_csdnum)
     max_csdnum = _csdnum;
   _csdnum++;
@@ -70,7 +70,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     const QString& in_rateUnits) {
 
   _inputVectors[INVECTOR] = in_V;
-  QString vecName = in_V ? in_V->Name() : QString::null;
+  QString vecName = in_V ? in_V->Name() : QString();
   _frequency = in_freq;
   _average = in_average;
   _apodize = in_apodize;
