@@ -85,7 +85,7 @@ ViewItem::ViewItem(View *parentView) :
     _parentRelativeWidth(0),
     _parentView(parentView)
 {
-  setParentView(parentView);
+  setView(parentView);
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
@@ -410,7 +410,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
   return knownTag;
 }
 
-View *ViewItem::parentView() const {
+View *ViewItem::view() const {
 #ifdef KST_DISBALE_QOBJECT_PARENT
   return _parentView;
 #else
@@ -418,7 +418,7 @@ View *ViewItem::parentView() const {
 #endif
 }
 
-void ViewItem::setParentView(View* parentView) {
+void ViewItem::setView(View* parentView) {
   _parentView = parentView;
 #ifndef KST_DISBALE_QOBJECT_PARENT
   QObject::setParent(parentView);
@@ -508,11 +508,11 @@ void ViewItem::setViewRect(qreal x, qreal y, qreal width, qreal height, bool aut
 
 
 QSizeF ViewItem::sizeOfGrip() const {
-  if (!parentView())
+  if (!view())
     return QSizeF();
 
   int base = 9;
-  return parentView()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
+  return view()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
 }
 
 
@@ -683,8 +683,8 @@ QRectF ViewItem::gripBoundingRect() const {
 
 QRectF ViewItem::boundingRect() const {
   bool inCreation = false;
-  if (parentView()) /* false when exiting */
-    inCreation = parentView()->mouseMode() == View::Create;
+  if (view()) /* false when exiting */
+    inCreation = view()->mouseMode() == View::Create;
   if ((!isSelected() && !isHovering()) || inCreation)
     return QGraphicsRectItem::boundingRect();
 
@@ -694,7 +694,7 @@ QRectF ViewItem::boundingRect() const {
 
 
 QPainterPath ViewItem::shape() const {
-  if ((!isSelected() && !isHovering()) || (parentView()->mouseMode() == View::Create))
+  if ((!isSelected() && !isHovering()) || (view()->mouseMode() == View::Create))
     return itemShape();
 
   QPainterPath selectPath;
@@ -714,13 +714,13 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
 
-  if (!parentView()->isPrinting() && !parentView()->childMaximized()) {
+  if (!view()->isPrinting() && !view()->childMaximized()) {
     painter->save();
     painter->setPen(Qt::DotLine);
     painter->setBrush(Qt::NoBrush);
     if ((isSelected() || isHovering())
-        && parentView()->mouseMode() != View::Create
-        && parentView()->viewMode() != View::Data) {
+        && view()->mouseMode() != View::Create
+        && view()->viewMode() != View::Data) {
       painter->drawPath(shape());
       if (_gripMode == Resize)
         painter->fillPath(grips(), Qt::blue);
@@ -806,23 +806,23 @@ void ViewItem::createAutoLayout() {
   if (parentViewItem()) {
     LayoutCommand *layout = new LayoutCommand(parentViewItem());
     layout->createLayout();
-  } else if (parentView()) {
-    parentView()->createLayout();
+  } else if (view()) {
+    view()->createLayout();
   }
 }
 
 
 void ViewItem::createCustomLayout() {
   bool ok;
-  int columns = QInputDialog::getInteger(parentView(), tr("Kst"),
+  int columns = QInputDialog::getInteger(view(), tr("Kst"),
                                       tr("Select Number of Columns"),1, 0,
                                       10, 1, &ok);
   if (ok) {
     if (parentViewItem()) {
       LayoutCommand *layout = new LayoutCommand(parentViewItem());
       layout->createLayout(columns);
-    } else if (parentView()) {
-      parentView()->createLayout(columns);
+    } else if (view()) {
+      view()->createLayout(columns);
     }
   }
 }
@@ -854,16 +854,16 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MousePress) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
     setViewRect(0.0, 0.0, 0.0, 0.0);
-    parentView()->scene()->addItem(this);
+    view()->scene()->addItem(this);
     _creationState = InProgress;
     return;
   }
 
   if (event == View::MouseMove) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
     QRectF newRect(rect().x(), rect().y(),
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
@@ -872,7 +872,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseRelease));
     QRectF newRect(rect().x(), rect().y(),
                    poly.last().x() - rect().x(),
                    poly.last().y() - rect().y());
@@ -884,14 +884,14 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
       newRect.moveTopLeft(QPointF(0, 0));
       setViewRect(newRect);
 
-      parentView()->setPlotBordersDirty(true);
+      view()->setPlotBordersDirty(true);
     } else {
       setViewRect(newRect.normalized());
     }
 
-    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
-    parentView()->setMouseMode(View::Default);
+    view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    view()->setMouseMode(View::Default);
 
     updateViewItemParent();
     _creationState = Completed;
@@ -986,33 +986,33 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
 }
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
 
 #ifdef KST_ENABLE_DD
   if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton) {
-    if (parentView()->mouseMode() == View::Move) {
+    if (view()->mouseMode() == View::Move) {
       startDragging(event->widget(), dragStartPosition.toPoint());
       return;
     }
   }
 #endif
 
-  if (parentView()->mouseMode() == View::Default) {
+  if (view()->mouseMode() == View::Default) {
     if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {
-      parentView()->setMouseMode(View::Move);
-      parentView()->undoStack()->beginMacro(tr("Move"));
+      view()->setMouseMode(View::Move);
+      view()->undoStack()->beginMacro(tr("Move"));
     } else if (gripMode() == ViewItem::Resize) {
-      parentView()->setMouseMode(View::Resize);
-      parentView()->undoStack()->beginMacro(tr("Resize"));
+      view()->setMouseMode(View::Resize);
+      view()->undoStack()->beginMacro(tr("Resize"));
     } else if (gripMode() == ViewItem::Scale) {
-      parentView()->setMouseMode(View::Scale);
-      parentView()->undoStack()->beginMacro(tr("Scale"));
+      view()->setMouseMode(View::Scale);
+      view()->undoStack()->beginMacro(tr("Scale"));
     } else if (gripMode() == ViewItem::Rotate) {
-      parentView()->setMouseMode(View::Rotate);
-      parentView()->undoStack()->beginMacro(tr("Rotate"));
+      view()->setMouseMode(View::Rotate);
+      view()->undoStack()->beginMacro(tr("Rotate"));
     }
   }
 
@@ -1560,13 +1560,13 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
     _parentRelativePosition =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
     _parentRelativePosition =  QPointF(_parentRelativePosition.x() / parentViewItem()->width(), _parentRelativePosition.y() / parentViewItem()->height());
-   } else if (parentView()) {
-    _parentRelativeHeight = (height() / parentView()->height());
-    _parentRelativeWidth = (width() / parentView()->width());
-    _parentRelativeCenter =  mapToParent(rect().center()) - parentView()->rect().topLeft();
-    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentView()->width(), _parentRelativeCenter.y() / parentView()->height());
-    _parentRelativePosition =  mapToParent(rect().topLeft()) - parentView()->rect().topLeft();
-    _parentRelativePosition =  QPointF(_parentRelativePosition.x() / parentView()->width(), _parentRelativePosition.y() / parentView()->height());
+   } else if (view()) {
+    _parentRelativeHeight = (height() / view()->height());
+    _parentRelativeWidth = (width() / view()->width());
+    _parentRelativeCenter =  mapToParent(rect().center()) - view()->rect().topLeft();
+    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / view()->width(), _parentRelativeCenter.y() / view()->height());
+    _parentRelativePosition =  mapToParent(rect().topLeft()) - view()->rect().topLeft();
+    _parentRelativePosition =  QPointF(_parentRelativePosition.x() / view()->width(), _parentRelativePosition.y() / view()->height());
   } else {
     _parentRelativeHeight = 0;
     _parentRelativeWidth = 0;
@@ -1644,7 +1644,7 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 
 
 void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1652,7 +1652,7 @@ void ViewItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void ViewItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
@@ -1727,16 +1727,16 @@ ViewItem::GripMode ViewItem::nextGripMode(GripMode currentMode) const {
 
 
 void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
 
   dragStartPosition = QPointF(0, 0);
 
-  if (parentView()->mouseMode() != View::Default) {
-    parentView()->setMouseMode(View::Default);
-    parentView()->undoStack()->endMacro();
+  if (view()->mouseMode() != View::Default) {
+    view()->setMouseMode(View::Default);
+    view()->undoStack()->endMacro();
   }
 
   QGraphicsRectItem::mouseReleaseEvent(event);
@@ -1745,40 +1745,40 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     return;
   }
   if (isSelected()) {
     QPointF p = event->pos();
     if ((isAllowed(TopLeftGrip) && topLeftGrip().contains(p)) || (isAllowed(BottomRightGrip) && bottomRightGrip().contains(p))) {
       if (gripMode() == ViewItem::Rotate) {
-        parentView()->setCursor(Qt::CrossCursor);
+        view()->setCursor(Qt::CrossCursor);
       } else if (gripMode() == ViewItem::Resize) {
-        parentView()->setCursor(Qt::SizeFDiagCursor);
+        view()->setCursor(Qt::SizeFDiagCursor);
       }
     } else if ((isAllowed(TopRightGrip) && topRightGrip().contains(p)) || (isAllowed(BottomLeftGrip) && bottomLeftGrip().contains(p))) {
       if (gripMode() == ViewItem::Rotate) {
-        parentView()->setCursor(Qt::CrossCursor);
+        view()->setCursor(Qt::CrossCursor);
       } else if (gripMode() == ViewItem::Resize) {
-        parentView()->setCursor(Qt::SizeBDiagCursor);
+        view()->setCursor(Qt::SizeBDiagCursor);
       }
     } else if ((isAllowed(TopMidGrip) && topMidGrip().contains(p)) || (isAllowed(BottomMidGrip) && bottomMidGrip().contains(p))) {
       if (gripMode() == ViewItem::Rotate) {
-        parentView()->setCursor(Qt::CrossCursor);
+        view()->setCursor(Qt::CrossCursor);
       } else if (gripMode() == ViewItem::Resize) {
-        parentView()->setCursor(Qt::SizeVerCursor);
+        view()->setCursor(Qt::SizeVerCursor);
       }
     } else if ((isAllowed(RightMidGrip) && rightMidGrip().contains(p)) || (isAllowed(LeftMidGrip) && leftMidGrip().contains(p))) {
       if (gripMode() == ViewItem::Rotate) {
-        parentView()->setCursor(Qt::CrossCursor);
+        view()->setCursor(Qt::CrossCursor);
       } else if (gripMode() == ViewItem::Resize) {
-        parentView()->setCursor(Qt::SizeHorCursor);
+        view()->setCursor(Qt::SizeHorCursor);
       }
     } else {
-      parentView()->setCursor(Qt::SizeAllCursor);
+      view()->setCursor(Qt::SizeAllCursor);
     }
   } else {
-    parentView()->setCursor(Qt::SizeAllCursor);
+    view()->setCursor(Qt::SizeAllCursor);
   }
 }
 
@@ -1792,7 +1792,7 @@ void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
-  parentView()->setCursor(Qt::ArrowCursor);
+  view()->setCursor(Qt::ArrowCursor);
 
   _hovering = false;
   update();
@@ -1814,18 +1814,18 @@ if (change == ItemSelectedChange) {
 
 void ViewItem::moveTo(const QPointF& pos)
 {
-  setPos(parentView()->snapPoint(pos));
+  setPos(view()->snapPoint(pos));
   new MoveCommand(this, _originalPosition, pos);
   updateViewItemParent();
   updateRelativeSize();
 }
 
 void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
-  if (parentView()->mouseMode() == View::Move) {
+  if (view()->mouseMode() == View::Move) {
     _originalPosition = pos();
-  } else if (parentView()->mouseMode() == View::Resize ||
-             parentView()->mouseMode() == View::Scale ||
-             parentView()->mouseMode() == View::Rotate) {
+  } else if (view()->mouseMode() == View::Resize ||
+             view()->mouseMode() == View::Scale ||
+             view()->mouseMode() == View::Rotate) {
     _originalRect = rect();
     _originalTransform = transform();
   } else if (oldMode == View::Move && _originalPosition != pos()) {
@@ -1850,7 +1850,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 
 void ViewItem::registerShortcut(QAction *action) {
   Q_ASSERT(action->parent() == this);
-  parentView()->grabShortcut(action->shortcut());
+  view()->grabShortcut(action->shortcut());
   _shortcutMap.insert(action->shortcut(), action);
 }
 
@@ -1971,7 +1971,7 @@ QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
 ViewItemCommand::ViewItemCommand(ViewItem *item, const QString &text, bool addToStack, QUndoCommand *parent)
     : QUndoCommand(text, parent), _item(item) {
   if (addToStack)
-    _item->parentView()->undoStack()->push(this);
+    _item->view()->undoStack()->push(this);
 }
 
 
@@ -2043,7 +2043,7 @@ void LayoutCommand::redo() {
 
 void LayoutCommand::createLayout(int columns) {
   Q_ASSERT(_item);
-  Q_ASSERT(_item->parentView());
+  Q_ASSERT(_item->view());
 
   QList<ViewItem*> viewItems;
   QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
@@ -2086,7 +2086,7 @@ void LayoutCommand::createLayout(int columns) {
   }
 
   _layout->apply();
-  _item->parentView()->undoStack()->push(this);
+  _item->view()->undoStack()->push(this);
 }
 
 
@@ -2105,17 +2105,17 @@ void AppendLayoutCommand::redo() {
 
 void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
   Q_ASSERT(_item);
-  Q_ASSERT(_item->parentView());
+  Q_ASSERT(_item->view());
   Q_ASSERT(item);
 
   _layout = new ViewGridLayout(_item);
 
-  QPointF center = _item->parentView()->sceneRect().center();
+  QPointF center = _item->view()->sceneRect().center();
   center -= QPointF(100.0, 100.0);
 
   item->setPos(center);
   item->setViewRect(0.0, 0.0, 200.0, 200.0);
-  _item->parentView()->scene()->addItem(item);
+  _item->view()->scene()->addItem(item);
 
   if (layout == CurvePlacement::Auto) {
     columns = 0;
@@ -2172,7 +2172,7 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
 
     _layout->apply();
   }
-  _item->parentView()->undoStack()->push(this);
+  _item->view()->undoStack()->push(this);
 }
 
 void MoveCommand::undo() {

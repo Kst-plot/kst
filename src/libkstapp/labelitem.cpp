@@ -35,7 +35,7 @@ LabelItem::LabelItem(View *parent, const QString& txt)
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
   _scale = ApplicationSettings::self()->defaultFontScale();
   _color = ApplicationSettings::self()->defaultFontColor();
-  _font = parentView()->defaultFont(_scale);
+  _font = view()->defaultFont(_scale);
 }
 
 
@@ -55,7 +55,7 @@ void LabelItem::generateLabel() {
     _dirty = false;
     QRectF box = rect();
     QFont font(_font);
-    font.setPointSizeF(parentView()->defaultFont(_scale).pointSizeF());
+    font.setPointSizeF(view()->defaultFont(_scale).pointSizeF());
     QFontMetrics fm(font);
     _paintTransform.reset();
     _paintTransform.translate(box.x(), box.y() + fm.ascent());
@@ -160,13 +160,13 @@ void LabelItem::setLabelFont(const QFont &font) {
 void LabelItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
-    if (parentView()->creationPolygon(View::MouseMove).size()>0) {
-      const QPointF P = parentView()->creationPolygon(View::MouseMove).last();
+    if (view()->creationPolygon(View::MouseMove).size()>0) {
+      const QPointF P = view()->creationPolygon(View::MouseMove).last();
       setPos(P);
       setDirty();
     }
   } else if (event == View::MouseRelease) {
-    const QPointF P = mapFromScene(parentView()->creationPolygon(event).last());
+    const QPointF P = mapFromScene(view()->creationPolygon(event).last());
     QRectF newRect(rect().x(), rect().y(),
                    P.x() - rect().x(),
                    P.y() - rect().y());
@@ -178,9 +178,9 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
 
     setViewRect(newRect.normalized());
 
-    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
-    parentView()->setMouseMode(View::Default);
+    view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    view()->setMouseMode(View::Default);
     updateViewItemParent();
     emit creationComplete();
     setDirty();
@@ -215,7 +215,7 @@ void CreateLabelCommand::createItem(QString *inText) {
     label->setLabelColor(dialog.labelColor());
     label->setLabelFont(dialog.labelFont());
   }
-  _item->parentView()->scene()->addItem(_item);
+  _item->view()->scene()->addItem(_item);
 
   _view->setCursor(Qt::IBeamCursor);
 

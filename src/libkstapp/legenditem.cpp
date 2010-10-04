@@ -36,7 +36,7 @@ struct DrawnLegendItem {
 
 
 LegendItem::LegendItem(PlotItem *parentPlot)
-  : ViewItem(parentPlot->parentView()), _plotItem(parentPlot), _auto(true), _verticalDisplay(true) {
+  : ViewItem(parentPlot->view()), _plotItem(parentPlot), _auto(true), _verticalDisplay(true) {
   setTypeName("Legend");
 
   _initializeShortName();
@@ -45,7 +45,7 @@ LegendItem::LegendItem(PlotItem *parentPlot)
   setAllowedGripModes(Move /*| Resize*/ /*| Rotate*/ /*| Scale*/);
 
   setViewRect(0.0, 0.0, 0.0, 0.0);
-  parentView()->scene()->addItem(this);
+  view()->scene()->addItem(this);
   setParentViewItem(_plotItem->renderItem());
 
   QPointF origin = QPointF(_plotItem->plotRect().width() * 0.15, _plotItem->plotRect().height() * 0.15);
@@ -82,7 +82,7 @@ void LegendItem::paint(QPainter *painter) {
   QSize legendSize(0, 0);
 
   QFont font(_font);
-  font.setPointSizeF(parentView()->defaultFont(_fontScale).pointSizeF());
+  font.setPointSizeF(view()->defaultFont(_fontScale).pointSizeF());
 
   foreach(RelationPtr relation, legendItems) {
     DrawnLegendItem item;

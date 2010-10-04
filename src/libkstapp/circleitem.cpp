@@ -54,15 +54,15 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MousePress) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-    parentView()->scene()->addItem(this);
+    view()->scene()->addItem(this);
     return;
   }
 
   if (event == View::MouseMove) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
     qreal size = (fabs(poly.last().x() - rect().x()) < fabs(poly.last().y() - rect().y())) ? fabs(poly.last().x() - rect().x()) : fabs(poly.last().y() - rect().y());
     qreal width = (poly.last().x() - rect().x()) < 0 ? size * -1.0 : size;
     qreal height = (poly.last().y() - rect().y()) < 0 ? size * -1.0 : size;
@@ -75,10 +75,10 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
-    parentView()->setMouseMode(View::Default);
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseRelease));
+    view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    view()->setMouseMode(View::Default);
     updateViewItemParent();
     emit creationComplete();
     return;

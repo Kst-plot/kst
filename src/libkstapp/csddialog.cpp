@@ -250,7 +250,7 @@ ObjectPtr CSDDialog::createNewDataObject() {
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       if (_CSDTab->curvePlacement()->scaleFonts()) {
-        plotItem->parentView()->resetPlotFontSizes();
+        plotItem->view()->resetPlotFontSizes();
       }
       break;
     }
@@ -263,7 +263,7 @@ ObjectPtr CSDDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(image));
     plotItem->update();
 
-    plotItem->parentView()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+    plotItem->view()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
   }
 
   return ObjectPtr(image.data());

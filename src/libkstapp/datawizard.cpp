@@ -1076,9 +1076,9 @@ void DataWizard::finished() {
   if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
     int np = plotList.count();
     if (np > 0) {
-      plotList.at(0)->parentView()->resetPlotFontSizes(); // set font sizes on first page.
-      if (plotList.at(np-1)->parentView() != plotList.at(0)->parentView()) { // and second, if there is one.
-        plotList.at(np-1)->parentView()->resetPlotFontSizes();
+      plotList.at(0)->view()->resetPlotFontSizes(); // set font sizes on first page.
+      if (plotList.at(np-1)->view() != plotList.at(0)->view()) { // and second, if there is one.
+        plotList.at(np-1)->view()->resetPlotFontSizes();
       }
     }
   } else {
@@ -1089,7 +1089,7 @@ void DataWizard::finished() {
 
   foreach (PlotItem* plot, plotList) {
     plot->update();
-    plot->parentView()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
+    plot->view()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
 
   }
   double fontScale;

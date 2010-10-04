@@ -258,7 +258,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       if (_powerSpectrumTab->curvePlacement()->scaleFonts()) {
-        plotItem->parentView()->resetPlotFontSizes();
+        plotItem->view()->resetPlotFontSizes();
       }
       break;
     }
@@ -271,7 +271,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->parentView()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+    plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
   }
 
   return ObjectPtr(powerspectrum.data());

@@ -426,7 +426,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       if (_curveTab->curvePlacement()->scaleFonts()) {
-        plotItem->parentView()->resetPlotFontSizes();
+        plotItem->view()->resetPlotFontSizes();
       }
       break;
     }
@@ -439,7 +439,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->parentView()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+    plotItem->view()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
   }
 
   return ObjectPtr(curve.data());

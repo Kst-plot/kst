@@ -230,9 +230,9 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       if (_filterFitTab->curvePlacement()->scaleFonts()) {
-        plotItem->parentView()->resetPlotFontSizes();
+        plotItem->view()->resetPlotFontSizes();
       }
-      plotItem->parentView()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
+      plotItem->view()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
                                              _filterFitTab->curvePlacement()->gridColumns());
       break;
     }

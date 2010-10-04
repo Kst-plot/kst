@@ -251,7 +251,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void saveAsDialogDefaults() const;
     void applyDefaults();
 
-    bool maskedByMaximization() {return (parentView()->childMaximized() && !_plotMaximized);}
+    bool maskedByMaximization() {return (view()->childMaximized() && !_plotMaximized);}
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();

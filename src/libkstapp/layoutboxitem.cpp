@@ -30,9 +30,9 @@ LayoutBoxItem::LayoutBoxItem(View *parent)
   setBrush(Qt::NoBrush);
   setAllowedGripModes(Move);
 
-  parentView()->scene()->addItem(this);
-  setPos(parentView()->sceneRect().topLeft());
-  setViewRect(parentView()->sceneRect());
+  view()->scene()->addItem(this);
+  setPos(view()->sceneRect().topLeft());
+  setViewRect(view()->sceneRect());
 
   setEnabled(true);
 }
@@ -44,8 +44,8 @@ void LayoutBoxItem::appendItem(ViewItem *item) {
 
   item->setParentViewItem(this);
 //   layout()->addViewItem(item, layout()->rowCount(), 0, 1, layout()->columnCount());
-  setPos(parentView()->sceneRect().topLeft());
-  setViewRect(parentView()->sceneRect());
+  setPos(view()->sceneRect().topLeft());
+  setViewRect(view()->sceneRect());
   //singleshot to give plots a chance to set a projection rect
 //   QTimer::singleShot(0, layout(), SLOT(update()));
 }
@@ -87,11 +87,11 @@ LayoutBoxItem::~LayoutBoxItem() {
 
 
 void LayoutBoxItem::setEnabled(bool enabled) {
-  if (!parentView())
+  if (!view())
     return;
 
   if (enabled) {
-    QList<QGraphicsItem*> list = parentView()->items();
+    QList<QGraphicsItem*> list = view()->items();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
       if (!viewItem || viewItem->parentItem() || !viewItem->isVisible() || viewItem == this)
@@ -100,7 +100,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
       viewItem->setParentViewItem(this);
     }
 
-    parentView()->setLayoutBoxItem(this);
+    view()->setLayoutBoxItem(this);
 
     show();
   } else {
@@ -113,7 +113,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
       viewItem->setParentViewItem(0);
     }
 
-    parentView()->setLayoutBoxItem(0);
+    view()->setLayoutBoxItem(0);
 
     hide();
   }

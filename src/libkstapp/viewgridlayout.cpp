@@ -158,7 +158,7 @@ void ViewGridLayout::reset() {
 
 void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation) {
   Q_ASSERT(item);
-  Q_ASSERT(item->parentView());
+  Q_ASSERT(item->view());
 
   // Gather all children of the SharedAxisBoxItem.
   QList<ViewItem*> viewItems;
@@ -228,8 +228,8 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
 
 void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   QList<PlotItem*> plotItems;
-  if (item->parentView()) {
-    QList<QGraphicsItem*> list = item->parentView()->items();
+  if (item->view()) {
+    QList<QGraphicsItem*> list = item->view()->items();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
       if (!viewItem || !viewItem->isVisible())

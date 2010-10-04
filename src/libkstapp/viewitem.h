@@ -79,8 +79,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setTypeName(const QString& name) { _typeName = name; }
     const QString typeName() const { return _typeName; }
 
-    View *parentView() const;
-    void setParentView(View *parent);
+    View* view() const;
+    void setView(View*);
 
     ViewItem *parentViewItem() const;
     void setParentViewItem(ViewItem *parent);
@@ -329,9 +329,13 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     View *_parentView;
 
-    // use void setParentView(View *parent);
+    // use view() / setView(View*)
     QObject* parent() const;
     void setParent(QObject*);
+
+    // use parentViewItem() / setParentViewItem(ViewItem*)
+    QGraphicsItem* parentItem() const;
+    void setParentItem(QGraphicsItem*);
 
     void startDragging(QWidget *widget, const QPointF& hotspot);
 

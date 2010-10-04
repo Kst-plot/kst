@@ -34,7 +34,7 @@
 namespace Kst {
 
 PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
-  : ViewItem(parentItem->parentView()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
+  : ViewItem(parentItem->view()), _referencePointMode(false), _highlightPointActive(false), _invertHighlight(false) {
 
   setTypeName(tr("Plot Render"));
   setParentViewItem(parentItem);
@@ -46,7 +46,7 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
           this, SLOT(updateGeometry()));
   connect(parentItem, SIGNAL(updatePlotRect()),
           this, SLOT(updateGeometry()));
-  connect(parentItem->parentView(), SIGNAL(viewModeChanged(View::ViewMode)),
+  connect(parentItem->view(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
 
   updateGeometry(); //the initial rect
@@ -62,7 +62,7 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   registerShortcut(_referenceModeDisabled);
   connect(_referenceModeDisabled, SIGNAL(triggered()), this, SLOT(referenceModeDisabled()));
 
-  disconnect(this, SIGNAL(geometryChanged()), parentView(), SLOT(viewChanged()));
+  disconnect(this, SIGNAL(geometryChanged()), view(), SLOT(viewChanged()));
 }
 
 
@@ -217,7 +217,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
      setReferencePoint(QPointF(x, y));
     } else if (xml.isStartElement()) {
       if (!parse(xml, validTag) && validTag) {
-        GraphicsFactory::parse(xml, store, parentView(), this);
+        GraphicsFactory::parse(xml, store, view(), this);
       }
     } else if (xml.isEndElement()) {
       if (xml.name().toString() != expectedEnd) {
@@ -268,14 +268,14 @@ void PlotRenderItem::paint(QPainter *painter) {
 
   painter->restore();
 
-  if (!parentView()->isPrinting()) {
+  if (!view()->isPrinting()) {
     processHoverMoveEvent(_hoverPos);
   }
 
   paintReferencePoint(painter);
   paintHighlightPoint(painter);
 
-  if (!parentView()->isPrinting()) {
+  if (!view()->isPrinting()) {
     if (_selectionRect.isValid()) {
       painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
       painter->drawRect(_selectionRect.rect());
@@ -367,7 +367,7 @@ QString PlotRenderItem::topLabel() const {
 
 
 void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -377,7 +377,7 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
     // show cursor as Qt::SizeVerCursor only on mouse events
     // because shift is also used for arrow key controlled zooming
   } else if (modifiers & Qt::CTRL) {
-    parentView()->setCursor(Qt::SizeHorCursor);
+    view()->setCursor(Qt::SizeHorCursor);
   }
 
   ViewItem::keyPressEvent(event);
@@ -387,17 +387,17 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
 
 
 void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
-    parentView()->setCursor(Qt::SizeVerCursor);
+    view()->setCursor(Qt::SizeVerCursor);
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
-    parentView()->setCursor(Qt::SizeHorCursor);
+    view()->setCursor(Qt::SizeHorCursor);
   } else {
-    parentView()->setCursor(Qt::CrossCursor);
+    view()->setCursor(Qt::CrossCursor);
     resetSelectionRect();
   }
   ViewItem::keyReleaseEvent(event);
@@ -421,7 +421,7 @@ void PlotRenderItem::updateSelectionRect() {
 
 
 void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -429,7 +429,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
-    parentView()->setCursor(Qt::SizeVerCursor);
+    view()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
@@ -467,7 +467,7 @@ void PlotRenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -480,11 +480,11 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF p = event->pos();
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
-    parentView()->setCursor(Qt::SizeVerCursor);
+    view()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
-    parentView()->setCursor(Qt::SizeHorCursor);
+    view()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
   } else {
@@ -494,7 +494,7 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 
 void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -518,7 +518,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   ViewItem::hoverMoveEvent(event);
 
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -528,13 +528,13 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     _lastPos = p;
-    parentView()->setCursor(Qt::SizeVerCursor);
+    view()->setCursor(Qt::SizeVerCursor);
     _selectionRect.setFrom(QPointF(rect().left(), p.y()));
     _selectionRect.setTo(QPointF(rect().right(), p.y()));
     update(); //FIXME should optimize instead of redrawing entire curve!
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _lastPos = p;
-    parentView()->setCursor(Qt::SizeHorCursor);
+    view()->setCursor(Qt::SizeHorCursor);
     _selectionRect.setFrom(QPointF(p.x(), rect().top()));
     _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
     update(); //FIXME should optimize instead of redrawing entire curve!
@@ -637,7 +637,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
 
 void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   ViewItem::hoverEnterEvent(event);
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -647,9 +647,9 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-8188
   if (!hasFocus()) {
     QEvent activate(QEvent::WindowActivate);
-    View* view = parentView();
-    if (view) {
-      QApplication::sendEvent(view->scene(), &activate);
+    View* v = view();
+    if (v) {
+      QApplication::sendEvent(v->scene(), &activate);
       setFocus(Qt::MouseFocusReason);
       if (!hasFocus()) {
         Debug::self()->log("PlotRenderItem::hoverEnterEvent: could not set focus", Debug::Warning);
@@ -673,7 +673,7 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
   _highlightPointActive = false;
 
-  if (parentView()->viewMode() != View::Data) {
+  if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
@@ -707,12 +707,12 @@ void PlotRenderItem::updateGeometry() {
 
 
 void PlotRenderItem::updateViewMode() {
-  switch (parentView()->viewMode()) {
+  switch (view()->viewMode()) {
   case View::Data:
-    parentView()->setCursor(Qt::CrossCursor);
+    view()->setCursor(Qt::CrossCursor);
     break;
   case View::Layout:
-    parentView()->setCursor(Qt::ArrowCursor);
+    view()->setCursor(Qt::ArrowCursor);
     break;
   default:
     break;
@@ -753,7 +753,7 @@ void PlotRenderItem::remove() {
 void PlotRenderItem::updateCursor(const QPointF &pos) {
   _lastPos = pos;
   if (checkBox().contains(pos)) {
-    parentView()->setCursor(Qt::ArrowCursor);
+    view()->setCursor(Qt::ArrowCursor);
   } else {
     updateViewMode();
   }
@@ -989,7 +989,7 @@ bool PlotRenderItem::tryShortcut(const QString &keySequence) {
 
 void PlotRenderItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   if (plotItem() && plotItem()->parentItem() && plotItem()->isInSharedAxisBox()) {
-    if (plotItem()->parentView()->viewMode() == View::Layout) {
+    if (plotItem()->view()->viewMode() == View::Layout) {
       plotItem()->sharedAxisBox()->triggerContextEvent(event);
       return;
     }

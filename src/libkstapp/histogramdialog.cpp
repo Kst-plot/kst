@@ -402,7 +402,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
 
       plotItem = static_cast<PlotItem*>(cmd->item());
       if (_histogramTab->curvePlacement()->scaleFonts()) {
-        plotItem->parentView()->resetPlotFontSizes();
+        plotItem->view()->resetPlotFontSizes();
       }
       break;
     }
@@ -415,7 +415,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->parentView()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+    plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
   }
   return ObjectPtr(histogram.data());
 }

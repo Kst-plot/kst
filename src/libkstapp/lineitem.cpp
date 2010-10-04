@@ -126,15 +126,15 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MousePress) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MousePress));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-    parentView()->scene()->addItem(this);
+    view()->scene()->addItem(this);
     return;
   }
 
   if (event == View::MouseMove) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseMove));
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
     if (!rect().isEmpty()) {
       rotateTowards(line().p2(), poly.last());
     }
@@ -145,10 +145,10 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
   }
 
   if (event == View::MouseRelease) {
-    const QPolygonF poly = mapFromScene(parentView()->creationPolygon(View::MouseRelease));
-    parentView()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
-    parentView()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
-    parentView()->setMouseMode(View::Default);
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseRelease));
+    view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    view()->setMouseMode(View::Default);
     updateViewItemParent();
     _created = true;
     emit creationComplete();
@@ -159,18 +159,18 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
 
 void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     event->ignore();
     return;
   }
 
-  if (parentView()->mouseMode() == View::Default) {
+  if (view()->mouseMode() == View::Default) {
     if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {
-      parentView()->setMouseMode(View::Move);
-      parentView()->undoStack()->beginMacro(tr("Move"));
+      view()->setMouseMode(View::Move);
+      view()->undoStack()->beginMacro(tr("Move"));
     } else if (gripMode() == ViewItem::Resize) {
-      parentView()->setMouseMode(View::Resize);
-      parentView()->undoStack()->beginMacro(tr("Resize"));
+      view()->setMouseMode(View::Resize);
+      view()->undoStack()->beginMacro(tr("Resize"));
     }
   }
 
@@ -217,12 +217,12 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   if (isSelected()) {
     QPointF p = event->pos();
     if ((isAllowed(RightMidGrip) && rightMidGrip().contains(p)) || (isAllowed(LeftMidGrip) && leftMidGrip().contains(p))) {
-      parentView()->setCursor(Qt::CrossCursor);
+      view()->setCursor(Qt::CrossCursor);
     } else {
-      parentView()->setCursor(Qt::SizeAllCursor);
+      view()->setCursor(Qt::SizeAllCursor);
     }
   } else {
-    parentView()->setCursor(Qt::SizeAllCursor);
+    view()->setCursor(Qt::SizeAllCursor);
   }
 }
 

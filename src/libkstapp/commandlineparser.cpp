@@ -285,7 +285,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
+      _plotItem->view()->appendToLayout(CurvePlacement::Auto, _plotItem);
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
@@ -305,7 +305,7 @@ void CommandLineParser::createImageInPlot(MatrixPtr m) {
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
-      _plotItem->parentView()->appendToLayout(CurvePlacement::Auto, _plotItem);
+      _plotItem->view()->appendToLayout(CurvePlacement::Auto, _plotItem);
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(image));
@@ -333,7 +333,7 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
 
       pi->setDescriptiveName( plot_name );
       _plotItems.append(pi);
-      pi->parentView()->appendToLayout(CurvePlacement::Auto, pi);
+      pi->view()->appendToLayout(CurvePlacement::Auto, pi);
     }
     _plotItem = pi;
 }
@@ -587,7 +587,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   _dialogDefaults->setValue("print/paperSize", int(_paperSize));
 
   if (_plotItem) {
-    _plotItem->parentView()->resetPlotFontSizes();
+    _plotItem->view()->resetPlotFontSizes();
   }
   UpdateManager::self()->doUpdates(true);
   return (dataPlotted);

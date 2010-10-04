@@ -49,7 +49,7 @@ void ArrowItem::paint(QPainter *painter) {
   end.clear();
   if (_startArrowHead) {
     //FIXME: this assumes that pixelSize == pointSize, which it only might...
-    double deltax = parentView()->defaultFont(_startArrowScale).pointSizeF()*0.5;
+    double deltax = view()->defaultFont(_startArrowScale).pointSizeF()*0.5;
     double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -70,7 +70,7 @@ void ArrowItem::paint(QPainter *painter) {
 
   if (_endArrowHead) {
     //FIXME: this assumes that pixelSize == pointSize, which it only might...
-    double deltax = parentView()->defaultFont(_endArrowScale).pointSizeF()*0.5;
+    double deltax = view()->defaultFont(_endArrowScale).pointSizeF()*0.5;
     double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -97,7 +97,7 @@ QPainterPath ArrowItem::shape() const {
   selectPath.addPolygon(rect());
   selectPath.addPolygon(start);
   selectPath.addPolygon(end);
-  if ((!isSelected() && !isHovering()) || (parentView()->mouseMode() == View::Create)) {
+  if ((!isSelected() && !isHovering()) || (view()->mouseMode() == View::Create)) {
   } else {
     selectPath.addPath(grips());
   }

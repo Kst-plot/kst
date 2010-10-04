@@ -120,7 +120,7 @@ PlotItem::PlotItem(View *parent)
   _bottomLabelDetails = new PlotLabel(this);
   _numberLabelDetails = new PlotLabel(this);
 
-  //parentView()->configurePlotFontDefaults(this);
+  //view()->configurePlotFontDefaults(this);
 
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setPlotBordersDirty()));
   connect(_leftLabelDetails, SIGNAL(labelChanged()), this, SLOT(setLeftLabelDirty()));
@@ -641,7 +641,7 @@ void PlotItem::createSharedAxisBoxMenu() {
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
-    if (parentView()->viewMode() == View::Data) {
+    if (view()->viewMode() == View::Data) {
 
       menu.addMenu(_sharedAxisBoxMenu);
 
@@ -652,7 +652,7 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     }
   }
 
-  if (parentView()->viewMode() == View::Data) {
+  if (view()->viewMode() == View::Data) {
     _plotMaximize->setChecked(_plotMaximized);
     menu.addAction(_plotMaximize);
   }
@@ -870,7 +870,7 @@ void PlotItem::paint(QPainter *painter) {
   QTime bench_time;
   bench_time.start();
 #endif
-  if (parentView()->isPrinting()) {
+  if (view()->isPrinting()) {
     paintPixmap(painter);
   } else {
     if (_plotPixmapDirty && rect().isValid()) {
@@ -891,7 +891,7 @@ void PlotItem::paint(QPainter *painter) {
 
 
 void PlotItem::paintPixmap(QPainter *painter) {
-  if ((parentView()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) && rect().isValid()) {
+  if ((view()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) && rect().isValid()) {
     ViewGridLayout::standardizePlotMargins(this, painter);
     setPlotBordersDirty(false);
   }
@@ -1656,7 +1656,7 @@ void PlotItem::setPlotBordersDirty(bool dirty) {
   if (isInSharedAxisBox() && dirty && _sharedBox) {
     _sharedBox->setDirty();
   } else {
-    parentView()->setPlotBordersDirty(dirty);
+    view()->setPlotBordersDirty(dirty);
   }
   if (dirty) {
     setPlotRectsDirty();
@@ -2630,7 +2630,7 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (checkBox().contains(event->pos())) {
       setTiedZoom(!isTiedZoom(), !isTiedZoom());
       ViewItem::mousePressEvent(event);
-    } else if (parentView()->viewMode() == View::Data) {
+    } else if (view()->viewMode() == View::Data) {
       edit();
     } else {
       ViewItem::mousePressEvent(event);
@@ -2701,7 +2701,7 @@ void PlotItem::setAllowUpdates(bool allowed) {
 
 
 void PlotItem::plotMaximize() {
-  if (!_plotMaximized && parentView()->viewMode() != View::Data) {
+  if (!_plotMaximized && view()->viewMode() != View::Data) {
     return;
   }
 
@@ -2709,8 +2709,8 @@ void PlotItem::plotMaximize() {
     double x_rescale;
     double y_rescale;
 
-    x_rescale = parentView()->sceneRect().width()/_plotMaximizedSourceParentRect.width();
-    y_rescale = parentView()->sceneRect().height()/_plotMaximizedSourceParentRect.height();
+    x_rescale = view()->sceneRect().width()/_plotMaximizedSourceParentRect.width();
+    y_rescale = view()->sceneRect().height()/_plotMaximizedSourceParentRect.height();
     _plotMaximizedSourceRect.setWidth(_plotMaximizedSourceRect.width()*x_rescale);
     _plotMaximizedSourceRect.setHeight(_plotMaximizedSourceRect.height()*y_rescale);
     _plotMaximizedSourcePosition.setX(_plotMaximizedSourcePosition.x()*x_rescale);
@@ -2727,8 +2727,8 @@ void PlotItem::plotMaximize() {
     setPos(_plotMaximizedSourcePosition);
     setViewRect(_plotMaximizedSourceRect);
     setZValue(_plotMaximizedSourceZValue);
-    parentView()->setChildMaximized(false);
-    parentView()->setFontRescale(1.0);
+    view()->setChildMaximized(false);
+    view()->setFontRescale(1.0);
   } else {
     _plotMaximizedBottomVisible = _bottomLabelDetails->isVisible();
     xAxis()->setAxisVisible(true);
@@ -2745,22 +2745,22 @@ void PlotItem::plotMaximize() {
     _plotMaximizedSourceRect = viewRect();
     _plotMaximizedSourceZValue = zValue();
     _plotMaximizedSourceParent = parentViewItem();
-    _plotMaximizedSourceParentRect = parentView()->sceneRect();
+    _plotMaximizedSourceParentRect = view()->sceneRect();
 
     setParentViewItem(0);
     setPos(0, 0);
-    setViewRect(parentView()->sceneRect());
+    setViewRect(view()->sceneRect());
     setZValue(PLOT_MAXIMIZED_ZORDER);
     PlotItemManager::self()->setFocusPlot(this);
 
-    double rescale = double(parentView()->sceneRect().width() +
-                            parentView()->sceneRect().height())/
+    double rescale = double(view()->sceneRect().width() +
+                            view()->sceneRect().height())/
                      double(_plotMaximizedSourceRect.width() + _plotMaximizedSourceRect.height());
-    parentView()->setChildMaximized(true);
-    parentView()->setFontRescale(rescale);
+    view()->setChildMaximized(true);
+    view()->setFontRescale(rescale);
   }
   if (isInSharedAxisBox()) {
-    parentView()->setPlotBordersDirty(true);
+    view()->setPlotBordersDirty(true);
   }
   setPlotBordersDirty();
 }
@@ -3366,7 +3366,7 @@ PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
 
   _fontColor = ApplicationSettings::self()->defaultFontColor();
   _fontScale = ApplicationSettings::self()->defaultFontScale();
-  _font = _plotItem->parentView()->defaultFont(_fontScale);
+  _font = _plotItem->view()->defaultFont(_fontScale);
 }
 
 
@@ -3393,10 +3393,10 @@ QFont PlotLabel::calculatedFont() {
   QFont tempFont;
   if (fontUseGlobal()) {
     tempFont = _plotItem->globalFont();
-    tempFont.setPointSizeF(_plotItem->parentView()->defaultFont(_plotItem->globalFontScale()).pointSizeF());
+    tempFont.setPointSizeF(_plotItem->view()->defaultFont(_plotItem->globalFontScale()).pointSizeF());
   } else {
     tempFont = font();
-    tempFont.setPointSizeF(_plotItem->parentView()->defaultFont(fontScale()).pointSizeF());
+    tempFont.setPointSizeF(_plotItem->view()->defaultFont(fontScale()).pointSizeF());
   }
   return tempFont;
 }

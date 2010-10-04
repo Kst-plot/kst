@@ -82,13 +82,13 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
     if (view->viewMode() != View::Layout) {
       view->setViewMode(View::Layout);
     }
-    if (view != m->item->parentView()) {
-      m->item->setParentView(view);
+    if (view != m->item->view()) {
+      m->item->setView(view);
       PlotItem* plotItem = qobject_cast<PlotItem*>(m->item);
       if (plotItem) {
         QList<PlotRenderItem*> renderItems = plotItem->renderItems();
         foreach (PlotRenderItem* renderItem, renderItems) {
-          renderItem->setParentView(view);
+          renderItem->setView(view);
         }
       }
       m->item->setParentViewItem(0);

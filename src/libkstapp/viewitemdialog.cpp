@@ -353,11 +353,11 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     parentHeight = item->parentViewItem()->height();
     parentX = item->parentViewItem()->rect().x();
     parentY = item->parentViewItem()->rect().y();
-  } else if (item->parentView()) {
-    parentWidth = item->parentView()->width();
-    parentHeight = item->parentView()->height();
-    parentX = item->parentView()->rect().x();
-    parentY = item->parentView()->rect().y();
+  } else if (item->view()) {
+    parentWidth = item->view()->width();
+    parentHeight = item->view()->height();
+    parentX = item->view()->rect().x();
+    parentY = item->view()->rect().y();
   } else {
     Q_ASSERT_X(false,"parent test", "item has no parentview item");
     parentWidth = parentHeight = 1.0;
