@@ -434,7 +434,7 @@ ViewItem *ViewItem::parentViewItem() const {
 
 
 void ViewItem::setParentViewItem(ViewItem* parent) {
-  setParentItem(parent);
+  QGraphicsItem::setParentItem(parent);
   updateRelativeSize();
 }
 

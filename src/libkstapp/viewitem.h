@@ -333,8 +333,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QObject* parent() const;
     void setParent(QObject*);
 
-    // use parentViewItem() / setParentViewItem(ViewItem*)
-    QGraphicsItem* parentItem() const;
+    // use setParentViewItem(ViewItem*)
     void setParentItem(QGraphicsItem*);
 
     void startDragging(QWidget *widget, const QPointF& hotspot);
