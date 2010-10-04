@@ -45,18 +45,13 @@ static const int DRAWING_ZORDER = 500;
 #define DEBUG_CHILD_GEOMETRY 0
 
 
-// Don't mix QObject and QGraphicItem ownership
-// Enabling the macro could have bad side effects, we will see.
-// TODO check for memory leaks when enabled.
-//#define KST_DISBALE_QOBJECT_PARENT
-
 // enable drag & drop
 #define KST_ENABLE_DD
 
 namespace Kst {
 
 ViewItem::ViewItem(View *parentView) :
-    QObject(),
+    QObject(parentView),
     NamedObject(),
     _isXTiedZoom(false),
     _isYTiedZoom(false),
@@ -82,20 +77,18 @@ ViewItem::ViewItem(View *parentView) :
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _parentRelativeHeight(0),
-    _parentRelativeWidth(0),
-    _parentView(parentView)
+    _parentRelativeWidth(0)
 {
-  setView(parentView);
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
   setAcceptsHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
-  connect(_parentView, SIGNAL(mouseModeChanged(View::MouseMode)),
+  connect(parentView, SIGNAL(mouseModeChanged(View::MouseMode)),
           this, SLOT(viewMouseModeChanged(View::MouseMode)));
-  connect(_parentView, SIGNAL(viewModeChanged(View::ViewMode)),
+  connect(parentView, SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateView()));
 
-  connect(this, SIGNAL(geometryChanged()), _parentView, SLOT(viewChanged()));
+  connect(this, SIGNAL(geometryChanged()), parentView, SLOT(viewChanged()));
 
   setLayoutMargins(ApplicationSettings::self()->layoutMargins());
   setLayoutSpacing(ApplicationSettings::self()->layoutSpacing());
@@ -411,20 +404,12 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
 }
 
 View *ViewItem::view() const {
-#ifdef KST_DISBALE_QOBJECT_PARENT
-  return _parentView;
-#else
   return qobject_cast<View*>(QObject::parent());
-#endif
 }
 
 void ViewItem::setView(View* parentView) {
-  _parentView = parentView;
-#ifndef KST_DISBALE_QOBJECT_PARENT
   QObject::setParent(parentView);
-#endif
   reRegisterShortcut();
-  updateRelativeSize();  
 }
 
 
@@ -1859,7 +1844,7 @@ void ViewItem::reRegisterShortcut() {
   QHashIterator<QString, QAction*> it(_shortcutMap);
   while (it.hasNext()) {
     it.next();
-    _parentView->grabShortcut(it.key());
+    view()->grabShortcut(it.key());
   }
 }
 

@@ -330,11 +330,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
 
-    QSizeF _layoutMargins, _layoutSpacing;
-
-    QPointF dragStartPosition;
-
-    View *_parentView;
+    QSizeF _layoutMargins, _layoutSpacing;    
 
     // use view() / setView(View*)
     QObject* parent() const;
@@ -343,6 +339,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     // use setParentViewItem(ViewItem*)
     void setParentItem(QGraphicsItem*);
 
+    QPointF dragStartPosition;
     void startDragging(QWidget *widget, const QPointF& hotspot);
 
 };
