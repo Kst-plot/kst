@@ -1452,7 +1452,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParentView(0);
+    setParentViewItem(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
@@ -1536,7 +1536,7 @@ bool ViewItem::maybeReparent() {
              << endl;
 #endif
 
-    setParentView(0);
+    setParentViewItem(0);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
     updateRelativeSize();
 
