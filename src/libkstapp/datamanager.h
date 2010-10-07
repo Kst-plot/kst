@@ -73,7 +73,7 @@ class DataManager : public QDialog, Ui::DataManager
     QToolBar *_filters;
 
     ObjectPtr _currentObject;
-
+    QShortcut *_deleteShortcut;
     QMenu *_contextMenu;
 };
 

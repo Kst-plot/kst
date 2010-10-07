@@ -57,6 +57,10 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   connect(_session, SIGNAL(doubleClicked(const QModelIndex &)),
           this, SLOT(showEditDialog(QModelIndex)));
 
+  // Simple keyboard shortcut for fast object deletion
+  _deleteShortcut = new QShortcut(Qt::Key_Delete, this);
+  connect(_deleteShortcut, SIGNAL(activated()), this, SLOT(deleteObject()));
+
   _contextMenu = new QMenu(this);
 
   connect(_purge, SIGNAL(clicked()), this, SLOT(purge()));
@@ -160,6 +164,7 @@ void DataManager::showContextMenu(const QPoint &position) {
           }
         }
 
+        // Also add delete action in the menu
         action = new QAction(tr("Delete"), this);
         connect(action, SIGNAL(triggered()), this, SLOT(deleteObject()));
         actions.append(action);
@@ -337,6 +342,9 @@ void DataManager::showFitDialog() {
 
 
 void DataManager::deleteObject() {
+  SessionModel *model = static_cast<SessionModel*>(_session->model());
+  int row = _session->selectionModel()->selectedIndexes()[0].row(); // Single selection mode => only one selected index
+  _currentObject = model->objectList()->at(row);
   if (RelationPtr relation = kst_cast<Relation>(_currentObject)) {
     Data::self()->removeCurveFromPlots(relation);
     _doc->objectStore()->removeObject(relation);
@@ -347,9 +355,11 @@ void DataManager::deleteObject() {
   }
   _currentObject = 0;
   _doc->session()->triggerReset();
+  // Now select the next item
+  _session->selectionModel()->select(model->index(row,0), QItemSelectionModel::Select);
+  // Cleanup and return
   _doc->objectStore()->cleanUpDataSourceList();
 }
-
 
 void DataManager::addToPlot(QAction* action) {
   PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
