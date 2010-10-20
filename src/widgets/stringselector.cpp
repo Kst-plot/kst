@@ -128,7 +128,7 @@ void StringSelector::fillStrings() {
   StringPtr current = selectedString();
 
   _string->clear();
-  foreach (QString string, list) {
+  foreach (const QString &string, list) {
     StringPtr s = strings.value(string);
     _string->addItem(string, qVariantFromValue(s.data()));
   }

@@ -30,7 +30,9 @@ const QString DataString::staticTypeTag = I18N_NOOP("datastring");
 
 /** Create a DataVector: raw data from a file */
 DataString::DataString(ObjectStore *store)
-: String(store), DataPrimitive() {
+: String(store) {
+
+  _dp = new DataPrimitive(this);
 
   setOrphan(true);
 }
@@ -41,7 +43,7 @@ DataString::~DataString() {
 
 
 QString DataString::_automaticDescriptiveName() const {
-  QString name = field();
+  QString name = _dp->_field;
   return name.replace('_', "\\_");
 }
 
@@ -53,20 +55,32 @@ const QString& DataString::typeString() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool DataString::isValid() const {
-  if (file()) {
-    file()->readLock();
-    bool rc = file()->string().isValid(_field);
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->readLock();
+    bool rc = _dp->_file->string().isValid(_dp->_field);
+    _dp->_file->unlock();
     return rc;
   }
   return false;
 }
 
+
+bool DataString::_checkValidity(const DataSourcePtr ds) const {
+  if (ds) {
+    ds->readLock();
+    bool rc = ds->string().isValid(_dp->_field);
+    ds->unlock();
+    return rc;
+  }
+  return false;
+}
+
+
 void DataString::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  _field = in_field;
-  file() = in_file;
+  _dp->_field = in_field;
+  _dp->_file = in_file;
 }
 
 void DataString::changeFile(DataSourcePtr in_file) {
@@ -75,16 +89,16 @@ void DataString::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
   }
-  file() = in_file;
+  _dp->_file = in_file;
 }
 
 
 /** Save data string information */
 void DataString::save(QXmlStreamWriter &s) {
-  if (file()) {
+  if (_dp->_file) {
     s.writeStartElement("datastring");
-    saveFilename(s);
-    s.writeAttribute("field", _field);
+    _dp->saveFilename(s);
+    s.writeAttribute("field", _dp->_field);
 
     saveNameInfo(s, XNUM);
     s.writeEndElement();
@@ -94,36 +108,36 @@ void DataString::save(QXmlStreamWriter &s) {
 
 /** Update a data String */
 void DataString::internalUpdate() {
-  if (file()) {
-    file()->writeLock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
     ReadInfo readInfo(&_value);
-    file()->string().read(_field, readInfo);
-    file()->unlock();
+    _dp->_file->string().read(_dp->_field, readInfo);
+    _dp->_file->unlock();
   }
 }
 
 qint64 DataString::minInputSerial() const {
-  if (file()) {
-    return (file()->serial());
+  if (_dp->_file) {
+    return (_dp->_file->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 DataString::minInputSerialOfLastChange() const {
-  if (file()) {
-    return (file()->serialOfLastChange());
+  if (_dp->_file) {
+    return (_dp->_file->serialOfLastChange());
   }
   return LLONG_MAX;
 }
 
 
 
-DataStringPtr DataString::makeDuplicate() const {
+PrimitivePtr DataString::_makeDuplicate() const {
   Q_ASSERT(store());
   DataStringPtr string = store()->createObject<DataString>();
 
   string->writeLock();
-  string->change(file(), _field);
+  string->change(_dp->_file, _dp->_field);
   if (descriptiveNameIsManual()) {
     string->setDescriptiveName(descriptiveName());
   }
@@ -131,7 +145,7 @@ DataStringPtr DataString::makeDuplicate() const {
   string->registerChange();
   string->unlock();
 
-  return string;
+  return kst_cast<Primitive>(string);
 }
 
 
@@ -142,22 +156,22 @@ QString DataString::descriptionTip() const {
       "Data String: %1 = %4\n"
       "  %2\n"
       "  Field: %3"
-  ).arg(Name()).arg(dataSource()->fileName()).arg(field()).arg(value());
+  ).arg(Name()).arg(_dp->dataSource()->fileName()).arg(_dp->_field).arg(value());
   return IDstring;
 }
 
 
 QString DataString::propertyString() const {
-  return i18n("%1 of %2").arg(_field).arg(dataSource()->fileName());
+  return i18n("%1 of %2").arg(_dp->_field).arg(_dp->dataSource()->fileName());
 }
 
 void DataString::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (file()) {
-    file()->writeLock();
-    file()->reset();
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
+    _dp->_file->reset();
+    _dp->_file->unlock();
     reset();
     registerChange();
   }
@@ -165,7 +179,7 @@ void DataString::reload() {
 
 void DataString::reset() {
   ReadInfo readInfo(&_value);
-  file()->string().read(_field, readInfo);
+  _dp->_file->string().read(_dp->_field, readInfo);
 }
 
 }

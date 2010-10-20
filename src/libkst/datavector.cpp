@@ -64,7 +64,9 @@ DataVector::DataInfo::DataInfo(int fc, int spf) :
 
 /** Create a DataVector: raw data from a file */
 DataVector::DataVector(ObjectStore *store)
-: Vector(store), DataPrimitive() {
+: Vector(store) {
+
+  _dp = new DataPrimitive(this);
 
   _saveable = true;
   _dontUseSkipAccel = false;
@@ -81,7 +83,6 @@ DataVector::DataVector(ObjectStore *store)
   Skip = 1;
   DoSkip = false;
   DoAve = false;
-  _field.clear();
 }
 
 
@@ -92,15 +93,25 @@ const QString& DataVector::typeString() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool DataVector::isValid() const {
-  if (file()) {
-    file()->readLock();
-    bool rc = file()->vector().isValid(_field);
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->readLock();
+    bool rc = _dp->_file->vector().isValid(_dp->_field);
+    _dp->_file->unlock();
     return rc;
   }
   return false;
 }
 
+
+bool DataVector::_checkValidity(const DataSourcePtr ds) const {
+  if (ds) {
+    ds->readLock();
+    bool rc = ds->vector().isValid(_dp->_field);
+    ds->unlock();
+    return rc;
+  }
+  return false;
+}
 
 void DataVector::change(DataSourcePtr in_file, const QString &in_field,
                         int in_f0, int in_n,
@@ -116,18 +127,18 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   }
 
   _dontUseSkipAccel = false;
-  file() = in_file;
+  _dp->_file = in_file;
   ReqF0 = in_f0;
   ReqNF = in_n;
-  _field = in_field;
+  _dp->_field = in_field;
 
-  if (file()) {
-    file()->writeLock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
   }
   reset();
   _resetFieldMetadata();
-  if (file()) {
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->unlock();
   }
 
   if (ReqNF <= 0 && ReqF0 < 0) {
@@ -137,15 +148,15 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
 }
 
 qint64 DataVector::minInputSerial() const {
-  if (file()) {
-    return (file()->serial());
+  if (_dp->_file) {
+    return (_dp->_file->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 DataVector::minInputSerialOfLastChange() const {
-  if (file()) {
-    return (file()->serialOfLastChange());
+  if (_dp->_file) {
+    return (_dp->_file->serialOfLastChange());
   }
   return LLONG_MAX;
 }
@@ -157,13 +168,13 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
-  file() = in_file;
-  if (file()) {
-    file()->writeLock();
+  _dp->_file = in_file;
+  if (_dp->_file) {
+    _dp->_file->writeLock();
   }
   reset();
-  if (file()) {
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->unlock();
   }
   registerChange();
 }
@@ -174,12 +185,12 @@ void DataVector::changeFrames(int in_f0, int in_n,
                               bool in_DoAve) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (file()) {
-    file()->writeLock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
   }
   reset();
-  if (file()) {
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->unlock();
   }
   Skip = in_skip;
   DoSkip = in_DoSkip;
@@ -213,8 +224,6 @@ void DataVector::setFromEnd() {
 
 
 DataVector::~DataVector() {
-  file() = 0;
-
   if (AveReadBuf) {
     free(AveReadBuf);
     AveReadBuf = 0L;
@@ -272,10 +281,10 @@ int DataVector::reqStartFrame() const {
 
 /** Save vector information */
 void DataVector::save(QXmlStreamWriter &s) {
-  if (file()) {
+  if (_dp->_file) {
     s.writeStartElement("datavector");
-    saveFilename(s);
-    s.writeAttribute("field", _field);
+    _dp->saveFilename(s);
+    s.writeAttribute("field", _dp->_field);
 
     s.writeAttribute("start", QString::number(ReqF0));
     s.writeAttribute("count", QString::number(ReqNF));
@@ -311,7 +320,7 @@ QString DataVector::label() const {
       }
     }
   } else {
-    label = _field;
+    label = _dp->_field;
     label.replace('_', "\\_");
   }
 
@@ -323,8 +332,8 @@ void DataVector::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dontUseSkipAccel = false;
-  if (file()) {
-    SPF = dataInfo(_field).samplesPerFrame;
+  if (_dp->_file) {
+    SPF = dataInfo(_dp->_field).samplesPerFrame;
   }
   F0 = NF = 0;
   resize(0);
@@ -346,8 +355,8 @@ void DataVector::checkIntegrity() {
   }
 
   // if it looks like we have a new file, reset
-  const DataInfo info = dataInfo(_field);
-  if (file() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
+  const DataInfo info = dataInfo(_dp->_field);
+  if (_dp->_file && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
     reset();
   }
 
@@ -389,13 +398,13 @@ void DataVector::internalUpdate() {
   int new_f0, new_nf;
   bool start_past_eof = false;
 
-  if (file()) {
-    file()->writeLock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
   } else {
     return;
   }
 
-  const DataInfo info = dataInfo(_field);
+  const DataInfo info = dataInfo(_dp->_field);
   checkIntegrity();
 
   if (DoSkip && Skip < 2 && SPF == 1) {
@@ -477,7 +486,7 @@ void DataVector::internalUpdate() {
         // We don't support boxcar inside data sources yet.
         _dontUseSkipAccel = true;
       } else {
-        rc = readField(_v + _numSamples, _field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
+        rc = readField(_v + _numSamples, _dp->_field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
         if (rc != -9999) {
           if (rc >= 0) {
             n_read = rc;
@@ -504,7 +513,7 @@ void DataVector::internalUpdate() {
               // FIXME: handle failed resize
             }
           }
-          ave_nread = readField(AveReadBuf, _field, new_f0+i, Skip);
+          ave_nread = readField(AveReadBuf, _dp->_field, new_f0+i, Skip);
           for (k = 1; k < ave_nread; k++) {
             AveReadBuf[0] += AveReadBuf[k];
           }
@@ -516,7 +525,7 @@ void DataVector::internalUpdate() {
         }
       } else {
         for (i = NF; new_nf_Skip >= i; i += Skip) {
-          n_read += readField(t++, _field, new_f0 + i, -1);
+          n_read += readField(t++, _dp->_field, new_f0 + i, -1);
         }
       }
     }
@@ -541,12 +550,12 @@ void DataVector::internalUpdate() {
     } else if (info.samplesPerFrame > 1) {
       assert(new_f0 + NF >= 0);
       assert(new_f0 + new_nf - 1 >= 0);
-      n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
-      n_read += readField(_v+(new_nf-1)*SPF, _field, new_f0 + new_nf - 1, -1);
+      n_read = readField(_v+NF*SPF, _dp->_field, new_f0 + NF, new_nf - NF - 1);
+      n_read += readField(_v+(new_nf-1)*SPF, _dp->_field, new_f0 + new_nf - 1, -1);
     } else {
       assert(new_f0 + NF >= 0);
       if (new_nf - NF > 0 || new_nf - NF == -1) {
-        n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF);
+        n_read = readField(_v+NF*SPF, _dp->_field, new_f0 + NF, new_nf - NF);
       }
     }
   }
@@ -578,8 +587,8 @@ void DataVector::internalUpdate() {
     NumShifted = _size;
   }
 
-  if (file()) {
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->unlock();
   }
 
   Vector::internalUpdate();
@@ -594,8 +603,8 @@ int DataVector::samplesPerFrame() const {
 
 int DataVector::fileLength() const {
 
-  if (file()) {    
-    int rc = dataInfo(_field).frameCount;
+  if (_dp->_file) {
+    int rc = dataInfo(_dp->_field).frameCount;
 
     return rc;
   }
@@ -607,10 +616,10 @@ int DataVector::fileLength() const {
 void DataVector::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (file()) {
-    file()->writeLock();
-    file()->reset();
-    file()->unlock();
+  if (_dp->_file) {
+    _dp->_file->writeLock();
+    _dp->_file->reset();
+    _dp->_file->unlock();
     reset();
     _resetFieldMetadata();
     registerChange();
@@ -623,7 +632,7 @@ void DataVector::_resetFieldMetadata() {
 }
 
 void DataVector::_resetFieldStrings() {
-  const QMap<QString, QString> meta_strings = file()->vector().metaStrings(_field);  
+  const QMap<QString, QString> meta_strings = _dp->_file->vector().metaStrings(_dp->_field);
   
   QStringList fieldStringKeys = _fieldStrings.keys();
   // remove field strings that no longer need to exist
@@ -659,7 +668,7 @@ void DataVector::_resetFieldStrings() {
 
 
 void DataVector::_resetFieldScalars() {
-  const QMap<QString, double> meta_scalars = file()->vector().metaScalars(_field);
+  const QMap<QString, double> meta_scalars = _dp->_file->vector().metaScalars(_dp->_field);
 
 
   QStringList fieldScalarKeys = _fieldScalars.keys();
@@ -695,12 +704,12 @@ void DataVector::_resetFieldScalars() {
 }
 
 
-DataVectorPtr DataVector::makeDuplicate() const {
+PrimitivePtr DataVector::_makeDuplicate() const {
   Q_ASSERT(store());
   DataVectorPtr vector = store()->createObject<DataVector>();
 
   vector->writeLock();
-  vector->change(file(), _field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  vector->change(_dp->_file, _dp->_field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
   if (descriptiveNameIsManual()) {
     vector->setDescriptiveName(descriptiveName());
   }
@@ -708,12 +717,12 @@ DataVectorPtr DataVector::makeDuplicate() const {
   vector->registerChange();
   vector->unlock();
 
-  return vector;
+  return kst_cast<Primitive>(vector);
 }
 
 QString DataVector::_automaticDescriptiveName() const {
   QString name;
-  name = _field;
+  name = _dp->_field;
   return name.replace('_', "\\_");
 }
 
@@ -725,7 +734,7 @@ QString DataVector::descriptionTip() const {
       "Data Vector: %1\n"
       "  %2\n"
       "  Field: %3"
-      ).arg(Name()).arg(dataSource()->fileName()).arg(field());
+      ).arg(Name()).arg(_dp->dataSource()->fileName()).arg(_dp->_field);
 
   if (countFromEOF()) {
     IDstring += i18n("\n  Last %1 frames.").arg(numFrames());
@@ -745,21 +754,21 @@ QString DataVector::descriptionTip() const {
 }
 
 QString DataVector::propertyString() const {
-  return i18n("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(field()).arg(startFrame()).arg(numFrames());
+  return i18n("%2 F0: %3 N: %4 of %1").arg(_dp->dataSource()->fileName()).arg(_dp->_field).arg(startFrame()).arg(numFrames());
 }
 
 
 int DataVector::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead)
 {
   ReadInfo par = {v, s, n, skip, lastFrameRead};
-  return file()->vector().read(field, par);
+  return _dp->_file->vector().read(field, par);
 }
 
 const DataVector::DataInfo DataVector::dataInfo(const QString& field) const
 {
-  file()->readLock();
-  const DataInfo info = file()->vector().dataInfo(field);
-  file()->unlock();
+  _dp->_file->readLock();
+  const DataInfo info = _dp->_file->vector().dataInfo(field);
+  _dp->_file->unlock();
   return info;
 }
 

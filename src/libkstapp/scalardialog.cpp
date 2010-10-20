@@ -254,15 +254,15 @@ ScalarDialog::~ScalarDialog() {
 
 void ScalarDialog::configureTab(ObjectPtr object) {
   if (DataScalarPtr dataScalar = kst_cast<DataScalar>(object)) {
-    _scalarTab->setFile(dataScalar->dataSource()->fileName());
-    _scalarTab->setDataSource(dataScalar->dataSource());
-    _scalarTab->setField(dataScalar->field());
+    _scalarTab->setFile(dataScalar->dp()->dataSource()->fileName());
+    _scalarTab->setDataSource(dataScalar->dp()->dataSource());
+    _scalarTab->setField(dataScalar->dp()->field());
     _scalarTab->hideGeneratedOptions();
     _scalarTab->setDataOptions();
   } else if (VScalarPtr vScalar = kst_cast<VScalar>(object)) {
-    _scalarTab->setFile(vScalar->dataSource()->fileName());
-    _scalarTab->setDataSource(vScalar->dataSource());
-    _scalarTab->setFieldRV(vScalar->field());
+    _scalarTab->setFile(vScalar->dp()->dataSource()->fileName());
+    _scalarTab->setDataSource(vScalar->dp()->dataSource());
+    _scalarTab->setFieldRV(vScalar->dp()->field());
     _scalarTab->setF0(vScalar->F0());
     _scalarTab->hideGeneratedOptions();
     _scalarTab->setRVOptions();

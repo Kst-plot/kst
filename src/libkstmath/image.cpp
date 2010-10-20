@@ -309,7 +309,7 @@ void Image::setAutoThreshold(bool yes) {
 }
 
 
-RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+RelationPtr Image::makeDuplicate()  const {
   ImagePtr image = store()->createObject<Image>();
 
   if (!_hasContourMap) {
@@ -341,7 +341,6 @@ RelationPtr Image::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   image->registerChange();
   image->unlock();
 
-  duplicatedRelations.insert(this, RelationPtr(image));
   return RelationPtr(image);
 
 }

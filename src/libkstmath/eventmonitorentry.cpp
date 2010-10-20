@@ -387,7 +387,7 @@ void EventMonitorEntry::setEMailRecipients(const QString& str) {
 }
 
 
-DataObjectPtr EventMonitorEntry::makeDuplicate() {
+DataObjectPtr EventMonitorEntry::makeDuplicate() const {
   EventMonitorEntryPtr eventMonitor = store()->createObject<EventMonitorEntry>();
 
   eventMonitor->setScriptCode(_script);
@@ -409,83 +409,6 @@ DataObjectPtr EventMonitorEntry::makeDuplicate() {
   eventMonitor->unlock();
 
   return DataObjectPtr(eventMonitor);
-}
-
-
-void EventMonitorEntry::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject) {
-  QString newExp = _event;
-
-  // replace all occurences of outputVectors, outputScalars from oldObject
-  for (VectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const QString oldName = j.value()->Name();
-    const QString newName = newObject->outputVectors()[j.key()]->Name();
-    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-  }
-
-  for (ScalarMap::ConstIterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    const QString oldName = j.value()->Name();
-    const QString newName = newObject->outputScalars()[j.key()]->Name();
-    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-  }
-
-  // and dependencies on vector stats
-  for (VectorMap::ConstIterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    const QHash<QString, ScalarPtr>& scalarMap(newObject->outputVectors()[j.key()]->scalars());
-    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-    while (scalarDictIter.hasNext()) {
-      const QString oldName = scalarDictIter.next().value()->Name();
-      const QString newName = scalarMap[scalarDictIter.key()]->Name();
-      newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-    }
-  }
-
-  // and dependencies on matrix stats
-  for (MatrixMap::ConstIterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    const QHash<QString, ScalarPtr>& scalarMap(newObject->outputMatrices()[j.key()]->scalars());
-    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-    while (scalarDictIter.hasNext()) {
-      const QString oldName = scalarDictIter.next().value()->Name();
-      const QString newName = scalarMap[scalarDictIter.key()]->Name();
-      newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-    }
-  }
-
-  setEvent(newExp);
-
-  // events have no _inputVectors
-}
-
-
-void EventMonitorEntry::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
-  // replace all occurences of oldName with newName
-  QString newExp = _event.replace('[' + oldVector->Name() + ']', '[' + newVector->Name() + ']');
-
-  // also replace all occurences of vector stats for the oldVector
-  QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
-  while (scalarDictIter.hasNext()) {
-    const QString oldName = scalarDictIter.next().value()->Name();
-    const QString newName = newVector->scalars()[scalarDictIter.key()]->Name();
-    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-  }
-
-  setEvent(newExp);
-
-  // events have no _inputVectors
-}
-
-
-void EventMonitorEntry::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
-  QString newExp = _event;
-
-  // also replace all occurences of scalar stats for the oldMatrix
-  QHashIterator<QString, ScalarPtr> scalarDictIter(oldMatrix->scalars());
-  while (scalarDictIter.hasNext()) {
-    const QString oldName = scalarDictIter.next().value()->Name();
-    const QString newName = newMatrix->scalars()[scalarDictIter.key()]->Name();
-    newExp = newExp.replace('[' + oldName + ']', '[' + newName + ']');
-  }
-
-  setEvent(newExp);
 }
 
 

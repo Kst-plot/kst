@@ -87,7 +87,7 @@ public:
     double vMin() const;
     int vNumSamples() const;
 
-    virtual DataObjectPtr makeDuplicate();
+    virtual DataObjectPtr makeDuplicate() const;
 
     virtual QString descriptionTip() const;
 

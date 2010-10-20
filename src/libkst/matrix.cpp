@@ -45,6 +45,11 @@ Matrix::Matrix(ObjectStore *store)
       _invertXHint(false), _invertYHint(false), _editable(false), _saveable(false), _z(0L), _zSize(0) {
 
   _initializeShortName();
+
+  _scalars.clear();
+  _strings.clear();
+  _vectors.clear();
+
   createScalars(store);
 
 }
@@ -363,11 +368,6 @@ void Matrix::internalUpdate() {
 }
 
 
-const QHash<QString, ScalarPtr>& Matrix::scalars() const {
-  return _scalars;
-}
-
-
 void Matrix::setLabel(const QString& newLabel) {
   _label = newLabel;
 }
@@ -628,5 +628,31 @@ QString Matrix::descriptionTip() const {
 QString Matrix::sizeString() const {
   return QString("%1x%2").arg(_nX).arg(_nY);
 }
+
+ObjectList<Primitive> Matrix::outputPrimitives() const {
+  PrimitiveList primitive_list;
+  int n;
+
+  n = _scalars.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_scalars.values().at(i)));
+  }
+
+  n = _strings.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_strings.values().at(i)));
+  }
+
+  n = _vectors.count();
+  for (int i = 0; i< n; i++) {
+    VectorPtr V = _vectors.values().at(i);
+    primitive_list.append(kst_cast<Primitive>(V));
+    primitive_list.append(V->outputPrimitives());
+  }
+
+  return primitive_list;
+}
+
+
 }
 // vim: ts=2 sw=2 et

@@ -48,7 +48,7 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     QString propertyString() const { return name(); } //no longer virtual
 
     //Provide an impl...
-    virtual DataObjectPtr makeDuplicate();
+    virtual DataObjectPtr makeDuplicate() const;
 
     virtual QString descriptionTip() const;
 

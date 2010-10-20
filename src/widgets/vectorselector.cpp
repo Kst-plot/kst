@@ -191,7 +191,7 @@ void VectorSelector::fillVectors() {
   VectorPtr current = selectedVector();
 
   _vector->clear();
-  foreach (QString string, list) {
+  foreach (const QString &string, list) {
     VectorPtr v = vectors.value(string);
     _vector->addItem(string, qVariantFromValue(v.data()));
   }

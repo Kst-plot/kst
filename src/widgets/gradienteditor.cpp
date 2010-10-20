@@ -73,7 +73,7 @@ void GradientEditor::mousePressEvent(QMouseEvent *event) {
   QWidget::mousePressEvent(event);
 
   QList<Stop> stops = _stopHash.values();
-  foreach (Stop stop, stops) {
+  foreach (const Stop &stop, stops) {
     if (stop.path.contains(event->pos())) {
       _movingStop = stop.pos;
       return;
@@ -143,7 +143,7 @@ void GradientEditor::paintEvent(QPaintEvent *event)
     }
 
     QList<Stop> stops = _stopHash.values();
-    foreach (Stop stop, stops) {
+    foreach (const Stop &stop, stops) {
       if (stop.path.contains(cursor)) {
         painter.setPen(Qt::white);
         painter.setBrush(Qt::black);
@@ -196,7 +196,7 @@ QGradientStops GradientEditor::gradientStops() const {
   QGradientStops realStops;
 
   QList<Stop> stops = _stopHash.values();
-  foreach (Stop stop, stops) {
+  foreach (const Stop &stop, stops) {
     qreal realStop = 1.0 - qreal(stop.pos) / qreal(rect().width());
     realStops << qMakePair(realStop, stop.color);
   }
@@ -208,7 +208,7 @@ QGradientStops GradientEditor::gradientStops() const {
 void GradientEditor::setGradientStops(const QGradientStops &stops) {
   _stopHash.clear();
 
-  foreach (QGradientStop gradientStop, stops) {
+  foreach (const QGradientStop &gradientStop, stops) {
     int position = int(-((gradientStop.first - 1.0) * qreal(rect().width())));
     Stop stop;
     stop.pos = position;

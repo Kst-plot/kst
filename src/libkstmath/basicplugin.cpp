@@ -58,7 +58,7 @@ void BasicPlugin::setPluginName(const QString &pluginName) {
 }
 
 
-DataObjectPtr BasicPlugin::makeDuplicate() {
+DataObjectPtr BasicPlugin::makeDuplicate() const {
 #if 0
   BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(propertyString()));
 

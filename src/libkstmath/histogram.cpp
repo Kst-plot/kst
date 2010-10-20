@@ -391,7 +391,7 @@ int Histogram::vNumSamples() const {
 }
 
 
-DataObjectPtr Histogram::makeDuplicate() {
+DataObjectPtr Histogram::makeDuplicate() const {
 
   HistogramPtr histogram = store()->createObject<Histogram>();
 

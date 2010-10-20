@@ -20,7 +20,6 @@
 
 #include <math.h>
 
-#include <QHash>
 #include <QPointer>
 
 #include "primitive.h"
@@ -140,9 +139,6 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
 
-    const QHash<QString, ScalarPtr>& scalars() const;
-    const QHash<QString, StringPtr>& strings() const; // used by datavector
-
     bool saveable() const;
 
     bool editable() const;
@@ -157,6 +153,11 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     virtual void internalUpdate();
 
+    // output primitives: statistics scalars, etc.
+    ScalarMap scalars() const {return _scalars;}
+    StringMap strings() const {return _strings;}
+
+    virtual ObjectList<Primitive> outputPrimitives() const;
 
   protected:
     /** current number of samples */
@@ -177,12 +178,6 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** number of new samples since last newSync */
     int NumNew;
-
-    /** Statistics Scalars */
-    QHash<QString, ScalarPtr> _scalars;
-
-    /** Dependent Strings: used by datavector */
-    QHash<QString, StringPtr> _strings;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;
@@ -215,6 +210,11 @@ class KSTCORE_EXPORT Vector : public Primitive
     friend class Matrix;
     virtual double* realloced(double *memptr, int newSize);
     virtual void setV(double *memptr, int newSize);
+
+    ObjectMap<Scalar> _scalars;
+    ObjectMap<String> _strings;
+
+
 };
 
 

@@ -23,6 +23,8 @@
 #include "kst_i18n.h"
 #include "objectstore.h"
 #include "relation.h"
+#include "sharedptr.h"
+#include "primitive.h"
 
 #include <QApplication>
 #include <QDir>
@@ -66,6 +68,99 @@ void DataObject::cleanupForExit() {
 
 
 void DataObject::attach() {
+}
+
+void DataObject::replaceInput(PrimitivePtr p, PrimitivePtr new_p) {
+  if (VectorPtr v = kst_cast<Vector>(p) ) {
+    if (VectorPtr new_v = kst_cast<Vector>(new_p)) {
+      for (VectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
+        if (j.value() == v) {
+          _inputVectors[j.key()] = new_v;
+        }
+      }
+    }
+  } else if (MatrixPtr m = kst_cast<Matrix>(p) ) {
+    if (MatrixPtr new_m = kst_cast<Matrix>(new_p)) {
+      for (MatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+        if (j.value() == m) {
+          _inputMatrices[j.key()] = new_m;
+        }
+      }
+    }
+  } else if (StringPtr s = kst_cast<String>(p) ) {
+    if (StringPtr new_s = kst_cast<String>(new_p)) {
+      for (StringMap::Iterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
+        if (j.value() == s) {
+          _inputStrings[j.key()] = new_s;
+        }
+      }
+    }
+  } else if (ScalarPtr s = kst_cast<Scalar>(p) ) {
+    if (ScalarPtr new_s = kst_cast<Scalar>(new_p)) {
+      for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+        if (j.value() == s) {
+          _inputScalars[j.key()] = new_s;
+        }
+      }
+    }
+  }
+}
+
+PrimitiveList DataObject::inputPrimitives() const {
+  PrimitiveList primitive_list;
+
+  int n = _inputMatrices.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_inputMatrices.values().at(i)));
+  }
+
+  n = _inputStrings.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_inputStrings.values().at(i)));
+  }
+
+  n = _inputScalars.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_inputScalars.values().at(i)));
+  }
+
+  n = _inputVectors.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_inputVectors.values().at(i)));
+  }
+
+  return primitive_list;
+}
+
+
+PrimitiveList DataObject::outputPrimitives()  const {
+  PrimitiveList primitive_list;
+
+  int n = _outputMatrices.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_outputMatrices.values().at(i)));
+      primitive_list.append(_outputMatrices.values().at(i)->outputPrimitives());
+  }
+
+  n = _outputStrings.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_outputStrings.values().at(i)));
+      primitive_list.append(_outputStrings.values().at(i)->outputPrimitives());
+  }
+
+  n = _outputScalars.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_outputScalars.values().at(i)));
+      primitive_list.append(_outputScalars.values().at(i)->outputPrimitives());
+  }
+
+  n = _outputVectors.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_outputVectors.values().at(i)));
+      primitive_list.append(_outputVectors.values().at(i)->outputPrimitives());
+  }
+
+  return primitive_list;
 }
 
 
@@ -588,257 +683,30 @@ void DataObject::deleteDependents() {
 }
 
 
-bool DataObject::duplicateDependents(DataObjectPtr newObject, QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) {
-  RelationList relations = _store->getObjects<Relation>();
-  foreach (RelationPtr relation, relations) {
-    if (relation->uses(this)) {
-      RelationPtr newRelation = relation->makeDuplicate(duplicatedRelations);
-      newRelation->replaceDependency(this, newObject);
-    }
-  }
-
-  DataObjectList dataObjects = _store->getObjects<DataObject>();
-  foreach (DataObjectPtr object, dataObjects) {
-    if (object->uses(this)) {
-      DataObjectPtr newDataObject = object->makeDuplicate();
-      newDataObject->replaceDependency(this, newObject);
-      object->duplicateDependents(newDataObject, duplicatedRelations);
-    }
-  }
-  return true;
-}
-
-
-void DataObject::replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject) {
-
-  // find all connections from this object to old object
-
-  // vectors
-  for (VectorMap::Iterator j = oldObject->outputVectors().begin(); j != oldObject->outputVectors().end(); ++j) {
-    for (VectorMap::Iterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
-      if (j.value().data() == k.value().data()) {
-        // replace input with the output from newObject
-        _inputVectors[k.key()] = (newObject->outputVectors())[j.key()];
-      }
-    }
-    // also replace dependencies on vector stats
-    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-      while (scalarDictIter.hasNext()) {
-        scalarDictIter.next();
-        if (scalarDictIter.value() == k.value()) {
-          _inputScalars[k.key()] = (((newObject->outputVectors())[j.key()])->scalars())[scalarDictIter.key()];
-        }
-      }
-    }
-    // also replace dependencies on vector strings
-    QHashIterator<QString, StringPtr> stringDictIter(j.value()->strings());
-    for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
-      while (stringDictIter.hasNext()) {
-        stringDictIter.next();
-        if (stringDictIter.value() == k.value()) {
-          _inputStrings[k.key()] = (((newObject->outputVectors())[j.key()])->strings())[stringDictIter.key()];
-        }
-      }
-    }
-  }
-
-  // matrices
-  for (MatrixMap::Iterator j = oldObject->outputMatrices().begin(); j != oldObject->outputMatrices().end(); ++j) {
-    for (MatrixMap::Iterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
-      if (j.value().data() == k.value().data()) {
-        // replace input with the output from newObject
-        _inputMatrices[k.key()] = (newObject->outputMatrices())[j.key()];
-      }
-    }
-    // also replace dependencies on matrix stats
-    QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-      while (scalarDictIter.hasNext()) {
-        scalarDictIter.next();
-        if (scalarDictIter.value() == k.value()) {
-          _inputScalars[k.key()] = (((newObject->outputMatrices())[j.key()])->scalars())[scalarDictIter.key()];
-        }
-      }
-    }
-  }
-
-  // scalars
-  for (ScalarMap::Iterator j = oldObject->outputScalars().begin(); j != oldObject->outputScalars().end(); ++j) {
-    for (ScalarMap::Iterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-      if (j.value().data() == k.value().data()) {
-        // replace input with the output from newObject
-        _inputScalars[k.key()] = (newObject->outputScalars())[j.key()];
-      }
-    }
-  }
-
-  // strings
-  for (StringMap::Iterator j = oldObject->outputStrings().begin(); j != oldObject->outputStrings().end(); ++j) {
-    for (StringMap::Iterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
-      if (j.value().data() == k.value().data()) {
-        // replace input with the output from newObject
-        _inputStrings[k.key()] = (newObject->outputStrings())[j.key()];
-      }
-    }
-  }
-}
-
-
-void DataObject::replaceDependency(VectorPtr oldVector, VectorPtr newVector) {
-  for (VectorMap::Iterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
-    if (j.value() == oldVector) {
-      _inputVectors[j.key()] = newVector;
-    }
-  }
-
-  // slave scalars
-  QHashIterator<QString, ScalarPtr> scalarDictIter(oldVector->scalars());
-  for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
-    while (scalarDictIter.hasNext()) {
-      scalarDictIter.next();
-      if (scalarDictIter.value() == j.value()) {
-        _inputScalars[j.key()] = (newVector->scalars())[scalarDictIter.key()];
-      }
-    }
-  }
-
-  // slave strings
-  QHashIterator<QString, StringPtr> stringDictIter(oldVector->strings());
-  for (StringMap::Iterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
-    while (stringDictIter.hasNext()) {
-      stringDictIter.next();
-      if (stringDictIter.value() == j.value()) {
-        _inputStrings[j.key()] = (newVector->strings())[stringDictIter.key()];
-      }
-    }
-  }
-}
-
-
-void DataObject::replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix) {
-  for (MatrixMap::Iterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
-    if (j.value() == oldMatrix) {
-      _inputMatrices[j.key()] = newMatrix;
-    }
-  }
-
-  QHashIterator<QString, ScalarPtr> scalarDictIter(oldMatrix->scalars());
-  for (ScalarMap::Iterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
-    while (scalarDictIter.hasNext()) {
-      scalarDictIter.next();
-      if (scalarDictIter.value() == j.value()) {
-        _inputScalars[j.key()] = (newMatrix->scalars())[scalarDictIter.key()];
-      }
-    }
-  }
-}
-
-
 bool DataObject::uses(ObjectPtr p) const {
-  VectorPtr v = kst_cast<Vector>(p);
-  if (v) {
-    for (VectorMap::ConstIterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
-      if (j.value() == v) {
-        return true;
-      }
-    }
-    QHashIterator<QString, ScalarPtr> scalarDictIter(v->scalars());
-    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
-      while (scalarDictIter.hasNext()) {
-        scalarDictIter.next();
-        if (scalarDictIter.value() == j.value()) {
-          return true;
-        }
-      }
-    }
-    QHashIterator<QString, StringPtr> stringDictIter(v->strings());
-    for (StringMap::ConstIterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
-      while (stringDictIter.hasNext()) {
-        stringDictIter.next();
-        if (stringDictIter.value() == j.value()) {
-          return true;
-        }
-      }
-    }
-  } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
-    for (MatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
-      if (j.value() == matrix) {
-        return true;
-      }
-    }
-    QHashIterator<QString, ScalarPtr> scalarDictIter(matrix->scalars());
-    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
-      while (scalarDictIter.hasNext()) {
-        scalarDictIter.next();
-        if (scalarDictIter.value() == j.value()) {
-          return true;
-        }
-      }
-    }
-  } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
-    // check all connections from this object to p
-    for (VectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
-      for (VectorMap::ConstIterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
-        if (j.value() == k.value()) {
-          return true;
-        }
-      }
-      // also check dependencies on vector stats
-      QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-        while (scalarDictIter.hasNext()) {
-          scalarDictIter.next();
-          if (scalarDictIter.value() == k.value()) {
-            return true;
-          }
-        }
-      }
-      // also check dependencies on vector strings
-      QHashIterator<QString, StringPtr> stringDictIter(j.value()->strings());
-      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
-        while (stringDictIter.hasNext()) {
-          stringDictIter.next();
-          if (stringDictIter.value() == k.value()) {
-            return true;
-          }
-        }
-      }
+  PrimitiveList this_input_primitives;
+  PrimitiveList p_output_primitives;
 
-    }
+  this_input_primitives = inputPrimitives();
 
-    for (MatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
-      for (MatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
-        if (j.value() == k.value()) {
-          return true;
-        }
-      }
-      // also check dependencies on matrix stats
-      QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-        while (scalarDictIter.hasNext()) {
-          scalarDictIter.next();
-          if (scalarDictIter.value() == k.value()) {
-            return true;
-          }
-        }
-      }
-    }
+  PrimitivePtr p_prim = kst_cast<Primitive>(p);
+  DataObjectPtr p_dobj = kst_cast<DataObject>(p);
 
-    for (ScalarMap::Iterator j = obj->outputScalars().begin(); j != obj->outputScalars().end(); ++j) {
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
-        if (j.value() == k.value()) {
-          return true;
-        }
-      }
-    }
+  if (p_prim) {
+    p_output_primitives = p_prim->outputPrimitives();
+    p_output_primitives << p_prim; // include the object itself.
+  } else if (p_dobj) {
+    p_output_primitives = p_dobj->outputPrimitives();
+  }  else {
+    p_output_primitives.clear();
+  }
 
-    for (StringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
-      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
-        if (j.value() == k.value()) {
-          return true;
-        }
-      }
+  // now check if any of this's input primitives are one of p's output primitives...
+  int n_in = this_input_primitives.count();
+  for (int i_in = 0; i_in<n_in; i_in++) {
+    PrimitivePtr p_in = this_input_primitives.at(i_in);
+    if (p_output_primitives.contains(p_in)) {
+      return true;
     }
   }
   return false;

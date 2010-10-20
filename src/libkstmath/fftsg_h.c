@@ -4,6 +4,9 @@
     download: http://momonga.t.u-tokyo.ac.jp/~ooura/fft.html
     You may use, copy, modify this code for any purpose and 
     without fee.
+
+*/
+
 /*
 
 Fast Fourier/Cosine/Sine Transform

@@ -602,7 +602,7 @@ double Curve::minX() const {
 }
 
 
-RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
+RelationPtr Curve::makeDuplicate() const {
   CurvePtr curve = store()->createObject<Curve>();
 
   if (descriptiveNameIsManual()) {
@@ -637,7 +637,6 @@ RelationPtr Curve::makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelat
   curve->registerChange();
   curve->unlock();
 
-  duplicatedRelations.insert(this, RelationPtr(curve));
   return RelationPtr(curve);
 }
 

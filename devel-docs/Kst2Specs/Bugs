@@ -29,3 +29,6 @@ scalar will indicate a value strikingly similar to the "Min" (or perhaps
 
 ** This appears to be either a BLASTpol defile bug, or a filesystem issue.  **
 
+--------------------
+
+Select box tool.  Escape to cancel.  Mouse zooms don't work until you actually draw a box.

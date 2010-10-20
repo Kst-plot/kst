@@ -70,17 +70,15 @@ class KSTMATH_EXPORT Equation : public DataObject {
 
     const CurveHintList *curveHints() const;
 
-    DataObjectPtr makeDuplicate();
-
-    void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
-
-    void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
-    void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
+    DataObjectPtr makeDuplicate() const;
 
     bool uses(ObjectPtr p) const;
 
     virtual QString descriptionTip() const;
     virtual void internalUpdate();
+
+    virtual PrimitiveList inputPrimitives() const;
+    virtual void replaceInput(PrimitivePtr p, PrimitivePtr new_p);
 
   protected:
     Equation(ObjectStore *store);

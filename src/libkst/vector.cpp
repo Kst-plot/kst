@@ -66,6 +66,9 @@ Vector::Vector(ObjectStore *store)
   _is_rising = false;
   _descriptiveLabel.clear();
 
+  _scalars.clear();
+  _strings.clear();
+
   CreateScalars(store);
   blank();
 
@@ -315,17 +318,6 @@ void Vector::updateScalars() {
     }
   }
 }
-
-
-const QHash<QString, ScalarPtr>& Vector::scalars() const {
-  return _scalars;
-}
-
-
-const QHash<QString, StringPtr>& Vector::strings() const {
-  return _strings;
-}
-
 
 double* Vector::realloced(double *memptr, int newSize) {
   double *old = _v;
@@ -619,6 +611,22 @@ QString Vector::descriptionTip() const {
 
 QString Vector::sizeString() const {
   return QString::number(length());
+}
+
+ObjectList<Primitive> Vector::outputPrimitives() const {
+  PrimitiveList primitive_list;
+
+  int n = _scalars.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_scalars.values().at(i)));
+  }
+
+  n = _strings.count();
+  for (int i = 0; i< n; i++) {
+      primitive_list.append(kst_cast<Primitive>(_strings.values().at(i)));
+  }
+
+  return primitive_list;
 }
 
 #undef INITSIZE

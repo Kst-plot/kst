@@ -143,7 +143,7 @@ qint64 VScalar::minInputSerialOfLastChange() const {
   return LLONG_MAX;
 }
 
-VScalarPtr VScalar::makeDuplicate() const {
+PrimitivePtr VScalar::_makeDuplicate() const {
   Q_ASSERT(store());
   VScalarPtr scalar = store()->createObject<VScalar>();
 
@@ -156,7 +156,7 @@ VScalarPtr VScalar::makeDuplicate() const {
   scalar->registerChange();
   scalar->unlock();
 
-  return scalar;
+  return kst_cast<Primitive>(scalar);
 }
 
 
@@ -188,6 +188,18 @@ bool VScalar::isValid() const {
   }
   return false;
 }
+
+
+bool VScalar::_checkValidity(const DataSourcePtr ds) const {
+  if (ds) {
+    ds->readLock();
+    bool rc = ds->vector().isValid(_dp->_field);
+    ds->unlock();
+    return rc;
+  }
+  return false;
+}
+
 
 QString VScalar::propertyString() const {
   return i18n("%2 frame %3 of %1 = %4").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());

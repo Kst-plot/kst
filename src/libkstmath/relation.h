@@ -135,11 +135,10 @@ class KSTMATH_EXPORT Relation : public Object {
     // render the legend symbol for this curve
     virtual void paintLegendSymbol(QPainter *p, const QRectF& bound) = 0;
 
-    virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
+    //virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
+    virtual SharedPtr<Relation> makeDuplicate() const = 0;
 
-    virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
-    virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
-    virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
+    virtual void replaceInput(PrimitivePtr p, PrimitivePtr new_p);
 
     // Compare the cached the context to the provided one.
     bool redrawRequired(const CurveRenderContext& context); 
@@ -165,6 +164,8 @@ class KSTMATH_EXPORT Relation : public Object {
     const MatrixMap& outputMatrices() const { return _outputMatrices; }
     MatrixMap& inputMatrices() { return _inputMatrices; }
     MatrixMap& outputMatrices() { return _outputMatrices; }
+
+    PrimitiveList inputPrimitives() const;
 
     virtual bool invertXHint() const {return false;}
     virtual bool invertYHint() const {return false;}

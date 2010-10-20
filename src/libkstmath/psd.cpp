@@ -364,7 +364,7 @@ void PSD::setGaussianSigma(double in_gaussianSigma) {
 }
 
 
-DataObjectPtr PSD::makeDuplicate() {
+DataObjectPtr PSD::makeDuplicate() const {
 
   PSDPtr powerspectrum = store()->createObject<PSD>();
   Q_ASSERT(powerspectrum);

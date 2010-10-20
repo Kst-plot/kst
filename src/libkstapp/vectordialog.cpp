@@ -353,9 +353,9 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->setNumberOfSamples(_dialogDefaults->value("genVector/length",1000).toInt());
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
-    _vectorTab->setFile(dataVector->dataSource()->fileName());
-    _vectorTab->setDataSource(dataVector->dataSource());
-    _vectorTab->setField(dataVector->field());
+    _vectorTab->setFile(dataVector->dp()->dataSource()->fileName());
+    _vectorTab->setDataSource(dataVector->dp()->dataSource());
+    _vectorTab->setField(dataVector->dp()->field());
     _vectorTab->dataRange()->setRange(dataVector->numFrames());
     _vectorTab->dataRange()->setStart(dataVector->startFrame());
     _vectorTab->dataRange()->setCountFromEnd(dataVector->countFromEOF());

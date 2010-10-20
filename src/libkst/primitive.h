@@ -24,6 +24,7 @@
 #include "object.h"
 #include "objectlist.h"
 #include "objectmap.h"
+#include "dataprimitive.h"
 
 namespace Kst {
 
@@ -47,6 +48,9 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual QString  sizeString() const;
 
     virtual bool used() const;
+
+    virtual ObjectList<Primitive> outputPrimitives() const {return ObjectList<Primitive>();}
+
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
 
@@ -61,15 +65,30 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual qint64 minInputSerial() const;
     virtual qint64 minInputSerialOfLastChange() const;
 
+    DataPrimitive *_dp;
+
   protected:
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
      * FIXME: pretty sure this is wrong: it shouldn't be a qpointer... not sure
      * what should be going on here! */
     QPointer<Object> _provider;
+  private:
+    friend class DataPrimitive;
+    // Some stuff only needed by data primitives...
+    // put it here so we can later use data primitives generically.
+    // The problem is that the "Diamond problem" [see wikipedia] is even
+    // tougher with QObjects.  So we decide that DataVectors and other
+    // Data Primitives "have a" DataPrimitive.  Rather than using dynamic
+    // cast to see if a primitive is a data primitive, check to see if _dp
+    // has been allocated.  Only access the following through dp()->
+    virtual SharedPtr<Primitive> _makeDuplicate() const {return 0;}
+    virtual bool _checkValidity(const DataSourcePtr ds) const {Q_UNUSED(ds) return true;}
+  public:
+    DataPrimitive *dp() const {return _dp;}
 };
 
 typedef SharedPtr<Primitive> PrimitivePtr;
-typedef ObjectList<PrimitivePtr> PrimitiveList;
+typedef ObjectList<Primitive> PrimitiveList;
 typedef ObjectMap<PrimitivePtr> PrimitiveMap;
 
 }

@@ -119,7 +119,7 @@ void CurveSelector::fillCurves() {
   CurvePtr current = selectedCurve();
 
   _curve->clear();
-  foreach (QString string, list) {
+  foreach (const QString &string, list) {
     CurvePtr r = curves.value(string);
     _curve->addItem(string, qVariantFromValue(r.data()));
   }

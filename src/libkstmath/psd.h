@@ -87,7 +87,7 @@ class KSTMATH_EXPORT PSD : public DataObject {
 
     const CurveHintList *curveHints() const;
 
-    virtual DataObjectPtr makeDuplicate();
+    virtual DataObjectPtr makeDuplicate() const;
 
     virtual QString descriptionTip() const;
 

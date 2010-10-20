@@ -18,6 +18,7 @@
 #include "datascalar.h"
 #include "datastring.h"
 #include "vscalar.h"
+#include "primitive.h"
 
 #include "plotitem.h"
 
@@ -141,40 +142,17 @@ void ChangeFileDialog::fileNameChanged(const QString &file) {
 
 
 void ChangeFileDialog::updatePrimitiveList() {
-  /* Make list of data primitives */
-  DataVectorList dataVectorList = _store->getObjects<DataVector>();
-  DataMatrixList dataMatrixList = _store->getObjects<DataMatrix>();
-  DataScalarList dataScalarList = _store->getObjects<DataScalar>();
-  DataStringList dataStringList = _store->getObjects<DataString>();
-  VScalarList vScalarList = _store->getObjects<VScalar>();
+  PrimitiveList allPrimitives = _store->getObjects<Primitive>();
+
   QStringList fileNameList;
 
   ObjectList<Primitive> primitives;
 
-  foreach (DataVectorPtr V, dataVectorList) {
-    PrimitivePtr P = kst_cast<Primitive>(V);
-    primitives.append(P);
-    fileNameList.append(V->filename());
-  }
-  foreach (DataMatrixPtr M, dataMatrixList) {
-    PrimitivePtr P = kst_cast<Primitive>(M);
-    primitives.append(P);
-    fileNameList.append(M->filename());
-  }
-  foreach (DataScalarPtr S, dataScalarList) {
-    PrimitivePtr P = kst_cast<Primitive>(S);
-    primitives.append(P);
-    fileNameList.append(S->filename());
-  }
-  foreach (DataStringPtr S, dataStringList) {
-    PrimitivePtr P = kst_cast<Primitive>(S);
-    primitives.append(P);
-    fileNameList.append(S->filename());
-  }
-  foreach (VScalarPtr V, vScalarList) {
-    PrimitivePtr P = kst_cast<Primitive>(V);
-    primitives.append(P);
-    fileNameList.append(V->filename());
+  foreach (PrimitivePtr P, allPrimitives) {
+    if (P->dp()) {
+      primitives.append(P);
+      fileNameList.append(P->dp()->filename());
+    }
   }
 
   // make sure all items in _changeFilePrimitiveList exist in the store; remove if they don't.
@@ -279,9 +257,9 @@ void ChangeFileDialog::selectAllFromFile() {
 
   for (int i = 0; i < _changeFilePrimitiveList->count(); i++) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(_changeFilePrimitiveList->item(i)->text()))) {
-      _changeFilePrimitiveList->item(i)->setSelected(vector->filename() == _files->currentText());
+      _changeFilePrimitiveList->item(i)->setSelected(vector->dp()->filename() == _files->currentText());
     } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(_changeFilePrimitiveList->item(i)->text()))) {
-      _changeFilePrimitiveList->item(i)->setSelected(matrix->filename() == _files->currentText());
+      _changeFilePrimitiveList->item(i)->setSelected(matrix->dp()->filename() == _files->currentText());
     }
   }
   addButtonClicked();
@@ -301,86 +279,154 @@ void ChangeFileDialog::apply() {
     return;
   }
 
-  QMap<RelationPtr, RelationPtr> duplicatedRelations;
+  // we need a list which preservs the order things are added, and a map to associate the duplicated
+  // primitive with its duplicate.
+  QMap<PrimitivePtr, PrimitivePtr> duplicatedPrimitiveMap; // associate duplicated with duplicates.
+  PrimitiveList duplicatedPrimitiveList; // list of duplicated primitives in order they were found
+
   DataSourceList oldSources;
   QString invalidSources;
   int invalid = 0;
 
-  QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors;
-  QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices;
-
   _selectedFilePrimitiveList->selectAll();
   QList<QListWidgetItem*> selectedItems = _selectedFilePrimitiveList->selectedItems();
-  for (int i = 0; i < selectedItems.size(); ++i) {
-    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems[i]->text()))) {
-      vector->writeLock();
-      _dataSource->readLock();
-      bool valid = _dataSource->vector().isValid(vector->field());
-      _dataSource->unlock();
-      if (!valid) {
-        if (invalid > 0) {
-          invalidSources += ", ";
+  int n_selectedItems = selectedItems.size();
+  for (int i = 0; i < n_selectedItems; ++i) {
+    PrimitivePtr prim = kst_cast<Primitive>(_store->retrieveObject(selectedItems[i]->text()));
+    if (prim) {
+      if (prim->dp()) {
+        prim->readLock();
+        _dataSource->readLock();
+        bool valid = prim->dp()->checkValidity(_dataSource);
+        _dataSource->unlock();
+        prim->unlock();
+        if (!valid) {
+          if (invalid > 0) {
+            invalidSources += ", ";
           }
-        invalidSources += vector->field();
-        ++invalid;
-      } else {
-        if (_duplicateSelected->isChecked()) {
-          DataVectorPtr newVector = vector->makeDuplicate();
-
-          newVector->writeLock();
-          newVector->changeFile(_dataSource);
-          newVector->registerChange();
-          newVector->unlock();
-          duplicatedVectors[vector] = newVector;
+          invalidSources += prim->dp()->field();
+          ++invalid;
+        } else if (_duplicateSelected->isChecked()) {
+          prim->readLock();
+          PrimitivePtr newPrim = prim->dp()->makeDuplicate();
+          prim->unlock();
+          newPrim->writeLock();
+          newPrim->dp()->changeFile(_dataSource);
+          newPrim->unlock();
+          duplicatedPrimitiveMap[prim] = newPrim;
+          duplicatedPrimitiveList.append(prim);
+          PrimitiveList output_prims = prim->outputPrimitives();
+          PrimitiveList dup_output_prims = newPrim->outputPrimitives();
+          // add output primitives to list of primitives that have been duplicated.
+          int n = output_prims.count();
+          for (int i_output=0; i_output<n; i_output++) {
+            duplicatedPrimitiveList.append(output_prims.at(i_output));
+            duplicatedPrimitiveMap[output_prims.at(i_output)] = dup_output_prims.at(i_output);
+          }
         } else {
-          if (!oldSources.contains(vector->dataSource())) {
-            oldSources << vector->dataSource();
+          prim->readLock();
+          if (!oldSources.contains(prim->dp()->dataSource())) {
+            oldSources << prim->dp()->dataSource();
           }
-          vector->writeLock();
-          vector->changeFile(_dataSource);
-          vector->registerChange();
-          vector->unlock();
+          prim->unlock();
+          prim->writeLock();
+          prim->dp()->changeFile(_dataSource);
+          prim->unlock();
         }
       }
-      vector->unlock();
-    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems[i]->text()))) {
-      matrix->writeLock();
-      _dataSource->readLock();
-      bool valid = _dataSource->matrix().isValid(matrix->field());
-      _dataSource->unlock();
-      if (!valid) {
-        if (invalid > 0) {
-          invalidSources += ", ";
-          }
-        invalidSources += matrix->field();
-        ++invalid;
-      } else {
-        if (_duplicateSelected->isChecked()) {
-          DataMatrixPtr newMatrix = matrix->makeDuplicate();
+    }
+    prim = 0;
+  }
 
-          newMatrix->writeLock();
-          newMatrix->changeFile(_dataSource);
-          newMatrix->registerChange();
-          newMatrix->unlock();
-          duplicatedMatrices[matrix] = newMatrix;
-        } else {
-          if (!oldSources.contains(matrix->dataSource())) {
-            oldSources << matrix->dataSource();
+  // Duplicate data objects:
+  // list of all data objects before we start duplication
+  DataObjectList dataObjects = _store->getObjects<DataObject>();
+
+  // map of data objects which have been duplicated.
+  QMap<DataObjectPtr, DataObjectPtr> duplicatedDataObjects;
+
+  // Lookup list to record if the data object has already been duplicated
+  // (We could have just checked if it was in the map, but that is slower)
+  QVector<bool> dataObjectDuplicated(dataObjects.count());
+  int n_dataObjects = dataObjects.count();
+  for (int i_OB = 0; i_OB < n_dataObjects; i_OB++) {
+    dataObjectDuplicated[i_OB] = false;
+  }
+
+
+  // go through whole list until nothing is duplicated
+  bool new_duplicate_found;
+  do {
+    new_duplicate_found = false;
+    for (int i_DP =0; i_DP<duplicatedPrimitiveList.count(); i_DP++) { // The list size will grow, so check count() each time.
+      for (int i_OB = 0; i_OB < n_dataObjects; i_OB++) {
+        PrimitiveList input_primitives = dataObjects.at(i_OB)->inputPrimitives();
+        if (input_primitives.contains(duplicatedPrimitiveList.at(i_DP))) {
+          DataObjectPtr duplicate_object;
+          if (!dataObjectDuplicated[i_OB]) {
+            duplicate_object = dataObjects.at(i_OB)->makeDuplicate();
+
+            // put the outputs of the new data object into the list of duplicated primitives.
+            PrimitiveList dup_output_prims = duplicate_object->outputPrimitives();
+            PrimitiveList output_prims = dataObjects.at(i_OB)->outputPrimitives();
+            int n = output_prims.count();
+            for (int i_output=0; i_output<n; i_output++) {
+              duplicatedPrimitiveList.append(output_prims.at(i_output));
+              duplicatedPrimitiveMap[output_prims.at(i_output)] = dup_output_prims.at(i_output);
+            }
+
+            duplicatedDataObjects[dataObjects.at(i_OB)] = duplicate_object;
+            dataObjectDuplicated[i_OB] = true;
+            new_duplicate_found = true;
+          } else {
+            duplicate_object = duplicatedDataObjects[dataObjects.at(i_OB)];
           }
-          matrix->writeLock();
-          matrix->changeFile(_dataSource);
-          matrix->registerChange();
-          matrix->unlock();
+          // replace the input primitive with its copy.
+          PrimitivePtr old_input_primitive = duplicatedPrimitiveList.at(i_DP);
+          PrimitivePtr new_input_primitive = duplicatedPrimitiveMap[old_input_primitive];
+          duplicate_object->replaceInput(old_input_primitive, new_input_primitive);
         }
       }
-      matrix->unlock();
+    }
+  } while (new_duplicate_found);
+
+
+  // Duplicate Relations
+  RelationList relations = _store->getObjects<Relation>();
+
+  // map of data objects which have been duplicated.
+  QMap<RelationPtr, RelationPtr> duplicatedRelations;
+
+  // Lookup list to record if the relation has already been duplicated
+  // (We could have just checked if it was in the map, but that is slower)
+  int n_relations = relations.count();
+  QVector<bool> relationDuplicated(n_relations);
+  for (int i_R = 0; i_R < n_relations; i_R++) {
+    relationDuplicated[i_R] = false;
+  }
+
+  for (int i_DP =0; i_DP<duplicatedPrimitiveList.count(); i_DP++) {
+    for (int i_R = 0; i_R < n_relations; i_R++) {
+      PrimitiveList input_primitives = relations.at(i_R)->inputPrimitives();
+      if (input_primitives.contains(duplicatedPrimitiveList.at(i_DP))) {
+        RelationPtr duplicate_relation;
+        if (!relationDuplicated[i_R]) {
+          duplicate_relation = relations.at(i_R)->makeDuplicate();
+          duplicatedRelations[relations.at(i_R)] = duplicate_relation;
+          relationDuplicated[i_R] = true;
+        } else {
+          duplicate_relation = duplicatedRelations[relations.at(i_R)];
+        }
+        // replace the input primitive with its copy.
+        PrimitivePtr old_input_primitive = duplicatedPrimitiveList.at(i_DP);
+        PrimitivePtr new_input_primitive = duplicatedPrimitiveMap[old_input_primitive];
+        duplicate_relation->replaceInput(old_input_primitive, new_input_primitive);
+      }
     }
   }
 
-  // Now that all new primitives have been created, generate derived objects
-  duplicateDerivedObjects(duplicatedVectors, duplicatedMatrices, duplicatedRelations);
 
-  // Plot the items. (Do we need to doUpdates before this?)
+  // Plot the items.
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
     PlotItem* plotItem = static_cast<PlotItem*>(plot);
     foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
@@ -412,61 +458,6 @@ void ChangeFileDialog::apply() {
   UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
 }
-
-
-void ChangeFileDialog::duplicateDerivedObjects(QMap<DataVectorPtr, DataVectorPtr> duplicatedVectors, QMap<DataMatrixPtr, DataMatrixPtr> duplicatedMatrices, QMap<RelationPtr, RelationPtr> &duplicatedRelations) {
-  // First, data objects (equations, etc...) so that curves derived from them can be handled in the next step.
-  // Dependencies between data objects should be handled fine, assuming that when we iterate the list we get dependents after what they depend on.
-  QMap<DataObjectPtr, DataObjectPtr> duplicatedDataObjects;
-  DataObjectList dataObjects = _store->getObjects<DataObject>();
-  foreach(DataObjectPtr dataObject, dataObjects) {
-    dataObject->readLock();
-    bool dataObjectDuplicated = false;
-    DataObjectPtr newDataObject = NULL;
-    foreach(VectorPtr inputVector, dataObject->inputVectors().values()) {
-      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
-        if (!dataObjectDuplicated) {
-          newDataObject = dataObject->makeDuplicate();
-          if (newDataObject) duplicatedDataObjects[dataObject] = newDataObject;
-          dataObjectDuplicated = true;
-        }
-        if (newDataObject) { // For the others, substitute the duplicated vector to be used in the duplicated relation
-          // TODO: Shouldn't we lock the object before making changes?
-          newDataObject->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
-        }
-      }
-    }
-    // If we have created a new data object, its output vectors could be the inputs of further objects, so we store
-    // the mapping of old to new output vectors to be able to clone dependents later in the chain.
-    // I'm assuming the order of output vectors has not changed during the replication.
-    if (newDataObject) {
-      for(int i=0; i<dataObject->outputVectors().count(); ++i) {
-        duplicatedVectors[kst_cast<DataVector>(dataObject->outputVectors().values()[i])] = kst_cast<DataVector>(newDataObject->outputVectors().values()[i]);
-      }
-    }
-    dataObject->unlock();
-  }
-  // Now, take care of curves ("relations")
-  RelationList relations = _store->getObjects<Relation>();
-  foreach(RelationPtr relation, relations) {
-    relation->readLock();
-    bool relationDuplicated = false;
-    RelationPtr newRelation = NULL;
-    foreach(VectorPtr inputVector, relation->inputVectors().values()) {
-      if (duplicatedVectors.value(kst_cast<DataVector>(inputVector))) {
-        if (!relationDuplicated) { // For the first duplicated vector, create the new relation
-          newRelation = relation->makeDuplicate(duplicatedRelations);
-          relationDuplicated = true;
-        }
-        if (newRelation) { // For the others, substitute the duplicated vector to be used in the duplicated relation
-          newRelation->replaceDependency(inputVector, duplicatedVectors[kst_cast<DataVector>(inputVector)]);
-        }
-      }
-    }
-    relation->unlock();
-  }
-}
-
 
 }
 // vim: ts=2 sw=2 et

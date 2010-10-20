@@ -33,11 +33,13 @@ namespace Kst {
 class DataSource;
 typedef SharedPtr<DataSource> DataSourcePtr;
 
+class Primitive;
+typedef SharedPtr<Primitive> PrimitivePtr;
 
 class KSTCORE_EXPORT DataPrimitive
 {
 public:
-    DataPrimitive();
+    DataPrimitive(PrimitivePtr primitive);
     virtual ~DataPrimitive();
 
     /** return the name of the file */
@@ -57,18 +59,22 @@ public:
     DataSourcePtr dataSource() const;
 
     /** change the datasource */
-    virtual void changeFile(DataSourcePtr file) = 0;
+    virtual void changeFile(DataSourcePtr file);
 
     /** return true if it has a valid file and field, or false otherwise */
-    virtual bool isValid() const = 0;
+    //virtual bool isValid() const = 0;
+
+    /** file to read */
+    QString _field;
+    DataSourcePtr _file;
+
+    PrimitivePtr makeDuplicate() const;
+
+    bool checkValidity(const DataSourcePtr ds) const;
 
   protected:
-    /** file to read for rvectors */
-    DataSourcePtr& file();
-    DataSourcePtr& file() const;
 
     /** For the scalar field in the data source */
-    QString _field;
 
   private:
     struct Private;
@@ -76,6 +82,5 @@ public:
 
 };
 
-typedef SharedPtr<DataPrimitive> DataPrimitivePtr;
 }
 #endif // DATAPRIMITIVE_H

@@ -30,7 +30,7 @@ public:
   double *z; // the data
 };
 
-class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive 
+class KSTCORE_EXPORT DataMatrix : public Matrix//, public DataPrimitive
 {
     Q_OBJECT
 
@@ -114,9 +114,6 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     // change the datasource for this matrix
     void changeFile(DataSourcePtr file);
 
-    // make a "copy" of this DataMatrix
-    SharedPtr<DataMatrix> makeDuplicate() const;
-
     virtual QString descriptionTip() const;
 
     virtual QString propertyString() const;
@@ -174,6 +171,11 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     QHash<QString, ScalarPtr> _fieldScalars;
     QHash<QString, StringPtr> _fieldStrings;
+
+    // make a "copy" of this DataMatrix
+    virtual PrimitivePtr _makeDuplicate() const;
+    virtual bool _checkValidity(const DataSourcePtr ds) const;
+
 
 };
 

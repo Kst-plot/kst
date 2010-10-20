@@ -17,7 +17,7 @@ namespace Kst {
   QSettings *_dialogDefaults;
 
 void setDataVectorDefaults(DataVectorPtr V) {
-  _dialogDefaults->setValue("vector/datasource", V->filename());
+  _dialogDefaults->setValue("vector/datasource", V->dp()->filename());
 }
 
 void setGenVectorDefaults(GeneratedVectorPtr V) {
@@ -30,7 +30,7 @@ void setDataMatrixDefaults(DataMatrixPtr M) {
   //qDebug() << "M...filename: " << M->dataSource()->fileName();
 
   // FIXME: data source filename isn't valid...
-  _dialogDefaults->setValue("matrix/datasource",M->dataSource()->fileName());
+  _dialogDefaults->setValue("matrix/datasource",M->dp()->dataSource()->fileName());
 
   _dialogDefaults->setValue("matrix/xCountFromEnd",M->xCountFromEnd());
   _dialogDefaults->setValue("matrix/yCountFromEnd",M->yCountFromEnd());

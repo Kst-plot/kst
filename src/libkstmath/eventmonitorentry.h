@@ -66,12 +66,7 @@ class KSTMATH_EXPORT EventMonitorEntry : public DataObject {
 
     bool reparse();
 
-    DataObjectPtr makeDuplicate();
-
-    void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
-
-    void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
-    void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
+    DataObjectPtr makeDuplicate() const;
 
     bool uses(ObjectPtr p) const;
 

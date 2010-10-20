@@ -129,7 +129,7 @@ void MatrixSelector::fillMatrices() {
   MatrixPtr current = selectedMatrix();
 
   _matrix->clear();
-  foreach (QString string, list) {
+  foreach (const QString &string, list) {
     MatrixPtr m = matrices.value(string);
     _matrix->addItem(string, qVariantFromValue(m.data()));
   }

@@ -224,13 +224,13 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     // check to see if an identical vector already exists.  If so, use it.
     for (int i=0; i<_vectors.count(); i++) {
       xv = _vectors.at(i);
-      if (field == xv->field()) {
+      if (field == xv->dp()->field()) {
         if ((xv->reqStartFrame() == _startFrame) &&
             (xv->reqNumFrames() == _numFrames) &&
             (xv->skip() == _skip) &&
             (xv->doSkip() == (_skip>0)) &&
             (xv->doAve() == _doAve) ){
-          if (xv->filename()==ds->fileName()) {
+          if (xv->dp()->filename()==ds->fileName()) {
             found = true;
             break;
           }

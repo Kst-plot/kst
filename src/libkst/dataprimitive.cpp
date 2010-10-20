@@ -16,6 +16,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "debug.h"
+#include "kst_i18n.h"
+
 #include "dataprimitive.h"
 
 #include "datasource.h"
@@ -29,7 +32,7 @@ namespace Kst {
 
 struct DataPrimitive::Private
 {
-  DataSourcePtr _file;
+  PrimitivePtr _primitive;
 
   static void saveFilename(const QString& fn, QXmlStreamWriter& s);
 };
@@ -48,40 +51,65 @@ void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s
 }
 
 
-
-
-
-DataPrimitive::DataPrimitive() : d(*new Private)
+DataPrimitive::DataPrimitive(PrimitivePtr primitive) : d(*new Private)
 {
-  d._file = 0;
+  _file = 0;
+  d._primitive = primitive;
   _field.clear();
 }
 
 
 DataPrimitive::~DataPrimitive() {
   _field = QString::null;
-  d._file = 0;
+  _file = 0;
+  d._primitive = 0;
   delete &d;
 }
 
 
+PrimitivePtr DataPrimitive::makeDuplicate() const {
+  return d._primitive->_makeDuplicate();
+}
+
+bool DataPrimitive::checkValidity(const DataSourcePtr ds) const {
+  return d._primitive->_checkValidity(ds);
+}
+
+void DataPrimitive::changeFile(DataSourcePtr in_file) {
+  Q_ASSERT(d._primitive->myLockStatus() == KstRWLock::WRITELOCKED);
+
+  if (!in_file) {
+    Debug::self()->log(i18n("Data file for vector %1 was not opened.", d._primitive->Name()), Debug::Warning);
+  }
+  _file = in_file;
+  if (_file) {
+    _file->writeLock();
+  }
+  d._primitive->reset();
+  if (_file) {
+    _file->unlock();
+  }
+  d._primitive->registerChange();
+
+}
+
 /** return the name of the file */
 QString DataPrimitive::filename() const {
   QString rc;
-  if (d._file) {
-    d._file->readLock();
-    rc = d._file->fileName();
-    d._file->unlock();
+  if (_file) {
+    _file->readLock();
+    rc = _file->fileName();
+    _file->unlock();
   }
   return rc;
 }
 
 
 void DataPrimitive::saveFilename(QXmlStreamWriter& s) {
-  if (d._file) {
-    file()->readLock();
-    DataPrimitive::Private::saveFilename(d._file->fileName(), s);
-    file()->unlock();
+  if (_file) {
+    _file->readLock();
+    DataPrimitive::Private::saveFilename(_file->fileName(), s);
+    _file->unlock();
   }
 }
 
@@ -117,17 +145,8 @@ const QString& DataPrimitive::field() const {
   return _field;
 }
 
-
 DataSourcePtr DataPrimitive::dataSource() const {
-  return d._file;
-}
-
-DataSourcePtr& DataPrimitive::file() {
-  return d._file;
-}
-
-DataSourcePtr& DataPrimitive::file() const {
-  return d._file;
+  return _file;
 }
 
 }

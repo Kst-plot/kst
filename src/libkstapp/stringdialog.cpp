@@ -225,9 +225,9 @@ StringDialog::~StringDialog() {
 
 void StringDialog::configureTab(ObjectPtr object) {
   if (DataStringPtr dataString = kst_cast<DataString>(object)) {
-    _stringTab->setFile(dataString->dataSource()->fileName());
-    _stringTab->setDataSource(dataString->dataSource());
-    _stringTab->setField(dataString->field());
+    _stringTab->setFile(dataString->dp()->dataSource()->fileName());
+    _stringTab->setDataSource(dataString->dp()->dataSource());
+    _stringTab->setField(dataString->dp()->field());
     _stringTab->hideGeneratedOptions();
   } else if (StringPtr string = kst_cast<String>(object)) { // edit value string
     _stringTab->hideDataOptions();

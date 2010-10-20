@@ -31,7 +31,7 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a data file. */
-class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
+class KSTCORE_EXPORT DataScalar : public Scalar {
   Q_OBJECT
 
   protected:
@@ -68,9 +68,6 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** make a copy of the DataScalar */
-    SharedPtr<DataScalar> makeDuplicate() const;
-
     virtual QString descriptionTip() const;
 
     virtual QString propertyString() const;
@@ -78,6 +75,11 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive {
 
     virtual void reset();
     void reload();
+
+  private:
+    /** make a copy of the DataScalar */
+    virtual PrimitivePtr _makeDuplicate() const;
+    virtual bool _checkValidity(const DataSourcePtr ds) const;
 };
 
 typedef SharedPtr<DataScalar> DataScalarPtr;

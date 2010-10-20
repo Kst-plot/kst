@@ -47,7 +47,7 @@ class KSTMATH_EXPORT DataObject : public Object
     Q_OBJECT
 
   public:
-    enum Kind { Generic, Primitive, Fit, Filter };
+    //enum Kind { GenericPlugin, PrimitivePlugin, FitPlugin, FilterPlugin };
 
     virtual void attach();
 
@@ -71,7 +71,6 @@ class KSTMATH_EXPORT DataObject : public Object
     virtual const QString& typeString() const { return _typeString; }
     virtual QString propertyString() const = 0;
     virtual const QString& type() const { return _type; }
-    virtual Kind kind() const { return Generic; }
 
     virtual int sampleCount() const { return 0; }
 
@@ -97,6 +96,9 @@ class KSTMATH_EXPORT DataObject : public Object
     MatrixMap& inputMatrices() { return _inputMatrices; }
     MatrixMap& outputMatrices() { return _outputMatrices; }
 
+    virtual PrimitiveList inputPrimitives() const;
+    PrimitiveList outputPrimitives() const;
+
     virtual void load(const QXmlStreamReader& s);
     virtual void save(QXmlStreamWriter& s);
 
@@ -112,13 +114,9 @@ class KSTMATH_EXPORT DataObject : public Object
 
     virtual void deleteDependents();
 
-    bool duplicateDependents(DataObjectPtr newObject, QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations);
+    virtual DataObjectPtr makeDuplicate() const = 0;
 
-    virtual DataObjectPtr makeDuplicate() = 0;
-
-    virtual void replaceDependency(DataObjectPtr oldObject, DataObjectPtr newObject);
-    virtual void replaceDependency(VectorPtr oldVector, VectorPtr newVector);
-    virtual void replaceDependency(MatrixPtr oldMatrix, MatrixPtr newMatrix);
+    virtual void replaceInput(PrimitivePtr p, PrimitivePtr new_p);
 
     virtual bool uses(ObjectPtr p) const;
 
@@ -168,7 +166,7 @@ class KSTMATH_EXPORT DataObject : public Object
     virtual qint64 minInputSerial() const;
     virtual qint64 minInputSerialOfLastChange() const;
 
-  private:
+  private:    
     QString _name;
     QString _author;
     QString _description;

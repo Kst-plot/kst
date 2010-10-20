@@ -619,8 +619,8 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
 
   } else if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(matrix)) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
-    _matrixTab->setFile(dataMatrix->dataSource()->fileName());
-    _matrixTab->setDataSource(dataMatrix->dataSource());
+    _matrixTab->setFile(dataMatrix->dp()->dataSource()->fileName());
+    _matrixTab->setDataSource(dataMatrix->dp()->dataSource());
     _matrixTab->setField(dataMatrix->field());
     _matrixTab->setXStartCountFromEnd(dataMatrix->xCountFromEnd());
     _matrixTab->setYStartCountFromEnd(dataMatrix->yCountFromEnd());

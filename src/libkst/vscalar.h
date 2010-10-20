@@ -69,9 +69,6 @@ class KSTCORE_EXPORT VScalar : public Scalar {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** make a copy of the VScalar */
-    SharedPtr<VScalar> makeDuplicate() const;
-
     /** the data source */
     DataSourcePtr dataSource() const;
 
@@ -90,6 +87,11 @@ class KSTCORE_EXPORT VScalar : public Scalar {
     QString _field;
 
     int _f0;
+
+    /** make a copy of the VScalar */
+    virtual PrimitivePtr _makeDuplicate() const;
+    virtual bool _checkValidity(const DataSourcePtr ds) const;
+
 };
 
 typedef SharedPtr<VScalar> VScalarPtr;

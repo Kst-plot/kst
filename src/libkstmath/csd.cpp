@@ -324,7 +324,7 @@ void CSD::setRateUnits(const QString& units) {
 }
 
 
-DataObjectPtr CSD::makeDuplicate() {
+DataObjectPtr CSD::makeDuplicate() const{
 
   CSDPtr csd = store()->createObject<CSD>();
   csd->change(_inputVectors[INVECTOR],

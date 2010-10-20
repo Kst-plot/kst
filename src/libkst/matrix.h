@@ -15,8 +15,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <QHash>
-
 #include "scalar.h"
 #include "vector.h"
 #include "primitive.h"
@@ -107,9 +105,6 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     // save the matrix
     virtual void save(QXmlStreamWriter &s);
 
-    // the statistics scalars for this matrix
-    const QHash<QString, ScalarPtr>& scalars() const;
-
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
     void setXLabel(const QString& newLabel);
@@ -143,6 +138,14 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     virtual void internalUpdate();
 
     double Z(int i) const {return _z[i];}
+
+    // output primitives: statistics scalars, etc.
+    VectorMap vectors() const {return _vectors;}
+    ScalarMap scalars() const {return _scalars;}
+    StringMap strings() const {return _strings;}
+
+    virtual ObjectList<Primitive> outputPrimitives() const;
+
   protected:
     int _NS;
     int _NRealS; // number of samples with real values
@@ -156,9 +159,6 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     bool _invertYHint;
 
     int _numNew; // number of new samples
-
-    ScalarMap _scalars;
-    VectorMap _vectors;
 
     bool _editable : 1;
     bool _saveable : 1;
@@ -184,6 +184,11 @@ class KSTCORE_EXPORT Matrix : public Primitive {
 
     // returns -1 if (x,y) is out of bounds
     int zIndex(int x, int y) const;
+
+    ObjectMap<Scalar> _scalars;
+    ObjectMap<Vector> _vectors;
+    ObjectMap<String> _strings;
+
 
 };
 

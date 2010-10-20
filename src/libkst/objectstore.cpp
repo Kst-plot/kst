@@ -127,68 +127,6 @@ void ObjectStore::rebuildDataSourceList() {
   }
 }
 
-#if 0
-void ObjectStore::rebuildDataSourceList() {
-  DataSourceList dataSourceList;
-
-  for (int i=0; i<_list.count(); i++) {
-    if (DataVectorPtr object_V = kst_cast<DataVector>(_list.at(i))) {
-      DataSourcePtr dataSource;
-      object_V->readLock();
-      dataSource = object_V->dataSource();
-      object_V->unlock();
-
-      if (!dataSourceList.contains(dataSource)) {
-        object_V->writeLock();
-        object_V->reload();
-        object_V->unlock();
-        dataSourceList.append(dataSource);
-      }
-    } else if (DataStringPtr object_T = kst_cast<DataString>(_list.at(i))) {
-      DataSourcePtr dataSource;
-      object_T->readLock();
-      dataSource = object_T->dataSource();
-      object_T->unlock();
-
-      if (!dataSourceList.contains(dataSource)) {
-        object_T->writeLock();
-        object_T->reload();
-        object_T->unlock();
-        dataSourceList.append(dataSource);
-      }
-    } else if (DataScalarPtr object_X = kst_cast<DataScalar>(_list.at(i))) {
-      DataSourcePtr dataSource;
-      object_X->readLock();
-      dataSource = object_X->dataSource();
-      object_X->unlock();
-
-      if (!dataSourceList.contains(dataSource)) {
-        object_X->writeLock();
-        object_X->reload();
-        object_X->unlock();
-        dataSourceList.append(dataSource);
-      }
-    } else if (DataMatrixPtr object_M = kst_cast<DataMatrix>(_list.at(i))) {
-      DataSourcePtr dataSource;
-      object_M->readLock();
-      dataSource = object_M->dataSource();
-      object_M->unlock();
-
-      if (!dataSourceList.contains(dataSource)) {
-        object_M->writeLock();
-        object_M->reload();
-        object_M->unlock();
-        dataSourceList.append(dataSource);
-      }
-    }
-  }
-
-  dataSourceList.clear();
-
-  cleanUpDataSourceList();
-}
-#endif
-
 void ObjectStore::cleanUpDataSourceList() {
   DataSourceList currentSourceList;
 
