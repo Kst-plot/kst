@@ -255,7 +255,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 
   int bufread;
   bool new_data = false;
-  bool first_read = (_numFrames == 0);
+  //bool first_read = (_numFrames == 0);
 
   QByteArray delbytes = _config._delimiters.value().toLatin1();
   const char *del = delbytes.constData();
@@ -302,7 +302,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
         has_dat = true;
       }
     }
-  } while ((bufread == MAXBUFREADLEN) && (!first_read));
+  } while ((bufread == MAXBUFREADLEN)); // && (!first_read));
 
   return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
