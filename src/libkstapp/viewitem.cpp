@@ -1799,7 +1799,14 @@ if (change == ItemSelectedChange) {
 
 void ViewItem::moveTo(const QPointF& pos)
 {
-  setPos(view()->snapPoint(pos));
+
+  QPointF newpos = view()->snapPoint(pos);
+
+  if (parentViewItem()) {
+    newpos -= parentViewItem()->scenePos();
+  }
+
+  setPos(newpos);
   new MoveCommand(this, _originalPosition, pos);
   updateViewItemParent();
   updateRelativeSize();
@@ -1819,7 +1826,6 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 #endif
   } else if (oldMode == View::Resize && _originalRect != rect()) {
     new ResizeCommand(this, _originalRect, rect());
-
     updateViewItemParent();
   } else if (oldMode == View::Scale && _originalTransform != transform()) {
     new ScaleCommand(this, _originalTransform, transform());
