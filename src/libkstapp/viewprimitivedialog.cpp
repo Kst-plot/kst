@@ -26,6 +26,11 @@ ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc, Primiti
   : QDialog(parent), _doc(doc), _type(type) {
   _model = 0;
   setupUi(this);
+  if (_type == Scalar) {
+    setWindowTitle(tr("View Scalar Values"));
+  } else if (_type == String) {
+    setWindowTitle(tr("View String Values"));
+  }
   refresh();
 
   setAttribute(Qt::WA_DeleteOnClose);
