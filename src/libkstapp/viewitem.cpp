@@ -947,8 +947,11 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
 
   QPixmap pixmap(sceneBoundingRect().size().toSize());
   pixmap.fill(Qt::white);
+  // Qt::transparent is maybe too expensive, and when 
+  // not moving a plot it also has no transparent background
+  //pixmap.fill(Qt::transparent);
   QPainter painter(&pixmap);
-  paint(&painter); // TODO also paint curves
+  paint(&painter); // TODO also paint annotations
   QList<QGraphicsItem*> children = childItems();
   foreach(QGraphicsItem* child, children) {
     ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
@@ -956,10 +959,9 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
       item->paint(&painter);
     }
   }
-
   painter.end();
-  pixmap.setMask(pixmap.createHeuristicMask());
-  drag->setPixmap(pixmap.scaled(pixmap.size()));
+
+  drag->setPixmap(pixmap);
   drag->setHotSpot(hotspot.toPoint());
 
   hide();
