@@ -16,6 +16,7 @@
 
 #include <QHash>
 #include <QPushButton>
+#include <QStackedWidget>
 
 namespace Kst {
 
@@ -23,7 +24,9 @@ Dialog::Dialog(QWidget *parent)
   : QDialog(parent), _allowApply(false) {
 
   setupUi(this);
-
+  _stackedWidget = new QStackedWidget;
+  _scrollArea->setWidget(_stackedWidget);
+  _scrollArea->setWidgetResizable(true);
   _saveAsDefault->hide();
 
   extensionWidget()->hide();

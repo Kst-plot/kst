@@ -19,8 +19,9 @@
 
 #include "ui_dialog.h"
 
-template<class Key, class Value>
-class QHash;
+template<class Key, class Value> class QHash;
+class QStackedWidget;
+
 
 namespace Kst {
 
@@ -65,6 +66,7 @@ class Dialog : public QDialog, public Ui::Dialog
 
     QHash<QListWidgetItem*, DialogPage*> _itemHash;
     bool _allowApply;
+    QStackedWidget* _stackedWidget;
 };
 
 }
