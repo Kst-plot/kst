@@ -137,6 +137,15 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   foreach(PlotItem* plot, list) {
     addMultipleEditOption(plot->plotName(), plot->descriptionTip(), plot->shortName());
   }
+  
+  QList<QList<QListWidgetItem*> > moveItems;
+  moveItems << _listWidget->findItems("Appearance", Qt::MatchFixedString);
+  moveItems << _listWidget->findItems("Dimensions", Qt::MatchFixedString);
+  foreach(const QList<QListWidgetItem*>& found, moveItems) {
+    if (found.size() > 0) {
+      _listWidget->addItem(_listWidget->takeItem(_listWidget->row(found.first())));
+    }
+  }
 
   selectDialogPage(contentsPage);
   _saveAsDefault->show();
