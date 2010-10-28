@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>400</height>
+    <width>421</width>
+    <height>299</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,12 +18,6 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>800</width>
-    <height>400</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -121,27 +115,15 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QScrollArea" name="_scrollArea">
+       <widget class="QStackedWidget" name="_stackedWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>2</horstretch>
+          <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
-        <property name="midLineWidth">
+        <property name="currentIndex">
          <number>-1</number>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
         </property>
        </widget>
       </widget>
