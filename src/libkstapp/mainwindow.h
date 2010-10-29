@@ -29,6 +29,7 @@ class DataManager;
 class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
+class LogDialog;
 class DifferentiateCurvesDialog;
 class ChooseColorDialog;
 class ChangeDataSampleDialog;
@@ -59,6 +60,7 @@ class MainWindow : public QMainWindow
     void showDataManager();
     void showDebugDialog();
     void showExportGraphicsDialog();
+    void showLogDialog();
     void showVectorEditor();
     void showScalarEditor();
     void showMatrixEditor();
@@ -91,6 +93,9 @@ class MainWindow : public QMainWindow
     void printToPrinter(QPrinter *printer);
     void printFromCommandLine(const QString &printFileName);
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
+    void exportLog(const QString &imagename, QString &msgfilename, const QString &_format, int x_size, int y_size,
+              int size_option_index, const QString &message);
+
 
     void clearDrawingMarker();
     void tiedZoomRemoved();
@@ -155,6 +160,7 @@ class MainWindow : public QMainWindow
     DataManager *_dataManager;
     DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
+    LogDialog *_logDialog;
     DifferentiateCurvesDialog *_differentiateCurvesDialog;
     ChooseColorDialog *_chooseColorDialog;
     ChangeDataSampleDialog *_changeDataSampleDialog;
@@ -208,6 +214,7 @@ class MainWindow : public QMainWindow
     QAction *_debugDialogAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
+    QAction *_logAct;
     QAction *_openAct;    
     QAction *_saveAct;
     QAction *_saveAsAct;

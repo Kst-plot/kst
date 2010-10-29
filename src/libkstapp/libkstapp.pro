@@ -89,6 +89,7 @@ SOURCES += aboutdialog.cpp \
     legenditemdialog.cpp \
     legendtab.cpp \
     lineitem.cpp \
+    logdialog.cpp \
     logwidget.cpp \
     mainwindow.cpp \
     markerstab.cpp \
@@ -195,6 +196,7 @@ HEADERS += aboutdialog.h \
     legenditemdialog.h \
     legendtab.h \
     lineitem.h \
+    logdialog.cpp\
     logwidget.h \
     mainwindow.h \
     markerstab.h \
@@ -233,7 +235,8 @@ HEADERS += aboutdialog.h \
     viewmatrixdialog.h \
     viewprimitivedialog.h \
     viewvectordialog.h \
-    pluginmenuitemaction.h
+    pluginmenuitemaction.h \
+    logdialog.h
 FORMS += aboutdialog.ui \
     arrowpropertiestab.ui \
     axistab.ui \
@@ -272,6 +275,7 @@ FORMS += aboutdialog.ui \
     labelpropertiestab.ui \
     layouttab.ui \
     legendtab.ui \
+    logdialog.ui \
     markerstab.ui \
     matrixtab.ui \
     powerspectrumtab.ui \

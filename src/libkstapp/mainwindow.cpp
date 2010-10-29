@@ -18,6 +18,7 @@
 #include "document.h"
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
+#include "logdialog.h"
 #include "application.h"
 #include "debug.h"
 #include "labelitem.h"
@@ -64,6 +65,7 @@ namespace Kst {
 MainWindow::MainWindow() :
     _dataManager(0),
     _exportGraphics(0),
+    _logDialog(0),
     _differentiateCurvesDialog(0),
     _chooseColorDialog(0),
     _changeDataSampleDialog(0),
@@ -357,6 +359,54 @@ void MainWindow::exportGraphicsFile(
     imageWriter.write(image);
     viewCount++;
   }
+}
+
+void MainWindow::exportLog(const QString &imagename, QString &msgfilename, const QString &format, int x_size, int y_size,
+                           int size_option_index, const QString &message) {
+  View *view = _tabWidget->currentView();
+
+  QSize size;
+  if (size_option_index == 0) {
+    size.setWidth(x_size);
+    size.setHeight(y_size);
+  } else if (size_option_index == 1) {
+    size.setWidth(x_size);
+    size.setHeight(y_size);
+  } else if (size_option_index == 2) {
+    QSize sizeWindow(view->geometry().size());
+
+    size.setWidth(x_size);
+    size.setHeight((int)((double)x_size * (double)sizeWindow.height() / (double)sizeWindow.width()));
+  } else {
+    QSize sizeWindow(view->geometry().size());
+
+    size.setHeight(y_size);
+    size.setWidth((int)((double)y_size * (double)sizeWindow.width() / (double)sizeWindow.height()));
+  }
+
+  QImage image(size, QImage::Format_ARGB32);
+
+  QPainter painter(&image);
+  QSize currentSize(view->size());
+  view->resize(size);
+  view->processResize(size);
+  view->setPrinting(true);
+  view->render(&painter);
+  view->setPrinting(false);
+  view->resize(currentSize);
+  view->processResize(currentSize);
+
+  QImageWriter imageWriter(imagename, format.toLatin1());
+  imageWriter.write(image);
+
+  QFile file(msgfilename);
+
+  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QTextStream out(&file);
+    out << message;
+    file.close();
+  }
+
 }
 
 void MainWindow::printToPrinter(QPrinter *printer) {
@@ -717,6 +767,11 @@ void MainWindow::createActions() {
   _exportGraphicsAct->setIcon(QPixmap(":document-export.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
+  _logAct = new QAction(tr("&Log Entry..."), this);
+  _logAct->setStatusTip(tr("Commit a log entry"));
+  _logAct->setIcon(QPixmap(":document-export.png"));
+  connect(_logAct, SIGNAL(triggered()), this, SLOT(showLogDialog()));
+
   _newTabAct = new QAction(tr("&New Tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(QPixmap(":tab-new.png"));
@@ -1009,6 +1064,7 @@ void MainWindow::createMenus() {
   // Print/export
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);
+  _fileMenu->addAction(_logAct);
   _fileMenu->addSeparator();
   // Tabs
   _fileMenu->addAction(_newTabAct);
@@ -1132,6 +1188,7 @@ void MainWindow::createToolBars() {
   _fileToolBar->addAction(_saveAct);
   _fileToolBar->addAction(_reloadAct);
   _fileToolBar->addAction(_printAct);
+  _fileToolBar->addAction(_logAct);
 
   _editToolBar = addToolBar(tr("Edit"));
   _editToolBar->setObjectName("Edit Toolbar");
@@ -1404,6 +1461,20 @@ void MainWindow::showExportGraphicsDialog() {
     _exportGraphics->activateWindow();
   }
   _exportGraphics->show();
+}
+
+
+void MainWindow::showLogDialog() {
+  if (!_logDialog) {
+    _logDialog = new LogDialog(this);
+    //connect(_logDialog, SIGNAL(exportLog(const QString &, time_t, const QString &, int, int, int, const QString &)),
+    //        this, SLOT(exportLog(const QString &, time_t, const QString &, int, int, int, const QString &)));
+  }
+  if (_logDialog->isVisible()) {
+    _logDialog->raise();
+    _logDialog->activateWindow();
+  }
+  _logDialog->show();
 }
 
 

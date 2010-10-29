@@ -86,6 +86,8 @@ void FileRequester::chooseFile() {
   QString file;
   if (_mode == QFileDialog::ExistingFile) {
     file = QFileDialog::getOpenFileName(this, tr("Open File"), _file, tr("All Files (*)"));
+  } else if (_mode == QFileDialog::Directory) {
+    file = QFileDialog::getExistingDirectory(this, tr("Logfile Directory"), _file);
   } else {
     file = QFileDialog::getSaveFileName(this, tr("Save File"), _file, tr("All Files (*)"));
   }
