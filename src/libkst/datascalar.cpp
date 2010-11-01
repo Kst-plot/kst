@@ -44,7 +44,13 @@ DataScalar::~DataScalar() {
 
 QString DataScalar::_automaticDescriptiveName() const {
   QString name = _dp->_field;
-  return name.replace('_', "\\_");
+
+  // un-escape escaped special characters so they aren't escaped 2x.
+  name.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  // now escape the special characters.
+  name.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+
+  return name;
 }
 
 

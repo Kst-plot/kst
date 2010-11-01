@@ -49,6 +49,8 @@ QString NamedObject::Name() const {
 QString NamedObject::CleanedName() const {
   QString clean_name = Name();
   clean_name.replace("\\_","_");
+  clean_name.replace("\\[","[");
+  clean_name.replace("\\]","]");
 
   return clean_name;
 }

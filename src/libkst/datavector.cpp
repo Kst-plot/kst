@@ -321,7 +321,10 @@ QString DataVector::label() const {
     }
   } else {
     label = _dp->_field;
-    label.replace('_', "\\_");
+    // un-escape escaped special characters so they aren't escaped 2x.
+    label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+    // now escape the special characters.
+    label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
   }
 
   return label;
@@ -723,7 +726,11 @@ PrimitivePtr DataVector::_makeDuplicate() const {
 QString DataVector::_automaticDescriptiveName() const {
   QString name;
   name = _dp->_field;
-  return name.replace('_', "\\_");
+  // un-escape escaped special characters so they aren't escaped 2x.
+  name.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  // now escape the special characters.
+  name.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+  return name;
 }
 
 QString DataVector::descriptionTip() const {

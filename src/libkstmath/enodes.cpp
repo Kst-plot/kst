@@ -792,13 +792,18 @@ Kst::Object::UpdateType DataNode::update(Context *ctx) {
 }
 
 
+// Hack alert: [ and ] in names confuse the parser, so strip them out.
 QString DataNode::text() const {
   if (_isEquation) {
     return QString("[=") + _tagName + ']';
   } else if (_vector) {
-    return QString('[') + _vector->Name() + QString(']');
+    QString Name = _vector->Name();
+    Name.remove("\\[").remove("\\]");
+    return QString('[') + Name.remove('[').remove(']') + QString(']');
   } else if (_scalar) {
-    return QString('[') + _scalar->Name() + QString(']');
+    QString Name = _scalar->Name();
+    Name.remove("\\[").remove("\\]");
+    return QString('[') + Name.remove('[').remove(']') + QString(']');
   } else {
     return QString();
   }
