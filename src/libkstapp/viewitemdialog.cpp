@@ -37,6 +37,15 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   setWindowTitle(tr("Edit View Item"));
 
+  // semi-hack: set the width of the list widget to 15 characters, which is enough
+  // to say "X-Axis Markers" in english.  This is better than setting it to a fixed
+  // number of pixels, as it scales with font size or screen resolution, but
+  // it won't necessairly survive translations, or someone adding a option like
+  // "Do something super important", which has more than 15 characters.
+  // We have to do it here, before the layout is set, and we don't yet know how
+  // what is going into the listWidget.
+  _listWidget->setMinimumWidth(_listWidget->fontMetrics().averageCharWidth()*15);
+
   QWidget *extension = extensionWidget();
 
   QVBoxLayout *extensionLayout = new QVBoxLayout(extension);
