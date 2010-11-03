@@ -15,6 +15,9 @@
 
 #include "mainwindow.h"
 
+#include <time.h>
+
+
 namespace Kst {
 
 LogDialog::LogDialog(MainWindow *parent)
