@@ -455,30 +455,13 @@ void DataManager::setUsedFlags() {
   foreach (DataObjectPtr object, dataObjectList) {
     object->readLock();
     //set used all input and output primitives
-    foreach (VectorPtr v, object->inputVectors()) {
-      v->setUsed(true);
+    foreach (PrimitivePtr p, object->inputPrimitives()) {
+      p->setUsed(true);
     }
-    foreach (VectorPtr v, object->outputVectors()) {
-      v->setUsed(true);
+    foreach (PrimitivePtr p, object->outputPrimitives()) {
+      p->setUsed(true);
     }
-    foreach (ScalarPtr s, object->inputScalars()) {
-      s->setUsed(true);
-    }
-    foreach (ScalarPtr s, object->outputScalars()) {
-      s->setUsed(true);
-    }
-    foreach (StringPtr s, object->inputStrings()) {
-      s->setUsed(true);
-    }
-    foreach (StringPtr s, object->outputStrings()) {
-      s->setUsed(true);
-    }
-    foreach (MatrixPtr m, object->inputMatrices()) {
-      m->setUsed(true);
-    }
-    foreach (MatrixPtr m, object->outputMatrices()) {
-      m->setUsed(true);
-    }
+
     object->unlock();
   }
 }
