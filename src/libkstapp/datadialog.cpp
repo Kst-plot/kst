@@ -182,11 +182,24 @@ void DataDialog::updateApplyButton() {
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_modified);
 }
 
+void DataDialog::editMultiple(const QList<ObjectPtr> &objects) {
+  slotEditMultiple();
+
+  QStringList names;
+  int n = objects.count();
+  for (int i = 0; i < n; i++) {
+    names.append(objects.at(i)->Name());
+  }
+
+  _editMultipleWidget->selectObjects(names);
+}
 
 void DataDialog::slotEditMultiple() {
+  int charWidth = fontMetrics().averageCharWidth();
+
   int currentWidth = width();
   int extensionWidth = extensionWidget()->width();
-  if (extensionWidth<204) extensionWidth = 204; // FIXME: magic number hack...
+  if (extensionWidth<charWidth*20) extensionWidth = charWidth*25; // FIXME: magic number hack...
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
   if (!extensionWidget()->isVisible()) {
     _tagString->setVisible(true);
@@ -199,6 +212,7 @@ void DataDialog::slotEditMultiple() {
     _editMultipleButton->setText(tr("Edit Multiple >>"));
     emit editSingleMode();
   } else {
+    if (currentWidth<charWidth*50) currentWidth = charWidth*80; // FIXME: magic number hack...
     _tagString->setVisible(false);
     _shortName->setVisible(false);
     _tagStringAuto->setVisible(false);

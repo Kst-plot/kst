@@ -112,12 +112,26 @@ void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
 }
 
 
+void DialogLauncherGui::showMultiCurveDialog(QList<ObjectPtr> curves) {
+  CurveDialog *dialog = new CurveDialog(curves.at(0), kstApp->mainWindow());
+  dialog->show();
+  dialog->editMultiple(curves);
+}
+
+
 void DialogLauncherGui::showImageDialog(ObjectPtr objectPtr, MatrixPtr matrix) {
   ImageDialog *dialog = new ImageDialog(objectPtr, kstApp->mainWindow());
   if (matrix) {
     dialog->setMatrix(matrix);
   }
   dialog->show();
+}
+
+
+void DialogLauncherGui::showMultiImageDialog(QList<ObjectPtr> images) {
+  ImageDialog *dialog = new ImageDialog(images.at(0), kstApp->mainWindow());
+  dialog->show();
+  dialog->editMultiple(images);
 }
 
 
@@ -187,6 +201,15 @@ void DialogLauncherGui::showBasicPluginDialog(QString pluginName, ObjectPtr obje
   }
 }
 
+void DialogLauncherGui::showMultiObjectDialog(QList<ObjectPtr> objects) {
+  if (objects.count() > 0) {
+    if (CurvePtr curve = kst_cast<Curve>(objects.at(0))) {
+      DialogLauncher::self()->showMultiCurveDialog(objects);
+    } else if (ImagePtr image = kst_cast<Image>(objects.at(0))) {
+      DialogLauncher::self()->showMultiImageDialog(objects);
+    }
+  }
+}
 
 void DialogLauncherGui::showObjectDialog(ObjectPtr objectPtr) {
   if (CurvePtr curve = kst_cast<Curve>(objectPtr)) {

@@ -68,7 +68,7 @@ void EditMultipleWidget::addObject(QString name, QString descriptionTip) {
   _objectList->addItem(wi);
 }
 
-QStringList EditMultipleWidget::selectedObjects() {
+QStringList EditMultipleWidget::selectedObjects() const{
   QStringList objects;
   QList<QListWidgetItem *> selectedItems = _objectList->selectedItems();
   foreach (QListWidgetItem *item, selectedItems) {
@@ -77,6 +77,17 @@ QStringList EditMultipleWidget::selectedObjects() {
   return objects;
 }
 
+void EditMultipleWidget::selectObjects(const QStringList &objects) {
+  int n = _objectList->count();
+  for (int i=0; i<n; i++) {
+    QListWidgetItem *item = _objectList->item(i);
+    if (item) {
+      if (objects.contains(item->text())) {
+        item->setSelected(true);
+      }
+    }
+  }
+}
 }
 
 // vim: ts=2 sw=2 et

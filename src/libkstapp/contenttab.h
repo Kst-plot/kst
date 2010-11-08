@@ -25,7 +25,7 @@ class ObjectStore;
 class ContentTab : public DialogTab, Ui::ContentTab {
   Q_OBJECT
   public:
-    ContentTab(QWidget *parent = 0);
+    ContentTab(QWidget *parent, ObjectStore* store);
     virtual ~ContentTab();
 
     void setDisplayedRelations(QStringList displayedRelations, QStringList displayedRelationTips);
@@ -44,6 +44,8 @@ class ContentTab : public DialogTab, Ui::ContentTab {
     void downButtonClicked();
     void availableDoubleClicked(QListWidgetItem * item);
     void displayedDoubleClicked(QListWidgetItem * item);
+    void editSelectedAvailable();
+    void editSelectedDisplayed();
 };
 
 }

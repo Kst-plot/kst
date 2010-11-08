@@ -46,7 +46,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   setWindowTitle(tr("Edit Plot Item"));
 
-  _contentTab = new ContentTab(this);
+  _contentTab = new ContentTab(this, _store);
   connect(_contentTab, SIGNAL(apply()), this, SLOT(contentChanged()));
   DialogPage *contentsPage = new DialogPage(this);
   contentsPage->setPageTitle(tr("Contents"));

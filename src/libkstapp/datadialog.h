@@ -40,6 +40,8 @@ class DataDialog : public Dialog {
     void addDataTab(DataTab *tab);
     QString dataObjectName() const;
 
+    void editMultiple(const QList<ObjectPtr> &objects);
+
   protected:
     virtual QString tagString() const;
     void setTagString(const QString &tagString);
@@ -57,9 +59,11 @@ class DataDialog : public Dialog {
     EditMultipleWidget *_editMultipleWidget;
     QString _dataObjectName;
 
+  public Q_SLOTS:
+    void slotEditMultiple();
+
   private Q_SLOTS:
     void slotApply();
-    void slotEditMultiple();
     void modified();
     void clearModified();
 

@@ -53,8 +53,10 @@ class KSTMATH_EXPORT DialogLauncher : public QObject {
 
     //standard objects
     virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0) = 0;
+    virtual void showMultiCurveDialog(QList<ObjectPtr> curves) = 0;
 
     virtual void showImageDialog(ObjectPtr objectPtr = 0, MatrixPtr matrix = 0) = 0;
+    virtual void showMultiImageDialog(QList<ObjectPtr> images) = 0;
 
     //standard data objects
     virtual void showEquationDialog(ObjectPtr objectPtr = 0) = 0;
@@ -72,6 +74,9 @@ class KSTMATH_EXPORT DialogLauncher : public QObject {
 
     //show appropriate dialog
     virtual void showObjectDialog(ObjectPtr objectPtr = 0) = 0;
+
+    virtual void showMultiObjectDialog(QList<ObjectPtr> names) = 0;
+
 };
 
 }

@@ -35,8 +35,10 @@ class DialogLauncherGui : public DialogLauncher {
 
     //standard objects
     virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
+    virtual void showMultiCurveDialog(QList<ObjectPtr> curves);
 
     virtual void showImageDialog(ObjectPtr objectPtr = 0, MatrixPtr matrix = 0);
+    virtual void showMultiImageDialog(QList<ObjectPtr> images);
 
     //standard data objects
     virtual void showEquationDialog(ObjectPtr objectPtr = 0);
@@ -54,6 +56,8 @@ class DialogLauncherGui : public DialogLauncher {
 
     //show appropriate dialog
     virtual void showObjectDialog(ObjectPtr objectPtr = 0);
+
+    virtual void showMultiObjectDialog(QList<ObjectPtr> objects);
 
 };
 

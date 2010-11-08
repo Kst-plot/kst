@@ -11,14 +11,17 @@
  ***************************************************************************/
 
 #include "contenttab.h"
+
 #include "objectstore.h"
+#include "relation.h"
+#include "dialoglauncher.h"
 
 #include <qdebug.h>
 
 namespace Kst {
 
-ContentTab::ContentTab(QWidget *parent)
-  : DialogTab(parent) {
+ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
+  : DialogTab(parent), _store(store) {
 
   setupUi(this);
 
@@ -46,12 +49,49 @@ ContentTab::ContentTab(QWidget *parent)
 
   connect(_availableRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_displayedRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+
+  connect(_editSelectedAvailable, SIGNAL(clicked()), this, SLOT(editSelectedAvailable()));
+  connect(_editSelectedDisplayed, SIGNAL(clicked()), this, SLOT(editSelectedDisplayed()));
 }
 
 
 ContentTab::~ContentTab() {
 }
 
+void ContentTab::editSelectedAvailable() {
+  QList<QListWidgetItem *> selected = _availableRelationList->selectedItems();
+
+  if (selected.count()>1) {
+    QList<ObjectPtr> objects;
+    int n = selected.count();
+    for (int i=0; i<n; i++) {
+      objects.append(_store->retrieveObject(selected.at(i)->text()));
+    }
+    DialogLauncher::self()->showMultiObjectDialog(objects);
+  } else if (selected.count() > 0) {
+    QString name = selected.at(0)->text();
+    RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(name));
+    DialogLauncher::self()->showObjectDialog(relation);
+  }
+}
+
+void ContentTab::editSelectedDisplayed() {
+  QList<QListWidgetItem *> selected = _displayedRelationList->selectedItems();
+
+
+  if (selected.count()>1) {
+    QList<ObjectPtr> objects;
+    int n = selected.count();
+    for (int i=0; i<n; i++) {
+      objects.append(_store->retrieveObject(selected.at(i)->text()));
+    }
+    DialogLauncher::self()->showMultiObjectDialog(objects);
+  } else if (selected.count() > 0) {
+    QString name = selected.at(0)->text();
+    RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(name));
+    DialogLauncher::self()->showObjectDialog(relation);
+  }
+}
 
 void ContentTab::updateButtons() {
 

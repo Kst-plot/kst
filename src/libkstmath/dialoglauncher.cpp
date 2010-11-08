@@ -82,10 +82,17 @@ void DialogLauncher::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(vector);
 }
 
+void DialogLauncher::showMultiCurveDialog(QList<ObjectPtr> curves) {
+  Q_UNUSED(curves);
+}
 
 void DialogLauncher::showImageDialog(ObjectPtr objectPtr, MatrixPtr matrix) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(matrix);
+}
+
+void DialogLauncher::showMultiImageDialog(QList<ObjectPtr> images) {
+  Q_UNUSED(images);
 }
 
 
@@ -128,6 +135,10 @@ void DialogLauncher::showBasicPluginDialog(QString pluginName, ObjectPtr objectP
 
 void DialogLauncher::showObjectDialog(ObjectPtr objectPtr) {
   Q_UNUSED(objectPtr);
+}
+
+void DialogLauncher::showMultiObjectDialog(QList<ObjectPtr> objects) {
+  Q_UNUSED(objects);
 }
 
 }
