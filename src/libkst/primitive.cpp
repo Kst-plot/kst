@@ -24,6 +24,7 @@
 #include "kst_i18n.h"
 #include "primitive.h"
 #include "updatemanager.h"
+#include "datasource.h"
 
 namespace Kst {
 
@@ -96,6 +97,11 @@ bool Primitive::used() const {
     return Object::used();
   }
 }
+
+bool Primitive::_checkValidity(const DataSourcePtr ds) const {
+  Q_UNUSED(ds) return true;
+}
+
 }
 
 // vim: et sw=2 ts=2

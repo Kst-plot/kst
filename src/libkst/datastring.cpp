@@ -61,10 +61,10 @@ const QString& DataString::typeString() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool DataString::isValid() const {
-  if (_dp->_file) {
-    _dp->_file->readLock();
-    bool rc = _dp->_file->string().isValid(_dp->_field);
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->readLock();
+    bool rc = _dp->dataSource()->string().isValid(_dp->_field);
+    _dp->dataSource()->unlock();
     return rc;
   }
   return false;
@@ -86,7 +86,7 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dp->_field = in_field;
-  _dp->_file = in_file;
+  _dp->dataSource() = in_file;
 }
 
 void DataString::changeFile(DataSourcePtr in_file) {
@@ -95,13 +95,13 @@ void DataString::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->_file = in_file;
+  _dp->dataSource() = in_file;
 }
 
 
 /** Save data string information */
 void DataString::save(QXmlStreamWriter &s) {
-  if (_dp->_file) {
+  if (_dp->dataSource()) {
     s.writeStartElement("datastring");
     _dp->saveFilename(s);
     s.writeAttribute("field", _dp->_field);
@@ -114,24 +114,24 @@ void DataString::save(QXmlStreamWriter &s) {
 
 /** Update a data String */
 void DataString::internalUpdate() {
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
     ReadInfo readInfo(&_value);
-    _dp->_file->string().read(_dp->_field, readInfo);
-    _dp->_file->unlock();
+    _dp->dataSource()->string().read(_dp->_field, readInfo);
+    _dp->dataSource()->unlock();
   }
 }
 
 qint64 DataString::minInputSerial() const {
-  if (_dp->_file) {
-    return (_dp->_file->serial());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 DataString::minInputSerialOfLastChange() const {
-  if (_dp->_file) {
-    return (_dp->_file->serialOfLastChange());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serialOfLastChange());
   }
   return LLONG_MAX;
 }
@@ -143,7 +143,7 @@ PrimitivePtr DataString::_makeDuplicate() const {
   DataStringPtr string = store()->createObject<DataString>();
 
   string->writeLock();
-  string->change(_dp->_file, _dp->_field);
+  string->change(_dp->dataSource(), _dp->_field);
   if (descriptiveNameIsManual()) {
     string->setDescriptiveName(descriptiveName());
   }
@@ -174,10 +174,10 @@ QString DataString::propertyString() const {
 void DataString::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
-    _dp->_file->reset();
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
+    _dp->dataSource()->reset();
+    _dp->dataSource()->unlock();
     reset();
     registerChange();
   }
@@ -185,7 +185,7 @@ void DataString::reload() {
 
 void DataString::reset() {
   ReadInfo readInfo(&_value);
-  _dp->_file->string().read(_dp->_field, readInfo);
+  _dp->dataSource()->string().read(_dp->_field, readInfo);
 }
 
 }

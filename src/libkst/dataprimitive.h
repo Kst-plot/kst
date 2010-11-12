@@ -65,8 +65,7 @@ public:
     //virtual bool isValid() const = 0;
 
     /** file to read */
-    QString _field;
-    DataSourcePtr _file;
+    QString _field;    
 
     PrimitivePtr makeDuplicate() const;
 

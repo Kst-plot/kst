@@ -93,10 +93,10 @@ const QString& DataVector::typeString() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool DataVector::isValid() const {
-  if (_dp->_file) {
-    _dp->_file->readLock();
-    bool rc = _dp->_file->vector().isValid(_dp->_field);
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->readLock();
+    bool rc = _dp->dataSource()->vector().isValid(_dp->_field);
+    _dp->dataSource()->unlock();
     return rc;
   }
   return false;
@@ -127,18 +127,18 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   }
 
   _dontUseSkipAccel = false;
-  _dp->_file = in_file;
+  _dp->dataSource() = in_file;
   ReqF0 = in_f0;
   ReqNF = in_n;
   _dp->_field = in_field;
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
   }
   reset();
   _resetFieldMetadata();
-  if (_dp->_file) {
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->unlock();
   }
 
   if (ReqNF <= 0 && ReqF0 < 0) {
@@ -148,15 +148,15 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
 }
 
 qint64 DataVector::minInputSerial() const {
-  if (_dp->_file) {
-    return (_dp->_file->serial());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 DataVector::minInputSerialOfLastChange() const {
-  if (_dp->_file) {
-    return (_dp->_file->serialOfLastChange());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serialOfLastChange());
   }
   return LLONG_MAX;
 }
@@ -168,13 +168,13 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->_file = in_file;
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  _dp->dataSource() = in_file;
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
   }
   reset();
-  if (_dp->_file) {
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->unlock();
   }
   registerChange();
 }
@@ -185,12 +185,12 @@ void DataVector::changeFrames(int in_f0, int in_n,
                               bool in_DoAve) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
   }
   reset();
-  if (_dp->_file) {
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->unlock();
   }
   Skip = in_skip;
   DoSkip = in_DoSkip;
@@ -281,7 +281,7 @@ int DataVector::reqStartFrame() const {
 
 /** Save vector information */
 void DataVector::save(QXmlStreamWriter &s) {
-  if (_dp->_file) {
+  if (_dp->dataSource()) {
     s.writeStartElement("datavector");
     _dp->saveFilename(s);
     s.writeAttribute("field", _dp->_field);
@@ -335,7 +335,7 @@ void DataVector::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dontUseSkipAccel = false;
-  if (_dp->_file) {
+  if (_dp->dataSource()) {
     SPF = dataInfo(_dp->_field).samplesPerFrame;
   }
   F0 = NF = 0;
@@ -359,7 +359,7 @@ void DataVector::checkIntegrity() {
 
   // if it looks like we have a new file, reset
   const DataInfo info = dataInfo(_dp->_field);
-  if (_dp->_file && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
+  if (_dp->dataSource() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
     reset();
   }
 
@@ -401,8 +401,8 @@ void DataVector::internalUpdate() {
   int new_f0, new_nf;
   bool start_past_eof = false;
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
   } else {
     return;
   }
@@ -590,8 +590,8 @@ void DataVector::internalUpdate() {
     NumShifted = _size;
   }
 
-  if (_dp->_file) {
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->unlock();
   }
 
   Vector::internalUpdate();
@@ -606,7 +606,7 @@ int DataVector::samplesPerFrame() const {
 
 int DataVector::fileLength() const {
 
-  if (_dp->_file) {
+  if (_dp->dataSource()) {
     int rc = dataInfo(_dp->_field).frameCount;
 
     return rc;
@@ -619,10 +619,10 @@ int DataVector::fileLength() const {
 void DataVector::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
-    _dp->_file->reset();
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
+    _dp->dataSource()->reset();
+    _dp->dataSource()->unlock();
     reset();
     _resetFieldMetadata();
     registerChange();
@@ -635,7 +635,7 @@ void DataVector::_resetFieldMetadata() {
 }
 
 void DataVector::_resetFieldStrings() {
-  const QMap<QString, QString> meta_strings = _dp->_file->vector().metaStrings(_dp->_field);
+  const QMap<QString, QString> meta_strings = _dp->dataSource()->vector().metaStrings(_dp->_field);
   
   QStringList fieldStringKeys = _fieldStrings.keys();
   // remove field strings that no longer need to exist
@@ -671,7 +671,7 @@ void DataVector::_resetFieldStrings() {
 
 
 void DataVector::_resetFieldScalars() {
-  const QMap<QString, double> meta_scalars = _dp->_file->vector().metaScalars(_dp->_field);
+  const QMap<QString, double> meta_scalars = _dp->dataSource()->vector().metaScalars(_dp->_field);
 
 
   QStringList fieldScalarKeys = _fieldScalars.keys();
@@ -712,7 +712,7 @@ PrimitivePtr DataVector::_makeDuplicate() const {
   DataVectorPtr vector = store()->createObject<DataVector>();
 
   vector->writeLock();
-  vector->change(_dp->_file, _dp->_field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
+  vector->change(_dp->dataSource(), _dp->_field, ReqF0, ReqNF, Skip, DoSkip, DoAve);
   if (descriptiveNameIsManual()) {
     vector->setDescriptiveName(descriptiveName());
   }
@@ -768,14 +768,14 @@ QString DataVector::propertyString() const {
 int DataVector::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead)
 {
   ReadInfo par = {v, s, n, skip, lastFrameRead};
-  return _dp->_file->vector().read(field, par);
+  return _dp->dataSource()->vector().read(field, par);
 }
 
 const DataVector::DataInfo DataVector::dataInfo(const QString& field) const
 {
-  _dp->_file->readLock();
-  const DataInfo info = _dp->_file->vector().dataInfo(field);
-  _dp->_file->unlock();
+  _dp->dataSource()->readLock();
+  const DataInfo info = _dp->dataSource()->vector().dataInfo(field);
+  _dp->dataSource()->unlock();
   return info;
 }
 

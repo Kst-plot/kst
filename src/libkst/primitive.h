@@ -82,7 +82,7 @@ class KSTCORE_EXPORT Primitive : public Object
     // cast to see if a primitive is a data primitive, check to see if _dp
     // has been allocated.  Only access the following through dp()->
     virtual SharedPtr<Primitive> _makeDuplicate() const {return 0;}
-    virtual bool _checkValidity(const DataSourcePtr ds) const {Q_UNUSED(ds) return true;}
+    virtual bool _checkValidity(const DataSourcePtr ds) const;
   public:
     DataPrimitive *dp() const {return _dp;}
 };

@@ -61,10 +61,10 @@ const QString& DataScalar::typeString() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool DataScalar::isValid() const {
-  if (_dp->_file) {
-    _dp->_file->readLock();
-    bool rc = _dp->_file->scalar().isValid(_dp->_field);
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->readLock();
+    bool rc = _dp->dataSource()->scalar().isValid(_dp->_field);
+    _dp->dataSource()->unlock();
     return rc;
   }
   return false;
@@ -84,7 +84,7 @@ void DataScalar::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dp->_field = in_field;
-  _dp->_file = in_file;
+  _dp->dataSource() = in_file;
 }
 
 void DataScalar::changeFile(DataSourcePtr in_file) {
@@ -93,13 +93,13 @@ void DataScalar::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->_file = in_file;
+  _dp->dataSource() = in_file;
 }
 
 
 /** Save data scalar information */
 void DataScalar::save(QXmlStreamWriter &s) {
-  if (_dp->_file) {
+  if (_dp->dataSource()) {
     s.writeStartElement("datascalar");
     _dp->saveFilename(s);
     s.writeAttribute("field", _dp->_field);
@@ -112,11 +112,11 @@ void DataScalar::save(QXmlStreamWriter &s) {
 
 /** Update a data Scalar */
 void DataScalar::internalUpdate() {
-  if (_dp->_file) {
-    _dp->_file->writeLock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
     ReadInfo readInfo(&_value);
-    _dp->_file->scalar().read(_dp->_field, readInfo);
-    _dp->_file->unlock();
+    _dp->dataSource()->scalar().read(_dp->_field, readInfo);
+    _dp->dataSource()->unlock();
   }
 }
 
@@ -126,7 +126,7 @@ PrimitivePtr DataScalar::_makeDuplicate() const {
   DataScalarPtr scalar = store()->createObject<DataScalar>();
 
   scalar->writeLock();
-  scalar->change(_dp->_file, _dp->_field);
+  scalar->change(_dp->dataSource(), _dp->_field);
   if (descriptiveNameIsManual()) {
     scalar->setDescriptiveName(descriptiveName());
   }
@@ -138,15 +138,15 @@ PrimitivePtr DataScalar::_makeDuplicate() const {
 }
 
 qint64 DataScalar::minInputSerial() const {
-  if (_dp->_file) {
-    return (_dp->_file->serial());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 DataScalar::minInputSerialOfLastChange() const {
-  if (_dp->_file) {
-    return (_dp->_file->serialOfLastChange());
+  if (_dp->dataSource()) {
+    return (_dp->dataSource()->serialOfLastChange());
   }
   return LLONG_MAX;
 }
@@ -170,10 +170,10 @@ QString DataScalar::propertyString() const {
 void DataScalar::reload() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (_dp->_file) {
-    _dp->_file->writeLock();
-    _dp->_file->reset();
-    _dp->_file->unlock();
+  if (_dp->dataSource()) {
+    _dp->dataSource()->writeLock();
+    _dp->dataSource()->reset();
+    _dp->dataSource()->unlock();
     reset();
     registerChange();
   }
@@ -181,7 +181,7 @@ void DataScalar::reload() {
 
 void DataScalar::reset() {
     ReadInfo readInfo(&_value);
-    _dp->_file->scalar().read(_dp->_field, readInfo);
+    _dp->dataSource()->scalar().read(_dp->_field, readInfo);
 }
 
 }
