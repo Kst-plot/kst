@@ -235,9 +235,8 @@ class KSTCORE_EXPORT DataSource : public Object
     DataInterface<DataVector>* interf_vector;
     DataInterface<DataMatrix>* interf_matrix;
 
-    //QFileSystemWatcher *_watcher;
+    QFileSystemWatcher *_watcher;
 
-    int _watcher;
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };

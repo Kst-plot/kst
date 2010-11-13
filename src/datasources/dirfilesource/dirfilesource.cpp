@@ -19,7 +19,7 @@
 #include "kst_i18n.h"
 
 #include <QXmlStreamWriter>
-//#include <QFileSystemWatcher>
+#include <QFileSystemWatcher>
 #include <QDir>
 
 using namespace Kst;
