@@ -951,6 +951,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   // not moving a plot it also has no transparent background
   //pixmap.fill(Qt::transparent);
   QPainter painter(&pixmap);
+  painter.translate(-rect().left(), -rect().top());
   paint(&painter); // TODO also paint annotations
   QList<QGraphicsItem*> children = childItems();
   foreach(QGraphicsItem* child, children) {
@@ -962,7 +963,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   painter.end();
 
   drag->setPixmap(pixmap);
-  drag->setHotSpot(hotspot.toPoint());
+  drag->setHotSpot(hotspot.toPoint()- rect().topLeft().toPoint());
 
   hide();
   Qt::DropActions dact = Qt::MoveAction;

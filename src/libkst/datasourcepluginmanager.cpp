@@ -28,7 +28,7 @@
 #include <QUrl>
 #include <QXmlStreamWriter>
 #include <QTimer>
-#include <QFileSystemWatcher>
+//#include <QFileSystemWatcher>
 
 #include "kst_i18n.h"
 #include "datacollection.h"

@@ -30,7 +30,7 @@
 #include <QUrl>
 #include <QXmlStreamWriter>
 #include <QTimer>
-#include <QFileSystemWatcher>
+//#include <QFileSystemWatcher>
 #include <QFSFileEngine>
 
 #include "kst_i18n.h"
@@ -166,12 +166,14 @@ DataSource::~DataSource() {
 
 
 void DataSource::resetFileWatcher() {
+#if 0
   if (_watcher) {
     disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
     disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
     delete _watcher;
     _watcher = 0L;
   }
+#endif
 }
 
 
@@ -206,8 +208,9 @@ void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
 {
   _updateCheckType = updateType;
   resetFileWatcher();
-  if (_updateCheckType == Timer) {    
+  //if (_updateCheckType == Timer) {
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));
+#if 0
   } else if (_updateCheckType == File) {
     // TODO only works on local files:
     // http://bugreports.qt.nokia.com/browse/QTBUG-8351
@@ -218,6 +221,7 @@ void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
     connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
     connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
   } 
+#endif
 }
 
 
