@@ -69,9 +69,7 @@ void EquationTab::selectionChanged() {
 void EquationTab::equationUpdate(const QString& string) {
   QString cleanString = string;
   cleanString.remove('[').remove(']'); // HACK: '[' in descriptive names mess up parser.  Remove them.
-  QString equation = _equation->text();
-  equation += '[' + cleanString + ']';
-  _equation->setText(equation); 
+  _equation->insert('[' + cleanString + ']');
 }
 
 
