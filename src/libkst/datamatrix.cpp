@@ -548,7 +548,7 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _reqYStart = reqYStart;
   _reqNX = reqNX;
   _reqNY = reqNY;
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
   _field = field;
   _doAve = doAve;
   _doSkip = doSkip;
@@ -625,7 +625,7 @@ void DataMatrix::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
   if (_dp->dataSource()) {
     _dp->dataSource()->writeLock();
   }

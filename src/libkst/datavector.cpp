@@ -127,7 +127,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
   }
 
   _dontUseSkipAccel = false;
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
   ReqF0 = in_f0;
   ReqNF = in_n;
   _dp->_field = in_field;
@@ -168,7 +168,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
   if (_dp->dataSource()) {
     _dp->dataSource()->writeLock();
   }

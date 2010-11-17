@@ -86,7 +86,7 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _dp->_field = in_field;
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
 }
 
 void DataString::changeFile(DataSourcePtr in_file) {
@@ -95,7 +95,7 @@ void DataString::changeFile(DataSourcePtr in_file) {
   if (!in_file) {
     Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
   }
-  _dp->dataSource() = in_file;
+  _dp->setDataSource(in_file);
 }
 
 

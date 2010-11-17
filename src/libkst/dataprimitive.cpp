@@ -150,4 +150,8 @@ DataSourcePtr DataPrimitive::dataSource() const {
   return d._file;
 }
 
+void DataPrimitive::setDataSource(const DataSourcePtr& file) {
+  d._file = file;
+}
+
 }

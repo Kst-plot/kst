@@ -57,6 +57,7 @@ public:
 
     /** the data source */
     DataSourcePtr dataSource() const;
+    void setDataSource(const DataSourcePtr&);
 
     /** change the datasource */
     virtual void changeFile(DataSourcePtr file);
