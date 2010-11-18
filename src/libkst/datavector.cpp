@@ -136,7 +136,6 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
     _dp->dataSource()->writeLock();
   }
   reset();
-  _resetFieldMetadata();
   if (_dp->dataSource()) {
     _dp->dataSource()->unlock();
   }
