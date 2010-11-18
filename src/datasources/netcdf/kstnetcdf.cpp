@@ -147,8 +147,8 @@ public:
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
-  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
-  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+  QMap<QString, double> metaScalars(const QString&);
+  QMap<QString, QString> metaStrings(const QString&);
 
 
 private:
@@ -175,6 +175,44 @@ int DataInterfaceNetCdfVector::read(const QString& field, DataVector::ReadInfo& 
 bool DataInterfaceNetCdfVector::isValid(const QString& field) const
 {
   return  netcdf._fieldList.contains( field );
+}
+
+QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& field)
+{
+  QMap<QString, double> fieldScalars;
+  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  fieldScalars["NbAttributes"] = var->num_atts();
+  for (int i=0; i<var->num_atts(); ++i) {
+    NcAtt *att = var->get_att(i);
+    // Only handle char attributes as fieldStrings, the others as fieldScalars
+    if (att->type() == NC_BYTE || att->type() == NC_SHORT || att->type() == NC_INT
+        || att->type() == NC_LONG || att->type() == NC_FLOAT || att->type() == NC_DOUBLE) {
+      // Some attributes may have multiple values => load the first as is, and for the others
+      // add a -2, -3, etc... suffix as obviously we can have only one value per scalar.
+      // Do it in two steps to avoid a test in the loop while keeping a "clean" name for the first one
+      fieldScalars[QString(att->name())] = att->values()->as_double(0);
+      for (int j=1; j<att->values()->num(); ++j) {
+        fieldScalars[QString(att->name()) + QString("-") + QString::number(j+1)] = att->values()->as_double(j);
+      }
+    }
+  }
+  return fieldScalars;
+}
+
+QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& field)
+{
+  QMap<QString, QString> fieldStrings;
+  QString tmpString;
+  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  for (int i=0; i<var->num_atts(); ++i) {
+    NcAtt *att = var->get_att(i);
+    // Only handle char/unspecified attributes as fieldStrings, the others as fieldScalars
+    if (att->type() == NC_CHAR || att->type() == NC_UNSPECIFIED) {
+      fieldStrings[att->name()] = QString(att->values()->as_string(0));
+    }
+    // qDebug() << att->name() << ": " << att->values()->num() << endl;
+  }
+  return fieldStrings;
 }
 
 
