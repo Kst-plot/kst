@@ -27,6 +27,7 @@
 
 
 class DataInterfaceNetCdfScalar;
+class DataInterfaceNetCdfString;
 class DataInterfaceNetCdfVector;
 class DataInterfaceNetCdfMatrix;
 
@@ -45,6 +46,8 @@ class NetcdfSource : public Kst::DataSource {
 
 
     int readScalar(double *v, const QString& field);
+
+    int readString(QString *stringValue, const QString& stringName);
 
     int readField(double *v, const QString& field, int s, int n);
 
@@ -68,18 +71,21 @@ class NetcdfSource : public Kst::DataSource {
     int _maxFrameCount;
     NcFile *_ncfile;    
 
-    QMap<QString, QString> _metaData;
+    // QMap<QString, QString> _metaData;
 
     // TODO remove friend
     QStringList _scalarList;
     QStringList _fieldList;
     QStringList _matrixList;
+    QStringList _stringList;
 
 
     friend class DataInterfaceNetCdfScalar;
+    friend class DataInterfaceNetCdfString;
     friend class DataInterfaceNetCdfVector;
     friend class DataInterfaceNetCdfMatrix;
     DataInterfaceNetCdfScalar* is;
+    DataInterfaceNetCdfString* it;
     DataInterfaceNetCdfVector* iv;
     DataInterfaceNetCdfMatrix* im;
 };

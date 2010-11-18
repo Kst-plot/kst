@@ -79,6 +79,48 @@ bool DataInterfaceNetCdfScalar::isValid(const QString& scalar) const
 }
 
 
+//
+// String interface
+//
+
+class DataInterfaceNetCdfString : public DataSource::DataInterface<DataString>
+{
+public:
+  DataInterfaceNetCdfString(NetcdfSource& s) : netcdf(s) {}
+
+  // read one element
+  int read(const QString&, DataString::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return netcdf._stringList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  void setDataInfo(const QString&, const DataString::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  NetcdfSource& netcdf;
+};
+
+
+int DataInterfaceNetCdfString::read(const QString& string, DataString::ReadInfo& p)
+{
+  return netcdf.readString(p.value, string);
+}
+
+
+bool DataInterfaceNetCdfString::isValid(const QString& string) const
+{
+  return  netcdf._stringList.contains( string );
+}
+
 
 
 
@@ -217,10 +259,12 @@ NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   Kst::DataSource(store, cfg, filename, type),
   _ncfile(0L),
   is(new DataInterfaceNetCdfScalar(*this)),
+  it(new DataInterfaceNetCdfString(*this)),
   iv(new DataInterfaceNetCdfVector(*this)),
   im(new DataInterfaceNetCdfMatrix(*this))
-{
+  {
   setInterface(is);
+  setInterface(it);
   setInterface(iv);
   setInterface(im);
 
@@ -282,7 +326,7 @@ bool NetcdfSource::initFile() {
     }
   }
 
-  // Get metadata
+  // Get strings
   int globalAttributesNb = _ncfile->num_atts();
   for (int i = 0; i < globalAttributesNb; ++i) {
     // Get only first value, should be enough for a start especially as strings are complete
@@ -294,7 +338,7 @@ bool NetcdfSource::initFile() {
       delete[] attString;
       //TODO port
       //KstString *ms = new KstString(KstObjectTag(attrName, tag()), this, attrValue);
-      _metaData.insert(attrName, attrValue);
+      _stringList += attrName;
     }
     delete att;
   }
@@ -339,6 +383,17 @@ int NetcdfSource::readScalar(double *v, const QString& field)
   return 1;
 }
 
+int NetcdfSource::readString(QString *stringValue, const QString& stringName)
+{
+  // TODO more error handling?
+  NcAtt *att = _ncfile->get_att((NcToken) stringName.toLatin1().data());
+  if (att) {
+    *stringValue = QString(att->as_string(0));
+    return 1;
+  }
+  delete att;
+  return 0;
+}
 
 int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   NcType dataType = ncNoType; /* netCDF data type */
