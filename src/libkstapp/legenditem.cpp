@@ -404,9 +404,9 @@ QString LegendItem::_automaticDescriptiveName() const {
   QString name = i18n("Empty Legend");
   if (_auto) {
     name = _plotItem->descriptiveName();
-  } else if (_relations.length()>0) {
+  } else if (_relations.size()>0) {
     name = _relations.at(0)->descriptiveName();
-    if (_relations.length()>1) {
+    if (_relations.size()>1) {
       name += ", ...";
     }
   }

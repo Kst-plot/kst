@@ -287,6 +287,17 @@ class DataSourceList : public QList<DataSourcePtr> {
       return rc;
     }
 
+#if QT_VERSION < 0x040500
+    void append(const DataSourcePtr& ptr) {
+      QList<DataSourcePtr>::append(ptr);
+    }
+    void append(const DataSourceList& list) {
+      foreach(const DataSourcePtr& ptr, list) {
+        QList<DataSourcePtr>::append(ptr);
+      }
+    }
+#endif
+
 };
 
 

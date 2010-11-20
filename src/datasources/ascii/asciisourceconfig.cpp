@@ -20,6 +20,8 @@
 
 #include "asciisource.h"
 
+#include <QLocale>
+
 //
 // AsciiSourceConfig
 //

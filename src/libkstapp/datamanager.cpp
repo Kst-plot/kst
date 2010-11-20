@@ -45,8 +45,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
   setupUi(this);
 
-  // Make sure the dialog gets maximize and minimize buttons under Windows
-  QWidget::setWindowFlags((Qt::WindowFlags) Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+  MainWindow::setWidgetFlags(this);
 
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setModel(doc->session());

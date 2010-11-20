@@ -22,6 +22,19 @@ namespace Kst {
 
 template<class T>
 class ObjectList : public QList<SharedPtr<T> > {
+
+#if QT_VERSION < 0x040500
+public:
+  void append(const SharedPtr<T>& ptr) {
+    QList<SharedPtr<T> >::append(ptr);
+  }
+  void append(const ObjectList& list) {
+    foreach(const SharedPtr<T>& ptr, list) {
+      QList<SharedPtr<T> >::append(ptr);
+    }
+  }
+#endif
+
 };
 
 }

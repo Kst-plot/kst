@@ -56,6 +56,8 @@ class MainWindow : public QMainWindow
     bool isHighlightPoint() { return _highlightPoint; }
     void setStatusMessage(QString message);
 
+    static void setWidgetFlags(QWidget*);
+
   public Q_SLOTS:
     void showDataManager();
     void showDebugDialog();

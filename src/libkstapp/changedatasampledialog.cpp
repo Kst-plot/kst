@@ -27,10 +27,9 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
-   // Make sure the dialog gets maximize and minimize buttons under Windows
-   QWidget::setWindowFlags((Qt::WindowFlags) Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+  MainWindow::setWidgetFlags(this);
 
-   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
+  if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
     _store = mw->document()->objectStore();
   } else {
     // FIXME: we need the object store

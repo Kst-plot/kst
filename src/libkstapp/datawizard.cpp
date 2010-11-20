@@ -41,8 +41,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0) {
    setupUi(this);
 
-   // Make sure the dialog gets maximize and minimize buttons under Windows
-   QWidget::setWindowFlags((Qt::WindowFlags) Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+  MainWindow::setWidgetFlags(this);
 
    connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
    connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
