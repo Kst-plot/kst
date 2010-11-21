@@ -81,15 +81,16 @@ void MeasureTime::restart()
 
 void MeasureTime::measure()
 {
+  double now = 0;
 #ifdef Q_OS_WIN
   LARGE_INTEGER st;
   QueryPerformanceCounter(&st);
-  double now = st.QuadPart * frequency;
+  now = st.QuadPart * frequency;
 #else
 #ifndef Q_OS_MAC  
   timespec t;
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-  double now = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
+  now = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
 #endif
 #endif
   interval += now - started;
