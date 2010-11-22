@@ -61,11 +61,19 @@ Build and install to specific location (/usr/local/bin /usr/local/libXX)
 *********************************************
 Mac OS
 *********************************************
-#0.  Not currently supported due to lack of a mac.  We'd love some help here!
-#1.  Same as the steps for Linux with some modifications required.
-#2.  The qmake command line needs to be updated to include -spec macx-g++.
-#3.  An error has been observed compiling view.cpp, view.h may need to be
-     updated to change QXmlStreamWriter to QCoreXmlStreamWriter on line 45.
+Building without Xcode (out-of-source):
+  qmake ../kst/kst.pro  -spec macx-g++ -config release
+  make
+
+Fixing the link pathes (installs kst frameworks to /Library/Frameworks)
+  ../kst/misc/macdeploykst
+
+Starting Kst from command line:
+  ./build/bin/kst2.app/Contents/MacOS/kst2
+
+Creating a dmg in /build/bin:
+  ../kst/misc/macdeploykst -dmg 
+
 
 
 *********************************************

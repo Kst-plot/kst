@@ -22,7 +22,7 @@ INCLUDEPATH += tmp \
     $$OUTPUT_DIR/src/widgets/tmp
 
 macx {
-	CONFIX += lib_bundle
+	CONFIG += lib_bundle
 	LIBS += -F$$OUTPUT_DIR/lib
 	qtAddLibrary(kst2lib)
 	qtAddLibrary(kst2math)

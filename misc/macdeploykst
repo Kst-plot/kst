@@ -61,7 +61,7 @@ install_kst_libs math
 install_kst_libs widgets
 
 # this copies and fixes the frameworks
-macdeployqt build/bin/kst2.app -dmg
+macdeployqt build/bin/kst2.app $1
 
 
 
