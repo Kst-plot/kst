@@ -12,6 +12,6 @@ SUBDIRS += \
 !macx:SUBDIRS += \
     src/d2asc \
     src/plugins \
-    test
+    tests
 
 !win32-msvc*:SUBDIRS += tests/dirfile_maker
