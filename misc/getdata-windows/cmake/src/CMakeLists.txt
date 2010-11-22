@@ -14,20 +14,20 @@ if(MSVC)
 		#${GETDATA_DIR}/src/ascii.c
 		${GETDATA_DIR}/src/${BZIP2_C}
 		#${GETDATA_DIR}/src/close.c
-		${GETDATA_DIR}/src/common.c
-		${GETDATA_DIR}/src/compat.c
+		#${GETDATA_DIR}/src/common.c
+		#${GETDATA_DIR}/src/compat.c
 		#${GETDATA_DIR}/src/constant.c
 		${GETDATA_DIR}/src/${DEBUG_C}
 		#${GETDATA_DIR}/src/del.c
 		#${GETDATA_DIR}/src/encoding.c
-		#${GETDATA_DIR}/src/endian.c
-		#${GETDATA_DIR}/src/entry.c
+		${GETDATA_DIR}/src/endian.c
+		${GETDATA_DIR}/src/entry.c
 		${GETDATA_DIR}/src/errors.c #config.h needed
-		#${GETDATA_DIR}/src/field_list.c
-		#${GETDATA_DIR}/src/flimits.c
-		#${GETDATA_DIR}/src/flush.c
-		#${GETDATA_DIR}/src/fragment.c
-		#${GETDATA_DIR}/src/getdata.c
+		${GETDATA_DIR}/src/field_list.c
+		${GETDATA_DIR}/src/flimits.c
+		${GETDATA_DIR}/src/flush.c
+		${GETDATA_DIR}/src/fragment.c
+		${GETDATA_DIR}/src/getdata.c
 		${GETDATA_DIR}/src/globals.c 
 		${GETDATA_DIR}/src/${GZIP_C}
 		${GETDATA_DIR}/src/index.c

@@ -8,7 +8,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 
 
-set(GETDATA_DIR ${CMAKE_SOURCE_DIR}/..)
+if(NOT GETDATA_DIR)
+	set(GETDATA_DIR ${CMAKE_SOURCE_DIR}/..)
+endif()
 
 
 macro(GD_FILES name folder)
@@ -35,6 +37,8 @@ if(MSVC)
 		-Dssize_t=size_t
 		-DGD_USE_CPP
 		-DHAVE_STDINT_H
+		-DGD_NO_C99_API
+		#-DGD_C89_API
 		)
 	set(CMAKE_DEBUG_POSTFIX d)
         configure_file(inttypes.h ${CMAKE_CURRENT_BINARY_DIR}/inttypes.h COPYONLY)
@@ -73,7 +77,7 @@ if (NOT CMAKE_INSTALL_PREFIX)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(bindings)
+#add_subdirectory(bindings)
 
 
 
