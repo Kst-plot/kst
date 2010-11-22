@@ -7,6 +7,7 @@ DEFINES += BUILD_KSTCORE
 TARGET = $$kstlib(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
 
+macx:CONFIG += lib_bundle
 
 !isEmpty(INSTALL_PREFIX) {
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR

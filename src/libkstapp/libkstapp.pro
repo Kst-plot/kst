@@ -8,21 +8,35 @@ TEMPLATE = lib
 TARGET = $$kstlib(kst2app)
 DESTDIR = $$OUTPUT_DIR/lib
 win32:CONFIG += staticlib
+
+
 !isEmpty(INSTALL_PREFIX) { 
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
 }
+
 INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/libkst \
     $$TOPLEVELDIR/src/libkstmath \
     $$TOPLEVELDIR/src/widgets \
     $$TOPOUTDIR/src/widgets \
     $$TOPOUTDIR/src/libkstapp/tmp
-LIBS += -L$$OUTPUT_DIR/lib \
-    -L$$OUTPUT_DIR/plugin \
-    -l$$kstlib(kst2widgets) \
-    -l$$kstlib(kst2math) \
-    -l$$kstlib(kst2lib)
+
+macx {
+	CONFIG += lib_bundle
+	LIBS += -F$$OUTPUT_DIR/lib
+	qtAddLibrary(kst2lib)
+	qtAddLibrary(kst2widgets)
+	qtAddLibrary(kst2math)
+} else {
+	LIBS += -L$$OUTPUT_DIR/lib \
+		-L$$OUTPUT_DIR/plugin \
+		-l$$kstlib(kst2widgets) \
+		-l$$kstlib(kst2math) \
+		-l$$kstlib(kst2lib)
+}
+
+
 SOURCES += aboutdialog.cpp \
     application.cpp \
     applicationsettings.cpp \

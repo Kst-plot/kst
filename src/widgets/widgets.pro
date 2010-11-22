@@ -11,6 +11,7 @@ TARGET = $$kstlib(kst2widgets)
 DESTDIR = $$OUTPUT_DIR/lib
 QT += core xml gui
 
+
 !isEmpty(INSTALL_PREFIX) {
     target.path = $$INSTALL_PREFIX/$$INSTALL_LIBDIR
     INSTALLS += target
@@ -20,12 +21,18 @@ INCLUDEPATH += tmp \
     $$TOPLEVELDIR/src/libkstmath \
     $$OUTPUT_DIR/src/widgets/tmp
 
-LIBS += \
-    -L$$OUTPUT_DIR/lib \
-    -L$$OUTPUT_DIR/plugin \
-    -l$$kstlib(kst2math) \
-    -l$$kstlib(kst2lib)
-
+macx {
+	CONFIX += lib_bundle
+	LIBS += -F$$OUTPUT_DIR/lib
+	qtAddLibrary(kst2lib)
+	qtAddLibrary(kst2math)
+} else {
+	LIBS += \
+		-L$$OUTPUT_DIR/lib \
+		-L$$OUTPUT_DIR/plugin \
+		-l$$kstlib(kst2math) \
+		-l$$kstlib(kst2lib)
+}
 SOURCES += \
     colorbutton.cpp \
     colorpalette.cpp \

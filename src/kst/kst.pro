@@ -19,14 +19,21 @@ INCLUDEPATH += \
     $$TOPLEVELDIR/src/libkstapp \
     $$OUTPUT_DIR/src/kst/tmp
 
-
-LIBS += \
+macx {
+	LIBS += -F$$OUTPUT_DIR/lib
+	qtAddLibrary(kst2lib)
+	qtAddLibrary(kst2math)
+	qtAddLibrary(kst2widgets)
+	qtAddLibrary(kst2app)
+} else {
+	LIBS += \
 		-L$$OUTPUT_DIR/lib \
 		-L$$OUTPUT_DIR/plugin \
 		-l$$kstlib(kst2app) \
 		-l$$kstlib(kst2widgets) \
 		-l$$kstlib(kst2math) \
 		-l$$kstlib(kst2lib)
+}
 
 
 SOURCES += \

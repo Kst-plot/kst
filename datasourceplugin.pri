@@ -20,8 +20,15 @@ INCLUDEPATH += \
 	      tmp \
 	      $$TOPLEVELDIR/src/libkst 
 
-LIBS += -L$$OUTPUT_DIR/lib -l$$kstlib(kst2lib)
 
+macx {
+	LIBS += -F$$OUTPUT_DIR/lib
+	qtAddLibrary(kst2lib)
+ } else {
+	LIBS += \
+		-L$$OUTPUT_DIR/lib \
+		-l$$kstlib(kst2lib)
+}
 
 LibExists(cfitsio) {
     win32 {

@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# 1. Plugins
+
+
+# Change link information from
+#
+#	$otool -L build/plugin/libkst2data_ascii.dylib 
+#	build/plugin/libkst2data_ascii.dylib:
+#		libkst2data_ascii.dylib (compatibility version 0.0.0, current version 0.0.0)
+#		kst2lib.framework/Versions/1/kst2lib (compatibility version 1.0.0, current version 1.0.0)
+#		QtXml.framework/Versions/4/QtXml (compatibility version 4.7.0, current version 4.7.1)
+#		QtGui.framework/Versions/4/QtGui (compatibility version 4.7.0, current version 4.7.1)
+#		QtCore.framework/Versions/4/QtCore (compatibility version 4.7.0, current version 4.7.1)
+#
+# to
+#
+#   $otool -L build/plugin/libkst2data_ascii.dylib 
+#	build/plugin/libkst2data_ascii.dylib:
+#		libkst2data_ascii.dylib (compatibility version 0.0.0, current version 0.0.0)
+#		@executable_path/../Frameworks/kst2lib.framework/Versions/1/kst2lib (compatibility version 1.0.0, current version 1.0.0)
+#		@executable_path/../Frameworks/QtXml.framework/Versions/4/QtXml (compatibility version 4.7.0, current version 4.7.1)
+#		@executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui (compatibility version 4.7.0, current version 4.7.1)
+#		@executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore (compatibility version 4.7.0, current version 4.7.1)
+#
+#ref: http://doc.qt.nokia.com/4.7/deployment-mac.html
+#
+
+mkdir build/bin/kst2.app/Contents
+mkdir build/bin/kst2.app/Contents/PlugIns
+
+change_lib_path()
+{
+	install_name_tool -change $2.framework/Versions/$3/$2 @executable_path/../Frameworks/$2.framework/Versions/$3/$2 $1
+}
+
+deploy_plugin()
+{
+	change_lib_path $1 kst2lib 1
+	change_lib_path $1 QtCore 4
+	change_lib_path $1 QtXml 4
+	change_lib_path $1 QtGui 4
+	
+	cp $1 build/bin/kst2.app/Contents/PlugIns
+}
+
+deploy_plugin build/plugin/libkst2data_ascii.dylib
+
+# 2. Libraries
+
+install_kst_libs()
+{
+    # this is not nice, but then we could use macdeployqt also for kst libs
+	sudo rm -rf /Library/Frameworks/kst2$1.framework/Versions/Current
+	sudo cp -R build/lib/kst2$1.framework /Library/Frameworks
+}
+
+install_kst_libs app
+install_kst_libs lib
+install_kst_libs math
+install_kst_libs widgets
+
+# this copies and fixes the frameworks
+macdeployqt build/bin/kst2.app -dmg
+
+
+
+
+
