@@ -98,10 +98,10 @@ double Matrix::value(double x, double y, bool* ok) const {
   
   int index = zIndex(x_index, y_index);
   if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
-    (*ok) = false;
+    if (ok) (*ok) = false;
     return 0.0;
   }
-  (*ok) = true;
+  if (ok) (*ok) = true;
   return _z[index];
 
 }
