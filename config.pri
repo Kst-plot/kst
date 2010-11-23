@@ -73,6 +73,9 @@ contains(lib, getdata) {
   win32:!isEmpty(GETDATADIR) {
     return(true)
   }
+  macx:!isEmpty(GETDATADIR) {
+    return(true)
+  }
   return(false)
 }
 

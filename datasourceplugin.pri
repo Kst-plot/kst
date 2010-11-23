@@ -45,9 +45,14 @@ LibExists(getdata) {
 	INCLUDEPATH += $$(GETDATADIR)/include
 	LIBS += -L$$(GETDATADIR)/lib
     } else {
-	CONFIG += link_pkgconfig
-	PKGCONFIG += getdata
-	INCLUDEPATH += $$pkginclude(getdata)
+        macx {
+            INCLUDEPATH += $$(GETDATADIR)/include
+	    LIBS += -L$$(GETDATADIR)/lib
+        } else {
+	    CONFIG += link_pkgconfig
+	    PKGCONFIG += getdata
+	    INCLUDEPATH += $$pkginclude(getdata)
+        }
     }
 }
 

@@ -26,7 +26,6 @@
 #ref: http://doc.qt.nokia.com/4.7/deployment-mac.html
 #
 
-mkdir build/bin/kst2.app/Contents
 mkdir build/bin/kst2.app/Contents/PlugIns
 
 change_lib_path()
@@ -45,6 +44,9 @@ deploy_plugin()
 }
 
 deploy_plugin build/plugin/libkst2data_ascii.dylib
+deploy_plugin build/plugin/libkst2data_dirfilesource.dylib
+
+
 
 # 2. Libraries
 

@@ -8,6 +8,7 @@ INCLUDEPATH += $$OUTPUT_DIR/src/datasources/dirfilesource/tmp
 
 LIBS += -lgetdata++
 win32:LIBS += -lgetdata
+macx:LIBS += -lgetdata -lz -lbz2
 
 SOURCES += \
     dirfilesource.cpp
