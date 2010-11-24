@@ -201,14 +201,22 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
 
 
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
-  if (PlotItemManager::self()->_tiedZoomViewPlotLists.contains(view)) {
-    QList<PlotItem*> plots = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
-    if (PlotItemManager::self()->_tiedZoomViewItemLists.contains(view)) {
-      foreach (ViewItem *viewItem, PlotItemManager::self()->_tiedZoomViewItemLists.value(view)) {
-        plots << tiedZoomPlotsForViewItem(viewItem);
-      }
+  if (kstApp->mainWindow()->isTiedTabs()) {
+    QList<PlotItem*> plots;
+    foreach (View *view, PlotItemManager::self()->_tiedZoomViewPlotLists.keys()) {
+      plots.append(PlotItemManager::self()->_tiedZoomViewPlotLists.value(view));
     }
     return plots;
+  } else {
+    if (PlotItemManager::self()->_tiedZoomViewPlotLists.contains(view)) {
+      QList<PlotItem*> plots = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
+      if (PlotItemManager::self()->_tiedZoomViewItemLists.contains(view)) {
+        foreach (ViewItem *viewItem, PlotItemManager::self()->_tiedZoomViewItemLists.value(view)) {
+          plots << tiedZoomPlotsForViewItem(viewItem);
+        }
+      }
+      return plots;
+    }
   }
   return QList<PlotItem*>();
 }
@@ -235,13 +243,22 @@ void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
 
 
 QList<PlotItem*> PlotItemManager::tiedZoomPlots(PlotItem* plotItem) {
-  if (plotItem->isInSharedAxisBox() && !plotItem->parentViewItem()->isTiedZoom()) {
-    return tiedZoomPlotsForViewItem(plotItem->parentViewItem());
+  if (kstApp->mainWindow()->isTiedTabs()) {
+    QList<PlotItem*> plots;
+    foreach (View *view, PlotItemManager::self()->_tiedZoomViewPlotLists.keys()) {
+      plots.append(PlotItemManager::self()->_tiedZoomViewPlotLists.value(view));
+    }
+
+    return plots;
+
   } else {
-    return tiedZoomPlotsForView(plotItem->view());
+    if (plotItem->isInSharedAxisBox() && !plotItem->parentViewItem()->isTiedZoom()) {
+      return tiedZoomPlotsForViewItem(plotItem->parentViewItem());
+    } else {
+      return tiedZoomPlotsForView(plotItem->view());
+    }
   }
 }
-
 
 QList<ViewItem*> PlotItemManager::tiedZoomViewItems(PlotItem* plotItem) {
   return PlotItemManager::self()->_tiedZoomViewItemLists.value(plotItem->view());

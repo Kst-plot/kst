@@ -23,7 +23,7 @@ namespace Kst {
 CurveAppearance::CurveAppearance(QWidget *parent)
   : QWidget(parent) {
   setupUi(this);  
-  populatePointSymbolCombo();
+  populateSymbolCombos();
   populateLineStyleCombo();
 
   drawSampleLine();
@@ -31,15 +31,21 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_showPoints, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
   connect(_showLines, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
   connect(_showBars, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
+  connect(_showHead, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
 
-  connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populatePointSymbolCombo()));
+  connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populateSymbolCombos()));
   connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populateLineStyleCombo()));
+  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(populateSymbolCombos()));
+  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(populateLineStyleCombo()));
 
   connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
+  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
   connect(_showLines, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showPoints, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
+  connect(_showHead, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_comboPointSymbol, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_comboLineStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
+  connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(drawSampleLine()));
   connect(_barStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
@@ -47,8 +53,10 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
   connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_showHead, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_comboPointDensity, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_comboPointSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_comboLineStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_barStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
@@ -60,43 +68,49 @@ CurveAppearance::~CurveAppearance() {
 }
 
 
-void CurveAppearance::populatePointSymbolCombo() {
-  QStyleOptionComboBox option;
-  option.initFrom(_comboPointSymbol);
-  option.currentIcon = _comboPointSymbol->itemIcon(_comboPointSymbol->currentIndex());
-  option.currentText = _comboPointSymbol->itemText(_comboPointSymbol->currentIndex());
-  option.editable = _comboPointSymbol->isEditable();
-  option.frame = _comboPointSymbol->hasFrame();
-  option.iconSize = _comboPointSymbol->iconSize();
+void CurveAppearance::populateSymbolCombos() {
+  populateSymbolCombo(_comboPointSymbol, color());
+  populateSymbolCombo(_comboHeadSymbol, headColor());
+}
 
-  QRect rect = _comboPointSymbol->style()->subControlRect(
+
+void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) {
+  QStyleOptionComboBox option;
+  option.initFrom(combo);
+  option.currentIcon = combo->itemIcon(combo->currentIndex());
+  option.currentText = combo->itemText(combo->currentIndex());
+  option.editable = combo->isEditable();
+  option.frame = combo->hasFrame();
+  option.iconSize = combo->iconSize();
+
+  QRect rect = combo->style()->subControlRect(
                  QStyle::CC_ComboBox,
                  &option,
                  QStyle::SC_ComboBoxEditField,
-                 _comboPointSymbol );
+                 combo );
   rect.setLeft( rect.left() + 2 );
   rect.setRight( rect.right() - 2 );
   rect.setTop( rect.top() + 2 );
   rect.setBottom( rect.bottom() - 2 );
 
-_comboPointSymbol->setIconSize(QSize(rect.width(), rect.height()));
+  combo->setIconSize(QSize(rect.width(), rect.height()));
 
   // fill the point type dialog with point types
   QPixmap ppix( rect.width(), rect.height() );
   QPainter pp( &ppix );
 
-  int currentItem = _comboPointSymbol->currentIndex();
-  _comboPointSymbol->clear();
-  pp.setPen(color());
+  int currentItem = combo->currentIndex();
+  combo->clear();
+  pp.setPen(symbolColor);
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
     CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, 0, 600);
-    _comboPointSymbol->addItem(QIcon(ppix), QString());
+    combo->addItem(QIcon(ppix), QString());
   }
 
   if (currentItem > 0) {
-    _comboPointSymbol->setCurrentIndex( currentItem );
+    combo->setCurrentIndex( currentItem );
   }
 }
 
@@ -123,6 +137,11 @@ void CurveAppearance::enableSettings() {
   enable = enable && showLines();
   _textLabelPointDensity->setEnabled(enable);
   _comboPointDensity->setEnabled(enable);
+
+  enable = showHead();
+  _textLabelHeadStyle->setEnabled(enable);
+  _comboHeadSymbol->setEnabled(enable);
+
 }
 
 
@@ -161,6 +180,23 @@ void CurveAppearance::setShowPoints(const bool showPoints) {
 }
 
 
+bool CurveAppearance::showHead() const {
+  return _showHead->checkState() == Qt::Checked;
+}
+
+
+bool CurveAppearance::showHeadDirty() const {
+  return _showHead->checkState() != Qt::PartiallyChecked;
+}
+
+
+void CurveAppearance::setShowHead(const bool showHead) {
+  _showHead->setChecked(showHead);
+  enableSettings();
+  drawSampleLine();
+}
+
+
 bool CurveAppearance::showBars() const {
   return _showBars->checkState() == Qt::Checked;
 }
@@ -194,6 +230,23 @@ void CurveAppearance::setColor(const QColor & c) {
   drawSampleLine();
 }
 
+QColor CurveAppearance::headColor() const {
+  return _headColor->color();
+}
+
+
+bool CurveAppearance::headColorDirty() const {
+  return _headColor->colorDirty();
+}
+
+
+void CurveAppearance::setHeadColor(const QColor & c) {
+  _headColor->setColor(c);
+  enableSettings();
+  drawSampleLine();
+}
+
+
 
 int CurveAppearance::pointType() const {
   return _comboPointSymbol->currentIndex();
@@ -207,6 +260,22 @@ bool CurveAppearance::pointTypeDirty() const {
 
 void CurveAppearance::setPointType(const int pointType) {
   _comboPointSymbol->setCurrentIndex(pointType);
+  enableSettings();
+  drawSampleLine();
+}
+
+int CurveAppearance::headType() const {
+  return _comboHeadSymbol->currentIndex();
+}
+
+
+bool CurveAppearance::headTypeDirty() const {
+  return _comboHeadSymbol->currentIndex() != -1;
+}
+
+
+void CurveAppearance::setHeadType(const int pointType) {
+  _comboHeadSymbol->setCurrentIndex(pointType);
   enableSettings();
   drawSampleLine();
 }
@@ -386,7 +455,11 @@ void CurveAppearance::drawSampleLine() {
 #endif
   p.setPen(pen);
   if (showLines()) {
-    p.drawLine(1, pix.height()/2, pix.width()-1, pix.height()/2);
+    if (showHead()) {
+      p.drawLine(1, pix.height()/2, pix.width()-10, pix.height()/2);
+    } else {
+      p.drawLine(1, pix.height()/2, pix.width()-1, pix.height()/2);
+    }
   }
 
   if (showPoints()) {
@@ -395,6 +468,12 @@ void CurveAppearance::drawSampleLine() {
     CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, lineWidth(), 600);
   }
 
+  if (showHead()) {
+    pen.setStyle(Qt::SolidLine);
+    pen.setColor(headColor());
+    p.setPen(pen);
+    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, lineWidth(), 600);
+  }
   _label->setPixmap(pix);
 }
 
@@ -409,19 +488,26 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
   _dialogDefaults->setValue("curves/lineWidth",lineWidth());
   _dialogDefaults->setValue("curves/lineStyle",lineStyle());
   _dialogDefaults->setValue("curves/pointType", pointType());
+  _dialogDefaults->setValue("curves/headType", headType());
   _dialogDefaults->setValue("curves/pointDensity", pointDensity());
   _dialogDefaults->setValue("curves/barStyle", barStyle());
+  _dialogDefaults->setValue("curves/showHead", showHead());
 }
 
 // set the widget to the stored default values
 void CurveAppearance::loadWidgetDefaults() {
   setColor(ColorSequence::current());
+  ColorSequence::next();
+  setHeadColor(ColorSequence::current());
+
   setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
   setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());
   setShowBars(_dialogDefaults->value("curves/showBars",false).toBool());
+  setShowHead(_dialogDefaults->value("curves/showHead",false).toBool());
   setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
   setLineStyle(_dialogDefaults->value("curves/lineStyle",0).toInt());
   setPointType(_dialogDefaults->value("curves/pointType",0).toInt());
+  setHeadType(_dialogDefaults->value("curves/headType",0).toInt());
   setPointDensity(_dialogDefaults->value("curves/pointDensity",0).toInt());
   setBarStyle(_dialogDefaults->value("curves/barStyle",0).toInt());
 }

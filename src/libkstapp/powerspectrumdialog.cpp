@@ -224,12 +224,15 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->setXVector(powerspectrum->vX());
   curve->setYVector(powerspectrum->vY());
   curve->setColor(_powerSpectrumTab->curveAppearance()->color());
+  curve->setHeadColor(_powerSpectrumTab->curveAppearance()->headColor());
   curve->setHasPoints(_powerSpectrumTab->curveAppearance()->showPoints());
   curve->setHasLines(_powerSpectrumTab->curveAppearance()->showLines());
   curve->setHasBars(_powerSpectrumTab->curveAppearance()->showBars());
+  curve->setHasHead(_powerSpectrumTab->curveAppearance()->showHead());
   curve->setLineWidth(_powerSpectrumTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_powerSpectrumTab->curveAppearance()->lineStyle());
   curve->setPointType(_powerSpectrumTab->curveAppearance()->pointType());
+  curve->setHeadType(_powerSpectrumTab->curveAppearance()->headType());
   curve->setPointDensity(_powerSpectrumTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_powerSpectrumTab->curveAppearance()->barStyle());
 

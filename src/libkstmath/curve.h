@@ -96,25 +96,33 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual bool hasPoints()    const { return HasPoints; }
     virtual bool hasLines()     const { return HasLines; }
     virtual bool hasBars()      const { return HasBars; }
+    virtual bool hasHead()      const { return HasHead; }
     virtual void setHasPoints(bool in_HasPoints);
     virtual void setHasLines(bool in_HasLines);
     virtual void setHasBars(bool in_HasBars);
+    virtual void setHasHead(bool in_HasHead);
     virtual void setLineWidth(int in_LineWidth);
     virtual void setLineStyle(int in_LineStyle);
     virtual void setBarStyle( int in_BarStyle);
     virtual void setPointDensity(int in_PointDensity);
     virtual void setPointType(int in_PointType);
+    virtual void setHeadType(int in_HeadType);
 
     virtual int lineWidth()     const { return LineWidth; }
     virtual int lineStyle()     const { return LineStyle; }
     virtual int barStyle()      const { return BarStyle; }
     virtual int pointDensity()  const { return PointDensity; }
     virtual int pointType()  const { return PointType; }
+    virtual int headType()  const { return HeadType; }
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);
 
+    virtual QColor headColor() const { return HeadColor; }
+    virtual void setHeadColor(const QColor& new_c);
 
+
+#if 0
     void pushColor(const QColor& c) { _colorStack.push(color()); setColor(c); }
     void popColor() { setColor(_colorStack.pop()); }
     void pushLineWidth(int w) { _widthStack.push(lineWidth()); setLineWidth(w); }
@@ -129,6 +137,7 @@ class KSTMATH_EXPORT Curve: public Relation
     void popHasLines() { setHasLines(_hasLinesStack.pop()); }
     void pushPointDensity(int d) { _pointDensityStack.push(pointDensity()); setPointDensity(d); }
     void popPointDensity() { setPointDensity(_pointDensityStack.pop()); }
+#endif
 
     //virtual RelationPtr makeDuplicate(QMap<RelationPtr, RelationPtr> &duplicatedRelations);
     virtual RelationPtr makeDuplicate() const;
@@ -168,12 +177,17 @@ class KSTMATH_EXPORT Curve: public Relation
     int LineStyle;
     int PointDensity;
     int PointType;
+    int HeadType;
 
     bool HasPoints;
     bool HasLines;
     bool HasBars;
+    bool HasHead;
 
     QColor Color;
+    QColor HeadColor;
+
+#if 0
     QStack<int> _widthStack;
     QStack<QColor> _colorStack;
     QStack<int> _pointStyleStack;
@@ -181,11 +195,16 @@ class KSTMATH_EXPORT Curve: public Relation
     QStack<bool> _hasPointsStack;
     QStack<bool> _hasLinesStack;
     QStack<int> _pointDensityStack;
+#endif
+
     QVector<QPolygonF> _polygons;
     QVector<QLineF> _lines;
     QVector<QPointF> _points;
     QVector<QRectF> _filledRects;
     QVector<QRectF> _rects;
+    QPointF _head;
+    bool _head_valid;
+
     int _width;
 };
 

@@ -302,12 +302,15 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setXVector(equation->vX());
   curve->setYVector(equation->vY());
   curve->setColor(_equationTab->curveAppearance()->color());
+  curve->setHeadColor(_equationTab->curveAppearance()->headColor());
   curve->setHasPoints(_equationTab->curveAppearance()->showPoints());
   curve->setHasLines(_equationTab->curveAppearance()->showLines());
   curve->setHasBars(_equationTab->curveAppearance()->showBars());
+  curve->setHasHead(_equationTab->curveAppearance()->showHead());
   curve->setLineWidth(_equationTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_equationTab->curveAppearance()->lineStyle());
   curve->setPointType(_equationTab->curveAppearance()->pointType());
+  curve->setHeadType(_equationTab->curveAppearance()->headType());
   curve->setPointDensity(_equationTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 

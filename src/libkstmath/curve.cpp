@@ -67,6 +67,7 @@ static const QLatin1String& EYMINUSVECTOR = QLatin1String("EYMinus");
 Curve::Curve(ObjectStore *store)
 : Relation(store) {
   setHasPoints(false);
+  setHasHead(false);
   setHasBars(false);
   setHasLines(true);
   setLineWidth(1);
@@ -80,6 +81,7 @@ Curve::Curve(ObjectStore *store)
   _type = "Curve";
   _initializeShortName();
   Color = QColor();
+  HeadColor = QColor();
 }
 
 void Curve::_initializeShortName() {
@@ -289,6 +291,7 @@ void Curve::save(QXmlStreamWriter &s) {
     s.writeAttribute("erroryminusvector", _inputVectors[EYMINUSVECTOR]->Name());
   }
   s.writeAttribute("color", Color.name());
+  s.writeAttribute("headcolor", HeadColor.name());
 
   s.writeAttribute("haslines", QVariant(HasLines).toString());
   s.writeAttribute("linewidth", QString::number(LineWidth));
@@ -301,6 +304,9 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
   s.writeAttribute("barstyle", QString::number(BarStyle));
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
+
+  s.writeAttribute("hashead", QVariant(HasHead).toString());
+  s.writeAttribute("headtype", QString::number(HeadType));
 
   saveNameInfo(s, CNUM);
 
@@ -541,6 +547,11 @@ void Curve::setHasPoints(bool in_HasPoints) {
 }
 
 
+void Curve::setHasHead(bool in_HasHead) {
+  HasHead = in_HasHead;
+}
+
+
 void Curve::setHasLines(bool in_HasLines) {
   HasLines = in_HasLines;
 }
@@ -581,8 +592,17 @@ void Curve::setPointType(int in_PointType) {
 }
 
 
+void Curve::setHeadType(int in_HeadType) {
+  HeadType = in_HeadType;
+}
+
+
 void Curve::setColor(const QColor& new_c) {
   Color = new_c;
+}
+
+void Curve::setHeadColor(const QColor& new_c) {
+  HeadColor = new_c;
 }
 
 
@@ -624,9 +644,11 @@ RelationPtr Curve::makeDuplicate() const {
   }
 
   curve->setColor(Color);
+  curve->setHeadColor(HeadColor);
   curve->setHasPoints(HasPoints);
   curve->setHasLines(HasLines);
   curve->setHasBars(HasBars);
+  curve->setHasHead(HasHead);
   curve->setLineWidth(LineWidth);
   curve->setLineStyle(LineStyle);
   curve->setPointType(PointDensity);
@@ -672,6 +694,11 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   }
   foreach(const QPointF& point, _points) {
     CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
+  }
+
+  if (hasHead() && _head_valid) {
+    p->setPen(QPen(headColor(), _width, style));
+    CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), _width);
   }
   p->restore();
 }
@@ -1186,6 +1213,30 @@ qDebug() << "y not in bounds"
         }
       }
     }
+
+    _head_valid = false;
+    if (hasHead()) {
+      const double w = Hx - Lx;
+      const double h = Hy - Ly;
+
+      QRectF rect(Lx, Ly, w, h);
+
+      rX = xv->interpolate(NS-1, NS);
+      rY = yv->interpolate(NS-1, NS);
+      if (xLog) {
+        rX = logXLo(rX, xLogBase);
+      }
+      if (yLog) {
+        rY = logYLo(rY, yLogBase);
+      }
+
+      _head.setX(m_X * rX + b_X);
+      _head.setY(m_Y * rY + b_Y);
+      if (rect.contains(_head)) {
+        _head_valid = true;
+      }
+    }
+
 
 #ifdef BENCHMARK
     b_3 = benchtmp.elapsed();

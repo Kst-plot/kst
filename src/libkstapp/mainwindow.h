@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
     QProgressBar *progressBar() const;
     bool initFromCommandLine();
     bool isHighlightPoint() { return _highlightPoint; }
+    bool isTiedTabs();
     void setStatusMessage(QString message);
 
     static void setWidgetFlags(QWidget*);
@@ -231,6 +232,7 @@ class MainWindow : public QMainWindow
 
     QAction *_layoutModeAct;
     QAction *_tiedZoomAct;
+    QAction *_tabTiedAct;
     QAction *_highlightPointAct;
     QAction *_standardZoomAct;
     QAction *_xOnlyZoomAct;

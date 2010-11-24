@@ -33,10 +33,11 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   Q_ASSERT(store);
 
-  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, barStyle=0;
-  QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName, errorYMinusVectorName, color;
+  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, barStyle=0, headType=0;
+  QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName;
+  QString errorYMinusVectorName, color, headColor;
   QString descriptiveName;
-  bool hasLines=true, hasPoints=false, hasBars=false, ignoreAutoScale=false;
+  bool hasLines=true, hasPoints=false, hasBars=false, ignoreAutoScale=false, hasHead=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -47,6 +48,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         yVectorName = attrs.value("yvector").toString();
         legend = attrs.value("legend").toString();
         color = attrs.value("color").toString();
+        headColor = attrs.value("headcolor").toString();
 
         errorXVectorName = attrs.value("errorxvector").toString();
         errorYVectorName = attrs.value("erroryvector").toString();
@@ -60,6 +62,10 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         hasPoints = attrs.value("haspoints").toString() == "true" ? true : false;
         pointType = attrs.value("pointtype").toString().toInt();
         pointDensity = attrs.value("pointdensity").toString().toInt();
+
+        hasHead = attrs.value("hashead").toString() == "true" ? true : false;
+        headType = attrs.value("headtype").toString().toInt();
+
 
         hasBars = attrs.value("hasbars").toString() == "true" ? true : false;
         barStyle = attrs.value("barstyle").toString().toInt();
@@ -138,12 +144,15 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setXMinusError(errorXMinusVector);
   curve->setYMinusError(errorYMinusVector);
   curve->setColor(QColor(color));
+  curve->setHeadColor(QColor(headColor));
   curve->setHasPoints(hasPoints);
   curve->setHasLines(hasLines);
   curve->setHasBars(hasBars);
+  curve->setHasHead(hasHead);
   curve->setLineWidth(lineWidth);
   curve->setLineStyle(lineStyle);
   curve->setPointType(pointType);
+  curve->setHeadType(headType);
   curve->setPointDensity(pointDensity);
   curve->setBarStyle(barStyle);
 

@@ -61,6 +61,7 @@ HistogramTab::HistogramTab(QWidget *parent)
   _curvePlacement->setExistingPlots(Data::self()->plotList());
   _curveAppearance->setShowLines(false);
   _curveAppearance->setShowPoints(false);
+  _curveAppearance->setShowHead(false);
   _curveAppearance->setShowBars(true);
   _curveAppearance->setColor(_curveAppearance->color());
   _curveAppearance->setPointType(0);
@@ -370,12 +371,15 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->setXVector(histogram->vX());
   curve->setYVector(histogram->vY());
   curve->setColor(_histogramTab->curveAppearance()->color());
+  curve->setHeadColor(_histogramTab->curveAppearance()->headColor());
   curve->setHasPoints(_histogramTab->curveAppearance()->showPoints());
   curve->setHasLines(_histogramTab->curveAppearance()->showLines());
   curve->setHasBars(_histogramTab->curveAppearance()->showBars());
+  curve->setHasHead(_histogramTab->curveAppearance()->showHead());
   curve->setLineWidth(_histogramTab->curveAppearance()->lineWidth());
   curve->setLineStyle(_histogramTab->curveAppearance()->lineStyle());
   curve->setPointType(_histogramTab->curveAppearance()->pointType());
+  curve->setHeadType(_histogramTab->curveAppearance()->headType());
   curve->setPointDensity(_histogramTab->curveAppearance()->pointDensity());
   curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
 

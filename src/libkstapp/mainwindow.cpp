@@ -950,12 +950,18 @@ void MainWindow::createActions() {
 
   // ************************** Mode Actions ******************************* //
   // First, general options
-  _tiedZoomAct = new QAction(tr("&Tied Zoom"), this);
+  _tiedZoomAct = new QAction(tr("&Toggle Tied Zoom"), this);
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom"));
   _tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
-  _tiedZoomAct->setCheckable(true);
+  _tiedZoomAct->setCheckable(false);
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
+
+  _tabTiedAct = new QAction(tr("&Tie Between Tabs"), this);
+  _tabTiedAct->setStatusTip(tr("Tied zoom applies between tabs"));
+  //_tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
+  _tabTiedAct->setCheckable(true);
+  //connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
   
   _highlightPointAct = new QAction(tr("&Highlight Data Points"), this);
@@ -1158,6 +1164,7 @@ void MainWindow::createMenus() {
   _modeMenu->addSeparator();
   // Options
   _modeMenu->addAction(_tiedZoomAct);
+  _modeMenu->addAction(_tabTiedAct);
   _modeMenu->addAction(_highlightPointAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
@@ -1560,6 +1567,10 @@ void MainWindow::showPluginDialog(QString &pluginName) {
   DialogLauncher::self()->showBasicPluginDialog(pluginName);
 }
 
+bool MainWindow::isTiedTabs() {
+  return _tabTiedAct->isChecked();
+}
+
 void MainWindow::readSettings() {
   QSettings settings("Kst2");
   QByteArray geo = settings.value("geometry").toByteArray();
@@ -1569,6 +1580,7 @@ void MainWindow::readSettings() {
       setGeometry(50, 50, 800, 600);
   }
   restoreState(settings.value("toolbarState").toByteArray());
+  _tabTiedAct->setChecked(settings.value("tieTabs").toBool());
 }
 
 
@@ -1576,6 +1588,7 @@ void MainWindow::writeSettings() {
   QSettings settings("Kst2");
   settings.setValue("geometry", saveGeometry());
   settings.setValue("toolbarState", saveState());
+  settings.setValue("tieTabs", _tabTiedAct->isChecked());
 }
 
 void MainWindow::setWidgetFlags(QWidget* widget)
