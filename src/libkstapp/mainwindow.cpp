@@ -957,7 +957,7 @@ void MainWindow::createActions() {
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
-  _tabTiedAct = new QAction(tr("&Tie Between Tabs"), this);
+  _tabTiedAct = new QAction(tr("&Tie Across All Tabs"), this);
   _tabTiedAct->setStatusTip(tr("Tied zoom applies between tabs"));
   //_tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
   _tabTiedAct->setCheckable(true);
@@ -1162,9 +1162,11 @@ void MainWindow::createMenus() {
   _modeMenu->addAction(_layoutModeAct);
   _standardZoomAct->setChecked(true);
   _modeMenu->addSeparator();
-  // Options
+  // Tied zoom options
   _modeMenu->addAction(_tiedZoomAct);
   _modeMenu->addAction(_tabTiedAct);
+  _modeMenu->addSeparator();
+  // Data mode
   _modeMenu->addAction(_highlightPointAct);
 
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
