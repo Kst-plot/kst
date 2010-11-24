@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=lockin
+X-Kst-Plugin-Author=The University of Toronto
+Name=Lock-In Amplification Data Object Plugin
+Comment=Lock-In amplification of channel to reference Data Object Plugin for Kst.

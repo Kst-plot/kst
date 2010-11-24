@@ -12,6 +12,7 @@ SUBDIRS += \
     chop \
     crossspectrum \
     effectivebandwidth \
+    lockin \
     periodogram \
     phase \
     shift \
