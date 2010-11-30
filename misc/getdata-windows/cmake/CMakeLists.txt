@@ -31,17 +31,20 @@ if(MSVC)
 		-DSTDC_HEADERS
 		-DHAVE_INTTYPES_H
 		-DHAVE_IO_H
-		-Dsnprintf=_snprintf
-		-Dfsync=_commit
-		-Dmode_t=int
-		-Dssize_t=size_t
-		-DGD_USE_CPP
 		-DHAVE_STDINT_H
 		-DGD_NO_C99_API
 		#-DGD_C89_API
+		-DPACKAGE_VERSION=1
+		-D_USE_MATH_DEFINES
 		)
 	set(CMAKE_DEBUG_POSTFIX d)
-        configure_file(inttypes.h ${CMAKE_CURRENT_BINARY_DIR}/inttypes.h COPYONLY)
+    configure_file(inttypes.h ${CMAKE_CURRENT_BINARY_DIR}/inttypes.h COPYONLY)
+	
+	# ANSI C
+	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /Za")
+	
+	# Suppress warnings
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W0")
 endif()
 
 if(MINGW)

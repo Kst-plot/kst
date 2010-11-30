@@ -1,193 +1,32 @@
-Index: src/endian.c
+Index: src/open.c
 ===================================================================
---- src/endian.c	(Revision 441)
-+++ src/endian.c	(Arbeitskopie)
-@@ -50,7 +50,7 @@
-   }
+--- src/open.c	(Revision 489)
++++ src/open.c	(Arbeitskopie)
+@@ -39,10 +39,13 @@
+ #include <libgen.h>
+ #endif
  
-   if (move && byte_sex != D->fragment[fragment].byte_sex) {
--    gd_entry_t **raw_entry = malloc(sizeof(gd_entry_t*) * D->n_entries);
-+    gd_entry_t **raw_entry = (gd_entry_t**)malloc(sizeof(gd_entry_t*) * D->n_entries);
- 
-     if (raw_entry == NULL) {
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-Index: src/entry.c
-===================================================================
---- src/entry.c	(Revision 441)
-+++ src/entry.c	(Arbeitskopie)
-@@ -152,10 +152,10 @@
-           _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-       }
- 
--      _GD_DoField(D, C, repr, 0, 1, type, data);
-+      _GD_DoField(D, C, repr, 0, 1, (gd_type_t)type, data);
- 
-       if (ptr) {
--        C->e->client = ptr;
-+        C->e->client = (gd_entry_t**)ptr;
-         C->e->client[C->e->n_client++] = E;
-       }
-     }
-Index: src/getdata.c
-===================================================================
---- src/getdata.c	(Revision 441)
-+++ src/getdata.c	(Arbeitskopie)
-@@ -54,8 +54,8 @@
-     case GD_INT64:      EXTRACT_REPR2(       int64_t, ot); break; \
-     case GD_FLOAT32:    EXTRACT_REPR2(         float, ot); break; \
-     case GD_FLOAT64:    EXTRACT_REPR2(        double, ot); break; \
--    case GD_COMPLEX64:  EXTRACT_REPR2( float complex, ot); break; \
--    case GD_COMPLEX128: EXTRACT_REPR2(double complex, ot); break; \
-+    case GD_COMPLEX64:  EXTRACT_REPR2(  GD_FCOMPLEXT, ot); break; \
-+    case GD_COMPLEX128: EXTRACT_REPR2(  GD_DCOMPLEXT, ot); break; \
-     default: \
-       _GD_SetError(D, GD_E_BAD_TYPE, in_type, NULL, 0, NULL); \
-     case GD_NULL: \
-@@ -82,8 +82,8 @@
-     case GD_INT64:      EXTRACT_REPRS(       int64_t); break;
-     case GD_FLOAT32:    EXTRACT_REPRS(         float); break;
-     case GD_FLOAT64:    EXTRACT_REPRS(        double); break;
--    case GD_COMPLEX64:  EXTRACT_REPRS( float complex); break;
--    case GD_COMPLEX128: EXTRACT_REPRS(double complex); break;
-+    case GD_COMPLEX64:  EXTRACT_REPRS(  GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: EXTRACT_REPRS(  GD_DCOMPLEXT); break;
-     default:
-       _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-     case GD_NULL:
-@@ -143,11 +143,11 @@
-       break;
-     case GD_COMPLEX64:
-       for (i = 0; i < n; i++)
--        ((float complex*)dataout)[i] = (float complex)(i + s0);
-+        ((GD_FCOMPLEXT*)dataout)[i] = (GD_FCOMPLEXT)(i + s0);
-       break;
-     case GD_COMPLEX128:
-       for (i = 0; i < n; i++)
--        ((double complex*)dataout)[i] = (double complex)(i + s0);
-+        ((GD_DCOMPLEXT*)dataout)[i] = (GD_DCOMPLEXT)(i + s0);
-       break;
-     default:
-       break;
-@@ -175,12 +175,10 @@
-   } else if (type & GD_COMPLEX) {
-     if (type == GD_COMPLEX64)
-       for (i = 0; i < nz; ++i)
--        *((float complex*)databuffer + i) = (float complex)(NaN +
--            _Complex_I * NaN);
-+        *((GD_FCOMPLEXT*)databuffer + i) = GD_FCOMPLEXT(NaN, NaN);
-     else
-       for (i = 0; i < nz; ++i)
--        *((double complex*)databuffer + i) = (double complex)(NaN +
--            _Complex_I * NaN);
-+        *((GD_DCOMPLEXT*)databuffer + i) = GD_DCOMPLEXT(NaN, NaN);
-   } else 
-     memset(databuffer, 0, nz * GD_SIZE(type));
- 
-@@ -206,7 +204,7 @@
-   else
-     s0 -= E->spf * D->fragment[E->fragment_index].frame_offset;
- 
--  databuffer = malloc(ns * E->e->size);
-+  databuffer = (char*)malloc(ns * E->e->size);
-   if (databuffer == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-     dreturn("%i", 0);
-@@ -363,8 +361,8 @@
-       case GD_UINT64:     POLYNOM(      uint64_t); break;
-       case GD_FLOAT32:    POLYNOM(         float); break;
-       case GD_FLOAT64:    POLYNOM(        double); break;
--      case GD_COMPLEX64:  POLYNOM( float complex); break;
--      case GD_COMPLEX128: POLYNOM(double complex); break;
-+      //case GD_COMPLEX64:  POLYNOM( GD_FCOMPLEXT); break;
-+      case GD_COMPLEX128: POLYNOM( GD_DCOMPLEXT); break;
-       default:
-                           _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                           break;
-@@ -378,7 +376,7 @@
-  * scalar a, and integer 2 <= n < GD_MAX_POLYORD
-  */
- static void _GD_CPolynomData(DIRFILE* D, void *data, gd_type_t type,
--    size_t npts, int n, double complex* a)
-+    size_t npts, int n, GD_DCOMPLEXT* a)
++
++
+ /* attempt to open or create a new dirfile - set error appropriately */
+ static FILE* _GD_CreateDirfile(DIRFILE* D, const char* format_file,
+     const char* filedir)
  {
-   size_t i;
++  FILE* fp = NULL;
+   struct stat statbuf;
+   char fullname[FILENAME_MAX];
+   DIR* dir;
+@@ -50,7 +53,6 @@
+   struct dirent* lamb;
+   int dir_error = 0;
+   int format_error = 0;
+-  FILE* fp = NULL;
  
-@@ -401,8 +399,8 @@
-       case GD_UINT64:     POLYNOM(      uint64_t); break;
-       case GD_FLOAT32:    POLYNOM(         float); break;
-       case GD_FLOAT64:    POLYNOM(        double); break;
--      case GD_COMPLEX64:  POLYNOM( float complex); break;
--      case GD_COMPLEX128: POLYNOM(double complex); break;
-+      //case GD_COMPLEX64:  POLYNOM( GD_FCOMPLEXT); break;
-+      case GD_COMPLEX128: POLYNOM(GD_DCOMPLEXT); break;
-       default:
-                           _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                           break;
-@@ -437,8 +435,8 @@
-     case GD_INT64:      MULTIPLY(       int64_t); break;
-     case GD_FLOAT32:    MULTIPLY(         float); break;
-     case GD_FLOAT64:    MULTIPLY(        double); break;
--    case GD_COMPLEX64:  MULTIPLY( float complex); break;
--    case GD_COMPLEX128: MULTIPLY(double complex); break;
-+    case GD_COMPLEX64:  MULTIPLY( GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: MULTIPLY(GD_DCOMPLEXT); break;
-     default:
-                         _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                         break;
-@@ -450,7 +448,7 @@
- /* CMultiplyData: Multiply A by B.  B is complex.
- */
- static void _GD_CMultiplyData(DIRFILE* D, void *A, gd_spf_t spfA,
--    double complex *B, gd_spf_t spfB, gd_type_t type, size_t n)
-+    GD_DCOMPLEXT *B, gd_spf_t spfB, gd_type_t type, size_t n)
- {
-   size_t i;
+   dtrace("%p, \"%s\", \"%s\"", D, format_file, filedir);
  
-@@ -469,8 +467,8 @@
-     case GD_INT64:      MULTIPLY(       int64_t); break;
-     case GD_FLOAT32:    MULTIPLY(         float); break;
-     case GD_FLOAT64:    MULTIPLY(        double); break;
--    case GD_COMPLEX64:  MULTIPLY( float complex); break;
--    case GD_COMPLEX128: MULTIPLY(double complex); break;
-+    case GD_COMPLEX64:  MULTIPLY( GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: MULTIPLY(GD_DCOMPLEXT); break;
-     default:
-                         _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                         break;
-@@ -504,8 +502,8 @@
-     case GD_INT64:      DIVIDE(       int64_t); break;
-     case GD_FLOAT32:    DIVIDE(         float); break;
-     case GD_FLOAT64:    DIVIDE(        double); break;
--    case GD_COMPLEX64:  DIVIDE( float complex); break;
--    case GD_COMPLEX128: DIVIDE(double complex); break;
-+    case GD_COMPLEX64:  DIVIDE( GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: DIVIDE(GD_DCOMPLEXT); break;
-     default:
-                         _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                         break;
-@@ -517,7 +515,7 @@
- /* CDivideData: Divide A by B.  B is complex.
- */
- static void _GD_CDivideData(DIRFILE *D, void *A, gd_spf_t spfA,
--    double complex *B, gd_spf_t spfB, gd_type_t type, size_t n)
-+    GD_DCOMPLEXT *B, gd_spf_t spfB, gd_type_t type, size_t n)
- {
-   size_t i;
- 
-@@ -536,8 +534,8 @@
-     case GD_INT64:      DIVIDE(       int64_t); break;
-     case GD_FLOAT32:    DIVIDE(         float); break;
-     case GD_FLOAT64:    DIVIDE(        double); break;
--    case GD_COMPLEX64:  DIVIDE( float complex); break;
--    case GD_COMPLEX128: DIVIDE(double complex); break;
-+    case GD_COMPLEX64:  DIVIDE( GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: DIVIDE(GD_DCOMPLEXT); break;
-     default:
-                         _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-                         break;
 Index: src/flush.c
 ===================================================================
---- src/flush.c	(Revision 441)
+--- src/flush.c	(Revision 489)
 +++ src/flush.c	(Arbeitskopie)
 @@ -26,7 +26,6 @@
  #include <errno.h>
@@ -197,200 +36,116 @@ Index: src/flush.c
  #include <time.h>
  #include <limits.h>
  #endif
-@@ -247,8 +246,8 @@
-   else if (type == GD_FLOAT64)
-     fprintf(stream, "%.15g%s", *(double*)value, postamble);
-   else if (type == GD_COMPLEX128)
--    fprintf(stream, "%.15g;%.15g%s", creal(*(double complex*)value),
--        cimag(*(double complex*)value), postamble);
-+    fprintf(stream, "%.15g;%.15g%s", creal((*(GD_DCOMPLEXT*)value)),
-+        cimag((*(GD_DCOMPLEXT*)value)), postamble);
-   else
-     _GD_InternalError(D);
+@@ -716,6 +715,7 @@
+   return (D->error == GD_E_OK) ? 0 : -1;
+ }
  
-@@ -356,8 +355,8 @@
-       else if (E->const_type & GD_IEEE754)
-         fprintf(stream, "%.15g\n", E->e->dconst);
-       else if (E->const_type & GD_COMPLEX)
--        fprintf(stream, "%.15g;%.15g\n", creal(E->e->cconst),
--            cimag(E->e->cconst));
-+        fprintf(stream, "%.15g;%.15g\n", creal(GD_DCOMPLEXU2C(E->e->cconst)),
-+            cimag(GD_DCOMPLEXU2C(E->e->cconst)));
-       else
-         fprintf(stream, "%" PRIu64 "\n", E->e->uconst);
-       break;
-@@ -399,7 +398,7 @@
-     mode = stat_buf.st_mode;
++#ifndef _MSC_VER
+ #define GD_VERS_GE_1  0xFFFFFFFFFFFFFFFELLU
+ #define GD_VERS_GE_2  0xFFFFFFFFFFFFFFFCLLU
+ #define GD_VERS_GE_3  0xFFFFFFFFFFFFFFF8LLU
+@@ -734,7 +734,28 @@
+ #define GD_VERS_LE_6  0x000000000000007fLLU
+ #define GD_VERS_LE_7  0x00000000000000ffLLU
+ #define GD_VERS_LE_8  0x00000000000001ffLLU
++#else
++#define GD_VERS_GE_1  0xFFFFFFFFFFFFFFFELU
++#define GD_VERS_GE_2  0xFFFFFFFFFFFFFFFCLU
++#define GD_VERS_GE_3  0xFFFFFFFFFFFFFFF8LU
++#define GD_VERS_GE_4  0xFFFFFFFFFFFFFFF0LU
++#define GD_VERS_GE_5  0xFFFFFFFFFFFFFFE0LU
++#define GD_VERS_GE_6  0xFFFFFFFFFFFFFFC0LU
++#define GD_VERS_GE_7  0xFFFFFFFFFFFFFF80LU
++#define GD_VERS_GE_8  0xFFFFFFFFFFFFFF00LU
  
-   /* open a temporary file */
--  temp_file = malloc(name_len + 15);
-+  temp_file = (char*)malloc(name_len + 15);
-   snprintf(temp_file, name_len + 15, "%s/format_XXXXXX", D->name);
-   fd = mkstemp(temp_file);
-   if (fd == -1) {
-Index: src/encoding.c
-===================================================================
---- src/encoding.c	(Revision 441)
-+++ src/encoding.c	(Arbeitskopie)
-@@ -354,7 +354,7 @@
-   dtrace("%p, %p, \"%s\", %i", D, file, base, temp);
- 
-   if (file->name == NULL) {
--    file->name = malloc(FILENAME_MAX);
-+    file->name = (char*)malloc(FILENAME_MAX);
-     if (file->name == NULL) {
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-       dreturn("%i", -1);
-@@ -385,7 +385,7 @@
-   }
- 
-   if (move && encoding != D->fragment[fragment].encoding) {
--    gd_entry_t **raw_entry = malloc(sizeof(gd_entry_t*) * D->n_entries);
-+    gd_entry_t **raw_entry = (gd_entry_t**)malloc(sizeof(gd_entry_t*) * D->n_entries);
- 
-     if (raw_entry == NULL) {
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
++#define GD_VERS_LE_0  0x0000000000000001LU
++#define GD_VERS_LE_1  0x0000000000000003LU
++#define GD_VERS_LE_2  0x0000000000000007LU
++#define GD_VERS_LE_3  0x000000000000000fLU
++#define GD_VERS_LE_4  0x000000000000001fLU
++#define GD_VERS_LE_5  0x000000000000003fLU
++#define GD_VERS_LE_6  0x000000000000007fLU
++#define GD_VERS_LE_7  0x00000000000000ffLU
++#define GD_VERS_LE_8  0x00000000000001ffLU
++#endif
++
++
+ uint64_t _GD_FindVersion(DIRFILE *D)
+ {
+   unsigned int i;
 Index: src/ascii.c
 ===================================================================
---- src/ascii.c	(Revision 441)
+--- src/ascii.c	(Revision 489)
 +++ src/ascii.c	(Arbeitskopie)
-@@ -22,16 +22,15 @@
- 
- #ifdef STDC_HEADERS
- #include <stdlib.h>
--#include <inttypes.h>
+@@ -25,7 +25,6 @@
+ #include <inttypes.h>
  #include <sys/stat.h>
  #include <sys/types.h>
 -#include <unistd.h>
  #include <fcntl.h>
  #include <stdio.h>
  #include <string.h>
- #include <errno.h>
+Index: src/mod.c
+===================================================================
+--- src/mod.c	(Revision 489)
++++ src/mod.c	(Arbeitskopie)
+@@ -30,6 +30,10 @@
+ #include <libgen.h>
  #endif
  
++#ifdef max
++#undef max
++#endif
 +
- /* The ASCII encoding uses file->fp as to indicate the current line and
-  * file->edata for the stream pointer */
- 
-Index: src/del.c
-===================================================================
---- src/del.c	(Revision 441)
-+++ src/del.c	(Arbeitskopie)
-@@ -268,7 +268,7 @@
-     free(field_code);
- 
-   /* gather a list of fields */
--  gd_entry_t **del_list = malloc(sizeof(gd_entry_t*) * (1 + E->e->n_meta));
-+  gd_entry_t **del_list = (gd_entry_t**)malloc(sizeof(gd_entry_t*) * (1 + E->e->n_meta));
- 
-   if (del_list == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-@@ -341,7 +341,7 @@
-   gd_entry_t* reference = NULL;
- 
-   if (E->field_type == GD_RAW_ENTRY) {
--    new_ref = malloc(sizeof(char*) * D->n_fragment);
-+    new_ref = (char**)malloc(sizeof(char*) * D->n_fragment);
-     if (new_ref == NULL) {
-       free(del_list);
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-Index: src/flimits.c
-===================================================================
---- src/flimits.c	(Revision 441)
-+++ src/flimits.c	(Arbeitskopie)
-@@ -42,7 +42,7 @@
-   }
- 
-   if (move && offset != D->fragment[fragment].frame_offset) {
--    gd_entry_t **raw_entry = malloc(sizeof(gd_entry_t*) * D->n_entries);
-+    gd_entry_t **raw_entry = (gd_entry_t**)malloc(sizeof(gd_entry_t*) * D->n_entries);
- 
-     if (raw_entry == NULL) {
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-Index: src/field_list.c
-===================================================================
---- src/field_list.c	(Revision 441)
-+++ src/field_list.c	(Arbeitskopie)
-@@ -56,7 +56,7 @@
-   }
- 
-   free(D->const_value_list);
--  fl = _GD_Alloc(D, return_type, D->n_const);
-+  fl = (char*)_GD_Alloc(D, return_type, D->n_const);
- 
-   if (fl == NULL) {
-     dreturn("%p", NULL);
-@@ -103,7 +103,7 @@
-     return D->string_value_list;
-   }
- 
--  fl = realloc((char**)D->string_value_list, sizeof(const char*) *
-+  fl = (char**)realloc((char**)D->string_value_list, sizeof(const char*) *
-       (D->n_string + 1));
- 
-   if (fl == NULL) {
-@@ -174,7 +174,7 @@
-     return D->type_list[index];
-   }
- 
--  fl = realloc((char**)D->type_list[index], sizeof(const char*) * (n + 1));
-+  fl = (char**)realloc((char**)D->type_list[index], sizeof(const char*) * (n + 1));
- 
-   if (fl == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-@@ -223,7 +223,7 @@
-     return D->vector_list;
-   }
- 
--  fl = realloc((char**)D->vector_list, sizeof(const char*) * (n + 1));
-+  fl = (char**)realloc((char**)D->vector_list, sizeof(const char*) * (n + 1));
- 
-   if (fl == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-@@ -271,7 +271,7 @@
-     return D->field_list;
-   }
- 
--  fl = realloc((char**)D->field_list, sizeof(const char*) *
-+  fl = (char**)realloc((char**)D->field_list, sizeof(const char*) *
-       (D->n_entries + 1 - D->n_meta));
- 
-   if (fl == NULL) {
+ static unsigned int max(unsigned int A, unsigned int B)
+ {
+   return (A > B) ? A : B;
 Index: src/internal.h
 ===================================================================
---- src/internal.h	(Revision 441)
+--- src/internal.h	(Revision 489)
 +++ src/internal.h	(Arbeitskopie)
-@@ -29,6 +29,14 @@
- #include "getdata.h"
- #include <string.h>
+@@ -27,18 +27,32 @@
+ #endif
  
-+#if HAVE_IO_H
-+#include <io.h>
-+#endif
+ #include "getdata.h"
 +
-+#ifdef STDC_HEADERS
++
+ #include <string.h>
++#include <errno.h>
 +#include <fcntl.h>
-+#endif
-+
+ 
  #ifdef __APPLE__
  typedef off_t off64_t;
  #endif
-@@ -50,8 +58,14 @@
+ 
++#ifdef _MSC_VER
++typedef size_t ssize_t;
++typedef int mode_t;
++#define fsync _commit
++#define snprintf _snprintf
++#endif
++
++
+ #ifdef GD_NO_C99_API
+ #  define GD_DCOMPLEXP_t double *
+ #  define GD_DCOMPLEXA(v) double v[2]
+ #  define GD_DCOMPLEXV(v) double v[][2]
++#ifndef _MSC_VER 
+ #  define cabs(z)  sqrt((z)[0] * (z)[0] + (z)[1] * (z)[1])
+ #  define carg(z)  atan2((z)[1], (z)[0])
++#endif
+ #  define creal(z) ((z)[0])
+ #  define cimag(z) ((z)[1])
+ #  define _gd_a2c _gd_c2c
+@@ -86,6 +100,7 @@
+ #endif
+ #endif
+ 
++
  /* For FILENAME_MAX */
  #include <stdio.h>
  
-+#ifdef HAVE_STDINT_H
-+#include <stdint.h>
-+#endif
-+
- /* For the C99 integer types */
-+#ifdef HAVE_INTTYPES_H
- #include <inttypes.h>
-+#endif
- 
- #ifdef HAVE_IO_H
- #  include <io.h>
-@@ -76,7 +90,11 @@
+@@ -122,7 +137,11 @@
  # define __wur
  #endif
  
@@ -402,16 +157,16 @@ Index: src/internal.h
  
  /* disable the "unspecified order" remark in ICC */
  #ifdef __INTEL_COMPILER
-@@ -186,7 +204,7 @@
+@@ -253,7 +272,7 @@
  #define rmdir _rmdir
  #endif
  
 -#if defined __CYGWIN__ || defined __APPLE__
-+#if defined __CYGWIN__ || defined __APPLE__ || _MSC_VER
++#if defined __CYGWIN__ || defined __APPLE__  || _MSC_VER
  #  define gd_stat64 stat
  #elif HAVE_STAT64
  #  define gd_stat64 stat64
-@@ -198,10 +216,23 @@
+@@ -265,7 +284,7 @@
  typedef struct stat64 gd_stat64_t;
  #elif HAVE_STRUCT___STAT64
  typedef struct __stat64 gd_stat64_t;
@@ -420,516 +175,79 @@ Index: src/internal.h
  typedef struct stat gd_stat64_t;
  #endif
  
-+#ifdef _MSC_VER
-+// TODO patched sys/stat.h	
-+#define _IFMT 0170000 // type of file
-+#define _IFDIR 0040000 // directory
-+#define _IFCHR 0020000 // character special
-+#define _IFBLK 0060000 // block special
-+#define _IFREG 0100000 // regular
-+#define _IFLNK 0120000 // symbolic link
-+#define _IFSOCK 0140000 // socket
-+#define _IFIFO 0010000 // fifo 
-+#define S_ISREG(m) (((m)&_IFMT) == _IFREG) 
-+#endif
-+
- #if ! HAVE_DECL_STRERROR_R
- int strerror_r(int, char*, size_t);
+@@ -285,6 +304,7 @@
+ #define write _write
  #endif
-@@ -293,7 +324,7 @@
-   double x;
-   union {
-     double y;
--    complex double cy;
-+    GD_DCOMPLEXU(cy);
-   };
- };
  
-@@ -334,7 +365,7 @@
-     };
-     struct { /* CONST */
-       union {
--        double complex cconst;
-+        GD_DCOMPLEXU(cconst);
-         double dconst;
-         uint64_t uconst;
-         int64_t iconst;
-@@ -504,14 +535,14 @@
- int _GD_BadInput(DIRFILE* D, gd_entry_t* E, int i);
- int _GD_CalculateEntry(DIRFILE* D, gd_entry_t* E);
- void _GD_CInvertData(DIRFILE* D, void* data, gd_type_t return_type,
--    double complex dividend, size_t n_read);
-+    GD_DCOMPLEXM(dividend), size_t n_read);
++
+ #ifndef HAVE_GETDELIM
+ ssize_t getdelim(char**, size_t*, int, FILE*);
+ #endif
+@@ -719,7 +739,13 @@
+ int _GD_SlimClose(struct _gd_raw_file* file);
+ off64_t _GD_SlimSize(struct _gd_raw_file* file, gd_type_t data_type);
  
- /* _GD_ClearError: Everything's A-OK; clear the last error. */
- #define _GD_ClearError(D) (D)->error = 0
- 
- void _GD_CLincomData(DIRFILE* D, int n, void* data1, gd_type_t return_type,
--    double complex *data2, double complex *data3, double complex* m,
--    double complex *b, gd_spf_t *spf, size_t n_read);
-+    GD_DCOMPLEXP(data2), GD_DCOMPLEXP(data3), GD_DCOMPLEXP(m),
-+    GD_DCOMPLEXP(b), gd_spf_t *spf, size_t n_read);
- void _GD_ConvertType(DIRFILE* D, const void *data_in, gd_type_t in_type,
-     void *data_out, gd_type_t out_type, size_t n) gd_nothrow;
- size_t _GD_DoField(DIRFILE*, gd_entry_t*, int, off64_t, size_t, gd_type_t,
-@@ -648,8 +679,14 @@
-  * For systems without NAN, this is a NAN in IEEE double format.
-  */
- 
+-static inline int entry_cmp(const void *a, const void *b)
 +#ifdef _MSC_VER
-+#define GD_ATTRIBUTE_CONST
++#define _gd_static_inline static
 +#else
-+#define GD_ATTRIBUTE_CONST __attribute__ ((__const__))
++#define _gd_static_inline static inline
 +#endif
 +
- #if !defined(NAN)
--static inline __attribute__ ((__const__)) double __NAN()
-+static inline GD_ATTRIBUTE_CONST double __NAN()
++_gd_static_inline int entry_cmp(const void *a, const void *b)
  {
-   typedef union { unsigned char b[8]; double d; } nan_t;
- #ifdef ARM_ENDIAN_DOUBLES
+   return strcmp((*(gd_entry_t**)a)->field, (*(gd_entry_t**)b)->field);
+ }
 Index: src/getdata.h.in
 ===================================================================
---- src/getdata.h.in	(Revision 441)
+--- src/getdata.h.in	(Revision 489)
 +++ src/getdata.h.in	(Arbeitskopie)
-@@ -47,7 +47,9 @@
+@@ -56,10 +56,18 @@
   *    size_t, off_t, __REDIRECT, &c., if present
   */
  #include <sys/types.h>
++
 +#ifdef HAVE_UNISTD_H
  #include <unistd.h>
 +#endif
  
- /* define function attributes */
- #define gd_gnu_enough ((__GNUC__ * 100 + __GNUC_MINOR__) >= 303)
-@@ -192,16 +194,41 @@
- #undef _gd_int16_t
- #undef _gd_uint16_t
- #undef _gd_int64_t
--#ifndef GETDATA_C89_API
++#ifdef HAVE_STDINT_H
++#include <stdint.h>
++#endif
++
++
+ /* If this symbol is defined here, the C99-API is not present in the library */
+-#undef GD_NO_C99_API
++// TODO check for C99 #undef GD_NO_C99_API
+ 
+ #if defined(GD_NO_C99_API) && ! defined(GD_C89_API)
+ # define GD_C89_API
+@@ -225,9 +233,15 @@
+ /* GD_NO_ENTRY is not part of this count */
+ #define GD_N_ENTYPES 14
+ 
 +#ifdef _MSC_VER // TODO
 +typedef short _gd_int16_t;
 +typedef unsigned short _gd_uint16_t;
 +typedef __int64 _gd_int64_t;
-+#endif
-+#if !defined(GETDATA_C89_API) && !defined(GD_USE_CPP)
- #  include <inttypes.h>
-+#  define GD_FCOMPLEXT    float _Complex
-+#  define GD_DCOMPLEXT    double _Complex
- #  define GD_DCOMPLEXM(v) double _Complex v
- #  define GD_DCOMPLEXP(v) double _Complex *v
-+#  define GD_DCOMPLEXU(v) double _Complex v
- typedef int16_t gd_bit_t;
- typedef uint16_t gd_spf_t;
- typedef int64_t gd_shift_t;
- #else
-+#ifdef GD_USE_CPP
-+#include <complex>
-+#  define GD_FCOMPLEXT    std::complex<float>
-+#  define GD_DCOMPLEXT    std::complex<double>
-+#  define GD_DCOMPLEXM(v) std::complex<double> v
-+#  define GD_DCOMPLEXP(v) std::complex<double>* v
-+#  define GD_DCOMPLEXU(v) double v[2] // needed in unions
-+#  define GD_DCOMPLEXU2C(v) std::complex<double>(v[0], v[1])
-+#  define creal(v) std::complex<double>(v).real()
-+#  define cimag(v) std::complex<double>(v).imag()
-+#  define cabs(v) abs(std::complex<double>(v))
-+#  define carg(v) arg(std::complex<double>(v))
 +#else
-+#  define GD_FCOMPLEXT    float[2]
-+#  define GD_DCOMPLEXT    double[2]
- #  define GD_DCOMPLEXM(v) double v[2]
- #  define GD_DCOMPLEXP(v) double *v
-+#  define GD_DCOMPLEXU(v) double v[2] // needed in unions
+ #undef _gd_int16_t
+ #undef _gd_uint16_t
+ #undef _gd_int64_t
 +#endif
- typedef _gd_int16_t gd_bit_t;
- typedef _gd_uint16_t gd_spf_t;
- typedef _gd_int64_t gd_shift_t;
-@@ -357,7 +384,7 @@
- /* The native gd_add_crecip cannot be used in C89 mode */
- #ifndef GETDATA_C89_API
- extern int gd_add_crecip(DIRFILE *dirfile, const char *field_code,
--    const char *in_field, _Complex double cdividend, int fragment_index)
-+    const char *in_field, GD_DCOMPLEXM(cdividend), int fragment_index)
-   gd_nothrow gd_nonnull ((1,2,3));
- #else
- #define gd_add_crecip gd_add_crecip89
-@@ -419,7 +446,7 @@
- 
- #ifndef GETDATA_C89_API
- extern int gd_alter_crecip(DIRFILE *dirfile, const char *field_code,
--    const char *in_field, _Complex double cdividend) gd_nothrow
-+    const char *in_field, GD_DCOMPLEXM(cdividend)) gd_nothrow
- gd_nonnull((1,2));
- #else
- #define gd_alter_crecip gd_alter_crecip89
-@@ -513,7 +540,7 @@
- 
- #ifndef GETDATA_C89_API
- extern int gd_madd_crecip(DIRFILE *dirfile, const char *parent,
--    const char *field_code, const char *in_field, _Complex double cdividend)
-+    const char *field_code, const char *in_field, GD_DCOMPLEXM(cdividend))
- gd_nothrow gd_nonnull ((1,2,3,4));
- #else
- #define gd_madd_crecip gd_madd_crecip89
-Index: src/add.c
+ #if ! defined GD_C89_API
+ #  include <inttypes.h>
+ #  define GD_DCOMPLEXM(v) double _Complex v
+Index: src/raw.c
 ===================================================================
---- src/add.c	(Revision 441)
-+++ src/add.c	(Arbeitskopie)
-@@ -122,7 +122,7 @@
-   }
- 
-   /* New entry */
--  E = malloc(sizeof(gd_entry_t));
-+  E = (gd_entry_t*)malloc(sizeof(gd_entry_t));
-   if (E == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-     dreturn("%i", -1);
-@@ -134,7 +134,7 @@
-   else
-     E->fragment_index = entry->fragment_index;
- 
--  E->e = malloc(sizeof(struct _gd_private_entry));
-+  E->e = (_gd_private_entry*)malloc(sizeof(struct _gd_private_entry));
-   if (E->e == NULL) {
-     _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-     free(E);
-@@ -188,7 +188,7 @@
-       E->e->file[0].fp = E->e->file[1].fp = -1;
-       E->e->file[0].encoding = GD_ENC_UNKNOWN;
- 
--      if ((E->e->filebase = malloc(FILENAME_MAX)) == NULL) {
-+      if ((E->e->filebase = (char*)malloc(FILENAME_MAX)) == NULL) {
-         _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-         break;
-       }
-@@ -227,8 +227,8 @@
-       else {
-         if (entry->comp_scal) {
-           int cs = 0;
--          memcpy(E->cm, entry->cm, sizeof(double complex) * E->n_fields);
--          memcpy(E->cb, entry->cb, sizeof(double complex) * E->n_fields);
-+          memcpy(E->cm, entry->cm, sizeof(GD_DCOMPLEXT) * E->n_fields);
-+          memcpy(E->cb, entry->cb, sizeof(GD_DCOMPLEXT) * E->n_fields);
-           for (i = 0; i < E->n_fields; ++i) {
-             E->m[i] = creal(E->cm[i]);
-             E->b[i] = creal(E->cb[i]);
-@@ -274,7 +274,9 @@
- 
-       copy_scalar[0] = 1;
-       if (entry->comp_scal) {
--        E->dividend = E->cdividend = entry->cdividend;
-+        // TODO review, original: E->dividend = E->cdividend = entry->cdividend;
-+        E->cdividend = entry->cdividend;
-+        E->dividend = creal(entry->cdividend);
-         E->comp_scal = (cimag(E->cdividend) == 0) ? 0 : 1;
-       } else {
-         E->cdividend = E->dividend = entry->dividend;
-@@ -326,7 +328,7 @@
-       else {
-         if (entry->comp_scal) {
-           int cs = 0;
--          memcpy(E->ca, entry->ca, sizeof(double complex) * (E->poly_ord + 1));
-+          memcpy(E->ca, entry->ca, sizeof(GD_DCOMPLEXT) * (E->poly_ord + 1));
-           for (i = 0; i <= E->poly_ord; ++i) {
-             E->a[i] = creal(E->ca[i]);
-             if (cimag(E->ca[i]))
-@@ -378,7 +380,7 @@
-     dreturn("%i", -1);
-     return -1;
-   }
--  D->entry = new_list;
-+  D->entry = (gd_entry_t**)new_list;
- 
-   if (is_dot) {
-     new_list = realloc(D->dot_list, (D->n_dot + 1) * sizeof(gd_entry_t*));
-@@ -388,7 +390,7 @@
-       dreturn("%i", -1);
-       return -1;
-     }
--    D->dot_list = new_list;
-+    D->dot_list = (gd_entry_t**)new_list;
-   }
- 
-   if (P) {
-@@ -403,7 +405,7 @@
- 
-     /* From here on, nothing may fail */
- 
--    P->e->meta_entry = ptr;
-+    P->e->meta_entry = (gd_entry_t**)ptr;
-     P->e->meta_entry[P->e->n_meta] = E;
-     P->e->n_meta++;
-     D->n_meta++;
-@@ -425,7 +427,7 @@
-       /* This is the first raw field in this fragment; propagate it upwards */
-       for (i = E->fragment_index; i != -1; i = D->fragment[i].parent) {
-         if (D->fragment[i].ref_name == NULL) {
--          D->fragment[i].ref_name = new_ref;
-+          D->fragment[i].ref_name = (char*)new_ref;
-           D->fragment[i].modified = 1;
-         } else
-           break;
-@@ -681,7 +683,7 @@
- 
- /* add a LINCOM entry with complex scalars */
- int gd_add_clincom(DIRFILE* D, const char* field_code, int n_fields,
--    const char** in_fields, const double complex* cm, const double complex* cb,
-+    const char** in_fields, const GD_DCOMPLEXP(cm), const GD_DCOMPLEXP(cb),
-     int fragment_index)
- {
-   dtrace("%p, \"%s\", %i, %p, %p, %p, %i", D, field_code, n_fields, in_fields,
-@@ -881,7 +883,7 @@
- }
- 
- int gd_add_crecip(DIRFILE* D, const char* field_code, const char* in_field,
--    double complex cdividend, int fragment_index)
-+    GD_DCOMPLEXM(cdividend), int fragment_index)
- {
-   dtrace("%p, \"%s\", \"%s\", %g;%g, %i", D, field_code, in_field,
-       creal(cdividend), cimag(cdividend), fragment_index);
-@@ -913,7 +915,7 @@
-       cdividend[0], cdividend[1], fragment_index);
- 
-   int error = gd_add_crecip(D, field_code, in_field,
--      *((complex double*)cdividend), fragment_index);
-+      *((GD_DCOMPLEXT*)cdividend), fragment_index);
- 
-   dreturn("%i", error);
-   return error;
-@@ -960,7 +962,7 @@
- }
- 
- int gd_add_cpolynom(DIRFILE* D, const char* field_code, int poly_ord,
--    const char* in_field, const double complex* ca, int fragment_index)
-+    const char* in_field, const GD_DCOMPLEXP(ca), int fragment_index)
- {
-   dtrace("%p, \"%s\", %i, \"%s\", %p, %i", D, field_code, poly_ord, in_field,
-       ca, fragment_index);
-@@ -1165,7 +1167,7 @@
- /* add a META LINCOM entry, with complex scalaras */
- int gd_madd_clincom(DIRFILE* D, const char* parent,
-     const char* field_code, int n_fields, const char** in_fields,
--    const double complex* cm, const double complex* cb)
-+    const GD_DCOMPLEXP(cm), const GD_DCOMPLEXP(cb))
- {
-   dtrace("%p, \"%s\", \"%s\", %i, %p, %p, %p", D, field_code, parent,
-       n_fields, in_fields, cm, cb);
-@@ -1379,7 +1381,7 @@
- /* add a META POLYNOM entry */
- int gd_madd_cpolynom(DIRFILE* D, const char* parent,
-     const char* field_code, int poly_ord, const char* in_field,
--    const double complex* ca)
-+    const GD_DCOMPLEXP(ca))
- {
-   dtrace("%p, \"%s\", \"%s\", %i, \"%s\", %p", D, field_code, parent, poly_ord,
-       in_field, ca);
-@@ -1470,7 +1472,7 @@
- }
- 
- int gd_madd_crecip(DIRFILE* D, const char *parent, const char* field_code, const
--    char* in_field, double complex cdividend)
-+    char* in_field, GD_DCOMPLEXM(cdividend))
- {
-   dtrace("%p, \"%s\", \"%s\", \"%s\", %g;%g", D, parent, field_code, in_field,
-       creal(cdividend), cimag(cdividend));
-@@ -1501,7 +1503,7 @@
-       in_field, cdividend[0], cdividend[1]);
- 
-   int error = gd_madd_crecip(D, parent, field_code, in_field,
--      *((complex double*)cdividend));
-+      *((GD_DCOMPLEXT*)cdividend));
- 
-   dreturn("%i", error);
-   return error;
-Index: src/common.c
-===================================================================
---- src/common.c	(Revision 441)
-+++ src/common.c	(Arbeitskopie)
-@@ -190,7 +190,7 @@
-       return 1;
-     }
-   } else {
--    e->table_path = malloc(FILENAME_MAX);
-+    e->table_path = (char*)malloc(FILENAME_MAX);
-     if (e->table_path == NULL) {
-       _GD_SetError(D, GD_E_ALLOC, 0, NULL, 0, NULL);
-       dreturn("%i", 1);
-@@ -264,7 +264,8 @@
-   do {
-     if (E->e->complex_table) {
-       sscanf(line, "%lg %lg;%lg", &(E->e->lut[i].x), &yr, &yi);
--      E->e->lut[i].cy = yr + _Complex_I * yi;
-+      E->e->lut[i].cy[0] = yr;
-+      E->e->lut[i].cy[1] = yi;
-     } else
-       sscanf(line, "%lg %lg", &(E->e->lut[i].x), &(E->e->lut[i].y));
- 
-@@ -345,13 +346,14 @@
-   return idx;
- }
- 
--#define CLINTERP(t) \
-+#define CLINTERP(t, r) \
-   do { \
-     for (i = 0; i < npts; i++) { \
-       x = data_in[i]; \
-       idx = _GD_GetIndex(x, lut, idx, n_ln); \
--      ((t*)data)[i] = (t)(lut[idx].cy + (lut[idx + 1].cy - lut[idx].cy) / \
--        (lut[idx + 1].x - lut[idx].x) * (x - lut[idx].x)); \
-+      ((t*)data)[i] = (t)r((GD_DCOMPLEXU2C(lut[idx].cy) + \
-+      (GD_DCOMPLEXU2C(lut[idx + 1].cy) - GD_DCOMPLEXU2C(lut[idx].cy)) / \
-+        (lut[idx + 1].x - lut[idx].x) * (x - lut[idx].x))); \
-     } \
-   } while (0)
- 
-@@ -365,8 +367,8 @@
-     } \
-   } while (0)
- 
--#define LINTERP(t) \
--  if (complex_table) CLINTERP(t); else RLINTERP(t)
-+#define LINTERP(t, r) \
-+  if (complex_table) CLINTERP(t, r); else RLINTERP(t)
- 
- /* _GD_LinterpData: calibrate data using lookup table lut
- */
-@@ -382,18 +384,18 @@
- 
-   switch (type) {
-     case GD_NULL:                                break;
--    case GD_INT8:       LINTERP(int8_t        ); break;
--    case GD_UINT8:      LINTERP(uint8_t       ); break;
--    case GD_INT16:      LINTERP(int16_t       ); break;
--    case GD_UINT16:     LINTERP(uint16_t      ); break;
--    case GD_INT32:      LINTERP(int32_t       ); break;
--    case GD_UINT32:     LINTERP(uint32_t      ); break;
--    case GD_INT64:      LINTERP(int64_t       ); break;
--    case GD_UINT64:     LINTERP(uint64_t      ); break;
--    case GD_FLOAT32:    LINTERP(float         ); break;
--    case GD_FLOAT64:    LINTERP(double        ); break;
--    case GD_COMPLEX64:  LINTERP(complex float ); break;
--    case GD_COMPLEX128: LINTERP(complex double); break;
-+    case GD_INT8:       LINTERP(int8_t,   creal); break;
-+    case GD_UINT8:      LINTERP(uint8_t,  creal); break;
-+    case GD_INT16:      LINTERP(int16_t,  creal); break;
-+    case GD_UINT16:     LINTERP(uint16_t, creal); break;
-+    case GD_INT32:      LINTERP(int32_t,  creal); break;
-+    case GD_UINT32:     LINTERP(uint32_t, creal); break;
-+    case GD_INT64:      LINTERP(int64_t,  creal); break;
-+    case GD_UINT64:     LINTERP(uint64_t, creal); break;
-+    case GD_FLOAT32:    LINTERP(float,    creal); break;
-+    case GD_FLOAT64:    LINTERP(double,   creal); break;
-+    case GD_COMPLEX64:  LINTERP(GD_FCOMPLEXT, GD_FCOMPLEXT); break;
-+    case GD_COMPLEX128: LINTERP(GD_DCOMPLEXT, GD_DCOMPLEXT); break;
-     default:            _GD_SetError(D, GD_E_BAD_TYPE, type, NULL, 0, NULL);
-   }
- 
-@@ -402,15 +404,15 @@
- 
- /* macros to reduce tangly code */
- #define LINCOM1(t) for (i = 0; i < n_read; i++) \
--                            ((t*)data1)[i] = (t)(((t*)data1)[i] * m[0] + b[0])
-+                            ((t*)data1)[i] = (t)(((t*)data1)[i] * t(m[0]) + t(b[0]))
- 
- #define LINCOM2(t) for (i = 0; i < n_read; i++) \
--                            ((t*)data1)[i] = (t)(((t*)data1)[i] * m[0] + \
--                              (data2[i * spf[1] / spf[0]] * m[1] + b[0] + b[1]))
-+                            ((t*)data1)[i] = (t)(((t*)data1)[i] * t(m[0]) + \
-+                              t(data2[i * spf[1] / spf[0]] * m[1] + b[0] + b[1]))
- 
- #define LINCOM3(t) for (i = 0; i < n_read; i++) \
--                            ((t*)data1)[i] = (t)(((t*)data1)[i] * m[0] + \
--                              (data2[i * spf[1] / spf[0]] * m[1] + \
-+                            ((t*)data1)[i] = (t)(((t*)data1)[i] * t(m[0]) + \
-+                              t(data2[i * spf[1] / spf[0]] * m[1] + \
-                                data3[i * spf[2] / spf[0]] * m[2] + \
-                                b[0] + b[1] + b[2]))
- 
-@@ -444,8 +446,8 @@
-     case GD_INT64:      LINCOM(int64_t);        break;
-     case GD_FLOAT32:    LINCOM(float);          break;
-     case GD_FLOAT64:    LINCOM(double);         break;
--    case GD_COMPLEX64:  LINCOM(float complex);  break;
--    case GD_COMPLEX128: LINCOM(double complex); break;
-+    case GD_COMPLEX64:  LINCOM(GD_FCOMPLEXT);  break;
-+    case GD_COMPLEX128: LINCOM(GD_DCOMPLEXT); break;
-     default:            _GD_InternalError(D);
-   }
- 
-@@ -454,8 +456,8 @@
- 
- /* Compute a complex valued lincom, all at once */
- void _GD_CLincomData(DIRFILE* D, int n, void* data1, gd_type_t return_type,
--    double complex *data2, double complex *data3, double complex* m,
--    double complex *b, gd_spf_t *spf, size_t n_read)
-+    GD_DCOMPLEXP(data2), GD_DCOMPLEXP(data3), GD_DCOMPLEXP(m),
-+    GD_DCOMPLEXP(b), gd_spf_t *spf, size_t n_read)
- {
-   size_t i;
- 
-@@ -464,6 +466,7 @@
- 
-   switch(return_type) {
-     case GD_NULL:                               break;
-+#ifndef GD_USE_CPP // TODO what should happen here, too much type propagating    
-     case GD_UINT8:      LINCOM(uint8_t);        break;
-     case GD_INT8:       LINCOM(int8_t);         break;
-     case GD_UINT16:     LINCOM(uint16_t);       break;
-@@ -474,8 +477,9 @@
-     case GD_INT64:      LINCOM(int64_t);        break;
-     case GD_FLOAT32:    LINCOM(float);          break;
-     case GD_FLOAT64:    LINCOM(double);         break;
--    case GD_COMPLEX64:  LINCOM(float complex);  break;
--    case GD_COMPLEX128: LINCOM(double complex); break;
-+    case GD_COMPLEX64:  LINCOM(GD_FCOMPLEXT);   break;
-+    case GD_COMPLEX128: LINCOM(GD_COMPLEXT);    break;
-+#endif
-     default:            _GD_InternalError(D);
-   }
- 
-@@ -483,7 +487,7 @@
- }
- 
- #define DIVIDE(t) for (i = 0; i < n_read; i++) \
--                           ((t*)data)[i] = (t)(dividend / ((t*)data)[i])
-+                           ((t*)data)[i] = (t)(t(dividend) / ((t*)data)[i])
- 
- /* Invert a vector */
- void _GD_InvertData(DIRFILE* D, void* data, gd_type_t return_type,
-@@ -505,8 +509,8 @@
-     case GD_INT64:      DIVIDE(int64_t);        break;
-     case GD_FLOAT32:    DIVIDE(float);          break;
-     case GD_FLOAT64:    DIVIDE(double);         break;
--    case GD_COMPLEX64:  DIVIDE(float complex);  break;
--    case GD_COMPLEX128: DIVIDE(double complex); break;
-+    case GD_COMPLEX64:  DIVIDE(GD_FCOMPLEXT);  break;
-+    case GD_COMPLEX128: DIVIDE(GD_DCOMPLEXT); break;
-     default:            _GD_InternalError(D);
-   }
- 
-@@ -515,7 +519,7 @@
- 
- /* Invert a vector */
- void _GD_CInvertData(DIRFILE* D, void* data, gd_type_t return_type,
--    double complex dividend, size_t n_read)
-+    GD_DCOMPLEXM(dividend), size_t n_read)
- {
-   size_t i;
- 
-@@ -524,6 +528,7 @@
- 
-   switch(return_type) {
-     case GD_NULL:                               break;
-+#ifndef GD_USE_CPP // TODO what should happen here, too much type propagating    
-     case GD_UINT8:      DIVIDE(uint8_t);        break;
-     case GD_INT8:       DIVIDE(int8_t);         break;
-     case GD_UINT16:     DIVIDE(uint16_t);       break;
-@@ -536,6 +541,7 @@
-     case GD_FLOAT64:    DIVIDE(double);         break;
-     case GD_COMPLEX64:  DIVIDE(float complex);  break;
-     case GD_COMPLEX128: DIVIDE(double complex); break;
-+#endif
-     default:            _GD_InternalError(D);
-   }
- 
+--- src/raw.c	(Revision 489)
++++ src/raw.c	(Arbeitskopie)
+@@ -24,7 +24,7 @@
+ #include <stdlib.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+-#include <unistd.h>
++
+ #include <fcntl.h>
+ #include <errno.h>
+ #endif
