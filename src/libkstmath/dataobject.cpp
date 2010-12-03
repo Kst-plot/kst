@@ -193,6 +193,11 @@ void DataObject::scanPlugins() {
   pluginPath += QDir::separator();
   pluginPath += QLatin1String("kst");
   pluginPaths << pluginPath;
+  
+  pluginPath = rootDir.canonicalPath();
+  pluginPath += QDir::separator();
+  pluginPath += QLatin1String("PlugIns");
+  pluginPaths << pluginPath;
 
   foreach (QString pluginPath, pluginPaths) {
     QDir d(pluginPath);
