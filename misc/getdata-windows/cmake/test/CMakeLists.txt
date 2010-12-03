@@ -3,11 +3,11 @@ project(GetDataTests)
 GD_FILES(gd test)
 
 set(tests_ignored
-	bzip_get bzip_get_get bzip_move_from bzip_nframes
-	gzip_get gzip_get_get gzip_move_from gzip_nframes
+	bzip_get bzip_get_get bzip_move_from bzip_nframes bzip_put
+	gzip_get gzip_get_get gzip_move_from gzip_nframes gzip_put
 	lzma_get lzma_nframes
 	legacy_get legacy_get_put legacy_get_rofs legacy_nframes legacy_nonexistent legacy_put legacy_spf
-	slim_get slim_nframes
+	slim_get slim_nframes slim_put
 	xz_get xz_nframes
 	)
 	
@@ -42,9 +42,9 @@ foreach(_item ${tests_ignored})
 	list(REMOVE_ITEM gd_sources ${GD_DIR}/test/${_item}.c)
 endforeach()
 
+#set(gd_sources ${GD_DIR}/test/close.c ${GD_DIR}/test/alter_multiply.c)
 
-
-add_definitions(-D__TEST__=\"${CMAKE_CURRENT_BINARY_DIR}/\")
+add_definitions(-D__TEST__=\"${CMAKE_BINARY_DIR}/\")
 
 foreach(_test ${gd_sources})
 	get_filename_component(testname ${_test} NAME_WE)
