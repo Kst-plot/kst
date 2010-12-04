@@ -18,6 +18,7 @@
 
 #include <QTextDocument>
 #include <QXmlStreamWriter>
+#include <QVariant>
 
 #include "kst_i18n.h"
 

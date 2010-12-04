@@ -15,6 +15,7 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QXmlStreamWriter>
 #include <QHash>
 #include <QAction>

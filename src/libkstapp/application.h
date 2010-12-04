@@ -16,7 +16,7 @@
 #include <QPointer>
 #include <QApplication>
 
-#include "kst_export.h"
+
 #include "mainwindow.h"
 
 #define kstApp \

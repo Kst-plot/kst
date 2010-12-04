@@ -37,6 +37,7 @@
 #include <QHeaderView>
 #include <QToolBar>
 #include <QMenu>
+#include <QShortcut>
 
 namespace Kst {
 

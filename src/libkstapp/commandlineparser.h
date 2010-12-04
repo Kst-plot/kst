@@ -18,6 +18,8 @@
 #include "plotitem.h"
 
 #include <QStringList>
+#include <QPrinter>
+
 namespace Kst {
 /**
 	@author Barth Netterfield <netterfield@physics.utoronto.ca>

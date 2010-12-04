@@ -23,6 +23,8 @@
 #include <QTabBar>
 #include <QUndoGroup>
 #include <QDebug>
+#include <QDragEnterEvent>
+
 
 namespace Kst {
 

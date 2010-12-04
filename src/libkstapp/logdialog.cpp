@@ -16,7 +16,7 @@
 #include "mainwindow.h"
 
 #include <time.h>
-
+#include <QImageWriter>
 
 namespace Kst {
 
