@@ -17,14 +17,14 @@
 
 namespace Kst {
 
-static QMap<QString, RelationFactory*> *factories = 0;
+static QMap<QString, RelationFactory*> *relation_factories = 0;
 
 void cleanupRelations() {
-  foreach (RelationFactory *f, *factories) {
+  foreach (RelationFactory *f, *relation_factories) {
     delete f;
   }
-  delete factories;
-  factories = 0;
+  delete relation_factories;
+  relation_factories = 0;
 }
 
 
@@ -37,11 +37,11 @@ RelationFactory::~RelationFactory() {
 
 
 void RelationFactory::registerFactory(const QString& node, RelationFactory *factory) {
-  if (!factories) {
-    factories = new QMap<QString,RelationFactory*>;
+  if (!relation_factories) {
+    relation_factories = new QMap<QString,RelationFactory*>;
     qAddPostRoutine(cleanupRelations);
   }
-  factories->insert(node, factory);
+  relation_factories->insert(node, factory);
 }
 
 
@@ -53,11 +53,11 @@ void RelationFactory::registerFactory(const QStringList& nodes, RelationFactory 
 
 
 RelationPtr RelationFactory::parse(ObjectStore *store, QXmlStreamReader& stream) {
-  if (!factories) {
+  if (!relation_factories) {
     return 0;
   }
 
-  RelationFactory *f = factories->value(stream.name().toString());
+  RelationFactory *f = relation_factories->value(stream.name().toString());
   if (!f) {
     return 0;
   }

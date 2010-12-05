@@ -37,7 +37,7 @@ namespace Kst {
 const QString CSD::staticTypeString = I18N_NOOP("Cumulative Spectral Decay");
 const QString CSD::staticTypeTag = I18N_NOOP("csd");
 
-static const QLatin1String INVECTOR = QLatin1String("I");
+static const QLatin1String CSD_INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
 
 #define KSTCSDMAXLEN 27
@@ -69,7 +69,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     PSDType in_outputType, const QString& in_vectorUnits,
     const QString& in_rateUnits) {
 
-  _inputVectors[INVECTOR] = in_V;
+  _inputVectors[CSD_INVECTOR] = in_V;
   QString vecName = in_V ? in_V->Name() : QString();
   _frequency = in_freq;
   _average = in_average;
@@ -101,7 +101,7 @@ CSD::~CSD() {
 
 void CSD::internalUpdate() {
 
-  VectorPtr inVector = _inputVectors[INVECTOR];
+  VectorPtr inVector = _inputVectors[CSD_INVECTOR];
 
   writeLockInputsAndOutputs();
 
@@ -151,7 +151,7 @@ void CSD::internalUpdate() {
 
 void CSD::save(QXmlStreamWriter &s) {
   s.writeStartElement(staticTypeTag);
-  s.writeAttribute("vector", _inputVectors[INVECTOR]->Name());
+  s.writeAttribute("vector", _inputVectors[CSD_INVECTOR]->Name());
   s.writeAttribute("samplerate", QString::number(_frequency));
   s.writeAttribute("gaussiansigma", QString::number(_gaussianSigma));
   s.writeAttribute("average", QVariant(_average).toString());
@@ -170,7 +170,7 @@ void CSD::save(QXmlStreamWriter &s) {
 
 
 void CSD::setVector(VectorPtr new_v) {
-  VectorPtr v = _inputVectors[INVECTOR];
+  VectorPtr v = _inputVectors[CSD_INVECTOR];
   if (v) {
     if (v == new_v) {
       return;
@@ -178,14 +178,14 @@ void CSD::setVector(VectorPtr new_v) {
     v->unlock();
   }
 
-  _inputVectors.remove(INVECTOR);
+  _inputVectors.remove(CSD_INVECTOR);
   new_v->writeLock();
-  _inputVectors[INVECTOR] = new_v;
+  _inputVectors[CSD_INVECTOR] = new_v;
 }
 
 
 VectorPtr CSD::vector() const {
-  return _inputVectors[INVECTOR];
+  return _inputVectors[CSD_INVECTOR];
 }
 
 
@@ -195,7 +195,7 @@ bool CSD::slaveVectorsUsed() const {
 
 
 QString CSD::propertyString() const {
-  return i18n("CSD: %1").arg(_inputVectors[INVECTOR]->Name());
+  return i18n("CSD: %1").arg(_inputVectors[CSD_INVECTOR]->Name());
 }
 
 
@@ -327,7 +327,7 @@ void CSD::setRateUnits(const QString& units) {
 DataObjectPtr CSD::makeDuplicate() const{
 
   CSDPtr csd = store()->createObject<CSD>();
-  csd->change(_inputVectors[INVECTOR],
+  csd->change(_inputVectors[CSD_INVECTOR],
               _frequency,
               _average,
               _removeMean,
@@ -366,7 +366,7 @@ void CSD::updateMatrixLabels(void) {
     label = i18n("Power Spectrum \\[%1^2\\]").arg(_vectorUnits);
     break;
   }
-  label += " of " + _inputVectors[INVECTOR]->descriptiveName();
+  label += " of " + _inputVectors[CSD_INVECTOR]->descriptiveName();
   _outMatrix->setLabel(label);
 
 }
@@ -386,7 +386,7 @@ QString CSD::descriptionTip() const {
     if (apodize()) tip += i18n("Apodize; ");
     if (removeMean()) tip += i18n("Remove Mean;");
   }
-  tip += i18n("\nInput: %1").arg(_inputVectors[INVECTOR]->descriptionTip());
+  tip += i18n("\nInput: %1").arg(_inputVectors[CSD_INVECTOR]->descriptionTip());
   return tip;
  
 }

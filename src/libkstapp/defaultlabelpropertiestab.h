@@ -50,6 +50,9 @@ class DefaultLabelPropertiesTab : public DialogTab, Ui_DefaultLabelPropertiesTab
     void referenceViewSizeComboChanged(int i);
 };
 
+extern const double A4Width; //  A4 with a 1.5 cm margin;
+extern const double A4Height; // A4 with a 1.5 cm margin;
+
 }
 
 #endif

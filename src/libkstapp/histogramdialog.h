@@ -24,6 +24,14 @@
 
 #include "kst_export.h"
 
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 namespace Kst {
 
 class HistogramTab : public DataTab, Ui::HistogramTab {

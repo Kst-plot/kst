@@ -5,6 +5,12 @@ project(Kst)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 include(KstMacros)
 
+message(STATUS "")
+message(STATUS "Build options:")
+message(STATUS "")
+kst_option(merge_files "Merge files to speedup build" OFFS all)
+message(STATUS "")
+
 find_package(Qt4 REQUIRED)
 find_package(Getdata)
 find_package(Gsl)

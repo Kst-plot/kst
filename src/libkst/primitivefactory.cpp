@@ -17,14 +17,14 @@
 
 namespace Kst {
 
-static QMap<QString, PrimitiveFactory*> *factories = 0;
+static QMap<QString, PrimitiveFactory*> *primitive_factories = 0;
 
 void cleanupPrimitives() {
-  foreach (PrimitiveFactory *f, *factories) {
+  foreach (PrimitiveFactory *f, *primitive_factories) {
     delete f;
   }
-  delete factories;
-  factories = 0;
+  delete primitive_factories;
+  primitive_factories = 0;
 }
 
 
@@ -37,11 +37,11 @@ PrimitiveFactory::~PrimitiveFactory() {
 
 
 void PrimitiveFactory::registerFactory(const QString& node, PrimitiveFactory *factory) {
-  if (!factories) {
-    factories = new QMap<QString,PrimitiveFactory*>;
+  if (!primitive_factories) {
+    primitive_factories = new QMap<QString,PrimitiveFactory*>;
     qAddPostRoutine(cleanupPrimitives);
   }
-  factories->insert(node, factory);
+  primitive_factories->insert(node, factory);
 }
 
 
@@ -53,11 +53,11 @@ void PrimitiveFactory::registerFactory(const QStringList& nodes, PrimitiveFactor
 
 
 PrimitivePtr PrimitiveFactory::parse(ObjectStore *store, QXmlStreamReader& stream) {
-  if (!factories) {
+  if (!primitive_factories) {
     return 0;
   }
 
-  PrimitiveFactory *f = factories->value(stream.name().toString());
+  PrimitiveFactory *f = primitive_factories->value(stream.name().toString());
   if (!f) {
     return 0;
   }

@@ -13,6 +13,7 @@
 #include "applicationsettings.h"
 
 #include "updatemanager.h"
+#include "defaultlabelpropertiestab.h"
 
 #include <QCoreApplication>
 #include <QGLPixelBuffer>
@@ -26,22 +27,20 @@
 
 namespace Kst {
 
-const double A4Width = (29.7 - 3.0); //  A4 with a 1.5 cm margin;
-const double A4Height = (21.0 - 3.0); // A4 with a 1.5 cm margin;
 
-static ApplicationSettings *_self = 0;
+static ApplicationSettings *settings_self = 0;
 void ApplicationSettings::cleanup() {
-  delete _self;
-  _self = 0;
+  delete settings_self;
+  settings_self = 0;
 }
 
 
 ApplicationSettings *ApplicationSettings::self() {
-  if (!_self) {
-    _self = new ApplicationSettings;
+  if (!settings_self) {
+    settings_self = new ApplicationSettings;
     qAddPostRoutine(cleanup);
   }
-  return _self;
+  return settings_self;
 }
 
 
