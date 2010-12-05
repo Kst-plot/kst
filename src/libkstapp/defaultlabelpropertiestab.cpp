@@ -12,6 +12,8 @@
 #include "kst_i18n.h"
 #include "defaultlabelpropertiestab.h"
 
+#include <math.h>
+
 namespace Kst {
 
 const double USLetterWidth = (11.0 - 1.0)*2.54; // 11 inches with a 1/2" margin in cm

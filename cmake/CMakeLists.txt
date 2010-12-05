@@ -6,6 +6,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 include(KstMacros)
 
 find_package(Qt4 REQUIRED)
+find_package(Getdata)
+find_package(Gsl)
+find_package(Netcdf)
 
 set(KST_VERSION 2.0.3)
 

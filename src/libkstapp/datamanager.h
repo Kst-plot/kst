@@ -14,6 +14,7 @@
 #define DATAMANAGER_H
 
 #include <QDialog>
+#include <QShortcut>
 #include "object.h"
 
 #include "ui_datamanager.h"

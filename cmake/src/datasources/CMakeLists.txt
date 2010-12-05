@@ -7,7 +7,10 @@ kst_add_plugin(. qimagesource)
 kst_add_plugin(. sampledatasource)
 
 if(getdata)
+	message(STATUS "Building 'dirfile' datasource plugin")
+	include_directories(${GETDATA_INCLUDE_DIR})
 	kst_add_plugin(. dirfilesource)
+	kst_link(${GETDATA_LIBRARIES})
 endif()
 
 if(fitsimage)
@@ -23,7 +26,10 @@ if(lfioo)
 endif()
 
 if(netcdf)
+	message(STATUS "Building 'netcdf' datasource plugin")
+	include_directories(${NETCDF_INCLUDE_DIR})
 	kst_add_plugin(. netcdf)
+	kst_link(${NETCDF_LIBRARIES})
 endif()
 	
 if(planckIDEF)
