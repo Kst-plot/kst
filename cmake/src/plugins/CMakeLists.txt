@@ -1,8 +1,6 @@
 
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/plugin)
-include_directories(${CMAKE_BINARY_DIR}/src/plugins)
-kst_include_directories(kstcore kstmath kstwidgets)
+kst_init_plugin(src/plugins)
 
 
 kst_add_plugin(dataobject bin)

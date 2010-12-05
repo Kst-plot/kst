@@ -19,8 +19,8 @@
 #define ASCII_PLUGIN_H
 
 
-#include <asciisource.h>
-#include <dataplugin.h>
+#include "asciisource.h"
+#include "dataplugin.h"
 
 
 class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface

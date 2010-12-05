@@ -201,12 +201,14 @@ void DataObject::scanPlugins() {
 
   foreach (QString pluginPath, pluginPaths) {
     QDir d(pluginPath);
-    foreach (QString fileName, d.entryList(QDir::Files)) {
+	Debug::self()->log(i18n("Path: ") + pluginPath);
+    foreach (QString fileName, d.entryList(QDir::Files)) {		
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
           if (DataObjectPluginInterface *dataObjectPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
             tmpList.append(dataObjectPlugin);
+			Debug::self()->log(i18n("Loaded: ") + fileName);
           }
         }
     }
