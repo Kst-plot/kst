@@ -1,8 +1,8 @@
 kst_init(kst)
 
-kst_files_find(src/kst)
+kst_files_ignore(main-vld)
 
-kst_files_remove(main-vld)
+kst_files_find(src/kst)
 
 if(MSVC)
 	set(rc_file ${KST_DIR}/src/kst/kst_icon.rc)
