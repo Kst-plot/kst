@@ -1,6 +1,10 @@
 
 
-kst_init_plugin(src/datasources)
+kst_init_plugin(src/datasources datasource)
+
+if(MSVC)
+	add_definitions(-DKST_USE_KST_ATOF)
+endif()
 
 kst_add_plugin(. ascii)
 kst_add_plugin(. qimagesource)
