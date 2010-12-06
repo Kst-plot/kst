@@ -27,7 +27,7 @@ macro(merged_files_build _allinone_name _list)
 		endif()
 	endif()
 
-	if (merge_rebuild)
+	if (merged_files_rebuild)
 		set(_rebuild_file_const 1)
 		set(_rebuild_file_touched 1)
 	endif()
