@@ -6,7 +6,7 @@ CONFIG += dll
 DEFINES += BUILD_KSTCORE
 TARGET = $$kstlib(kst2lib)
 DESTDIR = $$OUTPUT_DIR/lib
-
+unix:QMAKE_LFLAGS_SHLIB *= -lrt
 macx:CONFIG += lib_bundle
 
 !isEmpty(INSTALL_PREFIX) {
