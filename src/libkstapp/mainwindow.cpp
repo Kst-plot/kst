@@ -18,6 +18,7 @@
 #include "document.h"
 #include "ellipseitem.h"
 #include "exportgraphicsdialog.h"
+#include "exportvectorsdialog.h"
 #include "logdialog.h"
 #include "application.h"
 #include "debug.h"
@@ -65,6 +66,7 @@ namespace Kst {
 MainWindow::MainWindow() :
     _dataManager(0),
     _exportGraphics(0),
+    _exportVectors(0),
     _logDialog(0),
     _differentiateCurvesDialog(0),
     _chooseColorDialog(0),
@@ -769,6 +771,11 @@ void MainWindow::createActions() {
   _exportGraphicsAct->setIcon(QPixmap(":document-export.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
+  _exportVectorsAct = new QAction(tr("Export &Vectors..."), this);
+  _exportVectorsAct->setStatusTip(tr("Export vectors to ascii file"));
+  _exportVectorsAct->setIcon(QPixmap(":document-export.png"));
+  connect(_exportVectorsAct, SIGNAL(triggered()), this, SLOT(showExportVectorsDialog()));
+
   _logAct = new QAction(tr("&Log Entry..."), this);
   _logAct->setStatusTip(tr("Commit a log entry"));
   _logAct->setIcon(QPixmap(":document-export.png"));
@@ -826,10 +833,15 @@ void MainWindow::createActions() {
   _forwardAct->setIcon(QPixmap(":kst_forward.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
-  _readFromEndAct = new QAction(tr("Read From End"), this);
+  _readFromEndAct = new QAction(tr("Count From End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
   _readFromEndAct->setIcon(QPixmap(":kst_readFromEnd.png"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
+
+  _readToEndAct = new QAction(tr("Read To End"), this);
+  _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
+  _readToEndAct->setIcon(QPixmap(":kst_readToEnd.png"));
+  connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("Pause"), this);
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
@@ -1072,6 +1084,7 @@ void MainWindow::createMenus() {
   // Print/export
   _fileMenu->addAction(_printAct);
   _fileMenu->addAction(_exportGraphicsAct);
+  _fileMenu->addAction(_exportVectorsAct);
   _fileMenu->addAction(_logAct);
   _fileMenu->addSeparator();
   // Tabs
@@ -1097,6 +1110,7 @@ void MainWindow::createMenus() {
   _rangeMenu->addAction(_forwardAct);
   _rangeMenu->addSeparator();
   _rangeMenu->addAction(_readFromEndAct);
+  _rangeMenu->addAction(_readToEndAct);
   _rangeMenu->addAction(_pauseAct);
   _rangeMenu->addSeparator();
   _rangeMenu->addAction(_changeDataSampleDialogAct);
@@ -1218,6 +1232,7 @@ void MainWindow::createToolBars() {
   _rangeToolBar->addAction(_backAct);
   _rangeToolBar->addAction(_forwardAct);
   _rangeToolBar->addAction(_readFromEndAct);
+  _rangeToolBar->addAction(_readToEndAct);
   _rangeToolBar->addAction(_pauseAct);
 
   _modeToolBar = addToolBar(tr("Mode"));
@@ -1282,6 +1297,9 @@ void MainWindow::readFromEnd() {
   foreach (DataVectorPtr v, dataVectors) {
     v->readLock();
     nf = v->reqNumFrames();
+    if (nf <=0 ) {
+      nf = v->numFrames();
+    }
     skip = v->skip();
     do_skip = v->doSkip();
     do_filter = v->doAve();
@@ -1289,6 +1307,30 @@ void MainWindow::readFromEnd() {
 
     v->writeLock();
     v->changeFrames(-1, nf, skip, do_skip, do_filter);
+    v->registerChange();
+    v->unlock();
+  }
+  UpdateManager::self()->doUpdates(true);
+}
+
+void MainWindow::readToEnd() {
+  int f0;
+  int skip;
+  bool do_skip;
+  bool do_filter;
+
+  DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+
+  foreach (DataVectorPtr v, dataVectors) {
+    v->readLock();
+    f0 = v->startFrame();
+    skip = v->skip();
+    do_skip = v->doSkip();
+    do_filter = v->doAve();
+    v->unlock();
+
+    v->writeLock();
+    v->changeFrames(f0, -1, skip, do_skip, do_filter);
     v->registerChange();
     v->unlock();
   }
@@ -1472,6 +1514,20 @@ void MainWindow::showExportGraphicsDialog() {
     _exportGraphics->activateWindow();
   }
   _exportGraphics->show();
+}
+
+
+void MainWindow::showExportVectorsDialog() {
+  if (!_exportVectors) {
+    _exportVectors = new ExportVectorsDialog(this);
+    //connect(_exportVectors, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)),
+    //        this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
+  }
+  if (_exportVectors->isVisible()) {
+    _exportVectors->raise();
+    _exportVectors->activateWindow();
+  }
+  _exportVectors->show();
 }
 
 

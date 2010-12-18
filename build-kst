@@ -25,5 +25,8 @@ fi
 mkdir -p $BUILDDIR
 cd $BUILDDIR
 qmake -r $SCRIPTDIR/kst.pro
+#qmake-qt4 $SCRIPTDIR/kst.pro -r -spec linux-g++
 
 make -j3
+#make -j 3 -w 
+

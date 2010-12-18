@@ -55,7 +55,7 @@ class LogDialog : public QDialog, Ui::LogDialog
     MainWindow *_parent;
     QString _imagename;
     QString _msgfilename;
-
+    QString _username;
 
 };
 

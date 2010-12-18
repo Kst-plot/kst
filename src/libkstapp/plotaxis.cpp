@@ -1148,7 +1148,7 @@ double PlotAxis::computeMajorTickSpacing(MajorTickMode majorTickCount, double R,
     return computeMajorTickSpacing(majorTickCount, R);
   }
 
-  int best_i;
+  int best_i=0;
   double best_err = 1E88;
   double err;
   for (int i=0; i<n; i++) {

@@ -6,237 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>567</width>
-    <height>355</height>
+    <width>644</width>
+    <height>421</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Make a log entry</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="1" column="0" colspan="6">
-    <widget class="QPlainTextEdit" name="_message"/>
-   </item>
-   <item row="2" column="0" colspan="6">
-    <widget class="QGroupBox" name="groupBox1">
-     <property name="title">
-      <string>Plot Properties</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="textLabel1_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>S&amp;pecify:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="buddy">
-         <cstring>_sizeOption</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="3">
-       <widget class="QComboBox" name="_sizeOption">
-        <item>
-         <property name="text">
-          <string>width and height</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>size of square</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>width, maintaining aspect ratio</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>height, maintaining aspect ratio</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="textLabel1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>&amp;File format:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="buddy">
-         <cstring>_formats</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="_widthLabel">
-        <property name="text">
-         <string>&amp;Width:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="buddy">
-         <cstring>_xSize</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="_xSize">
-        <property name="whatsThis">
-         <string>Width (in Pixels) of the image.</string>
-        </property>
-        <property name="minimum">
-         <number>5</number>
-        </property>
-        <property name="maximum">
-         <number>10000</number>
-        </property>
-        <property name="singleStep">
-         <number>20</number>
-        </property>
-        <property name="value">
-         <number>1024</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="_heightLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>&amp;Height:</string>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="buddy">
-         <cstring>_ySize</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="_ySize">
-        <property name="whatsThis">
-         <string>Height of the image (in pixels).</string>
-        </property>
-        <property name="minimum">
-         <number>5</number>
-        </property>
-        <property name="maximum">
-         <number>10000</number>
-        </property>
-        <property name="singleStep">
-         <number>20</number>
-        </property>
-        <property name="value">
-         <number>768</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4" colspan="3">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>250</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="5" colspan="2">
-       <widget class="QComboBox" name="_formats"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="6">
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="_saveLocationLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Local Log Directory:</string>
-       </property>
-       <property name="wordWrap">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="Kst::FileRequester" name="_saveLocation" native="true"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>&amp;Script:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="buddy">
-        <cstring>_script</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="_script">
-       <property name="toolTip">
-        <string>The variables $imagefile and $messagefile can be used in the argument list.</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Script Output:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="6">
-    <widget class="QPlainTextEdit" name="_scriptOutput"/>
-   </item>
-   <item row="6" column="0">
+   <item row="1" column="0">
     <widget class="QPushButton" name="_rerunScript">
      <property name="enabled">
       <bool>false</bool>
@@ -252,7 +30,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="3">
+   <item row="1" column="1">
+    <widget class="QLabel" name="_scriptRunning">
+     <property name="text">
+      <string>Script:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -265,47 +50,312 @@
      </property>
     </spacer>
    </item>
-   <item row="6" column="4">
+   <item row="1" column="3">
     <widget class="QPushButton" name="_apply">
      <property name="text">
       <string>&amp;Apply</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="5">
+   <item row="1" column="4">
     <widget class="QPushButton" name="_close">
      <property name="text">
       <string>&amp;Close</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
-    <widget class="QLabel" name="_scriptRunning">
-     <property name="text">
-      <string>Script:</string>
+   <item row="0" column="0" colspan="5">
+    <widget class="QTabWidget" name="_tab">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Message</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>&amp;Message:</string>
+           </property>
+           <property name="buddy">
+            <cstring>_message</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>Clear</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPlainTextEdit" name="_message"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Script Output:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPlainTextEdit" name="_scriptOutput"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Configuration</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBox1">
+         <property name="title">
+          <string>Plot Properties</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="0">
+           <widget class="QLabel" name="_widthLabel">
+            <property name="text">
+             <string>&amp;Width:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+            <property name="buddy">
+             <cstring>_xSize</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5" colspan="2">
+           <widget class="QComboBox" name="_formats"/>
+          </item>
+          <item row="1" column="4" colspan="3">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>250</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QComboBox" name="_sizeOption">
+            <item>
+             <property name="text">
+              <string>width, maintaining aspect ratio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>width and height</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>height, maintaining aspect ratio</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>size of square</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="_heightLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>&amp;Height:</string>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+            <property name="buddy">
+             <cstring>_ySize</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QSpinBox" name="_ySize">
+            <property name="whatsThis">
+             <string>Height of the image (in pixels).</string>
+            </property>
+            <property name="minimum">
+             <number>5</number>
+            </property>
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="singleStep">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>768</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="textLabel1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>&amp;File format:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+            <property name="buddy">
+             <cstring>_formats</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="textLabel1_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>S&amp;pecify:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+            <property name="buddy">
+             <cstring>_sizeOption</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="_xSize">
+            <property name="whatsThis">
+             <string>Width (in Pixels) of the image.</string>
+            </property>
+            <property name="minimum">
+             <number>5</number>
+            </property>
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="singleStep">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>1024</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="_saveLocationLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Local Log Directory:</string>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="Kst::FileRequester" name="_saveLocation" native="true"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>&amp;Script:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>_script</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="_script">
+           <property name="toolTip">
+            <string>The variables $user, $imagefile and $messagefile can be used in the argument list.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>&amp;User Name:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>_user</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="_user"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>&amp;Message:</string>
-       </property>
-       <property name="buddy">
-        <cstring>_message</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Clear</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>
@@ -318,9 +368,19 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>_message</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>_tab</tabstop>
+  <tabstop>_apply</tabstop>
+  <tabstop>_close</tabstop>
+  <tabstop>_rerunScript</tabstop>
+  <tabstop>_scriptOutput</tabstop>
   <tabstop>_sizeOption</tabstop>
+  <tabstop>_formats</tabstop>
   <tabstop>_xSize</tabstop>
   <tabstop>_ySize</tabstop>
+  <tabstop>_script</tabstop>
+  <tabstop>_user</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -331,12 +391,12 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>526</x>
-     <y>329</y>
+     <x>629</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>256</x>
-     <y>329</y>
+     <y>328</y>
     </hint>
    </hints>
   </connection>
@@ -347,12 +407,12 @@
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>133</x>
-     <y>16</y>
+     <x>419</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
-     <x>125</x>
-     <y>46</y>
+     <x>137</x>
+     <y>109</y>
     </hint>
    </hints>
   </connection>

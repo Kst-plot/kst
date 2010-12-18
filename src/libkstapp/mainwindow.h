@@ -29,6 +29,7 @@ class DataManager;
 class DebugDialog;
 class Document;
 class ExportGraphicsDialog;
+class ExportVectorsDialog;
 class LogDialog;
 class DifferentiateCurvesDialog;
 class ChooseColorDialog;
@@ -63,6 +64,7 @@ class MainWindow : public QMainWindow
     void showDataManager();
     void showDebugDialog();
     void showExportGraphicsDialog();
+    void showExportVectorsDialog();
     void showLogDialog();
     void showVectorEditor();
     void showScalarEditor();
@@ -78,6 +80,7 @@ class MainWindow : public QMainWindow
     void showPluginDialog(QString &pluginName);
 
     void readFromEnd();
+    void readToEnd();
     void pause(bool pause);
     void back();
     void forward();
@@ -163,6 +166,7 @@ class MainWindow : public QMainWindow
     DataManager *_dataManager;
     DebugDialog *_debugDialog;
     ExportGraphicsDialog *_exportGraphics;
+    ExportVectorsDialog *_exportVectors;
     LogDialog *_logDialog;
     DifferentiateCurvesDialog *_differentiateCurvesDialog;
     ChooseColorDialog *_chooseColorDialog;
@@ -217,6 +221,7 @@ class MainWindow : public QMainWindow
     QAction *_debugDialogAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
+    QAction *_exportVectorsAct;
     QAction *_logAct;
     QAction *_openAct;    
     QAction *_saveAct;
@@ -248,6 +253,7 @@ class MainWindow : public QMainWindow
     QAction *_bugReportWizardAct;
 
     QAction *_readFromEndAct;
+    QAction *_readToEndAct;
     QAction *_pauseAct;
     QAction *_backAct;
     QAction *_forwardAct;

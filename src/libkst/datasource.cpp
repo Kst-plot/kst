@@ -47,8 +47,6 @@
 // TODO DataSource should not need the plugin code
 #include "datasourcepluginmanager.h"
 
-#define DATASOURCE_UPDATE_TIMER_LENGTH 1000
-
 
 using namespace Kst;
 

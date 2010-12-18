@@ -44,6 +44,9 @@ LogDialog::LogDialog(MainWindow *parent)
 
   _script->setText(_dialogDefaults->value("log/script", QString()).toString());
 
+  _tab->setCurrentIndex(0);
+
+  _user->setText(_dialogDefaults->value("log/user", QString()).toString());
 
   connect(_message, SIGNAL(textChanged()), this, SLOT(changed()));
   connect(_sizeOption, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -94,6 +97,7 @@ void LogDialog::enableApply() {
 void LogDialog::apply() {
   _logdir = _saveLocation->file();
   _format = _formats->currentText();
+  _username = _user->text();
   int x_size = _xSize->value();
   int y_size = _ySize->value();
   int size_option_index = _sizeOption->currentIndex();
@@ -104,6 +108,7 @@ void LogDialog::apply() {
   _dialogDefaults->setValue("log/ysize", y_size);
   _dialogDefaults->setValue("log/sizeOption", size_option_index);
   _dialogDefaults->setValue("log/script", _script->text());
+  _dialogDefaults->setValue("log/user", _username);
 
   _logtime = time(NULL);
 
@@ -125,7 +130,8 @@ void LogDialog::apply() {
 
 
 void LogDialog::runScript() {
-  QString script = _script->text().simplified().replace("$imagefile",_imagename).replace("$messagefile", _msgfilename);
+  QString script = _script->text().simplified().replace("$imagefile",_imagename).
+                   replace("$messagefile", _msgfilename).replace("$user", _username);
 
   _proc->start(script);
 }
@@ -170,25 +176,25 @@ void LogDialog::enableWidthHeight() {
   int size_option_index = _sizeOption->currentIndex();
 
   switch (size_option_index) {
-    case 0:
+    case 1:
       _xSize->setEnabled(true);
       _ySize->setEnabled(true);
       _widthLabel->setEnabled(true);
       _heightLabel->setEnabled(true);
       break;
-    case 1:
+    case 3:
+      _xSize->setEnabled(true);
+      _ySize->setEnabled(false);
+      _widthLabel->setEnabled(true);
+      _heightLabel->setEnabled(false);
+      break;
+    case 0:
       _xSize->setEnabled(true);
       _ySize->setEnabled(false);
       _widthLabel->setEnabled(true);
       _heightLabel->setEnabled(false);
       break;
     case 2:
-      _xSize->setEnabled(true);
-      _ySize->setEnabled(false);
-      _widthLabel->setEnabled(true);
-      _heightLabel->setEnabled(false);
-      break;
-    case 3:
       _xSize->setEnabled(false);
       _ySize->setEnabled(true);
       _widthLabel->setEnabled(false);

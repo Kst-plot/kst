@@ -94,12 +94,13 @@ ObjectPtr ObjectStore::retrieveObject(const QString name) const {
   shortName = rx.cap(2);
 
   // 1) search for short names
-  for (int i = 0; i < _list.size(); ++i) {
+  int size = _list.size();
+  for (int i = 0; i < size; ++i) {
     if (_list.at(i)->shortName()==shortName) 
       return _list.at(i);
   }
   // 3) search for descriptive names: must be unique
-  for (int i = 0; i < _list.size(); ++i) {
+  for (int i = 0; i < size; ++i) {
     if (_list.at(i)->descriptiveName() == name) {
       if (match != -1) 
         return NULL; // not unique, so... no match
