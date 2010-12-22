@@ -64,6 +64,7 @@ endmacro()
 
 
 macro(kst_init_plugin dir)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugin)
 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugin)
 	include_directories(${CMAKE_BINARY_DIR}/${dir})
 	kst_include_directories(kstcore kstmath kstwidgets)
