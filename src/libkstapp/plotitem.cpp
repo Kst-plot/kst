@@ -88,7 +88,6 @@ PlotItem::PlotItem(View *parent)
   _numberAxisLabelScaleFactor(1.0),
   _useNumberAxisLabelScale(true),
   _showLegend(false),
-  _plotMaximized(false),
   _allowUpdates(true),
   _legend(0),
   _zoomMenu(0),
@@ -4104,6 +4103,9 @@ void ZoomXRightCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
     QRectF compute = item->projectionRect();
 
     qreal dx = (item->xMax() - item->xMin())*0.10;
+    if (item->xAxis()->axisReversed()) {
+      dx *=-1;
+    }
     if (item->xAxis()->axisLog()) {
       compute.setLeft(pow(10, item->xMin() + dx));
       compute.setRight(pow(10, item->xMax() + dx));
@@ -4140,6 +4142,9 @@ void ZoomXLeftCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
     QRectF compute = item->projectionRect();
 
     qreal dx = (item->xMax() - item->xMin())*0.10;
+    if (item->xAxis()->axisReversed()) {
+      dx *=-1;
+    }
     if (item->xAxis()->axisLog()) {
       compute.setLeft(pow(10, item->xMin() - dx));
       compute.setRight(pow(10, item->xMax() - dx));

@@ -450,7 +450,6 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     bool _showLegend;
 
-    bool _plotMaximized;
     QPointF _plotMaximizedSourcePosition;
     QRectF _plotMaximizedSourceRect;
     QRectF _plotMaximizedSourceParentRect;

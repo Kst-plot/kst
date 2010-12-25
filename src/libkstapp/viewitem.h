@@ -210,6 +210,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
       return sceneEvent(event);
     }
 
+    virtual bool isMaximized();
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -287,6 +289,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     bool _isXTiedZoom;
     bool _isYTiedZoom;
+    bool _plotMaximized;
 
   private Q_SLOTS:
     void viewMouseModeChanged(View::MouseMode oldMode);

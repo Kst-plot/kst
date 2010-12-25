@@ -55,6 +55,7 @@ ViewItem::ViewItem(View *parentView) :
     NamedObject(),
     _isXTiedZoom(false),
     _isYTiedZoom(false),
+    _plotMaximized(false),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
@@ -691,10 +692,22 @@ QPainterPath ViewItem::shape() const {
   return selectPath;
 }
 
+bool ViewItem::isMaximized() {
+  if (_plotMaximized) {
+    return true;
+  } else if (parentViewItem()) {
+    return parentViewItem()->isMaximized();
+  } else {
+    return false;
+  }
+}
 
 void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);
+  if ((!isMaximized()) && view()->childMaximized()) {
+    return;
+  }
   painter->setPen(pen());
   painter->setBrush(brush());
   paint(painter); //this is the overload that subclasses should use...
