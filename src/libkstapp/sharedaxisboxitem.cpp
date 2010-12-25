@@ -1281,6 +1281,9 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
           if (PlotItem *plotItem = qobject_cast<PlotItem*>(i)) {
             plotItem->setSharedAxisBox(rc);
             rc->_sharedPlots << plotItem;
+            rc->connect(plotItem, SIGNAL(breakShareTriggered()), rc, SLOT(breakShare()));
+            rc->connect(plotItem, SIGNAL(shareXAxisTriggered()), rc, SLOT(shareXAxis()));
+            rc->connect(plotItem, SIGNAL(shareYAxisTriggered()), rc, SLOT(shareYAxis()));
           }
         }
       }
