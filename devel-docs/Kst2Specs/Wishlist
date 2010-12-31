@@ -80,6 +80,9 @@ The idea is that the live time of an object is handled externally to the object.
 The usage of the object is reference counted by QSharedPointer. Maybe we don't
 need the ObjectStore because in principle is only a wrapper for global variables.
 
+Use CMake build system with the option -Dkst_merge_files=1 because touching 
+sharedptr.h requires a complete rebuild which is many times faster with above option.
+
 -------
 
 
