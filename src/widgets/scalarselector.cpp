@@ -174,7 +174,11 @@ void ScalarSelector::editScalar() {
     DialogLauncher::self()->showObjectDialog(selectedScalar()->provider());
   } else {
     QString scalarName;
+#ifdef KST_USE_QSHAREDPOINTER
+    DialogLauncher::self()->showScalarDialog(scalarName, selectedScalar().objectCast<Object>(), true);
+#else
     DialogLauncher::self()->showScalarDialog(scalarName, ObjectPtr(selectedScalar()), true);
+#endif
   }
   fillScalars();
 }

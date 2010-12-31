@@ -124,7 +124,13 @@ class KSTMATH_EXPORT Image : public Relation {
 
   protected:
     Image(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     virtual ~Image();
+
+protected:
 
     friend class ObjectStore;
 

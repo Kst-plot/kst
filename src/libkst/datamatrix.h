@@ -123,8 +123,13 @@ class KSTCORE_EXPORT DataMatrix : public Matrix//, public DataPrimitive
     virtual QString yLabel() const;
   protected:
     DataMatrix(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+    public:
+#endif
     virtual ~DataMatrix();
 
+protected:
     // update DataMatrix
     virtual qint64 minInputSerial() const;
     virtual qint64 minInputSerialOfLastChange() const;

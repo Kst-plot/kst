@@ -369,7 +369,9 @@ void DataMatrix::_resetFieldStrings() {
       _fieldStrings.insert(key, sp = store()->createObject<String>());
       sp->setProvider(this);
       sp->setSlaveName(key);
+#ifndef KST_USE_QSHAREDPOINTER
       sp->_KShared_ref();
+#endif
     } else {  // find it
       sp = _fieldStrings[key];
     }

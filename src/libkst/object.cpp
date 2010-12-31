@@ -24,8 +24,12 @@ namespace Kst {
 
 const QString Object::staticTypeString = I18N_NOOP("Object");
 
-Object::Object() :
-  Shared(), KstRWLock(), NamedObject(),
+#ifdef KST_USE_QSHAREDPOINTER
+Object::Object() : 
+#else
+Object::Object() : Shared(), 
+#endif
+  KstRWLock(), NamedObject(),
   _store(0L), _serial(0), _serialOfLastChange(0)
 {
 }
@@ -51,7 +55,11 @@ const QString& Object::typeString() const {
 // Returns count - 1 to account for "this" and the list pointer, therefore
 // you MUST have a reference-counted pointer to call this function
 int Object::getUsage() const {
+#ifdef KST_USE_QSHAREDPOINTER
+  return -1;
+#else
   return _KShared_count() - 1;
+#endif
 }
 
 

@@ -59,7 +59,13 @@ class KSTCORE_EXPORT Vector : public Primitive
 
   protected:
     Vector(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+    public:
+#endif
     virtual ~Vector();
+
+    protected:
 
     friend class ObjectStore; 
 

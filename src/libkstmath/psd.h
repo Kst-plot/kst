@@ -100,7 +100,13 @@ class KSTMATH_EXPORT PSD : public DataObject {
   protected:
 
     PSD(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     virtual ~PSD();
+
+  protected:
 
     friend class ObjectStore;
 

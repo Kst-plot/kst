@@ -175,38 +175,38 @@ void Relation::writeLockInputsAndOutputs() const {
 
   QList<StringPtr> sl = _inputStrings.values();
   for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
-    inputs += (*i).data();
+    inputs += (*i).objectCast<Primitive>();
   }
   sl = _outputStrings.values();
   for (QList<StringPtr>::Iterator i = sl.begin(); i != sl.end(); ++i) {
-    outputs += (*i).data();
+    outputs += (*i).objectCast<Primitive>();
   }
 
   QList<ScalarPtr> sc = _inputScalars.values();
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
-    inputs += (*i).data();
+    inputs += (*i).objectCast<Primitive>();
   }
   sc = _outputScalars.values();
   for (QList<ScalarPtr>::Iterator i = sc.begin(); i != sc.end(); ++i) {
-    outputs += (*i).data();
+    outputs += (*i).objectCast<Primitive>();
   }
 
   QList<VectorPtr> vl = _inputVectors.values();
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
-    inputs += (*i).data();
+    inputs += (*i).objectCast<Primitive>();
   }
   vl = _outputVectors.values();
   for (QList<VectorPtr>::Iterator i = vl.begin(); i != vl.end(); ++i) {
-    outputs += (*i).data();
+    outputs += (*i).objectCast<Primitive>();
   }
 
   QList<MatrixPtr> ml = _inputMatrices.values();
   for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
-    inputs += (*i).data();
+    inputs += (*i).objectCast<Primitive>();
   }
   ml = _outputMatrices.values();
   for (QList<MatrixPtr>::Iterator i = ml.begin(); i != ml.end(); ++i) {
-    outputs += (*i).data();
+    outputs += (*i).objectCast<Primitive>();
   }
 
   qSort(inputs);

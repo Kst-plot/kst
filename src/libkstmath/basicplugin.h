@@ -96,8 +96,13 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     virtual bool hasParameterVector() const { return _outputVectors.contains("Parameters Vector");}
   protected:
     BasicPlugin(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     virtual ~BasicPlugin();
 
+  protected:
     //Pure virtual methods inherited from DataObject
     //We do this one ourselves for benefit of all plugins...
 

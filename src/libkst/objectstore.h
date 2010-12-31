@@ -114,7 +114,18 @@ SharedPtr<T> ObjectStore::createObject() {
   T *object = new T(this);
   addObject(object);
 
+
+#ifdef KST_USE_QSHAREDPOINTER
+  if (!_dataSourceList.isEmpty() && _dataSourceList.last().data() == qobject_cast<DataSource*>(object)) {
+    return _dataSourceList.last().objectCast<T>();
+  } else if (!_list.isEmpty() && _list.last().data() == qobject_cast<Object*>(object)) {
+    return _list.last().objectCast<T>();
+  }
+  Q_ASSERT(0); //should never happen
+  return SharedPtr<T>();
+#else
   return SharedPtr<T>(object);
+#endif
 }
 
 // Add an object to the store.

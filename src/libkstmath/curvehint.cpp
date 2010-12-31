@@ -21,7 +21,7 @@
 namespace Kst {
 
 CurveHint::CurveHint(const QString& name, const QString& x, const QString& y)
-: Shared(),  _curveName(name), _xVectorName(x), _yVectorName(y) {
+    : _curveName(name), _xVectorName(x), _yVectorName(y) {
 }
 
 

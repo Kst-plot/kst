@@ -40,7 +40,11 @@ class KSTCORE_EXPORT Primitive : public Object
     // Must not be a ObjectPtr!
     virtual void setProvider(Object* obj);
 
+#ifdef KST_USE_QSHAREDPOINTER
+    inline Object* provider() const { return _provider; }
+#else
     inline ObjectPtr provider() const { return ObjectPtr(_provider); }
+#endif
 
     void setSlaveName(QString slaveName);
     QString slaveName() { return _slaveName; }
@@ -54,7 +58,12 @@ class KSTCORE_EXPORT Primitive : public Object
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
 
+#ifdef KST_USE_QSHAREDPOINTER
+    public:
+#endif
     virtual ~Primitive();
+
+    protected:
 
     friend class ObjectStore;
 
@@ -71,7 +80,11 @@ class KSTCORE_EXPORT Primitive : public Object
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
      * FIXME: pretty sure this is wrong: it shouldn't be a qpointer... not sure
      * what should be going on here! */
+#ifdef KST_USE_QSHAREDPOINTER
+    Object* _provider;
+#else
     QPointer<Object> _provider;
+#endif
   private:
     friend class DataPrimitive;
     // Some stuff only needed by data primitives...

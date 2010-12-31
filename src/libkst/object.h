@@ -39,8 +39,11 @@ class Object;
 
 typedef SharedPtr<Object> ObjectPtr;
 
-
+#ifdef KST_USE_QSHAREDPOINTER
+class KSTCORE_EXPORT Object : public QObject, public KstRWLock, public NamedObject 
+#else
 class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, public NamedObject 
+#endif
 {
     Q_OBJECT
 
@@ -78,7 +81,12 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
 
   protected:
     Object();
+#ifdef KST_USE_QSHAREDPOINTER
+    public:
+#endif
     virtual ~Object();
+
+    protected:
 
     friend class ObjectStore;
     ObjectStore *_store;  // set by ObjectStore

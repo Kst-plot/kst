@@ -98,7 +98,11 @@ void StringSelector::newString() {
 
 void StringSelector::editString() {
   QString stringName;
+#ifdef KST_USE_QSHAREDPOINTER
+  DialogLauncher::self()->showStringDialog(stringName, selectedString().objectCast<Object>(), true);
+#else
   DialogLauncher::self()->showStringDialog(stringName, ObjectPtr(selectedString()), true);
+#endif
   fillStrings();
 }
 

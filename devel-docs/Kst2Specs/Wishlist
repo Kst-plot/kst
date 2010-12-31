@@ -72,3 +72,15 @@ vector selectors in curve dialog can't grow when you extend the window size.
 
 Some automagic way of deciding if plugin dialogs can make plots.
 
+-------
+
+Using QSharedPointer
+
+The idea is that the live time of an object is handled externally to the object.
+The usage of the object is reference counted by QSharedPointer. Maybe we don't
+need the ObjectStore because in principle is only a wrapper for global variables.
+
+-------
+
+
+

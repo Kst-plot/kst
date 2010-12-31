@@ -22,7 +22,11 @@ namespace Kst {
 
 class Relation;
 
+#ifdef KST_USE_QSHAREDPOINTER
+class CurveHint {
+#else
 class CurveHint : public Shared {
+#endif
   friend class DataObject;
   public:
     explicit CurveHint(const QString& name = QString(), const QString& x = QString(), const QString& y = QString());

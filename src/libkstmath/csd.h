@@ -90,7 +90,13 @@ class KSTMATH_EXPORT CSD : public DataObject {
     virtual void internalUpdate();
   protected:
     CSD(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     virtual ~CSD();
+
+  protected:
 
     friend class ObjectStore;
 

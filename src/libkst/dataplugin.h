@@ -26,7 +26,11 @@ class ObjectStore;
 class DataSource;
 class DataSourceConfigWidget;
 
+#ifdef KST_USE_QSHAREDPOINTER
+class PluginInterface {
+#else
 class PluginInterface : public Shared {
+#endif
   public:
     PluginInterface() {}
 

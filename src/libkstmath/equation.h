@@ -82,7 +82,13 @@ class KSTMATH_EXPORT Equation : public DataObject {
 
   protected:
     Equation(ObjectStore *store);
+
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~Equation();
+
+  protected:
 
     friend class ObjectStore;
 

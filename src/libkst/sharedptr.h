@@ -19,8 +19,15 @@
 #ifndef SharedPTR_H
 #define SharedPTR_H
 
+//#define KST_USE_QSHAREDPOINTER
+#ifdef KST_USE_QSHAREDPOINTER
+#include <QSharedPointer>
+#else
 #include <QSemaphore>
+#endif
+
 #include <QDebug>
+
 
 //#define KST_DEBUG_SHARED
 #ifdef KST_DEBUG_SHARED
@@ -36,6 +43,28 @@
 // See KSharedPtr in KDE libraries for more information
 
 namespace Kst {
+
+#ifdef KST_USE_QSHAREDPOINTER
+
+template< class T >
+struct SharedPtr : public QSharedPointer<T>
+{
+public:
+  SharedPtr()     : QSharedPointer()  {}
+  /*explicit*/SharedPtr(T* t) : QSharedPointer(t) {}
+  ~SharedPtr() {}
+  SharedPtr(int)  : QSharedPointer()  {}  
+  SharedPtr(const SharedPtr& p) : QSharedPointer(p) {}
+  SharedPtr(const QSharedPointer& p) : QSharedPointer(p) {}
+  
+  template<class Y>
+  operator SharedPtr<Y>() const { return this->objectCast<Y>(); }
+
+  operator T*() const { return data(); }
+  operator bool() const { return !isNull(); }
+};
+
+#else
 
 #define SEMAPHORE_COUNT 999999
 
@@ -163,6 +192,9 @@ public:
    */
   T* data() { isPtrValid(); return ptr; }
 
+  template<class Y>
+  T* objectCast() { return ptr; }
+
   /**
    * Returns the pointer.
    * @return the pointer
@@ -190,11 +222,15 @@ private:
     return ptr != 0; 
   } 
 };
-
+#endif
 
 template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
+#ifdef KST_USE_QSHAREDPOINTER
+  return object.objectCast<T>();
+#else
   return qobject_cast<T*>(object.data());
+#endif
 }
 
 // FIXME: make this safe

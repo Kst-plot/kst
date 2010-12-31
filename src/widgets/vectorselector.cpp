@@ -144,7 +144,11 @@ void VectorSelector::editVector() {
     DialogLauncher::self()->showObjectDialog(selectedVector()->provider());
   } else {
     QString vectorname;
+#ifdef KST_USE_QSHAREDPOINTER
+    DialogLauncher::self()->showVectorDialog(vectorname, selectedVector().objectCast<Object>()), true);
+#else
     DialogLauncher::self()->showVectorDialog(vectorname, ObjectPtr(selectedVector()), true);
+#endif
   }
   fillVectors(); // we might have just changed the name, so refill the combo.
 
