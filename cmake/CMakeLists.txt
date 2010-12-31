@@ -13,6 +13,7 @@ kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF a
 message(STATUS "")
 
 find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE})
 find_package(Getdata)
 find_package(Gsl)
 find_package(Netcdf)
