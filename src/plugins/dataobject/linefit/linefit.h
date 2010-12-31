@@ -45,6 +45,9 @@ class LineFitSource : public Kst::BasicPlugin {
 
   protected:
     LineFitSource(Kst::ObjectStore *store);
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~LineFitSource();
 
   friend class Kst::ObjectStore;

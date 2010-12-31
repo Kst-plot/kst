@@ -44,6 +44,9 @@ class StatisticsSource : public Kst::BasicPlugin {
 
   protected:
     StatisticsSource(Kst::ObjectStore *store);
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~StatisticsSource();
 
   private:

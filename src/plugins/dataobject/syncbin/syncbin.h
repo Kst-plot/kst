@@ -48,6 +48,9 @@ class SyncBinSource : public Kst::BasicPlugin {
 
   protected:
     SyncBinSource(Kst::ObjectStore *store);
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~SyncBinSource();
 
   friend class Kst::ObjectStore;

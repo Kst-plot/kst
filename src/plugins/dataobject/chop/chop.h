@@ -44,8 +44,12 @@ class ChopSource : public Kst::BasicPlugin {
 
   protected:
     ChopSource(Kst::ObjectStore *store);
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~ChopSource();
 
+  protected:
   friend class Kst::ObjectStore;
 
 

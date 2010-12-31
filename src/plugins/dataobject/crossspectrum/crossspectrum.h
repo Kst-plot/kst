@@ -47,6 +47,9 @@ class CrossSpectrumSource : public Kst::BasicPlugin {
 
   protected:
     CrossSpectrumSource(Kst::ObjectStore *store);
+#ifdef KST_USE_QSHAREDPOINTER
+  public:
+#endif
     ~CrossSpectrumSource();
 
   friend class Kst::ObjectStore;
