@@ -2,7 +2,7 @@
 
 kst_init_plugin(src/plugins)
 
-
+if(XXXXX)
 kst_add_plugin(dataobject bin)
 kst_add_plugin(dataobject chop)
 kst_add_plugin(dataobject linefit)
@@ -15,10 +15,11 @@ kst_add_plugin(dataobject crossspectrum)
 kst_add_plugin(dataobject differentiation)
 kst_add_plugin(dataobject effectivebandwidth)
 kst_add_plugin(dataobject genericfilter)
+endif()
 
 kst_add_plugin(filters cumulativesum)
-kst_add_plugin(filters despike)
-kst_add_plugin(filters differentiation)
+#kst_add_plugin(filters despike)
+#kst_add_plugin(filters differentiation)
 
 if(gsl)
 
