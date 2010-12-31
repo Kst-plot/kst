@@ -98,87 +98,97 @@ public:
   /**
    * Creates a null pointer.
    */
-  SharedPtr() : ptr(0) { }
+  SharedPtr() : ptr(0) { isPtrValid(); }
 
   /**
    * Creates a new pointer.
    * @param t the pointer
    */
-  SharedPtr( T* t ) : ptr(t) { if ( ptr ) ptr->_KShared_ref(); }
+  SharedPtr( T* t ) : ptr(t) { if (isPtrValid()) ptr->_KShared_ref(); }
 
   /**
    * Copies a pointer.
    * @param p the pointer to copy
    */
   SharedPtr( const SharedPtr& p )
-    : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
+    : ptr(p.ptr) { if (isPtrValid()) ptr->_KShared_ref(); }
 
   template<class Y> SharedPtr(SharedPtr<Y>& p)
-    : ptr(p.data()) { if (ptr) ptr->_KShared_ref(); }
+    : ptr(p.data()) { if (isPtrValid()) ptr->_KShared_ref(); }
 
   /**
    * Unreferences the object that this pointer points to. If it was
    * the last reference, the object will be deleted.
    */
-  ~SharedPtr() { if ( ptr ) ptr->_KShared_unref(); }
+  ~SharedPtr() { if (isPtrValid()) ptr->_KShared_unref(); }
 
   SharedPtr<T>& operator= ( const SharedPtr<T>& p ) {
+    isPtrValid();
     if ( ptr == p.ptr ) return *this;
-    if ( ptr ) ptr->_KShared_unref();
+    if (isPtrValid()) ptr->_KShared_unref();
     ptr = p.ptr;
-    if ( ptr ) ptr->_KShared_ref();
+    if (isPtrValid()) ptr->_KShared_ref();
     return *this;
   }
 
   template<class Y>
   SharedPtr<T>& operator=(SharedPtr<Y>& p) {
+    isPtrValid();
     if (ptr == p.data()) return *this;
-    if (ptr) ptr->_KShared_unref();
+    if (isPtrValid()) ptr->_KShared_unref();
     ptr = p.data();
-    if (ptr) ptr->_KShared_ref();
+    if (isPtrValid()) ptr->_KShared_ref();
     return *this;
   }
 
   SharedPtr<T>& operator= ( T* p ) {
-    if ( ptr == p ) return *this;
-    if ( ptr ) ptr->_KShared_unref();
+    isPtrValid();
+    if (ptr == p) return *this;
+    if (isPtrValid()) ptr->_KShared_unref();
     ptr = p;
-    if ( ptr ) ptr->_KShared_ref();
+    if (isPtrValid()) ptr->_KShared_ref();
     return *this;
   }
 
-  bool operator== ( const SharedPtr<T>& p ) const { return ( ptr == p.ptr ); }
-  bool operator!= ( const SharedPtr<T>& p ) const { return ( ptr != p.ptr ); }
-  bool operator== ( const T* p ) const { return ( ptr == p ); }
-  bool operator!= ( const T* p ) const { return ( ptr != p ); }
-  bool operator!() const { return ( ptr == 0 ); }
-  operator T*() const { return ptr; }
+  bool operator== ( const SharedPtr<T>& p ) const { isPtrValid(); return ( ptr == p.ptr ); }
+  bool operator!= ( const SharedPtr<T>& p ) const { isPtrValid(); return ( ptr != p.ptr ); }
+  bool operator== ( const T* p ) const { isPtrValid(); return ( ptr == p ); }
+  bool operator!= ( const T* p ) const { isPtrValid(); return ( ptr != p ); }
+  bool operator!() const { isPtrValid(); return ( ptr == 0 ); }
+  operator T*() const { isPtrValid(); return ptr; }
 
   /**
    * Returns the pointer.
    * @return the pointer
    */
-  T* data() { return ptr; }
+  T* data() { isPtrValid(); return ptr; }
 
   /**
    * Returns the pointer.
    * @return the pointer
    */
-  const T* data() const { return ptr; }
+  const T* data() const { isPtrValid(); return ptr; }
 
-  const T& operator*() const { return *ptr; }
-  T& operator*() { return *ptr; }
-  const T* operator->() const { return ptr; }
-  T* operator->() { return ptr; }
+  const T& operator*() const  { Q_ASSERT(isPtrValid()); return *ptr; }
+  T& operator*()              { Q_ASSERT(isPtrValid()); return *ptr; }
+  const T* operator->() const { Q_ASSERT(isPtrValid()); return ptr; }
+  T* operator->()             { Q_ASSERT(isPtrValid()); return ptr; }
 
   /**
    * Returns the number of references.
    * @return the number of references
    */
-  int count() const { return ptr->_KShared_count(); } // for debugging purposes
+  int count() const { Q_ASSERT(isPtrValid()); return ptr->_KShared_count(); } // for debugging purposes
 
 private:
   T* ptr;
+  bool isPtrValid() const { 
+    /*
+    if (ptr == (T*)1)
+      return false;
+    */
+    return ptr != 0; 
+  } 
 };
 
 
