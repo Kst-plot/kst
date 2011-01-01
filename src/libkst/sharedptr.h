@@ -47,6 +47,7 @@ namespace Kst {
 #ifdef KST_USE_QSHAREDPOINTER
 
 // In the final version SharedPtr should be completely replaced by QSharedPointer
+// Removing step by step the cast operators and constructors shows up the problems
 
 template< class T >
 struct SharedPtr : public QSharedPointer<T>
@@ -55,10 +56,9 @@ public:
   SharedPtr()  {}
   ~SharedPtr() {}
 
-  //explicit // TODO compile with 'explicit
+  //explicit // should compile with 'explicit'
   SharedPtr(T* t) : QSharedPointer<T>(t) {}
 
-  // remove
   explicit SharedPtr(int v) { Q_ASSERT(v==0); }
   explicit SharedPtr(long int v) { Q_ASSERT(v==0); }
 
@@ -67,8 +67,6 @@ public:
   SharedPtr(const SharedPtr& p) : QSharedPointer<T>(p) {}
   SharedPtr(const QSharedPointer<T>& p) : QSharedPointer<T>(p) {}
   
-  template<class Y>
-  operator SharedPtr<Y>() const { return this->template objectCast<Y>(); }
   operator T*() const { return QSharedPointer<T>::data(); }
   operator bool() const { return !QSharedPointer<T>::isNull(); }
 };
