@@ -46,22 +46,31 @@ namespace Kst {
 
 #ifdef KST_USE_QSHAREDPOINTER
 
+// In the final version SharedPtr should be completely replaced by QSharedPointer
+
 template< class T >
 struct SharedPtr : public QSharedPointer<T>
 {
 public:
-  SharedPtr()     : QSharedPointer()  {}
-  /*explicit*/SharedPtr(T* t) : QSharedPointer(t) {}
+  SharedPtr()  {}
   ~SharedPtr() {}
-  SharedPtr(int)  : QSharedPointer()  {}  
-  SharedPtr(const SharedPtr& p) : QSharedPointer(p) {}
-  SharedPtr(const QSharedPointer& p) : QSharedPointer(p) {}
+
+  //explicit // TODO compile with 'explicit
+  SharedPtr(T* t) : QSharedPointer<T>(t) {}
+
+  // remove
+  explicit SharedPtr(int v) { Q_ASSERT(v==0); }
+  explicit SharedPtr(long int v) { Q_ASSERT(v==0); }
+
+  template<class Y>
+  SharedPtr(const SharedPtr<Y>& p) { *this = p.template objectCast<T>(); }
+  SharedPtr(const SharedPtr& p) : QSharedPointer<T>(p) {}
+  SharedPtr(const QSharedPointer<T>& p) : QSharedPointer<T>(p) {}
   
   template<class Y>
-  operator SharedPtr<Y>() const { return this->objectCast<Y>(); }
-
-  operator T*() const { return data(); }
-  operator bool() const { return !isNull(); }
+  operator SharedPtr<Y>() const { return this->template objectCast<Y>(); }
+  operator T*() const { return QSharedPointer<T>::data(); }
+  operator bool() const { return !QSharedPointer<T>::isNull(); }
 };
 
 #else
@@ -227,7 +236,7 @@ private:
 template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
 #ifdef KST_USE_QSHAREDPOINTER
-  return object.objectCast<T>();
+  return object.template objectCast<T>();
 #else
   return qobject_cast<T*>(object.data());
 #endif
