@@ -43,9 +43,6 @@ class LockInSource : public Kst::BasicPlugin {
 
   protected:
     LockInSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~LockInSource();
 
   friend class Kst::ObjectStore;

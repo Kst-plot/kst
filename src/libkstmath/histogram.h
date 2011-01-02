@@ -99,13 +99,7 @@ public:
 
   protected:
     Histogram(ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     virtual ~Histogram();
-
-  protected:
 
     friend class ObjectStore;
 

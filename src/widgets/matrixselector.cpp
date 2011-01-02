@@ -90,11 +90,7 @@ void MatrixSelector::newMatrix() {
 
 void MatrixSelector::editMatrix() {
   QString matrixName;
-#ifdef KST_USE_QSHAREDPOINTER
-  DialogLauncher::self()->showMatrixDialog(matrixName, selectedMatrix().objectCast<Object>(), true);
-#else
   DialogLauncher::self()->showMatrixDialog(matrixName, ObjectPtr(selectedMatrix()), true);
-#endif
 }
 
 

@@ -47,9 +47,6 @@ class PhaseSource : public Kst::BasicPlugin {
 
   protected:
     PhaseSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~PhaseSource();
 
   private:

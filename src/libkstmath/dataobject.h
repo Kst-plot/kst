@@ -135,13 +135,7 @@ class KSTMATH_EXPORT DataObject : public Object
 
   protected:
     DataObject(ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     virtual ~DataObject();
-
-  protected:
 
     double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;
 

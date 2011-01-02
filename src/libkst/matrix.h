@@ -37,13 +37,7 @@ class KSTCORE_EXPORT Matrix : public Primitive {
 
   protected:
     Matrix(ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-    public:
-#endif
     virtual ~Matrix();
-
-    protected:
 
     friend class ObjectStore;
     virtual void _initializeShortName();

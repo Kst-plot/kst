@@ -42,9 +42,6 @@ class DifferentiationSource : public Kst::BasicPlugin {
 
   protected:
     DifferentiationSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~DifferentiationSource();
 
   friend class Kst::ObjectStore;

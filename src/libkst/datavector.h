@@ -132,13 +132,7 @@ class KSTCORE_EXPORT DataVector : public Vector
 
   protected:
     DataVector(ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-    public:
-#endif
     virtual ~DataVector();
-
-    protected:
 
     friend class ObjectStore;
 

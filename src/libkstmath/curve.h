@@ -162,12 +162,7 @@ class KSTMATH_EXPORT Curve: public Relation
   protected:
     Curve(ObjectStore *store);
 
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     virtual ~Curve();
-
-    protected:
 
     friend class ObjectStore;
 

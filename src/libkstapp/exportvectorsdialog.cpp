@@ -230,7 +230,7 @@ bool ExportVectorsDialog::apply() {
   out << "\n";
 
   int maxLength = 0;
-  for (int i=0; i<lengths.size(); i++) {
+  for (int i=0; i<lengths.length(); i++) {
     if (lengths.at(i)>maxLength) {
       maxLength = lengths.at(i);
     }
@@ -238,7 +238,7 @@ bool ExportVectorsDialog::apply() {
 
   out.setRealNumberPrecision(14);
 
-  int ncols = vectors.size();
+  int ncols = vectors.length();
   for (int row = 0; row < maxLength; row++) {
     for (int col = 0; col < ncols; col++) {
       out << " " << vectors.at(col)->interpolate(row, maxLength);

@@ -19,15 +19,8 @@
 #ifndef SharedPTR_H
 #define SharedPTR_H
 
-//#define KST_USE_QSHAREDPOINTER
-#ifdef KST_USE_QSHAREDPOINTER
-#include <QSharedPointer>
-#else
 #include <QSemaphore>
-#endif
-
 #include <QDebug>
-
 
 //#define KST_DEBUG_SHARED
 #ifdef KST_DEBUG_SHARED
@@ -43,35 +36,6 @@
 // See KSharedPtr in KDE libraries for more information
 
 namespace Kst {
-
-#ifdef KST_USE_QSHAREDPOINTER
-
-// In the final version SharedPtr should be completely replaced by QSharedPointer
-// Removing step by step the cast operators and constructors shows up the problems
-
-template< class T >
-struct SharedPtr : public QSharedPointer<T>
-{
-public:
-  SharedPtr()  {}
-  ~SharedPtr() {}
-
-  //explicit // should compile with 'explicit'
-  SharedPtr(T* t) : QSharedPointer<T>(t) {}
-
-  explicit SharedPtr(int v) { Q_ASSERT(v==0); }
-  explicit SharedPtr(long int v) { Q_ASSERT(v==0); }
-
-  template<class Y>
-  SharedPtr(const SharedPtr<Y>& p) { *this = p.template objectCast<T>(); }
-  SharedPtr(const SharedPtr& p) : QSharedPointer<T>(p) {}
-  SharedPtr(const QSharedPointer<T>& p) : QSharedPointer<T>(p) {}
-  
-  operator T*() const { return QSharedPointer<T>::data(); }
-  operator bool() const { return !QSharedPointer<T>::isNull(); }
-};
-
-#else
 
 #define SEMAPHORE_COUNT 999999
 
@@ -199,9 +163,6 @@ public:
    */
   T* data() { isPtrValid(); return ptr; }
 
-  template<class Y>
-  T* objectCast() { return ptr; }
-
   /**
    * Returns the pointer.
    * @return the pointer
@@ -229,15 +190,11 @@ private:
     return ptr != 0; 
   } 
 };
-#endif
+
 
 template <typename T, typename U>
 inline SharedPtr<T> kst_cast(SharedPtr<U> object) {
-#ifdef KST_USE_QSHAREDPOINTER
-  return object.template objectCast<T>();
-#else
   return qobject_cast<T*>(object.data());
-#endif
 }
 
 // FIXME: make this safe

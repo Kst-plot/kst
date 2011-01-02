@@ -45,9 +45,6 @@ class BinSource : public Kst::BasicPlugin {
 
   protected:
     BinSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~BinSource();
 
   friend class Kst::ObjectStore;

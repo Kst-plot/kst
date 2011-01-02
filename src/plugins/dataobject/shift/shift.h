@@ -45,9 +45,6 @@ class ShiftSource : public Kst::BasicPlugin {
 
   protected:
     ShiftSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~ShiftSource();
 
   friend class Kst::ObjectStore;

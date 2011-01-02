@@ -75,13 +75,7 @@ class KSTMATH_EXPORT EventMonitorEntry : public DataObject {
     virtual void internalUpdate();
   protected:
     EventMonitorEntry(ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~EventMonitorEntry();
-
-  protected:
 
     friend class ObjectStore;
 

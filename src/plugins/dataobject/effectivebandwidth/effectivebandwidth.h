@@ -48,9 +48,6 @@ class EffectiveBandwidthSource : public Kst::BasicPlugin {
 
   protected:
     EffectiveBandwidthSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~EffectiveBandwidthSource();
 
   friend class Kst::ObjectStore;

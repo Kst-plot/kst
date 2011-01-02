@@ -47,13 +47,7 @@ class CumulativeSumSource : public Kst::BasicPlugin {
 
   protected:
     CumulativeSumSource(Kst::ObjectStore *store);
-
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~CumulativeSumSource();
-
-  protected:
 
   friend class Kst::ObjectStore;
 

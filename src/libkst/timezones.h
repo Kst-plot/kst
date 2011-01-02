@@ -50,11 +50,8 @@ class TimezonesPrivate;
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-#ifdef KST_USE_QSHAREDPOINTER
-class KSTCORE_EXPORT TimezoneSource
-#else
-class KSTCORE_EXPORT TimezoneSource : public Shared
-#endif
+class KSTCORE_EXPORT TimezoneSource :
+    public Shared
 {
 public:
     TimezoneSource(const QString &db);

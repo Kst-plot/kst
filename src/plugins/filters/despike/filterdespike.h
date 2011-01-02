@@ -48,9 +48,6 @@ class FilterDespikeSource : public Kst::BasicPlugin {
 
   protected:
     FilterDespikeSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~FilterDespikeSource();
 
   friend class Kst::ObjectStore;

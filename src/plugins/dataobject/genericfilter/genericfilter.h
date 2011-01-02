@@ -45,9 +45,6 @@ class GenericFilterSource : public Kst::BasicPlugin {
 
   protected:
     GenericFilterSource(Kst::ObjectStore *store);
-#ifdef KST_USE_QSHAREDPOINTER
-  public:
-#endif
     ~GenericFilterSource();
 
   friend class Kst::ObjectStore;
