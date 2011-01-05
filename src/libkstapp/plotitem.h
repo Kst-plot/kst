@@ -128,7 +128,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual QString plotName() const; //from PlotItemInterface
 
     QList<PlotRenderItem*> renderItems() const;
-    PlotRenderItem *renderItem(PlotRenderItem::RenderType type=PlotRenderItem::First);
+    PlotRenderItem *renderItem(PlotRenderItem::RenderType type=PlotRenderItem::First);    
 
     virtual void save(QXmlStreamWriter &xml);
 
@@ -252,6 +252,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void applyDefaults();
 
     bool maskedByMaximization() {return (view()->childMaximized() && !_plotMaximized);}
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
@@ -393,6 +394,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void calculateLeftTickLabelBound(QPainter *painter);
 
     void setCurrentZoomState(ZoomState zoomState);
+
+    void showFitFilterDialog(QAction* action, const QString& plugin);
+    CurveList curveList() const;
 
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;

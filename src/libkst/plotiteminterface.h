@@ -32,6 +32,7 @@ class KSTCORE_EXPORT PlotItemInterface
     virtual bool handleChangedInputs(qint64 serial) = 0;
 
     void registerChange() {_serialOfLastChange = Forced;}
+
   protected:
     qint64 _serialOfLastChange;
 };

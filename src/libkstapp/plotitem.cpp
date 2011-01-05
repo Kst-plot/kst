@@ -582,6 +582,20 @@ void PlotItem::createZoomMenu() {
 }
 
 
+CurveList PlotItem::curveList() const
+{
+  CurveList list;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      if (CurvePtr curve = kst_cast<Curve>(relation)) {
+        list << curve;
+      }
+    }
+  }
+  return list;
+}
+
+
 void PlotItem::createFilterMenu() {
   if (_filterMenu) {
     delete _filterMenu;
@@ -590,14 +604,9 @@ void PlotItem::createFilterMenu() {
   _filterMenu = new QMenu;
   _filterMenu->setTitle(tr("Filter"));
 
-  QAction *action;
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    foreach (RelationPtr relation, renderer->relationList()) {
-      if (CurvePtr curve = kst_cast<Curve>(relation)) {
-        action = new QAction(relation->Name(), this);
-        _filterMenu->addAction(action);
-      }
-    }
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    _filterMenu->addAction(new QAction(curve->Name(), this));
   }
   connect(_filterMenu, SIGNAL(triggered(QAction*)), this, SLOT(showFilterDialog(QAction*)));
 }
@@ -611,15 +620,11 @@ void PlotItem::createFitMenu() {
   _fitMenu = new QMenu;
   _fitMenu->setTitle(tr("Fit"));
 
-  QAction *action;
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    foreach (RelationPtr relation, renderer->relationList()) {
-      if (CurvePtr curve = kst_cast<Curve>(relation)) {
-        action = new QAction(relation->Name(), this);
-        _fitMenu->addAction(action);
-      }
-    }
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    _fitMenu->addAction(new QAction(curve->Name(), this));
   }
+
   connect(_fitMenu, SIGNAL(triggered(QAction*)), this, SLOT(showFitDialog(QAction*)));
 }
 
@@ -677,29 +682,22 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 }
 
 
-void PlotItem::showFilterDialog(QAction* action) {
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    foreach (RelationPtr relation, renderer->relationList()) {
-      if (relation->Name() == action->text()) {
-        if (CurvePtr curve = kst_cast<Curve>(relation)) {
-          DialogLauncher::self()->showBasicPluginDialog(DataObject::filterPluginList().first(), 0, curve->xVector(), curve->yVector(), this);
-        }
-      }
+void PlotItem::showFitFilterDialog(QAction* action, const QString& plugin) {
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    if (curve->Name() == action->text()) {
+      DialogLauncher::self()->showBasicPluginDialog(plugin, 0, curve->xVector(), curve->yVector(), this);      
     }
   }
 }
 
 
+void PlotItem::showFilterDialog(QAction* action) {
+  showFitFilterDialog(action, DataObject::filterPluginList().first());
+}
+
 void PlotItem::showFitDialog(QAction* action) {
-  foreach (PlotRenderItem *renderer, renderItems()) {
-    foreach (RelationPtr relation, renderer->relationList()) {
-      if (relation->Name() == action->text()) {
-        if (CurvePtr curve = kst_cast<Curve>(relation)) {
-          DialogLauncher::self()->showBasicPluginDialog(DataObject::fitsPluginList().first(), 0, curve->xVector(), curve->yVector(), this);
-        }
-      }
-    }
-  }
+  showFitFilterDialog(action, DataObject::fitsPluginList().first());
 }
 
 
