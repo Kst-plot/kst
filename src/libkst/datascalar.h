@@ -31,7 +31,8 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a data file. */
-class KSTCORE_EXPORT DataScalar : public Scalar {
+class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive
+{
   Q_OBJECT
 
   protected:
@@ -78,8 +79,8 @@ class KSTCORE_EXPORT DataScalar : public Scalar {
 
   private:
     /** make a copy of the DataScalar */
-    virtual PrimitivePtr _makeDuplicate() const;
-    virtual bool _checkValidity(const DataSourcePtr ds) const;
+    virtual PrimitivePtr makeDuplicate() const;
+    virtual bool checkValidity(const DataSourcePtr& ds) const;
 };
 
 typedef SharedPtr<DataScalar> DataScalarPtr;

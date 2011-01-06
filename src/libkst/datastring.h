@@ -31,7 +31,8 @@ namespace Kst {
  */
 
 /** A string which gets its value from a data file. */
-class KSTCORE_EXPORT DataString : public String {
+class KSTCORE_EXPORT DataString : public String, public DataPrimitive 
+{
   Q_OBJECT
 
   protected:
@@ -79,10 +80,11 @@ class KSTCORE_EXPORT DataString : public String {
     virtual QString propertyString() const;
 
     bool isValid() const;
+
   private:
     /** make a copy of the DataString */
-    virtual PrimitivePtr _makeDuplicate() const;
-    virtual bool _checkValidity(const DataSourcePtr ds) const;
+    virtual PrimitivePtr makeDuplicate() const;
+    virtual bool checkValidity(const DataSourcePtr& ds) const;
 
 };
 

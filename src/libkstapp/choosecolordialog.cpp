@@ -69,8 +69,8 @@ void ChooseColorDialog::updateColorGroup() {
         vc_iter != vcList.end();
         ++vc_iter)
   {
-    if (fileNameList.contains((*vc_iter)->dp()->filename()) == 0)
-      fileNameList.push_back((*vc_iter)->dp()->filename());
+    if (fileNameList.contains((*vc_iter)->filename()) == 0)
+      fileNameList.push_back((*vc_iter)->filename());
   }
 
   cleanColorGroup();
@@ -145,7 +145,7 @@ void ChooseColorDialog::apply() {
     if (DataVectorPtr dataVector = kst_cast<DataVector>(vector))
     {
       curve->writeLock();
-      curve->setColor(getColorForFile(dataVector->dp()->filename()));
+      curve->setColor(getColorForFile(dataVector->filename()));
       curve->registerChange();
       curve->unlock();
     }

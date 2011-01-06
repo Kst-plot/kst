@@ -30,7 +30,7 @@ namespace Kst {
  *@author cbn
  */
 
-class KSTCORE_EXPORT DataVector : public Vector
+class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 {
     Q_OBJECT
 
@@ -187,8 +187,8 @@ class KSTCORE_EXPORT DataVector : public Vector
     QHash<QString, StringPtr> _fieldStrings;
 
     /** make a copy of the DataVector */
-    virtual PrimitivePtr _makeDuplicate() const;
-    virtual bool _checkValidity(const DataSourcePtr ds) const;
+    virtual PrimitivePtr makeDuplicate() const;
+    virtual bool checkValidity(const DataSourcePtr& ds) const;
 
     friend class TestDataSource;
     friend class TestHistogram;

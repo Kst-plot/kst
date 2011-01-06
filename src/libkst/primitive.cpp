@@ -34,14 +34,10 @@ Primitive::Primitive(ObjectStore *store, Object *provider)
   : _provider(provider) {
   Q_UNUSED(store);
   _slaveName = "fixme: set _slaveName";
-  _dp = 0;
-
 }
 
 
 Primitive::~Primitive() {
-  delete _dp;
-  _dp = 0;
 }
 
 
@@ -98,9 +94,6 @@ bool Primitive::used() const {
   }
 }
 
-bool Primitive::_checkValidity(const DataSourcePtr ds) const {
-  Q_UNUSED(ds) return true;
-}
 
 }
 

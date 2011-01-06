@@ -193,7 +193,7 @@ bool VScalar::isValid() const {
 bool VScalar::_checkValidity(const DataSourcePtr ds) const {
   if (ds) {
     ds->readLock();
-    bool rc = ds->vector().isValid(_dp->_field);
+    bool rc = ds->vector().isValid(_field);
     ds->unlock();
     return rc;
   }

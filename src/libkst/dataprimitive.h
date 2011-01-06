@@ -38,8 +38,7 @@ typedef SharedPtr<Primitive> PrimitivePtr;
 
 class KSTCORE_EXPORT DataPrimitive
 {
-public:
-    DataPrimitive(PrimitivePtr primitive);
+public:    
     virtual ~DataPrimitive();
 
     /** return the name of the file */
@@ -68,19 +67,21 @@ public:
     /** file to read */
     QString _field;    
 
-    PrimitivePtr makeDuplicate() const;
+    virtual PrimitivePtr makeDuplicate() const = 0;
 
-    bool checkValidity(const DataSourcePtr ds) const;
+    virtual bool checkValidity(const DataSourcePtr& ds) const = 0;
 
   protected:
-
-    /** For the scalar field in the data source */
+    DataPrimitive(Primitive* primitive);
 
   private:
+    DataPrimitive();
     struct Private;
     Private& d;
-
 };
 
 }
+
+Q_DECLARE_INTERFACE(Kst::DataPrimitive, "DataPrimitive")
+
 #endif // DATAPRIMITIVE_H

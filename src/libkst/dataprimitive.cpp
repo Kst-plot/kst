@@ -32,7 +32,7 @@ namespace Kst {
 
 struct DataPrimitive::Private
 {
-  PrimitivePtr _primitive;
+  Primitive* _primitive;
   DataSourcePtr _file;
 
   static void saveFilename(const QString& fn, QXmlStreamWriter& s);
@@ -52,7 +52,7 @@ void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s
 }
 
 
-DataPrimitive::DataPrimitive(PrimitivePtr primitive) : d(*new Private)
+DataPrimitive::DataPrimitive(Primitive* primitive) : d(*new Private)
 {
   d._file = 0;
   d._primitive = primitive;
@@ -67,14 +67,6 @@ DataPrimitive::~DataPrimitive() {
   delete &d;
 }
 
-
-PrimitivePtr DataPrimitive::makeDuplicate() const {
-  return d._primitive->_makeDuplicate();
-}
-
-bool DataPrimitive::checkValidity(const DataSourcePtr ds) const {
-  return d._primitive->_checkValidity(ds);
-}
 
 void DataPrimitive::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(d._primitive->myLockStatus() == KstRWLock::WRITELOCKED);
@@ -91,8 +83,8 @@ void DataPrimitive::changeFile(DataSourcePtr in_file) {
     d._file->unlock();
   }
   d._primitive->registerChange();
-
 }
+
 
 /** return the name of the file */
 QString DataPrimitive::filename() const {
