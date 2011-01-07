@@ -95,6 +95,28 @@ Options
 
 
 
+Status
+-----------
+
+	Kst builds, starts, and loads all plugins. Tested on Linux,
+	Windows, and MacOSX.
+	
+	The cmake build system is not finished yet and we need 
+	qmake until all issues are solved.
+	
+	TODOs:
+	- add install rules
+	- add package rules
+	- add svn revision number extraction
+	- add support for all 3rd party libraries used by the plugins
+	- add support for pre-compiled headers
+	- add configure checkes so config.h is generated
+	- only the kst binary is generated
+	- build and run tests
+	- have a look at kst1's cmake files, especially the 3rd party lib code
+
+
+
 
 
 
