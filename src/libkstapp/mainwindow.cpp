@@ -1311,6 +1311,9 @@ void MainWindow::readFromEnd() {
     v->unlock();
   }
   UpdateManager::self()->doUpdates(true);
+  _dialogDefaults->setValue("vector/range", nf);
+  _dialogDefaults->setValue("vector/countFromEnd", true);
+  _dialogDefaults->setValue("vector/readToEnd", false);
 }
 
 void MainWindow::readToEnd() {
@@ -1334,6 +1337,9 @@ void MainWindow::readToEnd() {
     v->registerChange();
     v->unlock();
   }
+  _dialogDefaults->setValue("vector/start", f0);
+  _dialogDefaults->setValue("vector/countFromEnd", false);
+  _dialogDefaults->setValue("vector/readToEnd", true);
   UpdateManager::self()->doUpdates(true);
 }
 
@@ -1384,6 +1390,11 @@ void MainWindow::forward() {
       v->unlock();
     }
   }
+  _dialogDefaults->setValue("vector/range", nf);
+  _dialogDefaults->setValue("vector/start", f0);
+  _dialogDefaults->setValue("vector/countFromEnd", false);
+  _dialogDefaults->setValue("vector/readToEnd", false);
+
   UpdateManager::self()->doUpdates(true);
 }
 
@@ -1430,6 +1441,10 @@ void MainWindow::back() {
       v->unlock();
     }
   }
+  _dialogDefaults->setValue("vector/range", nf);
+  _dialogDefaults->setValue("vector/start", f0);
+  _dialogDefaults->setValue("vector/countFromEnd", false);
+  _dialogDefaults->setValue("vector/readToEnd", false);
   UpdateManager::self()->doUpdates(true);
 }
 
