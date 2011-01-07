@@ -65,7 +65,7 @@ macro(kst_add_library type)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
 		                            ARCHIVE DESTINATION lib)
 	else()
-		install(TARGETS ${kst_name} RUNTIME DESTINATION lib)
+		install(TARGETS ${kst_name} DESTINATION lib)
 	endif()
 endmacro()
 
