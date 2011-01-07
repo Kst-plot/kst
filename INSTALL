@@ -80,6 +80,9 @@ Using cmake
 		cmake ..\kst\cmake -G"MinGW Makefiles"
 
 
+	Re-running cmake is simple: cmake .
+
+
 Options
 -------
 
