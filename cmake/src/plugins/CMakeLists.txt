@@ -21,11 +21,10 @@ kst_add_plugin(filters despike)
 kst_add_plugin(filters differentiation)
 
 if(gsl)
-
 	include_directories(${GSL_INCLUDE_DIR})
 	macro(kst_add_gsl_plugin dir name)
 		kst_add_plugin(${dir} ${name})
-		kst_link(${GSL_LIBRARY})
+		kst_link(${GSL_LIBRARIES})
 	endmacro()
 	
 	kst_add_gsl_plugin(dataobject/convolution    convolve)
