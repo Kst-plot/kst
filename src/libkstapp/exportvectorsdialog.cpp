@@ -19,6 +19,8 @@
 #include "mainwindow.h"
 #include "document.h"
 
+#include <QLineEdit>
+
 namespace Kst {
 
 ExportVectorsDialog::ExportVectorsDialog(QWidget *parent) :
