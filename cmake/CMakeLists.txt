@@ -8,10 +8,17 @@ include(KstMacros)
 message(STATUS "")
 message(STATUS "Build options:")
 message(STATUS "")
+kst_option(release "Build release version" OFF all)
 kst_option(merge_files "Merge files to speedup build" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
 message(STATUS "")
 
+
+if(kst_release)
+	set(CMAKE_BUILD_TYPE Release)
+else()
+	set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
