@@ -11,6 +11,7 @@ message(STATUS "")
 kst_option(release "Build release version" OFF all)
 kst_option(merge_files "Merge files to speedup build" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
+kst_option(verbose "Make verbose makefiles" OFF all)
 message(STATUS "")
 
 
@@ -18,6 +19,12 @@ if(kst_release)
 	set(CMAKE_BUILD_TYPE Release)
 else()
 	set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+if(kst_verbose)
+	set(CMAKE_VERBOSE_MAKEFILE 1)
+else()
+	set(CMAKE_VERBOSE_MAKEFILE 0)
 endif()
 
 find_package(Qt4 REQUIRED)
