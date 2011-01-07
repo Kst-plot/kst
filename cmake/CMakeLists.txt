@@ -12,11 +12,17 @@ kst_option(merge_files "Merge files to speedup build" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
 message(STATUS "")
 
+
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
+
+message(STATUS "")
+message(STATUS "3rd party libs for plugins:")
+message(STATUS "")
 find_package(Getdata)
 find_package(Gsl)
 find_package(Netcdf)
+message(STATUS "")
 
 set(KST_VERSION 2.0.3)
 

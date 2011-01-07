@@ -5,6 +5,7 @@ macro(kst_init name)
 	set(kst_name ${name})
 	set(kst_${kst_name}_dont_merge)
 	set(kst_${kst_name}_ignore)
+	set(kst_${kst_name}_info_files)
 endmacro()
 
 
@@ -138,8 +139,27 @@ macro(kst_option _name _description _default _sys)
 	if(_msg)
 		string(SUBSTRING "kst_${_name}                            " 0 25 _var)
 		string(SUBSTRING "${kst_${_name}}     " 0 4 _val)
-		message(STATUS "${_var}: ${_val}   (${_description})")
+		message(STATUS "${_var}= ${_val}   : ${_description}")
 	endif()
 endmacro()
 
-		
+
+macro(kst_add_info_files group)
+	foreach(_it ${ARGN})
+		if(NOT IS_DIRECTORY ${_it})
+			get_filename_component(name ${_it} NAME)
+			if(NOT ${_it} MATCHES "^/\\\\..*$;~$")
+				set_source_files_properties(${_it} PROPERTIES HEADER_FILE_ONLY TRUE)
+				set(kst_${group}_info_files ${kst_${group}_info_files} ${_it})
+			endif()
+		endif()
+	endforeach()
+	source_group(${group} FILES ${kst_${group}_info_files})
+	set(kst_${kst_name}_info_files ${kst_${kst_name}_info_files} ${kst_${group}_info_files})
+endmacro()
+
+macro(kst_find_info_files group files)
+	file(GLOB _filelist ${files})
+	kst_add_info_files(${group} ${_filelist})
+endmacro()
+
