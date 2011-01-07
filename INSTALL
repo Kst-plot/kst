@@ -1,0 +1,101 @@
+=========================
+Building Kst with CMake
+=========================
+
+Install CMake from www.cmake.org or your distribution (version >= 2.8).
+
+
+3rd party libraries
+-------------------
+
+	Install Qt 4 and make sure qmake is found.
+		Add the folder with qmake to the environment variable PATH.
+		If you've compiled Qt by yourself or qmake is not found after
+		installing Qt fix PATH,
+		Linux/Unix: export PATH=<your path to qt>/bin:$PATH
+		Windows   : set PATH=<your path to qt>\bin;%PATH%
+
+	Libraries for plugins:
+	Currently only Getdata, Gsl, and Netcdf are supported.
+	On pkg systems the libraries should be found automatically,
+	on non-pkg systems like Windows you must point to the libraries
+	by environment variables NETCDF_DIR, GETDATA_DIR, and GSL_DIR.
+
+
+Generating build system files
+-----------------------------
+
+	CMake is a build system file generator. On all systems it could
+	generate files for several build systems, for instance Makefiles
+	for make, project files for Visual Studio, Xcode, Eclipse.
+
+	Running cmake without any argument lists all supported build
+	systems on your system. Passing one of them as -G"<build system name>" 
+	argument when running cmake selects this.
+
+
+Building out-of-source
+----------------------
+
+	The standard way of using CMake is to build in a folder which doesn't resides
+	in the source tree. This has the advantage, that a complete fresh build could
+	be done by simply deleting all files in the build folder and to re-run cmake 
+	again.
+
+	Another benefit of out-of-source builds is that several builds (debug, release,
+	command-line builds, IDE project files) could all use the same source tree.
+
+	Therefore when using cmake create a folder outside of the source tree and
+	select this folder when using CMake's GUI, cmake-gui, or go into this folder
+	when you call cmake from the shell.
+
+
+Using cmake
+-------------
+
+	When calling cmake you must pass the path to the source tree (absolute are relative)
+	and optionally the generator (each system has its own default). Additional arguments 
+	could be passed with the -D prefix.
+
+	Here some examples, assuming the build folder is in the same folder as the source tree:
+
+	* Makefiles on Linux
+		cmake ../kst/cmake
+	
+	* Project files for QtCreator:
+		Open the kst/cmake/CMakeLists.txt file and select the build folder
+		or create the files in the command line using the -G"CodeBlocks *" option, eg
+			cmake ../kst/cmake -G"CodeBlocks - Unix Makefiles"
+	
+	* Project files for Xcode
+		cmake ../kst/cmake -GXcode
+		
+	* Project files for Visual Studio 10
+		cmake ..\kst\cmake -G"Visual Studio 10"
+
+	* NMake files for Visual Studio
+		cmake ..\kst\cmake -G"NMake Makefiles"
+
+	* Makefiles for MinGW
+		cmake ..\kst\cmake -G"MinGW Makefiles"
+
+
+Options
+-------
+
+	Options could be passed by the -D prefix when running cmake.
+	Available options will be listed on each cmake run:
+
+	-- kst_merge_files          = OFF     : Merge files to speedup build
+	-- kst_merge_rebuild        = OFF     : Rebuild generated files from merged files build
+	
+	To enable a option pass the value ON or 1, eg
+		cmake ../kst/cmake -Dkst_merge_files=1
+
+
+
+
+
+
+
+
