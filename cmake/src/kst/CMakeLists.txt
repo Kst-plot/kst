@@ -24,7 +24,17 @@ add_executable(kst ${kst_win32} ${kst_kst_sources} ${rc_file} ${kst_kst_info_fil
 
 kst_link(kstcore kstmath kstapp kstwidgets ${QT_QTOPENGL_LIBRARY} ${QT_QTSVG_LIBRARY} ${kst_qtmain_library})
 
-install(TARGETS kst RUNTIME DESTINATION bin)
+
+install(TARGETS kst 
+	RUNTIME DESTINATION bin
+	BUNDLE DESTINATION bin)
+	
+if(APPLE)
+	#TODO does not work
+	set(bdir ${CMAKE_INSTALL_PREFIX}/bin ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
+	set(blib ${CMAKE_INSTALL_PREFIX}/lib/libkstcore.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstapp.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstwidgets.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstmath.dylib)
+	install(CODE "include(BundleUtilities) fixup_bundle(kst \"${blib}\" \"${bdir}\")" COMPONENT RUNTIME)
+endif()
 
 if(WIN32)
 	install(FILES
