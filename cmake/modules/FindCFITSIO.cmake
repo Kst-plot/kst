@@ -1,7 +1,7 @@
 
 include(FindPkgConfig)
 
-pkg_check_modules(libcfitsio3 libcfitsio3)
+pkg_check_modules(cfitsio cfitsio)
 
 if(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
 	set(CFITSIO_LIBRARY -L${CFITSIO_LIBRARY_DIRS} ${CFITSIO_LIBRARIES})

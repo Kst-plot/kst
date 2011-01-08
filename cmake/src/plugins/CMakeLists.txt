@@ -3,6 +3,7 @@
 kst_init_plugin(src/plugins)
 
 
+
 kst_add_plugin(dataobject bin)
 kst_add_plugin(dataobject chop)
 kst_add_plugin(dataobject linefit)
@@ -62,6 +63,8 @@ if(gsl)
 	kst_add_gsl_plugin(fits sinusoid_weighted)
 endif()
 
+
+message(STATUS)
 
 
 
