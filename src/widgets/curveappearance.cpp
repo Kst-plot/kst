@@ -480,7 +480,7 @@ void CurveAppearance::drawSampleLine() {
 // store the current state of the widget as the default 
 void CurveAppearance::setWidgetDefaults(bool nextColor) {
   if (nextColor) {
-    ColorSequence::next();
+    ColorSequence::self().next();
   }
   _dialogDefaults->setValue("curves/showPoints",showPoints());
   _dialogDefaults->setValue("curves/showLines", showLines());
@@ -496,9 +496,9 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
 
 // set the widget to the stored default values
 void CurveAppearance::loadWidgetDefaults() {
-  setColor(ColorSequence::current());
-  ColorSequence::next();
-  setHeadColor(ColorSequence::current());
+  setColor(ColorSequence::self().current());
+  ColorSequence::self().next();
+  setHeadColor(ColorSequence::self().current());
 
   setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
   setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());

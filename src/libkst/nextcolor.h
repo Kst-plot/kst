@@ -10,49 +10,29 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _COLORSEQUENCE_H
-#define _COLORSEQUENCE_H
+#ifndef _NEXTCOLOR_H
+#define _NEXTCOLOR_H
 
-#include "kstmath_export.h"
+#include <QColor>
 
-#include "nextcolor.h"
-#include "curve.h"
-
+#include "kst_export.h"
 
 class KPalette;
 
 namespace Kst {
 
-class KSTMATH_EXPORT ColorSequence : public NextColor
+class KSTCORE_EXPORT NextColor
 {
   public:
-    enum ColorMode { MonoChrome, GrayScale, Color };
-    void createPalette();
-    QColor next();
-    QColor current();
-    QColor next(const QColor& badColor);
-    QColor next(const CurveList& Curves, const QColor& badColor);
-    bool colorsTooClose(const QColor& color, const QColor& badColor);
-    ColorMode colorMode();
-    void setColorMode(ColorMode mode);
-    int count();
-    void reset();
-    QColor entry(int ptr);
+    virtual ~NextColor();
+    virtual QColor next() = 0;
+    static NextColor& self();
 
-    static ColorSequence& self();
-    
+  protected:
+    NextColor();
+
   private:
-    ColorSequence();
-    ~ColorSequence();
-
-    static ColorSequence* _self;
-    static void cleanup();
-
-    QHash<int, QColor> _pal;
-    int _count;
-    int _ptr;  // pointer to the next color
-    ColorMode _mode;
-    QString _palette;
+    static NextColor* _instance;
 };
 
 }

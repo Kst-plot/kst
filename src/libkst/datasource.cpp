@@ -39,10 +39,11 @@
 #include "objectstore.h"
 #include "scalar.h"
 #include "string.h"
-//#include "stdinsource.h"
+#include "nextcolor.h"
 #include "updatemanager.h"
 
 #include "dataplugin.h"
+
 
 // TODO DataSource should not need the plugin code
 #include "datasourcepluginmanager.h"
@@ -133,10 +134,12 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   interf_string(new NotSupportedImp<DataString>),
   interf_vector(new NotSupportedImp<DataVector>),
   interf_matrix(new NotSupportedImp<DataMatrix>),
-  _watcher(0)
+  _watcher(0),
+  _color(NextColor::self().next())
 {
   Q_UNUSED(type)
   Q_UNUSED(store)
+
   _valid = false;
   _reusable = true;
   _writable = false;
@@ -384,6 +387,15 @@ QString DataSource::_automaticDescriptiveName() const {
 QString DataSource::descriptionTip() const {
   return fileName();
 }
+
+QColor DataSource::color() const {
+  return _color;
+}
+
+void DataSource::setColor(const QColor& color) {
+  _color = color;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 DataSourceConfigWidget::DataSourceConfigWidget(QSettings& settings)

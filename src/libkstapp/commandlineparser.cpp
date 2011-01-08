@@ -264,7 +264,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->setXError(0);
     curve->setXMinusError(0);
     curve->setYMinusError(0);
-    curve->setColor(ColorSequence::next());
+    curve->setColor(ColorSequence::self().next());
     curve->setHasPoints(_usePoints);
     curve->setHasLines(_useLines);
     curve->setHasBars(_useBargraph);

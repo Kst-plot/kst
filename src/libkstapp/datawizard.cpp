@@ -938,7 +938,7 @@ void DataWizard::finished() {
   int i_plot = 0;
   for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
     if (_pageDataPresentation->plotData()) {
-      color = ColorSequence::next();
+      color = ColorSequence::self().next();
       colors.append(color);
 
       DataVectorPtr vector = kst_cast<DataVector>(*it);
@@ -1036,7 +1036,7 @@ void DataWizard::finished() {
         curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
         if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {
-          color = ColorSequence::next();
+          color = ColorSequence::self().next();
         } else {
           color = colors[indexColor];
           indexColor++;

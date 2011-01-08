@@ -176,7 +176,7 @@ void DifferentiateCurvesDialog::apply() {
     CurvePtr curve = kst_cast<Curve>(*curve_iter);
     curve->writeLock();
     if (lineColorOrder) {
-      curve->setColor(ColorSequence::entry(sequenceNum));
+      curve->setColor(ColorSequence::self().entry(sequenceNum));
     }
     if (pointStyleOrder) {
       curve->setPointType(sequenceNum % KSTPOINT_MAXTYPE);

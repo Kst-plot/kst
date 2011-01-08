@@ -148,8 +148,11 @@ class KSTCORE_EXPORT DataSource : public Object
     bool reusable() const;
     void disableReuse();
 
-
-
+    /************************************************************/
+    /* Color for the "assign curve color per file" tool         */
+    /************************************************************/
+    QColor color() const;
+    void setColor(const QColor& color);
 
     /************************************************************/
     /* File/data specific                                      */
@@ -230,6 +233,8 @@ class KSTCORE_EXPORT DataSource : public Object
     void setInterface(DataInterface<DataMatrix>*);
 
   private:
+    DataSource();
+
     DataInterface<DataScalar>* interf_scalar;
     DataInterface<DataString>* interf_string;
     DataInterface<DataVector>* interf_vector;
@@ -237,6 +242,7 @@ class KSTCORE_EXPORT DataSource : public Object
 
     QFileSystemWatcher *_watcher;
 
+    QColor _color;
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };

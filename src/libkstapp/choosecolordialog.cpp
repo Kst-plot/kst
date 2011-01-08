@@ -32,7 +32,7 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
 
   MainWindow::setWidgetFlags(this);
 
-  grid = 0;
+  _grid = 0;
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
     _store = mw->document()->objectStore();
@@ -40,7 +40,7 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
     // FIXME: we need the object store
     qFatal("ERROR: can't construct a ChooseColorDialog without the object store");
   }
-
+  QMap<DataSourcePtr, QColor> _dataSourceColors;
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
@@ -48,7 +48,7 @@ ChooseColorDialog::ChooseColorDialog(QWidget *parent)
 
 
 ChooseColorDialog::~ChooseColorDialog() {
-  delete grid;
+  delete _grid;
 }
 
 
@@ -64,37 +64,36 @@ void ChooseColorDialog::updateColorGroup() {
   // are not used by any curves or vectors
   DataVectorList vcList = _store->getObjects<DataVector>();
 
-  QStringList fileNameList;
+  _dataSourceColors.clear();
   for (DataVectorList::Iterator vc_iter = vcList.begin();
         vc_iter != vcList.end();
         ++vc_iter)
   {
-    if (fileNameList.contains((*vc_iter)->filename()) == 0)
-      fileNameList.push_back((*vc_iter)->filename());
+    if (! (_dataSourceColors.contains((*vc_iter)->dataSource())))
+      _dataSourceColors[(*vc_iter)->dataSource()] = (*vc_iter)->dataSource()->color();
   }
 
   cleanColorGroup();
 
-  grid = new QGridLayout(colorFrame);
-  grid->setSpacing(8);
-  grid->setColumnStretch(1,0);
+  _grid = new QGridLayout(colorFrame);
+  _grid->setSpacing(8);
+  _grid->setColumnStretch(1,0);
 
-  int i = fileNameList.count();
-  for (QStringList::Iterator it = fileNameList.begin();
-        it != fileNameList.end();
-        ++it)
-  {
+  int i=0;
+  QMapIterator<DataSourcePtr, QColor> it(_dataSourceColors);
+  while (it.hasNext()) {
+    it.next();
     QLineEdit* dataSourceName = new QLineEdit(colorFrame);
     dataSourceName->setReadOnly(true);
-    dataSourceName->setText(*it);
-    grid->addWidget(dataSourceName,i,0);
-    lineEdits.push_back(dataSourceName);
+    dataSourceName->setText(it.key()->fileName());
+    _grid->addWidget(dataSourceName,i,0);
+    _lineEdits.push_back(dataSourceName);
     dataSourceName->show();
 
     ColorButton* dataSourceColor = new ColorButton(colorFrame);
-    dataSourceColor->setColor(ColorSequence::next());
-    grid->addWidget(dataSourceColor,i,1);
-    colorButtons.push_back(dataSourceColor);
+    dataSourceColor->setColor(it.value());
+    _grid->addWidget(dataSourceColor,i,1);
+    _colorButtons.push_back(dataSourceColor);
     dataSourceColor->show();
     i++;
   }
@@ -106,20 +105,20 @@ void ChooseColorDialog::updateColorGroup() {
 
 
 void ChooseColorDialog::cleanColorGroup() {
-  while (!lineEdits.isEmpty())
+  while (!_lineEdits.isEmpty())
   {
-    QLineEdit* tempLineEdit = lineEdits.back();
-    lineEdits.pop_back();
+    QLineEdit* tempLineEdit = _lineEdits.back();
+    _lineEdits.pop_back();
     delete tempLineEdit;
   }
 
-  while (!colorButtons.isEmpty())
+  while (!_colorButtons.isEmpty())
   {
-    ColorButton* tempColorButton = colorButtons.back();
-    colorButtons.pop_back();
+    ColorButton* tempColorButton = _colorButtons.back();
+    _colorButtons.pop_back();
     delete tempColorButton;
   }
-  delete grid;
+  delete _grid;
 }
 
 
@@ -150,7 +149,16 @@ void ChooseColorDialog::apply() {
       curve->unlock();
     }
   }
-  updateColorGroup();
+  // Store the selected colors in the corresponding datasource objects
+  QMutableMapIterator<DataSourcePtr, QColor> itDatasource(_dataSourceColors);
+  QListIterator<ColorButton*> itColorButton(_colorButtons);
+  DataSourcePtr ds;
+  while (itDatasource.hasNext()) {
+    ds = itDatasource.next().key();
+    ds->setColor(itColorButton.next()->color()); // Per construction there should always be as many color buttons as datasources
+  }
+
+  updateColorGroup(); // This will update the _dataSourceColors map
 
   UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
@@ -158,8 +166,8 @@ void ChooseColorDialog::apply() {
 
 
 QColor ChooseColorDialog::getColorForFile(const QString &fileName) {
-  QList<ColorButton*>::Iterator kc_iter = colorButtons.begin();
-  for (QList<QLineEdit*>::Iterator fn_iter = lineEdits.begin(); fn_iter != lineEdits.end(); ++fn_iter) {
+  QList<ColorButton*>::Iterator kc_iter = _colorButtons.begin();
+  for (QList<QLineEdit*>::Iterator fn_iter = _lineEdits.begin(); fn_iter != _lineEdits.end(); ++fn_iter) {
     if (fileName == (*fn_iter)->text()) {
       return (*kc_iter)->color();
     }

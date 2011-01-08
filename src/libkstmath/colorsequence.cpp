@@ -32,6 +32,24 @@ static const char *const colors[] = { "red",
 static const int colorcnt = sizeof(colors) / sizeof(char*);
 
 
+ColorSequence *ColorSequence::_self = &ColorSequence::self();
+
+
+ColorSequence& ColorSequence::self() {
+  if (!_self) {
+    _self = new ColorSequence;
+    qAddPostRoutine(ColorSequence::cleanup);
+  }
+  return *_self;
+}
+
+
+void ColorSequence::cleanup() {
+    delete _self;
+    _self = 0;
+}
+
+
 ColorSequence::ColorSequence()
 : _ptr(0), _mode(Color) {
   createPalette();
@@ -40,9 +58,6 @@ ColorSequence::ColorSequence()
 
 ColorSequence::~ColorSequence() {
 }
-
-
-ColorSequence *ColorSequence::_self = 0L;
 
 
 void ColorSequence::createPalette( ) {
@@ -60,10 +75,7 @@ void ColorSequence::createPalette( ) {
 }
 
 
-void ColorSequence::cleanup() {
-    delete _self;
-    _self = 0;
-}
+
 
 
 QColor ColorSequence::next(const CurveList& curves, const QColor& badColor) {
@@ -72,107 +84,95 @@ QColor ColorSequence::next(const CurveList& curves, const QColor& badColor) {
   int ptrMin;
   int start;
 
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  QVector<int> usage(_self->_count*2);
+  QVector<int> usage(_count*2);
 
-  for (int i = 0; i < _self->_count*2; i++) {
+  for (int i = 0; i < _count*2; i++) {
     usage[i] = 0;
   }
 
   // check we are not already using this color, but if
   //  we are then count the number of usages of each color
   //  in the palette.
-  start = _self->_ptr;
-  if (start >= _self->_count * 2) {
+  start = _ptr;
+  if (start >= _count * 2) {
     start = 0;
   }
 
-  while (_self->_ptr != start) {
-    if (_self->_ptr >= _self->_count * 2) {
-      _self->_ptr = 0;
+  while (_ptr != start) {
+    if (_ptr >= _count * 2) {
+      _ptr = 0;
     }
 
-    dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-    color = _self->_pal.value( _self->_ptr % _self->_count).dark(dark_factor);
+    dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+    color = _pal.value( _ptr % _count).dark(dark_factor);
 
     // if we are too close to the bad color then increase the usage count
     //  to try and not use it.
     if (badColor.isValid() && colorsTooClose(color, badColor) ) {
-      usage[_self->_ptr] += 100;
+      usage[_ptr] += 100;
     }
 
     for (int i = 0; i < (int)curves.count(); i++) {
       if (color == curves[i]->color()) {
-        usage[_self->_ptr]++;
+        usage[_ptr]++;
       }
     }
 
-    if (usage[_self->_ptr] == 0) {
+    if (usage[_ptr] == 0) {
       break;
     }
 
-    _self->_ptr++;
+    _ptr++;
   }
 
   // if we are already using this color then use the least used color for all the curves.
-  if (usage[_self->_ptr] != 0) {
-    ptrMin = _self->_ptr;
+  if (usage[_ptr] != 0) {
+    ptrMin = _ptr;
 
-    while (_self->_ptr != start) {
-      if (_self->_ptr >= _self->_count * 2) {
-        _self->_ptr = 0;
+    while (_ptr != start) {
+      if (_ptr >= _count * 2) {
+        _ptr = 0;
       }
 
-      if (usage[_self->_ptr] < usage[ptrMin]) {
-        ptrMin = _self->_ptr;
+      if (usage[_ptr] < usage[ptrMin]) {
+        ptrMin = _ptr;
       }
 
-      _self->_ptr++;
+      _ptr++;
     }
 
-    _self->_ptr = ptrMin;
+    _ptr = ptrMin;
   }
 
-  dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-  color = _self->_pal.value( _self->_ptr++ % _self->_count).dark(dark_factor);
+  dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+  color = _pal.value( _ptr++ % _count).dark(dark_factor);
 
   return color;
 }
 
 
 QColor ColorSequence::next() {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  if (_self->_ptr >= _self->_count * 2) {
-    _self->_ptr = 0;
+  if (_ptr >= _count * 2) {
+    _ptr = 0;
   }
 
-  int dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-  return _self->_pal.value( _self->_ptr++ % _self->_count).dark(dark_factor);
+  int dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+  return _pal.value( _ptr++ % _count).dark(dark_factor);
 }
 
 QColor ColorSequence::current() {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  if (_self->_ptr >= _self->_count * 2) {
-    _self->_ptr = 0;
+  if (_ptr >= _count * 2) {
+    _ptr = 0;
   }
 
-  int dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-  return _self->_pal.value( _self->_ptr % _self->_count).dark(dark_factor);
+  int dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+  return _pal.value( _ptr % _count).dark(dark_factor);
 }
 
 
@@ -180,32 +180,28 @@ QColor ColorSequence::next(const QColor& badColor) {
   QColor color;
   int dark_factor;
 
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  int start = _self->_ptr;
+  int start = _ptr;
 
   // find the next color in the sequence that it not too close to the bad color.
   if (badColor.isValid()) {
     do {
-      if (_self->_ptr >= _self->_count * 2) {
-        _self->_ptr = 0;
+      if (_ptr >= _count * 2) {
+        _ptr = 0;
       }
-      dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-      color = _self->_pal.value( _self->_ptr++ % _self->_count).dark(dark_factor);
-    } while (colorsTooClose(color, badColor) && start != _self->_ptr);
+      dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+      color = _pal.value( _ptr++ % _count).dark(dark_factor);
+    } while (colorsTooClose(color, badColor) && start != _ptr);
   }
 
   // if we couldn't find one then just use the next color in the sequence.
-  if (start == _self->_ptr) {
-    if (_self->_ptr >= _self->_count * 2) {
-      _self->_ptr = 0;
+  if (start == _ptr) {
+    if (_ptr >= _count * 2) {
+      _ptr = 0;
     }
-    dark_factor = 100 + ( 50 * ( _self->_ptr / _self->_count ) );
-    color = _self->_pal.value( _self->_ptr++ % _self->_count).dark(dark_factor);
+    dark_factor = 100 + ( 50 * ( _ptr / _count ) );
+    color = _pal.value( _ptr++ % _count).dark(dark_factor);
   }
 
   return color;
@@ -248,59 +244,36 @@ bool ColorSequence::colorsTooClose(const QColor& color, const QColor& badColor) 
 
 
 ColorSequence::ColorMode ColorSequence::colorMode() {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-
-  return _self->_mode;
+  return _mode;
 }
 
 
 void ColorSequence::setColorMode(ColorSequence::ColorMode mode) {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-
-  _self->_mode = mode;
+  _mode = mode;
 }
 
 
 int ColorSequence::count() {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  return _self->_count * 2;
+  return _count * 2;
 }
 
 
 void ColorSequence::reset() {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-
-  _self->_ptr = 0;
+  _ptr = 0;
 }
 
 
 QColor ColorSequence::entry(int ptr) {
-  if (!_self) {
-    _self = new ColorSequence;
-    qAddPostRoutine(ColorSequence::cleanup);
-  }
-  _self->createPalette();
+  createPalette();
 
-  if (ptr >= _self->_count * 2) {
+  if (ptr >= _count * 2) {
     ptr = 0;
   }
 
-  int dark_factor = 100 + ( 50 * ( ptr / _self->_count ) );
-  return _self->_pal.value( ptr % _self->_count).dark(dark_factor);
+  int dark_factor = 100 + ( 50 * ( ptr / _count ) );
+  return _pal.value( ptr % _count).dark(dark_factor);
 }
 
 }

@@ -17,6 +17,7 @@
 #include <QLineEdit>
 
 #include "colorbutton.h"
+#include "dataprimitive.h"
 
 #include "ui_choosecolordialog.h"
 
@@ -42,15 +43,17 @@ class ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
   private:
     QColor getColorForFile(const QString &fileName);
 
-    QGridLayout* grid;
+    QGridLayout* _grid;
 
     void updateColorGroup();
     void cleanColorGroup();
 
-    QList<QLineEdit*> lineEdits;
-    QList<ColorButton*> colorButtons;
+    QList<QLineEdit*> _lineEdits;
+    QList<ColorButton*> _colorButtons;
 
     ObjectStore *_store;
+    // Use a QMap to store the list of used datasources and their color
+    QMap<DataSourcePtr, QColor> _dataSourceColors;
 
 };
 
