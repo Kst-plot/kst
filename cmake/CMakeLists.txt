@@ -12,7 +12,7 @@ message(STATUS "Build options:")
 message(STATUS)
 
 kst_option(release "Build release version" OFF all)
-kst_option(merge_files "Merge files to speedup build" OFF all)
+kst_option(merge_files "Merge files to speedup build about factor 5" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
 kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
 kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
