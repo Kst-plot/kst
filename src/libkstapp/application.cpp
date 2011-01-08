@@ -24,6 +24,8 @@
 #include "datasource.h"
 #include "dialogdefaults.h"
 
+#include <QIcon>
+
 namespace Kst {
 
 Application::Application(int &argc, char **argv)
