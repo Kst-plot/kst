@@ -91,6 +91,10 @@ macro(kst_add_plugin folder name)
 	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	kst_link(kstcore kstmath kstwidgets)
 	install(TARGETS ${kst_name} LIBRARY DESTINATION plugin)
+	set(_msg ${ARGV2})
+	if(_msg)
+		message(STATUS "${ARGV2}${kst_name}")
+	endif()
 endmacro()
 
 

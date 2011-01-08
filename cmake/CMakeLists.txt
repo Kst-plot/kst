@@ -40,6 +40,7 @@ message(STATUS "3rd party libs for plugins--------------------")
 find_package(Getdata)
 find_package(Gsl)
 find_package(Netcdf)
+find_package(CFITSIO)
 message(STATUS "----------------------------------------------")
 message(STATUS)
 
