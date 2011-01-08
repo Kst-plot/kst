@@ -11,6 +11,7 @@
 
 #include "nextcolor.h"
 
+using namespace Kst;
 
 NextColor* NextColor::_instance = 0;
 
