@@ -89,8 +89,13 @@ Options
 	Options could be passed by the -D prefix when running cmake.
 	Available options will be listed on each cmake run:
 
-	-- kst_merge_files          = OFF     : Merge files to speedup build
-	-- kst_merge_rebuild        = OFF     : Rebuild generated files from merged files build
+	-- kst_release              = OFF    : Build release version
+	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
+	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
+	-- kst_verbose              = OFF    : Make verbose CMake run and Makefiles
+	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
+	-- kst_3rdparty             = OFF    : Build plugins depending on 3rd party libraries
+
 	
 	To enable a option pass the value ON or 1, eg
 		cmake ../kst/cmake -Dkst_merge_files=1
@@ -108,15 +113,14 @@ Status
 	qmake until all issues are solved.
 	
 	TODOs:
-	- add install rules
+	- install on Mac
 	- add package rules
 	- add svn revision number extraction
-	- add support for all 3rd party libraries used by the plugins
 	- add support for pre-compiled headers
-	- add configure checkes so config.h is generated
 	- only the kst binary is generated
 	- build and run tests
 	- have a look at kst1's cmake files, especially the 3rd party lib code
+
 
 
 
