@@ -17,6 +17,7 @@ kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF a
 kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
 kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
 kst_option(console "Open console on Windows" OFF win)
+kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
 
 message(STATUS)
 
@@ -36,12 +37,16 @@ if(MINGW)
 endif()
 
 message(STATUS)
-message(STATUS "3rd party libs for plugins--------------------")
-find_package(Getdata)
-find_package(Gsl)
-find_package(Netcdf)
-find_package(CFITSIO)
-message(STATUS "----------------------------------------------")
+if(kst_3rdparty)
+  message(STATUS "3rd party libs for plugins--------------------")
+  find_package(Getdata)
+  find_package(Gsl)
+  find_package(Netcdf)
+  find_package(CFITSIO)
+  message(STATUS "----------------------------------------------")
+else()
+  message(STATUS "Building plugins depending on 3rd party libraries suppressed")
+endif()
 message(STATUS)
 
 
