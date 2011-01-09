@@ -20,7 +20,7 @@
 
 #include <config.h>
 
-#include <kstsharedptr.h>
+#include "sharedptr.h"
 
 extern "C" {
 #include <HL2_DMC/PIODB.h>

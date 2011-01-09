@@ -18,7 +18,7 @@
 
 #include <assert.h>
 
-#include <kdebug.h>
+#include "debug.h"
 #include <math.h>
 
 //#define PIOLIBDEBUG

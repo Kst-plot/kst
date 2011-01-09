@@ -42,6 +42,11 @@ if(planckIDEF)
 	kst_add_plugin(. planckIDEF)
 endif()
 
+#set(dmc 1)
+if(dmc)
+	kst_add_plugin(. dmc)
+endif()
+
 message(STATUS)
 
 
