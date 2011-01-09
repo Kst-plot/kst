@@ -42,6 +42,7 @@ SOURCES += builtindatasources.cpp \
     matrixfactory.cpp \
     measuretime.cpp \
     namedobject.cpp \
+    nextcolor.cpp \
     object.cpp \
     objectlist.cpp \
     objectmap.cpp \
