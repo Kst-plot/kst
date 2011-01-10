@@ -34,7 +34,7 @@ namespace DMC {
     extern bool haveDMC();
     extern bool validDatabase(const QString&);
 
-class Source : public KstShared {
+class Source : public Kst::Shared {
   public:
     Source();
     virtual ~Source();

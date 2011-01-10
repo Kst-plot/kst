@@ -15,25 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DMC_H
-#define DMC_H
+#ifndef KST_DMCSOURCE_H
+#define KST_DMCSOURCE_H
 
-#include <kstdatasource.h>
+#include "datasource.h"
 #include "dmcdata.h"
 #include "dmcobj.h"
-
 
 #include "datasource.h"
 #include "dataplugin.h"
 
-#include <netcdf.h>
-#include <netcdfcpp.h>
 
 
-class DataInterfaceNetCdfScalar;
-class DataInterfaceNetCdfString;
-class DataInterfaceNetCdfVector;
-class DataInterfaceNetCdfMatrix;
+class DataInterfaceDmcScalar;
+class DataInterfaceDmcString;
+class DataInterfaceDmcVector;
+class DataInterfaceDmcMatrix;
 
 class DmcSource : public Kst::DataSource {
   public:
@@ -45,8 +42,9 @@ class DmcSource : public Kst::DataSource {
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 
-
     virtual const QString& typeString() const;
+
+    static const QString dmcTypeKey();
 
 
     int readScalar(double *v, const QString& field);
@@ -72,9 +70,6 @@ class DmcSource : public Kst::DataSource {
   private:
     QMap<QString, int> _frameCounts;
 
-    int _maxFrameCount;
-    NcFile *_ncfile;    
-
     // QMap<QString, QString> _metaData;
 
     // TODO remove friend
@@ -84,14 +79,29 @@ class DmcSource : public Kst::DataSource {
     QStringList _stringList;
 
 
-    friend class DataInterfaceNetCdfScalar;
-    friend class DataInterfaceNetCdfString;
-    friend class DataInterfaceNetCdfVector;
-    friend class DataInterfaceNetCdfMatrix;
-    DataInterfaceNetCdfScalar* is;
-    DataInterfaceNetCdfString* it;
-    DataInterfaceNetCdfVector* iv;
-    DataInterfaceNetCdfMatrix* im;
+    friend class DataInterfaceDmcScalar;
+    friend class DataInterfaceDmcString;
+    friend class DataInterfaceDmcVector;
+    friend class DataInterfaceDmcMatrix;
+    DataInterfaceDmcScalar* is;
+    DataInterfaceDmcString* it;
+    DataInterfaceDmcVector* iv;
+    DataInterfaceDmcMatrix* im;
+
+
+    // from old dmc code
+    Kst::SharedPtr<DMC::Object> _dmcObject;
+    QString _filename;
+
+    void update();
+
+    int readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) ;
+    bool isValidField(const QString& field) const;
+    bool supportsTimeConversions() const;
+    int sampleForTime(const QDateTime& time, bool *ok);
+    QDateTime timeForSample(int sample, bool *ok);
+    int sampleForTime(double ms, bool *ok);
+    double relativeTimeForSample(int sample, bool *ok);
 };
 
 

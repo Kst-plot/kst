@@ -1,4 +1,3 @@
-#if 0
 /***************************************************************************
                          dmcdata.cpp  -  Part of KST
                              -------------------
@@ -35,7 +34,7 @@ bool validDatabase(const QString& db) {
     return false;
   }
 
-  PIOGroup *g = PIOOpenVoidGrp(const_cast<char*>(db.latin1()), const_cast<char*>("r"));
+  PIOGroup *g = PIOOpenVoidGrp(const_cast<char*>(db.toLatin1().constData()), const_cast<char*>("r"));
   if (g) {
     PIOCloseVoidGrp(&g);
     // the call PIOOpenVoidGrp open the database, 
@@ -44,7 +43,8 @@ bool validDatabase(const QString& db) {
     // any subsequent open call will fail unless it is the same database
     // lets close it
     int rtc;
-    rtc = PIOQuitDB();
+#warning "Kst2 port use PIOQuitDB()"
+    //rtc = PIOQuitDB();
     if(rtc != 0) { 
       // closing failed, dont care
     }
@@ -54,7 +54,7 @@ bool validDatabase(const QString& db) {
 }
 }
 
-Source::Source() : KstShared() {
+Source::Source() : Kst::Shared() {
   _isValid = false;
 }
 
@@ -102,5 +102,3 @@ QSize Source::range(const QString& object) const {
   Q_UNUSED(object)
   return QSize();
 }
-
-#endif

@@ -1,5 +1,4 @@
-#if 0
-  /***************************************************************************
+/***************************************************************************
                     dmc.cpp  -  data source - planck DMC
                              -------------------
     begin                : Wed July 4 2007
@@ -16,19 +15,38 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "dmc.h"
+#include "dmcsource.h"
+#include "debug.h"
+#include "kst_i18n.h"
 
 #include <assert.h>
 #include <math.h>
 
-#include <kdebug.h>
+#include <QDir>
+#include <QFile>
 
-#include <qdir.h>
-#include <qfile.h>
+using namespace Kst;
 
 
-DMCSource::DMCSource(KConfig *cfg, const QString& filename)
-: KstDataSource(cfg, filename, "PLANCK DMC I/O") {
+
+static QString dmcTypeString = I18N_NOOP("PLANCK DMC I/O");
+
+const QString& DmcSource::typeString() const
+{
+  return dmcTypeString;
+}
+
+
+const QString DmcSource::dmcTypeKey()
+{
+  return ::dmcTypeString;
+}
+
+
+
+DmcSource::DmcSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
+    Kst::DataSource(store, cfg, filename, type)
+{
   _filename = filename;
 
   _dmcObject = new DMC::Object;
@@ -42,16 +60,16 @@ DMCSource::DMCSource(KConfig *cfg, const QString& filename)
     update();
     _valid = true;
   }
-  //kdDebug() << "Planck source " << (void*)this << " created" << endl;
+  //qDebug() << "Planck source " << (void*)this << " created" << endl;
 }
 
 
-DMCSource::~DMCSource() {
-  //kdDebug() << "Planck source " << (void*)this << " destroyed" << endl;
+DmcSource::~DmcSource() {
+  //qDebug() << "Planck source " << (void*)this << " destroyed" << endl;
 }
 
 
-bool DMCSource::reset() {
+void DmcSource::reset() {
   _valid = false;
   _dmcObject = new DMC::Object; // kshared - deletes the old one
   if (!_dmcObject->setGroup(_filename)) {
@@ -65,25 +83,25 @@ bool DMCSource::reset() {
     update();
     _valid = true;
   }
-  return _valid;
 }
 
 
-KstObject::UpdateType DMCSource::update(int u) {
-  if (KstObject::checkUpdateCounter(u)) {
-    return lastUpdateResult();
-  }
+Object::UpdateType DmcSource::internalDataSourceUpdate() {
+#warning port
+  /*
   if (_valid && _dmcObject && _dmcObject->updated()) {
     updateNumFramesScalar();
-    return setLastUpdateResult(KstObject::UPDATE);
+    return setLastUpdateResult(Object::Updated);
   }
-  return setLastUpdateResult(KstObject::NO_CHANGE);
+  return setLastUpdateResult(Object::NoChange);
+  */
+  return Object::UpdateType();
 }
 
 
-int DMCSource::readField(double *v, const QString& field, int s, int n) {
-  //kdDebug() << "Planck read field " << field << " - " << n << " samples from " << s << endl;
-  if (field.lower() == "index") {
+int DmcSource::readField(double *v, const QString& field, int s, int n) {
+  //qDebug() << "Planck read field " << field << " - " << n << " samples from " << s << endl;
+  if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
       return 1;
@@ -95,9 +113,9 @@ int DMCSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   if (!_valid || !_dmcObject || !_dmcObject->isValid()) {
-    kdDebug() << "tried to read from an invalid planck dmc source" << endl;
-    kdDebug() << "plugin is valid? " << _valid << endl;
-    kdDebug() << "Object object is non-null? " << (_dmcObject.data() != 0) << endl;
+    qDebug() << "tried to read from an invalid planck dmc source" << endl;
+    qDebug() << "plugin is valid? " << _valid << endl;
+    qDebug() << "Object object is non-null? " << (_dmcObject.data() != 0) << endl;
     return -1;
   }
 
@@ -118,7 +136,7 @@ int DMCSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   if (s + start > end) {
-    kdDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
+    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
     return 0;
   }
 
@@ -127,12 +145,12 @@ int DMCSource::readField(double *v, const QString& field, int s, int n) {
 }
 
 
-int DMCSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
+int DmcSource::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead) {
   if (*lastFrameRead) {
     *lastFrameRead = -1;
   }
 
-  if (field.lower() == "index") {
+  if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
       if (*lastFrameRead) {
@@ -166,18 +184,18 @@ int DMCSource::readField(double *v, const QString& field, int s, int n, int skip
   }
 
   if (s + (n-1)*skip >= count) { // trying to read past the end
-    kdDebug() << "TRYING TO READ PAST END.  n=" << n << endl;
+    qDebug() << "TRYING TO READ PAST END.  n=" << n << endl;
     // n = ceil((count-s)/skip)
     if ((count - s) % skip == 0) {
       n = (count - s) / skip;
     } else {
       n = (count - s) / skip + 1;
     }
-    kdDebug() << "N IS NOW=" << n << endl;
+    qDebug() << "N IS NOW=" << n << endl;
   }
 
   if (s + start > end) {
-    kdDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
+    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
     return 0;
   }
 
@@ -185,7 +203,7 @@ int DMCSource::readField(double *v, const QString& field, int s, int n, int skip
   // later.  For now, we read into a temp buffer, then extract what we need.
   double *tmp = new double[(n - 1) * skip + 1];
   int rc = _dmcObject->readObject(field, tmp, start + s, start + s + (n - 1) * skip);
-  //kdDebug() << "readObject rc=" << rc << " from=" << start+s << " to=" << start + s + (n - 1) * skip << endl;
+  //qDebug() << "readObject rc=" << rc << " from=" << start+s << " to=" << start + s + (n - 1) * skip << endl;
   int i = 0;
   while (i < n && i*skip < rc) {
     v[i] = tmp[i * skip];
@@ -201,28 +219,28 @@ int DMCSource::readField(double *v, const QString& field, int s, int n, int skip
 }
 
 
-bool DMCSource::isValidField(const QString& field) const {
-  return field.lower() == "index" || _fieldList.contains(field);
+bool DmcSource::isValidField(const QString& field) const {
+  return field.toLower() == "index" || _fieldList.contains(field);
 }
 
 
-int DMCSource::samplesPerFrame(const QString &field) {
+int DmcSource::samplesPerFrame(const QString &field) {
   Q_UNUSED(field)
   return 1;
 }
 
 
-int DMCSource::frameCount(const QString& field) const {
+int DmcSource::frameCount(const QString& field) const {
   if (!_valid) {
     return 0;
   }
 
-  if (field.isEmpty() || field.lower() == "index" || !_fieldList.contains(field)) {
+  if (field.isEmpty() || field.toLower() == "index" || !_fieldList.contains(field)) {
     int maxLen = 0;
     for (QStringList::ConstIterator i = _fieldList.begin(); i != _fieldList.end(); ++i) {
       assert(!(*i).isEmpty());
       QSize sz = _dmcObject->range(*i);
-      maxLen = QMAX(sz.height() - sz.width() + 1, maxLen);
+      maxLen = qMax(sz.height() - sz.width() + 1, maxLen);
     }
     return maxLen;
   }
@@ -232,17 +250,18 @@ int DMCSource::frameCount(const QString& field) const {
 }
 
 
-QString DMCSource::fileType() const {
+QString DmcSource::fileType() const {
   return "PLANCK DMC I/O";
 }
 
 
-void DMCSource::save(QTextStream &ts, const QString& indent) {
-  KstDataSource::save(ts, indent);
+void DmcSource::save(QTextStream &ts, const QString& indent) {
+#warning port
+  //DataSource::save(ts, indent);
 }
 
 
-bool DMCSource::isEmpty() const {
+bool DmcSource::isEmpty() const {
   if (!_valid) {
     return true;
   }
@@ -259,12 +278,12 @@ bool DMCSource::isEmpty() const {
 
 
 
-bool DMCSource::supportsTimeConversions() const {
+bool DmcSource::supportsTimeConversions() const {
   return _fieldList.contains("TIMES_OF_SAMPLES") || _fieldList.contains("TIMESEC");
 }
 
 
-int DMCSource::sampleForTime(const KST::ExtDateTime& time, bool *ok) {
+int DmcSource::sampleForTime(const QDateTime& time, bool *ok) {
   if (!_valid) {
     if (ok) {
       *ok = false;
@@ -277,7 +296,7 @@ int DMCSource::sampleForTime(const KST::ExtDateTime& time, bool *ok) {
 }
 
 
-int DMCSource::sampleForTime(double ms, bool *ok) {
+int DmcSource::sampleForTime(double ms, bool *ok) {
   if (!_valid) {
     if (ok) {
       *ok = false;
@@ -289,12 +308,12 @@ int DMCSource::sampleForTime(double ms, bool *ok) {
 }
 
 
-KST::ExtDateTime DMCSource::timeForSample(int sample, bool *ok) {
+QDateTime DmcSource::timeForSample(int sample, bool *ok) {
   if (!_valid) {
     if (ok) {
       *ok = false;
     }
-    return KST::ExtDateTime();
+    return QDateTime();
   }
 
   double t = _dmcObject->timeForSample(sample);
@@ -302,16 +321,16 @@ KST::ExtDateTime DMCSource::timeForSample(int sample, bool *ok) {
     if (ok) {
       *ok = false;
     }
-    return KST::ExtDateTime();
+    return QDateTime();
   }
 
-  KST::ExtDateTime dt;
+  QDateTime dt;
   dt.setTime_t(int(floor(t + 0.5)) - (86400 * (365 * 12 + 3)));
   return dt;
 }
 
 
-double DMCSource::relativeTimeForSample(int sample, bool *ok) {
+double DmcSource::relativeTimeForSample(int sample, bool *ok) {
   if (!_valid) {
     if (ok) {
       *ok = false;
@@ -332,57 +351,3 @@ double DMCSource::relativeTimeForSample(int sample, bool *ok) {
 }
 
 
-
-extern "C" {
-KstDataSource *create_dmc(KConfig *cfg, const QString& filename, const QString& type) {
-  Q_UNUSED(type)
-  return new DMCSource(cfg, filename);
-}
-
-QStringList provides_dmc() {
-  QStringList rc;
-  rc += "PLANCK DMC I/O";
-  return rc;
-}
-
-bool supportsTime_dmc(KConfig*, const QString& filename) {
-  KstSharedPtr<DMC::Object> pobj = new DMC::Object;
-  if (!pobj->setGroup(filename) || !pobj->isValid()) {
-    return false;
-  }
-  return pobj->fields().contains("TIMES_OF_SAMPLES") || pobj->fields().contains("TIMESEC");
-}
-
-int understands_dmc(KConfig*, const QString& filename) {
-  bool rc = DMC::validDatabase(filename);
-  kdDebug() << "-> Valid dmc database? " << rc << endl;
-  return rc ? 100 : 0;
-}
-
-QStringList fieldList_dmc(KConfig*, const QString& filename, const QString& type, QString *typeSuggestion, bool *complete) {
-  if (!type.isEmpty() && !provides_dmc().contains(type)) {
-    return QStringList();
-  }
-
-  KstSharedPtr<DMC::Object> pobj = new DMC::Object;
-  if (!pobj->setGroup(filename) || !pobj->isValid()) {
-    return QStringList();
-  }
-
-  if (complete) {
-    *complete = true;
-  }
-
-  if (typeSuggestion) {
-    *typeSuggestion = "PLANCK DMC I/O";
-  }
-
-  QStringList rc = pobj->fields();
-  rc.prepend("INDEX");
-  return rc;
-}
-
-}
-
-KST_KEY_DATASOURCE_PLUGIN(dmc)
-#endif

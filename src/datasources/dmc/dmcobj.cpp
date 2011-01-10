@@ -1,4 +1,4 @@
-#if 0
+
 /***************************************************************************
                         dmcobj.cpp  -  Part of KST
                              -------------------
@@ -155,7 +155,7 @@ void Object::reset() {
   kdDebug() << ">>>>>>>>>  Object reset" << endl;
 #endif
   for (QMap<QString,ObjectGroup*>::Iterator i = _groupInfo.begin(); i != _groupInfo.end(); ++i) {
-    delete i.data();
+    delete (*i);
   }
   _groupInfo.clear();
   Source::reset();
@@ -267,7 +267,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
       n = PIORead_1(ObjName, 
           const_cast<char*>("Written"),
           const_cast<char*>("PIOFLAG"),
-          const_cast<char*>(range.latin1()),
+          const_cast<char*>(range.toLatin1().constData()),
           &MyGroup, &MyObject, &MyData, &MyDataFlag);
 
 #ifdef PIOLIBDEBUG
@@ -290,7 +290,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
         PIORead_2(flagbuf, 0L, Mask,
             ObjName, 
             const_cast<char*>("PIOFLAG"),
-            const_cast<char*>(range.latin1()),
+            const_cast<char*>(range.toLatin1().constData()),
             const_cast<char*>("Written"), 
             MyGroup, 
             &MyObject, 
@@ -314,7 +314,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
       n = PIORead_1(ObjName, 
           const_cast<char*>("Written"),
           const_cast<char*>("PIODOUBLE"),
-          const_cast<char*>(range.latin1()),
+          const_cast<char*>(range.toLatin1().constData()),
           &MyGroup, &MyObject, &MyData, &MyDataFlag);
 
 #ifdef PIOLIBDEBUG
@@ -334,7 +334,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
         PIORead_2(buf, 0L, Mask,
             ObjName, 
             const_cast<char*>("PIODOUBLE"),
-            const_cast<char*>(range.latin1()),
+            const_cast<char*>(range.toLatin1().constData()),
             const_cast<char*>("Written"), 
             MyGroup, 
             &MyObject, 
@@ -613,7 +613,7 @@ bool ObjectGroup::open(const QString& groupURL) {
   close();
 
   // API bug
-  _group = PIOOpenVoidGrp(const_cast<char*>(groupURL.latin1()), const_cast<char*>("r"));
+  _group = PIOOpenVoidGrp(const_cast<char*>(groupURL.toLatin1().constData()), const_cast<char*>("r"));
 
   if (_group) {
 #ifdef PIOLIBDEBUG
@@ -629,4 +629,3 @@ bool ObjectGroup::open(const QString& groupURL) {
   return _valid;
 }
 
-#endif
