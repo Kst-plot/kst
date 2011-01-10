@@ -28,6 +28,74 @@
 using namespace Kst;
 
 
+//
+// Vector interface
+//
+
+
+//-------------------------------------------------------------------------------------------
+class DataInterfaceDmcVector : public DataSource::DataInterface<DataVector>
+{
+public:
+  DataInterfaceDmcVector(DmcSource& s) : src(s) {}
+
+  // read one element
+  int read(const QString&, DataVector::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return src._fieldList; }
+  bool isListComplete() const {
+#warning port/ review
+    return true;
+  }
+  bool isValid(const QString& field) const { return src._fieldList.contains( field ); }
+
+  // T specific
+  const DataVector::DataInfo dataInfo(const QString&) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&);
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  DmcSource& src;
+};
+
+
+//-------------------------------------------------------------------------------------------
+const DataVector::DataInfo DataInterfaceDmcVector::dataInfo(const QString &field) const
+{
+  if (!src._fieldList.contains(field))
+    return DataVector::DataInfo();
+
+  return DataVector::DataInfo(src._numFrames, 1);
+}
+
+
+//-------------------------------------------------------------------------------------------
+  int DataInterfaceDmcVector::read(const QString& field, DataVector::ReadInfo& p)
+{
+  return src.readField(p.data, field, p.startingFrame, p.numberOfFrames);
+}
+
+
+//-------------------------------------------------------------------------------------------
+// TODO FRAMES only in vector?
+QMap<QString, double> DataInterfaceDmcVector::metaScalars(const QString&)
+{
+  QMap<QString, double> m;
+  m["FRAMES"] = src._numFrames;;
+  return m;
+}
+
+
+
+
+
+//
+// DmcSource
+//
 
 static QString dmcTypeString = I18N_NOOP("PLANCK DMC I/O");
 
@@ -43,9 +111,9 @@ const QString DmcSource::dmcTypeKey()
 }
 
 
-
 DmcSource::DmcSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
-    Kst::DataSource(store, cfg, filename, type)
+    Kst::DataSource(store, cfg, filename, type),
+    iv(new DataInterfaceDmcVector(*this))
 {
   _filename = filename;
 
@@ -251,7 +319,7 @@ int DmcSource::frameCount(const QString& field) const {
 
 
 QString DmcSource::fileType() const {
-  return "PLANCK DMC I/O";
+  return dmcTypeString;
 }
 
 

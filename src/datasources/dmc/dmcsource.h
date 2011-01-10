@@ -69,27 +69,16 @@ class DmcSource : public Kst::DataSource {
 
   private:
     QMap<QString, int> _frameCounts;
+    int _numFrames;
 
-    // QMap<QString, QString> _metaData;
+    QStringList _fieldList;
+    DataInterfaceDmcVector* iv;
 
     // TODO remove friend
-    QStringList _scalarList;
-    QStringList _fieldList;
-    QStringList _matrixList;
-    QStringList _stringList;
-
-
-    friend class DataInterfaceDmcScalar;
-    friend class DataInterfaceDmcString;
     friend class DataInterfaceDmcVector;
-    friend class DataInterfaceDmcMatrix;
-    DataInterfaceDmcScalar* is;
-    DataInterfaceDmcString* it;
-    DataInterfaceDmcVector* iv;
-    DataInterfaceDmcMatrix* im;
 
 
-    // from old dmc code
+    // from kst1 old dmc code
     Kst::SharedPtr<DMC::Object> _dmcObject;
     QString _filename;
 
