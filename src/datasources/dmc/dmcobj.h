@@ -15,20 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _KST_DMCOBJ_H
-#define _KST_DMCOBJ_H
-
+#ifndef KST_DMOBJECT_H
+#define KST_DMOBJECT_H
 
 #include "dmcdata.h"
-#include <qmap.h>
+
+#include <QMap>
 
 
-namespace DMC {
+namespace DMC
+{
     enum TimeType { Undetermined = -1, Unknown = 0, TimeSec = 1, TimesOfSamples = 2 };
 
 class ObjectGroup;
 
-class Object : public Source {
+class Object : public Source
+{
   public:
     Object();
     virtual ~Object();

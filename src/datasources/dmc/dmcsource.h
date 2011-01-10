@@ -26,11 +26,7 @@
 #include "dataplugin.h"
 
 
-
-class DataInterfaceDmcScalar;
-class DataInterfaceDmcString;
 class DataInterfaceDmcVector;
-class DataInterfaceDmcMatrix;
 
 class DmcSource : public Kst::DataSource {
   public:

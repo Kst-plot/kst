@@ -14,8 +14,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DMC_PLUGIN_H
-#define DMC_PLUGIN_H
+#ifndef KST_DMC_PLUGIN_H
+#define KST_DMC_PLUGIN_H
 
 
 #include "datasource.h"

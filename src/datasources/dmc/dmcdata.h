@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _KST_DMC_H
-#define _KST_DMC_H
+#ifndef KST_DMCDATA_H
+#define KST_DMCDATA_H
 
 #include <config.h>
 
@@ -26,15 +26,18 @@ extern "C" {
 #include <HL2_DMC/PIODB.h>
 }
 
-#include <qsize.h>
-#include <qstring.h>
-#include <qstringlist.h>
+#include <QSize>
+#include <QString>
+#include <QStringList>
 
-namespace DMC {
+
+namespace DMC
+{
     extern bool haveDMC();
     extern bool validDatabase(const QString&);
 
-class Source : public Kst::Shared {
+class Source : public Kst::Shared
+{
   public:
     Source();
     virtual ~Source();
