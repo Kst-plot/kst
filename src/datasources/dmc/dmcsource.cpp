@@ -1,4 +1,5 @@
-/***************************************************************************
+#if 0
+  /***************************************************************************
                     dmc.cpp  -  data source - planck DMC
                              -------------------
     begin                : Wed July 4 2007
@@ -384,4 +385,4 @@ QStringList fieldList_dmc(KConfig*, const QString& filename, const QString& type
 }
 
 KST_KEY_DATASOURCE_PLUGIN(dmc)
-
+#endif

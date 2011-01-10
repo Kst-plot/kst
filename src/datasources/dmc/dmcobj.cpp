@@ -1,3 +1,4 @@
+#if 0
 /***************************************************************************
                         dmcobj.cpp  -  Part of KST
                              -------------------
@@ -628,3 +629,4 @@ bool ObjectGroup::open(const QString& groupURL) {
   return _valid;
 }
 
+#endif

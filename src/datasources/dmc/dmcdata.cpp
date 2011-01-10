@@ -1,3 +1,4 @@
+#if 0
 /***************************************************************************
                          dmcdata.cpp  -  Part of KST
                              -------------------
@@ -102,3 +103,4 @@ QSize Source::range(const QString& object) const {
   return QSize();
 }
 
+#endif
