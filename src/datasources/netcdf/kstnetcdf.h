@@ -44,6 +44,8 @@ class NetcdfSource : public Kst::DataSource {
 
     virtual const QString& typeString() const;
 
+    static const QString netcdfTypeKey();
+
 
     int readScalar(double *v, const QString& field);
 
@@ -88,60 +90,6 @@ class NetcdfSource : public Kst::DataSource {
     DataInterfaceNetCdfString* it;
     DataInterfaceNetCdfVector* iv;
     DataInterfaceNetCdfMatrix* im;
-};
-
-
-
-class NetCdfPlugin : public QObject, public Kst::DataSourcePluginInterface
-{
-    Q_OBJECT
-    Q_INTERFACES(Kst::DataSourcePluginInterface)
-
-  public:
-    virtual ~NetCdfPlugin() {}
-
-    virtual QString pluginName() const;
-    virtual QString pluginDescription() const;
-
-    virtual bool hasConfigWidget() const { return false; }
-
-    virtual Kst::DataSource *create(Kst::ObjectStore *store,
-                                  QSettings *cfg,
-                                  const QString &filename,
-                                  const QString &type,
-                                  const QDomElement &element) const;
-
-    virtual QStringList matrixList(QSettings *cfg,
-                                  const QString& filename,
-                                  const QString& type,
-                                  QString *typeSuggestion,
-                                  bool *complete) const;
-
-    virtual QStringList fieldList(QSettings *cfg,
-                                  const QString& filename,
-                                  const QString& type,
-                                  QString *typeSuggestion,
-                                  bool *complete) const;
-
-    virtual QStringList scalarList(QSettings *cfg,
-                                  const QString& filename,
-                                  const QString& type,
-                                  QString *typeSuggestion,
-                                  bool *complete) const;
-
-    virtual QStringList stringList(QSettings *cfg,
-                                  const QString& filename,
-                                  const QString& type,
-                                  QString *typeSuggestion,
-                                  bool *complete) const;
-
-    virtual int understands(QSettings *cfg, const QString& filename) const;
-
-    virtual bool supportsTime(QSettings *cfg, const QString& filename) const;
-
-    virtual QStringList provides() const;
-
-    virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
 
 

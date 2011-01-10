@@ -9,7 +9,9 @@ INCLUDEPATH += $$OUTPUT_DIR/src/datasources/netcdf/tmp
 LIBS += -l$$kstlib(netcdf_c++) -l$$kstlib(netcdf) 
 
 SOURCES += \
-    kstnetcdf.cpp
+    kstnetcdf.cpp \
+    netcdfplugin.cpp
 
 HEADERS += \
-    kstnetcdf.h
+    kstnetcdf.h \
+    netcdfplugin.h
