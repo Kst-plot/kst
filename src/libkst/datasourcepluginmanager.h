@@ -26,7 +26,6 @@ namespace Kst {
 
 class ObjectStore;
 
-typedef ObjectList<PluginInterface> PluginList;
 
 
 class KSTCORE_EXPORT DataSourcePluginManager
@@ -41,6 +40,8 @@ class KSTCORE_EXPORT DataSourcePluginManager
 
     /** Returns a list of plugins found on the system. */
     static QStringList pluginList();
+
+    static QString pluginFileName(const QString& pluginName);
 
     static SharedPtr<DataSource> loadSource(ObjectStore *store, const QString& filename, const QString& type = QString());
     static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e);

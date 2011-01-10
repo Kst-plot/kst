@@ -80,23 +80,15 @@ void DebugDialog::clear() {
 void DebugDialog::show() {
   Q_ASSERT(_store);
   _dataSources->clear();
-
-  const QStringList& pl = DataSourcePluginManager::pluginList();
-  foreach (QString pluginName, pl) {
-    new QTreeWidgetItem(_dataSources, QStringList(pluginName));
+  _dataSources->setColumnCount(2);
+  const QStringList pl = DataSourcePluginManager::pluginList();
+  foreach (const QString& pluginName, pl) {
+    QTreeWidgetItem* name = new QTreeWidgetItem(QStringList() << pluginName);
+    name->setData(1, Qt::DisplayRole, DataSourcePluginManager::pluginFileName(pluginName));
+    _dataSources->insertTopLevelItem (0, name);
   }
 
-  QTreeWidgetItemIterator it(_dataSources);
-  while (*it) {
-    foreach (DataSourcePtr dataSource, _store->dataSourceList()) {
-      if (dataSource->sourceName() == (*it)->text(0)) {
-        QStringList list(QString::null);
-        list += dataSource->fileName();
-        new QTreeWidgetItem(*it, list);
-      }
-    }
-    ++it;
-  }
+  _dataSources->header()->resizeSections(QHeaderView::ResizeToContents);
   QDialog::show();
 }
 
