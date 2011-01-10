@@ -24,7 +24,8 @@
 
 //#define PIOLIBDEBUG
 #include "dmcobj.h"
-#include <HL2_PIOLIB/PIOErr.h>
+
+#include "HL2_PIOLIB/PIOErr.h"
 
 #ifdef NAN
 double NOPOINT = NAN;

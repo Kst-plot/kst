@@ -42,9 +42,10 @@ if(planckIDEF)
 	kst_add_plugin(. planckIDEF)
 endif()
 
-#set(dmc 1)
 if(dmc)
-	kst_add_plugin(. dmc)
+  include_directories(${DMC_INCLUDE_DIR})
+  kst_add_plugin(. dmc)
+  #kst_link(${DMC_LIBRARIES})
 endif()
 
 message(STATUS)

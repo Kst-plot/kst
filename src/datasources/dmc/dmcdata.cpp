@@ -22,7 +22,9 @@
 using namespace DMC;
 
 
-namespace DMC {
+namespace DMC
+{
+
 bool haveDMC() {
   return true;
 }

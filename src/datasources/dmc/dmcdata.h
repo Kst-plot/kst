@@ -23,7 +23,7 @@
 #include "sharedptr.h"
 
 extern "C" {
-#include <HL2_DMC/PIODB.h>
+#include "HL2_DMC/PIODB.h"
 }
 
 #include <QSize>
