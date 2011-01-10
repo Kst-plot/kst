@@ -20,7 +20,7 @@
 //#define KST_DEBUG_SHARED
 #include "sharedptr.h"
 
-#include "kstnetcdf.h"
+#include "netcdfsource.h"
 #include "kst_i18n.h"
 #include "debug.h"
 

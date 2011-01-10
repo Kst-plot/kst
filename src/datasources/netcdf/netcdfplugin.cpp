@@ -18,7 +18,7 @@
 
 
 #include "netcdfplugin.h"
-#include "kstnetcdf.h"
+#include "netcdfsource.h"
 
 #include <QFile>
 
@@ -77,6 +77,7 @@ QStringList NetCdfPlugin::stringList(QSettings *cfg,
   return stringList;
 }
 
+
 QStringList NetCdfPlugin::fieldList(QSettings *cfg,
                                             const QString& filename,
                                             const QString& type,
@@ -114,9 +115,9 @@ Kst::DataSourceConfigWidget *NetCdfPlugin::configWidget(QSettings *cfg, const QS
 }
 
 
-  /** understands_netcdf: returns true if:
-    - the file is readable (!)
-    - the file can be opened by the netcdf library **/
+/** understands_netcdf: returns true if:
+  - the file is readable (!)
+  - the file can be opened by the netcdf library **/
 int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
 {
     QFile f(filename);
