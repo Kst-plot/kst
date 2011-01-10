@@ -80,7 +80,20 @@ Using cmake
 		cmake ..\kst\cmake -G"MinGW Makefiles"
 
 
-	Re-running cmake is simple: cmake .
+	Daily work:
+
+	* Re-running cmake is simple
+		cmake .
+
+	* Adding new files 
+		The cmake build system scans the directories, so no need to update any file,
+		just re-run cmake. Also the moccing rules are generated.
+
+	* Unused source code file
+		Because cmake scans the directories for *.cpp and *.h files it will also
+		add files to the build system which are not mentioned to build. To exclude
+		them change their ending and re-run cmake.
+
 
 
 Options
