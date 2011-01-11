@@ -10,7 +10,7 @@ get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
 set(kst_version 2.0.3)
 
 include(SubversionHeader)
-SubversionHeader(${kst_dir} Revision ${CMAKE_BINARY_DIR}/svnrevision.h " modified")
+SubversionHeader(${kst_dir} Revision ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
 
 
 message(STATUS)
