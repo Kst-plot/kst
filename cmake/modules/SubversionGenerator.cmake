@@ -5,7 +5,7 @@ if(SUBVERSION_FOUND)
 	# extract revision
 	Subversion_WC_INFO(${source_dir} src)
 	set(_revision "${src_WC_REVISION}")
-	
+
 	# check for modifications
 	execute_process(
 		COMMAND ${Subversion_SVN_EXECUTABLE} status ${source_dir}
@@ -13,8 +13,20 @@ if(SUBVERSION_FOUND)
 		ERROR_VARIABLE Subversion_src_info_error
 		RESULT_VARIABLE Subversion_src_info_result
 		OUTPUT_STRIP_TRAILING_WHITESPACE)
-	string(REGEX REPLACE "^(.*\n)?M ([^\n]+).*" "\\2" _modified "${src_WC_STATUS}")
-	message(STATUS "_modified  : ${_modified}")
+
+	# problems with multiple lines,
+	# http://www.mail-archive.com/cmake@cmake.org/msg07254.html
+	string(REGEX REPLACE "\r?\n" ";" lines "${src_WC_STATUS}")
+
+	set(_modified)
+	foreach(line ${lines})
+		string(REGEX MATCH "^(.*\n)?M ([^\n]+).*" _found "${line}")
+		if(_found)
+			message(STATUS "Modified file: ${_found}")
+			set(_modified ${_modified} _found)
+		endif()
+	endforeach()
+
 	if(_modified)
 		set(_revision "${_revision}${modified_str}")
 	endif()
