@@ -124,5 +124,9 @@ message(STATUS)
 
 add_subdirectory(src)
 
+add_dependencies(kstcore Revision)
+add_dependencies(kstapp  Revision)
+add_dependencies(kst     Revision)
+
 
 
