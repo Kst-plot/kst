@@ -14,6 +14,7 @@ if(SUBVERSION_FOUND)
 		RESULT_VARIABLE Subversion_src_info_result
 		OUTPUT_STRIP_TRAILING_WHITESPACE)
 	string(REGEX REPLACE "^(.*\n)?M ([^\n]+).*" "\\2" _modified "${src_WC_STATUS}")
+	message(STATUS "_modified : ${_modified}")
 	if(_modified)
 		set(_revision "${_revision}${modified_str}")
 	endif()
