@@ -371,9 +371,7 @@ bool AsciiPlugin::supportsTime(QSettings *cfg, const QString& filename) const {
 
 
 QStringList AsciiPlugin::provides() const {
-  QStringList rc;
-  rc += AsciiSource::asciiTypeKey();
-  return rc;
+  return QStringList() <<AsciiSource::asciiTypeKey();
 }
 
 
