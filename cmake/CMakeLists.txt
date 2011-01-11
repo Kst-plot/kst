@@ -2,10 +2,16 @@ cmake_minimum_required(VERSION 2.8)
 
 project(Kst)
 
-set(KST_VERSION 2.0.3)
-
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 include(KstMacros)
+
+get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
+
+set(kst_version 2.0.3)
+
+include(SubversionHeader)
+SubversionHeader(${kst_dir} Revision ${CMAKE_BINARY_DIR}/svnrevision.h " modified")
+
 
 message(STATUS)
 message(STATUS "Build options:")
@@ -52,6 +58,7 @@ message(STATUS)
 
 
 # React on options
+
 if(kst_release)
 	set(CMAKE_BUILD_TYPE Release)
 else()
@@ -91,10 +98,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 
-if(NOT KST_DIR)
-	set(KST_DIR ${CMAKE_SOURCE_DIR}/..)
-endif()
-
 if(MSVC)
 	add_definitions(-D_USE_MATH_DEFINES)
 endif()
@@ -103,7 +106,7 @@ if(WIN32)
 	set(CMAKE_DEBUG_POSTFIX d)
 endif()
 
-configure_file(${KST_DIR}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
+configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
 include_directories(
 	${CMAKE_BINARY_DIR}
@@ -112,11 +115,14 @@ include_directories(
 
 
 message(STATUS "Build summary----------------------------------")
-message(STATUS "Version          : ${KST_VERSION}")
-message(STATUS "Path to source   : ${KST_DIR}")
+message(STATUS "Version          : ${kst_version}")
+message(STATUS "Path to source   : ${kst_dir}")
 message(STATUS "Installation path: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "-----------------------------------------------")
 message(STATUS)
 
+
 add_subdirectory(src)
+
+
 

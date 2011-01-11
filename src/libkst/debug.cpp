@@ -10,9 +10,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "config.h"
+
 #include "datasource.h"
 #include "debug.h"
-#include "kstrevision.h"
 #include "logevents.h"
 
 #include <qlocale.h>
@@ -48,7 +49,7 @@ Debug::Debug()
 : QObject() {
   _applyLimit = false;
   _limit = 10000;
-  _kstRevision = QString::fromLatin1(KSTREVISION);
+  _kstRevision = QString::fromLatin1(SVN_REVISION);
   _hasNewError = false;
 }
 

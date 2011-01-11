@@ -24,7 +24,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
-    QStringList authors = QStringList()
+  QStringList authors = QStringList()
     << "Barth Netterfield"
     << "Matthew Truch"
     << "Nicolas Brisset"
@@ -39,11 +39,12 @@ AboutDialog::AboutDialog(QWidget *parent)
     << "Zongyi Zang"
     ;
 
-    authors.sort();
-    authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
+  authors.sort();
+  authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
 
   QStringList msg = QStringList()
   << tr("<qt><h2>Kst "KSTVERSION" - A data viewing program.</h2>")
+  << tr("Revision "SVN_REVISION"<br><hr>")
   << tr("Copyright &copy; 2000-2010 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst.kde.org/\">http://kst.kde.org/</a><br>")
   << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")

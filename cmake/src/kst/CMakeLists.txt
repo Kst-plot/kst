@@ -5,20 +5,20 @@ kst_files_ignore(main-vld)
 kst_files_find(src/kst)
 
 if(MSVC)
-	set(rc_file ${KST_DIR}/src/kst/kst_icon.rc)
+	set(rc_file ${kst_dir}/src/kst/kst_icon.rc)
 endif()
 
 kst_add_resources(src/images/images.qrc)
 
 kst_include_directories(kstapp)
 
-kst_find_info_files(KstCMakeFiles ${KST_DIR}/cmake/*)
-kst_find_info_files(KstCMakeFiles ${KST_DIR}/cmake/modules/*)
+kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/*)
+kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/modules/*)
 
 kst_add_info_files(KstInfoFiles 
-	${KST_DIR}/INSTALL
-	${KST_DIR}/NEWS
-	${KST_DIR}/README)
+	${kst_dir}/INSTALL
+	${kst_dir}/NEWS
+	${kst_dir}/README)
 
 add_executable(kst ${kst_win32} ${kst_kst_sources} ${rc_file} ${kst_kst_info_files})
 

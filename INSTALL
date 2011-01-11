@@ -128,16 +128,7 @@ Status
 	TODOs:
 	- install on Mac
 	- add package rules
-	- add svn revision number extraction
 	- add support for pre-compiled headers
 	- only the kst binary is generated
 	- build and run tests
 	- have a look at kst1's cmake files, especially the 3rd party lib code
-
-
-
-
-
-
-
-

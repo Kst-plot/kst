@@ -89,7 +89,6 @@ HEADERS += builtindatasources.h \
     generatedvector.h \
     kst_export.h \
     kst_i18n.h \
-    kstrevision.h \
     ksttimers.h \
     index_kst.h \
     logevents.h \

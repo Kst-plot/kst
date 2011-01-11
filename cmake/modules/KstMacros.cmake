@@ -10,7 +10,7 @@ endmacro()
 
 
 macro(kst_files_find folder)
-	set(_folder ${KST_DIR}/${folder})
+	set(_folder ${kst_dir}/${folder})
 	file(GLOB _sources     ${_folder}/*.c) 
 	file(GLOB _sources_cpp ${_folder}/*.cpp)
 	file(GLOB _headers     ${_folder}/*.h)
@@ -59,9 +59,9 @@ macro(kst_add_library type)
 		set(depends_moc_uic ${kst_${kst_name}_headers} ${kst_${kst_name}_uis} ${kst_${kst_name}_ui_files} ${kst_${kst_name}_mocs})
 		set_source_files_properties(merged_const.cpp   PROPERTIES OBJECT_DEPENDS "${depends_moc_uic}")
 		set_source_files_properties(merged_touched.cpp PROPERTIES OBJECT_DEPENDS "${depends_moc_uic}")
-		add_library(${kst_name} ${type} ${merged_files} ${kst_${kst_name}_dont_merge} ${kst_${kst_name}_headers} ${kst_${kst_name}_uis} ${kst_${kst_name}_sources_not_generated})
-	else()		
-		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
+		add_library(${kst_name} ${type} ${merged_files} ${kst_${kst_name}_dont_merge} ${kst_${kst_name}_headers} ${kst_${kst_name}_uis} ${kst_${kst_name}_sources_not_generated} ${svnversion_h})
+	else()
+		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
 	target_link_libraries(${kst_name} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY})
 	if(WIN32)
@@ -112,12 +112,11 @@ macro(kst_link)
 endmacro()
 
 
-macro(kst_files_ignore)	
+macro(kst_files_ignore)
 	set(kst_${kst_name}_ignore ${kst_${kst_name}_ignore} ${ARGV})
 endmacro()
 
-
-macro(kst_files_remove list)	
+macro(kst_files_remove list)
 	foreach(_item ${ARGN})
 		set(_file ${kst_${kst_name}_folder}/${_item})
 		if(${list})
@@ -127,9 +126,14 @@ macro(kst_files_remove list)
 endmacro()
 
 
+macro(kst_add_files)
+	set(kst_${kst_name}_sources ${kst_${kst_name}_sources} ${ARGN})
+endmacro()
+
+
 macro(kst_add_resources filepath)
-	qt4_add_resources(_rcc ${KST_DIR}/${filepath})
-	set(kst_${kst_name}_sources ${kst_${kst_name}_sources} ${_rcc})
+	qt4_add_resources(_rcc ${kst_dir}/${filepath})
+	kst_add_files(${_rcc})
 endmacro()
 
 
