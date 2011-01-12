@@ -107,7 +107,9 @@ Options
 	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
 	-- kst_verbose              = OFF    : Make verbose CMake run and Makefiles
 	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
-	-- kst_3rdparty             = OFF    : Build plugins depending on 3rd party libraries
+	-- kst_console              = OFF    : Open console on Windows
+	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
+	-- kst_tests                = OFF    : Build unit tests
 
 	
 	To enable a option pass the value ON or 1, eg
@@ -129,5 +131,4 @@ Status
 	- install on Mac
 	- add package rules
 	- add support for pre-compiled headers
-	- build and run tests
 	- have a look at kst1's cmake files, especially the 3rd party lib code

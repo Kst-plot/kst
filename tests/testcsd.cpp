@@ -237,3 +237,7 @@ void TestCSD::testCSD() {
 //   QCOMPARE(outMatrix->value(2, 2), -0.293267);
 
 }
+
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestCSD)
+#endif

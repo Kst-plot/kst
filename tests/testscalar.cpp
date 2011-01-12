@@ -134,4 +134,8 @@ void TestScalar::testScalar() {
   delete listener;
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestScalar)
+#endif
+
 // vim: ts=2 sw=2 et

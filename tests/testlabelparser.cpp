@@ -480,4 +480,8 @@ void TestLabelParser::testLabelParser() {
 }
 
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestLabelParser)
+#endif
+
 // vim: ts=2 sw=2 et

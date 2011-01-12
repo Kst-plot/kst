@@ -60,4 +60,8 @@ void TestVector::testVector() {
   QCOMPARE(v2->interpolate(4, 5), 3.0);
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestVector)
+#endif
+
 // vim: ts=2 sw=2 et

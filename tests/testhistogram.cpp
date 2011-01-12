@@ -133,4 +133,8 @@ void TestHistogram::testHistogram() {
   QCOMPARE(h1->xMax(), 10.0);
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestHistogram)
+#endif
+
 // vim: ts=2 sw=2 et

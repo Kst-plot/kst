@@ -48,6 +48,7 @@ macro(kst_add_executable)
 	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
 	target_link_libraries(${kst_name} ${kst_qtmain_library})
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	add_dependencies(${kst_name} Revision)
 endmacro()
 
 
@@ -85,6 +86,7 @@ macro(kst_add_library type)
 		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	add_dependencies(${kst_name} Revision)
 	if(WIN32)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
 		                            ARCHIVE DESTINATION lib)

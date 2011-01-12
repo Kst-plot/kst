@@ -710,4 +710,8 @@ void TestDataSource::testFITSImage() {
   }
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestDataSource)
+#endif
+
 // vim: ts=2 sw=2 et

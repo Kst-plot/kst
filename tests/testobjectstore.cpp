@@ -60,4 +60,8 @@ void TestObjectStore::testObjectStore() {
   QVERIFY(!p);  // make sure object gets deleted when last reference is gone
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestObjectStore)
+#endif
+
 // vim: ts=2 sw=2 et

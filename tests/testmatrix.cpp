@@ -177,4 +177,8 @@ void TestMatrix::testMatrix() {
   QVERIFY(sm->maxValueNoSpike() <= -1E+300);
 }
 
+#ifdef KST_USE_QTEST_MAIN
+QTEST_MAIN(TestMatrix)
+#endif
+
 // vim: ts=2 sw=2 et
