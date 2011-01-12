@@ -17,14 +17,19 @@
 
 #include "math_kst.h"
 
-template<>
-bool QTest::qCompare(double const& val, double const * const& nan,  const char *actual, const char *expected,
-                    const char *file, int line)
+namespace QTest
 {
-	return qCompare(
-		QByteArray((char*) &val, sizeof(double)),
-		QByteArray((char*) nan, sizeof(double)),
-		actual, expected, file, line);
+
+  template<>
+  bool qCompare(double const& val, double const * const& nan,  const char *actual, const char *expected,
+                      const char *file, int line)
+  {
+          return qCompare(
+                  QByteArray((char*) &val, sizeof(double)),
+                  QByteArray((char*) nan, sizeof(double)),
+                  actual, expected, file, line);
+  }
+
 }
 
 #endif
