@@ -13,3 +13,5 @@ kst_files_find(src/libkst)
 kst_dont_merge(sysinfo.c psversion.c)
 
 kst_add_library(SHARED)
+
+kst_link()

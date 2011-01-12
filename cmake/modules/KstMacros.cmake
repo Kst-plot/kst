@@ -43,6 +43,27 @@ macro(kst_dont_merge)
 endmacro()
 
 
+macro(kst_add_executable)
+	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
+	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
+	target_link_libraries(${kst_name} ${kst_qtmain_library})
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+endmacro()
+
+
+macro(kst_install_executable)
+	install(TARGETS ${kst_name} 
+		RUNTIME DESTINATION bin
+		BUNDLE DESTINATION bin)
+	#if(APPLE)
+	#	#TODO does not work
+	#	set(bdir ${CMAKE_INSTALL_PREFIX}/bin ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
+	#	set(blib ${CMAKE_INSTALL_PREFIX}/lib/libkstcore.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstapp.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstwidgets.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstmath.dylib)#
+	#	install(CODE "include(BundleUtilities) fixup_bundle(kst \"${blib}\" \"${bdir}\")" COMPONENT RUNTIME)
+	#endif()
+endmacro()
+
+
 macro(kst_add_library type)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	string(TOUPPER BUILD_${kst_name} _build_macro)
@@ -63,7 +84,7 @@ macro(kst_add_library type)
 	else()
 		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
-	target_link_libraries(${kst_name} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY})
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
 	if(WIN32)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
 		                            ARCHIVE DESTINATION lib)
@@ -108,7 +129,8 @@ endmacro()
 
 
 macro(kst_link)
-	target_link_libraries(${kst_name} ${ARGV})
+	target_link_libraries(${kst_name} ${ARGV}
+		${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTSVG_LIBRARY})
 endmacro()
 
 
@@ -181,6 +203,7 @@ macro(kst_add_info_files group)
 	source_group(${group} FILES ${kst_${group}_info_files})
 	set(kst_${kst_name}_info_files ${kst_${kst_name}_info_files} ${kst_${group}_info_files})
 endmacro()
+
 
 macro(kst_find_info_files group files)
 	file(GLOB _filelist ${files})

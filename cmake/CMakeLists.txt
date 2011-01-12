@@ -103,7 +103,7 @@ if(MSVC)
 endif()
 
 if(WIN32)
-	set(CMAKE_DEBUG_POSTFIX d)
+	set(kst_debug_postfix d)
 endif()
 
 configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
@@ -130,3 +130,29 @@ add_dependencies(kst     Revision)
 
 
 
+if(WIN32)
+	install(FILES
+		${QT_BINARY_DIR}/QtCore4.dll
+		${QT_BINARY_DIR}/QtGui4.dll
+		${QT_BINARY_DIR}/QtXml4.dll
+		${QT_BINARY_DIR}/QtOpenGL4.dll
+		${QT_BINARY_DIR}/QtSvg4.dll
+		DESTINATION bin
+		CONFIGURATIONS Release)
+	install(FILES
+		${QT_BINARY_DIR}/QtCored4.dll
+		${QT_BINARY_DIR}/QtGuid4.dll
+		${QT_BINARY_DIR}/QtXmld4.dll
+		${QT_BINARY_DIR}/QtOpenGLd4.dll
+		${QT_BINARY_DIR}/QtSvgd4.dll
+		DESTINATION bin
+		CONFIGURATIONS Debug)
+endif()
+
+if(MINGW)
+	get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
+	install(FILES 
+		${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll
+		${MINGW_BIN_PATH}/mingwm10.dll
+		DESTINATION bin)
+endif()
