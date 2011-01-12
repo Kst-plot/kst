@@ -109,7 +109,7 @@ Options
 	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
 	-- kst_console              = OFF    : Open console on Windows
 	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
-	-- kst_tests                = OFF    : Build unit tests
+	-- kst_test                 = OFF    : Build unit tests
 
 	
 	To enable a option pass the value ON or 1, eg
