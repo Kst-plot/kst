@@ -1,12 +1,12 @@
 project(ksttests)
 
-kst_init(tests)
-kst_files_find(tests)
+file(GLOB test_headers ${kst_dir}/tests/*.h)
 
 kst_include_directories(kstcore kstmath)
+
 add_definitions(-DKST_USE_QTEST_MAIN)
 
-foreach(header ${kst_tests_headers})
+foreach(header ${test_headers})
 	get_filename_component(testname ${header} NAME_WE)
 	kst_init(${testname})
 	set(moc_file)
