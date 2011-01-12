@@ -212,3 +212,11 @@ macro(kst_find_info_files group files)
 	kst_add_info_files(${group} ${_filelist})
 endmacro()
 
+
+macro(kst_flat_source_group)
+	source_group("Source Files" Files)
+	source_group("Header Files" Files)
+	source_group("CMakeLists" FILES CMakeLists.txt)
+endmacro()
+
+

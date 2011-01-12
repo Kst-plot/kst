@@ -89,7 +89,6 @@ endif()
 if(APPLE)
 	set(kst_win32 MACOSX_BUNDLE)
 endif()
-	
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)

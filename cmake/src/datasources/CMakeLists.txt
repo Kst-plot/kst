@@ -48,6 +48,5 @@ if(dmc)
   #kst_link(${DMC_LIBRARIES})
 endif()
 
-message(STATUS)
 
 

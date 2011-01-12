@@ -64,7 +64,6 @@ if(gsl)
 endif()
 
 
-message(STATUS)
 
 
 
