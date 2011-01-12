@@ -11,20 +11,27 @@
 
 #include "testvector.h"
 
-#include <QtTest>
-
 #include <vector.h>
 #include <datacollection.h>
 #include <objectstore.h>
 
+#include "ksttest.h"
+
 static Kst::ObjectStore _store;
+
+
 
 void TestVector::cleanupTestCase() {
   _store.clear();
 }
 
-void TestVector::testVector() {
+void TestVector::testVector() 
+{
   Kst::VectorPtr v1 = Kst::kst_cast<Kst::Vector>(_store.createObject<Kst::Vector>());
+
+  QCOMPARE(v1->length(), 1);
+  QCOMPARE(v1->value(0), &Kst::NOPOINT);
+
   Q_ASSERT(v1);
   v1->resize(15);
   QCOMPARE(v1->length(), 15);
