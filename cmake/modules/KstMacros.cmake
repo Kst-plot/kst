@@ -128,7 +128,7 @@ macro(kst_add_plugin folder name)
 	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	kst_link(kstcore kstmath kstwidgets)
 	install(TARGETS ${kst_name} LIBRARY DESTINATION plugin)
-	# TODO install(FILES  *.desktop DESTINATION share/services/kst)
+	kst_find_install_desktop_file(${kst_plugin_dir}/${folder}/${name})
 	if(kst_verbose)
 	  message(STATUS "Building plugin ${kst_name}")
 	endif()
@@ -139,6 +139,14 @@ macro(kst_include_directories)
 	foreach(_it ${ARGV})
 		include_directories(${kst_${_it}_includes})
 	endforeach()
+endmacro()
+
+
+macro(kst_find_install_desktop_file folder)
+	if(UNIX)
+		file(GLOB _desktop_file ${kst_dir}/${folder}/*.desktop)
+		install(FILES  ${_desktop_file} DESTINATION ${kst_install_plugin_desktop_file_path})
+	endif()
 endmacro()
 
 

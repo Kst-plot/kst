@@ -25,3 +25,18 @@ kst_add_executable(${kst_win32} ${rc_file})
 kst_link(kstcore kstmath kstapp kstwidgets)
 
 kst_install_executable()
+
+if(UNIX)
+	set(k ${kst_dir}/src/kst)
+	install(FILES ${k}/kstplugin.desktop
+	              ${k}/kstdatasourceplugin.desktop
+	              ${k}/kstdataobjectplugin.desktop
+	              ${k}/kstbasicplugin.desktop
+	              ${k}/kstfilter.desktop
+	              ${k}/kstextension.desktop
+	                                 DESTINATION share/servicetypes/kst)
+	install(FILES ${k}/kst.desktop   DESTINATION share/applnk/Graphics)
+	install(FILES ${k}/kstui.rc      DESTINATION share/apps/kst)
+	install(FILES ${k}/x-kst.desktop DESTINATION share/mimelink/application)
+	install(FILES ${k}/kst.desktop   DESTINATION share/applications)
+endif()

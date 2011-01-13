@@ -97,7 +97,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 
 # the RPATH to be used when installing
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+#path to install the .desktop files
+set(kst_install_plugin_desktop_file_path share/services/kst)
 
 
 if(MSVC)
@@ -110,10 +113,7 @@ endif()
 
 configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
-include_directories(
-	${CMAKE_BINARY_DIR}
-	${QT_INCLUDES}
-	)
+include_directories(${CMAKE_BINARY_DIR} ${QT_INCLUDES})
 
 
 message(STATUS "Build summary----------------------------------")
