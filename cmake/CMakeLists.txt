@@ -122,7 +122,7 @@ message(STATUS "Installation path: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "-----------------------------------------------")
 message(STATUS)
 
-
+add_subdirectory(misc)
 add_subdirectory(src)
 if(kst_test)
 	enable_testing()

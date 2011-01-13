@@ -43,11 +43,16 @@ macro(kst_dont_merge)
 endmacro()
 
 
+macro(kst_set_target_properties)
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	#set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
+endmacro()
+
 macro(kst_add_executable)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
 	target_link_libraries(${kst_name} ${kst_qtmain_library})
-	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	kst_set_target_properties()
 	add_dependencies(${kst_name} Revision)
 endmacro()
 
@@ -85,7 +90,7 @@ macro(kst_add_library type)
 	else()
 		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
-	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	kst_set_target_properties()
 	add_dependencies(${kst_name} Revision)
 	if(WIN32)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
@@ -116,7 +121,11 @@ macro(kst_add_plugin folder name)
 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
 	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	kst_link(kstcore kstmath kstwidgets)
-	install(TARGETS ${kst_name} LIBRARY DESTINATION plugin)
+	install(TARGETS ${kst_name}
+		LIBRARY DESTINATION plugin
+		#TODO ${INSTALL_TARGETS_DEFAULT_ARGS}
+		)
+	# TODO install(FILES  *.desktop DESTINATION share/services/kst)
 	if(kst_verbose)
 	  message(STATUS "Building plugin ${kst_name}")
 	endif()
