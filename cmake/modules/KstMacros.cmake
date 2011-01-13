@@ -9,6 +9,11 @@ macro(kst_init name)
 endmacro()
 
 
+macro(kst_revision_project_name name)
+	set(kst_revision_project ${name})
+endmacro()
+
+
 macro(kst_files_find folder)
 	set(_folder ${kst_dir}/${folder})
 	file(GLOB _sources     ${_folder}/*.c) 
@@ -45,15 +50,16 @@ endmacro()
 
 macro(kst_set_target_properties)
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	#set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
+	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
 endmacro()
+
 
 macro(kst_add_executable)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
 	target_link_libraries(${kst_name} ${kst_qtmain_library})
 	kst_set_target_properties()
-	add_dependencies(${kst_name} Revision)
+	add_dependencies(${kst_name} ${kst_revision_project})
 endmacro()
 
 
@@ -91,7 +97,7 @@ macro(kst_add_library type)
 		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
 	kst_set_target_properties()
-	add_dependencies(${kst_name} Revision)
+	add_dependencies(${kst_name} ${kst_revision_project})
 	if(WIN32)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
 		                            ARCHIVE DESTINATION lib)
@@ -121,10 +127,7 @@ macro(kst_add_plugin folder name)
 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
 	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	kst_link(kstcore kstmath kstwidgets)
-	install(TARGETS ${kst_name}
-		LIBRARY DESTINATION plugin
-		#TODO ${INSTALL_TARGETS_DEFAULT_ARGS}
-		)
+	install(TARGETS ${kst_name} LIBRARY DESTINATION plugin)
 	# TODO install(FILES  *.desktop DESTINATION share/services/kst)
 	if(kst_verbose)
 	  message(STATUS "Building plugin ${kst_name}")
@@ -148,6 +151,7 @@ endmacro()
 macro(kst_files_ignore)
 	set(kst_${kst_name}_ignore ${kst_${kst_name}_ignore} ${ARGV})
 endmacro()
+
 
 macro(kst_files_remove list)
 	foreach(_item ${ARGN})

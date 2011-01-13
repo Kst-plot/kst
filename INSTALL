@@ -131,4 +131,4 @@ Status
 	- install on Mac
 	- add package rules
 	- add support for pre-compiled headers
-	- have a look at kst1's cmake files, especially the 3rd party lib code
+

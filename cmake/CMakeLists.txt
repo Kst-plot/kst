@@ -10,7 +10,8 @@ get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
 set(kst_version 2.0.3)
 
 include(SubversionHeader)
-SubversionHeader(${kst_dir} Revision ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
+kst_revision_project_name(Revision)
+SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
 
 
 message(STATUS)
@@ -36,7 +37,7 @@ if(MINGW)
 	# seems there is a bug in FindQt4
 	macro(fix_it)
 		foreach(_it ${ARGN})
-			if (QT_${_it}_LIBRARY_DEBUG AND QT_${_it}_LIBRARY_RELEASE)
+			if(QT_${_it}_LIBRARY_DEBUG AND QT_${_it}_LIBRARY_RELEASE)
 				set(QT_${_it}_LIBRARY debug ${QT_${_it}_LIBRARY_DEBUG} optimized ${QT_${_it}_LIBRARY_RELEASE} CACHE STRING "Fixed ${_it}" FORCE)
 			endif()
 		endforeach()
@@ -122,38 +123,15 @@ message(STATUS "Installation path: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "-----------------------------------------------")
 message(STATUS)
 
-add_subdirectory(misc)
+
 add_subdirectory(src)
+
 if(kst_test)
 	enable_testing()
 	add_subdirectory(tests)
 endif()
 
+add_subdirectory(misc)
 
 
-if(WIN32)
-	install(FILES
-		${QT_BINARY_DIR}/QtCore4.dll
-		${QT_BINARY_DIR}/QtGui4.dll
-		${QT_BINARY_DIR}/QtXml4.dll
-		${QT_BINARY_DIR}/QtOpenGL4.dll
-		${QT_BINARY_DIR}/QtSvg4.dll
-		DESTINATION bin
-		CONFIGURATIONS Release)
-	install(FILES
-		${QT_BINARY_DIR}/QtCored4.dll
-		${QT_BINARY_DIR}/QtGuid4.dll
-		${QT_BINARY_DIR}/QtXmld4.dll
-		${QT_BINARY_DIR}/QtOpenGLd4.dll
-		${QT_BINARY_DIR}/QtSvgd4.dll
-		DESTINATION bin
-		CONFIGURATIONS Debug)
-endif()
 
-if(MINGW)
-	get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
-	install(FILES 
-		${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll
-		${MINGW_BIN_PATH}/mingwm10.dll
-		DESTINATION bin)
-endif()
