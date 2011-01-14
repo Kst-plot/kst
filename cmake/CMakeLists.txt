@@ -75,7 +75,7 @@ else()
 endif()
 
 if(kst_install_prefix)
-	set(CMAKE_INSTALL_PREFIX ${install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
+	set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
 	set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
