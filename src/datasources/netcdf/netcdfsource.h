@@ -71,7 +71,10 @@ class NetcdfSource : public Kst::DataSource {
     QMap<QString, int> _frameCounts;
 
     int _maxFrameCount;
-    NcFile *_ncfile;    
+    NcFile *_ncfile;
+
+    // we must hold an NcError to overwrite the exit-on-error behaviour of netCDF
+    NcError _ncErr;
 
     // QMap<QString, QString> _metaData;
 

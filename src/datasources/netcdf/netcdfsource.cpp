@@ -179,8 +179,12 @@ bool DataInterfaceNetCdfVector::isValid(const QString& field) const
 
 QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& field)
 {
-  QMap<QString, double> fieldScalars;
   NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  if (!var) {
+    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    return QMap<QString, double>();
+  }
+  QMap<QString, double> fieldScalars;
   fieldScalars["NbAttributes"] = var->num_atts();
   for (int i=0; i<var->num_atts(); ++i) {
     NcAtt *att = var->get_att(i);
@@ -201,9 +205,13 @@ QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& fiel
 
 QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& field)
 {
+  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  if (!var) {
+    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    return QMap<QString, QString>();
+  }
   QMap<QString, QString> fieldStrings;
   QString tmpString;
-  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
   for (int i=0; i<var->num_atts(); ++i) {
     NcAtt *att = var->get_att(i);
     // Only handle char/unspecified attributes as fieldStrings, the others as fieldScalars
@@ -256,6 +264,9 @@ const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& ma
 
   QByteArray bytes = matrix.toLatin1();
   NcVar *var = netcdf._ncfile->get_var(bytes.constData());  // var is owned by _ncfile
+  if (!var) {
+    return DataMatrix::DataInfo();
+  }
 
   if (var->num_dims() != 2) {
     return DataMatrix::DataInfo();
@@ -296,6 +307,7 @@ bool DataInterfaceNetCdfMatrix::isValid(const QString& field) const {
 NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element) :
   Kst::DataSource(store, cfg, filename, type),
   _ncfile(0L),
+  _ncErr(NcError::silent_nonfatal),
   is(new DataInterfaceNetCdfScalar(*this)),
   it(new DataInterfaceNetCdfString(*this)),
   iv(new DataInterfaceNetCdfVector(*this)),
@@ -352,6 +364,9 @@ bool NetcdfSource::initFile() {
 
   for (int i = 0; i < nb_vars; i++) {
     NcVar *var = _ncfile->get_var(i);
+    if (!var) {
+      continue;
+    }
     if (var->num_dims() == 0) {
       _scalarList += var->name();
     } else if (var->num_dims() == 1) {
@@ -403,6 +418,9 @@ Kst::Object::UpdateType NetcdfSource::internalDataSourceUpdate() {
   int nb_vars = _ncfile->num_vars();
   for (int j = 0; j < nb_vars; j++) {
     NcVar *var = _ncfile->get_var(j);
+    if (!var) {
+      continue;
+    }
     int fc = var->num_vals() / var->rec_size();
     _maxFrameCount = qMax(_maxFrameCount, fc);
     updated = updated || (_frameCounts[var->name()] != fc);
@@ -417,8 +435,11 @@ int NetcdfSource::readScalar(double *v, const QString& field)
   // TODO error handling
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
-  var->get(v);
-  return 1;
+  if (var) {
+    var->get(v);
+    return 1;
+  }
+  return 0;
 }
 
 int NetcdfSource::readString(QString *stringValue, const QString& stringName)
@@ -427,9 +448,9 @@ int NetcdfSource::readString(QString *stringValue, const QString& stringName)
   NcAtt *att = _ncfile->get_att((NcToken) stringName.toLatin1().data());
   if (att) {
     *stringValue = QString(att->as_string(0));
+    delete att;
     return 1;
   }
-  delete att;
   return 0;
 }
 
@@ -592,6 +613,7 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());
   if (!var) {
+    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return 0;
   }
   return var->rec_size();

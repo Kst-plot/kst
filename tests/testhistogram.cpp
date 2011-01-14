@@ -30,8 +30,18 @@ void TestHistogram::cleanupTestCase() {
 void TestHistogram::testHistogram() {
   Kst::GeneratedVectorPtr gvp = Kst::kst_cast<Kst::GeneratedVector>(_store.createObject<Kst::GeneratedVector>());
   Q_ASSERT(gvp);
+  QCOMPARE(gvp->length(), 1);
+
   gvp->changeRange(0, 10, 100);
+  QCOMPARE(gvp->max(), 0.0);
+  QCOMPARE(gvp->length(), 100);
+
+  gvp->internalUpdate();
+  QCOMPARE(gvp->max(), 10.0);
+  QCOMPARE(gvp->length(), 100);
+
   Kst::VectorPtr vp(gvp);
+  QCOMPARE(vp->max(), 10.0);
 
   Kst::HistogramPtr h1 = Kst::kst_cast<Kst::Histogram>(_store.createObject<Kst::Histogram>());
   h1->change(vp, 0, 10, 10, Kst::Histogram::Number);
