@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
 
   Kst::DataSourcePluginManager::init();
 
-  char field_list[40][120], filename[180];
+  QString filename;
+  QString field_list[40];
   bool do_hex[40];
   int n_field=0;
   int start_frame=0, n_frames=2000000;
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < 40; i++)
     do_hex[i] = false;
 
-  strcpy(filename, argv[1]);
+  filename = QString::fromLocal8Bit(argv[1]);
   for (i = 2; i < argc; i++) {
     if (argv[i][0] == '-') {
       if (argv[i][1] == 'f') {
@@ -78,14 +79,14 @@ int main(int argc, char *argv[]) {
         do_ave = true;
       } else if (argv[i][1] == 'x') {
         i++;
-        strcpy(field_list[n_field], argv[i]);
+        field_list[n_field] = QString::fromLocal8Bit(argv[i]);
         do_hex[n_field] = true;
         n_field++;
       } else {
         Usage();
       }
     } else {
-      strcpy(field_list[n_field], argv[i]);
+      field_list[n_field] = QString::fromLocal8Bit(argv[i]);
       n_field++;
     }
   }
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
 
   file = Kst::DataSourcePluginManager::loadSource(_document.objectStore(), filename);
   if (!file || !file->isValid() || file->isEmpty()) {
-    fprintf(stderr, "d2asc error: file %s has no data\n", filename);
+    fprintf(stderr, "d2asc error: file %s has no data\n", qPrintable(filename));
     return -2;
   }
   /** make vectors and fill the list **/
@@ -103,7 +104,7 @@ int main(int argc, char *argv[]) {
   for (i=0; i<n_field; i++) {
     if (!file->vector().isValid(field_list[i])) {
       fprintf(stderr, "d2asc error: field %s in file %s is not valid\n",
-              field_list[i], filename);
+              qPrintable(field_list[i]), qPrintable(filename));
       return -3;
     }
     Kst::DataVectorPtr v = _document.objectStore()->createObject<Kst::DataVector>();
