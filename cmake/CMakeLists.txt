@@ -13,6 +13,7 @@ include(SubversionHeader)
 kst_revision_project_name(Revision)
 SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
 
+set(kst_binary_name kst)
 
 message(STATUS)
 message(STATUS "Build options:")
@@ -25,7 +26,9 @@ kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
 kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
 kst_option(console "Open console on Windows" OFF win)
 kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
+kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
+
 
 
 message(STATUS)

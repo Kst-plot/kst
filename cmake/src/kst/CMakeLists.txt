@@ -1,4 +1,4 @@
-kst_init(kst)
+kst_init(${kst_binary_name})
 
 kst_files_ignore(main-vld)
 
