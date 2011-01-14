@@ -17,18 +17,32 @@ else()
 		~/Library/Frameworks
 		/Library/Frameworks
 		)
-	FIND_LIBRARY(NETCDF_LIBRARY_C netcdf 
-		HINTS
-		ENV NETCDF_DIR
-		PATH_SUFFIXES lib
-		PATHS
-		)
-	FIND_LIBRARY(NETCDF_LIBRARY_CPP netcdf_c++
-		HINTS
-		ENV NETCDF_DIR
-		PATH_SUFFIXES lib
-		PATHS
-		)
+		
+	macro(find_netcdf_lib var libname)
+		FIND_LIBRARY(${var} ${libname} 
+			HINTS
+			ENV NETCDF_DIR
+			PATH_SUFFIXES lib
+			PATHS)
+	endmacro()
+	
+	find_netcdf_lib(netcdf_c         netcdf)
+	find_netcdf_lib(netcdf_c_debug   netcdfd)
+	find_netcdf_lib(netcdf_cpp       netcdf_c++)
+	find_netcdf_lib(netcdf_cpp_debug netcdf_c++d)
+	
+	if(netcdf_c AND netcdf_c_debug)
+		set(NETCDF_LIBRARY_C optimized ${netcdf_c} debug ${netcdf_c_debug})
+	endif()
+	if(netcdf_cpp AND netcdf_cpp_debug)
+	   set(NETCDF_LIBRARY_CPP optimized ${netcdf_cpp} debug ${netcdf_cpp_debug})
+	endif()
+	
+	if(NOT MSVC)
+		# only msvc needs debug and release
+		set(NETCDF_LIBRARY_C   ${netcdf_c})
+		set(NETCDF_LIBRARY_CPP ${netcdf_cpp})
+	endif()
 endif()
 
 #message(STATUS "NETCDF: ${NETCDF_INCLUDEDIR}")

@@ -1,9 +1,26 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 2.8)
 
-project( netcdf)
+project(netcdf)
 
-set (TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+if(netcdf_sources)
+	set(TOP_DIR ${netcdf_sources})
+else()
+	set(TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+endif()
 
+
+if(netcdf_install_prefix)
+	set(CMAKE_INSTALL_PREFIX ${netcdf_install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
+	set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+endif()
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/INSTALLED CACHE PATH "Kst's default install prefix" FORCE)
+endif()
+
+message(STATUS)
+message(STATUS "Using netCDF soures from: ${TOP_DIR}")
+message(STATUS "Installing netCDF at    : ${CMAKE_INSTALL_PREFIX}")
+message(STATUS)
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DNOMINMAX)
