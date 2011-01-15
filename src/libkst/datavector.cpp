@@ -657,7 +657,6 @@ void DataVector::_resetFieldStrings() {
       _fieldStrings.insert(key, sp);
       sp->setProvider(this);
       sp->setSlaveName(key);
-      sp->_KShared_ref();
     } else {  // find it
       sp = _fieldStrings[key];
     }
@@ -694,7 +693,6 @@ void DataVector::_resetFieldScalars() {
       _fieldScalars.insert(key, sp);
       sp->setProvider(this);
       sp->setSlaveName(key);
-      sp->_KShared_ref();
     } else {  // find it
       sp = _fieldScalars[key];
     }
