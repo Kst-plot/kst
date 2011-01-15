@@ -39,6 +39,7 @@
 /*extern "C"*/ int yyparse(Kst::ObjectStore *store);
 extern void *ParsedEquation;
 /*extern "C"*/ struct yy_buffer_state *yy_scan_string(const char*);
+int yylex_destroy (void );
 
 namespace Kst {
 
@@ -146,6 +147,7 @@ const QString Equation::reparsedEquation() const {
       return (_equation);
     }
 
+    yylex_destroy();
     yy_scan_string(_equation.toLatin1());
     ParsedEquation = 0L;
     int rc = yyparse(store());
@@ -170,6 +172,7 @@ void Equation::save(QXmlStreamWriter &s) {
   // the optimizer
   if (!_equation.isEmpty()) {
     QMutexLocker ml(&Equations::mutex());
+    yylex_destroy();
     yy_scan_string(_equation.toLatin1());
     ParsedEquation = 0L;
     int rc = yyparse(store());
@@ -209,6 +212,7 @@ void Equation::setEquation(const QString& in_fn) {
   _pe = 0L;
   if (!_equation.isEmpty()) {
     Equations::mutex().lock();
+    yylex_destroy();
     yy_scan_string(_equation.toLatin1());
     int rc = yyparse(store()); 
     _pe = static_cast<Equations::Node*>(ParsedEquation);
@@ -447,6 +451,7 @@ bool Equation::FillY(bool force) {
     }
 
     QMutexLocker ml(&Equations::mutex());
+    yylex_destroy();
     yy_scan_string(_equation.toLatin1());
     int rc = yyparse(store());
     _pe = static_cast<Equations::Node*>(ParsedEquation);
