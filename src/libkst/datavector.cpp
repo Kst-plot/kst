@@ -548,10 +548,12 @@ void DataVector::internalUpdate() {
       _v[0] = NOPOINT;
       n_read = 1;
     } else if (info.samplesPerFrame > 1) {
+      int safe_nf = (new_nf>0 ? new_nf : 0);
+
       assert(new_f0 + NF >= 0);
-      assert(new_f0 + new_nf - 1 >= 0);
-      n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF - 1);
-      n_read += readField(_v+(new_nf-1)*SPF, _field, new_f0 + new_nf - 1, -1);
+      assert(new_f0 + safe_nf - 1 >= 0);
+      n_read = readField(_v+NF*SPF, _field, new_f0 + NF, safe_nf - NF - 1);
+      n_read += readField(_v+(safe_nf-1)*SPF, _field, new_f0 + safe_nf - 1, -1);
     } else {
       assert(new_f0 + NF >= 0);
       if (new_nf - NF > 0 || new_nf - NF == -1) {
