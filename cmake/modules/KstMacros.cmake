@@ -1,4 +1,5 @@
 include(MergedFilesBuild)
+include(KstPchSupport)
 
 
 macro(kst_init name)
@@ -81,6 +82,12 @@ macro(kst_add_library type)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	string(TOUPPER BUILD_${kst_name} _build_macro)
 	add_definitions(-D${_build_macro})
+	if(kst_pch)
+		# TODO each lib could use its own pch header
+		set(pch ${CMAKE_CURRENT_BINARY_DIR}/pch.h)
+		configure_file(${kst_dir}/pch.h ${pch})
+		kst_add_pch_rule(${pch} kst_${kst_name}_sources ${type})
+	endif()
 	if(kst_merge_files)
 		if(kst_merge_rebuild)
 			set(merged_files_rebuild 1)
