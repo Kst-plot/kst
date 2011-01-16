@@ -47,6 +47,7 @@ Histogram::Histogram(ObjectStore *store)
   // _Bins, _bVector and _hVector need to be valid, 
   // so initialize them as size 2 (where 2 is a small valid number)
   _Bins = new unsigned long[2];
+  _NumberOfBins = 0;
 
   VectorPtr v = store->createObject<Vector>();
   v->setProvider(this);

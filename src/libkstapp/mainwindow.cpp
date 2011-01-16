@@ -241,6 +241,8 @@ void MainWindow::newDoc() {
   }
 
   if (clearApproved) {
+    delete _dataManager;
+    _dataManager = 0;
     delete _doc;
     _doc = new Document(this);
   } else {
@@ -296,6 +298,8 @@ bool MainWindow::initFromCommandLine() {
 
 void MainWindow::openFile(const QString &file) {
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+  delete _dataManager;
+  _dataManager = 0;
   delete _doc;
   _doc = new Document(this);
 
