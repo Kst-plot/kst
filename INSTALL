@@ -106,10 +106,12 @@ Options
 	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
 	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
 	-- kst_verbose              = OFF    : Make verbose CMake run and Makefiles
-	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
 	-- kst_console              = OFF    : Open console on Windows
+	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
 	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
+	-- kst_dataobjects          = ON     : Build dataobject plugins
 	-- kst_test                 = OFF    : Build unit tests
+	-- kst_pch                  = OFF    : Use precompiled headers
 
 	
 	To enable a option pass the value ON or 1, eg
@@ -147,5 +149,5 @@ Status
 	TODOs:
 	- install on Mac
 	- add package rules
-	- add support for pre-compiled headers
+	- add pre-compiled headers for msvc
 
