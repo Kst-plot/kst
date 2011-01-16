@@ -117,6 +117,23 @@ Options
 
 
 
+Using the merged files build
+-----------------------------
+
+When the option 'kst_merge_files' is used then for each library a files 
+is generated(merged_const.cpp) which includes all source files of this 
+library, this speeds up compilation about factor 5.
+
+When you heavily work on one file you could comment out the relevant 
+define in the 'merged_const.cpp' file, so only the file 'merged_touched.cpp'
+file will be re-compiled again an again.
+
+The CMake macro 'kst_dont_merge' is only active when the option 'kst_merge_files'
+is used. 'kst_dont_merge' prevents the adding of the listed files to the generated
+file, all listed files will be compiled separately. Sometimes this is needed because
+of too much compiler errors, and it is simpler not to merge the file.
+
+
 
 Status
 -----------
