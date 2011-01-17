@@ -1,0 +1,53 @@
+
+#include "kstmath_pch.h"
+
+#ifdef KST_PCH_RECURSIVE
+
+// math headers
+#include "basicplugin.h"
+#include "basicpluginfactory.h"
+#include "builtinobjects.h"
+#include "builtinpalettes.h"
+#include "builtinrelations.h"
+#include "colorsequence.h"
+#include "csd.h"
+#include "csdfactory.h"
+#include "curve.h"
+#include "curvefactory.h"
+#include "curvehint.h"
+#include "curvepointsymbol.h"
+#include "dataobject.h"
+#include "dataobjectplugin.h"
+#include "dialoglauncher.h"
+#include "doublecompare.h"
+#include "emailthread.h"
+#include "enodefactory.h"
+#include "enodes.h"
+#include "eparse-eh.h"
+#include "eparse.h"
+#include "equation.h"
+#include "equationfactory.h"
+#include "eventmonitorentry.h"
+#include "eventmonitorfactory.h"
+#include "histogram.h"
+#include "histogramfactory.h"
+#include "image.h"
+#include "imagefactory.h"
+#include "kstmath_export.h"
+#include "labelparser.h"
+#include "linestyle.h"
+#include "objectfactory.h"
+#include "painter.h"
+#include "palette.h"
+#include "plotdefines.h"
+#include "psd.h"
+#include "psdcalculator.h"
+#include "psdfactory.h"
+#include "relation.h"
+#include "relationfactory.h"
+#include "settings.h"
+
+#endif
+
+
+

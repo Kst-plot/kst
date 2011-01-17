@@ -1,0 +1,32 @@
+
+#include "kstwidgets_pch.h"
+
+#ifdef KST_PCH_RECURSIVE
+
+// widgets headers
+#include "colorbutton.h"
+#include "combobox.h"
+#include "curveplacement.h"
+#include "datarange.h"
+#include "datasourceselector.h"
+#include "fftoptions.h"
+#include "gradienteditor.h"
+#include "labellineedit.h"
+#include "scalarlistselector.h"
+#include "stringselector.h"
+#include "widgets.h"
+#include "colorpalette.h"
+#include "curveappearance.h"
+#include "curveselector.h"
+#include "datasourceselectordialog.h"
+#include "dialogdefaults.h"
+#include "filerequester.h"
+#include "kstwidgets_export.h"
+#include "labelbuilder.h"
+#include "matrixselector.h"
+#include "scalarselector.h"
+#include "vectorselector.h"
+
+#endif
+
+
