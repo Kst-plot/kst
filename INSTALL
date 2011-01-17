@@ -143,11 +143,10 @@ Status
 	Kst builds, starts, and loads all plugins. Tested on Linux,
 	Windows, and MacOSX.
 	
-	The cmake build system is not finished yet and we need 
-	qmake until all issues are solved.
-	
-	TODOs:
-	- install on Mac
-	- add package rules
-	- add pre-compiled headers for msvc
+	Nice to have:
+	- add package rules: it is possiible to generate 
+	  .deb, .rpm, .zip, nsis-Installer, mac-bundles
+	- installation rules on Mac
+	- add pre-compiled headers for Mac, Xcode
+
 
