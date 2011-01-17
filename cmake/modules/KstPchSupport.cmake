@@ -6,21 +6,20 @@
 
 
 
-
-# use this macro before "add_executable"
+# use this macro before <add_library>
 #
 # _header : header to make a .gch
 # _sources: the variable name (do not use ${..}) which contains a
 #           a list of sources (a.cpp b.cpp c.cpp ...)
 #           This macro will append a header file to it, then this 
-#           src_list can be used in add_executable or add_library
+#           src_list can be used in <add_library>
 #
 # Now a .gch file should be generated and gcc should use it.
 #       (add -Winvalid-pch to the cpp flags to verify)
 #
 # make clean should delete the pch file
 #
-# example : ADD_PCH_RULE(pch.h myprog_SRCS)
+# example : kst_add_pch_rule(pch.h source_list_name SHARED)
 
 macro(kst_add_pch_rule  _header _sources _lib_type)
 		
