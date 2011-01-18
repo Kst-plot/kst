@@ -104,7 +104,7 @@ if(APPLE)
 endif()
 
 if(kst_pch)
-	set(kst_merge_files 0 BOOL STRING "merge files disabled because of using pchs" FORCE)
+	set(kst_merge_files 0 CACHE BOOL "merge files disabled because of using pchs" FORCE)
 endif()
 
 
