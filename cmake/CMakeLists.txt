@@ -87,7 +87,7 @@ if(kst_install_prefix)
 	set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/INSTALLED CACHE PATH "Kst's default install prefix" FORCE)
+	set(CMAKE_INSTALL_PREFIX INSTALLED CACHE PATH "Kst's default install prefix" FORCE)
 endif()
 
 if(NOT kst_console)
