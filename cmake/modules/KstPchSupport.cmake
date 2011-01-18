@@ -57,7 +57,7 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		
 		# now build the pch with the compiler arguments 
 		add_custom_command(OUTPUT ${_gch_filename}
-			COMMAND rm -f ${_gch_filename}
+			COMMAND ${CMAKE_COMMAND} -E remove ${_gch_filename}
 			COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} ${_args}
 			DEPENDS ${_header})
 			
