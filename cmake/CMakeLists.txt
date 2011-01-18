@@ -7,7 +7,10 @@ include(KstMacros)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
 
-set(kst_version 2.0.3)
+set(kst_version_major 2)
+set(kst_version_minor 0)
+set(kst_version_patch 3)
+set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 
 include(SubversionHeader)
 kst_revision_project_name(Revision)
@@ -146,3 +149,63 @@ add_subdirectory(misc)
 
 
 
+
+# CPack packaging
+#
+# http://cmake.org/cmake/help/cmake-2-8-docs.html#module:CPack
+
+set(CPACK_PACKAGE_NAME   Kst)
+set(CPACK_PACKAGE_VENDOR "The Kst Team")
+set(CPACK_PACKAGE_VERSION_MAJOR ${kst_version_major})
+set(CPACK_PACKAGE_VERSION_MINOR ${kst_version_minor})
+set(CPACK_PACKAGE_VERSION_PATCH ${kst_version_patch})
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Kst 2")
+set(CPACK_PACKAGE_DESCRIPTION_FILE    ${kst_dir}/README)
+set(CPACK_PACKAGE_CONTACT "http://bugs.kde.org}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
+
+set(CPACK_RESOURCE_FILE_LICENSE       ${kst_dir}/COPYING)
+
+
+# sources
+set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${kst_dir};/") # http://www.mail-archive.com/cmake@cmake.org/msg33720.html
+set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version})
+set(CPACK_SOURCE_GENERATOR TGZ ZIP TBZ2)
+
+# rpm
+set(CPACK_SET_DESTDIR "ON")
+FILE(READ ${CPACK_RESOURCE_FILE_LICENSE} CPACK_RPM_PACKAGE_LICENSE)
+set(CPACK_RPM_PACKAGE_GROUP "Applications/Science")
+set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
+
+# deb
+# This is experimental
+# check also for plugin's 3rdparty libraries?
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
+
+
+include(CPack)
+
+# Usage
+#
+# Source only .targz, .tar.bz2, .zip:
+#   make package_source
+#
+# Binary .tar.gz and install .sh:
+#   make package
+#
+# Binary .deb:
+# create : cpack -G DEB --config CPackConfig.cmake
+# list   : dpkg-deb -c Kst-*.deb
+# install: dpkg -i Kst-*.deb
+#
+# Binary .rpm:
+# create : cpack -G RPM --config CPackConfig.cmake
+# list   : rpm -qlp Kst-*.rpm              
+# install: rpm -U Kst-*.rpm                
+
+
+# CPack and Ubuntu
+# Found this:
+# http://www.purplekarrot.net/blog/dputCMake.html
