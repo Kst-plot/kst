@@ -23,8 +23,6 @@
 
 macro(kst_add_pch_rule  _header _sources _lib_type)
 
-	set(_pch_name ${_header}.${CMAKE_BUILD_TYPE})
-	
 	if(CMAKE_COMPILER_IS_GNUCC)
 		# first we have to find all compiler arguments
 		get_directory_property(_definitions COMPILE_DEFINITIONS)
@@ -51,7 +49,7 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 			LIST(APPEND _args "-I" ${_inc})
 		endforeach(_inc ${DIRINC})
 		
-		set(_gch_filename "${_pch_name}.gch")
+		set(_gch_filename "${_header}.gch")
 		list(APPEND ${_sources} ${_gch_filename})
 		list(APPEND _args -c ${_header} -o ${_gch_filename})
 		
@@ -71,7 +69,7 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		file(WRITE ${_header}.tmp "#include \"${_header}\"\n")
 		execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header}.tmp ${_header}.cpp)
 		
-		set(use_pch /Fp${_pch_name}.pch)
+		set(use_pch /Fp${_header}.${CMAKE_BUILD_TYPE}.pch)
 		set_source_files_properties(${_header}.cpp PROPERTIES COMPILE_FLAGS "/Yc\"${_header}\" ${use_pch}")
 		
 		# Bug in cmake: next line also compile .c files with pchs
