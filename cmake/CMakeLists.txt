@@ -32,7 +32,7 @@ kst_option(console "Open console on Windows" OFF win)
 kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
 kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
-kst_option(pch "Use precompiled headers" OFF all)
+kst_option(pch "Use precompiled headers" ON all)
 
 
 
@@ -99,8 +99,12 @@ if(APPLE)
 	set(kst_win32 MACOSX_BUNDLE)
 endif()
 
+if(APPLE)
+	set(kst_pch 0 CACHE BOOL "disable pch on mac, not supported yet" FORCE)
+endif()
+
 if(kst_pch)
-	set(kst_merge_files CACHE STRING "merge files disabled because of using pchs" FORCE)
+	set(kst_merge_files 0 BOOL STRING "merge files disabled because of using pchs" FORCE)
 endif()
 
 
