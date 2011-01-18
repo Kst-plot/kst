@@ -11,6 +11,11 @@
  ***************************************************************************/
 
 #include "config.h"
+
+#ifdef KST_HAVE_SVN_REVISION_H
+#include "svnrevision.h"
+#endif
+
 #include "aboutdialog.h"
 
 #include <QDesktopServices>

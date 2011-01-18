@@ -11,6 +11,7 @@ set(kst_version 2.0.3)
 
 include(SubversionHeader)
 kst_revision_project_name(Revision)
+add_definitions(-DKST_HAVE_SVN_REVISION_H)
 SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
 
 set(kst_binary_name kst)

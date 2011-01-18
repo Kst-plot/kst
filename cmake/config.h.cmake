@@ -6,8 +6,6 @@
 //#define QT_NO_STL
 //#define QT_NO_KEYWORDS
 
-#include "svnrevision.h"
-
 #define KSTVERSION  "${kst_version}"
 #define INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}"
 

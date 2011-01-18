@@ -12,6 +12,10 @@
 
 #include "config.h"
 
+#ifdef KST_HAVE_SVN_REVISION_H
+#include "svnrevision.h"
+#endif
+
 #include "datasource.h"
 #include "debug.h"
 #include "logevents.h"
