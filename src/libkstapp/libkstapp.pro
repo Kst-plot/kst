@@ -119,6 +119,7 @@ SOURCES += aboutdialog.cpp \
     plotmarkers.cpp \
     plotrenderitem.cpp \
     powerspectrumdialog.cpp \
+	primitivemodel.cpp \
     rangetab.cpp \
     scalardialog.cpp \
     scalarmodel.cpp \
@@ -227,6 +228,7 @@ HEADERS += aboutdialog.h \
     plotitemmanager.h \
     plotrenderitem.h \
     powerspectrumdialog.h \
+	primitivemodel.h \
     rangetab.h \
     scalardialog.h \
     scalarmodel.h \
