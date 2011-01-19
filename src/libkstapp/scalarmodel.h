@@ -70,6 +70,8 @@ private:
   ObjectStore *_store;
   ScalarTreeItem *_rootItem;
 
+  ScalarTreeItem* addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent);
+
 };
 
 }

@@ -93,15 +93,7 @@ int ScalarModel::columnCount(const QModelIndex& parent) const {
 
 
 void ScalarModel::addScalar(ScalarPtr scalar, ScalarTreeItem* parent) {
-  ScalarTreeItem* parentItem;
-  if (parent) {
-    parentItem = parent;
-  } else {
-    parentItem = _rootItem;
-  }
-  QList<QVariant> data;
-  data << scalar->Name() << scalar->value();
-  new ScalarTreeItem(data, parentItem);
+  addScalarTreeItem(QList<QVariant>() << scalar->Name() << scalar->value(), parent);
 }
 
 
@@ -118,44 +110,31 @@ void ScalarModel::addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, Sca
 }
 
 
-void ScalarModel::addVector(VectorPtr vector, ScalarTreeItem* parent) {
+ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent) {
   ScalarTreeItem* parentItem;
   if (parent) {
     parentItem = parent;
   } else {
     parentItem = _rootItem;
   }
-  QList<QVariant> data;
-  data << vector->Name();
-  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  return new ScalarTreeItem(data, parentItem);
+}
+
+
+void ScalarModel::addVector(VectorPtr vector, ScalarTreeItem* parent) {
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << vector->Name(), parent);
   addScalars(vector->scalars(), item);
 }
 
 
 void ScalarModel::addMatrix(MatrixPtr matrix, ScalarTreeItem* parent) {
-  ScalarTreeItem* parentItem;
-  if (parent) {
-    parentItem = parent;
-  } else {
-    parentItem = _rootItem;
-  }
-  QList<QVariant> data;
-  data << matrix->Name();
-  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << matrix->Name(), parent);
   addScalars(matrix->scalars(), item);
 }
 
 
 void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent) {
-  ScalarTreeItem* parentItem;
-  if (parent) {
-    parentItem = parent;
-  } else {
-    parentItem = _rootItem;
-  }
-  QList<QVariant> data;
-  data << dataObject->Name();
-  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
   QMap<QString, ObjectPtr> objectMap;
   foreach(Scalar* scalar, dataObject->outputScalars()) {
@@ -183,15 +162,7 @@ void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent
 
 
 void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent) {
-  ScalarTreeItem* parentItem;
-  if (parent) {
-    parentItem = parent;
-  } else {
-    parentItem = _rootItem;
-  }
-  QList<QVariant> data;
-  data << dataSource->shortName();
-  ScalarTreeItem* item = new ScalarTreeItem(data, parentItem);
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
   QStringList scalars = dataSource->scalar().list();
   scalars.sort();
