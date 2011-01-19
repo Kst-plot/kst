@@ -17,6 +17,7 @@
 #include "dataobject.h"
 #include "datasource.h"
 #include "object.h"
+#include "objectstore.h"
 
 
 namespace Kst {
