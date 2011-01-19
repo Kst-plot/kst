@@ -1,14 +1,14 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2011 The University of Toronto                        *
- *                   netterfield@astro.utoronto.ca                         *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+*                                                                         *
+*   copyright : (C) 2011 The University of Toronto                        *
+*                   netterfield@astro.utoronto.ca                         *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+***************************************************************************/
 
 #ifndef PRIMITIVE_MODEL_H
 #define PRIMITIVE_MODEL_H
@@ -18,30 +18,31 @@
 #include "datasource.h"
 #include "object.h"
 
+
 namespace Kst {
 
 class ObjectStore;
 
- class PrimitiveTreeItem
- {
- public:
-     explicit PrimitiveTreeItem(const QList<QVariant> &data, PrimitiveTreeItem *parent = 0);
-     ~PrimitiveTreeItem();
+class PrimitiveTreeItem
+{
+public:
+  explicit PrimitiveTreeItem(const QList<QVariant> &data, PrimitiveTreeItem *parent = 0);
+  ~PrimitiveTreeItem();
 
-     void addChild(PrimitiveTreeItem *child);
+  void addChild(PrimitiveTreeItem *child);
 
-     PrimitiveTreeItem *child(int row);
-     int childCount() const;
-     int columnCount() const;
-     QVariant data(int column) const;
-     int row() const;
-     PrimitiveTreeItem *parent();
+  PrimitiveTreeItem *child(int row);
+  int childCount() const;
+  int columnCount() const;
+  QVariant data(int column) const;
+  int row() const;
+  PrimitiveTreeItem *parent();
 
- private:
-     QList<PrimitiveTreeItem*> childItems;
-     QList<QVariant> itemData;
-     PrimitiveTreeItem *parentItem;
- };
+private:
+  QList<PrimitiveTreeItem*> childItems;
+  QList<QVariant> itemData;
+  PrimitiveTreeItem *parentItem;
+};
 
 
 
@@ -75,7 +76,7 @@ public:
 
   template<class T>
   void addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent = 0);
-  
+
   virtual void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0) = 0;
 
 protected:
@@ -111,6 +112,7 @@ void PrimitiveModel::addMeta(T* m, PrimitiveTreeItem* parent) {
   addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
 }
 
+
 template<class T>
 void PrimitiveModel::addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent) {
   foreach(const PrimitivePtr& m, metarMap) {
@@ -120,11 +122,13 @@ void PrimitiveModel::addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* p
   }
 }
 
+
 template<class T>
 void PrimitiveModel::addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent) {
   PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
   addMetas<T>(prim->metas(), item);
 }
+
 
 template<class T>
 void PrimitiveModel::addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent) {
@@ -137,8 +141,6 @@ void PrimitiveModel::addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTree
     }
   }
 }
-  
-
 
 
 }

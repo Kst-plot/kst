@@ -1,14 +1,14 @@
 /***************************************************************************
- *                                                                         *
- *   copyright : (C) 2011 The University of Toronto                        *
- *                   netterfield@astro.utoronto.ca                         *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+*                                                                         *
+*   copyright : (C) 2011 The University of Toronto                        *
+*                   netterfield@astro.utoronto.ca                         *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+***************************************************************************/
 
 #include "primitivemodel.h"
 
@@ -43,41 +43,43 @@ void PrimitiveTreeItem::addChild(PrimitiveTreeItem *item) {
 
 
 PrimitiveTreeItem *PrimitiveTreeItem::child(int row) {
-    return childItems.value(row);
+  return childItems.value(row);
 }
 
+
 int PrimitiveTreeItem::childCount() const {
-    return childItems.count();
+  return childItems.count();
 }
 
 
 int PrimitiveTreeItem::row() const {
-    if (parentItem)
-        return parentItem->childItems.indexOf(const_cast<PrimitiveTreeItem*>(this));
+  if (parentItem)
+    return parentItem->childItems.indexOf(const_cast<PrimitiveTreeItem*>(this));
 
-    return 0;
+  return 0;
 }
 
 
 int PrimitiveTreeItem::columnCount() const {
-    return itemData.count();
+  return itemData.count();
 }
 
 
 QVariant PrimitiveTreeItem::data(int column) const {
-    return itemData.value(column);
+  return itemData.value(column);
 }
 
+
 PrimitiveTreeItem *PrimitiveTreeItem::parent() {
-    return parentItem;
+  return parentItem;
 }
 
 
 PrimitiveModel::PrimitiveModel(ObjectStore *store)
-: QAbstractItemModel(), _store(store) {
-  QList<QVariant> rootData;
-  rootData << "Scalars";
-  _rootItem = new PrimitiveTreeItem(rootData);
+  : QAbstractItemModel(), _store(store) {
+    QList<QVariant> rootData;
+    rootData << "Scalars";
+    _rootItem = new PrimitiveTreeItem(rootData);
 }
 
 
@@ -87,7 +89,7 @@ PrimitiveModel::~PrimitiveModel() {
 
 int PrimitiveModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
-  return 2;
+    return 2;
 }
 
 
@@ -102,17 +104,15 @@ PrimitiveTreeItem* PrimitiveModel::addPrimitiveTreeItem(const QList<QVariant>& d
 }
 
 
-
-
 int PrimitiveModel::rowCount(const QModelIndex& parent) const {
   PrimitiveTreeItem *parentItem;
   if (parent.column() > 0)
-      return 0;
+    return 0;
 
   if (!parent.isValid())
-      parentItem = _rootItem;
+    parentItem = _rootItem;
   else
-      parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
+    parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
 
   return parentItem->childCount();
 }
@@ -139,20 +139,20 @@ QModelIndex PrimitiveModel::index(int row, int col, const QModelIndex& parent) c
   }
 
   if (!hasIndex(row, col, parent))
-      return QModelIndex();
+    return QModelIndex();
 
   PrimitiveTreeItem *parentItem;
 
   if (!parent.isValid())
-      parentItem = _rootItem;
+    parentItem = _rootItem;
   else
-      parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
+    parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
 
   PrimitiveTreeItem *childItem = parentItem->child(row);
   if (childItem)
-      return createIndex(row, col, childItem);
+    return createIndex(row, col, childItem);
   else
-      return QModelIndex();
+    return QModelIndex();
 }
 
 
@@ -160,13 +160,13 @@ QModelIndex PrimitiveModel::parent(const QModelIndex& index) const {
   Q_ASSERT(_store);
 
   if (!index.isValid())
-      return QModelIndex();
+    return QModelIndex();
 
   PrimitiveTreeItem *childItem = static_cast<PrimitiveTreeItem*>(index.internalPointer());
   PrimitiveTreeItem *parentItem = childItem->parent();
 
   if (parentItem == _rootItem)
-      return QModelIndex();
+    return QModelIndex();
 
   return createIndex(parentItem->row(), 0, parentItem);
 }
@@ -177,15 +177,16 @@ QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, in
     return QAbstractItemModel::headerData(section, orientation, role);
   }
   switch (section) {
-    case Name:
-      return tr("Name");
-    case Value:
-      return tr("Value");
-    default:
-      break;
+  case Name:
+    return tr("Name");
+  case Value:
+    return tr("Value");
+  default:
+    break;
   }
   return QVariant();
 }
+
 
 }
 

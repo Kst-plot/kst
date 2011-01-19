@@ -31,15 +31,13 @@ void StringModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
 
   PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
-  QStringList scalars = dataSource->string().list();
-  scalars.sort();
-  foreach(QString scalar, scalars) {
-    QList<QVariant> data;
+  QStringList strings = dataSource->string().list();
+  strings.sort();
+  foreach(const QString& str, strings) {
     QString value;
     DataString::ReadInfo readInfo(&value);
-    dataSource->string().read(scalar, readInfo);
-    data << scalar << value;
-    new PrimitiveTreeItem(data, item);
+    dataSource->string().read(str, readInfo);
+    new PrimitiveTreeItem(QList<QVariant>() << str << value, item);
   }
 }
 

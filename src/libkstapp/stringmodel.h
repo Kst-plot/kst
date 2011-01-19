@@ -18,6 +18,7 @@
 
 namespace Kst {
 
+
 class StringModel : public PrimitiveModel
 {
 

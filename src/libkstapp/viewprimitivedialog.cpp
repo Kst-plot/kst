@@ -22,41 +22,61 @@
 
 namespace Kst {
 
-ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc, PrimitiveType type)
-  : QDialog(parent), _doc(doc), _type(type) {
+ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc)
+  : QDialog(parent), _doc(doc) {
   _model = 0;
   setupUi(this);
-  if (_type == Scalar) {
-    setWindowTitle(tr("View Scalar Values"));
-  } else if (_type == String) {
-    setWindowTitle(tr("View String Values"));
-  }
-  refresh();
-
   setAttribute(Qt::WA_DeleteOnClose);
 }
 
 
 ViewPrimitiveDialog::~ViewPrimitiveDialog() {
-  _tree->setModel(0);
-  delete _model;
-  _model = 0;
+  deleteModel();
+}
+
+void ViewPrimitiveDialog::deleteModel() {
+  if (_model) {
+    _tree->setModel(0);
+    delete _model;
+    _model = 0;
+  }
 }
 
 
 void ViewPrimitiveDialog::refresh() {
-  if (_model) {
-    delete _model;
-  }
-  if (_type == Scalar) {
-    _model = (QAbstractItemModel*)new ScalarModel(_doc->objectStore());
-    _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
-    _tree->setModel(_model);
-  } else if (_type == String) {
-    _model = (QAbstractItemModel*)new StringModel(_doc->objectStore());
-    _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
-    _tree->setModel(_model);
-  }
+  deleteModel();
+  _model = createModel(_doc->objectStore());
+  _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _tree->setModel(_model);
+}
+
+
+
+ViewStringDialog::ViewStringDialog(QWidget *parent, Document *doc) :
+  ViewPrimitiveDialog(parent, doc)
+{
+  setWindowTitle(tr("View String Values"));
+  refresh();
+}
+
+
+QAbstractItemModel* ViewStringDialog::createModel(ObjectStore *store)
+{
+  return new StringModel(store);
+}
+
+
+ViewScalarDialog::ViewScalarDialog(QWidget *parent, Document *doc) :
+  ViewPrimitiveDialog(parent, doc)
+{
+  setWindowTitle(tr("View Scalar Values"));
+  refresh();
+}
+
+
+QAbstractItemModel* ViewScalarDialog::createModel(ObjectStore *store)
+{
+  return new ScalarModel(store);
 }
 
 

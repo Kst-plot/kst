@@ -29,18 +29,15 @@ void ScalarModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
     return;
   }
 
-
   PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
   QStringList scalars = dataSource->scalar().list();
   scalars.sort();
-  foreach(QString scalar, scalars) {
-    QList<QVariant> data;
+  foreach(const QString& scalar, scalars) {
     double value;
     DataScalar::ReadInfo readInfo(&value);
     dataSource->scalar().read(scalar, readInfo);
-    data << scalar << value;
-    new PrimitiveTreeItem(data, item);
+    new PrimitiveTreeItem(QList<QVariant>() << scalar << value, item);
   }
 }
 

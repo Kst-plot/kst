@@ -22,6 +22,7 @@
 namespace Kst {
 
 class Document;
+class ObjectStore;
 
 class ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
 {
@@ -30,15 +31,38 @@ class ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
   public:
     enum PrimitiveType { Scalar, String };
 
-    ViewPrimitiveDialog(QWidget *parent, Document *doc, PrimitiveType type);
+    ViewPrimitiveDialog(QWidget *parent, Document *doc);
     virtual ~ViewPrimitiveDialog();
 
-  private:
+  protected:
     void refresh();
+
+  private:
+    virtual QAbstractItemModel* createModel(ObjectStore *store) = 0;
+    void deleteModel();
 
     Document *_doc;
     QAbstractItemModel *_model;
-    PrimitiveType _type;
+};
+
+
+class ViewStringDialog : public ViewPrimitiveDialog
+{
+  public:
+    ViewStringDialog(QWidget *parent, Document *doc);
+
+  private:
+    QAbstractItemModel* createModel(ObjectStore *store);
+};
+
+
+class ViewScalarDialog : public ViewPrimitiveDialog
+{
+  public:
+    ViewScalarDialog(QWidget *parent, Document *doc);
+
+  private:
+    QAbstractItemModel* createModel(ObjectStore *store);
 };
 
 }
