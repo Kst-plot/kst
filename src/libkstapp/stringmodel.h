@@ -13,7 +13,7 @@
 #ifndef STRINGMODEL_H
 #define STRINGMODEL_H
 
-#include "scalarmodel.h"
+#include "primitivemodel.h"
 
 
 namespace Kst {
