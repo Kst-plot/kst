@@ -1493,13 +1493,13 @@ void MainWindow::showVectorEditor() {
 
 
 void MainWindow::showScalarEditor() {
-  ViewPrimitiveDialog *viewScalarDialog = new ViewPrimitiveDialog(this, _doc, ViewPrimitiveDialog::Scalar);
+  ViewPrimitiveDialog *viewScalarDialog = new ViewScalarDialog(this, _doc);
   viewScalarDialog->show();
 }
 
 
 void MainWindow::showStringEditor() {
-  ViewPrimitiveDialog *viewStringDialog = new ViewPrimitiveDialog(this, _doc, ViewPrimitiveDialog::String);
+  ViewPrimitiveDialog *viewStringDialog = new ViewStringDialog(this, _doc);
   viewStringDialog->show();
 }
 
