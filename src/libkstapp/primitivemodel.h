@@ -20,6 +20,13 @@
 #include "objectstore.h"
 
 
+#include "datavector.h"
+#include "generatedvector.h"
+#include "datamatrix.h"
+#include "generatedmatrix.h"
+#include "datasource.h"
+
+
 namespace Kst {
 
 class ObjectStore;
@@ -94,7 +101,14 @@ template<class T>
 void PrimitiveModel::createTree() {
   QList<ObjectPtr> objects = _store->objectList();
   foreach(const ObjectPtr& obj, objects) {
-    if (kst_cast<Primitive>(obj)) {
+    if (   kst_cast<Vector>(obj)
+        || kst_cast<Matrix>(obj)
+        || kst_cast<DataVector>(obj)
+        || kst_cast<DataMatrix>(obj)
+        || kst_cast<GeneratedVector>(obj)
+        || kst_cast<GeneratedMatrix>(obj)
+        || kst_cast<T>(obj))
+    {
       if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
         continue;
       }
@@ -137,7 +151,10 @@ void PrimitiveModel::addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTree
 
   ObjectList<Primitive> primitives = dataObject->outputPrimitives();
   foreach(PrimitivePtr prim, primitives) {
-    if (!kst_cast<String>(prim)) {
+    if (   kst_cast<Vector>(prim)
+        || kst_cast<Matrix>(prim)
+        || kst_cast<T>(prim))
+    {
       addPrimitivesMetas<T>(prim.data(), item);
     }
   }
