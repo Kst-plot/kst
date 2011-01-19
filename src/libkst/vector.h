@@ -157,6 +157,9 @@ class KSTCORE_EXPORT Vector : public Primitive
     ScalarMap scalars() const {return _scalars;}
     StringMap strings() const {return _strings;}
 
+    virtual PrimitiveMap metas() const;
+
+
     virtual ObjectList<Primitive> outputPrimitives() const;
 
   protected:

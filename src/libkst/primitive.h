@@ -28,10 +28,9 @@
 
 namespace Kst {
 
-class Scalar;
-class String;
-typedef ObjectMap<String> StringMap;
-typedef ObjectMap<Scalar> ScalarMap;
+
+class Primitive;
+typedef ObjectMap<Primitive> PrimitiveMap;
 
 class KSTCORE_EXPORT Primitive : public Object 
 {
@@ -56,9 +55,7 @@ class KSTCORE_EXPORT Primitive : public Object
 
     virtual ObjectList<Primitive> outputPrimitives() const {return ObjectList<Primitive>();}
 
-    // metas of Primitive
-    virtual ScalarMap scalars() const;
-    virtual StringMap strings() const;
+    virtual PrimitiveMap metas() const { return PrimitiveMap(); }
 
 
   protected:
@@ -84,7 +81,7 @@ class KSTCORE_EXPORT Primitive : public Object
 
 typedef SharedPtr<Primitive> PrimitivePtr;
 typedef ObjectList<Primitive> PrimitiveList;
-typedef ObjectMap<PrimitivePtr> PrimitiveMap;
+typedef ObjectMap<Primitive> PrimitiveMap;
 
 }
 

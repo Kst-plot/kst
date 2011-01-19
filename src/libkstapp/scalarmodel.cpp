@@ -92,18 +92,6 @@ int ScalarModel::columnCount(const QModelIndex& parent) const {
 }
 
 
-void ScalarModel::addScalar(ScalarPtr scalar, ScalarTreeItem* parent) {
-  addScalarTreeItem(QList<QVariant>() << scalar->Name() << scalar->value(), parent);
-}
-
-
-void ScalarModel::addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, ScalarTreeItem* parent) {
-  foreach(const ScalarPtr& scalar, scalarMap) {
-    addScalar(scalar, parent);
-  }
-}
-
-
 ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent) {
   ScalarTreeItem* parentItem;
   if (parent) {
@@ -115,19 +103,13 @@ ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, Scal
 }
 
 
-void ScalarModel::addPrimitivesScalars(const PrimitivePtr& prim, ScalarTreeItem* parent) {
-  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << prim->Name(), parent);
-  addScalars(prim->scalars(), item);
-}
-
-
 void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent) {
   ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
   ObjectList<Primitive> primitives = dataObject->outputPrimitives();
-  foreach(const PrimitivePtr& prim, primitives) {
+  foreach(PrimitivePtr prim, primitives) {
     if (!kst_cast<String>(prim)) {
-      addPrimitivesScalars(prim, item);
+      addPrimitivesScalars<Scalar>(prim.data(), item);
     }
   }
 }
@@ -156,7 +138,7 @@ void ScalarModel::createTree() {
       if (kst_cast<Scalar>(obj) && !kst_cast<Scalar>(obj)->orphan()) {
         continue;
       }
-      addPrimitivesScalars(kst_cast<Primitive>(obj));
+      addPrimitivesScalars<Scalar>(kst_cast<Primitive>(obj));
     } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
       addDataSource(kst_cast<DataSource>(obj));
     } else if (kst_cast<DataObject>(obj)) {
