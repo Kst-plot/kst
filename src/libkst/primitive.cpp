@@ -95,6 +95,11 @@ bool Primitive::used() const {
 }
 
 
+ScalarMap Primitive::scalars() const {return ScalarMap();}
+StringMap Primitive::strings() const {return StringMap();}
+
+
+
 }
 
 // vim: et sw=2 ts=2

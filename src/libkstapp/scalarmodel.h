@@ -58,13 +58,16 @@ public:
   QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
   void createTree();
+  
   void addScalar(ScalarPtr scalar, ScalarTreeItem* parent = 0);
-  void addVector(VectorPtr vector, ScalarTreeItem* parent = 0);
-  void addMatrix(MatrixPtr matrix, ScalarTreeItem* parent = 0);
+  void addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, ScalarTreeItem* parent = 0);
+
   void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0);
   void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
-  void addScalars(const QHash<QString, Kst::ScalarPtr> scalarMap, ScalarTreeItem* parent = 0);
+
+  void addPrimitivesScalars(const PrimitivePtr&, ScalarTreeItem* parent = 0);
 
 private:
   ObjectStore *_store;

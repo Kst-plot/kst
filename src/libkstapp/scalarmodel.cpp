@@ -121,41 +121,19 @@ ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, Scal
 }
 
 
-void ScalarModel::addVector(VectorPtr vector, ScalarTreeItem* parent) {
-  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << vector->Name(), parent);
-  addScalars(vector->scalars(), item);
-}
-
-
-void ScalarModel::addMatrix(MatrixPtr matrix, ScalarTreeItem* parent) {
-  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << matrix->Name(), parent);
-  addScalars(matrix->scalars(), item);
+void ScalarModel::addPrimitivesScalars(const PrimitivePtr& prim, ScalarTreeItem* parent) {
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << prim->Name(), parent);
+  addScalars(prim->scalars(), item);
 }
 
 
 void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent) {
   ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
-  QMap<QString, ObjectPtr> objectMap;
-  foreach(Scalar* scalar, dataObject->outputScalars()) {
-    objectMap.insert(scalar->Name(), scalar);
-  }
-  foreach(Vector* vector, dataObject->outputVectors()) {
-    objectMap.insert(vector->Name(), vector);
-  }
-  foreach(Matrix* matrix, dataObject->outputMatrices()) {
-    objectMap.insert(matrix->Name(), matrix);
-  }
-
-  QMapIterator<QString, ObjectPtr> iObject(objectMap);
-  while (iObject.hasNext()) {
-    iObject.next();
-    if (VectorPtr vector = kst_cast<Vector>(iObject.value())) {
-      addVector(vector, item);
-    } else if (MatrixPtr matrix = kst_cast<Matrix>(iObject.value())) {
-      addMatrix(matrix, item);
-    } else if (ScalarPtr scalar = kst_cast<Scalar>(iObject.value())) {
-      addScalar(scalar, item);
+  ObjectList<Primitive> primitives = dataObject->outputPrimitives();
+  foreach(const PrimitivePtr& prim, primitives) {
+    if (!kst_cast<String>(prim)) {
+      addPrimitivesScalars(prim, item);
     }
   }
 }
@@ -178,49 +156,23 @@ void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent
 
 
 void ScalarModel::createTree() {
-  QMap<QString, ObjectPtr> objectMap;
-  foreach(DataVector* vector, _store->getObjects<DataVector>()) {
-    objectMap.insert(vector->Name(), vector);
-  }
-  foreach(GeneratedVector* vector, _store->getObjects<GeneratedVector>()) {
-    objectMap.insert(vector->Name(), vector);
-  }
-  foreach(DataMatrix* matrix, _store->getObjects<DataMatrix>()) {
-    objectMap.insert(matrix->Name(), matrix);
-  }
-  foreach(GeneratedMatrix* matrix, _store->getObjects<GeneratedMatrix>()) {
-    objectMap.insert(matrix->Name(), matrix);
-  }
-  foreach(DataObjectPtr dataObject, _store->getObjects<DataObject>()) {
-    objectMap.insert(dataObject->Name(), dataObject);
-  }
-  foreach(Scalar* scalar, _store->getObjects<Scalar>()) {
-    if (scalar->orphan()) {
-      objectMap.insert(scalar->Name(), scalar);
-    }
-  }
-  foreach(DataSource* ds, _store->dataSourceList()) {
-    if (!ds->scalar().list().isEmpty()) {
-      objectMap.insert(ds->shortName(), ds);
-    }
-  }
-
-  QMapIterator<QString, ObjectPtr> iObject(objectMap);
-  while (iObject.hasNext()) {
-    iObject.next();
-    if (VectorPtr vector = kst_cast<Vector>(iObject.value())) {
-      addVector(vector);
-    } else if (MatrixPtr matrix = kst_cast<Matrix>(iObject.value())) {
-      addMatrix(matrix);
-    } else if (DataObjectPtr dataObject = kst_cast<DataObject>(iObject.value())) {
-      addDataObject(dataObject);
-    } else if (ScalarPtr scalar = kst_cast<Scalar>(iObject.value())) {
-      addScalar(scalar);
-    } else if (DataSourcePtr dataSource = kst_cast<DataSource>(iObject.value())) {
-      addDataSource(dataSource);
+  QList<ObjectPtr> objects = _store->objectList();
+  foreach(const ObjectPtr& obj, objects) {
+    if (kst_cast<Primitive>(obj)) {
+      if (kst_cast<Scalar>(obj) && !kst_cast<Scalar>(obj)->orphan()) {
+        continue;
+      }
+      addPrimitivesScalars(kst_cast<Primitive>(obj));
+    } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
+      addDataSource(kst_cast<DataSource>(obj));
+    } else if (kst_cast<DataObject>(obj)) {
+      addDataObject(kst_cast<DataObject>(obj));
     }
   }
 }
+
+
+
 
 int ScalarModel::rowCount(const QModelIndex& parent) const {
   ScalarTreeItem *parentItem;

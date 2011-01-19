@@ -28,6 +28,11 @@
 
 namespace Kst {
 
+class Scalar;
+class String;
+typedef ObjectMap<String> StringMap;
+typedef ObjectMap<Scalar> ScalarMap;
+
 class KSTCORE_EXPORT Primitive : public Object 
 {
     Q_OBJECT
@@ -50,6 +55,11 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual bool used() const;
 
     virtual ObjectList<Primitive> outputPrimitives() const {return ObjectList<Primitive>();}
+
+    // metas of Primitive
+    virtual ScalarMap scalars() const;
+    virtual StringMap strings() const;
+
 
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
