@@ -97,7 +97,7 @@ void PrimitiveModel::createTree() {
         continue;
       }
       addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
-    } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
+    } else if (kst_cast<DataSource>(obj)) {
       addDataSourcesMetas(kst_cast<DataSource>(obj));
     } else if (kst_cast<DataObject>(obj)) {
       addDataObjectsMetas<T>(kst_cast<DataObject>(obj));

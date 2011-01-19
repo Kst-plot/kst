@@ -25,6 +25,10 @@ namespace Kst {
 
 
 void StringModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent) {
+  if (dataSource->string().list().isEmpty()) {
+    return;
+  }
+
   PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
   QStringList scalars = dataSource->string().list();
