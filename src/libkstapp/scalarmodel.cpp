@@ -73,26 +73,25 @@ ScalarTreeItem *ScalarTreeItem::parent() {
 }
 
 
-ScalarModel::ScalarModel(ObjectStore *store)
+PrimitiveModel::PrimitiveModel(ObjectStore *store)
 : QAbstractItemModel(), _store(store) {
   QList<QVariant> rootData;
   rootData << "Scalars";
   _rootItem = new ScalarTreeItem(rootData);
-  createTree();
 }
 
 
-ScalarModel::~ScalarModel() {
+PrimitiveModel::~PrimitiveModel() {
 }
 
 
-int ScalarModel::columnCount(const QModelIndex& parent) const {
+int PrimitiveModel::columnCount(const QModelIndex& parent) const {
   Q_UNUSED(parent)
   return 2;
 }
 
 
-ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent) {
+ScalarTreeItem* PrimitiveModel::addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent) {
   ScalarTreeItem* parentItem;
   if (parent) {
     parentItem = parent;
@@ -100,18 +99,6 @@ ScalarTreeItem* ScalarModel::addScalarTreeItem(const QList<QVariant>& data, Scal
     parentItem = _rootItem;
   }
   return new ScalarTreeItem(data, parentItem);
-}
-
-
-void ScalarModel::addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent) {
-  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
-
-  ObjectList<Primitive> primitives = dataObject->outputPrimitives();
-  foreach(PrimitivePtr prim, primitives) {
-    if (!kst_cast<String>(prim)) {
-      addPrimitivesScalars<Scalar>(prim.data(), item);
-    }
-  }
 }
 
 
@@ -131,26 +118,10 @@ void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent
 }
 
 
-void ScalarModel::createTree() {
-  QList<ObjectPtr> objects = _store->objectList();
-  foreach(const ObjectPtr& obj, objects) {
-    if (kst_cast<Primitive>(obj)) {
-      if (kst_cast<Scalar>(obj) && !kst_cast<Scalar>(obj)->orphan()) {
-        continue;
-      }
-      addPrimitivesScalars<Scalar>(kst_cast<Primitive>(obj));
-    } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
-      addDataSource(kst_cast<DataSource>(obj));
-    } else if (kst_cast<DataObject>(obj)) {
-      addDataObject(kst_cast<DataObject>(obj));
-    }
-  }
-}
 
 
 
-
-int ScalarModel::rowCount(const QModelIndex& parent) const {
+int PrimitiveModel::rowCount(const QModelIndex& parent) const {
   ScalarTreeItem *parentItem;
   if (parent.column() > 0)
       return 0;
@@ -164,7 +135,7 @@ int ScalarModel::rowCount(const QModelIndex& parent) const {
 }
 
 
-QVariant ScalarModel::data(const QModelIndex& index, int role) const {
+QVariant PrimitiveModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) {
     return QVariant();
   }
@@ -179,7 +150,7 @@ QVariant ScalarModel::data(const QModelIndex& index, int role) const {
 }
 
 
-QModelIndex ScalarModel::index(int row, int col, const QModelIndex& parent) const {
+QModelIndex PrimitiveModel::index(int row, int col, const QModelIndex& parent) const {
   if (row < 0 || col < 0 || col > 1) {
     return QModelIndex();
   }
@@ -202,7 +173,7 @@ QModelIndex ScalarModel::index(int row, int col, const QModelIndex& parent) cons
 }
 
 
-QModelIndex ScalarModel::parent(const QModelIndex& index) const {
+QModelIndex PrimitiveModel::parent(const QModelIndex& index) const {
   Q_ASSERT(_store);
 
   if (!index.isValid())
@@ -218,7 +189,7 @@ QModelIndex ScalarModel::parent(const QModelIndex& index) const {
 }
 
 
-QVariant ScalarModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, int role) const {
   if (role != Qt::DisplayRole) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }

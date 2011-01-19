@@ -43,14 +43,14 @@ class ObjectStore;
      ScalarTreeItem *parentItem;
  };
 
-class ScalarModel : public QAbstractItemModel
+class PrimitiveModel : public QAbstractItemModel
 {
 
   enum ColumnID { Name, Value };
 
 public:
-  ScalarModel(ObjectStore *store);
-  ~ScalarModel();
+  PrimitiveModel(ObjectStore *store);
+  ~PrimitiveModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -59,7 +59,23 @@ public:
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-  void createTree();
+  template<class T>
+  void createTree() {
+    QList<ObjectPtr> objects = _store->objectList();
+    foreach(const ObjectPtr& obj, objects) {
+      if (kst_cast<Primitive>(obj)) {
+        if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
+          continue;
+        }
+        addPrimitivesScalars<T>(kst_cast<Primitive>(obj));
+      } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
+        addDataSource(kst_cast<DataSource>(obj));
+      } else if (kst_cast<DataObject>(obj)) {
+        addDataObject<T>(kst_cast<DataObject>(obj));
+      }
+    }
+  }
+
 
   template<class T>
   void addScalar(T* scalar, ScalarTreeItem* parent = 0) {
@@ -70,7 +86,7 @@ public:
   void addScalars(const PrimitiveMap& scalarMap, ScalarTreeItem* parent) {
     foreach(const PrimitivePtr& scalar, scalarMap) {
       if(kst_cast<T>(scalar)) {
-        addScalar<Scalar>(kst_cast<T>(scalar), parent);
+        addScalar<T>(kst_cast<T>(scalar), parent);
       }
     }
   }
@@ -81,17 +97,43 @@ public:
     addScalars<T>(prim->metas(), item);
   }
 
-  void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0);
-  void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
+  template<class T>
+  void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0) {
+    ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
+    ObjectList<Primitive> primitives = dataObject->outputPrimitives();
+    foreach(PrimitivePtr prim, primitives) {
+      if (!kst_cast<String>(prim)) {
+        addPrimitivesScalars<T>(prim.data(), item);
+      }
+    }
+  }
+  
+  virtual void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0) = 0;
+
+protected:
+  ScalarTreeItem* addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent);
 
 private:
   ObjectStore *_store;
   ScalarTreeItem *_rootItem;
-
-  ScalarTreeItem* addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent);
-
 };
+
+class ScalarModel : public PrimitiveModel
+{
+
+  enum ColumnID { Name, Value };
+
+public:
+  ScalarModel(ObjectStore *store) : PrimitiveModel(store) {
+    createTree<Scalar>();
+  }
+
+  void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
+};
+
+
+
 
 }
 
