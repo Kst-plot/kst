@@ -13,37 +13,25 @@
 #ifndef STRINGMODEL_H
 #define STRINGMODEL_H
 
-#include <QAbstractItemModel>
-#include "dataobject.h"
-#include "object.h"
+#include "scalarmodel.h"
+
 
 namespace Kst {
 
-class ObjectStore;
-
-class StringModel : public QAbstractItemModel
+class StringModel : public PrimitiveModel
 {
 
   enum ColumnID { Name, Value };
 
 public:
-  StringModel(ObjectStore *store);
-  ~StringModel();
+  StringModel(ObjectStore *store) : PrimitiveModel(store) {
+  createTree<String>();
+  }
 
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  QModelIndex index(int row, int col, const QModelIndex& parent = QModelIndex()) const;
-  QModelIndex parent(const QModelIndex& index) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  void generateObjectList();
 
-private:
-  QVariant stringData(StringPtr string, const QModelIndex& index) const;
-
-  ObjectStore *_store;
-  ObjectList<Object> _objectList;
+  void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
 };
+
 
 }
 

@@ -23,124 +23,22 @@
 
 namespace Kst {
 
-StringModel::StringModel(ObjectStore *store)
-: QAbstractItemModel(), _store(store) {
-  generateObjectList();
-}
 
+void StringModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent) {
+  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
-StringModel::~StringModel() {
-}
-
-
-int StringModel::columnCount(const QModelIndex& parent) const {
-  Q_UNUSED(parent)
-  return 2;
-}
-
-
-void StringModel::generateObjectList() {
-  ObjectList<DataObject> dol = _store->getObjects<DataObject>();
-  ObjectList<String> sol = _store->getObjects<String>();
-
-  foreach(DataObject* dataObject, dol) {
-    foreach(StringPtr string, dataObject->outputStrings()) {
-      _objectList.append(string);
-    }
-  }
-
-  foreach(String* string, sol) {
-    if (string->orphan()) {
-      _objectList.append(string);
-    }
+  QStringList scalars = dataSource->string().list();
+  scalars.sort();
+  foreach(QString scalar, scalars) {
+    QList<QVariant> data;
+    QString value;
+    DataString::ReadInfo readInfo(&value);
+    dataSource->string().read(scalar, readInfo);
+    data << scalar << value;
+    new ScalarTreeItem(data, item);
   }
 }
 
-int StringModel::rowCount(const QModelIndex& parent) const {
-  int rc = 0;
-  if (!parent.isValid()) {
-    rc = _objectList.count();
-  }
-  return rc;
-}
-
-
-QVariant StringModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid()) {
-    return QVariant();
-  }
-
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  const int row = index.row();
-  if (row < _objectList.count()) {
-    if (StringPtr p = kst_cast<String>(_objectList.at(row))) {
-      return stringData(p, index);
-    }
-  }
-
-  return QVariant();
-}
-
-
-QVariant StringModel::stringData(StringPtr string, const QModelIndex& index) const {
-  QVariant rc;
-
-  if (string) {
-    if (index.column() == Name) {
-      string->readLock();
-      rc.setValue(string->Name());
-      string->unlock();
-    } else if (index.column() == Value) {
-      string->readLock();
-      rc = QVariant(string->value());
-      string->unlock();
-    }
-  }
-
-  return rc;
-}
-
-
-QModelIndex StringModel::index(int row, int col, const QModelIndex& parent) const {
-  if (row < 0 || col < 0 || col > 1) {
-    return QModelIndex();
-  }
-
-  const int count = _objectList.count();
-  ObjectPtr object = 0;
-  if (!parent.isValid()) {
-    if (row < count) {
-      return createIndex(row, col);
-    }
-  }
-
-  return QModelIndex();
-}
-
-
-QModelIndex StringModel::parent(const QModelIndex& index) const {
-  Q_UNUSED(index);
-  return QModelIndex();
-}
-
-
-QVariant StringModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  if (role != Qt::DisplayRole) {
-    return QAbstractItemModel::headerData(section, orientation, role);
-  }
-  switch (section) {
-    case Name:
-      return tr("Name");
-    case Value:
-      return tr("Value");
-    default:
-      break;
-  }
-  return QVariant();
-}
 
 }
 
