@@ -632,10 +632,10 @@ ObjectList<Primitive> Vector::outputPrimitives() const {
 PrimitiveMap Vector::metas() const
 {
   PrimitiveMap meta;
-  for (QHash<QString, ScalarPtr>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+  for (QHash<QString, StringPtr>::ConstIterator it = _strings.begin(); it != _strings.end(); ++it) {
     meta[it.key()] = it.value();
   }
-  for (QHash<QString, StringPtr>::ConstIterator it = _strings.begin(); it != _strings.end(); ++it) {
+  for (QHash<QString, ScalarPtr>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
     meta[it.key()] = it.value();
   }
   return meta;

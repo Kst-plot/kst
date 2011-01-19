@@ -53,9 +53,9 @@ class KSTCORE_EXPORT Primitive : public Object
 
     virtual bool used() const;
 
-    virtual ObjectList<Primitive> outputPrimitives() const {return ObjectList<Primitive>();}
+    virtual ObjectList<Primitive> outputPrimitives() const = 0;
 
-    virtual PrimitiveMap metas() const { return PrimitiveMap(); }
+    virtual PrimitiveMap metas() const = 0;
 
 
   protected:

@@ -24,7 +24,8 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
-class KSTCORE_EXPORT String : public Primitive {
+class KSTCORE_EXPORT String : public Primitive
+{
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
 
@@ -36,6 +37,7 @@ class KSTCORE_EXPORT String : public Primitive {
     virtual QString descriptionTip() const;
     virtual QString sizeString() const;
     virtual QString propertyString() const;
+
   protected:
     String(ObjectStore *store);
 
@@ -53,6 +55,9 @@ class KSTCORE_EXPORT String : public Primitive {
 
     String& operator=(const QString& v);
     String& operator=(const char *v);
+
+    virtual ObjectList<Primitive> outputPrimitives() const { return ObjectList<Primitive>(); }
+    virtual PrimitiveMap metas() const { return PrimitiveMap(); }
 
   public slots:
     /* return the value of the string */

@@ -25,7 +25,8 @@ class QXmlStreamWriter;
 namespace Kst {
 
 /** The base class for all scalars. */
-class KSTCORE_EXPORT Scalar : public Primitive {
+class KSTCORE_EXPORT Scalar : public Primitive
+{
   Q_OBJECT
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
   Q_PROPERTY(double value READ value WRITE setValue)
@@ -39,6 +40,7 @@ class KSTCORE_EXPORT Scalar : public Primitive {
     virtual QString _automaticDescriptiveName() const;
 
     virtual void _initializeShortName();
+
   public:
     virtual ~Scalar();
 
@@ -61,6 +63,10 @@ class KSTCORE_EXPORT Scalar : public Primitive {
 
     virtual QString propertyString() const;
     virtual QString sizeString() const;
+
+    virtual ObjectList<Primitive> outputPrimitives() const { return ObjectList<Primitive>(); }
+    virtual PrimitiveMap metas() const { return PrimitiveMap(); }
+
   public slots:
     double value() const;
 

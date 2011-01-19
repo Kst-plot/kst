@@ -26,7 +26,8 @@ namespace Kst {
 class Matrix;
 typedef SharedPtr<Matrix> MatrixPtr;
 
-class KSTCORE_EXPORT Matrix : public Primitive {
+class KSTCORE_EXPORT Matrix : public Primitive
+{
   Q_OBJECT
 
   public:
@@ -143,6 +144,8 @@ class KSTCORE_EXPORT Matrix : public Primitive {
     VectorMap vectors() const {return _vectors;}
     ScalarMap scalars() const {return _scalars;}
     StringMap strings() const {return _strings;}
+
+    virtual PrimitiveMap metas() const;
 
     virtual ObjectList<Primitive> outputPrimitives() const;
 

@@ -653,6 +653,22 @@ ObjectList<Primitive> Matrix::outputPrimitives() const {
   return primitive_list;
 }
 
+PrimitiveMap Matrix::metas() const
+{
+  PrimitiveMap meta;
+  for (QHash<QString, StringPtr>::ConstIterator it = _strings.begin(); it != _strings.end(); ++it) {
+    meta[it.key()] = it.value();
+  }
+  for (QHash<QString, ScalarPtr>::ConstIterator it = _scalars.begin(); it != _scalars.end(); ++it) {
+    meta[it.key()] = it.value();
+  }
+  for (QHash<QString, VectorPtr>::ConstIterator it = _vectors.begin(); it != _vectors.end(); ++it) {
+    meta[it.key()] = it.value();
+  }
+  return meta;
+}
+
+
 
 }
 // vim: ts=2 sw=2 et
