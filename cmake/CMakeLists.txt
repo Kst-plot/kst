@@ -100,11 +100,11 @@ if(APPLE)
 endif()
 
 if(APPLE)
-	set(kst_pch 0 CACHE BOOL "disable pch on mac, not supported yet" FORCE)
+	set(kst_pch 0 CACHE BOOL "Disable pch on Mac, not supported yet" FORCE)
 endif()
 
-if(kst_pch)
-	set(kst_merge_files 0 CACHE BOOL "merge files disabled because of using pchs" FORCE)
+if(kst_merge_files)
+	set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
 endif()
 
 
