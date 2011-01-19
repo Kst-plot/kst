@@ -24,8 +24,8 @@
 namespace Kst {
 
 
-void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent) {
-  ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataSource->Name(), parent);
+void ScalarModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent) {
+  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataSource->Name(), parent);
 
   QStringList scalars = dataSource->scalar().list();
   scalars.sort();
@@ -35,7 +35,7 @@ void ScalarModel::addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent
     DataScalar::ReadInfo readInfo(&value);
     dataSource->scalar().read(scalar, readInfo);
     data << scalar << value;
-    new ScalarTreeItem(data, item);
+    new PrimitiveTreeItem(data, item);
   }
 }
 

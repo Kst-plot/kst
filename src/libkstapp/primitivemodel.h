@@ -22,26 +22,28 @@ namespace Kst {
 
 class ObjectStore;
 
- class ScalarTreeItem
+ class PrimitiveTreeItem
  {
  public:
-     explicit ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent = 0);
-     ~ScalarTreeItem();
+     explicit PrimitiveTreeItem(const QList<QVariant> &data, PrimitiveTreeItem *parent = 0);
+     ~PrimitiveTreeItem();
 
-     void addChild(ScalarTreeItem *child);
+     void addChild(PrimitiveTreeItem *child);
 
-     ScalarTreeItem *child(int row);
+     PrimitiveTreeItem *child(int row);
      int childCount() const;
      int columnCount() const;
      QVariant data(int column) const;
      int row() const;
-     ScalarTreeItem *parent();
+     PrimitiveTreeItem *parent();
 
  private:
-     QList<ScalarTreeItem*> childItems;
+     QList<PrimitiveTreeItem*> childItems;
      QList<QVariant> itemData;
-     ScalarTreeItem *parentItem;
+     PrimitiveTreeItem *parentItem;
  };
+
+
 
 class PrimitiveModel : public QAbstractItemModel
 {
@@ -67,57 +69,60 @@ public:
         if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
           continue;
         }
-        addPrimitivesScalars<T>(kst_cast<Primitive>(obj));
+        addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
       } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
-        addDataSource(kst_cast<DataSource>(obj));
+        addDataSourcesMetas(kst_cast<DataSource>(obj));
       } else if (kst_cast<DataObject>(obj)) {
-        addDataObject<T>(kst_cast<DataObject>(obj));
+        addDataObjectsMetas<T>(kst_cast<DataObject>(obj));
       }
     }
   }
 
 
   template<class T>
-  void addScalar(T* scalar, ScalarTreeItem* parent = 0) {
-    addScalarTreeItem(QList<QVariant>() << scalar->Name() << scalar->value(), parent);
+  void addMeta(T* m, PrimitiveTreeItem* parent = 0) {
+    addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
   }
 
   template<class T>
-  void addScalars(const PrimitiveMap& scalarMap, ScalarTreeItem* parent) {
-    foreach(const PrimitivePtr& scalar, scalarMap) {
-      if(kst_cast<T>(scalar)) {
-        addScalar<T>(kst_cast<T>(scalar), parent);
+  void addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent) {
+    foreach(const PrimitivePtr& m, metarMap) {
+      if(kst_cast<T>(m)) {
+        addMeta<T>(kst_cast<T>(m), parent);
       }
     }
   }
 
   template<class T>
-  void addPrimitivesScalars(const PrimitivePtr& prim, ScalarTreeItem* parent = 0) {
-    ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << prim->Name(), parent);
-    addScalars<T>(prim->metas(), item);
+  void addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent = 0) {
+    PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
+    addMetas<T>(prim->metas(), item);
   }
 
   template<class T>
-  void addDataObject(DataObjectPtr dataObject, ScalarTreeItem* parent = 0) {
-    ScalarTreeItem* item = addScalarTreeItem(QList<QVariant>() << dataObject->Name(), parent);
+  void addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent = 0) {
+    PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
     ObjectList<Primitive> primitives = dataObject->outputPrimitives();
     foreach(PrimitivePtr prim, primitives) {
       if (!kst_cast<String>(prim)) {
-        addPrimitivesScalars<T>(prim.data(), item);
+        addPrimitivesMetas<T>(prim.data(), item);
       }
     }
   }
   
-  virtual void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0) = 0;
+  virtual void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0) = 0;
 
 protected:
-  ScalarTreeItem* addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent);
+  PrimitiveTreeItem* addPrimitiveTreeItem(const QList<QVariant>& data, PrimitiveTreeItem* parent);
 
 private:
   ObjectStore *_store;
-  ScalarTreeItem *_rootItem;
+  PrimitiveTreeItem *_rootItem;
 };
+
+
+
 
 
 

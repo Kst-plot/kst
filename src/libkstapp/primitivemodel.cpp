@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-ScalarTreeItem::ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *parent) {
+PrimitiveTreeItem::PrimitiveTreeItem(const QList<QVariant> &data, PrimitiveTreeItem *parent) {
   parentItem = parent;
   itemData = data; 
   if (parent) {
@@ -32,43 +32,43 @@ ScalarTreeItem::ScalarTreeItem(const QList<QVariant> &data, ScalarTreeItem *pare
 }
 
 
-ScalarTreeItem::~ScalarTreeItem() {
+PrimitiveTreeItem::~PrimitiveTreeItem() {
   qDeleteAll(childItems);
 }
 
 
-void ScalarTreeItem::addChild(ScalarTreeItem *item) {
+void PrimitiveTreeItem::addChild(PrimitiveTreeItem *item) {
   childItems.append(item);
 }
 
 
-ScalarTreeItem *ScalarTreeItem::child(int row) {
+PrimitiveTreeItem *PrimitiveTreeItem::child(int row) {
     return childItems.value(row);
 }
 
-int ScalarTreeItem::childCount() const {
+int PrimitiveTreeItem::childCount() const {
     return childItems.count();
 }
 
 
-int ScalarTreeItem::row() const {
+int PrimitiveTreeItem::row() const {
     if (parentItem)
-        return parentItem->childItems.indexOf(const_cast<ScalarTreeItem*>(this));
+        return parentItem->childItems.indexOf(const_cast<PrimitiveTreeItem*>(this));
 
     return 0;
 }
 
 
-int ScalarTreeItem::columnCount() const {
+int PrimitiveTreeItem::columnCount() const {
     return itemData.count();
 }
 
 
-QVariant ScalarTreeItem::data(int column) const {
+QVariant PrimitiveTreeItem::data(int column) const {
     return itemData.value(column);
 }
 
-ScalarTreeItem *ScalarTreeItem::parent() {
+PrimitiveTreeItem *PrimitiveTreeItem::parent() {
     return parentItem;
 }
 
@@ -77,7 +77,7 @@ PrimitiveModel::PrimitiveModel(ObjectStore *store)
 : QAbstractItemModel(), _store(store) {
   QList<QVariant> rootData;
   rootData << "Scalars";
-  _rootItem = new ScalarTreeItem(rootData);
+  _rootItem = new PrimitiveTreeItem(rootData);
 }
 
 
@@ -91,28 +91,28 @@ int PrimitiveModel::columnCount(const QModelIndex& parent) const {
 }
 
 
-ScalarTreeItem* PrimitiveModel::addScalarTreeItem(const QList<QVariant>& data, ScalarTreeItem* parent) {
-  ScalarTreeItem* parentItem;
+PrimitiveTreeItem* PrimitiveModel::addPrimitiveTreeItem(const QList<QVariant>& data, PrimitiveTreeItem* parent) {
+  PrimitiveTreeItem* parentItem;
   if (parent) {
     parentItem = parent;
   } else {
     parentItem = _rootItem;
   }
-  return new ScalarTreeItem(data, parentItem);
+  return new PrimitiveTreeItem(data, parentItem);
 }
 
 
 
 
 int PrimitiveModel::rowCount(const QModelIndex& parent) const {
-  ScalarTreeItem *parentItem;
+  PrimitiveTreeItem *parentItem;
   if (parent.column() > 0)
       return 0;
 
   if (!parent.isValid())
       parentItem = _rootItem;
   else
-      parentItem = static_cast<ScalarTreeItem*>(parent.internalPointer());
+      parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
 
   return parentItem->childCount();
 }
@@ -127,7 +127,7 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const {
     return QVariant();
   }
 
-  ScalarTreeItem *item = static_cast<ScalarTreeItem*>(index.internalPointer());
+  PrimitiveTreeItem *item = static_cast<PrimitiveTreeItem*>(index.internalPointer());
 
   return item->data(index.column());
 }
@@ -141,14 +141,14 @@ QModelIndex PrimitiveModel::index(int row, int col, const QModelIndex& parent) c
   if (!hasIndex(row, col, parent))
       return QModelIndex();
 
-  ScalarTreeItem *parentItem;
+  PrimitiveTreeItem *parentItem;
 
   if (!parent.isValid())
       parentItem = _rootItem;
   else
-      parentItem = static_cast<ScalarTreeItem*>(parent.internalPointer());
+      parentItem = static_cast<PrimitiveTreeItem*>(parent.internalPointer());
 
-  ScalarTreeItem *childItem = parentItem->child(row);
+  PrimitiveTreeItem *childItem = parentItem->child(row);
   if (childItem)
       return createIndex(row, col, childItem);
   else
@@ -162,8 +162,8 @@ QModelIndex PrimitiveModel::parent(const QModelIndex& index) const {
   if (!index.isValid())
       return QModelIndex();
 
-  ScalarTreeItem *childItem = static_cast<ScalarTreeItem*>(index.internalPointer());
-  ScalarTreeItem *parentItem = childItem->parent();
+  PrimitiveTreeItem *childItem = static_cast<PrimitiveTreeItem*>(index.internalPointer());
+  PrimitiveTreeItem *parentItem = childItem->parent();
 
   if (parentItem == _rootItem)
       return QModelIndex();

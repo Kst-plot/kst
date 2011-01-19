@@ -29,7 +29,7 @@ public:
     createTree<Scalar>();
   }
 
-  void addDataSource(DataSourcePtr dataSource, ScalarTreeItem* parent = 0);
+  void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0);
 };
 
 
