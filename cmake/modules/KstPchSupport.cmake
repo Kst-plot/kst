@@ -69,7 +69,11 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		file(WRITE ${_header}.tmp "#include \"${_header}\"\n")
 		execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header}.tmp ${_header}.cpp)
 		
-		set(use_pch /Fp${_header}.${CMAKE_BUILD_TYPE}.pch)
+		if(MSVC_IDE)
+			set(use_pch "/Fp${_header}.\$(Configuration).pch")
+		else()
+			set(use_pch /Fp${_header}.pch)
+		endif()
 		set_source_files_properties(${_header}.cpp PROPERTIES COMPILE_FLAGS "/Yc\"${_header}\" ${use_pch}")
 		
 		# Bug in cmake: next line also compile .c files with pchs
