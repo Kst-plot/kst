@@ -62,54 +62,19 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   template<class T>
-  void createTree() {
-    QList<ObjectPtr> objects = _store->objectList();
-    foreach(const ObjectPtr& obj, objects) {
-      if (kst_cast<Primitive>(obj)) {
-        if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
-          continue;
-        }
-        addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
-      } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
-        addDataSourcesMetas(kst_cast<DataSource>(obj));
-      } else if (kst_cast<DataObject>(obj)) {
-        addDataObjectsMetas<T>(kst_cast<DataObject>(obj));
-      }
-    }
-  }
-
+  void createTree();
 
   template<class T>
-  void addMeta(T* m, PrimitiveTreeItem* parent = 0) {
-    addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
-  }
+  void addMeta(T* m, PrimitiveTreeItem* parent = 0);
 
   template<class T>
-  void addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent) {
-    foreach(const PrimitivePtr& m, metarMap) {
-      if(kst_cast<T>(m)) {
-        addMeta<T>(kst_cast<T>(m), parent);
-      }
-    }
-  }
+  void addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent);
 
   template<class T>
-  void addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent = 0) {
-    PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
-    addMetas<T>(prim->metas(), item);
-  }
+  void addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent = 0);
 
   template<class T>
-  void addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent = 0) {
-    PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataObject->Name(), parent);
-
-    ObjectList<Primitive> primitives = dataObject->outputPrimitives();
-    foreach(PrimitivePtr prim, primitives) {
-      if (!kst_cast<String>(prim)) {
-        addPrimitivesMetas<T>(prim.data(), item);
-      }
-    }
-  }
+  void addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent = 0);
   
   virtual void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0) = 0;
 
@@ -123,6 +88,56 @@ private:
 
 
 
+template<class T>
+void PrimitiveModel::createTree() {
+  QList<ObjectPtr> objects = _store->objectList();
+  foreach(const ObjectPtr& obj, objects) {
+    if (kst_cast<Primitive>(obj)) {
+      if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
+        continue;
+      }
+      addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
+    } else if (kst_cast<DataSource>(obj) && !kst_cast<DataSource>(obj)->scalar().list().isEmpty()) {
+      addDataSourcesMetas(kst_cast<DataSource>(obj));
+    } else if (kst_cast<DataObject>(obj)) {
+      addDataObjectsMetas<T>(kst_cast<DataObject>(obj));
+    }
+  }
+}
+
+
+template<class T>
+void PrimitiveModel::addMeta(T* m, PrimitiveTreeItem* parent) {
+  addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
+}
+
+template<class T>
+void PrimitiveModel::addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent) {
+  foreach(const PrimitivePtr& m, metarMap) {
+    if(kst_cast<T>(m)) {
+      addMeta<T>(kst_cast<T>(m), parent);
+    }
+  }
+}
+
+template<class T>
+void PrimitiveModel::addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent) {
+  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
+  addMetas<T>(prim->metas(), item);
+}
+
+template<class T>
+void PrimitiveModel::addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent) {
+  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataObject->Name(), parent);
+
+  ObjectList<Primitive> primitives = dataObject->outputPrimitives();
+  foreach(PrimitivePtr prim, primitives) {
+    if (!kst_cast<String>(prim)) {
+      addPrimitivesMetas<T>(prim.data(), item);
+    }
+  }
+}
+  
 
 
 
