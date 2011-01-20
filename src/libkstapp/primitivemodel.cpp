@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 *                                                                         *
 *   copyright : (C) 2011 The University of Toronto                        *
 *                   netterfield@astro.utoronto.ca                         *
@@ -20,6 +20,8 @@
 #include <datamatrix.h>
 #include <generatedmatrix.h>
 #include <datasource.h>
+
+#include <QFileInfo>
 
 namespace Kst {
 

@@ -135,10 +135,14 @@ Using the merged files build
 	file, all listed files will be compiled separately. Sometimes this is needed because
 	of too much compiler errors, and it is simpler not to merge the file.
 
-	Adding new files
-	When you add new files the merging files have to be rebuild:
+	- Adding new files
+	  When you add new files the merging files have to be rebuild:
 		cmake -Dkst_merge_rebuild=1
-	Or start over by complety cleaning the build folder.
+	  Or start over by completely  cleaning the build folder.
+
+	- Starting over with same configuration
+	  Delete all files but CMakeCache.txt and call
+		cmake .
 
 
 Packaging
@@ -169,7 +173,7 @@ Status
 	Windows, and MacOSX.
 	
 	Nice to have:
-	- add more package rules: nsis, mac-bundles
+	- add more package rules: Mac-bundles
 	- installation rules on Mac
 	- add pre-compiled headers for Mac, Xcode
 

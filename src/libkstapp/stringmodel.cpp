@@ -33,6 +33,7 @@ void StringModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
     return;
   }
 
+
   strings.sort();
   foreach(const QString& str, strings) {
     QString value;
