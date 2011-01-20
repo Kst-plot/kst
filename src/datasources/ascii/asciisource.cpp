@@ -256,8 +256,9 @@ bool AsciiSource::initRowIndex()
     if (!openValidFile(file)) {
       return false;
     }
+    int header_row = 0;
     int left = _config._dataLine;
-    int didRead = 0;    
+    int didRead = 0;
     while (left > 0) {
       QByteArray line = file.readLine();
       if (line.isEmpty() || file.atEnd()) {
@@ -265,6 +266,8 @@ bool AsciiSource::initRowIndex()
       }
       didRead += line.size();
       --left;
+      _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
+      header_row++;
     }
     _rowIndex[0] = didRead;
   }
@@ -504,12 +507,15 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
           }
         }
       }
+      /*
+      // TODO enable by option: "Add unparsable lines as strings"
       if (!found_value) {
-        if (_rowIndex.size() > s+1) {
-          QString unparsable = QString::fromAscii(&buffer[_rowIndex[s]], _rowIndex[s+1] - _rowIndex[s]);
-          _strings[QString("Line %1").arg(i)] = unparsable.trimmed();
+        if (_rowIndex.size() > s + 1) {
+          QString unparsable = QString::fromAscii(&buffer[_rowIndex[s]], _rowIndex[s + 1] - _rowIndex[s]);
+          _strings[QString("Unparsable %1").arg(i)] = unparsable.trimmed();
         }
       }
+      */
     }
   } else {
     return 0;
