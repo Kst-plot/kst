@@ -33,7 +33,7 @@ kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
 kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
-kst_option(edit_cont "Enable <Edit and Continue> for Visual Studio" OFF win)
+kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 
 
 message(STATUS)
@@ -125,14 +125,13 @@ if(MSVC)
 	add_definitions(-D_USE_MATH_DEFINES)
 endif()
 
-if(MSVC_IDE AND (kst_edit_cont OR kst_merge_files))
+if(MSVC_IDE AND kst_edit_cont)
 	# Enable <Edit and Continue> in Visual Studio
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI")
 	if(kst_pch)
 		# Studio bug: <Visual Studio 2005 "Force Includes" Breaks Edit and Continue with Pre-compiled Headers>
 		set(kst_pch 0 CACHE BOOL "Disable pch because of Edit&Continue" FORCE)
 	endif()
-	message(STATUS "# Studio bug: Visual Studio 2005 Force Includes Breaks Edit and Continue with Pre-compiled Headers")
 endif()
 
 

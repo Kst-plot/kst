@@ -112,6 +112,7 @@ Options
 	-- kst_dataobjects          = ON     : Build dataobject plugins
 	-- kst_test                 = OFF    : Build unit tests
 	-- kst_pch                  = OFF    : Use precompiled headers
+	-- kst_edit_cont            = OFF    : Enable "Edit and Continue" for Visual Studio
 
 	
 	To enable a option pass the value ON or 1, eg
