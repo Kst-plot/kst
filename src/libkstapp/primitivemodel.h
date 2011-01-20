@@ -106,13 +106,13 @@ void PrimitiveModel::createTree() {
         || kst_cast<DataVector>(obj)
         || kst_cast<DataMatrix>(obj)
         || kst_cast<GeneratedVector>(obj)
-        || kst_cast<GeneratedMatrix>(obj)
-        || kst_cast<T>(obj))
+        || kst_cast<GeneratedMatrix>(obj))
     {
-      if (kst_cast<T>(obj) && !kst_cast<T>(obj)->orphan()) {
-        continue;
-      }
       addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
+    } else if (kst_cast<T>(obj)) {
+      if (kst_cast<T>(obj) && kst_cast<T>(obj)->orphan()) {
+        addMeta<T>(kst_cast<T>(obj));
+      }
     } else if (kst_cast<DataSource>(obj)) {
       addDataSourcesMetas(kst_cast<DataSource>(obj));
     } else if (kst_cast<DataObject>(obj)) {
