@@ -25,8 +25,12 @@
 
 #include <QVarLengthArray>
 #include <QFile>
+#include <QMap>
 
+
+class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
+
 
 class AsciiSource : public Kst::DataSource
 {
@@ -85,11 +89,12 @@ class AsciiSource : public Kst::DataSource
     bool _fieldListComplete;
 
     QStringList _scalarList;
-    QStringList _stringList;
+    QMap<QString, QString> _strings;
     QStringList _fieldList;
 
     int columnOfField(const QString& field) const;
 
+    DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;
 
     bool openValidFile(QFile &file);
@@ -98,6 +103,7 @@ class AsciiSource : public Kst::DataSource
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
     // TODO remove
+    friend class DataInterfaceAsciiString;
     friend class DataInterfaceAsciiVector;
 };
 

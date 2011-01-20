@@ -99,6 +99,56 @@ QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
 
 
 
+//
+// String interface
+//
+
+class DataInterfaceAsciiString : public DataSource::DataInterface<DataString>
+{
+public:
+  DataInterfaceAsciiString(AsciiSource& s) : ascii(s) {}
+
+  // read one element
+  int read(const QString&, DataString::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return ascii._strings.keys(); }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  void setDataInfo(const QString&, const DataString::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  AsciiSource& ascii;
+};
+
+
+int DataInterfaceAsciiString::read(const QString& string, DataString::ReadInfo& p)
+{
+  if (isValid(string) && p.value) {
+    *p.value = ascii._strings[string];
+    return 1;
+  }
+  return 0;
+}
+
+
+bool DataInterfaceAsciiString::isValid(const QString& string) const
+{
+  return  ascii._strings.contains( string );
+}
+
+
+
+
+
 
 
 //
@@ -121,8 +171,10 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   Kst::DataSource(store, cfg, filename, type),  
   _tmpBuffer(),
   _rowIndex(),
+  is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
+  setInterface(is);
   setInterface(iv);
 
   reset();   
@@ -166,7 +218,7 @@ void AsciiSource::reset()
 
   _fieldList.clear();
   _scalarList.clear();
-  _stringList.clear();
+  _strings.clear();
 
   Object::reset();
 }
@@ -236,7 +288,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 
     // Re-update the scalar list since we have one now
     _scalarList = scalarListFor(_filename, &_config);
-    _stringList = stringListFor(_filename, &_config);
   }
 
   QFile file(_filename);
@@ -422,9 +473,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     for (int i = 0; i < n; i++, s++) {
       bool incol = false;
       int i_col = 0;
+      bool found_value = false;
 
       v[i] = Kst::NOPOINT;
-      for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+      int ch;
+      for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
         if (isspace((unsigned char)buffer[ch])) {
           if (buffer[ch] == '\n' || buffer[ch] == '\r') {
             break;
@@ -440,13 +493,21 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             if (i_col == col) {
               if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+') {
                 v[i] = lexc.toDouble(&buffer[0] + ch);
+                found_value = true;
               } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
                   tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
                 v[i] = INF;
+                found_value = true;
               }
               break;
             }
           }
+        }
+      }
+      if (!found_value) {
+        if (_rowIndex.size() > s+1) {
+          QString unparsable = QString::fromAscii(&buffer[_rowIndex[s]], _rowIndex[s+1] - _rowIndex[s]);
+          _strings[QString("Line %1").arg(i)] = unparsable.trimmed();
         }
       }
     }
@@ -475,25 +536,21 @@ bool AsciiSource::isEmpty() const
 //-------------------------------------------------------------------------------------------
 QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfig*) 
 {
-  QStringList rc;
   QFile file(filename);
   if (!openFile(file)) {
-    return rc;
+    return QStringList();
   }
-  rc += "FRAMES";
-  return rc;
+  return QStringList() << "FRAMES";
 }
 
 //-------------------------------------------------------------------------------------------
 QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig*) 
 {
-  QStringList rc;
   QFile file(filename);
   if (!openFile(file)) {
-    return rc;
+    return QStringList();
   }
-  rc += "FILE";
-  return rc;
+  return QStringList() << "FILE";
 }
 
 
