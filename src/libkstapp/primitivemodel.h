@@ -113,11 +113,13 @@ void PrimitiveModel::createTree() {
       if (kst_cast<T>(obj) && kst_cast<T>(obj)->orphan()) {
         addMeta<T>(kst_cast<T>(obj));
       }
-    } else if (kst_cast<DataSource>(obj)) {
-      addDataSourcesMetas(kst_cast<DataSource>(obj));
     } else if (kst_cast<DataObject>(obj)) {
       addDataObjectsMetas<T>(kst_cast<DataObject>(obj));
     }
+  }
+  DataSourceList datasoucres = _store->dataSourceList();
+  foreach(const DataSourcePtr& ds, datasoucres) {
+    addDataSourcesMetas(ds);
   }
 }
 
