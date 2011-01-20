@@ -19,10 +19,8 @@ SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevis
 
 set(kst_binary_name kst)
 
-message(STATUS)
-message(STATUS "Build options:")
-message(STATUS)
 
+kst_option_init()
 kst_option(release "Build release version" OFF all)
 kst_option(merge_files "Merge files to speedup build about factor 5" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
@@ -109,7 +107,6 @@ endif()
 
 
 
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
@@ -144,11 +141,15 @@ configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
 include_directories(${CMAKE_BINARY_DIR} ${QT_INCLUDES})
 
-
 message(STATUS "Build summary----------------------------------")
+message(STATUS)
 message(STATUS "Version          : ${kst_version}")
 message(STATUS "Path to source   : ${kst_dir}")
 message(STATUS "Installation path: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS)
+message(STATUS "Options:")
+kst_option_list_all()
+message(STATUS)
 message(STATUS "-----------------------------------------------")
 message(STATUS)
 
