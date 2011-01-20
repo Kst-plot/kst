@@ -87,7 +87,7 @@ Using cmake
 
 	* Adding new files 
 		The cmake build system scans the directories, so no need to update any file,
-		just re-run cmake. Also the moccing rules are generated.
+		just re-run cmake. Also the mocing rules are generated.
 
 	* Unused source code file
 		Because cmake scans the directories for *.cpp and *.h files it will also
@@ -135,6 +135,10 @@ Using the merged files build
 	file, all listed files will be compiled separately. Sometimes this is needed because
 	of too much compiler errors, and it is simpler not to merge the file.
 
+	Adding new files
+	When you add new files the merging files have to be rebuild:
+		cmake -Dkst_merge_rebuild=1
+	Or start over by complety cleaning the build folder.
 
 
 Packaging
