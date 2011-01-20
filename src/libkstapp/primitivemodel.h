@@ -89,6 +89,7 @@ public:
 
 protected:
   PrimitiveTreeItem* addPrimitiveTreeItem(const QList<QVariant>& data, PrimitiveTreeItem* parent);
+  PrimitiveTreeItem* addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent);
 
 private:
   ObjectStore *_store;
