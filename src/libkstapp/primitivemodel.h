@@ -127,7 +127,7 @@ void PrimitiveModel::createTree() {
 
 template<class T>
 void PrimitiveModel::addMeta(T* m, PrimitiveTreeItem* parent) {
-  addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
+  addPrimitiveTreeItem(QList<QVariant>() << m->slaveName() << m->value(), parent);
 }
 
 
