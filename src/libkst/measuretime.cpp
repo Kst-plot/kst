@@ -11,7 +11,6 @@
  ***************************************************************************/
 
 #include "measuretime.h"
-
  
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -19,6 +18,7 @@
 #include <time.h>
 #endif
 
+#include <iostream>
  
 MeasureTime::MeasureTime(const QString& n) :
     started(0),
@@ -101,7 +101,7 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  qDebug("%s: %f sec", qPrintable(name), interval);
+  std::cout << qPrintable(name) << ": " << interval << " seconds\n";
 }
 
 

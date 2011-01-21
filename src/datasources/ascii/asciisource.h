@@ -102,6 +102,9 @@ class AsciiSource : public Kst::DataSource
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
+
+    // column delimiter functions
+
     inline bool isWhiteSpace(char c) { 
       return isspace((unsigned char)c); 
     }
@@ -116,7 +119,25 @@ class AsciiSource : public Kst::DataSource
       return _columnDelimiterString.contains(c);
     }
 
-    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (AsciiSource::*isColumnDelemiterFunction)(char));
+
+    // comment delimiter functions
+
+    inline bool noCommentDelimiter(char) {
+      return false;
+    }
+    char _commentDelimiterCharacter;
+    inline bool isCommentDelimiter(char c) {
+      return _commentDelimiterCharacter == c;
+    }
+
+    QString _commentDelimiterString;
+    inline bool isInCommentDelimiterString(char c) {
+      return _commentDelimiterString.contains(c);
+    }
+
+    typedef bool (AsciiSource::*DelimiterFunction)(char);
+
+    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, DelimiterFunction);
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
     // TODO remove

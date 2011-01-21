@@ -432,13 +432,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
+      //MeasureTime t("character");
       _columnDelimiterCharacter = _config._columnDelimiter.value()[0].toAscii();
       return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isColumnDelimiter);
     } if (_config._columnDelimiter.value().size() > 1) {
+      //MeasureTime t("string");
       _columnDelimiterString = _config._columnDelimiter.value();
       return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isInColumnDelimiterString);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
+    //MeasureTime t("whitespace");
     return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isWhiteSpace);
   }
 
@@ -447,11 +450,24 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (AsciiSource::*isColumnDelemiterFunction)(char))
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, DelimiterFunction columnDelemiterFunction)
 {
   LexicalCast lexc;
   lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
   const QString delimiters = _config._delimiters.value();
+
+  DelimiterFunction commentDelemiterFunction;
+
+  if (_config._delimiters.value().size() == 0) {
+    commentDelemiterFunction = &AsciiSource::noCommentDelimiter;
+  } else if (_config._delimiters.value().size() == 1) {
+    _commentDelimiterCharacter = _config._delimiters.value()[0].toAscii();
+    commentDelemiterFunction = &AsciiSource::isCommentDelimiter;
+  } else if (_config._delimiters.value().size() > 1) {
+    _commentDelimiterString = _config._delimiters.value();
+    commentDelemiterFunction = &AsciiSource::isInCommentDelimiterString;
+  }
+
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
@@ -461,9 +477,9 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
     for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
       if (buffer[ch] == '\n' || buffer[ch] == '\r') {
         break;
-      } else if ((this->*isColumnDelemiterFunction)(buffer[ch])) { //<- check for column start
+      } else if ((this->*columnDelemiterFunction)(buffer[ch])) { //<- check for column start
         incol = false;
-      } else if (delimiters.contains(buffer[ch])) {
+      } else if ((this->*commentDelemiterFunction)(buffer[ch])) {
         break;
       } else {
         if (!incol) {
