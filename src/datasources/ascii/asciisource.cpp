@@ -443,24 +443,22 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
       // Read appropriate column and convert to double
       v[i] = lexc.toDouble(&buffer[0] + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
     }
+    return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
-    if (_config._columnDelimiter.value().isEmpty()) {
-      return 0;
+    if (!_config._columnDelimiter.value().isEmpty()) {
+      columnDelimiter = _config._columnDelimiter.value().toAscii().constData()[0];
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, &isColumnDelimiter);
     }
-    columnDelimiter = _config._columnDelimiter.value().toAscii().constData()[0];
-    readColumns(v, buffer, bufstart, bufread, col, s, n, &isColumnDelimiter);
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    readColumns(v, buffer, bufstart, bufread, col, s, n, &isWhiteSpace);
-  } else {
-    return 0;
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, &isWhiteSpace);
   }
 
-  return n;
+  return 0;
 }
 
 
 //-------------------------------------------------------------------------------------------
-void AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char))
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char))
 {
   LexicalCast lexc;
   lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
@@ -490,6 +488,7 @@ void AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int b
       }
     }
   }
+  return n;
 }
 
 
