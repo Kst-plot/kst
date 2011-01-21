@@ -446,12 +446,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     for (int i = 0; i < n; ++i, ++s) {
       bool incol = false;
       int i_col = 0;
+
       v[i] = Kst::NOPOINT;
       for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (columnDelimiter.contains(buffer[ch])) {
-          incol = false;
-        } else if (buffer[ch] == '\n' || buffer[ch] == '\r') {
+        if (buffer[ch] == '\n' || buffer[ch] == '\r') {
           break;
+        } else if (columnDelimiter.contains(buffer[ch])) { //<- check for column start
+          incol = false;
         } else if (delimiters.contains(buffer[ch])) {
           break;
         } else {
@@ -468,20 +469,17 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     const QString delimiters = _config._delimiters.value();
-    for (int i = 0; i < n; i++, s++) 
-    {
+    for (int i = 0; i < n; i++, s++) {
       bool incol = false;
       int i_col = 0;
 
       v[i] = Kst::NOPOINT;
       int ch;
       for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (isspace((unsigned char)buffer[ch])) {
-          if (buffer[ch] == '\n' || buffer[ch] == '\r') {
-            break;
-          } else {
+        if (buffer[ch] == '\n' || buffer[ch] == '\r') {
+          break;
+        } else if (isspace((unsigned char)buffer[ch])) { //<- check for column start
             incol = false;
-          }
         } else if (delimiters.contains(buffer[ch])) {
           break;
         } else {
