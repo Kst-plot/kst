@@ -459,7 +459,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+') {
+              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+' || isspace((unsigned char)buffer[ch])) {
                 v[i] = lexc.toDouble(&buffer[0] + ch);
               } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
                   tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
@@ -501,6 +501,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
                   tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
                 v[i] = INF;
                 found_value = true;
+              } else {
+                qDebug() << "Unredable";
+
               }
               break;
             }
