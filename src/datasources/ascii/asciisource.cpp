@@ -386,20 +386,6 @@ int AsciiSource::columnOfField(const QString& field) const
 
 
 //-------------------------------------------------------------------------------------------
-namespace 
-{
-  bool isWhiteSpace(char c) { 
-    return isspace((unsigned char)c); 
-  }
-
-  char columnDelimiter;
-  bool isColumnDelimiter(char c) {
-    return columnDelimiter == c;
-  }
-}
-
-
-//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
   if (n < 0) {
@@ -445,12 +431,15 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     }
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
-    if (!_config._columnDelimiter.value().isEmpty()) {
-      columnDelimiter = _config._columnDelimiter.value().toAscii().constData()[0];
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, &isColumnDelimiter);
+    if (_config._columnDelimiter.value().size() == 1) {
+      _columnDelimiterCharacter = _config._columnDelimiter.value()[0].toAscii();
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isColumnDelimiter);
+    } if (_config._columnDelimiter.value().size() > 1) {
+      _columnDelimiterString = _config._columnDelimiter.value();
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isInColumnDelimiterString);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    return readColumns(v, buffer, bufstart, bufread, col, s, n, &isWhiteSpace);
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isWhiteSpace);
   }
 
   return 0;
@@ -458,7 +447,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char))
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (AsciiSource::*isColumnDelemiterFunction)(char))
 {
   LexicalCast lexc;
   lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
@@ -472,7 +461,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
     for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
       if (buffer[ch] == '\n' || buffer[ch] == '\r') {
         break;
-      } else if (isColumnDelemiterFunction(buffer[ch])) { //<- check for column start
+      } else if ((this->*isColumnDelemiterFunction)(buffer[ch])) { //<- check for column start
         incol = false;
       } else if (delimiters.contains(buffer[ch])) {
         break;
