@@ -130,6 +130,7 @@ private:
 };
 
 
+//-------------------------------------------------------------------------------------------
 int DataInterfaceAsciiString::read(const QString& string, DataString::ReadInfo& p)
 {
   if (isValid(string) && p.value) {
@@ -140,6 +141,7 @@ int DataInterfaceAsciiString::read(const QString& string, DataString::ReadInfo& 
 }
 
 
+//-------------------------------------------------------------------------------------------
 bool DataInterfaceAsciiString::isValid(const QString& string) const
 {
   return  ascii._strings.contains( string );
@@ -361,18 +363,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
   return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
 }
 
+
 //-------------------------------------------------------------------------------------------
-/* TODO needed?
-int AsciiSource::readString(QString &S, const QString& string) {
-  if (string == "FILE") {
-    S = _filename;
-    return 1;
-  }
-  return 0;
-}
-*/
-
-
 int AsciiSource::columnOfField(const QString& field) const
 {
   if (_fieldList.contains(field)) {
@@ -406,6 +398,8 @@ namespace
   }
 }
 
+
+//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
   if (n < 0) {
@@ -436,13 +430,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
   bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
 
-
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
   const char* buffer = _tmpBuffer.constData();
 #else
   const QVarLengthArray<char, KST_PREALLOC>& buffer = _tmpBuffer;
 #endif
-
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     LexicalCast lexc;
@@ -467,7 +459,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 }
 
 
-
+//-------------------------------------------------------------------------------------------
 void AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char))
 {
   LexicalCast lexc;
@@ -501,6 +493,7 @@ void AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int b
 }
 
 
+//-------------------------------------------------------------------------------------------
 void AsciiSource::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row)
 {
   const char* here = &buffer[ch];
@@ -553,6 +546,7 @@ QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfi
   }
   return QStringList() << "FRAMES";
 }
+
 
 //-------------------------------------------------------------------------------------------
 QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig*) 
@@ -697,6 +691,7 @@ void AsciiSource::parseProperties(QXmlStreamAttributes &properties)
   reset();
   internalDataSourceUpdate();
 }
+
 
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::supportsTimeConversions() const 
