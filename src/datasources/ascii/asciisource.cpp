@@ -432,16 +432,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
-      //MeasureTime t("character");
+      MeasureTime t("character");
       _columnDelimiterCharacter = _config._columnDelimiter.value()[0].toAscii();
       return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isColumnDelimiter);
     } if (_config._columnDelimiter.value().size() > 1) {
-      //MeasureTime t("string");
+      MeasureTime t("string");
       _columnDelimiterString = _config._columnDelimiter.value();
       return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isInColumnDelimiterString);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    //MeasureTime t("whitespace");
+    MeasureTime t("whitespace");
     return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isWhiteSpace);
   }
 
@@ -459,7 +459,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
   DelimiterFunction commentDelemiterFunction;
 
   if (_config._delimiters.value().size() == 0) {
-    commentDelemiterFunction = &AsciiSource::noCommentDelimiter;
+    commentDelemiterFunction = 0;
   } else if (_config._delimiters.value().size() == 1) {
     _commentDelimiterCharacter = _config._delimiters.value()[0].toAscii();
     commentDelemiterFunction = &AsciiSource::isCommentDelimiter;
@@ -479,7 +479,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
         break;
       } else if ((this->*columnDelemiterFunction)(buffer[ch])) { //<- check for column start
         incol = false;
-      } else if ((this->*commentDelemiterFunction)(buffer[ch])) {
+      } else if (commentDelemiterFunction && (this->*commentDelemiterFunction)(buffer[ch])) {
         break;
       } else {
         if (!incol) {

@@ -105,33 +105,30 @@ class AsciiSource : public Kst::DataSource
 
     // column delimiter functions
 
-    inline bool isWhiteSpace(char c) { 
+    bool isWhiteSpace(char c) { 
       return isspace((unsigned char)c); 
     }
 
     char _columnDelimiterCharacter;
-    inline bool isColumnDelimiter(char c) {
+    bool isColumnDelimiter(char c) {
       return _columnDelimiterCharacter == c;
     }
 
     QString _columnDelimiterString;
-    inline bool isInColumnDelimiterString(char c) {
+    bool isInColumnDelimiterString(char c) {
       return _columnDelimiterString.contains(c);
     }
 
 
     // comment delimiter functions
 
-    inline bool noCommentDelimiter(char) {
-      return false;
-    }
     char _commentDelimiterCharacter;
-    inline bool isCommentDelimiter(char c) {
+    bool isCommentDelimiter(char c) {
       return _commentDelimiterCharacter == c;
     }
 
     QString _commentDelimiterString;
-    inline bool isInCommentDelimiterString(char c) {
+    bool isInCommentDelimiterString(char c) {
       return _commentDelimiterString.contains(c);
     }
 
