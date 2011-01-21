@@ -102,6 +102,7 @@ class AsciiSource : public Kst::DataSource
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
+    void readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char));
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
     // TODO remove
