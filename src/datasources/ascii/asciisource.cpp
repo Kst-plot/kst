@@ -298,7 +298,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
     return NoChange;
   }
-  
+
   bool forceUpdate;
   if (_byteLength == file.size()) {
     forceUpdate = false;
@@ -322,11 +322,11 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-  const char* buffer = varBuffer.constData();
-  const char* bufferData = buffer;
+    const char* buffer = varBuffer.constData();
+    const char* bufferData = buffer;
 #else
-  QVarLengthArray<char, MAXBUFREADLEN + 1>& buffer = varBuffer;
-  const char* bufferData = buffer.data();
+    QVarLengthArray<char, MAXBUFREADLEN + 1>& buffer = varBuffer;
+    const char* bufferData = buffer.data();
 #endif
 
     bool is_comment = false, has_dat = false;
@@ -378,7 +378,7 @@ int AsciiSource::columnOfField(const QString& field) const
   if (_fieldList.contains(field)) {
     return _fieldList.indexOf(field);
   } 
-  
+
   if (_fieldListComplete) {
     return -1;
   }
@@ -470,34 +470,34 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 void AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, bool (*isColumnDelemiterFunction)(char))
 {
-    LexicalCast lexc;
-    lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
-    const QString delimiters = _config._delimiters.value();
-    for (int i = 0; i < n; i++, s++) {
-      bool incol = false;
-      int i_col = 0;
+  LexicalCast lexc;
+  lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
+  const QString delimiters = _config._delimiters.value();
+  for (int i = 0; i < n; i++, s++) {
+    bool incol = false;
+    int i_col = 0;
 
-      v[i] = Kst::NOPOINT;
-      int ch;
-      for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-        if (buffer[ch] == '\n' || buffer[ch] == '\r') {
-          break;
-        } else if (isColumnDelemiterFunction(buffer[ch])) { //<- check for column start
-            incol = false;
-        } else if (delimiters.contains(buffer[ch])) {
-          break;
-        } else {
-          if (!incol) {
-            incol = true;
-            ++i_col;
-            if (i_col == col) {
-              toDouble(lexc, buffer, bufread, ch, &v[i], i);
-              break;
-            }
+    v[i] = Kst::NOPOINT;
+    int ch;
+    for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+      if (buffer[ch] == '\n' || buffer[ch] == '\r') {
+        break;
+      } else if (isColumnDelemiterFunction(buffer[ch])) { //<- check for column start
+        incol = false;
+      } else if (delimiters.contains(buffer[ch])) {
+        break;
+      } else {
+        if (!incol) {
+          incol = true;
+          ++i_col;
+          if (i_col == col) {
+            toDouble(lexc, buffer, bufread, ch, &v[i], i);
+            break;
           }
         }
-      }     
+      }
     }
+  }
 }
 
 
