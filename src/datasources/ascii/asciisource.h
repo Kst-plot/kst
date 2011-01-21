@@ -30,7 +30,7 @@
 
 class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
-
+struct LexicalCast;
 
 class AsciiSource : public Kst::DataSource
 {
@@ -101,6 +101,8 @@ class AsciiSource : public Kst::DataSource
     static bool openFile(QFile &file);
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
+
+    void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
     // TODO remove
     friend class DataInterfaceAsciiString;

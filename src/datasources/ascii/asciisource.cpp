@@ -459,12 +459,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+' || isspace((unsigned char)buffer[ch])) {
-                v[i] = lexc.toDouble(&buffer[0] + ch);
-              } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
-                  tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
-                v[i] = INF;
-              }
+              toDouble(lexc, buffer, bufread, ch, &v[i], i);
               break;
             }
           }
@@ -473,10 +468,10 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     const QString delimiters = _config._delimiters.value();
-    for (int i = 0; i < n; i++, s++) {
+    for (int i = 0; i < n; i++, s++) 
+    {
       bool incol = false;
       int i_col = 0;
-      bool found_value = false;
 
       v[i] = Kst::NOPOINT;
       int ch;
@@ -494,34 +489,47 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
             incol = true;
             ++i_col;
             if (i_col == col) {
-              if (isdigit((unsigned char)buffer[ch]) || buffer[ch] == '-' || buffer[ch] == '.' || buffer[ch] == '+') {
-                v[i] = lexc.toDouble(&buffer[0] + ch);
-                found_value = true;
-              } else if (ch + 2 < bufread && tolower(buffer[ch]) == 'i' &&
-                  tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
-                v[i] = INF;
-                found_value = true;
-              }
+              toDouble(lexc, buffer, bufread, ch, &v[i], i);
               break;
             }
           }
         }
-      }
-      /*
-      // TODO enable by option: "Add unparsable lines as strings"
-      if (!found_value) {
-        if (_rowIndex.size() > s + 1) {
-          QString unparsable = QString::fromAscii(&buffer[_rowIndex[s]], _rowIndex[s + 1] - _rowIndex[s]);
-          _strings[QString("Unparsable %1").arg(i)] = unparsable.trimmed();
-        }
-      }
-      */
+      }     
     }
   } else {
     return 0;
   }
 
   return n;
+}
+
+
+void AsciiSource::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row)
+{
+  const char* here = &buffer[ch];
+  if (   buffer[ch] == '-' 
+      || buffer[ch] == '.'
+      || buffer[ch] == '+' 
+      || isdigit((unsigned char)buffer[ch])
+      || isspace((unsigned char)buffer[ch])) {
+    *v = lexc.toDouble(&buffer[0] + ch);
+  } else if ( ch + 2 < bufread
+              && tolower(buffer[ch]) == 'i'
+              && tolower(buffer[ch + 1]) == 'n'
+              && tolower(buffer[ch + 2]) == 'f') {
+    *v = INF;
+  }
+
+#if 0
+  // TODO enable by option: "Add unparsable lines as strings"
+  else {
+    if (_rowIndex.size() > row + 1) {
+      QString unparsable = QString::fromAscii(&buffer[_rowIndex[row]], _rowIndex[row + 1] - _rowIndex[row]);
+      _strings[QString("Unparsable %1").arg(row)] = unparsable.trimmed();
+    }
+  }
+#endif
+
 }
 
 
