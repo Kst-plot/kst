@@ -53,8 +53,8 @@
 #define DEBUG_LABEL_REGION 0
 
 // Benchmark drawing
-// 0 = None, 1 = PlotItem, 2 = More Details
-#define BENCHMARK 0
+// undefined = None, 1 = PlotItem, 2 = More Details
+//#define BENCHMARK 1
 
 static const int PLOT_MAXIMIZED_ZORDER = 1000;
 
