@@ -501,9 +501,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
                   tolower(buffer[ch + 1]) == 'n' && tolower(buffer[ch + 2]) == 'f') {
                 v[i] = INF;
                 found_value = true;
-              } else {
-                qDebug() << "Unredable";
-
               }
               break;
             }
