@@ -138,7 +138,7 @@ Using the merged files build
 
 	- Adding new files
 	  When you add new files the merging files have to be rebuild:
-		cmake -Dkst_merge_rebuild=1
+		cmake -Dkst_merge_rebuild=1 .
 	  Or start over by completely  cleaning the build folder.
 
 	- Starting over with same configuration
@@ -149,7 +149,7 @@ Using the merged files build
 Packaging
 ----------
 
-	- Source .targz, .tar.bz2, .zip:
+	- Source .tar.gz, .tar.bz2, .zip:
 		make package_source
 
 	- Binary .tar.gz and install .sh:
