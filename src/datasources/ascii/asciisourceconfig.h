@@ -39,6 +39,8 @@ class AsciiSourceConfig {
     static const char Tag_columnDelimiter[];
     static const char Key_columnWidth[];
     static const char Tag_columnWidth[];
+    static const char Key_columnWidthIsConst[];
+    static const char Tag_columnWidthIsConst[];
     static const char Key_dataLine[];
     static const char Tag_dataLine[];
     static const char Key_readFields[];
@@ -69,6 +71,7 @@ class AsciiSourceConfig {
     NamedParameter<int, Key_columnType, Tag_columnType> _columnType;
     NamedParameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
     NamedParameter<int, Key_columnWidth, Tag_columnWidth> _columnWidth;
+    NamedParameter<bool, Key_columnWidthIsConst, Tag_columnWidthIsConst> _columnWidthIsConst;
     NamedParameter<int, Key_dataLine, Tag_dataLine> _dataLine;
     NamedParameter<bool, Key_readFields, Tag_readFields> _readFields;
     NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;

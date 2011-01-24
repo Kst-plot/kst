@@ -58,6 +58,7 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._columnType = ct;
   config._columnDelimiter = _columnDelimiter->text();
   config._columnWidth = _columnWidth->value();
+  config._columnWidthIsConst = _columnWidthIsConst->isChecked();
   config._dataLine = _startLine->value();
   config._readFields = _readFields->isChecked();
   config._useDot = _useDot->isChecked();
@@ -73,6 +74,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _fileNamePattern->setText(config._fileNamePattern);
   _columnDelimiter->setText(config._columnDelimiter);
   _columnWidth->setValue(config._columnWidth);
+  _columnWidthIsConst->setChecked(config._columnWidthIsConst);
   _startLine->setValue(config._dataLine);
   _readFields->setChecked(config._readFields);
   _useDot->setChecked(config._useDot);

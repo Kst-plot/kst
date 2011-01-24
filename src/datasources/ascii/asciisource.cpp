@@ -282,6 +282,8 @@ bool AsciiSource::initRowIndex()
 #define MAXBUFREADLEN 32768
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
 {
+  MeasureTime t("internalDataSourceUpdate");
+
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
@@ -356,7 +358,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
       } else if (!is_comment && !isspace((unsigned char)buffer[i])) {
         // FIXME: this breaks custom delimiters
         has_dat = true;
-      }
+      }      
     }
   } while ((bufread == MAXBUFREADLEN)); // && (!first_read));
 
@@ -468,9 +470,15 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
     commentDelemiterFunction = &AsciiSource::isInCommentDelimiterString;
   }
 
+  int col_start = -1;
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
+
+    if (_config._columnWidthIsConst && col_start != -1) {
+      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
+      continue;
+    }
 
     v[i] = Kst::NOPOINT;
     int ch;
@@ -487,6 +495,9 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
           ++i_col;
           if (i_col == col) {
             toDouble(lexc, buffer, bufread, ch, &v[i], i);
+            if (col_start == -1) {
+              col_start = ch - _rowIndex[s]  + 1;
+            }
             break;
           }
         }

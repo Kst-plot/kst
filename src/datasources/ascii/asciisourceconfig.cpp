@@ -45,6 +45,8 @@ const char AsciiSourceConfig::Key_columnDelimiter[] = "Column Delimiter";
 const char AsciiSourceConfig::Tag_columnDelimiter[] = "columndelimiter";
 const char AsciiSourceConfig::Key_columnWidth[] = "Column Width";
 const char AsciiSourceConfig::Tag_columnWidth[] = "columnwidth";
+const char AsciiSourceConfig::Key_columnWidthIsConst[] = "Column Width is const";
+const char AsciiSourceConfig::Tag_columnWidthIsConst[] = "columnwidthisconst";
 const char AsciiSourceConfig::Key_dataLine[] = "Data Start";
 const char AsciiSourceConfig::Tag_dataLine[] = "headerstart";
 const char AsciiSourceConfig::Key_readFields[] = "Read Fields";
@@ -63,6 +65,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _columnType(Whitespace),
   _columnDelimiter(","),
   _columnWidth(DEFAULT_COLUMN_WIDTH),
+  _columnWidthIsConst(false),
   _dataLine(0),
   _readFields(false),
   _fieldsLine(0),
@@ -85,6 +88,7 @@ void AsciiSourceConfig::save(QSettings& cfg) {
   _readFields >> cfg;
   _useDot >> cfg;
   _fieldsLine >> cfg;
+  _columnWidthIsConst >> cfg;
 }
 
 
@@ -113,6 +117,7 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _readFields << cfg;
   _useDot << cfg;
   _fieldsLine << cfg;
+  _columnWidthIsConst << cfg;
 }
 
 
@@ -148,6 +153,7 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _fieldsLine >> s;
   _readFields >> s;
   _useDot >> s;
+ _columnWidthIsConst >> s;
 
   s.writeEndElement();
 }
@@ -165,11 +171,12 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _readFields << attributes;
   _useDot << attributes;
   _fieldsLine << attributes;
+  _columnWidthIsConst << attributes;
 }
 
 
 void AsciiSourceConfig::load(const QDomElement& e) {
-  // TODO use tags
+  // TODO use tags, isn't this code torally buggy, because trings and tags doesn't match?
    QDomNode n = e.firstChild();
    while (!n.isNull()) {
      QDomElement e = n.toElement();
@@ -191,6 +198,9 @@ void AsciiSourceConfig::load(const QDomElement& e) {
          }
          if (e.hasAttribute("width")) {
            _columnWidth = e.attribute("width").toInt();
+         }
+         if (e.hasAttribute(Key_columnWidthIsConst)) {
+           _columnWidthIsConst = e.attribute(Key_columnWidthIsConst).toInt();
          }
          if (e.hasAttribute("delimiters")) {
            _columnDelimiter = e.attribute("delimiters").toLatin1();
