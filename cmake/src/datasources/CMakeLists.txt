@@ -2,7 +2,7 @@
 
 kst_init_plugin(src/datasources datasource)
 
-if(MSVC)
+if(MSVC OR MINGW)
 	add_definitions(-DKST_USE_KST_ATOF)
 endif()
 
