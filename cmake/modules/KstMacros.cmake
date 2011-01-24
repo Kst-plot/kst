@@ -2,6 +2,13 @@ include(MergedFilesBuild)
 include(KstPchSupport)
 
 
+macro(kst_dbg)
+	foreach(it ${ARGN})
+		message(STATUS "dgb: ${it} = ${${it}}")
+	endforeach()
+endmacro()
+
+
 macro(kst_init name)
 	set(kst_name ${name})
 	set(kst_${kst_name}_dont_merge)
