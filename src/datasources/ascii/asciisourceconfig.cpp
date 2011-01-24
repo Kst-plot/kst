@@ -27,7 +27,7 @@
 //
 
 
-#define DEFAULT_DELIMITERS "#/c!;"
+#define DEFAULT_COMMENT_DELIMITERS "#"
 #define DEFAULT_COLUMN_WIDTH 16
 
 
@@ -56,7 +56,7 @@ const char AsciiSourceConfig::Tag_fieldsLine[] = "fields";
 
 
 AsciiSourceConfig::AsciiSourceConfig() :
-  _delimiters(DEFAULT_DELIMITERS),
+  _delimiters(DEFAULT_COMMENT_DELIMITERS),
   _indexVector("INDEX"),
   _fileNamePattern(""),
   _indexInterpretation(Unknown),
