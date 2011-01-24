@@ -103,38 +103,79 @@ class AsciiSource : public Kst::DataSource
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
 
-    // column delimiter functions
+    // column and comment delimiter functions
 
-    bool isWhiteSpace(char c) { 
-      return isspace((unsigned char)c); 
-    }
+    struct AlwaysTrue {
+      AlwaysTrue() {
+      }
+      inline bool operator()() const {
+        return true;
+      }
+    };
 
-    char _columnDelimiterCharacter;
-    bool isColumnDelimiter(char c) {
-      return _columnDelimiterCharacter == c;
-    }
+    struct AlwaysFalse {
+      AlwaysFalse() {
+      }
+      inline bool operator()() const {
+        return false;
+      }
+    };
 
-    QString _columnDelimiterString;
-    bool isInColumnDelimiterString(char c) {
-      return _columnDelimiterString.contains(c);
-    }
+    struct NoDelimiter {
+      NoDelimiter() {
+      }
+      inline bool operator()(const char) const {
+        return false;
+      }
+    };
+
+    struct  IsWhiteSpace {
+      IsWhiteSpace() {
+      }
+      inline bool operator()(const char c) const {
+        return c == ' ' || c == '\t';
+      }
+    };
+
+    struct IsCharacter {
+      IsCharacter(char c) : character(c) {
+      }
+      const char character;
+      inline bool operator()(const char c) const {
+        return character == c;
+      }
+    };
+
+    struct IsInString {
+      IsInString(const QString& s) : str(s) {
+      }
+      const QString str;
+      inline bool operator()(const char c) const {
+        return str.contains(c);
+      }
+    };
+
+    struct IsLineBreak {
+      IsLineBreak() {
+      }
+      inline bool operator()(const char c) const {
+        return c == '\n' || c == '\r';
+      }
+    };
 
 
-    // comment delimiter functions
+    template<typename ColumnDelimiter>
+    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                    const ColumnDelimiter&);
 
-    char _commentDelimiterCharacter;
-    bool isCommentDelimiter(char c) {
-      return _commentDelimiterCharacter == c;
-    }
+    template<typename ColumnDelimiter, typename CommentDelimiter>
+    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                    const ColumnDelimiter&, const CommentDelimiter&);
 
-    QString _commentDelimiterString;
-    bool isInCommentDelimiterString(char c) {
-      return _commentDelimiterString.contains(c);
-    }
+    template<typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
+    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                    const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
-    typedef bool (AsciiSource::*DelimiterFunction)(char);
-
-    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, DelimiterFunction);
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
     // TODO remove

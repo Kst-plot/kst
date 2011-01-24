@@ -30,6 +30,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <iostream>
 
 
 // Load faster in debug mode:
@@ -435,16 +436,17 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("character");
-      _columnDelimiterCharacter = _config._columnDelimiter.value()[0].toAscii();
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isColumnDelimiter);
+      const IsCharacter column_del(_config._columnDelimiter.value()[0].toAscii());
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t("string");
-      _columnDelimiterString = _config._columnDelimiter.value();
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isInColumnDelimiterString);
+      const IsInString column_del(_config._columnDelimiter.value());
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     MeasureTime t("whitespace");
-    return readColumns(v, buffer, bufstart, bufread, col, s, n, &AsciiSource::isWhiteSpace);
+    const IsWhiteSpace column_del;
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del);
   }
 
   return 0;
@@ -452,42 +454,69 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n, DelimiterFunction columnDelemiterFunction)
+template<typename ColumnDelimiter>
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                              const ColumnDelimiter& column_del)
+{
+
+  if (_config._delimiters.value().size() == 0) {
+    const NoDelimiter comment_del;
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del, comment_del);
+  } else if (_config._delimiters.value().size() == 1) {
+    const IsCharacter comment_del(_config._delimiters.value()[0].toAscii());
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del, comment_del);
+  } else if (_config._delimiters.value().size() > 1) {
+    const IsInString comment_del(_config._delimiters.value());
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del, comment_del);
+  }
+
+  return 0;
+}
+
+template<typename ColumnDelimiter, typename CommentDelimiter>
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                              const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
+{
+  if (_config._columnWidthIsConst) {
+    const AlwaysTrue column_withs_are_const;
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del, comment_del, column_withs_are_const);
+  } else {
+    const AlwaysFalse column_withs_are_not_const;
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, column_del, comment_del, column_withs_are_not_const);
+  }
+}
+
+
+template<typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
+int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+                              const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
+                              const ColumnWidthsAreConst& are_column_widths_const)
 {
   LexicalCast lexc;
   lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
   const QString delimiters = _config._delimiters.value();
 
-  DelimiterFunction commentDelemiterFunction;
-
-  if (_config._delimiters.value().size() == 0) {
-    commentDelemiterFunction = 0;
-  } else if (_config._delimiters.value().size() == 1) {
-    _commentDelimiterCharacter = _config._delimiters.value()[0].toAscii();
-    commentDelemiterFunction = &AsciiSource::isCommentDelimiter;
-  } else if (_config._delimiters.value().size() > 1) {
-    _commentDelimiterString = _config._delimiters.value();
-    commentDelemiterFunction = &AsciiSource::isInCommentDelimiterString;
-  }
+  const IsLineBreak isLineBreak;
 
   int col_start = -1;
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
 
-    if (_config._columnWidthIsConst && col_start != -1) {
-      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
-      continue;
+    if (are_column_widths_const()) {
+      if (col_start != -1) {
+        v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
+        continue;
+      }
     }
 
     v[i] = Kst::NOPOINT;
-    int ch;
-    for (ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
-      if (buffer[ch] == '\n' || buffer[ch] == '\r') {
+    for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+      if (isLineBreak(buffer[ch])) {
         break;
-      } else if ((this->*columnDelemiterFunction)(buffer[ch])) { //<- check for column start
+      } else if (column_del(buffer[ch])) { //<- check for column start
         incol = false;
-      } else if (commentDelemiterFunction && (this->*commentDelemiterFunction)(buffer[ch])) {
+      } else if (comment_del(buffer[ch])) {
         break;
       } else {
         if (!incol) {
@@ -495,8 +524,10 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
           ++i_col;
           if (i_col == col) {
             toDouble(lexc, buffer, bufread, ch, &v[i], i);
-            if (col_start == -1) {
+            if (are_column_widths_const()) {
+              if (col_start == -1) {
               col_start = ch - _rowIndex[s]  + 1;
+              }
             }
             break;
           }
