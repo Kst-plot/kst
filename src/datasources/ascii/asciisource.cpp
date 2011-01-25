@@ -552,15 +552,15 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
 }
 
 
+
 //-------------------------------------------------------------------------------------------
 void AsciiSource::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row)
 {
-  const char* here = &buffer[ch];
-  if (   buffer[ch] == '-' 
+  if (   isDigit(buffer[ch])
+      || buffer[ch] == '-'
       || buffer[ch] == '.'
-      || buffer[ch] == '+' 
-      || isdigit((unsigned char)buffer[ch])
-      || isspace((unsigned char)buffer[ch])) {
+      || buffer[ch] == '+'
+      || isWhiteSpace(buffer[ch])) {
     *v = lexc.toDouble(&buffer[0] + ch);
   } else if ( ch + 2 < bufread
               && tolower(buffer[ch]) == 'i'

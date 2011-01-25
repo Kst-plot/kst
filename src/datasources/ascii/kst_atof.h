@@ -23,6 +23,7 @@ private:
   bool _useDot;  
   char _separator;
   QByteArray _originalLocal;
+  bool isDigit(const char) const;
 };
 
 

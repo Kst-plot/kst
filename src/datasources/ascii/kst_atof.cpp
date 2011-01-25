@@ -3,6 +3,7 @@
 
 #include "kst_atof.h"
 
+
 #include <math.h>
 #include <ctype.h>
 
@@ -11,6 +12,9 @@
 
 #define LOGHUGE 39
 
+inline bool LexicalCast::isDigit(const char c) const {
+  return (c >= 48) && (c <= 57) ? true : false;
+}
 
 #ifdef KST_USE_KST_ATOF
 double LexicalCast::toDouble(const char* signedp) const
@@ -35,7 +39,7 @@ double LexicalCast::toDouble(const char* signedp) const
 	exp = 0;
 	fl = 0;
 	nd = 0;
-	while ((c = *p++), isdigit(c)) {
+	while ((c = *p++), isDigit(c)) {
 		if (fl<big)
 			fl = 10*fl + (c-'0');
 		else
@@ -44,7 +48,7 @@ double LexicalCast::toDouble(const char* signedp) const
 	}
 
 	if (c == _separator) {
-		while ((c = *p++), isdigit(c)) {
+		while ((c = *p++), isDigit(c)) {
 			if (fl<big) {
 				fl = 10*fl + (c-'0');
 				exp--;
@@ -63,7 +67,7 @@ double LexicalCast::toDouble(const char* signedp) const
 		else
 			--p;
 
-		while ((c = *p++), isdigit(c)) {
+		while ((c = *p++), isDigit(c)) {
 			eexp = 10*eexp+(c-'0');
 		}
 		if (negexp<0)

@@ -137,6 +137,14 @@ class AsciiSource : public Kst::DataSource
       }
     };
 
+    struct IsDigit {
+      IsDigit() {
+      }
+      inline bool operator()(const char c) const {
+        return (c >= 48) && (c <= 57) ? true : false;
+      }
+    };
+
     struct IsCharacter {
       IsCharacter(char c) : character(c) {
       }
@@ -180,6 +188,9 @@ class AsciiSource : public Kst::DataSource
     bool findDataRows(const char* buffer, int bufstart, int bufread, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
+
+    const IsDigit isDigit;
+    const IsWhiteSpace isWhiteSpace;
 
     // TODO remove
     friend class DataInterfaceAsciiString;
