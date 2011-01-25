@@ -280,7 +280,7 @@ bool AsciiSource::initRowIndex()
 
 
 //-------------------------------------------------------------------------------------------
-#define MAXBUFREADLEN 32768
+#define MAXBUFREADLEN KST_PREALLOC
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
 {
   MeasureTime t("internalDataSourceUpdate");
@@ -304,25 +304,19 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     return NoChange;
   }
 
-  bool forceUpdate;
-  if (_byteLength == file.size()) {
-    forceUpdate = false;
-  } else {
-    forceUpdate = true;
-    _byteLength = file.size();
-  }
-
-  int bufread;
   bool new_data = false;
-  //bool first_read = (_numFrames == 0);
+  bool force_update = true;
+  if (_byteLength == file.size()) {
+    force_update = false;
+  }
+  _byteLength = file.size();
 
-  QByteArray delbytes = _config._delimiters.value().toLatin1();
-  const char *del = delbytes.constData();
-
+  int bufread = 0;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     QVarLengthArray<char, MAXBUFREADLEN + 1> varBuffer;
     varBuffer.resize(varBuffer.capacity());
+
     int bufstart = _rowIndex[_numFrames];
     bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
 
@@ -334,44 +328,55 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     const char* bufferData = buffer.data();
 #endif
 
-    findDataRows(buffer, bufstart, bufread, del, new_data);
-    
-  } while ((bufread == MAXBUFREADLEN)); // && (!first_read));
+    if (_config._delimiters.value().size() == 0) {
+      const NoDelimiter comment_del;
+      new_data = findDataRows(buffer, bufstart, bufread, comment_del);
+    } else if (_config._delimiters.value().size() == 1) {
+      const IsCharacter comment_del(_config._delimiters.value()[0].toAscii());
+      new_data = findDataRows(buffer, bufstart, bufread, comment_del);
+    } else if (_config._delimiters.value().size() > 1) {
+      const IsInString comment_del(_config._delimiters.value());
+      new_data = findDataRows(buffer, bufstart, bufread, comment_del);
+    }
 
-  return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
+  } while ((bufread == MAXBUFREADLEN));
+
+  _rowIndex.resize(_numFrames);
+
+  return (!new_data && !force_update ? NoChange : Updated);
 }
 
 
-int AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const char *del, bool& new_data)
+template<typename CommentDelimiter>
+bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const CommentDelimiter& comment_del)
 {
-  bool is_comment = false, has_dat = false;
-  char *comment = strpbrk(const_cast<char*>(buffer), del);
+  const IsLineBreak isLineBreak;
+  const IsWhiteSpace isWhiteSpace;
+
+  bool new_data = false;
+
+  bool is_data = false;
+  bool is_comment = false;
+
   for (int i = 0; i < bufread; i++) {
-      if (comment == &(buffer[i])) {
+      if (comment_del(buffer[i])) {
         is_comment = true;
-      } else if (buffer[i] == '\n' || buffer[i] == '\r') {
-        if (has_dat) {
+      } else if (isLineBreak(buffer[i])) {
+        is_comment = false;
+        if (is_data) {
+          is_data = false;
           ++_numFrames;
           if (_numFrames >= _rowIndex.size()) {
             _rowIndex.resize(_rowIndex.size() + MAXBUFREADLEN);
-            if (_numFrames >= _rowIndex.size()) {
-              // TODO where could we report an error;
-              return NoChange;
-            }
           }
+          _rowIndex[_numFrames] = bufstart + i + 1;
           new_data = true;
         }
-        _rowIndex[_numFrames] = bufstart + i + 1;
-        has_dat = is_comment = false;
-        if (comment && comment < &(buffer[i])) {
-          comment = strpbrk(const_cast<char*>(&(buffer[i])), del);
-        }
-      } else if (!is_comment && !isspace((unsigned char)buffer[i])) {
-        // FIXME: this breaks custom delimiters
-        has_dat = true;
+      } else if (!is_data && !isWhiteSpace(buffer[i]) && !comment_del(buffer[i])) {
+        is_data = is_comment ? false : true;
       }
   }
-  return 0;
+  return new_data;
 }
 
 

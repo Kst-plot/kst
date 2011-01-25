@@ -77,7 +77,7 @@ class AsciiSource : public Kst::DataSource
     // TODO Is this too big or should we use even more: 1MB on the stack?
 #define KST_PREALLOC 1 * 1024 * 1024
     QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
-    QVarLengthArray<int, KST_PREALLOC / 4> _rowIndex;
+    QVarLengthArray<int, KST_PREALLOC> _rowIndex;
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
@@ -102,8 +102,6 @@ class AsciiSource : public Kst::DataSource
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
-
-    int findDataRows(const char* buffer, int bufstart, int bufread, const char *del, bool& new_data);
 
     // column and comment delimiter functions
 
@@ -177,6 +175,9 @@ class AsciiSource : public Kst::DataSource
     template<typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
     int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
                     const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
+
+    template<typename CommentDelimiter>
+    bool findDataRows(const char* buffer, int bufstart, int bufread, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
