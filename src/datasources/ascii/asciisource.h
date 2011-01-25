@@ -103,6 +103,8 @@ class AsciiSource : public Kst::DataSource
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
 
+    int findDataRows(const char* buffer, int bufstart, int bufread, const char *del, bool& new_data);
+
     // column and comment delimiter functions
 
     struct AlwaysTrue {

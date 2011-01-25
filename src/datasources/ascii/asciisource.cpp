@@ -334,16 +334,26 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
     const char* bufferData = buffer.data();
 #endif
 
-    bool is_comment = false, has_dat = false;
-    char *comment = strpbrk(const_cast<char*>(bufferData), del);
-    for (int i = 0; i < bufread; i++) {
+    findDataRows(buffer, bufstart, bufread, del, new_data);
+    
+  } while ((bufread == MAXBUFREADLEN)); // && (!first_read));
+
+  return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
+}
+
+
+int AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const char *del, bool& new_data)
+{
+  bool is_comment = false, has_dat = false;
+  char *comment = strpbrk(const_cast<char*>(buffer), del);
+  for (int i = 0; i < bufread; i++) {
       if (comment == &(buffer[i])) {
         is_comment = true;
       } else if (buffer[i] == '\n' || buffer[i] == '\r') {
         if (has_dat) {
           ++_numFrames;
           if (_numFrames >= _rowIndex.size()) {
-            _rowIndex.resize(_rowIndex.size() + 32768);
+            _rowIndex.resize(_rowIndex.size() + MAXBUFREADLEN);
             if (_numFrames >= _rowIndex.size()) {
               // TODO where could we report an error;
               return NoChange;
@@ -359,11 +369,9 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
       } else if (!is_comment && !isspace((unsigned char)buffer[i])) {
         // FIXME: this breaks custom delimiters
         has_dat = true;
-      }      
-    }
-  } while ((bufread == MAXBUFREADLEN)); // && (!first_read));
-
-  return (forceUpdate ? Updated : (new_data ? Updated : NoChange));
+      }
+  }
+  return 0;
 }
 
 
