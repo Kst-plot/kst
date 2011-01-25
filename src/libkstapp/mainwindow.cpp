@@ -770,19 +770,19 @@ void MainWindow::createActions() {
   _printAct->setIcon(QPixmap(":document-print.png"));
   connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
 
-  _exportGraphicsAct = new QAction(tr("&Export..."), this);
+  _exportGraphicsAct = new QAction(tr("&Export as Image..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
-  _exportGraphicsAct->setIcon(QPixmap(":document-export.png"));
+  _exportGraphicsAct->setIcon(QPixmap(":image-x-generic.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
-  _exportVectorsAct = new QAction(tr("Export &Vectors..."), this);
+  _exportVectorsAct = new QAction(tr("Save &Vectors to Disk..."), this);
   _exportVectorsAct->setStatusTip(tr("Export vectors to ascii file"));
-  _exportVectorsAct->setIcon(QPixmap(":document-export.png"));
+  _exportVectorsAct->setIcon(QPixmap(":save-vectors.png"));
   connect(_exportVectorsAct, SIGNAL(triggered()), this, SLOT(showExportVectorsDialog()));
 
   _logAct = new QAction(tr("&Log Entry..."), this);
   _logAct->setStatusTip(tr("Commit a log entry"));
-  _logAct->setIcon(QPixmap(":document-export.png"));
+  _logAct->setIcon(QPixmap(":new-log-event.png"));
   connect(_logAct, SIGNAL(triggered()), this, SLOT(showLogDialog()));
 
   _newTabAct = new QAction(tr("&New Tab"), this);
@@ -829,27 +829,27 @@ void MainWindow::createActions() {
   // ************************ Data Range 1 click Actions ************************** //
   _backAct = new QAction(tr("Back One Screen"), this);
   _backAct->setStatusTip(tr("Back one screen"));
-  _backAct->setIcon(QPixmap(":kst_back.png"));
+  _backAct->setIcon(QPixmap(":page-previous.png"));
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
   _forwardAct = new QAction(tr("Forward One Screen"), this);
   _forwardAct->setStatusTip(tr("Forward one screen"));
-  _forwardAct->setIcon(QPixmap(":kst_forward.png"));
+  _forwardAct->setIcon(QPixmap(":page-next.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
   _readFromEndAct = new QAction(tr("Count From End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
-  _readFromEndAct->setIcon(QPixmap(":kst_readFromEnd.png"));
+  _readFromEndAct->setIcon(QPixmap(":count-from-end.png"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
   _readToEndAct = new QAction(tr("Read To End"), this);
   _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
-  _readToEndAct->setIcon(QPixmap(":kst_readToEnd.png"));
+  _readToEndAct->setIcon(QPixmap(":read-to-end.png"));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("Pause"), this);
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
-  _pauseAct->setIcon(QPixmap(":kst_pause.png"));
+  _pauseAct->setIcon(QPixmap(":pause.png"));
   _pauseAct->setCheckable(true);
   _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));

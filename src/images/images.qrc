@@ -97,5 +97,7 @@
         <file>pause.png</file>
         <file>count-from-end.png</file>
         <file>read-to-end.png</file>
+        <file>new-log-event.png</file>
+        <file>save-vectors.png</file>
     </qresource>
 </RCC>
