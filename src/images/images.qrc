@@ -55,11 +55,6 @@
         <file>kst_zoomy.png</file>
         <file>no.png</file>
         <file>yes.png</file>
-        <file>kst_readFromEnd.png</file>
-        <file>kst_readToEnd.png</file>
-        <file>kst_pause.png</file>
-        <file>kst_back.png</file>
-        <file>kst_forward.png</file>
         <file>kst_rightarrow.png</file>
         <file>kst_leftarrow.png</file>
         <file>kst_uparrow.png</file>
@@ -97,5 +92,10 @@
         <file>y-zoom.png</file>
         <file>xy-zoom.png</file>
         <file>document-close.png</file>
+        <file>page-previous.png</file>
+        <file>page-next.png</file>
+        <file>pause.png</file>
+        <file>count-from-end.png</file>
+        <file>read-to-end.png</file>
     </qresource>
 </RCC>
