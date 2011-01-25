@@ -96,6 +96,10 @@ PlotItem::PlotItem(View *parent)
   _sharedAxisBoxMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
+  _manuallyHideLeftAxisLabel(false),
+  _manuallyHideRightAxisLabel(false),
+  _manuallyHideTopAxisLabel(false),
+  _manuallyHideBottomAxisLabel(false),
   _plotPixmapDirty(true),
   _i_per(0)
 {
@@ -337,6 +341,10 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("globalfontscale", QVariant(_globalFontScale).toString());
     xml.writeAttribute("globalfontcolor", QVariant(_globalFontColor).toString());
     xml.writeAttribute("showlegend", QVariant(_showLegend).toString());
+    xml.writeAttribute("hidebottomaxislabel", QVariant(_manuallyHideBottomAxisLabel).toString());
+    xml.writeAttribute("hidetopaxislabel", QVariant(_manuallyHideTopAxisLabel).toString());
+    xml.writeAttribute("hideleftaxislabel", QVariant(_manuallyHideLeftAxisLabel).toString());
+    xml.writeAttribute("hiderightaxislabel", QVariant(_manuallyHideRightAxisLabel).toString());
     saveNameInfo(xml, PLOTNUM);
 
     ViewItem::save(xml);
@@ -1582,6 +1590,27 @@ void PlotItem::setTopPadding(const qreal padding) {
 }
 
 
+void PlotItem::setManuallyHideLeftAxisLabel(bool hide) {
+  _manuallyHideLeftAxisLabel = hide;
+  setLeftSuppressed(hide);
+}
+
+void PlotItem::setManuallyHideRightAxisLabel(bool hide) {
+  _manuallyHideRightAxisLabel = hide;
+  setRightSuppressed(hide);
+}
+
+void PlotItem::setManuallyHideTopAxisLabel(bool hide) {
+  _manuallyHideTopAxisLabel = hide;
+  setTopSuppressed(hide);
+}
+
+void PlotItem::setManuallyHideBottomAxisLabel(bool hide) {
+  _manuallyHideBottomAxisLabel = hide;
+  setBottomSuppressed(hide);
+}
+
+
 QRectF PlotItem::projectionRect() const {
   return _projectionRect;
 }
@@ -1927,22 +1956,34 @@ QString PlotItem::autoTopLabel() const {
 
 
 void PlotItem::setTopSuppressed(bool suppressed) {
+  if (_manuallyHideTopAxisLabel) {
+    suppressed = true;
+  }
   _topLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setRightSuppressed(bool suppressed) {
+  if (_manuallyHideRightAxisLabel) {
+    suppressed = true;
+  }
   _rightLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setLeftSuppressed(bool suppressed) {
+  if (_manuallyHideLeftAxisLabel) {
+    suppressed = true;
+  }
   _leftLabelDetails->setVisible(!suppressed);
   _yAxis->setAxisVisible(!suppressed);
 }
 
 
 void PlotItem::setBottomSuppressed(bool suppressed) {
+  if (_manuallyHideBottomAxisLabel) {
+    suppressed = true;
+  }
   _bottomLabelDetails->setVisible(!suppressed);
   _xAxis->setAxisVisible(!suppressed);
 }
@@ -3635,6 +3676,27 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           rc->setShowLegend(QVariant(av.toString()).toBool());
         }
+
+        av = attrs.value("hidebottomaxislabel");
+        if (!av.isNull()) {
+          rc->setManuallyHideBottomAxisLabel(QVariant(av.toString()).toBool());
+        }
+
+        av = attrs.value("hidetopaxislabel");
+        if (!av.isNull()) {
+          rc->setManuallyHideTopAxisLabel(QVariant(av.toString()).toBool());
+        }
+
+        av = attrs.value("hideleftaxislabel");
+        if (!av.isNull()) {
+          rc->setManuallyHideLeftAxisLabel(QVariant(av.toString()).toBool());
+        }
+
+        av = attrs.value("hiderightaxislabel");
+        if (!av.isNull()) {
+          rc->setManuallyHideRightAxisLabel(QVariant(av.toString()).toBool());
+        }
+
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           rc->setDescriptiveName(attrs.value("descriptiveName").toString());
         }

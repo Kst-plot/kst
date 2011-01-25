@@ -178,6 +178,18 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QString autoRightLabel() const;
     QString autoTopLabel() const;
 
+    // These are for explicitly hiding the axis and labels and are
+    // not by being in a shared axis box or cleared by 'z' mode.
+    bool manuallyHideLeftAxisLabel() const {return _manuallyHideLeftAxisLabel;}
+    bool manuallyHideRightAxisLabel() const  {return _manuallyHideRightAxisLabel;}
+    bool manuallyHideTopAxisLabel() const  {return _manuallyHideTopAxisLabel;}
+    bool manuallyHideBottomAxisLabel() const  {return _manuallyHideBottomAxisLabel;}
+
+    void setManuallyHideLeftAxisLabel(bool hide);
+    void setManuallyHideRightAxisLabel(bool hide);
+    void setManuallyHideTopAxisLabel(bool hide);
+    void setManuallyHideBottomAxisLabel(bool hide);
+
     PlotLabel* leftLabelDetails() const { return _leftLabelDetails; }
     PlotLabel* rightLabelDetails() const { return _rightLabelDetails; }
     PlotLabel* topLabelDetails() const { return _topLabelDetails; }
@@ -407,6 +419,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotLabel* _topLabelDetails;
     PlotLabel* _bottomLabelDetails;
     PlotLabel* _numberLabelDetails;
+
+    bool _manuallyHideLeftAxisLabel;
+    bool _manuallyHideRightAxisLabel;
+    bool _manuallyHideTopAxisLabel;
+    bool _manuallyHideBottomAxisLabel;
 
     bool _plotRectsDirty;
     QRectF _calculatedPlotRect;

@@ -68,6 +68,9 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
 
+  connect(_hideBottomLeft, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_hideTopRight, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpret, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
   connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -418,6 +421,30 @@ void AxisTab::setLabelRotation(const int rotation) {
   _rotation->setValue(rotation);
 }
 
+bool AxisTab::hideTopRight() const {
+  return (_hideTopRight->isChecked());
+}
+
+bool AxisTab::hideTopRightDirty() const {
+  return _hideTopRight->checkState() != Qt::PartiallyChecked;
+}
+
+void AxisTab::setHideTopRight(bool hide) {
+  _hideTopRight->setChecked(hide);
+}
+
+bool AxisTab::hideBottomLeft() const {
+  return (_hideBottomLeft->isChecked());
+}
+
+bool AxisTab::hideBottomLeftDirty() const {
+  return _hideBottomLeft->checkState() != Qt::PartiallyChecked;
+}
+
+void AxisTab::setHideBottomLeft(bool hide) {
+  _hideBottomLeft->setChecked(hide);
+}
+
 
 void AxisTab::updateButtons() {
   _scaleBaseOffset->setEnabled(!(_scaleInterpret->checkState() == Qt::PartiallyChecked || _scaleAutoBaseOffset->checkState() == Qt::PartiallyChecked));
@@ -463,6 +490,11 @@ void AxisTab::clearTabValues() {
   _axisMajorLineColor->clearSelection();
   _axisMinorLineColor->clearSelection();
   _axisMinorTickCount->clear();
+}
+
+void AxisTab::setAsYAxis() {
+  _hideBottomLeft->setText(i18n("Hide left"));
+  _hideTopRight->setText(i18n("Hide right"));
 }
 
 }

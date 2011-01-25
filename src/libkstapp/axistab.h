@@ -116,8 +116,18 @@ class AxisTab : public DialogTab, Ui::AxisTab {
     bool labelRotationDirty() const;
     void setLabelRotation(const int rotation);
 
+    bool hideTopRight() const;
+    bool hideTopRightDirty() const;
+    void setHideTopRight( bool hide);
+
+    bool hideBottomLeft() const;
+    bool hideBottomLeftDirty() const;
+    void setHideBottomLeft( bool hide);
+
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
+
+    void setAsYAxis();
 
   public Q_SLOTS:
     void updateButtons();

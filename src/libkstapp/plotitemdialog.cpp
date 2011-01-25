@@ -94,6 +94,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(_xAxisTab, SIGNAL(apply()), this, SLOT(xAxisChanged()));
 
   _yAxisTab = new AxisTab(this);
+  _yAxisTab->setAsYAxis();
   DialogPage *yAxisPage = new DialogPage(this);
   yAxisPage->setPageTitle(tr("Y-Axis"));
   yAxisPage->addDialogTab(_yAxisTab);
@@ -287,6 +288,8 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setInterpret(_plotItem->xAxis()->axisInterpret());
   _xAxisTab->setAxisDisplay(_plotItem->xAxis()->axisDisplay());
   _xAxisTab->setAxisInterpretation(_plotItem->xAxis()->axisInterpretation());
+  _xAxisTab->setHideTopRight(_plotItem->manuallyHideTopAxisLabel());
+  _xAxisTab->setHideBottomLeft(_plotItem->manuallyHideBottomAxisLabel());
   _xAxisTab->setAxisMinorTickCount(_plotItem->xAxis()->axisMinorTickCount());
   _xAxisTab->setSignificantDigits(_plotItem->xAxis()->axisSignificantDigits());
   _xAxisTab->setLabelRotation(_plotItem->xAxis()->axisLabelRotation());
@@ -311,6 +314,8 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setInterpret(_plotItem->yAxis()->axisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->yAxis()->axisDisplay());
   _yAxisTab->setAxisInterpretation(_plotItem->yAxis()->axisInterpretation());
+  _yAxisTab->setHideTopRight(_plotItem->manuallyHideRightAxisLabel());
+  _yAxisTab->setHideBottomLeft(_plotItem->manuallyHideLeftAxisLabel());
   _yAxisTab->setAxisMinorTickCount(_plotItem->yAxis()->axisMinorTickCount());
   _yAxisTab->setSignificantDigits(_plotItem->yAxis()->axisSignificantDigits());
   _yAxisTab->setLabelRotation(_plotItem->yAxis()->axisLabelRotation());
@@ -698,10 +703,18 @@ void PlotItemDialog::xAxisChanged() {
       PlotItem* plotItem = (PlotItem*)item;
       saveAxis(plotItem->xAxis(), _xAxisTab);
       plotItem->setProjectionRect(plotItem->projectionRect(), plotItem->xAxis()->isDirty());
+      if (_xAxisTab->hideBottomLeftDirty()) {
+        plotItem->setManuallyHideBottomAxisLabel(_xAxisTab->hideBottomLeft());
+      }
+      if (_xAxisTab->hideTopRightDirty()) {
+        plotItem->setManuallyHideTopAxisLabel(_xAxisTab->hideTopRight());
+      }
     }
   } else {
     saveAxis(_plotItem->xAxis(), _xAxisTab);
     _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
+    _plotItem->setManuallyHideBottomAxisLabel(_xAxisTab->hideBottomLeft());
+    _plotItem->setManuallyHideTopAxisLabel(_xAxisTab->hideTopRight());
   }
   kstApp->mainWindow()->document()->setChanged(true);
 }
@@ -714,10 +727,18 @@ void PlotItemDialog::yAxisChanged() {
       PlotItem* plotItem = (PlotItem*)item;
       saveAxis(plotItem->yAxis(), _yAxisTab);
       plotItem->setProjectionRect(plotItem->projectionRect(), plotItem->yAxis()->isDirty());
+      if (_yAxisTab->hideBottomLeftDirty()) {
+        plotItem->setManuallyHideLeftAxisLabel(_yAxisTab->hideBottomLeft());
+      }
+      if (_yAxisTab->hideTopRightDirty()) {
+        plotItem->setManuallyHideRightAxisLabel(_yAxisTab->hideTopRight());
+      }
     }
   } else {
     saveAxis(_plotItem->yAxis(), _yAxisTab);
     _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->yAxis()->isDirty());
+    _plotItem->setManuallyHideLeftAxisLabel(_yAxisTab->hideBottomLeft());
+    _plotItem->setManuallyHideRightAxisLabel(_yAxisTab->hideTopRight());
   }
   kstApp->mainWindow()->document()->setChanged(true);
 }

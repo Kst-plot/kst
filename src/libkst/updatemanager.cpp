@@ -68,6 +68,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
     return;
   }
 
+  //FIXME: should we just skip updating data sources in this case?
   if (_paused && !forceImmediate) {
     return;
   }
