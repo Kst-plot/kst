@@ -27,6 +27,7 @@ ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc)
   _model = 0;
   setupUi(this);
   setAttribute(Qt::WA_DeleteOnClose);
+  connect(updateButton, SIGNAL(clicked()), this, SLOT(update()));
 }
 
 
@@ -43,11 +44,16 @@ void ViewPrimitiveDialog::deleteModel() {
 }
 
 
-void ViewPrimitiveDialog::refresh() {
+void ViewPrimitiveDialog::update() {
   deleteModel();
   _model = createModel(_doc->objectStore());
-  _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
   _tree->setModel(_model);
+  _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
+  QApplication::processEvents();
+  if(_tree->header() && _tree->header()->count() > 1) {
+    _tree->header()->setResizeMode(0, QHeaderView::Interactive);
+    _tree->header()->setResizeMode(1, QHeaderView::Interactive);
+  }
 }
 
 
@@ -56,7 +62,7 @@ ViewStringDialog::ViewStringDialog(QWidget *parent, Document *doc) :
   ViewPrimitiveDialog(parent, doc)
 {
   setWindowTitle(tr("View String Values"));
-  refresh();
+  update();
 }
 
 
@@ -70,7 +76,7 @@ ViewScalarDialog::ViewScalarDialog(QWidget *parent, Document *doc) :
   ViewPrimitiveDialog(parent, doc)
 {
   setWindowTitle(tr("View Scalar Values"));
-  refresh();
+  update();
 }
 
 

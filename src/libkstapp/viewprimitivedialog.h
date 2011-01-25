@@ -34,8 +34,8 @@ class ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
     ViewPrimitiveDialog(QWidget *parent, Document *doc);
     virtual ~ViewPrimitiveDialog();
 
-  protected:
-    void refresh();
+  protected Q_SLOTS:
+    void update();
 
   private:
     virtual QAbstractItemModel* createModel(ObjectStore *store) = 0;
