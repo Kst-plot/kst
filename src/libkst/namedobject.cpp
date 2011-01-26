@@ -34,6 +34,7 @@ NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QStri
   _initial_plotnum = _plotnum; // plots
   _initial_lnum = _lnum; // legend
   _initial_dnum = _dnum; // view image
+  _initial_dsnum = _dsnum; // datasource
 
 }
 
@@ -118,6 +119,8 @@ void NamedObject::saveNameInfo(QXmlStreamWriter &s, unsigned I) {
     s.writeAttribute("initialLNum", QString::number(_initial_lnum));
   if (I & DNUM)
     s.writeAttribute("initialDNum", QString::number(_initial_dnum));
+  if (I & DSNUM)
+    s.writeAttribute("initialDSNum", QString::number(_initial_dsnum));
 }
 
 void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
@@ -178,6 +181,10 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
   R = attrs.value("initialDNum");
   if (!R.isEmpty())
     _dnum = R.toString().toInt();
+
+  R = attrs.value("initialDSNum");
+  if (!R.isEmpty())
+    _dsnum = R.toString().toInt();
 }
 
 
@@ -197,6 +204,7 @@ void NamedObject::resetNameIndex() {
   _plotnum = 1; // plots
   _lnum = 1; // legends
   _dnum = 1; // other view objects
+  _dsnum = 1; // datasource
 
   max_vnum = 0; // vectors
   max_pnum = 0; // plugins
@@ -212,6 +220,7 @@ void NamedObject::resetNameIndex() {
   max_plotnum = 0;
   max_lnum = 0;
   max_dnum = 0;
+  max_dsnum = 0;
 }
 
 //void NamedObject::_initializeShortName() {

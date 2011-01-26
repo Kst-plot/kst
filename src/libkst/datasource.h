@@ -163,6 +163,8 @@ class KSTCORE_EXPORT DataSource : public Object
 
     virtual QString fileName() const;
 
+    QMap<QString, QString> fileMetas() const;
+
     /** Returns the file type or an error message in a static string
       The string is stored in a separate static variable, so changes
       to this are ignored.  It is updated each time the fn is called */

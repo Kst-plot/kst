@@ -41,6 +41,7 @@ KSTCORE_EXPORT extern int _mnum; // matrix
 KSTCORE_EXPORT extern int _plotnum; // plot item
 KSTCORE_EXPORT extern int _lnum; // legend
 KSTCORE_EXPORT extern int _dnum; // view item (drawable)
+KSTCORE_EXPORT extern int _dsnum; // datasource
 
 KSTCORE_EXPORT extern int max_vnum; // vectors
 KSTCORE_EXPORT extern int max_pnum; // plugins
@@ -56,6 +57,7 @@ KSTCORE_EXPORT extern int max_mnum; // matrix
 KSTCORE_EXPORT extern int max_plotnum; // plot item
 KSTCORE_EXPORT extern int max_lnum; // legend
 KSTCORE_EXPORT extern int max_dnum; // view item
+KSTCORE_EXPORT extern int max_dsnum; // datasource
 
 class KSTCORE_EXPORT NamedObject 
 {
@@ -77,7 +79,8 @@ public:
       MNUM   = 0x0400,
       PLOTNUM= 0x0800,
       LNUM   = 0x1000,
-      DNUM   = 0x2000
+      DNUM   = 0x2000,
+      DSNUM  = 0x4000
     };
 
     // name system: see object names devel doc
@@ -116,6 +119,7 @@ public:
     int _initial_plotnum; // plot item
     int _initial_lnum; // legend
     int _initial_dnum; // view item
+    int _initial_dsnum; // datasource
 };
 
 }

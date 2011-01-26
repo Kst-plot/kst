@@ -99,6 +99,10 @@ Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
 
 
 void DataSource::_initializeShortName() {
+  _shortName = QString("DS%1").arg(_dsnum);
+  if (_dsnum>max_dsnum)
+    max_dsnum = _dsnum;
+  _dsnum++;
 }
 
 bool DataSource::isValid() const {
@@ -145,13 +149,9 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   _writable = false;
   _watcher = 0L;
 
-  QString shortFilename = filename;
-  while (shortFilename.at(shortFilename.length() - 1) == '/') {
-    shortFilename.truncate(shortFilename.length() - 1);
-  }
-  shortFilename = shortFilename.section('/', -1);
-  QString tn = i18n("DS-%1", shortFilename);
-  _shortName = tn;
+  _initializeShortName();
+
+  setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ")");
 
   // TODO What is the better default?
   setUpdateType(File);
@@ -163,6 +163,18 @@ DataSource::~DataSource() {
   delete interf_string;
   delete interf_vector;
   delete interf_matrix;
+}
+
+
+QMap<QString, QString> DataSource::fileMetas() const
+{
+  QMap<QString, QString> map;
+  QFileInfo info(_filename);
+  map["File name"] = info.fileName();
+  map["File path"] = info.path();
+  map["File creation"] = info.created().toString(Qt::ISODate);
+  map["File modification"] = info.lastModified().toString(Qt::ISODate);
+  return map;
 }
 
 

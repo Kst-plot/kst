@@ -154,6 +154,7 @@ bool DataInterfaceAsciiString::isValid(const QString& string) const
 
 
 
+
 //
 // AsciiSource
 //
@@ -180,7 +181,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   setInterface(is);
   setInterface(iv);
 
-  reset();   
+  reset();
 
   // TODO only works for local files
   setUpdateType(File);
@@ -224,6 +225,8 @@ void AsciiSource::reset()
   _strings.clear();
 
   Object::reset();
+
+  _strings = fileMetas();
 }
 
 

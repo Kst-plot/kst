@@ -28,6 +28,7 @@ namespace Kst
   int _plotnum = 1; // plots
   int _lnum = 1; // legend
   int _dnum = 1; // view item
+  int _dsnum = 1; // datasource
 
   int max_vnum = 0; // vectors
   int max_pnum = 0; // plugins
@@ -43,4 +44,5 @@ namespace Kst
   int max_plotnum = 0; // plots
   int max_lnum = 0; // legends
   int max_dnum = 0; // view item
+  int max_dsnum = 0; // datasource
 }

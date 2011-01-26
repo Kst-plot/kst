@@ -190,18 +190,6 @@ QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, in
 }
 
 
-PrimitiveTreeItem* PrimitiveModel::addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent)
-{
-  QString path = dataSource->descriptiveName();
-  QFileInfo info(path);
-  
-  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << info.fileName(), parent);
-  new PrimitiveTreeItem(QList<QVariant>() << "In directory" << info.path(), item);
-
-  return item;
-}
-
-
 
 }
 

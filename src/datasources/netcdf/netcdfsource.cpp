@@ -92,7 +92,7 @@ public:
   int read(const QString&, DataString::ReadInfo&);
 
   // named elements
-  QStringList list() const { return netcdf._stringList; }
+  QStringList list() const { return netcdf._strings.keys(); }
   bool isListComplete() const { return true; }
   bool isValid(const QString&) const;
 
@@ -110,15 +110,21 @@ private:
 };
 
 
+//-------------------------------------------------------------------------------------------
 int DataInterfaceNetCdfString::read(const QString& string, DataString::ReadInfo& p)
 {
-  return netcdf.readString(p.value, string);
+  //return netcdf.readString(p.value, string);
+  if (isValid(string) && p.value) {
+    *p.value = netcdf._strings[string];
+    return 1;
+  }
+  return 0;
 }
 
 
 bool DataInterfaceNetCdfString::isValid(const QString& string) const
 {
-  return  netcdf._stringList.contains( string );
+  return netcdf._strings.contains( string );
 }
 
 
@@ -328,6 +334,7 @@ NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   _maxFrameCount = 0;
 
   _filename = filename;
+  _strings = fileMetas();
   _valid = initFile();
 }
 
@@ -391,7 +398,7 @@ bool NetcdfSource::initFile() {
       delete[] attString;
       //TODO port
       //KstString *ms = new KstString(KstObjectTag(attrName, tag()), this, attrValue);
-      _stringList += attrName;
+      _strings[attrName] = attrValue;
     }
     delete att;
   }

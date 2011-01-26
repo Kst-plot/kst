@@ -76,13 +76,13 @@ class NetcdfSource : public Kst::DataSource {
     // we must hold an NcError to overwrite the exit-on-error behaviour of netCDF
     NcError _ncErr;
 
-    // QMap<QString, QString> _metaData;
+    QMap<QString, QString> _strings;
 
     // TODO remove friend
     QStringList _scalarList;
     QStringList _fieldList;
     QStringList _matrixList;
-    QStringList _stringList;
+    //QStringList _stringList;
 
 
     friend class DataInterfaceNetCdfScalar;
