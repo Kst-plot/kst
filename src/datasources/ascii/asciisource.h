@@ -155,11 +155,26 @@ class AsciiSource : public Kst::DataSource
     };
 
     struct IsInString {
-      IsInString(const QString& s) : str(s) {
+      IsInString(const QString& s) : str(s), chars(s.size()) {
+        QByteArray ascii = str.toAscii();
+        for (int i = 0; i < 6 && i < chars; i++) {
+          ch[i] = ascii[i];
+        }
       }
       const QString str;
+      const int chars;
+      char ch[6];
       inline bool operator()(const char c) const {
-        return str.contains(c);
+        switch (chars) {
+          case 0: return false;
+          case 1: return ch[0]==c;
+          case 2: return ch[0]==c || ch[1]==c;
+          case 3: return ch[0]==c || ch[1]==c || ch[2]==c;
+          case 4: return ch[0]==c || ch[1]==c || ch[2]==c || ch[3]==c;
+          case 5: return ch[0]==c || ch[1]==c || ch[2]==c || ch[3]==c || ch[4]==c;
+          case 6: return ch[0]==c || ch[1]==c || ch[2]==c || ch[3]==c || ch[4]==c || ch[5]==c;
+          default: return str.contains(c);
+        }
       }
     };
 
