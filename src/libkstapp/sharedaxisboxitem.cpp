@@ -211,9 +211,10 @@ void SharedAxisBoxItem::breakShare() {
   foreach (PlotItem *plotItem, list) {
     plotItem->setPos(mapToParent(plotItem->pos()));
     plotItem->setSharedAxisBox(0);
-    plotItem->setLabelsVisible(true);
-    plotItem->xAxis()->setAxisZoomMode(xAxisZoomMode());
-    plotItem->yAxis()->setAxisZoomMode(yAxisZoomMode());
+    plotItem->setTopSuppressed(false);
+    plotItem->setBottomSuppressed(false);
+    plotItem->setLeftSuppressed(false);
+    plotItem->setRightSuppressed(false);
     plotItem->update();
   }
   if (_layout) {

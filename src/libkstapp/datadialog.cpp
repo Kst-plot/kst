@@ -34,7 +34,7 @@
 
 namespace Kst {
 
-DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
+DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent, bool edit_multiple)
   : Dialog(parent), _dataObject(dataObject), _modified(false) {
 
   _dataObjectName.clear();
@@ -51,14 +51,14 @@ DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent)
     qFatal("ERROR: can't construct a Data Dialog without a document");
   }
 
-  createGui();
+  createGui(edit_multiple);
 }
 
 
 DataDialog::~DataDialog() {
 }
 
-void DataDialog::createGui() {
+void DataDialog::createGui(bool edit_multiple) {
 
   if (_mode == New) {
     buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
@@ -71,8 +71,12 @@ void DataDialog::createGui() {
   QVBoxLayout *extensionLayout = new QVBoxLayout(extension);
   extensionLayout->setContentsMargins(0, -1, 0, -1);
 
-  _editMultipleWidget = new EditMultipleWidget();
-  extensionLayout->addWidget(_editMultipleWidget);
+  if (edit_multiple) {
+    _editMultipleWidget = new EditMultipleWidget();
+    extensionLayout->addWidget(_editMultipleWidget);
+  } else {
+    _editMultipleWidget = 0L;
+  }
 
   extension->setLayout(extensionLayout);
 
@@ -90,10 +94,11 @@ void DataDialog::createGui() {
   _tagStringAuto = new QCheckBox(tr("&Auto","automatic"), box);
   connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
 
-  _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));
-  _editMultipleButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  connect(_editMultipleButton, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
-
+  if (edit_multiple) {
+    _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));
+    _editMultipleButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(_editMultipleButton, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
+  }
   QLabel *spacer = new QLabel();
 
   if (_dataObject) {
@@ -103,7 +108,9 @@ void DataDialog::createGui() {
   } else {
     _tagStringAuto->setChecked(true);
     setTagString(QString());
-    _editMultipleButton->setVisible(false);
+    if (edit_multiple) {
+      _editMultipleButton->setVisible(false);
+    }
   }
 
   layout->addWidget(_nameLabel);
@@ -111,7 +118,9 @@ void DataDialog::createGui() {
   layout->addWidget(_shortName);
   layout->addWidget(_tagStringAuto);
   layout->addWidget(spacer);
-  layout->addWidget(_editMultipleButton);
+  if (edit_multiple) {
+    layout->addWidget(_editMultipleButton);
+  }
 
   box->setLayout(layout);
 

@@ -33,7 +33,7 @@ class DataDialog : public Dialog {
   Q_OBJECT
   public:
     enum EditMode { New, Edit, EditMultiple };
-    explicit DataDialog(ObjectPtr dataObject = 0, QWidget *parent = 0);
+    explicit DataDialog(ObjectPtr dataObject = 0, QWidget *parent = 0, bool edit_multiple = true);
     virtual ~DataDialog();
 
     EditMode editMode() const { return _mode; }
@@ -72,7 +72,7 @@ class DataDialog : public Dialog {
     void editSingleMode();
 
   private:
-    void createGui();
+    void createGui(bool edit_multiple = true);
     void updateApplyButton();
 
   private:

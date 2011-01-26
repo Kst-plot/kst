@@ -1468,6 +1468,12 @@ void PlotItem::calculatePlotRects() {
   qreal top = _topLabelDetails->isVisible() ? topMarginSize() : 0.0;
 
   QPointF topLeft(rect().topLeft() + QPointF(left, top));
+  if (_manuallyHideRightAxisLabel && !_isInSharedAxisBox) {
+    right += 1;
+  }
+  if (_manuallyHideBottomAxisLabel && !_isInSharedAxisBox) {
+    bottom += 1;
+  }
   QPointF bottomRight(rect().bottomRight() - QPointF(right, bottom));
 
   _calculatedPlotAxisRect = QRectF(topLeft, bottomRight);
@@ -1589,25 +1595,32 @@ void PlotItem::setTopPadding(const qreal padding) {
   }
 }
 
-
 void PlotItem::setManuallyHideLeftAxisLabel(bool hide) {
   _manuallyHideLeftAxisLabel = hide;
-  setLeftSuppressed(hide);
+  if (!_isInSharedAxisBox) {
+    setLeftSuppressed(hide);
+  }
 }
 
 void PlotItem::setManuallyHideRightAxisLabel(bool hide) {
   _manuallyHideRightAxisLabel = hide;
-  setRightSuppressed(hide);
+  if (!_isInSharedAxisBox) {
+    setRightSuppressed(hide);
+  }
 }
 
 void PlotItem::setManuallyHideTopAxisLabel(bool hide) {
   _manuallyHideTopAxisLabel = hide;
-  setTopSuppressed(hide);
+  if (!_isInSharedAxisBox) {
+    setTopSuppressed(hide);
+  }
 }
 
 void PlotItem::setManuallyHideBottomAxisLabel(bool hide) {
   _manuallyHideBottomAxisLabel = hide;
-  setBottomSuppressed(hide);
+  if (!_isInSharedAxisBox) {
+    setBottomSuppressed(hide);
+  }
 }
 
 
@@ -1956,24 +1969,30 @@ QString PlotItem::autoTopLabel() const {
 
 
 void PlotItem::setTopSuppressed(bool suppressed) {
-  if (_manuallyHideTopAxisLabel) {
-    suppressed = true;
+  if (!_isInSharedAxisBox) {
+    if (_manuallyHideTopAxisLabel) {
+      suppressed = true;
+    }
   }
   _topLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setRightSuppressed(bool suppressed) {
-  if (_manuallyHideRightAxisLabel) {
-    suppressed = true;
+  if (!_isInSharedAxisBox) {
+    if (_manuallyHideRightAxisLabel) {
+     suppressed = true;
+    }
   }
   _rightLabelDetails->setVisible(!suppressed);
 }
 
 
 void PlotItem::setLeftSuppressed(bool suppressed) {
-  if (_manuallyHideLeftAxisLabel) {
-    suppressed = true;
+  if (!_isInSharedAxisBox) {
+    if (_manuallyHideLeftAxisLabel) {
+      suppressed = true;
+    }
   }
   _leftLabelDetails->setVisible(!suppressed);
   _yAxis->setAxisVisible(!suppressed);
@@ -1981,8 +2000,10 @@ void PlotItem::setLeftSuppressed(bool suppressed) {
 
 
 void PlotItem::setBottomSuppressed(bool suppressed) {
-  if (_manuallyHideBottomAxisLabel) {
-    suppressed = true;
+  if (!_isInSharedAxisBox) {
+    if (_manuallyHideBottomAxisLabel) {
+      suppressed = true;
+    }
   }
   _bottomLabelDetails->setVisible(!suppressed);
   _xAxis->setAxisVisible(!suppressed);

@@ -61,6 +61,7 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   _updateBox->addItem("Don't update");
   updateUpdateBox();
   connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
+  connect(_updateBox, SIGNAL(activated(int)), this, SIGNAL(modified()));
 }
 
 
@@ -291,7 +292,7 @@ void VectorTab::showConfigWidget() {
 }
 
 VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
-  : DataDialog(dataObject, parent) {
+  : DataDialog(dataObject, parent, false) {
 
   if (editMode() == Edit)
     setWindowTitle(tr("Edit Vector"));

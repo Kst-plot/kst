@@ -490,6 +490,9 @@ void AxisTab::clearTabValues() {
   _axisMajorLineColor->clearSelection();
   _axisMinorLineColor->clearSelection();
   _axisMinorTickCount->clear();
+
+  _hideBottomLeft->setCheckState(Qt::PartiallyChecked);
+  _hideTopRight->setCheckState(Qt::PartiallyChecked);
 }
 
 void AxisTab::setAsYAxis() {
