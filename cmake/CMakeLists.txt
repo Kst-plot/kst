@@ -12,11 +12,6 @@ set(kst_version_minor 0)
 set(kst_version_patch 3)
 set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 
-include(SubversionHeader)
-kst_revision_project_name(Revision)
-add_definitions(-DKST_HAVE_SVN_REVISION_H)
-SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
-
 set(kst_binary_name kst)
 
 
@@ -32,9 +27,20 @@ kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
+kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
 
 
 message(STATUS)
+
+kst_revision_project_name(Revision)
+add_definitions(-DKST_HAVE_SVN_REVISION_H)
+if(kst_svnversion)
+	include(SubversionHeader)
+	SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
+else()
+	file(WRITE ${CMAKE_BINARY_DIR}/svnrevision.h.tmp "#define SVN_REVISION \"unknown\"\n")
+	configure_file(${CMAKE_BINARY_DIR}/svnrevision.h.tmp ${CMAKE_BINARY_DIR}/svnrevision.h COPYONLY)
+endif()
 
 # Find 3rd party libraries
 find_package(Qt4 REQUIRED)

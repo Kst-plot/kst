@@ -22,6 +22,13 @@ macro(kst_revision_project_name name)
 endmacro()
 
 
+macro(kst_revision_add_dependency)
+	if(kst_revision_project)
+		add_dependencies(${kst_name} ${kst_revision_project})
+	endif()
+endmacro()
+
+
 macro(kst_files_find folder)
 	set(_folder ${kst_dir}/${folder})
 	file(GLOB _sources     ${_folder}/*.c) 
@@ -67,7 +74,7 @@ macro(kst_add_executable)
 	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
 	target_link_libraries(${kst_name} ${kst_qtmain_library})
 	kst_set_target_properties()
-	add_dependencies(${kst_name} ${kst_revision_project})
+	kst_revision_add_dependency()
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
 endmacro()
 
@@ -113,7 +120,7 @@ macro(kst_add_library type)
 	endif()
 	kst_set_target_properties()
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-	add_dependencies(${kst_name} ${kst_revision_project})
+	kst_revision_add_dependency()
 	if(WIN32)
 		install(TARGETS ${kst_name} RUNTIME DESTINATION bin
 		                            ARCHIVE DESTINATION lib)
