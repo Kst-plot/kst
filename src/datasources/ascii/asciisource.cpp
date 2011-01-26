@@ -341,7 +341,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 
   } while ((bufread == MAXBUFREADLEN));
 
-  _rowIndex.resize(_numFrames);
+  _rowIndex.resize(_numFrames + 1);
 
   return (!new_data && !force_update ? NoChange : Updated);
 }
