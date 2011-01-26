@@ -671,7 +671,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   rc += "INDEX";
 
   const QString columnDelimiter = cfg->_columnDelimiter.value();
-  const QRegExp regexColumnDelemiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
+  const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
   if (cfg->_readFields) {
     int l = cfg->_fieldsLine;
     while (!file.atEnd()) {
@@ -680,7 +680,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       if (l-- == 0) {
         if (r >= 0) {
           if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
-            rc += QString(line).trimmed().split(regexColumnDelemiter, QString::SkipEmptyParts);
+            rc += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
           } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
             int cnt = line.length() / cfg->_columnWidth;
             for (int i = 0; i < cnt; ++i) {
@@ -736,7 +736,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
         if (r > 1 && !regex.exactMatch(line)) {
           line = line.trimmed();
           if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
-            cnt = QString(line).split(regexColumnDelemiter, QString::SkipEmptyParts).count();
+            cnt = QString(line).split(regexColumnDelimiter, QString::SkipEmptyParts).count();
           } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
             cnt = line.length() / cfg->_columnWidth;
           } else {
@@ -756,7 +756,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     if (r > 1 && !regex.exactMatch(line)) { //at desired line, find count
       line = line.trimmed();
       if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
-        maxcnt = QString(line).split(regexColumnDelemiter, QString::SkipEmptyParts).count();
+        maxcnt = QString(line).split(regexColumnDelimiter, QString::SkipEmptyParts).count();
       } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
         maxcnt = line.length() / cfg->_columnWidth;
       } else {
