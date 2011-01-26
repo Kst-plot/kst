@@ -99,9 +99,17 @@ class AsciiSource : public Kst::DataSource
 
     bool openValidFile(QFile &file);
     static bool openFile(QFile &file);
+
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
 
+    struct LineEndingType {
+      bool is_crlf;
+      char character;
+      bool isCR() const { return character == '\r'; }
+      bool isLF() const { return character == '\n'; }
+    };
+    LineEndingType detectLineEndingType(QFile& file) const;
 
     // column and comment delimiter functions
 
@@ -178,29 +186,39 @@ class AsciiSource : public Kst::DataSource
       }
     };
 
-    struct IsLineBreak {
-      IsLineBreak() {
+    struct IsLineBreakLF {
+      IsLineBreakLF(const LineEndingType& t) : size(1) {
       }
+      const int size;
       inline bool operator()(const char c) const {
-        return c == '\n' || c == '\r';
+        return c == '\n';
+      }
+    };
+
+    struct IsLineBreakCR {
+      IsLineBreakCR(const LineEndingType& t) : size( t.is_crlf ? 2 : 1 ) {
+      }
+      const int size;
+      inline bool operator()(const char c) const {
+        return c == '\r';
       }
     };
 
 
     template<typename ColumnDelimiter>
     int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
-                    const ColumnDelimiter&);
+                    const LineEndingType&, const ColumnDelimiter&);
 
     template<typename ColumnDelimiter, typename CommentDelimiter>
     int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
-                    const ColumnDelimiter&, const CommentDelimiter&);
+                    const LineEndingType&, const ColumnDelimiter&, const CommentDelimiter&);
 
-    template<typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
+    template<typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
     int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
-                    const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
+                    const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
-    template<typename CommentDelimiter>
-    bool findDataRows(const char* buffer, int bufstart, int bufread, const CommentDelimiter&);
+    template<typename IsLineBreak, typename CommentDelimiter>
+    bool findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
