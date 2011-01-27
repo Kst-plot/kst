@@ -20,9 +20,7 @@
 #include <QSettings>
 #include <QXmlStreamWriter>
 #include <QXmlStreamAttributes>
-#include <QDebug>
-
-
+#include <QDomElement>
 
 template<class T, const char* Key, const char* Tag>
 class NamedParameter
@@ -53,6 +51,12 @@ public:
 
   void operator<<(QXmlStreamAttributes& att) {
     setValue(QVariant(att.value(Tag).toString()).value<T>());
+  }
+
+  void operator<<(const QDomElement& e) {
+    if (e.hasAttribute(Tag)) {
+      setValue(QVariant(e.attribute(Tag)).value<T>());
+    }
   }
 
   void setValue(const T& t) {

@@ -176,46 +176,26 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
 
 
 void AsciiSourceConfig::load(const QDomElement& e) {
-  // TODO use tags, isn't this code torally buggy, because trings and tags doesn't match?
-   QDomNode n = e.firstChild();
-   while (!n.isNull()) {
-     QDomElement e = n.toElement();
-     if (!e.isNull()) {
-       if (e.tagName() == "index") {
-         if (e.hasAttribute("vector")) {
-           _indexVector = e.attribute("vector");
-         }
-         if (e.hasAttribute("interpretation")) {
-           _indexInterpretation = Interpretation(e.attribute("interpretation").toInt());
-         }
-       } else if (e.tagName() == "comment") {
-         if (e.hasAttribute("delimiters")) {
-           _delimiters = e.attribute("delimiters").toLatin1();
-         }
-       } else if (e.tagName() == "columns") {
-         if (e.hasAttribute("type")) {
-           _columnType = ColumnType(e.attribute("type").toInt());
-         }
-         if (e.hasAttribute("width")) {
-           _columnWidth = e.attribute("width").toInt();
-         }
-         if (e.hasAttribute(Key_columnWidthIsConst)) {
-           _columnWidthIsConst = e.attribute(Key_columnWidthIsConst).toInt();
-         }
-         if (e.hasAttribute("delimiters")) {
-           _columnDelimiter = e.attribute("delimiters").toLatin1();
-         }
-       } else if (e.tagName() == "header") {
-         if (e.hasAttribute("start")) {
-           _dataLine = e.attribute("start").toInt();
-         }
-         if (e.hasAttribute("fields")) {
-           _fieldsLine = e.attribute("fields").toInt();
-         }
-       }
-     }
-     n = n.nextSibling();
-   }
+  QDomNode n = e.firstChild();
+  while (!n.isNull()) {
+    QDomElement elem = n.toElement();
+    if (!elem.isNull()) {
+      if (elem.tagName() == "properties") {
+        _fileNamePattern << elem;
+        _indexVector << elem;
+        _delimiters << elem;
+        _indexInterpretation << elem;
+        _columnType << elem;
+        _columnDelimiter << elem;
+        _columnWidth << elem;
+        _dataLine << elem;
+        _readFields << elem;
+        _useDot << elem;
+        _fieldsLine << elem;
+        _columnWidthIsConst << elem;
+      }
+    }
+    n = n.nextSibling();
+  }
 }
-
 
