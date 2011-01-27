@@ -330,13 +330,14 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
   _byteLength = file.size();
 
   int bufread = 0;
+  int bufstart = _rowIndex[_numFrames];
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     QVarLengthArray<char, MAXBUFREADLEN + 1> varBuffer;
     varBuffer.resize(varBuffer.capacity());
 
-    int bufstart = _rowIndex[_numFrames];
-    bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);    
+    bufstart += bufread;
+    bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
     const char* buffer = varBuffer.constData();
