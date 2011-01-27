@@ -37,8 +37,37 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(
   bgroup->addButton(_whitespace, AsciiSourceConfig::Whitespace);
   bgroup->addButton(_custom, AsciiSourceConfig::Custom);
   bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
-
   connect(bgroup, SIGNAL(buttonClicked(int)), this, SLOT(columnLayoutChanged(int)));
+
+  connect(_zeroStart, SIGNAL(stateChanged(int)), this, SLOT(zeroStartChanged(int)));
+}
+
+void ConfigWidgetAsciiInternal::zeroStartChanged(int state)
+{
+  int adjust_index = 0;
+  if (state == Qt::Checked) {
+    _index_offset = 0;
+    if (_startLine->minimum() == 1) {
+      adjust_index = -1;
+    }
+  } else {
+    _index_offset = 1;
+    if (_startLine->minimum() == 0) {
+      adjust_index = +1;
+    }
+  }
+
+  _startLine->setMinimum(0);
+  _fieldsLine->setMinimum(0);
+  _unitsLine->setMinimum(0);
+
+  _startLine->setValue(_startLine->value() + adjust_index);
+  _fieldsLine->setValue(_fieldsLine->value() + adjust_index);
+  _unitsLine->setValue(_unitsLine->value() + adjust_index);
+
+  _startLine->setMinimum(_index_offset);
+  _fieldsLine->setMinimum(_index_offset);
+  _unitsLine->setMinimum(_index_offset);
 }
 
 
@@ -70,12 +99,15 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._columnDelimiter = _columnDelimiter->text();
   config._columnWidth = _columnWidth->value();
   config._columnWidthIsConst = _columnWidthIsConst->isChecked();
-  config._dataLine = _startLine->value() - 1;
   config._readFields = _readFields->isChecked();
   config._readUnits = _readUnits->isChecked();
   config._useDot = _useDot->isChecked();
-  config._fieldsLine = _fieldsLine->value() - 1;
-  config._unitsLine = _unitsLine->value() - 1;
+
+  config._dataLine = _startLine->value() - _index_offset;
+  config._fieldsLine = _fieldsLine->value() - _index_offset;
+  config._unitsLine = _unitsLine->value() - _index_offset;
+
+  config._zeroStart = _zeroStart->isChecked();
 
   return config;
 }
@@ -88,12 +120,20 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _columnDelimiter->setText(config._columnDelimiter);
   _columnWidth->setValue(config._columnWidth);
   _columnWidthIsConst->setChecked(config._columnWidthIsConst);
-  _startLine->setValue(config._dataLine + 1);
   _readFields->setChecked(config._readFields);
   _readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
-  _fieldsLine->setValue(config._fieldsLine + 1);
-  _unitsLine->setValue(config._unitsLine + 1);
+  
+  _index_offset = 0;
+  _startLine->setMinimum(0);
+  _fieldsLine->setMinimum(0);
+  _unitsLine->setMinimum(0);
+  _startLine->setValue(config._dataLine);
+  _fieldsLine->setValue(config._fieldsLine);
+  _unitsLine->setValue(config._unitsLine);
+
+  _zeroStart->setChecked(config._zeroStart);
+  zeroStartChanged(config._zeroStart ? Qt::Checked : Qt::Unchecked);
 
   AsciiSourceConfig::ColumnType ct = (AsciiSourceConfig::ColumnType) config._columnType.value();
   if (ct == AsciiSourceConfig::Fixed) {
