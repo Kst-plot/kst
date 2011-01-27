@@ -11,7 +11,9 @@
  ***************************************************************************/
 
 #include "measuretime.h"
- 
+
+#include "debug.h"
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #else
@@ -101,7 +103,8 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  std::cout << qPrintable(name) << ": " << interval << " seconds\n";
+  //std::cout << qPrintable(name) << ": " << interval << " seconds\n";
+  Kst::Debug::self()->log(QString("Timing: %2 sec, Scope: %1").arg(name).arg(interval));
 }
 
 

@@ -299,7 +299,7 @@ AsciiSource::LineEndingType AsciiSource::detectLineEndingType(QFile& file) const
 #define MAXBUFREADLEN KST_PREALLOC
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
 {
-  MeasureTime t("internalDataSourceUpdate");
+  MeasureTime t("AsciiSource::internalDataSourceUpdate");
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -474,6 +474,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 #endif
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
+    MeasureTime t("AsciiSource::readField: same width for all columns");
     LexicalCast lexc;
     lexc.setDecimalSeparator(_config._useDot);
     const char* col_start = &buffer[0] + _config._columnWidth * (col - 1);
@@ -485,16 +486,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
-      MeasureTime t("character");
+      MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
       const IsCharacter column_del(_config._columnDelimiter.value()[0].toAscii());
       return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
-      MeasureTime t("string");
+      MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
       const IsInString column_del(_config._columnDelimiter.value());
       return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    MeasureTime t("whitespace");
+    MeasureTime t("AsciiSource::readField: whitespace separated columns");
     const IsWhiteSpace column_del;
     return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
   }
