@@ -581,7 +581,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
             toDouble(lexc, buffer, bufread, ch, &v[i], i);
             if (are_column_widths_const()) {
               if (col_start == -1) {
-              col_start = ch - _rowIndex[s]  + 1;
+                col_start = ch - _rowIndex[s];
               }
             }
             break;
