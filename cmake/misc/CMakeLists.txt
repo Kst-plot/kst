@@ -42,7 +42,8 @@ endif()
 # install data files
 if(UNIX)
 	if(NOT gyrodata)
-		configure_file(${kst_dir}/misc/tutorial/gyrodata.dat.gz ${CMAKE_BINARY_DIR}/gyrodata.dat.gz COPYONLY)
+		configure_file(${kst_dir}/sample_data/GYRODATA+free-width+whitespace+unixEOL+dot-decimal-separator.txt.gz 
+		${CMAKE_BINARY_DIR}/gyrodata.dat.gz COPYONLY)
 		execute_process(WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND gunzip gyrodata.dat.gz)
 		set(gyrodata ${CMAKE_BINARY_DIR}/gyrodata.dat CACHE STRING "gyrodata decompressed")
 	endif()
