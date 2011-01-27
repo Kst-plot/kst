@@ -86,7 +86,6 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
     NamedParameter<bool, Key_zeroStart, Tag_zeroStart> _zeroStart;
 
-    char _localSeparator;
 
   private:
     void save(QSettings& cfg);

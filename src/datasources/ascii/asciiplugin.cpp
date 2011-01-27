@@ -123,6 +123,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _readFields->setChecked(config._readFields);
   _readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
+  _useComma->setChecked(!config._useDot);
   
   _index_offset = 0;
   _startLine->setMinimum(0);

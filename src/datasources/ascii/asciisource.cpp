@@ -475,7 +475,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     LexicalCast lexc;
-    lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
+    lexc.setDecimalSeparator(_config._useDot);
     const char* col_start = &buffer[0] + _config._columnWidth * (col - 1);
     for (int i = 0; i < n; ++i) {
       /* Read appropriate column and convert to double
@@ -552,7 +552,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
                               const ColumnWidthsAreConst& are_column_widths_const)
 {
   LexicalCast lexc;
-  lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
+  lexc.setDecimalSeparator(_config._useDot);
   const QString delimiters = _config._delimiters.value();
 
   int col_start = -1;

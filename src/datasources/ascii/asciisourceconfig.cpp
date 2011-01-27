@@ -20,8 +20,6 @@
 
 #include "asciisource.h"
 
-#include <QLocale>
-
 //
 // AsciiSourceConfig
 //
@@ -77,8 +75,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _fieldsLine(0),
   _unitsLine(0),
   _useDot(true),
-  _zeroStart(false),
-  _localSeparator(QLocale().decimalPoint().toAscii())
+  _zeroStart(false)
 {
 }
 

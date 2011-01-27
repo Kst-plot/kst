@@ -109,31 +109,48 @@ double LexicalCast::toDouble(const char* signedp) const
 #endif
 
 
-LexicalCast::LexicalCast() : _useDot(false) 
+LexicalCast::LexicalCast()
 {
 }
 
 
 LexicalCast::~LexicalCast() 
 {
-  if (_useDot) {
-    setlocale(LC_NUMERIC, _originalLocal.constData());
-  }
-}
+  resetLocal();
+};
 
 
-void LexicalCast::setDecimalSeparator(bool useDot, char separator)
+void LexicalCast::resetLocal() 
 {
-  _useDot = useDot;  
-  if (_useDot) {   
-    _separator = '.';
-    _originalLocal = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
-    setlocale(LC_NUMERIC, "C");
-  } else {
-    _separator = separator;
+  
+  if (!_originalLocal.isEmpty()) {
+    setlocale(LC_NUMERIC, _originalLocal.constData());
+    _originalLocal.clear();
   }
 }
 
+
+void LexicalCast::setDecimalSeparator(bool useDot)
+{
+  useDot ? _separator = '.' : _separator = ',';
+
+  if (_separator != localSeparator()) {
+    _originalLocal = QByteArray((const char*) setlocale(LC_NUMERIC, 0));
+    if (useDot) {
+      setlocale(LC_NUMERIC, "C");
+    } else {
+      setlocale(LC_NUMERIC, "de");
+    }
+  } else {
+    resetLocal();
+  }
+}
+
+
+char LexicalCast::localSeparator() const
+{
+  return *setlocale(LC_NUMERIC, 0);
+}
 
 
 // vim: ts=2 sw=2 et
