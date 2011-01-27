@@ -70,10 +70,12 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._columnDelimiter = _columnDelimiter->text();
   config._columnWidth = _columnWidth->value();
   config._columnWidthIsConst = _columnWidthIsConst->isChecked();
-  config._dataLine = _startLine->value();
+  config._dataLine = _startLine->value() - 1;
   config._readFields = _readFields->isChecked();
+  //config._readUnits = _readUnits->isChecked();
   config._useDot = _useDot->isChecked();
-  config._fieldsLine = _fieldsLine->value();
+  config._fieldsLine = _fieldsLine->value() - 1;
+  //config._unitsLine = _unitsLine->value() - 1;
 
   return config;
 }
@@ -86,10 +88,12 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _columnDelimiter->setText(config._columnDelimiter);
   _columnWidth->setValue(config._columnWidth);
   _columnWidthIsConst->setChecked(config._columnWidthIsConst);
-  _startLine->setValue(config._dataLine);
+  _startLine->setValue(config._dataLine + 1);
   _readFields->setChecked(config._readFields);
+  //_readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
-  _fieldsLine->setValue(config._fieldsLine);
+  _fieldsLine->setValue(config._fieldsLine + 1);
+  //_unitsLine->setValue(config._unitsLine + 1);
 
   AsciiSourceConfig::ColumnType ct = (AsciiSourceConfig::ColumnType) config._columnType.value();
   if (ct == AsciiSourceConfig::Fixed) {

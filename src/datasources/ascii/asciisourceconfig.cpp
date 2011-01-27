@@ -66,9 +66,9 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _columnDelimiter(","),
   _columnWidth(DEFAULT_COLUMN_WIDTH),
   _columnWidthIsConst(false),
-  _dataLine(0),
+  _dataLine(1),
   _readFields(false),
-  _fieldsLine(0),
+  _fieldsLine(1),
   _useDot(true),
   _localSeparator(QLocale().decimalPoint().toAscii())
 {
