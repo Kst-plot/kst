@@ -53,8 +53,6 @@ class AsciiSourceConfig {
     static const char Tag_fieldsLine[];
     static const char Key_unitsLine[];
     static const char Tag_unitsLine[];
-    static const char Key_zeroStart[];
-    static const char Tag_zeroStart[];
 
   public:
     AsciiSourceConfig();
@@ -84,7 +82,6 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_readUnits, Tag_readUnits> _readUnits;
     NamedParameter<int, Key_unitsLine, Tag_unitsLine> _unitsLine;
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
-    NamedParameter<bool, Key_zeroStart, Tag_zeroStart> _zeroStart;
 
 
   private:

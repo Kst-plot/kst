@@ -90,10 +90,9 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
 
   private Q_SLOTS:
     void columnLayoutChanged(int);
-    void zeroStartChanged(int state);
 
   private:
-    int _index_offset;
+    const int _index_offset;
 
 };
 

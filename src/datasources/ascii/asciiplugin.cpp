@@ -30,7 +30,11 @@
 
 
 
-ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() {
+ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : 
+    QWidget(parent), 
+    Ui_AsciiConfig(),
+    _index_offset(1)
+{
   setupUi(this);
 
   QButtonGroup* bgroup = new QButtonGroup(this);
@@ -38,36 +42,6 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(
   bgroup->addButton(_custom, AsciiSourceConfig::Custom);
   bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
   connect(bgroup, SIGNAL(buttonClicked(int)), this, SLOT(columnLayoutChanged(int)));
-
-  connect(_zeroStart, SIGNAL(stateChanged(int)), this, SLOT(zeroStartChanged(int)));
-}
-
-void ConfigWidgetAsciiInternal::zeroStartChanged(int state)
-{
-  int adjust_index = 0;
-  if (state == Qt::Checked) {
-    _index_offset = 0;
-    if (_startLine->minimum() == 1) {
-      adjust_index = -1;
-    }
-  } else {
-    _index_offset = 1;
-    if (_startLine->minimum() == 0) {
-      adjust_index = +1;
-    }
-  }
-
-  _startLine->setMinimum(0);
-  _fieldsLine->setMinimum(0);
-  _unitsLine->setMinimum(0);
-
-  _startLine->setValue(_startLine->value() + adjust_index);
-  _fieldsLine->setValue(_fieldsLine->value() + adjust_index);
-  _unitsLine->setValue(_unitsLine->value() + adjust_index);
-
-  _startLine->setMinimum(_index_offset);
-  _fieldsLine->setMinimum(_index_offset);
-  _unitsLine->setMinimum(_index_offset);
 }
 
 
@@ -107,8 +81,6 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._fieldsLine = _fieldsLine->value() - _index_offset;
   config._unitsLine = _unitsLine->value() - _index_offset;
 
-  config._zeroStart = _zeroStart->isChecked();
-
   return config;
 }
 
@@ -125,16 +97,9 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _useDot->setChecked(config._useDot);
   _useComma->setChecked(!config._useDot);
   
-  _index_offset = 0;
-  _startLine->setMinimum(0);
-  _fieldsLine->setMinimum(0);
-  _unitsLine->setMinimum(0);
-  _startLine->setValue(config._dataLine);
-  _fieldsLine->setValue(config._fieldsLine);
-  _unitsLine->setValue(config._unitsLine);
-
-  _zeroStart->setChecked(config._zeroStart);
-  zeroStartChanged(config._zeroStart ? Qt::Checked : Qt::Unchecked);
+  _startLine->setValue(config._dataLine + _index_offset);
+  _fieldsLine->setValue(config._fieldsLine + _index_offset);
+  _unitsLine->setValue(config._unitsLine + _index_offset);
 
   AsciiSourceConfig::ColumnType ct = (AsciiSourceConfig::ColumnType) config._columnType.value();
   if (ct == AsciiSourceConfig::Fixed) {

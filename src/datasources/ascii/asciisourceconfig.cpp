@@ -57,8 +57,6 @@ const char AsciiSourceConfig::Key_fieldsLine[] = "Fields Line";
 const char AsciiSourceConfig::Tag_fieldsLine[] = "fields";
 const char AsciiSourceConfig::Key_unitsLine[] = "Units Line";
 const char AsciiSourceConfig::Tag_unitsLine[] = "units";
-const char AsciiSourceConfig::Key_zeroStart[] = "Line number start at 0";
-const char AsciiSourceConfig::Tag_zeroStart[] = "zerostart";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -74,8 +72,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _readUnits(false),
   _fieldsLine(0),
   _unitsLine(0),
-  _useDot(true),
-  _zeroStart(false)
+  _useDot(true)
 {
 }
 
@@ -96,7 +93,6 @@ void AsciiSourceConfig::save(QSettings& cfg) {
   _columnWidthIsConst >> cfg;
   _readUnits >> cfg;
   _unitsLine >> cfg;
-  _zeroStart >> cfg;
 }
 
 
@@ -128,7 +124,6 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _columnWidthIsConst << cfg;
   _readUnits << cfg;
   _unitsLine << cfg;
-  _zeroStart << cfg;
 }
 
 
@@ -167,7 +162,6 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _columnWidthIsConst >> s;
   _readUnits >> s;
   _unitsLine >> s;
-  _zeroStart >> s;
 
   s.writeEndElement();
 }
@@ -188,7 +182,6 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _columnWidthIsConst << attributes;
   _readUnits << attributes;
   _unitsLine << attributes;
-  _zeroStart << attributes;
 }
 
 
@@ -212,7 +205,6 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _columnWidthIsConst << elem;
         _readUnits << elem;
         _unitsLine << elem;
-        _zeroStart << elem;
       }
     }
     n = n.nextSibling();
