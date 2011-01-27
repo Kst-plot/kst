@@ -6,7 +6,10 @@ if(MSVC OR MINGW)
 	add_definitions(-DKST_USE_KST_ATOF)
 endif()
 
-
+if(UNIX)
+  # speedup on Linux x2.7
+  add_definitions(-DKST_USE_KST_ATOF)
+endif()
 
 kst_add_plugin(. ascii)
 kst_add_plugin(. qimagesource)
