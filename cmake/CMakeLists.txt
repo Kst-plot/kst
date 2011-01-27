@@ -12,7 +12,7 @@ set(kst_version_minor 0)
 set(kst_version_patch 3)
 set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 
-set(kst_binary_name kst)
+set(kst_binary_name kst2)
 
 
 kst_option_init()
