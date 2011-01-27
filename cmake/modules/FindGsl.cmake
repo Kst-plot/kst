@@ -1,7 +1,7 @@
 
 include(FindPkgConfig)
 
-pkg_check_modules(GSL gsl)
+pkg_check_modules(GSL QUIET gsl)
 
 if(GSL_INCLUDEDIR AND GSL_LIBRARIES)
 	set(GSL_LIBRARY -L${GSL_LIBRARY_DIRS} ${GSL_LIBRARIES})

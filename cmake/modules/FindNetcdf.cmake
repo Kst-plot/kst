@@ -1,7 +1,7 @@
 
 include(FindPkgConfig)
 
-pkg_check_modules(NETCDF netcdf)
+pkg_check_modules(NETCDF QUIET netcdf)
 
 if(NETCDF_INCLUDEDIR AND NETCDF_LIBRARIES)
 	FIND_LIBRARY(NETCDF_LIBRARY_CPP netcdf_c++ 
