@@ -51,11 +51,14 @@ const char AsciiSourceConfig::Key_dataLine[] = "Data Start";
 const char AsciiSourceConfig::Tag_dataLine[] = "headerstart";
 const char AsciiSourceConfig::Key_readFields[] = "Read Fields";
 const char AsciiSourceConfig::Tag_readFields[] = "readfields";
+const char AsciiSourceConfig::Key_readUnits[] = "Read Units";
+const char AsciiSourceConfig::Tag_readUnits[] = "readunits";
 const char AsciiSourceConfig::Key_useDot[] = "Use Dot";
 const char AsciiSourceConfig::Tag_useDot[] = "usedot";
 const char AsciiSourceConfig::Key_fieldsLine[] = "Fields Line";
 const char AsciiSourceConfig::Tag_fieldsLine[] = "fields";
-
+const char AsciiSourceConfig::Key_unitsLine[] = "Units Line";
+const char AsciiSourceConfig::Tag_unitsLine[] = "units";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -68,7 +71,9 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _columnWidthIsConst(false),
   _dataLine(1),
   _readFields(false),
+  _readUnits(false),
   _fieldsLine(1),
+  _unitsLine(2),
   _useDot(true),
   _localSeparator(QLocale().decimalPoint().toAscii())
 {
@@ -89,6 +94,8 @@ void AsciiSourceConfig::save(QSettings& cfg) {
   _useDot >> cfg;
   _fieldsLine >> cfg;
   _columnWidthIsConst >> cfg;
+  _readUnits >> cfg;
+  _unitsLine >> cfg;
 }
 
 
@@ -118,6 +125,9 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _useDot << cfg;
   _fieldsLine << cfg;
   _columnWidthIsConst << cfg;
+  _readUnits << cfg;
+  _unitsLine << cfg;
+
 }
 
 
@@ -153,7 +163,10 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _fieldsLine >> s;
   _readFields >> s;
   _useDot >> s;
- _columnWidthIsConst >> s;
+  _columnWidthIsConst >> s;
+  _readUnits >> s;
+  _unitsLine >> s;
+
 
   s.writeEndElement();
 }
@@ -172,6 +185,9 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _useDot << attributes;
   _fieldsLine << attributes;
   _columnWidthIsConst << attributes;
+  _readUnits << attributes;
+  _unitsLine << attributes;
+
 }
 
 
@@ -193,6 +209,8 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _useDot << elem;
         _fieldsLine << elem;
         _columnWidthIsConst << elem;
+        _readUnits << elem;
+        _unitsLine << elem;
       }
     }
     n = n.nextSibling();

@@ -45,10 +45,14 @@ class AsciiSourceConfig {
     static const char Tag_dataLine[];
     static const char Key_readFields[];
     static const char Tag_readFields[];
+    static const char Key_readUnits[];
+    static const char Tag_readUnits[];
     static const char Key_useDot[];
     static const char Tag_useDot[];
     static const char Key_fieldsLine[];
     static const char Tag_fieldsLine[];
+    static const char Key_unitsLine[];
+    static const char Tag_unitsLine[];
 
   public:
     AsciiSourceConfig();
@@ -75,6 +79,8 @@ class AsciiSourceConfig {
     NamedParameter<int, Key_dataLine, Tag_dataLine> _dataLine;
     NamedParameter<bool, Key_readFields, Tag_readFields> _readFields;
     NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
+    NamedParameter<bool, Key_readUnits, Tag_readUnits> _readUnits;
+    NamedParameter<int, Key_unitsLine, Tag_unitsLine> _unitsLine;
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
 
 

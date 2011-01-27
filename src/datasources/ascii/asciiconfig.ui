@@ -394,5 +394,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_readUnits</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_unitsLine</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>175</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>273</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>
