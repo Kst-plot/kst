@@ -118,11 +118,11 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="buttonGroup2">
+    <widget class="QGroupBox" name="headerButtonGroup">
      <property name="title">
       <string>Header</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout2">
       <item row="0" column="0">
        <widget class="QLabel" name="textLabel1_3">
         <property name="sizePolicy">
@@ -221,9 +221,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="buttonGroup1">
+    <widget class="QGroupBox" name="layoutButtonGroup">
      <property name="title">
-      <string>Data Format: Delimiters</string>
+      <string>Data Column Layout</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
@@ -254,25 +254,6 @@
         </item>
        </layout>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Data Format: Fixed-Width Options</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QRadioButton" name="radioButton">
-        <property name="text">
-         <string>Do not make assumptions on column width</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -300,10 +281,29 @@
         </item>
        </layout>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="widthButtonGroup">
+     <property name="title">
+      <string>Data Column Width Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="radioButton">
+        <property name="text">
+         <string>Do not make assumptions on column width</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QRadioButton" name="_columnWidthIsConst">
         <property name="text">
-         <string>Each column has a constant width</string>
+         <string>Each column has its own constant width</string>
         </property>
        </widget>
       </item>

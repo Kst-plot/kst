@@ -476,9 +476,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     LexicalCast lexc;
     lexc.setDecimalSeparator(_config._useDot, _config._localSeparator);
-    for (int i = 0; i < n; ++i, ++s) {
-      // Read appropriate column and convert to double
-      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[i] - _rowIndex[0] + _config._columnWidth * (col - 1));
+    const char* col_start = &buffer[0] + _config._columnWidth * (col - 1);
+    for (int i = 0; i < n; ++i) {
+      /* Read appropriate column and convert to double
+      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[i] + _config._columnWidth * (col - 1));*/
+      v[i] = lexc.toDouble(col_start + _rowIndex[i]);
     }
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {

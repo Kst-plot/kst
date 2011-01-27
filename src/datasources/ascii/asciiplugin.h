@@ -22,6 +22,8 @@
 #include "asciisource.h"
 #include "dataplugin.h"
 
+#include "ui_asciiconfig.h"
+
 
 class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
 {
@@ -73,6 +75,22 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
     virtual QStringList provides() const;
 
     virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
+};
+
+
+class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
+{
+  Q_OBJECT
+
+  public:
+    ConfigWidgetAsciiInternal(QWidget *parent);
+
+    AsciiSourceConfig config();
+    void setConfig(const AsciiSourceConfig&);
+
+  private Q_SLOTS:
+    void columnLayoutChanged(int);
+
 };
 
 #endif

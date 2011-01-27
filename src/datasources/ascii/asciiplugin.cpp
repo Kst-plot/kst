@@ -17,29 +17,38 @@
 
 #include "asciiplugin.h"
 #include "asciisourceconfig.h"
-#include "ui_asciiconfig.h"
+
 
 #include <QFile>
 #include <QFileInfo>
-
+#include <QButtonGroup>
 
 
 //
 // ConfigWidgetAsciiInternal
 //
 
-class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
-{
-  public:
-    ConfigWidgetAsciiInternal(QWidget *parent);
-
-    AsciiSourceConfig config();
-    void setConfig(const AsciiSourceConfig&);
-};
 
 
 ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : QWidget(parent), Ui_AsciiConfig() {
   setupUi(this);
+
+  QButtonGroup* bgroup = new QButtonGroup(this);
+  bgroup->addButton(_whitespace, AsciiSourceConfig::Whitespace);
+  bgroup->addButton(_custom, AsciiSourceConfig::Custom);
+  bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
+
+  connect(bgroup, SIGNAL(buttonClicked(int)), this, SLOT(columnLayoutChanged(int)));
+}
+
+
+void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
+{
+  if (idx == AsciiSourceConfig::Fixed) {
+    widthButtonGroup->setEnabled(false);
+  } else {
+    widthButtonGroup->setEnabled(true);
+  }
 }
 
 
@@ -49,13 +58,15 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._fileNamePattern = _fileNamePattern->text();
   config._indexInterpretation = (AsciiSourceConfig::Interpretation) (1 + _indexType->currentIndex());
   config._delimiters = _delimiters->text();
-  AsciiSourceConfig::ColumnType ct = AsciiSourceConfig::Whitespace;
-  if (_fixed->isChecked()) {
-    ct = AsciiSourceConfig::Fixed;
+  
+  if (_whitespace->isChecked()) {
+    config._columnType = AsciiSourceConfig::Whitespace;
   } else if (_custom->isChecked()) {
-    ct = AsciiSourceConfig::Custom;
+    config._columnType = AsciiSourceConfig::Custom;
+  } else if (_fixed->isChecked()) {
+    config._columnType = AsciiSourceConfig::Fixed;
   }
-  config._columnType = ct;
+
   config._columnDelimiter = _columnDelimiter->text();
   config._columnWidth = _columnWidth->value();
   config._columnWidthIsConst = _columnWidthIsConst->isChecked();
@@ -79,6 +90,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _readFields->setChecked(config._readFields);
   _useDot->setChecked(config._useDot);
   _fieldsLine->setValue(config._fieldsLine);
+
   AsciiSourceConfig::ColumnType ct = (AsciiSourceConfig::ColumnType) config._columnType.value();
   if (ct == AsciiSourceConfig::Fixed) {
     _fixed->setChecked(true);
@@ -87,6 +99,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   } else {
     _whitespace->setChecked(true);
   }
+  columnLayoutChanged(ct);
 }
 
 
