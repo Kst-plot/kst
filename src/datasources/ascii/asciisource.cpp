@@ -697,7 +697,11 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
         break;
       }
     }
-    return rc;
+    QStringList trimmed;
+    foreach(const QString& str, rc) {
+      trimmed << str.trimmed();
+    }
+    return trimmed;
   }
 
   QRegExp regex;
@@ -772,7 +776,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   }
 
   for (int i = 1; i <= maxcnt; ++i) {
-    rc += i18n("Column %1").arg(i);
+    rc += i18n("Column %1").arg(i).trimmed();
   }
 
   return rc;
