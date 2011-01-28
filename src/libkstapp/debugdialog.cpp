@@ -27,9 +27,9 @@ DebugDialog::DebugDialog(QWidget *parent)
   : QDialog(parent), _store(0) {
   setupUi(this);
 
-  _log = new LogWidget(TabPage);
+  _log = new LogWidget(_logTab);
 
-  gridLayout2->addWidget(_log, 0, 0, 0, 2);
+  _logTabLayout->addWidget(_log,0,0);
 
   connect(_clear, SIGNAL(clicked()), this, SLOT(clear()));
   connect(_showDebug, SIGNAL(toggled(bool)), _log, SLOT(setShowDebug(bool)));
