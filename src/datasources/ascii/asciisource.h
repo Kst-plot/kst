@@ -44,6 +44,8 @@ class AsciiSource : public Kst::DataSource
 
     bool initRowIndex();
 
+    UpdateType internalDataSourceUpdate(bool read_completely);
+
     virtual UpdateType internalDataSourceUpdate();
 
     int readField(double *v, const QString &field, int s, int n);

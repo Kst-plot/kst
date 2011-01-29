@@ -198,7 +198,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
   _valid = true;
   registerChange();
-  internalDataSourceUpdate();
+  internalDataSourceUpdate(false);
 }
 
 
@@ -296,8 +296,15 @@ AsciiSource::LineEndingType AsciiSource::detectLineEndingType(QFile& file) const
 
 
 //-------------------------------------------------------------------------------------------
+Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
+{
+  return internalDataSourceUpdate(true);
+}
+
+
+//-------------------------------------------------------------------------------------------
 #define MAXBUFREADLEN KST_PREALLOC
-Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate() 
+Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
   MeasureTime t("AsciiSource::internalDataSourceUpdate");
 
@@ -371,7 +378,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
       }
     }
 
-  } while ((bufread == MAXBUFREADLEN));
+  } while (bufread == MAXBUFREADLEN  && read_completely);
 
   _rowIndex.resize(_numFrames + 1);
 
