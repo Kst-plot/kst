@@ -172,7 +172,7 @@ Packaging
 
 
 Status
------------
+-------
 
 	Kst builds, starts, and loads all plugins. Tested on Linux,
 	Windows, and MacOSX.
@@ -182,4 +182,13 @@ Status
 	- installation rules on Mac
 	- add pre-compiled headers for Mac, Xcode
 
+
+
+Releasing
+----------
+
+	To build a release for Windows install the "Qt SDK for Windows"
+	(it comes with MinGW) and call in a build folder
+	
+		..\kst\misc\mingw-release-download-deps
 
