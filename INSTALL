@@ -94,13 +94,15 @@ Using cmake
 		add files to the build system which are not mentioned to build. To exclude
 		them change their ending and re-run cmake.
 
-
+	* Projects
+		'make help' lists the available targets.
 
 Options
 -------
 
 	Options could be passed by the -D prefix when running cmake.
-	Available options will be listed on each cmake run:
+	Available options will be listed on each cmake run.
+	Here the options with their default value:
 
 	-- kst_release              = OFF    : Build release version
 	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
@@ -109,6 +111,7 @@ Options
 	-- kst_console              = OFF    : Open console on Windows
 	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
 	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
+	-- kst_3rdparty_download    = OFF    : Download precompiled 3rd party libraries
 	-- kst_dataobjects          = ON     : Build dataobject plugins
 	-- kst_test                 = OFF    : Build unit tests
 	-- kst_pch                  = OFF    : Use precompiled headers

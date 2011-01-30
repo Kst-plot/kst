@@ -13,7 +13,8 @@ else()
 		HINTS
 		ENV NETCDF_DIR
 		PATH_SUFFIXES include
-		PATHS
+		PATHS 
+		${kst_3rdparty_dir}
 		~/Library/Frameworks
 		/Library/Frameworks
 		)
@@ -23,7 +24,7 @@ else()
 			HINTS
 			ENV NETCDF_DIR
 			PATH_SUFFIXES lib
-			PATHS)
+			PATHS ${kst_3rdparty_dir})
 	endmacro()
 	
 	find_netcdf_lib(netcdf_c         netcdf)

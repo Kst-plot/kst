@@ -11,13 +11,13 @@ else()
 		HINTS
 		ENV GSL_DIR
 		PATH_SUFFIXES include/gsl include
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 	FIND_LIBRARY(GSL_LIBRARIES gsl 
 		HINTS
 		ENV GSL_DIR
 		PATH_SUFFIXES lib
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 endif()
 

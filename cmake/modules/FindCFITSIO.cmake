@@ -11,13 +11,13 @@ else()
 		HINTS
 		ENV CFITSIO_DIR
 		PATH_SUFFIXES include/cfitsio include
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 	FIND_LIBRARY(CFITSIO_LIBRARIES cfitsio 
 		HINTS
 		ENV CFITSIO_DIR
 		PATH_SUFFIXES lib
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 endif()
 

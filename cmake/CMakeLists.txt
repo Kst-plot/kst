@@ -23,14 +23,32 @@ kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
 kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
 kst_option(console "Open console on Windows" OFF win)
 kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
+kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
 kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
 
-
 message(STATUS)
+
+
+if(kst_3rdparty_download)
+	message(STATUS "Checking downloaded 3rd party binaries.")
+	set(_deps kst-3rdparty-win32-deps)
+	set(_file ${_deps}.tar.bz2)
+	set(_downloaded _downloaded-NOTFOUND CACHE PATH "3rd party binaries already downloaded" FORCE)
+	find_file(_downloaded ${_file} ${CMAKE_BINARY_DIR})
+	if (NOT _downloaded)
+		# TODO move to sf.net, but sf.net is broken atm (Jan 30 2011)
+		file(DOWNLOAD http://kst-plot.kde.org/download/${_file} ${CMAKE_BINARY_DIR}/${_file}
+			EXPECTED_MD5 d2ffdb6dad509fe40f1cc9f60c88ddd5
+			SHOW_PROGRESS)
+		execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xfj ${CMAKE_BINARY_DIR}/${_file})
+	endif()
+	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/${_deps}-1.0)
+endif()
+
 
 kst_revision_project_name(Revision)
 add_definitions(-DKST_HAVE_SVN_REVISION_H)

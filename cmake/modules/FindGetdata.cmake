@@ -20,19 +20,19 @@ if(NOT GETDATA_INCLUDEDIR AND NOT GETDATA_LIBRARIES)
 		HINTS
 		ENV GETDATA_DIR
 		PATH_SUFFIXES include/getdata include
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 	FIND_LIBRARY(GETDATA_LIBRARY_C getdata 
 		HINTS
 		ENV GETDATA_DIR
 		PATH_SUFFIXES lib
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 	FIND_LIBRARY(GETDATA_LIBRARY_CPP getdata++
 		HINTS
 		ENV GETDATA_DIR
 		PATH_SUFFIXES lib
-		PATHS
+		PATHS ${kst_3rdparty_dir}
 		)
 endif()
 
