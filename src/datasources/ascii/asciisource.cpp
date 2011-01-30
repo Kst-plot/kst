@@ -272,7 +272,9 @@ bool AsciiSource::initRowIndex()
       }
       didRead += line.size();
       --left;
-      _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
+      if (header_row != _config._fieldsLine && header_row != _config._unitsLine) {
+        _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
+      }
       header_row++;
     }
     _rowIndex[0] = didRead;
