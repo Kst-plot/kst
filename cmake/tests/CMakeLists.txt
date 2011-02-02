@@ -6,7 +6,8 @@ list(REMOVE_ITEM test_headers ${kst_dir}/tests/ksttest.h)
 
 kst_include_directories(kstcore kstmath)
 
-add_definitions(-DKST_USE_QTEST_MAIN)
+add_definitions(-DKST_USE_QTEST_MAIN -DKST_SRC_DIR=${kst_dir})
+
 
 foreach(header ${test_headers})
 	get_filename_component(filename ${header} NAME_WE)

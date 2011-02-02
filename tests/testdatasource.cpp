@@ -28,12 +28,20 @@
 #include "datamatrix.h"
 #include "datasourcepluginmanager.h"
 
+#include "colorsequence.h"
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+
 
 static Kst::ObjectStore _store;
 
 void TestDataSource::initTestCase() {
   Kst::DataSourcePluginManager::init();
   _plugins = Kst::DataSourcePluginManager::pluginList();
+
+  Kst::ColorSequence::self();
 }
 
 
@@ -516,7 +524,7 @@ void TestDataSource::testQImageSource() {
     QSKIP("...couldn't find plugin.", SkipAll);
 
   //These tests assume that the image kst.png exists in src/images
-  QString imageFile = QDir::currentPath() + QDir::separator() + QString("src") +
+  QString imageFile = QString(TOSTRING(KST_SRC_DIR)) + QDir::separator() + QString("src") +
                       QDir::separator() + QString("images") + QDir::separator() + QString("kst.png");
 
   if (!QFile::exists(imageFile)) {

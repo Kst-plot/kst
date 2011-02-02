@@ -41,7 +41,7 @@ void TestGeneratedVector::testGeneratedVector() {
   QCOMPARE(m1->mean(), &Kst::NOPOINT);
 
   m1->changeRange(0, 100, 100);
-  QCOMPARE(m1->length(), 0);
+  QCOMPARE(m1->length(), 100);
 
   m1->writeLock();
   m1->internalUpdate();

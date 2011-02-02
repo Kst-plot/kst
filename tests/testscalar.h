@@ -15,15 +15,20 @@
 #include <QObject>
 #include <QDomDocument>
 
-class SListener : public QObject {
+class SListener : public QObject
+{
   Q_OBJECT
+
   public:
     SListener();
     virtual ~SListener();
+
     int _trigger;
+
   public Q_SLOTS:
-    void trigger();
+    void trigger(qint64);
 };
+
 
 class TestScalar : public QObject
 {

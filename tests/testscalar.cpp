@@ -22,6 +22,7 @@
 
 #include <datacollection.h>
 #include <objectstore.h>
+#include "updatemanager.h"
 
 static Kst::ObjectStore _store;
 
@@ -29,7 +30,9 @@ double NOPOINT = NAN;
 
 SListener::SListener() : QObject(), _trigger(0) {}
 SListener::~SListener() {}
-void SListener::trigger() { _trigger++; }
+void SListener::trigger(qint64) { 
+    _trigger++; 
+}
 
 
 QDomDocument TestScalar::makeDOMDocument(const QString& tag, const QString& val, bool orphan) {
@@ -81,13 +84,21 @@ void TestScalar::testScalar() {
 
   QCOMPARE((*sp = 2.0).value(), 2.0);
   SListener *listener = new SListener;
-  sp->connect(sp, SIGNAL(updated(ObjectPtr)), listener, SLOT(trigger()));
+  Kst::UpdateManager::self()->setStore(&_store);
+  QObject::connect(Kst::UpdateManager::self(), SIGNAL(objectsUpdated(qint64)), listener, SLOT(trigger(qint64)));
+
   *sp = 3.1415;
+  Kst::UpdateManager::self()->doUpdates(true);
   QCOMPARE(listener->_trigger, 1);
+
   sp->setValue(3.1415);
   QCOMPARE(listener->_trigger, 1);
-  *sp = 1.1415;
+  Kst::UpdateManager::self()->doUpdates(true);
   QCOMPARE(listener->_trigger, 2);
+
+  *sp = 1.1415;
+  Kst::UpdateManager::self()->doUpdates(true);
+  QCOMPARE(listener->_trigger, 3);
 
   Kst::ScalarPtr sp2 = Kst::kst_cast<Kst::Scalar>(_store.createObject<Kst::Scalar>());
 

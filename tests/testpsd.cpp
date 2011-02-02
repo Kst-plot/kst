@@ -19,11 +19,11 @@
 #include <QXmlStreamWriter>
 
 
-#include <psd.h>
+#include "psd.h"
+#include "ksttest.h"
 
-
-#include <datacollection.h>
-#include <objectstore.h>
+#include "datacollection.h"
+#include "objectstore.h"
 
 static Kst::ObjectStore _store;
 
@@ -139,7 +139,7 @@ void TestPSD::testPSD() {
   QVERIFY(vpVY->value()[0] != vpVY->value()[0]);
 
   for(int j = 0; j < vpVX->length(); j++){
-      QCOMPARE(vpVX->value()[j], 0.0);
+      QCOMPARE(vpVX->value()[j], &Kst::NOPOINT);
   }
 
   psd->setOutput(PSDAmplitudeSpectralDensity);
