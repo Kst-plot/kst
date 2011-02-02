@@ -21,6 +21,8 @@
 #include <fitsio.h>
 
 class DataInterfaceFitsImageMatrix;
+class DataInterfaceFitsImageString;
+
 
 class FitsImageSource : public Kst::DataSource {
   Q_OBJECT
@@ -49,8 +51,12 @@ class FitsImageSource : public Kst::DataSource {
     fitsfile *_fptr;
     mutable Config *_config;
 
+    QMap<QString, QString> _strings;
+
+    DataInterfaceFitsImageString* is;
     DataInterfaceFitsImageMatrix* im;
 
+    friend class DataInterfaceFitsImageString;
 };
 
 

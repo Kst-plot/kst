@@ -44,6 +44,60 @@ class FitsImageSource::Config {
     }
 };
 
+
+
+//
+// String interface
+//
+
+class DataInterfaceFitsImageString : public DataSource::DataInterface<DataString>
+{
+public:
+  DataInterfaceFitsImageString(FitsImageSource& s) : source(s) {}
+
+  // read one element
+  int read(const QString&, DataString::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return source._strings.keys(); }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  void setDataInfo(const QString&, const DataString::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+private:
+  FitsImageSource& source;
+};
+
+
+//-------------------------------------------------------------------------------------------
+int DataInterfaceFitsImageString::read(const QString& string, DataString::ReadInfo& p)
+{
+  // TODO read strings from file
+  if (isValid(string) && p.value) {
+    *p.value = source._strings[string];
+    return 1;
+  }
+  return 0;
+}
+
+
+//-------------------------------------------------------------------------------------------
+bool DataInterfaceFitsImageString::isValid(const QString& string) const
+{
+  // TODO read strings from file
+  return  source._strings.contains( string );
+}
+
+
+
 //
 // Matrix interface
 //
@@ -324,9 +378,12 @@ bool DataInterfaceFitsImageMatrix::isValid(const QString& field) const {
 
 
 FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type), _config(0L),
+: Kst::DataSource(store, cfg, filename, type),
+  _config(0L),
+  is(new DataInterfaceFitsImageString(*this)),
   im(new DataInterfaceFitsImageMatrix(&_fptr))
 {
+  setInterface(is);
   setInterface(im);
 
   setUpdateType(None);
@@ -389,6 +446,8 @@ bool FitsImageSource::init() {
     _fptr = 0L;
     return false;
   }
+
+  _strings = fileMetas();
 }
 
 
