@@ -143,8 +143,18 @@ void PrimitiveModel::addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* p
 
 template<class T>
 void PrimitiveModel::addPrimitivesMetas(const PrimitivePtr& prim, PrimitiveTreeItem* parent) {
-  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
-  addMetas<T>(prim->metas(), item);
+  bool metas_available = false;
+  PrimitiveMap metas = prim->metas();
+  foreach(const PrimitivePtr& m, metas) {
+    if (kst_cast<T>(m)) {
+      metas_available = true;
+      break;
+    }
+  }
+  if (metas_available) {
+    PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << prim->Name(), parent);
+    addMetas<T>(prim->metas(), item);
+  }
 }
 
 

@@ -26,13 +26,10 @@ class StringModel : public PrimitiveModel
 
 public:
   StringModel(ObjectStore *store) : PrimitiveModel(store) {
-  createTree<String>();
+    createTree<String>();
   }
 
   void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0);
-
-protected:
-  PrimitiveTreeItem* addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent);
 
 };
 

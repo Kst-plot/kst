@@ -44,18 +44,6 @@ void StringModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
   }
 }
 
-PrimitiveTreeItem* StringModel::addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent)
-{
-
-  QString path = dataSource->descriptiveName();
-  QFileInfo info(path);
-
-  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << info.fileName(), parent);
-  new PrimitiveTreeItem(QList<QVariant>() << "Name" << path, item);
-  new PrimitiveTreeItem(QList<QVariant>() << "In directory" << info.path(), item);
-
-  return item;
-}
 
 
 }
