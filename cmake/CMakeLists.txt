@@ -194,6 +194,11 @@ add_subdirectory(misc)
 #
 # http://cmake.org/cmake/help/cmake-2-8-docs.html#module:CPack
 
+if(WIN32)
+	set(CPACK_GENERATOR NSIS ZIP)
+	set(CPACK_BINARY_ZIP 1)
+endif()
+
 set(CPACK_PACKAGE_NAME   Kst)
 set(CPACK_PACKAGE_VENDOR "The Kst Team")
 set(CPACK_PACKAGE_VERSION_MAJOR ${kst_version_major})
@@ -204,6 +209,8 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Kst 2")
 set(CPACK_PACKAGE_DESCRIPTION_FILE    ${kst_dir}/README)
 set(CPACK_PACKAGE_CONTACT "http://bugs.kde.org}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
+set(CPACK_STRIP_FILES 1)
+
 
 set(CPACK_RESOURCE_FILE_LICENSE       ${kst_dir}/COPYING)
 
