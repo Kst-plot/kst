@@ -198,11 +198,18 @@ if(WIN32)
 	set(CPACK_GENERATOR NSIS ZIP)
 	set(CPACK_BINARY_ZIP 1)
 	if (kst_install_prefix)
-		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix})
 		set(CPACK_NSIS_PACKAGE_NAME ${kst_install_prefix})
-		set(CPACK_INSTALL_PREFIX "")
 	endif()
 endif()
+
+if (kst_install_prefix)
+	set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix})
+	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix}-sources)
+else()
+	set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version}-sources)
+endif()
+set(CPACK_INSTALL_PREFIX "")
+	
 
 set(CPACK_PACKAGE_NAME   Kst)
 set(CPACK_PACKAGE_VENDOR "The Kst Team")
@@ -216,13 +223,17 @@ set(CPACK_PACKAGE_CONTACT "http://bugs.kde.org}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 set(CPACK_STRIP_FILES 1)
 
-
-set(CPACK_RESOURCE_FILE_LICENSE       ${kst_dir}/COPYING)
+#cmake bug, problems with the quotes in the gpl
+if(UNIX)
+	set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_BINARY_DIR}/gpl)
+	FILE(WRITE ${CPACK_RESOURCE_FILE_LICENSE} "\n\nGNU GENERAL PUBLIC LICENSE, Version 2, June 1991")
+else()
+	set(CPACK_RESOURCE_FILE_LICENSE "${kst_dir}/COPYING")
+endif()
 
 
 # sources
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${kst_dir};/") # http://www.mail-archive.com/cmake@cmake.org/msg33720.html
-set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version})
 set(CPACK_SOURCE_GENERATOR TGZ ZIP TBZ2)
 
 # rpm
