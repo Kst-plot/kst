@@ -1893,8 +1893,15 @@ QString PlotItem::leftLabel() const {
 QString PlotItem::autoLeftLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     QString label = renderer->leftLabel();
-    if (!label.isEmpty())
-      return label;
+    if (!label.isEmpty()) {
+      if (_yAxis->axisInterpret()) { // remove units
+        QRegExp rx(" \\[*\\]");
+        rx.setPatternSyntax(QRegExp::Wildcard);
+        return label.remove(rx);
+      } else {
+        return label;
+      }
+    }
   }
   return QString();
 }
@@ -1912,8 +1919,15 @@ QString PlotItem::bottomLabel() const {
 QString PlotItem::autoBottomLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     QString label = renderer->bottomLabel();
-    if (!label.isEmpty())
-      return label;
+    if (!label.isEmpty()) {
+      if (_xAxis->axisInterpret()) { // remove units
+        QRegExp rx(" \\[*\\]");
+        rx.setPatternSyntax(QRegExp::Wildcard);
+        return label.remove(rx);
+      } else {
+        return label;
+      }
+    }
   }
   return QString();
 }
