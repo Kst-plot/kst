@@ -436,6 +436,7 @@ bool FitsImageSource::init() {
   fits_open_image( &_fptr, _filename.toAscii(), READONLY, &status );
 
   im->clear();
+  _strings = fileMetas();
   if (status == 0) {
     im->init();
 
@@ -446,8 +447,6 @@ bool FitsImageSource::init() {
     _fptr = 0L;
     return false;
   }
-
-  _strings = fileMetas();
 }
 
 
