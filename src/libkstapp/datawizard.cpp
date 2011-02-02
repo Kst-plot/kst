@@ -714,6 +714,11 @@ void DataWizard::finished() {
 
   DataSourcePtr ds = _pageDataSource->dataSource();
 
+  if (!ds.isPtrValid()) {
+    return;
+  }
+
+
   // check for sufficient memory
   unsigned long memoryRequested = 0, memoryAvailable = 1024*1024*1024; // 1GB
   double frames;

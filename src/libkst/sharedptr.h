@@ -180,15 +180,11 @@ public:
    */
   int count() const { Q_ASSERT(isPtrValid()); return ptr->_KShared_count(); } // for debugging purposes
 
+
+  bool isPtrValid() const { return ptr != 0; }
+
 private:
   T* ptr;
-  bool isPtrValid() const { 
-    /*
-    if (ptr == (T*)1)
-      return false;
-    */
-    return ptr != 0; 
-  } 
 };
 
 

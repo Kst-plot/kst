@@ -80,7 +80,7 @@ bool ObjectStore::removeObject(Object *o) {
   return true;
 }
 
-ObjectPtr ObjectStore::retrieveObject(const QString name) const {
+ObjectPtr ObjectStore::retrieveObject(const QString& name) const {
 
   int match = -1;
 
