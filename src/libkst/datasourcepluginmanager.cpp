@@ -266,6 +266,35 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     DataSourcePtr plugin = (*i).plugin->create(store, &settingsObject, filename, QString(), e);
     if (plugin) {
+
+      // add strings
+      const QStringList strings = plugin->string().list();
+      if (!strings.isEmpty()) {
+        foreach(const QString& key, strings) {
+          QString value;
+          DataString::ReadInfo readInfo(&value);
+          plugin->string().read(key, readInfo);
+          StringPtr s = store->createObject<String>();
+          s->setProvider(plugin);
+          s->setSlaveName(key);
+          s->setValue(value);
+        }
+      }
+
+      // add scalars
+      const QStringList scalars = plugin->scalar().list();
+      if (!scalars.isEmpty()) {
+        foreach(const QString& key, scalars) {
+          double value;
+          DataScalar::ReadInfo readInfo(&value);
+          plugin->scalar().read(key, readInfo);
+          ScalarPtr s = store->createObject<Scalar>();
+          s->setProvider(plugin);
+          s->setSlaveName(key);
+          s->setValue(value);
+        }
+      }
+
       return plugin;
     }
   }
