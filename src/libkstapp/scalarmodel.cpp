@@ -21,6 +21,8 @@
 #include <generatedmatrix.h>
 #include <datasource.h>
 
+#include <QFileInfo>
+
 namespace Kst {
 
 
@@ -42,6 +44,19 @@ void ScalarModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
   }
 }
 
+// There are not yet any per-file scalars, though things like num_frames should be constant across a datasource
+// and therefore availible as a per-file scalar... so, maybe, FIXME.
+PrimitiveTreeItem* ScalarModel::addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent)
+{
+
+  QString path = dataSource->descriptiveName();
+  QFileInfo info(path);
+
+  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << info.fileName(), parent);
+  //new PrimitiveTreeItem(QList<QVariant>() << "In directory" << info.path(), item);
+
+  return item;
+}
 
 
 

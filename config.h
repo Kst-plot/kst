@@ -1,11 +1,13 @@
-#ifndef KSTCONFIG_H
-#define KSTCONFIG_H
 
-#define KSTVERSION "2.0.3"
-#define SVN_REVISION "unknown"
+#ifndef KST_CONFIG_H
+#define KST_CONFIG_H
 
-/* Define if you have unsetenv */
-#define HAVE_UNSETENV 1
+// obligatory flags
+//#define QT_NO_STL
+//#define QT_NO_KEYWORDS
+
+#define KSTVERSION  "2.0.3"
+#define INSTALL_LIBDIR "INSTALLED"
+
 
 #endif
-

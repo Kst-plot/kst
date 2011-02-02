@@ -47,6 +47,11 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_bottomLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
   connect(_rightLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
 
+  connect(_topLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
+  connect(_bottomLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
+  connect(_leftLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
+  connect(_rightLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
+
   connect(_topLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
   connect(_leftLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
   connect(_bottomLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
@@ -83,7 +88,6 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
 LabelTab::~LabelTab() {
 }
 
-
 void LabelTab::update() {
 }
 
@@ -107,11 +111,12 @@ QString LabelTab::leftLabel() const {
 
 
 bool LabelTab::leftLabelDirty() const {
-  return (!_leftLabelText->text().isEmpty());
+  return (_leftLabelText->isModified());
 }
 
 
 void LabelTab::setLeftLabel(const QString &label) {
+  _leftLabelLabel->setEnabled(true);
   _leftLabelText->setText(label);
 }
 
@@ -137,11 +142,12 @@ QString LabelTab::bottomLabel() const {
 
 
 bool LabelTab::bottomLabelDirty() const {
-  return (!_bottomLabelText->text().isEmpty());
+  return (_bottomLabelText->isModified());
 }
 
 
 void LabelTab::setBottomLabel(const QString &label) {
+  _bottomLabelLabel->setEnabled(true);
   _bottomLabelText->setText(label);
 }
 
@@ -167,11 +173,12 @@ QString LabelTab::rightLabel() const {
 
 
 bool LabelTab::rightLabelDirty() const {
-  return (!_rightLabelText->text().isEmpty());
+  return (_rightLabelText->isModified());
 }
 
 
 void LabelTab::setRightLabel(const QString &label) {
+  _rightLabelLabel->setEnabled(true);
   _rightLabelText->setText(label);
 }
 
@@ -197,12 +204,13 @@ QString LabelTab::topLabel() const {
 
 
 bool LabelTab::topLabelDirty() const {
-  return (!_topLabelText->text().isEmpty());
+  return (_topLabelText->isModified());
 }
 
 
 
 void LabelTab::setTopLabel(const QString &label) {
+  _topLabelLabel->setEnabled(true);
   _topLabelText->setText(label);
 }
 
@@ -331,6 +339,16 @@ void LabelTab::clearTabValues() {
   _leftLabelText->clear();
   _rightLabelText->clear();
 
+  _topLabelText->setModified(false);
+  _bottomLabelText->setModified(false);
+  _leftLabelText->setModified(false);
+  _rightLabelText->setModified(false);
+
+  _topLabelLabel->setEnabled(false);
+  _bottomLabelLabel->setEnabled(false);
+  _leftLabelLabel->setEnabled(false);
+  _rightLabelLabel->setEnabled(false);
+
   _globalLabelColor->clearSelection();
 
   _topLabelAuto->setCheckState(Qt::PartiallyChecked);
@@ -355,6 +373,12 @@ void LabelTab::enableSingleEditOptions(bool enabled) {
   }
 }
 
+void LabelTab::_enableLabelLabels() {
+  _topLabelLabel->setEnabled(_topLabelText->isModified());
+  _bottomLabelLabel->setEnabled(_bottomLabelText->isModified());
+  _leftLabelLabel->setEnabled(_leftLabelText->isModified());
+  _rightLabelLabel->setEnabled(_rightLabelText->isModified());
+}
 }
 
 // vim: ts=2 sw=2 et

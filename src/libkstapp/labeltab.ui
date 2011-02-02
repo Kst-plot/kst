@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
+    <width>557</width>
     <height>374</height>
    </rect>
   </property>
@@ -130,7 +130,7 @@
     <widget class="Kst::StringSelector" name="_strings" native="true"/>
    </item>
    <item row="6" column="0">
-    <widget class="QLabel" name="_Label_13">
+    <widget class="QLabel" name="_topLabelLabel">
      <property name="text">
       <string>&amp;Top label:</string>
      </property>
@@ -139,13 +139,6 @@
      </property>
      <property name="buddy">
       <cstring>_topLabelText</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1" colspan="2">
-    <widget class="Kst::LabelLineEdit" name="_topLabelText">
-     <property name="enabled">
-      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -160,7 +153,7 @@
     </widget>
    </item>
    <item row="7" column="0">
-    <widget class="QLabel" name="_Label_14">
+    <widget class="QLabel" name="_bottomLabelLabel">
      <property name="text">
       <string>Botto&amp;m label:</string>
      </property>
@@ -172,7 +165,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="2">
+   <item row="7" column="1" colspan="5">
     <widget class="Kst::LabelLineEdit" name="_bottomLabelText">
      <property name="enabled">
       <bool>false</bool>
@@ -190,7 +183,7 @@
     </widget>
    </item>
    <item row="8" column="0">
-    <widget class="QLabel" name="_Label_15">
+    <widget class="QLabel" name="_leftLabelLabel">
      <property name="text">
       <string>&amp;Left label:</string>
      </property>
@@ -202,7 +195,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="2">
+   <item row="8" column="1" colspan="5">
     <widget class="Kst::LabelLineEdit" name="_leftLabelText">
      <property name="enabled">
       <bool>false</bool>
@@ -220,7 +213,7 @@
     </widget>
    </item>
    <item row="9" column="0">
-    <widget class="QLabel" name="_Label_16">
+    <widget class="QLabel" name="_rightLabelLabel">
      <property name="text">
       <string>&amp;Right label:</string>
      </property>
@@ -232,7 +225,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1" colspan="2">
+   <item row="9" column="1" colspan="5">
     <widget class="Kst::LabelLineEdit" name="_rightLabelText">
      <property name="enabled">
       <bool>false</bool>
@@ -335,6 +328,13 @@
     <widget class="QLabel" name="label">
      <property name="text">
       <string>points</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_topLabelText">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

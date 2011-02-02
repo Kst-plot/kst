@@ -20,7 +20,6 @@
 #include <datamatrix.h>
 #include <generatedmatrix.h>
 #include <datasource.h>
-
 #include <QFileInfo>
 
 namespace Kst {
@@ -188,8 +187,6 @@ QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, in
   }
   return QVariant();
 }
-
-
 
 }
 

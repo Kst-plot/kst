@@ -30,6 +30,10 @@ public:
   }
 
   void addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeItem* parent = 0);
+
+protected:
+  PrimitiveTreeItem* addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent);
+
 };
 
 

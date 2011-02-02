@@ -91,6 +91,7 @@ class LabelTab : public DialogTab, Ui::LabelTab {
     void labelSelected();
     void activateFields();
     void buttonUpdate();
+    void _enableLabelLabels();
 
 
 private:

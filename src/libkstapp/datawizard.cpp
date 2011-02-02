@@ -515,7 +515,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
    setupUi(this);
 
   _xVectorExisting->setObjectStore(store);
-  _xVectorExisting->setToLastX();
+  _xVectorExisting->setToLastX(_dialogDefaults->value("curve/xvectorfield","INDEX").toString());
   _xAxisUseExisting->setChecked(_xVectorExisting->count()>0);
   dataRange()->loadWidgetDefaults();
   getFFTOptions()->loadWidgetDefaults();

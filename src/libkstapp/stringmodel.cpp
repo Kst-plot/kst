@@ -21,6 +21,8 @@
 #include <generatedmatrix.h>
 #include <string_kst.h>
 
+#include <QFileInfo>
+
 namespace Kst {
 
 
@@ -40,6 +42,19 @@ void StringModel::addDataSourcesMetas(DataSourcePtr dataSource, PrimitiveTreeIte
     dataSource->string().read(str, readInfo);
     new PrimitiveTreeItem(QList<QVariant>() << str << value, item);
   }
+}
+
+PrimitiveTreeItem* StringModel::addDataSourceFileItem(DataSourcePtr dataSource, PrimitiveTreeItem* parent)
+{
+
+  QString path = dataSource->descriptiveName();
+  QFileInfo info(path);
+
+  PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << info.fileName(), parent);
+  new PrimitiveTreeItem(QList<QVariant>() << "Name" << path, item);
+  new PrimitiveTreeItem(QList<QVariant>() << "In directory" << info.path(), item);
+
+  return item;
 }
 
 

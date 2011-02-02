@@ -42,7 +42,7 @@ class KSTWIDGETS_EXPORT VectorSelector : public QWidget, public Ui::VectorSelect
     void clearSelection();
 
     void fillVectors();
-    void setToLastX();
+    void setToLastX(QString field = QString());
 
     void setIsX(bool is_x) {_isX = is_x;}
     int count() {return _vector->count();}

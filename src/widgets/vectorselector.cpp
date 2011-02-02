@@ -152,13 +152,26 @@ void VectorSelector::editVector() {
 }
 
 
-void VectorSelector::setToLastX() {
+void VectorSelector::setToLastX(QString field) {
   if (!_store) {
     return;
   }
-  CurveList objects = _store->getObjects<Curve>();
-  if (objects.count()>0) {
-    setSelectedVector(objects.at(objects.count()-1)->xVector());
+  int match = -1;
+  VectorList vectors = _store->getObjects<Vector>();
+  int size = vectors.size();
+  for (int i = 0; i < size; ++i) {
+    if (vectors.at(i)->descriptiveName() == field) {
+      match = i;
+    }
+  }
+
+  if (match >-1) {
+    setSelectedVector(vectors.at(match));
+  } else {
+    CurveList objects = _store->getObjects<Curve>();
+    if (objects.count()>0) {
+      setSelectedVector(objects.at(objects.count()-1)->xVector());
+    }
   }
 }
 
