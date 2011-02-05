@@ -303,26 +303,26 @@ void DataVector::save(QXmlStreamWriter &s) {
 
 
 QString DataVector::label() const {
-  QString label;
-
+  // Initialize label to field name, always
+  QString label = _field;
+  // If there is a meta string named "quantity", override the default label (does that really make sense???)
   if (_fieldStrings.contains("quantity")) {
     label = _fieldStrings.value("quantity")->value();
   }
 
-  if (!label.isEmpty()) {
-    if (_fieldStrings.contains("units")) {
-      QString units = _fieldStrings.value("units")->value();
-      if (!units.isEmpty()) {
-        label += " \\[" + units + "\\]";
-      }
+  // Now add the unit if found in the metadata
+  // FIXME: the name of the metadata should be configurable!
+  if (_fieldStrings.contains("units")) {
+    QString units = _fieldStrings.value("units")->value();
+    if (!units.isEmpty()) {
+      label += " \\[" + units + "\\]";
     }
-  } else {
-    label = _field;
-    // un-escape escaped special characters so they aren't escaped 2x.
-    label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
-    // now escape the special characters.
-    label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
   }
+
+  // un-escape escaped special characters so they aren't escaped 2x.
+  label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  // now escape the special characters.
+  label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
 
   return label;
 }
