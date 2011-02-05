@@ -31,8 +31,10 @@
 
 namespace Kst {
 
-ObjectStore::ObjectStore() 
+ObjectStore::ObjectStore()
 {
+  override.fileName = QString();
+  override.f0 = override.N = override.skip = override.doAve = -5;
 }
 
 

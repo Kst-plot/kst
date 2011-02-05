@@ -22,7 +22,7 @@
 static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_ORDER_IN = "Order Scalar";
 static const QString& SCALAR_CUTOFF_IN = "Cutoff / Spacing Scalar";
-static const QString& VECTOR_OUT = "Filtered";
+static const QString& VECTOR_OUT = "Y";
 
 class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget, public Ui_FilterButterworthHighPassConfig {
   public:
@@ -181,7 +181,14 @@ bool FilterButterworthHighPassSource::algorithm() {
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::ScalarPtr orderScalar = _inputScalars[SCALAR_ORDER_IN];
   Kst::ScalarPtr cutoffScalar = _inputScalars[SCALAR_CUTOFF_IN];
-  Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
+  Kst::VectorPtr outputVector;
+  // maintain kst file compatibility if the output vector name is changed.
+  if (_outputVectors.contains(VECTOR_OUT)) {
+    outputVector = _outputVectors[VECTOR_OUT];
+  } else {
+    outputVector = _outputVectors.values().at(0);
+  }
+
 
   Kst::ScalarList scalars;
   scalars.insert(0, orderScalar);

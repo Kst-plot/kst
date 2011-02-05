@@ -65,12 +65,16 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     return 0;
   }
 
-  DataSourcePtr dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
-  if (dataSource) {
-    dataSource->parseProperties(propertyAttributes);
-  }
+  if (store->override.fileName.isEmpty()) {
+    DataSourcePtr dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
+    if (dataSource) {
+      dataSource->parseProperties(propertyAttributes);
+    }
 
-  return dataSource;
+    return dataSource;
+  } else {
+    return 0;
+  }
 }
 
 }

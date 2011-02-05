@@ -162,6 +162,8 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     virtual ObjectList<Primitive> outputPrimitives() const;
 
+    virtual QString propertyString() const;
+
   protected:
     /** current number of samples */
     int _size;

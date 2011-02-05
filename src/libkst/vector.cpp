@@ -605,6 +605,10 @@ void Vector::change(QByteArray &data) {
   }
 }
 
+QString Vector::propertyString() const {
+  return i18n("Provider: %1").arg(_provider->Name());
+}
+
 QString Vector::descriptionTip() const {
   return i18n("Vector: %1\n  %2 samples\n%3").arg(Name()).arg(length()).arg(_provider->descriptionTip());
 }

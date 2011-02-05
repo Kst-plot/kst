@@ -20,7 +20,7 @@
 static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_NSIGMA_IN = "NSigma Scalar";
 static const QString& SCALAR_SPACING_IN = "Spacing Scalar";
-static const QString& VECTOR_OUT = "Filtered";
+static const QString& VECTOR_OUT = "Y";
 
 class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, public Ui_FilterDespikeConfig {
   public:
@@ -174,7 +174,13 @@ bool FilterDespikeSource::algorithm() {
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::ScalarPtr nSigmaScalar = _inputScalars[SCALAR_NSIGMA_IN];
   Kst::ScalarPtr spacingScalar = _inputScalars[SCALAR_SPACING_IN];
-  Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
+  Kst::VectorPtr outputVector;
+  // maintain kst file compatibility if the output vector name is changed.
+  if (_outputVectors.contains(VECTOR_OUT)) {
+    outputVector = _outputVectors[VECTOR_OUT];
+  } else {
+    outputVector = _outputVectors.values().at(0);
+  }
 
   int N = inputVector->length();
   double last_good;

@@ -23,7 +23,7 @@ static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_ORDER_IN = "Order Scalar";
 static const QString& SCALAR_RATE_IN = "Central Frequency / Sample Rate Scalar";
 static const QString& SCALAR_BANDWIDTH_IN = "Band width Scalar";
-static const QString& VECTOR_OUT = "Filtered";
+static const QString& VECTOR_OUT = "Y";
 
 class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget, public Ui_FilterButterworthBandStopConfig {
   public:
@@ -204,7 +204,14 @@ bool FilterButterworthBandStopSource::algorithm() {
   Kst::ScalarPtr orderScalar = _inputScalars[SCALAR_ORDER_IN];
   Kst::ScalarPtr rateScalar = _inputScalars[SCALAR_RATE_IN];
   Kst::ScalarPtr bandwidthScalar = _inputScalars[SCALAR_BANDWIDTH_IN];
-  Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
+  Kst::VectorPtr outputVector;
+  // maintain kst file compatibility if the output vector name is changed.
+  if (_outputVectors.contains(VECTOR_OUT)) {
+    outputVector = _outputVectors[VECTOR_OUT];
+  } else {
+    outputVector = _outputVectors.values().at(0);
+  }
+
 
   Kst::ScalarList scalars;
   scalars.insert(0, orderScalar);

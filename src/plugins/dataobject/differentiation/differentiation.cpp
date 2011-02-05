@@ -16,7 +16,7 @@
 
 static const QString& VECTOR_IN = "Vector In";
 static const QString& SCALAR_IN = "Scalar In";
-static const QString& VECTOR_OUT = "Derivative";
+static const QString& VECTOR_OUT = "Y'";
 
 class ConfigDifferentiationPlugin : public Kst::DataObjectConfigWidget, public Ui_DifferentiationConfig {
   public:
@@ -113,7 +113,7 @@ DifferentiationSource::~DifferentiationSource() {
 
 
 QString DifferentiationSource::_automaticDescriptiveName() const {
-  return QString("Differentiation Plugin Object");
+  return QString(vector()->descriptiveName() + " Derivative");
 }
 
 

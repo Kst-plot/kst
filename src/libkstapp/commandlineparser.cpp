@@ -369,12 +369,16 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = false;
     } else if (arg == "-f") {
       *ok = _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
+      _document->objectStore()->override.f0 = _startFrame;
     } else if (arg == "-n") {
-      *ok = _setIntArg(&_numFrames, i18n("Usage: -f <numframes>\n"), true);
+      *ok = _setIntArg(&_numFrames, i18n("Usage: -n <numframes>\n"), true);
+      _document->objectStore()->override.N = _numFrames;
     } else if (arg == "-s") {
       *ok = _setIntArg(&_skip, i18n("Usage: -s <frames per sample>\n"));
+      _document->objectStore()->override.skip = _skip;
     } else if (arg == "-a") {
       _doAve = true;
+      _document->objectStore()->override.doAve = _doAve;
     } else if (arg == "-P") {
       QString plot_name;
       *ok = _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
@@ -561,6 +565,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         new_fileList = true;
         dataPlotted = true;
       }
+    } else if (arg == "-F") {
+      *ok = _setStringArg(_document->objectStore()->override.fileName, i18n("Usage: -F <datafile>\n"));
     } else if (arg == "--png") {
       *ok = _setStringArg(_pngFile, i18n("Usage: --png <filename>\n"));
     } else if (arg == "--print") {

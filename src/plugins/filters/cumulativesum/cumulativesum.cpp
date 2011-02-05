@@ -157,7 +157,14 @@ void CumulativeSumSource::setupOutputs() {
 bool CumulativeSumSource::algorithm() {
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::ScalarPtr inputScalar = _inputScalars[SCALAR_IN];
-  Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
+  Kst::VectorPtr outputVector;
+  // maintain kst file compatibility if the output vector name is changed.
+  if (_outputVectors.contains(VECTOR_OUT)) {
+    outputVector = _outputVectors[VECTOR_OUT];
+  } else {
+    outputVector = _outputVectors.values().at(0);
+  }
+
 
   /* Memory allocation */
   outputVector->resize(inputVector->length()+1, true);

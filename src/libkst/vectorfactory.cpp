@@ -228,6 +228,23 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         count = attrs.value("count").toString().toInt();
         skip = attrs.value("skip").toString().toInt();
         doAve = attrs.value("doAve").toString() == "true" ? true : false;
+
+        // set overrides if set from command line
+        if (!store->override.fileName.isEmpty()) {
+          file = store->override.fileName;
+        }
+        if (store->override.f0 != -5) {
+          start = store->override.f0;
+        }
+        if (store->override.N != -5) {
+          count = store->override.N;
+        }
+        if (store->override.skip != -5 ) {
+          skip = store->override.skip;
+        }
+        if (store->override.doAve != -5) {
+          doAve = store->override.doAve;
+        }
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }

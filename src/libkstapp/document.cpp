@@ -153,6 +153,11 @@ bool Document::initFromCommandLine(CommandLineParser *P) {
       }
     }
   }
+  objectStore()->override.fileName = QString();
+  objectStore()->override.f0 = objectStore()->override.N =
+                               objectStore()->override.skip =
+                               objectStore()->override.doAve = -5;
+
   QApplication::restoreOverrideCursor();
 
   return ok;

@@ -80,6 +80,16 @@ class KSTCORE_EXPORT ObjectStore
 
 //    void deleteDependentObjects(const Primitive &p);
 
+    // some variables for overriding data source properties
+    // from the command line when opening a .kst file
+    struct {
+      QString fileName;
+      int f0;
+      int N;
+      int skip;
+      int doAve;
+    } override;
+
   private:
     Q_DISABLE_COPY(ObjectStore)
 
@@ -88,6 +98,7 @@ class KSTCORE_EXPORT ObjectStore
     // objects are stored in these lists
     DataSourceList _dataSourceList;
     QList<ObjectPtr> _list;
+
 };
 
 
