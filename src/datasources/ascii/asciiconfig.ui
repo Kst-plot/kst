@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>357</width>
-    <height>532</height>
+    <height>545</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -192,6 +192,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="_readUnits">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Read units from line:</string>
         </property>
@@ -398,12 +401,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>34</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
+     <x>243</x>
+     <y>341</y>
     </hint>
    </hints>
   </connection>
@@ -414,28 +417,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>33</x>
+     <y>171</y>
     </hint>
     <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_custom</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_columnDelimiter</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
+     <x>233</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -446,12 +433,60 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>175</y>
+     <x>95</x>
+     <y>191</y>
     </hint>
     <hint type="destinationlabel">
-     <x>273</x>
-     <y>175</y>
+     <x>234</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_readFields</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_readUnits</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>62</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>65</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_readFields</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_unitsLine</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_custom</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_columnDelimiter</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>34</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>158</x>
+     <y>311</y>
     </hint>
    </hints>
   </connection>

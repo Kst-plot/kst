@@ -65,7 +65,7 @@ public:
 
   // meta data
   QMap<QString, double> metaScalars(const QString&);
-  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+  QMap<QString, QString> metaStrings(const QString&);
 
 
   AsciiSource& ascii;
@@ -95,6 +95,13 @@ QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
 {
   QMap<QString, double> m;
   m["FRAMES"] = ascii._numFrames;;
+  return m;
+}
+
+QMap<QString, QString> DataInterfaceAsciiVector::metaStrings(const QString& field)
+{
+  QMap<QString, QString> m;
+  m["units"]=ascii._fieldUnits[field];
   return m;
 }
 
@@ -317,6 +324,16 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     }
     // Re-update the field list since we have one now
     _fieldList = fieldListFor(_filename, &_config);
+    QStringList units;
+    if (_config._readUnits) {
+      units += unitListFor(_filename, &_config);
+      for (int index = 0; index < _fieldList.size(); ++index) {
+        if (index >= units.size()) {
+          break; // Missing units => the user's fault, but at least don't crash
+        }
+        _fieldUnits[_fieldList[index]] = units[index];
+      }
+    }
     _fieldListComplete = _fieldList.count() > 1;
 
     // Re-update the scalar list since we have one now
@@ -673,46 +690,59 @@ QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfi
 
 
 //-------------------------------------------------------------------------------------------
-QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig* cfg) 
+QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg)
 {
-  QStringList rc;
-  QFile file(filename);
-  if (!openFile(file)) {
-    return rc;
-  }
-
-  rc += "INDEX";
-
+  QStringList parts;
   const QString columnDelimiter = cfg->_columnDelimiter.value();
   const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
+
+  if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
+    parts += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
+  } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
+    int cnt = line.length() / cfg->_columnWidth;
+    for (int i = 0; i < cnt; ++i) {
+      QString sub = line.mid(i * cfg->_columnWidth).left(cfg->_columnWidth);
+      parts += sub.trimmed();
+    }
+  } else {
+    parts += QString(line).trimmed().split(QRegExp("[\\s]"), QString::SkipEmptyParts);
+  }
+  return parts;
+}
+
+
+//-------------------------------------------------------------------------------------------
+QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig* cfg) 
+{
+  QStringList fields;
+  QFile file(filename);
+  if (!openFile(file)) {
+    return fields;
+  }
+
+  fields += "INDEX";
+
   if (cfg->_readFields) {
-    int l = cfg->_fieldsLine;
-    while (!file.atEnd()) {
+    int fieldsLine = cfg->_fieldsLine;
+    int currentLine = 0; // Explicit line counter, to make the code easier to understand
+    while (currentLine < cfg->_dataLine) {
       const QByteArray line = file.readLine();
       int r = line.size();
-      if (l-- == 0) {
-        if (r >= 0) {
-          if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
-            rc += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
-          } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
-            int cnt = line.length() / cfg->_columnWidth;
-            for (int i = 0; i < cnt; ++i) {
-              QString sub = line.mid(i * cfg->_columnWidth).left(cfg->_columnWidth);
-              rc += sub.trimmed();
-            }
-          } else {
-            rc += QString(line).trimmed().split(QRegExp("[\\s]"), QString::SkipEmptyParts);
-          }
-        }
+      if (currentLine == fieldsLine && r >= 0) {
+        fields += AsciiSource::splitHeaderLine(line, cfg);
         break;
       }
+      currentLine++;
     }
     QStringList trimmed;
-    foreach(const QString& str, rc) {
+    foreach(const QString& str, fields) {
       trimmed << str.trimmed();
     }
     return trimmed;
   }
+
+  const QString columnDelimiter = cfg->_columnDelimiter.value();
+  const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(columnDelimiter)));
 
   QRegExp regex;
   if (cfg->_columnType == AsciiSourceConfig::Custom && !columnDelimiter.isEmpty()) {
@@ -744,7 +774,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     if (skip > 0) { //keep skipping until desired line
       --skip;
       if (r < 0) {
-        return rc;
+        return fields;
       }
       continue;
     }
@@ -763,7 +793,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
             maxcnt = cnt;
           }
         } else if (r < 0) {
-          return rc;
+          return fields;
         }
         nextscan += nextscan + 1;
       }
@@ -781,15 +811,43 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       }
       done = true;
     } else if (r < 0) {
-      return rc;
+      return fields;
     }
   }
 
   for (int i = 1; i <= maxcnt; ++i) {
-    rc += i18n("Column %1").arg(i).trimmed();
+    fields += i18n("Column %1").arg(i).trimmed();
   }
 
-  return rc;
+  return fields;
+}
+
+QStringList AsciiSource::unitListFor(const QString& filename, AsciiSourceConfig* cfg)
+{
+  QStringList units;
+  QFile file(filename);
+  if (!openFile(file)) {
+    return units;
+  }
+
+  units += ""; // To go with INDEX
+
+  int unitsLine = cfg->_unitsLine;
+  int currentLine = 0;
+  while (currentLine < cfg->_dataLine) {
+    const QByteArray line = file.readLine();
+    int r = line.size();
+    if (currentLine == unitsLine && r >= 0) {
+      units += AsciiSource::splitHeaderLine(line, cfg);
+      break;
+    }
+    currentLine++;
+  }
+  QStringList trimmed;
+  foreach(const QString& str, units) {
+    trimmed << str.trimmed();
+  }
+  return trimmed;
 }
 
 

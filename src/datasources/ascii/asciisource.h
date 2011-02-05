@@ -72,6 +72,7 @@ class AsciiSource : public Kst::DataSource
     static const QString asciiTypeKey();
 
     static QStringList fieldListFor(const QString& filename, AsciiSourceConfig *cfg);
+    static QStringList unitListFor(const QString& filename, AsciiSourceConfig* cfg);
     static QStringList scalarListFor(const QString& filename, AsciiSourceConfig *cfg);
     static QStringList stringListFor(const QString& filename, AsciiSourceConfig *cfg);
 
@@ -93,8 +94,10 @@ class AsciiSource : public Kst::DataSource
     QStringList _scalarList;
     QMap<QString, QString> _strings;
     QStringList _fieldList;
+    QMap<QString, QString> _fieldUnits;
 
     int columnOfField(const QString& field) const;
+    static QStringList splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg);
 
     DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;
