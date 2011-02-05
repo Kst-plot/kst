@@ -514,7 +514,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     // the column in row i by adding _rowIndex[i] we have to start at:
     const char* col_start = &buffer[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
     for (int i = 0; i < n; ++i) {
-      v[i] = lexc.toDouble(col_start + _rowIndex[i]);
+      v[i] = lexc.toDouble(_rowIndex[i] + col_start);
     }
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
