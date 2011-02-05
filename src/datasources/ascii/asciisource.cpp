@@ -294,12 +294,19 @@ bool AsciiSource::initRowIndex()
 //-------------------------------------------------------------------------------------------
 AsciiSource::LineEndingType AsciiSource::detectLineEndingType(QFile& file) const
 {
-  LineEndingType end;
-  QByteArray line = file.readLine();
+  QByteArray line;
+  int line_size = 0;
+  while (line_size < 2 && !file.atEnd()) {
+     line = file.readLine();
+     line_size = line.size();
+  }
   file.seek(0);
-  int lsize = line.size();
-  end.is_crlf = line[lsize - 2] == '\r' && line[lsize - 1] == '\n' ;
-  end.character =  end.is_crlf ? line[lsize - 2] : line[lsize - 1];
+  if (line_size < 2) {
+    return LineEndingType();
+  }
+  LineEndingType end;
+  end.is_crlf = line[line_size - 2] == '\r' && line[line_size - 1] == '\n' ;
+  end.character =  end.is_crlf ? line[line_size - 2] : line[line_size - 1];
   return end;
 }
 
@@ -503,10 +510,10 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     MeasureTime t("AsciiSource::readField: same width for all columns");
     LexicalCast lexc;
     lexc.setDecimalSeparator(_config._useDot);
-    const char* col_start = &buffer[0] + _config._columnWidth * (col - 1);
+    // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
+    // the column in row i by adding _rowIndex[i] we have to start at:
+    const char* col_start = &buffer[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
     for (int i = 0; i < n; ++i) {
-      /* Read appropriate column and convert to double
-      v[i] = lexc.toDouble(&buffer[0] + _rowIndex[i] + _config._columnWidth * (col - 1));*/
       v[i] = lexc.toDouble(col_start + _rowIndex[i]);
     }
     return n;
