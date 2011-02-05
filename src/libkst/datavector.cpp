@@ -315,7 +315,12 @@ QString DataVector::label() const {
   if (_fieldStrings.contains("units")) {
     QString units = _fieldStrings.value("units")->value();
     if (!units.isEmpty()) {
-      label += " \\[" + units + "\\]";
+      // Apparently some people already add the square brackets in the unit name - avoid having two brackets
+      if (units.startsWith("[")) {
+        label += " " + units;
+      } else {
+        label += " \\[" + units + "\\]";
+      }
     }
   }
 
