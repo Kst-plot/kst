@@ -78,6 +78,7 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
 };
 
 
+
 class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
 {
   Q_OBJECT
@@ -87,14 +88,34 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
 
     AsciiSourceConfig config();
     void setConfig(const AsciiSourceConfig&);
+    void setFilename(const QString& filename);
 
   private Q_SLOTS:
     void columnLayoutChanged(int);
+    void showBeginning();
 
   private:
     const int _index_offset;
+    QString _filename;
 
 };
+
+
+class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
+{
+  public:
+    ConfigWidgetAscii(QSettings&);
+    ~ConfigWidgetAscii();
+
+    void load();
+    void save();
+
+    void setFilename(const QString& filename);
+
+    ConfigWidgetAsciiInternal *_ac;
+};
+
+
 
 #endif
 // vim: ts=2 sw=2 et

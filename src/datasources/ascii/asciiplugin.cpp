@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QButtonGroup>
+#include <QPlainTextEdit>
 
 
 //
@@ -42,6 +43,11 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) :
   bgroup->addButton(_custom, AsciiSourceConfig::Custom);
   bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
   connect(bgroup, SIGNAL(buttonClicked(int)), this, SLOT(columnLayoutChanged(int)));
+
+  _showBeginning->setFont(  QFont("Courier"));
+  _showBeginning->setReadOnly(true);
+  _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
+
 }
 
 
@@ -52,6 +58,27 @@ void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
   } else {
     widthButtonGroup->setEnabled(true);
   }
+}
+
+void ConfigWidgetAsciiInternal::showBeginning()
+{
+  QFile file(_filename);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    return;
+  }
+
+  int lines_read = 1;
+  QTextStream in(&file);
+  QStringList lines;
+  while (!in.atEnd() && lines_read <= 100) {
+    lines << QString("%1:").arg(lines_read, 3) + in.readLine();
+    lines_read++;
+  }
+
+  _showBeginning->setPlainText(lines.join("\n"));
+  _showBeginning->moveCursor(QTextCursor::Start);
+
+  _labelBeginning->setText(QString("First 100 lines in file '%1'").arg(QFileInfo(_filename).fileName()));
 }
 
 
@@ -85,6 +112,13 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
 }
 
 
+void ConfigWidgetAsciiInternal::setFilename(const QString& filename)
+{
+  _filename = filename;
+  showBeginning();
+}
+
+
 void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
 {
   _delimiters->setText(config._delimiters);
@@ -113,23 +147,6 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
 }
 
 
-//
-// ConfigWidgetAscii
-//
-
-class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
-{
-  public:
-    ConfigWidgetAscii(QSettings&);
-    ~ConfigWidgetAscii();
-
-    void load();
-    void save();
-
-    ConfigWidgetAsciiInternal *_ac;
-};
-
-
 ConfigWidgetAscii::ConfigWidgetAscii(QSettings& s) : Kst::DataSourceConfigWidget(s) {
   QGridLayout *layout = new QGridLayout(this);
   _ac = new ConfigWidgetAsciiInternal(this);
@@ -139,6 +156,12 @@ ConfigWidgetAscii::ConfigWidgetAscii(QSettings& s) : Kst::DataSourceConfigWidget
 
 
 ConfigWidgetAscii::~ConfigWidgetAscii() {
+}
+
+
+void ConfigWidgetAscii::setFilename(const QString& filename)
+{
+  _ac->setFilename(filename);
 }
 
 
@@ -404,6 +427,7 @@ Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QSt
   Q_UNUSED(filename)
   ConfigWidgetAscii *config = new ConfigWidgetAscii(*cfg);
   config->load();
+  config->setFilename(filename);
   return config;
 }
 
