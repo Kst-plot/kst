@@ -305,7 +305,13 @@ void DataVector::save(QXmlStreamWriter &s) {
 QString DataVector::label() const {
   // Initialize label to field name, always
   QString label = _field;
-  // If there is a meta string named "quantity", override the default label (does that really make sense???)
+
+  // un-escape escaped special characters so they aren't escaped 2x.
+  label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  // now escape the special characters.
+  label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+
+  // If there is a meta string named "quantity", override the default label
   if (_fieldStrings.contains("quantity")) {
     label = _fieldStrings.value("quantity")->value();
   }
@@ -323,11 +329,6 @@ QString DataVector::label() const {
       }
     }
   }
-
-  // un-escape escaped special characters so they aren't escaped 2x.
-  label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
-  // now escape the special characters.
-  label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
 
   return label;
 }
