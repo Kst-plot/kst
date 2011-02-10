@@ -1277,6 +1277,7 @@ void MainWindow::createMenus() {
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
   _toolsMenu->addSeparator();
+  updateRecentDataFiles();
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
   _settingsMenu->addAction(_settingsDialogAct);
