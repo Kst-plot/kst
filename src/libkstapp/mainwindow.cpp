@@ -103,7 +103,7 @@ MainWindow::MainWindow() :
 
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
 
-  updateRecentFiles();
+  updateRecentKstFiles();
 }
 
 
@@ -230,7 +230,7 @@ void MainWindow::saveAs() {
   _doc->save(fn);
   QDir::setCurrent(restorePath);
   setWindowTitle("Kst - " + fn);
-  updateRecentFiles(fn);
+  updateRecentKstFiles(fn);
 }
 
 
@@ -276,7 +276,7 @@ void MainWindow::open() {
 
 
 
-QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, const QString& name)
+QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, const QString& name, const char* openslot)
 {
   QAction* action = new QAction(this);
   QString text = tr("&%1 %2").arg(idx).arg(name);
@@ -284,20 +284,31 @@ QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, co
   action->setData(filename);
   action->setStatusTip(filename);
   action->setVisible(true);
-  connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  connect(action, SIGNAL(triggered()), this, openslot);
   return action;
 }
 
 
-void MainWindow::updateRecentFiles(const QString& newfilename)
+void MainWindow::updateRecentKstFiles(const QString& filename)
 {
-  foreach(QAction* it, _bottomRecentFiles) {
-    _fileMenu->removeAction(it);
+  updateRecentFiles("recentKstFileList", _fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
+}
+
+
+void MainWindow::updateRecentDataFiles(const QString& filename)
+{
+  updateRecentFiles("recentDataFileList", _toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
+}
+
+
+void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
+{
+  foreach(QAction* it, actions) {
+    menu->removeAction(it);
     delete it;
   }
-  _bottomRecentFiles.clear();
+  actions.clear();
   QSettings settings("Kst2");
-  QString key = "recentKstFiles";
   QStringList recentFiles = settings.value(key).toStringList();
   if (recentFiles.removeDuplicates() > 0) {
     settings.setValue(key, recentFiles);
@@ -309,27 +320,28 @@ void MainWindow::updateRecentFiles(const QString& newfilename)
     settings.setValue(key, recentFiles);
   }
   int i = 0;
-  _recentFilesMenu->clear();
+  submenu->clear();
   foreach(const QString& it, recentFiles) {
     i++;
     if (i <= 5) {
       // don't make file menu to wide, show complete path in statusbar
-      QAction* action = createRecentFileAction(it, i, QFileInfo(it).fileName());
-      _bottomRecentFiles << action;
-      _fileMenu->addAction(action);
+      QAction* action = createRecentFileAction(it, i, QFileInfo(it).fileName(), openslot);
+      actions << action;
+      menu->addAction(action);
     }
-    _recentFilesMenu->addAction(createRecentFileAction(it, i, it));
+    submenu->addAction(createRecentFileAction(it, i, it, openslot));
   }
 }
 
 
-void MainWindow::openRecentFile()
+void MainWindow::openRecentKstFile()
 {
   QAction *action = qobject_cast<QAction *>(sender());
   if (action) {
     openFile(action->data().toString());
   }
 }
+
 
 
 
@@ -377,7 +389,7 @@ void MainWindow::openFile(const QString &file) {
   }
 
   setWindowTitle("Kst - " + file);
-  updateRecentFiles(file);
+  updateRecentKstFiles(file);
 }
 
 
@@ -1146,7 +1158,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addAction(_closeAct);
-  _recentFilesMenu = _fileMenu->addMenu(tr("&Recent Files"));
+  _recentKstFilesMenu = _fileMenu->addMenu(tr("&Recent Files"));
   _fileMenu->addSeparator();
   // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
@@ -1165,7 +1177,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_exitAct);
   // recent files
   _fileMenu->addSeparator();
-  updateRecentFiles();
+  updateRecentKstFiles();
 
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -1260,9 +1272,11 @@ void MainWindow::createMenus() {
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataManagerAct);
   _toolsMenu->addAction(_dataWizardAct);
+  _recentDataFilesMenu = _toolsMenu->addMenu("&Recent Data File");
   _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
+  _toolsMenu->addSeparator();
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
   _settingsMenu->addAction(_settingsDialogAct);
@@ -1684,7 +1698,19 @@ void MainWindow::showChangeDataSampleDialog() {
 
 void MainWindow::showDataWizard() {
   DataWizard *dataWizard = new DataWizard(this);
+  connect(dataWizard, SIGNAL(dataSourceLoaded(const QString&)), this, SLOT(updateRecentDataFiles(const QString&)));
   dataWizard->show();
+}
+
+
+void MainWindow::openRecentDataFile()
+{
+  QAction *action = qobject_cast<QAction *>(sender());
+  if (action) {
+    DataWizard *dataWizard = new DataWizard(this, action->data().toString());
+    connect(dataWizard, SIGNAL(dataSourceLoaded(const QString&)), this, SLOT(updateRecentDataFiles(const QString&)));
+    dataWizard->show();
+  }
 }
 
 

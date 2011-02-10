@@ -38,7 +38,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
 {
   Q_OBJECT
   public:
-    DataWizardPageDataSource(ObjectStore *store, QWidget *parent);
+    DataWizardPageDataSource(ObjectStore *store, QWidget *parent, const QString& filename);
     virtual ~DataWizardPageDataSource();
 
   bool isComplete() const;
@@ -175,7 +175,7 @@ class DataWizard : public QWizard
   public:
     enum DataWizardPages {PageDataSource, PageVectors, PageDataPresentation, PageFilters, PagePlot};
 
-    DataWizard(QWidget *parent);
+    DataWizard(QWidget *parent, const QString& fn = QString());
     virtual ~DataWizard();
 
     QStringList dataSourceFieldList() const;
@@ -186,6 +186,9 @@ class DataWizard : public QWizard
     DataWizardPageFilters *_pageFilters;
     DataWizardPagePlot *_pagePlot;
     DataWizardPageDataPresentation *_pageDataPresentation;
+
+  Q_SIGNALS:
+    void dataSourceLoaded(const QString&);
 
   private Q_SLOTS:
     void finished();

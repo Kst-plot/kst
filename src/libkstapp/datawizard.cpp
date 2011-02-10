@@ -37,7 +37,7 @@
 
 namespace Kst {
 
-DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *parent)
+DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *parent, const QString& default_source)
   : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0) {
    setupUi(this);
 
@@ -46,8 +46,11 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
    connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
    connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 
-   QString default_source = _dialogDefaults->value("vector/datasource",".").toString();
-  _url->setFile(default_source);
+   if (default_source.isEmpty()) {
+    _url->setFile(_dialogDefaults->value("vector/datasource",".").toString());
+   } else {
+    _url->setFile(default_source);
+   }
   _url->setFocus();
 
   _updateBox->addItem("Time interval");
@@ -641,7 +644,7 @@ int DataWizardPageDataPresentation::nextId() const {
 }
 
 
-DataWizard::DataWizard(QWidget *parent)
+DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   : QWizard(parent), _document(0) {
 
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
@@ -652,7 +655,7 @@ DataWizard::DataWizard(QWidget *parent)
   }
 
   Q_ASSERT(_document);
-  _pageDataSource = new DataWizardPageDataSource(_document->objectStore(), this);
+  _pageDataSource = new DataWizardPageDataSource(_document->objectStore(), this, fileToOpen);
   _pageVectors = new DataWizardPageVectors(this);
   _pageDataPresentation = new DataWizardPageDataPresentation(_document->objectStore(), this);
   _pageFilters = new DataWizardPageFilters(this);
@@ -718,6 +721,7 @@ void DataWizard::finished() {
     return;
   }
 
+  emit dataSourceLoaded(ds->fileName());
 
   // check for sufficient memory
   unsigned long memoryRequested = 0, memoryAvailable = 1024*1024*1024; // 1GB
