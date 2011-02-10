@@ -212,7 +212,7 @@ set(CPACK_INSTALL_PREFIX "")
 	
 
 set(CPACK_PACKAGE_NAME   Kst)
-set(CPACK_PACKAGE_EXECUTABLES ${kst_binary_name} ${kst_binary_name})
+set(CPACK_PACKAGE_EXECUTABLES ${kst_binary_name} Kst2)
 set(CPACK_PACKAGE_VENDOR "The Kst Team")
 set(CPACK_PACKAGE_VERSION_MAJOR ${kst_version_major})
 set(CPACK_PACKAGE_VERSION_MINOR ${kst_version_minor})
