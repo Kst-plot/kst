@@ -3,4 +3,5 @@ cmake ..\kst\cmake -G"MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=1 -Dkst
 
 mingw32-make
 mingw32-make package
+mingw32-make package_source
 
