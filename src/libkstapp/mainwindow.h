@@ -100,7 +100,7 @@ class MainWindow : public QMainWindow
     void printFromCommandLine(const QString &printFileName);
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
     void exportLog(const QString &imagename, QString &msgfilename, const QString &_format, int x_size, int y_size,
-              int size_option_index, const QString &message);
+                   int size_option_index, const QString &message);
 
 
     void clearDrawingMarker();
@@ -149,6 +149,7 @@ class MainWindow : public QMainWindow
     void openRecentDataFile();
     void updateRecentKstFiles(const QString& newfilename = QString());
     void updateRecentDataFiles(const QString& newfilename = QString());
+    void checkRecentFilesOnExistence();
 
   protected:
     void closeEvent(QCloseEvent *e);

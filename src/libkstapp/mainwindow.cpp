@@ -319,8 +319,15 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
     recentFiles = recentFiles.mid(0, 30);
     settings.setValue(key, recentFiles);
   }
-  int i = 0;
+  
   submenu->clear();
+  QAction* check = new QAction(this);
+  check->setText("&Check Files On Existence");
+  check->setData(key);
+  check->setVisible(true);
+  connect(check, SIGNAL(triggered()), this, SLOT(checkRecentFilesOnExistence()));
+  submenu->addAction(check);
+  int i = 0;
   foreach(const QString& it, recentFiles) {
     i++;
     if (i <= 5) {
@@ -342,6 +349,24 @@ void MainWindow::openRecentKstFile()
   }
 }
 
+
+void MainWindow::checkRecentFilesOnExistence()
+{
+  QAction *action = qobject_cast<QAction *>(sender());
+  if (action) {
+    QSettings settings("Kst2");
+    QStringList recentFiles = settings.value(action->data().toString()).toStringList();
+    recentFiles.removeDuplicates();
+    foreach(const QString& it, recentFiles) {
+      if (!QFileInfo(it).exists()) {
+        recentFiles.removeOne(it);
+      }
+    }
+    settings.setValue(action->data().toString(), recentFiles);
+    updateRecentKstFiles();
+    updateRecentDataFiles();
+  }
+}
 
 
 
