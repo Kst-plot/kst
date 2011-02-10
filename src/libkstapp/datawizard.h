@@ -41,8 +41,8 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     DataWizardPageDataSource(ObjectStore *store, QWidget *parent, const QString& filename);
     virtual ~DataWizardPageDataSource();
 
-  bool isComplete() const;
-  QStringList dataSourceFieldList() const;
+    bool isComplete() const;
+    QStringList dataSourceFieldList() const;
 
   DataSourcePtr dataSource() const;
 
@@ -70,8 +70,8 @@ class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors
     DataWizardPageVectors(QWidget *parent);
     virtual ~DataWizardPageVectors();
 
-  bool isComplete() const;
-  QListWidget* plotVectors() const;
+    bool isComplete() const;
+    QListWidget* plotVectors() const;
 
   public Q_SLOTS:
     void add();
@@ -141,20 +141,20 @@ class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDat
     DataWizardPageDataPresentation(ObjectStore *store, QWidget *parent);
     virtual ~DataWizardPageDataPresentation();
 
-  int nextId() const;
-  bool isComplete() const;
+    int nextId() const;
+    bool isComplete() const;
 
-  bool createXAxisFromField() const;
-  QString vectorField() const;
+    bool createXAxisFromField() const;
+    QString vectorField() const;
 
-  bool plotPSD() const;
-  bool plotData() const;
-  bool plotDataPSD() const;
+    bool plotPSD() const;
+    bool plotData() const;
+    bool plotDataPSD() const;
 
-  VectorPtr selectedVector() const;
+    VectorPtr selectedVector() const;
 
-  FFTOptions* getFFTOptions() const;
-  DataRange* dataRange() const;
+    FFTOptions* getFFTOptions() const;
+    DataRange* dataRange() const;
 
   public Q_SLOTS:
     void applyFilter(bool);
