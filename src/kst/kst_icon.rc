@@ -1,1 +1,1 @@
-IDI_ICON1               ICON    DISCARDABLE     "${kst_dir}/src/images/kst.ico"
+IDI_ICON1               ICON    DISCARDABLE     "../images/kst.ico"
