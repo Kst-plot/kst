@@ -837,7 +837,7 @@ void MainWindow::createActions() {
   _closeAct->setIcon(QPixmap(":document-close.png"));
   connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
-  _reloadAct = new QAction(tr("Reload all Data Sources"), this);
+  _reloadAct = new QAction(tr("Reload all &Data Sources"), this);
   _reloadAct->setStatusTip(tr("Reload all data sources"));
   _reloadAct->setIcon(QPixmap(":kst_reload.png"));
   connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
@@ -904,34 +904,34 @@ void MainWindow::createActions() {
   connect(_stringEditorAct, SIGNAL(triggered()), this, SLOT(showStringEditor()));
 
   // ************************ Data Range 1 click Actions ************************** //
-  _backAct = new QAction(tr("Back One Screen"), this);
+  _backAct = new QAction(tr("&Back One Screen"), this);
   _backAct->setStatusTip(tr("Back one screen"));
   _backAct->setIcon(QPixmap(":page-previous.png"));
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
-  _forwardAct = new QAction(tr("Forward One Screen"), this);
+  _forwardAct = new QAction(tr("&Forward One Screen"), this);
   _forwardAct->setStatusTip(tr("Forward one screen"));
   _forwardAct->setIcon(QPixmap(":page-next.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
-  _readFromEndAct = new QAction(tr("Count From End"), this);
+  _readFromEndAct = new QAction(tr("&Count From End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
   _readFromEndAct->setIcon(QPixmap(":count-from-end.png"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
-  _readToEndAct = new QAction(tr("Read To End"), this);
+  _readToEndAct = new QAction(tr("&Read To End"), this);
   _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
   _readToEndAct->setIcon(QPixmap(":read-to-end.png"));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
-  _pauseAct = new QAction(tr("Pause"), this);
+  _pauseAct = new QAction(tr("&Pause"), this);
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources"));
   _pauseAct->setIcon(QPixmap(":pause.png"));
   _pauseAct->setCheckable(true);
   _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
-  _changeDataSampleDialogAct = new QAction(tr("Change Data Sample Range"), this);
+  _changeDataSampleDialogAct = new QAction(tr("&Change Data Sample Range"), this);
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
   _changeDataSampleDialogAct->setIcon(QPixmap(":kst_changenpts.png"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
