@@ -27,6 +27,5 @@ then
 	${kst_install_prefix}.tar.gz \
 	${kst_install_prefix}-sources.tar.gz \
 	${kst_install_prefix}-sources.tar.bz2 \
-	${kst_install_prefix}-sources.zip \
 	${3},kst@frs.sourceforge.net:"/home/frs/project/k/ks/kst/${2}"
 fi
