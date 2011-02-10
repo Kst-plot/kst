@@ -1146,7 +1146,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addAction(_closeAct);
-  _recentFilesMenu = _fileMenu->addMenu(tr("Recent Files"));
+  _recentFilesMenu = _fileMenu->addMenu(tr("&Recent Files"));
   _fileMenu->addSeparator();
   // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
