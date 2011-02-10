@@ -324,6 +324,9 @@ QString DataVector::label() const {
       // Apparently some people already add the square brackets in the unit name - avoid having two brackets
       if (units.startsWith("[")) {
         label += " " + units;
+        if (!label.endsWith("]")) {
+          label += "\\]";
+        }
       } else {
         label += " \\[" + units + "\\]";
       }
