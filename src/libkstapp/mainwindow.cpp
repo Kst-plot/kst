@@ -102,6 +102,8 @@ MainWindow::MainWindow() :
   connect(UpdateManager::self(), SIGNAL(objectsUpdated(qint64)), this, SLOT(updateViewItems(qint64)));
 
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
+
+  updateRecentFiles();
 }
 
 
@@ -228,6 +230,7 @@ void MainWindow::saveAs() {
   _doc->save(fn);
   QDir::setCurrent(restorePath);
   setWindowTitle("Kst - " + fn);
+  updateRecentFiles(fn);
 }
 
 
@@ -268,11 +271,67 @@ void MainWindow::open() {
     return;
   }
   settings.setValue(lastKey, fn);
-  QDir::setCurrent(fn.left(fn.lastIndexOf('/')) + '/');
-  QDir::setCurrent(fn.left(fn.lastIndexOf('/')));
   openFile(fn);
-  setWindowTitle("Kst - " + fn);
 }
+
+
+
+QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, const QString& name)
+{
+  QAction* action = new QAction(this);
+  QString text = tr("&%1 %2").arg(idx).arg(name);
+  action->setText(text);
+  action->setData(filename);
+  action->setStatusTip(filename);
+  action->setVisible(true);
+  connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  return action;
+}
+
+
+void MainWindow::updateRecentFiles(const QString& newfilename)
+{
+  foreach(QAction* it, _bottomRecentFiles) {
+    _fileMenu->removeAction(it);
+    delete it;
+  }
+  _bottomRecentFiles.clear();
+  QSettings settings("Kst2");
+  QString key = "recentKstFiles";
+  QStringList recentFiles = settings.value(key).toStringList();
+  if (recentFiles.removeDuplicates() > 0) {
+    settings.setValue(key, recentFiles);
+  }
+  if (!newfilename.isEmpty()) {
+    recentFiles.removeOne(newfilename);
+    recentFiles.push_front(newfilename);
+    recentFiles = recentFiles.mid(0, 30);
+    settings.setValue(key, recentFiles);
+  }
+  int i = 0;
+  _recentFilesMenu->clear();
+  foreach(const QString& it, recentFiles) {
+    i++;
+    if (i <= 5) {
+      // don't make file menu to wide, show complete path in statusbar
+      QAction* action = createRecentFileAction(it, i, QFileInfo(it).fileName());
+      _bottomRecentFiles << action;
+      _fileMenu->addAction(action);
+    }
+    _recentFilesMenu->addAction(createRecentFileAction(it, i, it));
+  }
+}
+
+
+void MainWindow::openRecentFile()
+{
+  QAction *action = qobject_cast<QAction *>(sender());
+  if (action) {
+    openFile(action->data().toString());
+  }
+}
+
+
 
 bool MainWindow::initFromCommandLine() {
   delete _doc;
@@ -297,6 +356,9 @@ bool MainWindow::initFromCommandLine() {
 }
 
 void MainWindow::openFile(const QString &file) {
+  QDir::setCurrent(file.left(file.lastIndexOf('/')) + '/');
+  QDir::setCurrent(file.left(file.lastIndexOf('/')));
+
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
   delete _dataManager;
   _dataManager = 0;
@@ -313,6 +375,9 @@ void MainWindow::openFile(const QString &file) {
     delete _doc;
     _doc = new Document(this);
   }
+
+  setWindowTitle("Kst - " + file);
+  updateRecentFiles(file);
 }
 
 
@@ -1081,6 +1146,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addAction(_closeAct);
+  _recentFilesMenu = _fileMenu->addMenu(tr("Recent Files"));
   _fileMenu->addSeparator();
   // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
@@ -1097,6 +1163,10 @@ void MainWindow::createMenus() {
   _fileMenu->addSeparator();
   // exit  
   _fileMenu->addAction(_exitAct);
+  // recent files
+  _fileMenu->addSeparator();
+  updateRecentFiles();
+
 
   _editMenu = menuBar()->addMenu(tr("&Edit"));
   _editMenu->addAction(_undoAct);

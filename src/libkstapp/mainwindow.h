@@ -145,6 +145,8 @@ class MainWindow : public QMainWindow
     void setHighlightPoint(bool);
     void changeZoomOnlyMode(QAction*);
 
+    void openRecentFile();
+
   protected:
     void closeEvent(QCloseEvent *e);
 
@@ -157,6 +159,9 @@ class MainWindow : public QMainWindow
     void readSettings();
     void writeSettings();
     bool promptSave();
+
+    QAction* createRecentFileAction(const QString& filename, int idx, const QString& text);
+    void updateRecentFiles(const QString& filename = QString());
 
   private:
     Document *_doc;
@@ -271,6 +276,8 @@ class MainWindow : public QMainWindow
     QAction *_newSpectrogramAct;
     QAction *_newEventMonitorAct;
 
+    QMenu* _recentFilesMenu;
+    QList<QAction*> _bottomRecentFiles;
 };
 
 }
