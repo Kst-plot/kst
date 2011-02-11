@@ -322,11 +322,12 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
   
   submenu->clear();
   QAction* check = new QAction(this);
-  check->setText("&Check Files On Existence");
+  check->setText("Remove Non-Existent Files");
   check->setData(key);
   check->setVisible(true);
   connect(check, SIGNAL(triggered()), this, SLOT(checkRecentFilesOnExistence()));
   submenu->addAction(check);
+  submenu->addSeparator();
   int i = 0;
   foreach(const QString& it, recentFiles) {
     i++;
