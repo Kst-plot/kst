@@ -151,9 +151,12 @@ static void scanPlugins() {
   
   pluginPath = rootDir.canonicalPath();
   pluginPath += QDir::separator();
-  pluginPath += QLatin1String("PlugIns");
-  pluginPaths << pluginPath;
+  pluginPaths << pluginPath + QLatin1String("PlugIns");
+  pluginPaths << pluginPath + QLatin1String("../PlugIns/Release");
+  pluginPaths << pluginPath + QLatin1String("../PlugIns/Debug");
 
+  Debug::self()->log(QString("\nPlugin Search Pathes: \n%1").arg(pluginPaths.join("\n")));
+	
   foreach (const QString& pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (QString fileName, d.entryList(QDir::Files)) {

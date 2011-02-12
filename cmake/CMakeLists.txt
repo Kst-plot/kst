@@ -118,7 +118,7 @@ if(NOT kst_console)
 	set(kst_qtmain_library ${QT_QTMAIN_LIBRARY})
 endif()
 
-if(APPLE)
+if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
 	set(kst_win32 MACOSX_BUNDLE)
 endif()
 

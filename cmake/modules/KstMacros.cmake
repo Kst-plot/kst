@@ -127,7 +127,7 @@ endmacro()
 
 macro(kst_init_plugin dir)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
-	if(APPLE)
+	if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
 	    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${kst_binary_name}.app/Contents/plugins)
 	else()
 		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
