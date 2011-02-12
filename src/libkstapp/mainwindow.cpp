@@ -1184,7 +1184,9 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_saveAct);
   _fileMenu->addAction(_saveAsAct);
   _fileMenu->addAction(_closeAct);
-  _recentKstFilesMenu = _fileMenu->addMenu(tr("&Recent Files"));
+  _fileMenu->addSeparator();
+  _recentKstFilesMenu = _fileMenu->addMenu(tr("&Recent Sessions"));
+  _recentDataFilesMenu = _fileMenu->addMenu("Recent D&ata Files");
   _fileMenu->addSeparator();
   // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
@@ -1298,7 +1300,6 @@ void MainWindow::createMenus() {
   _toolsMenu = menuBar()->addMenu(tr("&Tools"));
   _toolsMenu->addAction(_dataManagerAct);
   _toolsMenu->addAction(_dataWizardAct);
-  _recentDataFilesMenu = _toolsMenu->addMenu("&Recent Data File");
   _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
