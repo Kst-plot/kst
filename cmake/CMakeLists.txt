@@ -186,8 +186,9 @@ if(kst_test)
 	add_subdirectory(tests)
 endif()
 
-add_subdirectory(misc)
-
+if (NOT APPLE)
+	add_subdirectory(misc)
+endif()
 
 
 
@@ -279,29 +280,26 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 
 
 if(APPLE)
+	set(app ${CMAKE_BINARY_DIR}/bin/${kst_binary_name}.app)
 	set(contents_dir ${kst_binary_name}.app/Contents)
-	#install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${contents_dir}/plugins COMPONENT Runtime)
-	install(DIRECTORY "${CMAKE_BINARY_DIR}/plugins"    DESTINATION  ${contents_dir} COMPONENT Runtime)
+	#TODO copy not intsall install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${contents_dir}/plugins COMPONENT Runtime)
+	
 	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
 	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
 	
-	set(bapp ${CMAKE_BINARY_DIR}/bin/kst2.app)
-	set(bdir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
+	
+	#set(bdir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
 	install(CODE 
 		"file(GLOB qt_plugins \"\${CMAKE_INSTALL_PREFIX}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-		file(GLOB kst_plugins \"\${CMAKE_BINARY_DIR}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
+		file(GLOB kst_plugins \"${CMAKE_BINARY_DIR}/bin/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
 		set(libs \${qt_plugins_disbaled} \${kst_plugins})
 		include(BundleUtilities) 
-		fixup_bundle(\"${bapp}\" \"\${libs}\" \"${bdir}\") "
+		fixup_bundle(\"${app}\" \"\${libs}\" \"${bdir}\") "
 		COMPONENT RUNTIME)
 		
-	set(CPACK_BINARY_DRAGNDROP ON CACHE STRNG "" FORCE)
-	set(CPACK_BINARY_PACKAGEMAKER OFF CACHE STRNG "" FORCE)
-	set(CPACK_BINARY_STGZ OFF CACHE STRNG "" FORCE)
-	set(CPACK_BINARY_TBZ2 OFF CACHE STRNG "" FORCE)
-	set(CPACK_BINARY_TGZ OFF CACHE STRNG "" FORCE)
-	set(CPACK_STRIP_FILES OFF CACHE STRNG "" FORCE) 
-
+	#set(CPACK_STRIP_FILES OFF CACHE STRNG "" FORCE) 
+	set(CPACK_GENERATOR DragNDrop)
+	
 endif()
 
 include(CPack)
