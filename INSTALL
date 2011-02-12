@@ -97,6 +97,7 @@ Using cmake
 	* Projects
 		'make help' lists the available targets.
 
+
 Options
 -------
 
@@ -169,6 +170,8 @@ Packaging
 		list   : rpm -qlp Kst-*.rpm              
 		install: rpm -U Kst-*.rpm   
 
+	- Binary .dmg 
+		make packages
 
 
 Status
@@ -178,8 +181,6 @@ Status
 	Windows, and MacOSX.
 	
 	Nice to have:
-	- add more package rules: Mac-bundles
-	- installation rules on Mac
 	- add pre-compiled headers for Mac, Xcode
 
 
