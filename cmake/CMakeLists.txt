@@ -7,6 +7,7 @@ include(KstMacros)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
 
+
 set(kst_version_major 2)
 set(kst_version_minor 0)
 set(kst_version_patch 3)
@@ -251,7 +252,7 @@ set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 
 
-include(CPack)
+
 
 # Usage
 #
@@ -275,3 +276,30 @@ include(CPack)
 # CPack and Ubuntu
 # Found this:
 # http://www.purplekarrot.net/blog/dputCMake.html
+
+
+if(APPLE)
+	set(contents_dir ${kst_binary_name}.app/Contents)
+	#install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${contents_dir}/plugins COMPONENT Runtime)
+	install(DIRECTORY "${CMAKE_BINARY_DIR}/plugins"    DESTINATION  ${contents_dir} COMPONENT Runtime)
+	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
+	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
+	
+	set(bapp ${CMAKE_BINARY_DIR}/bin/kst2.app)
+	set(bdir ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
+	install(CODE 
+		"file(GLOB qt_plugins \"\${CMAKE_INSTALL_PREFIX}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+		file(GLOB kst_plugins \"\${CMAKE_BINARY_DIR}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
+		set(libs \${qt_plugins_disbaled} \${kst_plugins})
+		include(BundleUtilities) 
+		fixup_bundle(\"${bapp}\" \"\${libs}\" \"${bdir}\") "
+		COMPONENT RUNTIME)
+		
+	set(CPACK_BINARY_DRAGNDROP 1)
+	set(CPACK_BINARY_PACKAGEMAKER 0)
+	SET(CPACK_BINARY_STGZ 0)
+	set(CPACK_BINARY_TBZ2 0)
+	set(CPACK_BINARY_TGZ 0)
+endif()
+
+include(CPack)

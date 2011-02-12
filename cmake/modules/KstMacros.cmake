@@ -65,7 +65,7 @@ endmacro()
 
 macro(kst_set_target_properties)
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
+	#set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
 endmacro()
 
 
@@ -82,13 +82,7 @@ endmacro()
 macro(kst_install_executable)
 	install(TARGETS ${kst_name} 
 		RUNTIME DESTINATION bin
-		BUNDLE DESTINATION bin)
-	#if(APPLE)
-	#	#TODO does not work
-	#	set(bdir ${CMAKE_INSTALL_PREFIX}/bin ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/plugin)
-	#	set(blib ${CMAKE_INSTALL_PREFIX}/lib/libkstcore.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstapp.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstwidgets.dylib ${CMAKE_INSTALL_PREFIX}/lib/libkstmath.dylib)#
-	#	install(CODE "include(BundleUtilities) fixup_bundle(kst \"${blib}\" \"${bdir}\")" COMPONENT RUNTIME)
-	#endif()
+		BUNDLE DESTINATION .)
 endmacro()
 
 
@@ -132,8 +126,8 @@ endmacro()
 
 
 macro(kst_init_plugin dir)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugin)
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugin)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
 	include_directories(${CMAKE_BINARY_DIR}/${dir})
 	kst_include_directories(kstcore kstmath kstwidgets)
 	set(kst_plugin_dir ${dir})
@@ -151,7 +145,7 @@ macro(kst_add_plugin folder name)
 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
 	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	kst_link(kstcore kstmath kstwidgets)
-	install(TARGETS ${kst_name} LIBRARY DESTINATION plugin)
+	install(TARGETS ${kst_name} LIBRARY DESTINATION plugins)
 	kst_find_install_desktop_file(${kst_plugin_dir}/${folder}/${name})
 	add_dependencies(${kst_binary_name} ${kst_name})
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
@@ -211,6 +205,7 @@ endmacro()
 macro(kst_option_init)
 	set(kst_options)
 endmacro()
+
 
 macro(kst_option _name _description _default _sys)
 	set(_msg OFF)

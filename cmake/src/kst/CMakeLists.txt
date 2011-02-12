@@ -34,7 +34,7 @@ kst_link(kstcore kstmath kstapp kstwidgets)
 
 kst_install_executable()
 
-if(UNIX)
+if(UNIX AND NOT APPLE)
 	set(k ${kst_dir}/src/kst)
 	install(FILES ${k}/kstplugin.desktop
 	              ${k}/kstdatasourceplugin.desktop
