@@ -76,6 +76,7 @@ DataManager::~DataManager() {
 void DataManager::showEvent(QShowEvent*)
 {
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _session->header()->setStretchLastSection(false);
   QApplication::processEvents();
   _session->header()->setResizeMode(QHeaderView::Interactive);
 }

@@ -50,6 +50,7 @@ void ViewPrimitiveDialog::update() {
   _tree->setModel(_model);
 
   _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _tree->header()->setStretchLastSection(false);
   QApplication::processEvents();
   _tree->header()->setResizeMode(QHeaderView::Interactive);
 }
