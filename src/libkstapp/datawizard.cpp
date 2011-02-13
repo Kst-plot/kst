@@ -680,6 +680,10 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   // the dialog needs to know that the default has been set....
   _pageDataSource->sourceChanged(_dialogDefaults->value("vector/datasource",".").toString());
 
+  if (!fileToOpen.isEmpty()) {
+    _pageDataSource->sourceChanged(fileToOpen);
+  }
+
 }
 
 
