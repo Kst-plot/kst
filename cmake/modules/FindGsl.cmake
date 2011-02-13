@@ -1,38 +1,44 @@
 
+# use pkg to find the library name and pathes,
+# but use this iformation in find_* only
+
 include(FindPkgConfig)
+pkg_check_modules(PKGGSL QUIET gsl)
 
-pkg_check_modules(GSL QUIET gsl)
+if(NOT PKGGSL_LIBRARIES)
+	set(PKGGSL_LIBRARIES gsl)
+    if (UNIX)
+		set(PKGGSL_LIBRARIES ${PKGGSL_LIBRARIES} m)
+	endif()
+endif()
 
-if(GSL_INCLUDEDIR AND GSL_LIBRARIES)
-	set(GSL_LIBRARY -L${GSL_LIBRARY_DIRS} ${GSL_LIBRARIES})
-else()
-	set(GSL_INCLUDEDIR GSL_INCLUDEDIR-NOTFOUND CACHE STRING "" FORCE)
-	FIND_PATH(GSL_INCLUDEDIR gsl_version.h
-		HINTS
-		ENV GSL_DIR
-		PATH_SUFFIXES include/gsl include
-		PATHS ${kst_3rdparty_dir}
-		)
-	FIND_LIBRARY(GSL_LIBRARIES gsl 
+set(GSL_INCLUDEDIR GSL_INCLUDEDIR-NOTFOUND CACHE STRING "" FORCE)
+find_path(GSL_INCLUDEDIR gsl_version.h
+	HINTS
+	ENV GSL_DIR
+	PATH_SUFFIXES include/gsl include
+	PATHS ${kst_3rdparty_dir} ${PKGGSL_INCLUDEDIR})
+
+foreach(it ${PKGGSL_LIBRARIES})
+	set(lib lib-NOTFOUND CACHE STRING "" FORCE)
+	FIND_LIBRARY(lib ${it} 
 		HINTS
 		ENV GSL_DIR
 		PATH_SUFFIXES lib
-		PATHS ${kst_3rdparty_dir}
-		)
-endif()
+		PATHS ${kst_3rdparty_dir} ${PKGGSL_LIBRARY_DIRS})
+	list(APPEND GSL_LIBRARIES ${lib})
+endforeach()
 
-#message(STATUS "GSL: ${GSL_INCLUDEDIR}")
-#message(STATUS "GSL: ${GSL_LIBRARIES}")
-IF(GSL_INCLUDEDIR AND GSL_LIBRARIES)
-	MESSAGE(STATUS "Gsl found at ${GSL_INCLUDEDIR}")
-	SET(GSL_INCLUDE_DIR ${GSL_INCLUDEDIR} ${GSL_INCLUDEDIR}/..)
-    if (UNIX)
-		SET(GSL_LIBRARIES ${GSL_LIBRARIES} m)
-	endif()
-	SET(gsl 1)
-ELSE()
-	MESSAGE(STATUS "Gsl not found.")
-ENDIF()
+
+if(GSL_INCLUDEDIR AND GSL_LIBRARIES)
+	set(GSL_INCLUDE_DIR ${GSL_INCLUDEDIR} ${GSL_INCLUDEDIR}/..)
+	set(gsl 1)
+	message(STATUS "Found Gsl:")
+	message(STATUS "     includes : ${GSL_INCLUDE_DIR}")
+	message(STATUS "     libraries: ${GSL_LIBRARIES}")
+else()
+	message(STATUS "Not found: Gsl")
+endif()
 
 
 
