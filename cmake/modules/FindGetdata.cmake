@@ -12,7 +12,7 @@ pkg_check_modules(PKGGETDATA QUIET getdata>=0.6.0)
 # GETDATA_LIBRARY_C and GETDATA_LIBRARY_CPP are not.
 # Ubuntu: maybe /usr/local/lib/pkgconfig/getdata.pc is not correct
 #if(NOT PKGGETDATA_LIBRARIES)
-	set(PKGGETDATA_LIBRARIES getdata getdata++)
+	set(PKGGETDATA_LIBRARIES getdata++ getdata)
     if (UNIX)
 		SET(PKGGETDATA_LIBRARIES ${PKGGETDATA_LIBRARIES} m)
 	endif()
