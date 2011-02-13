@@ -14,6 +14,7 @@ if [ -z ${4} ]
 then
 	cmake ../kst/cmake -Dkst_release=1 -Dkst_merge_files=1 -Dkst_install_prefix=$kst_install_prefix
 	make -j4
+	make install
 	make package
 	make package_source
 fi
