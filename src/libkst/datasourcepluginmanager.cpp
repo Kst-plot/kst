@@ -138,7 +138,7 @@ static void scanPlugins() {
 
   QStringList pluginPaths;
   pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
-  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
+  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugins");
 
   QDir rootDir = QApplication::applicationDirPath();
   rootDir.cdUp();
@@ -151,9 +151,16 @@ static void scanPlugins() {
   
   pluginPath = rootDir.canonicalPath();
   pluginPath += QDir::separator();
+#if Q_OS_MACX
   pluginPaths << pluginPath + QLatin1String("PlugIns");
   pluginPaths << pluginPath + QLatin1String("../PlugIns/Release");
   pluginPaths << pluginPath + QLatin1String("../PlugIns/Debug");
+#endif
+#if Q_OS_WIN
+  pluginPaths << pluginPath + QLatin1String("plugins");
+  pluginPaths << pluginPath + QLatin1String("../plugins/Release");
+  pluginPaths << pluginPath + QLatin1String("../plugins/Debug");
+#endif
 
   Debug::self()->log(QString("\nPlugin Search Pathes: \n%1").arg(pluginPaths.join("\n")));
 	
