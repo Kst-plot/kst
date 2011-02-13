@@ -151,12 +151,14 @@ static void scanPlugins() {
   
   pluginPath = rootDir.canonicalPath();
   pluginPath += QDir::separator();
-#if Q_OS_MACX
+
+#ifdef Q_OS_MACX
   pluginPaths << pluginPath + QLatin1String("PlugIns");
   pluginPaths << pluginPath + QLatin1String("../PlugIns/Release");
   pluginPaths << pluginPath + QLatin1String("../PlugIns/Debug");
 #endif
-#if Q_OS_WIN
+
+#ifdef Q_OS_WIN
   pluginPaths << pluginPath + QLatin1String("plugins");
   pluginPaths << pluginPath + QLatin1String("../plugins/Release");
   pluginPaths << pluginPath + QLatin1String("../plugins/Debug");
