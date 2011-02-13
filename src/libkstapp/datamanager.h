@@ -76,6 +76,9 @@ class DataManager : public QDialog, Ui::DataManager
     ObjectPtr _currentObject;
     QShortcut *_deleteShortcut;
     QMenu *_contextMenu;
+
+    void showEvent(QShowEvent* event);
+
 };
 
 }

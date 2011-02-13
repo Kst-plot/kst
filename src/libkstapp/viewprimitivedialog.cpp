@@ -48,12 +48,10 @@ void ViewPrimitiveDialog::update() {
   deleteModel();
   _model = createModel(_doc->objectStore());
   _tree->setModel(_model);
+
   _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
   QApplication::processEvents();
-  if(_tree->header() && _tree->header()->count() > 1) {
-    _tree->header()->setResizeMode(0, QHeaderView::Interactive);
-    _tree->header()->setResizeMode(1, QHeaderView::Interactive);
-  }
+  _tree->header()->setResizeMode(QHeaderView::Interactive);
 }
 
 

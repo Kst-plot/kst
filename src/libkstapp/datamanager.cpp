@@ -64,7 +64,6 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _contextMenu = new QMenu(this);
 
   connect(_purge, SIGNAL(clicked()), this, SLOT(purge()));
-
 }
 
 DataManager::~DataManager() {
@@ -72,6 +71,15 @@ DataManager::~DataManager() {
   // need to clean up anything...  (though valgrind thinks we really
   // ought to delete all of our actions before we exit)
 }
+
+
+void DataManager::showEvent(QShowEvent*)
+{
+  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
+  QApplication::processEvents();
+  _session->header()->setResizeMode(QHeaderView::Interactive);
+}
+
 
 void DataManager::showContextMenu(const QPoint &position) {
   QList<QAction *> actions;
