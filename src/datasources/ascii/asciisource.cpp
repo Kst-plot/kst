@@ -705,7 +705,7 @@ QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConf
   const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter.value())));
 
   if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
-    parts += QString(line).trimmed().split(regexColumnDelimiter, QString::KeepEmptyParts);
+    parts += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
   } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
     int cnt = line.length() / cfg->_columnWidth;
     for (int i = 0; i < cnt; ++i) {
@@ -713,7 +713,7 @@ QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConf
       parts += sub.trimmed();
     }
   } else {
-    parts += QString(line).trimmed().split(QRegExp("\\s"), QString::KeepEmptyParts);
+    parts += QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts);
   }
   return parts;
 }
