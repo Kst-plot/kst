@@ -957,7 +957,7 @@ void MainWindow::createActions() {
   _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
-  _changeDataSampleDialogAct = new QAction(tr("Change Data &Sample Range"), this);
+  _changeDataSampleDialogAct = new QAction(tr("Change Data &Sample Range..."), this);
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
   _changeDataSampleDialogAct->setIcon(QPixmap(":kst_changenpts.png"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
