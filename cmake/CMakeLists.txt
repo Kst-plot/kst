@@ -288,15 +288,16 @@ if(APPLE)
 
 	set(app ${CMAKE_BINARY_DIR}/bin/${kst_binary_name}.app)
 	set(contents_dir ${kst_binary_name}.app/Contents)
-	#TODO copy not intsall! install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${contents_dir}/plugins COMPONENT Runtime)
+	#TODO copy not intsall! 
+	install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${CMAKE_BINARY_DIR}/bin/${contents_dir}/plugins COMPONENT Runtime)
 	
 	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
 	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
 	
 	install(CODE 
-		"file(GLOB qt_plugins \"\${CMAKE_INSTALL_PREFIX}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+		"file(GLOB qt_plugins \"\${CMAKE_BINARY_DIR}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
 		file(GLOB kst_plugins \"${CMAKE_BINARY_DIR}/bin/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
-		set(libs \${qt_plugins_disbaled} \${kst_plugins})
+		set(libs \${qt_plugins} \${kst_plugins})
 		include(BundleUtilities) 
 		fixup_bundle(\"${app}\" \"\${libs}\" \"${dir}\") "
 		COMPONENT RUNTIME)
