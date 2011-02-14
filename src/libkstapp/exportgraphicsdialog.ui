@@ -83,7 +83,7 @@
          <string>Do not autosave.  Instead, on OK or Apply, save once.</string>
         </property>
         <property name="text">
-         <string>Sa&amp;ve Once</string>
+         <string>Sa&amp;ve once</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -296,22 +296,22 @@
          <widget class="QComboBox" name="_comboBoxSizeOption">
           <item>
            <property name="text">
-            <string>width and height</string>
+            <string>Width and Maintain Aspect Ratio</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>size of square</string>
+            <string>Height and Maintain Aspect Ratio</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>width, maintaining aspect ratio</string>
+            <string>Width and Height</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>height, maintaining aspect ratio</string>
+            <string>Size of Square</string>
            </property>
           </item>
          </widget>
@@ -340,7 +340,7 @@
    <item row="2" column="0" colspan="2">
     <widget class="QCheckBox" name="_autoExtension">
      <property name="text">
-      <string>Automatic &amp;Extension</string>
+      <string>Automatic &amp;extension</string>
      </property>
      <property name="checked">
       <bool>true</bool>

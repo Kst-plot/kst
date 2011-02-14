@@ -176,30 +176,30 @@ void LogDialog::enableWidthHeight() {
   int size_option_index = _sizeOption->currentIndex();
 
   switch (size_option_index) {
-    case 1:
-      _xSize->setEnabled(true);
-      _ySize->setEnabled(true);
-      _widthLabel->setEnabled(true);
-      _heightLabel->setEnabled(true);
-      break;
-    case 3:
-      _xSize->setEnabled(true);
-      _ySize->setEnabled(false);
-      _widthLabel->setEnabled(true);
-      _heightLabel->setEnabled(false);
-      break;
-    case 0:
-      _xSize->setEnabled(true);
-      _ySize->setEnabled(false);
-      _widthLabel->setEnabled(true);
-      _heightLabel->setEnabled(false);
-      break;
-    case 2:
-      _xSize->setEnabled(false);
-      _ySize->setEnabled(true);
-      _widthLabel->setEnabled(false);
-      _heightLabel->setEnabled(true);
-      break;
+  case 0: // Width and Maintain Aspect Ratio
+    _xSize->setEnabled(true);
+    _ySize->setEnabled(false);
+    _widthLabel->setEnabled(true);
+    _heightLabel->setEnabled(false);
+    break;
+  case 1: // Height and Maintain Aspect Ratio
+    _xSize->setEnabled(false);
+    _ySize->setEnabled(true);
+    _widthLabel->setEnabled(false);
+    _heightLabel->setEnabled(true);
+    break;
+  case 2: // Width and Height
+    _xSize->setEnabled(true);
+    _ySize->setEnabled(true);
+    _widthLabel->setEnabled(true);
+    _heightLabel->setEnabled(true);
+    break;
+  case 3: // Size of Square
+    _xSize->setEnabled(true);
+    _ySize->setEnabled(false);
+    _widthLabel->setEnabled(true);
+    _heightLabel->setEnabled(false);
+    break;
   }
 }
 

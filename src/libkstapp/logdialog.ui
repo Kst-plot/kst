@@ -101,7 +101,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Script Output:</string>
+          <string>Script output:</string>
          </property>
         </widget>
        </item>
@@ -157,22 +157,22 @@
            <widget class="QComboBox" name="_sizeOption">
             <item>
              <property name="text">
-              <string>width, maintaining aspect ratio</string>
+              <string>Width and Maintain Aspect Ratio</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>width and height</string>
+              <string>Height and Maintain Aspect Ratio</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>height, maintaining aspect ratio</string>
+              <string>Width and Height</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>size of square</string>
+              <string>Size of Square</string>
              </property>
             </item>
            </widget>
@@ -292,7 +292,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Local Log Directory:</string>
+            <string>Local log directory:</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>
@@ -325,7 +325,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>&amp;User Name:</string>
+            <string>&amp;User name:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
