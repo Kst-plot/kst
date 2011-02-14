@@ -957,7 +957,7 @@ void MainWindow::createActions() {
   _pauseAct->setShortcut(QString("p"));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
-  _changeDataSampleDialogAct = new QAction(tr("&Change Data Sample Range"), this);
+  _changeDataSampleDialogAct = new QAction(tr("Change Data &Sample Range"), this);
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
   _changeDataSampleDialogAct->setIcon(QPixmap(":kst_changenpts.png"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
@@ -988,7 +988,7 @@ void MainWindow::createActions() {
   _newEquationAct = new QAction(tr("&Equation"), this);
   connect(_newEquationAct, SIGNAL(triggered()), this, SLOT(createEquation()));
 
-  _newPSDAct = new QAction(tr("&Power Spectrum"), this);
+  _newPSDAct = new QAction(tr("Po&wer Spectrum"), this);
   connect(_newPSDAct, SIGNAL(triggered()), this, SLOT(createPSD()));
 
   _newHistogramAct = new QAction(tr("&Histogram"), this);
@@ -997,10 +997,10 @@ void MainWindow::createActions() {
   _newImageAct = new QAction(tr("&Image"), this);
   connect(_newImageAct, SIGNAL(triggered()), this, SLOT(createImage()));
 
-  _newSpectrogramAct = new QAction(tr("&Spectrogram"), this);
+  _newSpectrogramAct = new QAction(tr("Spectr&ogram"), this);
   connect(_newSpectrogramAct, SIGNAL(triggered()), this, SLOT(createSpectogram()));
 
-  _newEventMonitorAct = new QAction(tr("E&vent Monitor"), this);
+  _newEventMonitorAct = new QAction(tr("Eve&nt Monitor"), this);
   connect(_newEventMonitorAct, SIGNAL(triggered()), this, SLOT(createEventMonitor()));
 
   // Advanced layout
@@ -1060,7 +1060,7 @@ void MainWindow::createActions() {
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 
-  _createSharedAxisBoxAct = new QAction(tr("&Shared Axis Box"), this);
+  _createSharedAxisBoxAct = new QAction(tr("Shared Axis &Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
   _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
   _createSharedAxisBoxAct->setCheckable(true);
@@ -1076,7 +1076,7 @@ void MainWindow::createActions() {
   _tiedZoomAct->setShortcut(QString("t"));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
-  _tabTiedAct = new QAction(tr("&Tie Across All Tabs"), this);
+  _tabTiedAct = new QAction(tr("Tie &Across All Tabs"), this);
   _tabTiedAct->setStatusTip(tr("Tied zoom applies between tabs"));
   //_tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
   _tabTiedAct->setCheckable(true);
@@ -1143,12 +1143,12 @@ void MainWindow::createActions() {
   _changeFileDialogAct->setShortcut(QString("f"));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
-  _chooseColorDialogAct = new QAction(tr("Assign &Curve Color per File"), this);
+  _chooseColorDialogAct = new QAction(tr("Assign Curve &Color per File"), this);
   _chooseColorDialogAct->setStatusTip(tr("Show Kst's Choose Color Dialog"));
   _chooseColorDialogAct->setIcon(QPixmap(":code-class.png"));
   connect(_chooseColorDialogAct, SIGNAL(triggered()), this, SLOT(showChooseColorDialog()));
 
-  _differentiateCurvesDialogAct = new QAction(tr("&Differentiate Curves"), this);
+  _differentiateCurvesDialogAct = new QAction(tr("D&ifferentiate Curves"), this);
   _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
   _differentiateCurvesDialogAct->setIcon(QPixmap(":kst_differentiatecurves.png"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
@@ -1186,7 +1186,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_closeAct);
   _fileMenu->addSeparator();
   _recentKstFilesMenu = _fileMenu->addMenu(tr("&Recent Sessions"));
-  _recentDataFilesMenu = _fileMenu->addMenu("Recent D&ata Files");
+  _recentDataFilesMenu = _fileMenu->addMenu("Recent Data &Files");
   _fileMenu->addSeparator();
   // Reload, isolate it a bit from the other entries to avoid inadvertent triggering
   _fileMenu->addAction(_reloadAct);
@@ -1252,7 +1252,7 @@ void MainWindow::createMenus() {
   // Now, create the dynamic plugin menus
   QMenu* _pluginsMenu = _createMenu->addMenu(tr("Standard P&lugin"));
   QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugin"));
-  QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Filter Plu&gin"));
+  QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Fil&ter Plugin"));
   PluginMenuItemAction* action;
   foreach (QString pluginName, DataObject::dataObjectPluginList()) {
     action = new PluginMenuItemAction(pluginName, this);
