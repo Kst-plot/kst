@@ -322,7 +322,7 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
   
   submenu->clear();
   QAction* check = new QAction(this);
-  check->setText("Remove Non-Existent Files");
+  check->setText("&Cleanup Non-Existent Files");
   check->setData(key);
   check->setVisible(true);
   connect(check, SIGNAL(triggered()), this, SLOT(checkRecentFilesOnExistence()));
@@ -863,7 +863,7 @@ void MainWindow::createActions() {
   _closeAct->setIcon(QPixmap(":document-close.png"));
   connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
-  _reloadAct = new QAction(tr("Reload all &Data Sources"), this);
+  _reloadAct = new QAction(tr("Reload All &Data Sources"), this);
   _reloadAct->setStatusTip(tr("Reload all data sources"));
   _reloadAct->setIcon(QPixmap(":kst_reload.png"));
   connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
@@ -940,12 +940,12 @@ void MainWindow::createActions() {
   _forwardAct->setIcon(QPixmap(":page-next.png"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
-  _readFromEndAct = new QAction(tr("&Count From End"), this);
+  _readFromEndAct = new QAction(tr("&Count from End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
   _readFromEndAct->setIcon(QPixmap(":count-from-end.png"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
-  _readToEndAct = new QAction(tr("&Read To End"), this);
+  _readToEndAct = new QAction(tr("&Read to End"), this);
   _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
   _readToEndAct->setIcon(QPixmap(":read-to-end.png"));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
