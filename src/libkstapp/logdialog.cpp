@@ -76,6 +76,8 @@ LogDialog::LogDialog(MainWindow *parent)
   bool valid = info.isDir() && info.isWritable();
   _apply->setEnabled(valid);
 
+  _scriptRunning->clear();
+
 }
 
 LogDialog::~LogDialog() {
@@ -83,6 +85,7 @@ LogDialog::~LogDialog() {
 
 void LogDialog::changed() {
   _rerunScript->setEnabled(false);
+  _scriptRunning->clear();
 }
 
 
