@@ -33,6 +33,8 @@
 #include "applicationsettings.h"
 #include "updatemanager.h"
 #include "datasourcepluginmanager.h"
+#include "sharedaxisboxitem.h"
+#include "boxitem.h"
 
 
 namespace Kst {
@@ -424,6 +426,10 @@ bool DataWizardPagePlot::rescaleFonts() const {
   return _rescaleFonts->isChecked();
 }
 
+bool DataWizardPagePlot::shareAxis() const {
+  return _shareAxis->isChecked();
+}
+
 int DataWizardPagePlot::plotCount() const {
   return _plotNumber->value();
 }
@@ -450,6 +456,8 @@ void DataWizardPagePlot::updatePlotBox() {
   _legendsAuto->setChecked(_dialogDefaults->value("wizard/legendsAuto",false).toBool());
 
   _rescaleFonts->setChecked(_dialogDefaults->value("wizard/rescaleFonts", true).toBool());
+  _shareAxis->setChecked(_dialogDefaults->value("wizard/shareAxis", false).toBool());
+  _shareAxis->hide(); //FIXME - not done yet.
 
   if (_dialogDefaults->value("wizard/linesOnly", true).toBool()) {
     _drawLines->setChecked(true);
@@ -712,6 +720,7 @@ void DataWizard::finished() {
   _dialogDefaults->setValue("wizard/logY", _pagePlot->PSDLogY());
 
   _dialogDefaults->setValue("wizard/rescaleFonts", _pagePlot->rescaleFonts());
+  _dialogDefaults->setValue("wizard/shareAxis", _pagePlot->shareAxis());
 
   _dialogDefaults->setValue("wizard/linesOnly", _pagePlot->drawLines());
   _dialogDefaults->setValue("wizard/pointsOnly", _pagePlot->drawPoints());
@@ -1117,7 +1126,13 @@ void DataWizard::finished() {
     }
   }
 
+  if (_pagePlot->shareAxis()) {
+     //FIXME: apply shared axis
+     // also delete the line _shareAxis->hide();
+  }
+
   UpdateManager::self()->doUpdates(true);
+
   kstApp->mainWindow()->document()->setChanged(true);
   QApplication::restoreOverrideCursor();
   accept();

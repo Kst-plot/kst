@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>360</height>
+    <width>624</width>
+    <height>376</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
@@ -140,39 +140,6 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="buttonGroup7">
-     <property name="title">
-      <string>Legends</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="_legendsOn">
-        <property name="text">
-         <string>O&amp;n</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="_legendsOff">
-        <property name="text">
-         <string>&amp;Off</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="_legendsAuto">
-        <property name="text">
-         <string>A&amp;uto</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="2" column="0" rowspan="2">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
@@ -230,7 +197,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="1" column="1" rowspan="2">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
       <string>Labels</string>
@@ -246,10 +213,17 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="_shareAxis">
+        <property name="text">
+         <string>Share Axis on tab</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="2" rowspan="2">
+   <item row="3" column="2">
     <widget class="QGroupBox" name="buttonGroup1">
      <property name="title">
       <string>Cur&amp;ve Style</string>
@@ -317,6 +291,39 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="2" rowspan="2">
+    <widget class="QGroupBox" name="buttonGroup7">
+     <property name="title">
+      <string>Legends</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_legendsOn">
+        <property name="text">
+         <string>O&amp;n</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="_legendsOff">
+        <property name="text">
+         <string>&amp;Off</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="_legendsAuto">
+        <property name="text">
+         <string>A&amp;uto</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

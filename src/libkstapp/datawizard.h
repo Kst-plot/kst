@@ -121,6 +121,7 @@ class DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
     bool legendsAuto() const;
 
     bool rescaleFonts() const;
+    bool shareAxis() const;
 
     CurvePlotPlacement curvePlacement() const;
     PlotItemInterface *existingPlot() const;

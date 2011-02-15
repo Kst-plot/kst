@@ -1,5 +1,6 @@
 /***************************************************************************
-                          datavector.cpp  -  description
+                          datavector.cpp  -  a vector which gets its data from
+                          a datasource.
                              -------------------
     begin                : Fri Sep 22 2000
     copyright            : (C) 2000-2010 by C. Barth Netterfield
@@ -302,35 +303,43 @@ void DataVector::save(QXmlStreamWriter &s) {
 }
 
 
+/**
+ * @brief Generate default label for axis associated with this vector.  
+ * Use meta-scalars "units" or "quantity" if they are defined.
+ * Otherwise use the field name.  Escape special characters in the field name.
+ * I 
+ *
+ * @return QString
+ **/
 QString DataVector::label() const {
-  // Initialize label to field name, always
-  QString label = _field;
+  QString label;
+  bool hasQuantity = _fieldStrings.contains("quantity");
+  bool hasUnits = _fieldStrings.contains("units");
 
-  // un-escape escaped special characters so they aren't escaped 2x.
-  label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
-  // now escape the special characters.
-  label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
-
-  // If there is a meta string named "quantity", override the default label
-  if (_fieldStrings.contains("quantity")) {
+  if (hasQuantity && hasUnits) {
+    label = _fieldStrings.value("quantity")->value() + " \\[" + _fieldStrings.value("units")->value() + "\\]";
+    // un-escape escaped special characters so they aren't escaped 2x.
+    label.replace("\\[", "[").replace("\\]", "]");
+    // now escape the special characters.
+    label.replace('[', "\\[").replace(']', "\\]");
+  } else if (hasQuantity) {
     label = _fieldStrings.value("quantity")->value();
-  }
-
-  // Now add the unit if found in the metadata
-  // FIXME: the name of the metadata should be configurable!
-  if (_fieldStrings.contains("units")) {
-    QString units = _fieldStrings.value("units")->value();
-    if (!units.isEmpty()) {
-      // Apparently some people already add the square brackets in the unit name - avoid having two brackets
-      if (units.startsWith("[")) {
-        label += " " + units;
-        if (!label.endsWith("]")) {
-          label += "\\]";
-        }
-      } else {
-        label += " \\[" + units + "\\]";
-      }
-    }
+    // un-escape escaped special characters so they aren't escaped 2x.
+    label.replace("\\[", "[").replace("\\]", "]");
+    // now escape the special characters.
+    label.replace('[', "\\[").replace(']', "\\]");
+  } else if (hasUnits) {
+    label = _fieldStrings.value("units")->value();
+    // un-escape escaped special characters so they aren't escaped 2x.
+    label.replace("\\[", "[").replace("\\]", "]");
+    // now escape the special characters.
+    label.replace('[', "\\[").replace(']', "\\]");
+  } else {
+    label = _field;
+    // un-escape escaped special characters so they aren't escaped 2x.
+    label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+    // now escape the special characters.
+    label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
   }
 
   return label;

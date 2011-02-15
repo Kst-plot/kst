@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>557</width>
-    <height>374</height>
+    <width>584</width>
+    <height>366</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,55 +27,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
-    <widget class="QPushButton" name="_globalLabelBold">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="0" column="1" colspan="2">
+    <widget class="QDoubleSpinBox" name="_globalLabelFontSize">
+     <property name="decimals">
+      <number>1</number>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>22</width>
-       <height>22</height>
-      </size>
-     </property>
-     <property name="shortcut">
-      <string>Alt+B</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="minimum">
+      <double>-25.000000000000000</double>
      </property>
     </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QPushButton" name="_globalLabelItalic">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>22</width>
-       <height>22</height>
-      </size>
-     </property>
-     <property name="shortcut">
-      <string>Alt+I</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="Kst::ColorButton" name="_globalLabelColor"/>
-   </item>
-   <item row="1" column="1" colspan="3">
-    <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
    </item>
    <item row="2" column="1" colspan="3">
     <widget class="QCheckBox" name="_autoScaleNumberAxis">
@@ -142,13 +102,10 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="6">
-    <widget class="QCheckBox" name="_topLabelAuto">
-     <property name="text">
-      <string>Auto</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
+   <item row="6" column="1" colspan="5">
+    <widget class="Kst::LabelLineEdit" name="_topLabelText">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -288,19 +245,6 @@
      </item>
     </layout>
    </item>
-   <item row="11" column="3" colspan="4">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>376</width>
-       <height>0</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item row="12" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -314,27 +258,83 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="1">
-    <widget class="QDoubleSpinBox" name="_globalLabelFontSize">
-     <property name="decimals">
-      <number>1</number>
+   <item row="11" column="3" colspan="4">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="minimum">
-      <double>-25.000000000000000</double>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>376</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="6" column="6">
+    <widget class="QCheckBox" name="_topLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="1" column="1" colspan="6">
+    <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
+   </item>
+   <item row="0" column="6">
+    <widget class="Kst::ColorButton" name="_globalLabelColor"/>
+   </item>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="_globalLabelItalic">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Alt+I</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QPushButton" name="_globalLabelBold">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Alt+B</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>points</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1" colspan="5">
-    <widget class="Kst::LabelLineEdit" name="_topLabelText">
-     <property name="enabled">
-      <bool>false</bool>
      </property>
     </widget>
    </item>
