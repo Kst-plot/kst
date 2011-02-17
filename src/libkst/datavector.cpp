@@ -304,45 +304,38 @@ void DataVector::save(QXmlStreamWriter &s) {
 
 
 /**
- * @brief Generate default label for axis associated with this vector.  
+ * @brief Generate default label info for axis associated with this vector.
  * Use meta-scalars "units" or "quantity" if they are defined.
- * Otherwise use the field name.  Escape special characters in the field name.
- * I 
+ * Escape special characters in the field name.
  *
- * @return QString
+ * @return LabelInfo
  **/
-QString DataVector::label() const {
-  QString label;
-  bool hasQuantity = _fieldStrings.contains("quantity");
-  bool hasUnits = _fieldStrings.contains("units");
 
-  if (hasQuantity && hasUnits) {
-    label = _fieldStrings.value("quantity")->value() + " \\[" + _fieldStrings.value("units")->value() + "\\]";
-    // un-escape escaped special characters so they aren't escaped 2x.
-    label.replace("\\[", "[").replace("\\]", "]");
-    // now escape the special characters.
-    label.replace('[', "\\[").replace(']', "\\]");
-  } else if (hasQuantity) {
-    label = _fieldStrings.value("quantity")->value();
-    // un-escape escaped special characters so they aren't escaped 2x.
-    label.replace("\\[", "[").replace("\\]", "]");
-    // now escape the special characters.
-    label.replace('[', "\\[").replace(']', "\\]");
-  } else if (hasUnits) {
-    label = _fieldStrings.value("units")->value();
-    // un-escape escaped special characters so they aren't escaped 2x.
-    label.replace("\\[", "[").replace("\\]", "]");
-    // now escape the special characters.
-    label.replace('[', "\\[").replace(']', "\\]");
+LabelInfo DataVector::labelInfo() const {
+  LabelInfo label_info;
+
+  if (_fieldStrings.contains("quantity")) {
+    label_info.quantity = _fieldStrings.value("quantity")->value();
+    label_info.quantity.replace('[', "\\[").replace(']', "\\]");
   } else {
-    label = _field;
-    // un-escape escaped special characters so they aren't escaped 2x.
-    label.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
-    // now escape the special characters.
-    label.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+    label_info.quantity = QString();
   }
 
-  return label;
+  if (_fieldStrings.contains("units")) {
+    label_info.units = _fieldStrings.value("units")->value();
+    label_info.units.replace('[', "\\[").replace(']', "\\]");
+  } else {
+    label_info.units = QString();
+  }
+
+  label_info.name = _field;
+
+  // un-escape escaped special characters so they aren't escaped 2x.
+  label_info.name.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  // now escape the special characters.
+  label_info.name.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+
+  return label_info;
 }
 
 

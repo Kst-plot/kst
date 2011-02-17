@@ -289,11 +289,6 @@ void Matrix::resetNumNew() {
 }
 
 
-QString Matrix::label() const {
-  return _label;
-}
-
-
 void Matrix::zero() {
   for (int i = 0; i < _zSize; i++) {
     _z[i] = 0.0;
@@ -367,29 +362,20 @@ void Matrix::internalUpdate() {
   }
 }
 
-
-void Matrix::setLabel(const QString& newLabel) {
-  _label = newLabel;
+void Matrix::setXLabelInfo(const LabelInfo &label_info) {
+  _xLabelInfo = label_info;
 }
 
-
-void Matrix::setXLabel(const QString& newLabel) {
-  _xLabel = newLabel;
+void Matrix::setYLabelInfo(const LabelInfo &label_info) {
+  _yLabelInfo = label_info;
 }
 
-
-void Matrix::setYLabel(const QString& newLabel) {
-  _yLabel = newLabel;
+LabelInfo Matrix::xLabelInfo() const {
+  return _xLabelInfo;
 }
 
-
-QString Matrix::xLabel() const {
-  return _xLabel;
-}
-
-
-QString Matrix::yLabel() const {
-  return _yLabel;
+LabelInfo Matrix::yLabelInfo() const {
+  return _yLabelInfo;
 }
 
 

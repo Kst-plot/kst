@@ -317,28 +317,87 @@ void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
   }
 }
 
+QString PlotRenderItem::singleRenderItemLabel(const LabelInfo& label_info) const {
+  if (label_info.units.isEmpty() && label_info.quantity.isEmpty()) {           // Nxx xxx
+    return label_info.name;
+  } else if (label_info.quantity.isEmpty()) {
+    if (!label_info.name.isEmpty()) {
+      return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NxU
+    } else {
+      return label_info.units;                                                // xxU
+    }
+  } else if (label_info.units.isEmpty()) {
+    if (label_info.name.isEmpty()) {
+      return label_info.quantity;                                             // xQx
+    } else {
+      if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
+        return label_info.name;                                               // NQx A
+      } else {
+        return QString("%1: %2").arg(label_info.name).arg(label_info.quantity); // NQx B
+      }
+    }
+  } else if (label_info.name.isEmpty()) {
+    return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units); // xQU
+  } else if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
+    return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU A
+  } else {
+    return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU B
+  }
+}
 
-QString PlotRenderItem::leftLabel() const {
-  QStringList labels;
 
-  // chose the first vector with a label.
-  // for best results here, vectors should define
-  // fieldScalars "quantity" and "units".
-  foreach (RelationPtr relation, relationList()) {
-    if (!relation->yLabel().isEmpty()) {
-      return relation->yLabel();
+QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
+  QString units;
+  QString quantity;
+  LabelInfo label_info;
+
+  units.clear();
+  quantity.clear();
+
+  // search for the first vector with quantity and units; use it.
+  foreach (const RelationPtr &relation, relationList()) {
+    if (isX) {
+      label_info = relation->xLabelInfo();
+    } else {
+      label_info = relation->yLabelInfo();
+    }
+    if (!label_info.quantity.isEmpty() && !label_info.units.isEmpty()) {
+      return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units);
+    }
+    if (!label_info.quantity.isEmpty()) {
+      quantity = label_info.quantity;
+    }
+    if (!label_info.units.isEmpty()) {
+      units = label_info.units;
     }
   }
-  return QString();
+  if (!units.isEmpty() && !quantity.isEmpty()) {
+    return QString("%1 \\[%2\\]").arg(quantity).arg(units);
+  } else if (!units.isEmpty()) {
+    return units;
+  } else {
+    return quantity;
+  }
+}
+
+
+QString PlotRenderItem::leftLabel() const {
+  if (relationList().size() == 1) {
+    LabelInfo label_info = relationList().at(0)->yLabelInfo();
+    return singleRenderItemLabel(label_info);
+  } else {  // multiple curves: quantity [units]
+    return multiRenderItemLabel(false);
+  }
 }
 
 
 QString PlotRenderItem::bottomLabel() const {
-  foreach (RelationPtr relation, relationList()) {
-    if (!relation->xLabel().isEmpty())
-      return relation->xLabel();
+  if (relationList().size() == 1) {
+    LabelInfo label_info = relationList().at(0)->xLabelInfo();
+    return singleRenderItemLabel(label_info);
+  } else {  // multiple curves: quantity [units]
+    return multiRenderItemLabel(true);
   }
-  return QString();
 }
 
 
@@ -350,6 +409,8 @@ QString PlotRenderItem::rightLabel() const {
 
 
 QString PlotRenderItem::topLabel() const {
+  return QString();
+#if 0
   QString label;
   for (int i = 0, count = relationList().count(); i<count; i++) {
     if (i>0) {
@@ -364,6 +425,7 @@ QString PlotRenderItem::topLabel() const {
     label += relationList().at(i)->topLabel();
   }
   return label;
+#endif
 }
 
 

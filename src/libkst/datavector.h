@@ -109,7 +109,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     virtual void save(QXmlStreamWriter &s);
 
     /** return a sensible label for this vector */
-    virtual QString label() const;
+    virtual LabelInfo labelInfo() const;
 
     /** return the length of the file */
     int fileLength() const;

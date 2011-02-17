@@ -41,7 +41,6 @@ class KSTCORE_EXPORT GeneratedVector : public Vector {
 
     virtual QString descriptionTip() const;
     virtual QString propertyString() const;
-    virtual QString label() const {return QString("x");}
 
   protected:
     GeneratedVector(ObjectStore *store);

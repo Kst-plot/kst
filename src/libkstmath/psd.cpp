@@ -404,42 +404,50 @@ void PSD::setInterpolateHoles(bool interpolate) {
 }
 
 void PSD::updateVectorLabels() {
+  LabelInfo label_info;
+
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
+      label_info.quantity = i18n("Spectral Density");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        _sVector->setLabel(i18n("Spectral Density"));
+        label_info.units = QString();
       } else {
-        _sVector->setLabel(i18n("Spectral Density \\[%1/%2^{1/2} \\]", _vectorUnits, _rateUnits));
+        label_info.units = QString("%1/%2^{1/2}").arg(_vectorUnits).arg(_rateUnits);
       }
       break;
     case 1: // power spectral density [V^2/Hz]
+      label_info.quantity = i18n("PSD");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        _sVector->setLabel(i18n("PSD"));
+        label_info.units = QString();
       } else {
-        _sVector->setLabel(i18n("PSD \\[%1^2/%2\\]", _vectorUnits, _rateUnits));
+        label_info.units = QString("%1^2/%2").arg(_vectorUnits).arg(_rateUnits);
       }
       break;
     case 2: // amplitude spectrum [V]
+      label_info.quantity = i18n("Amplitude Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        _sVector->setLabel(i18n("Amplitude Spectrum"));
+        label_info.units = QString();
       } else {
-        _sVector->setLabel(i18n("Amplitude Spectrum\\[%1\\]", _vectorUnits));
+        label_info.units = QString("%1").arg(_vectorUnits);
       }
       break;
     case 3: // power spectrum [V^2]
+      label_info.quantity = i18n("Power Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        _sVector->setLabel(i18n("Power Spectrum"));
+        label_info.units = QString();
       } else {
-        _sVector->setLabel(i18n("Power Spectrum \\[%1^2\\]", _vectorUnits));
+        label_info.units = QString("%1^2").arg(_vectorUnits);
       }
       break;
   }
-  if (_rateUnits.isEmpty()) {
-    _fVector->setLabel(i18n("Frequency"));
-  } else {
-    _fVector->setLabel(i18n("Frequency \\[%1\\]", _rateUnits));
-  }
+  label_info.name = QString();
+  _sVector->setLabelInfo(label_info);
+
+  label_info.quantity = i18n("Frequency");
+  label_info.units = _rateUnits;
+  _fVector->setLabelInfo(label_info);
+
 }
 
 QString PSD::_automaticDescriptiveName() const {

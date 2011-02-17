@@ -369,29 +369,21 @@ bool Image::invertYHint() const {
   }
 }
 
-QString Image::xLabel() const {
+
+LabelInfo Image::xLabelInfo() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->xLabel();
+    return (_inputMatrices[THEMATRIX]->xLabelInfo());
   } else {
-    return QString();
+    return LabelInfo();
   }
 }
 
 
-QString Image::yLabel() const {
+LabelInfo Image::yLabelInfo() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->yLabel();
+    return (_inputMatrices[THEMATRIX]->yLabelInfo());
   } else {
-    return QString();
-  }
-}
-
-
-QString Image::topLabel() const {
-  if (_inputMatrices.contains(THEMATRIX)) {
-    return _inputMatrices[THEMATRIX]->label();
-  } else {
-    return QString();
+    return LabelInfo();
   }
 }
 

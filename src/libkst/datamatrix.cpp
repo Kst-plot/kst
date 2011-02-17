@@ -375,44 +375,45 @@ void DataMatrix::_resetFieldStrings() {
   unlock();
 }
 
-QString DataMatrix::xLabel() const {
-  QString label;
+LabelInfo DataMatrix::xLabelInfo() const {
+  LabelInfo label_info;
 
   if (_fieldStrings.contains("x_quantity")) {
-    label = _fieldStrings.value("x_quantity")->value();
+    label_info.quantity = _fieldStrings.value("x_quantity")->value();
+  } else {
+    label_info.quantity = QString();
+  }
+  if (_fieldStrings.contains("x_units")) {
+    label_info.quantity = _fieldStrings.value("x_units")->value();
+  } else {
+    label_info.quantity = QString();
   }
 
-  if (!label.isEmpty()) {
-    if (_fieldStrings.contains("x_units")) {
-      QString units = _fieldStrings.value("x_units")->value();
-      if (!units.isEmpty()) {
-        label += " \\[" + units + "\\]";
-      }
-    }
-  }
+  label_info.name = QString();
 
-  return label;
-
+  return label_info;
 }
 
-QString DataMatrix::yLabel() const {
-  QString label;
+
+LabelInfo DataMatrix::yLabelInfo() const {
+  LabelInfo label_info;
 
   if (_fieldStrings.contains("y_quantity")) {
-    label = _fieldStrings.value("y_quantity")->value();
+    label_info.quantity = _fieldStrings.value("y_quantity")->value();
+  } else {
+    label_info.quantity = QString();
+  }
+  if (_fieldStrings.contains("y_units")) {
+    label_info.quantity = _fieldStrings.value("y_units")->value();
+  } else {
+    label_info.quantity = QString();
   }
 
-  if (!label.isEmpty()) {
-    if (_fieldStrings.contains("y_units")) {
-      QString units = _fieldStrings.value("y_units")->value();
-      if (!units.isEmpty()) {
-        label += " \\[" + units + "\\]";
-      }
-    }
-  }
+  label_info.name = QString();
 
-  return label;
+  return label_info;
 }
+
 
 void DataMatrix::internalUpdate() {
   if (dataSource()) {

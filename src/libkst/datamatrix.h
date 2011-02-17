@@ -119,8 +119,9 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     virtual QString propertyString() const;
     virtual void internalUpdate();
 
-    virtual QString xLabel() const;
-    virtual QString yLabel() const;
+    virtual LabelInfo xLabelInfo() const;
+    virtual LabelInfo yLabelInfo() const;
+
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();

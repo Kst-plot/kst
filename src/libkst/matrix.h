@@ -90,10 +90,11 @@ class KSTCORE_EXPORT Matrix : public Primitive
     // reset numNew to 0
     void resetNumNew();
 
-    // return a label for this matrix
-    virtual QString label() const;
-    virtual QString xLabel() const;
-    virtual QString yLabel() const;
+    // labels for plots
+    virtual void setXLabelInfo(const LabelInfo &label_info);
+    virtual void setYLabelInfo(const LabelInfo &label_info);
+    virtual LabelInfo xLabelInfo() const;
+    virtual LabelInfo yLabelInfo() const;
 
     void zero();
 
@@ -108,8 +109,6 @@ class KSTCORE_EXPORT Matrix : public Primitive
 
     // set the labels for this matrix
     void setLabel(const QString& newLabel);
-    void setXLabel(const QString& newLabel);
-    void setYLabel(const QString& newLabel);
 
     // whether or not this matrix can be edited
     bool editable() const;
@@ -170,9 +169,8 @@ class KSTCORE_EXPORT Matrix : public Primitive
     double _maxNoSpike;
 
     // labels for this matrix
-    QString _label;
-    QString _xLabel;
-    QString _yLabel;
+    LabelInfo _xLabelInfo;
+    LabelInfo _yLabelInfo;
 
     void createScalars(ObjectStore *store);
     void renameScalars();

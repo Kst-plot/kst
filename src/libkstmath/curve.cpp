@@ -368,20 +368,14 @@ void Curve::setYMinusError(VectorPtr new_ey) {
 }
 
 
-QString Curve::xLabel() const {
-  return _inputVectors[XVECTOR]->label();
+// labels for plots
+LabelInfo Curve::xLabelInfo() const {
+  return xVector()->labelInfo();
 }
 
-
-QString Curve::yLabel() const {
-  return _inputVectors[YVECTOR]->label();
+LabelInfo Curve::yLabelInfo() const {
+  return yVector()->labelInfo();
 }
-
-
-QString Curve::topLabel() const {
-  return _inputVectors[YVECTOR]->descriptiveLabel();
-}
-
 
 QString Curve::propertyString() const {
   return i18n("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());

@@ -257,17 +257,21 @@ void Equation::updateVectorLabels() {
   if (!_xInVector) {
     return;
   }
+
+  _xOutVector->setLabelInfo(_xInVector->labelInfo());
+
   QString yl;
   QString xl;
   QRegExp sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
   yl = reparsedEquation();
   yl.remove(sn);
 
-  xl = _xInVector->label();
+  LabelInfo label_info;
+  label_info.units = QString();
+  label_info.quantity = QString();
+  label_info.name = yl;
 
-  _xOutVector->setLabel(xl);
-  _yOutVector->setLabel(yl);
-  _yOutVector->setDescriptiveLabel(yl);
+  _yOutVector->setLabelInfo(label_info);
 }
 
 void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
@@ -543,7 +547,7 @@ bool Equation::uses(ObjectPtr p) const {
 }
 
 QString Equation::_automaticDescriptiveName() const {
-  return _yOutVector->label();
+  return _yOutVector->labelInfo().name;
 }
 
 QString Equation::descriptionTip() const {

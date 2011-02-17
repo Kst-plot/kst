@@ -91,6 +91,7 @@ HEADERS += builtindatasources.h \
     kst_i18n.h \
     ksttimers.h \
     index_kst.h \
+    labelinfo.h \
     logevents.h \
     math_kst.h \
     matrix.h \

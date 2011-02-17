@@ -54,6 +54,10 @@ Vector::Vector(ObjectStore *store)
 
   _saveable = false;
 
+  _labelInfo.name = QString();
+  _labelInfo.quantity = QString();
+  _labelInfo.units = QString();
+
   int size = INITSIZE;
 
   _v = static_cast<double*>(malloc(size * sizeof(double)));
@@ -64,7 +68,6 @@ Vector::Vector(ObjectStore *store)
     _size = size;
   }
   _is_rising = false;
-  _descriptiveLabel.clear();
 
   _scalars.clear();
   _strings.clear();
@@ -525,20 +528,6 @@ void Vector::setNewAndShift(int inNew, int inShift) {
   NumShifted = inShift;
 }
 
-
-QString Vector::label() const {
-  return _label; // default
-}
-
-QString Vector::descriptiveLabel() const {
-  if (_descriptiveLabel.isEmpty()) {
-    return descriptiveName();
-  } else {
-    return _descriptiveLabel;
-  }
-}
-
-
 double *Vector::value() const {
   return _v;
 }
@@ -546,14 +535,6 @@ double *Vector::value() const {
 
 void Vector::newSync() {
   NumNew = NumShifted = 0;
-}
-
-void Vector::setLabel(const QString& label_in) {
-  _label = label_in;
-}
-
-void Vector::setDescriptiveLabel(const QString& label_in) {
-  _descriptiveLabel = label_in;
 }
 
 int Vector::getUsage() const {
@@ -645,6 +626,15 @@ PrimitiveMap Vector::metas() const
   return meta;
 }
 
+
+LabelInfo Vector::labelInfo() const {
+  return _labelInfo;
+}
+
+
+void Vector::setLabelInfo(const LabelInfo &label_info) {
+  _labelInfo = label_info;
+}
 
 #undef INITSIZE
 

@@ -19,6 +19,7 @@
 #include "relation.h"
 #include "kstmath_export.h"
 #include "palette.h"
+#include "labelinfo.h"
 
 #include <QHash>
 
@@ -93,9 +94,8 @@ class KSTMATH_EXPORT Image : public Relation {
     virtual bool hasColorMap() const { return _hasColorMap; }
 
     // labels for plots
-    virtual QString xLabel() const;
-    virtual QString yLabel() const;
-    virtual QString topLabel() const;
+    virtual LabelInfo xLabelInfo() const;
+    virtual LabelInfo yLabelInfo() const;
 
     virtual RelationPtr makeDuplicate() const;
 

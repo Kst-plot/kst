@@ -25,6 +25,7 @@
 #include "primitive.h"
 #include "scalar.h"
 #include "string_kst.h"
+#include "labelinfo.h"
 #include "kst_export.h"
 
 class QXmlStreamWriter;
@@ -123,10 +124,8 @@ class KSTCORE_EXPORT Vector : public Primitive
     void updateScalars();
 
     /** return a sensible label for this vector */
-    void setLabel(const QString& label_in);
-    void setDescriptiveLabel(const QString& label_in);
-    virtual QString label() const;
-    virtual QString descriptiveLabel() const;
+    virtual LabelInfo labelInfo() const;
+    virtual void setLabelInfo(const LabelInfo &label_info);
 
     virtual int getUsage() const;
 
@@ -208,8 +207,7 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     virtual void deleteDependents();
 
-    QString _label;
-    QString _descriptiveLabel;
+    LabelInfo _labelInfo;
 
     friend class DataObject;
     friend class Matrix;

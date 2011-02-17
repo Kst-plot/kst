@@ -22,6 +22,7 @@
 #include "painter.h"
 #include "curvepointsymbol.h"
 #include "kstmath_export.h"
+#include "labelinfo.h"
 
 #include <QStack>
 
@@ -68,10 +69,6 @@ class KSTMATH_EXPORT Curve: public Relation
 
     /** Save curve information */
     void save(QXmlStreamWriter &s);
-
-    QString xLabel() const;
-    QString yLabel() const;
-    QString topLabel() const;
 
     virtual bool xIsRising() const;
 
@@ -158,6 +155,11 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual DataObjectPtr providerDataObject() const;
 
     virtual QString descriptionTip() const;
+
+    // labels for plots
+    virtual LabelInfo xLabelInfo() const;
+    virtual LabelInfo yLabelInfo() const;
+
 
   protected:
     Curve(ObjectStore *store);

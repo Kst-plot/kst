@@ -87,9 +87,16 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     _frequency = 1.0;
   }
 
-  _outMatrix->setLabel(i18n("Power \\[%1/%2^{1/2 }\\]").arg(_vectorUnits).arg(_rateUnits));
-  _outMatrix->setXLabel(i18n("Time \\[s\\]"));
-  _outMatrix->setYLabel(i18n("Frequency \\[%1\\]").arg(_rateUnits));
+  LabelInfo label_info;
+
+  label_info.name = QString();
+  label_info.quantity = i18n("Time");
+  label_info.units = QString('s');
+  _outMatrix->setXLabelInfo(label_info);
+
+  label_info.quantity = i18n("Frequency");
+  label_info.units = _rateUnits;
+  _outMatrix->setYLabelInfo(label_info);
 
   updateMatrixLabels();
 }
@@ -367,7 +374,7 @@ void CSD::updateMatrixLabels(void) {
     break;
   }
   label += " of " + _inputVectors[CSD_INVECTOR]->descriptiveName();
-  _outMatrix->setLabel(label);
+  //_outMatrix->setLabel(label); FIXME: csd lable
 
 }
 

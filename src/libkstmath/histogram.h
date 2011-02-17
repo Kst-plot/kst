@@ -52,8 +52,9 @@ public:
     void setVector(VectorPtr);
     VectorPtr vector() const;
 
-    virtual QString yLabel() const;
-    virtual QString xLabel() const;
+    // labels for plots
+    virtual LabelInfo xLabelInfo() const;
+    virtual LabelInfo yLabelInfo() const;
 
     bool isNormalizationNumber() const { return _NormalizationMode == Number; }
     void setIsNormalizationNumber() { _NormalizationMode = Number; }

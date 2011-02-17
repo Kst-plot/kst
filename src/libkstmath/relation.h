@@ -24,6 +24,7 @@
 #include "painter.h"
 #include "kstmath_export.h"
 #include "labelparser.h"
+#include "labelinfo.h"
 
 /**A class for handling curves for kst
  *@author C. Barth Netterfield
@@ -88,10 +89,6 @@ class KSTMATH_EXPORT Relation : public Object {
     virtual QString propertyString() const = 0;
 
     virtual int sampleCount() const { return NS; }
-
-    virtual QString xLabel() const   { return QString(); }
-    virtual QString yLabel() const   { return QString(); }
-    virtual QString topLabel() const { return QString(); }
 
     virtual void setIgnoreAutoScale(bool ignoreAutoScale);
     virtual bool ignoreAutoScale() const { return _ignoreAutoScale; }
@@ -169,6 +166,9 @@ class KSTMATH_EXPORT Relation : public Object {
 
     virtual bool invertXHint() const {return false;}
     virtual bool invertYHint() const {return false;}
+
+    virtual LabelInfo xLabelInfo() const = 0;
+    virtual LabelInfo yLabelInfo() const = 0;
 
   protected:
     virtual void writeLockInputsAndOutputs() const;

@@ -161,10 +161,12 @@ void Histogram::internalUpdate() {
     }
   }
 
+  LabelInfo label_info;
+
   switch (_NormalizationMode) {
     case Number:
       _Normalization = 1.0;
-      _hVector->setLabel(i18n("Number in bin"));
+      label_info.quantity = i18n("Number");
       break;
     case Percent:
       if (ns > 0) {
@@ -172,7 +174,7 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      _hVector->setLabel(i18n("Percent in bin"));
+      label_info.quantity = i18n("Percent");
       break;
     case Fraction:
       if (ns > 0) {
@@ -180,7 +182,7 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      _hVector->setLabel(i18n("Fraction in bin"));
+      label_info.quantity = i18n("Fraction");
       break;
     case MaximumOne:
       if (MaxY > 0) {
@@ -188,14 +190,18 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      _hVector->setLabel("");
+      label_info.quantity = i18n("Normalized Frequency");
       break;
     default:
       _Normalization = 1.0;
+      label_info.quantity = i18n("Number");
       break;
   }
 
-  _bVector->setLabel(_inputVectors[RAWVECTOR]->descriptiveName());
+  label_info.name = QString();
+  label_info.units = QString();
+  _hVector->setLabelInfo(label_info);
+  _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
 
   double *bins = _bVector->value();
   double *hist = _hVector->value();
@@ -276,27 +282,21 @@ VectorPtr Histogram::vector() const {
 }
 
 
-QString Histogram::yLabel() const {
-  switch (_NormalizationMode) {
-    case Number:
-      return i18n("Number in Bin");
-      break;
-    case Percent:
-      return i18n("Percent in Bin");
-      break;
-    case Fraction:
-      return i18n("Fraction in Bin");
-      break;
-    case MaximumOne:
-      return i18n("Histogram");
-      break;
+LabelInfo Histogram::yLabelInfo() const {
+  if (_hVector) {
+    _hVector->labelInfo();
+  } else {
+    return LabelInfo();
   }
-  return i18n("Histogram");
 }
 
 
-QString Histogram::xLabel() const {
-  return _inputVectors[RAWVECTOR]->label();
+LabelInfo Histogram::xLabelInfo() const {
+  if (_bVector) {
+    _bVector->labelInfo();
+  } else {
+    return LabelInfo();
+  }
 }
 
 void Histogram::save(QXmlStreamWriter &xml) {
