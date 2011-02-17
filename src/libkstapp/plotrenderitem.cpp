@@ -350,9 +350,34 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
   QString units;
   QString quantity;
   LabelInfo label_info;
+  LabelInfo first_label_info;
 
   units.clear();
   quantity.clear();
+
+  bool allSame = true;
+  int count;
+
+  count = relationList().size();
+  if (isX) {
+    first_label_info = relationList().at(0)->xLabelInfo();
+  } else {
+    first_label_info = relationList().at(0)->yLabelInfo();
+  }
+  for (int i=1; i<count; ++i) {
+    if (isX) {
+      label_info = relationList().at(i)->xLabelInfo();
+    } else {
+      label_info = relationList().at(i)->yLabelInfo();
+    }
+    if (label_info != first_label_info) {
+      allSame = false;
+    }
+  }
+
+  if (allSame) {
+    return singleRenderItemLabel(label_info);
+  }
 
   // search for the first vector with quantity and units; use it.
   foreach (const RelationPtr &relation, relationList()) {

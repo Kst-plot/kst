@@ -124,6 +124,7 @@ void ContentTab::displayedDoubleClicked(QListWidgetItem * item) {
   if (item) {
     _availableRelationList->addItem(_displayedRelationList->takeItem(_displayedRelationList->row(item)));
     _availableRelationList->clearSelection();
+    emit modified();
     updateButtons();
   }
 }
@@ -142,6 +143,7 @@ void ContentTab::availableDoubleClicked(QListWidgetItem * item) {
   if (item) {
     _displayedRelationList->addItem(_availableRelationList->takeItem(_availableRelationList->row(item)));
     _displayedRelationList->clearSelection();
+    emit modified();
     updateButtons();
   }
 }

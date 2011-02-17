@@ -26,6 +26,8 @@ namespace Kst {
 struct LabelInfo
 {
   LabelInfo() : name(QString()), quantity(QString()), units(QString()) {}
+  bool operator==(const LabelInfo &l) const { return (l.name==name) && (l.quantity==quantity) && (l.units==units); }
+  bool operator!=(const LabelInfo &l) const { return !(*this==l); }
   QString name;
   QString quantity;
   QString units;
