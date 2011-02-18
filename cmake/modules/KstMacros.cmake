@@ -120,7 +120,7 @@ macro(kst_add_library type)
 			install(TARGETS ${kst_name} RUNTIME DESTINATION bin)
 		endif()
 	elseif(NOT APPLE)
-		install(TARGETS ${kst_name} DESTINATION lib)
+		install(TARGETS ${kst_name} DESTINATION ${kst_install_libdir})
 	endif()
 endmacro()
 
