@@ -30,6 +30,7 @@ kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
+kst_option(rpath "Use rpath" ON gcc)
 
 message(STATUS)
 
@@ -136,8 +137,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 
-# the RPATH to be used when installing
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+if(kst_rpath)
+	# the RPATH to be used when installing
+	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif()
+
 
 #path to install the .desktop files
 set(kst_install_plugin_desktop_file_path share/services/kst)
