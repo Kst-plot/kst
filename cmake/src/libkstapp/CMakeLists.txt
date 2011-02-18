@@ -4,6 +4,12 @@ kst_files_find(src/libkstapp)
 
 kst_include_directories(kstcore kstmath kstwidgets)
 
-kst_add_library(STATIC)
+set(AUTHORS ${kst_dir}/AUTHORS)
+set_source_files_properties(${AUTHORS} PROPERTIES GENERATED TRUE HEADER_FILE_ONLY TRUE)
+file(READ ${AUTHORS} data)
+string(REPLACE "\n" ";" kst_authors ${data})
+file(WRITE ${CMAKE_BINARY_DIR}/authors.h "static const char* kst_authors = \"${kst_authors}\";\n")
+
+kst_add_library(STATIC ${CMAKE_BINARY_DIR}/authors.h ${AUTHORS})
 
 kst_link(kstcore kstmath kstwidgets)

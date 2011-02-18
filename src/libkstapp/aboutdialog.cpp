@@ -14,12 +14,14 @@
 
 #ifdef KST_HAVE_SVN_REVISION_H
 #include "svnrevision.h"
+#include "authors.h"
 #endif
 
 #include "aboutdialog.h"
 
 #include <QDesktopServices>
 #include <QDebug>
+#include <QTextEdit>
 
 #include <QStringList>
 
@@ -29,6 +31,16 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
+#ifdef KST_HAVE_SVN_REVISION_H
+   QStringList utf8Authors = QString::fromUtf8(kst_authors).trimmed().split(";");
+   QStringList authors;
+   foreach(const QString& a, utf8Authors) {
+     if (!a.startsWith("#")) {
+      authors << a;
+     }
+   }
+#else
+// qmake support
   QStringList authors = QStringList()
     << "Barth Netterfield"
     << "Matthew Truch"
@@ -41,10 +53,12 @@ AboutDialog::AboutDialog(QWidget *parent)
     << "The University of Toronto"
     << "Andrew Walker"
     << "Peter Kümmel"
-    << "Zongyi Zang"
-    ;
+    << "Zongyi Zang";
+#endif
 
   authors.sort();
+  authors.replaceInStrings("<", "&lt;");
+  authors.replaceInStrings(">", "&gt;");
   authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
 
   QStringList msg = QStringList()
