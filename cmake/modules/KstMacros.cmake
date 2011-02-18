@@ -65,7 +65,7 @@ endmacro()
 
 macro(kst_set_target_properties)
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION 2)
+	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION ${kst_version_major})
 endmacro()
 
 

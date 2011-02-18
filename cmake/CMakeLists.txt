@@ -115,7 +115,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 	set(CMAKE_INSTALL_PREFIX INSTALLED CACHE PATH "Kst's default install prefix" FORCE)
 endif()
 
-if(kst_install_libdir)
+if(NOT kst_install_libdir)
 	set(kst_install_libdir lib)
 endif()
 
