@@ -91,8 +91,8 @@ class DataSourcePluginInterface : public PluginInterface {
 }
 
 
-Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/2.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/2.0")
 
 
 #endif

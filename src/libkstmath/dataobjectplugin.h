@@ -60,7 +60,7 @@ typedef ObjectList<DataObjectPluginInterface> DataObjectPluginList;
 
 }
 
-Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.DataObjectPluginInterface/1.0")
-Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.BasicPluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, "com.kst.DataObjectPluginInterface/2.0")
+Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, "com.kst.BasicPluginInterface/2.0")
 
 #endif
