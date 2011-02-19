@@ -53,8 +53,8 @@ QStringList Kst::pluginSearchPaths()
   QDir rootDir = QApplication::applicationDirPath();
   rootDir.cdUp();
   QString path = rootDir.canonicalPath() + "/";
-  path += QLatin1String(KST_INSTALL_PLUGINS);
-  pluginPaths << path;
+  pluginPaths << path + QLatin1String("plugins");
+  pluginPaths << path + QLatin1String(KST_INSTALL_PLUGINS);
   
   rootDir.cdUp();
   path = rootDir.canonicalPath() + "/";

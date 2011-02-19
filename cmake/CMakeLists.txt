@@ -294,28 +294,29 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 
 
 if(APPLE)
-	# We start from bin/kst2.app, all is build into the final bundle folder
+	# We start from build/bin/kst2.app, all is build into the final bundle folder
 	# On the mac the pathes to needed shared libraries are hardcoded in the binary/library 
 	# which could be changed by the macro 'fixup_bundle' 
 	# libs which are hardcoded are resolved automatically
 	# but the plugins must be passed as extra argument because they are not hardcoded in the binary 
-
-	set(app ${CMAKE_BINARY_DIR}/bin/${kst_binary_name}.app)
-	set(contents_dir ${kst_binary_name}.app/Contents)
-	#TODO copy not intsall! 
-	install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION  ${CMAKE_BINARY_DIR}/bin/${contents_dir}/plugins COMPONENT Runtime)
 	
-	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
-	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
+	set(bundle_dir ${kst_build_dir}/bin)
+	set(contents_dir ${kst_binary_name}.app/Contents)
+	
+	set(app ${bundle_dir}/${kst_binary_name}.app)
+	install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${bundle_dir}/${contents_dir}/plugins COMPONENT Runtime)
 	
 	install(CODE 
-		"file(GLOB qt_plugins \"\${CMAKE_BINARY_DIR}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-		file(GLOB kst_plugins \"${CMAKE_BINARY_DIR}/bin/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
+		"file(GLOB qt_plugins \"${bundle_dir}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+		file(GLOB kst_plugins \"${bundle_dir}/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
 		set(libs \${qt_plugins} \${kst_plugins})
 		include(BundleUtilities) 
 		fixup_bundle(\"${app}\" \"\${libs}\" \"${dir}\") "
 		COMPONENT RUNTIME)
-		
+	
+	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
+	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
+
 	set(CPACK_GENERATOR DragNDrop)
 endif()
 
