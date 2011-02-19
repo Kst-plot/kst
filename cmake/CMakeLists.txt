@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 include(KstMacros)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
+get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 
 set(kst_version_major 2)
@@ -17,7 +18,7 @@ set(kst_binary_name kst2)
 
 
 kst_option_init()
-kst_option(release "Build release version" OFF all)
+kst_option(release "Build release version: optimize for speed, don't embedded debug symbols" OFF all)
 kst_option(merge_files "Merge files to speedup build about factor 5" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
 kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
@@ -110,14 +111,27 @@ endif()
 if(kst_install_prefix)
 	set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
 	set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-endif()
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-	set(CMAKE_INSTALL_PREFIX INSTALLED CACHE PATH "Kst's default install prefix" FORCE)
+else()
+	set(kst_install_prefix INSTALLED)
+	set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "Kst's default install prefix" FORCE)
 endif()
 
 if(NOT kst_install_libdir)
 	set(kst_install_libdir lib)
 endif()
+
+if(NOT kst_install_plugins)
+	set(kst_install_plugins ${kst_install_libdir}/${kst_binary_name}/plugins)
+endif()
+
+if(kst_rpath)
+	# the RPATH to be used when installing
+	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${kst_install_libdir}")
+endif()
+
+#path to install the .desktop files
+set(kst_install_plugin_desktop_file_path share/services/kst)
+
 
 
 if(NOT kst_console)
@@ -138,19 +152,6 @@ if(kst_merge_files)
 endif()
 
 
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
-
-if(kst_rpath)
-	# the RPATH to be used when installing
-	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-endif()
-
-
-#path to install the .desktop files
-set(kst_install_plugin_desktop_file_path share/services/kst)
 
 
 if(MSVC)
@@ -178,9 +179,12 @@ include_directories(${CMAKE_BINARY_DIR} ${QT_INCLUDES})
 
 message(STATUS "Build summary----------------------------------")
 message(STATUS)
-message(STATUS "Version          : ${kst_version}")
-message(STATUS "Path to source   : ${kst_dir}")
-message(STATUS "Installation path: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Version       : ${kst_version}")
+message(STATUS "Path to source: ${kst_dir}")
+message(STATUS "Installation  :")
+message(STATUS "        ${kst_install_prefix}/bin")
+message(STATUS "        ${kst_install_prefix}/${kst_install_libdir}")
+message(STATUS "        ${kst_install_prefix}/${kst_install_plugins}")
 message(STATUS)
 message(STATUS "Options:")
 kst_option_list_all()

@@ -7,7 +7,8 @@
 //#define QT_NO_KEYWORDS
 
 #define KSTVERSION  "${kst_version}"
-#define INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}"
+#define KST_INSTALL_LIBDIR  "${kst_install_libdir}"
+#define KST_INSTALL_PLUGINS "${kst_install_plugins}"
 
 
 #endif

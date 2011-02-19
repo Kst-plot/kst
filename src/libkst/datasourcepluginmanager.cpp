@@ -46,6 +46,32 @@
 using namespace Kst;
 
 
+QStringList Kst::pluginSearchPaths()
+{
+  QStringList pluginPaths;
+
+  QDir rootDir = QApplication::applicationDirPath();
+  rootDir.cdUp();
+  QString path = rootDir.canonicalPath() + "/";
+  path += QLatin1String(KST_INSTALL_PLUGINS);
+  pluginPaths << path;
+  
+  rootDir.cdUp();
+  path = rootDir.canonicalPath() + "/";
+  path += QLatin1String(KST_INSTALL_PLUGINS);
+  pluginPaths << path + QLatin1String("/Release");
+  pluginPaths << path + QLatin1String("/Debug");
+
+  Debug::self()->log(QString("\nPlugin Search Pathes:"));
+  foreach(const QString& p, pluginPaths) {
+    Debug::self()->log(QString("-> %1").arg(p));
+  }
+
+  return pluginPaths;
+}
+
+
+
 QSettings DataSourcePluginManager::settingsObject("kst", "data");
 QMap<QString,QString> DataSourcePluginManager::url_map;
 
@@ -136,36 +162,7 @@ static void scanPlugins() {
     }
   }
 
-  QStringList pluginPaths;
-  pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
-  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugins");
-
-  QDir rootDir = QApplication::applicationDirPath();
-  rootDir.cdUp();
-  QString pluginPath = rootDir.canonicalPath();
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String(INSTALL_LIBDIR);
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String("kst");
-  pluginPaths << pluginPath;
-  
-  pluginPath = rootDir.canonicalPath();
-  pluginPath += QDir::separator();
-
-#ifdef Q_OS_MACX
-  pluginPaths << pluginPath + QLatin1String("PlugIns");
-  pluginPaths << pluginPath + QLatin1String("../PlugIns/Release");
-  pluginPaths << pluginPath + QLatin1String("../PlugIns/Debug");
-#endif
-
-#ifdef Q_OS_WIN
-  pluginPaths << pluginPath + QLatin1String("plugins");
-  pluginPaths << pluginPath + QLatin1String("../plugins/Release");
-  pluginPaths << pluginPath + QLatin1String("../plugins/Debug");
-#endif
-
-  Debug::self()->log(QString("\nPlugin Search Pathes: \n%1").arg(pluginPaths.join("\n")));
-	
+  QStringList pluginPaths = pluginSearchPaths();
   foreach (const QString& pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (QString fileName, d.entryList(QDir::Files)) {

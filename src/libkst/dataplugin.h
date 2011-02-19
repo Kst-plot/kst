@@ -26,6 +26,9 @@ class ObjectStore;
 class DataSource;
 class DataSourceConfigWidget;
 
+
+KSTCORE_EXPORT QStringList pluginSearchPaths();
+
 class PluginInterface : public Shared {
   public:
     PluginInterface() {}

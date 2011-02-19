@@ -45,6 +45,8 @@ QSettings DataObject::settingsObject("kst", "data");
 QMap<QString,QString> DataObject::url_map;
 
 
+
+
 void DataObject::init() {
   initPlugins();
 }
@@ -181,34 +183,16 @@ void DataObject::scanPlugins() {
     }
   }
 
-  QStringList pluginPaths;
-  pluginPaths << QLibraryInfo::location(QLibraryInfo::PluginsPath);
-  pluginPaths << QString(qApp->applicationDirPath()).replace("bin", "plugin");
-
-  QDir rootDir = QApplication::applicationDirPath();
-  rootDir.cdUp();
-  QString pluginPath = rootDir.canonicalPath();
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String(INSTALL_LIBDIR);
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String("kst");
-  pluginPaths << pluginPath;
-  
-  pluginPath = rootDir.canonicalPath();
-  pluginPath += QDir::separator();
-  pluginPath += QLatin1String("PlugIns");
-  pluginPaths << pluginPath;
-
+  QStringList pluginPaths = pluginSearchPaths();
   foreach (QString pluginPath, pluginPaths) {
     QDir d(pluginPath);
-	Debug::self()->log(i18n("Path: ") + pluginPath);
-    foreach (QString fileName, d.entryList(QDir::Files)) {		
+    foreach (QString fileName, d.entryList(QDir::Files)) {
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
           if (DataObjectPluginInterface *dataObjectPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
             tmpList.append(dataObjectPlugin);
-			Debug::self()->log(i18n("Loaded: ") + fileName);
+            Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
           }
         }
     }
