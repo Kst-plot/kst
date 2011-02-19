@@ -74,16 +74,10 @@ macro(kst_add_executable)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	add_executable(${kst_name} ${ARGN} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${kst_${kst_name}_info_files})
 	target_link_libraries(${kst_name} ${kst_qtmain_library})
-	kst_set_target_properties()
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
 	kst_revision_add_dependency()
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-endmacro()
-
-
-macro(kst_install_executable)
-	install(TARGETS ${kst_name} 
-		RUNTIME DESTINATION bin
-		BUNDLE DESTINATION .)
+	install(TARGETS ${kst_name} RUNTIME DESTINATION bin BUNDLE DESTINATION .)
 endmacro()
 
 
