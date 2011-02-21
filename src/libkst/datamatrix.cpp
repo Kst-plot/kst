@@ -377,16 +377,15 @@ void DataMatrix::_resetFieldStrings() {
 
 LabelInfo DataMatrix::xLabelInfo() const {
   LabelInfo label_info;
-
   if (_fieldStrings.contains("x_quantity")) {
     label_info.quantity = _fieldStrings.value("x_quantity")->value();
   } else {
     label_info.quantity = QString();
   }
   if (_fieldStrings.contains("x_units")) {
-    label_info.quantity = _fieldStrings.value("x_units")->value();
+    label_info.units = _fieldStrings.value("x_units")->value();
   } else {
-    label_info.quantity = QString();
+    label_info.units = QString();
   }
 
   label_info.name = QString();
@@ -404,9 +403,9 @@ LabelInfo DataMatrix::yLabelInfo() const {
     label_info.quantity = QString();
   }
   if (_fieldStrings.contains("y_units")) {
-    label_info.quantity = _fieldStrings.value("y_units")->value();
+    label_info.units = _fieldStrings.value("y_units")->value();
   } else {
-    label_info.quantity = QString();
+    label_info.units = QString();
   }
 
   label_info.name = QString();
@@ -424,9 +423,9 @@ LabelInfo DataMatrix::titleInfo() const {
     label_info.quantity = QString();
   }
   if (_fieldStrings.contains("z_units")) {
-    label_info.quantity = _fieldStrings.value("z_units")->value();
+    label_info.units = _fieldStrings.value("z_units")->value();
   } else {
-    label_info.quantity = QString();
+    label_info.units = QString();
   }
 
   label_info.name = _field;
