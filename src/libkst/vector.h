@@ -123,9 +123,11 @@ class KSTCORE_EXPORT Vector : public Primitive
     /* Generally you don't need to call this */
     void updateScalars();
 
-    /** return a sensible label for this vector */
+    /** return information for building a label for this vector */
     virtual LabelInfo labelInfo() const;
+    virtual LabelInfo titleInfo() const;
     virtual void setLabelInfo(const LabelInfo &label_info);
+    virtual void setTitleInfo(const LabelInfo &label_info);
 
     virtual int getUsage() const;
 
@@ -208,6 +210,7 @@ class KSTCORE_EXPORT Vector : public Primitive
     virtual void deleteDependents();
 
     LabelInfo _labelInfo;
+    LabelInfo _titleInfo;
 
     friend class DataObject;
     friend class Matrix;

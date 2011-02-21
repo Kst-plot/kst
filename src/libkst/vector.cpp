@@ -42,7 +42,7 @@ const QString Vector::staticTypeTag = I18N_NOOP("vector");
 
 /** Create a vector */
 Vector::Vector(ObjectStore *store)
-    : Primitive(store, 0L), _nsum(0) {
+    : Primitive(store, 0L), _nsum(0), _labelInfo(LabelInfo()), _titleInfo(LabelInfo()) {
 
   _initializeShortName();
 
@@ -632,8 +632,18 @@ LabelInfo Vector::labelInfo() const {
 }
 
 
+LabelInfo Vector::titleInfo() const {
+  return _titleInfo;
+}
+
+
 void Vector::setLabelInfo(const LabelInfo &label_info) {
   _labelInfo = label_info;
+}
+
+
+void Vector::setTitleInfo(const LabelInfo &label_info) {
+  _titleInfo = label_info;
 }
 
 #undef INITSIZE

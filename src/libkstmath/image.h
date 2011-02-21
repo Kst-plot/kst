@@ -96,6 +96,7 @@ class KSTMATH_EXPORT Image : public Relation {
     // labels for plots
     virtual LabelInfo xLabelInfo() const;
     virtual LabelInfo yLabelInfo() const;
+    virtual LabelInfo titleInfo() const;
 
     virtual RelationPtr makeDuplicate() const;
 

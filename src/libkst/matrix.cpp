@@ -370,6 +370,10 @@ void Matrix::setYLabelInfo(const LabelInfo &label_info) {
   _yLabelInfo = label_info;
 }
 
+void Matrix::setTitleInfo(const LabelInfo &label_info) {
+  _titleInfo = label_info;
+}
+
 LabelInfo Matrix::xLabelInfo() const {
   return _xLabelInfo;
 }
@@ -378,6 +382,10 @@ LabelInfo Matrix::yLabelInfo() const {
   return _yLabelInfo;
 }
 
+
+LabelInfo Matrix::titleInfo() const {
+  return _titleInfo;
+}
 
 bool Matrix::editable() const {
   return _editable;

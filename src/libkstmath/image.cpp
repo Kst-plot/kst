@@ -388,6 +388,15 @@ LabelInfo Image::yLabelInfo() const {
 }
 
 
+LabelInfo Image::titleInfo() const {
+  if (_inputMatrices.contains(THEMATRIX)) {
+    return (_inputMatrices[THEMATRIX]->titleInfo());
+  } else {
+    return LabelInfo();
+  }
+}
+
+
 DataObjectPtr Image::providerDataObject() const {
   DataObjectPtr provider = 0L;
   // FIXME: fix this.. I don't know what's going on here

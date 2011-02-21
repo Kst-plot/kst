@@ -373,9 +373,16 @@ LabelInfo Curve::xLabelInfo() const {
   return xVector()->labelInfo();
 }
 
+
 LabelInfo Curve::yLabelInfo() const {
   return yVector()->labelInfo();
 }
+
+
+LabelInfo Curve::titleInfo() const {
+  return yVector()->titleInfo();
+}
+
 
 QString Curve::propertyString() const {
   return i18n("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());

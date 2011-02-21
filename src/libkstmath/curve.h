@@ -159,6 +159,7 @@ class KSTMATH_EXPORT Curve: public Relation
     // labels for plots
     virtual LabelInfo xLabelInfo() const;
     virtual LabelInfo yLabelInfo() const;
+    virtual LabelInfo titleInfo() const;
 
 
   protected:

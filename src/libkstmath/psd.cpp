@@ -448,6 +448,11 @@ void PSD::updateVectorLabels() {
   label_info.units = _rateUnits;
   _fVector->setLabelInfo(label_info);
 
+  label_info.quantity.clear();
+  label_info.units.clear();
+  label_info.name = _inputVectors[INVECTOR]->labelInfo().name;
+  _sVector->setTitleInfo(label_info);
+
 }
 
 QString PSD::_automaticDescriptiveName() const {

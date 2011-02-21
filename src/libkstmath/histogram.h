@@ -52,10 +52,6 @@ public:
     void setVector(VectorPtr);
     VectorPtr vector() const;
 
-    // labels for plots
-    virtual LabelInfo xLabelInfo() const;
-    virtual LabelInfo yLabelInfo() const;
-
     bool isNormalizationNumber() const { return _NormalizationMode == Number; }
     void setIsNormalizationNumber() { _NormalizationMode = Number; }
     bool isNormalizationPercent() const { return _NormalizationMode == Percent; }

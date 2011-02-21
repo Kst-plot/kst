@@ -271,7 +271,7 @@ void Equation::updateVectorLabels() {
   label_info.quantity = QString();
   label_info.name = yl;
 
-  _yOutVector->setLabelInfo(label_info);
+  _yOutVector->setTitleInfo(label_info);
 }
 
 void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {

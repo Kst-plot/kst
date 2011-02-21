@@ -203,6 +203,11 @@ void Histogram::internalUpdate() {
   _hVector->setLabelInfo(label_info);
   _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
 
+  label_info.quantity.clear();
+  label_info.units.clear();
+  label_info.name = i18n( "Histogram of %1").arg(_bVector->labelInfo().name);
+  _hVector->setTitleInfo(label_info);
+
   double *bins = _bVector->value();
   double *hist = _hVector->value();
 
@@ -210,11 +215,6 @@ void Histogram::internalUpdate() {
     bins[i_bin] = ( double( i_bin ) + 0.5 )*_W + _MinX;
     hist[i_bin] = _Bins[i_bin]*_Normalization;
   }
-
-  // these will get updated by the update manager now
-  // that their provider been changed.
-  //_bVector->update();
-  //_hVector->update();
 
   unlockInputsAndOutputs();
 
@@ -281,23 +281,6 @@ VectorPtr Histogram::vector() const {
   return _inputVectors[RAWVECTOR];
 }
 
-
-LabelInfo Histogram::yLabelInfo() const {
-  if (_hVector) {
-    _hVector->labelInfo();
-  } else {
-    return LabelInfo();
-  }
-}
-
-
-LabelInfo Histogram::xLabelInfo() const {
-  if (_bVector) {
-    _bVector->labelInfo();
-  } else {
-    return LabelInfo();
-  }
-}
 
 void Histogram::save(QXmlStreamWriter &xml) {
   xml.writeStartElement(staticTypeTag);

@@ -415,6 +415,26 @@ LabelInfo DataMatrix::yLabelInfo() const {
 }
 
 
+LabelInfo DataMatrix::titleInfo() const {
+  LabelInfo label_info;
+
+  if (_fieldStrings.contains("z_quantity")) {
+    label_info.quantity = _fieldStrings.value("z_quantity")->value();
+  } else {
+    label_info.quantity = QString();
+  }
+  if (_fieldStrings.contains("z_units")) {
+    label_info.quantity = _fieldStrings.value("z_units")->value();
+  } else {
+    label_info.quantity = QString();
+  }
+
+  label_info.name = _field;
+
+  return label_info;
+}
+
+
 void DataMatrix::internalUpdate() {
   if (dataSource()) {
     dataSource()->writeLock();

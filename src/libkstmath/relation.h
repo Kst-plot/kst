@@ -169,6 +169,7 @@ class KSTMATH_EXPORT Relation : public Object {
 
     virtual LabelInfo xLabelInfo() const = 0;
     virtual LabelInfo yLabelInfo() const = 0;
+    virtual LabelInfo titleInfo() const = 0;
 
   protected:
     virtual void writeLockInputsAndOutputs() const;

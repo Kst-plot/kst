@@ -93,8 +93,10 @@ class KSTCORE_EXPORT Matrix : public Primitive
     // labels for plots
     virtual void setXLabelInfo(const LabelInfo &label_info);
     virtual void setYLabelInfo(const LabelInfo &label_info);
+    virtual void setTitleInfo(const LabelInfo &label_info);
     virtual LabelInfo xLabelInfo() const;
     virtual LabelInfo yLabelInfo() const;
+    virtual LabelInfo titleInfo() const;
 
     void zero();
 
@@ -171,6 +173,7 @@ class KSTCORE_EXPORT Matrix : public Primitive
     // labels for this matrix
     LabelInfo _xLabelInfo;
     LabelInfo _yLabelInfo;
+    LabelInfo _titleInfo;
 
     void createScalars(ObjectStore *store);
     void renameScalars();

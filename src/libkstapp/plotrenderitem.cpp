@@ -338,10 +338,10 @@ QString PlotRenderItem::singleRenderItemLabel(const LabelInfo& label_info) const
     }
   } else if (label_info.name.isEmpty()) {
     return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units); // xQU
-  } else if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
-    return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU A
+  //} else if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
+  //  return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU A
   } else {
-    return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU B
+    return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units); // NQU B
   }
 }
 
@@ -434,23 +434,24 @@ QString PlotRenderItem::rightLabel() const {
 
 
 QString PlotRenderItem::topLabel() const {
-  return QString();
-#if 0
-  QString label;
-  for (int i = 0, count = relationList().count(); i<count; i++) {
-    if (i>0) {
-      if (i==count-1) {
-        //label += i18n(" and ", "last separater in a list");
-        label += i18n(" and ");
-      } else {
-        //label += i18n(", ", "separater in a list");
-        label += i18n(", ");
+  if (relationList().size() == 1) {
+    LabelInfo label_info = relationList().at(0)->titleInfo();
+    QString label = singleRenderItemLabel(label_info);
+    if (label.isEmpty()) {
+      label_info = relationList().at(0)->yLabelInfo();
+      if ((!label_info.name.isEmpty()) && (!label_info.quantity.isEmpty())) {
+        LabelInfo xlabel_info = relationList().at(0)->xLabelInfo();
+        if ((!xlabel_info.name.isEmpty()) && (!xlabel_info.quantity.isEmpty())) {
+          label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+        } else {
+          label = label_info.name;
+        }
       }
     }
-    label += relationList().at(i)->topLabel();
+    return label;
+  } else {
+    return QString();
   }
-  return label;
-#endif
 }
 
 
