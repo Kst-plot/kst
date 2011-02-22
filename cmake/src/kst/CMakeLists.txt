@@ -34,6 +34,13 @@ kst_link(kstcore kstmath kstapp kstwidgets)
 
 
 if(UNIX AND NOT APPLE)
+	
+	set(man ${CMAKE_BINARY_DIR}/kst.1)
+	configure_file(${kst_dir}/src/kst/kst.1.txt ${man}.txt)
+	install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E tar czf ${man}.gz ${man}.txt)")
+	set_source_files_properties(${man}.gz PROPERTIES GENERATED TRUE) 
+	install(FILES ${man}.gz DESTINATION share/man/man1)
+	
 	set(k ${kst_dir}/src/kst)
 	install(FILES ${k}/kstplugin.desktop
 	              ${k}/kstdatasourceplugin.desktop

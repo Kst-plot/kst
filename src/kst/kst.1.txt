@@ -1,0 +1,203 @@
+.\" The kst man page
+.\"
+.\" (C) 2011 Matthew Truch (and other kst authors)
+.\"
+.\""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+.\"
+.\" This file is part of kst
+.\"
+.\" Permission is granted to copy, distribute and/or modify this document
+.\" under the terms of the GNU Free Documentation License, Version 1.2 or
+.\" any later version published by the Free Software Foundation; with no
+.\" Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+.\" Texts.  A copy of the license is included in the `COPYING.DOC' file
+.\" as part of this distribution.
+.\"
+.TH kst 1 "22 February 2011" "Version @kst_version@" "@kst_binary_name@"
+.SH NAME
+kst \(em plots scientific data
+.SH SYNOPSIS
+.nh
+.ad l
+.TP
+\fBkst
+.TP
+\fBkst
+.RB "[ " \-F " DATASOURCE ] [ " \-f " STARTFRAME ] [ " \-n " NUMFRAMES ] [ "
+.BR \-s " FRAMESPERSAMPLE [ " \-a " ] ] kstfile"
+.TP
+\fBkst
+.RB "datasource [ " \-f " STARTFRAME ] [ " \-n " NUMFRAMES ] [ " \-s 
+.RB " FRAMESPERSAMPLE [ " \-a " ] ] "
+.RB "[ " \-P " PLOTNAME ] [ " \-A "] "
+.RB "[ " \-d " ] [ " \-l " ] [ " \-b " ] "
+.RB "[ " \-x " FIELD ] [ " \-e " FIELD ] [ " \-r " RATE ] "
+.RB "[ " \-y " FIELD ] [ " \-p " FIELD ] [ " \-h " FIELD ] [ " \-z " FIELD ] "
+.RB "[ " \-\-png " filename ] "
+.RB "[ " \-\-print " filename [ " \-\-landscape " | " \-\-portrait " ] "
+.RB "[ " \-\-Letter " | " \-\-A4 " ] ]" 
+.hy
+.ad n
+.SH DESCRIPTION
+kst is a graphical data plotting tool, which includes the ability
+to plot live data (contiuously update the plot as new data becomes
+available).  
+
+kst may be run entirely from within its GUI, in which case no
+command line arguments are needed.  kst has a powerful wizard for
+easily setting up new plots.  
+
+In the second invocation, kst loads pre-saved plot specifications from the
+file
+.I kstfile
+and optionally may override some of the settings in that file.
+
+In the third invocation, kst displays plots of the data as directed in 
+the default manner.  Additional datasources may be specified on the 
+command line with options for that datasource following it.  Command
+line options generally apply to all subsequent options unless later
+overridden.
+.SH OPTIONS
+.TP
+.B \-A\fR
+plot all curves in separate plots
+.TP
+.B \-a\fR
+average frames (simple mean) when plotting with
+.B -s\fR.
+.TP
+.B \-\-A4\fR
+use A4 sized paper for printing.  Requires
+.B \-\-print\fR.
+.TP
+.B \-b\fR
+plot as bargraphs.
+.TP
+.B \-d\fR
+use points when plotting curves.
+.TP
+.B \-e\ FIELD\fR
+use
+.I FIELD
+as the magnitude of error bars applied to the next plot.
+.TP
+.BR \-F\ datasource\fR
+override the datasource indicated in the 
+.I kstfile
+and instead use
+.I datasource\fR.
+.TP
+.B \-f\ STARTFRAME\fR
+begin plotting at
+.I STARTFRAME
+frames into the data.  Set to -1 to start at
+.I NUMFRAMES
+from the end of the data.
+.TP
+.B \-h\ FIELD\fR
+plot
+.I FIELD
+as a histogram.
+.TP
+.B \-l\fR
+use lines when plotting curves.
+.TP
+.B \-\-landscape\fR
+use landscape orientation for printing.  Requires
+.B \-\-print\fR.
+.B \-\-Letter\fR
+use US Letter sized paper for printing.  Requires
+.B \-\-print\fR.
+.TP
+.B \-n\ NUMFRAMES\fR
+plot at most
+.I NUMFRAMES
+frames of data.  Set to -1 to indicate all of the data.
+.TP
+.B \-P\ PLOTNAME\fR
+plot all plots in the plot named
+.I PLOTNAME\fR.
+.TP
+.B \-p\ FIELD\fR
+plot
+.I FIELD
+as a power spectrum plot.
+.TP
+.B \-\-png\ filename\fR
+render to a portable network graphics (png) image with file name 
+.I filename
+and quit.
+.TP
+.B \-\-portrait\fR
+use portrait orientation for printing.  Requires
+.B \-\-print\fR.
+.TP
+.B \-\-print\ filename
+print the plot to file
+.I filename
+and quit.
+.TP
+.B \-s\ FRAMESPERSAMPLE\fR
+plot every
+.I FRAMESPERSAMPLE
+frames when plotting.
+.TP
+.B \-x\ FIELD\fR
+use
+.I FIELD
+as the X-axis vector.
+.TP
+.B \-y\ FIELD\fR
+plot
+.I FIELD\fR
+as an XY plot.
+.TP
+.B \-z\ FIELD\fR
+plot
+.I FIELD
+as an image.
+.SH EXAMPLES
+Plot all data in column 2 from data.dat.
+       kst data.dat -y 2
+
+Same as above, except only read 20 lines, starting at line 10.
+       kst data.dat -f 10 -n 20 -y 2
+
+also read col 1. One plot per curve.
+       kst data.dat -f 10 -n 20 -y 1 -y 2
+
+Read col 1 from data2.dat and col 1 from data.dat
+       kst data.dat -f 10 -n 20 -y 2 data2.dat -y 1
+
+Same as above, except read 40 lines starting at 30 in data2.dat
+       kst data.dat -f 10 -n 20 -y 2 data2.dat -f 30 -n 40 -y 1
+
+Specify the X vector and error bars:
+Plot x = col 1 and Y = col 2 and error flags = col 3 from data.dat
+       kst data.dat -x 1 -e 3 -y 2
+
+Get the X vector from data1.dat, and the Y vector from data2.dat.
+       kst data1.dat -x 1 data2.dat -y 1
+
+Placement:
+Plot column 2 and column 3 in plot P1 and column 4 in plot P2
+       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4
+.SH BUGS
+Please report bugs to either the kst mailing list at
+.I kst@kde.org
+or to the kde bugzilla under the kst product at
+.I http://bugs.kde.org/\fR.
+If you can run kst, you can easily report bugs by selecting
+.I Bug Report Wizard
+from the 
+.I Help
+menu.
+.SH AUTHOR
+Matthew Truch <matt@truch.net>
+.SH LICENSE
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the `COPYING.DOC' file
+as part of the kst distribution.
