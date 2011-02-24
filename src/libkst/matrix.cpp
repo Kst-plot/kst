@@ -556,8 +556,16 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
 
   if (reinit && _zSize < sz) {
     // initialize new memory after old values
-    int newMemStart = ((_nX - 1) * ySize) + _nY;
-    memset(_z + newMemStart, 0, (sz - newMemStart)*sizeof(double));
+    for (int row=0; row < qMin(xSize, _nX); ++row) {
+      for (int col = qMin(ySize,_nY); col<ySize; col++) {
+        _z[row*ySize+col] = 0;
+      }
+    }
+    for (int row = qMin(xSize, _nX); row < xSize; row++) {
+      for (int col = 0; col < ySize; col++) {
+        _z[row*ySize+col] = 0;
+      }
+    }
   }
 
   _nX = xSize;
@@ -589,6 +597,7 @@ void Matrix::change(uint nX, uint nY, double minX, double minY, double stepX, do
   _stepY = stepY;
   _minX = minX;
   _minY = minY;
+  resizeZ(nX*nY, true);
 }
 
 

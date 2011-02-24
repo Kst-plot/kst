@@ -52,7 +52,7 @@ CSD::CSD(ObjectStore *store)
   MatrixPtr outMatrix = store->createObject<Matrix>();
   outMatrix->setProvider(this);
   outMatrix->setSlaveName("SG");
-  outMatrix->change(1, 1);
+  outMatrix->change(2, 2);
   _outMatrix = _outputMatrices.insert(OUTMATRIX, outMatrix).value();
 }
 
@@ -86,17 +86,6 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   if (_frequency <= 0.0) {
     _frequency = 1.0;
   }
-
-  LabelInfo label_info;
-
-  label_info.name = QString();
-  label_info.quantity = i18n("Time");
-  label_info.units = QString('s');
-  _outMatrix->setXLabelInfo(label_info);
-
-  label_info.quantity = i18n("Frequency");
-  label_info.units = _rateUnits;
-  _outMatrix->setYLabelInfo(label_info);
 
   updateMatrixLabels();
 }
@@ -357,24 +346,39 @@ DataObjectPtr CSD::makeDuplicate() const{
 }
 
 void CSD::updateMatrixLabels(void) {
-  QString label;
+
+  LabelInfo label_info;
+
   switch (_outputType) {
   default:
   case 0: // amplitude spectral density (default) [V/Hz^1/2]
-    label = i18n("ASD \\[%1/%2^{1/2} \\]").arg(_vectorUnits).arg(_rateUnits);
+    label_info.quantity = i18n("Amplitude Spectral Density");
+    label_info.units = QString("%1/%2^{1/2}").arg(_vectorUnits).arg(_rateUnits);
     break;
   case 1: // power spectral density [V^2/Hz]
-    label = i18n("PSD \\[%1^2/%2\\]").arg(_vectorUnits).arg(_rateUnits);
+    label_info.quantity = i18n("Power Spectral Density");
+    label_info.units = QString("%1^2/%2").arg(_vectorUnits).arg(_rateUnits);
     break;
   case 2: // amplitude spectrum [V]
-    label = i18n("Amplitude Spectrum \\[%1\\]").arg(_vectorUnits);
+    label_info.quantity = i18n("Amplitude Spectrum");
+    label_info.units = QString("%1").arg(_vectorUnits);
     break;
   case 3: // power spectrum [V^2]
-    label = i18n("Power Spectrum \\[%1^2\\]").arg(_vectorUnits);
+    label_info.quantity = i18n("Power Spectrum");
+    label_info.units = QString("%1^2").arg(_vectorUnits);
     break;
   }
-  label += " of " + _inputVectors[CSD_INVECTOR]->descriptiveName();
-  //_outMatrix->setLabel(label); FIXME: csd lable
+  label_info.name = _inputVectors[CSD_INVECTOR]->descriptiveName();
+  _outMatrix->setTitleInfo(label_info);
+
+  label_info.name.clear();
+  label_info.units = _rateUnits;
+  label_info.quantity = i18n("Frequency");
+  _outMatrix->setYLabelInfo(label_info);
+
+  label_info.quantity = i18n("Time");
+  label_info.units = QString('s');
+  _outMatrix->setXLabelInfo(label_info);
 
 }
 

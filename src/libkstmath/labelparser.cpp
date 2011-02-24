@@ -508,12 +508,17 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
   if (ctail->group) {
     ctail = new Chunk(ctail, Chunk::None, false, true);
   }
-
   for (uint& i = start; i < cnt; ++i) {
     QChar c = txt[i];
     Chunk::VOffset dir = Chunk::Down;
     switch (c.unicode()) {
       case '\n':
+        if (ctail->vOffset != Chunk::None && (!ctail->text.isEmpty() || ctail->locked())) {
+          while (ctail->vOffset != Chunk::None && (!ctail->text.isEmpty() || ctail->locked())) {
+            ctail = ctail->prev;
+          }
+          ctail = new Chunk(ctail, Chunk::None, false, true);
+        }
         if (!ctail->text.isEmpty() || ctail->locked()) {
           if (ctail->vOffset != Chunk::None) {
             ctail = new Chunk(ctail->prev, Chunk::None, false, true);
@@ -536,6 +541,15 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
         ctail = new Chunk(ctail, Chunk::None, false, true);
         break;
       case 0x5c:   // \ /**/
+
+        if (ctail->vOffset != Chunk::None && (!ctail->text.isEmpty() || ctail->locked())) {
+          while (ctail->vOffset != Chunk::None && (!ctail->text.isEmpty() || ctail->locked())) {
+            ctail = ctail->prev;
+          }
+          ctail = new Chunk(ctail, Chunk::None, false, true);
+        }
+
+
         if (ctail->vOffset != Chunk::None && !ctail->text.isEmpty()) {
           ctail = new Chunk(ctail->prev, Chunk::None, false, true);
         }
@@ -553,7 +567,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
         break;
       case 0x5e:   // ^
         dir = Chunk::Up;
-      case 0x5f:   // _
+      case 0x5f:   // _ (dir is set to Down at begining of loop)
         if (ctail->text.isEmpty() && !ctail->group) {
           setNormalChar(c, &ctail);
         } else {
@@ -563,7 +577,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
             } else if (ctail->group) {
               ctail = new Chunk(ctail, dir, false, true);
             } else {
-              return 0L; // parse error - x^y^z etc
+              ctail = new Chunk(ctail, dir, false, true);
             }
           } else {
             ctail = new Chunk(ctail, dir, false, true);

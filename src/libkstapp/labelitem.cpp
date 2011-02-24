@@ -69,6 +69,8 @@ void LabelItem::generateLabel() {
 
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(setDirty()));
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(triggerUpdate()));
+
+    delete parsed;
   }
 }
 

@@ -413,7 +413,7 @@ void PSD::updateVectorLabels() {
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
         label_info.units = QString();
       } else {
-        label_info.units = QString("%1/%2^{1/2} ").arg(_vectorUnits).arg(_rateUnits);
+        label_info.units = QString("%1/%2^{1/2}").arg(_vectorUnits).arg(_rateUnits);
       }
       break;
     case 1: // power spectral density [V^2/Hz]
