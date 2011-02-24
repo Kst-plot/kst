@@ -219,10 +219,10 @@ if(WIN32)
 endif()
 
 if (kst_install_prefix)
-	set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix})
-	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix}-sources)
+	set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-binary)
+	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix})
 else()
-	set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version}-sources)
+	set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version})
 endif()
 set(CPACK_INSTALL_PREFIX "")
 	
