@@ -63,11 +63,6 @@ macro(kst_dont_merge)
 endmacro()
 
 
-macro(kst_set_target_properties)
-	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION ${kst_version_major})
-endmacro()
-
 
 macro(kst_add_executable)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${kst_build_dir}/bin)
@@ -77,7 +72,13 @@ macro(kst_add_executable)
 	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
 	kst_revision_add_dependency()
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-	install(TARGETS ${kst_name} RUNTIME DESTINATION bin BUNDLE DESTINATION .)
+endmacro()
+
+
+macro(kst_install_executable)
+	install(TARGETS ${kst_name} 
+		RUNTIME DESTINATION bin
+		BUNDLE DESTINATION .)
 endmacro()
 
 
@@ -109,7 +110,8 @@ macro(kst_add_library type)
 	else()
 		add_library(${kst_name} ${type} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers} ${svnversion_h})
 	endif()
-	kst_set_target_properties()
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	set_target_properties(${kst_name} PROPERTIES VERSION ${kst_version} SOVERSION ${kst_version_major})
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
 	kst_revision_add_dependency()
 	if(WIN32)

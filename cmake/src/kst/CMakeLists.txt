@@ -32,6 +32,7 @@ kst_add_executable(${kst_win32} ${rc_file})
 
 kst_link(kstcore kstmath kstapp kstwidgets)
 
+kst_install_executable()
 
 if(UNIX AND NOT APPLE)
 	
