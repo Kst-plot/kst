@@ -2,7 +2,7 @@
                           vector.cpp  -  description
                              -------------------
     begin                : Fri Sep 22 2000
-    copyright            : (C) 2000-2002 by cbn
+    copyright            : (C) 2000-2011 by C. Barth Netterfield
     email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
@@ -28,7 +28,6 @@
 #include "datacollection.h"
 #include "math_kst.h"
 #include "vector.h"
-//#include "scalar.h"
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"

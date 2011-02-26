@@ -422,6 +422,10 @@ bool DataWizardPagePlot::legendsAuto() const {
   return _legendsAuto->isChecked();
 }
 
+bool DataWizardPagePlot::legendsVertical() const {
+  return _legendsVertical->isChecked();
+}
+
 bool DataWizardPagePlot::rescaleFonts() const {
   return _rescaleFonts->isChecked();
 }
@@ -454,6 +458,7 @@ void DataWizardPagePlot::updatePlotBox() {
 
   _legendsOn->setChecked(_dialogDefaults->value("wizard/legendsOn",false).toBool());
   _legendsAuto->setChecked(_dialogDefaults->value("wizard/legendsAuto",false).toBool());
+  _legendsVertical->setChecked(_dialogDefaults->value("legend/verticalDisplay",false).toBool());
 
   _rescaleFonts->setChecked(_dialogDefaults->value("wizard/rescaleFonts", true).toBool());
   _shareAxis->setChecked(_dialogDefaults->value("wizard/shareAxis", false).toBool());
@@ -716,6 +721,7 @@ void DataWizard::finished() {
 
   _dialogDefaults->setValue("wizard/legendsOn", _pagePlot->legendsOn());
   _dialogDefaults->setValue("wizard/legendsAuto", _pagePlot->legendsAuto());
+  _dialogDefaults->setValue("legend/verticalDisplay", _pagePlot->legendsVertical());
   _dialogDefaults->setValue("wizard/logX", _pagePlot->PSDLogX());
   _dialogDefaults->setValue("wizard/logY", _pagePlot->PSDLogY());
 
@@ -1119,9 +1125,11 @@ void DataWizard::finished() {
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {
       plot->setShowLegend(true, true);
+      plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
     } else if (_pagePlot->legendsAuto()) {
       if (plot->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
         plot->setShowLegend(true, true);
+        plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
       }
     }
   }

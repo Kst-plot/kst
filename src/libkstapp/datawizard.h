@@ -119,6 +119,7 @@ class DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 
     bool legendsOn() const;
     bool legendsAuto() const;
+    bool legendsVertical() const;
 
     bool rescaleFonts() const;
     bool shareAxis() const;
