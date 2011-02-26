@@ -320,10 +320,12 @@ void ChangeFileDialog::apply() {
           PrimitiveList output_prims = prim->outputPrimitives();
           PrimitiveList dup_output_prims = newPrim->outputPrimitives();
           // add output primitives to list of primitives that have been duplicated.
-          int n = output_prims.count();
+          int n = qMin(output_prims.count(), dup_output_prims.count());
           for (int i_output=0; i_output<n; i_output++) {
-            duplicatedPrimitiveList.append(output_prims.at(i_output));
-            duplicatedPrimitiveMap[output_prims.at(i_output)] = dup_output_prims.at(i_output);
+            if (output_prims.at(i_output)->descriptiveName() == dup_output_prims.at(i_output)->descriptiveName()) {
+              duplicatedPrimitiveList.append(output_prims.at(i_output));
+              duplicatedPrimitiveMap[output_prims.at(i_output)] = dup_output_prims.at(i_output);
+            }
           }
         } else {
           prim->readLock();
