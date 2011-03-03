@@ -14,6 +14,8 @@
 #include "datasource.h"
 #include "objectstore.h"
 #include "colorsequence.h"
+#include "svnrevision.h"
+#include "config.h"
 
 #include <iostream>
 #include <QCoreApplication>
@@ -111,12 +113,14 @@ namespace Kst {
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
 "       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n";
 
-static void printText(const QString& text, const QString& detailText, const QString& t = QString())
+static void printText(const QString& text, const QString& detailText = QString(), const QString& t = QString())
 {
 #ifdef Q_OS_WIN
   // No console on Windows.
   QMessageBox box(QMessageBox::Information, "Kst", text + t);
-  box.setDetailedText(detailText);
+  if (!detailText.isEmpty()) {
+    box.setDetailedText(detailText);
+  }
   box.exec();
 #else
   QString displayText = QString(text) + QString(detailText) + t;
@@ -364,7 +368,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       printUsage(QString());
       *ok = false;
     } else if (arg == "--version" || arg == "-version") {
-      printUsage(QString());
+      printText(QString("Kst ") + KSTVERSION + " Revision " + SVN_REVISION);
       *ok = false;
     } else if (arg == "-f") {
       *ok = _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
