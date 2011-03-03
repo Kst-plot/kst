@@ -111,28 +111,24 @@ namespace Kst {
 "Plot column 2 and column 3 in plot P1 and column 4 in plot P2\n"
 "       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4\n";
 
+static void printText(const QString& text, const QString& detailText, const QString& t = QString())
+{
 #ifdef Q_OS_WIN
-static void printUsage(QString t) { // No console on Windows.
-    QString displayText(usageMessage);
-    if (!t.isEmpty()) {
-      displayText += '\n';
-      displayText += t;
-    }
-    QMessageBox box(QMessageBox::Information, "Kst", displayText);
-    QString detailText(usageDetailsMessage);
-    box.setDetailedText(detailText);
-    box.exec();
-}
+  // No console on Windows.
+  QMessageBox box(QMessageBox::Information, "Kst", text + t);
+  box.setDetailedText(detailText);
+  box.exec();
 #else
-static void printUsage(const QString &t) {
-  QString displayText = QString(usageMessage) + QString(usageDetailsMessage);
-  if (!t.isEmpty()) {
-    displayText += "\n\n";
-    displayText += t;
-  }
+  QString displayText = QString(text) + QString(detailText) + t;
   qWarning("%s", qPrintable(displayText));
-}
 #endif
+}
+
+static void printUsage(const QString &t)
+{
+  printText(QString(usageMessage), QString(usageDetailsMessage), "\n" + t);
+}
+
 
 
 CommandLineParser::CommandLineParser(Document *doc):
@@ -365,6 +361,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
     arg = _arguments.takeFirst();
     if ((arg == "--help")||(arg == "-help")) {
+      printUsage(QString());
+      *ok = false;
+    } else if (arg == "--version" || arg == "-version") {
       printUsage(QString());
       *ok = false;
     } else if (arg == "-f") {
