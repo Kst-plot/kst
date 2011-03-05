@@ -51,7 +51,7 @@ Application::Application(int &argc, char **argv)
   DialogLauncher::replaceSelf(new DialogLauncherGui);
 
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
-  _mainWindow->show();
+  //_mainWindow->show();
   //_mainWindow->hide();
 }
 
