@@ -162,7 +162,7 @@
      <item row="1" column="3">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string> Points</string>
+        <string> points</string>
        </property>
       </widget>
      </item>

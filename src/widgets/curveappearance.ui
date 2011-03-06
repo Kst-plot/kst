@@ -364,7 +364,7 @@
       <item row="4" column="0">
        <widget class="QCheckBox" name="_showHead">
         <property name="text">
-         <string>Show &amp;Head</string>
+         <string>Show &amp;head</string>
         </property>
        </widget>
       </item>

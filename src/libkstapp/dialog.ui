@@ -52,7 +52,6 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <zorder>_splitter</zorder>
       </widget>
      </item>
      <item row="1" column="0">
@@ -134,7 +133,7 @@
    <item row="1" column="0">
     <widget class="QCheckBox" name="_saveAsDefault">
      <property name="text">
-      <string>Save As Default</string>
+      <string>Save as default</string>
      </property>
     </widget>
    </item>

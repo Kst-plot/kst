@@ -58,7 +58,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Mean c&amp;entered - </string>
+           <string>Mean c&amp;entered, </string>
           </property>
          </widget>
         </item>
@@ -74,7 +74,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Ran&amp;ge:</string>
+           <string>ran&amp;ge: </string>
           </property>
           <property name="buddy">
            <cstring>_xRange</cstring>
@@ -101,7 +101,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>F&amp;ixed -</string>
+           <string>F&amp;ixed, </string>
           </property>
          </widget>
         </item>
@@ -117,7 +117,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Fro&amp;m</string>
+           <string>fro&amp;m: </string>
           </property>
           <property name="buddy">
            <cstring>_xMin</cstring>
@@ -143,7 +143,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>T&amp;o</string>
+           <string>t&amp;o: </string>
           </property>
           <property name="buddy">
            <cstring>_xMax</cstring>
@@ -219,7 +219,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Mean &amp;centered - </string>
+           <string>Mean &amp;centered, </string>
           </property>
          </widget>
         </item>
@@ -235,7 +235,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&amp;Range:</string>
+           <string>&amp;range: </string>
           </property>
           <property name="buddy">
            <cstring>_yRange</cstring>
@@ -262,7 +262,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&amp;Fixed -</string>
+           <string>&amp;Fixed, </string>
           </property>
          </widget>
         </item>
@@ -278,7 +278,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>F&amp;rom</string>
+           <string>f&amp;rom: </string>
           </property>
           <property name="buddy">
            <cstring>_yMin</cstring>
@@ -304,7 +304,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&amp;To</string>
+           <string>&amp;to: </string>
           </property>
           <property name="buddy">
            <cstring>_yMax</cstring>

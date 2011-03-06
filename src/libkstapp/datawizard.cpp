@@ -55,9 +55,9 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
    }
   _url->setFocus();
 
-  _updateBox->addItem("Time interval");
-  _updateBox->addItem("Change detection");
-  _updateBox->addItem("Don't update");
+  _updateBox->addItem("Time Interval");
+  _updateBox->addItem("Change Detection");
+  _updateBox->addItem("No Update");
   updateUpdateBox();
   connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
 }
@@ -541,7 +541,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(optionsUpdated()));
 
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
-  _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots.  FFT Options:"));
+  _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots. Set FFT options below:"));
   _FFTOptions->GroupBoxFFTOptions->setChecked(false); // fixme: use persistant defaults
 
   _FFTOptions->GroupBoxFFTOptions->setChecked(_dialogDefaults->value("wizard/doPSD",false).toBool());

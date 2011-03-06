@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ChooseColorDialog</class>
- <widget class="QDialog" name="ChooseColorDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="ChooseColorDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,28 +10,28 @@
     <height>162</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Assign Curve Color From File</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="colorGroup" >
-     <property name="title" >
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="colorGroup">
+     <property name="title">
       <string>Assign Colors</string>
      </property>
-     <layout class="QGridLayout" >
-      <property name="margin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>0</number>
       </property>
-      <item row="0" column="0" >
-       <widget class="QFrame" name="colorFrame" >
-        <property name="frameShape" >
+      <item row="0" column="0">
+       <widget class="QFrame" name="colorFrame">
+        <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
-        <property name="frameShadow" >
+        <property name="frameShadow">
          <enum>QFrame::Plain</enum>
         </property>
-        <property name="lineWidth" >
+        <property name="lineWidth">
          <number>0</number>
         </property>
        </widget>
@@ -38,39 +39,39 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="QDialogButtonBox" name="_buttonBox" >
-     <property name="orientation" >
+   <item row="2" column="0">
+    <widget class="QDialogButtonBox" name="_buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="QGroupBox" name="vectorGroup" >
-     <property name="title" >
-      <string>Base Curve Color On</string>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="vectorGroup">
+     <property name="title">
+      <string>Base Curve Color on:</string>
      </property>
-     <layout class="QGridLayout" >
-      <property name="margin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>0</number>
       </property>
-      <item row="0" column="0" >
-       <widget class="QRadioButton" name="_xVector" >
-        <property name="text" >
-         <string>&amp;X Vector</string>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_xVector">
+        <property name="text">
+         <string>&amp;X vector</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QRadioButton" name="_yVector" >
-        <property name="text" >
-         <string>&amp;Y Vector</string>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="_yVector">
+        <property name="text">
+         <string>&amp;Y vector</string>
         </property>
        </widget>
       </item>
@@ -78,11 +79,8 @@
     </widget>
    </item>
   </layout>
-  <zorder>colorGroup</zorder>
-  <zorder>_buttonBox</zorder>
-  <zorder>vectorGroup</zorder>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>_xVector</tabstop>
   <tabstop>_yVector</tabstop>

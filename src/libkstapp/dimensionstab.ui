@@ -142,7 +142,7 @@
      <item row="0" column="1" colspan="3">
       <widget class="QCheckBox" name="_fixAspectRatio">
        <property name="text">
-        <string>&amp;Fix Aspect Ratio</string>
+        <string>&amp;Fix aspect ratio</string>
        </property>
       </widget>
      </item>

@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>BugReportWizard</class>
- <widget class="QDialog" name="BugReportWizard" >
-  <property name="geometry" >
+ <widget class="QDialog" name="BugReportWizard">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,38 +10,38 @@
     <height>197</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Bug Report Wizard</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QGridLayout" name="gridLayout" >
-       <item row="0" column="0" >
-        <widget class="QLabel" name="label" >
-         <property name="text" >
-          <string>Kst Version:</string>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Kst version:</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" >
-        <widget class="QLabel" name="_kstVersion" >
-         <property name="text" >
+       <item row="0" column="1">
+        <widget class="QLabel" name="_kstVersion">
+         <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="QLabel" name="label_2" >
-         <property name="text" >
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
           <string>OS:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1" >
-        <widget class="QLabel" name="_OS" >
-         <property name="text" >
+       <item row="1" column="1">
+        <widget class="QLabel" name="_OS">
+         <property name="text">
           <string/>
          </property>
         </widget>
@@ -48,11 +49,11 @@
       </layout>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2" >
-       <property name="orientation" >
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>238</width>
          <height>17</height>
@@ -63,8 +64,8 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="label_3" >
-     <property name="text" >
+    <widget class="QLabel" name="label_3">
+     <property name="text">
       <string>To submit a bug click on the button below.
 This will open a web browser window on http://bugs.kde.org where you will find a form to fill in.
 The information displayed above will be transferred to that server.</string>
@@ -72,20 +73,20 @@ The information displayed above will be transferred to that server.</string>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4" >
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QPushButton" name="_reportBugButton" >
-       <property name="text" >
+      <widget class="QPushButton" name="_reportBugButton">
+       <property name="text">
         <string>Launch Bug Report Wizard</string>
        </property>
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer" >
-       <property name="orientation" >
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
          <height>20</height>
@@ -96,18 +97,18 @@ The information displayed above will be transferred to that server.</string>
     </layout>
    </item>
    <item>
-    <widget class="Line" name="line" >
-     <property name="orientation" >
+    <widget class="Line" name="line">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
@@ -122,11 +123,11 @@ The information displayed above will be transferred to that server.</string>
    <receiver>BugReportWizard</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>248</x>
      <y>254</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -138,11 +139,11 @@ The information displayed above will be transferred to that server.</string>
    <receiver>BugReportWizard</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>316</x>
      <y>260</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DataWizardPageDataPresentation</class>
- <widget class="QWizardPage" name="DataWizardPageDataPresentation" >
-  <property name="geometry" >
+ <widget class="QWizardPage" name="DataWizardPageDataPresentation">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,77 +10,82 @@
     <height>355</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout_2">
+   <property name="margin">
     <number>0</number>
    </property>
-   <item row="0" column="0" colspan="2" >
-    <widget class="Kst::DataRange" native="1" name="_DataRange" />
+   <item row="0" column="0" colspan="2">
+    <widget class="Kst::DataRange" name="_DataRange" native="true"/>
    </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QGroupBox" name="_xAxisGroup" >
-     <property name="title" >
-      <string>Create &amp;XY Plots.  X Axis Vector Properties:</string>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="_xAxisGroup">
+     <property name="title">
+      <string>Create &amp;XY plots.  Set X-axis vector properties below:</string>
      </property>
-     <property name="checkable" >
+     <property name="checkable">
       <bool>true</bool>
      </property>
-     <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QRadioButton" name="_xAxisCreateFromField" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_xAxisCreateFromField">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Create fr&amp;om field:</string>
         </property>
-        <property name="checked" >
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QRadioButton" name="_xAxisUseExisting" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="_xAxisUseExisting">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Use existin&amp;g:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="Kst::ComboBox" name="_xVector" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+      <item row="0" column="1">
+       <widget class="Kst::ComboBox" name="_xVector">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="whatsThis" >
-         <string>The field to be used as the X axis in XY curves.</string>
+        <property name="whatsThis">
+         <string>The field to be used as the X-axis in XY curves.</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="Kst::VectorSelector" native="1" name="_xVectorExisting" />
+      <item row="1" column="1">
+       <widget class="Kst::VectorSelector" name="_xVectorExisting" native="true"/>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="Kst::FFTOptions" native="1" name="_FFTOptions" />
+   <item row="2" column="0" colspan="2">
+    <widget class="Kst::FFTOptions" name="_FFTOptions" native="true"/>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>Kst::ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>combobox.h</header>
+  </customwidget>
   <customwidget>
    <class>Kst::DataRange</class>
    <extends>QWidget</extends>
@@ -94,11 +100,6 @@
    <class>Kst::FFTOptions</class>
    <extends>QWidget</extends>
    <header>fftoptions.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Kst::ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>combobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

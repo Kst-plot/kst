@@ -17,21 +17,21 @@
    <item row="0" column="0">
     <widget class="QCheckBox" name="_showGrid">
      <property name="text">
-      <string>Show &amp;Grid</string>
+      <string>Show &amp;grid</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1" colspan="2">
     <widget class="QCheckBox" name="_snapToGrid">
      <property name="text">
-      <string>&amp;Snap toGrid</string>
+      <string>&amp;Snap to grid</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>Grid &amp;Horizontal Spacing:</string>
+      <string>Grid &amp;horizontal spacing:</string>
      </property>
      <property name="buddy">
       <cstring>_gridHorSpacing</cstring>
@@ -44,7 +44,7 @@
    <item row="2" column="0" colspan="2">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Grid &amp;Vertical Spacing:</string>
+      <string>Grid &amp;vertical spacing:</string>
      </property>
      <property name="buddy">
       <cstring>_gridVerSpacing</cstring>

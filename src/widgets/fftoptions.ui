@@ -66,7 +66,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Gaussian (custom sigma)</string>
+            <string>Gaussian (Custom Sigma)</string>
            </property>
           </item>
           <item>
@@ -367,22 +367,22 @@
          <widget class="QComboBox" name="_output">
           <item>
            <property name="text">
-            <string>Amplitude spectral density (V/Hz^1/2)</string>
+            <string>Amplitude Spectral Density (V/Hz^1/2)</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Power spectral density (V^2/Hz)</string>
+            <string>Power Spectral Density (V^2/Hz)</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Amplitude spectrum (V)</string>
+            <string>Amplitude Spectrum (V)</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Power spectrum (V^2)</string>
+            <string>Power Spectrum (V^2)</string>
            </property>
           </item>
          </widget>

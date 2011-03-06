@@ -149,7 +149,7 @@
       <item row="0" column="0" colspan="2">
        <widget class="QRadioButton" name="_autoLayout">
         <property name="text">
-         <string>Automatic &amp;Layout</string>
+         <string>Automatic &amp;layout</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -159,7 +159,7 @@
       <item row="1" column="0">
        <widget class="QRadioButton" name="_customGrid">
         <property name="text">
-         <string>Custo&amp;m Grid</string>
+         <string>Custo&amp;m grid</string>
         </property>
        </widget>
       </item>
@@ -190,7 +190,7 @@
       <item row="2" column="0" colspan="2">
        <widget class="QRadioButton" name="_protectLayout">
         <property name="text">
-         <string>P&amp;rotect Existing Layout</string>
+         <string>P&amp;rotect existing layout</string>
         </property>
        </widget>
       </item>
@@ -216,7 +216,7 @@
       <item row="1" column="0">
        <widget class="QCheckBox" name="_shareAxis">
         <property name="text">
-         <string>Share Axis on tab</string>
+         <string>Share axis on tab</string>
         </property>
        </widget>
       </item>
@@ -265,14 +265,14 @@
       <item>
        <widget class="QCheckBox" name="_psdLogX">
         <property name="text">
-         <string>Lo&amp;g X axis</string>
+         <string>Lo&amp;g X-axis</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="_psdLogY">
         <property name="text">
-         <string>&amp;Log Y axis</string>
+         <string>&amp;Log Y-axis</string>
         </property>
        </widget>
       </item>

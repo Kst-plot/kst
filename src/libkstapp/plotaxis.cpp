@@ -565,7 +565,7 @@ void PlotAxis::setAxisLabelRotation(const int rotation) {
   }
 }
 
-// Function validates that the labels will not overlap.  Only functions for x Axis.
+// Function validates that the labels will not overlap.  Only functions for X-axis.
 void PlotAxis::validateDrawingRegion(QPainter *painter) {
   // Always try to use the settings requested.
   if (_axisOverrideMajorTicks != _axisMajorTickMode) {

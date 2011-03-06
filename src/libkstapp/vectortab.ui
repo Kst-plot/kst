@@ -116,7 +116,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>&amp;To:</string>
+             <string>&amp;to:</string>
             </property>
             <property name="wordWrap">
              <bool>false</bool>
@@ -264,7 +264,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Update type. Use 'Time interval' for non local data.</string>
+           <string>Update type. Use 'Time Interval' for non local data.</string>
           </property>
           <property name="wordWrap">
            <bool>false</bool>
@@ -301,6 +301,11 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>Kst::DataRange</class>
+   <extends>QWidget</extends>
+   <header>datarange.h</header>
+  </customwidget>
+  <customwidget>
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
@@ -309,11 +314,6 @@
    <class>Kst::DataSourceSelector</class>
    <extends>QWidget</extends>
    <header>datasourceselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Kst::DataRange</class>
-   <extends>QWidget</extends>
-   <header>datarange.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

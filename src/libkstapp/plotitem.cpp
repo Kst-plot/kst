@@ -451,12 +451,12 @@ void PlotItem::createActions() {
   registerShortcut(_zoomXIn);
   connect(_zoomXIn, SIGNAL(triggered()), this, SLOT(zoomXIn()));
 
-  _zoomNormalizeXtoY = new QAction(tr("Normalize X Axis to Y Axis"), this);
+  _zoomNormalizeXtoY = new QAction(tr("Normalize X-axis to Y-axis"), this);
   _zoomNormalizeXtoY->setShortcut(Qt::Key_N);
   registerShortcut(_zoomNormalizeXtoY);
   connect(_zoomNormalizeXtoY, SIGNAL(triggered()), this, SLOT(zoomNormalizeXtoY()));
 
-  _zoomLogX = new QAction(tr("Log X Axis"), this);
+  _zoomLogX = new QAction(tr("Log X-axis"), this);
   _zoomLogX->setShortcut(Qt::Key_G);
   _zoomLogX->setCheckable(true);
   registerShortcut(_zoomLogX);
@@ -502,7 +502,7 @@ void PlotItem::createActions() {
   registerShortcut(_zoomYIn);
   connect(_zoomYIn, SIGNAL(triggered()), this, SLOT(zoomYIn()));
 
-  _zoomNormalizeYtoX = new QAction(tr("Normalize Y Axis to X Axis"), this);
+  _zoomNormalizeYtoX = new QAction(tr("Normalize Y-axis to X-axis"), this);
   _zoomNormalizeYtoX->setShortcut(Qt::SHIFT+Qt::Key_N);
   registerShortcut(_zoomNormalizeYtoX);
   connect(_zoomNormalizeYtoX, SIGNAL(triggered()), this, SLOT(zoomNormalizeYtoX()));

@@ -82,7 +82,7 @@ p, li { white-space: pre-wrap; }
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Unknown File Type</string>
+          <string>Unknown file type</string>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -131,7 +131,7 @@ p, li { white-space: pre-wrap; }
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Update type. Use 'Time interval' for non local data.</string>
+          <string>Update type; use 'Time Interval' for non-local data</string>
          </property>
          <property name="wordWrap">
           <bool>false</bool>

@@ -42,7 +42,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Plugin Name:</string>
+         <string>Plugin name:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

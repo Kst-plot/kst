@@ -86,7 +86,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&amp;Display As:</string>
+           <string>&amp;Display as:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -163,7 +163,7 @@
         <item row="0" column="0">
          <widget class="QCheckBox" name="_scaleAutoBaseOffset">
           <property name="text">
-           <string>Auto Base Offset Mode</string>
+           <string>Auto base / offset mode</string>
           </property>
           <property name="checked">
            <bool>true</bool>

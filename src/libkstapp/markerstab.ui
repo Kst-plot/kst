@@ -25,17 +25,30 @@
         <item>
          <layout class="QVBoxLayout">
           <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>&amp;New Marker Point</string>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
-            <property name="buddy">
-             <cstring>_newMarker</cstring>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
             </property>
-           </widget>
+           </spacer>
           </item>
           <item>
            <layout class="QHBoxLayout">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>&amp;New marker point: </string>
+              </property>
+              <property name="buddy">
+               <cstring>_newMarker</cstring>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QLineEdit" name="_newMarker">
               <property name="sizePolicy">
@@ -75,7 +88,7 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>C&amp;urrent Markers</string>
+             <string>C&amp;urrent markers</string>
             </property>
             <property name="buddy">
              <cstring>_currentMarkersList</cstring>
@@ -149,7 +162,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="_Label_3">
         <property name="text">
-         <string>Line St&amp;yle:</string>
+         <string>Line st&amp;yle:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -172,7 +185,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_10">
         <property name="text">
-         <string>Line Co&amp;lor:</string>
+         <string>Line co&amp;lor:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -188,7 +201,7 @@
       <item row="0" column="4">
        <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>Line &amp;Width:</string>
+         <string>Line &amp;width:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -213,7 +226,7 @@
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="_curveMarkers">
         <property name="text">
-         <string>Use Curve as marker &amp;source:</string>
+         <string>Use curve as marker &amp;source:</string>
         </property>
        </widget>
       </item>
@@ -243,14 +256,14 @@
       <item row="2" column="1">
        <widget class="QRadioButton" name="_risingEdge">
         <property name="text">
-         <string>R&amp;ising Edge</string>
+         <string>R&amp;ising edge</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QRadioButton" name="_fallingEdge">
         <property name="text">
-         <string>&amp;Falling Edge</string>
+         <string>&amp;Falling edge</string>
         </property>
        </widget>
       </item>
@@ -264,7 +277,7 @@
       <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="_vectorMarkers">
         <property name="text">
-         <string>Use &amp;Vector as marker source:</string>
+         <string>Use &amp;vector as marker source:</string>
         </property>
        </widget>
       </item>

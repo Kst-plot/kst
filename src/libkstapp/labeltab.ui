@@ -40,7 +40,7 @@
    <item row="2" column="1" colspan="3">
     <widget class="QCheckBox" name="_autoScaleNumberAxis">
      <property name="text">
-      <string>Automatically Scale Number Axis Labels</string>
+      <string>Automatically scale number axis labels</string>
      </property>
     </widget>
    </item>

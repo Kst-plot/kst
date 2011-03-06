@@ -47,15 +47,15 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   connect(_availableListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_selectedListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
-// TODO Icons required.
-//  _up->setIcon(QPixmap(":kst_uparrow.png"));
-  _up->setText("Up");
-//  _down->setIcon(QPixmap(":kst_downarrow.png"));
-  _down->setText("Down");
-//  _add->setIcon(QPixmap(":kst_rightarrow.png"));
-  _add->setText("Add");
-//  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
-  _remove->setText("Remove");
+  // Use the standard icons
+  _up->setIcon(QPixmap(":kst_uparrow.png"));
+  _down->setIcon(QPixmap(":kst_downarrow.png"));
+  _add->setIcon(QPixmap(":kst_rightarrow.png"));
+  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setToolTip(i18n("Move the selected property up the priority list"));
+  _down->setToolTip(i18n("Move the selected property down the priority list"));
+  _add->setToolTip(i18n("Add the selected property to the list of properties to cycle through"));
+  _remove->setToolTip(i18n("Remove the selected property from the list of properties to cycle through"));
 
   _maxLineWidth->setMaximum(LINEWIDTH_MAX);
 }

@@ -116,7 +116,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="_xVectorLabel">
         <property name="text">
-         <string>&amp;X Vector:</string>
+         <string>&amp;X vector:</string>
         </property>
         <property name="wordWrap">
          <bool>false</bool>

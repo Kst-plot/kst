@@ -17,9 +17,19 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Select by source file</string>
+      <string>Select by Source File</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="_allFromFile">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Add All &amp;From:</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="Kst::ComboBox" name="_files">
         <property name="enabled">
@@ -30,16 +40,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="_allFromFile">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Add All &amp;From</string>
         </property>
        </widget>
       </item>

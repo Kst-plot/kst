@@ -124,7 +124,7 @@
          <item>
           <widget class="QRadioButton" name="_autoLayout">
            <property name="text">
-            <string>Automati&amp;c Layout</string>
+            <string>Automati&amp;c layout</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -136,7 +136,7 @@
            <item>
             <widget class="QRadioButton" name="_customGrid">
              <property name="text">
-              <string>Custom &amp;Grid:</string>
+              <string>Custom &amp;grid:</string>
              </property>
             </widget>
            </item>
@@ -171,7 +171,7 @@
          <item>
           <widget class="QRadioButton" name="_protectLayout">
            <property name="text">
-            <string>&amp;Protect Existing Layout</string>
+            <string>&amp;Protect existing layout</string>
            </property>
           </widget>
          </item>
