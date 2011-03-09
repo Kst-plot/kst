@@ -13,6 +13,7 @@
 #include "changefiledialog.h"
 
 #include "datacollection.h"
+#include "datasourcedialog.h"
 #include "datavector.h"
 #include "datamatrix.h"
 #include "datascalar.h"
@@ -68,6 +69,8 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
+  connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
+
   _dataFile->setFile(QDir::currentPath());
   updateButtons();
 }
@@ -80,6 +83,14 @@ ChangeFileDialog::~ChangeFileDialog() {
 void ChangeFileDialog::show() {
   updatePrimitiveList();
   QDialog::show();
+}
+
+void ChangeFileDialog::showConfigWidget() {
+  QPointer<DataSourceDialog> dialog = new DataSourceDialog(DataDialog::New, _dataSource, this);
+  if ( dialog->exec() == QDialog::Accepted ) {
+    fileNameChanged(_dataSource->fileName());
+  }
+  delete dialog;
 }
 
 
@@ -125,13 +136,17 @@ void ChangeFileDialog::sourceValid(QString filename, int requestID) {
     return;
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
+  _fileType->setText(_dataSource->fileType());
   updateButtons();
+  _configure->setEnabled(_dataSource->hasConfigWidget());
+
 }
 
 
 void ChangeFileDialog::fileNameChanged(const QString &file) {
   _dataSource = 0;
   updateButtons();
+  _configure->setEnabled(false);
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);

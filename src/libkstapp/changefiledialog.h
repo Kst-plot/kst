@@ -48,6 +48,7 @@ class ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 
     void availableDoubleClicked(QListWidgetItem * item);
     void selectedDoubleClicked(QListWidgetItem * item);
+    void showConfigWidget();
 
     void updateButtons();
     void OKClicked();
