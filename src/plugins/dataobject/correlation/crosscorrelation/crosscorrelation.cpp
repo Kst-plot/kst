@@ -23,8 +23,8 @@
 
 static const QString& VECTOR_IN_ONE = "Vector One In";
 static const QString& VECTOR_IN_TWO = "Vector Two In";
-static const QString& VECTOR_OUT_STEP = "Step Value";
-static const QString& VECTOR_OUT_CORRELATED = "Correlated";
+static const QString& VECTOR_OUT_STEP = "Offset";
+static const QString& VECTOR_OUT_CORRELATED = "C";
 
 class ConfigCrossCorrelationPlugin : public Kst::DataObjectConfigWidget, public Ui_CrossCorrelationConfig {
   public:
@@ -120,7 +120,7 @@ CrossCorrelationSource::~CrossCorrelationSource() {
 
 
 QString CrossCorrelationSource::_automaticDescriptiveName() const {
-  return QString("Cross Correlation Plugin Object");
+  return QString("Cross Correlation");
 }
 
 
