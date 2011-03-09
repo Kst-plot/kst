@@ -317,35 +317,6 @@ void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
   }
 }
 
-QString PlotRenderItem::singleRenderItemLabel(const LabelInfo& label_info) const {
-  if (label_info.units.isEmpty() && label_info.quantity.isEmpty()) {           // Nxx xxx
-    return label_info.name;
-  } else if (label_info.quantity.isEmpty()) {
-    if (!label_info.name.isEmpty()) {
-      return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NxU
-    } else {
-      return label_info.units;                                                // xxU
-    }
-  } else if (label_info.units.isEmpty()) {
-    if (label_info.name.isEmpty()) {
-      return label_info.quantity;                                             // xQx
-    } else {
-      if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
-        return label_info.name;                                               // NQx A
-      } else {
-        return QString("%1: %2").arg(label_info.name).arg(label_info.quantity); // NQx B
-      }
-    }
-  } else if (label_info.name.isEmpty()) {
-    return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units); // xQU
-  //} else if (label_info.name.toLower().contains(label_info.quantity.toLower())) {
-  //  return QString("%1 \\[%2\\]").arg(label_info.name).arg(label_info.units); // NQU A
-  } else {
-    return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units); // NQU B
-  }
-}
-
-
 QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
   QString units;
   QString quantity;
@@ -376,7 +347,7 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
   }
 
   if (allSame) {
-    return singleRenderItemLabel(label_info);
+    return label_info.singleRenderItemLabel();
   }
 
   // search for the first vector with quantity and units; use it.
@@ -408,8 +379,7 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
 
 QString PlotRenderItem::leftLabel() const {
   if (relationList().size() == 1) {
-    LabelInfo label_info = relationList().at(0)->yLabelInfo();
-    return singleRenderItemLabel(label_info);
+    return relationList().at(0)->yLabelInfo().singleRenderItemLabel();
   } else {  // multiple curves: quantity [units]
     return multiRenderItemLabel(false);
   }
@@ -418,8 +388,7 @@ QString PlotRenderItem::leftLabel() const {
 
 QString PlotRenderItem::bottomLabel() const {
   if (relationList().size() == 1) {
-    LabelInfo label_info = relationList().at(0)->xLabelInfo();
-    return singleRenderItemLabel(label_info);
+    return relationList().at(0)->xLabelInfo().singleRenderItemLabel();
   } else {  // multiple curves: quantity [units]
     return multiRenderItemLabel(true);
   }
@@ -436,10 +405,12 @@ QString PlotRenderItem::rightLabel() const {
 QString PlotRenderItem::topLabel() const {
   if (relationList().size() == 1) {
     LabelInfo label_info = relationList().at(0)->titleInfo();
-    QString label = singleRenderItemLabel(label_info);
+    QString label = label_info.singleRenderItemLabel();
     if (label.isEmpty()) {
       label_info = relationList().at(0)->yLabelInfo();
-      if ((!label_info.name.isEmpty()) && (!label_info.quantity.isEmpty())) {
+      if (label_info.singleRenderItemLabel().isEmpty()) {
+        label = relationList().at(0)->descriptiveName();
+      } else if ((!label_info.name.isEmpty()) && (!label_info.quantity.isEmpty())) {
         LabelInfo xlabel_info = relationList().at(0)->xLabelInfo();
         if ((!xlabel_info.name.isEmpty()) && (!xlabel_info.quantity.isEmpty())) {
           label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);

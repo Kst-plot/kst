@@ -328,12 +328,12 @@ LabelInfo DataVector::labelInfo() const {
     label_info.units = QString();
   }
 
-  label_info.name = _field;
+  label_info.name = descriptiveName();// _field;
 
   // un-escape escaped special characters so they aren't escaped 2x.
-  label_info.name.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
+  //label_info.name.replace("\\_", "_").replace("\\^","^").replace("\\[", "[").replace("\\]", "]");
   // now escape the special characters.
-  label_info.name.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+  //label_info.name.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
 
   return label_info;
 }

@@ -1920,7 +1920,7 @@ QString PlotItem::autoBottomLabel() const {
   foreach (PlotRenderItem *renderer, renderItems()) {
     QString label = renderer->bottomLabel();
     if (!label.isEmpty()) {
-      if (_xAxis->axisInterpret()) { // remove units
+      if (_xAxis->axisInterpret()) { // remove units if time interpretation
         QRegExp rx(" \\[*\\]");
         rx.setPatternSyntax(QRegExp::Wildcard);
         return label.remove(rx);

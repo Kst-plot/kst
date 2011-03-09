@@ -31,6 +31,7 @@ struct LabelInfo
   QString name;
   QString quantity;
   QString units;
+  QString singleRenderItemLabel() const;
 };
 
 }

@@ -62,7 +62,6 @@ class PlotRenderItem : public ViewItem
     QString bottomLabel() const;
     QString rightLabel() const;
     QString topLabel() const;
-    QString singleRenderItemLabel(const LabelInfo& label_info) const;
     QString multiRenderItemLabel(bool isX) const;
 
     QRectF computedProjectionRect() const;

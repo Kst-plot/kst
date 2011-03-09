@@ -71,7 +71,7 @@ class LegendItem : public ViewItem {
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
   private:
-    QSize paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font);
+    QSize paintRelation(QString name, RelationPtr relation, QPixmap *pixmap, const QFont &font);
 
     PlotItem *_plotItem;
     bool _auto;

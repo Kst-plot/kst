@@ -84,10 +84,58 @@ void LegendItem::paint(QPainter *painter) {
   QFont font(_font);
   font.setPointSizeF(view()->defaultFont(_fontScale).pointSizeF());
 
-  foreach(RelationPtr relation, legendItems) {
+  // generate string list of relation names
+  QStringList names;
+  int count = legendItems.count();
+  bool allAuto = true;
+  bool sameX = true;
+  LabelInfo label_info = legendItems.at(0)->xLabelInfo();
+
+  for (int i = 0; i<count; i++) {
+    RelationPtr relation = legendItems.at(i);
+    if (relation->descriptiveNameIsManual()) {
+      allAuto = false;
+    }
+    if (relation->xLabelInfo() != label_info) {
+      sameX = false;
+    }
+  }
+
+  if (!allAuto) {
+    for (int i = 0; i<count; i++) {
+      names.append(legendItems.at(i)->descriptiveName());
+    }
+  } else {
+    for (int i = 0; i<count; i++) {
+      RelationPtr relation = legendItems.at(i);
+      label_info = relation->titleInfo();
+      QString label = label_info.singleRenderItemLabel();
+      if (label.isEmpty()) {
+        label_info = relation->yLabelInfo();
+        if (!label_info.name.isEmpty()) {
+          LabelInfo xlabel_info = relation->xLabelInfo();
+          if (!sameX) {
+            label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+          } else if (xlabel_info.quantity.isEmpty()) {
+            label = label_info.name;
+          } else if (xlabel_info.quantity != xlabel_info.name) {
+            label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+          } else {
+            label = label_info.name;
+          }
+        } else {
+          label = relation->descriptiveName();
+        }
+      }
+      names.append(label);
+    }
+  }
+
+  for (int i = 0; i<count; i++) {
+    RelationPtr relation = legendItems.at(i);
     DrawnLegendItem item;
     item.pixmap = QPixmap(LEGENDITEMMAXWIDTH, LEGENDITEMMAXHEIGHT);
-    item.size = paintRelation(relation, &item.pixmap, font);
+    item.size = paintRelation(names.at(i), relation, &item.pixmap, font);
 
     if (_verticalDisplay) {
       legendSize.setWidth(qMax(legendSize.width(), item.size.width()));
@@ -153,8 +201,8 @@ void LegendItem::paint(QPainter *painter) {
 }
 
 
-QSize LegendItem::paintRelation(RelationPtr relation, QPixmap *pixmap, const QFont &font) {
-  Label::Parsed *parsed = Label::parse(relation->descriptiveName());
+QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pixmap, const QFont &font) {
+  Label::Parsed *parsed = Label::parse(name);
 
   pixmap->fill(Qt::transparent);
 
