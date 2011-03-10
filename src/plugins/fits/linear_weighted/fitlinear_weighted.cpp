@@ -189,6 +189,19 @@ bool FitLinearWeightedSource::algorithm() {
   Kst::VectorPtr outputVectorYHi = _outputVectors[VECTOR_OUT_Y_HI];
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
+  Kst::LabelInfo label_info = inputVectorY->labelInfo();
+  label_info.name = i18n("Linear Fit to %1").arg(label_info.name);
+  outputVectorYFitted->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Residuals");
+  outputVectorYResiduals->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Lower Limit");
+  outputVectorYLo->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Upper Limit");
+  outputVectorYHi->setLabelInfo(label_info);
+
   int i = 0;
   int iLength;
   bool bReturn = false;

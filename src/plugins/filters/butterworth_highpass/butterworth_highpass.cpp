@@ -194,6 +194,10 @@ bool FilterButterworthHighPassSource::algorithm() {
   scalars.insert(0, orderScalar);
   scalars.insert(1, cutoffScalar);
 
+  Kst::LabelInfo label_info = inputVector->labelInfo();
+  label_info.name = i18n("Filtered %1").arg(label_info.name);
+  outputVector->setLabelInfo(label_info);
+
   return kst_pass_filter( inputVector, scalars, outputVector);
 }
 

@@ -216,6 +216,14 @@ bool FitGaussianUnweightedSource::algorithm() {
   Kst::VectorPtr outputVectorYCovariance = _outputVectors[VECTOR_OUT_Y_COVARIANCE];
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
+
+  Kst::LabelInfo label_info = inputVectorY->labelInfo();
+  label_info.name = i18n("Gaussian Fit to %1").arg(label_info.name);
+  outputVectorYFitted->setLabelInfo(label_info);
+
+  label_info.name = i18n("Gaussian Fit Residuals");
+  outputVectorYResiduals->setLabelInfo(label_info);
+
   bool bReturn = false;
 
   bReturn = kstfit_nonlinear( inputVectorX, inputVectorY,

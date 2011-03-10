@@ -89,7 +89,9 @@ void LegendItem::paint(QPainter *painter) {
   int count = legendItems.count();
   bool allAuto = true;
   bool sameX = true;
+  bool sameYUnits = true;
   LabelInfo label_info = legendItems.at(0)->xLabelInfo();
+  QString yUnits =  legendItems.at(0)->xLabelInfo().units;
 
   for (int i = 0; i<count; i++) {
     RelationPtr relation = legendItems.at(i);
@@ -98,6 +100,14 @@ void LegendItem::paint(QPainter *painter) {
     }
     if (relation->xLabelInfo() != label_info) {
       sameX = false;
+    }
+    // sameYUnits is false if any non empty units are defined differently.
+    if (yUnits.isEmpty()) {
+      yUnits = relation->yLabelInfo().units;
+    } else if (relation->yLabelInfo().units != yUnits) {
+      if (!relation->yLabelInfo().units.isEmpty()) {
+        sameYUnits = false;
+      }
     }
   }
 

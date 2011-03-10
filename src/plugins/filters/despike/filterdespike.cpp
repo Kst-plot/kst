@@ -279,6 +279,10 @@ bool FilterDespikeSource::algorithm() {
     }
   }
 
+  Kst::LabelInfo label_info = inputVector->labelInfo();
+  label_info.name = i18n("Despiked %1").arg(label_info.name);
+  outputVector->setLabelInfo(label_info);
+
   return true;
 }
 

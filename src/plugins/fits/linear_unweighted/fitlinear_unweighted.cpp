@@ -185,6 +185,19 @@ bool FitLinearUnweightedSource::algorithm() {
   double y;
   double yErr;
 
+  Kst::LabelInfo label_info = inputVectorY->labelInfo();
+  label_info.name = i18n("Linear Fit to %1").arg(label_info.name);
+  outputVectorYFitted->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Residuals");
+  outputVectorYResiduals->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Lower Limit");
+  outputVectorYLo->setLabelInfo(label_info);
+
+  label_info.name = i18n("Linear Fit Upper Limit");
+  outputVectorYHi->setLabelInfo(label_info);
+
   if( precursor( inputVectorX, inputVectorY, 0, &iLength, false, true, 2, pInputs, outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters, outputVectorYCovariance, outputVectorYLo, outputVectorYHi ) ) {
 
     if( !gsl_fit_linear( pInputs[XVALUES], 1, pInputs[YVALUES], 1, iLength, &c0, &c1, &cov00, &cov01, &cov11, &dSumSq ) ) {

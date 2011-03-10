@@ -189,6 +189,20 @@ bool FitGradientWeightedSource::algorithm() {
   Kst::VectorPtr outputVectorYHi = _outputVectors[VECTOR_OUT_Y_HI];
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
+  Kst::LabelInfo label_info = inputVectorY->labelInfo();
+  label_info.name = i18n("Gradient Fit to %1").arg(label_info.name);
+  outputVectorYFitted->setLabelInfo(label_info);
+
+  label_info.name = i18n("Gradient Fit Residuals");
+  outputVectorYResiduals->setLabelInfo(label_info);
+
+  label_info.name = i18n("Gradient Fit Lower Limit");
+  outputVectorYLo->setLabelInfo(label_info);
+
+  label_info.name = i18n("Gradient Fit Upper Limit");
+  outputVectorYHi->setLabelInfo(label_info);
+
+
   int i = 0;
   int iLength;
   bool bReturn = false;
