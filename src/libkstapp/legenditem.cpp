@@ -91,7 +91,7 @@ void LegendItem::paint(QPainter *painter) {
   bool sameX = true;
   bool sameYUnits = true;
   LabelInfo label_info = legendItems.at(0)->xLabelInfo();
-  QString yUnits =  legendItems.at(0)->xLabelInfo().units;
+  QString yUnits =  legendItems.at(0)->yLabelInfo().units;
 
   for (int i = 0; i<count; i++) {
     RelationPtr relation = legendItems.at(i);
@@ -118,20 +118,25 @@ void LegendItem::paint(QPainter *painter) {
   } else {
     for (int i = 0; i<count; i++) {
       RelationPtr relation = legendItems.at(i);
-      label_info = relation->titleInfo();
-      QString label = label_info.singleRenderItemLabel();
+      QString label = relation->titleInfo().singleRenderItemLabel();
       if (label.isEmpty()) {
         label_info = relation->yLabelInfo();
-        if (!label_info.name.isEmpty()) {
+        QString y_label = label_info.name;
+        if (!sameYUnits) {
+          if (!label_info.units.isEmpty()) {
+            y_label = i18n("%1 \\[%2\\]").arg(y_label).arg(label_info.units);
+          }
+        }
+        if (!y_label.isEmpty()) {
           LabelInfo xlabel_info = relation->xLabelInfo();
           if (!sameX) {
-            label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+            label = i18n("%1 vs %2").arg(y_label).arg(xlabel_info.name);
           } else if (xlabel_info.quantity.isEmpty()) {
-            label = label_info.name;
+            label = y_label;
           } else if (xlabel_info.quantity != xlabel_info.name) {
-            label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+            label = i18n("%1 vs %2").arg(y_label).arg(xlabel_info.name);
           } else {
-            label = label_info.name;
+            label = y_label;
           }
         } else {
           label = relation->descriptiveName();

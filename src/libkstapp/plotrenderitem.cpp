@@ -326,7 +326,10 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
   units.clear();
   quantity.clear();
 
-  bool allSame = true;
+  bool nameSame = true;
+  bool unitsSame = true;
+  bool quantitySame = true;
+
   int count;
 
   count = relationList().size();
@@ -341,32 +344,40 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
     } else {
       label_info = relationList().at(i)->yLabelInfo();
     }
-    if (label_info != first_label_info) {
-      allSame = false;
+    if (label_info.name != first_label_info.name) {
+      nameSame = false;
+    }
+    if (!label_info.units.isEmpty()) {
+      if (units.isEmpty()) {
+        units = label_info.units;
+      } else {
+        if (label_info.units != units) {
+          unitsSame = false;
+        }
+      }
+    }
+    if (!label_info.quantity.isEmpty()) {
+      if (quantity.isEmpty()) {
+        quantity = label_info.quantity;
+      } else {
+        if (label_info.quantity != quantity) {
+          quantitySame = false;
+        }
+      }
     }
   }
 
-  if (allSame) {
+  if (nameSame && unitsSame && quantitySame) {
     return label_info.singleRenderItemLabel();
   }
 
-  // search for the first vector with quantity and units; use it.
-  foreach (const RelationPtr &relation, relationList()) {
-    if (isX) {
-      label_info = relation->xLabelInfo();
-    } else {
-      label_info = relation->yLabelInfo();
-    }
-    if (!label_info.quantity.isEmpty() && !label_info.units.isEmpty()) {
-      return QString("%1 \\[%2\\]").arg(label_info.quantity).arg(label_info.units);
-    }
-    if (!label_info.quantity.isEmpty()) {
-      quantity = label_info.quantity;
-    }
-    if (!label_info.units.isEmpty()) {
-      units = label_info.units;
-    }
+  if (!quantitySame) {
+    quantity.clear();
   }
+  if (!unitsSame) {
+    units.clear();
+  }
+
   if (!units.isEmpty() && !quantity.isEmpty()) {
     return QString("%1 \\[%2\\]").arg(quantity).arg(units);
   } else if (!units.isEmpty()) {
