@@ -42,7 +42,7 @@ void CurvePlacement::updateButtons() {
 
 
 CurvePlacement::Place CurvePlacement::place() const {
-  if (_noPlot->isChecked())
+  if ((!isVisible()) || _noPlot->isChecked())
     return NoPlot;
   else if (_existingPlot->isChecked())
     return ExistingPlot;

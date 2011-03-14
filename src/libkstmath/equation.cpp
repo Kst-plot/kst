@@ -547,7 +547,7 @@ bool Equation::uses(ObjectPtr p) const {
 }
 
 QString Equation::_automaticDescriptiveName() const {
-  return _yOutVector->labelInfo().name;
+  return _yOutVector->titleInfo().name;
 }
 
 QString Equation::descriptionTip() const {
