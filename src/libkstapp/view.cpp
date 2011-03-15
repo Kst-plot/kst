@@ -70,6 +70,7 @@ void View::init()
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setScene(new Scene(this));
+  scene()->setSceneRect(rect());
   scene()->installEventFilter(this);
   setInteractive(true);
   setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
@@ -384,7 +385,7 @@ void View::processResize(QSize size) {
 
     viewport()->resize(size);
 
-    setSceneRect(QRectF(0.0, 0.0, size.width() - 4.0, size.height() - 4.0));
+    setSceneRect(QRectF(0.0, 0.0, size.width() - 1.0, size.height() - 1.0));
 
     updateBrush();
 
@@ -411,7 +412,7 @@ void View::resizeEvent(QResizeEvent *event) {
   if (size() != sceneRect().size()) {
     QRectF oldSceneRect = sceneRect();
 
-    setSceneRect(QRectF(0.0, 0.0, width() - 4.0, height() - 4.0));
+    setSceneRect(QRectF(0.0, 0.0, width() - 1.0, height() - 1.0));
 
     updateBrush();
 

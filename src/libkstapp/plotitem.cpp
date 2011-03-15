@@ -3638,7 +3638,6 @@ void CreatePlotCommand::createItem() {
 
 void CreatePlotForCurve::createItem() {
   _item = new PlotItem(_view);
-
   creationComplete(); //add to undo stack
 }
 
