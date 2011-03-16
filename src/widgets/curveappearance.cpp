@@ -75,6 +75,9 @@ void CurveAppearance::populateSymbolCombos() {
 
 
 void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) {
+  if (symbolColor == Qt::transparent) {
+    symbolColor = Qt::black;
+  }
   QStyleOptionComboBox option;
   option.initFrom(combo);
   option.currentIcon = combo->itemIcon(combo->currentIndex());
@@ -361,7 +364,9 @@ void CurveAppearance::setLineWidth(const int lineWidth) {
 
 void CurveAppearance::clearValues() {
   _color->clearSelection();
+  _headColor->clearSelection();
   _spinBoxLineWidth->clear();
+  _comboHeadSymbol->setCurrentIndex(-1);
   _comboPointSymbol->setCurrentIndex(-1);
   _comboPointDensity->setCurrentIndex(-1);
   _comboLineStyle->setCurrentIndex(-1);

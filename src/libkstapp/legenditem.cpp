@@ -254,7 +254,7 @@ void LegendItem::applyDefaults() {
   font.fromString(_dialogDefaults->value("legend/font",font.toString()).toString());
   setFont(font);
 
-  setFontScale(_dialogDefaults->value("legend/fontScale", 0.0).toDouble());
+  setFontScale(_dialogDefaults->value("legend/fontScale", 12.0).toDouble());
   _verticalDisplay = _dialogDefaults->value("legend/verticalDisplay",true).toBool();
 
    // set the pen
