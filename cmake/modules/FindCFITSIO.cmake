@@ -10,7 +10,7 @@ else()
 	FIND_PATH(CFITSIO_INCLUDEDIR fitsio.h
 		HINTS
 		ENV CFITSIO_DIR
-		PATH_SUFFIXES include/cfitsio include
+		PATH_SUFFIXES include include/cfitsio include/libcfitsio0
 		PATHS ${kst_3rdparty_dir}
 		)
 	FIND_LIBRARY(CFITSIO_LIBRARIES cfitsio 
