@@ -21,9 +21,13 @@
 #define LABELINFO_H
 
 #include <QString>
+
+#include "kst_export.h"
+
+
 namespace Kst {
 
-struct LabelInfo
+struct KSTCORE_EXPORT LabelInfo
 {
   LabelInfo() : name(QString()), quantity(QString()), units(QString()) {}
   bool operator==(const LabelInfo &l) const { return (l.name==name) && (l.quantity==quantity) && (l.units==units); }
