@@ -19,6 +19,10 @@
 #include "asciisource.h"
 #include "asciisourceconfig.h"
 
+#include "curve.h"
+#include "colorsequence.h"
+#include "objectstore.h"
+
 #include "math_kst.h"
 #include "kst_inf.h"
 #include "kst_i18n.h"
@@ -913,6 +917,14 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
     default:
       return Kst::DataSource::sampleForTime(time, ok);
   }
+}
+
+
+
+Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
+{
+  // here we could do more sophisticated stuff when generating a list of curves
+  return ObjectList<Kst::Object>();
 }
 
 

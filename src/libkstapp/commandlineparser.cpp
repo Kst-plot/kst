@@ -281,6 +281,11 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->registerChange();
     curve->unlock();
 
+    addCurve(curve);
+}
+
+void CommandLineParser::addCurve(CurvePtr curve)
+{
     if (_doConsecutivePlots) {
       CreatePlotForCurve *cmd = new CreatePlotForCurve();
       cmd->createItem();
@@ -361,7 +366,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   }
 
   while (*ok) {
-    if (_arguments.count()<1) break;
+    if (_arguments.count() < 1) {
+      break;
+    }
 
     arg = _arguments.takeFirst();
     if ((arg == "--help")||(arg == "-help")) {
@@ -588,6 +595,22 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         new_fileList = false;
       }
       _fileNames.append(arg);
+
+      if (!arg.endsWith(".kst") && _arguments.count() == 0) {
+        // try loading data without user interaction
+        DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), arg);
+        if (ds) {
+          ObjectList<Object> curves = ds->autoCurves(*_document->objectStore());
+          if (curves.isEmpty()) {
+            curves = autoCurves(ds);
+          }
+          if (!curves.isEmpty()) {
+            foreach(const ObjectPtr& ptr, curves) {
+              addCurve(kst_cast<Curve>(ptr));
+            }
+          }
+        }
+      }
     }
   }
 
@@ -600,6 +623,50 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   }
   UpdateManager::self()->doUpdates(true);
   return (dataPlotted);
+}
+
+
+Kst::ObjectList<Kst::Object> CommandLineParser::autoCurves(DataSourcePtr ds)
+{
+  QStringList fieldList = ds->vector().list();
+
+  if (fieldList.isEmpty()) {
+    return ObjectList<Kst::Object>();
+  }
+
+  ObjectList<Kst::Object> curves;
+
+  DataVectorPtr xv = _document->objectStore()->createObject<DataVector>();
+  xv->writeLock();
+  xv->change(ds, "INDEX", 0, -1, 0, false, false);
+  xv->registerChange();
+  xv->unlock();
+
+  foreach(const QString& field, fieldList) {
+    if (field != "INDEX") {
+      DataVectorPtr yv= _document->objectStore()->createObject<DataVector>();
+      yv->writeLock();
+      yv->change(ds, field, 0, -1, 0, false, false);
+      yv->registerChange();
+      yv->unlock();
+
+      CurvePtr curve = _document->objectStore()->createObject<Curve>();
+      curve->setXVector(xv);
+      curve->setYVector(yv);
+      curve->setXError(0);
+      curve->setXMinusError(0);
+      curve->setYMinusError(0);
+      curve->setColor(Kst::ColorSequence::self().next());
+      curve->setLineWidth(1); 
+
+      curve->writeLock();
+      curve->registerChange();
+      curve->unlock();
+
+      curves << curve;
+    }
+  }
+  return curves;
 }
 
 }

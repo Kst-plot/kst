@@ -194,6 +194,10 @@ class KSTCORE_EXPORT DataSource : public Object
 
     virtual QString descriptionTip() const;
 
+    /** Creates a list of curves without user interaction
+    */
+    virtual ObjectList<Object> autoCurves(ObjectStore& objectStore) { return ObjectList<Object>(); }
+
 
   public Q_SLOTS:
     virtual void checkUpdate();

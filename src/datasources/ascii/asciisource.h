@@ -76,6 +76,8 @@ class AsciiSource : public Kst::DataSource
     static QStringList scalarListFor(const QString& filename, AsciiSourceConfig *cfg);
     static QStringList stringListFor(const QString& filename, AsciiSourceConfig *cfg);
 
+    Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
+
   private:
     // TODO Is this too big or should we use even more: 1MB on the stack?
 #define KST_PREALLOC 1 * 1024 * 1024

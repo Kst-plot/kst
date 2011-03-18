@@ -34,6 +34,7 @@ public:
   QString pngFile() const {return _pngFile;}
   QString printFile() const {return _printFile;}
   //bool landscape() const {return _landscape;}
+
 private:
   bool _doAve;
   bool _doSkip;
@@ -73,6 +74,8 @@ private:
   void createOrFindPlot(const QString name);
   void createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr ev=0);
   void createImageInPlot(MatrixPtr m);
+  void addCurve(CurvePtr curve);
+  ObjectList<Object> autoCurves(DataSourcePtr ds);
 };
 
 }
