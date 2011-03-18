@@ -39,6 +39,11 @@
 
 namespace Kst {
 
+
+//
+// DataWizardPageDataSource
+//
+
 DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *parent, const QString& default_source)
   : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0) {
    setupUi(this);
@@ -161,6 +166,11 @@ void DataWizardPageDataSource::sourceChanged(const QString& file) {
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 
+
+
+//
+// DataWizardPageVectors
+//
 
 DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   : QWizardPage(parent) {
@@ -316,6 +326,10 @@ void DataWizardPageVectors::searchVectors() {
 }
 
 
+//
+// DataWizardPageFilters
+//
+
 DataWizardPageFilters::DataWizardPageFilters(QWidget *parent)
   : QWizardPage(parent) {
    setupUi(this);
@@ -337,6 +351,10 @@ DataWizardPagePlot::DataWizardPagePlot(QWidget *parent)
 }
 
 
+
+//
+// DataWizardPagePlot
+//
 
 DataWizardPagePlot::~DataWizardPagePlot() {
 }
@@ -526,6 +544,11 @@ void DataWizardPagePlot::updatePlotBox() {
 }
 
 
+
+//
+// DataWizardPageDataPresentation
+//
+
 DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *store, QWidget *parent)
   : QWizardPage(parent), _pageValid(false) {
    setupUi(this);
@@ -656,6 +679,11 @@ int DataWizardPageDataPresentation::nextId() const {
 //  }
 }
 
+
+
+//
+// DataWizard
+//
 
 DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   : QWizard(parent), _document(0) {
