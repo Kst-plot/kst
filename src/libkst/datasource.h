@@ -196,7 +196,7 @@ class KSTCORE_EXPORT DataSource : public Object
 
     /** Creates a list of curves without user interaction
     */
-    virtual ObjectList<Object> autoCurves(ObjectStore& objectStore) { return ObjectList<Object>(); }
+    virtual ObjectList<Object> autoCurves(ObjectStore&) { return ObjectList<Object>(); }
 
 
   public Q_SLOTS:

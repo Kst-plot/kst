@@ -638,7 +638,7 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
 
 
 //-------------------------------------------------------------------------------------------
-void AsciiSource::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row)
+void AsciiSource::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int)
 {
   if (   isDigit(buffer[ch])
       || buffer[ch] == '-'

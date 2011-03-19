@@ -194,7 +194,7 @@ class AsciiSource : public Kst::DataSource
     };
 
     struct IsLineBreakLF {
-      IsLineBreakLF(const LineEndingType& t) : size(1) {
+      IsLineBreakLF(const LineEndingType&) : size(1) {
       }
       const int size;
       inline bool operator()(const char c) const {
