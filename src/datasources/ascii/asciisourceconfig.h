@@ -78,8 +78,8 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_columnWidthIsConst, Tag_columnWidthIsConst> _columnWidthIsConst;
     NamedParameter<int, Key_dataLine, Tag_dataLine> _dataLine;
     NamedParameter<bool, Key_readFields, Tag_readFields> _readFields;
-    NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
     NamedParameter<bool, Key_readUnits, Tag_readUnits> _readUnits;
+    NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
     NamedParameter<int, Key_unitsLine, Tag_unitsLine> _unitsLine;
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
 

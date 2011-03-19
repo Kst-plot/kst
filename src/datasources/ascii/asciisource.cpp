@@ -379,11 +379,11 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-    const char* buffer = varBuffer.constData();
-    const char* bufferData = buffer;
+    const char* bufferData = varBuffer.constData();
+    const char* buffer = bufferData;
 #else
-    QVarLengthArray<char, MAXBUFREADLEN + 1>& buffer = varBuffer;
-    const char* bufferData = buffer.data();
+    QVarLengthArray<char, MAXBUFREADLEN + 1>& bufferData = varBuffer;
+    const char* buffer = bufferData.data();
 #endif
 
 

@@ -63,6 +63,10 @@ namespace Kst {
 PlotItem::PlotItem(View *parent)
   : ViewItem(parent), PlotItemInterface(),
   _isInSharedAxisBox(false),
+  _manuallyHideLeftAxisLabel(false),
+  _manuallyHideRightAxisLabel(false),
+  _manuallyHideTopAxisLabel(false),
+  _manuallyHideBottomAxisLabel(false),
   _plotRectsDirty(true),
   _calculatedLeftLabelMargin(0.0),
   _calculatedLeftLabelWidth(0.0),
@@ -96,10 +100,7 @@ PlotItem::PlotItem(View *parent)
   _sharedAxisBoxMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
-  _manuallyHideLeftAxisLabel(false),
-  _manuallyHideRightAxisLabel(false),
-  _manuallyHideTopAxisLabel(false),
-  _manuallyHideBottomAxisLabel(false),
+
   _plotPixmapDirty(true),
   _i_per(0)
 {
