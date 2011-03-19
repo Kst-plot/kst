@@ -614,7 +614,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
                 addCurve(kst_cast<Curve>(ptr));
                 count++;
               }
-              if (count >= 40) {
+              if (count >= 6 * 6) {
                 break;
               }
             }
