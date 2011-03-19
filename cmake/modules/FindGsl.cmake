@@ -6,7 +6,7 @@ include(FindPkgConfig)
 pkg_check_modules(PKGGSL QUIET gsl)
 
 if(NOT PKGGSL_LIBRARIES)
-	set(PKGGSL_LIBRARIES gsl)
+	set(PKGGSL_LIBRARIES gsl gslcblas)
     if (UNIX)
 		set(PKGGSL_LIBRARIES ${PKGGSL_LIBRARIES} m)
 	endif()
