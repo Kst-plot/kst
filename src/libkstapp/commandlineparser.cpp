@@ -24,6 +24,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QMessageBox>
+
 #include "curve.h"
 #include "psd.h"
 #include "histogram.h"
@@ -608,16 +609,32 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           if (curves.isEmpty()) {
             curves = autoCurves(ds);
           }
-          if (!curves.isEmpty()) {
+          int curve_count = 0;
+          foreach(const ObjectPtr& ptr, curves) {
+            if (kst_cast<Curve>(ptr)) {
+              curve_count++;
+            }
+          }
+          if (curve_count > 0) {
             _mainWindow->updateRecentDataFiles(arg);
             int count = 0;
+            const int max_count = 6 * 6;
+            bool asked = false;
             foreach(const ObjectPtr& ptr, curves) {
               if (kst_cast<Curve>(ptr)) {
+                if (!asked && count >= max_count) {
+                  asked = true;
+                  QMessageBox::StandardButton res = QMessageBox::question(0, "Kst reading datafile", QString(
+                    "Kst found %1 Curves in the specified data file.\n"
+                    "Should Kst plot all %1 curves?\n"
+                    "If not, Kst plots only %2 curves.").arg(curve_count).arg(max_count),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+                  if (res == QMessageBox::No) {
+                    break;
+                  }
+                }
                 addCurve(kst_cast<Curve>(ptr));
                 count++;
-              }
-              if (count >= 6 * 6) {
-                break;
               }
             }
           }

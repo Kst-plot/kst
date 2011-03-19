@@ -38,6 +38,7 @@ public:
   //bool landscape() const {return _landscape;}
 
 private:
+  MainWindow* _mainWindow;
   bool _doAve;
   bool _doSkip;
   bool _doConsecutivePlots;
@@ -57,8 +58,6 @@ private:
   QString _printFile;
   bool _landscape;
   QPrinter::PaperSize _paperSize;
-
-  MainWindow* _mainWindow;
 
   QStringList _fileNames;
   QStringList _arguments;
