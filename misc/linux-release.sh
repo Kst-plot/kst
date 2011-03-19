@@ -24,9 +24,9 @@ if [ ! -z ${3} ]
 then
 	# spaces in $2 "Kst\\ 2.0.3"
 	scp \
-	${kst_install_prefix}.sh \
+	${kst_install_prefix}-binary.sh \
+	${kst_install_prefix}-binary.tar.gz \
 	${kst_install_prefix}.tar.gz \
-	${kst_install_prefix}-sources.tar.gz \
-	${kst_install_prefix}-sources.tar.bz2 \
+	${kst_install_prefix}.tar.bz2 \
 	${3},kst@frs.sourceforge.net:"/home/frs/project/k/ks/kst/${2}"
 fi
