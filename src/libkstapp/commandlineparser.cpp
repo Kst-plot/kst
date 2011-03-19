@@ -138,7 +138,8 @@ static void printUsage(const QString &t)
 
 
 
-CommandLineParser::CommandLineParser(Document *doc):
+CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
+      _mainWindow(mw),
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
@@ -608,6 +609,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
             curves = autoCurves(ds);
           }
           if (!curves.isEmpty()) {
+            _mainWindow->updateRecentDataFiles(arg);
             int count = 0;
             foreach(const ObjectPtr& ptr, curves) {
               if (kst_cast<Curve>(ptr)) {

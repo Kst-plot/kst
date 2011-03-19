@@ -298,6 +298,9 @@ void MainWindow::updateRecentKstFiles(const QString& filename)
 void MainWindow::updateRecentDataFiles(const QString& filename)
 {
   updateRecentFiles("recentDataFileList", _toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
+  if (!filename.isEmpty()) {
+    _dialogDefaults->setValue("vector/datasource", filename);
+  }
 }
 
 
@@ -375,7 +378,7 @@ bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
 
-  CommandLineParser P(_doc);
+  CommandLineParser P(_doc, this);
 
   bool ok = _doc->initFromCommandLine(&P);
   if (!P.pngFile().isEmpty()) {

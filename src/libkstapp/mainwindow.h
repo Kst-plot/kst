@@ -107,6 +107,8 @@ class MainWindow : public QMainWindow
     void tiedZoomRemoved();
     void allPlotsTiedZoom();
 
+    void updateRecentDataFiles(const QString& newfilename = QString());
+
   private Q_SLOTS:
     void aboutToQuit();
     void about();
@@ -148,7 +150,6 @@ class MainWindow : public QMainWindow
     void openRecentKstFile();
     void openRecentDataFile();
     void updateRecentKstFiles(const QString& newfilename = QString());
-    void updateRecentDataFiles(const QString& newfilename = QString());
     void checkRecentFilesOnExistence();
 
   protected:

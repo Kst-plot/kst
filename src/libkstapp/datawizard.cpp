@@ -45,19 +45,20 @@ namespace Kst {
 //
 
 DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *parent, const QString& default_source)
-  : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0) {
-   setupUi(this);
+  : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0)
+{
+  setupUi(this);
 
   MainWindow::setWidgetFlags(this);
 
-   connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
-   connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
+  connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
+  connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 
-   if (default_source.isEmpty()) {
-    _url->setFile(_dialogDefaults->value("vector/datasource",".").toString());
-   } else {
+  if (default_source.isEmpty()) {
+    _url->setFile(_dialogDefaults->value("vector/datasource", ".").toString());
+  } else {
     _url->setFile(default_source);
-   }
+  }
   _url->setFocus();
 
   _updateBox->addItem("Time Interval");

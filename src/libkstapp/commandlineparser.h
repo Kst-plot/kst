@@ -16,6 +16,7 @@
 #include "document.h"
 #include "datavector.h"
 #include "plotitem.h"
+#include "mainwindow.h"
 
 #include <QStringList>
 #include <QPrinter>
@@ -24,9 +25,10 @@ namespace Kst {
 /**
 	@author Barth Netterfield <netterfield@physics.utoronto.ca>
 */
-class CommandLineParser{
+class CommandLineParser
+{
 public:
-  CommandLineParser(Document *doc);
+  CommandLineParser(Document *doc, MainWindow* mw);
   ~CommandLineParser();
 
   bool processCommandLine(bool *ok);
@@ -55,6 +57,8 @@ private:
   QString _printFile;
   bool _landscape;
   QPrinter::PaperSize _paperSize;
+
+  MainWindow* _mainWindow;
 
   QStringList _fileNames;
   QStringList _arguments;
