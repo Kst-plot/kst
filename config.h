@@ -10,5 +10,8 @@
 #define KST_INSTALL_LIBDIR  "lib"
 #define KST_INSTALL_PLUGINS "lib/kst2/plugins"
 
+#ifndef KST_HAVE_SVN_REVISION_H
+#define SVN_REVISION "unknown"
+#endif
 
 #endif

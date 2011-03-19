@@ -18,7 +18,8 @@ DESTDIR = $$OUTPUT_DIR/plugin
 
 INCLUDEPATH += \
 	      tmp \
-	      $$TOPLEVELDIR/src/libkst 
+	      $$TOPLEVELDIR/src/libkst \
+		  $$TOPLEVELDIR/src/libkstmath \
 
 
 macx {

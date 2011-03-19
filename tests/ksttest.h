@@ -21,7 +21,7 @@ namespace QTest
 {
 
   template<>
-  bool qCompare(double const& val, double const * const& nan,  const char *actual, const char *expected,
+  inline bool qCompare(double const& val, double const * const& nan,  const char *actual, const char *expected,
                       const char *file, int line)
   {
           return qCompare(

@@ -37,6 +37,7 @@ SOURCES += builtindatasources.cpp \
     extension.cpp \
     generatedmatrix.cpp \
     generatedvector.cpp \
+	labelinfo.cpp \
     math_kst.cpp \
     matrix.cpp \
     matrixfactory.cpp \
