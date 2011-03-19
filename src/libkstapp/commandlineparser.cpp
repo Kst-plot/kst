@@ -10,12 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "config.h"
+
 #include "commandlineparser.h"
 #include "datasource.h"
 #include "objectstore.h"
 #include "colorsequence.h"
+#ifdef KST_HAVE_SVN_REVISION_H
 #include "svnrevision.h"
-#include "config.h"
+#endif
 
 #include <iostream>
 #include <QCoreApplication>
@@ -605,8 +608,15 @@ bool CommandLineParser::processCommandLine(bool *ok) {
             curves = autoCurves(ds);
           }
           if (!curves.isEmpty()) {
+            int count = 0;
             foreach(const ObjectPtr& ptr, curves) {
-              addCurve(kst_cast<Curve>(ptr));
+              if (kst_cast<Curve>(ptr)) {
+                addCurve(kst_cast<Curve>(ptr));
+                count++;
+              }
+              if (count >= 40) {
+                break;
+              }
             }
           }
         }
