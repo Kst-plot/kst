@@ -41,8 +41,8 @@ FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
   _curveAppearance->setVisible(false);
   _curvePlacement->setVisible(false);
   _ignoreAutoScale->setVisible(false);
-  connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
   pluginChanged(pluginName);
+  connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
 }
 
 
