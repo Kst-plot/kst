@@ -49,10 +49,9 @@ class FitPolynomialUnweightedSource : public Kst::BasicPlugin {
     ~FitPolynomialUnweightedSource();
 
     virtual QString parameterName(int index) const;
+    virtual QString parameterVectorToString() const;
 
-  friend class Kst::ObjectStore;
-
-
+    friend class Kst::ObjectStore;
 };
 
 

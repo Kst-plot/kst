@@ -279,7 +279,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
     if (dataObject->hasParameterVector()) {
       CreateLabelCommand *cmd = new CreateLabelCommand;
-      QString *tmpstring = new QString(dataObject->label(9));
+      QString *tmpstring = new QString(dataObject->parameterVectorToString());
 
       cmd->createItem(tmpstring);
     }

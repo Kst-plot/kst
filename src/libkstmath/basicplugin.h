@@ -94,6 +94,8 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
 
     virtual void internalUpdate();
     virtual bool hasParameterVector() const { return _outputVectors.contains("Parameters Vector");}
+    virtual QString parameterVectorToString() const { return label(9);}
+
   protected:
     BasicPlugin(ObjectStore *store);
     virtual ~BasicPlugin();

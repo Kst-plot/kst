@@ -125,7 +125,7 @@ class ConfigWidgetFitPolynomialUnweightedPlugin : public Kst::DataObjectConfigWi
         if (vectory) {
           setSelectedVectorX(vectory);
         }
-        QString scalarName = _cfg->value("Order Scalar").toString();
+        QString scalarName = _cfg->value("Input Order Scalar").toString();
         object = _store->retrieveObject(scalarName);
         Kst::Scalar* orderScalar = static_cast<Kst::Scalar*>(object);
         if (orderScalar) {
@@ -212,6 +212,36 @@ bool FitPolynomialUnweightedSource::algorithm() {
   }
 
   return bReturn;
+}
+
+QString FitPolynomialUnweightedSource::parameterVectorToString() const {
+
+  QString str = Name();
+
+  if (hasParameterVector()) {
+    Kst::VectorPtr vectorParam = _outputVectors["Parameters Vector"];
+    //for (int i = vectorParam->length() - 1; i >= 0; i--) {
+    for (int i = 0; i < vectorParam->length(); i++) {
+      QString paramName = parameterName(i);
+      if (!paramName.isEmpty()) {
+        if (_outputScalars.contains(paramName)) {
+          QString name = _outputScalars[paramName]->Name();
+          double value = _outputScalars[paramName]->value();
+          if (i == 0) {
+            str += QString("\n[%1]").arg(name);
+          } else {
+            QString sign;
+            if (value >= 0) {
+              sign = " +";
+            }
+            str += QString("%1 [%2]%3").arg(sign).arg(_outputScalars[paramName]->Name()).arg(paramName);
+          }
+        }
+      }
+    }
+  }
+
+  return str;
 }
 
 
