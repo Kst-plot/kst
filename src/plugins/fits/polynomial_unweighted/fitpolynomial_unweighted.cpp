@@ -227,14 +227,18 @@ QString FitPolynomialUnweightedSource::parameterVectorToString() const {
         if (_outputScalars.contains(paramName)) {
           QString name = _outputScalars[paramName]->Name();
           double value = _outputScalars[paramName]->value();
+          QString sign;
+          if (value >= 0) {
+            sign = " +";
+          } else {
+            sign = " "; // Just for the space, the "-" is already in the number
+          }
           if (i == 0) {
             str += QString("\n[%1]").arg(name);
+          } else if (i == 1) { // Special case x^1 to x
+            str += QString("%1[%2]x").arg(sign).arg(name);
           } else {
-            QString sign;
-            if (value >= 0) {
-              sign = " +";
-            }
-            str += QString("%1 [%2]%3").arg(sign).arg(_outputScalars[paramName]->Name()).arg(paramName);
+            str += QString("%1[%2]%3").arg(sign).arg(name).arg(paramName);
           }
         }
       }
