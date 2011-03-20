@@ -296,15 +296,7 @@ void FitPolynomialWeightedSource::saveProperties(QXmlStreamWriter &s) {
 
 
 QString FitPolynomialWeightedSource::parameterName(int index) const {
-  QString parameter;
-  switch (index) {
-    case 0:
-      parameter = "x^%1";
-      parameter.arg(index);
-      break;
-  }
-
-  return parameter;
+  return QString("x^%1").arg(index);
 }
 
 
