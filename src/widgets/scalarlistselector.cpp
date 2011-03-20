@@ -30,7 +30,10 @@ ScalarListSelector::~ScalarListSelector() {
 
 
 QString ScalarListSelector::selectedScalar() const {
-  return _scalars->currentItem()->text();
+  if (_scalars->currentItem()) {
+    return _scalars->currentItem()->text();
+  }
+  return QString();
 }
 
 
