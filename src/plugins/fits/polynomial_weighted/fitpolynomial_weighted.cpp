@@ -230,6 +230,39 @@ bool FitPolynomialWeightedSource::algorithm() {
   return bReturn;
 }
 
+QString FitPolynomialWeightedSource::parameterVectorToString() const {
+
+  QString str = Name();
+
+  if (hasParameterVector()) {
+    Kst::VectorPtr vectorParam = _outputVectors["Parameters Vector"];
+    for (int i = 0; i < vectorParam->length(); i++) {
+      QString paramName = parameterName(i);
+      if (!paramName.isEmpty()) {
+        if (_outputScalars.contains(paramName)) {
+          QString name = _outputScalars[paramName]->Name();
+          double value = _outputScalars[paramName]->value();
+          QString sign;
+          if (value >= 0) {
+            sign = " +";
+          } else {
+            sign = " "; // Just for the space, the "-" is already in the number
+          }
+          if (i == 0) {
+            str += QString("\n[%1]").arg(name);
+          } else if (i == 1) { // Special case x^1 to x
+            str += QString("%1[%2]x").arg(sign).arg(name);
+          } else {
+            str += QString("%1[%2]%3").arg(sign).arg(name).arg(paramName);
+          }
+        }
+      }
+    }
+  }
+
+  return str;
+}
+
 
 Kst::VectorPtr FitPolynomialWeightedSource::vectorX() const {
   return _inputVectors[VECTOR_IN_X];

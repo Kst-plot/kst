@@ -50,6 +50,7 @@ class FitPolynomialWeightedSource : public Kst::BasicPlugin {
     ~FitPolynomialWeightedSource();
 
     virtual QString parameterName(int index) const;
+    virtual QString parameterVectorToString() const;
 
   friend class Kst::ObjectStore;
 

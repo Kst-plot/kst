@@ -214,13 +214,14 @@ bool FitPolynomialUnweightedSource::algorithm() {
   return bReturn;
 }
 
+
+// TODO merge with FitPolynomialWeightedSource
 QString FitPolynomialUnweightedSource::parameterVectorToString() const {
 
   QString str = Name();
 
   if (hasParameterVector()) {
     Kst::VectorPtr vectorParam = _outputVectors["Parameters Vector"];
-    //for (int i = vectorParam->length() - 1; i >= 0; i--) {
     for (int i = 0; i < vectorParam->length(); i++) {
       QString paramName = parameterName(i);
       if (!paramName.isEmpty()) {
