@@ -47,7 +47,7 @@ class KSTCORE_EXPORT Primitive : public Object
     inline ObjectPtr provider() const { return ObjectPtr(_provider); }
 
     void setSlaveName(QString slaveName);
-    QString slaveName() { return _slaveName; }
+    QString slaveName() const { return _slaveName; }
     virtual QString propertyString() const;
     virtual QString  sizeString() const;
 

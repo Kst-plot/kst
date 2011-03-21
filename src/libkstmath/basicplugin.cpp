@@ -306,47 +306,31 @@ QString BasicPlugin::label(int precision) const {
 }
 
 
-void BasicPlugin::save(QXmlStreamWriter &s) {
-  s.writeStartElement(staticTypeTag);
-  s.writeAttribute("type", _pluginName);
-  saveNameInfo(s, VNUM|PNUM|XNUM);
-  for (VectorMap::Iterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
-    s.writeStartElement("inputvector");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->Name());
-    s.writeEndElement();
+template<class T, class V>
+static void writeVectors(T& vectors, const QString& element, QXmlStreamWriter& stream, QString (V::* name)() const) {
+  for (QStringList::iterator it = vectors.ordered.begin(); it != vectors.ordered.end(); ++it) {
+    typename T::iterator i = vectors.find(*it);
+    stream.writeStartElement(element);
+    stream.writeAttribute("type", i.key());
+    stream.writeAttribute("tag", (i.value()->*name)());
+    stream.writeEndElement();
   }
-  for (ScalarMap::Iterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
-    s.writeStartElement("inputscalar");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->Name());
-    s.writeEndElement();
-  }
-  for (StringMap::Iterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
-    s.writeStartElement("inputstring");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->Name());
-    s.writeEndElement();
-  }
-  for (VectorMap::Iterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
-    s.writeStartElement("outputvector");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->slaveName());
-    s.writeEndElement();
-  }
-  for (ScalarMap::Iterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
-    s.writeStartElement("outputscalar");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->slaveName());
-    s.writeEndElement();
-  }
-  for (StringMap::Iterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
-    s.writeStartElement("outputstring");
-    s.writeAttribute("type", i.key());
-    s.writeAttribute("tag", i.value()->slaveName());
-    s.writeEndElement();
-  }
-  s.writeEndElement();
+}
+
+
+void BasicPlugin::save(QXmlStreamWriter &stream) {
+  stream.writeStartElement(staticTypeTag);
+  stream.writeAttribute("type", _pluginName);
+  saveNameInfo(stream, VNUM|PNUM|XNUM);
+
+  writeVectors(_inputVectors, "inputvector", stream, &NamedObject::Name);
+  writeVectors(_inputScalars, "inputscalar", stream, &NamedObject::Name);
+  writeVectors(_inputStrings, "inputstring", stream, &NamedObject::Name);
+  writeVectors(_outputVectors, "outputvector", stream, &Primitive::slaveName);
+  writeVectors(_outputScalars, "outputscalar", stream, &Primitive::slaveName);
+  writeVectors(_outputStrings, "outputstring", stream, &Primitive::slaveName);
+
+  stream.writeEndElement();
 }
 
 
