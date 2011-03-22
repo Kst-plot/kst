@@ -325,9 +325,9 @@ Kst::DataObject *DeconvolvePlugin::create(Kst::ObjectStore *store, Kst::DataObje
     DeconvolveSource* object = store->createObject<DeconvolveSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_ONE, config->selectedVectorOne());
       object->setInputVector(VECTOR_IN_TWO, config->selectedVectorTwo());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

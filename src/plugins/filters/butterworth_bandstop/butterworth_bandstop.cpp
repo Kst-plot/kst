@@ -297,11 +297,11 @@ Kst::DataObject *ButterworthBandStopPlugin::create(Kst::ObjectStore *store, Kst:
     FilterButterworthBandStopSource* object = store->createObject<FilterButterworthBandStopSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_ORDER_IN, config->selectedOrderScalar());
       object->setInputScalar(SCALAR_RATE_IN, config->selectedRateScalar());
       object->setInputScalar(SCALAR_BANDWIDTH_IN, config->selectedBandwidthScalar());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

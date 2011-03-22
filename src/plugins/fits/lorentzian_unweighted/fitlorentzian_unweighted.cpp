@@ -316,9 +316,9 @@ Kst::DataObject *FitLorentzianUnweightedPlugin::create(Kst::ObjectStore *store, 
     FitLorentzianUnweightedSource* object = store->createObject<FitLorentzianUnweightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

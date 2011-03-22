@@ -316,9 +316,9 @@ Kst::DataObject *CrossCorrelationPlugin::create(Kst::ObjectStore *store, Kst::Da
     CrossCorrelationSource* object = store->createObject<CrossCorrelationSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_ONE, config->selectedVectorOne());
       object->setInputVector(VECTOR_IN_TWO, config->selectedVectorTwo());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

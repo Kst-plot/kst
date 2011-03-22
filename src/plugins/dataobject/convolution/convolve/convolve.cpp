@@ -319,9 +319,9 @@ Kst::DataObject *ConvolvePlugin::create(Kst::ObjectStore *store, Kst::DataObject
     ConvolveSource* object = store->createObject<ConvolveSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_ONE, config->selectedVectorOne());
       object->setInputVector(VECTOR_IN_TWO, config->selectedVectorTwo());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

@@ -346,11 +346,11 @@ Kst::DataObject *PhasePlugin::create(Kst::ObjectStore *store, Kst::DataObjectCon
     PhaseSource* object = store->createObject<PhaseSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_TIME, config->selectedVectorTime());
       object->setInputVector(VECTOR_IN_DATA, config->selectedVectorData());
       object->setInputScalar(SCALAR_IN_PERIOD, config->selectedScalarPeriod());
       object->setInputScalar(SCALAR_IN_ZEROPHASE, config->selectedScalarZeroPhase());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

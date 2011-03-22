@@ -130,12 +130,12 @@ void PrimitiveModel::createTree() {
 
 template<class T>
 void PrimitiveModel::addMeta(T* m, PrimitiveTreeItem* parent) {
-  addPrimitiveTreeItem(QList<QVariant>() << m->slaveName() << m->value(), parent);
+  addPrimitiveTreeItem(QList<QVariant>() << QString("%1 (%2)").arg(m->slaveName()).arg(m->shortName()) << m->value(), parent);
 }
 
 template<class T>
 void PrimitiveModel::addOrphanMeta(T* m, PrimitiveTreeItem* parent) {
-  addPrimitiveTreeItem(QList<QVariant>() << m->descriptiveName() << m->value(), parent);
+  addPrimitiveTreeItem(QList<QVariant>() << m->Name() << m->value(), parent);
 }
 
 

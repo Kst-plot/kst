@@ -352,10 +352,10 @@ Kst::DataObject *FilterDespikePlugin::create(Kst::ObjectStore *store, Kst::DataO
     FilterDespikeSource* object = store->createObject<FilterDespikeSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_NSIGMA_IN, config->selectedNSigmaScalar());
       object->setInputScalar(SCALAR_SPACING_IN, config->selectedSpacingScalar());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

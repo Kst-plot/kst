@@ -353,9 +353,9 @@ Kst::DataObject *LockInPlugin::create(Kst::ObjectStore *store, Kst::DataObjectCo
     LockInSource* object = store->createObject<LockInSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(IN_INPUT_VECTOR, config->selectedInputVector());
       object->setInputVector(IN_REF_VECTOR, config->selectedRefVector());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

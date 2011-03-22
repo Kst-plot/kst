@@ -308,9 +308,9 @@ Kst::DataObject *FitLinearUnweightedPlugin::create(Kst::ObjectStore *store, Kst:
     FitLinearUnweightedSource* object = store->createObject<FitLinearUnweightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

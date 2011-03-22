@@ -217,8 +217,8 @@ Kst::DataObject *ChopPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConf
     ChopSource* object = store->createObject<ChopSource>();
 
     if (setupInputsOutputs) {
-      object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setupOutputs();
+      object->setInputVector(VECTOR_IN, config->selectedVector());
     }
 
     object->setPluginName(pluginName());

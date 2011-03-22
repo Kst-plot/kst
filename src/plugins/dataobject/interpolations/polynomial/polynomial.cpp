@@ -225,10 +225,10 @@ Kst::DataObject *PolynomialPlugin::create(Kst::ObjectStore *store, Kst::DataObje
     PolynomialSource* object = store->createObject<PolynomialSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_X1, config->selectedVectorX1());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

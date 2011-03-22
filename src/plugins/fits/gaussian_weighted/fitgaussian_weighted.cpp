@@ -338,10 +338,10 @@ Kst::DataObject *FitGaussianWeightedPlugin::create(Kst::ObjectStore *store, Kst:
     FitGaussianWeightedSource* object = store->createObject<FitGaussianWeightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

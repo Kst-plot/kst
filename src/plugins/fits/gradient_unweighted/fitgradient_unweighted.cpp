@@ -302,9 +302,9 @@ Kst::DataObject *FitGradientUnweightedPlugin::create(Kst::ObjectStore *store, Ks
     FitGradientUnweightedSource* object = store->createObject<FitGradientUnweightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

@@ -236,9 +236,9 @@ Kst::DataObject *DifferentiationPlugin::create(Kst::ObjectStore *store, Kst::Dat
     DifferentiationSource* object = store->createObject<DifferentiationSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_IN, config->selectedScalar());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

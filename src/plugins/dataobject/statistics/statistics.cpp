@@ -324,8 +324,8 @@ Kst::DataObject *StatisticsPlugin::create(Kst::ObjectStore *store, Kst::DataObje
     StatisticsSource* object = store->createObject<StatisticsSource>();
 
     if (setupInputsOutputs) {
-      object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setupOutputs();
+      object->setInputVector(VECTOR_IN, config->selectedVector());
     }
 
     object->setPluginName(pluginName());

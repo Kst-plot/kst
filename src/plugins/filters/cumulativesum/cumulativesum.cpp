@@ -236,9 +236,9 @@ Kst::DataObject *CumulativeSumPlugin::create(Kst::ObjectStore *store, Kst::DataO
     CumulativeSumSource* object = store->createObject<CumulativeSumSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_IN, config->selectedScalar());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

@@ -225,10 +225,10 @@ Kst::DataObject *AkimaPeriodicPlugin::create(Kst::ObjectStore *store, Kst::DataO
     AkimaPeriodicSource* object = store->createObject<AkimaPeriodicSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_X1, config->selectedVectorX1());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

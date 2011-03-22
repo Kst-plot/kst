@@ -337,10 +337,10 @@ Kst::DataObject *FitLorentzianWeightedPlugin::create(Kst::ObjectStore *store, Ks
     FitLorentzianWeightedSource* object = store->createObject<FitLorentzianWeightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

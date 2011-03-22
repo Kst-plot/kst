@@ -335,10 +335,10 @@ Kst::DataObject *FitPolynomialUnweightedPlugin::create(Kst::ObjectStore *store, 
     FitPolynomialUnweightedSource* object = store->createObject<FitPolynomialUnweightedSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, x);
       object->setInputVector(VECTOR_IN_Y, y);
       object->setInputScalar(SCALAR_IN, order);
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());

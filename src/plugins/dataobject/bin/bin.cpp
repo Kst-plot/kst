@@ -226,9 +226,9 @@ Kst::DataObject *BinPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfi
     BinSource* object = store->createObject<BinSource>();
 
     if (setupInputsOutputs) {
+      object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_IN, config->selectedScalar());
-      object->setupOutputs();
     }
 
     object->setPluginName(pluginName());
