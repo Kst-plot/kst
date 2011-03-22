@@ -214,6 +214,7 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
   StringPtr s = store()->createObject<String>();
   s->setProvider(this);
   s->setSlaveName(txt);
+  s->setOrphan(false);
   _outputStrings.insert(type, s);
 }
 

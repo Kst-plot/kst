@@ -77,6 +77,9 @@ public:
   void addMeta(T* m, PrimitiveTreeItem* parent = 0);
 
   template<class T>
+  void addOrphanMeta(T* m, PrimitiveTreeItem* parent = 0);
+
+  template<class T>
   void addMetas(const PrimitiveMap& metarMap, PrimitiveTreeItem* parent);
 
   template<class T>
@@ -112,7 +115,7 @@ void PrimitiveModel::createTree() {
       addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
     } else if (kst_cast<T>(obj)) {
       if (kst_cast<T>(obj) && kst_cast<T>(obj)->orphan()) {
-        addMeta<T>(kst_cast<T>(obj));
+        addOrphanMeta<T>(kst_cast<T>(obj));
       }
     } else if (kst_cast<DataObject>(obj)) {
       addDataObjectsMetas<T>(kst_cast<DataObject>(obj));
@@ -128,6 +131,11 @@ void PrimitiveModel::createTree() {
 template<class T>
 void PrimitiveModel::addMeta(T* m, PrimitiveTreeItem* parent) {
   addPrimitiveTreeItem(QList<QVariant>() << m->slaveName() << m->value(), parent);
+}
+
+template<class T>
+void PrimitiveModel::addOrphanMeta(T* m, PrimitiveTreeItem* parent) {
+  addPrimitiveTreeItem(QList<QVariant>() << m->descriptiveName() << m->value(), parent);
 }
 
 
@@ -162,13 +170,16 @@ template<class T>
 void PrimitiveModel::addDataObjectsMetas(DataObjectPtr dataObject, PrimitiveTreeItem* parent) {
   PrimitiveTreeItem* item = addPrimitiveTreeItem(QList<QVariant>() << dataObject->Name(), parent);
 
-  ObjectList<Primitive> primitives = dataObject->outputPrimitives();
+  ObjectList<Primitive> primitives = dataObject->outputPrimitives(false);
   foreach(PrimitivePtr prim, primitives) {
     if (   kst_cast<Vector>(prim)
         || kst_cast<Matrix>(prim)
         || kst_cast<T>(prim))
     {
       addPrimitivesMetas<T>(prim.data(), item);
+    }
+    if (kst_cast<T>(prim)) {
+      addMeta<T>(kst_cast<T>(prim), item);
     }
   }
 }

@@ -135,31 +135,39 @@ PrimitiveList DataObject::inputPrimitives() const {
 }
 
 
-PrimitiveList DataObject::outputPrimitives()  const {
+PrimitiveList DataObject::outputPrimitives(bool include_decendants)  const {
   PrimitiveList primitive_list;
 
   int n = _outputMatrices.count();
   for (int i = 0; i< n; i++) {
       primitive_list.append(kst_cast<Primitive>(_outputMatrices.values().at(i)));
-      primitive_list.append(_outputMatrices.values().at(i)->outputPrimitives());
+      if (include_decendants) {
+          primitive_list.append(_outputMatrices.values().at(i)->outputPrimitives());
+      }
   }
 
   n = _outputStrings.count();
   for (int i = 0; i< n; i++) {
       primitive_list.append(kst_cast<Primitive>(_outputStrings.values().at(i)));
-      primitive_list.append(_outputStrings.values().at(i)->outputPrimitives());
+      if (include_decendants) {
+          primitive_list.append(_outputStrings.values().at(i)->outputPrimitives());
+      }
   }
 
   n = _outputScalars.count();
   for (int i = 0; i< n; i++) {
       primitive_list.append(kst_cast<Primitive>(_outputScalars.values().at(i)));
-      primitive_list.append(_outputScalars.values().at(i)->outputPrimitives());
+      if (include_decendants) {
+          primitive_list.append(_outputScalars.values().at(i)->outputPrimitives());
+      }
   }
 
   n = _outputVectors.count();
   for (int i = 0; i< n; i++) {
       primitive_list.append(kst_cast<Primitive>(_outputVectors.values().at(i)));
-      primitive_list.append(_outputVectors.values().at(i)->outputPrimitives());
+      if (include_decendants) {
+          primitive_list.append(_outputVectors.values().at(i)->outputPrimitives());
+      }
   }
 
   return primitive_list;

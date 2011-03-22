@@ -112,7 +112,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
     scalar->setValue(value);
     scalar->setOrphan(true);
     scalar->setEditable(true);
-
+    scalar->setDescriptiveName(QString());
     scalar->writeLock();
     scalar->registerChange();
     scalar->unlock();

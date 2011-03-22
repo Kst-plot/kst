@@ -97,7 +97,7 @@ class KSTMATH_EXPORT DataObject : public Object
     MatrixMap& outputMatrices() { return _outputMatrices; }
 
     virtual PrimitiveList inputPrimitives() const;
-    PrimitiveList outputPrimitives() const;
+    PrimitiveList outputPrimitives(bool include_descendants = true) const;
 
     virtual void load(const QXmlStreamReader& s);
     virtual void save(QXmlStreamWriter& s);
