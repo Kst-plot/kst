@@ -37,7 +37,7 @@ if(GSL_INCLUDEDIR AND GSL_LIBRARIES)
 	message(STATUS "     includes : ${GSL_INCLUDE_DIR}")
 	message(STATUS "     libraries: ${GSL_LIBRARIES}")
 else()
-	message(STATUS "Not found: Gsl")
+	message(STATUS "Not found: Gsl, set GSL_DIR")
 endif()
 
 

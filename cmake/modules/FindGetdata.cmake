@@ -55,7 +55,7 @@ IF(GETDATA_INCLUDEDIR AND GETDATA_INCLUDEDIR)
 	message(STATUS "     includes : ${GETDATA_INCLUDE_DIR}")
 	message(STATUS "     libraries: ${GETDATA_LIBRARIES}")
 ELSE()
-	MESSAGE(STATUS "Not found: Getdata")
+	MESSAGE(STATUS "Not found: Getdata, GETDATA_DIR")
 ENDIF()
 
 
