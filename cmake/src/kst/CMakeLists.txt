@@ -1,4 +1,4 @@
-kst_init(${kst_binary_name})
+kst_init(${kst_binary_name} "")
 
 kst_files_ignore(main-vld)
 
@@ -26,11 +26,11 @@ kst_add_info_files(KstInfoFiles
 	${kst_dir}/NEWS
 	${kst_dir}/README)
 
-kst_include_directories(kstapp)
+kst_include_directories(app)
 
 kst_add_executable(${kst_win32} ${rc_file})
 
-kst_link(kstcore kstmath kstapp kstwidgets)
+kst_link(${libcore} ${libmath} ${libapp} ${libwidgets})
 
 kst_install_executable()
 

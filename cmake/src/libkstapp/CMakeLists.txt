@@ -1,8 +1,8 @@
-kst_init(kstapp)
+kst_init(${kst_binary_name} app)
 
 kst_files_find(src/libkstapp)
 
-kst_include_directories(kstcore kstmath kstwidgets)
+kst_include_directories(core math widgets)
 
 set(AUTHORS ${kst_dir}/AUTHORS)
 set_source_files_properties(${AUTHORS} PROPERTIES GENERATED TRUE HEADER_FILE_ONLY TRUE)
@@ -16,4 +16,4 @@ execute_process(COMMAND ${CMAKE_COMMAND}
 		
 kst_add_library(STATIC ${CMAKE_BINARY_DIR}/authors.h ${AUTHORS})
 
-kst_link(kstcore kstmath kstwidgets)
+kst_link(${libcore} ${libmath} ${libwidgets})

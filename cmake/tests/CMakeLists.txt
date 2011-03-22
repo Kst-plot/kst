@@ -4,7 +4,7 @@ file(GLOB test_headers ${kst_dir}/tests/*.h)
 
 list(REMOVE_ITEM test_headers ${kst_dir}/tests/ksttest.h)
 
-kst_include_directories(kstcore kstmath)
+kst_include_directories(core math)
 
 add_definitions(-DKST_USE_QTEST_MAIN -DKST_SRC_DIR=${kst_dir})
 
@@ -16,7 +16,7 @@ foreach(header ${test_headers})
 		message(STATUS "Building test ${testname}")
 	endif()
 
-	kst_init(${testname})
+	kst_init(${testname} "")
 
 	set(moc_file)
 	qt4_wrap_cpp(moc_file ${header} OPTIONS "-nw")
@@ -26,7 +26,7 @@ foreach(header ${test_headers})
 		${kst_dir}/tests/${filename}.cpp
 		${header} ${moc_file})
 
-	kst_link(kstcore kstmath ${QT_QTTEST_LIBRARY})
+	kst_link(${libcore} ${libmath} ${QT_QTTEST_LIBRARY})
 
 	add_test(NAME ${testname} COMMAND ${testname})
 

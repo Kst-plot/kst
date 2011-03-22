@@ -1,4 +1,4 @@
-kst_init(kstcore)
+kst_init(${kst_binary_name} core)
 
 kst_files_ignore(stdinsource timezones)
 
