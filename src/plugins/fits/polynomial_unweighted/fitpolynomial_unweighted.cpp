@@ -322,23 +322,13 @@ Kst::DataObject *FitPolynomialUnweightedPlugin::create(Kst::ObjectStore *store, 
 
   if (ConfigWidgetFitPolynomialUnweightedPlugin* config = static_cast<ConfigWidgetFitPolynomialUnweightedPlugin*>(configWidget)) {
 
-    Kst::VectorPtr x;
-    Kst::VectorPtr y;
-    Kst::ScalarPtr order;
-
-    if (setupInputsOutputs) {
-      x = config->selectedVectorX();
-      y = config->selectedVectorY();
-      order = config->selectedScalarOrder();
-    }
-
     FitPolynomialUnweightedSource* object = store->createObject<FitPolynomialUnweightedSource>();
 
     if (setupInputsOutputs) {
       object->setupOutputs();
-      object->setInputVector(VECTOR_IN_X, x);
-      object->setInputVector(VECTOR_IN_Y, y);
-      object->setInputScalar(SCALAR_IN, order);
+      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
+      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
+      object->setInputScalar(SCALAR_IN, config->selectedScalarOrder());
     }
 
     object->setPluginName(pluginName());
