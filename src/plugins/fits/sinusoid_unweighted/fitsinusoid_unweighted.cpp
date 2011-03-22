@@ -337,14 +337,22 @@ Kst::DataObject *FitSinusoidUnweightedPlugin::create(Kst::ObjectStore *store, Ks
 
   if (ConfigWidgetFitSinusoidUnweightedPlugin* config = static_cast<ConfigWidgetFitSinusoidUnweightedPlugin*>(configWidget)) {
 
+    Kst::ScalarPtr harmonics;
+    Kst::ScalarPtr period;
+
+    if (setupInputsOutputs) {
+      harmonics = config->selectedScalarHarmonics();
+      period = config->selectedScalarPeriod();
+    }
+
     FitSinusoidUnweightedSource* object = store->createObject<FitSinusoidUnweightedSource>();
 
     if (setupInputsOutputs) {
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setInputScalar(SCALAR_IN_HARMONICS, config->selectedScalarHarmonics());
-      object->setInputScalar(SCALAR_IN_PERIOD, config->selectedScalarPeriod());
+      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
+      object->setInputScalar(SCALAR_IN_PERIOD, period);
     }
 
     object->setPluginName(pluginName());

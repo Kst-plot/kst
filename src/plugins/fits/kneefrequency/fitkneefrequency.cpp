@@ -440,15 +440,25 @@ Kst::DataObject *FitKneeFrequencyPlugin::create(Kst::ObjectStore *store, Kst::Da
 
   if (ConfigWidgetFitKneeFrequencyPlugin* config = static_cast<ConfigWidgetFitKneeFrequencyPlugin*>(configWidget)) {
 
+    Kst::ScalarPtr max;
+    Kst::ScalarPtr min;
+    Kst::ScalarPtr noise;
+
+    if (setupInputsOutputs) {
+      max = config->selectedScalarMax();
+      min = config->selectedScalarMin();
+      noise = config->selectedScalarWhiteNoise();
+    }
+
     FitKneeFrequencySource* object = store->createObject<FitKneeFrequencySource>();
 
     if (setupInputsOutputs) {
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setInputScalar(SCALAR_IN_MAX, config->selectedScalarMax());
-      object->setInputScalar(SCALAR_IN_MIN, config->selectedScalarMin());
-      object->setInputScalar(SCALAR_IN_WHITENOISE, config->selectedScalarWhiteNoise());
+      object->setInputScalar(SCALAR_IN_MAX, max);
+      object->setInputScalar(SCALAR_IN_MIN, min);
+      object->setInputScalar(SCALAR_IN_WHITENOISE, noise);
     }
 
     object->setPluginName(pluginName());

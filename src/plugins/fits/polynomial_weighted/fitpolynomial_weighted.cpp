@@ -342,6 +342,12 @@ Kst::DataObject *FitPolynomialWeightedPlugin::create(Kst::ObjectStore *store, Ks
 
   if (ConfigWidgetFitPolynomialWeightedPlugin* config = static_cast<ConfigWidgetFitPolynomialWeightedPlugin*>(configWidget)) {
 
+    Kst::ScalarPtr order;
+
+    if (setupInputsOutputs) {
+      order = config->selectedScalarOrder();
+    }
+
     FitPolynomialWeightedSource* object = store->createObject<FitPolynomialWeightedSource>();
 
     if (setupInputsOutputs) {
@@ -349,7 +355,7 @@ Kst::DataObject *FitPolynomialWeightedPlugin::create(Kst::ObjectStore *store, Ks
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setInputScalar(SCALAR_IN, config->selectedScalarOrder());
+      object->setInputScalar(SCALAR_IN, order);
     }
 
     object->setPluginName(pluginName());

@@ -221,7 +221,7 @@ QString FitPolynomialUnweightedSource::parameterVectorToString() const {
   QString str = Name();
 
   if (hasParameterVector()) {
-    Kst::VectorPtr vectorParam = _outputVectors["Parameters Vector"];
+    Kst::VectorPtr vectorParam = _outputVectors[VECTOR_OUT_Y_PARAMETERS];
     for (int i = 0; i < vectorParam->length(); i++) {
       QString paramName = parameterName(i);
       if (!paramName.isEmpty()) {
@@ -322,13 +322,19 @@ Kst::DataObject *FitPolynomialUnweightedPlugin::create(Kst::ObjectStore *store, 
 
   if (ConfigWidgetFitPolynomialUnweightedPlugin* config = static_cast<ConfigWidgetFitPolynomialUnweightedPlugin*>(configWidget)) {
 
+    Kst::ScalarPtr order;
+
+    if (setupInputsOutputs) {
+      order = config->selectedScalarOrder();
+    }
+
     FitPolynomialUnweightedSource* object = store->createObject<FitPolynomialUnweightedSource>();
 
     if (setupInputsOutputs) {
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setInputScalar(SCALAR_IN, config->selectedScalarOrder());
+      object->setInputScalar(SCALAR_IN, order);
     }
 
     object->setPluginName(pluginName());

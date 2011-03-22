@@ -360,6 +360,14 @@ Kst::DataObject *FitSinusoidWeightedPlugin::create(Kst::ObjectStore *store, Kst:
 
   if (ConfigWidgetFitSinusoidWeightedPlugin* config = static_cast<ConfigWidgetFitSinusoidWeightedPlugin*>(configWidget)) {
 
+    Kst::ScalarPtr harmonics;
+    Kst::ScalarPtr period;
+
+    if (setupInputsOutputs) {
+      harmonics = config->selectedScalarHarmonics();
+      period = config->selectedScalarPeriod();
+    }
+
     FitSinusoidWeightedSource* object = store->createObject<FitSinusoidWeightedSource>();
 
     if (setupInputsOutputs) {
@@ -367,8 +375,8 @@ Kst::DataObject *FitSinusoidWeightedPlugin::create(Kst::ObjectStore *store, Kst:
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setInputScalar(SCALAR_IN_HARMONICS, config->selectedScalarHarmonics());
-      object->setInputScalar(SCALAR_IN_PERIOD, config->selectedScalarPeriod());
+      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
+      object->setInputScalar(SCALAR_IN_PERIOD, period);
     }
 
     object->setPluginName(pluginName());
