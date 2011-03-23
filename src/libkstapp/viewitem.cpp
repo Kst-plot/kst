@@ -1105,6 +1105,7 @@ void ViewItem::resizeTopLeft(const QPointF &offset) {
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
               "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
+  Q_UNUSED(newAspect);
   setViewRect(r);
 }
 
@@ -1120,6 +1121,7 @@ void ViewItem::resizeTopRight(const QPointF &offset) {
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
               "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
+  Q_UNUSED(newAspect);
   setViewRect(r);
 }
 
@@ -1135,6 +1137,7 @@ void ViewItem::resizeBottomLeft(const QPointF &offset) {
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
               "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
+  Q_UNUSED(newAspect);
   setViewRect(r);
 }
 
@@ -1149,6 +1152,7 @@ void ViewItem::resizeBottomRight(const QPointF &offset) {
   const qreal newAspect = r.width() / r.height();
   Q_ASSERT_X(_lockAspectRatio ? qFuzzyCompare(newAspect, oldAspect) : true,
               "lockAspect error", QString(QString::number(newAspect) + "!=" + QString::number(oldAspect)).toLatin1().constData());
+  Q_UNUSED(newAspect);
   setViewRect(r);
 }
 

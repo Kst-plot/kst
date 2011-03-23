@@ -1406,7 +1406,7 @@ QProgressBar *MainWindow::progressBar() const {
 }
 
 void MainWindow::readFromEnd() {
-  int nf;
+  int nf = 0;
   int skip;
   bool do_skip;
   bool do_filter;
@@ -1436,7 +1436,7 @@ void MainWindow::readFromEnd() {
 }
 
 void MainWindow::readToEnd() {
-  int f0;
+  int f0 = 0;
   int skip;
   bool do_skip;
   bool do_filter;
@@ -1473,8 +1473,8 @@ void MainWindow::pause(bool pause) {
 }
 
 void MainWindow::forward() {
-  int f0;
-  int nf;
+  int f0 = 0;
+  int nf = 0;
   int skip;
   int filelength;
   bool count_from_end;
@@ -1518,8 +1518,8 @@ void MainWindow::forward() {
 }
 
 void MainWindow::back() {
-  int f0;
-  int nf;
+  int f0 = 0;
+  int nf = 0;
   int skip;
   int filelength;
   bool count_from_end;
