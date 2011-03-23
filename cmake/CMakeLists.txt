@@ -24,15 +24,15 @@ kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF a
 kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
 kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
 kst_option(install_libdir "Install directory name for libraries" OFF all)
-kst_option(console "Open console on Windows" OFF win)
 kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
-kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
 kst_option(dataobjects "Build dataobject plugins" ON all)
 kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
-kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
 kst_option(rpath "Use rpath" ON gcc)
+kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
+kst_option(console "Open console on Windows" OFF win)
+kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 
 message(STATUS)
 

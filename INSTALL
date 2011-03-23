@@ -105,21 +105,22 @@ Options
 	Available options will be listed on each cmake run.
 	Here the options with their default value:
 
-	-- kst_release              = OFF    : Build release version
+	-- kst_release              = OFF    : Build release version: optimize for speed, don't embedded debug symbols
 	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
 	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
 	-- kst_verbose              = OFF    : Make verbose CMake run and Makefiles
-	-- kst_console              = OFF    : Open console on Windows
-	-- kst_install_prefix       = OFF    : Install path for Kst, using a default if not set
+	-- kst_install_prefix       = ON     : Install path for Kst, using a default if not set
+	-- kst_install_libdir       = ON     : Install directory name for libraries
 	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
-	-- kst_3rdparty_download    = OFF    : Download precompiled 3rd party libraries
 	-- kst_dataobjects          = ON     : Build dataobject plugins
 	-- kst_test                 = OFF    : Build unit tests
-	-- kst_pch                  = OFF    : Use precompiled headers
+	-- kst_pch                  = ON     : Use precompiled headers
+	-- kst_svnversion           = ON     : Use svnversion's output for Kst's version information
+	-- kst_rpath                = ON     : Use rpath
+	-- kst_3rdparty_download    = OFF    : Download precompiled 3rd party libraries
+	-- kst_console              = OFF    : Open console on Windows
 	-- kst_edit_cont            = OFF    : Enable "Edit and Continue" for Visual Studio
-	-- kst_svnversion           = OFF    : Use svnversion's output for Kst's version information
 
-	
 	To enable a option pass the value ON or 1, eg
 		cmake ../kst/cmake -Dkst_merge_files=1
 
