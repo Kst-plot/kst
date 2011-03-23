@@ -1,3 +1,4 @@
+
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
@@ -107,6 +108,7 @@ void View::init()
 
 View::~View() {
   // PlotItems are QGraphicsItems and managed by Qt's graphic view
+  PlotItemManager::clearPlotsForView(this);
   delete _undoStack;
   delete _layoutBoxItem;
 }

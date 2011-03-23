@@ -28,24 +28,28 @@ class SharedAxisBoxItem;
 class PlotItemManager : public QObject
 {
   Q_OBJECT
-  public:
+
+public:
+    static PlotItemManager *self();
+
     static QList<PlotItem*> plotsForView(View *view);
+    static void clearPlotsForView(View *view);
+
     static QList<PlotItem*> tiedZoomPlotsForView(View *view);
     static QList<PlotItem*> tiedZoomPlotsForViewItem(ViewItem *viewItem);
     static QList<PlotItem*> tiedZoomPlots(PlotItem* plotItem);
-    static QList<ViewItem*> tiedZoomViewItems(PlotItem* plotItem);
-    static PlotItemManager *self();
+    static QList<ViewItem*> tiedZoomViewItems(PlotItem* plotItem);    
 
     void toggleAllTiedZoom(View *view);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void tiedZoomRemoved();
     void allPlotsTiedZoom();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clearFocusedPlots();
 
-  private:
+private:
     static void cleanup();
 
     PlotItemManager();
@@ -66,7 +70,7 @@ class PlotItemManager : public QObject
 
     void checkAllTied(View* view);
 
-  private:
+private:
     friend class ViewItem;
     friend class PlotItem;
     friend class SharedAxisBoxItem;

@@ -200,6 +200,13 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
 }
 
 
+void PlotItemManager::clearPlotsForView(View *view) {
+  if (PlotItemManager::self()->_plotLists.contains(view)) {
+    PlotItemManager::self()->_plotLists.remove(view);
+  }
+}
+
+
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   if (kstApp->mainWindow()->isTiedTabs()) {
     QList<PlotItem*> plots;
