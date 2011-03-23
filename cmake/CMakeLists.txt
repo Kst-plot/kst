@@ -244,13 +244,10 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 set(CPACK_STRIP_FILES 1)
 
 
-if(UNIX)
-	# cmake bug, problems with the quotes in the gpl, fixed in 2.8.4
-	set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_BINARY_DIR}/gpl)
-	FILE(WRITE ${CPACK_RESOURCE_FILE_LICENSE} "\n\nGNU GENERAL PUBLIC LICENSE, Version 2, June 1991")
-else()
-	set(CPACK_RESOURCE_FILE_LICENSE "${kst_dir}/COPYING")
-endif()
+
+# cmake bug, problems with the quotes in the gpl, fixed in 2.8.4
+set(CPACK_RESOURCE_FILE_LICENSE "${kst_dir}/COPYING")
+
 
 
 # sources
