@@ -35,7 +35,6 @@ kst_link(${libcore} ${libmath} ${libapp} ${libwidgets})
 kst_install_executable()
 
 if(UNIX AND NOT APPLE)
-	
 	set(man ${CMAKE_BINARY_DIR}/${kst_binary_name}.1)
 	configure_file(${kst_dir}/src/kst/kst.1.txt ${man})
 	install(CODE "execute_process(COMMAND gzip ${man})")
