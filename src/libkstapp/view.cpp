@@ -106,10 +106,7 @@ void View::init()
 
 
 View::~View() {
-  QList<PlotItem*> list = PlotItemManager::plotsForView(this);
-  foreach (PlotItem *plotItem, list) {
-    delete plotItem;
-  }
+  // PlotItems are QGraphicsItems and managed by Qt's graphic view
   delete _undoStack;
   delete _layoutBoxItem;
 }
