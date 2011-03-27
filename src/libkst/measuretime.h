@@ -46,6 +46,8 @@ class KSTCORE_EXPORT MeasureTime
 
     /// Increment interval by interval since last call/restart().
     void measure();
+
+    double getTime() const;
 };
 
 #define TIME_IN_SCOPE(x) MeasureTime x(QString("%1 at %2, line %3, time in scope").arg(#x).arg(__FILE__).arg(__LINE__))

@@ -64,37 +64,46 @@ MeasureTime::~MeasureTime()
 }
 
 
-void MeasureTime::restart()
+double MeasureTime::getTime() const
 {
 #ifdef Q_OS_WIN
+
   LARGE_INTEGER st;
   QueryPerformanceCounter(&st);
-  started = st.QuadPart * frequency;
+  return st.QuadPart * frequency;
+
 #else
-#ifndef Q_OS_MAC
+
+#if defined(Q_OS_MAC)
+  // TODO
+  return 0;
+#else
   timespec t;
+#if defined(CLOCK_PROCESS_CPUTIME_ID)
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-  started = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;  
+#elif defined(CLOCK_PROF)
+  clock_gettime(CLOCK_PROF, &t);
+#else
+  clock_gettime(CLOCK_REALTIME, &t);
 #endif
+  return 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
 #endif
+
+#endif
+
+}
+
+
+void MeasureTime::restart()
+{
+  started = getTime();
   interval = 0;
 }
 
 
 void MeasureTime::measure()
 {
-  double now = 0;
-#ifdef Q_OS_WIN
-  LARGE_INTEGER st;
-  QueryPerformanceCounter(&st);
-  now = st.QuadPart * frequency;
-#else
-#ifndef Q_OS_MAC  
-  timespec t;
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-  now = 1.0 * t.tv_sec + 1e-9 * t.tv_nsec;
-#endif
-#endif
+  double now = getTime();
   interval += now - started;
   started = now;
 }
