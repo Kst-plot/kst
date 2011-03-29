@@ -215,19 +215,20 @@ endif()
 if(WIN32)
 	set(CPACK_GENERATOR NSIS ZIP)
 	set(CPACK_BINARY_ZIP 1)
-	if (kst_install_prefix)
-		set(CPACK_NSIS_PACKAGE_NAME ${kst_install_prefix})
-	endif()
 endif()
 
-if (kst_install_prefix)
-	set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-binary)
+if(kst_install_prefix)
+	if(WIN32)
+		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win32)
+	else()
+		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-binary)
+	endif()
 	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix})
 else()
 	set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version})
 endif()
 set(CPACK_INSTALL_PREFIX "")
-	
+
 
 set(CPACK_PACKAGE_NAME   Kst)
 set(CPACK_PACKAGE_EXECUTABLES ${kst_binary_name} Kst2)
@@ -252,7 +253,11 @@ set(CPACK_RESOURCE_FILE_LICENSE "${kst_dir}/COPYING")
 
 # sources
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${kst_dir};/") # http://www.mail-archive.com/cmake@cmake.org/msg33720.html
-set(CPACK_SOURCE_GENERATOR TGZ ZIP TBZ2)
+if(WIN32)
+	set(CPACK_SOURCE_GENERATOR ZIP)
+else()
+	set(CPACK_SOURCE_GENERATOR TGZ)
+endif()
 
 # rpm
 set(CPACK_SET_DESTDIR "ON")
