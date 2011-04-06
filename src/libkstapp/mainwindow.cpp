@@ -668,6 +668,7 @@ void MainWindow::clearDrawingMarker() {
   _createPictureAct->setChecked(false);
   _createPlotAct->setChecked(false);
   _createSvgAct->setChecked(false);
+  _tabWidget->currentView()->setMouseMode(View::Default);
 }
 
 
