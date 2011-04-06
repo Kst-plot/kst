@@ -444,6 +444,8 @@ Kst::DataObject *FitKneeFrequencyPlugin::create(Kst::ObjectStore *store, Kst::Da
     Kst::ScalarPtr min;
     Kst::ScalarPtr noise;
 
+    // access/create scalars before creating plugin
+    // in order to preserve continuous scalar shortnames
     if (setupInputsOutputs) {
       max = config->selectedScalarMax();
       min = config->selectedScalarMin();

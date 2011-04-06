@@ -344,6 +344,8 @@ Kst::DataObject *FitPolynomialWeightedPlugin::create(Kst::ObjectStore *store, Ks
 
     Kst::ScalarPtr order;
 
+    // access/create input scalars before creating plugin
+    // in order to preserve continuous scalar shortnames
     if (setupInputsOutputs) {
       order = config->selectedScalarOrder();
     }

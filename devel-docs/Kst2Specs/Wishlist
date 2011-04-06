@@ -28,11 +28,6 @@ Edit multiple for other view objects (arrow, line, label...)
 
 --------
 
-Edit multiple for vectors
-(or get rid of the option in the dialog)
-
---------
-
 data source text box doesn't recognise initial ~ as a euphemism for
    the user's home directory (QDirModel doesn't handle this...)
    (nor QDir, though QDir seems to know about $HOME).
@@ -54,11 +49,6 @@ tell any of the numbers apart).
 --------------------
 
 in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
-
---------------------
-
-Tied zoom icon should be a mag glass + paper clip
-Replace layout mode icon with zoom icon, and invert sense
 
 --------------------
 

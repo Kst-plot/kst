@@ -340,6 +340,8 @@ Kst::DataObject *FitSinusoidUnweightedPlugin::create(Kst::ObjectStore *store, Ks
     Kst::ScalarPtr harmonics;
     Kst::ScalarPtr period;
 
+    // access/create input scalars before creating plugin
+    // in order to preserve continuous scalar shortnames
     if (setupInputsOutputs) {
       harmonics = config->selectedScalarHarmonics();
       period = config->selectedScalarPeriod();

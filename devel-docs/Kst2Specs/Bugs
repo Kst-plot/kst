@@ -3,17 +3,10 @@ Draw an ellipse that spans many plots.  It ends up in the back, and can't be bro
 
 --------------------
 
-Artifacts when resizing large arrowheads.
-
---------------------
-
 Curves are rendered slightly above where they should be.  Take a plot
 that it is of very boring data (like always exactly zero) and it'll be
 drawn one pixel above the axis tick mark for zero.  (This is not always the same - sometimes above, sometimes below, sometimes right.)
 So: it appears that ticks and curves use different rounding
 
 Probably related bug: points don't always appear centered on the line.
---------------------
-
-Select box tool.  Escape to cancel.  Mouse zooms don't work until you actually draw a box.
 
