@@ -34,6 +34,7 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   _autoSaveTimer = new QTimer(this);
 
   QStringList formats;// = QPictureIO::outputFormats();
+  formats.append(QString("svg"));
   foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
     formats.append(QString(array));
   }

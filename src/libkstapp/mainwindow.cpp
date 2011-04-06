@@ -59,6 +59,7 @@
 #include "dialoglauncher.h"
 
 #include <QtGui>
+#include <QSvgGenerator>
 
 
 namespace Kst {
@@ -446,17 +447,6 @@ void MainWindow::exportGraphicsFile(
       size.setWidth((int)((double)height * (double)sizeWindow.width() / (double)sizeWindow.height()));
     }
 
-    QImage image(size, QImage::Format_ARGB32);
-
-    QPainter painter(&image);
-    QSize currentSize(view->size());
-    view->resize(size);
-    view->processResize(size);
-    view->setPrinting(true);
-    view->render(&painter);
-    view->setPrinting(false);
-    view->resize(currentSize);
-    view->processResize(currentSize);
 
     QString file = filename;
     if (n_views != 1) {
@@ -467,8 +457,49 @@ void MainWindow::exportGraphicsFile(
              QFI.suffix();
     }
 
-    QImageWriter imageWriter(file, format.toLatin1());
-    imageWriter.write(image);
+    if (format == QString("svg")) {
+      QPainter painter;
+      QSvgGenerator generator;
+
+      QSize currentSize(view->size());
+      view->resize(size);
+      view->processResize(size);
+      view->setPrinting(true);
+
+      generator.setFileName(file);
+      generator.setResolution(100);
+      generator.setSize(view->size());
+      generator.setViewBox(view->rect());
+
+      painter.begin(&generator);
+      view->render(&painter);
+      painter.end();
+
+      view->setPrinting(false);
+      view->resize(currentSize);
+      view->processResize(currentSize);
+
+
+    } else {
+      QPainter painter;
+      QImage image(size, QImage::Format_ARGB32);
+
+      painter.begin(&image);
+
+      QSize currentSize(view->size());
+      view->resize(size);
+      view->processResize(size);
+      view->setPrinting(true);
+      view->render(&painter);
+      view->setPrinting(false);
+      view->resize(currentSize);
+      view->processResize(currentSize);
+
+      painter.end();
+
+      QImageWriter imageWriter(file, format.toLatin1());
+      imageWriter.write(image);
+    }
     viewCount++;
   }
 }
