@@ -430,21 +430,19 @@ void MainWindow::exportGraphicsFile(
   foreach (View *view, _tabWidget->views()) {
     QSize size;
     if (display == 0) {
-      size.setWidth(width);
-      size.setHeight(height);
-    } else if (display == 1) {
-      size.setWidth(width);
-      size.setHeight(width);
-    } else if (display == 2) {
       QSize sizeWindow(view->geometry().size());
-
       size.setWidth(width);
       size.setHeight((int)((double)width * (double)sizeWindow.height() / (double)sizeWindow.width()));
-    } else {
+    } else if (display == 1){
       QSize sizeWindow(view->geometry().size());
-
       size.setHeight(height);
       size.setWidth((int)((double)height * (double)sizeWindow.width() / (double)sizeWindow.height()));
+    } else if (display == 2) {
+      size.setWidth(width);
+      size.setHeight(height);
+    } else { //if (display == 3) {
+      size.setWidth(width);
+      size.setHeight(width);
     }
 
 
