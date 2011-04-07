@@ -37,6 +37,7 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
     void apply();
     void applyAutosave();
     void updateButtons();
+    void updateFormats();
 
   Q_SIGNALS:
     void exportGraphics(const QString &filename, const QString &format, int w, int h, int display);

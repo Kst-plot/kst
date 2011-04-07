@@ -33,15 +33,10 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _autoSaveTimer = new QTimer(this);
 
-  QStringList formats;// = QPictureIO::outputFormats();
-  formats.append(QString("svg"));
-  foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
-    formats.append(QString(array));
-  }
+  _listVectorFormats->setChecked(_dialogDefaults->value("export/useVectors",true).toBool());
+  _listBitmapFormats->setChecked(_dialogDefaults->value("export/useBitmaps",true).toBool());
 
-  _comboBoxFormats->addItems(formats);
-  _comboBoxFormats->setCurrentIndex(
-        _comboBoxFormats->findText(_dialogDefaults->value("export/format","png").toString()));
+  updateFormats();
 
   _xSize->setValue(_dialogDefaults->value("export/xsize","1024").toInt());
   _ySize->setValue(_dialogDefaults->value("export/ysize","768").toInt());
@@ -57,12 +52,41 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
+  connect(_listVectorFormats, SIGNAL(clicked()), this, SLOT(updateFormats()));
+  connect(_listBitmapFormats, SIGNAL(clicked()), this, SLOT(updateFormats()));
 }
 
 
 ExportGraphicsDialog::~ExportGraphicsDialog() {
 }
 
+void ExportGraphicsDialog::updateFormats() {
+  QStringList formats;// = QPictureIO::outputFormats();
+
+  if (_listVectorFormats->isChecked()) {
+    formats.append(QString("svg"));
+  }
+
+  if (_listBitmapFormats->isChecked()) {
+    foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
+      formats.append(QString(array));
+    }
+  }
+
+  _comboBoxFormats->clear();
+  _comboBoxFormats->addItems(formats);
+
+  int index = _comboBoxFormats->findText(_dialogDefaults->value("export/format","png").toString());
+  if (index<0) {
+    if (_listBitmapFormats->isChecked()) {
+      index = _comboBoxFormats->findText("png");
+    } else {
+      index = _comboBoxFormats->findText("svg");
+    }
+  }
+  _comboBoxFormats->setCurrentIndex(index);
+
+}
 
 void ExportGraphicsDialog::enableWidthHeight() {
   int displayOption = _comboBoxSizeOption->currentIndex();
@@ -127,6 +151,8 @@ void ExportGraphicsDialog::createFile() {
   _dialogDefaults->setValue("export/xsize", _xSize->value());
   _dialogDefaults->setValue("export/ysize", _ySize->value());
   _dialogDefaults->setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
+  _dialogDefaults->setValue("export/useVectors", _listVectorFormats->isChecked());
+  _dialogDefaults->setValue("export/useBitmaps", _listBitmapFormats->isChecked());
   emit exportGraphics(filename, format, _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
 }
 
