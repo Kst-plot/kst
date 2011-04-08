@@ -478,6 +478,28 @@ void MainWindow::exportGraphicsFile(
       view->processResize(currentSize);
 
 
+    } else if (format == QString("eps")) {
+      QPrinter printer(QPrinter::ScreenResolution);
+      printer.setOutputFormat(QPrinter::PostScriptFormat);
+      printer.setOutputFileName(file);
+      setPrinterDefaults(&printer);
+
+      printer.setPrintRange(QPrinter::CurrentPage);
+
+      printer.setPaperSize(size, QPrinter::DevicePixel);
+      printToPrinter(&printer);
+
+    } else if (format == QString("pdf")) {
+      QPrinter printer(QPrinter::ScreenResolution);
+      printer.setOutputFormat(QPrinter::PdfFormat);
+      printer.setOutputFileName(file);
+      setPrinterDefaults(&printer);
+
+      printer.setPrintRange(QPrinter::CurrentPage);
+
+      printer.setPaperSize(size, QPrinter::DevicePixel);
+      printToPrinter(&printer);
+
     } else {
       QPainter painter;
       QImage image(size, QImage::Format_ARGB32);

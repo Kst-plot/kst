@@ -63,15 +63,20 @@ ExportGraphicsDialog::~ExportGraphicsDialog() {
 void ExportGraphicsDialog::updateFormats() {
   QStringList formats;// = QPictureIO::outputFormats();
 
-  if (_listVectorFormats->isChecked()) {
-    formats.append(QString("svg"));
-  }
-
   if (_listBitmapFormats->isChecked()) {
     foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
       formats.append(QString(array));
     }
+    formats.removeAll(QString("eps"));
+    formats.removeAll(QString("EPS"));
   }
+
+  if (_listVectorFormats->isChecked()) {
+    formats.append(QString("svg"));
+    formats.append(QString("eps"));
+    formats.append(QString("pdf"));
+  }
+
 
   _comboBoxFormats->clear();
   _comboBoxFormats->addItems(formats);
