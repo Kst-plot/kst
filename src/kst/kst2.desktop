@@ -1,11 +1,11 @@
 [Desktop Entry]
 Type=Application
-Exec=kst2 -caption "%c" %i %m
+Exec=kst2 
 Icon=kst
-DocPath=kst/index.html
+DocPath=kst2/index.html
 MimeType=application/x-kst;
 Categories=Qt;KDE;Science;
-Name=Kst
+Name=Kst2
 Name[hi]=केएसटी
 Name[ta]=கேஎஸ்டி
 Name[xx]=xxKstxx

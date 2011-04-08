@@ -39,27 +39,22 @@ else()
 endif()
 
 
-# install data files
-if(UNIX)
-	if(NOT gyrodata)
-		configure_file(${kst_dir}/sample_data/GYRODATA+free-width+whitespace+unixEOL+dot-decimal-separator.txt.gz 
-		${CMAKE_BINARY_DIR}/gyrodata.dat.gz COPYONLY)
-		execute_process(WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND gunzip gyrodata.dat.gz)
-		set(gyrodata ${CMAKE_BINARY_DIR}/gyrodata.dat CACHE STRING "gyrodata decompressed")
-	endif()
-endif()
-file(GLOB dat_files ${kst_dir}/misc/tutorial/*.dat)
-install(FILES ${dat_files} ${gyrodata} DESTINATION ${tutorial_folder})
+# none of these are needed for now, so don't install.
+# cbn April 8, 2011
+# install data files (TODO: decide on how we want to ship tutorial/demo data)
+#if(UNIX)
+#	if(NOT gyrodata)
+#		configure_file(${kst_dir}/sample_data/GYRODATA+free-width+whitespace+unixEOL+dot-decimal-separator.txt.gz 
+#		${CMAKE_BINARY_DIR}/gyrodata.dat.gz COPYONLY)
+#		execute_process(WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND gunzip gyrodata.dat.gz)
+#		set(gyrodata ${CMAKE_BINARY_DIR}/gyrodata.dat CACHE STRING "gyrodata decompressed")
+#	endif()
+#endif()
+#file(GLOB dat_files ${kst_dir}/misc/tutorial/*.dat)
+#install(FILES ${dat_files} ${gyrodata} DESTINATION ${tutorial_folder})
 
 
-# install colors
-file(GLOB idl_files ${kst_dir}/misc/IDL*)
-install(FILES ${idl_files} DESTINATION ${color_folder})
-
-
-#install fonts
-if(UNIX)
-	file(GLOB fonts ${kst_dir}/misc/fonts/*.gz)
-	install(FILES ${fonts} DESTINATION ${font_folder})
-endif()
+# install colors (TODO: support reading color pallets from disk)
+#file(GLOB idl_files ${kst_dir}/misc/IDL*)
+#install(FILES ${idl_files} DESTINATION ${color_folder})
 

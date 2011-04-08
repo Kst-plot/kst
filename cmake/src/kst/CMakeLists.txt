@@ -42,15 +42,14 @@ if(UNIX AND NOT APPLE)
 	install(FILES ${man}.gz DESTINATION share/man/man1)
 	
 	set(k ${kst_dir}/src/kst)
-	install(FILES ${k}/kstplugin.desktop
-	              ${k}/kstdatasourceplugin.desktop
-	              ${k}/kstdataobjectplugin.desktop
-	              ${k}/kstbasicplugin.desktop
-	              ${k}/kstfilter.desktop
-	              ${k}/kstextension.desktop
-	                                 DESTINATION share/servicetypes/kst)
-	install(FILES ${k}/kst.desktop   DESTINATION share/applnk/Graphics)
-	install(FILES ${k}/kstui.rc      DESTINATION share/apps/kst)
-	install(FILES ${k}/x-kst.desktop DESTINATION share/mimelink/application)
-	install(FILES ${k}/kst.desktop   DESTINATION share/applications)
+#	install(FILES ${k}/kstplugin.desktop
+#	              ${k}/kstdatasourceplugin.desktop
+#	              ${k}/kstdataobjectplugin.desktop
+#	              ${k}/kstbasicplugin.desktop
+#	              ${k}/kstfilter.desktop
+#	              ${k}/kstextension.desktop
+#	                                 DESTINATION share/servicetypes/kst)
+	install(FILES ${k}/kst2.desktop   DESTINATION share/applnk/Graphics)
+	install(FILES ${k}/x-kst2.desktop DESTINATION share/mimelink/application)
+	install(FILES ${k}/kst2.desktop   DESTINATION share/applications)
 endif()
