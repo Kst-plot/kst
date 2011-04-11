@@ -145,13 +145,14 @@ void ExportGraphicsDialog::apply() {
 
 void ExportGraphicsDialog::createFile() {
   QString filename = _saveLocation->file();
+  QString default_filename = filename;
   QString format = _comboBoxFormats->currentText();
   if (_autoExtension->isChecked()) {
     if (QFileInfo(filename).suffix().toLower() != format.toLower()) {
       filename += '.' + format;
     }
   }
-  _dialogDefaults->setValue("export/filename", filename);
+  _dialogDefaults->setValue("export/filename", default_filename);
   _dialogDefaults->setValue("export/format", format);
   _dialogDefaults->setValue("export/xsize", _xSize->value());
   _dialogDefaults->setValue("export/ysize", _ySize->value());

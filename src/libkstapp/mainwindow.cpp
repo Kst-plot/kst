@@ -427,7 +427,8 @@ void MainWindow::exportGraphicsFile(
     const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
-  foreach (View *view, _tabWidget->views()) {
+  for (int i_view = 0; i_view<n_views; i_view++) {
+    View *view = _tabWidget->views().at(i_view);
     QSize size;
     if (display == 0) {
       QSize sizeWindow(view->geometry().size());
@@ -449,12 +450,11 @@ void MainWindow::exportGraphicsFile(
     QString file = filename;
     if (n_views != 1) {
       QFileInfo QFI(filename);
-      file = QFI.completeBaseName() +
+      file = QFI.dir().path() + '/' + QFI.completeBaseName() +
              '_' +
              QString::number(viewCount+1) + '.' +
              QFI.suffix();
     }
-
     if (format == QString("svg")) {
       QPainter painter;
       QSvgGenerator generator;
@@ -484,7 +484,8 @@ void MainWindow::exportGraphicsFile(
       printer.setOutputFileName(file);
       setPrinterDefaults(&printer);
 
-      printer.setPrintRange(QPrinter::CurrentPage);
+      printer.setPrintRange(QPrinter::PageRange);
+      printer.setFromTo(i_view+1, i_view+1);
 
       printer.setPaperSize(size, QPrinter::DevicePixel);
       printToPrinter(&printer);
@@ -495,7 +496,8 @@ void MainWindow::exportGraphicsFile(
       printer.setOutputFileName(file);
       setPrinterDefaults(&printer);
 
-      printer.setPrintRange(QPrinter::CurrentPage);
+      printer.setPrintRange(QPrinter::PageRange);
+      printer.setFromTo(i_view+1, i_view+1);
 
       printer.setPaperSize(size, QPrinter::DevicePixel);
       printToPrinter(&printer);
@@ -1706,8 +1708,6 @@ void MainWindow::showExportGraphicsDialog() {
 void MainWindow::showExportVectorsDialog() {
   if (!_exportVectors) {
     _exportVectors = new ExportVectorsDialog(this);
-    //connect(_exportVectors, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)),
-    //        this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
   }
   if (_exportVectors->isVisible()) {
     _exportVectors->raise();
