@@ -17,6 +17,7 @@
 #include "plotitem.h"
 #include "plotitemmanager.h"
 #include "document.h"
+#include "datacollection.h"
 
 #include "layoutboxitem.h"
 
@@ -812,9 +813,11 @@ void ViewItem::createAutoLayout() {
 
 void ViewItem::createCustomLayout() {
   bool ok;
+  int default_cols = qMax(1,int(sqrt(Data::self()->plotList().count())));
   int columns = QInputDialog::getInteger(view(), tr("Kst"),
-                                      tr("Select Number of Columns"),1, 0,
+                                      tr("Select Number of Columns"),default_cols, 0,
                                       10, 1, &ok);
+
   if (ok) {
     if (parentViewItem()) {
       LayoutCommand *layout = new LayoutCommand(parentViewItem());

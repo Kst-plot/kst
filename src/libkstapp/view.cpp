@@ -24,6 +24,7 @@
 #include "plotitemmanager.h"
 #include "plotitem.h"
 #include "dialogdefaults.h"
+#include "datacollection.h"
 
 #include <math.h>
 
@@ -342,8 +343,9 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 
 void View::createCustomLayout() {
   bool ok;
+  int default_cols = qMax(1,int(sqrt(Data::self()->plotList().count())));
   int columns = QInputDialog::getInteger(this, tr("Kst"),
-                                      tr("Select Number of Columns"),1, 0,
+                                      tr("Select Number of Columns"),default_cols, 0,
                                       10, 1, &ok);
   if (ok) {
     createLayout(columns);
