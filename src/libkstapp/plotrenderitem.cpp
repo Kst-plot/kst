@@ -391,8 +391,10 @@ QString PlotRenderItem::multiRenderItemLabel(bool isX) const {
 QString PlotRenderItem::leftLabel() const {
   if (relationList().size() == 1) {
     return relationList().at(0)->yLabelInfo().singleRenderItemLabel();
-  } else {  // multiple curves: quantity [units]
+  } else if (relationList().size()>1) {  // multiple curves: quantity [units]
     return multiRenderItemLabel(false);
+  } else {
+    return QString();
   }
 }
 
@@ -400,8 +402,10 @@ QString PlotRenderItem::leftLabel() const {
 QString PlotRenderItem::bottomLabel() const {
   if (relationList().size() == 1) {
     return relationList().at(0)->xLabelInfo().singleRenderItemLabel();
-  } else {  // multiple curves: quantity [units]
+  } else if (relationList().size()>1) {  // multiple curves: quantity [units]
     return multiRenderItemLabel(true);
+  } else {
+    return QString();
   }
 }
 
