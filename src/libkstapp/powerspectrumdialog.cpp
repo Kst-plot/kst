@@ -37,6 +37,8 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Power Spectrum"));
 
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
+
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_FFTOptions, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
