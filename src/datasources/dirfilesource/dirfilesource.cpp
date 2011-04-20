@@ -46,6 +46,72 @@ class DirFileSource::Config {
     }
 };
 
+//
+// Scalar Interface
+//
+class DataInterfaceDirFileScalar : public DataSource::DataInterface<DataScalar>
+{
+public:
+  DataInterfaceDirFileScalar(DirFileSource& d) : dir(d) {}
+
+  // read one element
+  int read(const QString&, DataScalar::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return dir._scalarList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString& field) const { return dir._scalarList.contains( field ); }
+
+  // T specific: not used for scalars
+  const DataScalar::DataInfo dataInfo(const QString&) const { return DataScalar::DataInfo(); }
+  void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  DirFileSource& dir;
+};
+
+int DataInterfaceDirFileScalar::read(const QString& field, DataScalar::ReadInfo& p)
+{
+  return dir.readScalar(*p.value, field);
+}
+
+//
+// String Interface
+//
+class DataInterfaceDirFileString : public DataSource::DataInterface<DataString>
+{
+public:
+  DataInterfaceDirFileString(DirFileSource& d) : dir(d) {}
+
+  // read one element
+  int read(const QString&, DataString::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return dir._stringList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString& field) const { return dir._stringList.contains( field ); }
+
+  // T specific: not used for Strings
+  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  void setDataInfo(const QString&, const DataString::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  DirFileSource& dir;
+};
+
+int DataInterfaceDirFileString::read(const QString& field, DataString::ReadInfo& p)
+{
+  return dir.readString(*p.value, field);
+}
+
 
 //
 // Vector interface
@@ -126,9 +192,11 @@ QMap<QString, QString> DataInterfaceDirFileVector::metaStrings(const QString& fi
 
 DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
     Kst::DataSource(store, cfg, filename, type), _config(0L),
-    iv(new DataInterfaceDirFileVector(*this))
+    iv(new DataInterfaceDirFileVector(*this)), ix(new DataInterfaceDirFileScalar(*this)), is(new DataInterfaceDirFileString(*this))
 {
   setInterface(iv);
+  setInterface(ix);
+  setInterface(is);
 
   setUpdateType(None);
 
