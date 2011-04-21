@@ -2289,6 +2289,99 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   Q_ASSERT(_item->view());
   Q_ASSERT(item);
 
+  if (layout == CurvePlacement::Protect) {
+    _layout = new ViewGridLayout(_item);
+
+    QPointF center = _item->view()->sceneRect().center();
+    center -= QPointF(100.0, 100.0);
+
+    item->setPos(center);
+    item->setViewRect(0.0, 0.0, 200.0, 200.0);
+    _item->view()->scene()->addItem(item);
+    _item->view()->undoStack()->push(this);
+    return;
+  }
+
+
+  QList<ViewItem*> viewItems;
+  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
+      continue;
+    viewItems.append(viewItem);
+  }
+
+  _layout = new ViewGridLayout(_item);
+
+  QList<struct AutoFormatRC> rcList;
+  generateRCList(viewItems, rcList);
+
+  int max_row=0;
+  int max_col=0;
+  foreach (struct AutoFormatRC rc, rcList) {
+    max_row = qMax(rc.row + rc.row_span, max_row);
+    max_col = qMax(rc.col + rc.col_span, max_col);
+  }
+
+  int a[max_row][max_col];
+  for (int i_row = 0; i_row<max_row; i_row++) {
+    for (int i_col = 0; i_col<max_col; i_col++) {
+      a[i_row][i_col] = 0;
+    }
+  }
+  foreach (struct AutoFormatRC rc, rcList) {
+    for (int i_row = rc.row; i_row<rc.row+rc.row_span; i_row++) {
+      for (int i_col = rc.col; i_col<rc.col+rc.col_span; i_col++) {
+        a[i_row][i_col] = 1;
+      }
+    }
+  }
+
+  int row = -1;
+  int col = -1;
+  for (int i_col = 0; i_col<max_col; i_col++) {
+    for (int i_row = 0; i_row<max_row; i_row++) {
+      if (a[i_row][i_col]==0) {
+        row = i_row;
+        col = i_col;
+        break;
+      }
+      if (row>=0) {
+        break;
+      }
+    }
+  }
+  if (row<0) {
+    row = max_row;
+    col = 0;
+  }
+
+  int n_views = viewItems.size();
+  for (int i_view = 0; i_view<n_views; i_view++) {
+    ViewItem *v = viewItems.at(i_view);
+    struct AutoFormatRC rc = rcList.at(i_view);
+    _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
+  }
+  _item->view()->scene()->addItem(item);
+  _layout->addViewItem(item, row, col, 1,1);
+
+  if (qobject_cast<LayoutBoxItem*>(_item)) {
+    QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
+                    _item, SLOT(setEnabled(bool)));
+  }
+
+  _layout->apply();
+  _item->view()->undoStack()->push(this);
+}
+
+#if 0
+void oldAppendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
+  Q_ASSERT(_item);
+  Q_ASSERT(_item->view());
+  Q_ASSERT(item);
+
   _layout = new ViewGridLayout(_item);
 
   QPointF center = _item->view()->sceneRect().center();
@@ -2355,6 +2448,8 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   }
   _item->view()->undoStack()->push(this);
 }
+
+#endif
 
 void MoveCommand::undo() {
   Q_ASSERT(_item);
