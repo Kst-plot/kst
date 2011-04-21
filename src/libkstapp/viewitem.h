@@ -397,7 +397,6 @@ class LayoutCommand : public ViewItemCommand
     virtual void undo();
     virtual void redo();
     void createLayout(int columns = 0);
-
   private:
     QPointer<ViewGridLayout> _layout;
 };
@@ -566,6 +565,20 @@ public:
   QPointF hotSpot;
 
   static const MimeDataViewItem* downcast(const QMimeData*);
+};
+
+struct AutoFormatEdges {
+  int edge_number;
+  qreal edge;
+  bool left_or_top;
+  ViewItem *item;
+};
+
+struct AutoFormatRC {
+  int row;
+  int row_span;
+  int col;
+  int col_span;
 };
 
 }
