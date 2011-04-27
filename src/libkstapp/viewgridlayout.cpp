@@ -241,7 +241,6 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
   layout->shareAxis(painter, creation);
 #endif
 
-  qDebug() << "leave share plots";
 }
 
 

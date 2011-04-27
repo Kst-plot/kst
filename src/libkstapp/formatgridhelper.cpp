@@ -48,7 +48,7 @@ bool findNextEdgeLocation(QList<struct AutoFormatEdges> &edges, QList<qreal> &lo
       // count edges that are near this edge
       for (int j_edge = 0; j_edge<n_edges; ++j_edge) {
         if (edges.at(j_edge).edge_number == -1) {
-          if ((edges.at(j_edge).edge >= edges.at(i_edge).edge - 0.00001) &&
+          if ((edges.at(j_edge).edge >= edges.at(i_edge).edge - 0.0001) &&
               (edges.at(j_edge).edge <= edges.at(i_edge).edge+grid_resolution)) {
             this_edge_count++;
           }
@@ -68,12 +68,14 @@ bool findNextEdgeLocation(QList<struct AutoFormatEdges> &edges, QList<qreal> &lo
     int n_this_edge = 0;
     // Set edge_number of all of the edges which are in this area
     qreal best_edge = edges.at(i_best_edge).edge;
-    for (int i_edge = i_best_edge; i_edge < n_edges; i_edge++) {
-      if ((edges.at(i_edge).edge >= best_edge - 0.00001) &&
-          (edges.at(i_edge).edge <= best_edge+grid_resolution)) {
-        edges[i_edge].edge_number = edge_location;
-        sum_edge += edges.at(i_edge).edge;
-        ++n_this_edge;
+    for (int i_edge = 0; i_edge < n_edges; i_edge++) {
+      if (edges.at(i_edge).edge_number == -1) {
+        if ((edges.at(i_edge).edge >= best_edge - 0.0001) &&
+            (edges.at(i_edge).edge <= best_edge+grid_resolution)) {
+          edges[i_edge].edge_number = edge_location;
+          sum_edge += edges.at(i_edge).edge;
+          ++n_this_edge;
+        }
       }
     }
     best_edge = sum_edge/qreal(n_this_edge);
