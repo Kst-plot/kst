@@ -15,7 +15,7 @@
 #include "plotitem.h"
 #include "plotitemmanager.h"
 
-#include "gridlayouthelper.h"
+//#include "gridlayouthelper.h"
 #include "viewgridlayout.h"
 
 #include "application.h"

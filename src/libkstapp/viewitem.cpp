@@ -18,10 +18,11 @@
 #include "plotitemmanager.h"
 #include "document.h"
 #include "datacollection.h"
+#include "formatgridhelper.cpp"
 
 #include "layoutboxitem.h"
 
-#include "gridlayouthelper.h"
+//#include "gridlayouthelper.h"
 
 #include <math.h>
 
@@ -2055,179 +2056,6 @@ void LayoutCommand::redo() {
   _layout->apply();
 }
 
-/*****************************************************************************/
-/************** local helper functions for auto layout ***********************/
-void appendEdge(QList<struct AutoFormatEdges> &edges, double pos, double size, double grid, ViewItem *item) {
-  struct AutoFormatEdges edge;
-
-  edge.edge_number = -1;
-  edge.item = item;
-
-  // FIXME: do we really want to do this, or should we re-scale the lists at the end instead?
-  //size = qMax(size, grid);
-  //size = qMin(1.0, size);
-  //pos =  qMax(pos - size, 0.0);
-  //if (pos + size>1.0) {
-  //  pos = 1.0 - size;
-  //}
-
-  edge.edge = pos; // left edge
-  edge.left_or_top = true;
-  edges.append(edge);
-  edge.edge = pos+size; // right edge
-  edge.left_or_top = false;
-  edges.append(edge);
-
-}
-
-/*****************************************************************************/
-/************** local helper functions for auto layout ***********************/
-bool findNextEdgeLocation(QList<struct AutoFormatEdges> &edges, QList<qreal> &locations, qreal grid_resolution) {
-  int n_edges = edges.size();
-
-  int i_best_edge = -1;
-  int this_edge_count = 0;
-  int best_edge_count = 0;
-
-  for (int i_edge = 0; i_edge<n_edges; ++i_edge) {
-    this_edge_count = 0;
-    if (edges.at(i_edge).edge_number == -1) {
-      // count edges that are near this edge
-      for (int j_edge = 0; j_edge<n_edges; ++j_edge) {
-        if (edges.at(j_edge).edge_number == -1) {
-          if ((edges.at(j_edge).edge >= edges.at(i_edge).edge) &&
-              (edges.at(j_edge).edge <= edges.at(i_edge).edge+grid_resolution)) {
-            this_edge_count++;
-          }
-        }
-      }
-      if (this_edge_count > best_edge_count) {
-        i_best_edge = i_edge;
-        best_edge_count = this_edge_count;
-      }
-    }
-  }
-  // now i_best_edge holds the index of the edge with the most other edges
-  // 'close' to it (ie, between edge and edge + grid_resolution)
-  if (i_best_edge >= 0 ) {
-    int edge_location = locations.size();
-    qreal sum_edge = 0.0; // to get the mean of this edge
-    // Set edge_number of all of the edges which are in this area
-    qreal best_edge = edges.at(i_best_edge).edge;
-    for (int i_edge = best_edge; i_edge < n_edges; i_edge++) {
-      if ((edges.at(i_edge).edge >= best_edge) &&
-          (edges.at(i_edge).edge <= best_edge+grid_resolution)) {
-        edges[i_edge].edge_number = edge_location;
-        sum_edge += edges.at(i_edge).edge;
-      }
-    }
-    best_edge = sum_edge/qreal(best_edge_count);
-
-    locations.append(best_edge);
-    return true;
-  } else {
-    return false;
-  }
-}
-
-/*****************************************************************************/
-/************** local helper functions for auto layout ***********************/
-void convertEdgeLocationsToGrid(const QList<qreal> &locations, QList<int> &grid_locations) {
-
-  QList<qreal> sorted_locations(locations);
-  qSort(sorted_locations);
-
-  int n_loc = locations.size();
-  for (int i_unsorted = 0; i_unsorted<n_loc; i_unsorted++) {
-    for (int i_sorted = 0; i_sorted<n_loc; i_sorted++) {
-      if (locations.at(i_unsorted) == sorted_locations.at(i_sorted)) {
-        grid_locations.append(i_sorted);
-        break;
-      }
-    }
-  }
-}
-
-/*****************************************************************************/
-/************** local helper functions for auto layout ***********************/
-void generateRCList(const QList<ViewItem*> &viewItems, QList<struct AutoFormatRC> &rcList) {
-  const double min_size_limit = 0.05;
-
-  double min_height = 1.0;
-  double min_width = 1.0;
-
-  // Find the smallest plots, to determine the grid resolution
-  int n_view = viewItems.size();
-  for (int i_view = 0; i_view<n_view; i_view++) {
-    ViewItem *item = viewItems.at(i_view);
-    if ((item->relativeWidth()<min_width) && (item->relativeWidth()>min_size_limit)) {
-      min_width = item->relativeWidth();
-    }
-    if ((item->relativeHeight()<min_height) && (item->relativeHeight()>min_size_limit)) {
-      min_height = item->relativeHeight();
-    }
-  }
-  double grid_x_tolerance = min_height*0.3;
-  double grid_y_tolerance = min_width*0.3;
-
-  // Find all the edges
-  QList<struct AutoFormatEdges> x_edges;
-  QList<struct AutoFormatEdges> y_edges;
-  for (int i_view = 0; i_view<n_view; i_view++) {
-    ViewItem *item = viewItems.at(i_view);
-
-    appendEdge(x_edges, item->relativeCenter().x() - 0.5*item->relativeWidth(), item->relativeWidth(), grid_x_tolerance, item);
-    appendEdge(y_edges, item->relativeCenter().y() - 0.5*item->relativeHeight(), item->relativeHeight(), grid_y_tolerance, item);
-  }
-
-  // find edge concentrations
-  QList<qreal> x_edge_locations;
-  QList<qreal> y_edge_locations;
-  while (findNextEdgeLocation(x_edges, x_edge_locations, grid_x_tolerance)) {
-  }
-  while (findNextEdgeLocation(y_edges, y_edge_locations, grid_y_tolerance)) {
-  }
-
-  QList<int> x_edge_grid;
-  QList<int> y_edge_grid;
-  convertEdgeLocationsToGrid(x_edge_locations, x_edge_grid);
-  convertEdgeLocationsToGrid(y_edge_locations, y_edge_grid);
-  // x_edges: list of edges, each of which points to a x_edge_location and to a view item
-  // x_edge_location: a list of where the edge concentrations are.
-  // x_edge_grid: a list of grid indicies; same order as x_edge_location
-
-  foreach (ViewItem *v, viewItems) {
-    int left_gpos = 0;
-    int right_gpos = 1;
-    int top_gpos = 0;
-    int bottom_gpos = 1;
-    struct AutoFormatRC rc;
-    foreach (const AutoFormatEdges &edge, x_edges) {
-      if (edge.item == v) {
-        if (edge.left_or_top) {
-          left_gpos = x_edge_grid.at(edge.edge_number);
-        } else {
-          right_gpos = x_edge_grid.at(edge.edge_number);
-        }
-      }
-    }
-    foreach (const AutoFormatEdges &edge, y_edges) {
-      if (edge.item == v) {
-        if (edge.left_or_top) {
-          top_gpos = y_edge_grid.at(edge.edge_number);
-        } else {
-          bottom_gpos = y_edge_grid.at(edge.edge_number);
-        }
-      }
-    }
-    rc.row = top_gpos;
-    rc.col = left_gpos;
-    rc.row_span = bottom_gpos - top_gpos;
-    rc.col_span = right_gpos - left_gpos;
-    rcList.append(rc);
-  }
-}
-/*****************************************************************************/
 
 void LayoutCommand::createLayout(int columns) {
   Q_ASSERT(_item);
@@ -2252,15 +2080,35 @@ void LayoutCommand::createLayout(int columns) {
 
   _layout = new ViewGridLayout(_item);
 
-  QList<struct AutoFormatRC> rcList;
-  generateRCList(viewItems, rcList);
-  int n_views = viewItems.size();
-  for (int i_view = 0; i_view<n_views; i_view++) {
-    ViewItem *v = viewItems.at(i_view);
-    struct AutoFormatRC rc = rcList.at(i_view);
-    _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
+  FormatGridHelper grid(viewItems);
+
+  if (grid.n_cols == columns) {
+    columns = 0; // already in correct columns - just line stuff up
   }
 
+  if (columns == 0) {
+    int n_views = viewItems.size();
+    for (int i_view = 0; i_view<n_views; i_view++) {
+      ViewItem *v = viewItems.at(i_view);
+      struct AutoFormatRC rc = grid.rcList.at(i_view);
+      _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
+    }
+
+  } else {
+    int row = 0;
+    int col = 0;
+    int n_views = viewItems.size();
+
+    for (int i_view = 0; i_view<n_views; i_view++) {
+      ViewItem *v = viewItems.at(i_view);
+      _layout->addViewItem(v, row, col, 1, 1);
+      col++;
+      if (col>=columns) {
+        col = 0;
+        row++;
+      }
+    }
+  }
   if (qobject_cast<LayoutBoxItem*>(_item)) {
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                      _item, SLOT(setEnabled(bool)));
@@ -2315,35 +2163,13 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
 
   _layout = new ViewGridLayout(_item);
 
-  QList<struct AutoFormatRC> rcList;
-  generateRCList(viewItems, rcList);
-
-  int max_row=0;
-  int max_col=0;
-  foreach (struct AutoFormatRC rc, rcList) {
-    max_row = qMax(rc.row + rc.row_span, max_row);
-    max_col = qMax(rc.col + rc.col_span, max_col);
-  }
-
-  int a[max_row][max_col];
-  for (int i_row = 0; i_row<max_row; i_row++) {
-    for (int i_col = 0; i_col<max_col; i_col++) {
-      a[i_row][i_col] = 0;
-    }
-  }
-  foreach (struct AutoFormatRC rc, rcList) {
-    for (int i_row = rc.row; i_row<rc.row+rc.row_span; i_row++) {
-      for (int i_col = rc.col; i_col<rc.col+rc.col_span; i_col++) {
-        a[i_row][i_col] = 1;
-      }
-    }
-  }
+  FormatGridHelper grid(viewItems);
 
   int row = -1;
   int col = -1;
-  for (int i_col = 0; i_col<max_col; i_col++) {
-    for (int i_row = 0; i_row<max_row; i_row++) {
-      if (a[i_row][i_col]==0) {
+  for (int i_col = 0; i_col<grid.n_cols; i_col++) {
+    for (int i_row = 0; i_row<grid.n_rows; i_row++) {
+      if (grid.a[i_row][i_col]==0) {
         row = i_row;
         col = i_col;
         break;
@@ -2354,14 +2180,14 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     }
   }
   if (row<0) {
-    row = max_row;
+    row = grid.n_rows;
     col = 0;
   }
 
   int n_views = viewItems.size();
   for (int i_view = 0; i_view<n_views; i_view++) {
     ViewItem *v = viewItems.at(i_view);
-    struct AutoFormatRC rc = rcList.at(i_view);
+    struct AutoFormatRC rc = grid.rcList.at(i_view);
     _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
   }
   _item->view()->scene()->addItem(item);

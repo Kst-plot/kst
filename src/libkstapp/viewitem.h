@@ -567,20 +567,6 @@ public:
   static const MimeDataViewItem* downcast(const QMimeData*);
 };
 
-struct AutoFormatEdges {
-  int edge_number;
-  qreal edge;
-  bool left_or_top;
-  ViewItem *item;
-};
-
-struct AutoFormatRC {
-  int row;
-  int row_span;
-  int col;
-  int col_span;
-};
-
 }
 
 #endif

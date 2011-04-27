@@ -16,8 +16,9 @@
 #include "viewitem.h"
 #include "plotitem.h"
 #include "layoutboxitem.h"
-#include "gridlayouthelper.h"
+//#include "gridlayouthelper.h"
 #include "sharedaxisboxitem.h"
+#include "formatgridhelper.h"
 
 #include <QDebug>
 
@@ -178,11 +179,26 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
 
 
   // Build an automatic layout to try to maintain the existing layout.
-  Grid *grid = Grid::buildGrid(viewItems, 0);
-  Q_ASSERT(grid);
+  //Grid *grid = Grid::buildGrid(viewItems, 0);
+  //Q_ASSERT(grid);
 
   ViewGridLayout *layout = new ViewGridLayout(item);
 
+  FormatGridHelper grid(viewItems);
+
+  int n_views = viewItems.size();
+  for (int i_view = 0; i_view<n_views; i_view++) {
+    ViewItem *v = viewItems.at(i_view);
+    struct AutoFormatRC rc = grid.rcList.at(i_view);
+    layout->addViewItem(v, rc.row, rc.col, 1, 1);
+  }
+  layout->apply();
+
+  //layout->apply();
+
+  layout->shareAxis(painter, creation);
+
+#if 0
   foreach (ViewItem *v, viewItems) {
     int r = 0, c = 0, rs = 0, cs = 0;
     if (grid->locateWidget(v, r, c, rs, cs)) {
@@ -223,6 +239,9 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
   }
 
   layout->shareAxis(painter, creation);
+#endif
+
+  qDebug() << "leave share plots";
 }
 
 
