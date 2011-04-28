@@ -321,7 +321,12 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
 #endif
   QString fn = obtainFile(filename);
   if (fn.isEmpty()) {
-    return 0L;
+    return 0;
+  }
+
+  if (!QFileInfo(fn).exists()) {
+    Debug::self()->log(QObject::tr("File '%1' does not exists.").arg(fn), Debug::Warning);
+    return 0;
   }
 
   DataSourcePtr dataSource = findPluginFor(store, fn, type);
@@ -330,7 +335,6 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
   }
 
   return dataSource;
-
 }
 
 
