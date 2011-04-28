@@ -112,7 +112,8 @@ void LogWidget::setShowError(bool show) {
 
 void LogWidget::regenerate() {
   clear();
-  foreach(Debug::LogMessage message, Debug::self()->messages()) {
+  const QList<Debug::LogMessage> messages = Debug::self()->messages();
+  foreach(const Debug::LogMessage& message, messages) {
     logAdded(message);
   }
 }
