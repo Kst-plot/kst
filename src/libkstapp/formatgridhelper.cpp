@@ -210,4 +210,16 @@ FormatGridHelper::FormatGridHelper(const QList<ViewItem*> &viewItems) {
   }
 }
 
+int FormatGridHelper::numHoles() {
+  int n_holes = 0;
+  for (int i_row = 0; i_row<n_rows; i_row++) {
+    for (int i_col = 0; i_col<n_cols; i_col++) {
+      if (a[i_row][i_col] == 0) {
+        n_holes++;
+      }
+    }
+  }
+
+  return n_holes;
+}
 }

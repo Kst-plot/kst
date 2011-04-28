@@ -1143,10 +1143,21 @@ void DataWizard::finished() {
     }
   }
 
+  CurvePlacement::Layout layout_type = _pagePlot->layout();
+  int num_columns = _pagePlot->gridColumns();
+  if (plotsInPage == 0) { // no format to protext
+    if (layout_type != CurvePlacement::Custom) {
+      layout_type = CurvePlacement::Custom;
+      if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
+        num_columns = sqrt(plotList.size()/2);
+      } else {
+        num_columns = sqrt(plotList.size());
+      }
+    }
+  }
   foreach (PlotItem* plot, plotList) {
     plot->update();
-    plot->view()->appendToLayout(_pagePlot->layout(), plot, _pagePlot->gridColumns());
-
+    plot->view()->appendToLayout(layout_type, plot, num_columns);
   }
   double fontScale;
   fontScale = ApplicationSettings::self()->defaultFontScale();

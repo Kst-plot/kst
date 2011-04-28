@@ -2083,7 +2083,9 @@ void LayoutCommand::createLayout(int columns) {
   FormatGridHelper grid(viewItems);
 
   if (grid.n_cols == columns) {
-    columns = 0; // already in correct columns - just line stuff up
+    if (grid.numHoles()<columns) {
+      columns = 0; // already in correct columns - just line stuff up
+    }
   }
 
   if (columns == 0) {
@@ -2137,6 +2139,10 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   Q_ASSERT(_item->view());
   Q_ASSERT(item);
 
+  if (layout == CurvePlacement::Auto) {
+    columns = 0;
+  }
+
   if (layout == CurvePlacement::Protect) {
     _layout = new ViewGridLayout(_item);
 
@@ -2165,34 +2171,62 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
 
   FormatGridHelper grid(viewItems);
 
-  int row = -1;
-  int col = -1;
-  for (int i_col = 0; i_col<grid.n_cols; i_col++) {
-    for (int i_row = 0; i_row<grid.n_rows; i_row++) {
-      if (grid.a[i_row][i_col]==0) {
-        row = i_row;
-        col = i_col;
-        break;
-      }
-      if (row>=0) {
-        break;
-      }
+  if (grid.n_cols == columns) {
+    if (grid.numHoles()<columns) {
+      columns = 0; // already in correct columns - just line stuff up
     }
   }
-  if (row<0) {
-    row = grid.n_rows;
-    col = 0;
-  }
 
-  int n_views = viewItems.size();
-  for (int i_view = 0; i_view<n_views; i_view++) {
-    ViewItem *v = viewItems.at(i_view);
-    struct AutoFormatRC rc = grid.rcList.at(i_view);
-    _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
-  }
-  _item->view()->scene()->addItem(item);
-  _layout->addViewItem(item, row, col, 1,1);
+  if (columns == 0) {
+    int row = -1;
+    int col = -1;
+    for (int i_col = 0; i_col<grid.n_cols; i_col++) {
+      for (int i_row = 0; i_row<grid.n_rows; i_row++) {
+        if (grid.a[i_row][i_col]==0) {
+          row = i_row;
+          col = i_col;
+          break;
+        }
+        if (row>=0) {
+          break;
+        }
+      }
+    }
+    if (row<0) { // no empty slots
+      if (grid.n_rows>grid.n_cols+2) { // add a column
+        row = 0;
+        col = grid.n_cols;
+      } else { // add a row
+        row = grid.n_rows;
+        col = 0;
+      }
+    }
 
+    int n_views = viewItems.size();
+    for (int i_view = 0; i_view<n_views; i_view++) {
+      ViewItem *v = viewItems.at(i_view);
+      struct AutoFormatRC rc = grid.rcList.at(i_view);
+      _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
+    }
+    _item->view()->scene()->addItem(item);
+    _layout->addViewItem(item, row, col, 1,1);
+  } else {
+    int row = 0;
+    int col = 0;
+    int n_views = viewItems.size();
+
+    for (int i_view = 0; i_view<n_views; i_view++) {
+      ViewItem *v = viewItems.at(i_view);
+      _layout->addViewItem(v, row, col, 1, 1);
+      col++;
+      if (col>=columns) {
+        col = 0;
+        row++;
+      }
+    }
+    _item->view()->scene()->addItem(item);
+    _layout->addViewItem(item, row, col, 1,1);
+  }
   if (qobject_cast<LayoutBoxItem*>(_item)) {
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                     _item, SLOT(setEnabled(bool)));

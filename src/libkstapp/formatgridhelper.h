@@ -44,7 +44,7 @@ public:
   QVector< QVector <int> > a;
   int n_rows;
   int n_cols;
-  bool cleanGrid();
+  int numHoles();
 };
 
 }
