@@ -1149,9 +1149,9 @@ void DataWizard::finished() {
     if (layout_type != CurvePlacement::Custom) {
       layout_type = CurvePlacement::Custom;
       if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
-        num_columns = sqrt(plotList.size()/2);
+        num_columns = sqrt((double)plotList.size()/2);
       } else {
-        num_columns = sqrt(plotList.size());
+        num_columns = sqrt((double)plotList.size());
       }
     }
   }

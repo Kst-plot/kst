@@ -18,7 +18,7 @@ namespace Kst {
 
 /*****************************************************************************/
 /************** local helper functions for auto layout ***********************/
-void appendEdge(QList<struct AutoFormatEdges> &edges, double pos, double size, ViewItem *item) {
+void appendEdge(QList<AutoFormatEdges> &edges, double pos, double size, ViewItem *item) {
   struct AutoFormatEdges edge;
 
   edge.edge_number = -1;
@@ -35,7 +35,7 @@ void appendEdge(QList<struct AutoFormatEdges> &edges, double pos, double size, V
 
 /*****************************************************************************/
 /************** local helper functions for auto layout ***********************/
-bool findNextEdgeLocation(QList<struct AutoFormatEdges> &edges, QList<qreal> &locations, qreal grid_resolution) {
+bool findNextEdgeLocation(QList<AutoFormatEdges> &edges, QList<qreal> &locations, qreal grid_resolution) {
   int n_edges = edges.size();
 
   int i_best_edge = -1;
