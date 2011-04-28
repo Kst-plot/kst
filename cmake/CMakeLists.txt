@@ -8,16 +8,11 @@ include(KstMacros)
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
 get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
-
-set(kst_version_major 2)
-set(kst_version_minor 0)
-set(kst_version_patch 3)
-set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
-
 set(kst_binary_name kst2)
 
 
 kst_option_init()
+kst_option(version_string "Version string" OFF all)
 kst_option(release "Build release version: optimize for speed, don't embedded debug symbols" OFF all)
 kst_option(merge_files "Merge files to speedup build about factor 5" OFF all)
 kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
@@ -35,6 +30,16 @@ kst_option(console "Open console on Windows" OFF win)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 
 message(STATUS)
+
+
+set(kst_version_major 2)
+if(kst_version_string)
+	set(kst_version ${kst_version_string})
+else()
+	set(kst_version_minor 0)
+	set(kst_version_patch 3)
+	set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
+endif()
 
 
 if(kst_3rdparty_download)
