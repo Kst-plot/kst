@@ -85,9 +85,9 @@ SOURCES += aboutdialog.cpp \
     exportgraphicsdialog.cpp \
     filltab.cpp \
     filterfitdialog.cpp \
+    formatgridhelper.cpp \
     generaltab.cpp \
     graphicsfactory.cpp \
-    gridlayouthelper.cpp \
     gridtab.cpp \
     histogramdialog.cpp \
     imagedialog.cpp \
@@ -194,9 +194,9 @@ HEADERS += aboutdialog.h \
     exportgraphicsdialog.h \
     filltab.h \
     filterfitdialog.h \
+    formatgridhelper.h \
     generaltab.h \
     graphicsfactory.h \
-    gridlayouthelper.h \
     gridtab.h \
     histogramdialog.h \
     imagedialog.h \
