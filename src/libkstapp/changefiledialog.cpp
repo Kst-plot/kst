@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "changefiledialog.h"
+#include "dialogdefaults.h"
 
 #include "datacollection.h"
 #include "datasourcedialog.h"
@@ -71,7 +72,8 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
 
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 
-  _dataFile->setFile(QDir::currentPath());
+  _dataFile->setFile(_dialogDefaults->value("changedatafile/newFileName",QDir::currentPath()).toString());
+
   updateButtons();
 }
 
@@ -476,6 +478,10 @@ void ChangeFileDialog::apply() {
 
   UpdateManager::self()->doUpdates(true);
   kstApp->mainWindow()->document()->setChanged(true);
+
+  // store the newly used file as default for the next time the dialog is called
+  _dialogDefaults->setValue("changedatafile/newFileName",_dataFile->file());
+
 }
 
 }

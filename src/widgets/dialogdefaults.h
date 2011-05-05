@@ -92,3 +92,4 @@ namespace Kst {
 // wizard/curvePlacement enum    datawizard.cpp
 // wizard/plotCount     int      datawizard.cpp
 
+// changedatafile/newFileName  QString  changefiledialog.cpp
