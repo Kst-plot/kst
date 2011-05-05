@@ -1418,10 +1418,13 @@ void MainWindow::createToolBars() {
   _modeToolBar->addAction(_yOnlyZoomAct);
   _modeToolBar->addAction(_layoutModeAct);
 
+  _plotLayoutToolBar = addToolBar(tr("Plot Layout"));
+  _plotLayoutToolBar->setObjectName("Plot Layout Toolbar");
+  _plotLayoutToolBar->addAction(_createSharedAxisBoxAct);
+  _plotLayoutToolBar->addAction(_createPlotAct);
+
   _annotationToolBar = addToolBar(tr("Advanced Layout"));
   _annotationToolBar->setObjectName("Advanced Layout Toolbar");
-  _annotationToolBar->addAction(_createSharedAxisBoxAct);
-  _annotationToolBar->addSeparator();
   _annotationToolBar->addAction(_createLabelAct);
   _annotationToolBar->addAction(_createBoxAct);
   _annotationToolBar->addAction(_createCircleAct);

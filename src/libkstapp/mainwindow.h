@@ -209,6 +209,7 @@ class MainWindow : public QMainWindow
     QToolBar *_editToolBar;
     QToolBar *_rangeToolBar;
     QToolBar *_modeToolBar;
+    QToolBar *_plotLayoutToolBar;
     QToolBar *_toolsToolBar;
     QToolBar *_annotationToolBar;
 
