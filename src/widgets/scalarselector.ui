@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>37</height>
+    <width>298</width>
+    <height>35</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="whatsThis">
    <string>Select a scalar to utilize.  If you wish to create a new scalar, select the icon to the right.</string>
@@ -25,12 +19,6 @@
    </property>
    <item row="0" column="0">
     <widget class="Kst::ComboBox" name="_scalar">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="editable">
       <bool>true</bool>
      </property>

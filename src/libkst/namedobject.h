@@ -88,6 +88,8 @@ public:
     QString CleanedName() const; // all \_ replaced with _
     QString descriptiveName() const; // eg GYRO1: automatic or manual
     QString shortName() const; // eg V1: always automatically generated
+    QString lengthLimitedName(int length = 20) const; // Name, but with descriptiveName truncated
+    QString sizeLimitedName(const QWidget *widget) const; // Name, shrunk to fit in widget
     virtual QString descriptionTip() const = 0; // description for tooltips
     void setDescriptiveName(QString new_name); // auto if new_name.isEmpty()
     bool descriptiveNameIsManual() const;

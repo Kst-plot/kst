@@ -108,9 +108,34 @@ PlotItemInterface *CurvePlacement::existingPlot() const {
 
 
 void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingPlots) {
-  foreach (PlotItemInterface *plot, existingPlots) {
-    _plotList->addItem(plot->plotName(), qVariantFromValue(plot));
+  _plots.clear();
+
+  _plots.append(existingPlots);
+
+  updatePlotListCombo();
+}
+
+void CurvePlacement::updatePlotListCombo() {
+
+  int current_index=-1;
+  if (_plotList->count() > 0) {
+    current_index = _plotList->currentIndex();
   }
+  _plotList->clear();
+  foreach (PlotItemInterface *plot, _plots) {
+    _plotList->addItem(plot->plotSizeLimitedName(_plotList), qVariantFromValue(plot));
+  }
+
+  if ((current_index>0) && (current_index<_plotList->count())) {
+    _plotList->setCurrentIndex(current_index);
+  }
+}
+
+bool CurvePlacement::event(QEvent * event) {
+  if ((event->type() == QEvent::Resize)) {
+    updatePlotListCombo();
+  }
+  return QWidget::event(event);
 }
 
 void CurvePlacement::setCurrentPlot(const PlotItemInterface *currentPlot) {

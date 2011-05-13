@@ -201,7 +201,7 @@ void ScalarSelector::fillScalars() {
     ScalarPtr scalar = (*it);
 
     scalar->readLock();
-    scalars.insert(scalar->Name(), scalar);
+    scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
     scalar->unlock();
   }
 
@@ -229,7 +229,7 @@ void ScalarSelector::fillScalars() {
 
 
 bool ScalarSelector::event(QEvent * event) {
-  if (event->type() == QEvent::WindowActivate) {
+  if ((event->type() == QEvent::Resize) || (event->type() == QEvent::WindowActivate)) {
     if (_defaultsSet) {
       QString defaultText = _scalar->currentText();
       fillScalars();

@@ -38,6 +38,7 @@ class KSTWIDGETS_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlaceme
     PlotItemInterface *existingPlot() const;
     void setExistingPlots(const QList<PlotItemInterface*> &existingPlots);
     void setCurrentPlot(const PlotItemInterface *currentPlot);
+    void updatePlotListCombo();
 
     Layout layout() const;
     void setLayout(Layout layout);
@@ -45,8 +46,11 @@ class KSTWIDGETS_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlaceme
     int gridColumns() const;
     void setGridColumns(int gridColumns);
 
+    virtual bool event(QEvent * event);
   public Q_SLOTS:
     void updateButtons();
+  private:
+    QList<PlotItemInterface*> _plots;
 };
 
 }

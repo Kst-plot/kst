@@ -55,14 +55,6 @@ CurveTab::CurveTab(QWidget *parent)
 
   _xVector->setIsX(true);
 
-  int maxComboWidth = 200;
-  _xVector->setMaximumWidth(maxComboWidth);
-  _yVector->setMaximumWidth(maxComboWidth);
-  _xError->setMaximumWidth(maxComboWidth);
-  _yError->setMaximumWidth(maxComboWidth);
-  _xMinusError->setMaximumWidth(maxComboWidth);
-  _yMinusError->setMaximumWidth(maxComboWidth);
-
   connect(_xVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_yVector, SIGNAL(selectionChanged(QString)), this, SIGNAL(vectorsChanged()));
   connect(_xMinusSameAsPlus, SIGNAL(toggled(bool)), this, SLOT(xCheckboxClicked()));
@@ -445,7 +437,9 @@ ObjectPtr CurveDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+    if (_curveTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+    }
   }
 
   return ObjectPtr(curve.data());

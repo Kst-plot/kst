@@ -192,7 +192,7 @@ void VectorSelector::fillVectors() {
       continue;
 
     vector->readLock();
-    vectors.insert(vector->Name(), vector);
+    vectors.insert(vector->sizeLimitedName(_vector), vector);
     vector->unlock();
   }
 
@@ -222,7 +222,7 @@ void VectorSelector::fillVectors() {
 
 
 bool VectorSelector::event(QEvent * event) {
-  if (event->type() == QEvent::WindowActivate) {
+  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
     fillVectors();
   }
   return QWidget::event(event);

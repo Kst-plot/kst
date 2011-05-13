@@ -276,7 +276,9 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+    if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+    }
   }
 
   return ObjectPtr(powerspectrum.data());

@@ -126,6 +126,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual ~PlotItem();
 
     virtual QString plotName() const; //from PlotItemInterface
+    virtual QString plotSizeLimitedName(const QWidget *widget) const;  //from PlotItemInterface
 
     QList<PlotRenderItem*> renderItems() const;
     PlotRenderItem *renderItem(PlotRenderItem::RenderType type=PlotRenderItem::First);    

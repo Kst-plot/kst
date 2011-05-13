@@ -328,6 +328,9 @@ QString PlotItem::plotName() const {
   return Name();
 }
 
+QString PlotItem::plotSizeLimitedName(const QWidget *widget) const {
+  return sizeLimitedName(widget);
+}
 
 void PlotItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {

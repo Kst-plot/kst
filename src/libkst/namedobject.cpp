@@ -46,6 +46,49 @@ QString NamedObject::Name() const {
   return descriptiveName()+" ("+shortName()+')';
 }
 
+/** limit the length of the string to length.  However, do not shorten
+  the name so much that the shortname is truncated. */
+
+QString NamedObject::lengthLimitedName(int length) const {
+  QString name = Name();
+  if (name.length()<=length) {
+    return name;
+  }
+
+  length -= shortName().length() + 3;
+
+  if (length <= 5) { // not enough room for "a...z (V2)"
+    return '(' + shortName() + ')';
+  }
+
+  int dnl = descriptiveName().length();
+
+  int d =  dnl - length + 3;
+  int s = (length-3)/2;
+
+  return descriptiveName().replace(s, d, QString("...")) + " (" + shortName()+')';
+
+}
+
+QString NamedObject::sizeLimitedName(const QWidget *widget ) const {
+  // initial guess
+  int combo_chars = widget->width() / widget->fontMetrics().averageCharWidth() - 2;
+  int nameLength = Name().length();
+
+  QString name = lengthLimitedName(combo_chars);
+  while ((combo_chars <= nameLength+1) &&
+         (widget->fontMetrics().width(name) < widget->width() - widget->fontMetrics().maxWidth())) {
+    combo_chars++;
+    name = lengthLimitedName(combo_chars);
+  }
+  while ((combo_chars>0) &&
+         (widget->fontMetrics().width(name) > widget->width()  - widget->fontMetrics().maxWidth())) {
+    combo_chars--;
+    name = lengthLimitedName(combo_chars);
+  }
+  return name;
+
+}
 
 QString NamedObject::CleanedName() const {
   QString clean_name = Name();

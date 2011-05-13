@@ -419,7 +419,9 @@ ObjectPtr HistogramDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+    if (_histogramTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+    }
   }
   return ObjectPtr(histogram.data());
 }

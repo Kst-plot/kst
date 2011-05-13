@@ -352,7 +352,9 @@ ObjectPtr EquationDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(curve));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+    if (_equationTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+    }
   }
 
   return ObjectPtr(equation.data());

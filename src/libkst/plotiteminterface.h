@@ -28,6 +28,7 @@ class KSTCORE_EXPORT PlotItemInterface
     virtual ~PlotItemInterface();
 
     virtual QString plotName() const = 0;
+    virtual QString plotSizeLimitedName(const QWidget *widget) const = 0;
 
     virtual bool handleChangedInputs(qint64 serial) = 0;
 

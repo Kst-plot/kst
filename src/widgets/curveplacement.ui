@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
-    <height>218</height>
+    <width>422</width>
+    <height>216</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -66,12 +66,6 @@
        <widget class="QComboBox" name="_plotList">
         <property name="enabled">
          <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
         </property>
         <property name="whatsThis">
          <string>The name of the data file which will be read for this vector.</string>

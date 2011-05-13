@@ -118,7 +118,7 @@ void MatrixSelector::fillMatrices() {
     MatrixPtr matrix = (*it);
 
     matrix->readLock();
-    matrices.insert(matrix->Name(), matrix);
+    matrices.insert(matrix->sizeLimitedName(_matrix), matrix);
     matrix->unlock();
   }
 
@@ -142,7 +142,7 @@ void MatrixSelector::fillMatrices() {
 
 
 bool MatrixSelector::event(QEvent * event) {
-  if (event->type() == QEvent::WindowActivate) {
+  if ((event->type() == QEvent::Resize) || (event->type() == QEvent::WindowActivate)) {
     fillMatrices();
   }
   return QWidget::event(event);

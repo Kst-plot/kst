@@ -263,7 +263,9 @@ ObjectPtr CSDDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(image));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+    if (_CSDTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+    }
   }
 
   return ObjectPtr(image.data());

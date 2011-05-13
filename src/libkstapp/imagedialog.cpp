@@ -487,7 +487,9 @@ ObjectPtr ImageDialog::createNewDataObject() {
     renderItem->addRelation(kst_cast<Relation>(image));
     plotItem->update();
 
-    plotItem->view()->appendToLayout(_imageTab->curvePlacement()->layout(), plotItem, _imageTab->curvePlacement()->gridColumns());
+    if (_imageTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+      plotItem->view()->appendToLayout(_imageTab->curvePlacement()->layout(), plotItem, _imageTab->curvePlacement()->gridColumns());
+    }
   }
 
   return ObjectPtr(image.data());
