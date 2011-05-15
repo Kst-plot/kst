@@ -6,5 +6,7 @@ cmake $1 -Dkst_merge_files=1 -Dkst_3rdparty=1 -Dkst_dataobjects=1 -Dkst_install_
 
 make -j4
 
+make install/strip
+
 #TODO Why is /build/bin/kst2 added to the dmg?
 make package
