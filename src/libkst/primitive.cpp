@@ -31,7 +31,7 @@ namespace Kst {
 const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
 
 Primitive::Primitive(ObjectStore *store, Object *provider)
-  : _provider(provider) {
+  : Object(), _provider(provider) {
   Q_UNUSED(store);
   _slaveName = "fixme: set _slaveName";
 }
@@ -70,11 +70,11 @@ qint64 Primitive::minInputSerial() const {
   return LLONG_MAX;
 }
 
-qint64 Primitive::minInputSerialOfLastChange() const {
+qint64 Primitive::maxInputSerialOfLastChange() const {
   if (_provider) {
     return (_provider->serialOfLastChange());
   }
-  return LLONG_MAX;
+  return NoInputs;
 }
 
 

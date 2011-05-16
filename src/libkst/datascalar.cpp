@@ -142,11 +142,11 @@ qint64 DataScalar::minInputSerial() const {
   return LLONG_MAX;
 }
 
-qint64 DataScalar::minInputSerialOfLastChange() const {
+qint64 DataScalar::maxInputSerialOfLastChange() const {
   if (dataSource()) {
     return (dataSource()->serialOfLastChange());
   }
-  return LLONG_MAX;
+  return NoInputs;
 }
 
 QString DataScalar::descriptionTip() const {

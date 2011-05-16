@@ -47,6 +47,7 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
   public:
     static QString type();
     static const qint64 Forced = -1;
+    static const qint64 NoInputs = -2;
 
     enum UpdateType { NoChange = 0, Updated, Deferred };
 
@@ -84,7 +85,7 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     ObjectStore *_store;  // set by ObjectStore
 
     virtual qint64 minInputSerial() const = 0;
-    virtual qint64 minInputSerialOfLastChange() const = 0;
+    virtual qint64 maxInputSerialOfLastChange() const = 0;
 
     qint64 _serial;
     qint64 _serialOfLastChange;

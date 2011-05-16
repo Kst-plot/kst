@@ -176,7 +176,7 @@ class KSTMATH_EXPORT Relation : public Object {
     virtual void unlockInputsAndOutputs() const;
 
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
     CurveHintList *_curveHints;
     QString _typeString, _type;

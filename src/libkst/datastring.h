@@ -43,7 +43,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
 
     /** Update the string */
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
   public:
     virtual ~DataString();

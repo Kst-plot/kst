@@ -141,7 +141,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     virtual void _resetFieldMetadata();
 
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
   private:
     virtual void _resetFieldScalars();

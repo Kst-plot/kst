@@ -729,22 +729,22 @@ qint64 DataObject::minInputSerial() const{
   return minSerial;
 }
 
-qint64 DataObject::minInputSerialOfLastChange() const {
-  qint64 minSerial = LLONG_MAX;
+qint64 DataObject::maxInputSerialOfLastChange() const {
+  qint64 maxSerial = NoInputs;
 
   foreach (VectorPtr P, _inputVectors) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
   foreach (ScalarPtr P, _inputScalars) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
   foreach (MatrixPtr P, _inputMatrices) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
   foreach (StringPtr P, _inputStrings) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
-  return minSerial;
+  return maxSerial;
 }
 
 

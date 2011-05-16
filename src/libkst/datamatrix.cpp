@@ -324,14 +324,14 @@ qint64 DataMatrix::minInputSerial() const {
   if (dataSource()) {
     return (dataSource()->serial());
   }
-  return LLONG_MAX;
+  return NoInputs;
 }
 
-qint64 DataMatrix::minInputSerialOfLastChange() const {
+qint64 DataMatrix::maxInputSerialOfLastChange() const {
   if (dataSource()) {
     return (dataSource()->serialOfLastChange());
   }
-  return LLONG_MAX;
+  return Forced;
 }
 
 void DataMatrix::_resetFieldMetadata() {

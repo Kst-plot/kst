@@ -164,7 +164,7 @@ class KSTMATH_EXPORT DataObject : public Object
     CurveHintList *_curveHints;
 
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
   private:    
     QString _name;

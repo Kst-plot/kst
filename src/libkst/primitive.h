@@ -70,7 +70,7 @@ class KSTCORE_EXPORT Primitive : public Object
     QString _slaveName;
 
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
   protected:
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.

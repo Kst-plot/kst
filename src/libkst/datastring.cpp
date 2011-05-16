@@ -127,11 +127,11 @@ qint64 DataString::minInputSerial() const {
   return LLONG_MAX;
 }
 
-qint64 DataString::minInputSerialOfLastChange() const {
+qint64 DataString::maxInputSerialOfLastChange() const {
   if (dataSource()) {
     return (dataSource()->serialOfLastChange());
   }
-  return LLONG_MAX;
+  return NoInputs;
 }
 
 

@@ -298,25 +298,26 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
 qint64 Equation::minInputSerial() const {
   qint64 minSerial = DataObject::minInputSerial();
 
-  foreach (VectorPtr P, VectorsUsed) {
+  foreach (const VectorPtr &P, VectorsUsed) {
     minSerial = qMin(minSerial, P->serial());
   }
-  foreach (ScalarPtr P, ScalarsUsed) {
+  qDebug() << "scalars used: " <<  ScalarsUsed.size();
+  foreach (const ScalarPtr &P, ScalarsUsed) {
     minSerial = qMin(minSerial, P->serial());
   }
   return minSerial;
 }
 
-qint64 Equation::minInputSerialOfLastChange() const {
-  qint64 minSerial = DataObject::minInputSerialOfLastChange();
+qint64 Equation::maxInputSerialOfLastChange() const {
+  qint64 maxSerial = DataObject::maxInputSerialOfLastChange();
 
   foreach (VectorPtr P, VectorsUsed) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
   foreach (ScalarPtr P, ScalarsUsed) {
-    minSerial = qMin(minSerial, P->serialOfLastChange());
+    maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
-  return minSerial;
+  return maxSerial;
 }
 
 PrimitiveList Equation::inputPrimitives() const {

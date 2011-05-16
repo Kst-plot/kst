@@ -41,7 +41,7 @@ class KSTCORE_EXPORT VScalar : public Scalar {
     virtual QString _automaticDescriptiveName() const;
 
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
   public:
     virtual ~VScalar();

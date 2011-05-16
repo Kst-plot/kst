@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>263</height>
+    <width>534</width>
+    <height>261</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -182,7 +182,14 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true"/>
+        <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="_ignoreAutoScale">
@@ -194,7 +201,14 @@
       </layout>
      </item>
      <item>
-      <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true"/>
+      <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

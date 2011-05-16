@@ -109,7 +109,7 @@ class KSTCORE_EXPORT DataSource : public Object
 
     void internalUpdate() {return;}
     qint64 minInputSerial() const {return 0;}
-    qint64 minInputSerialOfLastChange() const {return 0;}
+    qint64 maxInputSerialOfLastChange() const {return 0;}
 
    /** Updates number of samples.
       For ascii files, it also reads and writes to a temporary binary file.

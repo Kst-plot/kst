@@ -136,11 +136,11 @@ qint64 VScalar::minInputSerial() const {
   return LLONG_MAX;
 }
 
-qint64 VScalar::minInputSerialOfLastChange() const {
+qint64 VScalar::maxInputSerialOfLastChange() const {
   if (_file) {
     return (_file->serialOfLastChange());
   }
-  return LLONG_MAX;
+  return NoInputs;
 }
 
 PrimitivePtr VScalar::_makeDuplicate() const {

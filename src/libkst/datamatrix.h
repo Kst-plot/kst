@@ -129,7 +129,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     // update DataMatrix
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
     friend class ObjectStore;
 

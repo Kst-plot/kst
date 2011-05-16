@@ -90,7 +90,7 @@ Object::UpdateType Object::objectUpdate(qint64 newSerial) {
     return Deferred;
   } else if (minInputSerial() < newSerial) { // if an input was forced, this will be true
     return Deferred;
-  } else if ((_serialOfLastChange < minInputSerialOfLastChange()) || (_serial == Object::Forced)) {
+  } else if ((_serialOfLastChange < maxInputSerialOfLastChange()) || (_serial == Object::Forced)) {
     internalUpdate();
     _serialOfLastChange = newSerial;
     _serial = newSerial;

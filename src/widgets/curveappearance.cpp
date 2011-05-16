@@ -427,7 +427,8 @@ void CurveAppearance::populateLineStyleCombo() {
 
 
 void CurveAppearance::drawSampleLine() {
-  QPixmap pix(_label->contentsRect().height()*7, _label->contentsRect().height());
+  //_label->resize(_label->height()*7, _label->height());
+  QPixmap pix(_label->contentsRect().width(), _label->contentsRect().height());
   QPainter p(&pix);
   QPen pen(color(),lineWidth(),LineStyle[lineStyle()]);
 

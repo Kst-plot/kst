@@ -43,7 +43,7 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive
 
     /** Update the scalar.*/
     virtual qint64 minInputSerial() const;
-    virtual qint64 minInputSerialOfLastChange() const;
+    virtual qint64 maxInputSerialOfLastChange() const;
 
 
   public:
