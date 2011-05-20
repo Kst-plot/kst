@@ -963,13 +963,43 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   mimeData->hotSpot = hotspot;
   drag->setMimeData(mimeData);
 
-  QPixmap pixmap(sceneBoundingRect().size().toSize());
-  pixmap.fill(Qt::white);
+  //QPixmap pixmap(sceneBoundingRect().size().toSize());
+  qreal theta = rotationAngle()*ONE_PI/180.0;
+  qreal w = fabs(rect().width()*cos(theta)) + fabs(rect().height()*sin(theta));
+  qreal h = fabs(rect().width()*sin(theta)) + fabs(rect().height()*cos(theta));
+
+  QPixmap pixmap(w+2, h+2);
+  //pixmap.fill(brush().color());
   // Qt::transparent is maybe too expensive, and when 
   // not moving a plot it also has no transparent background
-  //pixmap.fill(Qt::transparent);
+  pixmap.fill(Qt::transparent);
   QPainter painter(&pixmap);
+
+  //painter.translate(centerOfRotation().x(), centerOfRotation().y());
+  qreal x1 = -rect().height()*sin(theta);
+  qreal x3 = rect().width()*cos(theta);
+  qreal x2 = x1+x3;
+  qreal dx;
+
+  dx = qMin(0.0, x1);
+  dx = qMin(x2,dx);
+  dx = qMin(x3,dx);
+
+  qreal y1 = rect().height()*cos(theta);
+  qreal y3 = rect().width()*sin(theta);
+  qreal y2 = y1+y3;
+  qreal dy;
+
+  dy = qMin(0.0, y1);
+  dy = qMin(y2,dy);
+  dy = qMin(y3,dy);
+
+  painter.translate(-dx,-dy);
+  painter.rotate(rotationAngle());
   painter.translate(-rect().left(), -rect().top());
+
+  painter.setPen(pen());
+  painter.setBrush(brush());
   paint(&painter); // TODO also paint annotations
   QList<QGraphicsItem*> children = childItems();
   foreach(QGraphicsItem* child, children) {
@@ -981,7 +1011,16 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   painter.end();
 
   drag->setPixmap(pixmap);
-  drag->setHotSpot(hotspot.toPoint()- rect().topLeft().toPoint());
+
+  //drag->setHotSpot(hotspot.toPoint()- rect().topLeft().toPoint());
+  qreal hx = hotspot.toPoint().x()-rect().left();
+  qreal hy = hotspot.toPoint().y()-rect().top();
+  qreal hx_r = hx * cos(theta) - hy * sin(theta);
+  qreal hy_r = hy * cos(theta) + hx * sin(theta);
+  drag->setHotSpot(QPoint(hx_r-dx,hy_r-dy));
+
+  dropHotSpot = QPoint(hx_r-dx-w/2-1,hy_r-dy-h/2-1);
+  //dropHotSpot = hotspot;// + rect().topLeft();
 
   hide();
   Qt::DropActions dact = Qt::MoveAction;
@@ -1824,7 +1863,6 @@ if (change == ItemSelectedChange) {
 
 void ViewItem::moveTo(const QPointF& pos)
 {
-
   QPointF newpos = view()->snapPoint(pos);
 
   if (parentViewItem()) {

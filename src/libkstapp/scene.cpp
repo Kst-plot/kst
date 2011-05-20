@@ -96,7 +96,10 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
     }
     m->item->show();
     QPointF viewpos = view->mapFromScene(event->scenePos());
-    m->item->moveTo(viewpos - m->hotSpot);
+    //qDebug() << "viewpos: " << viewpos << " scenepos: " << event->scenePos();
+    //qDebug() << "m hotspot: " << m->hotSpot << " rect: " << m->item->rect() <<
+    //            " drop hot spot" << m->item->dropHotSpot << " topleft:" << m->item->rect().topLeft();
+    m->item->moveTo(viewpos - m->item->rect().center() - m->item->dropHotSpot.toPoint());
     event->acceptProposedAction();
   }
 }

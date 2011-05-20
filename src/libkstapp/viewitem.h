@@ -211,6 +211,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     }
 
     virtual bool isMaximized();
+    QPointF dropHotSpot;
 
   Q_SIGNALS:
     void geometryChanged();

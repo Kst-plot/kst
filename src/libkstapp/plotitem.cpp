@@ -885,12 +885,18 @@ void PlotItem::paint(QPainter *painter) {
     if (_plotPixmapDirty && rect().isValid()) {
       updatePlotPixmap();
     }
-
     painter->save();
     painter->setPen(Qt::NoPen);
     painter->drawRect(rect());
     painter->restore();
     painter->drawPixmap(rect().topLeft(), _plotPixmap);
+    if (view()->viewMode() == View::Layout) {
+      painter->save();
+      painter->setPen(pen());
+      painter->setBrush(Qt::NoBrush);
+      painter->drawRect(rect());
+      painter->restore();
+    }
   }
 #if BENCHMARK
   int i = bench_time.elapsed();
