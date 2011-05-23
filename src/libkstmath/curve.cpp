@@ -1186,7 +1186,10 @@ qDebug() << "y not in bounds"
       const double h = Hy - Ly;
       int size = 0;
       if (hasLines() && pointDensity() != 0) {
-        size = int(qMax(w, h)) / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()));
+        // high density: 91 points
+        // med density 27
+        // low density 9 points
+        size = w / int(pow(3.0, POINTDENSITY_MAXTYPE - pointDensity()+1));
       }
 
       QRectF rect(Lx, Ly, w, h);
@@ -1205,7 +1208,7 @@ qDebug() << "y not in bounds"
         pt.setX(m_X * rX + b_X);
         pt.setY(m_Y * rY + b_Y);
         if (rect.contains(pt) && pt != lastPt &&
-            (lastPt.isNull() || !((abs(pt.x() - lastPt.x()) < size) || (abs(pt.y() - lastPt.y()) < size)))) {
+            (lastPt.isNull() || (abs(pt.x() - lastPt.x()) > size))) { // || (abs(pt.y() - lastPt.y()) > size))) {
 #ifdef BENCHMARK
           ++numberOfPointsDrawn;
 #endif

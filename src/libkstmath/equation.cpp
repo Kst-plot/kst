@@ -301,7 +301,6 @@ qint64 Equation::minInputSerial() const {
   foreach (const VectorPtr &P, VectorsUsed) {
     minSerial = qMin(minSerial, P->serial());
   }
-  qDebug() << "scalars used: " <<  ScalarsUsed.size();
   foreach (const ScalarPtr &P, ScalarsUsed) {
     minSerial = qMin(minSerial, P->serial());
   }
