@@ -954,16 +954,20 @@ void ViewItem::addToMenuForContextEvent(QMenu &menu) {
 }
 
 void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
+
+  QPointF old_topleft = rect().topLeft();
+  normalizePosition();
+  QPointF new_hotspot = hotspot.toPoint() + rect().topLeft() - old_topleft;
+
   // UNDO tied zoom settings done in PlotItem::mousePressEvent
   setTiedZoom(false, false);
 
   QDrag *drag = new QDrag(widget);
   MimeDataViewItem* mimeData = new MimeDataViewItem;
   mimeData->item = this;
-  mimeData->hotSpot = hotspot;
+  mimeData->hotSpot = new_hotspot;
   drag->setMimeData(mimeData);
 
-  //QPixmap pixmap(sceneBoundingRect().size().toSize());
   qreal theta = rotationAngle()*ONE_PI/180.0;
   qreal w = fabs(rect().width()*cos(theta)) + fabs(rect().height()*sin(theta));
   qreal h = fabs(rect().width()*sin(theta)) + fabs(rect().height()*cos(theta));
@@ -975,7 +979,6 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   pixmap.fill(Qt::transparent);
   QPainter painter(&pixmap);
 
-  //painter.translate(centerOfRotation().x(), centerOfRotation().y());
   qreal x1 = -rect().height()*sin(theta);
   qreal x3 = rect().width()*cos(theta);
   qreal x2 = x1+x3;
@@ -1000,27 +1003,28 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
 
   painter.setPen(pen());
   painter.setBrush(brush());
-  paint(&painter); // TODO also paint annotations
+
+  paint(&painter);
+
+  // TODO also paint annotations
   QList<QGraphicsItem*> children = childItems();
   foreach(QGraphicsItem* child, children) {
     ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
     if (item) {
-      item->paint(&painter);
+      //item->paint(&painter);
     }
   }
   painter.end();
 
   drag->setPixmap(pixmap);
 
-  //drag->setHotSpot(hotspot.toPoint()- rect().topLeft().toPoint());
-  qreal hx = hotspot.toPoint().x()-rect().left();
-  qreal hy = hotspot.toPoint().y()-rect().top();
+  qreal hx = new_hotspot.toPoint().x()-rect().left();
+  qreal hy = new_hotspot.toPoint().y()-rect().top();
   qreal hx_r = hx * cos(theta) - hy * sin(theta);
   qreal hy_r = hy * cos(theta) + hx * sin(theta);
   drag->setHotSpot(QPoint(hx_r-dx,hy_r-dy));
 
   dropHotSpot = QPoint(hx_r-dx-w/2-1,hy_r-dy-h/2-1);
-  //dropHotSpot = hotspot;// + rect().topLeft();
 
   hide();
   Qt::DropActions dact = Qt::MoveAction;
@@ -1424,6 +1428,46 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
   _rotationTransform = t * _rotationTransform;
 
   setTransform(t, true);
+}
+
+void ViewItem::normalizePosition() {
+  qreal parentWidth;
+  qreal parentHeight;
+  qreal parentX;
+  qreal parentY;
+
+  if (parentViewItem()) {
+    parentWidth = parentViewItem()->width();
+    parentHeight = parentViewItem()->height();
+    parentX = parentViewItem()->rect().x();
+    parentY = parentViewItem()->rect().y();
+  } else if (view()) {
+    parentWidth = view()->width();
+    parentHeight = view()->height();
+    parentX = view()->rect().x();
+    parentY = view()->rect().y();
+  } else {
+    Q_ASSERT_X(false,"parent test", "item has no parentview item");
+    parentWidth = parentHeight = 1.0;
+    parentX = parentY = 0.0;
+  }
+
+  qreal w = relativeWidth() * parentWidth;
+  qreal h = relativeHeight() * parentHeight;
+
+  setPos(parentX + relativeCenter().x()*parentWidth,
+         parentY + relativeCenter().y()*parentHeight);
+
+
+  setViewRect(-w/2, -h/2, w, h);
+
+  QTransform transform;
+  transform.rotate(rotationAngle());
+
+  setTransform(transform);
+  //updateRelativeSize();
+  //updateViewItemParent();
+
 }
 
 

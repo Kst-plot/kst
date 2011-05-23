@@ -66,7 +66,7 @@ class ViewItemDialog : public Dialog
     void dimensionsChanged();
     void slotEditMultiple();
 
-  private:
+  protected:
     void setupFill();
     void setupStroke();
     void setupLayout();
