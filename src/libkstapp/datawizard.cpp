@@ -310,6 +310,9 @@ void DataWizardPageVectors::filterVectors(const QString& filter) {
   for (int i=0; i<selected.count(); i++) {
     _vectors->item(i)->setSelected(true);
   }
+  if (selected.count()>0) {
+    _vectors->scrollToTop();
+  }
 }
 
 
