@@ -1375,13 +1375,11 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
     if (flags & Qt::AlignRight) {
       qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
           painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
-      //if (w < r.width()) {
       qreal right = r.right();
       r.setWidth(w);
       r.moveRight(right);
-      qDebug() << "left: " << r.left();
-      //}
-      } else if (flags & Qt::AlignCenter) {
+
+    } else if (flags & Qt::AlignCenter) {
       qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
           painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
       QPointF center = r.center();
