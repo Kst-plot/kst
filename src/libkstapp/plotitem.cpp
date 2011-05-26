@@ -1363,6 +1363,47 @@ void PlotItem::setUseAxisScale(bool useScale) {
 }
 
 
+static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QString &text) {
+  const double superscript_scale = 0.60;
+  const double superscript_raise = 0.44;
+  QRectF r = rec;
+  QStringList base_mantisa = text.split('e');
+
+  if (base_mantisa.size()<=1) {
+    painter->drawText(r, flags, text);
+  } else {
+    if (flags & Qt::AlignRight) {
+      qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
+          painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
+      //if (w < r.width()) {
+      qreal right = r.right();
+      r.setWidth(w);
+      r.moveRight(right);
+      qDebug() << "left: " << r.left();
+      //}
+      } else if (flags & Qt::AlignCenter) {
+      qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
+          painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
+      QPointF center = r.center();
+      r.setWidth(w);
+      r.moveCenter(center);
+    }
+    QPointF p = QPointF(r.topLeft().x(), r.center().y()+painter->fontMetrics().boundingRect('0').height()/2);
+    //painter->drawRect(r);
+    painter->drawText(p, base_mantisa[0]);
+    p.setX(p.x() + painter->fontMetrics().width(base_mantisa[0]));
+    painter->drawText(p,"x10");
+    p.setX(p.x() + painter->fontMetrics().width("x10"));
+    p.setY(p.y() - superscript_raise * painter->fontMetrics().height());
+    painter->save();
+    QFont f = painter->font();
+    f.setPointSizeF(f.pointSizeF()*superscript_scale); // FIXME
+    painter->setFont(f);
+    painter->drawText(p,base_mantisa[1].remove('+'));
+    painter->restore();
+  }
+}
+
 void PlotItem::paintBottomTickLabels(QPainter *painter) {
   int flags = Qt::TextSingleLine/* | Qt::AlignCenter*/;
 
@@ -1381,10 +1422,10 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
       t.rotate(-1*rotation);
       painter->rotate(rotation);
 
-      painter->drawText(t.mapRect(bound), Qt::TextSingleLine | Qt::AlignCenter, label.value);
+      PaintNumber(painter, t.mapRect(bound), Qt::TextSingleLine | Qt::AlignCenter, label.value);
       painter->restore();
     } else {
-      painter->drawText(bound, flags, label.value);
+      PaintNumber(painter, bound, flags, label.value);
     }
   }
   painter->restore();
@@ -1407,7 +1448,8 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
       t.rotate(90.0);
       painter->rotate(-90.0);
 
-      painter->drawText(t.mapRect(label.bound), flags, label.value);
+      PaintNumber(painter, t.mapRect(label.bound), flags, label.value);
+      //painter->drawText(t.mapRect(label.bound), flags, label.value);
       painter->restore();
     } else {
       if (rotation != 0) {
@@ -1416,10 +1458,12 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
         t.rotate(-1*rotation);
         painter->rotate(rotation);
 
-        painter->drawText(t.mapRect(label.bound), flags, label.value);
+        PaintNumber(painter, t.mapRect(label.bound), flags, label.value);
+        //painter->drawText(t.mapRect(label.bound), flags, label.value);
         painter->restore();
       } else {
-        painter->drawText(label.bound, flags, label.value);
+        PaintNumber(painter, label.bound, flags, label.value);
+        //painter->drawText(label.bound, flags, label.value);
       }
     }
   }
