@@ -48,6 +48,7 @@ class PlotRenderItem : public ViewItem
     void addRelation(RelationPtr relation);
     void removeRelation(RelationPtr relation);
     void clearRelations();
+    void setRelationsList(const RelationList &relations);
 
     virtual void save(QXmlStreamWriter &xml);
     virtual void saveInPlot(QXmlStreamWriter &xml);

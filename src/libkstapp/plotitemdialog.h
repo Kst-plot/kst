@@ -41,7 +41,7 @@ class PlotItemDialog : public ViewItemDialog
 
   private Q_SLOTS:
     void contentChanged();
-    void relationChanged();
+    //void relationChanged();
     void xAxisChanged();
     void yAxisChanged();
     void labelsChanged();
@@ -64,8 +64,8 @@ class PlotItemDialog : public ViewItemDialog
     void setupRange();
     void setupLabels();
     void setupMarkers();
-    void addRelations();
-    void updateRelations();
+    //void addRelations();
+    //void updateRelations();
 
     void saveAxis(PlotAxis *item, AxisTab *axisTab);
     void saveRange(PlotItem *item);
@@ -92,7 +92,7 @@ class PlotItemDialog : public ViewItemDialog
     DialogPageTab *_labelPage;
 
 
-    QList<DialogPage*> _relationPages;
+    //QList<DialogPage*> _relationPages;
 
     ObjectStore* _store;
 };

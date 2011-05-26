@@ -1,8 +1,3 @@
-Export eps to vector format.
-  kst 1.x did this by printing to file a .ps file, and then modifying it by adding the bounding box.
-
-------------
-
 Shared axis from the command line
 
 ---------

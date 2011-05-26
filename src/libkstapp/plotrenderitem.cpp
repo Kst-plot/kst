@@ -152,6 +152,15 @@ void PlotRenderItem::clearRelations() {
   plotItem()->zoomMaximum();
 }
 
+void PlotRenderItem::setRelationsList(const RelationList &relations) {
+  _relationList.clear();
+
+  foreach (const RelationPtr & relation, relations) {
+    _relationList.append(relation);
+  }
+  plotItem()->registerChange();
+  UpdateManager::self()->doUpdates(true);
+}
 
 void PlotRenderItem::save(QXmlStreamWriter &xml) {
   Q_UNUSED(xml);

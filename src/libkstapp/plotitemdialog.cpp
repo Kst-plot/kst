@@ -177,16 +177,16 @@ void PlotItemDialog::editMultiple() {
   _xMarkersTab->clearTabValues();
   _yMarkersTab->clearTabValues();
   _contentTab->setEnabled(false);
-  foreach(DialogPage* page, _relationPages) {
-    removeDialogPage(page);
-  }
-  _relationPages.clear();
+  //foreach(DialogPage* page, _relationPages) {
+  //  removeDialogPage(page);
+  //}
+  //_relationPages.clear();
 }
 
 
 void PlotItemDialog::editSingle() {
   _contentTab->setEnabled(true);
-  updateRelations();
+  //updateRelations();
   setupContent();
   setupAxis();
   setupRange();
@@ -371,6 +371,7 @@ void PlotItemDialog::setupContent() {
 }
 
 
+#if 0
 void PlotItemDialog::addRelations() {
   foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
     if (CurvePtr curve = kst_cast<Curve>(relation)) {
@@ -448,7 +449,6 @@ void PlotItemDialog::addRelations() {
   }
 }
 
-
 void PlotItemDialog::updateRelations() {
   foreach(DialogPage* page, _relationPages) {
     removeDialogPage(page);
@@ -457,34 +457,26 @@ void PlotItemDialog::updateRelations() {
 
   addRelations();
 }
+#endif
+
 
 
 void PlotItemDialog::contentChanged() {
-  relationChanged();
 
-  QStringList currentRelations;
-  QStringList displayedRelations = _contentTab->displayedRelations();
+  QStringList relation_names = _contentTab->displayedRelations();
+  RelationList relations;
 
-  foreach (RelationPtr relation, _plotItem->renderItem(PlotRenderItem::Cartesian)->relationList()) {
-    currentRelations.append(relation->Name());
-    if (!displayedRelations.contains(relation->Name())) {
-      _plotItem->renderItem(PlotRenderItem::Cartesian)->removeRelation(relation);
-      _plotItem->update();
+  foreach (QString relation_name, relation_names) {
+    if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relation_name))) {
+      relations.append(relation);
     }
+    _plotItem->renderItem(PlotRenderItem::Cartesian)->setRelationsList(relations);
+    _plotItem->update();
   }
 
-  foreach (QString relationName, displayedRelations) {
-    if (!currentRelations.contains(relationName)) {
-      if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
-        _plotItem->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
-        _plotItem->update();
-      }
-    }
-  }
-
-  updateRelations();
 }
 
+#if 0
 
 void PlotItemDialog::relationChanged() {
   foreach(DialogPage* page, _relationPages) {
@@ -543,6 +535,7 @@ void PlotItemDialog::relationChanged() {
     }
   }
 }
+#endif
 
 
 void PlotItemDialog::rangeChanged() {
