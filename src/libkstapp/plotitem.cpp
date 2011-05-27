@@ -1410,7 +1410,7 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
     p.setY(p.y() - superscript_raise * painter->fontMetrics().height());
     painter->save();
     QFont f = painter->font();
-    f.setPointSizeF(f.pointSizeF()*superscript_scale); // FIXME
+    f.setPointSizeF(f.pointSizeF()*superscript_scale);
     painter->setFont(f);
     painter->drawText(p,base_mantisa[1]);
     p.setX(p.x() + painter->fontMetrics().width(base_mantisa[1]));

@@ -1002,9 +1002,12 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   painter.translate(-rect().left(), -rect().top());
 
   painter.setPen(pen());
-  painter.setBrush(brush());
+  //painter.setBrush(brush());
 
+  QBrush brush_hold = brush();
+  setBrush(Qt::NoBrush);
   paint(&painter);
+  setBrush(brush_hold);
 
   // TODO also paint annotations
   QList<QGraphicsItem*> children = childItems();
