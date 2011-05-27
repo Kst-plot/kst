@@ -684,7 +684,8 @@ void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
     if (majorPoint == 0) majorPoint = -350;
     if (i >= min && i <= max) {
       ticks << majorPoint;
-      labels.insert(majorPoint, QString::number(majorPoint, 'g', format_precision));
+      // 'x' is a sign to the plot item to write 10^i rather than 1.0x10^i
+      labels.insert(majorPoint, QString("xe%1").arg(i));
     }
 
     if (tick == 1.0) {

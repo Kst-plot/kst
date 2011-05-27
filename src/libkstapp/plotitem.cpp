@@ -1369,19 +1369,33 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
   QRectF r = rec;
   QStringList base_mantisa = text.split('e');
 
+  //painter->drawRect(r);
+
   if (base_mantisa.size()<=1) {
     painter->drawText(r, flags, text);
   } else {
+    QString base;
+    if (base_mantisa[0]==QString('x')) {
+      base = "10";
+      base_mantisa[0].clear();
+    } else {
+      base = "x10";
+    }
+    base_mantisa[1].remove('+');
+    if (base_mantisa[1].contains(']')) {
+      base_mantisa[1].remove(']');
+      base_mantisa.append(QString(']'));
+    }
+    qreal w = painter->fontMetrics().width(base_mantisa[0] + base) +
+        painter->fontMetrics().width(base_mantisa[1])*superscript_scale;
+    if (base_mantisa.size()>2) {
+      w += painter->fontMetrics().width(base_mantisa[2]);
+    }
     if (flags & Qt::AlignRight) {
-      qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
-          painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
       qreal right = r.right();
       r.setWidth(w);
       r.moveRight(right);
-
     } else if (flags & Qt::AlignCenter) {
-      qreal w = painter->fontMetrics().width(base_mantisa[0] + "x10") +
-          painter->fontMetrics().width(base_mantisa[1].remove('+'))*superscript_scale;
       QPointF center = r.center();
       r.setWidth(w);
       r.moveCenter(center);
@@ -1390,15 +1404,21 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
     //painter->drawRect(r);
     painter->drawText(p, base_mantisa[0]);
     p.setX(p.x() + painter->fontMetrics().width(base_mantisa[0]));
-    painter->drawText(p,"x10");
-    p.setX(p.x() + painter->fontMetrics().width("x10"));
+    painter->drawText(p,base);
+    qreal ly = p.y();
+    p.setX(p.x() + painter->fontMetrics().width(base));
     p.setY(p.y() - superscript_raise * painter->fontMetrics().height());
     painter->save();
     QFont f = painter->font();
     f.setPointSizeF(f.pointSizeF()*superscript_scale); // FIXME
     painter->setFont(f);
-    painter->drawText(p,base_mantisa[1].remove('+'));
+    painter->drawText(p,base_mantisa[1]);
+    p.setX(p.x() + painter->fontMetrics().width(base_mantisa[1]));
     painter->restore();
+    if (base_mantisa.size()>2) {
+      p.setY(ly);
+      painter->drawText(p,base_mantisa[2]);
+    }
   }
 }
 
