@@ -125,6 +125,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotItem(View *parent);
     virtual ~PlotItem();
 
+    enum PlotClickEditRegion {CONTENT, LABEL, XAXIS, YAXIS};
+
     virtual QString plotName() const; //from PlotItemInterface
     virtual QString plotSizeLimitedName(const QWidget *widget) const;  //from PlotItemInterface
 
@@ -322,7 +324,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void setPlotBordersDirty(bool dirty = true);
 
-    virtual void edit();
+    virtual void edit(PlotClickEditRegion region=CONTENT);
     void plotMaximize();
     void redrawPlot();
     void setPlotRectsDirty();

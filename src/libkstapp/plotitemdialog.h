@@ -39,6 +39,9 @@ class PlotItemDialog : public ViewItemDialog
     explicit PlotItemDialog(PlotItem *item, QWidget *parent = 0);
     virtual ~PlotItemDialog();
 
+    void selectLabelsPage() {selectDialogPage((DialogPage*)_labelPage);}
+    void selectXAxisPage() {selectDialogPage(_xAxisPage);}
+    void selectYAxisPage() {selectDialogPage(_yAxisPage);}
   private Q_SLOTS:
     void contentChanged();
     //void relationChanged();
@@ -78,6 +81,8 @@ class PlotItemDialog : public ViewItemDialog
 
     ContentTab *_contentTab;
     AxisTab *_xAxisTab;
+    DialogPage *_xAxisPage;
+    DialogPage *_yAxisPage;
     AxisTab *_yAxisTab;
     RangeTab *_rangeTab;
     MarkersTab *_xMarkersTab;

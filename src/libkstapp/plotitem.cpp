@@ -376,8 +376,15 @@ void PlotItem::save(QXmlStreamWriter &xml) {
 }
 
 
-void PlotItem::edit() {
+void PlotItem::edit(PlotClickEditRegion region) {
   PlotItemDialog *editDialog = new PlotItemDialog(this, kstApp->mainWindow());
+  if (region == LABEL) {
+    editDialog->selectLabelsPage();
+  } else if (region == XAXIS) {
+    editDialog->selectXAxisPage();
+  } else if (region == YAXIS) {
+    editDialog->selectYAxisPage();
+  }
   editDialog->show();
 }
 
@@ -2776,7 +2783,21 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       setTiedZoom(!isTiedZoom(), !isTiedZoom());
       ViewItem::mousePressEvent(event);
     } else if (view()->viewMode() == View::Data) {
-      edit();
+      PlotClickEditRegion region = CONTENT;
+      if (event->pos().x() - rect().left() < leftLabelMargin()) {
+        region = LABEL;
+      } else if (event->pos().y() - rect().top()< topLabelMargin()) {
+        region = LABEL;
+      } else if (rect().right()-event->pos().x() < rightLabelMargin()) {
+        region = LABEL;
+      } else if (rect().bottom()-event->pos().y() < bottomLabelMargin()) {
+        region = LABEL;
+      } else if (rect().bottom()-event->pos().y() < bottomMarginSize()) {
+        region = XAXIS;
+      } else if (event->pos().x() - rect().left() < leftMarginSize()) {
+        region = YAXIS;
+      }
+      edit(region);
     } else {
       ViewItem::mousePressEvent(event);
     }

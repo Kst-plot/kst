@@ -87,18 +87,18 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(_rangeTab, SIGNAL(apply()), this, SLOT(rangeChanged()));
 
   _xAxisTab = new AxisTab(this);
-  DialogPage *xAxisPage = new DialogPage(this);
-  xAxisPage->setPageTitle(tr("X-Axis"));
-  xAxisPage->addDialogTab(_xAxisTab);
-  addDialogPage(xAxisPage, true);
+  _xAxisPage = new DialogPage(this);
+  _xAxisPage->setPageTitle(tr("X-Axis"));
+  _xAxisPage->addDialogTab(_xAxisTab);
+  addDialogPage(_xAxisPage, true);
   connect(_xAxisTab, SIGNAL(apply()), this, SLOT(xAxisChanged()));
 
   _yAxisTab = new AxisTab(this);
   _yAxisTab->setAsYAxis();
-  DialogPage *yAxisPage = new DialogPage(this);
-  yAxisPage->setPageTitle(tr("Y-Axis"));
-  yAxisPage->addDialogTab(_yAxisTab);
-  addDialogPage(yAxisPage, true);
+  _yAxisPage = new DialogPage(this);
+  _yAxisPage->setPageTitle(tr("Y-Axis"));
+  _yAxisPage->addDialogTab(_yAxisTab);
+  addDialogPage(_yAxisPage, true);
   connect(_yAxisTab, SIGNAL(apply()), this, SLOT(yAxisChanged()));
 
   _xMarkersTab = new MarkersTab(this);
