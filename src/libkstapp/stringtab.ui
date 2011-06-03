@@ -170,16 +170,24 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Kst::DataSourceSelector</class>
-   <extends>QWidget</extends>
-   <header>datasourceselector.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
   </customwidget>
+  <customwidget>
+   <class>Kst::DataSourceSelector</class>
+   <extends>QWidget</extends>
+   <header>datasourceselector.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_generatedStringGroup</tabstop>
+  <tabstop>_stringValue</tabstop>
+  <tabstop>_dataStringGroup</tabstop>
+  <tabstop>_field</tabstop>
+  <tabstop>_connect</tabstop>
+  <tabstop>_configure</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

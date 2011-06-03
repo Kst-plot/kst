@@ -324,7 +324,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void setPlotBordersDirty(bool dirty = true);
 
-    virtual void edit(PlotClickEditRegion region=CONTENT);
+    virtual void edit(PlotClickEditRegion region);
+    virtual void edit() {edit(CONTENT);}
     void plotMaximize();
     void redrawPlot();
     void setPlotRectsDirty();
