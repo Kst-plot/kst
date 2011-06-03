@@ -70,8 +70,7 @@ SOURCES += \
     psdcalculator.cpp \
     psdfactory.cpp \
     relation.cpp \
-    relationfactory.cpp \
-    settings.cpp
+    relationfactory.cpp
 
 HEADERS += \
     basicplugin.h \
@@ -111,8 +110,7 @@ HEADERS += \
     psd.h \
     psdcalculator.h \
     relation.h \
-    relationfactory.h \
-    settings.h
+    relationfactory.h
 
 #LEXSOURCES += escan.l
 #YACCSOURCES += eparse.y

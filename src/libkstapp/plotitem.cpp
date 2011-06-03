@@ -39,7 +39,6 @@
 
 #include "math_kst.h"
 
-#include "settings.h"
 #include "dialogdefaults.h"
 
 #include <QMenu>

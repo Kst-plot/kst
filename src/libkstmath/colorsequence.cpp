@@ -12,12 +12,13 @@
 
 // application specific includes
 #include "colorsequence.h"
-#include "settings.h"
 #include <QVector>
 #include <qapplication.h>
 #include <math_kst.h>
 
 namespace Kst {
+
+static const QString KstColorsName("KstColors");
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",
@@ -61,9 +62,9 @@ ColorSequence::~ColorSequence() {
 
 
 void ColorSequence::createPalette( ) {
-  if (_palette != Settings::globalSettings()->curveColorSequencePalette) {
+  if (_palette != KstColorsName) {
     _pal.clear();
-    _palette = Settings::globalSettings()->curveColorSequencePalette;
+    _palette = KstColorsName;
 
     for (int i = 0; i < colorcnt; i++) {
       _pal.insert(i, QColor(colors[i]));

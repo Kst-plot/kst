@@ -29,7 +29,6 @@
 #include "objectstore.h"
 #include "plotitem.h"
 #include "plotiteminterface.h"
-#include "settings.h"
 #include "applicationsettings.h"
 #include "updatemanager.h"
 #include "datasourcepluginmanager.h"
@@ -1016,7 +1015,7 @@ void DataWizard::finished() {
       curve->setColor(color);
       curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
       curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-      curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
+      curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
       curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
       curve->writeLock();
@@ -1092,7 +1091,7 @@ void DataWizard::finished() {
         curve->setYVector(powerspectrum->vY());
         curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
         curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-        curve->setLineWidth(Settings::globalSettings()->defaultLineWeight);
+        curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
         curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
         if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {

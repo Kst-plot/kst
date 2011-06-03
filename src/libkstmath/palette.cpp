@@ -12,7 +12,6 @@
 
 // application specific includes
 #include "palette.h"
-#include "settings.h"
 #include <QVector>
 #include <qapplication.h>
 #include <math_kst.h>

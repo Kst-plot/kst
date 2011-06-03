@@ -13,7 +13,6 @@
 #include "plotaxis.h"
 
 #include "math_kst.h"
-#include "settings.h"
 #include "dialogdefaults.h"
 
 #include <QDate>
@@ -149,7 +148,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   // utcOffset() is returned in seconds... as it must be since
   //  some time zones are not an integer number of hours offset
   //  from UTC...
-  jd += double(Settings::globalSettings()->utcOffset()) / 86400.0;
+  //jd += double(Settings::globalSettings()->utcOffset()) / 86400.0;
 
   // get the date from the Julian day number
   double jd_day = floor(jd);

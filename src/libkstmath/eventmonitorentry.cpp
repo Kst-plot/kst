@@ -285,10 +285,10 @@ void EventMonitorEntry::doLog(const QString& logMessage) const {
     Debug::self()->log(logMessage, _level);
   }
 
-  if (_logEMail && !_eMailRecipients.isEmpty()) {
-    EMailThread* thread = new EMailThread(_eMailRecipients, "Kst Event Monitoring Notification", logMessage);
-    thread->send();
-  }
+  //if (_logEMail && !_eMailRecipients.isEmpty()) {
+  //  EMailThread* thread = new EMailThread(_eMailRecipients, "Kst Event Monitoring Notification", logMessage);
+  //  thread->send();
+  //}
 
 //FIXME ELOG need to be implemented.
 //   if (_logELOG) {

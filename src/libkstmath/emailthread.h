@@ -1,3 +1,4 @@
+#if 0
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
@@ -58,5 +59,5 @@ class EMailThread : public QObject {
 
 }
 #endif
-
+#endif
 // vim: ts=2 sw=2 et
