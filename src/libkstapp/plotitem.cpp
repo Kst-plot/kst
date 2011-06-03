@@ -1378,7 +1378,6 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
 
   if (base_mantisa.size()>1) {
     if (base_mantisa[1][0].isLetter()) {
-      qDebug() << "base mantisa[0]" << base_mantisa[0];
       base_mantisa.clear();
       base_mantisa.append(text);
     }
