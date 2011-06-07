@@ -450,7 +450,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
   if (CurvePtr curve = kst_cast<Curve>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         CurvePtr curve = kst_cast<Curve>(_document->objectStore()->retrieveObject(objectName));
         if (curve) {
           VectorPtr xVector = _curveTab->xVectorDirty() ? _curveTab->xVector() : curve->xVector();

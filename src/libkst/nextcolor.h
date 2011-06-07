@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _NEXTCOLOR_H
-#define _NEXTCOLOR_H
+#ifndef NEXTCOLOR_H
+#define NEXTCOLOR_H
 
 #include <QColor>
 

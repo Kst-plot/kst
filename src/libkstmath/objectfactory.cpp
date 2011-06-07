@@ -46,7 +46,7 @@ void ObjectFactory::registerFactory(const QString& node, ObjectFactory *factory)
 
 
 void ObjectFactory::registerFactory(const QStringList& nodes, ObjectFactory *factory) {
-  foreach (const QString n, nodes) {
+  foreach (const QString &n, nodes) {
     registerFactory(n, factory);
   }
 }

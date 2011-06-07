@@ -431,7 +431,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
   if (HistogramPtr histogram = kst_cast<Histogram>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         HistogramPtr histogram = kst_cast<Histogram>(_document->objectStore()->retrieveObject(objectName));
         if (histogram) {
           VectorPtr vector = _histogramTab->vectorDirty() ? _histogramTab->vector() : histogram->vector();

@@ -46,7 +46,7 @@ void PrimitiveFactory::registerFactory(const QString& node, PrimitiveFactory *fa
 
 
 void PrimitiveFactory::registerFactory(const QStringList& nodes, PrimitiveFactory *factory) {
-  foreach (const QString n, nodes) {
+  foreach (const QString &n, nodes) {
     registerFactory(n, factory);
   }
 }

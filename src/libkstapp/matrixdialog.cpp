@@ -642,7 +642,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     if (_editMultipleWidget) {
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
       _editMultipleWidget->clearObjects();
-      foreach(DataMatrixPtr object, objects) {
+      foreach(const DataMatrixPtr &object, objects) {
         _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
     }
@@ -661,7 +661,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     if (_editMultipleWidget) {
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
       _editMultipleWidget->clearObjects();
-      foreach(DataMatrixPtr object, objects) {
+      foreach(const DataMatrixPtr &object, objects) {
         _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
     }
@@ -805,7 +805,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
   if (DataMatrixPtr dataMatrix = kst_cast<DataMatrix>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         DataMatrixPtr matrix = kst_cast<DataMatrix>(_document->objectStore()->retrieveObject(objectName));
         if (matrix) {
           const int skip = _matrixTab->skipDirty() ? _matrixTab->skip() : matrix->skip();
@@ -866,7 +866,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
   } else if (GeneratedMatrixPtr generatedMatrix = kst_cast<GeneratedMatrix>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         GeneratedMatrixPtr matrix = kst_cast<GeneratedMatrix>(_document->objectStore()->retrieveObject(objectName));
         if (matrix) {
           const uint nX = _matrixTab->nXDirty() ? _matrixTab->nX() : matrix->xNumSteps();

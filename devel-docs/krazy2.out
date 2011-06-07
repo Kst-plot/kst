@@ -2,20 +2,27 @@
 krazy2 Analysis
 
 Checkers Run = 45
-Files Processed = 752
-Total Issues = 717 ...as of October 04 2010 10:07:12 EDT
+Files Processed = 778
+Total Issues = 629 ...as of June 07 2011 10:33:54 EDT
 
 ==>For File Type c++<==
 1. Check for TRUE and FALSE macros [captruefalse]... Ok!
 
 2. Check for methods that return 'const' refs in public classes [constref]... Ok!
 
-3. Check for an acceptable copyright [copyright]... 5 issues found
-	./plugins/dataobject/genericfilter/filter.h: missing tags: email address(line 7)  (1)
+3. Check for an acceptable copyright [copyright]... 12 issues found
+	./libkstmath/kstmath_pch.h: missing tags: copyright  (1)
+	./datasources/dmc/dmcdata.h: missing tags: email address(line 5)  (1)
+	./datasources/dmc/dmcsource.cpp: missing tags: email address(line 5)  (1)
+	./datasources/dmc/dmcobj.cpp: missing tags: email address(line 6)  (1)
+	./datasources/dmc/dmcdata.cpp: missing tags: email address(line 5)  (1)
+	./datasources/dmc/dmcsource.h: missing tags: email address(line 5)  (1)
+	./datasources/dmc/dmcobj.h: missing tags: email address(line 5)  (1)
 	./plugins/dataobject/genericfilter/polynom.h: missing tags: email address(line 7)  (1)
-	./libkst/sysinfo.c: missing tags: email address(line 2)  (1)
-	./libkstapp/gridlayouthelper.h: missing tags: email address(line 25)  (1)
-	./libkstapp/gridlayouthelper.cpp: missing tags: email address(line 25)  (1)
+	./plugins/dataobject/genericfilter/filter.h: missing tags: email address(line 7)  (1)
+	./widgets/kstwidgets_pch.h: missing tags: copyright  (1)
+	./libkst/kstcore_pch.h: missing tags: copyright  (1)
+	./libkstapp/kstapp_pch.h: missing tags: copyright  (1)
 	All source files must contain a copyright header which identifies
 	the copyright holder(s) together with a e-mail address that can be
 	used to reach the copyright holder.  One copyright holder per line,
@@ -25,40 +32,46 @@ Total Issues = 717 ...as of October 04 2010 10:07:12 EDT
 	copyright looks like: "Copyright 2002,2005-2006 Joe Hacker
 	<joe.hacker@kde.org>"
 
-4. Check for cpp macros and usage [cpp]... 32 issues found
-	./widgets/curveappearance.cpp: O/S or Compiler specific macro line#377[Q_WS_WIN32] (1)
-	./libkstmath/basicplugin.cpp: O/S or Compiler specific macro line#17[Q_WS_WIN32] (1)
+4. Check for cpp macros and usage [cpp]... 36 issues found
+	./libkstmath/basicplugin.cpp: O/S or Compiler specific macro line#19[Q_WS_WIN32] (1)
+	./libkstmath/escan.cpp: O/S or Compiler specific macro line#516[Q_WS_WIN32],1541[Q_WS_WIN32],1568[Q_WS_WIN32] (3)
+	./libkstmath/enodes.cpp: O/S or Compiler specific macro line#25[Q_WS_WIN32],390[Q_WS_WIN32] (2)
+	./libkstmath/eventmonitorentry.cpp: O/S or Compiler specific macro line#35[Q_WS_WIN32] (1)
+	./libkstmath/curve.cpp: O/S or Compiler specific macro line#43[__GNUC__],567[Q_WS_WIN32] (2)
 	./libkstmath/labelparser.h: O/S or Compiler specific macro line#67[Q_WS_WIN32] (1)
-	./libkstmath/curve.cpp: O/S or Compiler specific macro line#43[__GNUC__],555[Q_WS_WIN32] (2)
-	./libkstmath/enodes.cpp: O/S or Compiler specific macro line#23[Q_WS_WIN32],389[Q_WS_WIN32] (2)
-	./libkstmath/escan.cpp: O/S or Compiler specific macro line#511[Q_WS_WIN32],1498[Q_WS_WIN32],1526[Q_WS_WIN32] (3)
-	./libkstmath/eventmonitorentry.cpp: O/S or Compiler specific macro line#34[Q_WS_WIN32] (1)
+	./datasources/dmc/dmcsource.cpp: Guard #warning with '#ifdef __GNUC__' line#48,158,327 (3)
+	./datasources/dmc/dmcdata.cpp: Guard #warning with '#ifdef __GNUC__' line#48 (1)
+	./widgets/curveappearance.cpp: O/S or Compiler specific macro line#452[Q_WS_WIN32] (1)
 	./libkst/kst_inf.h: O/S or Compiler specific macro line#21[__sun] (1)
+	./libkst/datasourcepluginmanager.cpp: O/S or Compiler specific macro line#315[Q_WS_WIN32],354[Q_WS_WIN32] (2)
 	./libkst/psversion.h: O/S or Compiler specific macro line#2[__linux__] (1)
+	./libkst/sysinfo.h: O/S or Compiler specific macro line#12[__linux__] (1)
+	./libkst/math_kst.h: O/S or Compiler specific macro line#23[__sun],63[__APPLE__],82[__SVR4,__sun],86[Q_WS_WIN32] (4)
+	./libkst/ksttimers.h: Unknown HAVE_FOO macro line#18[HAVE_KST_USE_TIMERS] (1)
+	./libkst/datacollection.cpp: O/S or Compiler specific macro line#33[__linux__],47[__linux__] (2)
 	./libkst/procps.h: O/S or Compiler specific macro line#58[__GNUC__,__GNUC_MINOR__],66[__GNUC__,__GNUC_MINOR__],83[__GNUC__,__GNUC_MINOR__] (3)
 	./libkst/procps.h: Guard #warning with '#ifdef __GNUC__' line#61 (1)
-	./libkst/datacollection.cpp: O/S or Compiler specific macro line#33[__linux__],47[__linux__] (2)
-	./libkst/sysinfo.h: O/S or Compiler specific macro line#12[__linux__] (1)
-	./libkst/ksttimers.h: Unknown HAVE_FOO macro line#18[HAVE_KST_USE_TIMERS] (1)
-	./libkst/datasourcepluginmanager.cpp: O/S or Compiler specific macro line#247[Q_WS_WIN32],282[Q_WS_WIN32] (2)
-	./libkst/math_kst.h: O/S or Compiler specific macro line#23[__sun],63[__APPLE__],82[__SVR4,__sun],86[Q_WS_WIN32] (4)
-	./libkstapp/memorywidget.cpp: O/S or Compiler specific macro line#34[__linux__] (1)
+	./libkstapp/datawizard.cpp: O/S or Compiler specific macro line#779[__linux__] (1)
+	./libkstapp/viewitemdialog.cpp: O/S or Compiler specific macro line#306[Q_WS_WIN32] (1)
+	./libkstapp/memorywidget.cpp: O/S or Compiler specific macro line#35[__linux__] (1)
 	./libkstapp/bugreportwizard.cpp: O/S or Compiler specific macro line#35[Q_WS_WIN32],37[Q_WS_WIN64] (2)
-	./libkstapp/viewitemdialog.cpp: O/S or Compiler specific macro line#297[Q_WS_WIN32] (1)
-	./libkstapp/datawizard.cpp: O/S or Compiler specific macro line#718[__linux__] (1)
 	C++ source files and non-installed headers should NOT use cpp
 	conditionals that check for a certain O/S or compiler; instead use
 	CMake HAVE_foo macros. We want to check for features discovered
 	during CMake time rather than for a specific O/S.
 
-5. Check for code that should be considered crashy. [crashy]... Ok!
+5. Check for code that should be considered crashy. [crashy]... 1 issue found
+	./libkstapp/commandlineparser.cpp: line#128 (1)
+	Looks for not using QPointers when showing modal dialogs via
+	exec(), as discussed in <http://www.kdedevelopers.org/node/3919>
 
-6. Check single-char QString operations for efficiency [doublequote_chars]... 8 issues found
+6. Check single-char QString operations for efficiency [doublequote_chars]... 6 issues found
+	./plugins/filters/butterworth_bandstop/butterworth_bandstop.cpp: line#26 (1)
+	./plugins/filters/butterworth_bandpass/butterworth_bandpass.cpp: line#26 (1)
+	./plugins/filters/butterworth_lowpass/butterworth_lowpass.cpp: line#26 (1)
+	./plugins/filters/butterworth_highpass/butterworth_highpass.cpp: line#25 (1)
+	./plugins/dataobject/correlation/crosscorrelation/crosscorrelation.cpp: line#27 (1)
 	./plugins/dataobject/effectivebandwidth/effectivebandwidth.cpp: line#24 (1)
-	./plugins/dataobject/syncbin/syncbin.cpp: line#36 (1)
-	./plugins/dataobject/linefit/linefit.cpp: line#27,28 (2)
-	./libkstmath/equation.cpp: line#48,50 (2)
-	./libkstmath/eventmonitorentry.cpp: line#60,61 (2)
 	Adding single characters to a QString is faster if the characters
 	are QChars and not QStrings.  For example: QString path = oldpath +
 	"/" + base is better written as QString path = oldpath + '/' +
@@ -75,47 +88,15 @@ Total Issues = 717 ...as of October 04 2010 10:07:12 EDT
 
 10. Check that file ends with a newline [endswithnewline]... Ok!
 
-11. Check for C++ ctors that should be declared 'explicit' [explicit]... Ok!
+11. Check for C++ ctors that should be declared 'explicit' [explicit]... 1 issue found
+	./libkstapp/datawizard.h: line#180 (1)
+	Make all C++ class constructors that can be used with only one
+	required argument 'explicit' to minimize wrong use of the class. Do
+	this to avoid mistaken implicit constructor ambiguities. Copy
+	constructors should not be explicit.
 
-12. Check for foreach loop issues [foreach]... 62 issues found
-X	./widgets/gradienteditor.cpp: non-const ref iterator line#76,146,199,211 (4)
-X	./widgets/stringselector.cpp: non-const ref iterator line#131 (1)
-X	./widgets/vectorselector.cpp: non-const ref iterator line#194 (1)
-X	./widgets/curveselector.cpp: non-const ref iterator line#122 (1)
-X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
-	./widgets/scalarselector.cpp: non-const ref iterator line#215 (1)
-	./libkstmath/objectfactory.cpp: non-const ref iterator line#49 (1)
-	./libkstmath/relationfactory.cpp: non-const ref iterator line#49 (1)
-	./libkstmath/dataobject.cpp: non-const ref iterator line#102,104 (2)
-	./datasources/qimagesource/qimagesource.cpp: non-const ref iterator line#538 (1)
-	./libkst/datasourcefactory.cpp: non-const ref iterator line#49 (1)
-	./libkst/datasourcepluginmanager.cpp: non-const ref iterator line#136,138 (2)
-	./libkst/primitivefactory.cpp: non-const ref iterator line#49 (1)
-	./libkstapp/powerspectrumdialog.cpp: non-const ref iterator line#286 (1)
-	./libkstapp/legenditem.cpp: non-const ref iterator line#143,251 (2)
-	./libkstapp/matrixdialog.cpp: non-const ref iterator line#808,869 (2)
-	./libkstapp/exportgraphicsdialog.cpp: non-const ref iterator line#37 (1)
-	./libkstapp/viewgridlayout.cpp: non-const ref iterator line#151,318,415,519,548,601,641,657,686 (9)
-	./libkstapp/imagedialog.cpp: non-const ref iterator line#501 (1)
-	./libkstapp/plotitemdialog.cpp: non-const ref iterator line#462 (1)
-	./libkstapp/vectordialog.cpp: non-const ref iterator line#471,524 (2)
-	./libkstapp/histogramdialog.cpp: non-const ref iterator line#428 (1)
-	./libkstapp/csddialog.cpp: non-const ref iterator line#278 (1)
-	./libkstapp/labelrenderer.cpp: non-const ref iterator line#232 (1)
-	./libkstapp/applicationsettings.cpp: non-const ref iterator line#278 (1)
-	./libkstapp/graphicsfactory.cpp: non-const ref iterator line#49 (1)
-	./libkstapp/curvedialog.cpp: non-const ref iterator line#453 (1)
-	./libkstapp/mainwindow.cpp: non-const ref iterator line#1065,1070,1075 (3)
-	./libkstapp/plotitem.cpp: non-const ref iterator line#1358,1388,1415,3344,3759,3769 (6)
-	./libkstapp/changefiledialog.cpp: values or keys iteration line#423,452 (2)
-	./libkstapp/logwidget.cpp: non-const ref iterator line#115 (1)
-	./libkstapp/equationdialog.cpp: non-const ref iterator line#363 (1)
-	./libkstapp/viewitem.cpp: non-const ref iterator line#192 (1)
-	./libkstapp/viewitemdialog.cpp: non-const ref iterator line#147 (1)
-	./libkstapp/eventmonitordialog.cpp: non-const ref iterator line#341 (1)
-	./libkstapp/scalarmodel.cpp: non-const ref iterator line#198 (1)
-	./libkstapp/legenditemdialog.cpp: non-const ref iterator line#158 (1)
-	./libkstapp/debugdialog.cpp: non-const ref iterator line#85 (1)
+12. Check for foreach loop issues [foreach]... 1 issue found
+	./libkstapp/formatgridhelper.cpp: non-const ref iterator line#204 (1)
 	When not using POD types (int, double, pointer, ...) you should use
 	const & for your foreach variables. There are two reasons for this:
 	1) Prevents you from the mistake of writing foreach loops that
@@ -123,69 +104,90 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 	0;' compiles but does not modify the contents of list 2) Saves a
 	copy constructor call for each of the list elements
 
-13. Check validity of i18n calls [i18ncheckarg]... 103 issues found
+13. Check validity of i18n calls [i18ncheckarg]... 124 issues found
+	./libkstmath/histogram.cpp: wrong argument count, have 0 need 3 line#412
+	./libkstmath/histogram.cpp: wrong argument count, have 0 need 1 line#210,302,408,414
+	./libkstmath/equation.cpp: wrong argument count, have 0 need 3 line#557
+	./libkstmath/equation.cpp: wrong argument count, have 0 need 1 line#157,182,232,239,241
+	./libkstmath/psd.cpp: wrong argument count, have 0 need 2 line#467
+	./libkstmath/psd.cpp: wrong argument count, have 0 need 1 line#475
+	./libkstmath/psd.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#471
+	./libkstmath/basicplugin.cpp: wrong argument count, have 0 need 1 line#233,388
+	./libkstmath/csd.cpp: wrong argument count, have 0 need 2 line#393
+	./libkstmath/csd.cpp: wrong argument count, have 0 need 1 line#195,401
+	./libkstmath/csd.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#397
+	./libkstmath/image.cpp: wrong argument count, have 0 need 1 line#142,799
+	./libkstmath/enodes.cpp: wrong argument count, have 0 need 1 line#753
+	./libkstmath/dataobject.cpp: wrong argument count, have 0 need 3 line#518
+	./libkstmath/eventmonitorentry.cpp: wrong argument count, have 0 need 1 line#442
+	./libkstmath/eventmonitorentry.cpp: reported ambiguous message by translators; use context call to explain what it refers to line#438,442
+	./libkstmath/curve.cpp: wrong argument count, have 0 need 2 line#388,1594,1619
+	./libkstmath/curve.cpp: wrong argument count, have 0 need 1 line#1603,1607,1611,1615,1623
+	./libkstmath/curve.cpp: wrong argument count, have 0 need 3 line#1600
+	./libkstmath/plotdefines.h: malformed markup (unmatched tags, etc.) line#63,64
+	./datasources/ascii/asciisource.cpp: wrong argument count, have 0 need 1 line#813
+	./plugins/fits/gaussian_weighted/fitgaussian_weighted.cpp: wrong argument count, have 0 need 1 line#236
+	./plugins/fits/lorentzian_weighted/fitlorentzian_weighted.cpp: wrong argument count, have 0 need 1 line#235
+	./plugins/fits/exponential_unweighted/fitexponential_unweighted.cpp: wrong argument count, have 0 need 1 line#216
+	./plugins/fits/polynomial_weighted/fitpolynomial_weighted.cpp: wrong argument count, have 0 need 1 line#213
+	./plugins/fits/gradient_weighted/fitgradient_weighted.cpp: wrong argument count, have 0 need 1 line#193
+	./plugins/fits/linear_unweighted/fitlinear_unweighted.cpp: wrong argument count, have 0 need 1 line#189
+	./plugins/fits/linear_weighted/fitlinear_weighted.cpp: wrong argument count, have 0 need 1 line#193
+	./plugins/fits/polynomial_unweighted/fitpolynomial_unweighted.cpp: wrong argument count, have 0 need 1 line#197
+	./plugins/fits/gradient_unweighted/fitgradient_unweighted.cpp: wrong argument count, have 0 need 1 line#177
+	./plugins/fits/exponential_weighted/fitexponential_weighted.cpp: wrong argument count, have 0 need 1 line#231
+	./plugins/fits/gaussian_unweighted/fitgaussian_unweighted.cpp: wrong argument count, have 0 need 1 line#221
+	./plugins/fits/lorentzian_unweighted/fitlorentzian_unweighted.cpp: wrong argument count, have 0 need 1 line#221
+	./plugins/fits/sinusoid_weighted/fitsinusoid_weighted.cpp: wrong argument count, have 0 need 1 line#238
+	./plugins/fits/sinusoid_unweighted/fitsinusoid_unweighted.cpp: wrong argument count, have 0 need 1 line#221
+	./plugins/filters/butterworth_bandstop/butterworth_bandstop.cpp: wrong argument count, have 0 need 1 line#222
+	./plugins/filters/despike/filterdespike.cpp: wrong argument count, have 0 need 1 line#155,283
+	./plugins/filters/despike/filterdespike.cpp: wrong argument count, have 0 need 3 line#153
 	./plugins/filters/differentiation/differentiation.cpp: wrong argument count, have 0 need 2 line#137
 	./plugins/filters/differentiation/differentiation.cpp: wrong argument count, have 0 need 1 line#139
-	./plugins/filters/despike/filterdespike.cpp: wrong argument count, have 0 need 1 line#155
-	./plugins/filters/despike/filterdespike.cpp: wrong argument count, have 0 need 3 line#153
 	./plugins/filters/cumulativesum/cumulativesum.cpp: wrong argument count, have 0 need 2 line#137
 	./plugins/filters/cumulativesum/cumulativesum.cpp: wrong argument count, have 0 need 1 line#139
+	./plugins/filters/butterworth_bandpass/butterworth_bandpass.cpp: wrong argument count, have 0 need 1 line#221
+	./plugins/filters/butterworth_lowpass/butterworth_lowpass.cpp: wrong argument count, have 0 need 1 line#194
+	./plugins/filters/butterworth_highpass/butterworth_highpass.cpp: wrong argument count, have 0 need 1 line#198
 	./widgets/labelbuilder.cpp: malformed markup (unmatched tags, etc.) line#24
-	./libkstmath/basicplugin.cpp: wrong argument count, have 0 need 1 line#231,402
-	./libkstmath/curve.cpp: wrong argument count, have 0 need 2 line#381,1540,1565
-	./libkstmath/curve.cpp: wrong argument count, have 0 need 1 line#1549,1553,1557,1561,1569
-	./libkstmath/curve.cpp: wrong argument count, have 0 need 3 line#1546
-	./libkstmath/enodes.cpp: wrong argument count, have 0 need 1 line#752
-	./libkstmath/equation.cpp: wrong argument count, have 0 need 3 line#614
-	./libkstmath/equation.cpp: wrong argument count, have 0 need 1 line#155,179,228,235,237
-	./libkstmath/histogram.cpp: wrong argument count, have 0 need 3 line#426
-	./libkstmath/histogram.cpp: wrong argument count, have 0 need 1 line#316,422,428
-	./libkstmath/psd.cpp: wrong argument count, have 0 need 2 line#452
-	./libkstmath/psd.cpp: wrong argument count, have 0 need 1 line#460
-	./libkstmath/psd.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#456
-	./libkstmath/plotdefines.h: malformed markup (unmatched tags, etc.) line#63,64
-	./libkstmath/csd.cpp: wrong argument count, have 0 need 2 line#90,357,360,381
-	./libkstmath/csd.cpp: wrong argument count, have 0 need 1 line#92,198,363,366,389
-	./libkstmath/csd.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#385
-	./libkstmath/eventmonitorentry.cpp: wrong argument count, have 0 need 1 line#518
-	./libkstmath/eventmonitorentry.cpp: reported ambiguous message by translators; use context call to explain what it refers to line#514,518
-	./libkstmath/image.cpp: wrong argument count, have 0 need 1 line#142,799
-	./libkstmath/dataobject.cpp: wrong argument count, have 0 need 3 line#424
-	./datasources/ascii/asciisource.cpp: wrong argument count, have 0 need 1 line#610
-	./libkst/datastring.cpp: wrong argument count, have 0 need 2 line#151
-	./libkst/datastring.cpp: wrong argument count, have 0 need 4 line#142
-	./libkst/debug.cpp: wrong argument count, have 0 need 1 line#137
-	./libkst/string_kst.cpp: wrong argument count, have 0 need 1 line#101
-	./libkst/datavector.cpp: wrong argument count, have 0 need 2 line#735
-	./libkst/datavector.cpp: wrong argument count, have 0 need 1 line#731,733,739,741
-	./libkst/datavector.cpp: wrong argument count, have 0 need 3 line#725
-	./libkst/datavector.cpp: wrong argument count, have 0 need 4 line#748
-	./libkst/datamatrix.cpp: wrong argument count, have 0 need 5 line#632
-	./libkst/datamatrix.cpp: wrong argument count, have 0 need 2 line#640
-	./libkst/datamatrix.cpp: wrong argument count, have 0 need 1 line#174
-	./libkst/datascalar.cpp: wrong argument count, have 0 need 3 line#151
-	./libkst/datascalar.cpp: wrong argument count, have 0 need 4 line#142
-	./libkst/generatedvector.cpp: wrong argument count, have 0 need 3 line#92
-	./libkst/generatedvector.cpp: wrong argument count, have 0 need 4 line#87
-	./libkst/vscalar.cpp: wrong argument count, have 0 need 5 line#172
-	./libkst/vscalar.cpp: wrong argument count, have 0 need 4 line#193
-	./libkst/vector.cpp: wrong argument count, have 0 need 3 line#617
-	./libkst/matrix.cpp: wrong argument count, have 0 need 3 line#625
+	./libkst/string_kst.cpp: wrong argument count, have 0 need 1 line#102
+	./libkst/datasource.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#76
+	./libkst/vscalar.cpp: wrong argument count, have 0 need 5 line#174
+	./libkst/vscalar.cpp: wrong argument count, have 0 need 4 line#207
+	./libkst/vector.cpp: wrong argument count, have 0 need 3 line#594
+	./libkst/vector.cpp: wrong argument count, have 0 need 1 line#590
 	./libkst/scalar.cpp: wrong argument count, have 0 need 2 line#139
 	./libkst/scalar.cpp: wrong argument count, have 0 need 1 line#156
 	./libkst/scalar.cpp: wrong argument count, have 0 need 3 line#137
-	./libkst/editablevector.cpp: wrong argument count, have 0 need 2 line#82
-	./libkst/datasource.cpp: single adjective as message, probably ambiguous; use context call to explain what it refers to line#77
-	./libkstapp/legenditem.cpp: wrong argument count, have 0 need 2 line#423
-	./libkstapp/plotaxis.cpp: reported ambiguous message by translators; use context call to explain what it refers to line#785
-	./libkstapp/labelpropertiestab.cpp: malformed markup (unmatched tags, etc.) line#30
-	./libkstapp/plotitem.cpp: wrong argument count, have 0 need 2 line#3264
-	./libkstapp/logwidget.cpp: wrong argument count, have 0 need 3 line#57
+	./libkst/generatedvector.cpp: wrong argument count, have 0 need 3 line#93
+	./libkst/generatedvector.cpp: wrong argument count, have 0 need 4 line#88
+	./libkst/matrix.cpp: wrong argument count, have 0 need 3 line#625
+	./libkst/datastring.cpp: wrong argument count, have 0 need 2 line#170
+	./libkst/datastring.cpp: wrong argument count, have 0 need 4 line#161
+	./libkst/debug.cpp: wrong argument count, have 0 need 1 line#143
+	./libkst/datascalar.cpp: wrong argument count, have 0 need 3 line#166
+	./libkst/datascalar.cpp: wrong argument count, have 0 need 4 line#157
+	./libkst/datamatrix.cpp: wrong argument count, have 0 need 5 line#669
+	./libkst/datamatrix.cpp: wrong argument count, have 0 need 2 line#677
+	./libkst/datamatrix.cpp: wrong argument count, have 0 need 1 line#175
+	./libkst/datavector.cpp: wrong argument count, have 0 need 2 line#759
+	./libkst/datavector.cpp: wrong argument count, have 0 need 1 line#755,757,763,765
+	./libkst/datavector.cpp: wrong argument count, have 0 need 3 line#749
+	./libkst/datavector.cpp: wrong argument count, have 0 need 4 line#772
+	./libkst/editablevector.cpp: wrong argument count, have 0 need 2 line#84
+	./libkstapp/plotitem.cpp: wrong argument count, have 0 need 2 line#3435
+	./libkstapp/legenditem.cpp: wrong argument count, have 0 need 2 line#127,133,137,486
+	./libkstapp/datawizard.cpp: wrong argument count, have 0 need 2 line#833
+	./libkstapp/logdialog.cpp: wrong argument count, have 0 need 1 line#162
 	./libkstapp/debugdialog.cpp: wrong argument count, have 0 need 2 line#41
 	./libkstapp/debugdialog.cpp: wrong argument count, have 0 need 1 line#43
-	./libkstapp/datawizard.cpp: wrong argument count, have 0 need 2 line#772
-	./libkstapp/commandlineparser.cpp: wrong argument count, have 0 need 1 line#420,463,504,544
-	./libkstapp/commandlineparser.cpp: malformed markup (unmatched tags, etc.) line#371,373,375,380,402,404,406,409,456,497,538,565,567
+	./libkstapp/plotrenderitem.cpp: wrong argument count, have 0 need 2 line#439
+	./libkstapp/commandlineparser.cpp: wrong argument count, have 0 need 1 line#439,482,523,563
+	./libkstapp/commandlineparser.cpp: malformed markup (unmatched tags, etc.) line#386,389,392,399,421,423,425,428,475,516,557,584,586,588
+	./libkstapp/logwidget.cpp: wrong argument count, have 0 need 3 line#57
+	./libkstapp/labelpropertiestab.cpp: malformed markup (unmatched tags, etc.) line#30
+	./libkstapp/plotaxis.cpp: reported ambiguous message by translators; use context call to explain what it refers to line#785
 	Make the translators' job easier and detect problems in the usage
 	of the i18n() calls. When the fix is not clear, check the Techbase
 	article at
@@ -194,76 +196,34 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 
 14. Check for invalid icon names [iconnames]... Ok!
 
-15. Check for proper include directives [includes]... 71 issues found
-	./plugins/dataobject/interpolations/interpolations.h: missing or improper include guard in header
-	./plugins/fits/non_linear.h: missing or improper include guard in header
-	./plugins/fits/non_linear_weighted.h: missing or improper include guard in header
+15. Check for proper include directives [includes]... 31 issues found
+	./libkstmath/escan.cpp: duplicate includes line#21,495(stdio.h);22,496(string.h);24,494(stdlib.h)
+	./libkstmath/kstmath_pch.h: missing or improper include guard in header
+	./libkstmath/emailthread.h: missing or improper include guard in header
+	./datasources/netcdf/netcdfplugin.h: missing or improper include guard in header
+	./datasources/netcdf/netcdfsource.h: missing or improper include guard in header
+	./datasources/netcdf/netcdfsource.cpp: include own header first line#23
+	./datasources/dmc/dmcobj.cpp: include own header first line#26
+	./datasources/dmc/dmcsource.h: duplicate includes line#21,25(datasource.h)
+	./datasources/dmc/dmcobj.h: missing or improper include guard in header
 	./plugins/fits/linear_weighted.h: missing or improper include guard in header
 	./plugins/fits/common.h: missing or improper include guard in header
+	./plugins/fits/non_linear_weighted.h: missing or improper include guard in header
 	./plugins/fits/linear.h: missing or improper include guard in header
+	./plugins/fits/non_linear.h: missing or improper include guard in header
 	./plugins/fits/kneefrequency/fitkneefrequency.h: missing or improper include guard in header
 	./plugins/filters/filters.h: missing or improper include guard in header
-	./libkstmath/basicplugin.cpp: include own header first line#24
-	./libkstmath/curve.cpp: include own header first line#32
-	./libkstmath/enodes.cpp: include own header first line#34
-	./libkstmath/equation.cpp: include own header first line#34
-	./libkstmath/histogram.cpp: include own header first line#28
-	./libkstmath/psd.cpp: include own header first line#33
-	./libkstmath/psdcalculator.cpp: include own header first line#26
-	./libkstmath/colorsequence.h: using leading or trailing underscores on include guard in header
-	./libkstmath/EosA.h: missing or improper include guard in header
-	./libkstmath/EosB.h: missing or improper include guard in header
-	./libkstmath/Spectrum.h: missing or improper include guard in header
-	./libkstmath/palette.h: using leading or trailing underscores on include guard in header
-	./libkstmath/emailthread.cpp: include own header first line#22
-	./libkstmath/settings.cpp: include own header first line#21
-	./libkstmath/doublecompare.h: missing or improper include guard in header
-	./libkstmath/escan.cpp: duplicate includes line#24,490(stdio.h);25,491(string.h);27,489(stdlib.h)
-	./libkstmath/RED-Temperature.h: missing or improper include guard in header
-	./libkstmath/csd.cpp: include own header first line#27
-	./libkstmath/eventmonitorentry.cpp: include own header first line#27
-	./libkstmath/image.cpp: include own header first line#18
-	./datasources/netcdf/kstnetcdf.cpp: include own header first line#23
-	./libkst/datastring.cpp: include own header first line#22
-	./libkst/primitive.cpp: include own header first line#25
-	./libkst/psversion.h: put config.h in angle brackets line#1
-	./libkst/debug.cpp: include own header first line#14
-	./libkst/stdinsource.h: missing or improper include guard in header
-	./libkst/datacollection.cpp: include own header first line#23
-	./libkst/string_kst.cpp: include own header first line#22
-	./libkst/datavector.cpp: include own header first line#30
-	./libkst/datamatrix.cpp: include own header first line#26
-	./libkst/datascalar.cpp: include own header first line#22
-	./libkst/object.cpp: include own header first line#20
-	./libkst/generatedvector.cpp: include own header first line#22
-	./libkst/timezones.h: using leading or trailing underscores on include guard in header
-	./libkst/objectstore.cpp: include own header first line#23
-	./libkst/generatedmatrix.cpp: include own header first line#20
-	./libkst/vscalar.cpp: include own header first line#22
-	./libkst/vector.cpp: include own header first line#30
-	./libkst/datasourcepluginmanager.cpp: duplicate includes line#13,42(datasourcepluginmanager.h)
-	./libkst/matrix.cpp: include own header first line#24
-	./libkst/scalar.cpp: include own header first line#24
-	./libkst/editablevector.cpp: include own header first line#19
+	./plugins/dataobject/interpolations/interpolations.h: missing or improper include guard in header
+	./plugins/dataobject/lockin/iirfilter.h: using leading or trailing underscores on include guard in header
+	./widgets/kstwidgets_pch.h: missing or improper include guard in header
+	./libkst/kstcore_pch.h: missing or improper include guard in header
+	./libkst/kstcore_pch.h: do not include QtModules line#8(QtCore);9(QtGui);10(QtXml)
 	./libkst/stdinsource.cpp: include own header first line#20
 	./libkst/stdinsource.cpp: put config.h in angle brackets line#19
-	./libkstapp/plotitem.h: duplicate includes line#19,27(namedobject.h)
-	./libkstapp/memorywidget.cpp: put config.h in angle brackets line#13
-	./libkstapp/stringdialog.cpp: include own header first line#14
-	./libkstapp/dialog.cpp: include own header first line#13
-	./libkstapp/generaltab.cpp: include own header first line#14
-	./libkstapp/rangetab.cpp: include own header first line#18
-	./libkstapp/datadialog.cpp: include own header first line#21
+	./libkst/timezones.h: using leading or trailing underscores on include guard in header
+	./libkst/stdinsource.h: missing or improper include guard in header
 	./libkstapp/overridelabeltab.h: missing or improper include guard in header
-	./libkstapp/vectordialog.cpp: include own header first line#13
-	./libkstapp/scalardialog.cpp: include own header first line#15
-	./libkstapp/defaultlabelpropertiestab.cpp: include own header first line#13
-	./libkstapp/plotmarkers.h: using leading or trailing underscores on include guard in header
-	./libkstapp/mainwindow.cpp: do not include QtModules line#59(QtGui)
-	./libkstapp/bugreportwizard.cpp: put config.h in angle brackets line#14
-	./libkstapp/aboutdialog.cpp: put config.h in angle brackets line#13
-	./libkstapp/plotrenderitem.cpp: duplicate includes line#16,20(application.h)
-	./libkstapp/dimensionstab.cpp: include own header first line#13
+	./libkstapp/kstapp_pch.h: missing or improper include guard in header
 	Use <..> to include installed headers; <QtModule/QClass> to include
 	Qt headers from installed headers; cpp file should include their
 	own headers first (but below config.h); other rules apply, see
@@ -274,34 +234,30 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 16. Check for inline methods in public classes [inline]... Ok!
 
 17. Check for an acceptable license [license]... 10 issues found
-	./plugins/dataobject/crossspectrum/fftsg_h.c: missing license
-	./plugins/dataobject/genericfilter/filter.h: missing license
-	./plugins/dataobject/genericfilter/polynom.h: missing license
 	./libkstmath/fftsg_h.c: missing license
-	./datasources/ascii/kst_atof.cpp: missing license
+	./libkstmath/kstmath_pch.h: missing license
 	./datasources/ascii/kst_atof.h: missing license
+	./datasources/ascii/kst_atof.cpp: missing license
 	./kst/main-vld.cpp: missing license
-	./libkst/sharedptr.h: LGPL (v2) (wrong address)
-	./libkstapp/gridlayouthelper.h: GPL v3+ or v2-only is not compatible with Qt or KDE licensing
-	./libkstapp/gridlayouthelper.cpp: GPL v3+ or v2-only is not compatible with Qt or KDE licensing
+	./plugins/dataobject/genericfilter/polynom.h: missing license
+	./plugins/dataobject/genericfilter/filter.h: missing license
+	./plugins/dataobject/crossspectrum/fftsg_h.c: missing license
+	./widgets/kstwidgets_pch.h: missing license
+	./libkstapp/kstapp_pch.h: missing license
 	Each source file must contain a license or a reference to a license
 	which states under which terms the software may be used, modified
 	and redistributed.  For details regarding KDE's licensing policy
 	please visit <http://techbase.kde.org/Policies/Licensing_Policy>.
 
-18. Check for assignments to QString::null [nullstrassign]... 13 issues found
-	./libkstmath/emailthread.h: line#33,34 (2)
+18. Check for assignments to QString::null [nullstrassign]... 8 issues found
 	./datasources/lfiio/lfiio.cpp: line#32 (1)
 	./datasources/lfiio/lfiio.h: line#40 (1)
-	./datasources/planckIDEF/planckIDEF.h: line#54 (1)
-	./datasources/planckIDEF/planckIDEF.cpp: line#35 (1)
 	./datasources/healpix/healpix.h: line#44 (1)
 	./datasources/healpix/healpix.cpp: line#50 (1)
-	./libkst/dataprimitive.cpp: line#62 (1)
-	./libkst/stdinsource.h: line#48 (1)
-	./libkst/dataplugin.h: line#36 (1)
+	./datasources/planckIDEF/planckIDEF.cpp: line#35 (1)
+	./datasources/planckIDEF/planckIDEF.h: line#54 (1)
 	./libkst/stdinsource.cpp: line#159 (1)
-	./libkstapp/debugdialog.cpp: line#93 (1)
+	./libkst/stdinsource.h: line#48 (1)
 	Do not assign QString::null or QString() to a QString.	Instead use
 	the .clear() method.  For example, "str = QString::null" becomes
 	"str.clear()". When returning an empty string from a method use
@@ -313,36 +269,35 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 
 21. Check for inappropriate pass-by-value function args [passbyvalue]... Ok!
 
-22. Check for postfix usage of ++ and -- [postfixop]... 142 issues found
-	./plugins/dataobject/crossspectrum/crossspectrum.cpp: line#218,232,240,256,273,283 (6)
-	./plugins/dataobject/periodogram/periodogram.cpp: line#378,382,490,535,541,602,611,619,737,749,756,761,774 (13)
-	./plugins/dataobject/linefit/linefit.cpp: line#187,201,217 (3)
-	./plugins/fits/gradient_weighted/fitgradient_weighted.cpp: line#205 (1)
-	./plugins/fits/kneefrequency/fitkneefrequency.cpp: line#277,292,315,320,325 (5)
-	./plugins/fits/linear_weighted/fitlinear_weighted.cpp: line#208 (1)
-	./plugins/fits/linear_unweighted/fitlinear_unweighted.cpp: line#191 (1)
-	./plugins/fits/gradient_unweighted/fitgradient_unweighted.cpp: line#188 (1)
-	./plugins/filters/despike/filterdespike.cpp: line#193,205,228,252 (4)
-	./widgets/stringselector.cpp: line#74 (1)
-	./widgets/vectorselector.cpp: line#89 (1)
-	./widgets/curveselector.cpp: line#62 (1)
-	./widgets/scalarselector.cpp: line#146 (1)
-	./d2asc/d2asc.cpp: line#61,65,103,116,125,126 (6)
-	./libkstmath/curve.cpp: line#518,1094,1106,1209,1299 (5)
-	./libkstmath/histogram.cpp: line#142,156,202 (3)
-	./libkstmath/psdcalculator.cpp: line#193,213,222,226,230,234,238,242,246,250,261,286,293,299,305 (15)
-	./datasources/fitsimage/fitsimage.cpp: line#274,275,281,282,288,289,295,296 (8)
+22. Check for postfix usage of ++ and -- [postfixop]... 121 issues found
+	./d2asc/d2asc.cpp: line#62,66,104,117,126,127 (6)
+	./libkstmath/psdcalculator.cpp: line#194,214,223,227,231,235,239,243,247,251,262,287,294,300,306 (15)
+	./libkstmath/curve.cpp: line#525,1121,1133,1263,1353 (5)
 	./datasources/lfiio/lfiio.cpp: line#169,253,258,311,550 (5)
-	./datasources/ascii/asciisource.cpp: line#422 (1)
-	./datasources/planckIDEF/planckIDEF.cpp: line#315,375,528,623,746,814,1320 (7)
 	./datasources/healpix/healpix_tools_pix.cpp: line#83,87,765,771,776,782 (6)
 	./datasources/healpix/healpix_tools_fits.cpp: line#55,64,92,101 (4)
+	./datasources/fitsimage/fitsimage.cpp: line#328,329,335,336,342,343,349,350 (8)
 	./datasources/qimagesource/qimagesource.cpp: line#121,127,133,139 (4)
-	./libkst/datavector.cpp: line#454,508,569 (3)
-	./libkst/vector.cpp: line#398,436,475 (3)
-	./libkst/matrix.cpp: line#216,225,228,236,245,253 (6)
+	./datasources/ascii/asciisource.cpp: line#599 (1)
+	./datasources/planckIDEF/planckIDEF.cpp: line#315,375,528,623,746,814,1320 (7)
+	./datasources/dmc/dmcobj.cpp: line#302,349 (2)
+	./plugins/fits/gradient_weighted/fitgradient_weighted.cpp: line#219 (1)
+	./plugins/fits/linear_unweighted/fitlinear_unweighted.cpp: line#204 (1)
+	./plugins/fits/linear_weighted/fitlinear_weighted.cpp: line#221 (1)
+	./plugins/fits/gradient_unweighted/fitgradient_unweighted.cpp: line#202 (1)
+	./plugins/fits/kneefrequency/fitkneefrequency.cpp: line#277,292,315,320,325 (5)
+	./plugins/filters/despike/filterdespike.cpp: line#199,211,234,258 (4)
+	./plugins/dataobject/periodogram/periodogram.cpp: line#378,382,490,535,541,602,611,619,737,749,756,761,774 (13)
+	./plugins/dataobject/crossspectrum/crossspectrum.cpp: line#218,232,240,256,273,283 (6)
+	./plugins/dataobject/linefit/linefit.cpp: line#187,201,217 (3)
+	./widgets/scalarselector.cpp: line#146 (1)
+	./widgets/stringselector.cpp: line#74 (1)
+	./widgets/curveselector.cpp: line#62 (1)
+	./widgets/vectorselector.cpp: line#89 (1)
+	./libkst/vector.cpp: line#393,431,470 (3)
+	./libkst/matrix.cpp: line#218,227,230,238,247,255 (6)
+	./libkst/datavector.cpp: line#474,528,591 (3)
 	./libkst/timezones.cpp: line#746,750,755,761,786,791,796 (7)
-	./libkstapp/gridlayouthelper.cpp: line#351,359,372,383,390,403,415,421,434,445,451,464,484,490,491,504,508,513,518,523 (20)
 	You should use ++ and -- as prefix whenever possible as these are
 	more efficient than postfix operators. Prefix increments first and
 	then uses the variable, postfix uses the actual; the variable is
@@ -352,42 +307,46 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 
 23. Check for dangerous or inefficient QByteArray usage [qbytearray]... Ok!
 
-24. Check for Qt classes that should not be used [qclasses]... 52 issues found
-	./widgets/filerequester.cpp: QLineEdit[KLineEdit],QFileDialog[KFileDialog],QFileDialog[KFileDialog] (3)
-	./widgets/gradienteditor.cpp: QColorDialog[KColorDialog] (1)
+24. Check for Qt classes that should not be used [qclasses]... 57 issues found
+	./widgets/curveappearance.h: QComboBox[KComboBox] (1)
 	./widgets/labellineedit.cpp: QLineEdit[KLineEdit] (1)
-	./widgets/datasourceselector.cpp: QLineEdit[KLineEdit] (1)
-	./widgets/combobox.h: QComboBox[KComboBox] (1)
-	./widgets/datasourceselectordialog.h: QFileDialog[KFileDialog] (1)
-	./widgets/colorbutton.cpp: QColorDialog[KColorDialog] (1)
+	./widgets/gradienteditor.cpp: QColorDialog[KColorDialog] (1)
 	./widgets/combobox.cpp: QLineEdit[KLineEdit] (1)
+	./widgets/filerequester.cpp: QLineEdit[KLineEdit],QFileDialog[KFileDialog],QFileDialog[KFileDialog],QFileDialog[KFileDialog] (4)
 	./widgets/datasourceselectordialog.cpp: QMessageBox[KMessageBox],QFileDialog[KFileDialog] (2)
+	./widgets/colorbutton.cpp: QColorDialog[KColorDialog] (1)
+	./widgets/datasourceselector.cpp: QLineEdit[KLineEdit] (1)
+	./widgets/datasourceselectordialog.h: QFileDialog[KFileDialog] (1)
 	./widgets/labellineedit.h: QLineEdit[KLineEdit] (1)
+	./widgets/curveappearance.cpp: QComboBox[KComboBox] (1)
+	./widgets/combobox.h: QComboBox[KComboBox] (1)
 	./libkst/datasourcepluginmanager.cpp: QUrl[KUrl] (1)
-	./libkstapp/pictureitem.cpp: QFileDialog[KFileDialog] (1)
-	./libkstapp/dialog.cpp: QDialog[KDialog] (1)
-	./libkstapp/filterfitdialog.cpp: QMessageBox[KMessageBox] (1)
-	./libkstapp/svgitem.cpp: QFileDialog[KFileDialog] (1)
 	./libkstapp/datadialog.cpp: QLineEdit[KLineEdit] (1)
-	./libkstapp/logwidget.h: QTextBrowser[KTextBrowser] (1)
-	./libkstapp/choosecolordialog.cpp: QDialog[KDialog],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (3)
-	./libkstapp/mainwindow.cpp: QMessageBox[KMessageBox],QFileDialog[KFileDialog],QMessageBox[KMessageBox],QFileDialog[KFileDialog],QMessageBox[KMessageBox] (5)
-	./libkstapp/changefiledialog.cpp: QDialog[KDialog],QMessageBox[KMessageBox],QMessageBox[KMessageBox],QMessageBox[KMessageBox] (4)
-	./libkstapp/differentiatecurvesdialog.cpp: QDialog[KDialog] (1)
-	./libkstapp/dialogpage.cpp: QTabWidget[KTabWidget] (1)
-	./libkstapp/basicplugindialog.cpp: QMessageBox[KMessageBox] (1)
-	./libkstapp/viewitem.cpp: QInputDialog[KInputDialog] (1)
-	./libkstapp/datamanager.cpp: QDialog[KDialog] (1)
-	./libkstapp/viewvectordialog.cpp: QDialog[KDialog] (1)
-	./libkstapp/viewmatrixdialog.cpp: QDialog[KDialog] (1)
-	./libkstapp/markerstab.cpp: QMessageBox[KMessageBox],QMessageBox[KMessageBox] (2)
-	./libkstapp/viewitemdialog.cpp: QLineEdit[KLineEdit] (1)
-	./libkstapp/changedatasampledialog.cpp: QDialog[KDialog] (1)
-	./libkstapp/view.cpp: QInputDialog[KInputDialog] (1)
-	./libkstapp/tabwidget.cpp: QTabBar[KTabBar],QTabBar[KTabBar],QInputDialog[KInputDialog],QTabBar[KTabBar] (4)
-	./libkstapp/debugdialog.cpp: QDialog[KDialog],QDialog[KDialog] (2)
-	./libkstapp/tabwidget.h: QTabWidget[KTabWidget] (1)
+	./libkstapp/pictureitem.cpp: QFileDialog[KFileDialog] (1)
 	./libkstapp/datawizard.cpp: QMessageBox[KMessageBox] (1)
+	./libkstapp/datamanager.cpp: QDialog[KDialog] (1)
+	./libkstapp/viewitemdialog.cpp: QLineEdit[KLineEdit] (1)
+	./libkstapp/debugdialog.cpp: QDialog[KDialog],QDialog[KDialog] (2)
+	./libkstapp/markerstab.cpp: QMessageBox[KMessageBox],QMessageBox[KMessageBox] (2)
+	./libkstapp/logwidget.h: QTextBrowser[KTextBrowser] (1)
+	./libkstapp/changefiledialog.cpp: QDialog[KDialog],QMessageBox[KMessageBox],QMessageBox[KMessageBox],QMessageBox[KMessageBox] (4)
+	./libkstapp/viewvectordialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/exportvectorsdialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/viewmatrixdialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/commandlineparser.cpp: QMessageBox[KMessageBox] (1)
+	./libkstapp/filterfitdialog.cpp: QMessageBox[KMessageBox] (1)
+	./libkstapp/dialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/view.cpp: QInputDialog[KInputDialog] (1)
+	./libkstapp/changedatasampledialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/differentiatecurvesdialog.cpp: QDialog[KDialog] (1)
+	./libkstapp/mainwindow.cpp: QMessageBox[KMessageBox],QFileDialog[KFileDialog],QMessageBox[KMessageBox],QFileDialog[KFileDialog],QMessageBox[KMessageBox] (5)
+	./libkstapp/basicplugindialog.cpp: QMessageBox[KMessageBox] (1)
+	./libkstapp/dialogpage.cpp: QTabWidget[KTabWidget] (1)
+	./libkstapp/viewitem.cpp: QInputDialog[KInputDialog] (1)
+	./libkstapp/svgitem.cpp: QFileDialog[KFileDialog] (1)
+	./libkstapp/tabwidget.h: QTabWidget[KTabWidget] (1)
+	./libkstapp/tabwidget.cpp: QTabBar[KTabBar],QTabBar[KTabBar],QInputDialog[KInputDialog],QTabBar[KTabBar] (4)
+	./libkstapp/choosecolordialog.cpp: QDialog[KDialog],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (3)
 	Don't use Qt 4 classes that are deprecated. Additionally make sure
 	to use the KDE version of some Qt GUI elements to provide a
 	consistent look and feel for the KDE desktop. The KDE classes are
@@ -405,145 +364,163 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 
 28. Check for signals: and slots: [sigsandslots]... Ok!
 
-29. Check for spelling errors [spelling]... 24 issues found
-	./plugins/dataobject/genericfilter/polynom.h: line#20[acces],60[acces] (2)
+29. Check for spelling errors [spelling]... 7 issues found
+	./datasources/dmc/dmcdata.cpp: line#51[dont] (1)
 	./plugins/sampleplugin/sampleplugin.cpp: line#93[everytime],104[everytime],145[occured] (3)
-	./widgets/dialogdefaults.h: line#41[retreived] (1)
-	./libkstmath/equation.cpp: line#493[occurences],543[occurences],546[occurences],571[occurences] (4)
-	./libkstmath/histogram.cpp: line#148[boundry],149[boundry] (2)
-	./libkstmath/eventmonitorentry.cpp: line#418[occurences],460[occurences],463[occurences],480[occurences] (4)
-	./libkst/datavector.cpp: line#366[devided] (1)
+	./plugins/dataobject/genericfilter/polynom.h: line#60[acces] (1)
 	./libkst/timezones.h: line#206[customised] (1)
-	./libkst/objectstore.cpp: line#59[existant],65[existant] (2)
 	./libkst/timezones.cpp: line#777[abbrevations] (1)
-	./libkst/updatemanager.cpp: line#81[progess] (1)
-	./libkstapp/labelitem.cpp: line#78[noticable] (1)
-	./libkstapp/viewitem.h: line#522[aquired] (1)
 	Spelling errors in comments and strings should be fixed as they may
 	show up later in API documentation, handbooks, etc.  Misspelled
 	strings make the translator's job harder. Please use US English.
 
-30. Check for strings used improperly or should be i18n. [strings]... 35 issues found
+30. Check for strings used improperly or should be i18n. [strings]... 36 issues found
 	./libkstmath/labelparser.cpp: QLatin1String issues line#210,214,225,229,239,243,247,257,261,275,279,283,293,297,337,349,353,357,371,375,379,383,397,414,426,438,442,460,464,468,478,490 (32)
-	./libkst/datasourcepluginmanager.cpp: QLatin1String issues line#140 (1)
+	./libkst/datasourcepluginmanager.cpp: QLatin1String issues line#169 (1)
 	./libkst/timezones.cpp: QLatin1String issues line#594 (1)
 	./libkstapp/document.cpp: QLatin1String issues line#63 (1)
+	./libkstapp/commandlineparser.cpp: QLatin1String issues line#604 (1)
 	Some QString methods (like startsWith() and endsWith()) are more
 	efficient if they are passed a QLatin1String, avoiding an implicit
 	conversion from const char *.
 
-31. Check for system calls to replace by KDE or Qt equivalents [syscalls]... 5 issues found
+31. Check for system calls to replace by KDE or Qt equivalents [syscalls]... 6 issues found
+	./datasources/dmc/dmcdata.cpp: line#33 getenv[qgetenv] (1)
 	./libkst/timezones.cpp: line#276 getenv[qgetenv],325 getenv[qgetenv],422 getenv[qgetenv],518 getenv[qgetenv] (4)
 	./libkstapp/document.cpp: line#148 open[KDE_open] (1)
 	Some system calls are not portable, please use the suggested
 	portable wrapper instead. See kde_file.h
 
 32. Check for typedefs that should be replaced by Qt typedefs [typedefs]... 3 issues found
-	./libkstmath/escan.cpp: line#48 int8_t[qint8],#50 int16_t[qint16],#52 int32_t[qint32] (3)
+	./libkstmath/escan.cpp: line#45 int8_t[qint8],#47 int16_t[qint16],#49 int32_t[qint32] (3)
 	Please use Qt typedefs (like qint32 and qreal) as defined in
 	QGlobals. These typedefs are guaranteed to have the size in bits
 	that the name states on all platforms. 
+
+==>For File Type desktop<==
+1. Check that file ends with a newline [endswithnewline]... Ok!
+
+2. Check for invalid icon names [iconnames]... Ok!
+
+3. Check for spelling errors [spelling]... Ok!
+
+4. Validates desktop files using 'desktop-file-validate' [validate]... 9 issues found
+	./kst/kst2.desktop: key "DocPath" in group "Desktop Entry" is a reserved key for KDE
+	./kst/kst2.desktop: (will be fatal in the future): value "Science" in key "Categories" in group "Desktop Entry" requires another category to be present among the following categories: Education
+	./kst/kst2.desktop: (will be fatal in the future): value "Qt;KDE;Science;" for key "Categories" in group "Desktop Entry" does not contain a registered main category
+	./kst/kst2.desktop: key "Encoding" in group "Desktop Entry" is deprecated
+	./kst/x-kst2.desktop: value "MimeType" for key "Type" in group "Desktop Entry" is deprecated
+	./kst/x-kst2.desktop: value "application/x-kst" for string list key "MimeType" in group "Desktop Entry" does not have a semicolon (';') as trailing character
+	./kst/x-kst2.desktop: key "DefaultApp" in group "Desktop Entry" is deprecated
+	./kst/x-kst2.desktop: key "Patterns" in group "Desktop Entry" is deprecated
+	./kst/x-kst2.desktop: required key "Name" in group "Desktop Entry" is not present
+	Please make sure your .desktop files conform to the freedesktop.org
+	standard. See the spec at
+	<http://standards.freedesktop.org/desktop-entry-spec/latest>
 
 ==>For File Type designer<==
 1. Check that file ends with a newline [endswithnewline]... Ok!
 
 2. Check for files that need to be fixed by 'fixuifiles' [fixuifiles]... 14 issues found
+	./libkstapp/labeltab.ui: fixuifiles needs to be run on this file
+	./libkstapp/labelpropertiestab.ui: fixuifiles needs to be run on this file
 	./libkstapp/overridelabeltab.ui: fixuifiles needs to be run on this file
+	./libkstapp/labelcreator.ui: fixuifiles needs to be run on this file
+	./libkstapp/legendtab.ui: fixuifiles needs to be run on this file
 	./libkstapp/datawizardpagevectors.ui: fixuifiles needs to be run on this file
 	./libkstapp/contenttab.ui: fixuifiles needs to be run on this file
-	./libkstapp/labelcreator.ui: fixuifiles needs to be run on this file
-	./libkstapp/labelpropertiestab.ui: fixuifiles needs to be run on this file
-	./libkstapp/legendtab.ui: fixuifiles needs to be run on this file
-	./libkstapp/labeltab.ui: fixuifiles needs to be run on this file
 	Please run the trunk/kdesdk/fixuifiles on all your .ui files as
 	there are some artifacts created by Qt designer that are
 	undesireable for KDE.
 
-3. Check validity of i18n calls [i18ncheckarg]... 55 issues found
-	./plugins/fits/gradient_weighted/fitgradient_weightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#29
-	./plugins/fits/polynomial_unweighted/fitpolynomial_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./plugins/fits/linear_unweighted/fitlinear_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./plugins/fits/exponential_weighted/fitexponential_weightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#23
-	./plugins/fits/exponential_unweighted/fitexponential_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./plugins/fits/gaussian_unweighted/fitgaussian_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./plugins/fits/gradient_unweighted/fitgradient_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./plugins/fits/sinusoid_unweighted/fitsinusoid_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#29
+3. Check validity of i18n calls [i18ncheckarg]... 57 issues found
+	./datasources/healpix/healpixconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#34
 	./plugins/fits/gaussian_weighted/fitgaussian_weightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#29
+	./plugins/fits/exponential_unweighted/fitexponential_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
+	./plugins/fits/gradient_weighted/fitgradient_weightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#29
+	./plugins/fits/linear_unweighted/fitlinear_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
+	./plugins/fits/polynomial_unweighted/fitpolynomial_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
+	./plugins/fits/gradient_unweighted/fitgradient_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
+	./plugins/fits/exponential_weighted/fitexponential_weightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#23
+	./plugins/fits/gaussian_unweighted/fitgaussian_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
 	./plugins/fits/lorentzian_unweighted/fitlorentzian_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#31
-	./widgets/curveappearance.ui: reported ambiguous message by translators; use context call to explain what it refers to line#187
-	./widgets/curveappearance.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#192,197,202,361
+	./plugins/fits/sinusoid_unweighted/fitsinusoid_unweightedconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#29
 	./widgets/fftoptions.ui: reported ambiguous message by translators; use context call to explain what it refers to line#44
+	./widgets/matrixselector.ui: reported ambiguous message by translators; use context call to explain what it refers to line#27
 	./widgets/scalarlistselector.ui: reported ambiguous message by translators; use context call to explain what it refers to line#41
 	./widgets/vectorselector.ui: reported ambiguous message by translators; use context call to explain what it refers to line#33
-	./widgets/matrixselector.ui: reported ambiguous message by translators; use context call to explain what it refers to line#27
-	./datasources/healpix/healpixconfig.ui: reported ambiguous message by translators; use context call to explain what it refers to line#34
-	./libkstapp/editmultiplewidget.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#65
-	./libkstapp/differentiatecurvesdialog.ui: reported ambiguous message by translators; use context call to explain what it refers to line#245
-	./libkstapp/differentiatecurvesdialog.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#110,130,250,255,260
-	./libkstapp/matrixtab.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#669
-	./libkstapp/overridelabeltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#20
+	./widgets/curveappearance.ui: reported ambiguous message by translators; use context call to explain what it refers to line#296
+	./widgets/curveappearance.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#198,301,306,311
+	./libkstapp/generaltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/dialogpage.ui: reported ambiguous message by translators; use context call to explain what it refers to line#13
+	./libkstapp/matrixtab.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#670
 	./libkstapp/stroketab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/gridtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/eventmonitortab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#169
-	./libkstapp/eventmonitortab.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#199
-	./libkstapp/labelcreator.ui: reported ambiguous message by translators; use context call to explain what it refers to line#80
-	./libkstapp/labelcreator.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#87,103
-	./libkstapp/dimensionstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/imagetab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/layouttab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/markerstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/editmultiplewidget.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#66
 	./libkstapp/filltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#20
-	./libkstapp/axistab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/defaultlabelpropertiestab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14,164
+	./libkstapp/labeltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/layouttab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/dimensionstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
 	./libkstapp/labelpropertiestab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#17
 	./libkstapp/labelpropertiestab.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#70,89
-	./libkstapp/generaltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/legendtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#19
-	./libkstapp/dialogpage.ui: reported ambiguous message by translators; use context call to explain what it refers to line#13
-	./libkstapp/defaultlabelpropertiestab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14,164
-	./libkstapp/arrowpropertiestab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#16
-	./libkstapp/labeltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/logdialog.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#92
+	./libkstapp/arrowpropertiestab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#17
+	./libkstapp/histogramtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#111
 	./libkstapp/rangetab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
-	./libkstapp/childviewoptionstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#13
-	./libkstapp/histogramtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#110
-	./libkstapp/markerstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/childviewoptionstab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/gridtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/overridelabeltab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#20
+	./libkstapp/labelcreator.ui: reported ambiguous message by translators; use context call to explain what it refers to line#80
+	./libkstapp/labelcreator.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#87,103
+	./libkstapp/axistab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/imagetab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#14
+	./libkstapp/viewprimitivedialog.ui: reported ambiguous message by translators; use context call to explain what it refers to line#25
+	./libkstapp/legendtab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#19
+	./libkstapp/differentiatecurvesdialog.ui: reported ambiguous message by translators; use context call to explain what it refers to line#245
+	./libkstapp/differentiatecurvesdialog.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#110,130,250,255,260
+	./libkstapp/eventmonitortab.ui: reported ambiguous message by translators; use context call to explain what it refers to line#169
+	./libkstapp/eventmonitortab.ui: single adjective as message, probably ambiguous; use context call to explain what it refers to line#199
 	Make the translators' job easier and detect problems in the usage
 	of the i18n() calls. When the fix is not clear, check the Techbase
 	article at
 	<http://techbase.kde.org/Development/Tutorials/Localization/i18n_Kr
 	azy> for more information.
 
-4. Check for Qt classes that should not be used [qclasses]... 82 issues found
-	./widgets/colorpalette.ui: QComboBox[KComboBox] (1)
-	./widgets/curveappearance.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (4)
+4. Check for Qt classes that should not be used [qclasses]... 88 issues found
+	./datasources/healpix/healpixconfig.ui: QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QComboBox[KComboBox],QLineEdit[KLineEdit] (9)
+	./datasources/ascii/asciiconfig.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QComboBox[KComboBox] (5)
 	./widgets/fftoptions.ui: QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox] (5)
 	./widgets/scalarlistselector.ui: QLineEdit[KLineEdit] (1)
 	./widgets/curveplacement.ui: QComboBox[KComboBox] (1)
 	./widgets/datarange.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QComboBox[KComboBox] (4)
-	./datasources/ascii/asciiconfig.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QComboBox[KComboBox],QLineEdit[KLineEdit] (5)
-	./datasources/healpix/healpixconfig.ui: QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox],QComboBox[KComboBox],QLineEdit[KLineEdit] (9)
-	./libkstapp/stringtab.ui: QLineEdit[KLineEdit] (1)
-	./libkstapp/editmultiplewidget.ui: QLineEdit[KLineEdit] (1)
-	./libkstapp/differentiatecurvesdialog.ui: QComboBox[KComboBox] (1)
-	./libkstapp/exportgraphicsdialog.ui: QComboBox[KComboBox] (1)
-	./libkstapp/matrixtab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (6)
-	./libkstapp/datawizardpagevectors.ui: QLineEdit[KLineEdit] (1)
-	./libkstapp/equationtab.ui: QComboBox[KComboBox],QLineEdit[KLineEdit] (2)
-	./libkstapp/stroketab.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (4)
-	./libkstapp/eventmonitortab.ui: QLineEdit[KLineEdit],QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QTextEdit[KTextEdit] (5)
-	./libkstapp/debugdialog.ui: QTabWidget[KTabWidget] (1)
-	./libkstapp/imagetab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit] (2)
-	./libkstapp/filltab.ui: QComboBox[KComboBox] (1)
-	./libkstapp/axistab.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (5)
+	./widgets/colorpalette.ui: QComboBox[KComboBox] (1)
+	./widgets/curveappearance.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (5)
 	./libkstapp/vectortab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QComboBox[KComboBox] (3)
-	./libkstapp/legendtab.ui: QLineEdit[KLineEdit] (1)
 	./libkstapp/dialogpage.ui: QTabWidget[KTabWidget] (1)
-	./libkstapp/defaultlabelpropertiestab.ui: QComboBox[KComboBox] (1)
-	./libkstapp/datawizardpagedatasource.ui: QComboBox[KComboBox] (1)
-	./libkstapp/rangetab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (6)
-	./libkstapp/histogramtab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit] (2)
+	./libkstapp/matrixtab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (6)
+	./libkstapp/stroketab.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (4)
 	./libkstapp/markerstab.ui: QLineEdit[KLineEdit],QComboBox[KComboBox] (2)
+	./libkstapp/editmultiplewidget.ui: QLineEdit[KLineEdit] (1)
+	./libkstapp/filltab.ui: QComboBox[KComboBox] (1)
+	./libkstapp/defaultlabelpropertiestab.ui: QComboBox[KComboBox] (1)
 	./libkstapp/filterfittab.ui: QComboBox[KComboBox] (1)
+	./libkstapp/exportgraphicsdialog.ui: QComboBox[KComboBox] (1)
+	./libkstapp/logdialog.ui: QTabWidget[KTabWidget],QComboBox[KComboBox],QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (5)
+	./libkstapp/histogramtab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit] (2)
 	./libkstapp/aboutdialog.ui: QTextBrowser[KTextBrowser] (1)
+	./libkstapp/rangetab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QLineEdit[KLineEdit] (6)
+	./libkstapp/axistab.ui: QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox],QComboBox[KComboBox] (5)
+	./libkstapp/imagetab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit] (2)
+	./libkstapp/stringtab.ui: QLineEdit[KLineEdit] (1)
 	./libkstapp/scalartab.ui: QLineEdit[KLineEdit],QLineEdit[KLineEdit] (2)
+	./libkstapp/legendtab.ui: QLineEdit[KLineEdit] (1)
+	./libkstapp/debugdialog.ui: QTabWidget[KTabWidget] (1)
+	./libkstapp/datawizardpagedatasource.ui: QComboBox[KComboBox] (1)
+	./libkstapp/equationtab.ui: QComboBox[KComboBox],QLineEdit[KLineEdit] (2)
+	./libkstapp/datawizardpagevectors.ui: QLineEdit[KLineEdit] (1)
+	./libkstapp/differentiatecurvesdialog.ui: QComboBox[KComboBox] (1)
+	./libkstapp/eventmonitortab.ui: QLineEdit[KLineEdit],QComboBox[KComboBox],QLineEdit[KLineEdit],QLineEdit[KLineEdit],QTextEdit[KTextEdit] (5)
 	Don't use Qt 4 classes that are deprecated. Additionally make sure
 	to use the KDE version of some Qt GUI elements to provide a
 	consistent look and feel for the KDE desktop. The KDE classes are
@@ -554,15 +531,6 @@ X	./widgets/matrixselector.cpp: non-const ref iterator line#132 (1)
 	*to* *the* *K* *classes*.
 
 5. Check for spelling errors [spelling]... Ok!
-
-==>For File Type desktop<==
-1. Check that file ends with a newline [endswithnewline]... Ok!
-
-2. Check for invalid icon names [iconnames]... Ok!
-
-3. Check for spelling errors [spelling]... Ok!
-
-4. Validates desktop files using 'desktop-file-validate' [validate]... Ok!
 
 ==>For File Type kpartgui<==
 1. Check that file ends with a newline [endswithnewline]... Ok!

@@ -9,9 +9,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <config.h>
 
 #include "bugreportwizard.h"
-#include "config.h"
 
 #include "kst_i18n.h"
 

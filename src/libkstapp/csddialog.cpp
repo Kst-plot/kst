@@ -277,7 +277,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const FFTOptions *options = _CSDTab->FFTOptionsWidget();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         CSDPtr csd = kst_cast<CSD>(_document->objectStore()->retrieveObject(objectName));
         if (csd) {
           VectorPtr vector = _CSDTab->vectorDirty() ? _CSDTab->vector() : csd->vector();

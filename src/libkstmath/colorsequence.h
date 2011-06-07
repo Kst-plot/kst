@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _COLORSEQUENCE_H
-#define _COLORSEQUENCE_H
+#ifndef COLORSEQUENCE_H
+#define COLORSEQUENCE_H
 
 #include "kstmath_export.h"
 

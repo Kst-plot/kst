@@ -10,9 +10,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+#include <config.h>
 
 #include "memorywidget.h"
+
 #include <psversion.h>
 #include <sysinfo.h>
 

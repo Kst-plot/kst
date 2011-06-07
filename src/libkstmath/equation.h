@@ -104,9 +104,6 @@ class KSTMATH_EXPORT Equation : public DataObject {
 
     int _numNew, _numShifted, _interp, _ns;
 
-    static const QString XINVECTOR;
-    static const QString XOUTVECTOR;
-    static const QString YOUTVECTOR;
     VectorPtr _xInVector, _xOutVector, _yOutVector;
     Equations::Node *_pe;
 };

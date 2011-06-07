@@ -203,7 +203,7 @@ void LegendItem::paint(QPainter *painter) {
   }
 
 
-  foreach(DrawnLegendItem item, legendPixmaps) {
+  foreach(const DrawnLegendItem &item, legendPixmaps) {
     painter->drawPixmap(QPoint(x, y), item.pixmap, QRect(0, 0, item.size.width(), item.size.height()));
     if (_verticalDisplay) {
       y += item.size.height();
@@ -311,7 +311,7 @@ void LegendItem::saveAsDialogDefaults() const {
   _dialogDefaults->setValue("legend/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
   if (b.gradient()) {
     QString stopList;
-    foreach(QGradientStop stop, b.gradient()->stops()) {
+    foreach(const QGradientStop &stop, b.gradient()->stops()) {
       qreal point = (qreal)stop.first;
       QColor color = (QColor)stop.second;
 
@@ -335,7 +335,7 @@ void LegendItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("fontscale", QVariant(_fontScale).toString());
   xml.writeAttribute("verticaldisplay", QVariant(_verticalDisplay).toString());
   ViewItem::save(xml);
-  foreach (RelationPtr relation, _relations) {
+  foreach (const RelationPtr &relation, _relations) {
     xml.writeStartElement("relation");
     xml.writeAttribute("tag", relation->Name());
     xml.writeEndElement();
@@ -479,7 +479,7 @@ QString LegendItem::_automaticDescriptiveName() const {
 
 QString LegendItem::descriptionTip() const {
   QString contents;
-  foreach (Relation *relation, _relations) {
+  foreach (const RelationPtr &relation, _relations) {
     contents += QString("  %1\n").arg(relation->Name());
   }
 

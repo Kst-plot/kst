@@ -153,7 +153,7 @@ void ViewItemDialog::addMultipleEditOption(QString name, QString descriptionTip,
 QList<ViewItem*> ViewItemDialog::selectedMultipleEditObjects() {
   QList<ViewItem*> selectedItems;
   QList<ViewItem*> allItiems = ViewItem::getItems<ViewItem>();
-  foreach(QString name, _editMultipleWidget->selectedObjects()) {
+  foreach(const QString &name, _editMultipleWidget->selectedObjects()) {
     if (_multiNameShortName.contains(name)) {
       QString shortName = _multiNameShortName[name];
       foreach (ViewItem *item, allItiems) {

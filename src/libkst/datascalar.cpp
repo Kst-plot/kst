@@ -14,12 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "datascalar.h"
+
 #include <QDebug>
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "datascalar.h"
 #include "debug.h"
 #include "objectstore.h"
 

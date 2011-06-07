@@ -18,7 +18,6 @@
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "sharedaxisboxitem.h"
-#include "application.h"
 #include "image.h"
 #include "debug.h"
 

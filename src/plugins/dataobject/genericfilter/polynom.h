@@ -17,7 +17,7 @@ public:
   polynom(int n);                       // constructor
   polynom(const polynom& P);            // copy constructor
  ~polynom();                            // destructor
-  S& operator[] (int i);                // ith coefficient acces (read/write)
+  S& operator[] (int i);                // ith coefficient access (read/write)
   S operator() (S x);                   // value at x
   polynom& operator=(const polynom& P); // set a polynom equal to another one
   polynom  operator+(const polynom& P); // sum of 2 polynoms

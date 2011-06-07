@@ -365,7 +365,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
   if (EquationPtr equation = kst_cast<Equation>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         EquationPtr equation = kst_cast<Equation>(_document->objectStore()->retrieveObject(objectName));
         if (equation) {
           VectorPtr xVector = _equationTab->xVectorDirty() ? _equationTab->xVector() : equation->vXIn();

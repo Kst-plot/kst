@@ -39,7 +39,6 @@
 #include "updatemanager.h"
 
 #include "dataplugin.h"
-#include "datasourcepluginmanager.h"
 
 #define DATASOURCE_UPDATE_TIMER_LENGTH 1000
 
@@ -52,12 +51,12 @@ QStringList Kst::pluginSearchPaths()
 
   QDir rootDir = QApplication::applicationDirPath();
   rootDir.cdUp();
-  QString path = rootDir.canonicalPath() + "/";
+  QString path = rootDir.canonicalPath() + '/';
   pluginPaths << path + QLatin1String("plugins");
   pluginPaths << path + QLatin1String(KST_INSTALL_PLUGINS);
   
   rootDir.cdUp();
-  path = rootDir.canonicalPath() + "/";
+  path = rootDir.canonicalPath() + '/';
   path += QLatin1String(KST_INSTALL_PLUGINS);
   pluginPaths << path + QLatin1String("/Release");
   pluginPaths << path + QLatin1String("/Debug");
@@ -165,7 +164,7 @@ static void scanPlugins() {
   QStringList pluginPaths = pluginSearchPaths();
   foreach (const QString& pluginPath, pluginPaths) {
     QDir d(pluginPath);
-    foreach (QString fileName, d.entryList(QDir::Files)) {
+    foreach (const QString &fileName, d.entryList(QDir::Files)) {
 #ifdef Q_OS_WIN
         if (!fileName.endsWith(".dll"))
             continue;

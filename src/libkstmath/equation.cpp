@@ -19,6 +19,8 @@
  *@author C. Barth Netterfield
  */
 
+#include "equation.h"
+
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +33,6 @@
 #include "eparse-eh.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "equation.h"
 #include "kst_i18n.h"
 #include "generatedvector.h"
 #include "objectstore.h"
@@ -46,10 +47,9 @@ namespace Kst {
 const QString Equation::staticTypeString = I18N_NOOP("Equation");
 const QString Equation::staticTypeTag = I18N_NOOP("equation");
 
-const QString Equation::XINVECTOR = "X";
-const QString Equation::XOUTVECTOR = "XO"; // Output (slave) vector
-const QString Equation::YOUTVECTOR = "O"; // Output (slave) vector
-
+static const QLatin1String& XINVECTOR = QLatin1String("X");
+static const QLatin1String& XOUTVECTOR = QLatin1String("XO"); // Output (slave) vector
+static const QLatin1String& YOUTVECTOR = QLatin1String("O"); // Output (slave) vector
 
 Equation::Equation(ObjectStore *store)
 : DataObject(store), _doInterp(false), _xInVector(0) {
@@ -267,8 +267,8 @@ void Equation::updateVectorLabels() {
   yl.remove(sn);
 
   LabelInfo label_info;
-  label_info.units = QString();
-  label_info.quantity = QString();
+  label_info.units.clear();
+  label_info.quantity.clear();
   label_info.name = yl;
 
   _yOutVector->setTitleInfo(label_info);

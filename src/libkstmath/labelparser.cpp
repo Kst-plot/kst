@@ -567,7 +567,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
         break;
       case 0x5e:   // ^
         dir = Chunk::Up;
-      case 0x5f:   // _ (dir is set to Down at begining of loop)
+      case 0x5f:   // _ (dir is set to Down at beginning of loop)
         if (ctail->text.isEmpty() && !ctail->group) {
           setNormalChar(c, &ctail);
         } else {

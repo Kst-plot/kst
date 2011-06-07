@@ -79,7 +79,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
       _delayedUpdateScheduled = true;
       int deferTime = _minUpdatePeriod-dT;
       if (deferTime <= 0) {
-        deferTime = 20; // if an update is already in progess, wait this long to check again.
+        deferTime = 20; // if an update is already in progress, wait this long to check again.
       }
       QTimer::singleShot(deferTime, this, SLOT(delayedUpdates()));
     }

@@ -192,9 +192,9 @@ void DataObject::scanPlugins() {
   }
 
   QStringList pluginPaths = pluginSearchPaths();
-  foreach (QString pluginPath, pluginPaths) {
+  foreach (const QString &pluginPath, pluginPaths) {
     QDir d(pluginPath);
-    foreach (QString fileName, d.entryList(QDir::Files)) {
+    foreach (const QString &fileName, d.entryList(QDir::Files)) {
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
@@ -624,7 +624,7 @@ const CurveHintList* DataObject::curveHints() const {
 
 void DataObject::deleteDependents() {
   DataObjectList dataObjects = _store->getObjects<DataObject>();
-  foreach (DataObjectPtr object, dataObjects) {
+  foreach (const DataObjectPtr &object, dataObjects) {
     bool usesObject = object->uses(this);
     if (!usesObject) {
       for (VectorMap::Iterator j = _outputVectors.begin(); !usesObject && j != _outputVectors.end(); ++j) {
@@ -646,7 +646,7 @@ void DataObject::deleteDependents() {
   }
 
   RelationList relations = _store->getObjects<Relation>();
-  foreach (RelationPtr relation, relations) {
+  foreach (const RelationPtr &relation, relations) {
     bool usesRelation = relation->uses(this);
     if (!usesRelation) {
       for (VectorMap::Iterator j = _outputVectors.begin(); !usesRelation && j != _outputVectors.end(); ++j) {
@@ -667,16 +667,16 @@ void DataObject::deleteDependents() {
     }
   }
 
-  foreach (VectorPtr vector, _outputVectors) {
+  foreach (const VectorPtr &vector, _outputVectors) {
     _store->removeObject(vector);
   }
-  foreach (MatrixPtr matrix, _outputMatrices) {
+  foreach (const MatrixPtr &matrix, _outputMatrices) {
     _store->removeObject(matrix);
   }
-  foreach (ScalarPtr scalar, _outputScalars) {
+  foreach (const ScalarPtr &scalar, _outputScalars) {
     _store->removeObject(scalar);
   }
-  foreach (StringPtr string, _outputStrings) {
+  foreach (const StringPtr &string, _outputStrings) {
     _store->removeObject(string);
   }
 }
@@ -714,16 +714,16 @@ bool DataObject::uses(ObjectPtr p) const {
 qint64 DataObject::minInputSerial() const{
   qint64 minSerial = LLONG_MAX;
 
-  foreach (VectorPtr P, _inputVectors) {
+  foreach (const VectorPtr &P, _inputVectors) {
     minSerial = qMin(minSerial, P->serial());
   }
-  foreach (ScalarPtr P, _inputScalars) {
+  foreach (const ScalarPtr &P, _inputScalars) {
     minSerial = qMin(minSerial, P->serial());
   }
-  foreach (MatrixPtr P, _inputMatrices) {
+  foreach (const MatrixPtr &P, _inputMatrices) {
     minSerial = qMin(minSerial, P->serial());
   }
-  foreach (StringPtr P, _inputStrings) {
+  foreach (const StringPtr &P, _inputStrings) {
     minSerial = qMin(minSerial, P->serial());
   }
   return minSerial;
@@ -732,16 +732,16 @@ qint64 DataObject::minInputSerial() const{
 qint64 DataObject::maxInputSerialOfLastChange() const {
   qint64 maxSerial = NoInputs;
 
-  foreach (VectorPtr P, _inputVectors) {
+  foreach (const VectorPtr &P, _inputVectors) {
     maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
-  foreach (ScalarPtr P, _inputScalars) {
+  foreach (const ScalarPtr &P, _inputScalars) {
     maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
-  foreach (MatrixPtr P, _inputMatrices) {
+  foreach (const MatrixPtr &P, _inputMatrices) {
     maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
-  foreach (StringPtr P, _inputStrings) {
+  foreach (const StringPtr &P, _inputStrings) {
     maxSerial = qMax(maxSerial, P->serialOfLastChange());
   }
   return maxSerial;

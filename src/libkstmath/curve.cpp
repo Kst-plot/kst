@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "curve.h"
 
 // includes for KDE
 #include "kst_i18n.h"
@@ -29,7 +30,6 @@
 #include "linestyle.h"
 #include "math_kst.h"
 #include "datavector.h"
-#include "curve.h"
 #include "ksttimers.h"
 #include "objectstore.h"
 

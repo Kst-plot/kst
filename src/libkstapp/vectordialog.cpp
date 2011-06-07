@@ -9,7 +9,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <stdio.h>
 #include "vectordialog.h"
 
 #include "dialogpage.h"
@@ -469,7 +468,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const DataRange *dataRange = _vectorTab->dataRange();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         DataVectorPtr vector = kst_cast<DataVector>(_document->objectStore()->retrieveObject(objectName));
         if (vector) {
           int start = dataRange->startDirty() ? dataRange->start() : vector->startFrame();
@@ -522,7 +521,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         GeneratedVectorPtr vector = kst_cast<GeneratedVector>(_document->objectStore()->retrieveObject(objectName));
         if (vector) {
           double min = _vectorTab->fromDirty() ? _vectorTab->from() : vector->min();

@@ -338,7 +338,7 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
   if (EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(_document->objectStore()->retrieveObject(objectName));
         if (eventMonitor) {
           const QString script = _eventMonitorTab->scriptDirty() ? _eventMonitorTab->script() : eventMonitor->scriptCode();

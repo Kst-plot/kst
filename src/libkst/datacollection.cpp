@@ -14,13 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "datacollection.h"
 
 #include <config.h>
 
 #include <stdlib.h>
 #include <qapplication.h>
 
-#include "datacollection.h"
 
 #include "sysinfo.h"
 #include "psversion.h"

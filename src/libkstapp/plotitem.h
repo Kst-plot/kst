@@ -24,7 +24,6 @@
 #include "plotiteminterface.h"
 #include "plotdefines.h"
 #include "plotmarkers.h"
-#include "namedobject.h"
 
 #include "plotaxis.h"
 #include "legenditem.h"

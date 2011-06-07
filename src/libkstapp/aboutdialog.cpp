@@ -10,14 +10,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+#include <config.h>
+#include "aboutdialog.h"
 
 #ifdef KST_HAVE_SVN_REVISION_H
 #include "svnrevision.h"
 #include "authors.h"
 #endif
-
-#include "aboutdialog.h"
 
 #include <QDesktopServices>
 #include <QDebug>
@@ -32,10 +31,10 @@ AboutDialog::AboutDialog(QWidget *parent)
    setupUi(this);
 
 #ifdef KST_HAVE_SVN_REVISION_H
-   QStringList utf8Authors = QString::fromUtf8(kst_authors).trimmed().split(";");
+   QStringList utf8Authors = QString::fromUtf8(kst_authors).trimmed().split(';');
    QStringList authors;
    foreach(const QString& a, utf8Authors) {
-     if (!a.startsWith("#")) {
+     if (!a.startsWith('#')) {
       authors << a;
      }
    }

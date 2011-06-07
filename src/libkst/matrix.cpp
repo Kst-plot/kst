@@ -18,13 +18,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QDebug>
-#include <QXmlStreamWriter>
-
 #include "matrix.h"
 
-//#include <stdlib.h>
-//#include <math.h>
+#include <QDebug>
+#include <QXmlStreamWriter>
 
 #include "debug.h"
 #include "kst_i18n.h"

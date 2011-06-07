@@ -149,7 +149,7 @@ void ViewGridLayout::setEnabled(bool enabled) {
 
 
 void ViewGridLayout::reset() {
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     item.viewItem->setTransform(item.transform);
     item.viewItem->setPos(item.position);
     item.viewItem->setViewRect(item.rect);
@@ -194,52 +194,7 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
   }
   layout->apply();
 
-  //layout->apply();
-
   layout->shareAxis(painter, creation);
-
-#if 0
-  foreach (ViewItem *v, viewItems) {
-    int r = 0, c = 0, rs = 0, cs = 0;
-    if (grid->locateWidget(v, r, c, rs, cs)) {
-      layout->addViewItem(v, r, c, rs, cs);
-    } else {
-      grid->appendItem(v);
-      if (grid->locateWidget(v, r, c, rs, cs)) {
-        layout->addViewItem(v, r, c, rs, cs);
-      } else {
-        qDebug() << "ooops, viewItem does not fit in layout" << endl;
-      }
-    }
-  }
-  layout->apply();
-  layout->apply();
-
-  // Using the automatic layout as a basis, build a custom grid with the same column count,
-  // this will remove all spans, making each plot the same size.  When this is built, the 
-  // sharedAxis layout will be applied.
-  int columnCount = layout->columnCount();
-  grid = Grid::buildGrid(viewItems, columnCount);
-  Q_ASSERT(grid);
-
-  layout = new ViewGridLayout(item);
-
-  foreach (ViewItem *v, viewItems) {
-    int r = 0, c = 0, rs = 0, cs = 0;
-    if (grid->locateWidget(v, r, c, rs, cs)) {
-      layout->addViewItem(v, r, c, rs, cs);
-    } else {
-      grid->appendItem(v);
-      if (grid->locateWidget(v, r, c, rs, cs)) {
-        layout->addViewItem(v, r, c, rs, cs);
-      } else {
-        qDebug() << "ooops, viewItem does not fit in layout" << endl;
-      }
-    }
-  }
-
-  layout->shareAxis(painter, creation);
-#endif
 
 }
 
@@ -333,7 +288,7 @@ void ViewGridLayout::apply() {
 #endif
 
   PlotItem *plot = 0;
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     QPointF topLeft(itemWidth * item.column, itemHeight * item.row);
     QSizeF size(itemWidth * item.columnSpan, itemHeight * item.rowSpan);
     topLeft += layoutTopLeft;
@@ -430,7 +385,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
            << "rowCount" << rowCount() << "columnCount" << columnCount();
 #endif
 
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
       plotItem->calculateBorders(painter);
       if (plotItem->leftMarginSize() > leftLabelBounds[item.column]) {
@@ -534,7 +489,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
   QMap<int, QMap<int, int> > cellHeights;
   QMap<int, QMap<int, int> > cellWidths;
 
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem)) {
       int width = columnProjWidth;
       if (plotItem->leftLabelDetails()->isVisible()) {
@@ -563,7 +518,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
   qDebug() << "Calculated cell heights (row x column)" << cellHeights;
 #endif
 
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     int columnStart = 0;
     for (int i = 0; i < item.column; i++) {
       columnStart += cellWidths[item.row][i];
@@ -616,7 +571,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
 void ViewGridLayout::updatePlotMargins() {
   _plotMarginWidth.clear();
   _plotMarginHeight.clear();
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
@@ -656,7 +611,7 @@ void ViewGridLayout::updatePlotMargins() {
 
 
 void ViewGridLayout::unshareAxis() {
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
@@ -672,7 +627,7 @@ void ViewGridLayout::updateSharedAxis() {
   if (!_shareX && !_shareY) {
     return;
   }
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)
@@ -701,7 +656,7 @@ void ViewGridLayout::calculateSharing() {
   qreal xStart = 0.0, xStop = 0.0;
   qreal yStart = 0.0, yStop = 0.0;
 
-  foreach (LayoutItem item, _items) {
+  foreach (const LayoutItem &item, _items) {
     PlotItem *plotItem = qobject_cast<PlotItem*>(item.viewItem);
 
     if (!plotItem)

@@ -19,6 +19,8 @@
  *@author C. Barth Netterfield
  */
 
+#include "psd.h"
+
 #include <assert.h>
 #include <math.h>
 
@@ -30,7 +32,6 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "psd.h"
 #include "psdcalculator.h"
 #include "objectstore.h"
 
@@ -41,9 +42,9 @@ namespace Kst {
 const QString PSD::staticTypeString = I18N_NOOP("Power Spectrum");
 const QString PSD::staticTypeTag = I18N_NOOP("powerspectrum");
 
-const QLatin1String& INVECTOR = QLatin1String("I");
-const QLatin1String& SVECTOR = QLatin1String("S");
-const QLatin1String& FVECTOR = QLatin1String("F");
+static const QLatin1String& INVECTOR = QLatin1String("I");
+static const QLatin1String& SVECTOR = QLatin1String("S");
+static const QLatin1String& FVECTOR = QLatin1String("F");
 
 #define KSTPSDMAXLEN 27
 
@@ -412,7 +413,7 @@ void PSD::updateVectorLabels() {
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
       label_info.quantity = i18n("Spectral Density");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        label_info.units = QString();
+        label_info.units.clear();
       } else {
         label_info.units = QString("%1/%2^{1/2}").arg(_vectorUnits).arg(_rateUnits);
       }
@@ -420,7 +421,7 @@ void PSD::updateVectorLabels() {
     case 1: // power spectral density [V^2/Hz]
       label_info.quantity = i18n("PSD");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        label_info.units = QString();
+        label_info.units.clear();
       } else {
         label_info.units = QString("%1^2/%2").arg(_vectorUnits).arg(_rateUnits);
       }
@@ -428,7 +429,7 @@ void PSD::updateVectorLabels() {
     case 2: // amplitude spectrum [V]
       label_info.quantity = i18n("Amplitude Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        label_info.units = QString();
+        label_info.units.clear();
       } else {
         label_info.units = QString("%1").arg(_vectorUnits);
       }
@@ -436,13 +437,13 @@ void PSD::updateVectorLabels() {
     case 3: // power spectrum [V^2]
       label_info.quantity = i18n("Power Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
-        label_info.units = QString();
+        label_info.units.clear();
       } else {
         label_info.units = QString("%1^2").arg(_vectorUnits);
       }
       break;
   }
-  label_info.name = QString();
+  label_info.name.clear();
   _sVector->setLabelInfo(label_info);
 
   label_info.quantity = i18n("Frequency");

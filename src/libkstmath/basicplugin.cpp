@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "basicplugin.h"
+
 #include <stdlib.h>
 
 #include <QXmlStreamWriter>
@@ -21,7 +23,6 @@
 #include "kst_i18n.h"
 
 #include "debug.h"
-#include "basicplugin.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "objectstore.h"

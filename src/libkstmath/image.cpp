@@ -12,10 +12,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "image.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "image.h"
 #include "math_kst.h"
 #include "objectstore.h"
 

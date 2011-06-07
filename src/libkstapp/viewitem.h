@@ -529,7 +529,7 @@ class RotateCommand : public TransformCommand
 };
 
 // FIXME: This returns a list of ungaurded pointers; if the object is deleted
-// between when the list is aquired and when one of the pointers is de-referenced,
+// between when the list is acquired and when one of the pointers is de-referenced,
 // there will be a crash.  They are unguarded, because they are normally held by the
 // scene as unguarded pointers, so it is too late to add a guard.
 // I can't see a way of fixing it easily.  The best option

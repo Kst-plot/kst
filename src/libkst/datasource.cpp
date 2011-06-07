@@ -151,7 +151,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
   _initializeShortName();
 
-  setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ")");
+  setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ')');
 
   // TODO What is the better default?
   setUpdateType(File);
@@ -172,8 +172,8 @@ QMap<QString, QString> DataSource::fileMetas() const
   QFileInfo info(_filename);
   map["File name"] = info.fileName();
   map["File path"] = info.path();
-  map["File creation"] = info.created().toString(Qt::ISODate).replace("T", " ");
-  map["File modification"] = info.lastModified().toString(Qt::ISODate).replace("T", " ");
+  map["File creation"] = info.created().toString(Qt::ISODate).replace('T', ' ');
+  map["File modification"] = info.lastModified().toString(Qt::ISODate).replace('T', ' ');
   return map;
 }
 

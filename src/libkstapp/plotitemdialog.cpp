@@ -466,7 +466,7 @@ void PlotItemDialog::contentChanged() {
   QStringList relation_names = _contentTab->displayedRelations();
   RelationList relations;
 
-  foreach (QString relation_name, relation_names) {
+  foreach (const QString &relation_name, relation_names) {
     if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relation_name))) {
       relations.append(relation);
     }

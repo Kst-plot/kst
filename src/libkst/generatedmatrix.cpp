@@ -11,13 +11,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "generatedmatrix.h"
 
 #include <QTextStream>
 #include <QTextDocument>
 
 #include "kst_i18n.h"
 
-#include "generatedmatrix.h"
 #include <QXmlStreamWriter>
 #include <QVariant>
 

@@ -15,11 +15,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "dataprimitive.h"
 
 #include "debug.h"
 #include "kst_i18n.h"
-
-#include "dataprimitive.h"
 
 #include "datasource.h"
 
@@ -61,7 +60,7 @@ DataPrimitive::DataPrimitive(Primitive* primitive) : d(*new Private)
 
 
 DataPrimitive::~DataPrimitive() {
-  _field = QString::null;
+  _field.clear();
   d._file = 0;
   d._primitive = 0;
   delete &d;

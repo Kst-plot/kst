@@ -38,7 +38,7 @@ namespace Kst {
 
 #endif
 
-// Dialog defaults are stored and retreived from the Kst::dialogDefaults.
+// Dialog defaults are stored and retrieved from the Kst::dialogDefaults.
 // As you add defaults, add them here!
 // Name                   Type    Where used
 // vector/datasource      QString vectordialog datawizard

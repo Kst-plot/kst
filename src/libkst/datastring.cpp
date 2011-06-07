@@ -14,12 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "datastring.h"
+
 #include <QDebug>
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "datastring.h"
 #include "debug.h"
 #include "objectstore.h"
 

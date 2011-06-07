@@ -274,7 +274,7 @@ void ApplicationSettings::setBackgroundBrush(const QBrush brush) {
 
   QString stopList;
   if (brush.gradient()) {
-    foreach(QGradientStop stop, brush.gradient()->stops()) {
+    foreach(const QGradientStop &stop, brush.gradient()->stops()) {
       qreal point = (qreal)stop.first;
       QColor color = (QColor)stop.second;
 

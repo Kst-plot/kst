@@ -210,7 +210,8 @@ void PlotItemManager::clearPlotsForView(View *view) {
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   if (kstApp->mainWindow()->isTiedTabs()) {
     QList<PlotItem*> plots;
-    foreach (View *view, PlotItemManager::self()->_tiedZoomViewPlotLists.keys()) {
+    QList<View*> keys = PlotItemManager::self()->_tiedZoomViewPlotLists.keys();
+    foreach (View *view, keys) {
       const QList<PlotItem*> plotlist = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
       foreach(PlotItem* item, plotlist) {
         plots.append(item);
@@ -255,7 +256,8 @@ void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
 QList<PlotItem*> PlotItemManager::tiedZoomPlots(PlotItem* plotItem) {
   if (kstApp->mainWindow()->isTiedTabs()) {
     QList<PlotItem*> plots;
-    foreach (View *view, PlotItemManager::self()->_tiedZoomViewPlotLists.keys()) {
+    QList<View *> keys = PlotItemManager::self()->_tiedZoomViewPlotLists.keys();
+    foreach (View *view, keys) {
       const QList<PlotItem*> plotlist = PlotItemManager::self()->_tiedZoomViewPlotLists.value(view);
       foreach(PlotItem* item, plotlist) {
         plots.append(item);

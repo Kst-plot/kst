@@ -14,6 +14,8 @@
 
 #include <config.h>
 
+#include "eventmonitorentry.h"
+
 // include files for Qt
 #include <qthread.h>
 #include <QEvent>
@@ -24,7 +26,6 @@
 #include "emailthread.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "eventmonitorentry.h"
 
 #include <QXmlStreamWriter>
 
@@ -57,8 +58,8 @@ namespace {
 //extern "C" void *ParsedEquation;
 //extern "C" struct yy_buffer_state *yy_scan_string(const char*);
 
-const QString EventMonitorEntry::OUTXVECTOR = "X";
-const QString EventMonitorEntry::OUTYVECTOR = "Y";
+const QString EventMonitorEntry::OUTXVECTOR('X');
+const QString EventMonitorEntry::OUTYVECTOR('Y');
 
 EventMonitorEntry::EventMonitorEntry(ObjectStore *store) : DataObject(store) {
   _level = Debug::Warning;

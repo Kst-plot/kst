@@ -9,9 +9,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "stringdialog.h"
 
 #include "datasourcedialog.h"
-#include "stringdialog.h"
 #include "enodes.h"
 #include "document.h"
 #include "objectstore.h"

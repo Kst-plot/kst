@@ -14,12 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include "vscalar.h"
+
 #include <QDebug>
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "vscalar.h"
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"

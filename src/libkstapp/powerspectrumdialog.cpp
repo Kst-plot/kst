@@ -177,7 +177,7 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
     if (_editMultipleWidget) {
       PSDList objects = _document->objectStore()->getObjects<PSD>();
       _editMultipleWidget->clearObjects();
-      foreach(PSDPtr object, objects) {
+      foreach(const PSDPtr &object, objects) {
         _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
     }
@@ -290,7 +290,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
     if (editMode() == EditMultiple) {
       const FFTOptions *options = _powerSpectrumTab->FFTOptionsWidget();
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         PSDPtr powerspectrum = kst_cast<PSD>(_document->objectStore()->retrieveObject(objectName));
         if (powerspectrum) {
           VectorPtr vector = _powerSpectrumTab->vectorDirty() ? _powerSpectrumTab->vector() : powerspectrum->vector();

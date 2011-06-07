@@ -15,9 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "object.h"
 #include "kst_i18n.h"
 
-#include "object.h"
 #include "objectstore.h"
 
 namespace Kst {

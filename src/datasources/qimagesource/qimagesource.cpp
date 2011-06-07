@@ -535,7 +535,7 @@ int QImageSourcePlugin::understands(QSettings *cfg, const QString& filename) con
   QList<QByteArray> formats = QImageReader::supportedImageFormats();
 
   bool matches = false;
-  foreach (QByteArray ext, formats) {
+  foreach (const QByteArray &ext, formats) {
     if (filename.toLower().endsWith(ext.toLower())) {
       matches = true;
       break;

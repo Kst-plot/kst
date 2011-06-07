@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-static const QString KstColorsName("KstColors");
+static const QLatin1String& KstColorsName = QLatin1String("KstColors");
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",

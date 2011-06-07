@@ -58,7 +58,6 @@
 
 #include "dialoglauncher.h"
 
-#include <QtGui>
 #include <QSvgGenerator>
 
 
@@ -1311,17 +1310,17 @@ void MainWindow::createMenus() {
   QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugin"));
   QMenu* _filterPluginsMenu = _createMenu->addMenu(tr("Fil&ter Plugin"));
   PluginMenuItemAction* action;
-  foreach (QString pluginName, DataObject::dataObjectPluginList()) {
+  foreach (const QString &pluginName, DataObject::dataObjectPluginList()) {
     action = new PluginMenuItemAction(pluginName, this);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _pluginsMenu->addAction(action);
   }
-  foreach (QString pluginName, DataObject::fitsPluginList()) {
+  foreach (const QString &pluginName, DataObject::fitsPluginList()) {
     action = new PluginMenuItemAction(pluginName, this);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _fitPluginsMenu->addAction(action);
   }
-  foreach (QString pluginName, DataObject::filterPluginList()) {
+  foreach (const QString &pluginName, DataObject::filterPluginList()) {
     action = new PluginMenuItemAction(pluginName, this);
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _filterPluginsMenu->addAction(action);

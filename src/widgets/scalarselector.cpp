@@ -212,7 +212,7 @@ void ScalarSelector::fillScalars() {
   ScalarPtr current = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));;
 
   _scalar->clear();
-  foreach (QString string, list) {
+  foreach (const QString &string, list) {
     ScalarPtr v = scalars.value(string);
     _scalar->addItem(string, qVariantFromValue(v.data()));
   }

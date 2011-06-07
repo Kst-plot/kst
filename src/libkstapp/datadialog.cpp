@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "datadialog.h"
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
@@ -17,8 +19,6 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QDebug>
-
-#include "datadialog.h"
 
 #include "datatab.h"
 #include "dialogpage.h"

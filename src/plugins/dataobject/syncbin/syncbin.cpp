@@ -33,7 +33,7 @@ static const QString& SCALAR_IN_XMAX = "X Max";
 static const QString& VECTOR_OUT_X_OUT = "X out";
 static const QString& VECTOR_OUT_Y_OUT = "Y out";
 static const QString& VECTOR_OUT_Y_ERROR = "Y error";
-static const QString& VECTOR_OUT_N = "N";
+static const QString VECTOR_OUT_N('N');
 
 class ConfigSyncBinPlugin : public Kst::DataObjectConfigWidget, public Ui_SyncBinConfig {
   public:

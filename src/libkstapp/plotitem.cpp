@@ -1441,7 +1441,7 @@ void PlotItem::paintBottomTickLabels(QPainter *painter) {
   painter->setPen(_numberLabelDetails->fontColor());
 
   int rotation = _xAxis->axisLabelRotation();
-  foreach(CachedPlotLabel label, _xPlotLabels) {
+  foreach(const CachedPlotLabel &label, _xPlotLabels) {
     QRectF bound = label.bound;
     if (_numberAxisLabelScaleFactor<0.9999) {
       bound.translate( bound.width() *(1.0-_numberAxisLabelScaleFactor)*0.5, 0.0);
@@ -1471,7 +1471,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
 
   int rotation = _yAxis->axisLabelRotation();
 
-  foreach(CachedPlotLabel label, _yPlotLabels) {
+  foreach(const CachedPlotLabel &label, _yPlotLabels) {
     if (label.baseLabel) {
       painter->save();
       QTransform t;
@@ -1501,7 +1501,7 @@ void PlotItem::paintLeftTickLabels(QPainter *painter) {
 
 #if DEBUG_LABEL_REGION
   QRectF yLabelRect;
-  foreach(CachedPlotLabel label, _yPlotLabels) {
+  foreach(const CachedPlotLabel &label, _yPlotLabels) {
     if (yLabelRect.isValid()) {
       yLabelRect = yLabelRect.united(label.bound);
     } else {
@@ -3512,7 +3512,7 @@ void PlotItem::saveAsDialogDefaults() const {
   _dialogDefaults->setValue("plot/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
   if (b.gradient()) {
     QString stopList;
-    foreach(QGradientStop stop, b.gradient()->stops()) {
+    foreach(const QGradientStop &stop, b.gradient()->stops()) {
       qreal point = (qreal)stop.first;
       QColor color = (QColor)stop.second;
 
@@ -3947,7 +3947,7 @@ ZoomCommand::~ZoomCommand() {
 
 
 void ZoomCommand::undo() {
-  foreach (ZoomState state, _originalStates) {
+  foreach (const ZoomState &state, _originalStates) {
     state.item->setCurrentZoomState(state);
   }
   kstApp->mainWindow()->document()->setChanged(true);
@@ -3957,7 +3957,7 @@ void ZoomCommand::undo() {
 void ZoomCommand::redo() {
   bool tiedX = _plotItem->isXTiedZoom();
   bool tiedY = _plotItem->isYTiedZoom();
-  foreach (ZoomState state, _originalStates) {
+  foreach (const ZoomState &state, _originalStates) {
     if (state.item == _plotItem) {
       applyZoomTo(state.item, true, true);
     } else {

@@ -46,7 +46,7 @@ void GraphicsFactory::registerFactory(const QString& node, GraphicsFactory *fact
 
 
 void GraphicsFactory::registerFactory(const QStringList& nodes, GraphicsFactory *factory) {
-  foreach (const QString n, nodes) {
+  foreach (const QString &n, nodes) {
     registerFactory(n, factory);
   }
 }

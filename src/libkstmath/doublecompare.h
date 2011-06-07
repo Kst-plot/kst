@@ -10,6 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef DOUBLECOMPARE_H
+#define DOUBLECOMPARE_H
+
 
 #include <math.h>
 
@@ -44,3 +47,5 @@ inline
 bool doubleGreaterThanEqual(const T& a, const T& b) {
   return doubleEqual(a, b) || doubleGreaterThan(a, b);
 }
+
+#endif

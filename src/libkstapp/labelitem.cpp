@@ -77,7 +77,7 @@ void LabelItem::generateLabel() {
 
 void LabelItem::paint(QPainter *painter) {
   // possible optimization: make _dirty actually work to save label
-  // regeneration on 'paint'.  Unlikely to be noticable though.
+  // regeneration on 'paint'.  Unlikely to be noticeable though.
   //if (_dirty || 1) {
   generateLabel();
   //}

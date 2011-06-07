@@ -14,13 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "objectstore.h"
 
 #include <QHash>
 #include <QList>
 #include <QString>
 
 #include "object.h"
-#include "objectstore.h"
 #include "datavector.h"
 #include "datastring.h"
 #include "datascalar.h"
@@ -33,7 +33,7 @@ namespace Kst {
 
 ObjectStore::ObjectStore()
 {
-  override.fileName = QString();
+  override.fileName.clear();
   override.f0 = override.N = override.skip = override.doAve = -5;
 }
 
@@ -58,13 +58,13 @@ bool ObjectStore::removeObject(Object *o) {
   if (ds) {
     if (!_dataSourceList.contains(ds)) {
 #if NAMEDEBUG > 1
-      qDebug() << "Trying to delete a non-existant data source from the store: " << ds->tag().tagString();
+      qDebug() << "Trying to delete a non-existent data source from the store: " << ds->tag().tagString();
 #endif
       return false;
     }
   } else if (!_list.contains(o)) {
 #if NAMEDEBUG > 1
-    qDebug() << "Trying to delete a non-existant object from the store: " << o->tag().tagString();
+    qDebug() << "Trying to delete a non-existent object from the store: " << o->tag().tagString();
 #endif
     return false;
   }

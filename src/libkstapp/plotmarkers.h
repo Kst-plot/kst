@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _PLOTMARKERS_H
-#define _PLOTMARKERS_H
+#ifndef PLOTMARKERS_H
+#define PLOTMARKERS_H
 
 #include "kst_export.h"
 

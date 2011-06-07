@@ -1,5 +1,5 @@
 // Copyright (C) 1992-1998 by Michael K. Johnson, johnsonm@redhat.com
-// Copyright 1998-2003 Albert Cahalan
+// Copyright 1998-2003 Albert Cahalan <albert@users.sf.net>
 //
 // This file is placed under the conditions of the GNU Library
 // General Public License, version 2, or any later version.

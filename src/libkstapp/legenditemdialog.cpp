@@ -155,7 +155,7 @@ void LegendItemDialog::saveLegend(LegendItem *legendItem, bool save_relations) {
 
   if (save_relations) {
     RelationList newRelations;
-    foreach (QString relationName, displayedRelations) {
+    foreach (const QString &relationName, displayedRelations) {
       if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relationName))) {
         newRelations.append(relation);
       }

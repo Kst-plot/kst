@@ -24,8 +24,6 @@
 #include "generatedvector.h"
 #include "datamatrix.h"
 #include "generatedmatrix.h"
-#include "datasource.h"
-
 
 namespace Kst {
 

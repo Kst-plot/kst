@@ -15,13 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "scalar.h"
+
 #include <QDebug>
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-
-#include "scalar.h"
 
 namespace Kst {
 

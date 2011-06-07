@@ -64,7 +64,7 @@ void ExportGraphicsDialog::updateFormats() {
   QStringList formats;// = QPictureIO::outputFormats();
 
   if (_listBitmapFormats->isChecked()) {
-    foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
+    foreach(const QByteArray &array, QImageWriter::supportedImageFormats()) {
       formats.append(QString(array));
     }
     formats.removeAll(QString("eps"));

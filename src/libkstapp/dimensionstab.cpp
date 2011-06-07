@@ -9,8 +9,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QDebug>
 #include "dimensionstab.h"
+#include <QDebug>
 
 namespace Kst {
 DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent) 

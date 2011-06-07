@@ -17,12 +17,12 @@
  ***************************************************************************/
 
 //#define UPDATEDEBUG
+#include "primitive.h"
 #include <QDebug>
 
 #include <limits.h>
 
 #include "kst_i18n.h"
-#include "primitive.h"
 #include "updatemanager.h"
 #include "datasource.h"
 

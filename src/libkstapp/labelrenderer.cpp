@@ -229,7 +229,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
 
 void paintLabel(RenderContext& rc, QPainter *p) {
   if (p) {
-    foreach (RenderedText text, rc.cachedText) {
+    foreach (const RenderedText &text, rc.cachedText) {
       p->save();
       p->setPen(text.pen);
       p->setFont(text.font);

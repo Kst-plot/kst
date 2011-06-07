@@ -16,6 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "vector.h"
+
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -27,7 +29,6 @@
 
 #include "datacollection.h"
 #include "math_kst.h"
-#include "vector.h"
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
@@ -53,9 +54,9 @@ Vector::Vector(ObjectStore *store)
 
   _saveable = false;
 
-  _labelInfo.name = QString();
-  _labelInfo.quantity = QString();
-  _labelInfo.units = QString();
+  _labelInfo.name.clear();
+  _labelInfo.quantity.clear();
+  _labelInfo.units.clear();
 
   int size = INITSIZE;
 

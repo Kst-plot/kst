@@ -46,7 +46,7 @@ void RelationFactory::registerFactory(const QString& node, RelationFactory *fact
 
 
 void RelationFactory::registerFactory(const QStringList& nodes, RelationFactory *factory) {
-  foreach (const QString n, nodes) {
+  foreach (const QString &n, nodes) {
     registerFactory(n, factory);
   }
 }

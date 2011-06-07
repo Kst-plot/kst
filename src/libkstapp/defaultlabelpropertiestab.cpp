@@ -9,8 +9,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "kst_i18n.h"
 #include "defaultlabelpropertiestab.h"
+
+#include "kst_i18n.h"
 
 #include <math.h>
 

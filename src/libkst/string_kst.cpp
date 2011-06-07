@@ -15,11 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "string_kst.h"
+
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
-#include "string_kst.h"
 
 
 namespace Kst {

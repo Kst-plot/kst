@@ -9,8 +9,8 @@
  *                                                                             *
  *******************************************************************************/
 
-#ifndef _PALETTE_H
-#define _PALETTE_H
+#ifndef PALETTE_H
+#define PALETTE_H
 
 #include <QColor>
 #include <QHash>

@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "enodes.h"
+
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -31,7 +33,6 @@
 #include <QMutex>
 #include <QRegExp>
 
-#include "enodes.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "math_kst.h"

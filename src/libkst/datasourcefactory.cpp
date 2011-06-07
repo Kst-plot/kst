@@ -46,7 +46,7 @@ void DataSourceFactory::registerFactory(const QString& node, DataSourceFactory *
 
 
 void DataSourceFactory::registerFactory(const QStringList& nodes, DataSourceFactory *factory) {
-  foreach (const QString n, nodes) {
+  foreach (const QString &n, nodes) {
     registerFactory(n, factory);
   }
 }

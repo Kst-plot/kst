@@ -411,7 +411,7 @@ void ImageDialog::configureTab(ObjectPtr object) {
     if (_editMultipleWidget) {
       ImageList objects = _document->objectStore()->getObjects<Image>();
       _editMultipleWidget->clearObjects();
-      foreach(ImagePtr object, objects) {
+      foreach(const ImagePtr &object, objects) {
         _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
     }
@@ -500,7 +500,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
   if (ImagePtr image = kst_cast<Image>(dataObject())) {
     if (editMode() == EditMultiple) {
       QStringList objects = _editMultipleWidget->selectedObjects();
-      foreach (QString objectName, objects) {
+      foreach (const QString &objectName, objects) {
         ImagePtr image = kst_cast<Image>(_document->objectStore()->retrieveObject(objectName));
         if (image) {
           MatrixPtr matrix = _imageTab->matrixDirty() ? _imageTab->matrix() : image->matrix();

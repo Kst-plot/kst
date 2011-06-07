@@ -11,12 +11,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include "editablevector.h"
+
 // use KCodecs::base64Encode() in kmdcodecs.h
 // Create QDataStream into a QByteArray
 // qCompress the bytearray
 #include <QXmlStreamWriter>
 
-#include "editablevector.h"
 #include "debug.h"
 #include "kst_i18n.h"
 

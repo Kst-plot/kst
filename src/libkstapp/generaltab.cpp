@@ -9,9 +9,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "generaltab.h"
 
 #include "kst_i18n.h"
-#include "generaltab.h"
 
 namespace Kst {
 

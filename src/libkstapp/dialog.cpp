@@ -9,8 +9,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QDebug>
 #include "dialog.h"
+
+#include <QDebug>
 
 #include "dialogpage.h"
 

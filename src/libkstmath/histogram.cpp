@@ -15,6 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+
+#include "histogram.h"
+
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -25,7 +28,6 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
-#include "histogram.h"
 #include "objectstore.h"
 
 namespace Kst {
@@ -140,21 +142,21 @@ void Histogram::internalUpdate() {
   memset(_Bins, 0, _NumberOfBins*sizeof(*_Bins));
 
   ns = _inputVectors[RAWVECTOR]->length();
-  for (i_pt = 0; i_pt < ns ; i_pt++) {
+  for (i_pt = 0; i_pt < ns ; ++i_pt) {
     y = _inputVectors[RAWVECTOR]->interpolate(i_pt, ns);
     i_bin = (int)floor((y-_MinX)/_W);
     if (i_bin >= 0 && i_bin < _NumberOfBins) {
       _Bins[i_bin]++;
     } else {
-      // the top boundry of the top bin is included in the top bin.
-      // for all other bins, the top boundry is included in the next bin
+      // the top boundary of the top bin is included in the top bin.
+      // for all other bins, the top boundary is included in the next bin
       if (y == _MaxX) {
         _Bins[_NumberOfBins-1]++;
       }
     }
   }
 
-  for (i_bin=0; i_bin<_NumberOfBins; i_bin++) {
+  for (i_bin=0; i_bin<_NumberOfBins; ++i_bin) {
     y = _Bins[i_bin];
     if (y > MaxY) {
       MaxY = y;
@@ -198,8 +200,8 @@ void Histogram::internalUpdate() {
       break;
   }
 
-  label_info.name = QString();
-  label_info.units = QString();
+  label_info.name.clear();
+  label_info.units.clear();
   _hVector->setLabelInfo(label_info);
   _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
 
@@ -211,7 +213,7 @@ void Histogram::internalUpdate() {
   double *bins = _bVector->value();
   double *hist = _hVector->value();
 
-  for ( i_bin = 0; i_bin<_NumberOfBins; i_bin++ ) {
+  for ( i_bin = 0; i_bin<_NumberOfBins; ++i_bin ) {
     bins[i_bin] = ( double( i_bin ) + 0.5 )*_W + _MinX;
     hist[i_bin] = _Bins[i_bin]*_Normalization;
   }

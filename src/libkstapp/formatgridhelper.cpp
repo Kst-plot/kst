@@ -201,7 +201,7 @@ FormatGridHelper::FormatGridHelper(const QList<ViewItem*> &viewItems) {
       a[i_row][i_col] = 0;
     }
   }
-  foreach (struct AutoFormatRC rc, rcList) {
+  foreach (const struct AutoFormatRC &rc, rcList) {
     for (int i_row = rc.row; i_row<rc.row+rc.row_span; i_row++) {
       for (int i_col = rc.col; i_col<rc.col+rc.col_span; i_col++) {
         a[i_row][i_col]++;

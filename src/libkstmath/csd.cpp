@@ -15,6 +15,8 @@
 /** A class for handling cumulative spectral decays for kst
  */
 
+#include "csd.h"
+
 #include <assert.h>
 #include <math.h>
 
@@ -24,7 +26,6 @@
 #include "kst_i18n.h"
 
 #include "dialoglauncher.h"
-#include "csd.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "psdcalculator.h"

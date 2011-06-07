@@ -18,12 +18,13 @@
 /** A utility class for calculating power spectra 
 */
 
+#include "psdcalculator.h"
+
 #include <assert.h>
 
 #include "kst_i18n.h"
 
 #include "debug.h"
-#include "psdcalculator.h"
 #include "vector.h"
 
 #include <qnamespace.h>

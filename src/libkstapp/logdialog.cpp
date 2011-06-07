@@ -26,7 +26,7 @@ LogDialog::LogDialog(MainWindow *parent)
   setupUi(this);
 
   QStringList formats;
-  foreach(QByteArray array, QImageWriter::supportedImageFormats()) {
+  foreach(const QByteArray &array, QImageWriter::supportedImageFormats()) {
     formats.append(QString(array));
   }
 

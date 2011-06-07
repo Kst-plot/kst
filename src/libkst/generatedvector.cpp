@@ -14,12 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "generatedvector.h"
+
 #include <QDebug>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
 
-#include "generatedvector.h"
 
 namespace Kst {
 

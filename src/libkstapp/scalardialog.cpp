@@ -10,9 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "scalardialog.h"
 #include "datasourcedialog.h"
 
-#include "scalardialog.h"
 #include "enodes.h"
 #include "document.h"
 #include "objectstore.h"

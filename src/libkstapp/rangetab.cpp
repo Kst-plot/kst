@@ -14,8 +14,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QDebug>
 #include "rangetab.h"
+
+#include <QDebug>
 
 namespace Kst {
 RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent) 

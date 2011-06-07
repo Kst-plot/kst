@@ -228,11 +228,9 @@ QString FitPolynomialUnweightedSource::parameterVectorToString() const {
         if (_outputScalars.contains(paramName)) {
           QString name = _outputScalars[paramName]->Name();
           double value = _outputScalars[paramName]->value();
-          QString sign;
+          QString sign(' ');
           if (value >= 0) {
-            sign = " +";
-          } else {
-            sign = " "; // Just for the space, the "-" is already in the number
+            sign += '+';
           }
           if (i == 0) {
             str += QString("\n[%1]").arg(name);

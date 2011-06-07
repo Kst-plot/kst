@@ -186,7 +186,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("style", QVariant(brush().style()).toString());
   if (brush().gradient()) {
     QString stopList;
-    foreach(QGradientStop stop, brush().gradient()->stops()) {
+    foreach(const QGradientStop &stop, brush().gradient()->stops()) {
       qreal point = (qreal)stop.first;
       QColor color = (QColor)stop.second;
 

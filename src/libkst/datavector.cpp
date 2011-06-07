@@ -16,6 +16,7 @@
  *   Permission is granted to link with any opensource library             *
  *                                                                         *
  ***************************************************************************/
+#include "datavector.h"
 
 #include <assert.h>
 #include <math.h>
@@ -28,7 +29,6 @@
 
 #include "datacollection.h"
 #include "debug.h"
-#include "datavector.h"
 #include "datasource.h"
 #include "math_kst.h"
 #include "objectstore.h"
@@ -318,14 +318,14 @@ LabelInfo DataVector::labelInfo() const {
     label_info.quantity = _fieldStrings.value("quantity")->value();
     label_info.quantity.replace('[', "\\[").replace(']', "\\]");
   } else {
-    label_info.quantity = QString();
+    label_info.quantity.clear();
   }
 
   if (_fieldStrings.contains("units")) {
     label_info.units = _fieldStrings.value("units")->value();
     label_info.units.replace('[', "\\[").replace(']', "\\]");
   } else {
-    label_info.units = QString();
+    label_info.units.clear();
   }
 
   label_info.name = descriptiveName();// _field;
@@ -383,7 +383,7 @@ void DataVector::checkIntegrity() {
 
 // Some things to consider about the following routine...
 // Frames:
-//    Some data sources have data devided into frames.  Each field
+//    Some data sources have data divided into frames.  Each field
 //    has a fixed number of samples per frame.  For some (eg, ascii files)
 //    each frame has 1 sample.  For others (eg, dirfiles) you may have more.
 //    Different fields in the same data source may have different samples per frame.

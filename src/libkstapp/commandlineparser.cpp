@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+#include <config.h>
 
 #include "commandlineparser.h"
 #include "datasource.h"
@@ -134,7 +134,7 @@ static void printText(const QString& text, const QString& detailText = QString()
 
 static void printUsage(const QString &t)
 {
-  printText(QString(usageMessage), QString(usageDetailsMessage), "\n" + t);
+  printText(QString(usageMessage), QString(usageDetailsMessage), '\n' + t);
 }
 
 
