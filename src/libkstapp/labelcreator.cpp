@@ -18,6 +18,8 @@
 #include "document.h"
 
 #include "applicationsettings.h"
+#include "dialogdefaults.h"
+
 
 namespace Kst {
 
@@ -37,12 +39,17 @@ LabelCreator::LabelCreator(QWidget *parent)
 
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
-  QFont defaultFont(ApplicationSettings::self()->defaultFont());
-  _family->setCurrentFont(defaultFont);
-  _bold->setChecked(defaultFont.bold());
-  _italic->setChecked(defaultFont.italic());
-  _labelColor->setColor(ApplicationSettings::self()->defaultFontColor());
-  _labelFontScale->setValue(ApplicationSettings::self()->defaultFontScale());
+  QFont font;
+  font.fromString(_dialogDefaults->value("label/font",font.toString()).toString());
+  _family->setCurrentFont(font);
+  _bold->setChecked(font.bold());
+  _italic->setChecked(font.italic());
+
+  _labelColor->setColor(_dialogDefaults->value("label/color",QColor(Qt::black)).value<QColor>());
+  _labelFontScale->setValue(_dialogDefaults->value("label/fontScale",12).toDouble());
+
+  _saveAsDefault->show();
+
 }
 
 

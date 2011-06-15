@@ -24,8 +24,8 @@ static const QString& VECTOR_IN_Y = "Vector In Y";
 static const QString& VECTOR_OUT_X = "X Interpolated";
 static const QString& VECTOR_OUT_Y = "Y Interpolated";
 
-static const QString SCALAR_OUT_A('a');
-static const QString SCALAR_OUT_B('b');
+static const QString& SCALAR_OUT_A = "a";
+static const QString& SCALAR_OUT_B = "b";
 static const QString& SCALAR_OUT_CHI2 = "chi^2";
 
 

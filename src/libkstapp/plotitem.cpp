@@ -2966,7 +2966,6 @@ void PlotItem::zoomXRange(const QRectF &projection, bool force) {
   if (projection.isValid()) {
     if (isInSharedAxisBox()) {
       if (!force) {
-        qDebug() << "zoom X range: telling shared axis box";
         sharedAxisBox()->zoomXRange(projection, this);
       } else {
         xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);

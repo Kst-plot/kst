@@ -34,6 +34,8 @@ LabelItemDialog::LabelItemDialog(LabelItem *item, QWidget *parent)
   connect(_propertiesTab, SIGNAL(apply()), this, SLOT(propertiesChanged()));
 
   setupProperties();
+  _saveAsDefault->show();
+
 }
 
 
@@ -55,6 +57,9 @@ void LabelItemDialog::propertiesChanged() {
   _labelItem->setLabelColor(_propertiesTab->labelColor());
   _labelItem->setLabelFont(_propertiesTab->labelFont());
   saveDimensions(_labelItem);
+  if (_saveAsDefault->isChecked()) {
+    _labelItem->saveAsDialogDefaults();
+  }
 }
 
 }

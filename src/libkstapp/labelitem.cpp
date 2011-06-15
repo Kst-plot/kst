@@ -20,6 +20,7 @@
 #include "applicationsettings.h"
 
 #include "debug.h"
+#include "dialogdefaults.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -33,16 +34,27 @@ LabelItem::LabelItem(View *parent, const QString& txt)
   setTypeName("Label");
   setFixedSize(true);
   setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
-  _scale = ApplicationSettings::self()->defaultFontScale();
-  _color = ApplicationSettings::self()->defaultFontColor();
-  _font = view()->defaultFont(_scale);
+
+  applyDefaults();
 }
 
+void LabelItem::applyDefaults() {
+  QFont font;
+  font.fromString(_dialogDefaults->value("label/font",font.toString()).toString());
+  _font  = font;
+  _color = _dialogDefaults->value("label/color",QColor(Qt::black)).value<QColor>();
+  _scale = _dialogDefaults->value("label/fontScale",12).toDouble();
+}
+
+void LabelItem::saveAsDialogDefaults() const {
+  _dialogDefaults->setValue("label/font", QVariant(_font).toString());
+  _dialogDefaults->setValue("label/color", _color.name());
+  _dialogDefaults->setValue("label/fontScale", _scale);
+}
 
 LabelItem::~LabelItem() {
   delete _labelRc;
 }
-
 
 void LabelItem::generateLabel() {
   if (_labelRc) {
@@ -216,6 +228,9 @@ void CreateLabelCommand::createItem(QString *inText) {
     label->setLabelScale(dialog.labelScale());
     label->setLabelColor(dialog.labelColor());
     label->setLabelFont(dialog.labelFont());
+    if (dialog.saveAsDefaults()) {
+      label->saveAsDialogDefaults();
+    }
   }
   _item->view()->scene()->addItem(_item);
 

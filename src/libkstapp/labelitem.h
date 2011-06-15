@@ -44,6 +44,9 @@ class LabelItem : public ViewItem {
     QFont labelFont() const;
     void setLabelFont(const QFont &font);
 
+    void applyDefaults();
+    void saveAsDialogDefaults() const;
+
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; };

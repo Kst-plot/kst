@@ -20,7 +20,7 @@
 static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_NSIGMA_IN = "NSigma Scalar";
 static const QString& SCALAR_SPACING_IN = "Spacing Scalar";
-static const QString VECTOR_OUT('Y');
+static const QString& VECTOR_OUT = "Y";
 
 class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, public Ui_FilterDespikeConfig {
   public:

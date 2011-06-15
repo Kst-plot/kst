@@ -1,3 +1,14 @@
+More than one shared axis group.  Tied zoom doesn't work right.
+
+-----------------
+
+Draw a box and an arrow.  Drage the box.  Then the arrow.  Arrow starting location is way off from the mouse.
+
+-----------------
+
+Draw a box and an arrow.  Box can never be put over the arrow (it alway ends up behind.)
+
+---------------------
 
 Draw an ellipse that spans many plots.  It ends up in the back, and can't be brought to the front.
 
