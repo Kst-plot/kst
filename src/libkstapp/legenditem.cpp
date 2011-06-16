@@ -52,6 +52,8 @@ LegendItem::LegendItem(PlotItem *parentPlot)
   setPos(origin);
 
   applyDefaults();
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
 }
 
 void LegendItem::_initializeShortName() {
@@ -248,67 +250,37 @@ void LegendItem::save(QXmlStreamWriter &xml) {
 }
 
 void LegendItem::applyDefaults() {
-  _auto = _dialogDefaults->value("legend/auto",true).toBool();
+  _auto = _dialogDefaults->value(defaultsGroupName()+"/auto",true).toBool();
 
   QFont font;
-  font.fromString(_dialogDefaults->value("legend/font",font.toString()).toString());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/font",font.toString()).toString());
   setFont(font);
 
-  setFontScale(_dialogDefaults->value("legend/fontScale", 12.0).toDouble());
-  _verticalDisplay = _dialogDefaults->value("legend/verticalDisplay",true).toBool();
+  setFontScale(_dialogDefaults->value(defaultsGroupName()+"/fontScale", 12.0).toDouble());
+  _verticalDisplay = _dialogDefaults->value(defaultsGroupName()+"/verticalDisplay",true).toBool();
 
-   // set the pen
-  QPen pen;
-  pen.setStyle((Qt::PenStyle)_dialogDefaults->value("legend/strokeStyle", 1).toInt());
-  pen.setWidthF(_dialogDefaults->value("legend/strokeWidth",0).toDouble());
-  pen.setJoinStyle((Qt::PenJoinStyle)_dialogDefaults->value("legend/strokeJoinStyle",64).toInt());
-  pen.setCapStyle((Qt::PenCapStyle)_dialogDefaults->value("legend/strokeCapStyle",16).toInt());
   QBrush brush;
-  QColor color = _dialogDefaults->value("legend/strokeBrushColor",QColor(Qt::black)).value<QColor>();
-  brush.setColor(color);
-  brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("legend/strokeBrushStyle",1).toInt());
-  pen.setBrush(brush);
-  setPen(pen);
-
-  //set the brush
-  bool useGradient = _dialogDefaults->value("legend/fillBrushUseGradient", false).toBool();
-  if (useGradient) {
-    QStringList stopInfo =
-        _dialogDefaults->value("legend/fillBrushGradient", "0,#000000,1,#ffffff,").
-        toString().split(',', QString::SkipEmptyParts);
-    QLinearGradient gradient(1,0,0,0);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    for (int i = 0; i < stopInfo.size(); i+=2) {
-      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
-    }
-    brush = QBrush(gradient);
-  } else {
-    color = _dialogDefaults->value("legend/fillBrushColor",QColor(Qt::white)).value<QColor>();
-    brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("legend/fillBrushStyle",1).toInt());
-  }
-  setBrush(brush);
-
+  QColor color;
 }
 
 void LegendItem::saveAsDialogDefaults() const {
-  _dialogDefaults->setValue("legend/auto",_auto);
-  _dialogDefaults->setValue("legend/title", _title);
-  _dialogDefaults->setValue("legend/font", QVariant(_font).toString());
-  _dialogDefaults->setValue("legend/fontScale",_fontScale);
-  _dialogDefaults->setValue("legend/verticalDisplay", _verticalDisplay);
+  _dialogDefaults->setValue(defaultsGroupName()+"/auto",_auto);
+  _dialogDefaults->setValue(defaultsGroupName()+"/title", _title);
+  _dialogDefaults->setValue(defaultsGroupName()+"/font", QVariant(_font).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/fontScale",_fontScale);
+  _dialogDefaults->setValue(defaultsGroupName()+"/verticalDisplay", _verticalDisplay);
 
-  _dialogDefaults->setValue("legend/strokeStyle", QVariant(pen().style()).toString());
-  _dialogDefaults->setValue("legend/strokeWidth", QVariant(pen().widthF()).toString());
-  _dialogDefaults->setValue("legend/strokeCap", QVariant(pen().capStyle()).toString());
-  _dialogDefaults->setValue("legend/strokeJoinStyle", QVariant(pen().joinStyle()).toString());
-  _dialogDefaults->setValue("legend/strokeBrushColor", pen().brush().color().name());
-  _dialogDefaults->setValue("legend/strokeBrushStyle", QVariant(pen().brush().style()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeStyle", QVariant(pen().style()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeWidth", QVariant(pen().widthF()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeCap", QVariant(pen().capStyle()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeJoinStyle", QVariant(pen().joinStyle()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushColor", pen().brush().color().name());
+  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushStyle", QVariant(pen().brush().style()).toString());
 
   QBrush b = brush();
-  _dialogDefaults->setValue("legend/fillBrushColor", b.color().name());
-  _dialogDefaults->setValue("legend/fillBrushStyle", QVariant(b.style()).toString());
-  _dialogDefaults->setValue("legend/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushColor", b.color().name());
+  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushStyle", QVariant(b.style()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
   if (b.gradient()) {
     QString stopList;
     foreach(const QGradientStop &stop, b.gradient()->stops()) {
@@ -320,7 +292,7 @@ void LegendItem::saveAsDialogDefaults() const {
       stopList += color.name();
       stopList += ',';
     }
-     _dialogDefaults->setValue("legend/fillBrushGradient", stopList);
+     _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushGradient", stopList);
    }
 
   // Save legend defaults here

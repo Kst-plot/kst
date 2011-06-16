@@ -153,6 +153,8 @@ PlotItem::PlotItem(View *parent)
   connect(this, SIGNAL(geometryChanged()), this, SLOT(setPlotPixmapDirty()));
 
   applyDefaults();
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
 }
 
 void PlotItem::applyDefaults() {
@@ -160,143 +162,111 @@ void PlotItem::applyDefaults() {
 
   // Global Font Settings
   QFont globalfont;
-  globalfont.fromString(_dialogDefaults->value("plot/globalFontFamily",globalfont.toString()).toString());
+  globalfont.fromString(_dialogDefaults->value(defaultsGroupName()+"/globalFontFamily",globalfont.toString()).toString());
   setGlobalFont(globalfont);
   setGlobalFontScale(ApplicationSettings::self()->defaultFontScale());
   QColor color;
-  color = _dialogDefaults->value("plot/globalFontColor", QColor(Qt::black)).value<QColor>();
+  color = _dialogDefaults->value(defaultsGroupName()+"/globalFontColor", QColor(Qt::black)).value<QColor>();
   setGlobalFontColor(color);
 
   // Left Font Settings
-  leftLabelDetails()->setFontUseGlobal(_dialogDefaults->value("plot/leftFontGlobal", true).toBool());
-  font.fromString(_dialogDefaults->value("plot/leftFontFamily",globalfont.toString()).toString());
+  leftLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/leftFontGlobal", true).toBool());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/leftFontFamily",globalfont.toString()).toString());
   leftLabelDetails()->setFont(font);
-  leftLabelDetails()->setFontScale(_dialogDefaults->value("plot/leftFontScale",0).toDouble());
-  color = _dialogDefaults->value("plot/leftFontColor", QColor(Qt::black)).value<QColor>();
+  leftLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/leftFontScale",0).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/leftFontColor", QColor(Qt::black)).value<QColor>();
   leftLabelDetails()->setFontColor(color);
 
   // right Font Settings
-  rightLabelDetails()->setFontUseGlobal(_dialogDefaults->value("plot/rightFontGlobal", true).toBool());
-  font.fromString(_dialogDefaults->value("plot/rightFontFamily",globalfont.toString()).toString());
+  rightLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/rightFontGlobal", true).toBool());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/rightFontFamily",globalfont.toString()).toString());
   rightLabelDetails()->setFont(font);
-  rightLabelDetails()->setFontScale(_dialogDefaults->value("plot/rightFontScale",0).toDouble());
-  color = _dialogDefaults->value("plot/rightFontColor", QColor(Qt::black)).value<QColor>();
+  rightLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/rightFontScale",0).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/rightFontColor", QColor(Qt::black)).value<QColor>();
   rightLabelDetails()->setFontColor(color);
 
   // top Font Settings
-  topLabelDetails()->setFontUseGlobal(_dialogDefaults->value("plot/topFontGlobal", true).toBool());
-  font.fromString(_dialogDefaults->value("plot/topFontFamily",globalfont.toString()).toString());
+  topLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/topFontGlobal", true).toBool());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/topFontFamily",globalfont.toString()).toString());
   topLabelDetails()->setFont(font);
-  topLabelDetails()->setFontScale(_dialogDefaults->value("plot/topFontScale",0).toDouble());
-  color = _dialogDefaults->value("plot/topFontColor", QColor(Qt::black)).value<QColor>();
+  topLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/topFontScale",0).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/topFontColor", QColor(Qt::black)).value<QColor>();
   topLabelDetails()->setFontColor(color);
 
   // bottom Font Settings
-  bottomLabelDetails()->setFontUseGlobal(_dialogDefaults->value("plot/bottomFontGlobal", true).toBool());
-  font.fromString(_dialogDefaults->value("plot/bottomFontFamily",globalfont.toString()).toString());
+  bottomLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/bottomFontGlobal", true).toBool());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/bottomFontFamily",globalfont.toString()).toString());
   bottomLabelDetails()->setFont(font);
-  bottomLabelDetails()->setFontScale(_dialogDefaults->value("plot/bottomFontScale",0).toDouble());
-  color = _dialogDefaults->value("plot/bottomFontColor", QColor(Qt::black)).value<QColor>();
+  bottomLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/bottomFontScale",0).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/bottomFontColor", QColor(Qt::black)).value<QColor>();
   bottomLabelDetails()->setFontColor(color);
 
   // number Font Settings
-  numberLabelDetails()->setFontUseGlobal(_dialogDefaults->value("plot/numberFontGlobal", true).toBool());
-  font.fromString(_dialogDefaults->value("plot/numberFontFamily",globalfont.toString()).toString());
+  numberLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/numberFontGlobal", true).toBool());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/numberFontFamily",globalfont.toString()).toString());
   numberLabelDetails()->setFont(font);
-  numberLabelDetails()->setFontScale(_dialogDefaults->value("plot/numberFontScale",0).toDouble());
-  color = _dialogDefaults->value("plot/numberFontColor", QColor(Qt::black)).value<QColor>();
+  numberLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/numberFontScale",0).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/numberFontColor", QColor(Qt::black)).value<QColor>();
   numberLabelDetails()->setFontColor(color);
 
-  // set the pen
-  QPen pen;
-  pen.setStyle((Qt::PenStyle)_dialogDefaults->value("plot/strokeStyle", 1).toInt());
-  pen.setWidthF(_dialogDefaults->value("plot/strokeWidth",0).toDouble());
-  pen.setJoinStyle((Qt::PenJoinStyle)_dialogDefaults->value("plot/strokeJoinStyle",64).toInt());
-  pen.setCapStyle((Qt::PenCapStyle)_dialogDefaults->value("plot/strokeCapStyle",16).toInt());
-  QBrush brush;
-  color = _dialogDefaults->value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>();
-  brush.setColor(color);
-  brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("plot/strokeBrushStyle",1).toInt());
-  pen.setBrush(brush);
-  setPen(pen);
+  xAxis()->setAxisVisible(_dialogDefaults->value(defaultsGroupName()+"/xAxisVisible", true).toBool());
+  xAxis()->setAxisLog(_dialogDefaults->value(defaultsGroupName()+"/xAxisLog", false).toBool());
+  xAxis()->setAxisReversed(_dialogDefaults->value(defaultsGroupName()+"/xAxisReversed", false).toBool());
+  xAxis()->setAxisAutoBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/xAxisAutoBaseOffset", true).toBool());
+  xAxis()->setAxisBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/xAxisBaseOffset", false).toBool());
+  xAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpret", false).toBool());
+  xAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpretation", 1).toInt());
+  xAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/xAxisDisplay", 4).toInt());
+  xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/xAxisMajorTickMode", 5).toInt());
+  xAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/xAxisMinorTickCount", 5).toInt());
+  xAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisautoMinorTickCount", true).toBool());
+  xAxis()->setDrawAxisMajorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorTicks", true).toBool());
+  xAxis()->setDrawAxisMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMinorTicks", true).toBool());
+  xAxis()->setDrawAxisMajorGridLines(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorGridLines", true).toBool());
+  xAxis()->setDrawAxisMinorGridLines(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMinorGridLines", false).toBool());
 
-  //set the brush
-  bool useGradient = _dialogDefaults->value("plot/fillBrushUseGradient", false).toBool();
-  if (useGradient) {
-    QStringList stopInfo =
-        _dialogDefaults->value("plot/fillBrushGradient", "0,#000000,1,#ffffff,").
-        toString().split(',', QString::SkipEmptyParts);
-    QLinearGradient gradient(1,0,0,0);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    for (int i = 0; i < stopInfo.size(); i+=2) {
-      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
-    }
-    brush = QBrush(gradient);
-  } else {
-    color = _dialogDefaults->value("plot/fillBrushColor",QColor(Qt::white)).value<QColor>();
-    brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("plot/fillBrushStyle",1).toInt());
-  }
-  setBrush(brush);
-
-  xAxis()->setAxisVisible(_dialogDefaults->value("plot/xAxisVisible", true).toBool());
-  xAxis()->setAxisLog(_dialogDefaults->value("plot/xAxisLog", false).toBool());
-  xAxis()->setAxisReversed(_dialogDefaults->value("plot/xAxisReversed", false).toBool());
-  xAxis()->setAxisAutoBaseOffset(_dialogDefaults->value("plot/xAxisAutoBaseOffset", true).toBool());
-  xAxis()->setAxisBaseOffset(_dialogDefaults->value("plot/xAxisBaseOffset", false).toBool());
-  xAxis()->setAxisInterpret(_dialogDefaults->value("plot/xAxisInterpret", false).toBool());
-  xAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value("plot/xAxisInterpretation", 1).toInt());
-  xAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value("plot/xAxisDisplay", 4).toInt());
-  xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value("plot/xAxisMajorTickMode", 5).toInt());
-  xAxis()->setAxisMinorTickCount(_dialogDefaults->value("plot/xAxisMinorTickCount", 5).toInt());
-  xAxis()->setAxisAutoMinorTicks(_dialogDefaults->value("plot/xAxisautoMinorTickCount", true).toBool());
-  xAxis()->setDrawAxisMajorTicks(_dialogDefaults->value("plot/xAxisDrawMajorTicks", true).toBool());
-  xAxis()->setDrawAxisMinorTicks(_dialogDefaults->value("plot/xAxisDrawMinorTicks", true).toBool());
-  xAxis()->setDrawAxisMajorGridLines(_dialogDefaults->value("plot/xAxisDrawMajorGridLines", true).toBool());
-  xAxis()->setDrawAxisMinorGridLines(_dialogDefaults->value("plot/xAxisDrawMinorGridLines", false).toBool());
-
-  xAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)_dialogDefaults->value("plot/xAxisDrawMajorGridLineStyle", 2).toInt());
-  xAxis()->setAxisMajorGridLineWidth(_dialogDefaults->value("plot/xAxisDrawMajorGridLineWidth",1).toDouble());
-  color = _dialogDefaults->value("plot/xAxisDrawMajorGridLineColor", "#a0a0a4").value<QColor>();
+  xAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorGridLineStyle", 2).toInt());
+  xAxis()->setAxisMajorGridLineWidth(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorGridLineWidth",1).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorGridLineColor", "#a0a0a4").value<QColor>();
   xAxis()->setAxisMajorGridLineColor(color);
 
-  xAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)_dialogDefaults->value("plot/xAxisDrawMinorGridLineStyle", 2).toInt());
-  xAxis()->setAxisMinorGridLineWidth(_dialogDefaults->value("plot/xAxisDrawMinorGridLineWidth",1).toDouble());
-  color = _dialogDefaults->value("plot/xAxisDrawMinorGridLineColor", "#a0a0a4").value<QColor>();
+  xAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMinorGridLineStyle", 2).toInt());
+  xAxis()->setAxisMinorGridLineWidth(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMinorGridLineWidth",1).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMinorGridLineColor", "#a0a0a4").value<QColor>();
   xAxis()->setAxisMinorGridLineColor(color);
 
-  xAxis()->setAxisSignificantDigits(_dialogDefaults->value("plot/xAxisSignificantDigits",9).toInt());
-  xAxis()->setAxisLabelRotation(_dialogDefaults->value("plot/xAxisRotation",0).toDouble());
+  xAxis()->setAxisSignificantDigits(_dialogDefaults->value(defaultsGroupName()+"/xAxisSignificantDigits",9).toInt());
+  xAxis()->setAxisLabelRotation(_dialogDefaults->value(defaultsGroupName()+"/xAxisRotation",0).toDouble());
 
 
-  yAxis()->setAxisVisible(_dialogDefaults->value("plot/yAxisVisible", true).toBool());
-  yAxis()->setAxisLog(_dialogDefaults->value("plot/yAxisLog", false).toBool());
-  yAxis()->setAxisReversed(_dialogDefaults->value("plot/yAxisReversed", false).toBool());
-  yAxis()->setAxisAutoBaseOffset(_dialogDefaults->value("plot/yAxisAutoBaseOffset", true).toBool());
-  yAxis()->setAxisBaseOffset(_dialogDefaults->value("plot/yAxisBaseOffset", false).toBool());
-  yAxis()->setAxisInterpret(_dialogDefaults->value("plot/yAxisInterpret", false).toBool());
-  yAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value("plot/yAxisInterpretation", 1).toInt());
-  yAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value("plot/yAxisDisplay", 4).toInt());
-  yAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value("plot/yAxisMajorTickMode", 5).toInt());
-  yAxis()->setAxisMinorTickCount(_dialogDefaults->value("plot/yAxisMinorTickCount", 5).toInt());
-  yAxis()->setAxisAutoMinorTicks(_dialogDefaults->value("plot/yAxisautoMinorTickCount", true).toBool());
-  yAxis()->setDrawAxisMajorTicks(_dialogDefaults->value("plot/yAxisDrawMajorTicks", true).toBool());
-  yAxis()->setDrawAxisMinorTicks(_dialogDefaults->value("plot/yAxisDrawMinorTicks", true).toBool());
-  yAxis()->setDrawAxisMajorGridLines(_dialogDefaults->value("plot/yAxisDrawMajorGridLines", true).toBool());
-  yAxis()->setDrawAxisMinorGridLines(_dialogDefaults->value("plot/yAxisDrawMinorGridLines", false).toBool());
+  yAxis()->setAxisVisible(_dialogDefaults->value(defaultsGroupName()+"/yAxisVisible", true).toBool());
+  yAxis()->setAxisLog(_dialogDefaults->value(defaultsGroupName()+"/yAxisLog", false).toBool());
+  yAxis()->setAxisReversed(_dialogDefaults->value(defaultsGroupName()+"/yAxisReversed", false).toBool());
+  yAxis()->setAxisAutoBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/yAxisAutoBaseOffset", true).toBool());
+  yAxis()->setAxisBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/yAxisBaseOffset", false).toBool());
+  yAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpret", false).toBool());
+  yAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpretation", 1).toInt());
+  yAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/yAxisDisplay", 4).toInt());
+  yAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/yAxisMajorTickMode", 5).toInt());
+  yAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/yAxisMinorTickCount", 5).toInt());
+  yAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisautoMinorTickCount", true).toBool());
+  yAxis()->setDrawAxisMajorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorTicks", true).toBool());
+  yAxis()->setDrawAxisMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMinorTicks", true).toBool());
+  yAxis()->setDrawAxisMajorGridLines(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorGridLines", true).toBool());
+  yAxis()->setDrawAxisMinorGridLines(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMinorGridLines", false).toBool());
 
-  yAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)_dialogDefaults->value("plot/yAxisDrawMajorGridLineStyle", 2).toInt());
-  yAxis()->setAxisMajorGridLineWidth(_dialogDefaults->value("plot/yAxisDrawMajorGridLineWidth",1).toDouble());
-  color = _dialogDefaults->value("plot/yAxisDrawMajorGridLineColor", "#a0a0a4").value<QColor>();
+  yAxis()->setAxisMajorGridLineStyle((Qt::PenStyle)_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorGridLineStyle", 2).toInt());
+  yAxis()->setAxisMajorGridLineWidth(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorGridLineWidth",1).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorGridLineColor", "#a0a0a4").value<QColor>();
   yAxis()->setAxisMajorGridLineColor(color);
 
-  yAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)_dialogDefaults->value("plot/yAxisDrawMinorGridLineStyle", 2).toInt());
-  yAxis()->setAxisMinorGridLineWidth(_dialogDefaults->value("plot/yAxisDrawMinorGridLineWidth",1).toDouble());
-  color = _dialogDefaults->value("plot/yAxisDrawMinorGridLineColor", "#a0a0a4").value<QColor>();
+  yAxis()->setAxisMinorGridLineStyle((Qt::PenStyle)_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMinorGridLineStyle", 2).toInt());
+  yAxis()->setAxisMinorGridLineWidth(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMinorGridLineWidth",1).toDouble());
+  color = _dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMinorGridLineColor", "#a0a0a4").value<QColor>();
   yAxis()->setAxisMinorGridLineColor(color);
 
-  yAxis()->setAxisSignificantDigits(_dialogDefaults->value("plot/yAxisSignificantDigits",9).toInt());
-  yAxis()->setAxisLabelRotation(_dialogDefaults->value("plot/yAxisRotation",0).toDouble());
+  yAxis()->setAxisSignificantDigits(_dialogDefaults->value(defaultsGroupName()+"/yAxisSignificantDigits",9).toInt());
+  yAxis()->setAxisLabelRotation(_dialogDefaults->value(defaultsGroupName()+"/yAxisRotation",0).toDouble());
 
 }
 
@@ -3483,48 +3453,18 @@ void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 }
 
 void PlotItem::saveAsDialogDefaults() const {
-  _dialogDefaults->setValue("plot/globalFontFamily", QVariant(globalFont()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/globalFontFamily", QVariant(globalFont()).toString());
   ApplicationSettings::self()->setDefaultFontScale(globalFontScale());
-  _dialogDefaults->setValue("plot/globalFontColor", QVariant(globalFontColor()).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/globalFontColor", QVariant(globalFontColor()).toString());
 
-  leftLabelDetails()->saveAsDialogDefaults(QString("plot/leftFont"));
-  rightLabelDetails()->saveAsDialogDefaults(QString("plot/rightFont"));
-  topLabelDetails()->saveAsDialogDefaults(QString("plot/topFont"));
-  bottomLabelDetails()->saveAsDialogDefaults(QString("plot/bottomFont"));
-  numberLabelDetails()->saveAsDialogDefaults(QString("plot/numberFont"));
+  leftLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/leftFont"));
+  rightLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/rightFont"));
+  topLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/topFont"));
+  bottomLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/bottomFont"));
+  numberLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/numberFont"));
 
-  // Save stroke...
-  QPen p = pen();
-  QBrush b = p.brush();
-
-  _dialogDefaults->setValue("plot/strokeStyle", QVariant(p.style()).toString());
-  _dialogDefaults->setValue("plot/strokeWidth", p.widthF());
-  _dialogDefaults->setValue("plot/strokeJoinStyle", QVariant(p.joinStyle()).toString());
-  _dialogDefaults->setValue("plot/strokeCapStyle", QVariant(p.capStyle()).toString());
-  _dialogDefaults->setValue("plot/strokeBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue("plot/strokeBrushStyle", QVariant(b.style()).toString());
-
-  // Save the brush
-  b = brush();
-  _dialogDefaults->setValue("plot/fillBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue("plot/fillBrushStyle", QVariant(b.style()).toString());
-  _dialogDefaults->setValue("plot/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
-  if (b.gradient()) {
-    QString stopList;
-    foreach(const QGradientStop &stop, b.gradient()->stops()) {
-      qreal point = (qreal)stop.first;
-      QColor color = (QColor)stop.second;
-
-      stopList += QString::number(point);
-      stopList += ',';
-      stopList += color.name();
-      stopList += ',';
-    }
-     _dialogDefaults->setValue("plot/fillBrushGradient", stopList);
-   }
-
-  _xAxis->saveAsDialogDefaults("plot/xAxis");
-  _yAxis->saveAsDialogDefaults("plot/yAxis");
+  _xAxis->saveAsDialogDefaults(defaultsGroupName()+"/xAxis");
+  _yAxis->saveAsDialogDefaults(defaultsGroupName()+"/yAxis");
 }
 
 

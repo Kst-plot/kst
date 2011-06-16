@@ -29,6 +29,12 @@ class LabelItem : public ViewItem {
     LabelItem(View *parent, const QString& labelText);
     virtual ~LabelItem();
 
+    const QString defaultsGroupName() const {return QString("label");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return false;}
+    virtual bool hasBrush() const {return false;}
+
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 

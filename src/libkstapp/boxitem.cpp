@@ -23,6 +23,8 @@ BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
   setTypeName("Box");
   setBrush(Qt::white);
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
 }
 
 

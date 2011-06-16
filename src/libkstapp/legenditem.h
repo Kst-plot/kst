@@ -32,6 +32,12 @@ class LegendItem : public ViewItem {
     LegendItem(PlotItem *parent);
     virtual ~LegendItem();
 
+    const QString defaultsGroupName() const {return QString("legend");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
+
     virtual void paint(QPainter *painter);
 
     void setAutoContents(const bool autoContent);

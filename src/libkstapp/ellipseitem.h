@@ -25,6 +25,12 @@ class EllipseItem : public ViewItem
     EllipseItem(View *parent);
     virtual ~EllipseItem();
 
+    const QString defaultsGroupName() const {return QString("ellipse");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
+
     virtual void save(QXmlStreamWriter &xml);
     virtual QPainterPath itemShape() const;
     virtual void paint(QPainter *painter);

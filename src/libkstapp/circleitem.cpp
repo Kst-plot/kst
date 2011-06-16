@@ -25,6 +25,8 @@ CircleItem::CircleItem(View *parent)
   setBrush(Qt::white);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
 }
 
 

@@ -25,6 +25,12 @@ class BoxItem : public ViewItem
     BoxItem(View *parent);
     virtual ~BoxItem();
 
+    const QString defaultsGroupName() const {return QString("box");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
+
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 };

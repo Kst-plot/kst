@@ -33,6 +33,7 @@ LineItem::LineItem(View *parent)
   QPen p = pen();
   p.setWidthF(1);
   setPen(p);
+  applyDialogDefaultsStroke();
 }
 
 

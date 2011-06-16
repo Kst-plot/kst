@@ -35,6 +35,8 @@ ArrowItem::ArrowItem(View *parent)
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
   setBrush(b);
+
+  applyDialogDefaultsStroke();
 }
 
 

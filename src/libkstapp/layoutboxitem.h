@@ -25,6 +25,8 @@ class LayoutBoxItem : public ViewItem
     LayoutBoxItem(View *parent);
     virtual ~LayoutBoxItem();
 
+    const QString defaultsGroupName() const {return QString("layoutbox");}
+
     void appendItem(ViewItem *item);
     bool appendItemFromXml(QXmlStreamReader &xml);
 

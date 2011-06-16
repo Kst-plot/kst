@@ -27,6 +27,7 @@ class CartesianRenderItem : public PlotRenderItem
     virtual void paintRelations(QPainter *painter);
 
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
+    const QString defaultsGroupName() const {return QString("plot");}
 };
 
 }

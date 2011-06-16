@@ -76,17 +76,26 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   setSupportsMultipleEdit(false);
 
-  _fillTab = new FillTab(this);
-  _strokeTab = new StrokeTab(this);
+  if (_item->hasBrush()) {
+    _fillTab = new FillTab(this);
+    connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
+  }
+  if (_item->hasStroke()) {
+    _strokeTab = new StrokeTab(this);
+    connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
+  }
   _layoutTab = new LayoutTab(this);
-  connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
-  connect(_strokeTab, SIGNAL(apply()), this, SLOT(strokeChanged()));
   connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
 
   DialogPageTab *page = new DialogPageTab(this);
   page->setPageTitle(tr("Appearance"));
-  page->addDialogTab(_fillTab);
-  page->addDialogTab(_strokeTab);
+  if (_item->hasBrush()) {
+    page->addDialogTab(_fillTab);
+  }
+
+  if (_item->hasStroke()) {
+    page->addDialogTab(_strokeTab);
+  }
   page->addDialogTab(_layoutTab);
   addDialogPage(page);
 
@@ -112,6 +121,8 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(setMultipleEdit()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(setSingleEdit()));
+  _saveAsDefault->show();
+
 }
 
 
@@ -176,35 +187,37 @@ void ViewItemDialog::clearMultipleEditOptions() {
 
 void ViewItemDialog::setupFill() {
   Q_ASSERT(_item);
-  QBrush b = _item->brush();
+  if (_item->hasBrush()) {
+    QBrush b = _item->brush();
 
-  _fillTab->enableSingleEditOptions(true);
-  _fillTab->setColor(b.color());
-  _fillTab->setStyle(b.style());
+    _fillTab->enableSingleEditOptions(true);
+    _fillTab->setColor(b.color());
+    _fillTab->setStyle(b.style());
 
-  if (const QGradient *gradient = b.gradient()) {
-    _fillTab->setGradient(*gradient);
-  } else {
-    _fillTab->setUseGradient(false);
+    if (const QGradient *gradient = b.gradient()) {
+      _fillTab->setGradient(*gradient);
+    } else {
+      _fillTab->setUseGradient(false);
+    }
   }
 }
 
-
 void ViewItemDialog::setupStroke() {
   Q_ASSERT(_item);
-  QPen p = _item->pen();
-  QBrush b = p.brush();
+  if (_item->hasStroke()) {
+    QPen p = _item->pen();
+    QBrush b = p.brush();
 
-  _strokeTab->setStyle(p.style());
-  _strokeTab->setWidth(p.widthF());
+    _strokeTab->setStyle(p.style());
+    _strokeTab->setWidth(p.widthF());
 
-  _strokeTab->setBrushColor(b.color());
-  _strokeTab->setBrushStyle(b.style());
+    _strokeTab->setBrushColor(b.color());
+    _strokeTab->setBrushStyle(b.style());
 
-  _strokeTab->setJoinStyle(p.joinStyle());
-  _strokeTab->setCapStyle(p.capStyle());
+    _strokeTab->setJoinStyle(p.joinStyle());
+    _strokeTab->setCapStyle(p.capStyle());
+  }
 }
-
 
 void ViewItemDialog::setupLayout() {
   Q_ASSERT(_item);
@@ -224,47 +237,53 @@ void ViewItemDialog::setupDimensions() {
 void ViewItemDialog::fillChanged() {
   Q_ASSERT(_item);
 
-  if (_mode == Multiple) {
-    foreach(ViewItem* item, selectedMultipleEditObjects()) {
-      saveFill(item);
+  if (_item->hasBrush()) {
+    if (_mode == Multiple) {
+      foreach(ViewItem* item, selectedMultipleEditObjects()) {
+        saveFill(item);
+      }
+    } else {
+      saveFill(_item);
+      if (_saveAsDefault->isChecked()) {
+        _item->saveDialogDefaultsFill();
+      }
     }
-  } else {
-    saveFill(_item);
+    kstApp->mainWindow()->document()->setChanged(true);
   }
-  kstApp->mainWindow()->document()->setChanged(true);
 }
 
-
 void ViewItemDialog::saveFill(ViewItem *item) {
-  QBrush b = item->brush();
+  if (_item->hasBrush()) {
+    QBrush b = item->brush();
 
-  QColor color = _fillTab->colorDirty() ? _fillTab->color() : b.color();
-  Qt::BrushStyle style = _fillTab->styleDirty() ? _fillTab->style() : b.style();
+    QColor color = _fillTab->colorDirty() ? _fillTab->color() : b.color();
+    Qt::BrushStyle style = _fillTab->styleDirty() ? _fillTab->style() : b.style();
 
-  if (_fillTab->useGradientDirty()) {
-    // Apply / unapply gradient
-    if (_fillTab->useGradient()) {
-      b = QBrush(_fillTab->gradient());
-    } else {
-      b.setColor(color);
-      b.setStyle(style);
-    }
-  } else {
-    // Leave gradient but make other changes.
-    QGradient gradient;
-    if (const QGradient *grad = b.gradient()) {
-      if (_fillTab->gradientDirty()) {
-        gradient = _fillTab->gradient();
+    if (_fillTab->useGradientDirty()) {
+      // Apply / unapply gradient
+      if (_fillTab->useGradient()) {
+        b = QBrush(_fillTab->gradient());
       } else {
-        gradient = *grad;
+        b.setColor(color);
+        b.setStyle(style);
       }
-      b = QBrush(gradient);
     } else {
-      b.setColor(color);
-      b.setStyle(style);
+      // Leave gradient but make other changes.
+      QGradient gradient;
+      if (const QGradient *grad = b.gradient()) {
+        if (_fillTab->gradientDirty()) {
+          gradient = _fillTab->gradient();
+        } else {
+          gradient = *grad;
+        }
+        b = QBrush(gradient);
+      } else {
+        b.setColor(color);
+        b.setStyle(style);
+      }
     }
+    item->setBrush(b);
   }
-  item->setBrush(b);
 }
 
 
@@ -276,39 +295,44 @@ void ViewItemDialog::strokeChanged() {
     }
   } else {
     saveStroke(_item);
+    if (_saveAsDefault->isChecked()) {
+      _item->saveDialogDefaultsStroke();
+    }
   }
   kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
 void ViewItemDialog::saveStroke(ViewItem *item) {
-  QPen p = item->pen();
-  QBrush b = p.brush();
+  if (_item->hasStroke()) {
+    QPen p = item->pen();
+    QBrush b = p.brush();
 
-  Qt::PenStyle style = _strokeTab->styleDirty() ? _strokeTab->style() : p.style();
-  qreal width = _strokeTab->widthDirty() ? _strokeTab->width() : p.widthF();
-  QColor brushColor = _strokeTab->brushColorDirty() ? _strokeTab->brushColor() : b.color();
-  Qt::BrushStyle brushStyle = _strokeTab->brushStyleDirty() ? _strokeTab->brushStyle() : b.style();
+    Qt::PenStyle style = _strokeTab->styleDirty() ? _strokeTab->style() : p.style();
+    qreal width = _strokeTab->widthDirty() ? _strokeTab->width() : p.widthF();
+    QColor brushColor = _strokeTab->brushColorDirty() ? _strokeTab->brushColor() : b.color();
+    Qt::BrushStyle brushStyle = _strokeTab->brushStyleDirty() ? _strokeTab->brushStyle() : b.style();
 
-  Qt::PenJoinStyle joinStyle = _strokeTab->joinStyleDirty() ? _strokeTab->joinStyle() : p.joinStyle();
-  Qt::PenCapStyle capStyle = _strokeTab->capStyleDirty() ? _strokeTab->capStyle() : p.capStyle();
+    Qt::PenJoinStyle joinStyle = _strokeTab->joinStyleDirty() ? _strokeTab->joinStyle() : p.joinStyle();
+    Qt::PenCapStyle capStyle = _strokeTab->capStyleDirty() ? _strokeTab->capStyle() : p.capStyle();
 
 
-  p.setStyle(style);
-  p.setWidthF(width);
+    p.setStyle(style);
+    p.setWidthF(width);
 
-  b.setColor(brushColor);
-  b.setStyle(brushStyle);
+    b.setColor(brushColor);
+    b.setStyle(brushStyle);
 
-  p.setJoinStyle(joinStyle);
-  p.setCapStyle(capStyle);
-  p.setBrush(b);
+    p.setJoinStyle(joinStyle);
+    p.setCapStyle(capStyle);
+    p.setBrush(b);
 #ifdef Q_WS_WIN32
-  if (p.isCosmetic()) {
-    p.setWidth(1);
-  }
+    if (p.isCosmetic()) {
+      p.setWidth(1);
+    }
 #endif
-  item->setItemPen(p);
+    item->setItemPen(p);
+  }
 }
 
 
@@ -427,8 +451,12 @@ void ViewItemDialog::setMultipleEdit() {
   _mode = Multiple;
   _dimensionsTab->clearTabValues();
   _dimensionsTab->enableSingleEditOptions(false);
-  _fillTab->clearTabValues();
-  _strokeTab->clearTabValues();
+  if (_item->hasBrush()) {
+    _fillTab->clearTabValues();
+  }
+  if (_item->hasStroke()) {
+    _strokeTab->clearTabValues();
+  }
   _layoutTab->clearTabValues();
   _editMultipleButton->setText(tr("<< Edit One"));
   setAlwaysAllowApply(true);

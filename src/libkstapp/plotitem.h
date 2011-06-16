@@ -124,6 +124,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotItem(View *parent);
     virtual ~PlotItem();
 
+    const QString defaultsGroupName() const {return QString("plot");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
+
     enum PlotClickEditRegion {CONTENT, LABEL, XAXIS, YAXIS};
 
     virtual QString plotName() const; //from PlotItemInterface

@@ -80,6 +80,13 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setTypeName(const QString& name) { _typeName = name; }
     const QString typeName() const { return _typeName; }
 
+    // for dialog defaults
+    virtual const QString defaultsGroupName() const = 0;
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return false;}
+    virtual bool hasBrush() const {return false;}
+
     View* view() const;
     void setView(View*);
 
@@ -214,6 +221,11 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QPointF dropHotSpot;
 
     void normalizePosition();
+
+    virtual void saveDialogDefaultsFill() const;
+    virtual void saveDialogDefaultsStroke() const;
+    virtual void applyDialogDefaultsFill();
+    virtual void applyDialogDefaultsStroke();
 
   Q_SIGNALS:
     void geometryChanged();

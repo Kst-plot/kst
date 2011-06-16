@@ -25,6 +25,12 @@ class LineItem : public ViewItem
     LineItem(View *parent);
     virtual ~LineItem();
 
+    const QString defaultsGroupName() const {return QString("line");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return false;}
+
     QLineF line() const;
     //void setLine(const QLineF &line);
 

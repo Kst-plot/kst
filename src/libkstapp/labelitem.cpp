@@ -40,16 +40,16 @@ LabelItem::LabelItem(View *parent, const QString& txt)
 
 void LabelItem::applyDefaults() {
   QFont font;
-  font.fromString(_dialogDefaults->value("label/font",font.toString()).toString());
+  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/font",font.toString()).toString());
   _font  = font;
-  _color = _dialogDefaults->value("label/color",QColor(Qt::black)).value<QColor>();
-  _scale = _dialogDefaults->value("label/fontScale",12).toDouble();
+  _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
+  _scale = _dialogDefaults->value(defaultsGroupName()+"/fontScale",12).toDouble();
 }
 
 void LabelItem::saveAsDialogDefaults() const {
-  _dialogDefaults->setValue("label/font", QVariant(_font).toString());
-  _dialogDefaults->setValue("label/color", _color.name());
-  _dialogDefaults->setValue("label/fontScale", _scale);
+  _dialogDefaults->setValue(defaultsGroupName()+"/font", QVariant(_font).toString());
+  _dialogDefaults->setValue(defaultsGroupName()+"/color", _color.name());
+  _dialogDefaults->setValue(defaultsGroupName()+"/fontScale", _scale);
 }
 
 LabelItem::~LabelItem() {

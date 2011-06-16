@@ -25,6 +25,12 @@ class CircleItem : public ViewItem
     CircleItem(View *parent);
     virtual ~CircleItem();
 
+    const QString defaultsGroupName() const {return QString("circle");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
+
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void creationPolygonChanged(View::CreationEvent event);

@@ -24,6 +24,8 @@ EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
   setTypeName("Ellipse");
   setBrush(Qt::white);
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
 }
 
 

@@ -25,6 +25,12 @@ class ArrowItem : public LineItem
     ArrowItem(View *parent);
     virtual ~ArrowItem();
 
+    const QString defaultsGroupName() const {return QString("arrow");}
+
+    // for view item dialogs
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return false;}
+
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
 

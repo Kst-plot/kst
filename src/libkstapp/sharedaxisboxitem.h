@@ -52,6 +52,7 @@ class SharedAxisBoxItem : public ViewItem
     void updateZoomForDataUpdate(qint64 serial);
 
     PlotItem* keyPlot() { return _keyPlot; };
+    const QString defaultsGroupName() const {return QString("plot");}
 
   Q_SIGNALS:
     void breakShareSignal();
