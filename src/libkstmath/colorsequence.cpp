@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-static const QLatin1String& KstColorsName = QLatin1String("KstColors");
+static const QLatin1String& KstColorSequenceName = QLatin1String("KstColors");
 
 // Default palette that is used if "Kst Colors" is not found.
 static const char *const colors[] = { "red",
@@ -62,9 +62,9 @@ ColorSequence::~ColorSequence() {
 
 
 void ColorSequence::createPalette( ) {
-  if (_palette != KstColorsName) {
+  if (_palette != KstColorSequenceName) {
     _pal.clear();
-    _palette = KstColorsName;
+    _palette = KstColorSequenceName;
 
     for (int i = 0; i < colorcnt; i++) {
       _pal.insert(i, QColor(colors[i]));

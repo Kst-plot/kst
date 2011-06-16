@@ -59,6 +59,11 @@
 #include "dialoglauncher.h"
 
 #include <QSvgGenerator>
+#include <QUndoGroup>
+#include <QPrintDialog>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QProgressBar>
 
 
 namespace Kst {
