@@ -269,9 +269,7 @@ void ViewItem::applyDialogDefaultsFill() {
 }
 
 void ViewItem::applyDialogDefaultsStroke() {
-  qDebug() << "has stroke:" << hasStroke() << " type name: " << typeName();
   if (hasStroke()) {
-     qDebug() << " defaultsGroupName: " << defaultsGroupName();
     // set the pen
     QPen pen;
     QColor color;
@@ -1952,7 +1950,7 @@ void ViewItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
       view()->setCursor(Qt::SizeAllCursor);
     }
   } else {
-    view()->setCursor(Qt::SizeAllCursor);
+    //view()->setCursor(Qt::SizeAllCursor);
   }
 }
 
@@ -1966,7 +1964,7 @@ void ViewItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
   QGraphicsRectItem::hoverMoveEvent(event);
-  view()->setCursor(Qt::ArrowCursor);
+  //view()->setCursor(Qt::ArrowCursor);
 
   _hovering = false;
   update();

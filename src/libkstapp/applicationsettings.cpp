@@ -77,10 +77,6 @@ ApplicationSettings::ApplicationSettings() {
     _backgroundBrush = QBrush(gradient);
   }
 
-  QString fontString = _settings->value("fonts/defaultfont", QFont()).toString();
-  _defaultFont.fromString(fontString);
-  _defaultFontScale = _settings->value("fonts/defaultfontscale", QVariant(13)).toDouble();
-  _defaultFontColor = QColor(_settings->value("fonts/defaultfontcolor", "black").toString());
   _refViewWidth = _settings->value("fonts/referenceviewwidth", QVariant(A4Width)).toDouble();
   _refViewHeight = _settings->value("fonts/referenceviewheight", QVariant(A4Height)).toDouble();
   _minFontSize = _settings->value("fonts/minimumfontsize", QVariant(4.0)).toDouble();
@@ -161,42 +157,6 @@ double ApplicationSettings::minimumFontSize() const {
 void ApplicationSettings::setMinimumFontSize(double points) {
   _minFontSize = points;
   _settings->setValue("general/minimumfontsize", points);
-  emit modified();
-}
-
-
-QFont ApplicationSettings::defaultFont() const {
-  return _defaultFont;
-}
-
-
-void ApplicationSettings::setDefaultFont(const QFont &font) {
-  _defaultFont = font;
-  _settings->setValue("defaultlabelproperties/defaultfont", QVariant(font).toString());
-  emit modified();
-}
-
-
-qreal ApplicationSettings::defaultFontScale() const {
-  return _defaultFontScale;
-}
-
-
-void ApplicationSettings::setDefaultFontScale(const qreal scale) {
-  _defaultFontScale = scale;
-  _settings->setValue("defaultlabelproperties/defaultfontscale", _defaultFontScale);
-  emit modified();
-}
-
-
-QColor ApplicationSettings::defaultFontColor() const {
-  return _defaultFontColor;
-}
-
-
-void ApplicationSettings::setDefaultFontColor(const QColor &color) {
-  _defaultFontColor = color;
-  _settings->setValue("defaultlabelproperties/defaultfontcolor", _defaultFontColor.name());
   emit modified();
 }
 

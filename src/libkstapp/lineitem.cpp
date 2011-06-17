@@ -223,7 +223,7 @@ void LineItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
       view()->setCursor(Qt::SizeAllCursor);
     }
   } else {
-    view()->setCursor(Qt::SizeAllCursor);
+    //view()->setCursor(Qt::SizeAllCursor);
   }
 }
 

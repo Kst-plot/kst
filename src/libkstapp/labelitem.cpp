@@ -67,7 +67,7 @@ void LabelItem::generateLabel() {
     _dirty = false;
     QRectF box = rect();
     QFont font(_font);
-    font.setPointSizeF(view()->defaultFont(_scale).pointSizeF());
+    font.setPointSizeF(view()->viewScaledFontSize(_scale));
     QFontMetrics fm(font);
     _paintTransform.reset();
     _paintTransform.translate(box.x(), box.y() + fm.ascent());

@@ -44,15 +44,6 @@ class ApplicationSettings : public QObject
     double minimumFontSize() const;
     void setMinimumFontSize(const double points);
 
-    QFont defaultFont() const;
-    void setDefaultFont(const QFont &font);
-
-    qreal defaultFontScale() const;
-    void setDefaultFontScale(const qreal scale);
-
-    QColor defaultFontColor() const;
-    void setDefaultFontColor(const QColor &color);
-
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int period);
 
@@ -93,10 +84,6 @@ class ApplicationSettings : public QObject
     double _refViewWidth;
     double _refViewHeight;
     double _minFontSize;
-    QString _defaultFontFamily;
-    QFont _defaultFont;
-    qreal _defaultFontScale;
-    QColor _defaultFontColor;
     int _maxUpdate;
     bool _showGrid;
     bool _snapToGrid;

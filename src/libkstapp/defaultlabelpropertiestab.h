@@ -26,15 +26,6 @@ class DefaultLabelPropertiesTab : public DialogTab, Ui_DefaultLabelPropertiesTab
     DefaultLabelPropertiesTab(QWidget *parent = 0);
     virtual ~DefaultLabelPropertiesTab();
 
-    qreal labelScale() const;
-    void setLabelScale(const qreal scale);
-
-    QColor labelColor() const;
-    void setLabelColor(const QColor &color);
-
-    QFont labelFont() const;
-    void setLabelFont(const QFont &font);
-
     double referenceViewWidth() const;
     void setReferenceViewWidth(const double width);
 

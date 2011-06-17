@@ -51,7 +51,7 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   addDialogPage(general);
 
   DialogPage *defaultLabelProperties = new DialogPage(this);
-  defaultLabelProperties->setPageTitle(tr("Fonts"));
+  defaultLabelProperties->setPageTitle(tr("Scaling"));
   defaultLabelProperties->addDialogTab(_defaultLabelPropertiesTab);
   addDialogPage(defaultLabelProperties);
 
@@ -61,12 +61,12 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   addDialogPage(grid);
 
   DialogPage *fill = new DialogPage(this);
-  fill->setPageTitle(tr("Default Fill Properties"));
+  fill->setPageTitle(tr("Tab Fill Properties"));
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
   DialogPage *layout = new DialogPage(this);
-  layout->setPageTitle(tr("Default Layout Properties"));
+  layout->setPageTitle(tr("Layout Properties"));
   layout->addDialogTab(_layoutTab);
   addDialogPage(layout);
 
@@ -122,9 +122,6 @@ void ApplicationSettingsDialog::setupFill() {
 
 
 void ApplicationSettingsDialog::setupDefaultLabelProperties() {
-  _defaultLabelPropertiesTab->setLabelFont(ApplicationSettings::self()->defaultFont());
-  _defaultLabelPropertiesTab->setLabelScale(ApplicationSettings::self()->defaultFontScale());
-  _defaultLabelPropertiesTab->setLabelColor(ApplicationSettings::self()->defaultFontColor());
   _defaultLabelPropertiesTab->setReferenceViewWidth(ApplicationSettings::self()->referenceViewWidthCM());
   _defaultLabelPropertiesTab->setReferenceViewHeight(ApplicationSettings::self()->referenceViewHeightCM());
   _defaultLabelPropertiesTab->setMinimumFontSize(ApplicationSettings::self()->minimumFontSize());
@@ -185,9 +182,7 @@ void ApplicationSettingsDialog::fillChanged() {
 void ApplicationSettingsDialog::defaultLabelPropertiesChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
-  ApplicationSettings::self()->setDefaultFont(_defaultLabelPropertiesTab->labelFont());
-  ApplicationSettings::self()->setDefaultFontScale(_defaultLabelPropertiesTab->labelScale());
-  ApplicationSettings::self()->setDefaultFontColor(_defaultLabelPropertiesTab->labelColor());
+
   ApplicationSettings::self()->blockSignals(false);
   ApplicationSettings::self()->setReferenceViewWidthCM(_defaultLabelPropertiesTab->referenceViewWidth());
   ApplicationSettings::self()->setReferenceViewHeightCM(_defaultLabelPropertiesTab->referenceViewHeight());

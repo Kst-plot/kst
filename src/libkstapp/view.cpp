@@ -402,7 +402,6 @@ void View::processResize(QSize size) {
       viewItem->updateChildGeometry(oldSceneRect, sceneRect());
     }
   }
-  updateFont();
 }
 
 void View::resizeEvent(QResizeEvent *event) {
@@ -429,7 +428,6 @@ void View::resizeEvent(QResizeEvent *event) {
       viewItem->updateChildGeometry(oldSceneRect, sceneRect());
     }
   }
-  updateFont();
 }
 
 
@@ -517,11 +515,9 @@ void View::updateSettings() {
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
 
-  QFont oldFont = _defaultFont;
-  updateFont();
-  if (oldFont != _defaultFont) {
-    forceChildResize(sceneRect(), sceneRect());
-  }
+  //FIXME: only if reference size changed...
+  forceChildResize(sceneRect(), sceneRect());
+  //FIXME: should trigger a paint.
 }
 
 
@@ -535,9 +531,7 @@ void View::loadSettings() {
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
 
-  updateFont();
   updateBrush();
-
 }
 
 
@@ -553,21 +547,11 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
   }
 }
 
-
-// the view's default font size will be the application's default font size,
-// scaled by the size of the window compared to the reference plot size.
-void View::updateFont() {
-  _defaultFont = ApplicationSettings::self()->defaultFont();
-}
-
-
-// returns a font of size pointSize, rescaled if the window size
-// is different than the reference window size.
-QFont View::defaultFont(double pointSize) const {
-  QFont font(_defaultFont);
-
+// returns the size of a font, rescaled by the size of the window
+// relative to the reference window size.
+qreal View::viewScaledFontSize(qreal pointSize) const {
   qreal fontSize = (qreal)(height() + width()) /
-                   (ApplicationSettings::self()->referenceViewHeight() +
+                    (ApplicationSettings::self()->referenceViewHeight() +
                     ApplicationSettings::self()->referenceViewWidth()) *
                    pointSize * _fontRescale;
 
@@ -576,7 +560,7 @@ QFont View::defaultFont(double pointSize) const {
   }
 
   if (fontSize < 0)
-    return font;
+    return 1;
 
 #ifdef Q_OS_WIN
   // On Windows more and more memory gets allocated when fontsize
@@ -585,9 +569,7 @@ QFont View::defaultFont(double pointSize) const {
   fontSize = floor(fontSize * fontPrecision + 0.5) / fontPrecision;
 #endif
 
-  font.setPointSizeF(fontSize); 
-  
-  return font;
+  return fontSize;
 }
 
 // Set the font sizes of all plots in the view to a default size, scaled

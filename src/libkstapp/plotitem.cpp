@@ -164,7 +164,7 @@ void PlotItem::applyDefaults() {
   QFont globalfont;
   globalfont.fromString(_dialogDefaults->value(defaultsGroupName()+"/globalFontFamily",globalfont.toString()).toString());
   setGlobalFont(globalfont);
-  setGlobalFontScale(ApplicationSettings::self()->defaultFontScale());
+  setGlobalFontScale(_dialogDefaults->value(defaultsGroupName()+"/globalFontScale", 13).toDouble());
   QColor color;
   color = _dialogDefaults->value(defaultsGroupName()+"/globalFontColor", QColor(Qt::black)).value<QColor>();
   setGlobalFontColor(color);
@@ -173,7 +173,7 @@ void PlotItem::applyDefaults() {
   leftLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/leftFontGlobal", true).toBool());
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/leftFontFamily",globalfont.toString()).toString());
   leftLabelDetails()->setFont(font);
-  leftLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/leftFontScale",0).toDouble());
+  leftLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/leftFontScale", 13).toDouble());
   color = _dialogDefaults->value(defaultsGroupName()+"/leftFontColor", QColor(Qt::black)).value<QColor>();
   leftLabelDetails()->setFontColor(color);
 
@@ -181,7 +181,7 @@ void PlotItem::applyDefaults() {
   rightLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/rightFontGlobal", true).toBool());
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/rightFontFamily",globalfont.toString()).toString());
   rightLabelDetails()->setFont(font);
-  rightLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/rightFontScale",0).toDouble());
+  rightLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/rightFontScale", 13).toDouble());
   color = _dialogDefaults->value(defaultsGroupName()+"/rightFontColor", QColor(Qt::black)).value<QColor>();
   rightLabelDetails()->setFontColor(color);
 
@@ -189,7 +189,7 @@ void PlotItem::applyDefaults() {
   topLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/topFontGlobal", true).toBool());
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/topFontFamily",globalfont.toString()).toString());
   topLabelDetails()->setFont(font);
-  topLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/topFontScale",0).toDouble());
+  topLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/topFontScale", 13).toDouble());
   color = _dialogDefaults->value(defaultsGroupName()+"/topFontColor", QColor(Qt::black)).value<QColor>();
   topLabelDetails()->setFontColor(color);
 
@@ -197,7 +197,7 @@ void PlotItem::applyDefaults() {
   bottomLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/bottomFontGlobal", true).toBool());
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/bottomFontFamily",globalfont.toString()).toString());
   bottomLabelDetails()->setFont(font);
-  bottomLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/bottomFontScale",0).toDouble());
+  bottomLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/bottomFontScale", 13).toDouble());
   color = _dialogDefaults->value(defaultsGroupName()+"/bottomFontColor", QColor(Qt::black)).value<QColor>();
   bottomLabelDetails()->setFontColor(color);
 
@@ -205,7 +205,7 @@ void PlotItem::applyDefaults() {
   numberLabelDetails()->setFontUseGlobal(_dialogDefaults->value(defaultsGroupName()+"/numberFontGlobal", true).toBool());
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/numberFontFamily",globalfont.toString()).toString());
   numberLabelDetails()->setFont(font);
-  numberLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/numberFontScale",0).toDouble());
+  numberLabelDetails()->setFontScale(_dialogDefaults->value(defaultsGroupName()+"/numberFontScale", 13).toDouble());
   color = _dialogDefaults->value(defaultsGroupName()+"/numberFontColor", QColor(Qt::black)).value<QColor>();
   numberLabelDetails()->setFontColor(color);
 
@@ -3454,7 +3454,7 @@ void PlotItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 
 void PlotItem::saveAsDialogDefaults() const {
   _dialogDefaults->setValue(defaultsGroupName()+"/globalFontFamily", QVariant(globalFont()).toString());
-  ApplicationSettings::self()->setDefaultFontScale(globalFontScale());
+  _dialogDefaults->setValue(defaultsGroupName()+"/globalFontScale",globalFontScale());
   _dialogDefaults->setValue(defaultsGroupName()+"/globalFontColor", QVariant(globalFontColor()).toString());
 
   leftLabelDetails()->saveAsDialogDefaults(QString(defaultsGroupName()+"/leftFont"));
@@ -3474,9 +3474,6 @@ PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
   _fontUseGlobal(true),
   _isAuto(true) {
 
-  _fontColor = ApplicationSettings::self()->defaultFontColor();
-  _fontScale = ApplicationSettings::self()->defaultFontScale();
-  _font = _plotItem->view()->defaultFont(_fontScale);
 }
 
 
@@ -3503,10 +3500,10 @@ QFont PlotLabel::calculatedFont() {
   QFont tempFont;
   if (fontUseGlobal()) {
     tempFont = _plotItem->globalFont();
-    tempFont.setPointSizeF(_plotItem->view()->defaultFont(_plotItem->globalFontScale()).pointSizeF());
+    tempFont.setPointSizeF(_plotItem->view()->viewScaledFontSize(_plotItem->globalFontScale()));
   } else {
     tempFont = font();
-    tempFont.setPointSizeF(_plotItem->view()->defaultFont(fontScale()).pointSizeF());
+    tempFont.setPointSizeF(_plotItem->view()->viewScaledFontSize(fontScale()));
   }
   return tempFont;
 }

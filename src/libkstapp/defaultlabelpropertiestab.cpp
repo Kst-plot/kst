@@ -40,12 +40,9 @@ DefaultLabelPropertiesTab::DefaultLabelPropertiesTab(QWidget *parent)
 
   connect(_referenceViewSizeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(referenceViewSizeComboChanged(int)));
 
-  connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_refViewWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_refViewHeight, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_minFontSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
-  connect(_family, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(modified()));
 }
 
 
@@ -128,37 +125,6 @@ int DefaultLabelPropertiesTab::minimumFontSize() const {
 
 void DefaultLabelPropertiesTab::setMinimumFontSize(const int points) {
   _minFontSize->setValue(points);
-}
-
-
-qreal DefaultLabelPropertiesTab::labelScale() const { 
-  return _labelFontScale->value(); 
-}
-
-
-void DefaultLabelPropertiesTab::setLabelScale(const qreal scale) { 
-  _labelFontScale->setValue(scale);
-}
-
-
-QColor DefaultLabelPropertiesTab::labelColor() const { 
-  return _labelColor->color();
-}
-
-
-void DefaultLabelPropertiesTab::setLabelColor(const QColor &color) {
-  _labelColor->setColor(color);
-}
-
-
-QFont DefaultLabelPropertiesTab::labelFont() const {
-  QFont font(_family->currentFont());
-  return font;
-}
-
-
-void DefaultLabelPropertiesTab::setLabelFont(const QFont &font) {
-  _family->setCurrentFont(font);
 }
 
 }

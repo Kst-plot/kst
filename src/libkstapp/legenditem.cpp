@@ -84,7 +84,7 @@ void LegendItem::paint(QPainter *painter) {
   QSize legendSize(0, 0);
 
   QFont font(_font);
-  font.setPointSizeF(view()->defaultFont(_fontScale).pointSizeF());
+  font.setPointSizeF(view()->viewScaledFontSize(_fontScale));
 
   // generate string list of relation names
   QStringList names;

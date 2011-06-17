@@ -73,7 +73,7 @@ class View : public QGraphicsView
     bool showGrid() const { return _showGrid; }
     void setShowGrid(bool showGrid);
 
-    QFont defaultFont(double pointSize) const;
+    qreal viewScaledFontSize(qreal pointSize) const;
 
     QSizeF gridSpacing() const { return _gridSpacing; }
     void setGridSpacing(const QSizeF &gridSpacing);
@@ -147,7 +147,6 @@ class View : public QGraphicsView
   private Q_SLOTS:
     void updateSettings();
     void loadSettings();
-    void updateFont();
     void updateBrush();
     virtual void edit();
 
@@ -162,7 +161,6 @@ class View : public QGraphicsView
     QPolygonF _creationPolygonPress;
     QPolygonF _creationPolygonMove;
     QPolygonF _creationPolygonRelease;
-    QFont _defaultFont;
     bool _useOpenGL;
     QSizeF _gridSpacing;
     bool _showGrid;

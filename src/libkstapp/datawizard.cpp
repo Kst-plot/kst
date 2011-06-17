@@ -1161,8 +1161,6 @@ void DataWizard::finished() {
     plot->update();
     plot->view()->appendToLayout(layout_type, plot, num_columns);
   }
-  double fontScale;
-  fontScale = ApplicationSettings::self()->defaultFontScale();
 
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {
