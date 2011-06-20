@@ -23,8 +23,6 @@ namespace Kst {
 
 class GeneralTab;
 class GridTab;
-class FillTab;
-class ChildViewOptionsTab;
 class DefaultLabelPropertiesTab;
 class LayoutTab;
 
@@ -38,24 +36,18 @@ class ApplicationSettingsDialog : public Dialog
   private Q_SLOTS:
     void generalChanged();
     void gridChanged();
-    void fillChanged();
-    void childViewOptionsChanged();
     void defaultLabelPropertiesChanged();
     void layoutChanged();
 
   private:
     void setupGeneral();
     void setupGrid();
-    void setupFill();
-    void setupChildViewOptions();
     void setupDefaultLabelProperties();
     void setupLayout();
 
   private:
     GeneralTab *_generalTab;
     GridTab *_gridTab;
-    FillTab *_fillTab;
-    ChildViewOptionsTab *_childViewOptionsTab;
     DefaultLabelPropertiesTab *_defaultLabelPropertiesTab;
     LayoutTab *_layoutTab;
 };

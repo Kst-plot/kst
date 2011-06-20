@@ -14,8 +14,6 @@
 
 #include "view.h"
 #include "filltab.h"
-#include "gridtab.h"
-#include "childviewoptionstab.h"
 #include "dialogpage.h"
 #include "document.h"
 #include "mainwindow.h"
@@ -32,33 +30,20 @@ ViewDialog::ViewDialog(View *view, QWidget *parent)
   setWindowTitle(tr("Edit View"));
 
   _fillTab = new FillTab(this);
-  _gridTab = new GridTab(this);
-//   _childViewOptionsTab = new ChildViewOptionsTab(this);
 
   connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
-  connect(_gridTab, SIGNAL(apply()), this, SLOT(gridChanged()));
-//   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
 
-  DialogPage *grid = new DialogPage(this);
-  grid->setPageTitle(tr("Grid"));
-  grid->addDialogTab(_gridTab);
-  addDialogPage(grid);
+  _saveAsDefault->show();
 
   DialogPage *fill = new DialogPage(this);
   fill->setPageTitle(tr("Fill"));
   fill->addDialogTab(_fillTab);
   addDialogPage(fill);
 
-//   DialogPage *childViewOptions = new DialogPage(this);
-//   childViewOptions->setPageTitle(tr("Child View Options"));
-//   childViewOptions->addDialogTab(_childViewOptionsTab);
-//   addDialogPage(childViewOptions);
-
   setupFill();
-  setupGrid();
-//   setupChildViewOptions();
 
-  selectDialogPage(grid);
+  selectDialogPage(fill);
+
 }
 
 
@@ -78,19 +63,6 @@ void ViewDialog::setupFill() {
   }
 }
 
-
-void ViewDialog::setupGrid() {
-  _gridTab->setShowGrid(_view->showGrid());
-  _gridTab->setSnapToGrid(_view->snapToGrid());
-  _gridTab->setGridHorizontalSpacing(_view->gridSpacing().width());
-  _gridTab->setGridVerticalSpacing(_view->gridSpacing().height());
-}
-
-
-void ViewDialog::setupChildViewOptions() {
-}
-
-
 void ViewDialog::fillChanged() {
   Q_ASSERT(_view);
 
@@ -105,17 +77,10 @@ void ViewDialog::fillChanged() {
   }
   kstApp->mainWindow()->document()->setChanged(true);
   _view->setBackgroundBrush(b);
-}
 
-
-void ViewDialog::gridChanged() {
-  _view->setShowGrid(_gridTab->showGrid());
-  _view->setSnapToGrid(_gridTab->snapToGrid());
-  _view->setGridSpacing(QSizeF(_gridTab->gridHorizontalSpacing(), _gridTab->gridVerticalSpacing()));
-}
-
-
-void ViewDialog::childViewOptionsChanged() {
+  if (_saveAsDefault->isChecked()) {
+    _view->saveDialogDefaultsFill();
+  }
 }
 
 }

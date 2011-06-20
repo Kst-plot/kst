@@ -23,8 +23,6 @@ namespace Kst {
 
 class View;
 class FillTab;
-class GridTab;
-class ChildViewOptionsTab;
 
 class ViewDialog : public Dialog
 {
@@ -35,19 +33,13 @@ class ViewDialog : public Dialog
 
   private Q_SLOTS:
     void fillChanged();
-    void gridChanged();
-    void childViewOptionsChanged();
 
   private:
     void setupFill();
-    void setupGrid();
-    void setupChildViewOptions();
 
   private:
     QPointer<View> _view;
     FillTab *_fillTab;
-    GridTab *_gridTab;
-    ChildViewOptionsTab * _childViewOptionsTab;
 };
 
 }

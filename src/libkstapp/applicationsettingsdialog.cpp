@@ -15,9 +15,7 @@
 #include "applicationsettings.h"
 #include "gridtab.h"
 #include "generaltab.h"
-#include "filltab.h"
 #include "dialogpage.h"
-#include "childviewoptionstab.h"
 #include "defaultlabelpropertiestab.h"
 #include "layouttab.h"
 
@@ -33,15 +31,11 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
 
   _generalTab = new GeneralTab(this);
   _gridTab = new GridTab(this);
-  _fillTab = new FillTab(this);
   _defaultLabelPropertiesTab = new DefaultLabelPropertiesTab(this);
   _layoutTab = new LayoutTab(this);
-//   _childViewOptionsTab = new ChildViewOptionsTab(this);
 
   connect(_generalTab, SIGNAL(apply()), this, SLOT(generalChanged()));
   connect(_gridTab, SIGNAL(apply()), this, SLOT(gridChanged()));
-  connect(_fillTab, SIGNAL(apply()), this, SLOT(fillChanged()));
-//   connect(_childViewOptionsTab, SIGNAL(apply()), this, SLOT(childViewOptionsChanged()));
   connect(_defaultLabelPropertiesTab, SIGNAL(apply()), this, SLOT(defaultLabelPropertiesChanged()));
   connect(_layoutTab, SIGNAL(apply()), this, SLOT(layoutChanged()));
 
@@ -60,27 +54,15 @@ ApplicationSettingsDialog::ApplicationSettingsDialog(QWidget *parent)
   grid->addDialogTab(_gridTab);
   addDialogPage(grid);
 
-  DialogPage *fill = new DialogPage(this);
-  fill->setPageTitle(tr("Tab Fill Properties"));
-  fill->addDialogTab(_fillTab);
-  addDialogPage(fill);
-
   DialogPage *layout = new DialogPage(this);
   layout->setPageTitle(tr("Layout Properties"));
   layout->addDialogTab(_layoutTab);
   addDialogPage(layout);
 
-//   DialogPage *childViewOptions = new DialogPage(this);
-//   childViewOptions->setPageTitle(tr("Child View Options"));
-//   childViewOptions->addDialogTab(_childViewOptionsTab);
-//   addDialogPage(childViewOptions);
-
   setupGeneral();
   setupGrid();
-  setupFill();
   setupDefaultLabelProperties();
   setupLayout();
-//   setupChildViewOptions();
 
   selectDialogPage(general);
 }
@@ -101,23 +83,6 @@ void ApplicationSettingsDialog::setupGrid() {
   _gridTab->setSnapToGrid(ApplicationSettings::self()->snapToGrid());
   _gridTab->setGridHorizontalSpacing(ApplicationSettings::self()->gridHorizontalSpacing());
   _gridTab->setGridVerticalSpacing(ApplicationSettings::self()->gridVerticalSpacing());
-}
-
-
-void ApplicationSettingsDialog::setupFill() {
-  QGradientStops stops;
-  stops.append(qMakePair(1.0, QColor(Qt::white)));
-  stops.append(qMakePair(0.0, QColor(Qt::lightGray)));
-  _fillTab->gradientEditor()->setDefaultGradientStops(stops);
-
-  QBrush b = ApplicationSettings::self()->backgroundBrush();
-
-  _fillTab->setColor(b.color());
-  _fillTab->setStyle(b.style());
-
-  if (const QGradient *gradient = b.gradient()) {
-    _fillTab->setGradient(*gradient);
-  }
 }
 
 
@@ -160,25 +125,6 @@ void ApplicationSettingsDialog::gridChanged() {
 }
 
 
-void ApplicationSettingsDialog::fillChanged() {
-  QBrush b = ApplicationSettings::self()->backgroundBrush();
-
-  b.setColor(_fillTab->color());
-  b.setStyle(_fillTab->style());
-
-  QGradient gradient = _fillTab->gradient();
-  if (gradient.type() != QGradient::NoGradient) {
-    QLinearGradient linearGradient;
-    linearGradient.setStops(gradient.stops());
-    b = QBrush(linearGradient);
-  }
-
-  ApplicationSettings::self()->setBackgroundBrush(b);
-
-  emit ApplicationSettings::self()->modified();
-}
-
-
 void ApplicationSettingsDialog::defaultLabelPropertiesChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
@@ -202,13 +148,6 @@ void ApplicationSettingsDialog::layoutChanged() {
   emit ApplicationSettings::self()->modified();
 }
 
-
-void ApplicationSettingsDialog::setupChildViewOptions() {
-}
-
-
-void ApplicationSettingsDialog::childViewOptionsChanged() {
-}
 
 }
 

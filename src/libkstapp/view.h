@@ -117,6 +117,9 @@ class View : public QGraphicsView
     void setChildMaximized(bool isMax) { _childMaximized = isMax;}
     bool childMaximized() const {return _childMaximized;}
 
+    void saveDialogDefaultsFill() const;
+    void applyDialogDefaultsFill();
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);
@@ -147,7 +150,6 @@ class View : public QGraphicsView
   private Q_SLOTS:
     void updateSettings();
     void loadSettings();
-    void updateBrush();
     virtual void edit();
 
   private:

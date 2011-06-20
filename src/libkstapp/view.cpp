@@ -104,6 +104,8 @@ void View::init()
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
   connect(this, SIGNAL(viewModeChanged(View::ViewMode)), PlotItemManager::self(), SLOT(clearFocusedPlots()));
+
+  applyDialogDefaultsFill();
 }
 
 
@@ -151,10 +153,69 @@ ViewItem *View::selectedViewItem() const {
 }
 
 
+void View::saveDialogDefaultsFill() const {
+  // Save the brush
+  QBrush b = backgroundBrush();
+  _dialogDefaults->setValue("view/fillBrushColor", QVariant(b.color()).toString());
+  _dialogDefaults->setValue("view/fillBrushStyle", QVariant(b.style()).toString());
+  _dialogDefaults->setValue("view/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
+  if (b.gradient()) {
+    QString stopList;
+    foreach(const QGradientStop &stop, b.gradient()->stops()) {
+      qreal point = (qreal)stop.first;
+      QColor color = (QColor)stop.second;
+
+      stopList += QString::number(point);
+      stopList += ',';
+      stopList += color.name();
+      stopList += ',';
+    }
+     _dialogDefaults->setValue("view/fillBrushGradient", stopList);
+   }
+}
+
+void View::applyDialogDefaultsFill() {
+  //set the brush
+  QBrush brush;
+  bool useGradient = _dialogDefaults->value("view/fillBrushUseGradient", false).toBool();
+  if (useGradient) {
+    QStringList stopInfo =
+        _dialogDefaults->value("view/fillBrushGradient", "0,#000000,1,#ffffff,").
+        toString().split(',', QString::SkipEmptyParts);
+    QLinearGradient gradient(1,0,0,0);
+    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+    for (int i = 0; i < stopInfo.size(); i+=2) {
+      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
+    }
+    brush = QBrush(gradient);
+  } else {
+    QColor color = _dialogDefaults->value("view/fillBrushColor",QColor(Qt::white)).value<QColor>();
+    brush.setColor(color);
+    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("view/fillBrushStyle",1).toInt());
+  }
+  setBackgroundBrush(brush);
+}
+
 void View::save(QXmlStreamWriter &xml) {
   QList<QGraphicsItem*> items = scene()->items();
   xml.writeAttribute("width", QVariant(sceneRect().width()).toString());
   xml.writeAttribute("height", QVariant(sceneRect().height()).toString());
+  xml.writeAttribute("color", backgroundBrush().color().name());
+  xml.writeAttribute("style", QVariant(backgroundBrush().style()).toString());
+  if (backgroundBrush().gradient()) {
+    QString stopList;
+    foreach(const QGradientStop &stop, backgroundBrush().gradient()->stops()) {
+      qreal point = (qreal)stop.first;
+      QColor color = (QColor)stop.second;
+
+      stopList += QString::number(point);
+      stopList += ',';
+      stopList += color.name();
+      stopList += ',';
+    }
+    xml.writeAttribute("gradient", stopList);
+  }
+
   foreach(QGraphicsItem* viewItem, items) {
     if (!viewItem->parentItem()) {
       qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
@@ -388,8 +449,6 @@ void View::processResize(QSize size) {
 
     setSceneRect(QRectF(0.0, 0.0, size.width() - 1.0, size.height() - 1.0));
 
-    updateBrush();
-
     setCacheMode(QGraphicsView::CacheBackground);
 
     foreach (QGraphicsItem *item, items()) {
@@ -413,8 +472,6 @@ void View::resizeEvent(QResizeEvent *event) {
     QRectF oldSceneRect = sceneRect();
 
     setSceneRect(QRectF(0.0, 0.0, width() - 1.0, height() - 1.0));
-
-    updateBrush();
 
     setCacheMode(QGraphicsView::CacheBackground);
 
@@ -440,17 +497,6 @@ void View::forceChildResize(QRectF oldRect, QRectF newRect) {
     Q_ASSERT(viewItem);
 
     viewItem->updateChildGeometry(oldRect, newRect);
-  }
-}
-
-
-void View::updateBrush() {
-  if (!ApplicationSettings::self()->gradientStops().empty()) {
-    QLinearGradient l(0.0, height() - 4.0, 0.0, 0.0);
-    l.setStops(ApplicationSettings::self()->gradientStops());
-    setBackgroundBrush(l);
-  } else {
-    setBackgroundBrush(ApplicationSettings::self()->backgroundBrush());
   }
 }
 
@@ -531,7 +577,6 @@ void View::loadSettings() {
   setGridSpacing(QSizeF(ApplicationSettings::self()->gridHorizontalSpacing(),
                         ApplicationSettings::self()->gridVerticalSpacing()));
 
-  updateBrush();
 }
 
 

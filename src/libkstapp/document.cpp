@@ -236,23 +236,47 @@ bool Document::open(const QString& file) {
           case Graphics:
             {
               if (n == "view") {
+                QXmlStreamAttributes attrs = xml.attributes();
                 loadedView = new Kst::View(0);
+
+                QBrush brush;
+                QStringRef av = attrs.value("gradient");
+                if (!av.isNull()) {
+                  QStringList stopInfo = av.toString().split(',', QString::SkipEmptyParts);
+                  QLinearGradient gradient(1,0,0,0);
+                  gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+                  for (int i = 0; i < stopInfo.size(); i+=2) {
+                    gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
+                  }
+                  brush = QBrush(gradient);
+                } else {
+                  av = attrs.value("color");
+                  if (!av.isNull()) {
+                      brush.setColor(QColor(av.toString()));
+                  }
+                  av = attrs.value("style");
+                  if (!av.isNull()) {
+                    brush.setStyle((Qt::BrushStyle)av.toString().toInt());
+                  }
+                }
+                loadedView->setBackgroundBrush(brush);
+
                 if (firstView) {
                   _win->tabWidget()->clear();
                   firstView = false;
                 }
                 _win->tabWidget()->addView(loadedView);
-                QXmlStreamAttributes attrs = xml.attributes();
                 loadedView->setObjectName(attrs.value("name").toString());
                 _win->tabWidget()->setCurrentViewName(attrs.value("name").toString());
+
                 qreal width = 1.0, height = 1.0;
-                QStringRef string = attrs.value("width");
-                if (!string.isNull()) {
-                   width = string.toString().toDouble();
+                av = attrs.value("width");
+                if (!av.isNull()) {
+                   width = av.toString().toDouble();
                 }
-                string = attrs.value("height");
-                if (!string.isNull()) {
-                   height = string.toString().toDouble();
+                av = attrs.value("height");
+                if (!av.isNull()) {
+                   height = av.toString().toDouble();
                 }
                 currentSceneRect = QRectF(QPointF(0, 0), QSizeF(width, height));
                 state = View;

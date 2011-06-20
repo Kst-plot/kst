@@ -53,7 +53,6 @@ SOURCES += aboutdialog.cpp \
     cartesianrenderitem.cpp \
     changedatasampledialog.cpp \
     changefiledialog.cpp \
-    childviewoptionstab.cpp \
     choosecolordialog.cpp \
     circleitem.cpp \
     commandlineparser.cpp \
@@ -161,7 +160,6 @@ HEADERS += aboutdialog.h \
     cartesianrenderitem.h \
     changedatasampledialog.h \
     changefiledialog.h \
-    childviewoptionstab.h \
     choosecolordialog.h \
     circleitem.h \
     commandlineparser.h \
@@ -262,7 +260,6 @@ FORMS += aboutdialog.ui \
     bugreportwizard.ui \
     changedatasampledialog.ui \
     changefiledialog.ui \
-    childviewoptionstab.ui \
     choosecolordialog.ui \
     contenttab.ui \
     csdtab.ui \

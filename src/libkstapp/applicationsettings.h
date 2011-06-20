@@ -59,9 +59,6 @@ class ApplicationSettings : public QObject
     qreal gridVerticalSpacing() const;
     void setGridVerticalSpacing(qreal spacing);
 
-    QBrush backgroundBrush() const;
-    void setBackgroundBrush(const QBrush brush);
-
     QGradientStops gradientStops() const;
 
     QSizeF layoutMargins() const;
@@ -91,7 +88,6 @@ class ApplicationSettings : public QObject
     qreal _gridVerSpacing;
     QBrush _backgroundBrush;
     QGradientStops _gradientStops;
-    bool _shareAxis;
     QSizeF _layoutMargins;
     QSizeF _layoutSpacing;
 

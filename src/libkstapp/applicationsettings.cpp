@@ -81,8 +81,6 @@ ApplicationSettings::ApplicationSettings() {
   _refViewHeight = _settings->value("fonts/referenceviewheight", QVariant(A4Height)).toDouble();
   _minFontSize = _settings->value("fonts/minimumfontsize", QVariant(4.0)).toDouble();
 
-  _shareAxis = _settings->value("childviewoptions/shareaxis", QVariant(true)).toBool();
-
   _layoutMargins.setHeight(_settings->value("layout/marginheight", QVariant(3.0)).toDouble());
   _layoutMargins.setWidth(_settings->value("layout/marginwidth", QVariant(3.0)).toDouble());
   _layoutSpacing.setHeight(_settings->value("layout/spacingheight", QVariant(0.0)).toDouble());
@@ -220,37 +218,6 @@ void ApplicationSettings::setGridVerticalSpacing(qreal spacing) {
   _settings->setValue("grid/verticalspacing", spacing);
   emit modified();
 }
-
-QBrush ApplicationSettings::backgroundBrush() const {
-  return _backgroundBrush;
-}
-
-
-void ApplicationSettings::setBackgroundBrush(const QBrush brush) {
-  _backgroundBrush = brush;
-  _gradientStops.clear();
-  _settings->setValue("fill/color", brush.color().name());
-  _settings->setValue("fill/style", QVariant(brush.style()).toString());
-
-  QString stopList;
-  if (brush.gradient()) {
-    foreach(const QGradientStop &stop, brush.gradient()->stops()) {
-      qreal point = (qreal)stop.first;
-      QColor color = (QColor)stop.second;
-
-      _gradientStops.append(qMakePair(point, color));
-
-      stopList += QString::number(point);
-      stopList += ',';
-      stopList += color.name();
-      stopList += ',';
-    }
-  }
-  _settings->setValue("fill/gradient", stopList);
-
-  emit modified();
-}
-
 
 QGradientStops ApplicationSettings::gradientStops() const {
   return _gradientStops;
