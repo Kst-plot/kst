@@ -45,6 +45,7 @@
 #include "pluginmenuitemaction.h"
 
 #include "applicationsettingsdialog.h"
+#include "themedialog.h"
 #include "differentiatecurvesdialog.h"
 #include "choosecolordialog.h"
 #include "changedatasampledialog.h"
@@ -79,6 +80,7 @@ MainWindow::MainWindow() :
     _changeFileDialog(0),
     _bugReportWizard(0),
     _applicationSettingsDialog(0),
+    _themeDialog(0),
     _aboutDialog(0),
     _highlightPoint(false) 
 {
@@ -1220,6 +1222,11 @@ void MainWindow::createActions() {
   _settingsDialogAct->setIcon(QPixmap(":configure.png"));
   connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
 
+  _themeDialogAct = new QAction(tr("&Theme"), this);
+  _themeDialogAct->setStatusTip(tr("Show Kst's Theme Dialog"));
+  _themeDialogAct->setIcon(QPixmap(":configure.png"));
+  connect(_themeDialogAct, SIGNAL(triggered()), this, SLOT(showThemeDialog()));
+
   // *********************** Help actions ************************************** //
   _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
@@ -1369,6 +1376,7 @@ void MainWindow::createMenus() {
 
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
   _settingsMenu->addAction(_settingsDialogAct);
+  _settingsMenu->addAction(_themeDialogAct);
 
   menuBar()->addSeparator();
 
@@ -1747,6 +1755,20 @@ void MainWindow::showSettingsDialog() {
     _applicationSettingsDialog->activateWindow();
   }
   _applicationSettingsDialog->show();
+}
+
+
+void MainWindow::showThemeDialog() {
+  if (!_themeDialog) {
+    _themeDialog = new ThemeDialog(this);
+  }
+  if (_themeDialog->isVisible()) {
+    _themeDialog->raise();
+    _themeDialog->activateWindow();
+  }
+
+  _themeDialog->reset();
+  _themeDialog->show();
 }
 
 

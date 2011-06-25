@@ -33,6 +33,16 @@ LegendTab::LegendTab(QWidget *parent)
   _add->setToolTip(i18n("Select: Alt+s"));
   _remove->setToolTip(i18n("Remove: Alt+r"));
 
+  _bold->setFixedWidth(32);
+  _bold->setFixedHeight(32);
+  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _italic->setFixedWidth(32);
+  _italic->setFixedHeight(32);
+  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _labelColor->setFixedWidth(32);
+  _labelColor->setFixedHeight(32);
+
+
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
   connect(_up, SIGNAL(clicked()), this, SLOT(upButtonClicked()));
@@ -54,9 +64,9 @@ LegendTab::LegendTab(QWidget *parent)
 
   connect(_title, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_fontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_bold, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_underline, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_italic, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   _displayedRelationList->setSortingEnabled(false);
@@ -174,7 +184,6 @@ QFont LegendTab::font(QFont ref_font) const {
   QFont font(family);
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
-  font.setUnderline(_underline->isChecked());
   return font;
 }
 
@@ -186,7 +195,6 @@ bool LegendTab::fontDirty() const {
 void LegendTab::setFont(const QFont &font) {
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
-  _underline->setChecked(font.underline());
   _italic->setChecked(font.italic());
 }
 

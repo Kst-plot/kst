@@ -159,6 +159,51 @@ void FillTab::enableSingleEditOptions(bool enabled) {
     _useGradient->setTristate(false);
   }
 }
+
+void FillTab::initialize(QBrush *b) {
+  setColor(b->color());
+  setStyle(b->style());
+
+  if (const QGradient *gradient = b->gradient()) {
+    setGradient(*gradient);
+  } else {
+    setUseGradient(false);
+  }
+}
+
+
+QBrush FillTab::brush(QBrush b) const {
+
+  QColor this_color = colorDirty() ? color() : b.color();
+  Qt::BrushStyle this_style = styleDirty() ? style() : b.style();
+
+  if (useGradientDirty()) {
+    // Apply / unapply gradient
+    if (useGradient()) {
+      b = QBrush(gradient());
+    } else {
+      b.setColor(this_color);
+      b.setStyle(this_style);
+    }
+  } else {
+    // Leave gradient but make other changes.
+    QGradient this_gradient;
+    if (const QGradient *grad = b.gradient()) {
+      if (gradientDirty()) {
+        this_gradient = gradient();
+      } else {
+        this_gradient = *grad;
+      }
+      b = QBrush(this_gradient);
+    } else {
+      b.setColor(this_color);
+      b.setStyle(this_style);
+    }
+  }
+
+  return b;
+}
+
 }
 
 // vim: ts=2 sw=2 et

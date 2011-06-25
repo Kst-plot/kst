@@ -25,7 +25,8 @@ class ArrowItem : public LineItem
     ArrowItem(View *parent);
     virtual ~ArrowItem();
 
-    const QString defaultsGroupName() const {return QString("arrow");}
+    const QString defaultsGroupName() const {return ArrowItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("arrow");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}

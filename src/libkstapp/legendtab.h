@@ -45,6 +45,9 @@ class LegendTab : public DialogTab, Ui::LegendTab {
     void setFont(const QFont &font);
     bool fontDirty() const;
 
+    QColor legendColor() const {return _labelColor->color();}
+    void setColor(const QColor c) {_labelColor->setColor(c);}
+
     qreal fontScale() const;
     void setFontScale(const qreal scale);
     bool fontScaleDirty() const;

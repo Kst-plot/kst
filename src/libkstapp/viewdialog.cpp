@@ -18,6 +18,7 @@
 #include "document.h"
 #include "mainwindow.h"
 #include "application.h"
+#include "dialogdefaults.h"
 
 #include <QBrush>
 #include <QDebug>
@@ -55,31 +56,19 @@ void ViewDialog::setupFill() {
   Q_ASSERT(_view);
   QBrush b = _view->backgroundBrush();
 
-  _fillTab->setColor(b.color());
-  _fillTab->setStyle(b.style());
-
-  if (const QGradient *gradient = b.gradient()) {
-    _fillTab->setGradient(*gradient);
-  }
+  _fillTab->initialize(&b);
 }
 
 void ViewDialog::fillChanged() {
   Q_ASSERT(_view);
 
-  QBrush b = _view->backgroundBrush();
+  QBrush b = _fillTab->brush(_view->backgroundBrush());
 
-  b.setColor(_fillTab->color());
-  b.setStyle(_fillTab->style());
-
-  QGradient gradient = _fillTab->gradient();
-  if (gradient.type() != QGradient::NoGradient) {
-    b = QBrush(gradient);
-  }
   kstApp->mainWindow()->document()->setChanged(true);
   _view->setBackgroundBrush(b);
 
   if (_saveAsDefault->isChecked()) {
-    _view->saveDialogDefaultsFill();
+    saveDialogDefaultsBrush(View::staticDefaultsGroupName(), _view->backgroundBrush());
   }
 }
 

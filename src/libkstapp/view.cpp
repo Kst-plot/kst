@@ -152,47 +152,10 @@ ViewItem *View::selectedViewItem() const {
   return qgraphicsitem_cast<ViewItem*>(items.first());
 }
 
-
-void View::saveDialogDefaultsFill() const {
-  // Save the brush
-  QBrush b = backgroundBrush();
-  _dialogDefaults->setValue("view/fillBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue("view/fillBrushStyle", QVariant(b.style()).toString());
-  _dialogDefaults->setValue("view/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
-  if (b.gradient()) {
-    QString stopList;
-    foreach(const QGradientStop &stop, b.gradient()->stops()) {
-      qreal point = (qreal)stop.first;
-      QColor color = (QColor)stop.second;
-
-      stopList += QString::number(point);
-      stopList += ',';
-      stopList += color.name();
-      stopList += ',';
-    }
-     _dialogDefaults->setValue("view/fillBrushGradient", stopList);
-   }
-}
-
 void View::applyDialogDefaultsFill() {
   //set the brush
   QBrush brush;
-  bool useGradient = _dialogDefaults->value("view/fillBrushUseGradient", false).toBool();
-  if (useGradient) {
-    QStringList stopInfo =
-        _dialogDefaults->value("view/fillBrushGradient", "0,#000000,1,#ffffff,").
-        toString().split(',', QString::SkipEmptyParts);
-    QLinearGradient gradient(1,0,0,0);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    for (int i = 0; i < stopInfo.size(); i+=2) {
-      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
-    }
-    brush = QBrush(gradient);
-  } else {
-    QColor color = _dialogDefaults->value("view/fillBrushColor",QColor(Qt::white)).value<QColor>();
-    brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value("view/fillBrushStyle",1).toInt());
-  }
+  brush = dialogDefaultsBrush(staticDefaultsGroupName());
   setBackgroundBrush(brush);
 }
 

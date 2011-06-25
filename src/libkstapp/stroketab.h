@@ -26,6 +26,10 @@ class StrokeTab : public DialogTab, Ui::StrokeTab {
     StrokeTab(QWidget *parent = 0);
     virtual ~StrokeTab();
 
+    void initialize(QPen *p);
+
+    QPen pen(QPen pen = QPen()) const;
+
     Qt::PenStyle style() const;
     bool styleDirty() const;
     void setStyle(Qt::PenStyle style);

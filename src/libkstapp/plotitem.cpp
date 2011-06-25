@@ -3467,6 +3467,34 @@ void PlotItem::saveAsDialogDefaults() const {
   _yAxis->saveAsDialogDefaults(defaultsGroupName()+"/yAxis");
 }
 
+void PlotItem::saveDialogDefaultsFont(QFont F, QColor C) {
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/globalFontFamily", QVariant(F).toString());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/globalFontScale",F.pointSize());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/globalFontColor", QVariant(C).toString());
+
+  PlotLabel::saveDialogDefaults(staticDefaultsGroupName()+"/leftFont", F, C, true);
+  PlotLabel::saveDialogDefaults(staticDefaultsGroupName()+"/rightFont", F, C, true);
+  PlotLabel::saveDialogDefaults(staticDefaultsGroupName()+"/topFont", F, C, true);
+  PlotLabel::saveDialogDefaults(staticDefaultsGroupName()+"/bottomFont", F, C, true);
+  PlotLabel::saveDialogDefaults(staticDefaultsGroupName()+"/numberFont", F, C, true);
+}
+
+void PlotItem::setFont(const QFont &f, const QColor &c) {
+  leftLabelDetails()->setFontUseGlobal(true);
+  rightLabelDetails()->setFontUseGlobal(true);
+  topLabelDetails()->setFontUseGlobal(true);
+  bottomLabelDetails()->setFontUseGlobal(true);
+  numberLabelDetails()->setFontUseGlobal(true);
+  setGlobalFontColor(c);
+  setGlobalFont(f);
+  setGlobalFontScale(f.pointSize());
+  leftLabelDetails()->setFontColor(c);
+  rightLabelDetails()->setFontColor(c);
+  topLabelDetails()->setFontColor(c);
+  bottomLabelDetails()->setFontColor(c);
+  numberLabelDetails()->setFontColor(c);
+}
+
 
 PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
   _plotItem(plotItem),
@@ -3655,12 +3683,17 @@ bool PlotLabel::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 }
 
 void PlotLabel::saveAsDialogDefaults(const QString &group) const {
-  _dialogDefaults->setValue(group+QString("Global"), fontUseGlobal());
-  _dialogDefaults->setValue(group+QString("Family"), QVariant(font()).toString());
-  _dialogDefaults->setValue(group+QString("Scale"), fontScale());
-  _dialogDefaults->setValue(group+QString("Color"), QVariant(fontColor()).toString());
+  QFont F = font();
+  F.setPointSize(fontScale());
+  PlotLabel::saveDialogDefaults(group, F, fontColor(), fontUseGlobal());
 }
 
+void PlotLabel::saveDialogDefaults(const QString &group, const QFont &F, const QColor &C, bool U) {
+  _dialogDefaults->setValue(group+QString("Global"), U);
+  _dialogDefaults->setValue(group+QString("Family"), QVariant(F).toString());
+  _dialogDefaults->setValue(group+QString("Scale"), F.pointSize());
+  _dialogDefaults->setValue(group+QString("Color"), QVariant(C).toString());
+}
 
 void CreatePlotCommand::createItem() {
   _item = new PlotItem(_view);
@@ -3684,7 +3717,6 @@ PlotItemFactory::PlotItemFactory()
 
 PlotItemFactory::~PlotItemFactory() {
 }
-
 
 ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *store, View *view, ViewItem *parent) {
   PlotItem *rc = 0;

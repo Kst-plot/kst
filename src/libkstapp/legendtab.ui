@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>660</width>
-    <height>653</height>
+    <height>342</height>
    </rect>
   </property>
   <layout class="QVBoxLayout">
@@ -219,7 +219,7 @@
      <property name="title">
       <string>Legend Font Settings</string>
      </property>
-     <layout class="QGridLayout">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="_Label_11">
         <property name="sizePolicy">
@@ -252,6 +252,54 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string> points</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="_bold">
+        <property name="toolTip">
+         <string>Bold</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="shortcut">
+         <string>Alt+B</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="_italic">
+        <property name="toolTip">
+         <string>Italic</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="shortcut">
+         <string>Alt+I</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="Kst::ColorButton" name="_labelColor"/>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="_Label_12">
         <property name="text">
@@ -265,29 +313,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="4">
+      <item row="1" column="1" colspan="5">
        <widget class="QFontComboBox" name="_family"/>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="_bold">
-        <property name="text">
-         <string>&amp;Bold</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QCheckBox" name="_underline">
-        <property name="text">
-         <string>&amp;Underline</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QCheckBox" name="_italic">
-        <property name="text">
-         <string>&amp;Italics</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -310,6 +337,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kst::ColorButton</class>
+   <extends>QToolButton</extends>
+   <header>colorbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>_title</tabstop>
   <tabstop>_autoContents</tabstop>
@@ -320,9 +354,6 @@
   <tabstop>_add</tabstop>
   <tabstop>_down</tabstop>
   <tabstop>_fontSize</tabstop>
-  <tabstop>_bold</tabstop>
-  <tabstop>_underline</tabstop>
-  <tabstop>_italic</tabstop>
   <tabstop>_family</tabstop>
   <tabstop>_displayVertically</tabstop>
  </tabstops>

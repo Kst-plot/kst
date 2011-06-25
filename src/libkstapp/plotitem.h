@@ -100,7 +100,7 @@ class PlotLabel : public QObject {
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
 
     void saveAsDialogDefaults(const QString &group) const;
-
+    static void saveDialogDefaults(const QString &group, const QFont &F, const QColor &C, bool U);
   Q_SIGNALS:
     void labelChanged();
 
@@ -124,11 +124,15 @@ class PlotItem : public ViewItem, public PlotItemInterface
     PlotItem(View *parent);
     virtual ~PlotItem();
 
-    const QString defaultsGroupName() const {return QString("plot");}
+    const QString defaultsGroupName() const {return PlotItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("plot");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}
     virtual bool hasBrush() const {return true;}
+    virtual bool hasFont() const {return true;}
+
+    virtual void setFont(const QFont &f, const QColor &c);
 
     enum PlotClickEditRegion {CONTENT, LABEL, XAXIS, YAXIS};
 
@@ -270,6 +274,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void saveAsDialogDefaults() const;
     void applyDefaults();
+    static void saveDialogDefaultsFont(QFont F, QColor C);
 
     bool maskedByMaximization() {return (view()->childMaximized() && !_plotMaximized);}
 

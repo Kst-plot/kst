@@ -25,7 +25,8 @@ class CircleItem : public ViewItem
     CircleItem(View *parent);
     virtual ~CircleItem();
 
-    const QString defaultsGroupName() const {return QString("circle");}
+    const QString defaultsGroupName() const {return CircleItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("circle");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}

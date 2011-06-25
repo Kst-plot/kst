@@ -25,7 +25,8 @@ class BoxItem : public ViewItem
     BoxItem(View *parent);
     virtual ~BoxItem();
 
-    const QString defaultsGroupName() const {return QString("box");}
+    const QString defaultsGroupName() const {return BoxItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("box");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}

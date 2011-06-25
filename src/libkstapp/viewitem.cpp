@@ -211,77 +211,18 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   }
 }
 
-void ViewItem::saveDialogDefaultsFill() const {
-  // Save the brush
-  QBrush b = brush();
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushStyle", QVariant(b.style()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
-  if (b.gradient()) {
-    QString stopList;
-    foreach(const QGradientStop &stop, b.gradient()->stops()) {
-      qreal point = (qreal)stop.first;
-      QColor color = (QColor)stop.second;
-
-      stopList += QString::number(point);
-      stopList += ',';
-      stopList += color.name();
-      stopList += ',';
-    }
-     _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushGradient", stopList);
-   }
-}
-
-void ViewItem::saveDialogDefaultsStroke() const {
-  // Save stroke...
-  QPen p = pen();
-  QBrush b = p.brush();
-
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeStyle", QVariant(p.style()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeWidth", p.widthF());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeJoinStyle", QVariant(p.joinStyle()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeCapStyle", QVariant(p.capStyle()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushStyle", QVariant(b.style()).toString());
-
-}
-
 void ViewItem::applyDialogDefaultsFill() {
-  //set the brush
-  QBrush brush;
-  bool useGradient = _dialogDefaults->value(defaultsGroupName()+"/fillBrushUseGradient", false).toBool();
-  if (useGradient) {
-    QStringList stopInfo =
-        _dialogDefaults->value(defaultsGroupName()+"/fillBrushGradient", "0,#000000,1,#ffffff,").
-        toString().split(',', QString::SkipEmptyParts);
-    QLinearGradient gradient(1,0,0,0);
-    gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    for (int i = 0; i < stopInfo.size(); i+=2) {
-      gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));
-    }
-    brush = QBrush(gradient);
-  } else {
-    QColor color = _dialogDefaults->value(defaultsGroupName()+"/fillBrushColor",QColor(Qt::white)).value<QColor>();
-    brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value(defaultsGroupName()+"/fillBrushStyle",1).toInt());
+  if (hasBrush()) {
+    //set the brush
+    QBrush brush = dialogDefaultsBrush(defaultsGroupName());
+    setBrush(brush);
   }
-  setBrush(brush);
 }
 
 void ViewItem::applyDialogDefaultsStroke() {
   if (hasStroke()) {
     // set the pen
-    QPen pen;
-    QColor color;
-    QBrush brush;
-    pen.setStyle((Qt::PenStyle)_dialogDefaults->value(defaultsGroupName()+"/strokeStyle", 1).toInt());
-    pen.setWidthF(_dialogDefaults->value(defaultsGroupName()+"/strokeWidth",0).toDouble());
-    pen.setJoinStyle((Qt::PenJoinStyle)_dialogDefaults->value(defaultsGroupName()+"/strokeJoinStyle",64).toInt());
-    pen.setCapStyle((Qt::PenCapStyle)_dialogDefaults->value(defaultsGroupName()+"/strokeCapStyle",16).toInt());
-    color = _dialogDefaults->value(defaultsGroupName()+"/strokeBrushColor",QColor(Qt::black)).value<QColor>();
-    brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)_dialogDefaults->value(defaultsGroupName()+"/strokeBrushStyle",1).toInt());
-    pen.setBrush(brush);
+    QPen pen = dialogDefaultsPen(defaultsGroupName());
     setPen(pen);
   }
 }

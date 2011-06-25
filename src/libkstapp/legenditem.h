@@ -32,11 +32,13 @@ class LegendItem : public ViewItem {
     LegendItem(PlotItem *parent);
     virtual ~LegendItem();
 
-    const QString defaultsGroupName() const {return QString("legend");}
+    const QString defaultsGroupName() const {return LegendItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("legend");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}
     virtual bool hasBrush() const {return true;}
+    virtual bool hasFont() const {return true;}
 
     virtual void paint(QPainter *painter);
 
@@ -47,13 +49,18 @@ class LegendItem : public ViewItem {
     bool verticalDisplay() const;
 
     QFont font() const;
-    void setFont(const QFont &font);
+    void setLegendFont(const QFont &font);
 
     qreal fontScale() const;
     void setFontScale(const qreal scale);
 
+    QColor legendColor() const;
+    void setLegendColor(const QColor &color);
+
     QString title() const;
     void setTitle(const QString &title);
+
+    virtual void setFont(const QFont &f, const QColor &c);
 
     PlotItem* plot() { return _plotItem; }
 
@@ -67,6 +74,7 @@ class LegendItem : public ViewItem {
     QString descriptionTip() const;
 
     void saveAsDialogDefaults() const;
+    static void saveDialogDefaultsFont(const QFont &F, const QColor &C);
 
     void applyDefaults();
   public Q_SLOTS:
@@ -83,6 +91,7 @@ class LegendItem : public ViewItem {
     bool _auto;
     QString _title;
     QFont _font;
+    QColor _color;
     qreal _fontScale;
     bool _verticalDisplay;
     RelationList _relations;

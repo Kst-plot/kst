@@ -26,6 +26,7 @@ Dialog::Dialog(QWidget *parent)
   setupUi(this);
 
   _saveAsDefault->hide();
+  _applyToExisting->hide();
 
   extensionWidget()->hide();
 

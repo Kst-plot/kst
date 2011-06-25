@@ -23,6 +23,8 @@
 #include "mainwindow.h"
 #include "application.h"
 
+#include "dialogdefaults.h"
+
 #include "editmultiplewidget.h"
 
 #include <QPen>
@@ -189,16 +191,8 @@ void ViewItemDialog::setupFill() {
   Q_ASSERT(_item);
   if (_item->hasBrush()) {
     QBrush b = _item->brush();
-
     _fillTab->enableSingleEditOptions(true);
-    _fillTab->setColor(b.color());
-    _fillTab->setStyle(b.style());
-
-    if (const QGradient *gradient = b.gradient()) {
-      _fillTab->setGradient(*gradient);
-    } else {
-      _fillTab->setUseGradient(false);
-    }
+    _fillTab->initialize(&b);
   }
 }
 
@@ -206,16 +200,8 @@ void ViewItemDialog::setupStroke() {
   Q_ASSERT(_item);
   if (_item->hasStroke()) {
     QPen p = _item->pen();
-    QBrush b = p.brush();
 
-    _strokeTab->setStyle(p.style());
-    _strokeTab->setWidth(p.widthF());
-
-    _strokeTab->setBrushColor(b.color());
-    _strokeTab->setBrushStyle(b.style());
-
-    _strokeTab->setJoinStyle(p.joinStyle());
-    _strokeTab->setCapStyle(p.capStyle());
+    _strokeTab->initialize(&p);
   }
 }
 
@@ -245,7 +231,7 @@ void ViewItemDialog::fillChanged() {
     } else {
       saveFill(_item);
       if (_saveAsDefault->isChecked()) {
-        _item->saveDialogDefaultsFill();
+        saveDialogDefaultsBrush(_item->defaultsGroupName(), _item->brush());
       }
     }
     kstApp->mainWindow()->document()->setChanged(true);
@@ -254,34 +240,7 @@ void ViewItemDialog::fillChanged() {
 
 void ViewItemDialog::saveFill(ViewItem *item) {
   if (_item->hasBrush()) {
-    QBrush b = item->brush();
-
-    QColor color = _fillTab->colorDirty() ? _fillTab->color() : b.color();
-    Qt::BrushStyle style = _fillTab->styleDirty() ? _fillTab->style() : b.style();
-
-    if (_fillTab->useGradientDirty()) {
-      // Apply / unapply gradient
-      if (_fillTab->useGradient()) {
-        b = QBrush(_fillTab->gradient());
-      } else {
-        b.setColor(color);
-        b.setStyle(style);
-      }
-    } else {
-      // Leave gradient but make other changes.
-      QGradient gradient;
-      if (const QGradient *grad = b.gradient()) {
-        if (_fillTab->gradientDirty()) {
-          gradient = _fillTab->gradient();
-        } else {
-          gradient = *grad;
-        }
-        b = QBrush(gradient);
-      } else {
-        b.setColor(color);
-        b.setStyle(style);
-      }
-    }
+    QBrush b = _fillTab->brush(item->brush());
     item->setBrush(b);
   }
 }
@@ -296,7 +255,7 @@ void ViewItemDialog::strokeChanged() {
   } else {
     saveStroke(_item);
     if (_saveAsDefault->isChecked()) {
-      _item->saveDialogDefaultsStroke();
+      saveDialogDefaultsPen(_item->defaultsGroupName(), _item->pen());
     }
   }
   kstApp->mainWindow()->document()->setChanged(true);
@@ -305,33 +264,7 @@ void ViewItemDialog::strokeChanged() {
 
 void ViewItemDialog::saveStroke(ViewItem *item) {
   if (_item->hasStroke()) {
-    QPen p = item->pen();
-    QBrush b = p.brush();
-
-    Qt::PenStyle style = _strokeTab->styleDirty() ? _strokeTab->style() : p.style();
-    qreal width = _strokeTab->widthDirty() ? _strokeTab->width() : p.widthF();
-    QColor brushColor = _strokeTab->brushColorDirty() ? _strokeTab->brushColor() : b.color();
-    Qt::BrushStyle brushStyle = _strokeTab->brushStyleDirty() ? _strokeTab->brushStyle() : b.style();
-
-    Qt::PenJoinStyle joinStyle = _strokeTab->joinStyleDirty() ? _strokeTab->joinStyle() : p.joinStyle();
-    Qt::PenCapStyle capStyle = _strokeTab->capStyleDirty() ? _strokeTab->capStyle() : p.capStyle();
-
-
-    p.setStyle(style);
-    p.setWidthF(width);
-
-    b.setColor(brushColor);
-    b.setStyle(brushStyle);
-
-    p.setJoinStyle(joinStyle);
-    p.setCapStyle(capStyle);
-    p.setBrush(b);
-#ifdef Q_WS_WIN32
-    if (p.isCosmetic()) {
-      p.setWidth(1);
-    }
-#endif
-    item->setItemPen(p);
+    item->setItemPen(_strokeTab->pen(item->pen()));
   }
 }
 

@@ -48,6 +48,8 @@ class View : public QGraphicsView
     View(QWidget* parent);
     virtual ~View();
 
+    static QString staticDefaultsGroupName() { return QString("view");}
+
     void init();
 
     virtual void save(QXmlStreamWriter &xml);
@@ -117,7 +119,6 @@ class View : public QGraphicsView
     void setChildMaximized(bool isMax) { _childMaximized = isMax;}
     bool childMaximized() const {return _childMaximized;}
 
-    void saveDialogDefaultsFill() const;
     void applyDialogDefaultsFill();
 
   Q_SIGNALS:

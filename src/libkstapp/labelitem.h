@@ -29,11 +29,13 @@ class LabelItem : public ViewItem {
     LabelItem(View *parent, const QString& labelText);
     virtual ~LabelItem();
 
-    const QString defaultsGroupName() const {return QString("label");}
+    const QString defaultsGroupName() const {return LabelItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("label");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return false;}
     virtual bool hasBrush() const {return false;}
+    virtual bool hasFont() const {return true;}
 
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
@@ -52,6 +54,9 @@ class LabelItem : public ViewItem {
 
     void applyDefaults();
     void saveAsDialogDefaults() const;
+    static void saveDialogDefaultsFont(const QFont &F, const QColor &C);
+
+    virtual void setFont(const QFont &f, const QColor &c);
 
   public Q_SLOTS:
     virtual void edit();

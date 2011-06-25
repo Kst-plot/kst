@@ -25,7 +25,8 @@ class EllipseItem : public ViewItem
     EllipseItem(View *parent);
     virtual ~EllipseItem();
 
-    const QString defaultsGroupName() const {return QString("ellipse");}
+    const QString defaultsGroupName() const {return EllipseItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("ellipse");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}

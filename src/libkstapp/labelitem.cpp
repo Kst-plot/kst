@@ -47,9 +47,15 @@ void LabelItem::applyDefaults() {
 }
 
 void LabelItem::saveAsDialogDefaults() const {
-  _dialogDefaults->setValue(defaultsGroupName()+"/font", QVariant(_font).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/color", _color.name());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fontScale", _scale);
+  QFont F;
+  F.setPointSize(_scale);
+  LabelItem::saveDialogDefaultsFont(F, _color);
+}
+
+void LabelItem::saveDialogDefaultsFont(const QFont &F, const QColor &C) {
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/color", C.name());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/fontScale", F.pointSize());
 }
 
 LabelItem::~LabelItem() {
@@ -204,6 +210,11 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
   }
 }
 
+void LabelItem::setFont(const QFont &f, const QColor &c) {
+  setLabelColor(c);
+  setLabelFont(f);
+  setLabelScale(f.pointSize());
+}
 
 void CreateLabelCommand::createItem(QString *inText) {
 

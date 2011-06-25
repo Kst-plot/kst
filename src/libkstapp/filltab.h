@@ -26,6 +26,10 @@ class FillTab : public DialogTab, Ui::FillTab {
     FillTab(QWidget *parent = 0);
     virtual ~FillTab();
 
+    void initialize(QBrush *b);
+
+    QBrush brush(QBrush b = QBrush()) const;
+
     QColor color() const;
     bool colorDirty() const;
     void setColor(const QColor &color);

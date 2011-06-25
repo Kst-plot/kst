@@ -86,6 +86,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     // for view item dialogs
     virtual bool hasStroke() const {return false;}
     virtual bool hasBrush() const {return false;}
+    virtual bool hasFont() const {return false;}
+
+    virtual void setFont(const QFont &f, const QColor &c) {return;}
 
     View* view() const;
     void setView(View*);
@@ -222,8 +225,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     void normalizePosition();
 
-    virtual void saveDialogDefaultsFill() const;
-    virtual void saveDialogDefaultsStroke() const;
     virtual void applyDialogDefaultsFill();
     virtual void applyDialogDefaultsStroke();
 

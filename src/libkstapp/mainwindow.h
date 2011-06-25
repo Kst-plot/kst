@@ -37,6 +37,7 @@ class ChangeDataSampleDialog;
 class ChangeFileDialog;
 class BugReportWizard;
 class ApplicationSettingsDialog;
+class ThemeDialog;
 class AboutDialog;
 class TabWidget;
 class View;
@@ -71,6 +72,7 @@ class MainWindow : public QMainWindow
     void showMatrixEditor();
     void showStringEditor();
     void showSettingsDialog();
+    void showThemeDialog();
     void showDifferentiateCurvesDialog();
     void showChooseColorDialog();
     void showChangeDataSampleDialog();
@@ -185,6 +187,7 @@ class MainWindow : public QMainWindow
     ChangeFileDialog *_changeFileDialog;
     BugReportWizard *_bugReportWizard;
     ApplicationSettingsDialog *_applicationSettingsDialog;
+    ThemeDialog *_themeDialog;
     AboutDialog* _aboutDialog;
 
     QPointer<QProgressBar> _progressBar;
@@ -256,6 +259,7 @@ class MainWindow : public QMainWindow
     QAction *_yOnlyZoomAct;
 
     QAction *_settingsDialogAct;
+    QAction *_themeDialogAct;
 
     QAction *_differentiateCurvesDialogAct;
     QAction *_chooseColorDialogAct;

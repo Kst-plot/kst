@@ -984,7 +984,6 @@ void PlotItemDialog::globalFontUpdate() {
   QFont font = _labelTab->globalLabelFont(QFont());
   QColor color = _labelTab->globalLabelColor();
 
-
   _topLabelTab->setFontSpecsIfDefault(font, fontScale, color);
   _bottomLabelTab->setFontSpecsIfDefault(font, fontScale, color);
   _leftLabelTab->setFontSpecsIfDefault(font, fontScale, color);

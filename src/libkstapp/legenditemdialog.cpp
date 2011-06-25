@@ -120,6 +120,7 @@ void LegendItemDialog::setupLegend() {
   _legendTab->setTitle(_legendItem->title());
   _legendTab->setAutoContents(_legendItem->autoContents());
   _legendTab->setVerticalDisplay(_legendItem->verticalDisplay());
+  _legendTab->setColor(_legendItem->legendColor());
 
 }
 
@@ -145,11 +146,12 @@ void LegendItemDialog::legendChanged() {
 }
 
 void LegendItemDialog::saveLegend(LegendItem *legendItem, bool save_relations) {
-  legendItem->setFont(_legendTab->font(legendItem->font()));
+  legendItem->setLegendFont(_legendTab->font(legendItem->font()));
   legendItem->setFontScale(_legendTab->fontScale());
   legendItem->setTitle(_legendTab->title());
   legendItem->setAutoContents(_legendTab->autoContents());
   legendItem->setVerticalDisplay(_legendTab->verticalDisplay());
+  legendItem->setLegendColor(_legendTab->legendColor());
 
   QStringList displayedRelations = _legendTab->displayedRelations();
 

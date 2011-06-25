@@ -25,7 +25,8 @@ class LineItem : public ViewItem
     LineItem(View *parent);
     virtual ~LineItem();
 
-    const QString defaultsGroupName() const {return QString("line");}
+    const QString defaultsGroupName() const {return LineItem::staticDefaultsGroupName();}
+    static QString staticDefaultsGroupName() { return QString("line");}
 
     // for view item dialogs
     virtual bool hasStroke() const {return true;}

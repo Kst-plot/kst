@@ -65,6 +65,50 @@ StrokeTab::StrokeTab(QWidget *parent)
 StrokeTab::~StrokeTab() {
 }
 
+
+void StrokeTab::initialize(QPen *p) {
+  QBrush b = p->brush();
+
+  setStyle(p->style());
+  setWidth(p->widthF());
+
+  setBrushColor(b.color());
+  setBrushStyle(b.style());
+
+  setJoinStyle(p->joinStyle());
+  setCapStyle(p->capStyle());
+}
+
+QPen StrokeTab::pen(QPen p) const {
+  QBrush b = p.brush();
+
+  Qt::PenStyle this_style = styleDirty() ? style() : p.style();
+  qreal this_width = widthDirty() ? width() : p.widthF();
+  QColor this_brushColor = brushColorDirty() ? brushColor() : b.color();
+  Qt::BrushStyle this_brushStyle = brushStyleDirty() ? brushStyle() : b.style();
+
+  Qt::PenJoinStyle this_joinStyle = joinStyleDirty() ? joinStyle() : p.joinStyle();
+  Qt::PenCapStyle this_capStyle = capStyleDirty() ? capStyle() : p.capStyle();
+
+
+  p.setStyle(this_style);
+  p.setWidthF(this_width);
+
+  b.setColor(this_brushColor);
+  b.setStyle(this_brushStyle);
+
+  p.setJoinStyle(this_joinStyle);
+  p.setCapStyle(this_capStyle);
+  p.setBrush(b);
+#ifdef Q_WS_WIN32
+  if (p.isCosmetic()) {
+    p.setWidth(1);
+  }
+#endif
+
+  return p;
+}
+
 Qt::PenStyle StrokeTab::style() const {
   return Qt::PenStyle(_style->itemData(_style->currentIndex()).toInt());
 }

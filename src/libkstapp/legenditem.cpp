@@ -232,6 +232,7 @@ QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pix
 
   pixmapPainter.translate(4 * fm.ascent() + paddingValue, 0);
 
+  parsed->chunk->attributes.color = _color;
   Label::RenderContext rc(font, &pixmapPainter);
   rc.y = fm.ascent();
 
@@ -249,55 +250,52 @@ void LegendItem::save(QXmlStreamWriter &xml) {
   Q_UNUSED(xml);
 }
 
+QColor LegendItem::legendColor() const {
+  return _color;
+}
+
+
+void LegendItem::setLegendColor(const QColor &color) {
+  _color = color;
+}
+
+
 void LegendItem::applyDefaults() {
   _auto = _dialogDefaults->value(defaultsGroupName()+"/auto",true).toBool();
 
+  _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
+
   QFont font;
   font.fromString(_dialogDefaults->value(defaultsGroupName()+"/font",font.toString()).toString());
-  setFont(font);
+  setLegendFont(font);
 
   setFontScale(_dialogDefaults->value(defaultsGroupName()+"/fontScale", 12.0).toDouble());
   _verticalDisplay = _dialogDefaults->value(defaultsGroupName()+"/verticalDisplay",true).toBool();
+}
 
-  QBrush brush;
-  QColor color;
+void LegendItem::setFont(const QFont &f, const QColor &c) {
+  setLegendColor(c);
+  setLegendFont(f);
+  setFontScale(f.pointSize());
 }
 
 void LegendItem::saveAsDialogDefaults() const {
   _dialogDefaults->setValue(defaultsGroupName()+"/auto",_auto);
   _dialogDefaults->setValue(defaultsGroupName()+"/title", _title);
-  _dialogDefaults->setValue(defaultsGroupName()+"/font", QVariant(_font).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fontScale",_fontScale);
   _dialogDefaults->setValue(defaultsGroupName()+"/verticalDisplay", _verticalDisplay);
 
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeStyle", QVariant(pen().style()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeWidth", QVariant(pen().widthF()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeCap", QVariant(pen().capStyle()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeJoinStyle", QVariant(pen().joinStyle()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushColor", pen().brush().color().name());
-  _dialogDefaults->setValue(defaultsGroupName()+"/strokeBrushStyle", QVariant(pen().brush().style()).toString());
-
-  QBrush b = brush();
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushColor", b.color().name());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushStyle", QVariant(b.style()).toString());
-  _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
-  if (b.gradient()) {
-    QString stopList;
-    foreach(const QGradientStop &stop, b.gradient()->stops()) {
-      qreal point = (qreal)stop.first;
-      QColor color = (QColor)stop.second;
-
-      stopList += QString::number(point);
-      stopList += ',';
-      stopList += color.name();
-      stopList += ',';
-    }
-     _dialogDefaults->setValue(defaultsGroupName()+"/fillBrushGradient", stopList);
-   }
-
-  // Save legend defaults here
+  QFont F = _font;
+  F.setPointSize(_fontScale);
+  saveDialogDefaultsFont(F, _color);
+  saveDialogDefaultsPen(defaultsGroupName(), pen());
+  saveDialogDefaultsBrush(defaultsGroupName(), brush());
 }
 
+void LegendItem::saveDialogDefaultsFont(const QFont &F, const QColor &C) {
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/fontScale",F.pointSize());
+  _dialogDefaults->setValue(staticDefaultsGroupName()+"/color", C.name());
+}
 
 void LegendItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeStartElement("legend");
@@ -305,6 +303,7 @@ void LegendItem::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeAttribute("title", QVariant(_title).toString());
   xml.writeAttribute("font", QVariant(_font).toString());
   xml.writeAttribute("fontscale", QVariant(_fontScale).toString());
+  xml.writeAttribute("color", QVariant(_color).toString());
   xml.writeAttribute("verticaldisplay", QVariant(_verticalDisplay).toString());
   ViewItem::save(xml);
   foreach (const RelationPtr &relation, _relations) {
@@ -334,7 +333,7 @@ bool LegendItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   if (!av.isNull()) {
     QFont font;
     font.fromString(av.toString());
-    setFont(font);
+    setLegendFont(font);
   }
   av = attrs.value("fontscale");
   if (!av.isNull()) {
@@ -420,7 +419,7 @@ QFont LegendItem::font() const {
 }
 
 
-void LegendItem::setFont(const QFont &font) {
+void LegendItem::setLegendFont(const QFont &font) {
   _font = font;
 }
 
