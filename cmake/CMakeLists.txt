@@ -37,7 +37,7 @@ if(kst_version_string)
 	set(kst_version ${kst_version_string})
 else()
 	set(kst_version_minor 0)
-	set(kst_version_patch 3)
+	set(kst_version_patch x)
 	set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 endif()
 
