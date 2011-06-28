@@ -2,7 +2,7 @@
 
 # $1 = path to kst/cmake
 # $2 = package name
-cmake $1 -Dkst_merge_files=1 -Dkst_3rdparty=1 -Dkst_dataobjects=1 -Dkst_install_prefix=$2 -Dkst_release=1
+cmake $1 -Dkst_merge_files=1 -Dkst_3rdparty=1 -Dkst_dataobjects=1 -Dkst_version_string=$2 -Dkst_release=1
 
 make -j4
 
