@@ -1,18 +1,18 @@
 #!/bin/sh
 
 # Usage
-#   linux-release <package name> optional: <existing sourceforge dir>  <sourceforge username> <skip-build>
+#   linux-release <version string> optional: <existing sourceforge dir>  <sourceforge username> <skip-build>
 # e.g:
-#   build  only     : linux-release.sh Kst-2.0.3-beta2 
-#   build and upload: linux-release.sh Kst-2.0.3-beta2 "Kst\\ 2.0.3" username
-#   upload only     : linux-release.sh Kst-2.0.3-beta2 "Kst\\ 2.0.3" username skip
+#   build  only     : linux-release.sh 2.0.3-beta2 
+#   build and upload: linux-release.sh 2.0.3-beta2 "Kst\\ 2.0.3" username
+#   upload only     : linux-release.sh 2.0.3-beta2 "Kst\\ 2.0.3" username skip
 #   
 
-kst_install_prefix=$1
+kst_install_prefix=kst-$1
 
 if [ -z ${4} ]
 then
-	cmake ../kst/cmake -Dkst_release=1 -Dkst_merge_files=1 -Dkst_install_prefix=$kst_install_prefix
+	cmake ../kst/cmake -Dkst_release=1 -Dkst_merge_files=1 -Dkst_version_string=$1 -Dkst_install_prefix=$kst_install_prefix
 	make -j4
 	make install
 	make package
