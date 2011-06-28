@@ -99,5 +99,6 @@
         <file>read-to-end.png</file>
         <file>new-log-event.png</file>
         <file>save-vectors.png</file>
+        <file>themes.png</file>
     </qresource>
 </RCC>

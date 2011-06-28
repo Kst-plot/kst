@@ -1224,7 +1224,7 @@ void MainWindow::createActions() {
 
   _themeDialogAct = new QAction(tr("&Theme"), this);
   _themeDialogAct->setStatusTip(tr("Show Kst's Theme Dialog"));
-  _themeDialogAct->setIcon(QPixmap(":configure.png"));
+  _themeDialogAct->setIcon(QPixmap(":themes.png"));
   connect(_themeDialogAct, SIGNAL(triggered()), this, SLOT(showThemeDialog()));
 
   // *********************** Help actions ************************************** //
