@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # $1 = path to kst/cmake
-# $2 = package name
+# $2 = version name, for instance 2.0.4-beta2
 cmake $1 -Dkst_merge_files=1 -Dkst_3rdparty=1 -Dkst_dataobjects=1 -Dkst_version_string=$2 -Dkst_release=1
 
 make -j4
