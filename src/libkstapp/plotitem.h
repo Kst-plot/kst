@@ -283,6 +283,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     virtual void _initializeShortName();
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   Q_SIGNALS:

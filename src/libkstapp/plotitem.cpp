@@ -2757,26 +2757,33 @@ void PlotItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (checkBox().contains(event->pos())) {
       setTiedZoom(!isTiedZoom(), !isTiedZoom());
       ViewItem::mousePressEvent(event);
-    } else if (view()->viewMode() == View::Data) {
-      PlotClickEditRegion region = CONTENT;
-      if (event->pos().x() - rect().left() < leftLabelMargin()) {
-        region = LABEL;
-      } else if (event->pos().y() - rect().top()< topLabelMargin()) {
-        region = LABEL;
-      } else if (rect().right()-event->pos().x() < rightLabelMargin()) {
-        region = LABEL;
-      } else if (rect().bottom()-event->pos().y() < bottomLabelMargin()) {
-        region = LABEL;
-      } else if (rect().bottom()-event->pos().y() < bottomMarginSize()) {
-        region = XAXIS;
-      } else if (event->pos().x() - rect().left() < leftMarginSize()) {
-        region = YAXIS;
-      }
-      edit(region);
     } else {
       ViewItem::mousePressEvent(event);
     }
   } 
+}
+
+
+void PlotItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+  if (event->button() == Qt::LeftButton && view()->viewMode() == View::Data) {
+    PlotClickEditRegion region = CONTENT;
+    if (event->pos().x() - rect().left() < leftLabelMargin()) {
+      region = LABEL;
+    } else if (event->pos().y() - rect().top()< topLabelMargin()) {
+      region = LABEL;
+    } else if (rect().right()-event->pos().x() < rightLabelMargin()) {
+      region = LABEL;
+    } else if (rect().bottom()-event->pos().y() < bottomLabelMargin()) {
+      region = LABEL;
+    } else if (rect().bottom()-event->pos().y() < bottomMarginSize()) {
+      region = XAXIS;
+    } else if (event->pos().x() - rect().left() < leftMarginSize()) {
+      region = YAXIS;
+    }
+    edit(region);
+  } else {
+    ViewItem::mouseDoubleClickEvent(event);
+  }
 }
 
 
