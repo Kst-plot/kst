@@ -67,8 +67,13 @@ void ScalarSelector::emitSelectionChanged() {
 
 void ScalarSelector::setDefaultValue(double value) {
  QString string = QString::number(value);
- _scalar->addItem(string, qVariantFromValue(0));
- _scalar->setCurrentIndex(_scalar->findText(string));
+ int index = _scalar->findText(string);
+ if (index<0) {
+   _scalar->addItem(string, qVariantFromValue(0));
+   _scalar->setCurrentIndex(_scalar->findText(string));
+ } else {
+   _scalar->setCurrentIndex(index);
+ }
  _defaultsSet = true;
 }
 
@@ -149,12 +154,14 @@ void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
       break;
     }
   }
-  Q_ASSERT(i != -1);
 
-  _scalar->setCurrentIndex(i);
-  _defaultsSet = false;
+  if (i==-1) {
+    setDefaultValue(selectedScalar->value());
+  } else {
+    _scalar->setCurrentIndex(i);
+    _defaultsSet = false;
+  }
 }
-
 
 void ScalarSelector::newScalar() {
   QString scalarName;
@@ -201,7 +208,9 @@ void ScalarSelector::fillScalars() {
     ScalarPtr scalar = (*it);
 
     scalar->readLock();
-    scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
+    if (!scalar->orphan()) {
+      scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
+    }
     scalar->unlock();
   }
 
@@ -209,6 +218,7 @@ void ScalarSelector::fillScalars() {
 
   qSort(list);
 
+  QString current_text = _scalar->currentText();
   ScalarPtr current = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));;
 
   _scalar->clear();
@@ -220,8 +230,13 @@ void ScalarSelector::fillScalars() {
   _scalarListSelector->clear();
   _scalarListSelector->fillScalars(list);
 
-  if (current)
+  if (current) {
     setSelectedScalar(current);
+  } else {
+    _scalar->addItem(current_text, qVariantFromValue(0));
+    _scalar->setCurrentIndex(_scalar->findText(current_text));
+    _defaultsSet = true;
+  }
 
   _editScalar->setEnabled(_scalar->count() > 0);
   _selectScalar->setEnabled(_scalar->count() > 0);

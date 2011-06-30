@@ -140,9 +140,12 @@ bool CurvePlacement::event(QEvent * event) {
 
 void CurvePlacement::setCurrentPlot(const PlotItemInterface *currentPlot) {
   if (currentPlot) {
-    int index = _plotList->findText(currentPlot->plotName());
-    if (index >= 0) {
-      _plotList->setCurrentIndex(index);
+    int n = _plotList->count();
+    for (int i=0; i<n; ++i ) {
+      if (qVariantValue<PlotItemInterface*>(_plotList->itemData(i))->plotName() == currentPlot->plotName()) {
+        _plotList->setCurrentIndex(i);
+        return;
+      }
     }
   }
 }

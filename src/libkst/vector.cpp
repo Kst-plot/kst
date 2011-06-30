@@ -382,6 +382,7 @@ void Vector::internalUpdate() {
   double sum, sum2, last, first, v;
   double last_v;
   double dv2 = 0.0, dv, no_spike_max_dv;
+  const double epsilon=1e-300;
 
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
   _nsum = 0;
@@ -420,7 +421,7 @@ void Vector::internalUpdate() {
     _max = _min = _v[i0];
     sum = sum2 = 0.0;
 
-    if (_v[i0] > 0.0) {
+    if (_v[i0] > epsilon) {
       _minPos = _v[i0];
     } else {
       _minPos = 1.0E300;
@@ -452,7 +453,7 @@ void Vector::internalUpdate() {
         } else if (v < _min) {
           _min = v;
         }
-        if (v < _minPos && v > 0.0) {
+        if (v < _minPos && v > epsilon) {
           _minPos = v;
         }
       } else {

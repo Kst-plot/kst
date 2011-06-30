@@ -155,7 +155,7 @@ void PSD::internalUpdate() {
   for (i_samp = 0; i_samp < _PSDLength; ++i_samp) {
     f[i_samp] = i_samp * 0.5 * _Frequency / (_PSDLength - 1);
   }
-  f[0] = 0.0; // really 0! (this shouldn't be needed...
+  //f[0] = -1E-280; // really 0 (this shouldn't be needed...)
 
   _psdCalculator.calculatePowerSpectrum(iv->value(), v_len, psd, _PSDLength, _RemoveMean,  _interpolateHoles, _Average, _averageLength, _Apodize, _apodizeFxn, _gaussianSigma, _Output, _Frequency);
 
