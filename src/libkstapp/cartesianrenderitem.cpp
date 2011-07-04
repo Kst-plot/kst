@@ -47,8 +47,8 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.penWidth = painter->pen().width(); //floating point??
     context.xLog = plotItem()->xAxis()->axisLog();
     context.yLog = plotItem()->yAxis()->axisLog();
-    context.xLogBase = 10.0/*plotItem()->xLogBase()*/;
-    context.yLogBase = 10.0/*plotItem()->yLogBase()*/;
+    context.xLogBase = 10.0;
+    context.yLogBase = 10.0;
     context.foregroundColor = painter->pen().color();
     context.backgroundColor = painter->brush().color();
 

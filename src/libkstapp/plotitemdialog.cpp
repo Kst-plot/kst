@@ -708,6 +708,7 @@ void PlotItemDialog::xAxisChanged() {
     _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->xAxis()->isDirty());
     _plotItem->setManuallyHideBottomAxisLabel(_xAxisTab->hideBottomLeft());
     _plotItem->setManuallyHideTopAxisLabel(_xAxisTab->hideTopRight());
+    _plotItem->setProjectionRect(_plotItem->computedProjectionRect(), true); //need to recompute
   }
   kstApp->mainWindow()->document()->setChanged(true);
 }
@@ -732,6 +733,7 @@ void PlotItemDialog::yAxisChanged() {
     _plotItem->setProjectionRect(_plotItem->projectionRect(), _plotItem->yAxis()->isDirty());
     _plotItem->setManuallyHideLeftAxisLabel(_yAxisTab->hideBottomLeft());
     _plotItem->setManuallyHideRightAxisLabel(_yAxisTab->hideTopRight());
+    _plotItem->setProjectionRect(_plotItem->computedProjectionRect(), true); //need to recompute
   }
   kstApp->mainWindow()->document()->setChanged(true);
 }
