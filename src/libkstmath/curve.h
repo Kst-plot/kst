@@ -100,20 +100,21 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual void setHasHead(bool in_HasHead);
     virtual void setLineWidth(int in_LineWidth);
     virtual void setLineStyle(int in_LineStyle);
-    virtual void setBarStyle( int in_BarStyle);
     virtual void setPointDensity(int in_PointDensity);
     virtual void setPointType(int in_PointType);
     virtual void setHeadType(int in_HeadType);
 
     virtual int lineWidth()     const { return LineWidth; }
     virtual int lineStyle()     const { return LineStyle; }
-    virtual int barStyle()      const { return BarStyle; }
     virtual int pointDensity()  const { return PointDensity; }
     virtual int pointType()  const { return PointType; }
     virtual int headType()  const { return HeadType; }
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);
+
+    virtual QColor barFillColor() const { return BarFillColor; }
+    virtual void setBarFillColor(const QColor& new_c);
 
     virtual QColor headColor() const { return HeadColor; }
     virtual void setHeadColor(const QColor& new_c);
@@ -175,7 +176,6 @@ class KSTMATH_EXPORT Curve: public Relation
   private:
     double MeanY;
 
-    int BarStyle;
     int LineWidth;
     int LineStyle;
     int PointDensity;
@@ -189,6 +189,7 @@ class KSTMATH_EXPORT Curve: public Relation
 
     QColor Color;
     QColor HeadColor;
+    QColor BarFillColor;
 
 #if 0
     QStack<int> _widthStack;

@@ -33,9 +33,10 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   Q_ASSERT(store);
 
-  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, barStyle=0, headType=0;
+  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, headType=0;
   QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName;
   QString errorYMinusVectorName, color, headColor;
+  QString barFillColor;
   QString descriptiveName;
   bool hasLines=true, hasPoints=false, hasBars=false, ignoreAutoScale=false, hasHead=false;
 
@@ -49,6 +50,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         legend = attrs.value("legend").toString();
         color = attrs.value("color").toString();
         headColor = attrs.value("headcolor").toString();
+        barFillColor = attrs.value("barfillcolor").toString();
 
         errorXVectorName = attrs.value("errorxvector").toString();
         errorYVectorName = attrs.value("erroryvector").toString();
@@ -66,9 +68,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         hasHead = attrs.value("hashead").toString() == "true" ? true : false;
         headType = attrs.value("headtype").toString().toInt();
 
-
         hasBars = attrs.value("hasbars").toString() == "true" ? true : false;
-        barStyle = attrs.value("barstyle").toString().toInt();
 
         ignoreAutoScale = attrs.value("ignoreautoscale").toString() == "true" ? true : false;
 
@@ -145,6 +145,11 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setYMinusError(errorYMinusVector);
   curve->setColor(QColor(color));
   curve->setHeadColor(QColor(headColor));
+  if (barFillColor.isEmpty()) {
+    curve->setBarFillColor(curve->color());
+  } else {
+    curve->setBarFillColor(QColor(barFillColor));
+  }
   curve->setHasPoints(hasPoints);
   curve->setHasLines(hasLines);
   curve->setHasBars(hasBars);
@@ -154,7 +159,6 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setPointType(pointType);
   curve->setHeadType(headType);
   curve->setPointDensity(pointDensity);
-  curve->setBarStyle(barStyle);
 
   curve->setDescriptiveName(descriptiveName);
 

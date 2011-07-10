@@ -227,6 +227,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->setYVector(powerspectrum->vY());
   curve->setColor(_powerSpectrumTab->curveAppearance()->color());
   curve->setHeadColor(_powerSpectrumTab->curveAppearance()->headColor());
+  curve->setBarFillColor(_powerSpectrumTab->curveAppearance()->barFillColor());
   curve->setHasPoints(_powerSpectrumTab->curveAppearance()->showPoints());
   curve->setHasLines(_powerSpectrumTab->curveAppearance()->showLines());
   curve->setHasBars(_powerSpectrumTab->curveAppearance()->showBars());
@@ -236,7 +237,6 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->setPointType(_powerSpectrumTab->curveAppearance()->pointType());
   curve->setHeadType(_powerSpectrumTab->curveAppearance()->headType());
   curve->setPointDensity(_powerSpectrumTab->curveAppearance()->pointDensity());
-  curve->setBarStyle(_powerSpectrumTab->curveAppearance()->barStyle());
 
   curve->writeLock();
   curve->registerChange();

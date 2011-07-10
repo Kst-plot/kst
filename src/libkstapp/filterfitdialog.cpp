@@ -262,7 +262,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
     curve->setLineStyle(_filterFitTab->curveAppearance()->lineStyle());
     curve->setPointType(_filterFitTab->curveAppearance()->pointType());
     curve->setPointDensity(_filterFitTab->curveAppearance()->pointDensity());
-    curve->setBarStyle(_filterFitTab->curveAppearance()->barStyle());
+    curve->setBarFillColor(_filterFitTab->curveAppearance()->barFillColor());
 
     curve->writeLock();
     curve->registerChange();

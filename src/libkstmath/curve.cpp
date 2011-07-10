@@ -72,7 +72,6 @@ Curve::Curve(ObjectStore *store)
   setHasLines(true);
   setLineWidth(1);
   setLineStyle(0);
-  setBarStyle(0);
   setPointDensity(0);
 
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
@@ -82,6 +81,7 @@ Curve::Curve(ObjectStore *store)
   _initializeShortName();
   Color = QColor();
   HeadColor = QColor();
+  BarFillColor = QColor();
 }
 
 void Curve::_initializeShortName() {
@@ -292,6 +292,7 @@ void Curve::save(QXmlStreamWriter &s) {
   }
   s.writeAttribute("color", Color.name());
   s.writeAttribute("headcolor", HeadColor.name());
+  s.writeAttribute("barfillcolor", BarFillColor.name());
 
   s.writeAttribute("haslines", QVariant(HasLines).toString());
   s.writeAttribute("linewidth", QString::number(LineWidth));
@@ -302,7 +303,6 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("pointdensity", QString::number(PointDensity));
 
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
-  s.writeAttribute("barstyle", QString::number(BarStyle));
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
 
   s.writeAttribute("hashead", QVariant(HasHead).toString());
@@ -578,11 +578,6 @@ void Curve::setLineStyle(int in_LineStyle) {
 }
 
 
-void Curve::setBarStyle(int in_BarStyle) {
-  BarStyle = in_BarStyle;
-}
-
-
 void Curve::setPointDensity(int in_PointDensity) {
   PointDensity = in_PointDensity;
 }
@@ -606,6 +601,9 @@ void Curve::setHeadColor(const QColor& new_c) {
   HeadColor = new_c;
 }
 
+void Curve::setBarFillColor(const QColor &new_c) {
+  BarFillColor = new_c;
+}
 
 double Curve::maxX() const {
   if (hasBars() && sampleCount() > 0) {
@@ -646,6 +644,7 @@ RelationPtr Curve::makeDuplicate() const {
 
   curve->setColor(Color);
   curve->setHeadColor(HeadColor);
+  curve->setBarFillColor(BarFillColor);
   curve->setHasPoints(HasPoints);
   curve->setHasLines(HasLines);
   curve->setHasBars(HasBars);
@@ -654,7 +653,6 @@ RelationPtr Curve::makeDuplicate() const {
   curve->setLineStyle(LineStyle);
   curve->setPointType(PointDensity);
   curve->setPointDensity(PointDensity);
-  curve->setBarStyle(BarStyle);
 
   curve->writeLock();
   curve->registerChange();
@@ -672,14 +670,15 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 
   if (hasBars()) {
-    if (barStyle() == 1) { // filled
-      p->setPen(QPen(context.foregroundColor, _width, style));
-    } else {
-      p->setPen(QPen(color(), _width, style));
-    }
+
+    //if (barStyle() == 1) { // filled
+      p->setPen(QPen(barFillColor(), _width, style));
+    //} else {
+      //p->setPen(QPen(color(), _width, style));
+    //}
 
     foreach(const QRectF& rect, _filledRects) {
-        p->fillRect(rect, color());
+        p->fillRect(rect, barFillColor());
     }
   }
   p->setPen(QPen(color(), _width, style));
@@ -1162,11 +1161,11 @@ qDebug() << "y not in bounds"
         if (visible) {
           QRectF rect(X1, Y1, X2 - X1, Y2 - Y1);
           if (!lastRect.contains(rect)) {
-            if (barStyle() == 1) { // filled
+            //if (barStyle() == 1) { // filled
               _filledRects.append(rect);
-            } else {
+            //} else {
               _rects.append(rect);
-            }
+            //}
             lastRect = rect;
 #ifdef BENCHMARK
             ++numberOfBarsDrawn;

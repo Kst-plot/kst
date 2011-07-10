@@ -312,7 +312,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setPointType(_equationTab->curveAppearance()->pointType());
   curve->setHeadType(_equationTab->curveAppearance()->headType());
   curve->setPointDensity(_equationTab->curveAppearance()->pointDensity());
-  curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
+  curve->setBarFillColor(_equationTab->curveAppearance()->barFillColor());
 
   curve->writeLock();
   curve->registerChange();

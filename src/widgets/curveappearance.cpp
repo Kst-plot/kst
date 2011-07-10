@@ -40,6 +40,7 @@ CurveAppearance::CurveAppearance(QWidget *parent)
 
   connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
   connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
+  connect(_barFillColor, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
   connect(_showLines, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showPoints, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showHead, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
@@ -47,10 +48,11 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_comboLineStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(drawSampleLine()));
-  connect(_barStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
 
   connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_headColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_barFillColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
   connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showHead, SIGNAL(clicked()), this, SIGNAL(modified()));
@@ -59,7 +61,6 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_comboLineStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_barStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
   connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
@@ -123,7 +124,7 @@ void CurveAppearance::enableSettings() {
 
   enable = showLines() || showBars();
   _comboLineStyle->setEnabled(enable);
-  _textLabelLineStyle->setEnabled(enable);
+  //_textLabelLineStyle->setEnabled(enable);
 
   enable = enable || showPoints();
   _textLabelWeight->setEnabled(enable);
@@ -131,7 +132,7 @@ void CurveAppearance::enableSettings() {
 
   enable = showBars();
   _textLabelBarStyle->setEnabled(enable);
-  _barStyle->setEnabled(enable);
+  _barFillColor->setEnabled(enable);
 
   enable = showPoints();
   _textLabelPointStyle->setEnabled(enable);
@@ -144,6 +145,7 @@ void CurveAppearance::enableSettings() {
   enable = showHead();
   _textLabelHeadStyle->setEnabled(enable);
   _comboHeadSymbol->setEnabled(enable);
+  _headColor->setEnabled(enable);
 
 }
 
@@ -250,6 +252,23 @@ void CurveAppearance::setHeadColor(const QColor & c) {
 }
 
 
+QColor CurveAppearance::barFillColor() const {
+  return _barFillColor->color();
+}
+
+
+bool CurveAppearance::barFillColorDirty() const {
+  return _barFillColor->colorDirty();
+}
+
+
+void CurveAppearance::setBarFillColor(const QColor & c) {
+  _barFillColor->setColor(c);
+  enableSettings();
+  drawSampleLine();
+}
+
+
 
 int CurveAppearance::pointType() const {
   return _comboPointSymbol->currentIndex();
@@ -304,23 +323,6 @@ void CurveAppearance::setLineStyle(int lineStyle) {
 }
 
 
-int CurveAppearance::barStyle() const {
- return _barStyle->currentIndex();
-}
-
-
-bool CurveAppearance::barStyleDirty() const {
-  return _barStyle->currentIndex() != -1;
-}
-
-
-void CurveAppearance::setBarStyle(const int barStyle) {
-  _barStyle->setCurrentIndex(barStyle);
-  enableSettings();
-  drawSampleLine();
-}
-
-
 int CurveAppearance::pointDensity() const {
   return _comboPointDensity->currentIndex();
 }
@@ -365,12 +367,12 @@ void CurveAppearance::setLineWidth(const int lineWidth) {
 void CurveAppearance::clearValues() {
   _color->clearSelection();
   _headColor->clearSelection();
+  _barFillColor->clearSelection();
   _spinBoxLineWidth->clear();
   _comboHeadSymbol->setCurrentIndex(-1);
   _comboPointSymbol->setCurrentIndex(-1);
   _comboPointDensity->setCurrentIndex(-1);
   _comboLineStyle->setCurrentIndex(-1);
-  _barStyle->setCurrentIndex(-1);
   _showPoints->setCheckState(Qt::PartiallyChecked);
   _showLines->setCheckState(Qt::PartiallyChecked);
   _showBars->setCheckState(Qt::PartiallyChecked);
@@ -440,12 +442,9 @@ void CurveAppearance::drawSampleLine() {
                   pix.height(),
                   (pix.height()/2)+1);
 
-    if (barStyle() == 1) {
-      p.fillRect(rectBar,QBrush(QColor(color())));
-      p.setPen(QPen(QColor("black"),lineWidth(), LineStyle[lineStyle()]));
-    } else {
-      p.setPen(pen);
-    }
+
+    p.fillRect(rectBar,QBrush(QColor(barFillColor())));
+    p.setPen(QPen(QColor(color()),lineWidth(), LineStyle[lineStyle()]));
     p.drawRect(rectBar);
   }
 
@@ -496,7 +495,6 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
   _dialogDefaults->setValue("curves/pointType", pointType());
   _dialogDefaults->setValue("curves/headType", headType());
   _dialogDefaults->setValue("curves/pointDensity", pointDensity());
-  _dialogDefaults->setValue("curves/barStyle", barStyle());
   _dialogDefaults->setValue("curves/showHead", showHead());
 }
 
@@ -505,6 +503,8 @@ void CurveAppearance::loadWidgetDefaults() {
   setColor(ColorSequence::self().current());
   ColorSequence::self().next();
   setHeadColor(ColorSequence::self().current());
+  ColorSequence::self().next();
+  setBarFillColor(ColorSequence::self().current());
 
   setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
   setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());
@@ -515,7 +515,6 @@ void CurveAppearance::loadWidgetDefaults() {
   setPointType(_dialogDefaults->value("curves/pointType",0).toInt());
   setHeadType(_dialogDefaults->value("curves/headType",0).toInt());
   setPointDensity(_dialogDefaults->value("curves/pointDensity",0).toInt());
-  setBarStyle(_dialogDefaults->value("curves/barStyle",0).toInt());
 }
 
 }

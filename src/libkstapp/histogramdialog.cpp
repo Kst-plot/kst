@@ -59,16 +59,15 @@ HistogramTab::HistogramTab(QWidget *parent)
   _vectorLabel->setBuddy(_vector->_vector);
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
+
+  _curveAppearance->loadWidgetDefaults();
+
   _curveAppearance->setShowLines(false);
   _curveAppearance->setShowPoints(false);
   _curveAppearance->setShowHead(false);
   _curveAppearance->setShowBars(true);
-  _curveAppearance->setColor(_curveAppearance->color());
-  _curveAppearance->setPointType(0);
-  _curveAppearance->setLineWidth(0);
-  _curveAppearance->setLineStyle(0);
-  _curveAppearance->setBarStyle(1);
   _curveAppearance->setPointDensity(0);
+  _curveAppearance->setColor(_dialogDefaults->value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>());
 }
 
 
@@ -372,6 +371,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->setYVector(histogram->vY());
   curve->setColor(_histogramTab->curveAppearance()->color());
   curve->setHeadColor(_histogramTab->curveAppearance()->headColor());
+  curve->setBarFillColor(_histogramTab->curveAppearance()->barFillColor());
   curve->setHasPoints(_histogramTab->curveAppearance()->showPoints());
   curve->setHasLines(_histogramTab->curveAppearance()->showLines());
   curve->setHasBars(_histogramTab->curveAppearance()->showBars());
@@ -381,7 +381,6 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->setPointType(_histogramTab->curveAppearance()->pointType());
   curve->setHeadType(_histogramTab->curveAppearance()->headType());
   curve->setPointDensity(_histogramTab->curveAppearance()->pointDensity());
-  curve->setBarStyle(_histogramTab->curveAppearance()->barStyle());
 
   curve->writeLock();
   curve->registerChange();

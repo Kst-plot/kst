@@ -6,15 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>482</width>
-    <height>199</height>
+    <width>410</width>
+    <height>177</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
     <widget class="QGroupBox" name="GroupBox9_2_2_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -31,195 +28,36 @@
      <property name="title">
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" name="_2">
-      <item row="0" column="0" colspan="7">
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QLabel" name="_label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>160</width>
-            <height>16</height>
-           </size>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="scaledContents">
-           <bool>true</bool>
-          </property>
-          <property name="wordWrap">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Kst::ColorButton" name="_color">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QCheckBox" name="_showPoints">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="_label">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="whatsThis">
-         <string>Check this to cause the selected points to be drawn at each data point.</string>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>16</height>
+         </size>
         </property>
-        <property name="text">
-         <string>Show po&amp;ints</string>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="3">
-       <widget class="QCheckBox" name="_showLines">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
         </property>
-        <property name="whatsThis">
-         <string>Check this to cause lines to be drawn between data points.</string>
-        </property>
-        <property name="text">
-         <string>Show &amp;lines</string>
-        </property>
-        <property name="checked">
+        <property name="scaledContents">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="3">
-       <widget class="QCheckBox" name="_showBars">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string>Check this to cause lines to be drawn between data points.</string>
-        </property>
-        <property name="text">
-         <string>&amp;Bargraph</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="_showHead">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Show &amp;head</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="5">
-       <widget class="Kst::ColorButton" name="_headColor">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="4">
-       <widget class="QComboBox" name="_comboHeadSymbol"/>
-      </item>
-      <item row="4" column="3">
-       <widget class="QLabel" name="_textLabelHeadStyle">
-        <property name="text">
-         <string>&amp;Type:</string>
-        </property>
-        <property name="buddy">
-         <cstring>_comboHeadSymbol</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4" colspan="3">
-       <widget class="QComboBox" name="_barStyle">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Line Type</string>
-        </property>
-        <property name="whatsThis">
-         <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Lines</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Solid</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QLabel" name="_textLabelBarStyle">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>&amp;Type:</string>
         </property>
         <property name="wordWrap">
          <bool>false</bool>
         </property>
-        <property name="buddy">
-         <cstring>_barStyle</cstring>
-        </property>
        </widget>
       </item>
-      <item row="2" column="6">
+      <item row="1" column="5">
        <widget class="QSpinBox" name="_spinBoxLineWidth">
         <property name="toolTip">
          <string>Line Width</string>
@@ -232,37 +70,56 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="5">
-       <widget class="QLabel" name="_textLabelWeight">
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="_showLines">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Check this to cause lines to be drawn between data points.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Lines</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QCheckBox" name="_showPoints">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Check this to cause the selected points to be drawn at each data point.</string>
+        </property>
+        <property name="text">
+         <string>Po&amp;ints</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QCheckBox" name="_showHead">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Weight:</string>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="buddy">
-         <cstring>_spinBoxLineWidth</cstring>
+         <string>&amp;Head</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
-       <widget class="QComboBox" name="_comboLineStyle">
-        <property name="toolTip">
-         <string>Line Type</string>
-        </property>
-        <property name="whatsThis">
-         <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="_textLabelLineStyle">
+      <item row="4" column="2">
+       <widget class="QLabel" name="_textLabelPointStyle">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -276,11 +133,43 @@
          <bool>false</bool>
         </property>
         <property name="buddy">
-         <cstring>_comboLineStyle</cstring>
+         <cstring>_comboPointSymbol</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="4" column="3">
+       <widget class="QComboBox" name="_comboPointSymbol">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Point Type</string>
+        </property>
+        <property name="whatsThis">
+         <string>If &quot;Show Points&quot; is checked, the selected point type will be drawn at each data point.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLabel" name="_textLabelPointDensity">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>&amp;Density:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="buddy">
+         <cstring>_comboPointDensity</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="5">
        <widget class="QComboBox" name="_comboPointDensity">
         <property name="enabled">
          <bool>false</bool>
@@ -313,54 +202,113 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="5">
-       <widget class="QLabel" name="_textLabelPointDensity">
+      <item row="7" column="2">
+       <widget class="QLabel" name="_textLabelHeadStyle">
+        <property name="text">
+         <string>&amp;Type:</string>
+        </property>
+        <property name="buddy">
+         <cstring>_comboHeadSymbol</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QComboBox" name="_comboHeadSymbol"/>
+      </item>
+      <item row="7" column="4">
+       <widget class="Kst::ColorButton" name="_headColor">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="2">
+       <widget class="QCheckBox" name="_showBars">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>Check this to cause lines to be drawn between data points.</string>
+        </property>
+        <property name="text">
+         <string>&amp;Bargraph</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QLabel" name="_textLabelBarStyle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Density:</string>
+         <string>Fill:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="wordWrap">
          <bool>false</bool>
         </property>
-        <property name="buddy">
-         <cstring>_comboPointDensity</cstring>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="Kst::ColorButton" name="_barFillColor">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QComboBox" name="_comboPointSymbol">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Point Type</string>
-        </property>
-        <property name="whatsThis">
-         <string>If &quot;Show Points&quot; is checked, the selected point type will be drawn at each data point.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="_textLabelPointStyle">
+       <widget class="QLabel" name="_textLabelWeight">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Type:</string>
+         <string>&amp;Weight:</string>
         </property>
         <property name="wordWrap">
          <bool>false</bool>
         </property>
         <property name="buddy">
-         <cstring>_comboPointSymbol</cstring>
+         <cstring>_spinBoxLineWidth</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QComboBox" name="_comboLineStyle">
+        <property name="toolTip">
+         <string>Line Type</string>
+        </property>
+        <property name="whatsThis">
+         <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="Kst::ColorButton" name="_color">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>
@@ -378,15 +326,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>_color</tabstop>
   <tabstop>_showPoints</tabstop>
-  <tabstop>_comboPointSymbol</tabstop>
-  <tabstop>_comboPointDensity</tabstop>
-  <tabstop>_showLines</tabstop>
-  <tabstop>_comboLineStyle</tabstop>
-  <tabstop>_spinBoxLineWidth</tabstop>
-  <tabstop>_showBars</tabstop>
-  <tabstop>_barStyle</tabstop>
  </tabstops>
  <includes>
   <include location="global">kst_export.h</include>

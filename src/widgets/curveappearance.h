@@ -66,9 +66,9 @@ class KSTWIDGETS_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppear
     bool lineWidthDirty() const;
     void setLineWidth(const int lineWidth);
 
-    int barStyle() const;
-    bool barStyleDirty() const;
-    void setBarStyle(const int barStyle);
+    QColor barFillColor() const;
+    bool barFillColorDirty() const;
+    void setBarFillColor(const QColor &c);
 
     int pointDensity() const;
     bool pointDensityDirty() const;

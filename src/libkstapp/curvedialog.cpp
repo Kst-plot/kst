@@ -343,7 +343,7 @@ void CurveDialog::configureTab(ObjectPtr object) {
     _curveTab->curveAppearance()->setLineStyle(curve->lineStyle());
     _curveTab->curveAppearance()->setPointType(curve->pointType());
     _curveTab->curveAppearance()->setPointDensity(curve->pointDensity());
-    _curveTab->curveAppearance()->setBarStyle(curve->barStyle());
+    _curveTab->curveAppearance()->setBarFillColor(curve->barFillColor());
     _curveTab->curveAppearance()->setHeadType(curve->headType());
     _curveTab->hidePlacementOptions();
     if (_editMultipleWidget) {
@@ -389,7 +389,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
   curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
   curve->setPointType(_curveTab->curveAppearance()->pointType());
   curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
-  curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
+  curve->setBarFillColor(_curveTab->curveAppearance()->barFillColor());
   curve->setHeadType(_curveTab->curveAppearance()->headType());
   curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
 
@@ -483,12 +483,12 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
 
           QColor color = _curveTab->curveAppearance()->colorDirty() ? _curveTab->curveAppearance()->color() : curve->color();
           QColor headColor = _curveTab->curveAppearance()->headColorDirty() ? _curveTab->curveAppearance()->headColor() : curve->headColor();
+          QColor barFillColor = _curveTab->curveAppearance()->barFillColorDirty() ? _curveTab->curveAppearance()->barFillColor() : curve->barFillColor();
 
           int lineWidth = _curveTab->curveAppearance()->lineWidthDirty() ?  _curveTab->curveAppearance()->lineWidth() : curve->lineWidth();
           int lineStyle = _curveTab->curveAppearance()->lineStyleDirty() ?  _curveTab->curveAppearance()->lineStyle() : curve->lineStyle();
           int pointType = _curveTab->curveAppearance()->pointTypeDirty() ?  _curveTab->curveAppearance()->pointType() : curve->pointType();
           int pointDensity = _curveTab->curveAppearance()->pointDensityDirty() ?  _curveTab->curveAppearance()->pointDensity() : curve->pointDensity();
-          int barStyle = _curveTab->curveAppearance()->barStyleDirty() ?  _curveTab->curveAppearance()->barStyle() : curve->barStyle();
           int headType = _curveTab->curveAppearance()->headTypeDirty() ?  _curveTab->curveAppearance()->headType() : curve->headType();
 
           bool showPoints = _curveTab->curveAppearance()->showPointsDirty() ?  _curveTab->curveAppearance()->showPoints() : curve->hasPoints();
@@ -506,6 +506,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           curve->setYMinusError(yMinusError);
           curve->setColor(color);
           curve->setHeadColor(headColor);
+          curve->setBarFillColor(barFillColor);
           curve->setHasPoints(showPoints);
           curve->setHasLines(showLines);
           curve->setHasBars(showBars);
@@ -514,7 +515,6 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           curve->setLineStyle(lineStyle);
           curve->setPointType(pointType);
           curve->setPointDensity(pointDensity);
-          curve->setBarStyle(barStyle);
           curve->setHeadType(headType);
           curve->setIgnoreAutoScale(ignoreAutoScale);
           if (DataDialog::tagStringAuto()) {
@@ -537,6 +537,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setYMinusError(_curveTab->yMinusError());
       curve->setColor(_curveTab->curveAppearance()->color());
       curve->setHeadColor(_curveTab->curveAppearance()->headColor());
+      curve->setBarFillColor(_curveTab->curveAppearance()->barFillColor());
       curve->setHasPoints(_curveTab->curveAppearance()->showPoints());
       curve->setHasLines(_curveTab->curveAppearance()->showLines());
       curve->setHasBars(_curveTab->curveAppearance()->showBars());
@@ -545,7 +546,6 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
       curve->setPointType(_curveTab->curveAppearance()->pointType());
       curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
-      curve->setBarStyle(_curveTab->curveAppearance()->barStyle());
       curve->setHeadType(_curveTab->curveAppearance()->headType());
       curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
       if (DataDialog::tagStringAuto()) {
