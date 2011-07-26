@@ -54,8 +54,8 @@ SOURCES += \
     scalarselector.cpp \
     stringselector.cpp \
     vectorselector.cpp \
-    widgets.cpp
-
+    widgets.cpp \
+    cclineedit.cpp
 HEADERS += \
     colorbutton.h \
     colorpalette.h \
@@ -77,7 +77,9 @@ HEADERS += \
     scalarlistselector.h \
     stringselector.h \
     vectorselector.h \
-    widgets.h
+    widgets.h \
+    cclineedit.h \
+    cclineedit_p.h
 
 FORMS += \
     colorpalette.ui \

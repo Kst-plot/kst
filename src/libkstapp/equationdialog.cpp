@@ -31,25 +31,21 @@ EquationTab::EquationTab(QWidget *parent)
   : DataTab(parent) {
 
   setupUi(this);
-  setTabTitle(tr("Equation"));
 
   populateFunctionList();
+
+  setTabTitle(tr("Equation"));
 
   _curvePlacement->setExistingPlots(Data::self()->plotList());
 
   _xVectors->setIsX(true);
 
+  TextLabel1_11->setBuddy(_equation);
   _xVectorLabel->setBuddy(_xVectors->_vector);
-  _scalarsLabel->setBuddy(_scalars->_scalar);
-  _vectorsLabel->setBuddy(_vectors->_vector);
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
-  connect(Operators, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
-  connect(_vectors, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
-  connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
 
   connect(_xVectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
-  connect(_vectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
 
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
@@ -81,46 +77,61 @@ void EquationTab::equationOperatorUpdate(const QString& string) {
 
 
 void EquationTab::populateFunctionList() {
-  Operators->clear();
-  Operators->addItem("+");
-  Operators->addItem("-");
-  Operators->addItem("*");
-  Operators->addItem("/");
-  Operators->addItem("%");
-  Operators->addItem("^");
-  Operators->addItem("&");
-  Operators->addItem("|");
-  Operators->addItem("&&");
-  Operators->addItem("||");
-  Operators->addItem("!");
-  Operators->addItem("<");
-  Operators->addItem("<=");
-  Operators->addItem("==");
-  Operators->addItem(">=");
-  Operators->addItem(">");
-  Operators->addItem("!=");
-  Operators->addItem("PI");
-  Operators->addItem("e");
-  Operators->addItem("STEP()");
-  Operators->addItem("ABS()");
-  Operators->addItem("SQRT()");
-  Operators->addItem("CBRT()");
-  Operators->addItem("SIN()");
-  Operators->addItem("COS()");
-  Operators->addItem("TAN()");
-  Operators->addItem("ASIN()");
-  Operators->addItem("ACOS()");
-  Operators->addItem("ATAN()");
-  Operators->addItem("SEC()");
-  Operators->addItem("CSC()");
-  Operators->addItem("COT()");
-  Operators->addItem("SINH()");
-  Operators->addItem("COSH()");
-  Operators->addItem("TANH()");
-  Operators->addItem("EXP()");
-  Operators->addItem("LN()");
-  Operators->addItem("LOG()");
-  Operators->addItem("PLUGIN()");
+  QList<QString> Operators;
+  Operators.clear();
+  Operators.push_back("+");
+  Operators.push_back("-");
+  Operators.push_back("*");
+  Operators.push_back("/");
+  Operators.push_back("%");
+  Operators.push_back("^");
+  Operators.push_back("&");
+  Operators.push_back("|");
+  Operators.push_back("&&");
+  Operators.push_back("||");
+  Operators.push_back("!");
+  Operators.push_back("<");
+  Operators.push_back("<=");
+  Operators.push_back("==");
+  Operators.push_back(">=");
+  Operators.push_back(">");
+  Operators.push_back("!=");
+  Operators.push_back("PI");
+  Operators.push_back("e");
+  Operators.push_back("STEP()");
+  Operators.push_back("ABS()");
+  Operators.push_back("SQRT()");
+  Operators.push_back("CBRT()");
+  Operators.push_back("SIN()");
+  Operators.push_back("COS()");
+  Operators.push_back("TAN()");
+  Operators.push_back("ASIN()");
+  Operators.push_back("ACOS()");
+  Operators.push_back("ATAN()");
+  Operators.push_back("SEC()");
+  Operators.push_back("CSC()");
+  Operators.push_back("COT()");
+  Operators.push_back("SINH()");
+  Operators.push_back("COSH()");
+  Operators.push_back("TANH()");
+  Operators.push_back("EXP()");
+  Operators.push_back("LN()");
+  Operators.push_back("LOG()");
+  Operators.push_back("PLUGIN()");
+
+  QList<CompletionCase> data;
+  data.push_back(CompletionCase(""));
+  data.back().push_back(Category("Operators"));
+  data.back().push_back(Category("Functions"));
+  for(int i=0;i<Operators.count();i++) {
+      data.back()[Operators.at(i).contains("()")?1:0]<<Operators.at(i);
+  }
+  for(int i=0;i<data.back()[1].size();i++) {
+      data.back()[1][i].chop(1);
+  }
+  data.push_back(CompletionCase("\\["));    //block escaped brackets
+  _equation->init(data);
+
 }
 
 
@@ -180,8 +191,7 @@ CurvePlacement* EquationTab::curvePlacement() const {
 
 
 void EquationTab::setObjectStore(ObjectStore *store) {
-  _vectors->setObjectStore(store);
-  _scalars->setObjectStore(store);
+  _equation->setObjectStore(store);
   _xVectors->setObjectStore(store);
 }
 
@@ -201,8 +211,7 @@ void EquationTab::clearTabValues() {
 
 void EquationTab::updateVectorCombos() {
   _xVectors->fillVectors();
-  _vectors->fillVectors();
-  _scalars->fillScalars();
+  _equation->fillKstObjects();
 }
 
 EquationDialog::EquationDialog(ObjectPtr dataObject, QWidget *parent)
@@ -312,7 +321,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setPointType(_equationTab->curveAppearance()->pointType());
   curve->setHeadType(_equationTab->curveAppearance()->headType());
   curve->setPointDensity(_equationTab->curveAppearance()->pointDensity());
-  curve->setBarFillColor(_equationTab->curveAppearance()->barFillColor());
+  //curve->setBarStyle(_equationTab->curveAppearance()->barStyle());
 
   curve->writeLock();
   curve->registerChange();

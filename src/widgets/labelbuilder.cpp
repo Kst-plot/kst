@@ -37,8 +37,8 @@ LabelBuilder::LabelBuilder(QWidget *parent, ObjectStore *store)
   _label->setToolTip(tr("Label text.  A subset of LaTeX is supported.  See What's This."));
 
   connect(_label, SIGNAL(textChanged()), this, SIGNAL(labelChanged()));
-  connect(_strings, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
-  connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
+
+  _label->setFocus();
 }
 
 
@@ -48,8 +48,7 @@ LabelBuilder::~LabelBuilder() {
 
 void LabelBuilder::setObjectStore(ObjectStore *store) {
   _store = store;
-  _scalars->setObjectStore(store);
-  _strings->setObjectStore(store);
+  _label->setObjectStore(store);
 }
 
 
@@ -62,12 +61,6 @@ void LabelBuilder::setLabelText(const QString &label) {
   _label->setPlainText(label);
 }
 
-
-void LabelBuilder::labelUpdate(const QString& string) {
-  QString label = _label->toPlainText();
-  label += '[' + string + ']';
-  _label->setPlainText(label);
-}
 
 }
 

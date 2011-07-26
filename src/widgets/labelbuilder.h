@@ -38,9 +38,6 @@ class KSTWIDGETS_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
   Q_SIGNALS:
     void labelChanged();
 
-  private Q_SLOTS:
-    void labelUpdate(const QString&);
-
   private:
     ObjectStore *_store;
 };
