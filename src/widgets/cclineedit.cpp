@@ -467,6 +467,72 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
             _allData->push_back((*add)[i]);
         }
     }
+    _allData->push_back(CompletionCase("\\"));
+
+    /*<qt>The syntax for labels is a derivative of a subset of LaTeX.  "
+    "Supported syntax is: <b>\\[greeklettername]</b> and <b>\\[Greeklettername]</b>, "
+    "<b>\\approx</b>, <b>\\cdot</b>, <b>\\ge</b>, <b>\\geq</b>, <b>\\inf</b> ,"
+    "<b>\\int</b>, <b>\\le</b>, <b>\\leq</b>, <b>\\ne</b>, <b>\\n</b>, "
+    "<b>\\partial</b>, <b>\\prod</b>, <b>\\pm</b>, "
+    "<b>\\textcolor{color name}{colored text}</b>, <b>\\textbf{bold text}</b>, "
+    "<b>\\textit{italicized text}</b>, <b>\\t</b>, <b>\\sum</b>, <b>\\sqrt</b>, "
+    "<b>\\underline{underlined text}</b>, <b>\\overline{overlined text}</b>, "
+    "<b>x^y</b>, <b>x_y</b>.  "
+    "Scalars, equations, and vector elements can be embedded.  "
+    "Scalar: <i>[V1/Mean]</i>.  Vector Element: <i>[V1[4]]</i>.  "
+    "Equation: <i>[=[V1/Mean]^2]</i>.  A [ character can be inserted as <i>\\[</i>.*/
+
+    _allData->back().push_back(Category("Greek Letter Names"));
+    _allData->back().back().push_back("Alpha");
+    _allData->back().back().push_back("Beta");
+    _allData->back().back().push_back("Gamma");
+    _allData->back().back().push_back("Delta");
+    _allData->back().back().push_back("Epsilon");
+    _allData->back().back().push_back("Zeta");
+    _allData->back().back().push_back("Eta");
+    _allData->back().back().push_back("Theta");
+    _allData->back().back().push_back("Iota");
+    _allData->back().back().push_back("Kappa");
+    _allData->back().back().push_back("Lambda");
+    _allData->back().back().push_back("Mu");
+    _allData->back().back().push_back("Nu");
+    _allData->back().back().push_back("Xi");
+    _allData->back().back().push_back("Omicron");
+    _allData->back().back().push_back("Pi");
+    _allData->back().back().push_back("Rho");
+    _allData->back().back().push_back("Sigma");
+    _allData->back().back().push_back("Tau");
+    _allData->back().back().push_back("Upsilon");
+    _allData->back().back().push_back("Phi");
+    _allData->back().back().push_back("Chi");
+    _allData->back().back().push_back("Psi");
+    _allData->back().back().push_back("Omega");
+    _allData->back().push_back(Category("Math Symbols"));
+    _allData->back().back().push_back("Approx");
+    _allData->back().back().push_back("Cdot");
+    _allData->back().back().push_back("Epsilon");
+    _allData->back().back().push_back("Ell");
+    _allData->back().back().push_back("Geq");
+    _allData->back().back().push_back("Ge");
+    _allData->back().back().push_back("Inf");
+    _allData->back().back().push_back("Int");
+    _allData->back().back().push_back("Leq");
+    _allData->back().back().push_back("Le");
+    _allData->back().back().push_back("Nu");
+    _allData->back().back().push_back("Ne");
+    _allData->back().back().push_back("Overline{");
+    _allData->back().back().push_back("Odot");
+    _allData->back().back().push_back("Partial");
+    _allData->back().back().push_back("Prod");
+    _allData->back().back().push_back("Pm");
+    _allData->back().back().push_back("Textcolor{");
+    _allData->back().back().push_back("Textbf{");
+    _allData->back().back().push_back("Textit{");
+    _allData->back().back().push_back("Sum");
+    _allData->back().back().push_back("Sqrt");
+    _allData->back().back().push_back("Underline{");
+
+
     CCTextEdit::init(*_allData);
 }
 

@@ -186,6 +186,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
 
 
 inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail, bool interpretNewLine) {
+  // STOP! Changes you make here should be made into cclineedit.cpp as well for completion.
   QChar c = txt[from];
   bool upper = false;
   *skip = 1;
