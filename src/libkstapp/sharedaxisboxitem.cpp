@@ -15,8 +15,8 @@
 #include "plotitem.h"
 #include "plotitemmanager.h"
 
-//#include "gridlayouthelper.h"
 #include "viewgridlayout.h"
+#include "formatgridhelper.h"
 
 #include "application.h"
 
@@ -207,9 +207,34 @@ bool SharedAxisBoxItem::acceptItems() {
 
 void SharedAxisBoxItem::breakShare() {
   _loaded = false;
-  QList<PlotItem*> list = getSharedPlots();
-  foreach (PlotItem *plotItem, list) {
-    plotItem->setPos(mapToParent(plotItem->pos()));
+  QList<PlotItem*> plotList = getSharedPlots();
+  QList<ViewItem*> viewItemList;
+  int n_plots = plotList.size();
+  for (int i_plot = 0; i_plot<n_plots; i_plot++) {
+    viewItemList.append(dynamic_cast<ViewItem*>(plotList.at(i_plot)));
+  }
+
+  FormatGridHelper grid(viewItemList);
+
+  double height;
+  double width;
+
+  if (grid.n_rows>0) {
+    height = double(rect().height())/double(grid.n_rows);
+  } else {
+    height = rect().height();
+  }
+  if (grid.n_cols>0) {
+    width = double(rect().width())/double(grid.n_cols);
+  } else {
+    width = rect().width();
+  }
+  QPointF P0 = rect().topLeft();
+  for (int i_plot = 0; i_plot<n_plots; i_plot++) {
+    PlotItem *plotItem = plotList.at(i_plot);
+
+    plotItem->setRect(0,0,width, height);
+    plotItem->setPos(mapToParent(P0 + QPointF(grid.rcList.at(i_plot).col*width, grid.rcList.at(i_plot).row*height)));
     plotItem->setSharedAxisBox(0);
     plotItem->setTopSuppressed(false);
     plotItem->setBottomSuppressed(false);
@@ -261,13 +286,13 @@ void SharedAxisBoxItem::shareYAxis() {
 
 
 void SharedAxisBoxItem::updateShare() {
+  ViewGridLayout::updateProjections(this, _shareX, _shareY);
+  view()->setPlotBordersDirty(true);
+  setDirty();
+  update();
   if (!_shareX && !_shareY) {
     breakShare();
   } else {
-    ViewGridLayout::updateProjections(this, _shareX, _shareY);
-    view()->setPlotBordersDirty(true);
-    setDirty();
-    update();
   }
 }
 

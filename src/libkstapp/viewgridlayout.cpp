@@ -16,7 +16,6 @@
 #include "viewitem.h"
 #include "plotitem.h"
 #include "layoutboxitem.h"
-//#include "gridlayouthelper.h"
 #include "sharedaxisboxitem.h"
 #include "formatgridhelper.h"
 
@@ -177,10 +176,6 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
   if (viewItems.isEmpty())
     return; //not added to undostack
 
-
-  // Build an automatic layout to try to maintain the existing layout.
-  //Grid *grid = Grid::buildGrid(viewItems, 0);
-  //Q_ASSERT(grid);
 
   ViewGridLayout *layout = new ViewGridLayout(item);
 
@@ -349,7 +344,6 @@ void ViewGridLayout::apply() {
 
 
 void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
-
 
   SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(parentItem());
   if (!shareBox) {
