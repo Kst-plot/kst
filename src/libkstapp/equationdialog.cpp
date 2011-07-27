@@ -96,8 +96,6 @@ void EquationTab::populateFunctionList() {
   Operators.push_back(">=");
   Operators.push_back(">");
   Operators.push_back("!=");
-  Operators.push_back("PI");
-  Operators.push_back("e");
   Operators.push_back("STEP()");
   Operators.push_back("ABS()");
   Operators.push_back("SQRT()");
@@ -122,12 +120,13 @@ void EquationTab::populateFunctionList() {
   QList<CompletionCase> data;
   data.push_back(CompletionCase(""));
   data.back().push_back(Category("Operators"));
+  data.push_back(CompletionCase(""));
   data.back().push_back(Category("Functions"));
   for(int i=0;i<Operators.count();i++) {
-      data.back()[Operators.at(i).contains("()")?1:0]<<Operators.at(i);
+      data[Operators.at(i).contains("()")?1:0][0]<<Operators.at(i);
   }
-  for(int i=0;i<data.back()[1].size();i++) {
-      data.back()[1][i].chop(1);
+  for(int i=0;i<data[1][0].size();i++) {
+      data[1][0][i].chop(1);
   }
   data.push_back(CompletionCase("\\["));    //block escaped brackets
   _equation->init(data);

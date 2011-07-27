@@ -30,6 +30,7 @@ class CategoricalCompleter : public QCompleter {
     CCTableView* _tableView;
     CompletionCase* _currentSubset;
 public:
+    friend class CCCommonEdit;
     friend class CCLineEdit;
     friend class CCTextEdit;
     /**

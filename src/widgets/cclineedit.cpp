@@ -33,6 +33,7 @@
 #include <QCompleter>
 #include <QHash>
 #include <QMenu>
+#include <QTimer>
 
 namespace Kst {
 
@@ -151,6 +152,22 @@ void CategoricalCompleter::verifyPrefix()
 
     for(int i=_data.size()-1;i>=0;i--) {
         if(!_data[i].prefix().size()||!search.indexOf(_data[i].prefix())) {
+            SVCCLineEdit* hack=dynamic_cast<SVCCLineEdit*>(widget());
+            if(hack&&_data[i].prefix()==""&&_data[i].size()&&_data[i][0].title().contains("Fun")) {
+                QString operatorNextList="])Ie0123456789";
+                QString functionNextList="&=<>!+-/*&^|(";
+                int last1=-1,last2=-1;
+                for(int i=0;i<operatorNextList.size();i++) {
+                    last1=qMax(last1,hack->text().lastIndexOf(operatorNextList[i],hack->cursorPosition()-1));
+                }
+                for(int i=0;i<functionNextList.size();i++) {
+                    last2=qMax(last2,hack->text().lastIndexOf(functionNextList[i],hack->cursorPosition()-1));
+                }
+                if(last2<last1) {
+                    continue;
+                }
+            }
+
             if(_currentSubset!=&_data[i]) {
                 setModel(new QStringListModel(join(_data[i],_data[i].prefix())));
                 _tableView->setData(&_data[i],_data[i].prefix());
@@ -203,11 +220,11 @@ CCTextEdit::CCTextEdit(const QString &s, QWidget *p) : QTextEdit(s,p), _cc() { }
 CCLineEdit::~CCLineEdit() { delete _cc; }
 CCTextEdit::~CCTextEdit() { delete _cc; }
 
-void CCLineEdit::insert(const QString &i,bool completion)
+void CCCommonEdit::Insert(const QString &i,bool completion)
 {
-    QString x=text(),y=text();
-    y.remove(0,cursorPosition());
-    x.truncate(cursorPosition());
+    QString x=Text(),y=Text();
+    y.remove(0,CursorPosition());
+    x.truncate(CursorPosition());
 
     if(completion) {
         bool caught=0;
@@ -219,7 +236,7 @@ void CCLineEdit::insert(const QString &i,bool completion)
         if(caught) {
             search='[';
         } else {
-            const QString& possiblePhraseEndings=" +-=$.\n:/*]()%^&|!<>";
+            const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789Ie";
             // also change in divide!!
             int maxIndex=-1;
             for(int j=0;j<possiblePhraseEndings.size();j++) {
@@ -230,79 +247,35 @@ void CCLineEdit::insert(const QString &i,bool completion)
             }
         }
 
-        if(x.lastIndexOf(search)!=-1) {
-            x.remove(x.lastIndexOf(search)+(caught?0:1),999999);
-        } else {
-            x.remove(0,x.size());
-        }
-    }
-    setText(x+i+y);
-    setCursorPosition((x+i).size());
-
-    //Special exception:
-    int cbPos=text().indexOf("]",(x+i).size());
-    int cbPosNot=text().indexOf("\\]",(x+i).size())+1;
-    int obPos=text().indexOf("[",(x+i).size());
-    if(cbPos!=-1&&cbPos!=cbPosNot&&(cbPos<obPos||obPos==-1))
-    {
-        QString t=text();
-        t.remove(cursorPosition(),cbPos-cursorPosition()+1);
-        setText(t);
-    }
-}
-
-void CCTextEdit::insert(const QString &i, bool completion)
-{
-    QString x=toPlainText(),y=toPlainText();
-    y.remove(0,textCursor().position());
-    x.truncate(textCursor().position());
-
-    if(completion) {
-        bool caught=0;
-        if(i.size()) {
-            caught = i[i.size()-1]==']';     // this is a hard-coded exception to allow spaces in vector or scalar names. make less hacky
-        }
-
-        QChar search;
-        if(caught) {
-            search='[';
-        } else {
-            const QString& possiblePhraseEndings=" +-=$.\n:/*]()%^&|!<>";
-            // also change in divide!!
-            int maxIndex=-1;
-            for(int j=0;j<possiblePhraseEndings.size();j++) {
-                if(x.lastIndexOf(possiblePhraseEndings[j])>maxIndex) {
-                    maxIndex=x.lastIndexOf(possiblePhraseEndings[j]);
-                    search=possiblePhraseEndings[j];
-                }
+        if(!caught||(x.lastIndexOf(']')<x.lastIndexOf('['))) {
+            if(x.lastIndexOf(search)!=-1) {
+                x.remove(x.lastIndexOf(search)+(caught?0:1),1000000);
+            } else {
+                x.remove(0,x.size());
             }
         }
-
-        if(x.lastIndexOf(search)!=-1) {
-            x.remove(x.lastIndexOf(search)+(caught?0:1),999999);
-        }
     }
-    setText(x+i+y);
-    QTextCursor tc=textCursor();
-    tc.setPosition((x+i).size());
-    setTextCursor(tc);
+    SetText(x+i+y);
+    SetCursorPosition((x+i).size());
 
     //Special exception:
-    int cbPos=toPlainText().indexOf("]",(x+i).size());
-    int cbPosNot=toPlainText().indexOf("\\]",(x+i).size())+1;
-    int obPos=toPlainText().indexOf("[",(x+i).size());
+    int cbPos=Text().indexOf("]",(x+i).size());
+    int cbPosNot=Text().indexOf("\\]",(x+i).size())+1;
+    int obPos=Text().indexOf("[",(x+i).size());
     if(cbPos!=-1&&cbPos!=cbPosNot&&(cbPos<obPos||obPos==-1))
     {
-        QString t=toPlainText();
-        t.remove(textCursor().position(),cbPos-textCursor().position()+1);
-        setPlainText(t);
+        QString t=Text();
+        t.remove(CursorPosition(),cbPos-CursorPosition()+1);
+        int cp=CursorPosition();
+        SetText(t);
+        SetCursorPosition(cp);
     }
 }
 
-void CCLineEdit::divide(QString x)
+void CCCommonEdit::Divide(QString x)
 {
-    x=(x=="\0")?text():x;
-    x.truncate(cursorPosition());
+    x=(x=="\0")?Text():x;
+    x.truncate(CursorPosition());
 
     // this is a hard-coded exception to allow spaces in vector or scalar names. make less hacky {
 
@@ -317,7 +290,7 @@ void CCLineEdit::divide(QString x)
     if(caught) {
         search='[';
     } else {
-        const QString& possiblePhraseEndings=" +-=$.\n:/*]()%^&|!<>";
+        const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789Ie";
         // also change in insert!!
 
         int maxIndex=-2;
@@ -333,44 +306,7 @@ void CCLineEdit::divide(QString x)
         x.remove(0,x.lastIndexOf(search)+(caught?0:1));
     }
 
-    emit currentPrefixChanged(x);
-}
-
-void CCTextEdit::divide(QString x)
-{
-    x=(x=="\0")?toPlainText():x;
-    x.truncate(textCursor().position());
-
-    // this is a hard-coded exception to allow spaces in vector or scalar names. make less hacky {
-
-    bool caught = (x.indexOf("[")!=-1)&&(x.indexOf("]",x.lastIndexOf("["))==-1);
-    if(caught) {
-        caught=((x.lastIndexOf("\\[")==-1)||(x.lastIndexOf("\\[")+1!=x.lastIndexOf("[")));
-    }
-
-    //}
-
-    QChar search;
-    if(caught) {
-        search='[';
-    } else {
-        const QString& possiblePhraseEndings=" +-=$.\n:/*]()%^&|!<>";
-        // also change in insert!!
-
-        int maxIndex=-2;
-        for(int i=0;i<possiblePhraseEndings.size();i++) {
-            if(x.lastIndexOf(possiblePhraseEndings[i])>maxIndex) {
-                maxIndex=x.lastIndexOf(possiblePhraseEndings[i]);
-                search=possiblePhraseEndings[i];
-            }
-        }
-    }
-
-    if(x.lastIndexOf(search)) {
-        x.remove(0,x.lastIndexOf(search)+(caught?0:1));
-    }
-
-    emit currentPrefixChanged(x);
+    ChangeCurrentPrefix(x);
 }
 
 void CCLineEdit::keyPressEvent(QKeyEvent*ev)
@@ -381,9 +317,18 @@ void CCLineEdit::keyPressEvent(QKeyEvent*ev)
     }
     _cc->_tableView->keyPressEvent(ev);
     QLineEdit::keyPressEvent(ev);
+    _cc->verifyPrefix();
     _cc->_tableView->updateSuggestions();
 }
+void CCTextEdit::insert(const QString &i, bool stringIsCompletion)
+{
+    Insert(i,stringIsCompletion);
+}
 
+void CCTextEdit::divide(QString x)
+{
+    Divide(x);
+}
 void CCTextEdit::keyPressEvent(QKeyEvent*ev)
 {
     if(!_cc) {
@@ -392,7 +337,17 @@ void CCTextEdit::keyPressEvent(QKeyEvent*ev)
     }
     _cc->_tableView->keyPressEvent(ev);
     QTextEdit::keyPressEvent(ev);
+    _cc->verifyPrefix();
     _cc->_tableView->updateSuggestions();
+}
+
+void CCLineEdit::mousePressEvent(QMouseEvent*ev)
+{
+    if(ev->buttons()==Qt::LeftButton) {
+        _cc->verifyPrefix();
+        _cc->_tableView->updateSuggestions();
+    }
+    QLineEdit::mousePressEvent(ev);
 }
 
 void CCLineEdit::init(QList<CompletionCase> data)
@@ -424,13 +379,29 @@ void CCTextEdit::init(QList<CompletionCase> data)
     _cc->setWidget(this);
 }
 
+void CCLineEdit::insert(const QString &i,bool stringIsCompletion)
+{
+    Insert(i,stringIsCompletion);
+    QTimer* timer=new QTimer;
+    connect(timer,SIGNAL(timeout()),_cc->_tableView,SLOT(updateSuggestions()));
+    connect(timer,SIGNAL(timeout()),timer,SLOT(deleteLater()));
+    timer->start(0);
+    setFocus();
+}
+
+void CCLineEdit::divide(QString x)
+{
+    Divide(x);
+}
+
+
 // SVCCLineEdit & SVCCTextEdit
 
-SVCCLineEdit::SVCCLineEdit(QWidget*p) : CCLineEdit(p),_store(0),_extraData(0),_svData(0),_allData(0) { }
-SVCCTextEdit::SVCCTextEdit(QWidget*p) : CCTextEdit(p),_store(0),_extraData(0),_svData(0),_allData(0) { }
+SVCCLineEdit::SVCCLineEdit(QWidget*p) : CCLineEdit(p),_extraData(0),_svData(0),_allData(0) { }
+SVCCTextEdit::SVCCTextEdit(QWidget*p) : CCTextEdit(p),_extraData(0),_svData(0),_allData(0) { }
 
-SVCCLineEdit::SVCCLineEdit(const QString &s, QWidget *p) : CCLineEdit(s,p),_store(0),_extraData(0),_svData(0),_allData(0) { }
-SVCCTextEdit::SVCCTextEdit(const QString &s, QWidget *p) : CCTextEdit(s,p),_store(0),_extraData(0),_svData(0),_allData(0) { }
+SVCCLineEdit::SVCCLineEdit(const QString &s, QWidget *p) : CCLineEdit(s,p),_extraData(0),_svData(0),_allData(0) { }
+SVCCTextEdit::SVCCTextEdit(const QString &s, QWidget *p) : CCTextEdit(s,p),_extraData(0),_svData(0),_allData(0) { }
 
 SVCCLineEdit::~SVCCLineEdit() { delete _extraData; delete _svData; delete _allData; }
 SVCCTextEdit::~SVCCTextEdit() { delete _extraData; delete _svData; delete _allData; }
@@ -459,12 +430,23 @@ void SVCCLineEdit::init(QList<CompletionCase> data)
         delete _allData;
     }
     _allData = new QList<CompletionCase>;
-    for(int k=0;k<2;k++) {
-        QList<CompletionCase>* add=k?_svData:_extraData;
-        for(int i=0;add&&i<add->size();i++) {
-            _allData->push_back((*add)[i]);
-        }
+    for(int i=0;_extraData&&i<_extraData->size();i++) {
+        _allData->push_back((*_extraData)[i]);
     }
+    if(!_allData->size()) {
+        _allData->push_back(CompletionCase(""));
+    }
+    //hacky {
+    if(!_svData||!_svData->size()||(_svData->at(0).size()<2)) {
+        return;
+    }
+    for(int i=0;i<_svData->front().size();i++) {
+        _allData[0][1].push_back(_svData->front()[i]);
+    }
+    for(int i=1;_svData&&i<_svData->size();i++) {
+        _allData->push_back((*_svData)[i]);
+    }
+    // }
     CCLineEdit::init(*_allData);
 }
 
@@ -498,6 +480,11 @@ void SVCCLineEdit::fillKstObjects()
         delete _svData;
     }
     _svData = new QList<CompletionCase>;
+    _svData->push_back(CompletionCase(""));
+    _svData->back().push_back(Category("Scalars"));
+    _svData->back().back().push_back("PI");
+    _svData->back().back().push_back("e");
+    _svData->back().push_back(Category("Vectors"));
     _svData->push_back(CompletionCase("["));
     _svData->back().push_back(Category("Scalars"));
     _svData->back().push_back(Category("Vectors"));
@@ -505,26 +492,24 @@ void SVCCLineEdit::fillKstObjects()
     ScalarList scalarList = _store->getObjects<Scalar>();
     VectorList vectorList = _store->getObjects<Vector>();
 
-    {
-        ScalarList::ConstIterator it = scalarList.begin();
-        for (; it != scalarList.end(); ++it) {
-            ScalarPtr scalar = (*it);
+    ScalarList::ConstIterator scalarIt = scalarList.begin();
+    for (; scalarIt != scalarList.end(); ++scalarIt) {
+        ScalarPtr scalar = (*scalarIt);
 
-            scalar->readLock();
-            _svData->back()[0].push_back(scalar->Name()+"]");
-            scalar->unlock();
-        }
+        scalar->readLock();
+        _svData->back()[0].push_back(scalar->Name()+"]");
+        _svData->front()[0].push_back("["+scalar->Name()+"]");
+        scalar->unlock();
     }
 
-    {
-        VectorList::ConstIterator it = vectorList.begin();
-        for (; it != vectorList.end(); ++it) {
-            VectorPtr vector = (*it);
+    VectorList::ConstIterator vectorIt = vectorList.begin();
+    for (; vectorIt != vectorList.end(); ++vectorIt) {
+        VectorPtr vector = (*vectorIt);
 
-            vector->readLock();
-            _svData->back()[1].push_back(vector->Name()+"]");
-            vector->unlock();
-        }
+        vector->readLock();
+        _svData->back()[1].push_back(vector->Name()+"]");
+        _svData->front()[1].push_back("["+vector->Name()+"]");
+        vector->unlock();
     }
 
     init();
@@ -541,53 +526,36 @@ void SVCCTextEdit::fillKstObjects()
     _svData = new QList<CompletionCase>;
     _svData->push_back(CompletionCase("["));
     _svData->back().push_back(Category("Scalars"));
-    //_svData->back().push_back(Category("Vectors"));
 
     ScalarList scalarList = _store->getObjects<Scalar>();
-    //VectorList vectorList = _store->getObjects<Vector>();
     StringList stringList = _store->getObjects<String>();
 
-    {
-        ScalarList::ConstIterator it = scalarList.begin();
-        for (; it != scalarList.end(); ++it) {
-            ScalarPtr scalar = (*it);
+        ScalarList::ConstIterator scalarIt = scalarList.begin();
+        for (; scalarIt != scalarList.end(); ++scalarIt) {
+            ScalarPtr scalar = (*scalarIt);
 
             scalar->readLock();
             _svData->back()[0].push_back(scalar->Name()+"]");
             scalar->unlock();
         }
-    }
-
-    /*{
-        VectorList::ConstIterator it = vectorList.begin();
-        for (; it != vectorList.end(); ++it) {
-            VectorPtr vector = (*it);
-
-            vector->readLock();
-            _svData->back()[1].push_back(vector->Name()+"]");
-            vector->unlock();
-        }
-    }*/
 
     _svData->back().push_back(Category("Strings"));
 
-    StringList::ConstIterator it = stringList.begin();
-    for (; it != stringList.end(); ++it) {
-        StringPtr string = (*it);
+    StringList::ConstIterator stringIt = stringList.begin();
+    for (; stringIt != stringList.end(); ++stringIt) {
+        StringPtr string = (*stringIt);
 
         string->readLock();
         _svData->back()[1].push_back(string->Name()+"]");
         string->unlock();
     }
 
-
-
     init();
 }
 
 void SVCCLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);
+    QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::NoButton,Qt::NoButton,Qt::NoModifier);
     mousePressEvent(&fake); //update cursor
     QMenu *menu = createStandardContextMenu();
     QAction* newVectorAction=new QAction(tr("Insert New &Vector"),this);
@@ -697,8 +665,7 @@ void SVCCTextEdit::contextMenuEvent(QContextMenuEvent *event)
     delete editAction;
 }
 
-
-void SVCCLineEdit::newVector()
+void CCCommonEdit::NewVector()
 {
     QString newName;
     DialogLauncher::self()->showVectorDialog(newName, 0, true);
@@ -707,24 +674,11 @@ void SVCCLineEdit::newVector()
 
     if (vector) {
         QString vName="["+vector->Name()+"]";
-        insert(vName,0);
+        Insert(vName,0);
     }
 }
 
-void SVCCTextEdit::newVector()
-{
-    QString newName;
-    DialogLauncher::self()->showVectorDialog(newName, 0, true);
-    fillKstObjects();
-    VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));
-
-    if (vector) {
-        QString vName="["+vector->Name()+"]";
-        insert(vName,0);
-    }
-}
-
-void SVCCLineEdit::newScalar()
+void CCCommonEdit::NewScalar()
 {
     QString scalarName;
     DialogLauncher::self()->showScalarDialog(scalarName, 0, true);
@@ -733,24 +687,11 @@ void SVCCLineEdit::newScalar()
 
     if (scalar) {
         QString sName="["+scalar->Name()+"]";
-        insert(sName,0);
+        Insert(sName,0);
     }
 }
 
-void SVCCTextEdit::newScalar()
-{
-    QString scalarName;
-    DialogLauncher::self()->showScalarDialog(scalarName, 0, true);
-    fillKstObjects();
-    ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
-
-    if (scalar) {
-        QString sName="["+scalar->Name()+"]";
-        insert(sName,0);
-    }
-}
-
-void SVCCTextEdit::newString()
+void CCCommonEdit::NewString()
 {
     QString stringName;
     DialogLauncher::self()->showStringDialog(stringName, 0, true);
@@ -759,57 +700,15 @@ void SVCCTextEdit::newString()
 
     if (string) {
         QString sName="["+string->Name()+"]";
-        insert(sName,0);
+        Insert(sName,0);
     }
 }
 
-void SVCCLineEdit::editItem()
+void CCCommonEdit::EditItem()
 {
-    QString x=text();
-    int openVector=x.lastIndexOf("[",cursorPosition());
-    int closeVector=x.indexOf("]",cursorPosition());
-    if(openVector!=-1&&closeVector!=-1) {
-        x.remove(0,openVector+1);
-        x.remove(closeVector-openVector-1,99999);
-        if(x.indexOf("[")==x.indexOf("]")&&x.indexOf("[")==-1) {
-            ObjectPtr ptr = _store->retrieveObject(x);
-
-            //could be:
-            VectorPtr vector = kst_cast<Vector>(ptr);
-            ScalarPtr scalar = kst_cast<Scalar>(ptr);
-            if(vector) {
-                if (vector->provider()) {
-                    DialogLauncher::self()->showObjectDialog(vector->provider());
-                } else {
-                    if(ObjectPtr(vector))
-                    {
-                        QString vectorName;
-                        DialogLauncher::self()->showVectorDialog(vectorName,ObjectPtr(vector),1);
-                    }
-                }
-                fillKstObjects();
-            } else if(scalar) {
-                if (scalar->provider()) {
-                    DialogLauncher::self()->showObjectDialog(scalar->provider());
-                } else {
-                    if(ObjectPtr(scalar))
-                    {
-                        QString scalarName;
-                        DialogLauncher::self()->showScalarDialog(scalarName,ObjectPtr(scalar),1);
-                    }
-                }
-                fillKstObjects();
-            } else {
-            }
-        }
-    }
-}
-
-void SVCCTextEdit::editItem()
-{
-    QString x=toPlainText();
-    int openVector=x.lastIndexOf("[",textCursor().position());
-    int closeVector=x.indexOf("]",textCursor().position());
+    QString x=Text();
+    int openVector=x.lastIndexOf("[",CursorPosition());
+    int closeVector=x.indexOf("]",CursorPosition());
     if(openVector!=-1&&closeVector!=-1) {
         x.remove(0,openVector+1);
         x.remove(closeVector-openVector-1,99999);
@@ -860,10 +759,8 @@ void SVCCTextEdit::editItem()
 
 // CCTableModel
 
-int CCTableModel::rowCount(const QModelIndex &parent=QModelIndex()) const
+int CCTableModel::rowCount(const QModelIndex &) const
 {
-    Q_UNUSED(parent);
-
     int max=0;
     for(int i=0;i<_visibleData.size();i++) {
         max=qMax(max,_visibleData[i].size());
@@ -871,16 +768,15 @@ int CCTableModel::rowCount(const QModelIndex &parent=QModelIndex()) const
     return max-1; // top row is title
 }
 
-int CCTableModel::columnCount(const QModelIndex &parent=QModelIndex()) const
+int CCTableModel::columnCount(const QModelIndex &) const
 {
-    Q_UNUSED(parent);
     return _visibleData.size();
 }
 
 QVariant CCTableModel::data(const QModelIndex &index, int role) const
 {
     if(role!=Qt::DisplayRole) return QVariant();  // Return unvalid QVariant
-    Q_ASSERT(index.column()<columnCount());
+    Q_ASSERT(index.column()<columnCount(QModelIndex()));
     if(index.column()==-1) {
         return QVariant("");
     }
@@ -888,9 +784,8 @@ QVariant CCTableModel::data(const QModelIndex &index, int role) const
     return _visibleData[index.column()][index.row()+1]; // +1 because top row is title
 }
 
-Qt::ItemFlags CCTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CCTableModel::flags(const QModelIndex &) const
 {
-    Q_UNUSED(index);
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
@@ -907,7 +802,6 @@ CCTableView::CCTableView(CompletionCase* data) : _data(data), origModel(0), comp
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setMinimumHeight(150);
-    //    setMinimumWidth(300);
     verticalHeader()->hide();
 }
 

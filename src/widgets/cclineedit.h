@@ -30,7 +30,7 @@ public:
     Category(QString title) : QStringList(), _title(title) { }
     Category(QString title, QString i) : QStringList(i), _title(title) { }
     Category(QString title, QStringList l) : QStringList(l), _title(title) { }
-    const QString& title() { return _title; }
+    const QString& title() const { return _title; }
 };
 
 /**
@@ -47,15 +47,44 @@ public:
 bool operator<(const CompletionCase&a,const CompletionCase&b);
 
 class CategoricalCompleter;
+class ObjectStore;
+
+class CCCommonEdit {
+protected:
+    ObjectStore *_store;
+    virtual QString Text()=0;
+    virtual void SetText(QString text)=0;
+    virtual int CursorPosition()=0;
+    virtual void SetCursorPosition(int)=0;
+    virtual void NewPrefix(QString)=0;
+    virtual void SetCompleter(QCompleter*) {}
+    virtual void ChangeCurrentPrefix(QString)=0;
+    void Divide(QString x="\0");
+    virtual void fillKstObjects() {}
+    void NewVector();
+    void NewScalar();
+    void NewString();
+    void EditItem();
+    void Insert(const QString&i,bool stringIsCompletion=true);
+    CCCommonEdit() : _store(0) {}
+};
 
 /**
  * This is a LineEdit with autocompletion. The completion items are divided into cases, categories and items.
  * @sa CompletionCase, Category
  */
-class KSTWIDGETS_EXPORT CCLineEdit : public QLineEdit {
+class KSTWIDGETS_EXPORT CCLineEdit : public QLineEdit, public CCCommonEdit {
     Q_OBJECT
 protected:
     CategoricalCompleter* _cc;
+    virtual QString Text(){return text();}
+    virtual void SetText(QString text){setText(text);}
+    virtual int CursorPosition(){return cursorPosition();}
+    virtual void SetCursorPosition(int x){setCursorPosition(x);}
+    virtual void NewPrefix(QString x){emit currentPrefixChanged(x);}
+    virtual void SetCompleter(QCompleter*c) {setCompleter(c);}
+    virtual void ChangeCurrentPrefix(QString x){emit currentPrefixChanged(x);}
+
 public:
     friend class CCTableView;
     CCLineEdit(QWidget*p=0);
@@ -70,11 +99,10 @@ protected slots:
 
 protected:
     void keyPressEvent(QKeyEvent *);
+    void mousePressEvent(QMouseEvent *);
 signals:
     void currentPrefixChanged(QString);
 };
-
-class ObjectStore;
 
 /**
  * This is a special version of CCLineEdit which is used to display scalars and vectors.
@@ -84,7 +112,6 @@ class ObjectStore;
 class KSTWIDGETS_EXPORT SVCCLineEdit : public CCLineEdit
 {
     Q_OBJECT
-    ObjectStore *_store;
     QList<CompletionCase> *_extraData, *_svData, *_allData;
 public:
     SVCCLineEdit(QWidget*p=0);
@@ -97,19 +124,26 @@ public:
 protected:
     void contextMenuEvent(QContextMenuEvent *);
 public slots:
-    void newVector();
-    void newScalar();
-    void editItem();
+    inline void newVector(){NewVector();}
+    inline void newScalar(){NewScalar();}
+    inline void editItem(){EditItem();}
 };
 
 /**
  * This is a TextEdit with audocompletion.
  * @sa CCLineEdit
  */
-class KSTWIDGETS_EXPORT CCTextEdit : public QTextEdit {
+class KSTWIDGETS_EXPORT CCTextEdit : public QTextEdit, public CCCommonEdit {
     Q_OBJECT
 protected:
     CategoricalCompleter* _cc;
+    virtual QString Text(){return toPlainText();}
+    virtual void SetText(QString text){setPlainText(text);}
+    virtual int CursorPosition(){return textCursor().position();}
+    virtual void SetCursorPosition(int x){QTextCursor tc=textCursor();tc.setPosition(x);setTextCursor(tc);}
+    virtual void NewPrefix(QString x){emit currentPrefixChanged(x);}
+    virtual void SetCompleter(QCompleter*) {}
+    virtual void ChangeCurrentPrefix(QString x){emit currentPrefixChanged(x);}
 public:
     friend class CCTableView;
     CCTextEdit(QWidget*p=0);
@@ -135,7 +169,6 @@ signals:
 class KSTWIDGETS_EXPORT SVCCTextEdit : public CCTextEdit
 {
     Q_OBJECT
-    ObjectStore *_store;
     QList<CompletionCase> *_extraData, *_svData, *_allData;
 public:
     SVCCTextEdit(QWidget*p=0);
@@ -148,10 +181,10 @@ public:
 protected:
     void contextMenuEvent(QContextMenuEvent *);
 public slots:
-    void newVector();
-    void newScalar();
-    void newString();
-    void editItem();
+    inline void newVector(){NewVector();}
+    inline void newScalar(){NewScalar();}
+    inline void newString(){NewString();}
+    inline void editItem(){EditItem();}
 };
 
 }
