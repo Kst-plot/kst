@@ -236,7 +236,7 @@ void CCCommonEdit::Insert(const QString &i,bool completion)
         if(caught) {
             search='[';
         } else {
-            const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789Ie";
+            const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789";
             // also change in divide!!
             int maxIndex=-1;
             for(int j=0;j<possiblePhraseEndings.size();j++) {
@@ -290,7 +290,7 @@ void CCCommonEdit::Divide(QString x)
     if(caught) {
         search='[';
     } else {
-        const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789Ie";
+        const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789";
         // also change in insert!!
 
         int maxIndex=-2;
