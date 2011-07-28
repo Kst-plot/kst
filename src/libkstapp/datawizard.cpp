@@ -500,6 +500,7 @@ void DataWizardPagePlot::updatePlotBox() {
   _cycleExisting->setEnabled(havePlots);
   _existingPlot->setEnabled(havePlots);
   _existingPlotName->setEnabled(havePlots && _existingPlot->isChecked());
+  _plotLayoutBox->setEnabled(!_existingPlot->isChecked());
 
   CurvePlotPlacement placement = static_cast<CurvePlotPlacement>(_dialogDefaults->value("wizard/curvePlacement",MultiplePlots).toInt());
   switch (placement) {
@@ -720,6 +721,7 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageDataPresentation, SLOT(updateVectors()));
   disconnect(button(QWizard::FinishButton), SIGNAL(clicked()), (QDialog*)this, SLOT(accept()));
   connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finished()));
+
 
   // the dialog needs to know that the default has been set....
   _pageDataSource->sourceChanged(_dialogDefaults->value("vector/datasource",".").toString());
@@ -1131,37 +1133,39 @@ void DataWizard::finished() {
     }
   }
 
-  if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
-    int np = plotList.count();
-    if (np > 0) {
-      plotList.at(0)->view()->resetPlotFontSizes(); // set font sizes on first page.
-      if (plotList.at(np-1)->view() != plotList.at(0)->view()) { // and second, if there is one.
-        plotList.at(np-1)->view()->resetPlotFontSizes();
+  if (relayout) {
+    if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
+      int np = plotList.count();
+      if (np > 0) {
+        plotList.at(0)->view()->resetPlotFontSizes(); // set font sizes on first page.
+        if (plotList.at(np-1)->view() != plotList.at(0)->view()) { // and second, if there is one.
+          plotList.at(np-1)->view()->resetPlotFontSizes();
+        }
+      }
+    } else {
+      foreach (PlotItem* plot, plotList) {
+        _document->currentView()->configurePlotFontDefaults(plot); // copy plots already in window
       }
     }
-  } else {
+
+    CurvePlacement::Layout layout_type = _pagePlot->layout();
+    int num_columns = _pagePlot->gridColumns();
+    if (plotsInPage == 0) { // no format to protext
+      if (layout_type != CurvePlacement::Custom) {
+        layout_type = CurvePlacement::Custom;
+        if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
+          num_columns = sqrt((double)plotList.size()/2);
+        } else {
+          num_columns = sqrt((double)plotList.size());
+        }
+      }
+    }
     foreach (PlotItem* plot, plotList) {
-      _document->currentView()->configurePlotFontDefaults(plot); // copy plots already in window
+      plot->update();
+      plot->view()->appendToLayout(layout_type, plot, num_columns);
     }
-  }
 
-  CurvePlacement::Layout layout_type = _pagePlot->layout();
-  int num_columns = _pagePlot->gridColumns();
-  if (plotsInPage == 0) { // no format to protext
-    if (layout_type != CurvePlacement::Custom) {
-      layout_type = CurvePlacement::Custom;
-      if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
-        num_columns = sqrt((double)plotList.size()/2);
-      } else {
-        num_columns = sqrt((double)plotList.size());
-      }
-    }
   }
-  foreach (PlotItem* plot, plotList) {
-    plot->update();
-    plot->view()->appendToLayout(layout_type, plot, num_columns);
-  }
-
   foreach (PlotItem* plot, plotList) {
     if (_pagePlot->legendsOn()) {
       plot->setShowLegend(true, true);
@@ -1171,12 +1175,14 @@ void DataWizard::finished() {
         plot->setShowLegend(true, true);
         plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
       }
+    } else {
+      plot->setShowLegend(false,false);
     }
   }
 
   if (_pagePlot->shareAxis()) {
-     //FIXME: apply shared axis
-     // also delete the line _shareAxis->hide();
+    //FIXME: apply shared axis
+    // also delete the line _shareAxis->hide();
   }
 
   UpdateManager::self()->doUpdates(true);

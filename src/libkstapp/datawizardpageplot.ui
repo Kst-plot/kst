@@ -141,7 +141,7 @@
     </widget>
    </item>
    <item row="2" column="0" rowspan="2">
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="_plotLayoutBox">
      <property name="title">
       <string>Plot Layout</string>
      </property>
@@ -351,12 +351,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>110</y>
+     <x>118</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
-     <x>225</x>
-     <y>112</y>
+     <x>218</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>
@@ -367,12 +367,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>632</x>
-     <y>112</y>
+     <x>105</x>
+     <y>256</y>
     </hint>
     <hint type="destinationlabel">
-     <x>760</x>
-     <y>114</y>
+     <x>218</x>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
@@ -383,12 +383,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>143</x>
-     <y>172</y>
+     <x>135</x>
+     <y>156</y>
     </hint>
     <hint type="destinationlabel">
-     <x>225</x>
-     <y>174</y>
+     <x>218</x>
+     <y>157</y>
     </hint>
    </hints>
   </connection>
@@ -399,12 +399,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>54</y>
+     <x>489</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
-     <x>101</x>
-     <y>133</y>
+     <x>112</x>
+     <y>130</y>
     </hint>
    </hints>
   </connection>
@@ -415,8 +415,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>357</x>
-     <y>62</y>
+     <x>595</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
@@ -431,12 +431,124 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>389</x>
-     <y>62</y>
+     <x>627</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
-     <x>55</x>
-     <y>166</y>
+     <x>67</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_plotLayoutBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>59</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_cycleExisting</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_plotLayoutBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>82</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>85</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_3</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>265</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_cycleExisting</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_3</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>140</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>19</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_existingPlot</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_psdAxisGroup</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>141</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_cycleExisting</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_psdAxisGroup</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>341</x>
+     <y>218</y>
     </hint>
    </hints>
   </connection>
