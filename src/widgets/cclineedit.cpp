@@ -507,6 +507,10 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
     _allData->back().back().push_back("Chi");
     _allData->back().back().push_back("Psi");
     _allData->back().back().push_back("Omega");
+    int max=_allData->back().back().size();
+    for(int i=0;i<max;i++) {
+	_allData->back().back().push_back(_allData->back().back()[i].toLower());
+    }
     _allData->back().push_back(Category("Math Symbols"));
     _allData->back().back().push_back("Approx");
     _allData->back().back().push_back("Cdot");
