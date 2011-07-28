@@ -154,7 +154,7 @@ void CategoricalCompleter::verifyPrefix()
         if(!_data[i].prefix().size()||!search.indexOf(_data[i].prefix())) {
             SVCCLineEdit* hack=dynamic_cast<SVCCLineEdit*>(widget());
             if(hack&&_data[i].prefix()==""&&_data[i].size()&&_data[i][0].title().contains("Fun")) {
-                QString operatorNextList="])Ie0123456789";
+                QString operatorNextList="])0123456789";
                 QString functionNextList="&=<>!+-/*&^|(";
                 int last1=-1,last2=-1;
                 for(int i=0;i<operatorNextList.size();i++) {
@@ -236,7 +236,7 @@ void CCCommonEdit::Insert(const QString &i,bool completion)
         if(caught) {
             search='[';
         } else {
-            const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789";
+            const QString& possiblePhraseEndings=" =$.\n:/*]()%^&|!<>0245+1337-6789\\";
             // also change in divide!!
             int maxIndex=-1;
             for(int j=0;j<possiblePhraseEndings.size();j++) {
@@ -254,6 +254,9 @@ void CCCommonEdit::Insert(const QString &i,bool completion)
                 x.remove(0,x.size());
             }
         }
+	if(search=='\\') {
+	    x.chop(1);
+	}
     }
     SetText(x+i+y);
     SetCursorPosition((x+i).size());
@@ -302,6 +305,15 @@ void CCCommonEdit::Divide(QString x)
         }
     }
 
+    // this is a hard-coded exception to allow non-space-sperated Latex commands {
+    if(!caught&&x.lastIndexOf("\\")>x.lastIndexOf(search)&&x.lastIndexOf("\\"))
+    {
+	search=x[x.lastIndexOf("\\")-1];
+	qDebug()<<"EX.SEARCH IS NOW"<<search;
+	caught=1;
+	x.remove(0,x.lastIndexOf("\\"));
+    }
+    // }
     if(x.lastIndexOf(search)) {
         x.remove(0,x.lastIndexOf(search)+(caught?0:1));
     }
