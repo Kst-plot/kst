@@ -52,6 +52,7 @@ class ObjectStore;
 class CCCommonEdit {
 protected:
     ObjectStore *_store;
+    static QList<CCCommonEdit*> _u;
     virtual QString Text()=0;
     virtual void SetText(QString text)=0;
     virtual int CursorPosition()=0;
@@ -66,7 +67,8 @@ protected:
     void NewString();
     void EditItem();
     void Insert(const QString&i,bool stringIsCompletion=true);
-    CCCommonEdit() : _store(0) {}
+    CCCommonEdit() : _store(0) {_u.push_back(this);}
+    ~CCCommonEdit() { _u.push_back(this); }
 };
 
 /**
@@ -138,7 +140,7 @@ class KSTWIDGETS_EXPORT CCTextEdit : public QTextEdit, public CCCommonEdit {
 protected:
     CategoricalCompleter* _cc;
     virtual QString Text(){return toPlainText();}
-    virtual void SetText(QString text){setPlainText(text);}
+    virtual void SetText(QString text){bool dirty=document()->isModified();setPlainText(text);document()->setModified(dirty);}
     virtual int CursorPosition(){return textCursor().position();}
     virtual void SetCursorPosition(int x){QTextCursor tc=textCursor();tc.setPosition(x);setTextCursor(tc);}
     virtual void NewPrefix(QString x){emit currentPrefixChanged(x);}

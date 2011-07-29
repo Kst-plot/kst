@@ -39,26 +39,20 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   _globalLabelColor->setColor(_plotItem->globalFontColor());
   _globalLabelFontSize->setValue(_plotItem->globalFontScale());
 
-  _scalars->setObjectStore(kstApp->mainWindow()->document()->objectStore());
-  _strings->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _topLabelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _bottomLabelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _leftLabelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
+  _rightLabelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
-  connect(_topLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_leftLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_bottomLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_rightLabelText, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_topLabelText, SIGNAL(textChanged()), this, SIGNAL(modified()));
+  connect(_leftLabelText, SIGNAL(textChanged()), this, SIGNAL(modified()));
+  connect(_bottomLabelText, SIGNAL(textChanged()), this, SIGNAL(modified()));
+  connect(_rightLabelText, SIGNAL(textChanged()), this, SIGNAL(modified()));
 
-  connect(_topLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
-  connect(_bottomLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
-  connect(_leftLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
-  connect(_rightLabelText, SIGNAL(textChanged(const QString &)), this, SLOT(_enableLabelLabels()));
-
-  connect(_topLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
-  connect(_leftLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
-  connect(_bottomLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
-  connect(_rightLabelText, SIGNAL(inFocus()), this, SLOT(labelSelected()));
-
-  connect(_strings, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
-  connect(_scalars, SIGNAL(selectionChanged(QString)), this, SLOT(labelUpdate(const QString&)));
+  connect(_topLabelText, SIGNAL(textChanged()), this, SLOT(_enableLabelLabels()));
+  connect(_bottomLabelText, SIGNAL(textChanged()), this, SLOT(_enableLabelLabels()));
+  connect(_leftLabelText, SIGNAL(textChanged()), this, SLOT(_enableLabelLabels()));
+  connect(_rightLabelText, SIGNAL(textChanged()), this, SLOT(_enableLabelLabels()));
 
   connect(_autoScaleNumberAxis, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_showLegend, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -98,25 +92,20 @@ void LabelTab::buttonUpdate() {
 
 
 void LabelTab::activateFields() {
-  _topLabelText->setEnabled(_topLabelAuto->checkState() != Qt::Checked);
-  _leftLabelText->setEnabled(_leftLabelAuto->checkState() != Qt::Checked);
-  _bottomLabelText->setEnabled(_bottomLabelAuto->checkState() != Qt::Checked);
-  _rightLabelText->setEnabled(_rightLabelAuto->checkState() != Qt::Checked);
 }
 
 
 QString LabelTab::leftLabel() const {
-  return _leftLabelText->text();
+  return _leftLabelText->toPlainText();
 }
 
 
 bool LabelTab::leftLabelDirty() const {
-  return (_leftLabelText->isModified());
+  return (_leftLabelText->document()->isModified());
 }
 
 
 void LabelTab::setLeftLabel(const QString &label) {
-  _leftLabelLabel->setEnabled(true);
   _leftLabelText->setText(label);
 }
 
@@ -137,17 +126,16 @@ void LabelTab::setLeftLabelAuto(bool a) {
 
 
 QString LabelTab::bottomLabel() const {
-  return _bottomLabelText->text();
+  return _bottomLabelText->toPlainText();
 }
 
 
 bool LabelTab::bottomLabelDirty() const {
-  return (_bottomLabelText->isModified());
+  return (_bottomLabelText->document()->isModified());
 }
 
 
 void LabelTab::setBottomLabel(const QString &label) {
-  _bottomLabelLabel->setEnabled(true);
   _bottomLabelText->setText(label);
 }
 
@@ -168,17 +156,16 @@ void LabelTab::setBottomLabelAuto(bool a) {
 
 
 QString LabelTab::rightLabel() const {
-  return _rightLabelText->text();
+  return _rightLabelText->toPlainText();
 }
 
 
 bool LabelTab::rightLabelDirty() const {
-  return (_rightLabelText->isModified());
+  return (_rightLabelText->document()->isModified());
 }
 
 
 void LabelTab::setRightLabel(const QString &label) {
-  _rightLabelLabel->setEnabled(true);
   _rightLabelText->setText(label);
 }
 
@@ -199,18 +186,17 @@ void LabelTab::setRightLabelAuto(bool a) {
 
 
 QString LabelTab::topLabel() const {
-  return _topLabelText->text();
+  return _topLabelText->toPlainText();
 }
 
 
 bool LabelTab::topLabelDirty() const {
-  return (_topLabelText->isModified());
+  return (_topLabelText->document()->isModified());
 }
 
 
 
 void LabelTab::setTopLabel(const QString &label) {
-  _topLabelLabel->setEnabled(true);
   _topLabelText->setText(label);
 }
 
@@ -304,24 +290,12 @@ void LabelTab::setAutoScaleNumbers(const bool scale) {
 
 
 void LabelTab::labelUpdate(const QString& string) {
-  if (_activeLineEdit) {
-    QString label = _activeLineEdit->text();
-    label += '[' + string + ']';
-    _activeLineEdit->setText(label); 
-  }
+    Q_UNUSED(string);
 }
 
 
 void LabelTab::labelSelected() {
-  if (_rightLabelText->hasFocus()) {
-    _activeLineEdit = _rightLabelText;
-  } else if (_bottomLabelText->hasFocus()) {
-    _activeLineEdit = _bottomLabelText;
-  } else if (_leftLabelText->hasFocus()) {
-    _activeLineEdit = _leftLabelText;
-  } else {
-    _activeLineEdit = _topLabelText;
-  }
+
 }
 
 
@@ -339,15 +313,10 @@ void LabelTab::clearTabValues() {
   _leftLabelText->clear();
   _rightLabelText->clear();
 
-  _topLabelText->setModified(false);
-  _bottomLabelText->setModified(false);
-  _leftLabelText->setModified(false);
-  _rightLabelText->setModified(false);
-
-  _topLabelLabel->setEnabled(false);
-  _bottomLabelLabel->setEnabled(false);
-  _leftLabelLabel->setEnabled(false);
-  _rightLabelLabel->setEnabled(false);
+  _topLabelText->document()->setModified(false);
+  _bottomLabelText->document()->setModified(false);
+  _leftLabelText->document()->setModified(false);
+  _rightLabelText->document()->setModified(false);
 
   _globalLabelColor->clearSelection();
 
@@ -374,10 +343,6 @@ void LabelTab::enableSingleEditOptions(bool enabled) {
 }
 
 void LabelTab::_enableLabelLabels() {
-  _topLabelLabel->setEnabled(_topLabelText->isModified());
-  _bottomLabelLabel->setEnabled(_bottomLabelText->isModified());
-  _leftLabelLabel->setEnabled(_leftLabelText->isModified());
-  _rightLabelLabel->setEnabled(_rightLabelText->isModified());
 }
 }
 

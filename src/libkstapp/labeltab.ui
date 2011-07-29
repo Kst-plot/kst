@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>366</height>
+    <width>582</width>
+    <height>364</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="2" colspan="2">
     <widget class="QDoubleSpinBox" name="_globalLabelFontSize">
      <property name="decimals">
       <number>1</number>
@@ -37,14 +37,71 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="3">
+   <item row="0" column="4">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>points</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="_globalLabelBold">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Alt+B</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QPushButton" name="_globalLabelItalic">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Alt+I</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="Kst::ColorButton" name="_globalLabelColor"/>
+   </item>
+   <item row="1" column="2" colspan="6">
+    <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
+   </item>
+   <item row="2" column="2" colspan="3">
     <widget class="QCheckBox" name="_autoScaleNumberAxis">
      <property name="text">
       <string>Automatically scale number axis labels</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="7">
+   <item row="3" column="0" colspan="8">
     <widget class="Line" name="line_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -58,38 +115,6 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="TextLabel1_2_2_2">
-     <property name="text">
-      <string>Insert scalar in label:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1" colspan="6">
-    <widget class="Kst::ScalarSelector" name="_scalars" native="true"/>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="TextLabel1_2_2_3">
-     <property name="text">
-      <string>Insert string in label:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="6">
-    <widget class="Kst::StringSelector" name="_strings" native="true"/>
-   </item>
-   <item row="6" column="0">
     <widget class="QLabel" name="_topLabelLabel">
      <property name="text">
       <string>&amp;Top label:</string>
@@ -102,14 +127,17 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="5">
-    <widget class="Kst::LabelLineEdit" name="_topLabelText">
-     <property name="enabled">
-      <bool>false</bool>
+   <item row="4" column="7">
+    <widget class="QCheckBox" name="_topLabelAuto">
+     <property name="text">
+      <string>Auto</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="_bottomLabelLabel">
      <property name="text">
       <string>Botto&amp;m label:</string>
@@ -122,14 +150,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="5">
-    <widget class="Kst::LabelLineEdit" name="_bottomLabelText">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="6">
+   <item row="5" column="7">
     <widget class="QCheckBox" name="_bottomLabelAuto">
      <property name="text">
       <string>Auto</string>
@@ -139,7 +160,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="_leftLabelLabel">
      <property name="text">
       <string>&amp;Left label:</string>
@@ -152,14 +173,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="5">
-    <widget class="Kst::LabelLineEdit" name="_leftLabelText">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="6">
+   <item row="6" column="7">
     <widget class="QCheckBox" name="_leftLabelAuto">
      <property name="text">
       <string>Auto</string>
@@ -169,7 +183,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="_rightLabelLabel">
      <property name="text">
       <string>&amp;Right label:</string>
@@ -182,14 +196,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1" colspan="5">
-    <widget class="Kst::LabelLineEdit" name="_rightLabelText">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="6">
+   <item row="7" column="7">
     <widget class="QCheckBox" name="_rightLabelAuto">
      <property name="text">
       <string>Auto</string>
@@ -199,7 +206,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0" colspan="7">
+   <item row="8" column="0" colspan="8">
     <widget class="Line" name="line">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -212,7 +219,7 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0" colspan="2">
+   <item row="9" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="spacing">
       <number>0</number>
@@ -245,20 +252,7 @@
      </item>
     </layout>
    </item>
-   <item row="12" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="11" column="3" colspan="4">
+   <item row="9" column="4" colspan="4">
     <spacer>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -271,70 +265,128 @@
      </property>
     </spacer>
    </item>
-   <item row="6" column="6">
-    <widget class="QCheckBox" name="_topLabelAuto">
-     <property name="text">
-      <string>Auto</string>
+   <item row="10" column="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="6">
-    <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
-   </item>
-   <item row="0" column="6">
-    <widget class="Kst::ColorButton" name="_globalLabelColor"/>
-   </item>
-   <item row="0" column="5">
-    <widget class="QPushButton" name="_globalLabelItalic">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="iconSize">
+     <property name="sizeHint" stdset="0">
       <size>
-       <width>22</width>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="2" colspan="5">
+    <widget class="Kst::SVCCTextEdit" name="_topLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
        <height>22</height>
       </size>
      </property>
-     <property name="shortcut">
-      <string>Alt+I</string>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
-    <widget class="QPushButton" name="_globalLabelBold">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="5" column="2" colspan="5">
+    <widget class="Kst::SVCCTextEdit" name="_bottomLabelText">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
-     <property name="iconSize">
+     <property name="minimumSize">
       <size>
-       <width>22</width>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
        <height>22</height>
       </size>
      </property>
-     <property name="shortcut">
-      <string>Alt+B</string>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>points</string>
+   <item row="6" column="2" colspan="5">
+    <widget class="Kst::SVCCTextEdit" name="_leftLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2" colspan="5">
+    <widget class="Kst::SVCCTextEdit" name="_rightLabelText">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
      </property>
     </widget>
    </item>
@@ -342,31 +394,17 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>Kst::SVCCTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>cclineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>Kst::ColorButton</class>
    <extends>QToolButton</extends>
    <header>colorbutton.h</header>
   </customwidget>
-  <customwidget>
-   <class>Kst::ScalarSelector</class>
-   <extends>QWidget</extends>
-   <header>scalarselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Kst::StringSelector</class>
-   <extends>QWidget</extends>
-   <header>stringselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Kst::LabelLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>labellineedit.h</header>
-  </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>_topLabelText</tabstop>
-  <tabstop>_bottomLabelText</tabstop>
-  <tabstop>_leftLabelText</tabstop>
-  <tabstop>_rightLabelText</tabstop>
   <tabstop>_globalLabelFontSize</tabstop>
   <tabstop>_globalLabelBold</tabstop>
   <tabstop>_globalLabelItalic</tabstop>
@@ -376,5 +414,70 @@
   <tabstop>_editLegendContents</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_topLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_topLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>570</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>408</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_bottomLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_bottomLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>170</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_leftLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_leftLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_rightLabelAuto</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_rightLabelText</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>549</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>465</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

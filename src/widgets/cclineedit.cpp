@@ -37,6 +37,8 @@
 
 namespace Kst {
 
+QList<CCCommonEdit*> CCCommonEdit::_u;
+
 // CompletionCase
 bool operator<(const CompletionCase&a,const CompletionCase&b)
 {
@@ -305,16 +307,12 @@ void CCCommonEdit::Divide(QString x)
         }
     }
 
-    // this is a hard-coded exception to allow non-space-sperated Latex commands {
-    if(!caught&&x.lastIndexOf("\\")>x.lastIndexOf(search)&&x.lastIndexOf("\\"))
+    if(!caught&&x.lastIndexOf("\\")>x.lastIndexOf(search)&&x.lastIndexOf("\\")) // this is an exception to allow non-space-sperated Latex commands
     {
-	search=x[x.lastIndexOf("\\")-1];
-	qDebug()<<"EX.SEARCH IS NOW"<<search;
 	caught=1;
-	x.remove(0,x.lastIndexOf("\\"));
+        x.remove(0,x.lastIndexOf("\\"));
     }
-    // }
-    if(x.lastIndexOf(search)) {
+    else if(x.lastIndexOf(search)) {
         x.remove(0,x.lastIndexOf(search)+(caught?0:1));
     }
 
@@ -556,6 +554,7 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
 void SVCCLineEdit::fillKstObjects()
 {
     if(!_store) {
+        qDebug()<<"Warning: SVCCLineEdit::fillKstObjects() called without object store...";
         return;
     }
     if(_svData) {
@@ -579,8 +578,8 @@ void SVCCLineEdit::fillKstObjects()
         ScalarPtr scalar = (*scalarIt);
 
         scalar->readLock();
-        _svData->back()[0].push_back(scalar->Name()+"]");
-        _svData->front()[0].push_back("["+scalar->Name()+"]");
+        _svData->back()[0].push_back(scalar->lengthLimitedName(40)+"]");
+        _svData->front()[0].push_back("["+scalar->lengthLimitedName(40)+"]");
         scalar->unlock();
     }
 
@@ -589,8 +588,8 @@ void SVCCLineEdit::fillKstObjects()
         VectorPtr vector = (*vectorIt);
 
         vector->readLock();
-        _svData->back()[1].push_back(vector->Name()+"]");
-        _svData->front()[1].push_back("["+vector->Name()+"]");
+        _svData->back()[1].push_back(vector->lengthLimitedName(40)+"]");
+        _svData->front()[1].push_back("["+vector->lengthLimitedName(40)+"]");
         vector->unlock();
     }
 
@@ -600,6 +599,7 @@ void SVCCLineEdit::fillKstObjects()
 void SVCCTextEdit::fillKstObjects()
 {
     if(!_store) {
+        qDebug()<<"Warning: SVCCTextEdit::fillKstObjects() called without object store...";
         return;
     }
     if(_svData) {
@@ -617,7 +617,7 @@ void SVCCTextEdit::fillKstObjects()
             ScalarPtr scalar = (*scalarIt);
 
             scalar->readLock();
-            _svData->back()[0].push_back(scalar->Name()+"]");
+            _svData->back()[0].push_back(scalar->lengthLimitedName(40)+"]");
             scalar->unlock();
         }
 
@@ -628,7 +628,7 @@ void SVCCTextEdit::fillKstObjects()
         StringPtr string = (*stringIt);
 
         string->readLock();
-        _svData->back()[1].push_back(string->Name()+"]");
+        _svData->back()[1].push_back(string->lengthLimitedName(40)+"]");
         string->unlock();
     }
 
@@ -751,7 +751,9 @@ void CCCommonEdit::NewVector()
 {
     QString newName;
     DialogLauncher::self()->showVectorDialog(newName, 0, true);
-    fillKstObjects();
+    foreach(CCCommonEdit* ccc, _u) {
+        ccc->fillKstObjects();
+    }
     VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));
 
     if (vector) {
@@ -764,8 +766,9 @@ void CCCommonEdit::NewScalar()
 {
     QString scalarName;
     DialogLauncher::self()->showScalarDialog(scalarName, 0, true);
-    fillKstObjects();
-    ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
+    foreach(CCCommonEdit* ccc, _u) {
+        ccc->fillKstObjects();
+    }    ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
 
     if (scalar) {
         QString sName="["+scalar->Name()+"]";
@@ -777,8 +780,9 @@ void CCCommonEdit::NewString()
 {
     QString stringName;
     DialogLauncher::self()->showStringDialog(stringName, 0, true);
-    fillKstObjects();
-    StringPtr string = kst_cast<String>(_store->retrieveObject(stringName));
+    foreach(CCCommonEdit* ccc, _u) {
+        ccc->fillKstObjects();
+    }    StringPtr string = kst_cast<String>(_store->retrieveObject(stringName));
 
     if (string) {
         QString sName="["+string->Name()+"]";
@@ -811,7 +815,9 @@ void CCCommonEdit::EditItem()
                         DialogLauncher::self()->showVectorDialog(vectorName,ObjectPtr(vector),1);
                     }
                 }
-                fillKstObjects();
+                foreach(CCCommonEdit* ccc, _u) {
+                    ccc->fillKstObjects();
+                }
             } else if(scalar) {
                 if (scalar->provider()) {
                     DialogLauncher::self()->showObjectDialog(scalar->provider());
@@ -822,7 +828,9 @@ void CCCommonEdit::EditItem()
                         DialogLauncher::self()->showScalarDialog(scalarName,ObjectPtr(scalar),1);
                     }
                 }
-                fillKstObjects();
+                foreach(CCCommonEdit* ccc, _u) {
+                    ccc->fillKstObjects();
+                }
             } else if(string) {
                 if (string->provider()) {
                     DialogLauncher::self()->showObjectDialog(string->provider());
@@ -833,7 +841,9 @@ void CCCommonEdit::EditItem()
                         DialogLauncher::self()->showScalarDialog(stringName,ObjectPtr(string),1);
                     }
                 }
-                fillKstObjects();
+                foreach(CCCommonEdit* ccc, _u) {
+                    ccc->fillKstObjects();
+                }
             }
         }
     }
