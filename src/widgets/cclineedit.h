@@ -67,8 +67,8 @@ protected:
     void NewString();
     void EditItem();
     void Insert(const QString&i,bool stringIsCompletion=true);
-    CCCommonEdit() : _store(0) {_u.push_back(this);}
-    ~CCCommonEdit() { _u.push_back(this); }
+    CCCommonEdit() : _store(0) {_u.push_back(this); }
+    ~CCCommonEdit() { _u.removeOne(this); }
 };
 
 /**
