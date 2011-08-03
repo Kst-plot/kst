@@ -170,6 +170,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     virtual void paint(QPainter *painter);
 
+    virtual void paintChildItems(QPainter &painter);
+
     virtual QList<DialogPage*> dialogPages() const { return QList<DialogPage*>(); }
 
     virtual QPointF centerOfRotation() const { return rect().center(); }

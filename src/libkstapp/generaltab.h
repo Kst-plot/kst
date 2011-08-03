@@ -29,6 +29,9 @@ class GeneralTab : public DialogTab, Ui::GeneralTab {
     bool useOpenGL() const;
     void setUseOpenGL(const bool useOpenGL);
 
+    bool transparentDrag() const;
+    void setTransparentDrag(const bool transparent_drag);
+
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int Period);
 

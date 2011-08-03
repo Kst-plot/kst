@@ -38,6 +38,13 @@ void GeneralTab::setUseOpenGL(const bool useOpenGL) {
   _useOpenGL->setChecked(useOpenGL);
 }
 
+bool GeneralTab::transparentDrag() const {
+  return _transparentDrag->isChecked();
+}
+
+void GeneralTab::setTransparentDrag(const bool transparent_drag) {
+  _transparentDrag->setChecked(transparent_drag);
+}
 
 int GeneralTab::minimumUpdatePeriod() const {
   return _maxUpdate->value();

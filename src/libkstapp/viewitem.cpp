@@ -993,7 +993,11 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   //pixmap.fill(brush().color());
   // Qt::transparent is maybe too expensive, and when 
   // not moving a plot it also has no transparent background
-  pixmap.fill(Qt::transparent);
+  if (ApplicationSettings::self()->transparentDrag()) {
+    pixmap.fill(Qt::transparent);
+  } else {
+    pixmap.fill(brush().color());
+  }
   QPainter painter(&pixmap);
 
   qreal x1 = -rect().height()*sin(theta);
@@ -1027,13 +1031,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   setBrush(brush_hold);
 
   // TODO also paint annotations
-  QList<QGraphicsItem*> children = childItems();
-  foreach(QGraphicsItem* child, children) {
-    ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
-    if (item) {
-      //item->paint(&painter);
-    }
-  }
+  paintChildItems(painter);
   painter.end();
 
   drag->setPixmap(pixmap);
@@ -1052,6 +1050,23 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   if (dropAction != Qt::MoveAction) {
     show();
   }
+}
+
+void ViewItem::paintChildItems(QPainter &painter) {
+  QList<QGraphicsItem*> children = childItems();
+  foreach(QGraphicsItem* child, children) {
+    ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
+    if (item) {
+      painter.save();
+      painter.translate(item->pos().x(),
+                        item->pos().y());
+      painter.rotate(item->rotationAngle());
+      item->paint(&painter);
+      item->paintChildItems(painter);
+      painter.restore();
+    }
+  }
+
 }
 
 void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {

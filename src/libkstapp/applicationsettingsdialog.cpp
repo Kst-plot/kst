@@ -74,6 +74,7 @@ ApplicationSettingsDialog::~ApplicationSettingsDialog() {
 
 void ApplicationSettingsDialog::setupGeneral() {
   _generalTab->setUseOpenGL(ApplicationSettings::self()->useOpenGL());
+  _generalTab->setTransparentDrag(ApplicationSettings::self()->transparentDrag());
   _generalTab->setMinimumUpdatePeriod(ApplicationSettings::self()->minimumUpdatePeriod());
 }
 
@@ -104,6 +105,7 @@ void ApplicationSettingsDialog::setupLayout() {
 void ApplicationSettingsDialog::generalChanged() {
   //Need to block the signals so that the modified signal only goes out once...
   ApplicationSettings::self()->blockSignals(true);
+  ApplicationSettings::self()->setTransparentDrag(_generalTab->transparentDrag());
   ApplicationSettings::self()->setUseOpenGL(_generalTab->useOpenGL());
   ApplicationSettings::self()->setMinimumUpdatePeriod(_generalTab->minimumUpdatePeriod());
   ApplicationSettings::self()->blockSignals(false);

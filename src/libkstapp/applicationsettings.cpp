@@ -48,9 +48,7 @@ ApplicationSettings::ApplicationSettings() {
 
   _settings = new QSettings("kst", "application");
 
-  //FIXME Not sure if this is the best test for hardware acceleration
-  // but right now opening with QGV with QGLWidget as viewport takes
-  // several seconds delay when opening application on my system.
+  _transparentDrag = _settings->value("general/transparentdrag", false).toBool();
   _useOpenGL = _settings->value("general/opengl", false).toBool(); //QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
 
   _maxUpdate = _settings->value("general/minimumupdateperiod", QVariant(200)).toInt();
@@ -92,6 +90,15 @@ ApplicationSettings::~ApplicationSettings() {
   delete _settings;
 }
 
+bool ApplicationSettings::transparentDrag() const {
+  return _transparentDrag;
+}
+
+void ApplicationSettings::setTransparentDrag(bool transparent_drag) {
+  _transparentDrag = transparent_drag;
+  _settings->setValue("general/transparentdrag",transparent_drag);
+  emit modified();
+}
 
 bool ApplicationSettings::useOpenGL() const {
   return _useOpenGL;

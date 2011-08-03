@@ -29,6 +29,9 @@ class ApplicationSettings : public QObject
   public:
     static ApplicationSettings *self();
 
+    bool transparentDrag() const;
+    void setTransparentDrag(bool transparent_drag);
+
     bool useOpenGL() const;
     void setUseOpenGL(bool useOpenGL);
 
@@ -77,6 +80,7 @@ class ApplicationSettings : public QObject
 
   private:
     QSettings *_settings;
+    bool _transparentDrag;
     bool _useOpenGL;
     double _refViewWidth;
     double _refViewHeight;
