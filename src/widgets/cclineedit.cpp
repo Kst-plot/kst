@@ -532,7 +532,6 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
     _allData->back().back().push_back("Int");
     _allData->back().back().push_back("Leq");
     _allData->back().back().push_back("Le");
-    _allData->back().back().push_back("Nu");
     _allData->back().back().push_back("Ne");
     _allData->back().back().push_back("Overline{");
     _allData->back().back().push_back("Odot");
@@ -1009,6 +1008,7 @@ void CCTableView::showEvent(QShowEvent *)
 {
     //    resizeColumnsToContents();
     int bestWidth=qMax(width(),(int)((horizontalHeader()->length()+verticalScrollBar()->width())));
+    horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
     horizontalHeader()->setStretchLastSection(1);
     setMinimumWidth(bestWidth);
     setMaximumWidth(bestWidth);
