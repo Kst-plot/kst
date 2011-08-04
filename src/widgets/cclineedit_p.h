@@ -59,10 +59,13 @@ public slots:
 class CCTableModel : public QAbstractTableModel {
     Q_OBJECT
     QList<QStringList> _visibleData;
+    QSize s_minSizeCache[32];
 public:
     explicit CCTableModel(const QList<QStringList>& visibleData) : _visibleData(visibleData)
     {
-
+        for(int i=0;i<32;i++) {
+            s_minSizeCache[i]=QSize(-1,-1);
+        }
     }
 
     int rowCount(const QModelIndex &parent) const;

@@ -34,6 +34,7 @@
 #include <QHash>
 #include <QMenu>
 #include <QTimer>
+#include <QLabel>
 
 namespace Kst {
 
@@ -162,6 +163,9 @@ void CategoricalCompleter::verifyPrefix()
                 for(int i=0;i<operatorNextList.size();i++) {
                     last1=qMax(last1,hack->text().lastIndexOf(operatorNextList[i],hack->cursorPosition()-1));
                 }
+                last1=qMax(last1,hack->text().lastIndexOf("PI ",hack->cursorPosition()-1,Qt::CaseInsensitive));
+                last1=qMax(last1,hack->text().lastIndexOf("e ",hack->cursorPosition()-1,Qt::CaseInsensitive));
+
                 for(int i=0;i<functionNextList.size();i++) {
                     last2=qMax(last2,hack->text().lastIndexOf(functionNextList[i],hack->cursorPosition()-1));
                 }
@@ -562,8 +566,8 @@ void SVCCLineEdit::fillKstObjects()
     _svData = new QList<CompletionCase>;
     _svData->push_back(CompletionCase(""));
     _svData->back().push_back(Category("Scalars"));
-    _svData->back().back().push_back("PI");
-    _svData->back().back().push_back("e");
+    _svData->back().back().push_back("PI ");
+    _svData->back().back().push_back("e ");
     _svData->back().push_back(Category("Vectors"));
     _svData->push_back(CompletionCase("["));
     _svData->back().push_back(Category("Scalars"));
@@ -866,6 +870,23 @@ int CCTableModel::columnCount(const QModelIndex &) const
 
 QVariant CCTableModel::data(const QModelIndex &index, int role) const
 {
+    if(role==Qt::SizeHintRole) {    //evil problems have evil solutions -_-
+        if(index.column()>=columnCount(QModelIndex())) {
+            return QVariant();
+        }
+        if(s_minSizeCache[index.column()]!=QSize(-1,-1)) {
+            return s_minSizeCache[index.column()];
+        }
+        QLabel tmp;
+        int wid=0;
+        for(int i=0;i<_visibleData[index.column()].size();i++) {
+            tmp.setText(_visibleData[index.column()][i]);
+            wid=qMax(wid,tmp.sizeHint().width());
+        }
+        QSize s=tmp.sizeHint();
+        s.setWidth(wid*1.1);
+        return const_cast<CCTableModel*>(this)->s_minSizeCache[index.column()]=s;
+    }
     if(role!=Qt::DisplayRole) return QVariant();  // Return unvalid QVariant
     Q_ASSERT(index.column()<columnCount(QModelIndex()));
     if(index.column()==-1) {
@@ -1002,6 +1023,8 @@ void CCTableView::mousePressEvent(QMouseEvent *event)
         }
         hide();
     }
+    completer->verifyPrefix();
+    updateSuggestions();
 }
 
 void CCTableView::showEvent(QShowEvent *)
