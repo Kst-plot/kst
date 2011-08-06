@@ -884,21 +884,23 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
-    QRectF newRect(rect().x(), rect().y(),
-                   poly.last().x() - rect().x(),
-                   poly.last().y() - rect().y());
+    double x0 = qMin(0.0, poly.last().x());
+    double y0 = qMin(0.0, poly.last().y());
+    QRectF newRect(x0, y0, fabs(poly.last().x()), fabs(poly.last().y()));
     setViewRect(newRect);
     return;
   }
 
   if (event == View::MouseRelease) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseRelease));
-    QRectF newRect(rect().x(), rect().y(),
-                   poly.last().x() - rect().x(),
-                   poly.last().y() - rect().y());
+    double x0 = qMin(0.0, poly.last().x());
+    double y0 = qMin(0.0, poly.last().y());
+    QRectF newRect(x0, y0, fabs(poly.last().x()), fabs(poly.last().y()));
 
     if (!newRect.isValid()) {
       newRect = newRect.normalized();
+      newRect.setWidth(qMax(3.0, newRect.width()));
+      newRect.setHeight(qMax(3.0, newRect.height()));
       setPos(pos() + newRect.topLeft());
 
       newRect.moveTopLeft(QPointF(0, 0));
@@ -915,7 +917,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
     updateViewItemParent();
     _creationState = Completed;
-    setZValue(1);
+    setZValue(DRAWING_ZORDER);
     emit creationComplete();
     return;
   }
@@ -1557,18 +1559,16 @@ bool ViewItem::updateViewItemParent() {
            << "topLevel:" << (topLevel ? "true" : "false")
            << "origin:" << origin
            << "rect:" << rect()
-           << "collision count:" << collisions.count()
-           << endl;
+           << "collision count:" << collisions.count();
 #endif
 
   //Doesn't collide then reparent to top-level
   if (collisions.isEmpty() && !topLevel) {
 #if DEBUG_REPARENT
-    qDebug() << "reparent to topLevel" << endl;
+    qDebug() << "reparent to topLevel";
 
     qDebug() << "before transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     /*bring the old parent's transform with us*/
@@ -1576,8 +1576,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     setParentViewItem(0);
@@ -1586,8 +1585,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after new parent"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     return true;
@@ -1599,24 +1597,24 @@ bool ViewItem::updateViewItemParent() {
 
     if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect)) {
 #if DEBUG_REPARENT
-     qDebug() << "rejecting collision" << viewItem << !viewItem->acceptsChildItems() << isAncestorOf(viewItem) << !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect); 
+     qDebug() << "rejecting collision" << viewItem << !viewItem->acceptsChildItems() <<
+                 isAncestorOf(viewItem) << !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect);
 #endif
       continue;
     }
 
     if (parentItem() == viewItem) { /*already done*/
 #if DEBUG_REPARENT
-      qDebug() << "already in containing parent" << endl;
+      qDebug() << "already in containing parent";
 #endif
       return false;
     }
 
 #if DEBUG_REPARENT
-    qDebug() << "reparent to" << viewItem << endl;
+    qDebug() << "reparent to" << viewItem;
 
     qDebug() << "before transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     if (!topLevel) { /*bring the old parent's transform with us*/
@@ -1628,8 +1626,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     setParentViewItem(viewItem);
@@ -1638,8 +1635,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after new parent"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     return true;
@@ -1648,11 +1644,10 @@ bool ViewItem::updateViewItemParent() {
   //No suitable collisions then reparent to top-level
   if (!topLevel) {
 #if DEBUG_REPARENT
-    qDebug() << "reparent to topLevel" << endl;
+    qDebug() << "reparent to topLevel";
 
     qDebug() << "before transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     /*bring the old parent's transform with us*/
@@ -1660,8 +1655,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after transform"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     setParentViewItem(0);
@@ -1670,8 +1664,7 @@ bool ViewItem::updateViewItemParent() {
 
 #if DEBUG_REPARENT
     qDebug() << "after new parent"
-             << "origin:" << mapToScene(QPointF(0,0))
-             << endl;
+             << "origin:" << mapToScene(QPointF(0,0));
 #endif
 
     return true;
@@ -2353,80 +2346,6 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
   _item->view()->undoStack()->push(this);
 }
 
-#if 0
-void oldAppendLayout(CurvePlacement::Layout layout, ViewItem* item, int columns) {
-  Q_ASSERT(_item);
-  Q_ASSERT(_item->view());
-  Q_ASSERT(item);
-
-  _layout = new ViewGridLayout(_item);
-
-  QPointF center = _item->view()->sceneRect().center();
-  center -= QPointF(100.0, 100.0);
-
-  item->setPos(center);
-  item->setViewRect(0.0, 0.0, 200.0, 200.0);
-  _item->view()->scene()->addItem(item);
-
-  if (layout == CurvePlacement::Auto) {
-    columns = 0;
-  }
-
-  if (layout != CurvePlacement::Protect) {
-    QList<ViewItem*> viewItems;
-    QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
-
-    foreach (QGraphicsItem *graphicsItem, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
-      if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item || viewItem == item)
-        continue;
-      viewItems.append(viewItem);
-    }
-
-    bool appendRequired = true;
-    if (viewItems.isEmpty()) {
-      viewItems.append(item);
-      appendRequired = false;
-    }
-    if (layout == CurvePlacement::Auto) {
-      columns = (int)sqrt((double)viewItems.count()+1);
-    }
-
-    Grid *grid = Grid::buildGrid(viewItems, columns);
-    Q_ASSERT(grid);
-    grid->appendItem(item);
-
-    if (appendRequired) {
-      viewItems.append(item);
-    }
-
-    _layout = new ViewGridLayout(_item);
-
-    foreach (ViewItem *v, viewItems) {
-      int r = 0, c = 0, rs = 0, cs = 0;
-      if (grid->locateWidget(v, r, c, rs, cs)) {
-        if (rs * cs == 1) {
-          _layout->addViewItem(v, r, c, 1, 1);
-        } else {
-          _layout->addViewItem(v, r, c, rs, cs);
-        }
-      } else {
-        qDebug() << "ooops, viewItem does not fit in layout" << endl;
-      }
-    }
-    delete grid;
-
-    if (qobject_cast<LayoutBoxItem*>(_item)) {
-      QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
-                      _item, SLOT(setEnabled(bool)));
-    }
-
-    _layout->apply();
-  }
-  _item->view()->undoStack()->push(this);
-}
-
-#endif
 
 void MoveCommand::undo() {
   Q_ASSERT(_item);

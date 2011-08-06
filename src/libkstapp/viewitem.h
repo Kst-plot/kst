@@ -319,6 +319,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
+    QPointF dragStartPosition;
+    void startDragging(QWidget *widget, const QPointF& hotspot);
 
   private:
     GripMode _gripMode;
@@ -360,9 +362,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     // use setParentViewItem(ViewItem*)
     void setParentItem(QGraphicsItem*);
-
-    QPointF dragStartPosition;
-    void startDragging(QWidget *widget, const QPointF& hotspot);
 
 };
 

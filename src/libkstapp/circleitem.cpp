@@ -59,18 +59,18 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
     setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
+    setRect(-2,-2,4,4);
     view()->scene()->addItem(this);
     return;
   }
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
-    qreal size = (fabs(poly.last().x() - rect().x()) < fabs(poly.last().y() - rect().y())) ? fabs(poly.last().x() - rect().x()) : fabs(poly.last().y() - rect().y());
-    qreal width = (poly.last().x() - rect().x()) < 0 ? size * -1.0 : size;
-    qreal height = (poly.last().y() - rect().y()) < 0 ? size * -1.0 : size;
-    QRectF newRect(rect().x(), rect().y(),
-                   width,
-                   height);
+    qreal dx = poly.last().x();
+    qreal dy = poly.last().y();
+    qreal r = qMax(2.0,sqrt(dx*dx + dy*dy));
+
+    QRectF newRect(-r, -r, 2.0*r, 2.0*r);
     setViewRect(newRect);
 
     return;

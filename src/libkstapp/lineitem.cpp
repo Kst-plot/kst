@@ -165,6 +165,13 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
+  if (!dragStartPosition.isNull() && event->buttons() & Qt::LeftButton) {
+    if (view()->mouseMode() == View::Move) {
+      startDragging(event->widget(), dragStartPosition.toPoint());
+      return;
+    }
+  }
+
   if (view()->mouseMode() == View::Default) {
     if (gripMode() == ViewItem::Move || activeGrip() == NoGrip) {
       view()->setMouseMode(View::Move);
