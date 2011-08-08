@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
       process_field_entry(i_frame, entry_list+i_ref, sourcedf, destdf);
       i_frame++;
     } else { // we are caught up
-      gd_flush(destdf, NULL);
+      //gd_flush(destdf, NULL);
       usleep(10000);
     }
   }
