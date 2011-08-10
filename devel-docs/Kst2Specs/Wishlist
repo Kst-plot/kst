@@ -13,10 +13,6 @@ Smarter ASCII reader:
 Fixup line/arrow dimensions tab:
   x,y instead of length/angle
 
-----------
-
-Scientific notation (instead of C's %e notation) for extreme axis numbers
-
 --------
 
 Edit multiple for other view objects (arrow, line, label...)
@@ -48,10 +44,6 @@ in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
 --------------------
 
 Legends can get larger than the plot if there are enought things in them.  This should not be. 
-
---------
-
-vector selectors in curve dialog can't grow when you extend the window size.
 
 -------
 

@@ -120,7 +120,10 @@ ViewItem::ViewItem(View *parentView) :
   _autoLayoutAction = new QAction(tr("Automatic"), this);
   connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createAutoLayout()));
 
-  _customLayoutAction = new QAction(tr("Custom"), this);
+  _protectedLayoutAction = new QAction(tr("Protect Layout"), this);
+  connect(_protectedLayoutAction, SIGNAL(triggered()), this, SLOT(createProtectedLayout()));
+
+  _customLayoutAction = new QAction(tr("Columns"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
   // only drop plots onto TabBar
@@ -823,9 +826,18 @@ void ViewItem::sharePlots(QPainter *painter, bool creation) {
 void ViewItem::createAutoLayout() {
   if (parentViewItem()) {
     LayoutCommand *layout = new LayoutCommand(parentViewItem());
-    layout->createLayout();
+    layout->createLayout(false);
   } else if (view()) {
-    view()->createLayout();
+    view()->createLayout(false);
+  }
+}
+
+void ViewItem::createProtectedLayout() {
+  if (parentViewItem()) {
+    LayoutCommand *layout = new LayoutCommand(parentViewItem());
+    layout->createLayout(true);
+  } else if (view()) {
+    view()->createLayout(true);
   }
 }
 
@@ -840,9 +852,9 @@ void ViewItem::createCustomLayout() {
   if (ok) {
     if (parentViewItem()) {
       LayoutCommand *layout = new LayoutCommand(parentViewItem());
-      layout->createLayout(columns);
+      layout->createLayout(false, columns);
     } else if (view()) {
-      view()->createLayout(columns);
+      view()->createLayout(false, columns);
     }
   }
 }
@@ -955,6 +967,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
     layoutMenu.setTitle(tr("Cleanup Layout"));
     layoutMenu.addAction(_autoLayoutAction);
+    layoutMenu.addAction(_protectedLayoutAction);
     layoutMenu.addAction(_customLayoutAction);
     menu.addMenu(&layoutMenu);
 
@@ -2167,7 +2180,7 @@ void LayoutCommand::redo() {
 }
 
 
-void LayoutCommand::createLayout(int columns) {
+void LayoutCommand::createLayout(bool preserve, int columns) {
   Q_ASSERT(_item);
   Q_ASSERT(_item->view());
 
@@ -2176,7 +2189,6 @@ void LayoutCommand::createLayout(int columns) {
   if (list.isEmpty()) {
     return; //not added to undostack
   }
-
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
     if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
@@ -2190,7 +2202,7 @@ void LayoutCommand::createLayout(int columns) {
 
   _layout = new ViewGridLayout(_item);
 
-  FormatGridHelper grid(viewItems);
+  FormatGridHelper grid(viewItems, preserve);
 
   if (grid.n_cols == columns) {
     if (grid.numHoles()<columns) {

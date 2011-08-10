@@ -38,13 +38,15 @@ struct AutoFormatRC {
 class FormatGridHelper
 {
 public:
-  FormatGridHelper(const QList<ViewItem*> &viewItems);
+  FormatGridHelper(const QList<ViewItem*> &viewItems, bool protectLayout=true);
 
   QList<AutoFormatRC> rcList;
   QVector< QVector <int> > a;
   int n_rows;
   int n_cols;
   int numHoles();
+  void getHole(int &row, int &col);
+  void condense();
 };
 
 }

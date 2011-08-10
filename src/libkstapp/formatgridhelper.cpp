@@ -110,7 +110,7 @@ void convertEdgeLocationsToGrid(const QList<qreal> &locations, QList<int> &grid_
 
 /*****************************************************************************/
 
-FormatGridHelper::FormatGridHelper(const QList<ViewItem*> &viewItems) {
+FormatGridHelper::FormatGridHelper(const QList<ViewItem*> &viewItems, bool protectLayout) {
   const double min_size_limit = 0.02;
 
   double min_height = 100000.0;
@@ -201,13 +201,33 @@ FormatGridHelper::FormatGridHelper(const QList<ViewItem*> &viewItems) {
       a[i_row][i_col] = 0;
     }
   }
-  foreach (const struct AutoFormatRC &rc, rcList) {
-    for (int i_row = rc.row; i_row<rc.row+rc.row_span; i_row++) {
-      for (int i_col = rc.col; i_col<rc.col+rc.col_span; i_col++) {
+  QList<int> overlapedEntryIndices;
+  int n_rc = rcList.length();
+  for (int i_rc = 0; i_rc < n_rc; i_rc++) {
+  //foreach (const struct AutoFormatRC &rc, rcList) {
+    for (int i_row = rcList.at(i_rc).row; i_row<rcList.at(i_rc).row+rcList.at(i_rc).row_span; i_row++) {
+      for (int i_col = rcList.at(i_rc).col; i_col<rcList.at(i_rc).col+rcList.at(i_rc).col_span; i_col++) {
+        if (a[i_row][i_col]>0) {
+          overlapedEntryIndices.append(i_rc);
+        }
         a[i_row][i_col]++;
       }
     }
   }
+  if (!protectLayout) { // remove overlaps and delete empty rows
+    // move overlaps
+    if (overlapedEntryIndices.length()>0) {
+      foreach (const int &i_ol, overlapedEntryIndices) {
+        int row, col;
+        getHole(row,col);
+        rcList[i_ol].row = row;
+        rcList[i_ol].col = col;
+      }
+    }
+    // remove empty rows
+    condense();
+  }
+
 }
 
 int FormatGridHelper::numHoles() {
@@ -221,5 +241,73 @@ int FormatGridHelper::numHoles() {
   }
 
   return n_holes;
+}
+
+// find an unused location in the grid.  Create a new row if needed.
+void FormatGridHelper::getHole(int &row, int &col) {
+  for (int i_row = 0; i_row<n_rows; i_row++) {
+    for (int i_col = 0; i_col<n_cols; i_col++) {
+      if (a[i_row][i_col] == 0) {
+        row = i_row;
+        col = i_col;
+        a[i_row][i_col]++; // mark it used
+        return;
+      }
+    }
+  }
+  // add a new row
+  n_rows++;
+  a.resize(n_rows);
+  a[n_rows-1].resize(n_cols);
+  row = n_rows-1;
+  col = 0;
+  a[row][col]++; // mark it used
+  return;
+}
+
+// remove empty rows and empty columns
+void FormatGridHelper::condense() {
+  // delete empty rows;
+  for (int i_row = 0; i_row < n_rows; i_row++) {
+    bool row_used = false;
+    for (int i_col = 0; i_col < n_cols; i_col++) {
+      if (a[i_row][i_col]>0) {
+        row_used = true;
+      }
+    }
+    if (!row_used) {
+      a.remove(i_row);
+      int n_rc = rcList.length();
+      for (int i_rc=0; i_rc < n_rc; i_rc++) {
+        if (rcList[i_rc].row > i_row) {
+          rcList[i_rc].row--;
+        }
+      }
+      i_row--;
+      n_rows--;
+    }
+  }
+  // delete empty columns
+  for (int i_col = 0; i_col < n_cols; i_col++) {
+    bool col_used = false;
+    for (int i_row = 0; i_row < n_rows; i_row++) {
+      if (a[i_row][i_col]>0) {
+        col_used = true;
+      }
+    }
+    if (!col_used) {
+      for (int j_row = 0; j_row<n_rows; j_row++) {
+        a[j_row].remove(i_col);
+      }
+      int n_rc = rcList.length();
+      for (int i_rc=0; i_rc < n_rc; i_rc++) {
+        if (rcList[i_rc].col > i_col) {
+          rcList[i_rc].col--;
+        }
+      }
+      i_col--;
+      n_cols--;
+    }
+  }
 }
 }

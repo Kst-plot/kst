@@ -127,7 +127,8 @@ class View : public QGraphicsView
     void creationPolygonChanged(View::CreationEvent event);
 
   public Q_SLOTS:
-    void createLayout(int columns = 0);
+    void createLayout(bool preserve = true, int columns = 0);
+    void createUnprotectedLayout(bool preserve = true, int columns = 0) {createLayout(false);}
     void appendToLayout(CurvePlacement::Layout layout, ViewItem* item, int columns = 0);
     void createCustomLayout();
     void viewChanged();
@@ -146,6 +147,7 @@ class View : public QGraphicsView
 
     QAction *_editAction;
     QAction *_autoLayoutAction;
+    QAction *_protectedLayoutAction;
     QAction *_customLayoutAction;
 
   private Q_SLOTS:

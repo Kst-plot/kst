@@ -240,6 +240,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void raise();
     virtual void lower();
     virtual void createAutoLayout();
+    virtual void createProtectedLayout();
     virtual void createCustomLayout();
     virtual void sharePlots(QPainter *painter, bool creation);
     virtual void remove();
@@ -303,6 +304,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QAction *_raiseAction;
     QAction *_lowerAction;
     QAction *_autoLayoutAction;
+    QAction *_protectedLayoutAction;
     QAction *_customLayoutAction;
 
     bool _isXTiedZoom;
@@ -413,7 +415,7 @@ class LayoutCommand : public ViewItemCommand
 
     virtual void undo();
     virtual void redo();
-    void createLayout(int columns = 0);
+    void createLayout(bool preserve = true, int columns = 0);
   private:
     QPointer<ViewGridLayout> _layout;
 };

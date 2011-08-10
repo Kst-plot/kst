@@ -98,7 +98,10 @@ void View::init()
   connect(_editAction, SIGNAL(triggered()), this, SLOT(edit()));
 
   _autoLayoutAction = new QAction(tr("Automatic"), this);
-  connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
+  connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createUnprotectedLayout()));
+
+  _protectedLayoutAction = new QAction(tr("Protect Layout"), this);
+  connect(_protectedLayoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
 
   _customLayoutAction = new QAction(tr("Custom"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
@@ -372,16 +375,16 @@ void View::createCustomLayout() {
                                       tr("Select Number of Columns"),default_cols, 0,
                                       10, 1, &ok);
   if (ok) {
-    createLayout(columns);
+    createLayout(false, columns);
   }
 }
 
 
-void View::createLayout(int columns) {
+void View::createLayout(bool preserve, int columns) {
   PlotItemManager::self()->clearFocusedPlots();
 
   LayoutCommand *layout = new LayoutCommand(new LayoutBoxItem(this));
-  layout->createLayout(columns);
+  layout->createLayout(preserve, columns);
 
   if (_layoutBoxItem) {
     _layoutBoxItem->setEnabled(false);
@@ -664,6 +667,7 @@ void View::contextMenuEvent() {
   QMenu layoutMenu;
   layoutMenu.setTitle(tr("Cleanup Layout"));
   layoutMenu.addAction(_autoLayoutAction);
+  layoutMenu.addAction(_protectedLayoutAction);
   layoutMenu.addAction(_customLayoutAction);
   menu.addMenu(&layoutMenu);
 
