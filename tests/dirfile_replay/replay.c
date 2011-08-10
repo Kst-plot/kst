@@ -182,6 +182,7 @@ int main(int argc, char *argv[]) {
       i_ref = i_field;
     }
   }
+  printf("Reference field %d %s\n", i_ref, entry_list[i_ref].field);
   buffer = (void *)malloc(max_spf * sizeof(double));
   
   gettimeofday(&tv, NULL);
@@ -198,10 +199,12 @@ int main(int argc, char *argv[]) {
 	  process_field_entry(i_frame, entry_list+i_field, sourcedf, destdf);
         }
       }
+      if (i_frame == n_frames-1) {
+	usleep(10000);
+      }
       process_field_entry(i_frame, entry_list+i_ref, sourcedf, destdf);
       i_frame++;
     } else { // we are caught up
-      //gd_flush(destdf, NULL);
       usleep(10000);
     }
   }
