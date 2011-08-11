@@ -553,6 +553,8 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
     CCTextEdit::init(*_allData);
 }
 
+#define SIZE_LIMITED_NAME sizeLimitedName( (_cc&&_cc->_tableView)?_cc->_tableView->font():QFont(), \
+    (_cc&&_cc->_tableView)? ((_cc->_tableView->width()/2-50)): 900000000000)
 
 void SVCCLineEdit::fillKstObjects()
 {
@@ -563,6 +565,7 @@ void SVCCLineEdit::fillKstObjects()
     if(_svData) {
         delete _svData;
     }
+    CCLineEdit::init(*_extraData);
     _svData = new QList<CompletionCase>;
     _svData->push_back(CompletionCase(""));
     _svData->back().push_back(Category("Scalars"));
@@ -581,8 +584,8 @@ void SVCCLineEdit::fillKstObjects()
         ScalarPtr scalar = (*scalarIt);
 
         scalar->readLock();
-        _svData->back()[0].push_back(scalar->lengthLimitedName(40)+"]");
-        _svData->front()[0].push_back("["+scalar->lengthLimitedName(40)+"]");
+        _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
+        _svData->front()[0].push_back("["+scalar->SIZE_LIMITED_NAME+"]");
         scalar->unlock();
     }
 
@@ -591,8 +594,8 @@ void SVCCLineEdit::fillKstObjects()
         VectorPtr vector = (*vectorIt);
 
         vector->readLock();
-        _svData->back()[1].push_back(vector->lengthLimitedName(40)+"]");
-        _svData->front()[1].push_back("["+vector->lengthLimitedName(40)+"]");
+        _svData->back()[1].push_back(vector->SIZE_LIMITED_NAME+"]");
+        _svData->front()[1].push_back("["+vector->SIZE_LIMITED_NAME+"]");
         vector->unlock();
     }
 
@@ -608,6 +611,8 @@ void SVCCTextEdit::fillKstObjects()
     if(_svData) {
         delete _svData;
     }
+    if(!_extraData) _extraData=new QList<CompletionCase>;
+    CCTextEdit::init(*_extraData);
     _svData = new QList<CompletionCase>;
     _svData->push_back(CompletionCase("["));
     _svData->back().push_back(Category("Scalars"));
@@ -620,7 +625,7 @@ void SVCCTextEdit::fillKstObjects()
             ScalarPtr scalar = (*scalarIt);
 
             scalar->readLock();
-            _svData->back()[0].push_back(scalar->lengthLimitedName(40)+"]");
+            _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
             scalar->unlock();
         }
 
@@ -631,7 +636,7 @@ void SVCCTextEdit::fillKstObjects()
         StringPtr string = (*stringIt);
 
         string->readLock();
-        _svData->back()[1].push_back(string->lengthLimitedName(40)+"]");
+        _svData->back()[1].push_back(string->SIZE_LIMITED_NAME+"]");
         string->unlock();
     }
 
@@ -871,9 +876,11 @@ int CCTableModel::columnCount(const QModelIndex &) const
 QVariant CCTableModel::data(const QModelIndex &index, int role) const
 {
     if(role==Qt::SizeHintRole) {    //evil problems have evil solutions -_-
+        emit checkSize();
         if(index.column()>=columnCount(QModelIndex())) {
             return QVariant();
         }
+
         if(s_minSizeCache[index.column()]!=QSize(-1,-1)) {
             return s_minSizeCache[index.column()];
         }
@@ -965,7 +972,8 @@ void CCTableView::updateSuggestions()
             horizontalHeader()->showSection(i);
         }
     }
-    setModel(new CCTableModel(items));
+    CCTableModel* tmodel=new CCTableModel(items);
+    setModel(tmodel);
     int minOK=-1;
     int maxOK=-1;
     for(int i=0;i<_data->size();i++) {
@@ -979,6 +987,7 @@ void CCTableView::updateSuggestions()
     }
 
     resizeColumnsToContents();
+    horizontalHeader()->setStretchLastSection(1);
     completer->complete();
 }
 
@@ -1031,10 +1040,15 @@ void CCTableView::showEvent(QShowEvent *)
 {
     //    resizeColumnsToContents();
     int bestWidth=qMax(width(),(int)((horizontalHeader()->length()+verticalScrollBar()->width())));
-    horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    horizontalHeader()->setResizeMode(QHeaderView::Interactive);
     horizontalHeader()->setStretchLastSection(1);
     setMinimumWidth(bestWidth);
     setMaximumWidth(bestWidth);
+}
+
+void CCTableView::resizeEvent(QResizeEvent*ev)
+{
+    QTableView::resizeEvent(ev);
 }
 
 }

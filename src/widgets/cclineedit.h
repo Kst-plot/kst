@@ -95,6 +95,7 @@ public:
     virtual void init(QList<CompletionCase> data);
 
 public slots:
+    virtual void fillKstObjects() {}
     void insert(const QString &i,bool stringIsCompletion=true);
 protected slots:
     void divide(QString x="\0");
@@ -122,6 +123,7 @@ public:
 
     void setObjectStore(ObjectStore *store);
     virtual void init(QList<CompletionCase> data=QList<CompletionCase>());
+public Q_SLOTS:
     void fillKstObjects();
 protected:
     void contextMenuEvent(QContextMenuEvent *);
@@ -155,6 +157,7 @@ public:
 
 public slots:
     void insert(const QString &i,bool stringIsCompletion=true);
+    virtual void fillKstObjects() {}
 protected slots:
     void divide(QString x="\0");
 
@@ -179,6 +182,7 @@ public:
 
     void setObjectStore(ObjectStore *store);
     virtual void init(QList<CompletionCase> data=QList<CompletionCase>());
+public slots:
     void fillKstObjects();
 protected:
     void contextMenuEvent(QContextMenuEvent *);

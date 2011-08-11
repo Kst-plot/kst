@@ -70,24 +70,28 @@ QString NamedObject::lengthLimitedName(int length) const {
 
 }
 
+QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const {
+    QFontMetrics fontMetrics=QFontMetrics(font);
+    // initial guess
+    int combo_chars = width / fontMetrics.averageCharWidth() - 2;
+    int nameLength = Name().length();
+
+    QString name = lengthLimitedName(combo_chars);
+    while ((combo_chars <= nameLength+1) &&
+           (fontMetrics.width(name) < width - fontMetrics.maxWidth())) {
+      combo_chars++;
+      name = lengthLimitedName(combo_chars);
+    }
+    while ((combo_chars>0) &&
+           (fontMetrics.width(name) > width  - fontMetrics.maxWidth())) {
+      combo_chars--;
+      name = lengthLimitedName(combo_chars);
+    }
+    return name;
+}
+
 QString NamedObject::sizeLimitedName(const QWidget *widget ) const {
-  // initial guess
-  int combo_chars = widget->width() / widget->fontMetrics().averageCharWidth() - 2;
-  int nameLength = Name().length();
-
-  QString name = lengthLimitedName(combo_chars);
-  while ((combo_chars <= nameLength+1) &&
-         (widget->fontMetrics().width(name) < widget->width() - widget->fontMetrics().maxWidth())) {
-    combo_chars++;
-    name = lengthLimitedName(combo_chars);
-  }
-  while ((combo_chars>0) &&
-         (widget->fontMetrics().width(name) > widget->width()  - widget->fontMetrics().maxWidth())) {
-    combo_chars--;
-    name = lengthLimitedName(combo_chars);
-  }
-  return name;
-
+  return sizeLimitedName(widget->font(),widget->width());
 }
 
 QString NamedObject::CleanedName() const {

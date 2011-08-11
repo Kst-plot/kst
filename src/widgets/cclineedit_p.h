@@ -33,6 +33,8 @@ public:
     friend class CCCommonEdit;
     friend class CCLineEdit;
     friend class CCTextEdit;
+    friend class SVCCLineEdit;
+    friend class SVCCTextEdit;
     /**
    * Creates an autocompleter for child.
    *
@@ -73,6 +75,8 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+signals:
+    void checkSize() const;
 };
 
 class CCTableView : public QTableView {
@@ -97,6 +101,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void showEvent(QShowEvent *);
+    void resizeEvent(QResizeEvent *event);
     int widgetCursorPosition() {
         if(_le) {
             return _le->cursorPosition();
@@ -123,7 +128,7 @@ public slots:
     void setColumnHeaders(QStringList columnHeaders);
     void setCompleter(CategoricalCompleter* completer);
     void setData(CompletionCase* data,QString prefix="");
-    void setLineEdit(CCLineEdit* le) { _le=le;}
+    void setLineEdit(CCLineEdit* le) { bool set=_le; _le=le; if(set) le->fillKstObjects(); }
     void setTextEdit(CCTextEdit* te) { _te=te;}
 
 signals:
