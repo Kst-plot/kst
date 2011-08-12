@@ -65,7 +65,9 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QProgressBar>
-
+#include <QMessageBox>
+#include <QImageWriter>
+#include <QToolBar>
 
 namespace Kst {
 

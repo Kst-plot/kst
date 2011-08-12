@@ -13,6 +13,9 @@
 #include "dialogdefaults.h"
 #include "datasource.h"
 
+#include <QPen>
+
+
 namespace Kst {
   QSettings *_dialogDefaults;
 

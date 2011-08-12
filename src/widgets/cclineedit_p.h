@@ -14,6 +14,7 @@
 #include <QStringList>
 #include <QAbstractTableModel>
 #include <QTableView>
+#include <QDebug>
 #include "cclineedit.h"
 
 #ifndef CCLINEEDIT_P_H

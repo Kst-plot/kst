@@ -15,6 +15,7 @@
 #define FORMATGRIDHELPER_H
 
 #include <QList>
+#include <QVector>
 
 namespace Kst {
 

@@ -18,6 +18,8 @@
 
 #include "kst_export.h"
 
+#include <QPen>
+
 namespace Kst {
 
 class StrokeTab : public DialogTab, Ui::StrokeTab {

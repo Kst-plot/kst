@@ -16,6 +16,9 @@
  ***************************************************************************/
 #include "namedobject.h"
 
+#include <QFontMetrics>
+#include <QWidget>
+
 namespace Kst {
   
 NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName")) {

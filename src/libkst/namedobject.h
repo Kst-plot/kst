@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QXmlStreamWriter>
+#include <QFont>
 #include "kst_export.h"
 
 namespace Kst {

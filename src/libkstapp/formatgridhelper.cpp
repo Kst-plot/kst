@@ -14,6 +14,8 @@
 #include "formatgridhelper.h"
 #include "viewitem.h"
 
+#include <QDebug>
+
 namespace Kst {
 
 /*****************************************************************************/
