@@ -378,6 +378,14 @@ static double sec(double x) {
   return 1.0/cos(x);
 }
 
+static double step(double x) {
+  if (x>0.0) {
+    return 1.0;
+  } else {
+    return 0.0;
+  }
+}
+
 
 static struct {
   const char *name;
@@ -401,6 +409,7 @@ static struct {
   {"sin",  &sin},
   {"sinh", &sinh},
   {"sqrt", &sqrt},
+  {"step", &step},
   {"tan",  &tan},
   {"tanh", &tanh},
   {0, 0}
