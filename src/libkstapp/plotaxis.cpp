@@ -91,6 +91,13 @@ double PlotAxis::convertJDtoDisplayTime(double T) {
 }
 
 
+double PlotAxis::convertJDtoCTime(double jdIn) {
+  jdIn -= (JD1970);
+  jdIn *= 24.0*3600.0;
+  return (jdIn);
+}
+
+
 double PlotAxis::convertTimeValueToJD(double valueIn) {
   double value = valueIn;
 
@@ -145,10 +152,10 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
     }
   }
 
-  // utcOffset() is returned in seconds... as it must be since
+  // gmtOffset() is returned in seconds... as it must be since
   //  some time zones are not an integer number of hours offset
   //  from UTC...
-  //jd += double(Settings::globalSettings()->utcOffset()) / 86400.0;
+  jd += (_timezone.gmtOffset(convertJDtoCTime(jd)))/(3600.0*24.0);
 
   // get the date from the Julian day number
   double jd_day = floor(jd);
@@ -521,6 +528,19 @@ bool PlotAxis::axisInterpret() const {
 void PlotAxis::setAxisInterpret(const bool enabled) {
   if (_axisInterpret != enabled) {
     _axisInterpret = enabled;
+    _dirty = true;
+  }
+}
+
+
+QString PlotAxis::timezoneName() const {
+  return _timezone.tzName();
+}
+
+
+void PlotAxis::setTimezoneName(QString timezone) {
+  if (_timezone.tzName() != timezone) {
+    _timezone.setTZ(timezone);
     _dirty = true;
   }
 }
@@ -1201,6 +1221,7 @@ void PlotAxis::saveAsDialogDefaults(const QString &group) const {
   _dialogDefaults->setValue(group+"Interpret", QVariant(axisInterpret()).toString());
   _dialogDefaults->setValue(group+"Interpretation", QVariant(axisInterpretation()).toString());
   _dialogDefaults->setValue(group+"Display", QVariant(axisDisplay()).toString());
+  _dialogDefaults->setValue(group+"Timezone", QVariant(timezoneName()));
   _dialogDefaults->setValue(group+"MajorTickMode", QVariant(axisMajorTickMode()).toString());
   _dialogDefaults->setValue(group+"MinorTickCount", QVariant(axisMinorTickCount()).toString());
   _dialogDefaults->setValue(group+"AutoMinorTickCount", QVariant(axisAutoMinorTicks()).toString());
@@ -1246,6 +1267,8 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());
   xml.writeAttribute("rotation", QVariant(axisLabelRotation()).toString());
   xml.writeAttribute("zoommode", QVariant(axisZoomMode()).toString());
+  xml.writeAttribute("timezonename", _timezone.tzName());
+  xml.writeAttribute("timezoneoffset", QVariant(_timezone.gmtOffset(0)).toString());
   _axisPlotMarkers.saveInPlot(xml);
   xml.writeEndElement();
 }
@@ -1351,6 +1374,11 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   av = attrs.value("zoommode");
   if (!av.isNull()) {
     setAxisZoomMode((PlotAxis::ZoomMode)av.toString().toInt());
+  }
+  av = attrs.value("timezonename");
+  if (!av.isNull()) {
+    setTimezoneName(av.toString());
+    // fixme: handle unrecognised timezone name by using timezoneoffset
   }
 
   QString expectedEnd;

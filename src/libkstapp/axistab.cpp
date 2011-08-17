@@ -12,6 +12,7 @@
 
 #include "axistab.h"
 #include "plotdefines.h"
+#include "ksttimezone.h"
 
 namespace Kst {
 
@@ -77,6 +78,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_timezone, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
@@ -86,6 +88,8 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
   connect(_rotation, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+
+  _timezone->addItems(KstTimeZone::tzList());
 }
 
 
@@ -392,6 +396,21 @@ void AxisTab::setAxisDisplay(AxisDisplayType display) {
 }
 
 
+QString AxisTab::timezone() const {
+  return _timezone->currentText();
+}
+
+
+bool AxisTab::timezoneDirty() const {
+  return _timezone->currentIndex() != -1;
+}
+
+
+void AxisTab::setTimezone(QString timezone) {
+  _timezone->setCurrentIndex(_timezone->findText(timezone));
+}
+
+
 AxisInterpretationType AxisTab::axisInterpretation() const {
   return AxisInterpretationType(_scaleInterpretType->itemData(_scaleInterpretType->currentIndex()).toInt());
 }
@@ -478,6 +497,7 @@ void AxisTab::clearTabValues() {
   _rotation->clear();
   _scaleInterpretType->setCurrentIndex(-1);
   _scaleDisplayType->setCurrentIndex(-1);
+  _timezone->setCurrentIndex(-1);
 
   _drawAxisMajorTicks->setCheckState(Qt::PartiallyChecked);
   _drawAxisMajorGridLines->setCheckState(Qt::PartiallyChecked);

@@ -17,6 +17,7 @@
 
 #include "plotitem.h"
 #include "plotmarkers.h"
+#include "ksttimezone.h"
 
 namespace Kst {
 
@@ -104,6 +105,9 @@ class PlotAxis : public QObject
     bool axisInterpret() const;
     void setAxisInterpret(const bool enabled);
 
+    QString timezoneName() const;
+    void setTimezoneName(QString timezone);
+
     AxisDisplayType axisDisplay() const;
     void setAxisDisplay(const AxisDisplayType display);
 
@@ -142,6 +146,7 @@ class PlotAxis : public QObject
 
   private:
     double convertTimeValueToJD(double valueIn);
+    double convertJDtoCTime(double jdIn);
     double convertJDtoDisplayTime(double T);
     QString convertJDToDateString(double jday, double range_jd);
 
@@ -182,6 +187,7 @@ class PlotAxis : public QObject
     bool _axisInterpret;
     AxisDisplayType _axisDisplay;
     AxisInterpretationType _axisInterpretation;
+    KstTimeZone _timezone;
 
     MajorTickMode _axisMajorTickMode;
     MajorTickMode _axisOverrideMajorTicks;

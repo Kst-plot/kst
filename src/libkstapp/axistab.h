@@ -108,6 +108,10 @@ class AxisTab : public DialogTab, Ui::AxisTab {
     bool axisDisplayDirty() const;
     void setAxisDisplay(AxisDisplayType display);
 
+    QString timezone() const;
+    bool timezoneDirty() const;
+    void setTimezone(QString timezone);
+
     AxisInterpretationType axisInterpretation() const;
     bool axisInterpretationDirty() const;
     void setAxisInterpretation(AxisInterpretationType interpretation);

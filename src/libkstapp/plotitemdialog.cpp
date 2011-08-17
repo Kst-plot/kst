@@ -288,6 +288,7 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setInterpret(_plotItem->xAxis()->axisInterpret());
   _xAxisTab->setAxisDisplay(_plotItem->xAxis()->axisDisplay());
   _xAxisTab->setAxisInterpretation(_plotItem->xAxis()->axisInterpretation());
+  _xAxisTab->setTimezone(_plotItem->xAxis()->timezoneName());
   _xAxisTab->setHideTopRight(_plotItem->manuallyHideTopAxisLabel());
   _xAxisTab->setHideBottomLeft(_plotItem->manuallyHideBottomAxisLabel());
   _xAxisTab->setAxisMinorTickCount(_plotItem->xAxis()->axisMinorTickCount());
@@ -314,6 +315,7 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setInterpret(_plotItem->yAxis()->axisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->yAxis()->axisDisplay());
   _yAxisTab->setAxisInterpretation(_plotItem->yAxis()->axisInterpretation());
+  _yAxisTab->setTimezone(_plotItem->yAxis()->timezoneName());
   _yAxisTab->setHideTopRight(_plotItem->manuallyHideRightAxisLabel());
   _yAxisTab->setHideBottomLeft(_plotItem->manuallyHideLeftAxisLabel());
   _yAxisTab->setAxisMinorTickCount(_plotItem->yAxis()->axisMinorTickCount());
@@ -788,6 +790,9 @@ void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
   }
   if (axisTab->axisInterpretationDirty()) {
     axis->setAxisInterpretation(axisTab->axisInterpretation());
+  }
+  if (axisTab->timezoneDirty()) {
+    axis->setTimezoneName(axisTab->timezone());
   }
   if (axisTab->isBaseOffsetDirty()) {
     axis->setAxisBaseOffset(axisTab->isBaseOffset());

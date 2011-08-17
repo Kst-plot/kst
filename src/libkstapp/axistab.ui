@@ -61,7 +61,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="1" column="1" colspan="3">
          <widget class="QComboBox" name="_scaleInterpretType">
           <property name="enabled">
            <bool>false</bool>
@@ -106,6 +106,35 @@
           </property>
           <property name="whatsThis">
            <string>If the axis is to be intpreted as time, then display the time on the axis with this format.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="label_7">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>TZ:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QComboBox" name="_timezone">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Time encoding type</string>
+          </property>
+          <property name="whatsThis">
+           <string>The axis represents time, whose encoding is selected here.</string>
           </property>
          </widget>
         </item>
@@ -613,8 +642,8 @@
      <y>299</y>
     </hint>
     <hint type="destinationlabel">
-     <x>136</x>
-     <y>396</y>
+     <x>128</x>
+     <y>400</y>
     </hint>
    </hints>
   </connection>
@@ -625,8 +654,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>158</x>
-     <y>297</y>
+     <x>247</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>254</x>
@@ -641,8 +670,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>473</x>
-     <y>294</y>
+     <x>516</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>340</x>
@@ -709,7 +738,7 @@
      <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>528</x>
+     <x>224</x>
      <y>117</y>
     </hint>
    </hints>
@@ -725,7 +754,7 @@
      <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>114</x>
+     <x>109</x>
      <y>117</y>
     </hint>
    </hints>
@@ -737,8 +766,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>114</x>
-     <y>81</y>
+     <x>109</x>
+     <y>86</y>
     </hint>
     <hint type="destinationlabel">
      <x>305</x>
@@ -753,12 +782,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>168</y>
+     <x>122</x>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
-     <x>276</x>
-     <y>209</y>
+     <x>245</x>
+     <y>220</y>
     </hint>
    </hints>
   </connection>
@@ -769,8 +798,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>168</y>
+     <x>122</x>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>340</x>
@@ -785,8 +814,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>190</x>
-     <y>285</y>
+     <x>247</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>156</x>
@@ -801,8 +830,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>284</y>
+     <x>247</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>206</x>
@@ -817,8 +846,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>438</x>
-     <y>284</y>
+     <x>516</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>424</x>
@@ -833,12 +862,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>445</x>
-     <y>284</y>
+     <x>516</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>487</x>
      <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_timezone</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>104</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_7</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>

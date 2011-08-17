@@ -217,6 +217,7 @@ void PlotItem::applyDefaults() {
   xAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpret", false).toBool());
   xAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpretation", 1).toInt());
   xAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/xAxisDisplay", 4).toInt());
+  xAxis()->setTimezoneName(_dialogDefaults->value(defaultsGroupName()+"/xAxisTimezone", "GMT").toString());
   xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/xAxisMajorTickMode", 5).toInt());
   xAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/xAxisMinorTickCount", 5).toInt());
   xAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisautoMinorTickCount", true).toBool());
@@ -247,6 +248,7 @@ void PlotItem::applyDefaults() {
   yAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpret", false).toBool());
   yAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpretation", 1).toInt());
   yAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/yAxisDisplay", 4).toInt());
+  yAxis()->setTimezoneName(_dialogDefaults->value(defaultsGroupName()+"/yAxisTimezone", "GMT").toString());
   yAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/yAxisMajorTickMode", 5).toInt());
   yAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/yAxisMinorTickCount", 5).toInt());
   yAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisautoMinorTickCount", true).toBool());
@@ -2652,7 +2654,8 @@ LegendItem* PlotItem::legend() {
   if (!_legend) {
     _legend = new LegendItem(this);
     _legend->setVisible(false);
-    _legend->setPos(rect().x() + plotRect().width()*0.05, rect().y() + plotRect().height()*0.15);
+    double margin = 0.025*(plotRect().width() + plotRect().height());
+    _legend->setPos(plotRect().x() + margin, plotRect().y() + margin);
     _legend->updateRelativeSize();
   }
   return _legend;
