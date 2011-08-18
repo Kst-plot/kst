@@ -13,11 +13,13 @@
 #ifndef KSTTIMEZONE_H
 #define KSTTIMEZONE_H
 
+#include "kst_export.h"
+
 #include <QStringList>
 
 namespace Kst {
 
-class KstTimeZone
+class KSTCORE_EXPORT KstTimeZone
 {
 public:
     KstTimeZone(QString name = "GMT");
