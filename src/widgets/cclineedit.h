@@ -85,7 +85,7 @@ protected:
     virtual void SetCursorPosition(int x){setCursorPosition(x);}
     virtual void NewPrefix(QString x){emit currentPrefixChanged(x);}
     virtual void SetCompleter(QCompleter*c) {setCompleter(c);}
-    virtual void ChangeCurrentPrefix(QString x){emit currentPrefixChanged(x);}
+    virtual void ChangeCurrentPrefix(QString x);
 
 public:
     friend class CCTableView;
@@ -147,7 +147,7 @@ protected:
     virtual void SetCursorPosition(int x){QTextCursor tc=textCursor();tc.setPosition(x);setTextCursor(tc);}
     virtual void NewPrefix(QString x){emit currentPrefixChanged(x);}
     virtual void SetCompleter(QCompleter*) {}
-    virtual void ChangeCurrentPrefix(QString x){emit currentPrefixChanged(x);}
+    virtual void ChangeCurrentPrefix(QString x);
 public:
     friend class CCTableView;
     CCTextEdit(QWidget*p=0);

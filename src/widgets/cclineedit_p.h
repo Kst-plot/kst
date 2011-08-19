@@ -53,7 +53,7 @@ protected:
     bool eventFilter(QObject *o, QEvent *e);
     //  QStringList splitPath(const QString &path) const;
     //  QString pathFromIndex(const QModelIndex &index) const;
-    static QStringList join(CompletionCase&,QString prefix="");
+    static QStringList join(CompletionCase&,QString prefix="",QStringList searchpattern=QStringList(),int complength=0);
     static QStringList getDefault(QList<CompletionCase>&);
 public slots:
     void verifyPrefix();

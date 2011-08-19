@@ -152,6 +152,14 @@ bool CategoricalCompleter::eventFilter(QObject *o, QEvent *e)
 void CategoricalCompleter::verifyPrefix()
 {
     QString search=completionPrefix();
+    QString altsearch=search;
+    QStringList altlist;
+    if(search.contains("*")) {
+        search.remove(search.indexOf('*'),99999);
+        altsearch.remove(0,altsearch.indexOf('*')+1);
+        altlist=altsearch.split("*");
+        setCompletionPrefix(search);
+    }
 
     for(int i=_data.size()-1;i>=0;i--) {
         if(!_data[i].prefix().size()||!search.indexOf(_data[i].prefix())) {
@@ -174,11 +182,12 @@ void CategoricalCompleter::verifyPrefix()
                 }
             }
 
-            if(_currentSubset!=&_data[i]) {
-                setModel(new QStringListModel(join(_data[i],_data[i].prefix())));
+            if(_currentSubset!=&_data[i]||search!=altsearch) {
+                setModel(new QStringListModel(join(_data[i],_data[i].prefix(),(search==altsearch)?QStringList():altlist,search.size())));
                 _tableView->setData(&_data[i],_data[i].prefix());
                 complete();
                 _currentSubset=&_data[i];
+                setCompletionPrefix(search);
             }
             break;
         }
@@ -190,15 +199,24 @@ CategoricalCompleter::~CategoricalCompleter()
     //_tableView is child
 }
 
-QStringList CategoricalCompleter::join(CompletionCase& l,QString prefix)
+QStringList CategoricalCompleter::join(CompletionCase& l,QString prefix,QStringList searchpattern,int complength)
 {
     QStringList ret;
     for(int i=0;i<l.size();i++) {
         ret<<l[i];
     }
-    if(prefix.size()) {
+    if(prefix.size()||searchpattern.size()) {
         for(int i=0;i<ret.size();i++) {
             ret[i].prepend(prefix);
+            int lastindex=prefix.size()+complength;
+            for(int j=0;j<searchpattern.size();j++) {
+                if(ret[i].indexOf(searchpattern[j],lastindex,Qt::CaseInsensitive)==-1) {
+                    ret.takeAt(i);
+                    i-=1;
+                    break;
+                }
+                lastindex=ret[i].indexOf(searchpattern[j],lastindex)+searchpattern.size();
+            }
         }
     }
     return ret;
@@ -362,6 +380,16 @@ void CCLineEdit::mousePressEvent(QMouseEvent*ev)
         _cc->_tableView->updateSuggestions();
     }
     QLineEdit::mousePressEvent(ev);
+}
+
+void CCLineEdit::ChangeCurrentPrefix(QString x)
+{
+    emit currentPrefixChanged(x);
+}
+
+void CCTextEdit::ChangeCurrentPrefix(QString x)
+{
+    emit currentPrefixChanged(x);
 }
 
 void CCLineEdit::init(QList<CompletionCase> data)
@@ -579,6 +607,10 @@ void SVCCLineEdit::fillKstObjects()
     ScalarList scalarList = _store->getObjects<Scalar>();
     VectorList vectorList = _store->getObjects<Vector>();
 
+    if(_cc&&_cc->_tableView) {
+        _cc->_tableView->setFixedWidth(_cc->_tableView->width());
+    }
+
     ScalarList::ConstIterator scalarIt = scalarList.begin();
     for (; scalarIt != scalarList.end(); ++scalarIt) {
         ScalarPtr scalar = (*scalarIt);
@@ -616,6 +648,10 @@ void SVCCTextEdit::fillKstObjects()
     _svData = new QList<CompletionCase>;
     _svData->push_back(CompletionCase("["));
     _svData->back().push_back(Category("Scalars"));
+
+    if(_cc&&_cc->_tableView) {
+        _cc->_tableView->setFixedWidth(_cc->_tableView->width());
+    }
 
     ScalarList scalarList = _store->getObjects<Scalar>();
     StringList stringList = _store->getObjects<String>();
@@ -921,6 +957,7 @@ CCTableView::CCTableView(CompletionCase* data) : _data(data), origModel(0), comp
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setMinimumHeight(150);
+    setFixedWidth(width());
     verticalHeader()->hide();
 }
 
@@ -1039,11 +1076,9 @@ void CCTableView::mousePressEvent(QMouseEvent *event)
 void CCTableView::showEvent(QShowEvent *)
 {
     //    resizeColumnsToContents();
-    int bestWidth=qMax(width(),(int)((horizontalHeader()->length()+verticalScrollBar()->width())));
+//    int bestWidth=qMax(width(),(int)((horizontalHeader()->length()+verticalScrollBar()->width())));
     horizontalHeader()->setResizeMode(QHeaderView::Interactive);
     horizontalHeader()->setStretchLastSection(1);
-    setMinimumWidth(bestWidth);
-    setMaximumWidth(bestWidth);
 }
 
 void CCTableView::resizeEvent(QResizeEvent*ev)
