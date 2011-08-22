@@ -115,15 +115,18 @@ ScalarPtr ScalarSelector::selectedScalar() {
 
     ScalarPtr scalar = _store->createObject<Scalar>();
     scalar->setValue(value);
-    scalar->setOrphan(true);
     scalar->setEditable(true);
     scalar->setDescriptiveName(QString());
+    scalar->setOrphan(false);
+
+    _scalar->clearEditText();
+    fillScalars();
+    scalar->setOrphan(true);
+
     scalar->writeLock();
     scalar->registerChange();
     scalar->unlock();
 
-    _scalar->clearEditText();
-    fillScalars();
     setSelectedScalar(scalar);
 
     return scalar;

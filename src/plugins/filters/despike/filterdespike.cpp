@@ -36,7 +36,7 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
       _scalarNSigma->setObjectStore(store);
       _scalarSpacing->setObjectStore(store);
       _scalarNSigma->setDefaultValue(5.0);
-      _scalarSpacing->setDefaultValue(1);
+      _scalarSpacing->setDefaultValue(1.0);
     }
 
     void setupSlots(QWidget* dialog) {
@@ -254,8 +254,8 @@ bool FilterDespikeSource::algorithm() {
       }
     }
   }
-  // do a 2 point difference for lat dx points
-  for (i=N-dx; i<N; i++) {
+  // do a 2 point difference for last dx points
+  for (i=N-dx-1; i<N; i++) {
     if (fabs(inputVector->value(i-dx) - inputVector->value(i))>cut) {
       if (spike_start<0) { 
         spike_start = i-border;
@@ -265,7 +265,7 @@ bool FilterDespikeSource::algorithm() {
       }
     } else {
       if (spike_start>=0) {
-        i += 4*border-1; 
+        i += 4*border-1;
         if (i>=N) {
           i=N-1;
         }
@@ -276,6 +276,11 @@ bool FilterDespikeSource::algorithm() {
       } else {
         last_good = outputVector->value()[i] = inputVector->value(i);
       }
+    }
+  }
+  if (spike_start>=0) {
+    for (int j=spike_start; j<N; j++) {
+      outputVector->value()[j] = last_good;
     }
   }
 
@@ -352,10 +357,10 @@ Kst::DataObject *FilterDespikePlugin::create(Kst::ObjectStore *store, Kst::DataO
     FilterDespikeSource* object = store->createObject<FilterDespikeSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_SPACING_IN, config->selectedSpacingScalar());
+      object->setInputScalar(SCALAR_NSIGMA_IN, config->selectedNSigmaScalar());
       object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
-      object->setInputScalar(SCALAR_NSIGMA_IN, config->selectedNSigmaScalar());
-      object->setInputScalar(SCALAR_SPACING_IN, config->selectedSpacingScalar());
     }
 
     object->setPluginName(pluginName());

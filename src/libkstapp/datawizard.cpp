@@ -776,12 +776,9 @@ void DataWizard::finished() {
   emit dataSourceLoaded(ds->fileName());
 
   // check for sufficient memory
-  unsigned long memoryRequested = 0, memoryAvailable = 1024*1024*1024; // 1GB
+  unsigned long memoryRequested = 0;
+  unsigned long memoryAvailable = Data::AvailableMemory();
   double frames;
-#ifdef __linux__
-  meminfo();
-  memoryAvailable = S(kb_main_free + kb_main_buffers + kb_main_cached);
-#endif
 
   ds->writeLock();
 

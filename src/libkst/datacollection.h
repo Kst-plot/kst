@@ -57,6 +57,8 @@ class KSTCORE_EXPORT Data
       * -1 if not in layout.
       */
     virtual int columns() const;
+
+    static unsigned long AvailableMemory();
 };
 
 /** Bad choice for location - maybe move it later */

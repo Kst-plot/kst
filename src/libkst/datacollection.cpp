@@ -30,33 +30,27 @@ namespace Kst {
 static QMutex bigLock;
 
 void *realloc(void *ptr, size_t size) {
-#ifdef __linux__
-  QMutexLocker ml(&bigLock);
-  meminfo();
-  unsigned long bFree = S(kb_main_free + kb_main_buffers + kb_main_cached);
-  if (size > bFree) {
-    const unsigned long sz = size;
-    qDebug("Tried to allocate too much memory! (Wanted %lu, had %lu)", sz, bFree);
-    return 0L;
-  }
-#endif
   return ::realloc(ptr, size);
 }
 
 void *malloc(size_t size) {
-#ifdef __linux__
-  QMutexLocker ml(&bigLock);
-  meminfo();
-  unsigned long bFree = S(kb_main_free + kb_main_buffers + kb_main_cached);
-  if (size > bFree) {
-    const unsigned long sz = size;
-    qDebug("Tried to allocate too much memory! (Wanted %lu, had %lu)", sz, bFree);
-    return 0L;
-  }
-#endif
   return ::malloc(size);
 }
 
+unsigned long Data::AvailableMemory() {
+  unsigned long available_memory = 1024*1024*1024;
+  // FIXME: under windows or mac, this is totally wrong.
+  // Under windows, try GlobalMemoryStatusEx
+  // (http://msdn.microsoft.com/en-us/library/aa366589)
+  // but, I don't have access to a windows devel environment...
+
+#ifdef __linux__
+  QMutexLocker ml(&bigLock);
+  meminfo();
+  available_memory = S(kb_main_free + kb_main_cached) - 30*1024*1024; // 30MB margin
+#endif
+  return available_memory;
+}
 
 Data *Data::_self = 0L;
 void Data::cleanup() {

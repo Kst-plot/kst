@@ -3509,6 +3509,7 @@ void PlotItem::setFont(const QFont &f, const QColor &c) {
 PlotLabel::PlotLabel(PlotItem *plotItem) : QObject(),
   _plotItem(plotItem),
   _visible(true),
+  _fontScale(12),
   _fontUseGlobal(true),
   _isAuto(true) {
 
