@@ -351,11 +351,11 @@ Kst::DataObject *FitPolynomialWeightedPlugin::create(Kst::ObjectStore *store, Ks
     FitPolynomialWeightedSource* object = store->createObject<FitPolynomialWeightedSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN, order);
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setInputScalar(SCALAR_IN, order);
     }
 
     object->setPluginName(pluginName());

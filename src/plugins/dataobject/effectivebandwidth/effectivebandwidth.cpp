@@ -347,12 +347,12 @@ Kst::DataObject *EffectiveBandwidthPlugin::create(Kst::ObjectStore *store, Kst::
     EffectiveBandwidthSource* object = store->createObject<EffectiveBandwidthSource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
-      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputScalar(SCALAR_IN_MIN, config->selectedScalarMin());
       object->setInputScalar(SCALAR_IN_FREQ, config->selectedScalarFreq());
       object->setInputScalar(SCALAR_IN_K, config->selectedScalarK());
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
+      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
     }
 
     object->setPluginName(pluginName());

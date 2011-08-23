@@ -366,11 +366,11 @@ Kst::DataObject *CrossSpectrumPlugin::create(Kst::ObjectStore *store, Kst::DataO
     CrossSpectrumSource* object = store->createObject<CrossSpectrumSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN_FFT, config->selectedScalarFFT());
+      object->setInputScalar(SCALAR_IN_RATE, config->selectedScalarRate());
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_ONE, config->selectedVectorOne());
       object->setInputVector(VECTOR_IN_TWO, config->selectedVectorTwo());
-      object->setInputScalar(SCALAR_IN_FFT, config->selectedScalarFFT());
-      object->setInputScalar(SCALAR_IN_RATE, config->selectedScalarRate());
     }
 
     object->setPluginName(pluginName());

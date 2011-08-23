@@ -230,9 +230,9 @@ Kst::DataObject *NoiseAdditionPlugin::create(Kst::ObjectStore *store, Kst::DataO
     NoiseAdditionSource* object = store->createObject<NoiseAdditionSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN, config->selectedScalar());
       object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
-      object->setInputScalar(SCALAR_IN, config->selectedScalar());
     }
 
     object->setPluginName(pluginName());

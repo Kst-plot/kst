@@ -455,12 +455,12 @@ Kst::DataObject *FitKneeFrequencyPlugin::create(Kst::ObjectStore *store, Kst::Da
     FitKneeFrequencySource* object = store->createObject<FitKneeFrequencySource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
-      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputScalar(SCALAR_IN_MAX, max);
       object->setInputScalar(SCALAR_IN_MIN, min);
       object->setInputScalar(SCALAR_IN_WHITENOISE, noise);
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
+      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
     }
 
     object->setPluginName(pluginName());

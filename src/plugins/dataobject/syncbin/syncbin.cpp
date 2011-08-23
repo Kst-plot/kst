@@ -394,12 +394,12 @@ Kst::DataObject *SyncBinPlugin::create(Kst::ObjectStore *store, Kst::DataObjectC
     SyncBinSource* object = store->createObject<SyncBinSource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
-      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputScalar(SCALAR_IN_BINS, config->selectedScalarBins());
       object->setInputScalar(SCALAR_IN_XMIN, config->selectedScalarXMin());
       object->setInputScalar(SCALAR_IN_XMAX, config->selectedScalarXMax());
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
+      object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
     }
 
     object->setPluginName(pluginName());

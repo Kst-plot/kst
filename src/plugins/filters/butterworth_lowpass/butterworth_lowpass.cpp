@@ -262,10 +262,10 @@ Kst::DataObject *ButterworthLowPassPlugin::create(Kst::ObjectStore *store, Kst::
     FilterButterworthLowPassSource* object = store->createObject<FilterButterworthLowPassSource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_CUTOFF_IN, config->selectedCutoffScalar());
       object->setInputScalar(SCALAR_ORDER_IN, config->selectedOrderScalar());
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN, config->selectedVector());
     }
 
     object->setPluginName(pluginName());

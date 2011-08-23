@@ -239,9 +239,9 @@ Kst::DataObject *ShiftPlugin::create(Kst::ObjectStore *store, Kst::DataObjectCon
     ShiftSource* object = store->createObject<ShiftSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN, config->selectedScalar());
       object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
-      object->setInputScalar(SCALAR_IN, config->selectedScalar());
     }
 
     object->setPluginName(pluginName());

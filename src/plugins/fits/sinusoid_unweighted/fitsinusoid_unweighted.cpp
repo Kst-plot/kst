@@ -350,11 +350,11 @@ Kst::DataObject *FitSinusoidUnweightedPlugin::create(Kst::ObjectStore *store, Ks
     FitSinusoidUnweightedSource* object = store->createObject<FitSinusoidUnweightedSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
+      object->setInputScalar(SCALAR_IN_PERIOD, period);
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
-      object->setInputScalar(SCALAR_IN_PERIOD, period);
     }
 
     object->setPluginName(pluginName());

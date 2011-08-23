@@ -832,11 +832,11 @@ Kst::DataObject *PeriodogramPlugin::create(Kst::ObjectStore *store, Kst::DataObj
     PeriodogramSource* object = store->createObject<PeriodogramSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN_OVERSAMPLING, config->selectedScalarOversampling());
+      object->setInputScalar(SCALAR_IN_ANFF, config->selectedScalarANFF());
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_TIME, config->selectedVectorTime());
       object->setInputVector(VECTOR_IN_DATA, config->selectedVectorData());
-      object->setInputScalar(SCALAR_IN_OVERSAMPLING, config->selectedScalarOversampling());
-      object->setInputScalar(SCALAR_IN_ANFF, config->selectedScalarANFF());
     }
 
     object->setPluginName(pluginName());

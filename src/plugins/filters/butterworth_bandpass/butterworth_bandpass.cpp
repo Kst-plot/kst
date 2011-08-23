@@ -296,11 +296,11 @@ Kst::DataObject *ButterworthBandPassPlugin::create(Kst::ObjectStore *store, Kst:
     FilterButterworthBandPassSource* object = store->createObject<FilterButterworthBandPassSource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_ORDER_IN, config->selectedOrderScalar());
       object->setInputScalar(SCALAR_RATE_IN, config->selectedRateScalar());
       object->setInputScalar(SCALAR_BANDWIDTH_IN, config->selectedBandwidthScalar());
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN, config->selectedVector());
     }
 
     object->setPluginName(pluginName());

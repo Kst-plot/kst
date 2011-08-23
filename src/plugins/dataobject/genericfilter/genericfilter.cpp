@@ -300,11 +300,11 @@ Kst::DataObject *GenericFilterPlugin::create(Kst::ObjectStore *store, Kst::DataO
     GenericFilterSource* object = store->createObject<GenericFilterSource>();
 
     if (setupInputsOutputs) {
-      object->setupOutputs();
-      object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputScalar(SCALAR_IN, config->selectedScalar());
       object->setInputString(STRING_IN_NUMERATOR, config->selectedStringNumerator());
       object->setInputString(STRING_IN_DENOMINATOR, config->selectedStringDenominator());
+      object->setupOutputs();
+      object->setInputVector(VECTOR_IN, config->selectedVector());
     }
 
     object->setPluginName(pluginName());

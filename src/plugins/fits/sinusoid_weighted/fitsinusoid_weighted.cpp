@@ -373,12 +373,12 @@ Kst::DataObject *FitSinusoidWeightedPlugin::create(Kst::ObjectStore *store, Kst:
     FitSinusoidWeightedSource* object = store->createObject<FitSinusoidWeightedSource>();
 
     if (setupInputsOutputs) {
+      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
+      object->setInputScalar(SCALAR_IN_PERIOD, period);
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->setInputScalar(SCALAR_IN_HARMONICS, harmonics);
-      object->setInputScalar(SCALAR_IN_PERIOD, period);
     }
 
     object->setPluginName(pluginName());
