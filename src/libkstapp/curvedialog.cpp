@@ -104,6 +104,11 @@ void CurveTab::setXVector(VectorPtr vector) {
 }
 
 
+bool CurveTab::xVectorSelected() const {
+  return _xVector->vectorSelected();
+}
+
+
 VectorPtr CurveTab::yVector() const {
   return _yVector->selectedVector();
 }
@@ -111,6 +116,11 @@ VectorPtr CurveTab::yVector() const {
 
 bool CurveTab::yVectorDirty() const {
   return _yVector->selectedVectorDirty();
+}
+
+
+bool CurveTab::yVectorSelected() const {
+  return _yVector->vectorSelected();
 }
 
 
@@ -363,7 +373,13 @@ void CurveDialog::setVector(VectorPtr vector) {
 
 
 void CurveDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_curveTab->xVector() && _curveTab->yVector()) || (editMode() == EditMultiple));
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(dialogValid());
+}
+
+
+bool CurveDialog::dialogValid() const {
+  bool valid = (_curveTab->xVectorSelected() && _curveTab->yVectorSelected()) || (editMode() == EditMultiple);
+  return (valid);
 }
 
 

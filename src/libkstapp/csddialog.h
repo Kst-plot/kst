@@ -64,8 +64,9 @@ class CSDDialog : public DataDialog {
 
     void setVector(VectorPtr vector);
 
+    virtual bool dialogValid() const {return bool(_CSDTab->vector()) || (editMode() == EditMultiple);}
+
   protected:
-//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;
 

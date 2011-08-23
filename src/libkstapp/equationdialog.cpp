@@ -262,7 +262,13 @@ void EquationDialog::editSingleMode() {
 
 
 void EquationDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled((_equationTab->xVector() && !_equationTab->equation().isEmpty()) || (editMode() == EditMultiple));
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(dialogValid());
+}
+
+
+bool EquationDialog::dialogValid() const {
+  bool valid = (_equationTab->xVectorSelected()) || (editMode() == EditMultiple);
+  return (valid);
 }
 
 

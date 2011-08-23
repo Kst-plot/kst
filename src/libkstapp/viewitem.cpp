@@ -149,6 +149,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeStartElement("position");
   xml.writeAttribute("x", QVariant(pos().x()).toString());
   xml.writeAttribute("y", QVariant(pos().y()).toString());
+  xml.writeAttribute("z", QVariant(zValue()).toString());
   xml.writeEndElement();
   xml.writeStartElement("rect");
   xml.writeAttribute("x", QVariant(viewRect().x()).toString());
@@ -245,7 +246,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
      }
     } else if (xml.name().toString() == "position") {
       knownTag = true;
-      double x = 0, y = 0;
+      double x = 0, y = 0, z = DRAWING_ZORDER;
       av = attrs.value("x");
       if (!av.isNull()) {
         x = av.toString().toDouble();
@@ -255,6 +256,13 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
         y = av.toString().toDouble();
      }
      setPos(x, y);
+
+     av = attrs.value("z");
+     if (!av.isNull()) {
+       z = av.toString().toDouble();
+     }
+     setZValue(z);
+
     } else if (xml.name().toString() == "brush") {
       knownTag = true;
       QBrush brush;

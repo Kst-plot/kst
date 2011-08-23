@@ -154,6 +154,7 @@ void PowerSpectrumDialog::setVector(VectorPtr vector) {
 }
 
 
+
 void PowerSpectrumDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _powerSpectrumTab->FFTOptionsWidget()->loadWidgetDefaults();
@@ -186,9 +187,14 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
 
 
 void PowerSpectrumDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_powerSpectrumTab->vector() || (editMode() == EditMultiple));
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(dialogValid());
 }
 
+
+bool PowerSpectrumDialog::dialogValid() const {
+  bool valid = _powerSpectrumTab->vector() || (editMode() == EditMultiple);
+  return valid;
+}
 
 ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   Q_ASSERT(_document && _document->objectStore());

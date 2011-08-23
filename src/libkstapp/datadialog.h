@@ -59,6 +59,7 @@ class DataDialog : public Dialog {
     EditMultipleWidget *_editMultipleWidget;
     QString _dataObjectName;
 
+    virtual bool dialogValid() const {return true;}
   public Q_SLOTS:
     void slotEditMultiple();
 

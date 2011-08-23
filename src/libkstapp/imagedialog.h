@@ -112,6 +112,8 @@ class ImageDialog : public DataDialog {
 
     void setMatrix(MatrixPtr matrix);
 
+    virtual bool dialogValid() const {return bool(_imageTab->matrix()) || (editMode() == EditMultiple);}
+
   protected:
     virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;

@@ -33,10 +33,12 @@ class CurveTab : public DataTab, Ui::CurveTab {
     VectorPtr xVector() const;
     bool xVectorDirty() const;
     void setXVector(VectorPtr vector);
+    bool xVectorSelected() const;
 
     VectorPtr yVector() const;
     bool yVectorDirty() const;
     void setYVector(VectorPtr vector);
+    bool yVectorSelected() const;
 
     VectorPtr xError() const;
     bool xErrorDirty() const;
@@ -88,9 +90,9 @@ class CurveDialog : public DataDialog {
     void setVector(VectorPtr vector);
 
   protected:
-//     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();
     virtual ObjectPtr editExistingDataObject() const;
+    virtual bool dialogValid() const;
 
   private Q_SLOTS:
     void updateButtons();

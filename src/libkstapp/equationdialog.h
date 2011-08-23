@@ -33,6 +33,7 @@ class EquationTab : public DataTab, Ui::EquationTab {
     VectorPtr xVector() const;
     bool xVectorDirty() const;
     void setXVector(VectorPtr vector);
+    bool xVectorSelected() const {return _xVectors->vectorSelected();}
 
     QString equation() const;
     bool equationDirty() const;
@@ -70,6 +71,7 @@ class EquationDialog : public DataDialog {
   public:
     explicit EquationDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~EquationDialog();
+    virtual bool dialogValid() const;
 
   protected:
 //     virtual QString tagString() const;

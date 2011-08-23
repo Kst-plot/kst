@@ -33,6 +33,7 @@ class KSTWIDGETS_EXPORT VectorSelector : public QWidget, public Ui::VectorSelect
     void setObjectStore(ObjectStore *store);
 
     VectorPtr selectedVector() const;
+    bool vectorSelected() const;
     bool selectedVectorDirty() const;
     void setSelectedVector(VectorPtr selectedVector);
 

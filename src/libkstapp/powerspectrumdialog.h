@@ -37,6 +37,7 @@ class PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     VectorPtr vector() const;
     bool vectorDirty() const;
     void setVector(const VectorPtr vector);
+    bool vectorSelected() const {return _vector->vectorSelected();}
 
     CurveAppearance* curveAppearance() const;
     CurvePlacement* curvePlacement() const;
@@ -59,6 +60,7 @@ class PowerSpectrumDialog : public DataDialog {
     virtual ~PowerSpectrumDialog();
 
     void setVector(VectorPtr vector);
+    virtual bool dialogValid() const;
 
   protected:
 //     virtual QString tagString() const;

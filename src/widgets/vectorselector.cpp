@@ -74,6 +74,10 @@ VectorPtr VectorSelector::selectedVector() const {
 }
 
 
+bool VectorSelector::vectorSelected() const {
+  return (_vector->currentIndex()>=0);
+}
+
 bool VectorSelector::selectedVectorDirty() const {
   return _vector->currentIndex() != -1;
 }

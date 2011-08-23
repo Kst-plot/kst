@@ -335,7 +335,12 @@ void HistogramDialog::configureTab(ObjectPtr object) {
 
 
 void HistogramDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_histogramTab->vector() || (editMode() == EditMultiple));
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(dialogValid());
+}
+
+
+bool HistogramDialog::dialogValid() const {
+  return _histogramTab->vectorSelected() || (editMode() == EditMultiple);
 }
 
 

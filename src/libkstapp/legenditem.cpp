@@ -80,6 +80,12 @@ void LegendItem::paint(QPainter *painter) {
     legendItems = _relations;
   }
 
+  int count = legendItems.count();
+  if (count <= 0) { // no legend or box if there are no legend items
+    return;
+  }
+
+
   QList<DrawnLegendItem> legendPixmaps;
   QSize legendSize(0, 0);
 
@@ -88,10 +94,10 @@ void LegendItem::paint(QPainter *painter) {
 
   // generate string list of relation names
   QStringList names;
-  int count = legendItems.count();
   bool allAuto = true;
   bool sameX = true;
   bool sameYUnits = true;
+
   LabelInfo label_info = legendItems.at(0)->xLabelInfo();
   QString yUnits =  legendItems.at(0)->yLabelInfo().units;
 

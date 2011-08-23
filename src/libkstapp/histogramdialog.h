@@ -45,6 +45,7 @@ class HistogramTab : public DataTab, Ui::HistogramTab {
     VectorPtr vector() const;
     bool vectorDirty() const;
     void setVector(VectorPtr vector);
+    bool vectorSelected() const {return _vector->vectorSelected();}
 
     double min() const;
     bool minDirty() const;
@@ -94,6 +95,8 @@ class HistogramDialog : public DataDialog {
     virtual ~HistogramDialog();
 
     void setVector(VectorPtr vector);
+
+    virtual bool dialogValid() const;
 
   protected:
 //     virtual QString tagString() const;
