@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
+    <width>601</width>
     <height>364</height>
    </rect>
   </property>
@@ -206,7 +206,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="8">
+   <item row="9" column="0" colspan="8">
     <widget class="Line" name="line">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -219,7 +219,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="3">
+   <item row="10" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="spacing">
       <number>0</number>
@@ -252,7 +252,7 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="4" colspan="4">
+   <item row="10" column="4" colspan="4">
     <spacer>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -265,7 +265,7 @@
      </property>
     </spacer>
    </item>
-   <item row="10" column="3">
+   <item row="11" column="3">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -387,6 +387,20 @@
      </property>
      <property name="lineWrapMode">
       <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2" colspan="6">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>Supports scalars &amp; strings (name in square brackets) - eg,  [INDEX:Max (X2)],
+embedded equations  - eg, [=[INDEX:Max] / 2]
+and LaTeX symbols - eg, \theta.  Names and symbols are autocompleted.</string>
      </property>
     </widget>
    </item>
