@@ -343,6 +343,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
+    void showEditDialog(QAction *action);
 
     void setLeftLabelDirty() { _leftLabel.dirty = true; setPlotPixmapDirty(); }
     void setRightLabelDirty() { _rightLabel.dirty = true; setPlotPixmapDirty(); }
@@ -358,6 +359,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void createZoomMenu();
     void createFilterMenu();
     void createFitMenu();
+    void createEditMenu();
     void createSharedAxisBoxMenu();
 
     void resetSelectionRect();
@@ -531,9 +533,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QAction *_adjustImageColorscale;
 
     QMenu *_filterMenu;
-    QAction *_filterAction;
     QMenu *_fitMenu;
-    QAction *_fitAction;
+    QMenu *_editMenu;
     QMenu *_sharedAxisBoxMenu;
     QAction *_shareBoxShareX;
     QAction *_shareBoxShareY;

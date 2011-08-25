@@ -526,7 +526,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void PlotRenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF point = plotItem()->mapToProjection(event->pos());
-  qreal range = qMax(plotItem()->xMax() - plotItem()->xMin(), plotItem()->yMax() - plotItem()->yMin());
+  qreal range = 4.0*(plotItem()->xMax() - plotItem()->xMin())/double(rect().width());
   double distance = 1000;
   bool first = true;
   RelationPtr closestRelation = 0;

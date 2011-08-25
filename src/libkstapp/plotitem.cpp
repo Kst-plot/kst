@@ -96,6 +96,7 @@ PlotItem::PlotItem(View *parent)
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0),
+  _editMenu(0),
   _sharedAxisBoxMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
@@ -283,6 +284,8 @@ PlotItem::~PlotItem() {
   delete _numberLabelDetails;
   delete _zoomMenu;
   delete _filterMenu;
+  delete _fitMenu;
+  delete _editMenu;
 
   PlotItemManager::self()->removePlot(this);
 }
@@ -602,6 +605,22 @@ void PlotItem::createFilterMenu() {
 }
 
 
+void PlotItem::createEditMenu() {
+  if (_editMenu) {
+    delete _editMenu;
+  }
+
+  _editMenu = new QMenu;
+  _editMenu->setTitle(tr("Edit"));
+
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    _editMenu->addAction(new QAction(curve->Name(), this));
+  }
+  connect(_editMenu, SIGNAL(triggered(QAction*)), this, SLOT(showEditDialog(QAction*)));
+}
+
+
 void PlotItem::createFitMenu() {
   if (_fitMenu) {
     delete _fitMenu;
@@ -669,8 +688,23 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     createFitMenu();
     menu.addMenu(_fitMenu);
   }
+  if (curveList().size()>0) {
+    createEditMenu();
+    menu.addMenu(_editMenu);
+  }
 }
 
+
+void PlotItem::showEditDialog(QAction *action) {
+  CurveList curves = curveList();
+  int n = curves.size();
+  for (int i = 0; i<n; i++) {
+    CurvePtr curve = curves.at(i);
+    if (curve->Name() == action->text()) {
+      DialogLauncher::self()->showCurveDialog(curve);
+    }
+  }
+}
 
 void PlotItem::showFitFilterDialog(QAction* action, const QString& plugin) {
   CurveList curves = curveList();
