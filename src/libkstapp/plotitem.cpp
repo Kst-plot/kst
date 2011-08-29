@@ -575,8 +575,7 @@ void PlotItem::createZoomMenu() {
 }
 
 
-CurveList PlotItem::curveList() const
-{
+CurveList PlotItem::curveList() const {
   CurveList list;
   foreach (PlotRenderItem *renderer, renderItems()) {
     foreach (RelationPtr relation, renderer->relationList()) {
@@ -585,6 +584,18 @@ CurveList PlotItem::curveList() const
       }
     }
   }
+  return list;
+}
+
+
+RelationList PlotItem::relationList() const {
+  RelationList list;
+  foreach (PlotRenderItem *renderer, renderItems()) {
+    foreach (RelationPtr relation, renderer->relationList()) {
+      list << relation;
+    }
+  }
+
   return list;
 }
 
@@ -613,9 +624,9 @@ void PlotItem::createEditMenu() {
   _editMenu = new QMenu;
   _editMenu->setTitle(tr("Edit"));
 
-  CurveList curves = curveList();
-  foreach (const CurvePtr& curve, curves) {
-    _editMenu->addAction(new QAction(curve->Name(), this));
+  RelationList relations = relationList();
+  foreach (const RelationPtr& relation, relations) {
+    _editMenu->addAction(new QAction(relation->Name(), this));
   }
   connect(_editMenu, SIGNAL(triggered(QAction*)), this, SLOT(showEditDialog(QAction*)));
 }
@@ -696,15 +707,16 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
 
 void PlotItem::showEditDialog(QAction *action) {
-  CurveList curves = curveList();
-  int n = curves.size();
+  RelationList relations = relationList();
+  int n = relations.size();
   for (int i = 0; i<n; i++) {
-    CurvePtr curve = curves.at(i);
-    if (curve->Name() == action->text()) {
-      DialogLauncher::self()->showCurveDialog(curve);
+    RelationPtr relation = relations.at(i);
+    if (relation->Name() == action->text()) {
+      DialogLauncher::self()->showObjectDialog(relation);
     }
   }
 }
+
 
 void PlotItem::showFitFilterDialog(QAction* action, const QString& plugin) {
   CurveList curves = curveList();

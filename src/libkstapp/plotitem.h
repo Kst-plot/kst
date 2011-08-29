@@ -426,6 +426,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void showFitFilterDialog(QAction* action, const QString& plugin);
     CurveList curveList() const;
+    RelationList relationList() const;
 
   private:
     QHash<PlotRenderItem::RenderType, PlotRenderItem*> _renderers;

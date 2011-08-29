@@ -55,13 +55,26 @@ RangeTab::~RangeTab() {
 void RangeTab::setupRange() {
   Q_ASSERT(_plotItem);
 
-  _xRange->setText(QString::number(fabs(_plotItem->xMax() - _plotItem->xMin()),'g', 13));
-  _xMin->setText(QString::number(_plotItem->xMin(),'g', 13));
-  _xMax->setText(QString::number(_plotItem->xMax(),'g', 13));
+  double xmax = _plotItem->xMax();
+  double xmin = _plotItem->xMin();
+  double ymax = _plotItem->yMax();
+  double ymin = _plotItem->yMin();
+  if (_plotItem->xAxis()->axisLog()) {
+    xmax = exp10(xmax);
+    xmin = exp10(xmin);
+  }
+  if (_plotItem->yAxis()->axisLog()) {
+    ymax = exp10(ymax);
+    ymin = exp10(ymin);
+  }
 
-  _yRange->setText(QString::number(fabs(_plotItem->yMax() - _plotItem->yMin()),'g', 13));
-  _yMin->setText(QString::number(_plotItem->yMin(),'g', 13));
-  _yMax->setText(QString::number(_plotItem->yMax(),'g', 13));
+  _xRange->setText(QString::number(fabs(xmax - xmin),'g', 13));
+  _xMin->setText(QString::number(xmin,'g', 13));
+  _xMax->setText(QString::number(xmax,'g', 13));
+
+  _yRange->setText(QString::number(fabs(ymax - ymin),'g', 13));
+  _yMin->setText(QString::number(ymin,'g', 13));
+  _yMax->setText(QString::number(ymax,'g', 13));
 
   switch (_plotItem->xAxis()->axisZoomMode()) {
     case PlotAxis::Auto:
