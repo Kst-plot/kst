@@ -957,12 +957,15 @@ CCTableView::CCTableView(CompletionCase* data) : _data(data), origModel(0), comp
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setMinimumHeight(150);
-    setFixedWidth(width());
     verticalHeader()->hide();
 }
 
 void CCTableView::updateSuggestions()
 {
+    if(parentWidget()) {
+        setFixedWidth(qMin(width(),parentWidget()->width()));
+    }
+
     //this could be made more efficient.
     if(!model()||(!_le&&!_te)) {
         return;
