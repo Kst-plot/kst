@@ -1,0 +1,53 @@
+For information on how to create Kst scripts in python, please see hen.astro.utoronto.ca/pyKst
+
+Kst implements a client-server interface for scripting. Scripts interacts with a running kst session.
+
+This server is implemented in scriptserver.cpp.
+
+Upon receiving a socket message from QLocalSocket, ScriptServer parses it. ScriptServer implements a map
+between command strings and ScriptServer member functions. 
+
+These commands include "newVector()", "getPlotList()", etc.
+
+To edit a vector, you would call "beginEdit(Vector Name)". This would open an "interface". One interface
+is DialogScriptInterface which simply allows a script to control a hidden dialog. Where speed is important,
+other (hard-coded) interfaces are created. To close the interface, one would call "endEdit()".
+
+ScriptServer also implements a very minimalistic language providing:
+
+  - if statements in the form:
+
+    if(...)
+    fi()
+
+  - variables in the form:
+    $a=blah
+    setText($a)
+
+  - macros in the form:
+    newMacro(a,d=c)
+    setText($a)
+    setColor($d)
+    endMacro()
+
+    Note that 'c' is not a default argument: they initialize a and d so you can run a macro while writing it.
+    newMacro(...) runs the macro while it is being written. newMacro_(...) does not)
+
+Note that kstScript (that is, the simple language ScriptServer understands) never uses quotes. It is therefore
+important that extra spacing is not added. Comments are also not supported. I feel that it is not worth improving
+this 'language'. If someone should have time, a port to javascript would certainly be better.
+
+You can use tests/kstcontrol to write kstScript macros. A list of possible commands is shown inside kstcontrol on the
+right hand side. To make macros permanent (i.e., load on start of kst) add them to the file "kstScript.txt".
+kstcontrol outputs macros you create to stdout on endMacro().
+
+IMPORTANT
+===========
+Writing macros is preferred over implementing them directly in a language (say, python) because the underlying API is
+not guaranteed to be consistent and macros allow multiple languages to all have similar functionality with better code
+reuse.
+
+To get a feel for how they are written, please see kstScript.txt.
+
+To give a language the ability to communicate with kst, implement functions which use QLocalSocket to communicate with
+ScriptServer. Refer to pykst whose source is available in pykst/pykst.py and pykst/pykstpp.py.

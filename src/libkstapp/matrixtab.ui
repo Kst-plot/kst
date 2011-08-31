@@ -489,6 +489,9 @@
           <property name="text">
            <string>C&amp;ount from end</string>
           </property>
+          <property name="si" stdset="0">
+           <string>count X From End</string>
+          </property>
          </widget>
         </item>
         <item row="2" column="3">
@@ -504,6 +507,9 @@
           </property>
           <property name="checked">
            <bool>true</bool>
+          </property>
+          <property name="si" stdset="0">
+           <string>read x to end</string>
           </property>
          </widget>
         </item>
@@ -559,6 +565,9 @@
           <property name="checked">
            <bool>true</bool>
           </property>
+          <property name="si" stdset="0">
+           <string>read Y To End</string>
+          </property>
          </widget>
         </item>
         <item row="1" column="3">
@@ -571,6 +580,9 @@
           </property>
           <property name="text">
            <string>Count from en&amp;d</string>
+          </property>
+          <property name="si" stdset="0">
+           <string>count Y From End</string>
           </property>
          </widget>
         </item>

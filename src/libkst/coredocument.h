@@ -25,6 +25,7 @@
 
 namespace Kst {
 
+class ScriptServer;
 class ObjectStore;
 
 class KSTCORE_EXPORT CoreDocument 
@@ -47,6 +48,7 @@ class KSTCORE_EXPORT CoreDocument
     virtual QString lastError() const;
 
   private:
+    ScriptServer *_scriptServer;
     ObjectStore *_objectStore;
     bool _dirty;
     bool _isOpen;

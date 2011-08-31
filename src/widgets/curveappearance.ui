@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>177</height>
+    <width>408</width>
+    <height>181</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -135,6 +135,9 @@
         <property name="buddy">
          <cstring>_comboPointSymbol</cstring>
         </property>
+        <property name="si" stdset="0">
+         <string>points type</string>
+        </property>
        </widget>
       </item>
       <item row="4" column="3">
@@ -210,6 +213,9 @@
         <property name="buddy">
          <cstring>_comboHeadSymbol</cstring>
         </property>
+        <property name="si" stdset="0">
+         <string>head type</string>
+        </property>
        </widget>
       </item>
       <item row="7" column="3">
@@ -222,6 +228,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="si" stdset="0">
+         <string>curve head color</string>
         </property>
        </widget>
       </item>
@@ -271,6 +280,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="si" stdset="0">
+         <string>curve bar fill</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="4">
@@ -300,6 +312,9 @@
         <property name="whatsThis">
          <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
         </property>
+        <property name="si" stdset="0">
+         <string>line style</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -309,6 +324,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="si" stdset="0">
+         <string>curve color</string>
         </property>
        </widget>
       </item>

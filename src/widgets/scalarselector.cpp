@@ -40,7 +40,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
-  connect(_scalar, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
+  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
   connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 }
 

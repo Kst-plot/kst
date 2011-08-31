@@ -28,6 +28,7 @@ namespace Kst {
 class StringTab : public DataTab, Ui::StringTab {
   Q_OBJECT
   public:
+    friend class DialogSI;
     enum StringMode { DataString, GeneratedString };
 
     explicit StringTab(ObjectStore *store, QWidget *parent = 0);
@@ -75,6 +76,7 @@ class StringTab : public DataTab, Ui::StringTab {
 class StringDialog : public DataDialog {
   Q_OBJECT
   public:
+    friend class DialogSI;
     explicit StringDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~StringDialog();
 

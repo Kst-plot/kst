@@ -63,11 +63,13 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   QHBoxLayout *layout = new QHBoxLayout(_editMultipleBox);
 
   _tagStringLabel = new QLabel(tr("&Name:"), _editMultipleBox);
+  _tagStringLabel->setObjectName("_tagStringLabel");
   _tagString = new QLineEdit(_editMultipleBox);
   connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
   _tagStringLabel->setBuddy(_tagString);
 
   _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));
+  _editMultipleButton->setObjectName("_editMultipleButton");
   connect(_editMultipleButton, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
 
   layout->addWidget(_tagStringLabel);
@@ -125,6 +127,8 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   connect(this, SIGNAL(editSingleMode()), this, SLOT(setSingleEdit()));
   _saveAsDefault->show();
 
+  _tagStringLabel->setProperty("si","&Name:");
+  _editMultipleButton->setProperty("si","Edit Multiple >>");
 }
 
 

@@ -90,6 +90,39 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_rotation, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
   _timezone->addItems(KstTimeZone::tzList());
+
+  _scaleLog->setProperty("si","&Logarithmic");
+  _scaleReverse->setProperty("si","&Reverse");
+  _scaleInterpret->setProperty("si","&Interpret as:");
+  _Label_6->setProperty("si","&Display as:");
+  _hideTopRight->setProperty("si","Hide right");
+  _hideBottomLeft->setProperty("si","Hide left");
+  _scaleAutoBaseOffset->setProperty("si","Auto base / offset mode");
+  _scaleBaseOffset->setProperty("si","&Base and offset mode");
+  _drawAxisMajorTicks->setProperty("si","Dra&w ticks");
+  _drawAxisMajorGridLines->setProperty("si","Draw &grid lines");
+  _drawAxisMinorTicks->setProperty("si","Dr&aw ticks");
+  _drawAxisMinorGridLines->setProperty("si","Draw grid lines");
+  _autoMinorTicks->setProperty("si","Auto");
+  _axisMinorLineStyleLabel->setProperty("si","Line st&yle:");
+  _scaleLog->setProperty("si","&Logarithmic");
+  _scaleReverse->setProperty("si","&Reverse");
+  _scaleInterpret->setProperty("si","&Interpret as:");
+  _Label_6->setProperty("si","&Display as:");
+  _hideTopRight->setProperty("si","Hide top");
+  _hideBottomLeft->setProperty("si","Hide bottom");
+  _scaleAutoBaseOffset->setProperty("si","Auto base / offset mode");
+  _scaleBaseOffset->setProperty("si","&Base and offset mode");
+  _drawAxisMajorTicks->setProperty("si","Dra&w ticks");
+  _drawAxisMajorGridLines->setProperty("si","Draw &grid lines");
+  _drawAxisMinorTicks->setProperty("si","Dr&aw ticks");
+  _drawAxisMinorGridLines->setProperty("si","Draw grid lines");
+  _autoMinorTicks->setProperty("si","Auto");
+  _axisMinorLineStyleLabel->setProperty("si","Line st&yle:");
+  label_4->setProperty("si","&range: ");
+  label_5->setProperty("si","f&rom: ");
+  label_6->setProperty("si","&to: ");
+
 }
 
 

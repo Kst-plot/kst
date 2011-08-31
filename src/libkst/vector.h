@@ -69,6 +69,7 @@ class KSTCORE_EXPORT Vector : public Primitive
 
   public:
     void change(QByteArray& data);
+    void oldChange(QByteArray& data);
 
     inline int length() const { return _size; }
 
@@ -164,6 +165,13 @@ class KSTCORE_EXPORT Vector : public Primitive
     virtual ObjectList<Primitive> outputPrimitives() const;
 
     virtual QString propertyString() const;
+
+    // this is reimplemented but must not be virtual.
+    QByteArray scriptInterface(QList<QByteArray>&command);
+
+    /** get an binary array with a number of doubles.
+      */
+    QByteArray getBinaryArray() const;
 
   protected:
     /** current number of samples */

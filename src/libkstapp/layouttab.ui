@@ -27,6 +27,9 @@
        <property name="buddy">
         <cstring>_horMargin</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>layout horizontal margin</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="1">
@@ -49,6 +52,9 @@
        </property>
        <property name="buddy">
         <cstring>_verMargin</cstring>
+       </property>
+       <property name="si" stdset="0">
+        <string>layout vertical margin</string>
        </property>
       </widget>
      </item>
@@ -73,6 +79,9 @@
        <property name="buddy">
         <cstring>_horSpacing</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>layout horizontal spacing</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -95,6 +104,9 @@
        </property>
        <property name="buddy">
         <cstring>_verSpacing</cstring>
+       </property>
+       <property name="si" stdset="0">
+        <string>layout vertical spacing</string>
        </property>
       </widget>
      </item>

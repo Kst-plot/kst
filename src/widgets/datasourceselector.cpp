@@ -24,12 +24,17 @@
 #include <QPointer>
 
 #include <QDebug>
+#include <QLabel>
 
 namespace Kst {
 
 DataSourceSelector::DataSourceSelector(QWidget *parent)
   : QWidget(parent), _mode(QFileDialog::ExistingFile) {
   setup();
+  QLabel* l=new QLabel(this);
+  l->hide();
+  l->setProperty("si","data source");
+  l->setBuddy(_fileEdit);
 }
 
 
@@ -41,6 +46,7 @@ void DataSourceSelector::setup() {
 
   _fileEdit = new QLineEdit(this);
   _fileButton = new QToolButton(this);
+  _fileButton->setProperty("si","file browse button");
 
   QHBoxLayout * layout = new QHBoxLayout(this);
   layout->setMargin(0);

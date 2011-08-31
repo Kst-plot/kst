@@ -44,9 +44,9 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_showLines, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showPoints, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showHead, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
-  connect(_comboPointSymbol, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
-  connect(_comboLineStyle, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
-  connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SLOT(drawSampleLine()));
+  connect(_comboPointSymbol, SIGNAL(currentIndexChanged(int)), this, SLOT(drawSampleLine()));
+  connect(_comboLineStyle, SIGNAL(currentIndexChanged(int)), this, SLOT(drawSampleLine()));
+  connect(_comboHeadSymbol, SIGNAL(currentIndexChanged(int)), this, SLOT(drawSampleLine()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
 
@@ -56,12 +56,19 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showHead, SIGNAL(clicked()), this, SIGNAL(modified()));
-  connect(_comboPointDensity, SIGNAL(activated(int)), this, SIGNAL(modified()));
-  connect(_comboPointSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
-  connect(_comboHeadSymbol, SIGNAL(activated(int)), this, SIGNAL(modified()));
-  connect(_comboLineStyle, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_comboPointDensity, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_comboPointSymbol, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_comboHeadSymbol, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_comboLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
+
+  _showLines->setProperty("si","&Lines");
+  _showPoints->setProperty("si","Po&ints");
+  _showHead->setProperty("si","&Head");
+  _textLabelPointDensity->setProperty("si","&Density:");
+  _showBars->setProperty("si","&Bargraph");
+  _textLabelWeight->setProperty("si","&Weight:");
 }
 
 

@@ -32,6 +32,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
   Q_OBJECT
 
   public:
+    friend class DialogSI;
     enum VectorMode { DataVector, GeneratedVector };
 
     explicit VectorTab(ObjectStore *store, QWidget *parent = 0);
@@ -96,6 +97,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
 class VectorDialog : public DataDialog {
   Q_OBJECT
   public:
+    friend class DialogSI;
     explicit VectorDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~VectorDialog();
 

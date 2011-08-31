@@ -64,7 +64,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   _updateBox->addItem("Change Detection");
   _updateBox->addItem("No Update");
   updateUpdateBox();
-  connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
+  connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateTypeActivated(int)));
 }
 
 

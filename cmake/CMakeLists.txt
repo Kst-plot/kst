@@ -81,7 +81,7 @@ if(MINGW)
 			endif()
 		endforeach()
 	endmacro()
-	fix_it(QTCORE QTGUI QTXML QTSVG QTOPENGL)
+	fix_it(QTCORE QTGUI QTXML QTSVG QTOPENGL QTNETWORK)
 endif()
 
 message(STATUS)

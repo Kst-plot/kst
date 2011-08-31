@@ -40,7 +40,8 @@ SOURCES += \
     main.cpp
 
 RESOURCES += \
-    $$TOPLEVELDIR/src/images/images.qrc
+    $$TOPLEVELDIR/src/images/images.qrc \
+    $$TOPLEVELDIR/src/libkstapp/script.qrc
 
 win32:QT += svg opengl
 win32:RC_FILE = kst_icon.rc

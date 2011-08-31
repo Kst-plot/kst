@@ -16,7 +16,7 @@ if(WIN32)
 	endif()
 endif()
 
-kst_add_resources(src/images/images.qrc)
+kst_add_resources(src/images/images.qrc src/libkstapp/script.qrc)
 
 kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/*)
 kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/modules/*)

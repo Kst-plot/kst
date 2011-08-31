@@ -46,6 +46,7 @@ class KSTWIDGETS_EXPORT MatrixSelector : public QWidget, public Ui::MatrixSelect
   public Q_SLOTS:
     void updateMatrices();
     void matrixSelected(int index);
+    void matrixSelected(QString text);
 
   private Q_SLOTS:
     void newMatrix();

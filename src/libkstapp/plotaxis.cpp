@@ -961,7 +961,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
 
   int i = 0;
   qreal lastTick = 12345678;
-  while (1) {    
+  while (1) {
     qreal uNextTick = uFirstTick + i++ * uMajorTickSpacing;
     if (fabs(uNextTick)<uMajorTickSpacing*0.5) { // fix roundoff...
       uNextTick = 0.0;

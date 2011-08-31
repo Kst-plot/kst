@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>510</height>
+    <width>724</width>
+    <height>508</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -267,6 +267,44 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="_scriptLabel1">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>THIS, AND EVERYTHING BELOW IS FOR SCRIPTING AND SHOULD BE HIDDEN!</string>
+     </property>
+     <property name="buddy">
+      <cstring>_scriptLineEdit1</cstring>
+     </property>
+     <property name="si" stdset="0">
+      <string>insert object</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="_scriptLineEdit1"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="_scriptLabel2">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="buddy">
+      <cstring>_scriptLineEdit2</cstring>
+     </property>
+     <property name="si" stdset="0">
+      <string>remove object</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="_scriptLineEdit2"/>
    </item>
    <item>
     <widget class="Line" name="line">

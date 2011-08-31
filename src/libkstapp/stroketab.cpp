@@ -59,6 +59,8 @@ StrokeTab::StrokeTab(QWidget *parent)
   connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+
+  _brushColor->setProperty("si","stroke brush color");
 }
 
 

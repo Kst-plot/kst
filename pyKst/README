@@ -1,0 +1,25 @@
+PyKst is, at the time of writing, not stable enough for serious use.
+For the time being, do not write scripts with it except to test and to send feedback.
+
+PyKst is tested on Python 2.6 and does not work with Python 3.x.
+
+PyKst needs NumPy 1.6 and does not work with NumPy 1.5. If it is very important
+that it should work with NumPy 1.5, modify pykstpp.py to work with the old
+API (and submit these changes to kst!!) or send an email to the devel list.
+
+PyKst currently is not portable as pykstpp.py contains C++ code which is
+compiled upon first use. It should, instead, create a dynamic library at
+Kst compile time. Also, it does not detect the location of the Qt library or
+include files, so to get it to compile you might have to modify pykstpp.py.
+
+Please email the Kst list with feature requests and bug reports. I am not able to work on
+scripting as much as I have had the chance to do in the past two weeks because of
+high school, but can certainly try to help with relatively minor fixes.
+
+The fastest way to get started is to take a look at the examples inside the svn tree
+at pyKst/
+
+Documentation is available for now at hen.astro.utoronto.ca/pyKst or inside the
+svn tree at pyKst/doc.
+
+Josh

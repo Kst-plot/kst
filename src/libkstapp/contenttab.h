@@ -46,6 +46,8 @@ class ContentTab : public DialogTab, Ui::ContentTab {
     void displayedDoubleClicked(QListWidgetItem * item);
     void editSelectedAvailable();
     void editSelectedDisplayed();
+    void addObject(QString);
+    void removeObject(QString);
 };
 
 }

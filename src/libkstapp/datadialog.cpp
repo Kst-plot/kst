@@ -62,6 +62,7 @@ void DataDialog::createGui(bool edit_multiple) {
 
   if (_mode == New) {
     buttonBox()->button(QDialogButtonBox::Apply)->setVisible(false);
+    buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
   }
 
   connect(this, SIGNAL(apply()), this, SLOT(slotApply()));
@@ -85,6 +86,7 @@ void DataDialog::createGui(bool edit_multiple) {
   QHBoxLayout *layout = new QHBoxLayout(box);
 
   _nameLabel = new QLabel(tr("&Name:"), box);
+  _nameLabel->setObjectName("_nameLabel");
   _tagString = new QLineEdit(box);
   connect(_tagString, SIGNAL(textChanged(QString)), this, SLOT(modified()));
   _nameLabel->setBuddy(_tagString);
@@ -92,10 +94,12 @@ void DataDialog::createGui(bool edit_multiple) {
   _shortName = new QLabel(QString(), box);
 
   _tagStringAuto = new QCheckBox(tr("&Auto","automatic"), box);
+  _tagStringAuto->setObjectName("_tagStringAuto");
   connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
 
   if (edit_multiple) {
     _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));
+    _editMultipleButton->setObjectName("_editMultipleButton");
     _editMultipleButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connect(_editMultipleButton, SIGNAL(clicked()), this, SLOT(slotEditMultiple()));
   }
@@ -124,6 +128,11 @@ void DataDialog::createGui(bool edit_multiple) {
 
   box->setLayout(layout);
 
+  _nameLabel->setProperty("si","&Name:");
+  if(_editMultipleWidget&&_editMultipleButton) {
+      _editMultipleButton->setProperty("si","Edit Multiple >>");
+  }
+  _tagStringAuto->setProperty("si","&Auto");
 }
 
 

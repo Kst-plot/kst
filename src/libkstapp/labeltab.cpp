@@ -76,6 +76,19 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_leftLabelAuto, SIGNAL(toggled(bool)), this, SLOT(activateFields()));
   connect(_bottomLabelAuto, SIGNAL(toggled(bool)), this, SLOT(activateFields()));
   connect(_rightLabelAuto, SIGNAL(toggled(bool)), this, SLOT(activateFields()));
+
+  _Label_4->setProperty("si","Default plot font &size:");
+  _autoScaleNumberAxis->setProperty("si","Automatically scale number axis labels");
+  _topLabelLabel->setProperty("si","&Top label:");
+  _topLabelAuto->setProperty("si","Auto");
+  _bottomLabelLabel->setProperty("si","Botto&m label:");
+  _bottomLabelAuto->setProperty("si","Auto");
+  _leftLabelLabel->setProperty("si","&Left label:");
+  _leftLabelAuto->setProperty("si","Auto");
+  _rightLabelLabel->setProperty("si","&Right label:");
+  _rightLabelAuto->setProperty("si","Auto");
+  _showLegend->setProperty("si","Show le&gend");
+  _editLegendContents->setProperty("si","E&dit");
 }
 
 

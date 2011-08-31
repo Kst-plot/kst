@@ -34,6 +34,13 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
   _add->setToolTip(i18n("Select: Alt+s"));
   _remove->setToolTip(i18n("Remove: Alt+r"));
 
+  _scriptLineEdit1->hide();
+  _scriptLineEdit2->hide();
+  _scriptLabel1->hide();
+  _scriptLabel2->hide();
+  connect(_scriptLineEdit1,SIGNAL(textChanged(QString)),this,SLOT(addObject(QString)));
+  connect(_scriptLineEdit2,SIGNAL(textChanged(QString)),this,SLOT(removeObject(QString)));
+
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
   connect(_up, SIGNAL(clicked()), this, SLOT(upButtonClicked()));
@@ -52,6 +59,13 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
 
   connect(_editSelectedAvailable, SIGNAL(clicked()), this, SLOT(editSelectedAvailable()));
   connect(_editSelectedDisplayed, SIGNAL(clicked()), this, SLOT(editSelectedDisplayed()));
+
+  _deselectAllAvailable->setProperty("si","Deselect  All");
+  _selectAllAvailable->setProperty("si","Select All");
+  _editSelectedAvailable->setProperty("si","Edit");
+  _deselectAllDisplayed->setProperty("si","Deselect  All");
+  _selectAllDisplayed->setProperty("si","Select All");
+  _editSelectedDisplayed->setProperty("si","Edit");
 }
 
 
@@ -203,6 +217,24 @@ QStringList ContentTab::displayedRelations() {
     relations.append(_displayedRelationList->item(i)->text());
   }
   return relations;
+}
+
+void ContentTab::addObject(QString x) {
+    for(int i=0;i<_availableRelationList->count();i++) {
+        if(_availableRelationList->item(i)->text().contains(x)) {
+            _displayedRelationList->addItem(_availableRelationList->takeItem(i));
+            return;
+        }
+    }
+}
+
+void ContentTab::removeObject(QString x) {
+    for(int i=0;i<_displayedRelationList->count();i++) {
+        if(_displayedRelationList->item(i)->text().contains(x)) {
+            _availableRelationList->addItem(_displayedRelationList->takeItem(i));
+            return;
+        }
+    }
 }
 
 }

@@ -143,7 +143,8 @@ SOURCES += aboutdialog.cpp \
     viewprimitivedialog.cpp \
     viewvectordialog.cpp \
     pluginmenuitemaction.cpp \
-    exportvectorsdialog.cpp
+    exportvectorsdialog.cpp \
+    dialogscriptinterface.cpp
 HEADERS += aboutdialog.h \
     application.h \
     applicationsettings.h \
@@ -252,7 +253,8 @@ HEADERS += aboutdialog.h \
     viewvectordialog.h \
     pluginmenuitemaction.h \
     logdialog.h \
-    exportvectorsdialog.h
+    exportvectorsdialog.h \
+    dialogscriptinterface.h
 FORMS += aboutdialog.ui \
     arrowpropertiestab.ui \
     axistab.ui \
@@ -304,4 +306,4 @@ FORMS += aboutdialog.ui \
     viewprimitivedialog.ui \
     viewvectordialog.ui \
     exportvectorsdialog.ui
-RESOURCES += $$TOPLEVELDIR/src/images/images.qrc
+RESOURCES += $$TOPLEVELDIR/src/images/images.qrc script.qrc

@@ -211,80 +211,82 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
     return 0;
   }
 
-  PlotItem *plotItem = 0;
-  switch (_filterFitTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_filterFitTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlotNewTab:
-    _document->createView();
-    // fall through to case NewPlot.
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_filterFitTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_filterFitTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_filterFitTab->curvePlacement()->existingPlot());
+          break;
       }
-      plotItem->view()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
-                                             _filterFitTab->curvePlacement()->gridColumns());
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlotNewTab:
+          _document->createView();
+          // fall through to case NewPlot.
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (plotItem) {
-    CurvePtr curve = _document->objectStore()->createObject<Curve>();
-    Q_ASSERT(curve);
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_filterFitTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          plotItem->view()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
+                                           _filterFitTab->curvePlacement()->gridColumns());
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (!_vectorX) {
-      setVectorX(dataObject->inputVectors().value(dataObject->inputVectorList().first()));
-    }
-    Q_ASSERT(_vectorX);
-    curve->setXVector(_vectorX);
+      if (plotItem) {
+          CurvePtr curve = _document->objectStore()->createObject<Curve>();
+          Q_ASSERT(curve);
 
-    VectorPtr yVector = dataObject->outputVectors().value(dataObject->outputVectorList().first());
-    Q_ASSERT(yVector);
-    curve->setYVector(yVector);
+          if (!_vectorX) {
+              setVectorX(dataObject->inputVectors().value(dataObject->inputVectorList().first()));
+          }
+          Q_ASSERT(_vectorX);
+          curve->setXVector(_vectorX);
 
-    curve->setColor(_filterFitTab->curveAppearance()->color());
-    curve->setHasPoints(_filterFitTab->curveAppearance()->showPoints());
-    curve->setHasLines(_filterFitTab->curveAppearance()->showLines());
-    curve->setHasBars(_filterFitTab->curveAppearance()->showBars());
-    curve->setLineWidth(_filterFitTab->curveAppearance()->lineWidth());
-    curve->setLineStyle(_filterFitTab->curveAppearance()->lineStyle());
-    curve->setPointType(_filterFitTab->curveAppearance()->pointType());
-    curve->setPointDensity(_filterFitTab->curveAppearance()->pointDensity());
-    curve->setBarFillColor(_filterFitTab->curveAppearance()->barFillColor());
+          VectorPtr yVector = dataObject->outputVectors().value(dataObject->outputVectorList().first());
+          Q_ASSERT(yVector);
+          curve->setYVector(yVector);
 
-    curve->writeLock();
-    curve->registerChange();
-    curve->unlock();
+          curve->setColor(_filterFitTab->curveAppearance()->color());
+          curve->setHasPoints(_filterFitTab->curveAppearance()->showPoints());
+          curve->setHasLines(_filterFitTab->curveAppearance()->showLines());
+          curve->setHasBars(_filterFitTab->curveAppearance()->showBars());
+          curve->setLineWidth(_filterFitTab->curveAppearance()->lineWidth());
+          curve->setLineStyle(_filterFitTab->curveAppearance()->lineStyle());
+          curve->setPointType(_filterFitTab->curveAppearance()->pointType());
+          curve->setPointDensity(_filterFitTab->curveAppearance()->pointDensity());
+          curve->setBarFillColor(_filterFitTab->curveAppearance()->barFillColor());
 
-    _filterFitTab->curveAppearance()->setWidgetDefaults();
+          curve->writeLock();
+          curve->registerChange();
+          curve->unlock();
 
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(curve));
+          _filterFitTab->curveAppearance()->setWidgetDefaults();
 
-    dataObject->writeLock();
-    dataObject->internalUpdate();
-    dataObject->unlock();
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(curve));
 
-    if (dataObject->hasParameterVector()) {
-      CreateLabelCommand *cmd = new CreateLabelCommand;
-      QString *tmpstring = new QString(dataObject->parameterVectorToString());
+          dataObject->writeLock();
+          dataObject->internalUpdate();
+          dataObject->unlock();
 
-      cmd->createItem(tmpstring);
-    }
-    plotItem->update();
+          if (dataObject->hasParameterVector()) {
+              CreateLabelCommand *cmd = new CreateLabelCommand;
+              QString *tmpstring = new QString(dataObject->parameterVectorToString());
 
+              cmd->createItem(tmpstring);
+          }
+          plotItem->update();
+
+      }
   }
 
   _filterFitTab->configWidget()->save();

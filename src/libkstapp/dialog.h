@@ -30,6 +30,8 @@ class Dialog : public QDialog, public Ui::Dialog
 {
   Q_OBJECT
   public:
+    friend class DialogSI;
+    friend class ScriptServer;
     Dialog(QWidget *parent = 0);
     virtual ~Dialog();
 

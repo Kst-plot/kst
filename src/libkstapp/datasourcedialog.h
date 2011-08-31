@@ -29,6 +29,7 @@ class DataSourceDialog : public QDialog
 {
   Q_OBJECT
   public:
+    friend class DialogSI;
     DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent = 0);
     virtual ~DataSourceDialog();
 

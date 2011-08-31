@@ -291,6 +291,8 @@ class MainWindow : public QMainWindow
     QMenu* _recentDataFilesMenu;
     QList<QAction*> _bottomRecentKstActions;
     QList<QAction*> _bottomRecentDataActions;
+
+    friend class ScriptServer;
 };
 
 }

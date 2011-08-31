@@ -23,6 +23,17 @@ CurvePlacement::CurvePlacement(QWidget *parent)
   connect(_existingPlot, SIGNAL(toggled(bool)), _plotList, SLOT(setEnabled(bool)));
   connect(_newPlot, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
   connect(_customGrid, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
+
+  _noPlot->setProperty("si","Do not pl&ace in any plot");
+  _existingPlot->setProperty("si","Place in &existing plot:");
+  _newPlot->setProperty("si","Place in &new plot");
+  _newTab->setProperty("si","In ne&w tab");
+  _scaleFonts->setProperty("si","Scale fonts");
+  _autoLayout->setProperty("si","Automati&c layout");
+  _customGrid->setProperty("si","Custom &grid:");
+  _gridColumnsLabel->setProperty("si","Colu&mns");
+  _protectLayout->setProperty("si","&Protect existing layout");
+  _plotList->setProperty("si","place In Existing Plot");
 }
 
 
@@ -42,7 +53,9 @@ void CurvePlacement::updateButtons() {
 
 
 CurvePlacement::Place CurvePlacement::place() const {
-  if ((!isVisible()) || _noPlot->isChecked())
+  if (/*(!isVisible()) ||*/ _noPlot->isChecked())   //the dialogscriptinterface hides dialogs.
+                                                    //instead, before calling place() make sure
+                                                    //editmode()==New
     return NoPlot;
   else if (_existingPlot->isChecked())
     return ExistingPlot;
@@ -103,7 +116,20 @@ void CurvePlacement::setLayout(CurvePlacement::Layout layout) {
 }
 
 PlotItemInterface *CurvePlacement::existingPlot() const {
-  return qVariantValue<PlotItemInterface*>(_plotList->itemData(_plotList->currentIndex()));
+  QString shortName;
+  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  rx.indexIn(_plotList->currentText());
+  shortName = rx.cap(2);
+
+  int xi=-1;
+  for(int i=0;i<_plotList->count();i++) {
+      if(_plotList->itemText(i).contains(shortName)) {
+          xi= i;
+          break;
+      }
+  }
+  if(xi==-1) ++xi;
+  return qVariantValue<PlotItemInterface*>(_plotList->itemData(xi));
 }
 
 
@@ -116,18 +142,27 @@ void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingP
 }
 
 void CurvePlacement::updatePlotListCombo() {
+  QString shortName;
+  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  rx.indexIn(_plotList->currentText());
+  shortName = rx.cap(2);
 
-  int current_index=-1;
-  if (_plotList->count() > 0) {
-    current_index = _plotList->currentIndex();
+  int xi=-1;
+  for(int i=0;i<_plotList->count();i++) {
+      if(_plotList->itemText(i).contains(shortName)) {
+          xi= i;
+          break;
+      }
   }
+  if(xi==-1) ++xi;
+
   _plotList->clear();
   foreach (PlotItemInterface *plot, _plots) {
     _plotList->addItem(plot->plotSizeLimitedName(_plotList), qVariantFromValue(plot));
   }
 
-  if ((current_index>0) && (current_index<_plotList->count())) {
-    _plotList->setCurrentIndex(current_index);
+  if ((xi>0) && (xi<_plotList->count())) {
+    _plotList->setCurrentIndex(xi);
   }
 }
 

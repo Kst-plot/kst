@@ -24,11 +24,13 @@ ColorPalette::ColorPalette(QWidget *parent)
   setupUi(this);
 
   connect(_palette, SIGNAL(highlighted(const QString&)), this, SLOT(updatePalette(const QString&)));
-  connect(_palette, SIGNAL(activated(const QString&)), this, SLOT(updatePalette(const QString&)));
+  connect(_palette, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(updatePalette(const QString&)));
   connect(_palette, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()));
 
   refresh(DefaultPalette);
   updatePalette(DefaultPalette);
+
+  _label->setProperty("si","C&olor palette:");
 }
 
 
@@ -43,7 +45,7 @@ void ColorPalette::updatePalette(const QString &palette) {
 
  Palette*  newPalette = new Palette(palette);
   int numberOfColors = newPalette->colorCount();
-  int height = _palette->height();
+  int height = _palette->height()?_palette->height():1;
   int width = 7 * height;
   int size = 1;
   int step = 1;

@@ -45,6 +45,7 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
 
   _vectorLabel->setBuddy(_vector->_vector);
 
+  _vectorLabel->setProperty("si","Data vecto&r:");
 }
 
 
@@ -250,41 +251,43 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
 
   _powerSpectrumTab->curveAppearance()->setWidgetDefaults();
 
-  PlotItem *plotItem = 0;
-  switch (_powerSpectrumTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_powerSpectrumTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlotNewTab:
-    _document->createView();
-    // fall through to case NewPlot.
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_powerSpectrumTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_powerSpectrumTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_powerSpectrumTab->curvePlacement()->existingPlot());
+          break;
       }
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlotNewTab:
+          _document->createView();
+          // fall through to case NewPlot.
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(curve));
-    plotItem->update();
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_powerSpectrumTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
-      plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
-    }
+      if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(curve));
+          plotItem->update();
+
+          if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+              plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+          }
+      }
   }
 
   return ObjectPtr(powerspectrum.data());

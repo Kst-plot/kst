@@ -31,6 +31,7 @@ class ObjectStore;
 class MatrixTab : public DataTab, Ui::MatrixTab {
   Q_OBJECT
   public:
+    friend class DialogSI;
     enum MatrixMode { DataMatrix, GeneratedMatrix };
 
     explicit MatrixTab(ObjectStore *store, QWidget *parent = 0);
@@ -163,6 +164,7 @@ class MatrixDialog : public DataDialog {
   public:
     explicit MatrixDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~MatrixDialog();
+    friend class DialogSI;
 
   protected:
 //     virtual QString tagString() const;

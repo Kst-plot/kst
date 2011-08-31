@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>203</width>
-    <height>124</height>
+    <width>338</width>
+    <height>121</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -42,7 +42,11 @@
       </widget>
      </item>
      <item row="0" column="1" colspan="2">
-      <widget class="Kst::ColorButton" name="_color"/>
+      <widget class="Kst::ColorButton" name="_color">
+       <property name="si" stdset="0">
+        <string>fill color</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
@@ -61,6 +65,9 @@
        <property name="buddy">
         <cstring>_style</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>fill style</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="1" colspan="2">
@@ -71,6 +78,9 @@
        <property name="text">
         <string>Use &amp;linear gradient</string>
        </property>
+       <property name="si" stdset="0">
+        <string>fill use linear gradient</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="2">
@@ -80,6 +90,9 @@
        </property>
        <property name="text">
         <string>&amp;Reset Gradient</string>
+       </property>
+       <property name="si" stdset="0">
+        <string>fill reset gradient</string>
        </property>
       </widget>
      </item>

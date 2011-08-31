@@ -92,17 +92,17 @@ class RenderContext : public QObject {
 
   inline void addObject(Kst::VectorPtr vp) {
     _refObjects.append(vp);
-    //connect(vp, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
+    connect(vp.data(), SIGNAL(dirty()), this, SIGNAL(labelDirty()));
   }
 
   inline void addObject(Kst::ScalarPtr scalar) {
     _refObjects.append(scalar);
-    //connect(scalar, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
+    connect(scalar.data(), SIGNAL(dirty()), this, SIGNAL(labelDirty()));
   }
 
   inline void addObject(Kst::StringPtr string) {
     _refObjects.append(string);
-    //connect(string, SIGNAL(updated(ObjectPtr)), this, SIGNAL(labelDirty()));
+    connect(string.data(), SIGNAL(dirty()), this, SIGNAL(labelDirty()));
   }
 
   inline int fontSize() const {

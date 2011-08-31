@@ -32,8 +32,8 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
 
   _fileNameLabel->setBuddy(_fileName->_fileEdit);
 
-  connect(_generatedStringGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
-  connect(_dataStringGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
+  connect(_generatedStringGroup, SIGNAL(toggled(bool)), this, SLOT(generateClicked()));
+  connect(_dataStringGroup, SIGNAL(toggled(bool)), this, SLOT(readFromSourceClicked()));
   connect(_stringValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));

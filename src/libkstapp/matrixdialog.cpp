@@ -75,6 +75,34 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
   _connect->setVisible(false);
+
+  QLabel* siHack=new QLabel(this);
+  siHack->hide();
+  siHack->setProperty("si","Read 1 sample per");
+  siHack->setObjectName("siHack");
+  siHack->setBuddy(_skip);
+
+  textLabel7->setProperty("si","X step si&ze:");
+  textLabel5_2_2->setProperty("si","&X minimum:");
+  textLabel6->setProperty("si","&Y minimum:");
+  textLabel7_2->setProperty("si","Y ste&p size:");
+  _gradientX->setProperty("si","X-axis");
+  _gradientY->setProperty("si","Y-axis");
+  textLabel6_2->setProperty("si","Z at minimum:");
+  textLabel8->setProperty("si","X steps:");
+  textLabel8_2->setProperty("si","Y steps:");
+  textLabel7_3->setProperty("si","Z at maximum:");
+  textLabel3->setProperty("si","Y s&tarting frame:");
+  textLabel2_2->setProperty("si","X n&umber of frames:");
+  textLabel3_2->setProperty("si","Y nu&mber of frames:");
+  textLabel2->setProperty("si","X &starting frame:");
+  _doAverage->setProperty("si","Boxcar &filter first");
+  _doSkip->setProperty("si","Read &1 sample per");
+  _readFromSource->setProperty("si","Read from data source");
+  _generateGradient->setProperty("si","Generate gradient");
+  TextLabel6->setProperty("si","F&ield or column:");
+  _connect->setProperty("si","&Connect");
+  _configure->setProperty("si","Co&nfigure...");
 }
 
 
@@ -454,6 +482,9 @@ bool MatrixTab::xReadToEndDirty() const {
 
 void MatrixTab::setXReadToEnd(bool xReadToEnd) {
   _xNumStepsReadToEnd->setChecked(xReadToEnd);
+  if(_xNumSteps->isEnabled()==xReadToEnd) {
+      _xNumSteps->setEnabled(!xReadToEnd);
+  }
 }
 
 
@@ -469,6 +500,9 @@ bool MatrixTab::yReadToEndDirty() const {
 
 void MatrixTab::setYReadToEnd(bool yReadToEnd) {
   _yNumStepsReadToEnd->setChecked(yReadToEnd);
+  if(_yNumSteps->isEnabled()==yReadToEnd) {
+      _yNumSteps->setEnabled(!yReadToEnd);
+  }
 }
 
 void MatrixTab::readFromSourceChanged() {

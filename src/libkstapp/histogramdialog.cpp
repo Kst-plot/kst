@@ -68,6 +68,17 @@ HistogramTab::HistogramTab(QWidget *parent)
   _curveAppearance->setShowBars(true);
   _curveAppearance->setPointDensity(0);
   _curveAppearance->setColor(_dialogDefaults->value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>());
+
+  _vectorLabel->setProperty("si","Data vecto&r:");
+  TextLabel1_4_2_2->setProperty("si","Bins from&:");
+  TextLabel4_5_2->setProperty("si","to:");
+  TextLabel5_2->setProperty("si","Num bin&s:");
+  AutoBin->setProperty("si","A&uto Bin");
+  _realTimeAutoBin->setProperty("si","Real&-time auto bin");
+  _normalizationIsPercent->setProperty("si","Percent& in bin");
+  _normalizationIsFraction->setProperty("si","&Fraction in bin");
+  _normalizationIsNumber->setProperty("si","Nu&mber in bin");
+  _normalizationMaximumOne->setProperty("si","Peak bin = &1.0");
 }
 
 
@@ -391,41 +402,43 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->registerChange();
   curve->unlock();
 
-  PlotItem *plotItem = 0;
-  switch (_histogramTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_histogramTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlotNewTab:
-    _document->createView();
-    // fall through to case NewPlot.
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_histogramTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_histogramTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_histogramTab->curvePlacement()->existingPlot());
+          break;
       }
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlotNewTab:
+          _document->createView();
+          // fall through to case NewPlot.
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (_histogramTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(curve));
-    plotItem->update();
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_histogramTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (_histogramTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
-      plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
-    }
+      if (_histogramTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(curve));
+          plotItem->update();
+
+          if (_histogramTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+              plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+          }
+      }
   }
   return ObjectPtr(histogram.data());
 }

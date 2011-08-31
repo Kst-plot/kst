@@ -22,6 +22,7 @@
 #include "arrowitem.h"
 #include "circleitem.h"
 #include "sharedaxisboxitem.h"
+#include "buttonitem.h"
 
 namespace Kst {
   namespace Builtins {
@@ -31,6 +32,7 @@ namespace Kst {
       new CircleItemFactory;
       new EllipseItemFactory;
       new LabelItemFactory;
+      new ButtonItemFactory;
       new LayoutBoxItemFactory;
       new LineItemFactory;
       new PictureItemFactory;

@@ -86,6 +86,9 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
+       <property name="si" stdset="0">
+        <string>override label italic</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="0">
@@ -140,6 +143,9 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
+       <property name="si" stdset="0">
+        <string>override label bold</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="3">
@@ -156,6 +162,9 @@
       <widget class="Kst::ColorButton" name="_labelColor">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="si" stdset="0">
+        <string>override label color</string>
        </property>
       </widget>
      </item>

@@ -279,6 +279,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="si" stdset="0">
+           <string>updateInterval</string>
+          </property>
          </widget>
         </item>
        </layout>

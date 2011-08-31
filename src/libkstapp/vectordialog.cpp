@@ -35,8 +35,8 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Vector"));
 
-  connect(_generatedVectorGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
-  connect(_dataVectorGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
+  connect(_generatedVectorGroup, SIGNAL(toggled(bool)), this, SLOT(generateClicked()));
+  connect(_dataVectorGroup, SIGNAL(toggled(bool)), this, SLOT(readFromSourceClicked()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
   connect(_field, SIGNAL(editTextChanged(const QString &)), this, SIGNAL(fieldChanged()));
@@ -55,12 +55,16 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
 
   _connect->setVisible(false);
 
+  QLabel* siHack=new QLabel(this);
+  siHack->hide();
+  siHack->setBuddy(_updateBox);
+  siHack->setText("update type");
   _updateBox->addItem("Time interval");
   _updateBox->addItem("Change detection");
   _updateBox->addItem("Don't update");
   updateUpdateBox();
-  connect(_updateBox, SIGNAL(activated(int)), this, SLOT(updateTypeActivated(int)));
-  connect(_updateBox, SIGNAL(activated(int)), this, SIGNAL(modified()));
+  connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateTypeActivated(int)));
+  connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 }
 
 

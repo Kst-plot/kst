@@ -31,6 +31,10 @@ DataRange::DataRange(QWidget *parent)
   connect(_readToEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_doSkip, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 
+  QLabel* siHack=new QLabel(this);
+  siHack->hide();
+  siHack->setProperty("si","read 1 sample per");
+  siHack->setBuddy(_skip);
 }
 
 

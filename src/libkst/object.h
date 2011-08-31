@@ -52,7 +52,7 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     enum UpdateType { NoChange = 0, Updated, Deferred };
 
     virtual UpdateType objectUpdate(qint64 newSerial);
-    virtual void registerChange() {_serial = Forced;}
+    virtual void registerChange() {_serial = Forced; emit dirty();}
 
     virtual void reset();
 
@@ -91,6 +91,8 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     qint64 _serialOfLastChange;
   private:
     bool _used;
+  signals:
+    void dirty();
   };
 
 

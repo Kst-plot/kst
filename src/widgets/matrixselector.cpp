@@ -38,6 +38,7 @@ MatrixSelector::MatrixSelector(QWidget *parent, ObjectStore *store)
   connect(_editMatrix, SIGNAL(pressed()), this, SLOT(editMatrix()));
 
   connect(_matrix, SIGNAL(currentIndexChanged(int)), this, SLOT(matrixSelected(int)));
+  connect(_matrix, SIGNAL(editTextChanged(QString)), this, SLOT(matrixSelected(QString)));
 }
 
 
@@ -52,7 +53,9 @@ void MatrixSelector::setObjectStore(ObjectStore *store) {
 
 
 MatrixPtr MatrixSelector::selectedMatrix() const {
-  return qVariantValue<Matrix*>(_matrix->itemData(_matrix->currentIndex()));
+  ObjectPtr p=_store->retrieveObject(_matrix->currentText());
+  if(p.isPtrValid()) return kst_cast<Matrix>(p);
+  else return NULL;
 }
 
 
@@ -67,6 +70,9 @@ void MatrixSelector::matrixSelected(int index) {
     emit selectionChanged();
 }
 
+void MatrixSelector::matrixSelected(QString) {
+  emit selectionChanged();
+}
 
 void MatrixSelector::setSelectedMatrix(MatrixPtr selectedMatrix) {
   int i = _matrix->findData(qVariantFromValue(selectedMatrix.data()));

@@ -24,6 +24,8 @@
 #include "datasource.h"
 #include "dialogdefaults.h"
 
+#include "dialogscriptinterface.h"
+
 #include <QIcon>
 
 namespace Kst {
@@ -49,6 +51,9 @@ Application::Application(int &argc, char **argv)
 
   //Replace the dialoglauncher singleton with one that actually works
   DialogLauncher::replaceSelf(new DialogLauncherGui);
+
+  //Also give us dialog-script scripting functionality
+  DialogLauncherSI::self = new DialogLauncherSI;
 
   connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
   //_mainWindow->show();

@@ -331,6 +331,9 @@
             <blue>0</blue>
            </color>
           </property>
+          <property name="si" stdset="0">
+           <string>image contour color</string>
+          </property>
          </widget>
         </item>
        </layout>

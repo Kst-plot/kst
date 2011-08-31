@@ -22,7 +22,7 @@ FFTOptions::FFTOptions(QWidget *parent)
 
   connect(_interleavedAverage, SIGNAL(clicked()), this, SLOT(clickedInterleaved()));
   connect(_apodize, SIGNAL(clicked()), this, SLOT(clickedApodize()));
-  connect(_apodizeFunction, SIGNAL(activated(int)), this, SLOT(changedApodizeFxn()));
+  connect(_apodizeFunction, SIGNAL(currentIndexChanged(int)), this, SLOT(changedApodizeFxn()));
   connect(_apodize, SIGNAL(clicked()), this, SLOT(changedApodizeFxn()));
 
   connect(_apodizeFunction, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
@@ -36,6 +36,19 @@ FFTOptions::FFTOptions(QWidget *parent)
   connect(_rateUnits, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_sigma, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_FFTLength, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+
+
+  _sigmaLabel->setProperty("si","S&igma:");
+  _apodize->setProperty("si","Apodi&ze");
+  textLabel2->setProperty("si","Fun&ction:");
+  _removeMean->setProperty("si","Remo&ve mean");
+  TextLabel1_9->setProperty("si","FFT &length: 2^");
+  _interleavedAverage->setProperty("si","Interleave&d average");
+  _interpolateOverHoles->setProperty("si","Interpolate over &holes");
+  TextLabel1_9_2->setProperty("si","Sa&mple rate:");
+  TextLabel1_9_3->setProperty("si","Vector units:");
+  TextLabel1_9_2_2->setProperty("si","Rate units:");
+  textLabel1_2->setProperty("si","Ou&tput:");
 }
 
 

@@ -222,6 +222,9 @@
       </item>
       <item row="0" column="3">
        <widget class="QComboBox" name="_startUnits">
+        <property name="si" stdset="0">
+         <string>start units</string>
+        </property>
         <item>
          <property name="text">
           <string>frames</string>
@@ -233,6 +236,9 @@
        <widget class="QComboBox" name="_rangeUnits">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="si" stdset="0">
+         <string>range units</string>
         </property>
         <item>
          <property name="text">

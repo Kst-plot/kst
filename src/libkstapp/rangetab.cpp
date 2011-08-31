@@ -36,15 +36,28 @@ RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent)
   connect(_ySpike, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_yFixed, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 
-  connect(_xMin, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
-  connect(_xMax, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
-  connect(_xRange, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_xMin, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_xMax, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_xRange, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
 
-  connect(_yMin, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
-  connect(_yMax, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
-  connect(_yRange, SIGNAL(textEdited(const QString &)), this, SIGNAL(modified()));
+  connect(_yMin, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_yMax, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_yRange, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
 
   connect(this, SIGNAL(modified()), this, SLOT(updateButtons()));
+
+  _xAuto->setProperty("si","A&uto");
+  _xBorder->setProperty("si","Auto with bor&der");
+  _xSpike->setProperty("si","S&pike insensitive auto");
+  _xMean->setProperty("si","Mean c&entered, ");
+  _xFixed->setProperty("si","F&ixed, ");
+  _xHidden->setProperty("si","SHOULD BE HIDDEN");
+  _yAuto->setProperty("si","&Auto");
+  _yBorder->setProperty("si","Auto with &border");
+  _ySpike->setProperty("si","&Spike insensitive auto");
+  _yMean->setProperty("si","Mean &centered, ");
+  _yFixed->setProperty("si","&Fixed, ");
+  _yHidden->setProperty("si","SHOULD BE HIDDEN");
 }
 
 

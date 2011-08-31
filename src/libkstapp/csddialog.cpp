@@ -44,6 +44,10 @@ CSDTab::CSDTab(QWidget *parent)
   connect(_FFTOptions, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_windowSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+
+
+  textLabel1->setProperty("si","Window size:");
+  _vector->setProperty("si","data vector");
 }
 
 
@@ -234,38 +238,40 @@ ObjectPtr CSDDialog::createNewDataObject() {
   image->registerChange();
   image->unlock();
 
-  PlotItem *plotItem = 0;
-  switch (_CSDTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_CSDTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_CSDTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_CSDTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_CSDTab->curvePlacement()->existingPlot());
+          break;
       }
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (_CSDTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(image));
-    plotItem->update();
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_CSDTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (_CSDTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
-      plotItem->view()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
-    }
+      if (_CSDTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(image));
+          plotItem->update();
+
+          if (_CSDTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+              plotItem->view()->appendToLayout(_CSDTab->curvePlacement()->layout(), plotItem, _CSDTab->curvePlacement()->gridColumns());
+          }
+      }
   }
 
   return ObjectPtr(image.data());

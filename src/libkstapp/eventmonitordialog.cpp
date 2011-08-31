@@ -30,7 +30,7 @@ EventMonitorTab::EventMonitorTab(QWidget *parent)
   setTabTitle(tr("Event Monitor"));
 
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
-  connect(_equationOperator, SIGNAL(activated(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
+  connect(_equationOperator, SIGNAL(currentIndexChanged(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
   connect(_vectorSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
   connect(_scalarSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
 

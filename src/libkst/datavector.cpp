@@ -607,6 +607,46 @@ void DataVector::internalUpdate() {
   Vector::internalUpdate();
 }
 
+QByteArray DataVector::scriptInterface(QList<QByteArray> &c)
+{
+    Q_ASSERT(c.size());
+    if(c[0]=="changeFrames") {
+//        int f0, int n, int skip, bool in_doSkip, bool in_doAve;
+        if(c.size()!=6) {
+            return QByteArray("Bad parameter count (!=5).");
+        }
+        changeFrames(c[1].toInt(),c[2].toInt(),c[3].toInt(),(c[4]=="true")?1:0,(c[5]=="true")?1:0);
+        return QByteArray("Done.");
+    } else if(c[0]=="numFrames") {
+        return QByteArray::number(numFrames());
+    } else if(c[0]=="startFrame") {
+        return QByteArray::number(startFrame());
+    } else if(c[0]=="doSkip") {
+        return QByteArray(doSkip()?"true":"false");
+    } else if(c[0]=="doAve") {
+        return QByteArray(doAve()?"true":"false");
+    } else if(c[0]=="skip") {
+        return QByteArray::number(skip());
+    } else if(c[0]=="reload") {
+        reload();
+        return QByteArray("Done");
+    } else if(c[0]=="samplesPerFrame") {
+        return QByteArray::number(samplesPerFrame());
+    } else if(c[0]=="fileLength") {
+        return QByteArray::number(fileLength());
+    } else if(c[0]=="readToEOF") {
+        return QByteArray(readToEOF()?"true":"false");
+    } else if(c[0]=="countFromEOF") {
+        return QByteArray(countFromEOF()?"true":"false");
+    } else if(c[0]=="descriptionTip") {
+        return QByteArray(descriptionTip().toAscii());
+    } else if(c[0]=="isValid") {
+        return isValid()?"true":"false";
+    }
+
+    return "No such command...";
+}
+
 
 /** Returns intrinsic samples per frame */
 int DataVector::samplesPerFrame() const {

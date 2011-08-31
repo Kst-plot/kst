@@ -80,30 +80,30 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     void changeFile(DataSourcePtr file);
 
     void changeFrames(int f0, int n, int skip,
-                      bool in_doSkip, bool in_doAve);
+                      bool in_doSkip, bool in_doAve);           //si
 
     /** Return frames held in Vector */
-    int numFrames() const;
+    int numFrames() const;                                      //si
 
     /** Return the requested number of frames in the vector */
     int reqNumFrames() const;
 
     /** Return Starting Frame of Vector */
-    int startFrame() const;
+    int startFrame() const;                                     //si
 
     /** Return the requested starting frame of the Vector */
     int reqStartFrame() const;
 
     /** Return frames to skip per read */
-    bool doSkip() const;
+    bool doSkip() const;                                        //si^3
     bool doAve() const;
     int skip() const;
 
     /** Reload the contents of the vector */
-    void reload();
+    void reload();                                              //si
 
     /** Returns intrinsic samples per frame */
-    int samplesPerFrame() const;
+    int samplesPerFrame() const;                                //si
 
     /** Save vector information */
     virtual void save(QXmlStreamWriter &s);
@@ -112,23 +112,26 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     virtual LabelInfo labelInfo() const;
 
     /** return the length of the file */
-    int fileLength() const;
+    int fileLength() const;                                     //si
 
     /** return whether the vector is suppose to read to end of file */
-    bool readToEOF() const;
+    bool readToEOF() const;                                     //si
 
     /** read whether the vector is suppose to count back from end of file */
-    bool countFromEOF() const;
+    bool countFromEOF() const;                                  //si
 
     /** Read from end */
     void setFromEnd();
 
-    virtual QString descriptionTip() const;
+    virtual QString descriptionTip() const;                     //si
 
     virtual QString propertyString() const;
 
-    bool isValid() const;
+    bool isValid() const;                                       //si
     virtual void internalUpdate();
+
+    //implemented in Vector too but must not be virtual.
+    QByteArray scriptInterface(QList<QByteArray> &command);
 
   protected:
     DataVector(ObjectStore *store);

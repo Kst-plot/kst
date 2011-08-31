@@ -28,7 +28,7 @@ const QString EditableVector::staticTypeString = I18N_NOOP("Editable Vector");
 const QString EditableVector::staticTypeTag = I18N_NOOP("editablevector");
 
 EditableVector::EditableVector(ObjectStore *store)
-    : Vector(store) {
+    : Vector(store), _sum(0.0) {
   _editable = true;
   _saveable = true;
   _saveData = true;
@@ -42,6 +42,24 @@ const QString& EditableVector::typeString() const {
 
 void EditableVector::setSaveData(bool save) {
   Q_UNUSED(save)
+}
+
+void EditableVector::setValue(const int &i, const double &val) { //sa Vector::change(...)
+    writeLock();
+    Q_ASSERT(i>=0);
+    if(i>_size) {
+        resize(i,1);
+    }
+    _scalars["sum"]->setValue(_sum+val-_v[i]);
+    _scalars["sumsquared"]->setValue(_sum*_sum);
+    _scalars["max"]->setValue(qMax(_max,val));
+    _scalars["min"]->setValue(qMin(_min,_min));
+    double b=(float)(qMax((float)0.0f,(float)_minPos));
+    _scalars["minpos"]->setValue(qMin(_min,b));
+    _scalars["last"]->setValue(_v[_size-1]);
+    _scalars["first"]->setValue(_v[0]);
+    _v[i]=val;
+    unlock();
 }
 
 /** Save vector information */

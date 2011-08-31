@@ -32,6 +32,8 @@ class EditMultipleWidget;
 class DataDialog : public Dialog {
   Q_OBJECT
   public:
+    friend class DialogLauncherSI;
+    friend class DialogSI;
     enum EditMode { New, Edit, EditMultiple };
     explicit DataDialog(ObjectPtr dataObject = 0, QWidget *parent = 0, bool edit_multiple = true);
     virtual ~DataDialog();

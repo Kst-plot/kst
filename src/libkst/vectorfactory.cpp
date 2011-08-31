@@ -37,6 +37,7 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   QByteArray data;
   QString descriptiveName;
   Q_ASSERT(store);
+  int saveVer=-1;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -47,11 +48,12 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
           descriptiveName = attrs.value("descriptiveName").toString();
         }
         Object::processShortNameIndexAttributes(attrs);
-      } else if (n == "data") {
+      } else if (n == "data"||n=="data_v2") {
 
         QString qcs(xml.readElementText().toLatin1());
         QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
         data = qUncompress(qbca);
+        saveVer=(n=="data")?1:2;
 
       } else {
         return 0;
@@ -72,7 +74,11 @@ PrimitivePtr VectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   }
 
   VectorPtr vector = store->createObject<Vector>();
-  vector->change(data);
+  if(saveVer==2) {
+      vector->change(data);
+  } else {
+      vector->oldChange(data);
+  }
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
@@ -152,6 +158,7 @@ EditableVectorFactory::~EditableVectorFactory() {
 PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
   QByteArray data;
   QString descriptiveName;
+  int dataVer=-1;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -162,11 +169,11 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
           descriptiveName = attrs.value("descriptiveName").toString();
         }
         Object::processShortNameIndexAttributes(attrs);
-      } else if (n == "data") {
+      } else if (n == "data" || n == "data_v2") {
         QString qcs(xml.readElementText().toLatin1());
         QByteArray qbca = QByteArray::fromBase64(qcs.toLatin1());
         data = qUncompress(qbca);
-
+        dataVer=(n=="data_v2")?2:1;
       } else {
         return 0;
       }
@@ -186,7 +193,12 @@ PrimitivePtr EditableVectorFactory::generatePrimitive(ObjectStore *store, QXmlSt
   }
 
   EditableVectorPtr vector = store->createObject<EditableVector>();
-  vector->change(data);
+
+  if(dataVer==2) {
+      vector->change(data);
+  } else {
+      vector->oldChange(data);
+  }
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();

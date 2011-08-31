@@ -29,6 +29,11 @@ ArrowPropertiesTab::ArrowPropertiesTab(QWidget *parent)
   connect(_endArrowScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 
   update();
+
+  _startArrow->setProperty("si","Arrow at &start");
+  _startArrowLabel->setProperty("si","S&tart arrow scale");
+  _endArrow->setProperty("si","Arrow at &end");
+  _endArrowLabel->setProperty("si","E&nd arrow scale");
 }
 
 

@@ -35,9 +35,15 @@ class EditableVector : public Vector {
 
     void setSaveData(bool save);
 
+    /** If value exceeds length, vector is resized
+      * @sa Vector::change()
+      */
+    void setValue(const int& i,const double&val);
+
     virtual QString descriptionTip() const;
 
   protected:
+    long double _sum;
     KSTCORE_EXPORT EditableVector(ObjectStore *store);
 
     friend class ObjectStore; 

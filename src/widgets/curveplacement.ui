@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>216</height>
+    <width>420</width>
+    <height>214</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -71,7 +71,7 @@
          <string>The name of the data file which will be read for this vector.</string>
         </property>
         <property name="editable">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="insertPolicy">
          <enum>QComboBox::InsertAtTop</enum>
@@ -81,6 +81,9 @@
         </property>
         <property name="duplicatesEnabled">
          <bool>false</bool>
+        </property>
+        <property name="si" stdset="0">
+         <string>place In Existing Plot</string>
         </property>
        </widget>
       </item>

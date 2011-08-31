@@ -42,6 +42,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 {
   Q_OBJECT
   public:
+    friend class DialogLauncherSI;
     enum GripMode {
       Move    = 1,
       Resize  = 2,
@@ -212,8 +213,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     CreationState creationState() const { return _creationState; }
 
-    virtual void setItemPen(const QPen & pen) { setPen(pen); };
-    virtual void setItemBrush(const QBrush & brush) { setBrush(brush); };
+    virtual void setItemPen(const QPen & pen) { setPen(pen); }
+    virtual void setItemBrush(const QBrush & brush) { setBrush(brush); }
 
     template<class T> static QList<T *> getItems();
 

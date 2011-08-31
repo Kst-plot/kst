@@ -35,7 +35,7 @@ StringSelector::StringSelector(QWidget *parent, ObjectStore *store)
 
   connect(_newString, SIGNAL(pressed()), this, SLOT(newString()));
   connect(_editString, SIGNAL(pressed()), this, SLOT(editString()));
-  connect(_string, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
+  connect(_string, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
   connect(_string, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
 }
 

@@ -150,6 +150,8 @@ class KSTCORE_EXPORT Matrix : public Primitive
 
     virtual ObjectList<Primitive> outputPrimitives() const;
 
+    QByteArray getBinaryArray() const;
+
   protected:
     int _NS;
     int _NRealS; // number of samples with real values

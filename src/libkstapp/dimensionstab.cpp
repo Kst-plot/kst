@@ -19,6 +19,13 @@ DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent)
   setTabTitle(tr("Dimensions"));
 
   connect(_fixAspectRatio, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
+
+  label_5->setProperty("si","&Rotation:");
+  label_3->setProperty("si","geo X");
+  _dimXlabel->setProperty("si","geo Y");
+  label->setProperty("si","pos X");
+  label_2->setProperty("si","pos Y");
+  _fixAspectRatio->setProperty("si","&Fix aspect ratio");
 }
 
 

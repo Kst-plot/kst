@@ -50,6 +50,10 @@ EquationTab::EquationTab(QWidget *parent)
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
   connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
+
+  TextLabel1_11->setProperty("si","Eq&uation:");
+  _xVectorLabel->setProperty("si","&X vector:");
+  _doInterpolation->setProperty("si","Inte&rpolate to highest resolution vector");
 }
 
 
@@ -334,41 +338,43 @@ ObjectPtr EquationDialog::createNewDataObject() {
 
   _equationTab->curveAppearance()->setWidgetDefaults();
 
-  PlotItem *plotItem = 0;
-  switch (_equationTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_equationTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlotNewTab:
-    _document->createView();
-    // fall through to case NewPlot.
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_equationTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_equationTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_equationTab->curvePlacement()->existingPlot());
+          break;
       }
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlotNewTab:
+          _document->createView();
+          // fall through to case NewPlot.
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (_equationTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(curve));
-    plotItem->update();
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_equationTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (_equationTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
-      plotItem->view()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
-    }
+      if (_equationTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(curve));
+          plotItem->update();
+
+          if (_equationTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+              plotItem->view()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+          }
+      }
   }
 
   return ObjectPtr(equation.data());

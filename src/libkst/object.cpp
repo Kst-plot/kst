@@ -86,6 +86,7 @@ Object::UpdateType Object::objectUpdate(qint64 newSerial) {
   }
 
   if (newSerial == Forced) { // register the forced update, but don't do it now.
+      qDebug()<<"Forced, def";
     _serial = Forced;
     return Deferred;
   } else if (minInputSerial() < newSerial) { // if an input was forced, this will be true

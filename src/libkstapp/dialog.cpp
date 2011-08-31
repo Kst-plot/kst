@@ -39,6 +39,9 @@ Dialog::Dialog(QWidget *parent)
   setAttribute(Qt::WA_DeleteOnClose);
 
   resize(minimumSizeHint());
+
+  _saveAsDefault->setProperty("si","Save as default");
+  _applyToExisting->setProperty("si","Apply to existing objects");
 }
 
 

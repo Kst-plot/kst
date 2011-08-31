@@ -53,6 +53,9 @@
        <property name="buddy">
         <cstring>_width</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>geo X</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -82,6 +85,9 @@
        <property name="buddy">
         <cstring>_height</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>geo Y</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="3">
@@ -108,6 +114,9 @@
        <property name="buddy">
         <cstring>_x</cstring>
        </property>
+       <property name="si" stdset="0">
+        <string>pos X</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="2">
@@ -123,6 +132,9 @@
        </property>
        <property name="buddy">
         <cstring>_y</cstring>
+       </property>
+       <property name="si" stdset="0">
+        <string>pos Y</string>
        </property>
       </widget>
      </item>

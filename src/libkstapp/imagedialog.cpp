@@ -65,7 +65,23 @@ ImageTab::ImageTab(QWidget *parent)
   connect(_contourOnly, SIGNAL(clicked()), this, SLOT(modeChanged()));
   connect(_colorAndContour, SIGNAL(clicked()), this, SLOT(modeChanged()));
 
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
+
   _matrixLabel->setBuddy(_matrix->_matrix);
+
+  _matrixLabel->setProperty("si","&Matrix:");
+  _colorOnly->setProperty("si","Color m&ap");
+  _contourOnly->setProperty("si","Con&tour map");
+  _colorAndContour->setProperty("si","&Color map and contour map");
+  textLabel2->setProperty("si","&Upper:");
+  textLabel2_4->setProperty("si","Threshold - &Lower:");
+  _smartThreshold->setProperty("si","&Smart");
+  textLabel1_4->setProperty("si","Percent&ile:");
+  _autoThreshold->setProperty("si","Max&/Min");
+  _realTimeAutoThreshold->setProperty("si","&Real-time auto threshold");
+  textLabel1_3->setProperty("si","Num&ber of contour levels:");
+  textLabel1->setProperty("si","&Weight:");
+  _useVariableWeight->setProperty("si","Use &variable line weight");
 }
 
 
@@ -455,41 +471,43 @@ ObjectPtr ImageDialog::createNewDataObject() {
   image->registerChange();
   image->unlock();
 
-  PlotItem *plotItem = 0;
-  switch (_imageTab->curvePlacement()->place()) {
-  case CurvePlacement::NoPlot:
-    break;
-  case CurvePlacement::ExistingPlot:
-    {
-      plotItem = static_cast<PlotItem*>(_imageTab->curvePlacement()->existingPlot());
-      break;
-    }
-  case CurvePlacement::NewPlotNewTab:
-    _document->createView();
-    // fall through to case NewPlot.
-  case CurvePlacement::NewPlot:
-    {
-      CreatePlotForCurve *cmd = new CreatePlotForCurve();
-      cmd->createItem();
-
-      plotItem = static_cast<PlotItem*>(cmd->item());
-      if (_imageTab->curvePlacement()->scaleFonts()) {
-        plotItem->view()->resetPlotFontSizes();
+  if(editMode()==New) {
+      PlotItem *plotItem = 0;
+      switch (_imageTab->curvePlacement()->place()) {
+      case CurvePlacement::NoPlot:
+          break;
+      case CurvePlacement::ExistingPlot:
+      {
+          plotItem = static_cast<PlotItem*>(_imageTab->curvePlacement()->existingPlot());
+          break;
       }
-      break;
-    }
-  default:
-    break;
-  }
+      case CurvePlacement::NewPlotNewTab:
+          _document->createView();
+          // fall through to case NewPlot.
+      case CurvePlacement::NewPlot:
+      {
+          CreatePlotForCurve *cmd = new CreatePlotForCurve();
+          cmd->createItem();
 
-  if (_imageTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
-    PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
-    renderItem->addRelation(kst_cast<Relation>(image));
-    plotItem->update();
+          plotItem = static_cast<PlotItem*>(cmd->item());
+          if (_imageTab->curvePlacement()->scaleFonts()) {
+              plotItem->view()->resetPlotFontSizes();
+          }
+          break;
+      }
+      default:
+          break;
+      }
 
-    if (_imageTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
-      plotItem->view()->appendToLayout(_imageTab->curvePlacement()->layout(), plotItem, _imageTab->curvePlacement()->gridColumns());
-    }
+      if (_imageTab->curvePlacement()->place() != CurvePlacement::NoPlot) {
+          PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
+          renderItem->addRelation(kst_cast<Relation>(image));
+          plotItem->update();
+
+          if (_imageTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
+              plotItem->view()->appendToLayout(_imageTab->curvePlacement()->layout(), plotItem, _imageTab->curvePlacement()->gridColumns());
+          }
+      }
   }
 
   return ObjectPtr(image.data());

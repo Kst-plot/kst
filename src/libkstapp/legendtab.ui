@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>660</width>
-    <height>342</height>
+    <height>361</height>
    </rect>
   </property>
   <layout class="QVBoxLayout">
@@ -279,6 +279,9 @@
         <property name="checkable">
          <bool>true</bool>
         </property>
+        <property name="si" stdset="0">
+         <string>legend bold</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="4">
@@ -295,10 +298,17 @@
         <property name="checkable">
          <bool>true</bool>
         </property>
+        <property name="si" stdset="0">
+         <string>legend italic</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="5">
-       <widget class="Kst::ColorButton" name="_labelColor"/>
+       <widget class="Kst::ColorButton" name="_labelColor">
+        <property name="si" stdset="0">
+         <string>legend color</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="_Label_12">

@@ -34,6 +34,7 @@ class ViewItemDialog : public Dialog
 {
   Q_OBJECT
   public:
+    friend class DialogSI;
     enum EditMode { Single, Multiple };
     explicit ViewItemDialog(ViewItem *item, QWidget *parent = 0);
     virtual ~ViewItemDialog();

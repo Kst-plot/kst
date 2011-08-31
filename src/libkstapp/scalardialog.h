@@ -28,6 +28,7 @@ namespace Kst {
 class ScalarTab : public DataTab, Ui::ScalarTab {
   Q_OBJECT
   public:
+    friend class DialogSI;
     enum ScalarMode { DataScalar, GeneratedScalar, RVectorScalar };
 
     explicit ScalarTab(ObjectStore *store, QWidget *parent = 0);
@@ -82,6 +83,7 @@ class ScalarDialog : public DataDialog {
   public:
     explicit ScalarDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~ScalarDialog();
+    friend class DialogSI;
 
   protected:
     virtual ObjectPtr createNewDataObject();

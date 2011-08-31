@@ -601,10 +601,10 @@ void Matrix::change(uint nX, uint nY, double minX, double minY, double stepX, do
 void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY, double stepX, double stepY) {
   _nX = nX;
   _nY = nY;
-  _stepX = stepX;
-  _stepY = stepY;
   _minX = minX;
   _minY = minY;
+  _stepX = stepX;
+  _stepY = stepY;
 
   _saveable = true;
   resizeZ(nX*nY, true);
@@ -619,6 +619,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
     Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
     resizeZ(i, false);
   }
+  internalUpdate();
 }
 
 QString Matrix::descriptionTip() const {
@@ -668,7 +669,20 @@ PrimitiveMap Matrix::metas() const
   return meta;
 }
 
+QByteArray Matrix::getBinaryArray() const {
+    readLock();
+    QByteArray ret;
+    QDataStream ds(&ret, QIODevice::WriteOnly);
+    ds<<(qint32)_nX<<(qint32)_nY<<_minX<<_minY<<_stepX<<_stepY; //fixme: this makes it not compatible w/ change(...)
 
+    uint i;
+    // fill in the raw array with the data
+    for (i = 0; i < _nX*_nY; i++) {
+      ds << _z[i];
+    }
+    unlock();
+    return ret;
+}
 
 }
 // vim: ts=2 sw=2 et

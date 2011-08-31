@@ -64,6 +64,9 @@
      <property name="checkable">
       <bool>true</bool>
      </property>
+     <property name="si" stdset="0">
+      <string>label bold</string>
+     </property>
     </widget>
    </item>
    <item row="0" column="6">
@@ -86,10 +89,17 @@
      <property name="checkable">
       <bool>true</bool>
      </property>
+     <property name="si" stdset="0">
+      <string>label italic</string>
+     </property>
     </widget>
    </item>
    <item row="0" column="7">
-    <widget class="Kst::ColorButton" name="_globalLabelColor"/>
+    <widget class="Kst::ColorButton" name="_globalLabelColor">
+     <property name="si" stdset="0">
+      <string>label color</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="2" colspan="6">
     <widget class="QFontComboBox" name="_globalLabelFontFamily"/>
@@ -408,14 +418,14 @@ and LaTeX symbols - eg, \theta.  Names and symbols are autocompleted.</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Kst::SVCCTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header>cclineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::ColorButton</class>
    <extends>QToolButton</extends>
    <header>colorbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::SVCCTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>cclineedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

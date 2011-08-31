@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include <QDebug>
+#include <QApplication>
 #include <QXmlStreamWriter>
 
 #include "kst_i18n.h"
@@ -518,7 +519,7 @@ void Vector::save(QXmlStreamWriter &s) {
       qds << _v[i];
     }
 
-    s.writeTextElement("data", qCompress(qba).toBase64());
+    s.writeTextElement("data_v2", qCompress(qba).toBase64());
   }
   saveNameInfo(s, VNUM|XNUM);
   s.writeEndElement();
@@ -571,24 +572,72 @@ void Vector::setSaveData(bool save) {
   _saveData = save;
 }
 
+void Vector::oldChange(QByteArray &data) {
+  if (!data.isEmpty()) {
+    _saveable = true;
+    _saveData = true;
+
+    QDataStream qds(data);
+
+    int sz = qMax(qint64((size_t)(INITSIZE)), qint64(data.size()/sizeof(double)));
+    resize(sz, true);
+
+    double sum=0.0;
+    for (int i = 0; i<sz; ++i) {
+      qds >> _v[i];
+      if(!i) {
+          _min=_max=_minPos=sum=_v[i];
+          _minPos=qMax(_minPos,0.0);
+      } else {
+          _min=qMin(_v[i],_min);
+          _max=qMax(_v[i],_max);
+          _minPos=qMin(qMax(_v[i],0.0),_minPos);
+          sum+=_v[i];
+      }
+    }
+    _mean=sum/double(_size);
+  }
+  updateScalars();
+  internalUpdate();
+}
 
 void Vector::change(QByteArray &data) {
   if (!data.isEmpty()) {
     _saveable = true;
     _saveData = true;
 
-    int sz = qMax((size_t)(INITSIZE), data.size()/sizeof(double));
+    qint64 count;
+    QDataStream qds(data);
+    qds>>count;
+
+    int sz = qMax(qint64((size_t)(INITSIZE)), count);
     resize(sz, true);
 
-    QDataStream qds(data);
-    for (int i = 0; !qds.atEnd(); ++i) {
+    double sum=0.0;
+    for (int i = 0; i<count; ++i) {
       qds >> _v[i];
+      if(!i) {
+          _min=_max=_minPos=sum=_v[i];
+          _minPos=qMax(_minPos,0.0);
+      } else {
+          _min=qMin(_v[i],_min);
+          _max=qMax(_v[i],_max);
+          _minPos=qMin(qMax(_v[i],0.0),_minPos);
+          sum+=_v[i];
+      }
     }
+    _mean=sum/double(count);
   }
+  updateScalars();
+  internalUpdate();
 }
 
 QString Vector::propertyString() const {
-  return i18n("Provider: %1").arg(_provider->Name());
+  if(_provider) {
+      return i18n("Provider: %1").arg(_provider->Name());
+  } else {
+      return Name();
+  }
 }
 
 QString Vector::descriptionTip() const {
@@ -645,6 +694,83 @@ void Vector::setLabelInfo(const LabelInfo &label_info) {
 
 void Vector::setTitleInfo(const LabelInfo &label_info) {
   _titleInfo = label_info;
+}
+
+QByteArray Vector::scriptInterface(QList<QByteArray> &c) {
+    Q_ASSERT(c.size());
+    if(c[0]=="length") {
+        return QByteArray::number(_size);
+    } else if(c[0]=="interpolate") {
+        if(c.size()!=3) {
+            return "interpolate takes 2 args";
+        }
+        return QByteArray::number(interpolate(c[1].toInt(),c[2].toInt()));
+    } else if(c[0]=="interpolateNoHoles") {
+        if(c.size()!=3) {
+            return "interpolateNoHoles takes 2 args";
+        }
+        return QByteArray::number(interpolateNoHoles(c[1].toInt(),c[2].toInt()));
+    } else if(c[0]=="value") {
+        if(c.size()!=2) {
+            return "value takes 1 arg";
+        }
+        readLock();
+        QByteArray ret = QByteArray::number(value(c[1].toDouble()));
+        unlock();
+        return ret;
+    } else if(c[0]=="min") {
+        return QByteArray::number(min());
+    } else if(c[0]=="max") {
+        return QByteArray::number(max());
+    } else if(c[0]=="ns_max") {
+        return QByteArray::number(ns_max());
+    } else if(c[0]=="ns_min") {
+        return QByteArray::number(ns_min());
+    } else if(c[0]=="mean") {
+        return QByteArray::number(mean());
+    } else if(c[0]=="minPos") {
+        return QByteArray::number(minPos());
+    } else if(c[0]=="numNew") {
+        return QByteArray::number(numNew());
+    } else if(c[0]=="numShift") {
+        return QByteArray::number(numShift());
+    } else if(c[0]=="isRising") {
+        return isRising()?"true":"false";
+    } else if(c[0]=="newSync") {
+        newSync();
+        return "Ok";
+    } else if(c[0]=="resize") {
+        if(c.size()!=3) {
+            return "takes 2 args";
+        }
+        return resize(c[1].toInt(),c[2].toInt())?"true":"false";
+    } else if(c[0]=="setNewAndShift") {
+        if(c.size()!=3) {
+            return "takes 2 args";
+        }
+        setNewAndShift(c[0].toInt(),c[1].toInt());
+        return "Ok";
+    } else if(c[0]=="zero") {
+        zero();
+        return "Ok";
+    } else if(c[0]=="blank") {
+        blank();
+        return "Ok";
+    }
+
+    return "No such command...";
+}
+
+QByteArray Vector::getBinaryArray() const {
+    readLock();
+    QByteArray ret;
+    QDataStream ds(&ret,QIODevice::WriteOnly);
+    ds<<(qint64)_size;
+    for(int i=0;i<_size;i++) {
+        ds<<(double)_v[i];
+    }
+    unlock();
+    return ret;
 }
 
 #undef INITSIZE
