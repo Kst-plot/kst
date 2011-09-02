@@ -16,6 +16,7 @@
  ***************************************************************************/
 #include "rangetab.h"
 
+#include <math.h>
 #include <QDebug>
 
 namespace Kst {
@@ -73,12 +74,12 @@ void RangeTab::setupRange() {
   double ymax = _plotItem->yMax();
   double ymin = _plotItem->yMin();
   if (_plotItem->xAxis()->axisLog()) {
-    xmax = exp10(xmax);
-    xmin = exp10(xmin);
+    xmax = pow(10.0f,xmax);
+    xmin = pow(10.0f,xmin);
   }
   if (_plotItem->yAxis()->axisLog()) {
-    ymax = exp10(ymax);
-    ymin = exp10(ymin);
+    ymax = pow(10.0f,ymax);
+    ymin = pow(10.0f,ymin);
   }
 
   _xRange->setText(QString::number(fabs(xmax - xmin),'g', 13));
