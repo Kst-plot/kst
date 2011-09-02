@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-class EditableVector : public Vector {
+class KSTCORE_EXPORT EditableVector : public Vector {
   Q_OBJECT
 
   public:

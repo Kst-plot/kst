@@ -582,7 +582,7 @@ void SVCCTextEdit::init(QList<CompletionCase> data)
 }
 
 #define SIZE_LIMITED_NAME sizeLimitedName( (_cc&&_cc->_tableView)?_cc->_tableView->font():QFont(), \
-    (_cc&&_cc->_tableView)? ((_cc->_tableView->width()/2-50)): 900000000000)
+    (_cc&&_cc->_tableView)? ((_cc->_tableView->width()/2-50)): INT_MAX)
 
 void SVCCLineEdit::fillKstObjects()
 {

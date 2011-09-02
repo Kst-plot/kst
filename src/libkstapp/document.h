@@ -25,6 +25,7 @@ class SessionModel;
 class View;
 class ViewItem;
 class CommandLineParser;
+class ScriptServer;
 
 class Document : public CoreDocument {
   public:
@@ -51,6 +52,7 @@ class Document : public CoreDocument {
     View *currentView() const;
 
   private:
+    ScriptServer* _scriptServer;
     QPointer<MainWindow> _win;
     SessionModel *_session;
     bool _dirty;

@@ -22,19 +22,16 @@
 #include <QXmlStreamReader>
 
 #include "objectstore.h"
-#include "../libkstapp/scriptserver.h"
 
 namespace Kst {
 
 CoreDocument::CoreDocument()
 : _objectStore(new ObjectStore()), _dirty(false), _isOpen(false) {
-  _scriptServer = new ScriptServer(_objectStore);
   _fileName.clear();
 }
 
 
 CoreDocument::~CoreDocument() {
-  delete _scriptServer;
   delete _objectStore;
   _objectStore = 0;
 }

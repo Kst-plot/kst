@@ -18,8 +18,6 @@
 #include "dialogdefaults.h"
 #include "curve.h"
 
-#include <QLabel>
-
 namespace Kst {
 
 VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
@@ -37,14 +35,10 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
   fillVectors();
 
-  _vector->setProperty("si","data vector");
-
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
-  connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
-  connect(_vector, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
+  connect(_vector, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
   connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
-  connect(_vector, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
 }
 
 
@@ -68,15 +62,6 @@ void VectorSelector::updateDescriptionTip() {
 
 
 void VectorSelector::emitSelectionChanged() {
-  if(_vector->currentIndex()!=-1&&_vector->currentIndex()<_vector->count()&&
-         _vector->currentText()!=_vector->itemText(_vector->currentIndex())){
-      for(int i=0;i<_vector->count();i++) {
-          if(_vector->itemText(i).contains(_vector->currentText())) {
-              _vector->setCurrentIndex(i);
-              break;
-          }
-      }
-  }
   if (_allowEmptySelection && (_vector->count()>0)) {
       _editVector->setDisabled(_vector->currentIndex()==0);
   }
@@ -85,17 +70,17 @@ void VectorSelector::emitSelectionChanged() {
 
 
 VectorPtr VectorSelector::selectedVector() const {
-  QString shortName;
-  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-  rx.indexIn(_vector->currentText());
-  shortName = rx.cap(2);
+    QString shortName;
+    QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+    rx.indexIn(_vector->currentText());
+    shortName = rx.cap(2);
 
-  for(int i=0;i<_vector->count();i++) {
-      if(_vector->itemText(i).contains(shortName)) {
-          return qVariantValue<Vector*>(_vector->itemData(i));
-      }
-  }
-  return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
+    for(int i=0;i<_vector->count();i++) {
+        if(_vector->itemText(i).contains(shortName)) {
+            return qVariantValue<Vector*>(_vector->itemData(i));
+        }
+    }
+    return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
 }
 
 
