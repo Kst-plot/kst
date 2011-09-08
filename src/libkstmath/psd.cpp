@@ -453,6 +453,7 @@ void PSD::updateVectorLabels() {
   label_info.quantity.clear();
   label_info.units.clear();
   label_info.name = _inputVectors[INVECTOR]->labelInfo().name;
+  label_info.file = _inputVectors[INVECTOR]->labelInfo().file;
   _sVector->setTitleInfo(label_info);
 
 }

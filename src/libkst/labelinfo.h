@@ -29,12 +29,13 @@ namespace Kst {
 
 struct KSTCORE_EXPORT LabelInfo
 {
-  LabelInfo() : name(QString()), quantity(QString()), units(QString()) {}
-  bool operator==(const LabelInfo &l) const { return (l.name==name) && (l.quantity==quantity) && (l.units==units); }
+  LabelInfo() : name(QString()), quantity(QString()), units(QString()), file(QString()) {}
+  bool operator==(const LabelInfo &l) const { return (l.name==name) && (l.quantity==quantity) && (l.units==units) && (l.file==file); }
   bool operator!=(const LabelInfo &l) const { return !(*this==l); }
   QString name;
   QString quantity;
   QString units;
+  QString file;
   QString singleRenderItemLabel() const;
 };
 

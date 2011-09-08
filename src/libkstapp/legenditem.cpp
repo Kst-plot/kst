@@ -24,7 +24,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
-#define LEGENDITEMMAXWIDTH 400
+#define LEGENDITEMMAXWIDTH 900
 #define LEGENDITEMMAXHEIGHT 100
 
 namespace Kst {
@@ -150,7 +150,18 @@ void LegendItem::paint(QPainter *painter) {
           label = relation->descriptiveName();
         }
       }
-      names.append(label);
+      int i_dup = names.indexOf(label);
+      if (i_dup<0) {
+        names.append(label);
+      } else {
+        RelationPtr dup_relation = legendItems.at(i_dup);
+        if (!dup_relation->yLabelInfo().file.isEmpty()) {
+          names.replace(i_dup, label + " (" + dup_relation->yLabelInfo().file + ')');
+        }
+        if (!relation->yLabelInfo().file.isEmpty()) {
+          names.append(label + " (" + relation->yLabelInfo().file + ')');
+        }
+      }
     }
   }
 

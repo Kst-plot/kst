@@ -87,7 +87,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
         socket.disconnectFromServer();
         connectTo=initial+QString::number(connectTo.remove(initial).toInt()+1);
     }
-    qDebug()<<"Created script server with name "<<connectTo;
+    //qDebug()<<"Created script server with name "<<connectTo;
     connect(_server,SIGNAL(newConnection()),this,SLOT(procConnection()));
 
     //setup _map={QByteArray->ScriptMemberFn}
@@ -233,6 +233,8 @@ ScriptServer::~ScriptServer()
     while(_varMap.size()) {
         delete _varMap.take(_varMap.keys().first());
     }
+
+    //qDebug() << "Script server deleted";
 }
 
 /** Conv. function which takes a response, and executes if 'if' statement is unexistant or true. */

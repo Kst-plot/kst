@@ -676,8 +676,9 @@ QByteArray Matrix::getBinaryArray() const {
     ds<<(qint32)_nX<<(qint32)_nY<<_minX<<_minY<<_stepX<<_stepY; //fixme: this makes it not compatible w/ change(...)
 
     uint i;
+    uint n = _nX*_nY;
     // fill in the raw array with the data
-    for (i = 0; i < _nX*_nY; i++) {
+    for (i = 0; i < n; i++) {
       ds << _z[i];
     }
     unlock();

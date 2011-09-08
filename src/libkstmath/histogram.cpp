@@ -200,14 +200,13 @@ void Histogram::internalUpdate() {
       break;
   }
 
-  label_info.name.clear();
-  label_info.units.clear();
-  _hVector->setLabelInfo(label_info);
   _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
 
   label_info.quantity.clear();
   label_info.units.clear();
   label_info.name = i18n( "Histogram of %1").arg(_bVector->labelInfo().name);
+  label_info.file = _bVector->labelInfo().file;
+
   _hVector->setTitleInfo(label_info);
 
   double *bins = _bVector->value();
