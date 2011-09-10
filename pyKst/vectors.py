@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 import pykst as kst
 from datetime import datetime
 from numpy import *

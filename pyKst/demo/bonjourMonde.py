@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 import sip
 sip.setapi('QString', 1)
 import pykst as kst
