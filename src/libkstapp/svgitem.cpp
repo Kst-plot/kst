@@ -12,6 +12,7 @@
 
 #include "svgitem.h"
 #include "debug.h"
+#include "dialogdefaults.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -65,16 +66,33 @@ void SvgItem::save(QXmlStreamWriter &xml) {
 }
 
 
+void SvgItem::creationPolygonChanged(View::CreationEvent event) {
+
+  double aspect = 1.0;
+  if ((_svg->defaultSize().width()>0) && (_svg->defaultSize().height()>0)) {
+    aspect = double(_svg->defaultSize().width())/double(_svg->defaultSize().height());
+  }
+
+  creationPolygonChangedFixedAspect(event, aspect);
+
+}
+
+
+
 void SvgItem::setSvgData(const QByteArray &svgData) {
   _svg->load(svgData);
   _svgData = svgData;
 }
 
 void CreateSvgCommand::createItem() {
-  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Svg Image"));
+  QString start_dir = _dialogDefaults->value("svg/startdir", ".").toString();
+  QString filter = "SVG Images (*.svg *.SVG)";
+  QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open SVG Image"), start_dir, filter);
+
   if (file.isEmpty())
     return;
 
+  _dialogDefaults->setValue("svg/startdir", QFileInfo(file).path());
   _item = new SvgItem(_view, file);
   _view->setCursor(Qt::CrossCursor);
 

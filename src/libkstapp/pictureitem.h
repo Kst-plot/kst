@@ -33,6 +33,7 @@ class PictureItem : public ViewItem
 
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
+    virtual void creationPolygonChanged(View::CreationEvent event);
 
     void setImage(const QImage &image);
 

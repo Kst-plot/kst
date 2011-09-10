@@ -944,6 +944,51 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 }
 
 
+
+void ViewItem::creationPolygonChangedFixedAspect(View::CreationEvent event, double aspect) {
+
+  if (event == View::EscapeEvent) {
+    ViewItem::creationPolygonChanged(event);
+    return;
+  }
+
+  if (event == View::MousePress) {
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
+    setPos(poly.first().x(), poly.first().y());
+    setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
+    setRect(0,0,4,4);
+    view()->scene()->addItem(this);
+    return;
+  }
+
+  if (event == View::MouseMove) {
+    const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
+
+    QPointF offset = lockOffset(poly.last(), aspect, false);
+
+    if (offset.x()<5.0) {
+      offset.setX(5.0);
+      offset.setY(5.0/aspect);
+    }
+
+    setViewRect(0,0,offset.x(), offset.y());
+    return;
+  }
+
+  if (event == View::MouseRelease) {
+    view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
+    view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
+    view()->setMouseMode(View::Default);
+
+    updateViewItemParent();
+    _creationState = Completed;
+    setZValue(DRAWING_ZORDER);
+    emit creationComplete();
+    return;
+  }
+}
+
+
 void ViewItem::addTitle(QMenu *menu) const {
   QWidgetAction *action = new QWidgetAction(menu);
   action->setEnabled(false);

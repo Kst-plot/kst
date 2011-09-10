@@ -286,6 +286,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
+    void creationPolygonChangedFixedAspect(View::CreationEvent even, double aspect);
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);

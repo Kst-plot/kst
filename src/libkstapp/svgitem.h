@@ -37,6 +37,7 @@ class SvgItem : public ViewItem
     virtual void paint(QPainter *painter);
 
     void setSvgData(const QByteArray &svgData);
+    virtual void creationPolygonChanged(View::CreationEvent event);
 
   private:
     QSvgRenderer *_svg;

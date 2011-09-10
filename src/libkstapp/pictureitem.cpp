@@ -88,6 +88,17 @@ void CreatePictureCommand::createItem() {
   CreateCommand::createItem();
 }
 
+void PictureItem::creationPolygonChanged(View::CreationEvent event) {
+
+  double aspect = 1.0;
+  if ((_image.width()>0) && (_image.height()>0)) {
+    aspect = double(_image.width())/double(_image.height());
+  }
+
+  creationPolygonChangedFixedAspect(event, aspect);
+
+}
+
 
 PictureItemFactory::PictureItemFactory()
 : GraphicsFactory() {
