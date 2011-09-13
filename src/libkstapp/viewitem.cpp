@@ -60,6 +60,7 @@ ViewItem::ViewItem(View *parentView) :
     _isXTiedZoom(false),
     _isYTiedZoom(false),
     _plotMaximized(false),
+    _activeGrip(NoGrip),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
@@ -78,7 +79,6 @@ ViewItem::ViewItem(View *parentView) :
     _acceptsContextMenuEvents(true),
     _updatingLayout(false),
     _highlighted(false),
-    _activeGrip(NoGrip),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _parentRelativeHeight(0),

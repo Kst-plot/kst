@@ -325,6 +325,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void _initializeShortName();
     QPointF dragStartPosition;
     void startDragging(QWidget *widget, const QPointF& hotspot);
+    ActiveGrip _activeGrip;
 
   private:
     GripMode _gripMode;
@@ -352,7 +353,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QTransform _originalTransform;
     QLineF _normalLine;
     QLineF _rotationLine;
-    ActiveGrip _activeGrip;
     ActiveGrips _allowedGrips;
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;

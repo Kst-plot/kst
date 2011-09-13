@@ -30,10 +30,11 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0) {
+  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false) {
   setTypeName("Label");
-  setFixedSize(true);
-  setAllowedGripModes(Move /*| Resize*/ | Rotate /*| Scale*/);
+  setFixedSize(false);
+  setLockAspectRatio(true);
+  setAllowedGripModes(Move | Resize | Rotate /*| Scale*/);
 
   applyDefaults();
 }
@@ -63,7 +64,9 @@ LabelItem::~LabelItem() {
 }
 
 void LabelItem::generateLabel() {
+  double lines = 1.0;
   if (_labelRc) {
+    lines = _labelRc->lines;
     delete _labelRc;
   }
 
@@ -73,6 +76,12 @@ void LabelItem::generateLabel() {
     _dirty = false;
     QRectF box = rect();
     QFont font(_font);
+    if (_resized) {
+      font.setPointSizeF(view()->viewScaledFontSize(_scale));
+      QFontMetrics fm(font);
+      double fs_adjust = rect().height()/(fm.height()*(lines+1));
+      _scale *= fs_adjust;
+    }
     font.setPointSizeF(view()->viewScaledFontSize(_scale));
     QFontMetrics fm(font);
     _paintTransform.reset();
@@ -83,8 +92,33 @@ void LabelItem::generateLabel() {
     _height = fm.height();
 
     // Make sure we have a rect for selection, movement, etc
-    setViewRect(QRectF(rect().x(), rect().y(), _labelRc->xMax, (_labelRc->lines+1) * _height));
-
+    if (_resized) {
+      _resized = false;
+      double x0 = rect().x();
+      double y0 = rect().y();
+      double x1 = x0 + rect().width();
+      double y1 = y0 + rect().height();
+      double w = _labelRc->xMax;
+      double h = (_labelRc->lines+1) * _height;
+      switch(_activeGrip) {
+      case TopLeftGrip:
+        setViewRect(QRectF(x1-w,y1-h,w,h));
+        break;
+      case TopRightGrip:
+        setViewRect(QRectF(x0,y1-h,w,h));
+        break;
+      case BottomLeftGrip:
+        setViewRect(QRectF(x1-w,y0,w,h));
+        break;
+      case BottomRightGrip:
+      case NoGrip:
+      default:
+        setViewRect(QRectF(x0,y0,w,h));
+        break;
+      }
+    } else {
+      setViewRect(QRectF(rect().x(), rect().y(), _labelRc->xMax, (_labelRc->lines+1) * _height));
+    }
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(setDirty()));
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(triggerUpdate()));
 
@@ -176,6 +210,15 @@ void LabelItem::setLabelFont(const QFont &font) {
   setDirty();
 }
 
+
+void LabelItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  ViewItem::mouseMoveEvent(event);
+
+  if ((gripMode() == ViewItem::Resize) && (activeGrip() != NoGrip)) {
+    _resized = true;
+  }
+
+}
 
 void LabelItem::creationPolygonChanged(View::CreationEvent event) {
 

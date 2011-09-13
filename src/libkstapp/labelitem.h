@@ -65,6 +65,7 @@ class LabelItem : public ViewItem {
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
   private:
     void generateLabel();
@@ -77,6 +78,7 @@ class LabelItem : public ViewItem {
     QColor _color;
     QFont _font;
     qreal _height;
+    bool _resized;
 };
 
 
