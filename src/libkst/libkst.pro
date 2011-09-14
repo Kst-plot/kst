@@ -60,7 +60,8 @@ SOURCES += builtindatasources.cpp \
     updatemanager.cpp \
     vector.cpp \
     vectorfactory.cpp \
-    vscalar.cpp
+    vscalar.cpp \
+    ksttimezone.cpp
 	
 #!win32:SOURCES += stdinsource.cpp
 !macx:!win32:SOURCES += sysinfo.c \
@@ -120,4 +121,5 @@ HEADERS += builtindatasources.h \
     updatemanager.h \
     vector.h \
     vectorfactory.h \
-    vscalar.h
+    vscalar.h \
+    ksttimezone.h

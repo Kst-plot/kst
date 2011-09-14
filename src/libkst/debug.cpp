@@ -54,7 +54,11 @@ Debug::Debug()
 : QObject() {
   _applyLimit = false;
   _limit = 10000;
+#ifdef SVN_REVISION
   _kstRevision = QString::fromLatin1(SVN_REVISION);
+#else
+  _kstRevision = -1;
+#endif
   _hasNewError = false;
 }
 

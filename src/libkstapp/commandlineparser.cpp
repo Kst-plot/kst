@@ -380,7 +380,13 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       printUsage(QString());
       *ok = false;
     } else if (arg == "--version" || arg == "-version") {
-      printText(QString("Kst ") + KSTVERSION + " Revision " + SVN_REVISION);
+
+      printText(QString("Kst ") + KSTVERSION
+#ifdef SVN_REVISION
++ " Revision " + SVN_REVISION
+#endif
+);
+
       *ok = false;
     } else if (arg == "-f") {
       *ok = _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);

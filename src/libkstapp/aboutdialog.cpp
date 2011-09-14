@@ -62,7 +62,9 @@ AboutDialog::AboutDialog(QWidget *parent)
 
   QStringList msg = QStringList()
   << tr("<qt><h2>Kst "KSTVERSION" - A data viewing program.</h2>")
+#ifdef SVN_REVISION
   << tr("Revision "SVN_REVISION"<br><hr>")
+#endif
   << tr("Copyright &copy; 2000-2011 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst-plot.kde.org/\">http://kst-plot.kde.org/</a><br>")
   << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")
