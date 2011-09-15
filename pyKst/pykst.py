@@ -555,7 +555,7 @@ class DataMatrix(Matrix) :
   The parameters of this function mirror the parameters within "Create>Matrix". """
   def __init__(self,client,filename,field,xstart,ystart,xnframe,ynframe,skip=False,boxcarFirst=False,xmin=0,ymin=0,xstep=1,ystep=1,name="") :
     Matrix.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newMatrix("+b2str(filename)+","+b2str(field)+","+","+b2str(xstart)+","+b2str(ystart)+","+b2str(xnframe)+","+b2str(ynframe)+","+b2str(skip)+","+b2str(boxcarFirst)+","+b2str(xmin)+","+b2str(ymin)+","+b2str(xstep)+","+b2str(ystep)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newMatrix("+b2str(filename)+","+b2str(field)+","+b2str(xstart)+","+b2str(ystart)+","+b2str(xnframe)+","+b2str(ynframe)+","+b2str(skip)+","+b2str(boxcarFirst)+","+b2str(xmin)+","+b2str(ymin)+","+b2str(xstep)+","+b2str(ystep)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
 class ExistingMatrix(Matrix) :
