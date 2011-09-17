@@ -18,6 +18,7 @@
 #include "debug.h"
 #include "math_kst.h"
 #include "objectstore.h"
+#include "plottickcalculator.h"
 
 #include "kst_i18n.h"
 
@@ -770,18 +771,47 @@ void Image::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-void Image::paintLegendSymbol(QPainter *p, const QRectF& bound) {
+QSize Image::legendSymbolSize(const QFont &font) {
+  QFontMetrics fm(font);
+  return QSize(fm.height()*7, 2*fm.height());
+}
+
+
+void Image::paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size) {
+  QRect bound(QPoint(0,0),size);
+  QFontMetrics fm(font);
+
   if (hasColorMap() && (_pal.colorCount()>0)) {
-    int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom();
+    double spacing;
+    int minor_ticks;
+    computeMajorTickSpacing(&spacing, &minor_ticks, TicksCoarse, upperThreshold() - lowerThreshold());
+
+    int l = bound.left(), r = bound.right(), t = bound.top(), b = bound.bottom()-fm.height();
     // draw the color palette
+    p->save();
     for (int i = l; i <= r; i++) {
       int index = (int)floor(static_cast<double>(((i - l) * (_pal.colorCount() - 1))) / (r - l));
       QColor sliceColor = _pal.color(index).rgb();
       p->setPen(QPen(sliceColor, 1));
       p->drawLine(i, t, i, b);
     }
-  }
-  if (hasContourMap()) {
+    p->restore();
+    p->drawRect(l,t,(r-l),(b-t));
+    double min = int(lowerThreshold()/spacing)*spacing;
+    if (min<lowerThreshold()) {
+      min += spacing;
+    }
+    p->save();
+    p->setFont(font);
+    for (double tick = min; tick < upperThreshold(); tick+=spacing) {
+      int x = (tick-lowerThreshold())*(r-l)/(upperThreshold()-lowerThreshold())+l;
+      p->drawLine(x,b,x,b-fm.ascent()/3);
+      QString tickStr = QString::number(tick);
+      QRect bound = p->boundingRect(QRect(),Qt::AlignLeft|Qt::AlignBottom, tickStr);
+      p->drawText(QPoint(x-bound.width()/2, b+fm.ascent()), tickStr);
+    }
+    p->restore();
+  } else if (hasContourMap()) {
     // draw a box with contour color
     p->setPen(QPen(_contourColor, 1));
     p->drawRect(bound.left(), bound.top(), bound.width(), bound.height());

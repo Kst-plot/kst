@@ -219,7 +219,7 @@ void PlotItem::applyDefaults() {
   xAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpretation", 1).toInt());
   xAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/xAxisDisplay", 4).toInt());
   xAxis()->setTimezoneName(_dialogDefaults->value(defaultsGroupName()+"/xAxisTimezone", "GMT").toString());
-  xAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/xAxisMajorTickMode", 5).toInt());
+  xAxis()->setAxisMajorTickMode((MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/xAxisMajorTickMode", 5).toInt());
   xAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/xAxisMinorTickCount", 5).toInt());
   xAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisautoMinorTickCount", true).toBool());
   xAxis()->setDrawAxisMajorTicks(_dialogDefaults->value(defaultsGroupName()+"/xAxisDrawMajorTicks", true).toBool());
@@ -250,7 +250,7 @@ void PlotItem::applyDefaults() {
   yAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpretation", 1).toInt());
   yAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/yAxisDisplay", 4).toInt());
   yAxis()->setTimezoneName(_dialogDefaults->value(defaultsGroupName()+"/yAxisTimezone", "GMT").toString());
-  yAxis()->setAxisMajorTickMode((PlotAxis::MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/yAxisMajorTickMode", 5).toInt());
+  yAxis()->setAxisMajorTickMode((MajorTickMode)_dialogDefaults->value(defaultsGroupName()+"/yAxisMajorTickMode", 5).toInt());
   yAxis()->setAxisMinorTickCount(_dialogDefaults->value(defaultsGroupName()+"/yAxisMinorTickCount", 5).toInt());
   yAxis()->setAxisAutoMinorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisautoMinorTickCount", true).toBool());
   yAxis()->setDrawAxisMajorTicks(_dialogDefaults->value(defaultsGroupName()+"/yAxisDrawMajorTicks", true).toBool());

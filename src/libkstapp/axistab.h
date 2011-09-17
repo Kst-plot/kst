@@ -44,9 +44,9 @@ class AxisTab : public DialogTab, Ui::AxisTab {
     bool drawAxisMinorGridLinesDirty() const;
     void setDrawAxisMinorGridLines(const bool enabled);
 
-    PlotAxis::MajorTickMode axisMajorTickSpacing() const;
+    MajorTickMode axisMajorTickSpacing() const;
     bool axisMajorTickSpacingDirty() const;
-    void setAxisMajorTickSpacing(PlotAxis::MajorTickMode spacing);
+    void setAxisMajorTickSpacing(MajorTickMode spacing);
 
     Qt::PenStyle axisMajorGridLineStyle() const;
     bool axisMajorGridLineStyleDirty() const;

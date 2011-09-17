@@ -237,29 +237,56 @@ void LegendItem::paint(QPainter *painter) {
 
 QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pixmap, const QFont &font) {
   Label::Parsed *parsed = Label::parse(name);
+  parsed->chunk->attributes.color = _color;
 
   pixmap->fill(Qt::transparent);
 
   QPainter pixmapPainter(pixmap);
   QFontMetrics fm(font);
-
+  QSize symbol_size = relation->legendSymbolSize(font);
+  int label_width = 0;
   int paddingValue = fm.height() / 4;
-  pixmapPainter.translate(paddingValue, paddingValue / 2);
-  relation->paintLegendSymbol(&pixmapPainter, QRect(0, 0, 4 * fm.ascent(), fm.height()));
 
-  pixmapPainter.translate(4 * fm.ascent() + paddingValue, 0);
+  if (relation->symbolLabelOnTop()) {
+    Label::RenderContext tmprc(font, 0);
+    Label::renderLabel(tmprc, parsed->chunk, false);
+    label_width = tmprc.x;
+    pixmapPainter.translate(paddingValue, fm.height()+paddingValue / 2);
+    symbol_size.setWidth(qMax(label_width, symbol_size.width()));
+  } else {
+    pixmapPainter.translate(paddingValue, paddingValue / 2);
+  }
 
-  parsed->chunk->attributes.color = _color;
+  relation->paintLegendSymbol(&pixmapPainter, font, symbol_size);
+
+
+  if (relation->symbolLabelOnTop()) {
+    pixmapPainter.translate((symbol_size.width()-label_width)/2, fm.ascent() - fm.height());
+  } else {
+    pixmapPainter.translate(symbol_size.width() + paddingValue, 0);
+  }
   Label::RenderContext rc(font, &pixmapPainter);
-  rc.y = fm.ascent();
-
+  if (relation->symbolLabelOnTop()) {
+    rc.y = 0;
+  } else {
+    rc.y = (symbol_size.height()+fm.boundingRect('M').height())/2;
+  }
   if (parsed) {
     Label::renderLabel(rc, parsed->chunk, false);
     delete parsed;
     parsed = 0;
   }
 
-  return QSize((4 * fm.ascent()) + (paddingValue * 3) + rc.x, fm.height() + paddingValue);
+  double h = symbol_size.height() + paddingValue;
+  if (relation->symbolLabelOnTop()) {
+    h += fm.height();
+  }
+  if (relation->symbolLabelOnTop()) {
+    return QSize(qMax(rc.x,(symbol_size.width())) + (paddingValue * 2), h);
+  } else {
+    return QSize((symbol_size.width()) + (paddingValue * 3) + rc.x, h);
+  }
+
 }
 
 

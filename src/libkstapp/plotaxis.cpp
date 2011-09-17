@@ -42,8 +42,8 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisInterpret(false),
   _axisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
   _axisInterpretation(AXIS_INTERP_CTIME),
-  _axisMajorTickMode(Normal),
-  _axisOverrideMajorTicks(Normal),
+  _axisMajorTickMode(TicksNormal),
+  _axisOverrideMajorTicks(TicksNormal),
   _axisMinorTickCount(4),
   _automaticMinorTicks(true),
   _automaticMinorTickCount(5),
@@ -301,12 +301,12 @@ void PlotAxis::setAxisSignificantDigits(const int digits) {
 }
 
 
-PlotAxis::MajorTickMode PlotAxis::axisMajorTickMode() const {
+MajorTickMode PlotAxis::axisMajorTickMode() const {
   return _axisMajorTickMode;
 }
 
 
-void PlotAxis::setAxisMajorTickMode(PlotAxis::MajorTickMode mode) {
+void PlotAxis::setAxisMajorTickMode(MajorTickMode mode) {
   if (_axisMajorTickMode != mode) {
     _axisMajorTickMode = mode;
     _dirty = true;
@@ -632,7 +632,7 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
     if (!labels[i].intersected(labels[i+1]).isEmpty()) {
       qreal labelSize;
       qreal plotSize;
-      PlotAxis::MajorTickMode old_override_major_ticks = _axisOverrideMajorTicks;
+      MajorTickMode old_override_major_ticks = _axisOverrideMajorTicks;
 
       if (_orientation == Qt::Horizontal) {
         labelSize = qMax(labels[i].boundingRect().width(), labels[i+1].boundingRect().width());
@@ -644,12 +644,12 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
 
       _axisOverrideMajorTicks = convertToMajorTickMode((plotSize / labelSize) - 1, old_override_major_ticks);
 
-      if (_axisOverrideMajorTicks == None) {
-        qreal scale = plotSize / (labelSize * (Normal - 1));
+      if (_axisOverrideMajorTicks == TicksNone) {
+        qreal scale = plotSize / (labelSize * (TicksNormal - 1));
         if (scale < 1) {
           plotItem()->scaleAxisLabels(scale);
         }
-        _axisOverrideMajorTicks = Coarse;
+        _axisOverrideMajorTicks = TicksCoarse;
       }
 
       updateTicks(true);
@@ -661,16 +661,16 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
 }
 
 
-PlotAxis::MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode) {
-  MajorTickMode mode = None;
-  if ((tickCount >= VeryFine) && (old_mode > VeryFine)) {
-    mode = VeryFine;
-  } else if ((tickCount >= Fine) && (old_mode > Fine)) {
-    mode = Fine;
-  } else if ((tickCount >= Normal) && (old_mode > Normal)) {
-    mode = Normal;
-  } else if ((tickCount >= Coarse) && (old_mode > Coarse)) {
-    mode = Coarse;
+MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount, MajorTickMode old_mode) {
+  MajorTickMode mode = TicksNone;
+  if ((tickCount >= TicksVeryFine) && (old_mode > TicksVeryFine)) {
+    mode = TicksVeryFine;
+  } else if ((tickCount >= TicksFine) && (old_mode > TicksFine)) {
+    mode = TicksFine;
+  } else if ((tickCount >= TicksNormal) && (old_mode > TicksNormal)) {
+    mode = TicksNormal;
+  } else if ((tickCount >= TicksCoarse) && (old_mode > TicksCoarse)) {
+    mode = TicksCoarse;
   }
   return mode;
 }
@@ -796,21 +796,21 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
     // use years
     range_u = range_jd/365.25;
     units = i18n(" [Years]");
-    tickspacing_u = computeMajorTickSpacing(tickMode, range_u);
+    computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u);
     // round base to year;
     base_jd = floor((min_jd - (JD1900 + 0.5))/365.25) * 365.25 + (JD1900 + 0.5) + 1.0;
   } else if (range_jd > minimum_units) {
     // use days
     range_u = range_jd;
     units = i18n(" [Days]");
-    tickspacing_u = computeMajorTickSpacing(tickMode, range_u);
+    computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u);
     // round base to day
     base_jd = floor(min_jd)+1.0;
   } else if (range_jd > minimum_units/24.0) {
     // use hours
     range_u = range_jd*24.0;
     units = i18n(" [Hours]");
-    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Hour);
+    computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Hour);
     // round base to hour
     double d_jd = min_jd - floor(min_jd);
     base_jd = floor(min_jd) + (floor(d_jd*24.0/tickspacing_u)+1.0)/(24.0/tickspacing_u);
@@ -818,7 +818,7 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
     // use minutes
     range_u = range_jd*24.0*60.0;
     units = i18n(" [Minutes]");
-    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Minute);
+    computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Minute);
     double d_jd = min_jd - floor(min_jd);
     base_jd = floor(min_jd) + (floor(d_jd*24.0*60.0/tickspacing_u)+1.0)/(24.0*60.0/tickspacing_u);
   } else {
@@ -826,7 +826,7 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
     range_u = range_jd*24.0*3600.0;
     units = i18n(" [Seconds]");
     double d_jd = min_jd - floor(min_jd);
-    tickspacing_u = computeMajorTickSpacing(tickMode, range_u, Second);
+    computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Second);
     base_jd = floor(min_jd) + (floor(d_jd*24.0*3600.0/tickspacing_u)+1.0)/(24.0*3600.0/tickspacing_u);
     if (base_jd < min_jd) base_jd = min_jd;
     if (base_jd > max_jd) base_jd = min_jd;
@@ -953,7 +953,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
     uMax = max;
   }
 
-  uMajorTickSpacing = computeMajorTickSpacing(tickMode, uR);
+  computeMajorTickSpacing(&uMajorTickSpacing, &_automaticMinorTickCount, tickMode, uR);
 
   qreal uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
   qreal firstTick = uFirstTick*drdu + rOffset;
@@ -1090,100 +1090,6 @@ void PlotAxis::updateTicks(bool useOverrideTicks) {
 }
 
 
-/*
- * Major ticks are always spaced by D = A*10^B where B is an integer,
- * and A is 1, 2 or 5. So: 1, 0.02, 50, 2000 are all possible major tick
- * spacings, but 30 is not.
- *
- * A and B are chosen so that there are as close as possible to M major ticks
- * on the axis (but at least 2). The value of M is set by the requested
- * MajorTickMode.
- */
-double PlotAxis::computeMajorTickSpacing(MajorTickMode majorTickCount, double R) {
-  qreal M = majorTickCount;
-  qreal B = floor(log10(R/M));
-
-  qreal d1 = 1 * pow(10, B); // tick spacing
-  qreal d2 = 2 * pow(10, B);
-  qreal d5 = 5 * pow(10, B);
-
-  qreal r1 = d1 * M; // tick range
-  qreal r2 = d2 * M;
-  qreal r5 = d5 * M;
-
-  qreal s1 = qAbs(r1 - R);
-  qreal s2 = qAbs(r2 - R);
-  qreal s5 = qAbs(r5 - R);
-
-  _automaticMinorTickCount = 5;
-  if (s1 <= s2 && s1 <= s5) {
-    return d1;
-  } else if (s2 <= s5) {
-    if ((M == 2) && (r2 > R)) {
-      return d1; // Minimum ticks not met using d2 using d1 instead
-    } else {
-      _automaticMinorTickCount = 4;
-      return d2;
-    }
-  } else {
-    if ((M == 2) && (r5 > R)) {
-      _automaticMinorTickCount = 4;
-      return d2; // Minimum ticks not met using d5 using d2 instead
-    } else {
-      return d5;
-    }
-  }
-}
-
-// compute the major ticks for hours (base = 24) or min/sec (base = 60)
-double PlotAxis::computeMajorTickSpacing(MajorTickMode majorTickCount, double R, timeUnits time_units) {
-  double base60list[] =     {1.0,2.0,5.0,10.0,20.0,30.0,60.0};
-  int minorlist_minutes[] = {  6,  4,  5,   5,   4,   6,   4};
-  int minorlist_seconds[] = {  5,  4,  5,   5,   4,   6,   6};
-  int n60 = 7;
-  double base24list[] =   {1.0,2.0,4.0,6.0,12.0,24.0};
-  int minorlist_hours[] = {  4,  4,  4,  6,   6,   6};
-  int n24 = 6;
-  double *baselist;
-  int *minorlist;
-  double n;
-
-  if (R <= majorTickCount) {
-    return computeMajorTickSpacing(majorTickCount, R);
-  }
-
-  if (time_units == Hour) {
-    baselist = base24list;
-    minorlist = minorlist_hours;
-    n = n24;
-  } else if (time_units == Minute) {
-    baselist = base60list;
-    minorlist = minorlist_minutes;
-    n = n60;
-  } else if (time_units == Second) {
-    baselist = base60list;
-    minorlist = minorlist_seconds;
-    n = n60;
-  } else { // unknown base - use base 10;
-    return computeMajorTickSpacing(majorTickCount, R);
-  }
-
-  int best_i=0;
-  double best_err = 1E88;
-  double err;
-  for (int i=0; i<n; i++) {
-    err = fabs(double(majorTickCount) - R/baselist[i]);
-    if (err < best_err) {
-      best_err = err;
-      best_i = i;
-    }
-  }
-
-  _automaticMinorTickCount = minorlist[best_i];
-  return baselist[best_i];
-
-}
-
 void PlotAxis::copyProperties(PlotAxis *source) {
   if (source) {
     setAxisVisible(source->isAxisVisible());
@@ -1313,7 +1219,7 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   }
   av = attrs.value("majortickmode");
   if (!av.isNull()) {
-    setAxisMajorTickMode((PlotAxis::MajorTickMode)QVariant(av.toString()).toInt());
+    setAxisMajorTickMode((MajorTickMode)QVariant(av.toString()).toInt());
   }
   av = attrs.value("minortickcount");
   if (!av.isNull()) {

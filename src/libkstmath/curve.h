@@ -119,7 +119,6 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual QColor headColor() const { return HeadColor; }
     virtual void setHeadColor(const QColor& new_c);
 
-
 #if 0
     void pushColor(const QColor& c) { _colorStack.push(color()); setColor(c); }
     void popColor() { setColor(_colorStack.pop()); }
@@ -147,7 +146,9 @@ class KSTMATH_EXPORT Curve: public Relation
     void updatePaintObjects(const CurveRenderContext& context);
 
     // render the legend symbol for this curve
-    virtual void paintLegendSymbol(QPainter *p, const QRectF& bound);
+    virtual QSize legendSymbolSize(const QFont &font);
+    virtual void paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size);
+    virtual bool symbolLabelOnTop() {return false;}
 
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;

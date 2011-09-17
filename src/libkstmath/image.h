@@ -116,7 +116,9 @@ class KSTMATH_EXPORT Image : public Relation {
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
 
     // see KstRelation::paintLegendSymbol
-    virtual void paintLegendSymbol(QPainter *p, const QRectF& bound);
+    virtual QSize legendSymbolSize(const QFont &font);
+    virtual void paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size);
+    virtual bool symbolLabelOnTop() {return true;}
 
     virtual QString descriptionTip() const;
 

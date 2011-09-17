@@ -18,6 +18,7 @@
 #include "plotitem.h"
 #include "plotmarkers.h"
 #include "ksttimezone.h"
+#include "plottickcalculator.h"
 
 namespace Kst {
 
@@ -26,16 +27,7 @@ class PlotAxis : public QObject
   Q_OBJECT
   public:
 
-    enum MajorTickMode {
-      None = 0,
-      Coarse = 2,
-      Normal = 5,
-      Fine = 10,
-      VeryFine = 15
-    };
-
     enum ZoomMode { Auto, AutoBorder, FixedExpression, SpikeInsensitive, MeanCentered };
-    enum timeUnits {Hour, Minute, Second};
 
     PlotAxis(PlotItem *plotItem, Qt::Orientation orientation);
     ~PlotAxis();
@@ -150,14 +142,11 @@ class PlotAxis : public QObject
     double convertJDtoDisplayTime(double T);
     QString convertJDToDateString(double jday, double range_jd);
 
-    double computeMajorTickSpacing(MajorTickMode majorTickCount, double range);
-    double computeMajorTickSpacing(MajorTickMode majorTickCount, double range, timeUnits time_units);
-
     void updateLogTicks(MajorTickMode tickMode);
     void updateInterpretTicks(MajorTickMode tickMode);
     void updateLinearTicks(MajorTickMode tickMode);
     bool isLinearTickMode();
-    MajorTickMode convertToMajorTickMode(int tickCount, PlotAxis::MajorTickMode old_mode = VeryFine);
+    MajorTickMode convertToMajorTickMode(int tickCount, MajorTickMode old_mode = TicksVeryFine);
 
   private:
 

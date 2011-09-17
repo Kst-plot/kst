@@ -1565,7 +1565,15 @@ double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-void Curve::paintLegendSymbol(QPainter *p, const QRectF& bound) {
+QSize Curve::legendSymbolSize(const QFont &font) {
+  QFontMetrics fm(font);
+  return QSize(fm.height()*3.5, fm.height());
+}
+
+
+void Curve::paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size) {
+  QRect bound(QPoint(0,0),size);
+
   int width;
   
   if (lineWidth() == 0) {
