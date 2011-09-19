@@ -292,10 +292,10 @@ PlotItem::~PlotItem() {
 
 void PlotItem::_initializeShortName() {
   _shortName = 'P'+QString::number(_plotnum);
-  if (_plotnum>max_plotnum)
+  if (_plotnum>max_plotnum) {
     max_plotnum = _plotnum;
+  }
   _plotnum++;
-
 }
 
 QString PlotItem::plotName() const {
@@ -3783,12 +3783,17 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
     if (xml.isStartElement()) {
       if (!rc && xml.name().toString() == "plot") {
         Q_ASSERT(!rc);
+
+        QXmlStreamAttributes attrs = xml.attributes();
+        QStringRef av;
+
+        Object::processShortNameIndexAttributes(attrs);
+
         rc = new PlotItem(view);
         if (parent) {
           rc->setParentViewItem(parent);
         }
-        QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
+
         bool xTiedZoom = false, yTiedZoom = false;
         av = attrs.value("tiedxzoom");
         if (!av.isNull()) {
@@ -3857,7 +3862,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           rc->setDescriptiveName(attrs.value("descriptiveName").toString());
         }
-        Object::processShortNameIndexAttributes(attrs);
 
         // Add any new specialized PlotItem Properties here.
       } else if (xml.name().toString() == "projectionrect") {
