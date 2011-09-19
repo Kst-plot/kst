@@ -27,6 +27,7 @@
 #include "objectstore.h"
 #include "datasourcepluginmanager.h"
 #include "dialogdefaults.h"
+#include <QTimer>
 
 #include <QDir>
 #include <QThreadPool>
@@ -34,7 +35,7 @@
 namespace Kst {
 
 MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataMatrix), _store(store), _initField(QString()), _requestID(0) {
+  : DataTab(parent), validating(false), _mode(DataMatrix), _store(store), _initField(QString()), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Matrix"));
@@ -545,6 +546,8 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->unlock();
 
+  validating = false;
+
   emit sourceChanged();
 }
 
@@ -558,6 +561,7 @@ void MatrixTab::fileNameChanged(const QString &file) {
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
   connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  validating = true;
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 
@@ -733,11 +737,19 @@ ObjectPtr MatrixDialog::createNewDataObject() {
 
 
 ObjectPtr MatrixDialog::createNewDataMatrix() {
- const DataSourcePtr dataSource = _matrixTab->dataSource();
 
-  //FIXME better validation than this please...
-  if (!dataSource)
+  // wait for the validation thread to finish
+  // should only happen with scripting
+  while (_matrixTab->validating) {
+    usleep(10000);
+    QApplication::processEvents();
+  }
+
+  const DataSourcePtr dataSource = _matrixTab->dataSource();
+
+  if (!dataSource) {
     return 0;
+  }
 
   const QString field = _matrixTab->field();
   const int skip = _matrixTab->skip();

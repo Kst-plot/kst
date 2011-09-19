@@ -136,6 +136,8 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
 
+    bool validating;
+
   Q_SIGNALS:
     void sourceChanged();
 
@@ -172,8 +174,8 @@ class MatrixDialog : public DataDialog {
     virtual ObjectPtr editExistingDataObject() const;
 
   private:
-    ObjectPtr createNewDataMatrix();
     ObjectPtr createNewGeneratedMatrix();
+    ObjectPtr createNewDataMatrix();
     void configureTab(ObjectPtr vector);
 
   private Q_SLOTS:
