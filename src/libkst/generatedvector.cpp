@@ -70,6 +70,9 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
     _v[i] = x0 + double(i) * (x1 - x0) / double(n - 1);
   }
 
+  _min = x0;
+  _max = x1;
+
   _scalars["min"]->setValue(x0);
   _scalars["max"]->setValue(x1);
 

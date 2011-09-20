@@ -108,8 +108,8 @@ void Image::internalUpdate() {
     _ns_minx = MinX;
     _ns_maxy = MaxY;
     _ns_miny = MinY;
-    MinPosY = MinY > 0 ? MinY : 0;
-    MinPosX = MinX > 0 ? MinX : 0;
+    MinPosY = MinY > 0 ? MinY : yStepSize*0.5;
+    MinPosX = MinX > 0 ? MinX : xStepSize*0.5;
 
 
     //recalculate the thresholds if necessary

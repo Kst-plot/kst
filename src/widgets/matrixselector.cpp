@@ -95,8 +95,14 @@ void MatrixSelector::newMatrix() {
 
 
 void MatrixSelector::editMatrix() {
-  QString matrixName;
-  DialogLauncher::self()->showMatrixDialog(matrixName, ObjectPtr(selectedMatrix()), true);
+
+  if (selectedMatrix()->provider()) {
+    DialogLauncher::self()->showObjectDialog(selectedMatrix()->provider());
+  } else {
+    QString matrixName;
+    DialogLauncher::self()->showMatrixDialog(matrixName, ObjectPtr(selectedMatrix()), true);
+  }
+
 }
 
 
