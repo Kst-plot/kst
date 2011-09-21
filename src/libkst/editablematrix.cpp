@@ -49,6 +49,7 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   }
 
   xml.writeStartElement(staticTypeTag);
+  saveNameInfo(xml, VNUM|MNUM|XNUM);
   xml.writeAttribute("xmin", QString::number(minX()));
   xml.writeAttribute("ymin", QString::number(minY()));
   xml.writeAttribute("nx", QString::number(xNumSteps()));
@@ -56,7 +57,6 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("xstep", QString::number(xStepSize()));
   xml.writeAttribute("ystep", QString::number(yStepSize()));
   xml.writeTextElement("data", qCompress(qba).toBase64());
-  saveNameInfo(xml, VNUM|MNUM|XNUM);
   xml.writeEndElement();
 }
 

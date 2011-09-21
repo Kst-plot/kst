@@ -3778,6 +3778,7 @@ PlotItemFactory::~PlotItemFactory() {
 ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *store, View *view, ViewItem *parent) {
   PlotItem *rc = 0;
   double x = 0, y = 0, w = 10, h = 10;
+  bool xTiedZoom = false, yTiedZoom = false;
   while (!xml.atEnd()) {
     bool validTag = true;
     if (xml.isStartElement()) {
@@ -3794,7 +3795,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           rc->setParentViewItem(parent);
         }
 
-        bool xTiedZoom = false, yTiedZoom = false;
         av = attrs.value("tiedxzoom");
         if (!av.isNull()) {
           xTiedZoom = QVariant(av.toString()).toBool();
@@ -3803,7 +3803,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         if (!av.isNull()) {
           yTiedZoom = QVariant(av.toString()).toBool();
         }
-        rc->setTiedZoom(xTiedZoom, yTiedZoom);
         av = attrs.value("leftlabelvisible");
         if (!av.isNull()) {
           rc->leftLabelDetails()->setVisible(QVariant(av.toString()).toBool());
@@ -3946,6 +3945,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
     xml.readNext();
   }
   rc->setProjectionRect(QRectF(QPointF(x, y), QSizeF(w, h)));
+  rc->setTiedZoom(xTiedZoom, yTiedZoom);
   return rc;
 }
 
