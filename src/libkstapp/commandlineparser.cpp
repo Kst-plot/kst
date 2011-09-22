@@ -268,18 +268,19 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->setYVector(yv);
     curve->setXError(0);
     curve->setXMinusError(0);
-    curve->setYMinusError(0);
     curve->setColor(ColorSequence::self().next());
     curve->setHasPoints(_usePoints);
     curve->setHasLines(_useLines);
     curve->setHasBars(_useBargraph);
-    curve->setLineWidth(1); //FIXME: use defaults
+    curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
     //curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
     if (ev) {
       curve->setYError(ev);
+      curve->setYMinusError(ev);
     } else {
       curve->setYError(0);
+      curve->setYMinusError(0);
     }
 
     curve->writeLock();
@@ -453,7 +454,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
         DataVectorPtr ev;
         if (!_errorField.isEmpty()) {
-          DataVectorPtr ev = createOrFindDataVector(_errorField, ds);
+          ev = createOrFindDataVector(_errorField, ds);
           if (!_overrideStyle) {
             _useBargraph=false;
             _useLines = false;
