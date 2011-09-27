@@ -87,7 +87,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
         socket.disconnectFromServer();
         connectTo=initial+QString::number(connectTo.remove(initial).toInt()+1);
     }
-    //qDebug()<<"Created script server with name "<<connectTo;
+    qDebug()<<"Created script server with name "<<connectTo;
     connect(_server,SIGNAL(newConnection()),this,SLOT(procConnection()));
 
     //setup _map={QByteArray->ScriptMemberFn}
@@ -175,7 +175,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("eliminate()",&ScriptServer::eliminate);
     _fnMap.insert("endEdit()",&ScriptServer::endEdit);
 
-    _fnMap.insert("done()",&ScriptServer::beginEdit);
+    _fnMap.insert("done()",&ScriptServer::done);
+    _fnMap.insert("clear()",&ScriptServer::clear);
 
     _fnMap.insert("tabCount()",&ScriptServer::tabCount);
     _fnMap.insert("newTab()",&ScriptServer::newTab);
@@ -1054,6 +1055,14 @@ QByteArray ScriptServer::done(QByteArray&, QLocalSocket* s,ObjectStore*,const in
     delete s;
     return "Bye.";
 }
+
+
+QByteArray ScriptServer::clear(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
+                              const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+  kstApp->mainWindow()->newDoc(true);
+  return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+}
+
 
 QByteArray ScriptServer::tabCount(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {

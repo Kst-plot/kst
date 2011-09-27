@@ -24,7 +24,6 @@
 #include <commandlineparser.h>
 #include "objectstore.h"
 #include "updatemanager.h"
-#include "scriptserver.h"
 
 #include <QDebug>
 #include <QFile>
@@ -36,7 +35,6 @@ namespace Kst {
 Document::Document(MainWindow *window)
 : CoreDocument(), _win(window), _dirty(false), _isOpen(false) {
   _session = new SessionModel(objectStore());
-  _scriptServer = new ScriptServer(objectStore());
 
   _fileName.clear();
   UpdateManager::self()->setStore(objectStore());
@@ -45,7 +43,6 @@ Document::Document(MainWindow *window)
 
 Document::~Document() {
   delete _session;
-  delete _scriptServer;
   _session = 0;
 }
 

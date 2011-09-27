@@ -48,6 +48,7 @@ public:
     ScriptServer(ObjectStore*obj);
     ~ScriptServer();
     QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
+    void setStore(ObjectStore *obj) { _store = obj;}
 public slots:
     void procConnection();
     void readSomething();
@@ -145,6 +146,9 @@ protected:
 
     // Quit:
     QByteArray done(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    // Clear:
+    QByteArray clear(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
     // Destruction is much easier than construction.
     QByteArray eliminate(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);

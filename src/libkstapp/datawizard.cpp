@@ -569,7 +569,6 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
 
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
   _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots. Set FFT options below:"));
-  _FFTOptions->GroupBoxFFTOptions->setChecked(false); // fixme: use persistant defaults
 
   _FFTOptions->GroupBoxFFTOptions->setChecked(_dialogDefaults->value("wizard/doPSD",false).toBool());
   _xAxisGroup->setChecked(_dialogDefaults->value("wizard/doXY",true).toBool());
@@ -695,7 +694,8 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
     _document = mw->document();
   } else {
-    // FIXME: we need a document
+    // we need a document
+    // not sure that this can ever happen.
     qFatal("ERROR: can't construct a DataWizard without a document");
   }
 

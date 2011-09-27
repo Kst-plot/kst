@@ -58,6 +58,7 @@
 #include "dialogdefaults.h"
 
 #include "dialoglauncher.h"
+#include "scriptserver.h"
 
 #include <QSvgGenerator>
 #include <QUndoGroup>
@@ -87,6 +88,8 @@ MainWindow::MainWindow() :
     _highlightPoint(false) 
 {
   _doc = new Document(this);
+  _scriptServer = new ScriptServer(_doc->objectStore());
+
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this);
@@ -121,6 +124,8 @@ MainWindow::~MainWindow() {
   _dataManager = 0;
   delete _doc;
   _doc = 0;
+  delete _scriptServer;
+  _scriptServer = 0;
 }
 
 
@@ -242,10 +247,11 @@ void MainWindow::saveAs() {
   updateRecentKstFiles(fn);
 }
 
-
-void MainWindow::newDoc() {
+void MainWindow::newDoc(bool force) {
   bool clearApproved = false;
-  if (_doc->isChanged()) {
+  if (force) {
+    clearApproved = true;
+  } else if (_doc->isChanged()) {
     clearApproved = promptSave();
   } else {
     int rc = QMessageBox::warning(this, tr("Kst"), tr("Delete everything?"), QMessageBox::Ok, QMessageBox::Cancel);
@@ -257,6 +263,7 @@ void MainWindow::newDoc() {
     _dataManager = 0;
     delete _doc;
     _doc = new Document(this);
+    _scriptServer->setStore(_doc->objectStore());
   } else {
     return;
   }
@@ -386,6 +393,7 @@ void MainWindow::checkRecentFilesOnExistence()
 bool MainWindow::initFromCommandLine() {
   delete _doc;
   _doc = new Document(this);
+  _scriptServer->setStore(_doc->objectStore());
 
   CommandLineParser P(_doc, this);
 
@@ -414,6 +422,7 @@ void MainWindow::openFile(const QString &file) {
   _dataManager = 0;
   delete _doc;
   _doc = new Document(this);
+  _scriptServer->setStore(_doc->objectStore());
 
   bool ok = _doc->open(file);
   QApplication::restoreOverrideCursor();
@@ -424,6 +433,7 @@ void MainWindow::openFile(const QString &file) {
            "Maybe it is a Kst 1 file which could not be read by Kst 2.").arg(file, _doc->lastError()));
     delete _doc;
     _doc = new Document(this);
+    _scriptServer->setStore(_doc->objectStore());
   }
 
   setWindowTitle("Kst - " + file);

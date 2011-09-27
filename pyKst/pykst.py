@@ -33,7 +33,6 @@ class Client:
         self.ls.connectToServer(serverName)
         self.ls.waitForConnected(300)
         self.serverName=serverName
-        sleep(1)
     
   def send(self,command):
     """ Sends a command to kst and returns a response. You should never use this directly, as there is no guarantee that the internal command
@@ -58,7 +57,10 @@ class Client:
     ret=array([0.0])
     get_matrix(ret,self.serverName,command)
     return ret
-    
+
+  def clear(self):
+    """ Equivalent to file->close from the menubar inside kst.  Clears all objects from kst."""
+    self.send("clear()")
   def screenBack(self):
     """ Equivalent to "Range>Back One Screen" from the menubar inside kst. """
     self.send("screenBack()")

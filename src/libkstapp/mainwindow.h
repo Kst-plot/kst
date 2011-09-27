@@ -41,6 +41,7 @@ class ThemeDialog;
 class AboutDialog;
 class TabWidget;
 class View;
+class ScriptServer;
 
 
 class MainWindow : public QMainWindow
@@ -93,7 +94,7 @@ class MainWindow : public QMainWindow
     void save();
     void saveAs();
     void open();
-    void newDoc();
+    void newDoc(bool force=false);
     void openFile(const QString &file);
     void print();
     void setPrinterDefaults(QPrinter *printer);
@@ -175,6 +176,7 @@ class MainWindow : public QMainWindow
     Document *_doc;
     TabWidget *_tabWidget;
     QUndoGroup *_undoGroup;
+    ScriptServer* _scriptServer;
 
     DataManager *_dataManager;
     DebugDialog *_debugDialog;

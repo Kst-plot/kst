@@ -52,9 +52,6 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.foregroundColor = painter->pen().color();
     context.backgroundColor = painter->brush().color();
 
-    //FIXME rename these methods in kstvcurve
-    //FIXME Completely refactor KstCurveRenderContext now that we know what these are
-
     //Set the projection box...
     context.XMin = projectionRect().left();
     context.XMax = projectionRect().right();
