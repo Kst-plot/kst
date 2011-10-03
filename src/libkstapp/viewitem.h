@@ -216,6 +216,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void setItemPen(const QPen & pen) { setPen(pen); }
     virtual void setItemBrush(const QBrush & brush) { setBrush(brush); }
 
+    template<class T> static T* retrieveItem(const QString &name);
+
     template<class T> static QList<T *> getItems();
 
    // TODO: Remove, needed only for a Qt 4.3 bug workaround
@@ -546,15 +548,7 @@ class RotateCommand : public TransformCommand
     virtual ~RotateCommand() {}
 };
 
-// FIXME: This returns a list of ungaurded pointers; if the object is deleted
-// between when the list is acquired and when one of the pointers is de-referenced,
-// there will be a crash.  They are unguarded, because they are normally held by the
-// scene as unguarded pointers, so it is too late to add a guard.
-// I can't see a way of fixing it easily.  The best option
-// for now is to minimize the cross section of this: use the pointers
-// immediately after getting them, and don't hold them waiting for the
-// user to delete the object they refer to...  The user might still be able to arrange
-// a crash, however.
+
 template<class T>
 QList<T *> ViewItem::getItems() {
   QList<T *> tItems;
@@ -575,6 +569,43 @@ QList<T *> ViewItem::getItems() {
   }
   return tItems;
 }
+
+template<class T>
+T* ViewItem::retrieveItem(const QString &name) {
+  QList<T *> tItems = getItems<T>();
+
+  int match = -1;
+
+  if (name.isEmpty()) {
+    return NULL;
+  }
+
+  QString shortName;
+  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  rx.indexIn(name);
+  shortName = rx.cap(2);
+
+  // 1) search for short names
+  int size = tItems.size();
+  for (int i = 0; i < size; ++i) {
+    if (tItems.at(i)->shortName()==shortName)
+      return tItems.at(i);
+  }
+  // 3) search for descriptive names: must be unique
+  for (int i = 0; i < size; ++i) {
+    if (tItems.at(i)->descriptiveName() == name) {
+      if (match != -1)
+        return NULL; // not unique, so... no match
+      match = i;
+    }
+  }
+
+  if (match >-1)
+    return tItems.at(match);
+
+  return NULL;
+}
+
 
 class MimeDataViewItem : public QMimeData
 {

@@ -25,8 +25,7 @@ namespace Kst {
 
 class ViewItem;
 
-struct LayoutTabSI
-{
+struct LayoutTabSI {
     ViewItem* vi;
     QByteArrayList commands();
     QString doCommand(QString x);

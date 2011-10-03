@@ -70,6 +70,7 @@
 
 #include "viewitemscriptinterface.h"
 #include "labelscriptinterface.h"
+#include "plotscriptinterface.h"
 #include "stringscriptinterface.h"
 
 #include "datasourcepluginmanager.h"
@@ -172,10 +173,11 @@ ScriptInterface* DialogLauncherSI::newPicture(QByteArray picf) {
     return new ViewItemSI(bi);
 }
 
-DialogSI* DialogLauncherSI::newPlot() {
+ScriptInterface* DialogLauncherSI::newPlot() {
     PlotItem* bi=new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return showViewItemDialog(bi);
+    return new PlotSI(bi);
+    //return showViewItemDialog(bi);
 }
 
 DialogSI* DialogLauncherSI::newSharedAxisBox() {
@@ -829,10 +831,14 @@ QByteArray DialogSI::setComboBoxEditValue(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setComboBoxIndex(QByteArray&y,QWidget*obj){
-    if(!obj->isEnabled()) return "Option disabled.";
+    if(!obj->isEnabled()) {
+      return "Option disabled.";
+    }
     QString x=y;
     x.remove(0,y.indexOf("(")+1);
-    if(x.contains(')')) x.remove(x.lastIndexOf(')'),9999);
+    if(x.contains(')')) {
+      x.remove(x.lastIndexOf(')'),INT_MAX);
+    }
     bool ok;
     int a=x.toInt(&ok);
     if(ok) {

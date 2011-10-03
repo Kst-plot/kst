@@ -131,8 +131,37 @@ protected:
     QByteArray getPictureList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPicture(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
+    /*************************/
+    /* plot related commands */
+    /*************************/
     QByteArray getPlotList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPlot(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    QByteArray setPlotXRange(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotYRange(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotXAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotYAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotXAutoBorder(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotYAutoBorder(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotXNoSpike(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotYNoSpike(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotXAC(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotYAC(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    QByteArray setPlotGlobalFont(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    QByteArray setPlotTopLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotBottomLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotLeftLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotRightLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    QByteArray setPlotTopLabelAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotBottomLabelAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotLeftLabelAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray setPlotRightLabelAuto(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
+    /*************************/
+
 
     QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);

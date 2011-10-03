@@ -76,7 +76,7 @@ class DialogLauncherSI {
     ScriptInterface* newLabel();
     ScriptInterface* newLine();
     ScriptInterface* newPicture(QByteArray file);
-    DialogSI* newPlot();
+    ScriptInterface* newPlot();
     DialogSI* newSharedAxisBox();
     ScriptInterface* newSvgItem(QByteArray path);
 

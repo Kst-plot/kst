@@ -44,6 +44,12 @@ class Client:
     x=self.ls.readAll()
     return x
     
+  def send_si(self, handle, command):
+    x = self.send(b2str("beginEdit("+handle.toAscii()+")"))
+    x = x + self.send(command)
+    x = x + self.send(b2str("endEdit()"))
+    return x
+
   def getArray(self,command):
     """ Sends a request for a numPy.array. You should never use this directly, as there is no guarantee that the internal command list kst
         uses won't change. Instead use the convenience classes included with pykst. """
@@ -888,99 +894,106 @@ class ViewItem:
     
   def setHMargin(self,margin):
     """ This is equivalent to setting Apperance>Layout>Horizontal Margin within a view item dialog in kst. """
-    self.client.send(b2str("#setHMargin("+self.handle.toAscii()+","+b2str(margin)+")"))
-    
+    #self.client.send(b2str("#setHMargin("+self.handle.toAscii()+","+b2str(margin)+")"))
+    self.client.send_si(self.handle, b2str("setLayoutHorizontalMargin("+b2str(margin)+")"))
+
   def setVMargin(self,margin):
     """ This is equivalent to setting Apperance>Layout>Vertical Margin within a view item dialog in kst. """
-    self.client.send(b2str("#setVMargin("+self.handle.toAscii()+","+b2str(margin)+")"))
-    
+    #self.client.send(b2str("#setVMargin("+self.handle.toAscii()+","+b2str(margin)+")"))
+    self.client.send_si(self.handle, b2str("setLayoutVerticalMargin("+b2str(margin)+")"))
+
   def setHSpace(self,space):
     """ This is equivalent to setting Apperance>Layout>Horizontal Spacing within a view item dialog in kst. """
-    self.client.send(b2str("#setHSpace("+self.handle.toAscii()+","+b2str(space)+")"))
-    
+    #self.client.send(b2str("#setHSpace("+self.handle.toAscii()+","+b2str(space)+")"))
+    self.client.send_si(self.handle, b2str("setLayoutHorizontalSpacing("+b2str(space)+")"))
+
   def setVSpace(self,space):
     """ This is equivalent to setting Apperance>Layout>Vertical Spacing within a view item dialog in kst. """
-    self.client.send(b2str("#setVSpace("+self.handle.toAscii()+","+b2str(space)+")"))
-    
+    #self.client.send(b2str("#setVSpace("+self.handle.toAscii()+","+b2str(space)+")"))
+    self.client.send_si(self.handle, b2str("setLayoutVerticalSpacing("+b2str(space)+")"))
+
   def setFillColor(self,color):
     """ This is equivalent to setting Apperance>Fill>Color within a view item dialog in kst. Not all view items
     support fill color. Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
-    self.client.send(b2str("#setFillColor("+self.handle.toAscii()+","+b2str(color)+")"))
+    self.client.send_si(self.handle, b2str("setFillColor("+b2str(color)+")"))
     
   def setFillStyle(self,style):
     """ This is equivalent to setting the index of Apperance>Fill>Style within a view item dialog in kst.
     Not all view items support fill styles. 0 is NoBrush, 1 is SolidPattern, 2 is Dense1Pattern, 3 is Dense2Pattern,
     4 is Dense3Pattern, 5 is Dense4Pattern, 6 is Dense5Pattern, 7 is Dense6Pattern, 8 is Dense7Pattern
     9 is HorPattern, 11 is VerPattern, 12 is CrossPattern, 13 is BDiagPattern and 14 is FDiagPattern."""
-    self.client.send(b2str("#setFillStyle("+self.handle.toAscii()+","+b2str(style)+")"))
-    
+    self.client.send_si(self.handle, b2str("setIndexOfFillStyle("+b2str(style)+")"))
+
   def setStrokeStyle(self,style):
     """ This is equivalent to setting the index of Apperance>Stroke>Style within a view item dialog in kst. Not all view items
     support stroke styles. 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, 4 is DashDotDotLine, and 5 is
     CustomDashLine"""
-    self.client.send(b2str("#setStrokeStyle("+self.handle.toAscii()+","+b2str(style)+")"))
-    
+    self.client.send_si(self.handle, b2str("setIndexOfStrokeStyle("+b2str(style)+")"))
+
   def setStrokeWidth(self,width):
     """ This is equivalent to setting Apperance>Stroke>Width within a view item dialog in kst. Not all view items
     support stroke width."""
-    self.client.send(b2str("#setStrokeWidth("+self.handle.toAscii()+","+b2str(width)+")"))
-    
+    self.client.send_si(self.handle, b2str("setStrokeWidth("+b2str(width)+")"))
+
   def setStrokeBrushColor(self,color):
     """ This is equivalent to setting Apperance>Stroke>Brush Color within a view item dialog in kst. Not all view items
     support fill color. Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
-    self.client.send(b2str("#setStrokeBrushColor("+self.handle.toAscii()+","+b2str(color)+")"))
-    
+    self.client.send_si(self.handle, b2str("setStrokeBrushColor("+b2str(color)+")"))
+
   def setStrokeBrushStyle(self,style):
     """ This is equivalent to setting the index of Apperance>Stroke>Brush Style within a view item dialog in kst.
     Not all view items support stroke brush styles. 0 is NoBrush, 1 is SolidPattern, 2 is Dense1Pattern, 3 is Dense2Pattern,
     4 is Dense3Pattern, 5 is Dense4Pattern, 6 is Dense5Pattern, 7 is Dense6Pattern, 8 is Dense7Pattern
     9 is HorPattern, 11 is VerPattern, 12 is CrossPattern, 13 is BDiagPattern and 14 is FDiagPattern."""
-    self.client.send(b2str("#setStrokeBrushStyle("+self.handle.toAscii()+","+b2str(style)+")"))
-    
+    self.client.send_si(self.handle, b2str("setIndexOfStrokeBrushStyle("+b2str(style)+")"))
+
   def setStrokeJoinStyle(self,style):
     """ This is equivalent to setting the index of Apperance>Stroke>Join Style within a view item dialog in kst.
     Not all view items support stroke join styles. 0 is MiterJoin, 1 is BevelJoin, 2 is RoundJoin,
     and 3 is SvgMiterJoin."""
-    self.client.send(b2str("#setStrokeJoinStyle("+self.handle.toAscii()+","+b2str(style)+")"))
-      
+    self.client.send_si(self.handle, b2str("setIndexOfStrokeJoinStyle("+b2str(style)+")"))
+
   def setStrokeCapStyle(self,style):
     """ This is equivalent to setting the index of Apperance>Stroke>Cap Style within a view item dialog in kst.
     Not all view items support stroke cap styles. 0 is FlatCap, 1 is SquareCap, and 2 is RoundCap"""
-    self.client.send(b2str("#setStrokeCapStyle("+self.handle.toAscii()+","+b2str(style)+")"))
-    
+    self.client.send_si(self.handle, b2str("setIndexOfStrokeCapStyle("+b2str(style)+")"))
+
   def setFixedAspectRatioTrue(self):
     """ This is equivalent to checking Dimensions>Fix aspect ratio within a view item dialog in kst.
     The behaviour of this is undefined in view items which always have fixed aspect ratios (e.g., circles)"""
-    self.client.send(b2str("#setFixedAspectRatioTrue("+self.handle.toAscii()+")"))
-    
+    self.client.send_si(self.handle, b2str("checkFixAspectRatio()"))
+
   def setFixedAspectRatioFalse(self):
     """ This is equivalent to unchecking Dimensions>Fix aspect ratio within a view item dialog in kst.
     The behaviour of this is undefined in view items which always have fixed aspect ratios (e.g., circles)"""
-    self.client.send(b2str("#setFixedAspectRatioFalse("+self.handle.toAscii()+")"))
-    
+    self.client.send_si(self.handle, b2str("uncheckFixAspectRatio()"))
+
   def setPosX(self,pos):
     """ This is equivalent to setting Dimensions>Position within a view item dialog in kst.
     Positions refer to the center of an object and x-values range from 0.0 (left) to 1.0 (right)"""
-    self.client.send(b2str("#setPosX("+self.handle+","+b2str(pos)+")"))
-    
+    self.client.send_si(self.handle, b2str("setPosX("+b2str(pos)+")"))
+
   def setPosY(self,pos):
     """ This is equivalent to setting Dimensions>Position within a view item dialog in kst.
     Positions refer to the center of an object and y-values range from 0.0(top) to 1.0(bottom)"""
-    self.client.send(b2str("#setPosY("+self.handle+","+b2str(pos)+")"))
-    
+    self.client.send_si(self.handle, b2str("setPosY("+b2str(pos)+")"))
+
   def setSizeX(self,size):
     """ This is equivalent to setting Dimensions>Size within a view item dialog. In cases
     where the aspect ratio is fixed, this changes both sizes (x and y)"""
-    self.client.send(b2str("#setSizeX("+self.handle+","+b2str(size)+")"))
-    
+    #self.client.send(b2str("#setSizeX("+self.handle+","+b2str(size)+")"))
+    self.client.send_si(self.handle, b2str("setGeoX("+b2str(size)+")"))
+
   def setSizeY(self,size):
     """ This is equivalent to setting Dimensions>Size within a view item dialog. In cases
     where the aspect ratio is fixed, this behaviour of this function is undefined."""
-    self.client.send(b2str("#setSizeY("+self.handle+","+b2str(size)+")"))
-    
+    #self.client.send(b2str("#setSizeY("+self.handle+","+b2str(size)+")"))
+    self.client.send_si(self.handle, b2str("setGeoY("+b2str(size)+")"))
+
   def setRot(self,rot):
     """ This is equivalent to setting Dimensions>Rotation within a view item dialog."""
-    self.client.send(b2str("#setRot("+self.handle+","+b2str(rot)+")"))
+    #self.client.send(b2str("#setRot("+self.handle+","+b2str(rot)+")"))
+    self.client.send_si(self.handle, b2str("setRotation("+b2str(rot)+")"))
 
   def remove(self):
     """ This removes the object from Kst. You should be careful when using this, because any handles you have to this object will
@@ -1008,31 +1021,31 @@ class Label(ViewItem) :
     
   def setText(self,text):
     """ Set text. It may be faster to insert strings within labels (e.g.,"[String (X1)]") and simply modify strings. """
-    self.client.send(b2str("#setLabelText("+self.handle+","+b2str(text)+")"))
-    
+    self.client.send_si(self.handle, b2str("setLabel("+b2str(text)+")"))
+
   def setLabelFontSize(self,size):
     """ This does not actually represent point size but is relative to the size of the window. """
-    self.client.send(b2str("#setLabelFontSize("+self.handle+","+b2str(size)+")"))
-    
+    self.client.send_si(self.handle, b2str("setFontSize("+b2str(size)+")"))
+
   def setFontBoldTrue(self):
     """ . . . """
-    self.client.send(b2str("#setFontBoldTrue("+self.handle+")"))
-    
+    self.client.send_si(self.handle, b2str("checkLabelBold()"))
+
   def setFontBoldFalse(self):
     """ . . . """
-    self.client.send(b2str("#setFontBoldFalse("+self.handle+")"))
-    
+    self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
+
   def setFontItalicTrue(self):
     """ . . . """
-    self.client.send(b2str("#setFontItalicTrue("+self.handle+")"))
-    
+    self.client.send_si(self.handle, b2str("checkLabelItalic()"))
+
   def setFontItalicFalse(self):
     """ . . . """
-    self.client.send(b2str("#setFontItalicFalse("+self.handle+")"))
-    
+    self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
+
   def setFontColor(self,color):
     """ Colors are given by a name such as 'red' or a hex number such as '#FF0000' """
-    self.client.send(b2str("#setFontColor("+self.handle+","+b2str(color)+")"))
+    self.client.send_si(self.handle, b2str("setLabelColor("+b2str(color)+")"))
 
 class ExistingLabel(Label):
   def  __init__(self,client,handle):
@@ -1277,7 +1290,86 @@ class Plot(ViewItem) :
       self.client.send("checkAuto()")
     self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+  def setXRange(self, x0 = 0.0, x1 = 10.0) :
+    """ Set X zoom range from x0 to x1 """
+    self.client.send(b2str("setPlotXRange("+self.handle+","+b2str(x0)+","+b2str(x1)+")"))
+
+  def setYRange(self, y0 = 0.0, y1 = 10.0) :
+    """ Set Y zoom range from y0 to y1 """
+    self.client.send(b2str("setPlotYRange("+self.handle+","+b2str(y0)+","+b2str(y1)+")"))
+
+  def setXAuto(self) :
+    """ Set X zoom range to autoscale """
+    self.client.send(b2str("setPlotXAuto("+self.handle+")"))
+
+  def setYAuto(self) :
+    """ Set Y zoom range to autoscale """
+    self.client.send(b2str("setPlotYAuto("+self.handle+")"))
+
+  def setXAutoBorder(self) :
+    """ Set X zoom range to autoscale with a small border """
+    self.client.send(b2str("setPlotXAutoBorder("+self.handle+")"))
+
+  def setYAutoBorder(self) :
+    """ Set Y zoom range to autoscale with a small border """
+    self.client.send(b2str("setPlotYAutoBorder("+self.handle+")"))
+
+  def setXNoSpike(self) :
+    """ Set X zoom range to spike insensitive autoscale """
+    self.client.send(b2str("setPlotXNoSpike("+self.handle+")"))
+
+  def setYNoSpike(self) :
+    """ Set Y zoom range to spike insensitive autoscale """
+    self.client.send(b2str("setPlotYNoSpike("+self.handle+")"))
+
+  def setXAC(self, r=0.2) :
+    """ Set X zoom range to fixed range, centered around the mean.  Similar to AC coupling on an oscilloscope. """
+    self.client.send(b2str("setPlotXAC("+self.handle+","+b2str(r)+")"))
+
+  def setYAC(self, r=0.2) :
+    """ Set Y zoom range to fixed range, centered around the mean.  Similar to AC coupling on an oscilloscope. """
+    self.client.send(b2str("setPlotYAC("+self.handle+","+b2str(r)+")"))
+
+  def setGlobalFont(self, family="", bold="false", italic="false") :
+    """ Set the global plot font.  By default, the axis labels all use this, unless they have been set to use their own.
+        If the parameter 'family' is empty, the font family will be unchanged.
+        The font will be bold if parameter 'bold' is set to 'bold' or 'true'.
+        The font will be italic if parameter 'italic' is set to 'italic' or 'true'."""
+    self.client.send(b2str("setPlotGlobalFont("+self.handle+","+family+","+bold+","+italic+")"))
+
+  def setTopLabel(self, label="") :
+    """ Set the plot top label """
+    self.client.send(b2str("setPlotTopLabel("+self.handle+","+label+")"))
+
+  def setBottomLabel(self, label="") :
+    """ Set the plot bottom label """
+    self.client.send(b2str("setPlotBottomLabel("+self.handle+","+label+")"))
+
+  def setLeftLabel(self, label="") :
+    """ Set the plot left label """
+    self.client.send(b2str("setPlotLeftLabel("+self.handle+","+label+")"))
+
+  def setRightLabel(self, label="") :
+    """ Set the plot right label """
+    self.client.send(b2str("setPlotRightLabel("+self.handle+","+label+")"))
+
+  def setTopLabelAuto(self) :
+    """ Set the top label to auto generated. """
+    self.client.send(b2str("setPlotTopLabelAuto("+self.handle+")"))
+
+  def setBottomLabelAuto(self) :
+    """ Set the bottom label to auto generated. """
+    self.client.send(b2str("setPlotBottomLabelAuto("+self.handle+")"))
+
+  def setLeftLabelAuto(self) :
+    """ Set the left label to auto generated. """
+    self.client.send(b2str("setPlotLeftLabelAuto("+self.handle+")"))
+
+  def setRightLabelAuto(self) :
+    """ Set the right label to auto generated. """
+    self.client.send(b2str("setPlotRightLabelAuto("+self.handle+")"))
+
 class ExistingPlot(Plot):
   def __init__(self,client,handle):
     ViewItem.__init__(self,client)

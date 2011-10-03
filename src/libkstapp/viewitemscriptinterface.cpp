@@ -172,10 +172,16 @@ QByteArrayList DimensionTabSI::commands() {
 }
 
 QString DimensionTabSI::doCommand(QString x) {
-    if(x=="fixAspectRatioIsChecked()") {
+
+    QString command = x.left(x.indexOf('('));
+    double parameter = x.remove(command).remove('(').remove(')').toDouble();
+
+    if(command=="fixAspectRatioIsChecked") {
         return item->lockAspectRatio()?"true":"false";
     }
-    if(!x.startsWith("setGeo")&&!x.startsWith("setPos")&&!x.contains("checkFixAspect")&&!x.contains("setRotation")) {
+
+    if(!command.startsWith("setGeo")&&!command.startsWith("setPos")&&
+       !command.contains("checkFixAspect")&&!command.contains("setRotation")) {
         return "";
     }
     qreal parentWidth;
@@ -200,12 +206,16 @@ QString DimensionTabSI::doCommand(QString x) {
     }
 
     qreal aspectRatio;
-    aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
+    if (item->rect().width()==0) {
+      aspectRatio = 1.0;
+    } else {
+      aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
+    }
 
-    qreal relativeWidth = x.startsWith("setGeoX(") ? x.remove("setGeoX(").remove(")").toDouble() :item->relativeWidth();
-    qreal relativeHeight = x.startsWith("setGeoY(") ? x.remove("setGeoY(").remove(")").toDouble() :item->relativeHeight();
-    bool fixedAspect = x.startsWith("checkFixAspectRatio()") ? true :item->lockAspectRatio();
-    fixedAspect = x.startsWith("uncheckFixAspectRatio()") ? false :item->lockAspectRatio();
+    qreal relativeWidth = (command == "setGeoX") ? parameter :item->relativeWidth();
+    qreal relativeHeight = (command == "setGeoY") ? parameter :item->relativeHeight();
+    bool fixedAspect = (command == "checkFixAspectRatio") ? true :item->lockAspectRatio();
+    fixedAspect = (command == "uncheckFixAspectRatio") ? false :item->lockAspectRatio();
 
     qreal width = relativeWidth * parentWidth;
     qreal height;
@@ -217,12 +227,14 @@ QString DimensionTabSI::doCommand(QString x) {
         item->setLockAspectRatio(false);
     }
 
-    item->setPos(parentX + (x.startsWith("setPosX(")?x.remove("setPosX(").remove(")").toDouble():item->relativeCenter().x())*parentWidth,
-                 parentY + (x.startsWith("setPosY(")?x.remove("setPosY(").remove(")").toDouble():item->relativeCenter().y())*parentHeight);
+    double x0 = parentX + ((command == "setPosX")? parameter : item->relativeCenter().x())*parentWidth;
+    double y0 = parentY + ((command == "setPosY")? parameter : item->relativeCenter().y())*parentHeight;
+
+    item->setPos(x0,y0);
 
     item->setViewRect(-width/2, -height/2, width, height);
 
-    qreal rotation = x.startsWith("setRotation(") ? x.remove("setRotation(").remove(")").toDouble() :item->rotationAngle();
+    qreal rotation = (command == "setRotation") ? parameter :item->rotationAngle();
 
     QTransform transform;
     transform.rotate(rotation);

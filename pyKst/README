@@ -23,3 +23,15 @@ Documentation is available for now at hen.astro.utoronto.ca/pyKst or inside the
 svn tree at pyKst/doc.
 
 Josh
+
+
+
+----------------
+
+Adding a scripting command:
+
+i) add to pykst.py
+
+ii) add to scriptserver.h
+iii) define in scriptserver.cpp
+
