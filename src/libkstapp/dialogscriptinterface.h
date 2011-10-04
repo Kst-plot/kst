@@ -66,8 +66,8 @@ class DialogLauncherSI {
     DialogSI* showEventMonitorDialog(ObjectPtr objectPtr = 0);
 
     //view items [grr...]
-    DialogSI* showViewItemDialog(ViewItem* x);
-    DialogSI* newArrow();
+    ScriptInterface* showViewItemDialog(ViewItem* x);
+    ScriptInterface* newArrow();
     ScriptInterface* newBox();
     ScriptInterface* newButton();
     ScriptInterface* newLineEdit();
@@ -77,7 +77,7 @@ class DialogLauncherSI {
     ScriptInterface* newLine();
     ScriptInterface* newPicture(QByteArray file);
     ScriptInterface* newPlot();
-    DialogSI* newSharedAxisBox();
+    ScriptInterface* newSharedAxisBox();
     ScriptInterface* newSvgItem(QByteArray path);
 
     //plugins

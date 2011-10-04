@@ -1291,84 +1291,84 @@ class Plot(ViewItem) :
     self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
-  def setXRange(self, x0 = 0.0, x1 = 10.0) :
+  def setXRange(self,x0 = 0.0, x1 = 10.0) :
     """ Set X zoom range from x0 to x1 """
-    self.client.send(b2str("setPlotXRange("+self.handle+","+b2str(x0)+","+b2str(x1)+")"))
+    self.client.send_si(self.handle, b2str("setXRange("+b2str(x0)+","+b2str(x1)+")"))
 
   def setYRange(self, y0 = 0.0, y1 = 10.0) :
     """ Set Y zoom range from y0 to y1 """
-    self.client.send(b2str("setPlotYRange("+self.handle+","+b2str(y0)+","+b2str(y1)+")"))
+    self.client.send_si(self.handle, b2str("setYRange("+b2str(y0)+","+b2str(y1)+")"))
 
   def setXAuto(self) :
     """ Set X zoom range to autoscale """
-    self.client.send(b2str("setPlotXAuto("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setXAuto()"))
 
   def setYAuto(self) :
     """ Set Y zoom range to autoscale """
-    self.client.send(b2str("setPlotYAuto("+self.handle+")"))
+    self.client.send_si(self.handle, b2str("setPlotYAuto()"))
 
   def setXAutoBorder(self) :
     """ Set X zoom range to autoscale with a small border """
-    self.client.send(b2str("setPlotXAutoBorder("+self.handle+")"))
+    self.client.send_si(self.handle, b2str("setPlotXAutoBorder()"))
 
   def setYAutoBorder(self) :
     """ Set Y zoom range to autoscale with a small border """
-    self.client.send(b2str("setPlotYAutoBorder("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setYAutoBorder()"))
 
   def setXNoSpike(self) :
     """ Set X zoom range to spike insensitive autoscale """
-    self.client.send(b2str("setPlotXNoSpike("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setXNoSpike()"))
 
   def setYNoSpike(self) :
     """ Set Y zoom range to spike insensitive autoscale """
-    self.client.send(b2str("setPlotYNoSpike("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setYNoSpike()"))
 
   def setXAC(self, r=0.2) :
     """ Set X zoom range to fixed range, centered around the mean.  Similar to AC coupling on an oscilloscope. """
-    self.client.send(b2str("setPlotXAC("+self.handle+","+b2str(r)+")"))
+    self.client.send_si(self.handle,b2str("setXAC("+b2str(r)+")"))
 
   def setYAC(self, r=0.2) :
     """ Set Y zoom range to fixed range, centered around the mean.  Similar to AC coupling on an oscilloscope. """
-    self.client.send(b2str("setPlotYAC("+self.handle+","+b2str(r)+")"))
+    self.client.send_si(self.handle,b2str("setYAC("+b2str(r)+")"))
 
   def setGlobalFont(self, family="", bold="false", italic="false") :
     """ Set the global plot font.  By default, the axis labels all use this, unless they have been set to use their own.
         If the parameter 'family' is empty, the font family will be unchanged.
         The font will be bold if parameter 'bold' is set to 'bold' or 'true'.
         The font will be italic if parameter 'italic' is set to 'italic' or 'true'."""
-    self.client.send(b2str("setPlotGlobalFont("+self.handle+","+family+","+bold+","+italic+")"))
+    self.client.send_si(self.handle,b2str("setGlobalFont("+family+","+bold+","+italic+")"))
 
   def setTopLabel(self, label="") :
     """ Set the plot top label """
-    self.client.send(b2str("setPlotTopLabel("+self.handle+","+label+")"))
+    self.client.send_si(self.handle,b2str("setTopLabel("+label+")"))
 
   def setBottomLabel(self, label="") :
     """ Set the plot bottom label """
-    self.client.send(b2str("setPlotBottomLabel("+self.handle+","+label+")"))
+    self.client.send_si(self.handle,b2str("setBottomLabel("+label+")"))
 
   def setLeftLabel(self, label="") :
     """ Set the plot left label """
-    self.client.send(b2str("setPlotLeftLabel("+self.handle+","+label+")"))
+    self.client.send_si(self.handle,b2str("setLeftLabel("+label+")"))
 
   def setRightLabel(self, label="") :
     """ Set the plot right label """
-    self.client.send(b2str("setPlotRightLabel("+self.handle+","+label+")"))
+    self.client.send_si(self.handle,b2str("setRightLabel("+label+")"))
 
   def setTopLabelAuto(self) :
     """ Set the top label to auto generated. """
-    self.client.send(b2str("setPlotTopLabelAuto("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setTopLabelAuto()"))
 
   def setBottomLabelAuto(self) :
     """ Set the bottom label to auto generated. """
-    self.client.send(b2str("setPlotBottomLabelAuto("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setBottomLabelAuto()"))
 
   def setLeftLabelAuto(self) :
     """ Set the left label to auto generated. """
-    self.client.send(b2str("setPlotLeftLabelAuto("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setLeftLabelAuto()"))
 
   def setRightLabelAuto(self) :
     """ Set the right label to auto generated. """
-    self.client.send(b2str("setPlotRightLabelAuto("+self.handle+")"))
+    self.client.send_si(self.handle,b2str("setRightLabelAuto()"))
 
 class ExistingPlot(Plot):
   def __init__(self,client,handle):

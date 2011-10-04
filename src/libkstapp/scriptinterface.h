@@ -13,6 +13,10 @@
 #ifndef SCRIPTINTERFACE_H
 #define SCRIPTINTERFACE_H
 
+#ifndef CALL_MEMBER_FN
+#define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
+#endif
+
 #include <QByteArray>
 #include <QString>
 #include <QList>

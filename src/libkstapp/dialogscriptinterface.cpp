@@ -98,24 +98,24 @@ DialogLauncherSI::DialogLauncherSI() {
 DialogLauncherSI::~DialogLauncherSI() {
 }
 
-DialogSI* DialogLauncherSI::showViewItemDialog(ViewItem* x) {
+ScriptInterface* DialogLauncherSI::showViewItemDialog(ViewItem* x) {
     ViewItemDialog* dialog=0;
     if(qobject_cast<PlotItem*>(x)) {
-        dialog=new PlotItemDialog(qobject_cast<PlotItem*>(x),kstApp->mainWindow());
+      return new PlotSI(qobject_cast<PlotItem*>(x));
     } else if(qobject_cast<ArrowItem*>(x)) {
-        dialog=new ArrowItemDialog(qobject_cast<ArrowItem*>(x),kstApp->mainWindow());
+      dialog=new ArrowItemDialog(qobject_cast<ArrowItem*>(x),kstApp->mainWindow());
     } else if(qobject_cast<LabelItem*>(x)) {
-        dialog=new LabelItemDialog(qobject_cast<LabelItem*>(x),kstApp->mainWindow());
+      return new LabelSI(qobject_cast<LabelItem*>(x));
     } else if(qobject_cast<LegendItem*>(x)) {
-        dialog=new LegendItemDialog(qobject_cast<LegendItem*>(x),kstApp->mainWindow());
+      dialog=new LegendItemDialog(qobject_cast<LegendItem*>(x),kstApp->mainWindow());
     } else {
-        dialog=new ViewItemDialog(x,kstApp->mainWindow());
+      return new ViewItemSI(qobject_cast<ViewItem*>(x));
     }
     dialog->hide();
     return new DialogSI(dialog,x);
 }
 
-DialogSI* DialogLauncherSI::newArrow() {
+ScriptInterface* DialogLauncherSI::newArrow() {
     ArrowItem* bi=new ArrowItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     return showViewItemDialog(bi);
@@ -180,7 +180,7 @@ ScriptInterface* DialogLauncherSI::newPlot() {
     //return showViewItemDialog(bi);
 }
 
-DialogSI* DialogLauncherSI::newSharedAxisBox() {
+ScriptInterface* DialogLauncherSI::newSharedAxisBox() {
     SharedAxisBoxItem* bi=new SharedAxisBoxItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     return showViewItemDialog(bi);
