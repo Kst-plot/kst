@@ -69,6 +69,7 @@ SOURCES += \
     psd.cpp \
     psdcalculator.cpp \
     psdfactory.cpp \
+    plottickcalculator.cpp \
     relation.cpp \
     relationfactory.cpp
 
@@ -109,6 +110,7 @@ HEADERS += \
     plotdefines.h \
     psd.h \
     psdcalculator.h \
+    plottickcalculator.h \
     relation.h \
     relationfactory.h
 
