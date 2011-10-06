@@ -1037,7 +1037,7 @@ QByteArray ScriptServer::endEdit(QByteArray&, QLocalSocket* s,ObjectStore*,const
     }
 
     QByteArray x=_interface->getHandle();
-    UpdateManager::self()->doUpdates(1);
+    _interface->endEditUpdate();
     delete _interface;
     _interface=0;
     return handleResponse(x,s,ifMode,ifEqual,_if,var);

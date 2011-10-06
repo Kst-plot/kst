@@ -15,6 +15,7 @@
 #include <QSizeF>
 #include <QList>
 #include "scriptinterface.h"
+#include "viewitem.h"
 
 #ifndef VIEWITEMSCRIPTINTERFACE_H
 #define VIEWITEMSCRIPTINTERFACE_H
@@ -53,15 +54,17 @@ class ViewItemSI : public ScriptInterface
 {
     Q_OBJECT
 public:
-    LayoutTabSI* layout;
-    DimensionTabSI* dim;
-    FillTabSI* fill;
-    StrokeTabSI* stroke;
     ViewItemSI(ViewItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
     QByteArray getHandle();
+    void endEditUpdate() {if (dim->item) dim->item->update();}
+  private:
+    LayoutTabSI* layout;
+    DimensionTabSI* dim;
+    FillTabSI* fill;
+    StrokeTabSI* stroke;
 };
 
 }

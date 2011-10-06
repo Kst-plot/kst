@@ -22,6 +22,8 @@
 
 #include "datavector.h"
 #include "generatedvector.h"
+#include "editablematrix.h"
+#include "editablevector.h"
 #include "datamatrix.h"
 #include "generatedmatrix.h"
 
@@ -107,6 +109,8 @@ void PrimitiveModel::createTree() {
         || kst_cast<Matrix>(obj)
         || kst_cast<DataVector>(obj)
         || kst_cast<DataMatrix>(obj)
+        || kst_cast<EditableVector>(obj)
+        || kst_cast<EditableMatrix>(obj)
         || kst_cast<GeneratedVector>(obj)
         || kst_cast<GeneratedMatrix>(obj))
     {

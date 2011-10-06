@@ -48,7 +48,7 @@ public:
     ScriptServer(ObjectStore*obj);
     ~ScriptServer();
     QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
-    void setStore(ObjectStore *obj) { _store = obj;}
+    void setStore(ObjectStore *obj) { _store = obj; vi.clear();}
 public slots:
     void procConnection();
     void readSomething();
@@ -131,14 +131,8 @@ protected:
     QByteArray getPictureList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPicture(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
-    /*************************/
-    /* plot related commands */
-    /*************************/
     QByteArray getPlotList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPlot(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-
-    /*************************/
-
 
     QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);

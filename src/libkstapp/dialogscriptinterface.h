@@ -13,6 +13,7 @@
 #include "objectstore.h"
 #include "editablevector.h"
 #include "scriptinterface.h"
+#include "updatemanager.h"
 #include <QLabel>
 
 #ifndef DIALOGSCRIPTINTERFACE_H
@@ -120,7 +121,7 @@ public:
     void initDataSourceDialogSI();
     bool isValid() { return _valid; }
     QByteArray getHandle();
-
+    void endEditUpdate() { UpdateManager::self()->doUpdates(true); }
 public slots:
     void invalidate();
 public:

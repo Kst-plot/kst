@@ -20,6 +20,7 @@
 
 #include "datamatrix.h"
 #include "generatedmatrix.h"
+#include "editablematrix.h"
 
 #include "datacollection.h"
 
@@ -63,7 +64,7 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientZAtMin, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_gradientZAtMax, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_minX, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_minX, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_minY, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_xStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_yStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
   connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
@@ -703,6 +704,20 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
         _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
       }
     }
+  } else if (EditableMatrixPtr editableMatrix = kst_cast<EditableMatrix>(matrix)) {
+    _matrixTab->setMinX(editableMatrix->minX());
+    _matrixTab->setMinY(editableMatrix->minY());
+    _matrixTab->setStepX(editableMatrix->xStepSize());
+    _matrixTab->setStepY(editableMatrix->yStepSize());
+    _matrixTab->hideDataOptions();
+    _matrixTab->hideGeneratedOptions();
+    if (_editMultipleWidget) {
+      EditableMatrixList objects = _document->objectStore()->getObjects<EditableMatrix>();
+      _editMultipleWidget->clearObjects();
+      foreach(const EditableMatrixPtr &object, objects) {
+        _editMultipleWidget->addObject(object->Name(), object->descriptionTip());
+      }
+    }
   }
 }
 
@@ -946,6 +961,38 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       generatedMatrix->change(nX, nY, minX, minY, stepX, stepY, gradZMin, gradZMax, xDirection);
       generatedMatrix->registerChange();
       generatedMatrix->unlock();
+    }
+  } else if (EditableMatrixPtr editableMatrix = kst_cast<EditableMatrix>(dataObject())) {
+    if (editMode() == EditMultiple) {
+      QStringList objects = _editMultipleWidget->selectedObjects();
+      foreach (const QString &objectName, objects) {
+        EditableMatrixPtr matrix = kst_cast<EditableMatrix>(_document->objectStore()->retrieveObject(objectName));
+        if (matrix) {
+          const double minX = _matrixTab->minXDirty() ? _matrixTab->minX() : matrix->minX();
+          const double minY = _matrixTab->minYDirty() ? _matrixTab->minY() : matrix->minY();
+          const double stepX = _matrixTab->stepXDirty() ? _matrixTab->stepX() : matrix->xStepSize();
+          const double stepY = _matrixTab->stepYDirty() ? _matrixTab->stepY() : matrix->yStepSize();
+          int nX = matrix->xNumSteps();
+          int nY = matrix->yNumSteps();
+
+          matrix->writeLock();
+          matrix->change(nX, nY, minX, minY, stepX, stepY);
+          matrix->registerChange();
+          matrix->unlock();
+        }
+      }
+    } else {
+      const uint nX = editableMatrix->xNumSteps();
+      const uint nY = editableMatrix->yNumSteps();
+      const double minX = _matrixTab->minX();
+      const double minY = _matrixTab->minY();
+      const double stepX = _matrixTab->stepX();
+      const double stepY = _matrixTab->stepY();
+
+      editableMatrix->writeLock();
+      editableMatrix->change(nX, nY, minX, minY, stepX, stepY);
+      editableMatrix->registerChange();
+      editableMatrix->unlock();
     }
   }
   return dataObject();

@@ -20,6 +20,7 @@
 
 #include "scriptinterface.h"
 #include "string_kst.h"
+#include "updatemanager.h"
 typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst {
@@ -34,6 +35,7 @@ public:
     QString doCommand(QString);
     bool isValid();
     QByteArray getHandle();
+    void endEditUpdate() { UpdateManager::self()->doUpdates(true); }
 };
 
 }

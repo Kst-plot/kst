@@ -191,6 +191,7 @@ class Client:
             break
           elif isinstance(arg,Matrix):
             ColorImage(self,arg.handle,0,0,0,0,0,True,0,False,False if not isinstance(plot,Plot) else plot.handle,True if not isinstance(plot,Plot) else False)
+            plot=ExistingPlot.getList(self)[-1]   #i.e., last
             s=-1
             break
           elif isinstance(arg,ndarray):
@@ -554,7 +555,23 @@ class Matrix(NamedObject) :
   def getNumPyArray(self) :
     """ Returns a numPy array of the matrix. """
     return self.client.getArray2D(self.handle)
-    
+
+  def setXMin(self,x0=0) :
+    """ set the left edge of the map defined by the matrix """
+    self.client.send_si(self.handle, b2str("setXMinimum("+b2str(x0)+")"))
+
+  def setYMin(self,y0=0) :
+    """ set the bottom edge of the map defined by the matrix """
+    self.client.send_si(self.handle, b2str("setYMinimum("+b2str(y0)+")"))
+
+  def setXStep(self,dx=0) :
+    """ set the x step size of the map defined by the matrix """
+    self.client.send_si(self.handle, b2str("setXStepSize("+b2str(dx)+")"))
+
+  def setYStep(self,dy=0) :
+    """ set the y step size of the map defined by the matrix """
+    self.client.send_si(self.handle, b2str("setYStepSize("+b2str(dy)+")"))
+
 class DataMatrix(Matrix) :
   """ This class represents a matrix you would create via "Create>Matrix" from the menubar inside kst.
   
@@ -1357,7 +1374,6 @@ class Plot(ViewItem) :
   def setTopLabelAuto(self) :
     """ Set the top label to auto generated. """
     self.client.send_si(self.handle,b2str("setTopLabelAuto()"))
-
   def setBottomLabelAuto(self) :
     """ Set the bottom label to auto generated. """
     self.client.send_si(self.handle,b2str("setBottomLabelAuto()"))

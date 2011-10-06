@@ -18,6 +18,7 @@
 #include <QList>
 #include <QObject>
 #include "viewitemscriptinterface.h"
+#include "labelitem.h"
 typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst {
@@ -29,14 +30,16 @@ class LabelSI : public ScriptInterface
 {
     Q_OBJECT
 public:
-    LayoutTabSI* layout;
-    DimensionTabSI* dim;
-    LabelTabSI*lab;
     LabelSI(LabelItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
     QByteArray getHandle();
+    void endEditUpdate() {if (dim->item) dim->item->update();}
+private:
+    LayoutTabSI* layout;
+    DimensionTabSI* dim;
+    LabelTabSI*lab;
 };
 
 

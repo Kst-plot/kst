@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QMap>
 #include "viewitemscriptinterface.h"
+#include "plotitem.h"
 typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst {
@@ -26,6 +27,7 @@ public:
     QString doCommand(QString);
     bool isValid();
     QByteArray getHandle();
+    void endEditUpdate() {if (_item) _item->update();}
 protected:
    QString noSuchFn(QString&) {return ""; }
 
