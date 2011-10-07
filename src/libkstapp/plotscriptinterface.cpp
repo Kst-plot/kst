@@ -30,6 +30,14 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
   _fnMap.insert("setBottomLabelAuto",&PlotSI::setBottomLabelAuto);
   _fnMap.insert("setLeftLabelAuto",&PlotSI::setLeftLabelAuto);
   _fnMap.insert("setRightLabelAuto",&PlotSI::setRightLabelAuto);
+  _fnMap.insert("setLogX",&PlotSI::setLogX);
+  _fnMap.insert("setLogY",&PlotSI::setLogY);
+  _fnMap.insert("normalizeXtoY",&PlotSI::normalizeXtoY);
+  _fnMap.insert("setXAxisReversed",&PlotSI::setXAxisReversed);
+  _fnMap.insert("setYAxisReversed",&PlotSI::setYAxisReversed);
+  _fnMap.insert("setXAxisNotReversed",&PlotSI::setXAxisNotReversed);
+  _fnMap.insert("setYAxisNotReversed",&PlotSI::setYAxisNotReversed);
+
 
 }
 
@@ -200,8 +208,6 @@ QString PlotSI::setXNoSpike(QString &) {
 
 QString PlotSI::setYNoSpike(QString &) {
 
-
-
   if (_item) {
     _item->zoomYNoSpike();
   }
@@ -229,6 +235,64 @@ QString PlotSI::setYAC(QString &command) {
       R = 0.2;
     }
     _item->zoomYMeanCentered(R);
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::normalizeXtoY(QString &) {
+  if (_item) {
+    _item->zoomNormalizeXtoY();
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setLogX(QString &) {
+
+  if (_item) {
+    _item->zoomLogX();
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setLogY(QString &) {
+
+  if (_item) {
+    _item->zoomLogY();
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setXAxisReversed(QString &) {
+  if (_item) {
+    _item->xAxis()->setAxisReversed(true);
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setYAxisReversed(QString &) {
+  if (_item) {
+    _item->yAxis()->setAxisReversed(true);
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setXAxisNotReversed(QString &) {
+  if (_item) {
+    _item->xAxis()->setAxisReversed(false);
+  }
+  return "Done.";
+}
+
+
+QString PlotSI::setYAxisNotReversed(QString &) {
+  if (_item) {
+    _item->yAxis()->setAxisReversed(false);
   }
   return "Done.";
 }

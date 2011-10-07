@@ -52,6 +52,14 @@ private:
     QString setYNoSpike(QString& command);
     QString setXAC(QString& command);
     QString setYAC(QString& command);
+    QString normalizeXtoY(QString& command);
+    QString setLogX(QString& command);
+    QString setLogY(QString& command);
+
+    QString setXAxisReversed(QString& command);
+    QString setYAxisReversed(QString& command);
+    QString setXAxisNotReversed(QString& command);
+    QString setYAxisNotReversed(QString& command);
 
     QString setGlobalFont(QString& command);
 

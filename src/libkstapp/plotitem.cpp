@@ -3269,7 +3269,7 @@ void PlotItem::zoomNormalizeXtoY(bool force) {
 #endif
 
   if (xAxis()->axisLog() || yAxis()->axisLog())
-    return; //apparently we don't want to do anything here according to kst2dplot...
+    return; //FIXME: if both are log, this could be supported
 
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomNormalizeXtoY(this);

@@ -45,9 +45,9 @@ class Client:
     return x
     
   def send_si(self, handle, command):
-    x = self.send(b2str("beginEdit("+handle.toAscii()+")"))
-    x = x + self.send(command)
-    x = x + self.send(b2str("endEdit()"))
+    self.send(b2str("beginEdit("+handle.toAscii()+")"))
+    x = self.send(command)
+    self.send(b2str("endEdit()"))
     return x
 
   def getArray(self,command):
@@ -560,17 +560,33 @@ class Matrix(NamedObject) :
     """ set the left edge of the map defined by the matrix """
     self.client.send_si(self.handle, b2str("setXMinimum("+b2str(x0)+")"))
 
+  def getXMin(self) :
+    """ get the left edge of the map defined by the matrix """
+    return self.client.send_si(self.handle, b2str("getXMinimum()"))
+
   def setYMin(self,y0=0) :
     """ set the bottom edge of the map defined by the matrix """
     self.client.send_si(self.handle, b2str("setYMinimum("+b2str(y0)+")"))
+
+  def getYMin(self) :
+    """ get the bottom edge of the map defined by the matrix """
+    return self.client.send_si(self.handle, b2str("getYMinimum()"))
 
   def setXStep(self,dx=0) :
     """ set the x step size of the map defined by the matrix """
     self.client.send_si(self.handle, b2str("setXStepSize("+b2str(dx)+")"))
 
+  def getXStep(self) :
+    """ get the x step size of the map defined by the matrix """
+    return self.client.send_si(self.handle, b2str("getXStepSize()"))
+
   def setYStep(self,dy=0) :
     """ set the y step size of the map defined by the matrix """
     self.client.send_si(self.handle, b2str("setYStepSize("+b2str(dy)+")"))
+
+  def getYStep(self) :
+    """ get the y step size of the map defined by the matrix """
+    return self.client.send_si(self.handle, b2str("getYStepSize()"))
 
 class DataMatrix(Matrix) :
   """ This class represents a matrix you would create via "Create>Matrix" from the menubar inside kst.
@@ -1385,6 +1401,35 @@ class Plot(ViewItem) :
   def setRightLabelAuto(self) :
     """ Set the right label to auto generated. """
     self.client.send_si(self.handle,b2str("setRightLabelAuto()"))
+
+  def normalizeXtoY(self) :
+    """ Adjust the X zoom range so X and Y have the same scale per unit (square pixels) """
+    self.client.send_si(self.handle, b2str("normalizeXtoY()"))
+
+  def setLogX(self) :
+    """ Set X axis to log mode. """
+    self.client.send_si(self.handle, b2str("setLogX()"))
+
+  def setLogY(self) :
+    """ Set X axis to log mode. """
+    self.client.send_si(self.handle, b2str("setLogY()"))
+
+  def setXAxisReversed(self) :
+    """ set the X axis to decreasing from left to right. """
+    self.client.send_si(self.handle, b2str("setXAxisReversed()"))
+
+  def setYAxisReversed(self) :
+    """ set the Y axis to decreasing from bottom to top. """
+    self.client.send_si(self.handle, b2str("setYAxisReversed()"))
+
+  def setXAxisNotReversed(self) :
+    """ set the X axis to increasing from left to right. """
+    self.client.send_si(self.handle, b2str("setXAxisNotReversed()"))
+
+  def setYAxisNotReversed(self) :
+    """ set the Y axis to increasing from bottom to top. """
+    self.client.send_si(self.handle, b2str("setYAxisNotReversed()"))
+
 
 class ExistingPlot(Plot):
   def __init__(self,client,handle):
