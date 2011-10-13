@@ -557,7 +557,7 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
           double A = img_Lx_pix - b_X;
           double B = 1.0/m_X;
           for (int x = 0; x < iw; ++x) {
-            bool okX = true;
+            bool okZ = true;
             double new_x;
             if (xLog) {
               new_x = pow(xLogBase, (x + img_Lx_pix - b_X) / m_X);
@@ -567,12 +567,12 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
             x_index = (int)((new_x - m_minX)*m_stepXr);
             double z = m->Z(x_index * m_numY + y_index);
 
-            okX = finite(z);
+            okZ = (finite(z));
 
-            if (okX && okY) {
+            if (okZ && okY) {
               scanLine[x] = _pal.rgb((int)(((z - _zLower) * palCountMin1_OverDZ)));
             } else {
-              scanLine[x] = 0;
+              scanLine[x] =  Qt::transparent;
             }
           }
         }

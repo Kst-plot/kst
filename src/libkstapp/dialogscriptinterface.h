@@ -134,6 +134,7 @@ protected:
 
     QByteArray noSuchFn(QByteArray&c,QWidget*) { qDebug()<<"Called noSuchFn() for"<<c; return "No such command"; }
 
+    void waitForValidation();
     //
     // these are commands processed by DialogSI
     //

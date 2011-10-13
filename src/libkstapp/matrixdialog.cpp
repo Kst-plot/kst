@@ -750,15 +750,18 @@ ObjectPtr MatrixDialog::createNewDataObject() {
   }
 }
 
+void MatrixDialog::waitForValidation() {
+  while (_matrixTab->validating) {
+    usleep(10000);
+    QApplication::processEvents();
+  }
+}
 
 ObjectPtr MatrixDialog::createNewDataMatrix() {
 
   // wait for the validation thread to finish
   // should only happen with scripting
-  while (_matrixTab->validating) {
-    usleep(10000);
-    QApplication::processEvents();
-  }
+  waitForValidation();
 
   const DataSourcePtr dataSource = _matrixTab->dataSource();
 

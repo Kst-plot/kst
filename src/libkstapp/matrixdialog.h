@@ -167,6 +167,7 @@ class MatrixDialog : public DataDialog {
     explicit MatrixDialog(ObjectPtr dataObject, QWidget *parent = 0);
     virtual ~MatrixDialog();
     friend class DialogSI;
+    virtual void waitForValidation();
 
   protected:
 //     virtual QString tagString() const;

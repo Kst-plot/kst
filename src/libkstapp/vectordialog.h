@@ -73,6 +73,8 @@ class VectorTab : public DataTab, Ui::VectorTab {
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
 
+    bool validating;
+
   Q_SIGNALS:
     void sourceChanged();
     void fieldChanged();
@@ -102,6 +104,7 @@ class VectorDialog : public DataDialog {
     virtual ~VectorDialog();
 
     void setField(QString field) {_vectorTab->setField(field);}
+    virtual void waitForValidation();
 
   protected:
 //     virtual QString tagString() const;

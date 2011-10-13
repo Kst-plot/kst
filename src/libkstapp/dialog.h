@@ -42,6 +42,11 @@ class Dialog : public QDialog, public Ui::Dialog
 
     void setAlwaysAllowApply(const bool allow);
 
+    // dialogs should implement the following if
+    // they have validation threads that scripting
+    // needs to wait for.
+    virtual void waitForValidation() {return;}
+
   Q_SIGNALS:
     void ok();
     void apply();

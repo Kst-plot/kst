@@ -30,7 +30,7 @@
 namespace Kst {
 
 VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), _mode(DataVector), _store(store), _initField(QString()), _requestID(0) {
+  : DataTab(parent), validating(false), _mode(DataVector), _store(store), _initField(QString()), _requestID(0) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -269,6 +269,9 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   updateUpdateBox();
 
   _dataSource->unlock();
+
+  validating = false;
+
   emit sourceChanged();
 }
 
@@ -282,6 +285,7 @@ void VectorTab::fileNameChanged(const QString &file) {
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
   connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  validating = true;
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 
@@ -555,6 +559,13 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
   }
 
   return dataObject();
+}
+
+void VectorDialog::waitForValidation() {
+  while (_vectorTab->validating) {
+    usleep(10000);
+    QApplication::processEvents();
+  }
 }
 
 }

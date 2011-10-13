@@ -739,12 +739,23 @@ void DialogSI::initDataSourceDialogSI()
 
 }
 
+
+void DialogSI::waitForValidation() {
+  Dialog *d = qobject_cast<Dialog*>(_dialog);
+  if (d) {
+    d->waitForValidation();
+  }
+}
+
+
 QByteArray DialogSI::pressConfigure(QByteArray&y,QWidget*obj){
+    waitForValidation();
     initDataSourceDialogSI();
     return "Done";
 }
 
 QByteArray DialogSI::setPicture(QByteArray&y,QWidget*obj){
+    waitForValidation();
     y.remove(0,y.indexOf("(")+1);
     if(y.contains(')')) {
         y.remove(y.lastIndexOf(')'),1);
@@ -760,6 +771,7 @@ QByteArray DialogSI::setPicture(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setLineEditText(QByteArray&y,QWidget*obj) {
+    waitForValidation();
     if(!qobject_cast<QLineEdit*>(obj)->isEnabled()) {
         return "Option disabled.";
     }
@@ -771,6 +783,7 @@ QByteArray DialogSI::setLineEditText(QByteArray&y,QWidget*obj) {
 }
 
 QByteArray DialogSI::setTextEditText(QByteArray&y,QWidget*obj){
+    waitForValidation();
     if(!qobject_cast<QTextEdit*>(obj)->isEnabled()) {
         return "Option disabled.";
     }
@@ -782,6 +795,7 @@ QByteArray DialogSI::setTextEditText(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setSpinBoxValue(QByteArray&y,QWidget*obj){
+    waitForValidation();
     if(!qobject_cast<QSpinBox*>(obj)->isEnabled()) {
         return "Option disabled.";
     }
@@ -797,6 +811,7 @@ QByteArray DialogSI::setSpinBoxValue(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setDoubleSpinBoxValue(QByteArray&y,QWidget*obj){
+    waitForValidation();
     if(!qobject_cast<QDoubleSpinBox*>(obj)->isEnabled()) {
         return "Option disabled.";
     }
@@ -816,6 +831,7 @@ QByteArray DialogSI::setDoubleSpinBoxValue(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setComboBoxEditValue(QByteArray&y,QWidget*obj){
+    waitForValidation();
     if(!qobject_cast<QComboBox*>(obj)->isEnabled()) {
         return "Option disabled.";
     }
@@ -831,6 +847,7 @@ QByteArray DialogSI::setComboBoxEditValue(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::setComboBoxIndex(QByteArray&y,QWidget*obj){
+    waitForValidation();
     if(!obj->isEnabled()) {
       return "Option disabled.";
     }

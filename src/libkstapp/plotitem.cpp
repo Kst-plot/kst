@@ -935,13 +935,6 @@ void PlotItem::paintPixmap(QPainter *painter) {
     setPlotBordersDirty(false);
   }
 
-#if BENCHMARK
-  QTime bench_time, benchtmp;
-  int b_1 = 0, b_2 = 0, b_3 = 0, b_4 = 0, b_5 = 0;
-  bench_time.start();
-  benchtmp.start();
-#endif
-
   painter->save();
   painter->setPen(Qt::NoPen);
   painter->drawRect(rect());
@@ -956,56 +949,19 @@ void PlotItem::paintPixmap(QPainter *painter) {
 
   painter->setFont(numberLabelDetails()->calculatedFont());
 
-#if BENCHMARK
-    b_1 = benchtmp.elapsed();
-#endif
-#if DEBUG_LABEL_REGION
-  //  qDebug() << "=============> leftLabel:" << leftLabel() << endl;
-#endif
   paintLeftLabel(painter);
-#if DEBUG_LABEL_REGION
-  //  qDebug() << "=============> bottomLabel:" << bottomLabel() << endl;
-#endif
   paintBottomLabel(painter);
-#if DEBUG_LABEL_REGION
-  //  qDebug() << "=============> rightLabel:" << rightLabel() << endl;
-#endif
   paintRightLabel(painter);
-#if BENCHMARK
-    b_2 = benchtmp.elapsed();
-#endif
 
   paintPlot(painter, xTicksUpdated, yTicksUpdated);
-#if BENCHMARK
-    b_3 = benchtmp.elapsed();
-#endif
 
   paintTickLabels(painter);
-#if BENCHMARK
-    b_4 = benchtmp.elapsed();
-#endif
 
   paintPlotMarkers(painter);
 
-#if DEBUG_LABEL_REGION
-  //  qDebug() << "=============> topLabel:" << topLabel() << endl;
-#endif
   paintTopLabel(painter);
 
-#if BENCHMARK
-    b_5 = benchtmp.elapsed();
-#endif
-
   painter->restore();
-#if BENCHMARK
-  int i = bench_time.elapsed();
-  qDebug() << "Painting Plot Pixmap " << (void *)this << ": " << i << "ms";
-  if (b_1 > 0)       qDebug() << "            Setup: " << b_1 << "ms";
-  if (b_2 - b_1 > 0) qDebug() << "           Labels: " << (b_2 - b_1) << "ms";
-  if (b_3 - b_2 > 0) qDebug() << "             Plot: " << (b_3 - b_2) << "ms";
-  if (b_4 - b_3 > 0) qDebug() << "      Tick Labels: " << (b_4 - b_3) << "ms";
-  if (b_5 - b_4 > 0) qDebug() << "          Markers: " << (b_5 - b_4) << "ms";
-#endif
 }
 
 
