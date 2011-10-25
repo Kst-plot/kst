@@ -63,7 +63,7 @@ LabelItem::~LabelItem() {
   delete _labelRc;
 }
 
-void LabelItem::generateLabel() {
+void LabelItem::generateLabel(QPainter *p) {
   double lines = 1.0;
   if (_labelRc) {
     lines = _labelRc->lines;
@@ -77,19 +77,19 @@ void LabelItem::generateLabel() {
     QRectF box = rect();
     QFont font(_font);
     if (_resized) {
-      font.setPointSizeF(view()->viewScaledFontSize(_scale));
-      QFontMetrics fm(font);
-      double fs_adjust = rect().height()/(fm.height()*(lines+1));
+      font.setPointSizeF(view()->scaledFontSize(_scale, *p->device()));
+      Label::RenderContext *tmpRc = new Label::RenderContext(font, p);
+      double fs_adjust = rect().height()/(tmpRc->fontHeight()*(lines+1));
       _scale *= fs_adjust;
+      delete tmpRc;
     }
-    font.setPointSizeF(view()->viewScaledFontSize(_scale));
-    QFontMetrics fm(font);
+    font.setPointSizeF(view()->scaledFontSize(_scale, *p->device()));
+    _labelRc = new Label::RenderContext(font, p);
     _paintTransform.reset();
-    _paintTransform.translate(box.x(), box.y() + fm.ascent());
-    _labelRc = new Label::RenderContext(font, 0);
-    Label::renderLabel(*_labelRc, parsed->chunk);
+    _paintTransform.translate(box.x(), box.y() + _labelRc->fontAscent());
+    Label::renderLabel(*_labelRc, parsed->chunk, true, false);
 
-    _height = fm.height();
+    _height = _labelRc->fontHeight();
 
     // Make sure we have a rect for selection, movement, etc
     if (_resized) {
@@ -131,7 +131,7 @@ void LabelItem::paint(QPainter *painter) {
   // possible optimization: make _dirty actually work to save label
   // regeneration on 'paint'.  Unlikely to be noticeable though.
   //if (_dirty || 1) {
-  generateLabel();
+  generateLabel(painter);
   //}
 
   if (_labelRc) {

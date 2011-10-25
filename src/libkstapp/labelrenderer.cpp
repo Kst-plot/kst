@@ -35,7 +35,7 @@ const double superscript_raise = 0.44;
 
 namespace Label {
 
-void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
+void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
   // FIXME: RTL support
   int oldSize = rc.size = rc.fontSize();
   int oldY = rc.y;
@@ -73,7 +73,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
     if (fi->attributes.color.isValid()) {
       pen.setColor(fi->attributes.color);
     }
-    if (rc.p) {
+    if (draw && rc.p) {
       rc.p->setPen(pen);
     }
 
@@ -87,9 +87,10 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
       continue;
     }
 
-    if (!rc.substitute && (fi->scalar || fi->vector)) {
+    if (/*!rc.substitute*/ 0 && (fi->scalar || fi->vector)) {
+        // FIXME: dead code, I think...
       QString txt = QString('[') + fi->text + ']';
-      if (rc.p) {
+      if (draw && rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }
       if (cache) {
@@ -125,7 +126,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
           }
         }
       }
-      if (rc.p) {
+      if (draw && rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }
       if (cache) {
@@ -153,7 +154,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
           }
         }
       }
-      if (rc.p) {
+      if (draw && rc.p) {
         rc.p->drawText(rc.x, rc.y, txt);
       }
       if (cache) {
@@ -163,7 +164,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
     } else if (fi->tab) {
       const int tabWidth = rc.fontWidth("MMMM");
       const int toSkip = tabWidth - (rc.x - rc.xStart) % tabWidth;
-      if (rc.p && (fi->attributes.underline || fi->attributes.overline)) {
+      if (draw && rc.p && (fi->attributes.underline || fi->attributes.overline)) {
         const int spaceWidth = rc.fontWidth(" ");
         const int spacesToSkip = tabWidth / spaceWidth + (tabWidth % spaceWidth > 0 ? 1 : 0);
         QString txt(QString().fill(' ', spacesToSkip));
@@ -174,7 +175,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
       }
       rc.x += toSkip;
     } else {
-      if (rc.p) {
+      if (draw && rc.p) {
 #ifdef BENCHMARK
         QTime t;
         t.start();
@@ -191,29 +192,21 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache) {
       rc.x += rc.fontWidth(fi->text);
     }
 
-    if (!rc.p) {
-      // No need to compute ascent and descent when really painting
-      rc.ascent = qMax(rc.ascent, -rc.y + rc.fontAscent());
-      if (-rc.y - rc.fontDescent() < 0) {
-        rc.descent = qMax(rc.descent, rc.fontDescent() + rc.y);
-      }
-    }
-
     int xNext = rc.x;
     if (fi->group) {
-      renderLabel(rc, fi->group);
+      renderLabel(rc, fi->group, true, draw);
       xNext = rc.x;
     }
 
     if (fi->up) {
       int xPrev = rc.x;
-      renderLabel(rc, fi->up);
+      renderLabel(rc, fi->up, true, draw);
       xNext = qMax(xNext, rc.x);
       rc.x = xPrev;
     }
 
     if (fi->down) {
-      renderLabel(rc, fi->down);
+      renderLabel(rc, fi->down, true, draw);
       xNext = qMax(xNext, rc.x);
     }
 

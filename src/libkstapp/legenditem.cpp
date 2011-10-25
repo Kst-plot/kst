@@ -90,7 +90,8 @@ void LegendItem::paint(QPainter *painter) {
   QSize legendSize(0, 0);
 
   QFont font(_font);
-  font.setPointSizeF(view()->viewScaledFontSize(_fontScale));
+  qreal painter_scale = painter->device()->logicalDpiX()/view()->logicalDpiX();
+  font.setPointSizeF(view()->scaledFontSize(_fontScale, *painter->device())*painter_scale);
 
   // generate string list of relation names
   QStringList names;
@@ -168,7 +169,8 @@ void LegendItem::paint(QPainter *painter) {
   for (int i = 0; i<count; i++) {
     RelationPtr relation = legendItems.at(i);
     DrawnLegendItem item;
-    item.pixmap = QPixmap(LEGENDITEMMAXWIDTH, LEGENDITEMMAXHEIGHT);
+    item.pixmap = QPixmap(painter_scale*LEGENDITEMMAXWIDTH,
+                          painter_scale*LEGENDITEMMAXHEIGHT);
     item.size = paintRelation(names.at(i), relation, &item.pixmap, font);
 
     if (_verticalDisplay) {
@@ -201,7 +203,7 @@ void LegendItem::paint(QPainter *painter) {
       Label::RenderContext rc(font, &pixmapPainter);
       QFontMetrics fm(font);
       rc.y = fm.ascent();
-      Label::renderLabel(rc, parsed->chunk, false);
+      Label::renderLabel(rc, parsed->chunk, false, true);
 
       int startPoint = qMax(0, (legendSize.width() / 2) - (rc.x / 2));
       int paddingValue = fm.height() / 4;
@@ -248,8 +250,8 @@ QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pix
   int paddingValue = fm.height() / 4;
 
   if (relation->symbolLabelOnTop()) {
-    Label::RenderContext tmprc(font, 0);
-    Label::renderLabel(tmprc, parsed->chunk, false);
+    Label::RenderContext tmprc(font, &pixmapPainter);
+    Label::renderLabel(tmprc, parsed->chunk, false, false);
     label_width = tmprc.x;
     pixmapPainter.translate(paddingValue, fm.height()+paddingValue / 2);
     symbol_size.setWidth(qMax(label_width, symbol_size.width()));
@@ -272,7 +274,7 @@ QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pix
     rc.y = (symbol_size.height()+fm.boundingRect('M').height())/2;
   }
   if (parsed) {
-    Label::renderLabel(rc, parsed->chunk, false);
+    Label::renderLabel(rc, parsed->chunk, false, true);
     delete parsed;
     parsed = 0;
   }

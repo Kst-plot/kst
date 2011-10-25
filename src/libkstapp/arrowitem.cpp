@@ -50,8 +50,8 @@ void ArrowItem::paint(QPainter *painter) {
   start.clear();
   end.clear();
   if (_startArrowHead) {
-    //FIXME: this assumes that pixelSize == pointSize, which it only might...
-    double deltax = view()->viewScaledFontSize(_startArrowScale)*0.5;
+    double deltax = view()->scaledFontSize(_startArrowScale, *painter->device())*0.5; // in points
+    deltax *= painter->device()->logicalDpiX()/72.0; // convert to 'pixels'.
     double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);
@@ -71,8 +71,8 @@ void ArrowItem::paint(QPainter *painter) {
   }
 
   if (_endArrowHead) {
-    //FIXME: this assumes that pixelSize == pointSize, which it only might...
-    double deltax = view()->viewScaledFontSize(_endArrowScale)*0.5;
+    double deltax = view()->scaledFontSize(_endArrowScale, *painter->device())*0.5;
+    deltax *= painter->device()->logicalDpiX()/72.0; // convert points to 'pixels'.
     double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
     double sina = sin(theta);
     double cosa = cos(theta);

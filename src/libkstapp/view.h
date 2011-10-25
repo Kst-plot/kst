@@ -75,7 +75,7 @@ class View : public QGraphicsView
     bool showGrid() const { return _showGrid; }
     void setShowGrid(bool showGrid);
 
-    qreal viewScaledFontSize(qreal pointSize) const;
+    qreal scaledFontSize(qreal pointSize, const QPaintDevice &p) const;
 
     QSizeF gridSpacing() const { return _gridSpacing; }
     void setGridSpacing(const QSizeF &gridSpacing);
@@ -120,6 +120,8 @@ class View : public QGraphicsView
     bool childMaximized() const {return _childMaximized;}
 
     void applyDialogDefaultsFill();
+    void referenceFontsToView() { _referenceFontSizeToView = true;}
+    void referenceFontsToPainter() { _referenceFontSizeToView = false;}
 
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
@@ -176,6 +178,7 @@ class View : public QGraphicsView
     bool _dataMode;
     double _fontRescale;
     bool _childMaximized;
+    bool _referenceFontSizeToView;
 };
 
 }

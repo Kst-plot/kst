@@ -69,6 +69,7 @@ void View::init()
   _fontRescale = 1.0;
   _childMaximized = false;
   _undoStack = new QUndoStack(this);
+  _referenceFontSizeToView = true;
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setScene(new Scene(this));
@@ -558,16 +559,24 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
   }
 }
 
-// returns the size of a font, rescaled by the size of the window
+// returns the size of a font, rescaled by the size of the paint device
 // relative to the reference window size.
-qreal View::viewScaledFontSize(qreal pointSize) const {
-  qreal fontSize = (qreal)(height() + width()) /
-                    (ApplicationSettings::self()->referenceViewHeight() +
-                    ApplicationSettings::self()->referenceViewWidth()) *
-                   pointSize * _fontRescale;
+qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
+  qreal fontSize;
 
+  if (!_printing) {
+      fontSize = (qreal)(height() + width()) /
+              (ApplicationSettings::self()->referenceViewHeight() +
+               ApplicationSettings::self()->referenceViewWidth()) *
+              pointSize * _fontRescale;
+  } else {
+      fontSize = (qreal)(p.heightMM() + p.widthMM()) * 0.1 /
+              (ApplicationSettings::self()->referenceViewHeightCM() +
+               ApplicationSettings::self()->referenceViewWidthCM()) *
+              pointSize * _fontRescale;
+  }
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
-    fontSize = ApplicationSettings::self()->minimumFontSize();
+      fontSize = ApplicationSettings::self()->minimumFontSize();
   }
 
   if (fontSize < 0)
@@ -575,13 +584,15 @@ qreal View::viewScaledFontSize(qreal pointSize) const {
 
 #ifdef Q_OS_WIN
   // On Windows more and more memory gets allocated when fontsize
-  // is to detailed, somewhere some strange caching happens.
+  // is too detailed, somewhere some strange caching happens.
   const double fontPrecision = 4;
   fontSize = floor(fontSize * fontPrecision + 0.5) / fontPrecision;
 #endif
 
   return fontSize;
 }
+
+
 
 // Set the font sizes of all plots in the view to a default size, scaled
 // by the default global font scale, and the application minimum font scale.

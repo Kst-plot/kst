@@ -947,7 +947,7 @@ void PlotItem::paintPixmap(QPainter *painter) {
     resetScaleAxisLabels();
   }
 
-  painter->setFont(numberLabelDetails()->calculatedFont());
+  painter->setFont(numberLabelDetails()->calculatedFont(*painter->device()));
 
   paintLeftLabel(painter);
   paintBottomLabel(painter);
@@ -2147,7 +2147,7 @@ QRectF PlotItem::rightLabelRect() const {
 }
 
 
-void PlotItem::generateLeftLabel() {
+void PlotItem::generateLeftLabel(QPainter *p) {
   if (!_leftLabel.dirty) {
     return;
   }
@@ -2161,10 +2161,9 @@ void PlotItem::generateLeftLabel() {
       delete _leftLabel.rc;
     }
 
-    Label::RenderContext *rc = new Label::RenderContext(leftLabelDetails()->calculatedFont(), 0);
-    QFontMetrics fm(leftLabelDetails()->calculatedFont());
-    rc->y = fm.ascent();
-    Label::renderLabel(*rc, parsed->chunk);
+    Label::RenderContext *rc = new Label::RenderContext(leftLabelDetails()->calculatedFont(*p->device()), p);
+    rc->y = rc->fontAscent();
+    Label::renderLabel(*rc, parsed->chunk, true, false);
 
     QTransform t;
     t.translate(rect().left(),plotRect().center().y() + rc->x/2);
@@ -2186,7 +2185,7 @@ void PlotItem::paintLeftLabel(QPainter *painter) {
   if (!_leftLabelDetails->isVisible() || leftLabel().isEmpty())
     return;
 
-  generateLeftLabel();
+  generateLeftLabel(painter);
 
   if (_leftLabel.valid) {
     painter->save();
@@ -2206,7 +2205,7 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
     t.rotate(90.0);
     painter->rotate(-90.0);
 
-    painter->setFont(leftLabelDetails()->calculatedFont());
+    painter->setFont(leftLabelDetails()->calculatedFont(*painter->device()));
     QRectF leftLabelBound = painter->boundingRect(t.mapRect(leftLabelRect()),
         Qt::AlignCenter, leftLabel());
     painter->restore();
@@ -2221,7 +2220,7 @@ void PlotItem::calculateLeftLabelMargin(QPainter *painter) {
 }
 
 
-void PlotItem::generateBottomLabel() {
+void PlotItem::generateBottomLabel(QPainter *p) {
   if (!_bottomLabel.dirty) {
     return;
   }
@@ -2236,10 +2235,9 @@ void PlotItem::generateBottomLabel() {
       delete _bottomLabel.rc;
     }
 
-    Label::RenderContext *rc = new Label::RenderContext(bottomLabelDetails()->calculatedFont(), 0);
-    QFontMetrics fm(bottomLabelDetails()->calculatedFont());
-    rc->y = fm.ascent();
-    Label::renderLabel(*rc, parsed->chunk);
+    Label::RenderContext *rc = new Label::RenderContext(bottomLabelDetails()->calculatedFont(*p->device()), p);
+    rc->y = rc->fontAscent();
+    Label::renderLabel(*rc, parsed->chunk, true, false);
 
     QTransform t;
     t.translate(plotRect().center().x() - rc->x / 2, plotAxisRect().bottom());
@@ -2260,7 +2258,7 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
   if (!_bottomLabelDetails->isVisible() || bottomLabel().isEmpty())
     return;
 
-  generateBottomLabel();
+  generateBottomLabel(painter);
 
   if (_bottomLabel.valid) {
     painter->save();
@@ -2292,7 +2290,7 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
   } else {
     painter->save();
 
-    painter->setFont(bottomLabelDetails()->calculatedFont());
+    painter->setFont(bottomLabelDetails()->calculatedFont(*painter->device()));
 
     QRectF bottomLabelBound = painter->boundingRect(bottomLabelRect(),
         Qt::AlignCenter, bottomLabel());
@@ -2308,7 +2306,7 @@ void PlotItem::calculateBottomLabelMargin(QPainter *painter) {
 }
 
 
-void PlotItem::generateRightLabel() {
+void PlotItem::generateRightLabel(QPainter *p) {
   if (!_rightLabel.dirty) {
     return;
   }
@@ -2322,10 +2320,9 @@ void PlotItem::generateRightLabel() {
       delete _rightLabel.parsed;
     }
 
-    Label::RenderContext *rc = new Label::RenderContext(rightLabelDetails()->calculatedFont(), 0);
-    QFontMetrics fm(rightLabelDetails()->calculatedFont());
-    rc->y = fm.ascent();
-    Label::renderLabel(*rc, parsed->chunk);
+    Label::RenderContext *rc = new Label::RenderContext(rightLabelDetails()->calculatedFont(*p->device()), p);
+    rc->y = rc->fontAscent();
+    Label::renderLabel(*rc, parsed->chunk, true, false);
 
     QTransform t;
     t.translate(rect().right(), plotRect().center().y() - rc->x/2);
@@ -2348,7 +2345,7 @@ void PlotItem::paintRightLabel(QPainter *painter) {
   if (!_rightLabelDetails->isVisible() || rightLabel().isEmpty())
     return;
 
-  generateRightLabel();
+  generateRightLabel(painter);
 
   if (_rightLabel.valid) {
     painter->save();
@@ -2386,7 +2383,7 @@ void PlotItem::calculateRightLabelMargin(QPainter *painter) {
     t.rotate(-90.0);
     painter->rotate(90.0);
 
-    painter->setFont(rightLabelDetails()->calculatedFont());
+    painter->setFont(rightLabelDetails()->calculatedFont(*painter->device()));
 
     QRectF rightLabelBound = painter->boundingRect(t.mapRect(rightLabelRect()),
         Qt::AlignCenter, rightLabel());
@@ -2401,7 +2398,7 @@ void PlotItem::calculateRightLabelMargin(QPainter *painter) {
 }
 
 
-void PlotItem::generateTopLabel() {
+void PlotItem::generateTopLabel(QPainter *p) {
   if (!_topLabel.dirty) {
     return;
   }
@@ -2415,10 +2412,9 @@ void PlotItem::generateTopLabel() {
       delete _topLabel.rc;
     }
 
-    Label::RenderContext *rc = new Label::RenderContext(topLabelDetails()->calculatedFont(), 0);
-    QFontMetrics fm(topLabelDetails()->calculatedFont());
-    rc->y = fm.ascent();
-    Label::renderLabel(*rc, parsed->chunk);
+    Label::RenderContext *rc = new Label::RenderContext(topLabelDetails()->calculatedFont(*p->device()), p);
+    rc->y = rc->fontAscent();
+    Label::renderLabel(*rc, parsed->chunk, true, false);
 
     QTransform t;
     if (_topLabelDetails->isVisible()) {
@@ -2442,7 +2438,7 @@ void PlotItem::paintTopLabel(QPainter *painter) {
   if (topLabel().isEmpty())
     return;
 
-  generateTopLabel();
+  generateTopLabel(painter);
   if (_topLabel.valid) {
     painter->save();
     painter->setTransform(_topLabel.transform, true);
@@ -2472,7 +2468,7 @@ void PlotItem::calculateTopLabelMargin(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(topLabelDetails()->calculatedFont());
+  painter->setFont(topLabelDetails()->calculatedFont(*painter->device()));
 
   QRectF topLabelBound = painter->boundingRect(topLabelRect(),
       Qt::AlignCenter, topLabel());
@@ -2531,7 +2527,7 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(numberLabelDetails()->calculatedFont());
+  painter->setFont(numberLabelDetails()->calculatedFont(*painter->device()));
 
 
   int flags = Qt::TextSingleLine | Qt::AlignCenter;
@@ -2594,7 +2590,7 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 
   painter->save();
 
-  painter->setFont(numberLabelDetails()->calculatedFont());
+  painter->setFont(numberLabelDetails()->calculatedFont(*painter->device()));
 
   _calculatedAxisMarginHLead = painter->fontMetrics().boundingRect('[').height()/2;
 
@@ -3537,14 +3533,14 @@ void PlotLabel::setDetails(const QString &label, bool is_auto,
 }
 
 
-QFont PlotLabel::calculatedFont() {
+QFont PlotLabel::calculatedFont(const QPaintDevice &p) {
   QFont tempFont;
   if (fontUseGlobal()) {
     tempFont = _plotItem->globalFont();
-    tempFont.setPointSizeF(_plotItem->view()->viewScaledFontSize(_plotItem->globalFontScale()));
+    tempFont.setPointSizeF(_plotItem->view()->scaledFontSize(_plotItem->globalFontScale(),p));
   } else {
     tempFont = font();
-    tempFont.setPointSizeF(_plotItem->view()->viewScaledFontSize(fontScale()));
+    tempFont.setPointSizeF(_plotItem->view()->scaledFontSize(fontScale(),p));
   }
   return tempFont;
 }

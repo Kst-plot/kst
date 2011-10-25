@@ -490,7 +490,7 @@ void MainWindow::exportGraphicsFile(
       view->setPrinting(true);
 
       generator.setFileName(file);
-      generator.setResolution(100);
+      generator.setResolution(300);
       generator.setSize(view->size());
       generator.setViewBox(view->rect());
 
@@ -644,6 +644,7 @@ void MainWindow::printToPrinter(QPrinter *printer) {
 
 void MainWindow::printFromCommandLine(const QString &printFileName) {
   QPrinter printer(QPrinter::ScreenResolution);
+  printer.setResolution(300);
   printer.setOutputFileName(printFileName);
   setPrinterDefaults(&printer);
 
@@ -685,6 +686,8 @@ void MainWindow::print() {
   // FIXME: come up with a better definition of line width!
   QPrinter printer(QPrinter::ScreenResolution);
   //QPrinter printer(QPrinter::HighResolution);
+  printer.setResolution(300);
+  qDebug() << "resolution: " << printer.resolution();
 
   setPrinterDefaults(&printer);
 

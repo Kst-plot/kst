@@ -93,7 +93,7 @@ class PlotLabel : public QObject {
     QColor fontColor() const;
     void setFontColor(const QColor &color);
 
-    QFont calculatedFont();
+    QFont calculatedFont(const QPaintDevice &p);
 
     void setDetails(const QString &label, bool is_auto, const bool use_global, const QFont &font, const qreal scale, const QColor &color);
     void saveInPlot(QXmlStreamWriter &xml, QString labelId);
@@ -409,10 +409,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void calculateTopLabelMargin(QPainter *painter);
     void calculateMargins();
 
-    void generateLeftLabel();
-    void generateBottomLabel();
-    void generateRightLabel();
-    void generateTopLabel();
+    void generateLeftLabel(QPainter *p);
+    void generateBottomLabel(QPainter *p);
+    void generateRightLabel(QPainter *p);
+    void generateTopLabel(QPainter *p);
 
     void paintLeftLabel(QPainter *painter);
     void paintBottomLabel(QPainter *painter);

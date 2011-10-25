@@ -23,6 +23,7 @@
 #include <qpair.h>
 #include <qstring.h>
 #include <qvariant.h>
+#include <QPrinter>
 
 #include "vector.h"
 #include "scalar.h"
@@ -46,9 +47,7 @@ class RenderContext : public QObject {
   RenderContext(const QFont& font, QPainter *p)
   : QObject(), p(p), _fm(_font) {
     x = y = xMax = xStart = 0;
-    ascent = descent = 0;
     precision = 8;
-    substitute = true;
     setFont(font);
     lines = 0;
   }
@@ -133,22 +132,12 @@ class RenderContext : public QObject {
     }
   }
 
-  inline bool substituteScalars() const {
-    return substitute;
-  }
-
-  inline void setSubstituteScalars(bool on) {
-    substitute = on;
-  }
-
   int x, y; // Coordinates we're rendering at
   int xMax, xStart;
-  int ascent, descent;
   QString fontName;
   int size;
   QPainter *p;
   int precision;
-  bool substitute;
   QList<Kst::Primitive*> _refObjects;
   QPen pen;
   int lines;
@@ -160,12 +149,12 @@ class RenderContext : public QObject {
   private:
     QFont _font;
     QFontMetrics _fm;
-    int _ascent, _descent, _height, _lineSpacing; // caches to avoid performance problem                                        // with QFont*
+    int _ascent, _descent, _height, _lineSpacing; // caches to avoid performance problem with QFont*
     int _fontSize;
 };
 
 struct Chunk;
-void renderLabel(RenderContext& rc, Chunk *fi, bool cache = true);
+void renderLabel(RenderContext& rc, Chunk *fi, bool cache, bool draw);
 void paintLabel(RenderContext& rc, QPainter *p);
 }
 

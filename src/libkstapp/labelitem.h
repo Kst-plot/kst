@@ -68,7 +68,7 @@ class LabelItem : public ViewItem {
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
   private:
-    void generateLabel();
+    void generateLabel(QPainter *p);
 
     Label::RenderContext *_labelRc;
     QTransform _paintTransform;

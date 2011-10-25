@@ -1058,9 +1058,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   qreal h = fabs(rect().width()*sin(theta)) + fabs(rect().height()*cos(theta));
 
   QPixmap pixmap(w+2, h+2);
-  //pixmap.fill(brush().color());
-  // Qt::transparent is maybe too expensive, and when 
-  // not moving a plot it also has no transparent background
+
   if (ApplicationSettings::self()->transparentDrag()) {
     pixmap.fill(Qt::transparent);
   } else {
