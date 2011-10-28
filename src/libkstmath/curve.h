@@ -146,8 +146,8 @@ class KSTMATH_EXPORT Curve: public Relation
     void updatePaintObjects(const CurveRenderContext& context);
 
     // render the legend symbol for this curve
-    virtual QSize legendSymbolSize(const QFont &font);
-    virtual void paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size);
+    virtual QSize legendSymbolSize(QPainter *p);
+    virtual void paintLegendSymbol(QPainter *p, const QSize &size);
     virtual bool symbolLabelOnTop() {return false;}
 
     // see KstRelation::distanceToPoint

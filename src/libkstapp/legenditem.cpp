@@ -29,11 +29,6 @@
 
 namespace Kst {
 
-struct DrawnLegendItem {
-  QPixmap pixmap;
-  QSize size;
-};
-
 
 LegendItem::LegendItem(PlotItem *parentPlot)
   : ViewItem(parentPlot->view()), _plotItem(parentPlot), _auto(true), _verticalDisplay(true) {
@@ -86,12 +81,10 @@ void LegendItem::paint(QPainter *painter) {
   }
 
 
-  QList<DrawnLegendItem> legendPixmaps;
-  QSize legendSize(0, 0);
-
   QFont font(_font);
-  qreal painter_scale = painter->device()->logicalDpiX()/view()->logicalDpiX();
-  font.setPointSizeF(view()->scaledFontSize(_fontScale, *painter->device())*painter_scale);
+  font.setPointSizeF(view()->scaledFontSize(_fontScale, *painter->device()));
+
+  painter->setFont(font);
 
   // generate string list of relation names
   QStringList names;
@@ -166,29 +159,58 @@ void LegendItem::paint(QPainter *painter) {
     }
   }
 
-  for (int i = 0; i<count; i++) {
-    RelationPtr relation = legendItems.at(i);
-    DrawnLegendItem item;
-    item.pixmap = QPixmap(painter_scale*LEGENDITEMMAXWIDTH,
-                          painter_scale*LEGENDITEMMAXHEIGHT);
-    item.size = paintRelation(names.at(i), relation, &item.pixmap, font);
+  QSize legendSize(0, 0);
+  QSize titleSize(0,0);
+  for (int draw = 0; draw<=1; draw++){ // do twice: once to get sizes; second to draw it.
 
-    if (_verticalDisplay) {
-      legendSize.setWidth(qMax(legendSize.width(), item.size.width()));
-      legendSize.setHeight(legendSize.height() + item.size.height());
-    } else {
-      legendSize.setHeight(qMax(legendSize.height(), item.size.height()));
-      legendSize.setWidth(legendSize.width() + item.size.width());
+    if (draw) {
+      painter->drawRect(rect());
     }
+    int x=rect().x();
+    int y=rect().y();
+    if (!_title.isEmpty()) {
+      int pad = painter->fontMetrics().ascent()/4;
+      Label::Parsed *parsed = Label::parse(_title);
+      Label::RenderContext rc(painter->font(), painter);
+      titleSize.setHeight(painter->fontMetrics().height()+pad);
 
-    legendPixmaps.append(item);
+      rc.y = rect().y() + titleSize.height()-pad;
+      rc.x = qMax(rect().x()+pad, rect().x() + legendSize.width()/2 - titleSize.width()/2);
+      int x0 = rc.x;
+
+      Label::renderLabel(rc, parsed->chunk, false, true);
+
+      titleSize.setWidth(rc.x - x0 + 3*pad);
+      y+= titleSize.height();
+    }
+    legendSize.setWidth(0);
+    legendSize.setHeight(0);
+    for (int i = 0; i<count; i++) {
+      RelationPtr relation = legendItems.at(i);
+      QSize size;
+      painter->save();
+      painter->translate(x,y);
+      size = paintRelation(names.at(i), relation, painter, draw);
+      painter->restore();
+
+      if (_verticalDisplay) {
+        legendSize.setWidth(qMax(legendSize.width(), size.width()));
+        legendSize.setHeight(legendSize.height() + size.height());
+        y+=size.height();
+      } else {
+        legendSize.setHeight(qMax(legendSize.height(), size.height()));
+        legendSize.setWidth(legendSize.width() + size.width());
+        x+=size.width();
+      }
+    }
+    if (!draw) {
+      setViewRect(rect().x(), rect().y(), qMax(legendSize.width(), titleSize.width()), legendSize.height() + titleSize.height());
+    }
   }
 
-  int x = rect().left();
-  int y = rect().top();
 
-  painter->save();
 
+#if 0
   if (!_title.isEmpty()) {
     // Paint the title
     Label::Parsed *parsed = Label::parse(_title);
@@ -232,56 +254,56 @@ void LegendItem::paint(QPainter *painter) {
       x += item.size.width();
     }
   }
-
-  painter->restore();
+#endif
 }
 
 
-QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPixmap *pixmap, const QFont &font) {
+QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPainter *painter, bool draw) {
   Label::Parsed *parsed = Label::parse(name);
   parsed->chunk->attributes.color = _color;
 
-  pixmap->fill(Qt::transparent);
+  int fontHeight = painter->fontMetrics().height();
+  int fontAscent = painter->fontMetrics().ascent();
 
-  QPainter pixmapPainter(pixmap);
-  QFontMetrics fm(font);
-  QSize symbol_size = relation->legendSymbolSize(font);
+  QSize symbol_size = relation->legendSymbolSize(painter);
   int label_width = 0;
-  int paddingValue = fm.height() / 4;
+  int paddingValue = fontHeight / 4;
 
   if (relation->symbolLabelOnTop()) {
-    Label::RenderContext tmprc(font, &pixmapPainter);
+    Label::RenderContext tmprc(painter->font(), painter);
     Label::renderLabel(tmprc, parsed->chunk, false, false);
     label_width = tmprc.x;
-    pixmapPainter.translate(paddingValue, fm.height()+paddingValue / 2);
+    painter->translate(paddingValue, fontHeight+paddingValue / 2);
     symbol_size.setWidth(qMax(label_width, symbol_size.width()));
   } else {
-    pixmapPainter.translate(paddingValue, paddingValue / 2);
+    painter->translate(paddingValue, paddingValue / 2);
   }
 
-  relation->paintLegendSymbol(&pixmapPainter, font, symbol_size);
-
+  if (draw) {
+    relation->paintLegendSymbol(painter, symbol_size);
+  }
 
   if (relation->symbolLabelOnTop()) {
-    pixmapPainter.translate((symbol_size.width()-label_width)/2, fm.ascent() - fm.height());
+    painter->translate((symbol_size.width()-label_width)/2, fontAscent - fontHeight);
   } else {
-    pixmapPainter.translate(symbol_size.width() + paddingValue, 0);
+    painter->translate(symbol_size.width() + paddingValue, 0);
   }
-  Label::RenderContext rc(font, &pixmapPainter);
+  Label::RenderContext rc(painter->font(), painter);
   if (relation->symbolLabelOnTop()) {
     rc.y = 0;
   } else {
-    rc.y = (symbol_size.height()+fm.boundingRect('M').height())/2;
+    rc.y = (symbol_size.height()+painter->fontMetrics().boundingRect('M').height())/2;
   }
   if (parsed) {
-    Label::renderLabel(rc, parsed->chunk, false, true);
+    Label::renderLabel(rc, parsed->chunk, false, draw);
+
     delete parsed;
     parsed = 0;
   }
 
   double h = symbol_size.height() + paddingValue;
   if (relation->symbolLabelOnTop()) {
-    h += fm.height();
+    h += fontHeight;
   }
   if (relation->symbolLabelOnTop()) {
     return QSize(qMax(rc.x,(symbol_size.width())) + (paddingValue * 2), h);

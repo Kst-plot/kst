@@ -1565,13 +1565,12 @@ double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 }
 
 
-QSize Curve::legendSymbolSize(const QFont &font) {
-  QFontMetrics fm(font);
-  return QSize(fm.height()*3.5, fm.height());
+QSize Curve::legendSymbolSize(QPainter *p) {
+  return QSize(p->fontMetrics().height()*3.5, p->fontMetrics().height());
 }
 
 
-void Curve::paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size) {
+void Curve::paintLegendSymbol(QPainter *p, const QSize &size) {
   QRect bound(QPoint(0,0),size);
 
   int width;

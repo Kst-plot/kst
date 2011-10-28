@@ -130,8 +130,8 @@ class KSTMATH_EXPORT Relation : public Object {
     virtual void updatePaintObjects(const CurveRenderContext& context) = 0;
 
     // render the legend symbol for this curve
-    virtual QSize legendSymbolSize(const QFont &font) = 0;
-    virtual void paintLegendSymbol(QPainter *p, const QFont &font, const QSize &size) = 0;
+    virtual QSize legendSymbolSize(QPainter *p) = 0;
+    virtual void paintLegendSymbol(QPainter *p, const QSize &size) = 0;
     virtual bool symbolLabelOnTop() = 0;
 
     //virtual SharedPtr<Relation> makeDuplicate(QMap< SharedPtr<Relation>, SharedPtr<Relation> > &duplicatedRelations) = 0;
