@@ -507,7 +507,7 @@ void MainWindow::exportGraphicsFile(
       QPrinter printer(QPrinter::ScreenResolution);
       printer.setOutputFormat(QPrinter::PostScriptFormat);
       printer.setOutputFileName(file);
-      setPrinterDefaults(&printer);
+      printer.setOrientation(QPrinter::Portrait);
 
       printer.setPrintRange(QPrinter::PageRange);
       printer.setFromTo(i_view+1, i_view+1);
@@ -519,7 +519,8 @@ void MainWindow::exportGraphicsFile(
       QPrinter printer(QPrinter::ScreenResolution);
       printer.setOutputFormat(QPrinter::PdfFormat);
       printer.setOutputFileName(file);
-      setPrinterDefaults(&printer);
+      //setPrinterDefaults(&printer);
+      printer.setOrientation(QPrinter::Portrait);
 
       printer.setPrintRange(QPrinter::PageRange);
       printer.setFromTo(i_view+1, i_view+1);
@@ -682,15 +683,12 @@ void MainWindow::savePrinterDefaults(QPrinter *printer) {
 }
 
 void MainWindow::print() {
-  // line widths in pixels make sense when using ScreenResolution
-  // FIXME: come up with a better definition of line width!
   QPrinter printer(QPrinter::ScreenResolution);
-  //QPrinter printer(QPrinter::HighResolution);
   printer.setResolution(300);
-  qDebug() << "resolution: " << printer.resolution();
 
   setPrinterDefaults(&printer);
 
+  printer.setOutputFileName(_dialogDefaults->value("print/path", "./print.pdf").toString());
   QPointer<QPrintDialog> pd = new QPrintDialog(&printer, this);
 #if QT_VERSION >= 0x040500
   pd->setOption(QPrintDialog::PrintToFile);
@@ -704,6 +702,7 @@ void MainWindow::print() {
     QApplication::restoreOverrideCursor();
     savePrinterDefaults(&printer);
   }
+  _dialogDefaults->setValue("print/path", printer.outputFileName());
   delete pd;
 }
 
