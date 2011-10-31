@@ -1,0 +1,30 @@
+0) make sure you have the absolute latest kst2 from steve
+# sudo apt-get update
+# sudo apt-get upgrade
+
+It hopefully will update kst2.
+
+1) install dependencies for numpy and scipy
+sudo apt-get install python python-dev libatlas-base-dev gcc gfortran g++
+
+2) Install numpy 1.6.1
+# tar xvfz numpy-1.6.1.tar.gz
+# cd numpy-1.6.1/
+# python setup.py build --fcompiler=gnu95
+# sudo python setup.py install
+
+3) Install scipy-0.9.0 +
+# tar xvfz scipy-0.9.0.tar.gz
+# cd cd scipy-0.9.0
+# sudo python setup.py install
+
+4) copy pykstpp.py and pykst.py into the directory where you will be writing and running your own python scripts.
+(Note: this is totally lame, and will change 'soon'.)
+(Note: you may want to get new versions of these from time to time until I properly fix things)
+
+5) testing it
+vectors.py and matrix.py are two test scripts that you can run to see if everything is working.
+pykstpp.py and pykst.py need to be in the same directory as these scripts if you expect it to work.
+
+
+
