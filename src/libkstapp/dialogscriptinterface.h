@@ -27,6 +27,8 @@ class QLocalServer;
 class QLocalSocket;
 class QComboBox;
 class QGroupBox;
+class QAbstractButton;
+
 typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst{

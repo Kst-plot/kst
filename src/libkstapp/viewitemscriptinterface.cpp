@@ -15,6 +15,8 @@
 #include "lineedititem.h"
 #include "buttonitem.h"
 
+#include <QStringBuilder>
+
 namespace Kst {
 
 QByteArrayList LayoutTabSI::commands() {
@@ -283,7 +285,7 @@ bool ViewItemSI::isValid() {
 }
 
 QByteArray ViewItemSI::getHandle() {
-    return ((QString)("Finished editing "%dim->item->Name())).toAscii();
+    return ("Finished editing "%dim->item->Name()).toLatin1();
 }
 
 }

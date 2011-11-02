@@ -20,6 +20,8 @@
 #include <qobject.h>
 #include <qmutex.h>
 
+#include <QThread>
+
 #include "kst_export.h"
 
 namespace Kst {
@@ -78,6 +80,13 @@ class KSTCORE_EXPORT Debug : public QObject {
     QPointer<QObject> _handler;
     QString _kstRevision;
 };
+
+
+struct Sleep : QThread
+{
+    static void ms(int t) { QThread::msleep(t); }
+};
+
 
 }
 #endif

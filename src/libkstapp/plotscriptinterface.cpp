@@ -1,6 +1,8 @@
 #include "plotscriptinterface.h"
 #include "plotitem.h"
 
+#include <QStringBuilder>
+
 namespace Kst {
 
 PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI), _fill(new FillTabSI), _stroke(new StrokeTabSI) {
@@ -72,7 +74,7 @@ bool PlotSI::isValid() {
 }
 
 QByteArray PlotSI::getHandle() {
-    return ((QString)("Finished editing "%_dim->item->Name())).toAscii();
+    return ("Finished editing " % _dim->item->Name()).toLatin1();
 }
 
 QStringList PlotSI::getArgs(const QString &command) {

@@ -59,6 +59,7 @@
 #include <QLocalSocket>
 #include <iostream>
 #include <QFile>
+#include <QStringBuilder>
 
 namespace Kst {
 

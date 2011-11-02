@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "rangetab.h"
+#include "math_kst.h"
 
-#include <math.h>
 #include <QDebug>
 
 namespace Kst {

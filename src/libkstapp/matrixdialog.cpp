@@ -28,8 +28,9 @@
 #include "objectstore.h"
 #include "datasourcepluginmanager.h"
 #include "dialogdefaults.h"
-#include <QTimer>
+#include "debug.h"
 
+#include <QTimer>
 #include <QDir>
 #include <QThreadPool>
 
@@ -752,7 +753,7 @@ ObjectPtr MatrixDialog::createNewDataObject() {
 
 void MatrixDialog::waitForValidation() {
   while (_matrixTab->validating) {
-    usleep(10000);
+    Sleep::ms(10);
     QApplication::processEvents();
   }
 }

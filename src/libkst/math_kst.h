@@ -26,6 +26,11 @@
 
 #include "kst_export.h"
 
+#ifdef _MSC_VER
+inline double pow(float a, double b) { return pow((double)a, b); }
+inline double pow(int a, qreal b) { return pow((double)a, (double)b); }
+#endif
+
 namespace Kst {
 /*
 ** For systems without NAN, this is a NAN in IEEE double format.

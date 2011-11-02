@@ -12,6 +12,8 @@
 
 #include "stringscriptinterface.h"
 
+#include <QStringBuilder>
+
 namespace Kst {
 
 StringGenSI::StringGenSI(StringPtr it) {
@@ -47,7 +49,7 @@ bool StringGenSI::isValid() {
 }
 
 QByteArray StringGenSI::getHandle() {
-    return ((QString)("Finished editing "%str->Name())).toAscii();
+    return ("Finished editing "%str->Name()).toLatin1();
 }
 
 }

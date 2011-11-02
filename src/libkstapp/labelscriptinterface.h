@@ -23,7 +23,7 @@ typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst {
 
-class LabelTabSI;
+struct LabelTabSI;
 class LabelItem;
 
 class LabelSI : public ScriptInterface

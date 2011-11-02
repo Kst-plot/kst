@@ -13,6 +13,8 @@
 #ifndef PLOTTICKCALCULATOR_H
 #define PLOTTICKCALCULATOR_H
 
+#include "kstmath_export.h"
+
 namespace Kst {
 
 enum MajorTickMode {
@@ -25,8 +27,8 @@ enum MajorTickMode {
 
 enum timeUnits {Hour, Minute, Second};
 
-void computeMajorTickSpacing(double *major_spacing, int *minor_count, MajorTickMode majorTickCount, double range);
-void computeMajorTickSpacing(double *major_spacing, int *minor_count, MajorTickMode majorTickCount, double range, timeUnits time_units);
+KSTMATH_EXPORT void computeMajorTickSpacing(double *major_spacing, int *minor_count, MajorTickMode majorTickCount, double range);
+KSTMATH_EXPORT void computeMajorTickSpacing(double *major_spacing, int *minor_count, MajorTickMode majorTickCount, double range, timeUnits time_units);
 
 }
 

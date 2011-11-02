@@ -23,6 +23,7 @@
 #include "objectstore.h"
 #include "datasourcepluginmanager.h"
 #include "dialogdefaults.h"
+#include "debug.h"
 
 #include <QDir>
 #include <QThreadPool>
@@ -563,7 +564,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
 
 void VectorDialog::waitForValidation() {
   while (_vectorTab->validating) {
-    usleep(10000);
+    Sleep::ms(10);
     QApplication::processEvents();
   }
 }

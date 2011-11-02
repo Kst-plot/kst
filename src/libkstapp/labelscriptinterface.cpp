@@ -13,6 +13,8 @@
 #include "labelscriptinterface.h"
 #include "labelitem.h"
 
+#include <QStringBuilder>
+
 namespace Kst {
 
 struct LabelTabSI {
@@ -82,7 +84,7 @@ bool LabelSI::isValid() {
 }
 
 QByteArray LabelSI::getHandle() {
-    return ((QString)("Finished editing "%dim->item->Name())).toAscii();
+    return ("Finished editing "%dim->item->Name()).toLatin1();
 }
 
 }

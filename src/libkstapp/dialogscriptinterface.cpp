@@ -81,6 +81,9 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QStringBuilder>
+
+
 using namespace std;
 
 #define TEXT(T) (T->property("si").isValid()?T->property("si").toString().toAscii():T->text().toAscii())
@@ -165,7 +168,7 @@ ScriptInterface* DialogLauncherSI::newLine() {
 }
 
 ScriptInterface* DialogLauncherSI::newPicture(QByteArray picf) {
-    PictureItem* bi=new PictureItem(kstApp->mainWindow()->tabWidget()->currentView(),QImage((QString)picf));
+    PictureItem* bi=new PictureItem(kstApp->mainWindow()->tabWidget()->currentView(),QImage(QString::fromLocal8Bit(picf)));
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     bi->setViewRect(0.9,0.9,1.0,1.0,true);
     bi->setVisible(1);
@@ -235,7 +238,7 @@ DialogSI* DialogLauncherSI::showStringDialog(QByteArray &, ObjectPtr objectPtr) 
 
 ScriptInterface* DialogLauncherSI::showStringGenDialog(QByteArray &, ObjectPtr objectPtr,ObjectStore*store) {
     if(!objectPtr) {
-        objectPtr=store->createObject<String>();
+        objectPtr=ObjectPtr(store->createObject<String>());
     }
 
     return new StringGenSI(kst_cast<String>(objectPtr));
@@ -655,16 +658,16 @@ DialogSI::~DialogSI()
 QByteArray DialogSI::getHandle() {
     QByteArray x;
     if(qobject_cast<DataDialog*>(_dialog)&&qobject_cast<DataDialog*>(_dialog)->dataObject()) {
-        return ((QString)("Finished editing "%qobject_cast<DataDialog*>(_dialog)->dataObject()->Name())).toAscii();
+        return ("Finished editing "%qobject_cast<DataDialog*>(_dialog)->dataObject()->Name()).toLatin1();
     } else if(qobject_cast<ViewItemDialog*>(_dialog)&&
               qobject_cast<ViewItemDialog*>(_dialog)->_item) {
-        return ((QString)("Finished editing "%qobject_cast<ViewItemDialog*>(_dialog)->_item->Name())).toAscii();
+        return ("Finished editing "%qobject_cast<ViewItemDialog*>(_dialog)->_item->Name()).toLatin1();
     } else {
         if(qobject_cast<DataDialog*>(_dialog)) {
             ObjectPtr z=qobject_cast<DataDialog*>(_dialog)->createNewDataObject();
             if(z.isPtrValid()) {
                 qobject_cast<DataDialog*>(_dialog)->setDataObject(z);
-                return ((QString)("(created) Finished editing "%z->Name())).toAscii();
+                return ("(created) Finished editing "%z->Name()).toLatin1();
             } else {
                 return "No handle returned.";
             }
