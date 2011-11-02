@@ -44,7 +44,7 @@ class KSTCORE_EXPORT EditableVector : public Vector {
 
   protected:
     long double _sum;
-    KSTCORE_EXPORT EditableVector(ObjectStore *store);
+    EditableVector(ObjectStore *store);
 
     friend class ObjectStore; 
 
