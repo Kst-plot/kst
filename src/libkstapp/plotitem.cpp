@@ -45,12 +45,6 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
-// Zoom Debugging.  0 Off, 1 On.
-#define DEBUG_ZOOM 0
-
-// Label Region Debugging.  0 Off, 1 On.
-#define DEBUG_LABEL_REGION 0
-
 // Benchmark drawing
 // undefined = None, 1 = PlotItem, 2 = More Details
 //#define BENCHMARK 1
@@ -2266,21 +2260,6 @@ void PlotItem::paintBottomLabel(QPainter *painter) {
     Label::paintLabel(*_bottomLabel.rc, painter);
     painter->restore();
   }
-
-#if DEBUG_LABEL_REGION
-  painter->save();
-
-  QRectF bottomLabel = bottomLabelRect();
-  bottomLabel.moveTopLeft(plotAxisRect().bottomLeft());
-
-  painter->save();
-  painter->setOpacity(0.3);
-  qDebug() << "bottomLabel:" << bottomLabel;
-  painter->fillRect(bottomLabel, Qt::red);
-  painter->restore();
-
-  painter->restore();
-#endif
 }
 
 
@@ -2354,23 +2333,6 @@ void PlotItem::paintRightLabel(QPainter *painter) {
     painter->restore();
   }
 
-#if DEBUG_LABEL_REGION
-  painter->save();
-  QTransform t;
-  t.rotate(-90.0);
-  painter->rotate(90.0);
-
-  QRectF rightLabel = rightLabelRect();
-  rightLabel.moveTopLeft(plotAxisRect().topRight());
-
-  painter->save();
-  painter->setOpacity(0.3);
-  qDebug() << "rightLabel:" << t.mapRect(rightLabel)<< endl;
-  painter->fillRect(t.mapRect(rightLabel), Qt::red);
-  painter->restore();
-
-  painter->restore();
-#endif
 }
 
 
@@ -2446,21 +2408,6 @@ void PlotItem::paintTopLabel(QPainter *painter) {
     painter->restore();
 
   }
-
-#if DEBUG_LABEL_REGION
-  painter->save();
-
-  QRectF topLabel = topLabelRect();
-  topLabel.moveBottomLeft(plotAxisRect().topLeft());
-
-  painter->save();
-  painter->setOpacity(0.3);
-  qDebug() << "topLabel:" << topLabel;
-  painter->fillRect(topLabel, Qt::red);
-  painter->restore();
-
-  painter->restore();
-#endif
 }
 
 
@@ -2792,7 +2739,6 @@ QPainterPath PlotItem::checkBox() const {
   if (!isInSharedAxisBox() || (sharedAxisBox() && sharedAxisBox()->isXAxisShared() && sharedAxisBox()->isYAxisShared())) {
     return ViewItem::checkBox();
   } else {
-    QRectF bound = selectBoundingRect();
     QRectF grip;
     if (sharedAxisBox()->isXAxisShared()) {
       grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() + sizeOfGrip().width() * .25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * -.25), sizeOfGrip());
@@ -2810,7 +2756,6 @@ QPainterPath PlotItem::tiedZoomCheck() const {
   if (!isInSharedAxisBox() || (sharedAxisBox() && sharedAxisBox()->isXAxisShared() && sharedAxisBox()->isYAxisShared())) {
     return ViewItem::tiedZoomCheck();
   } else {
-    QRectF bound = selectBoundingRect();
     QRectF grip;
     if (sharedAxisBox()->isXAxisShared()) {
       grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() + sizeOfGrip().width() * .25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * -.25), sizeOfGrip());
@@ -2916,9 +2861,6 @@ void PlotItem::plotMaximize() {
 
 
 void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomFixedExpression" << projection << "current" << projectionRect();
-#endif
   if (projection.isValid()) {
     if (isInSharedAxisBox()) {
       if (!force) {
@@ -2938,9 +2880,6 @@ void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
 
 
 void PlotItem::zoomXRange(const QRectF &projection, bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXRange" << projection << endl;
-#endif
   if (projection.isValid()) {
     if (isInSharedAxisBox()) {
       if (!force) {
@@ -2959,9 +2898,6 @@ void PlotItem::zoomXRange(const QRectF &projection, bool force) {
 
 
 void PlotItem::zoomYRange(const QRectF &projection, bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYRange" << projection << endl;
-#endif
   if (projection.isValid()) {
     if (isInSharedAxisBox()) {
       if (!force) {
@@ -2980,9 +2916,6 @@ void PlotItem::zoomYRange(const QRectF &projection, bool force) {
 
 
 void PlotItem::zoomMaximum(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMaximum" << endl;
-#endif
   if (isInSharedAxisBox() && (!force)) {
     sharedAxisBox()->zoomMaximum(this);
   } else {
@@ -3013,9 +2946,6 @@ void PlotItem::adjustImageColorScale() {
 }
 
 void PlotItem::zoomMaxSpikeInsensitive(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMaxSpikeInsensitive" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomMaxSpikeInsensitive(this);
   } else {
@@ -3027,9 +2957,6 @@ void PlotItem::zoomMaxSpikeInsensitive(bool force) {
 
 
 void PlotItem::zoomPrevious() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomPrevious" << endl;
-#endif
   if (!isInSharedAxisBox()) {
     if (_undoStack->canUndo()) {
       QAction *undoAction = _undoStack->createUndoAction(this);
@@ -3042,33 +2969,21 @@ void PlotItem::zoomPrevious() {
 
 
 void PlotItem::zoomTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomTied" << endl;
-#endif
   setTiedZoom(!isTiedZoom(), !isTiedZoom());
 }
 
 
 void PlotItem::zoomXTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXTied" << endl;
-#endif
   setTiedZoom(!isXTiedZoom(), isYTiedZoom());
 }
 
 
 void PlotItem::zoomYTied() {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYTied" << endl;
-#endif
   setTiedZoom(isXTiedZoom(), !isYTiedZoom());
 }
 
 
 void PlotItem::zoomMeanCentered(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMeanCentered" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomMeanCentered(this);
   } else {
@@ -3080,9 +2995,6 @@ void PlotItem::zoomMeanCentered(bool force) {
 
 
 void PlotItem::zoomYMeanCentered(qreal dY, bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYMeanCentered" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYMeanCentered(this);
   } else {
@@ -3094,9 +3006,6 @@ void PlotItem::zoomYMeanCentered(qreal dY, bool force) {
 
 
 void PlotItem::zoomXMeanCentered(qreal dX, bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXMeanCentered" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXMeanCentered(this);
   } else {
@@ -3108,9 +3017,6 @@ void PlotItem::zoomXMeanCentered(qreal dX, bool force) {
 
 
 void PlotItem::zoomXMaximum(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXMaximum" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXMaximum(this);
   } else {
@@ -3122,9 +3028,6 @@ void PlotItem::zoomXMaximum(bool force) {
 
 
 void PlotItem::zoomXNoSpike(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXNoSpike" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXNoSpike(this);
   } else {
@@ -3136,9 +3039,6 @@ void PlotItem::zoomXNoSpike(bool force) {
 
 
 void PlotItem::zoomXAutoBorder(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXAutoBorder" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXAutoBorder(this);
   } else {
@@ -3154,9 +3054,6 @@ void PlotItem::zoomXRight(bool force) {
   //  zoomXOut(force);
   //  return;
   //}
-#if DEBUG_ZOOM
-  qDebug() << "zoomXRight" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXRight(this);
   } else {
@@ -3172,9 +3069,6 @@ void PlotItem::zoomXLeft(bool force) {
   //  zoomXIn(force);
   //  return;
   //}
-#if DEBUG_ZOOM
-  qDebug() << "zoomXLeft" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXLeft(this);
   } else {
@@ -3186,9 +3080,6 @@ void PlotItem::zoomXLeft(bool force) {
 
 
 void PlotItem::zoomXOut(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXOut" << endl;
-#endif
   resetSelectionRect();
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXOut(this);
@@ -3201,9 +3092,6 @@ void PlotItem::zoomXOut(bool force) {
 
 
 void PlotItem::zoomXIn(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXIn" << endl;
-#endif
   resetSelectionRect();
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXIn(this);
@@ -3216,10 +3104,6 @@ void PlotItem::zoomXIn(bool force) {
 
 
 void PlotItem::zoomNormalizeXtoY(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomNormalizeXtoY" << endl;
-#endif
-
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //FIXME: if both are log, this could be supported
 
@@ -3234,9 +3118,6 @@ void PlotItem::zoomNormalizeXtoY(bool force) {
 
 
 void PlotItem::zoomLogX(bool force, bool autoLog, bool enableLog) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomLogX" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomLogX(this);
   } else {
@@ -3252,9 +3133,6 @@ void PlotItem::zoomLogX(bool force, bool autoLog, bool enableLog) {
 
 
 void PlotItem::zoomYLocalMaximum(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYLocalMaximum" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYLocalMaximum(this);
   } else {
@@ -3266,9 +3144,6 @@ void PlotItem::zoomYLocalMaximum(bool force) {
 
 
 void PlotItem::zoomYMaximum(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYMaximum" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYMaximum(this);
   } else {
@@ -3280,9 +3155,6 @@ void PlotItem::zoomYMaximum(bool force) {
 
 
 void PlotItem::zoomYNoSpike(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYNoSpike" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYNoSpike(this);
   } else {
@@ -3294,9 +3166,6 @@ void PlotItem::zoomYNoSpike(bool force) {
 
 
 void PlotItem::zoomYAutoBorder(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYAutoBorder" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYAutoBorder(this);
   } else {
@@ -3308,9 +3177,6 @@ void PlotItem::zoomYAutoBorder(bool force) {
 
 
 void PlotItem::zoomYUp(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYUp" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYUp(this);
   } else {
@@ -3322,9 +3188,6 @@ void PlotItem::zoomYUp(bool force) {
 
 
 void PlotItem::zoomYDown(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYDown" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYDown(this);
   } else {
@@ -3336,9 +3199,6 @@ void PlotItem::zoomYDown(bool force) {
 
 
 void PlotItem::zoomYOut(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYOut" << endl;
-#endif
   resetSelectionRect();
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYOut(this);
@@ -3351,9 +3211,6 @@ void PlotItem::zoomYOut(bool force) {
 
 
 void PlotItem::zoomYIn(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYIn" << endl;
-#endif
   resetSelectionRect();
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomYIn(this);
@@ -3366,10 +3223,6 @@ void PlotItem::zoomYIn(bool force) {
 
 
 void PlotItem::zoomNormalizeYtoX(bool force) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomNormalizeYtoX" << endl;
-#endif
-
   if (xAxis()->axisLog() || yAxis()->axisLog())
     return; //apparently we don't want to do anything here according to kst2dplot...
 
@@ -3384,9 +3237,6 @@ void PlotItem::zoomNormalizeYtoX(bool force) {
 
 
 void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomLogY" << endl;
-#endif
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomLogY(this);
   } else {
@@ -3889,7 +3739,6 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
       }
     }
     if (!validTag) {
-      qDebug("invalid Tag\n");
       Debug::self()->log(QObject::tr("Error creating plot object from Kst file."), Debug::Warning);
       delete rc;
       return 0;

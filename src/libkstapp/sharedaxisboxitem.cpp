@@ -421,7 +421,7 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
     plotTied = PlotItemManager::tiedZoomPlotsForView(view());
     foreach (PlotItem* plotItem, plotTied) {      
       // tie only changes the unshared axis for shared plots
-      if (!_shareX || !plotItem->isInSharedAxisBox()) {
+      if ((!_shareX || !plotItem->isInSharedAxisBox()) && applyX) {
         switch (xAxisZoomMode()) {
           case PlotAxis::Auto:
             plotItem->zoomXMaximum(true);
@@ -439,7 +439,7 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
         }
       }
 
-      if (!_shareY || !plotItem->isInSharedAxisBox()) {
+      if ((!_shareY || !plotItem->isInSharedAxisBox()) && applyY) {
         switch (yAxisZoomMode()) {
           case PlotAxis::Auto:
             plotItem->zoomYMaximum(true);
@@ -470,22 +470,16 @@ void SharedAxisBoxItem::applyZoom(const QRectF &projection, PlotItem* originPlot
 
 
 void SharedAxisBoxItem::zoomFixedExpression(const QRectF &projection, PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomFixedExpression" << projection;
-#endif
   _xAxisZoomMode = PlotAxis::FixedExpression;
   _yAxisZoomMode = PlotAxis::FixedExpression;
   if (originPlotItem) {
     originPlotItem->zoomFixedExpression(projection, true);
   }
-  applyZoom(projection, originPlotItem);
+  applyZoom(projection, originPlotItem, true, true);
 }
 
 
 void SharedAxisBoxItem::zoomXRange(const QRectF &projection, PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXRange" << projection << endl;
-#endif
   if (!_shareX) {
     if (originPlotItem) {
       originPlotItem->zoomXRange(projection, true);
@@ -506,9 +500,6 @@ void SharedAxisBoxItem::zoomXRange(const QRectF &projection, PlotItem* originPlo
 
 
 void SharedAxisBoxItem::zoomYRange(const QRectF &projection, PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYRange" << projection << endl;
-#endif
   if (!_shareY) {
     if (originPlotItem) {
       originPlotItem->zoomYRange(projection, true);
@@ -529,9 +520,6 @@ void SharedAxisBoxItem::zoomYRange(const QRectF &projection, PlotItem* originPlo
 
 
 void SharedAxisBoxItem::zoomMaximum(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMaximum" << endl;
-#endif
   if (!originPlotItem) {
     originPlotItem = keyPlot();
   }
@@ -546,9 +534,6 @@ void SharedAxisBoxItem::zoomMaximum(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomMaxSpikeInsensitive(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMaxSpikeInsensitive" << endl;
-#endif
   _xAxisZoomMode = PlotAxis::Auto;
   _yAxisZoomMode = PlotAxis::SpikeInsensitive;
   if (originPlotItem) {
@@ -559,17 +544,11 @@ void SharedAxisBoxItem::zoomMaxSpikeInsensitive(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomMeanCentered(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomMeanCentered" << endl;
-#endif
   _yAxisZoomMode = PlotAxis::MeanCentered;
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
 }
 
 void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYMeanCentered" << endl;
-#endif
   _yAxisZoomMode = PlotAxis::MeanCentered;
   if (originPlotItem) {
     originPlotItem->zoomYMeanCentered(true);
@@ -578,9 +557,6 @@ void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
 }
 
 void SharedAxisBoxItem::zoomXMeanCentered(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXMeanCentered" << endl;
-#endif
   _xAxisZoomMode = PlotAxis::MeanCentered;
   if (originPlotItem) {
     originPlotItem->zoomXMeanCentered(true);
@@ -589,9 +565,6 @@ void SharedAxisBoxItem::zoomXMeanCentered(PlotItem* originPlotItem) {
 }
 
 void SharedAxisBoxItem::zoomXMaximum(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXMaximum" << endl;
-#endif
   _xAxisZoomMode = PlotAxis::Auto;
   if (originPlotItem) {
     originPlotItem->zoomXMaximum(true);
@@ -601,9 +574,6 @@ void SharedAxisBoxItem::zoomXMaximum(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXNoSpike(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXNoSpike" << endl;
-#endif
   _xAxisZoomMode = PlotAxis::SpikeInsensitive;
   if (originPlotItem) {
     originPlotItem->zoomXNoSpike(true);
@@ -613,9 +583,6 @@ void SharedAxisBoxItem::zoomXNoSpike(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXAutoBorder(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXAutoBorder" << endl;
-#endif
   _xAxisZoomMode = PlotAxis::AutoBorder;
   if (originPlotItem) {
     originPlotItem->zoomXAutoBorder(true);
@@ -625,9 +592,6 @@ void SharedAxisBoxItem::zoomXAutoBorder(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXRight" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -664,9 +628,6 @@ void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXLeft" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -702,9 +663,6 @@ void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXOut(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXOut" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -741,9 +699,6 @@ void SharedAxisBoxItem::zoomXOut(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomXIn(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomXIn" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -780,9 +735,6 @@ void SharedAxisBoxItem::zoomXIn(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomNormalizeXtoY(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomNormalizeXtoY" << endl;
-#endif
   if (!(_shareX || isXTiedZoom())) {
     if (originPlotItem) {
       originPlotItem->zoomNormalizeXtoY(true);
@@ -813,9 +765,6 @@ void SharedAxisBoxItem::zoomNormalizeXtoY(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomLogX(PlotItem* originPlotItem, bool autoEnable, bool enable) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomLogX" << endl;
-#endif
   bool enableLog;
   if (autoEnable && originPlotItem) {
     enableLog = !originPlotItem->xAxis()->axisLog();
@@ -856,9 +805,6 @@ void SharedAxisBoxItem::zoomLogX(PlotItem* originPlotItem, bool autoEnable, bool
 
 
 void SharedAxisBoxItem::zoomYLocalMaximum(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYLocalMaximum" << endl;
-#endif
 
   bool origin_tied = false;
   if (originPlotItem) {
@@ -898,9 +844,6 @@ void SharedAxisBoxItem::zoomYLocalMaximum(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYMaximum(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYMaximum" << endl;
-#endif
   _yAxisZoomMode = PlotAxis::Auto;
   if (originPlotItem) {
     originPlotItem->zoomYMaximum(true);
@@ -910,9 +853,6 @@ void SharedAxisBoxItem::zoomYMaximum(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYNoSpike(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYNoSpike" << endl;
-#endif
   _yAxisZoomMode = PlotAxis::SpikeInsensitive;
   if (originPlotItem) {
     originPlotItem->zoomYNoSpike(true);
@@ -922,9 +862,6 @@ void SharedAxisBoxItem::zoomYNoSpike(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYAutoBorder(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYAutoBorder" << endl;
-#endif
   _yAxisZoomMode = PlotAxis::AutoBorder;
   if (originPlotItem) {
     originPlotItem->zoomYAutoBorder(true);
@@ -934,9 +871,6 @@ void SharedAxisBoxItem::zoomYAutoBorder(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYUp(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYUp" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareY) {
     allPlots = getSharedPlots();
@@ -972,9 +906,6 @@ void SharedAxisBoxItem::zoomYUp(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYDown(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYDown" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareY) {
     allPlots = getSharedPlots();
@@ -1011,9 +942,6 @@ void SharedAxisBoxItem::zoomYDown(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYOut(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYOut" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareY) {
     allPlots = getSharedPlots();
@@ -1050,9 +978,6 @@ void SharedAxisBoxItem::zoomYOut(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomYIn(PlotItem* originPlotItem) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomYIn" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareY) {
     allPlots = getSharedPlots();
@@ -1092,9 +1017,6 @@ void SharedAxisBoxItem::zoomNormalizeYtoX(PlotItem* originPlotItem) {
   if (!originPlotItem) {
     return;
   }
-#if DEBUG_ZOOM
-  qDebug() << "zoomNormalizeYtoX" << endl;
-#endif
 
   bool origin_tied = false;
   if (originPlotItem) {
@@ -1131,9 +1053,6 @@ void SharedAxisBoxItem::zoomNormalizeYtoX(PlotItem* originPlotItem) {
 
 
 void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool enable) {
-#if DEBUG_ZOOM
-  qDebug() << "zoomLogY" << endl;
-#endif
   QList<PlotItem*> allPlots;
   if (_shareY) {
     allPlots = getSharedPlots();
@@ -1321,7 +1240,6 @@ ViewItem* SharedAxisBoxItemFactory::generateGraphics(QXmlStreamReader& xml, Obje
       }
     }
     if (!validTag) {
-      qDebug("invalid Tag\n");
       Debug::self()->log(QObject::tr("Error creating sharedaxisbox object from Kst file."), Debug::Warning);
       delete rc;
       return 0;
