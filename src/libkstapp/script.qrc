@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/script">
+        <file>kstScript.txt</file>
+    </qresource>
+</RCC>

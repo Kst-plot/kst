@@ -624,10 +624,8 @@ void View::resetPlotFontSizes(double pointSize) {
 // plot, then break.
 void View::configurePlotFontDefaults(PlotItem *plot) {
   if (plot) {
-    bool configured = false;
     foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
       if (plot != plotItem) {
-        configured = true;
         plot->setGlobalFont(plotItem->globalFont());
         plot->setGlobalFontScale(plotItem->globalFontScale());
         plot->setGlobalFontColor(plotItem->globalFontColor());

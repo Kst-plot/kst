@@ -169,7 +169,7 @@ bool NoiseAdditionSource::algorithm() {
     gsl_rng_free( pRandomNumberGenerator );
   }
 
-  return true;
+  return iRetVal;
 }
 
 

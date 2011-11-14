@@ -101,7 +101,4 @@
         <file>save-vectors.png</file>
         <file>themes.png</file>
     </qresource>
-    <qresource prefix="/script">
-        <file>kstScript.txt</file>
-    </qresource>
 </RCC>

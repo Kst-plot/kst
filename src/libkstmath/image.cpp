@@ -589,7 +589,7 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
 #endif
       //draw the contourmap
       if (image->hasContourMap()) {
-        QColor tempColor = image->contourColor();
+        //QColor tempColor = image->contourColor();
         bool variableWeight = image->contourWeight() < 0;
         int lineWeight=1;
         if (!variableWeight) {

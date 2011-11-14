@@ -1,5 +1,6 @@
 import numpy as npy
 from scipy.weave import inline
+import pykstpp_h as pykstpp_h
 
 def get_arr(arr,socket,handle):
     dtype2ctype = {
@@ -56,7 +57,7 @@ do {
 
     socket=str(socket)
     handle=str(handle)
-    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=["/usr/include/qt4/QtCore","/usr/include/qt4/QtNetwork","/usr/include/qt4"],libraries=["QtCore","QtNetwork"],runtime_library_dirs=["/usr/lib/"])
+    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=pykstpp_h.INCLUDES,libraries=pykstpp_h.LIBS,runtime_library_dirs=pykstpp_h.LIBDIRS)
     # I'm not sure if the above line can be made portable or not...
 
 
@@ -126,7 +127,7 @@ do {
 
     socket=str(socket)
     handle=str(handle)
-    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=["/usr/include/qt4/QtCore","/usr/include/qt4/QtNetwork","/usr/include/qt4"],libraries=["QtCore","QtNetwork"],runtime_library_dirs=["/usr/lib/"])
+    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=pykstpp_h.INCLUDES,libraries=pykstpp_h.LIBS,runtime_library_dirs=pykstpp_h.LIBDIRS)
     # I'm not sure if the above line can be made portable or not...
 
 
@@ -196,7 +197,7 @@ while(s.bytesToWrite()) {
 
     socket=str(socket)
     handle=str(handle)
-    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=["/usr/include/qt4/QtCore","/usr/include/qt4/QtNetwork","/usr/include/qt4"],libraries=["QtCore","QtNetwork"],runtime_library_dirs=["/usr/lib/"])
+    inline(code, ['arr','socket','handle'],support_code=support_code,include_dirs=pykstpp_h.INCLUDES,libraries=pykstpp_h.LIBS,runtime_library_dirs=pykstpp_h.LIBDIRS)
     # I'm not sure if the above line can be made portable or not...
 
 
@@ -260,5 +261,5 @@ while(s.bytesToWrite()) {
 
     socket=str(socket)
     handle=str(handle)
-    inline(code, ['arr','nX','nY','socket','handle'],support_code=support_code,include_dirs=["/usr/include/qt4/QtCore","/usr/include/qt4/QtNetwork","/usr/include/qt4"],libraries=["QtCore","QtNetwork"],runtime_library_dirs=["/usr/lib/"])
+    inline(code, ['arr','nX','nY','socket','handle'],support_code=support_code,include_dirs=pykstpp_h.INCLUDES,libraries=pykstpp_h.LIBS,runtime_library_dirs=pykstpp_h.LIBDIRS)
     # I'm not sure if the above line can be made portable or not...

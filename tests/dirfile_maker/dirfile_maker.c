@@ -83,10 +83,10 @@ int main() {
   fclose(fpf);
 
   /* make curfile */
-  fpf = fopen("dm.cur", "w");
-  fprintf(fpf,"%s", dirfilename);
-  fclose(fpf);
+  unlink("dm.lnk");
+  symlink(dirfilename, "dm.lnk");
 
+  printf("starting loop\n");
   while (1) {
     /* write 'fcount' */
     for (i=0; i<df[FCOUNT].spf; i++) {

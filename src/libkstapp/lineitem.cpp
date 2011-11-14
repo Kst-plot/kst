@@ -186,7 +186,7 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return QGraphicsRectItem::mouseMoveEvent(event);
 
   QPointF p = event->pos();
-  QPointF s = event->scenePos();
+  //QPointF s = event->scenePos();
 
   if (gripMode() == ViewItem::Resize) {
     switch(activeGrip()) {
