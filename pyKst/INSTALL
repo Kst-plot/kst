@@ -25,7 +25,7 @@ Example for ubuntu:
 0) make sure you have the absolute latest kst2 from steve.  See kst.kde.org
 
 1) install dependencies for numpy and scipy
-sudo apt-get install python python-dev libatlas-base-dev gcc gfortran g++
+sudo apt-get install python python-dev python-qt4 libatlas-base-dev gcc gfortran g++
 
 2) Install numpy 1.6.1 (ubuntu's default is not new enough)
 [host]$ tar xvfz numpy-1.6.1.tar.gz
@@ -47,3 +47,10 @@ Change INCLUDES as suggested by comments in pykstpp_h.py
 6) test it
 [host]$ cd demo
 [host]$ python2.7 vectors.py
+
+
+========
+Try with cmake:
+
+sudo cmake ../kst/cmake/pyKst
+sudo make
