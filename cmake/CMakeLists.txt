@@ -214,8 +214,6 @@ endif()
 
 if(kst_python)
     add_subdirectory(pyKst)
-    # Only build/install one time
-    set(kst_python OFF CACHE BOOL "Install Kst's python support" FORCE)
 endif()
 
 # CPack packaging
