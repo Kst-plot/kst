@@ -52,5 +52,10 @@ Change INCLUDES as suggested by comments in pykstpp_h.py
 ========
 Try with cmake:
 
-sudo cmake ../kst/cmake/pyKst
+# install the python files where they belong
+sudo cmake ../cmake/pyKst
+
+# Download, build, and install the right versions of numpy and scipy.
+# This is not needed if you already have them
 sudo make
+

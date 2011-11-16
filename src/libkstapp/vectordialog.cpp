@@ -563,7 +563,7 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
 }
 
 void VectorDialog::waitForValidation() {
-  while (_vectorTab->validating) {
+  while (_vectorTab->validating && (_vectorTab->vectorMode() == VectorTab::DataVector)) {
     Sleep::ms(10);
     QApplication::processEvents();
   }
