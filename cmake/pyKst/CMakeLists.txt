@@ -14,38 +14,41 @@ find_package(PythonLibs REQUIRED)
 
 include(ExternalProject)
 
-
 set(pypi http://pypi.python.org/packages/source)
 set(numpy numpy-1.6.1)
 set(scipy scipy-0.10.0)
 
-ExternalProject_Add(numpy 
-                    URL             ${pypi}/n/numpy/${numpy}.tar.gz
-                    CONFIGURE_COMMAND ""
-                    BUILD_IN_SOURCE ON
-                    BUILD_COMMAND   python setup.py build --fcompiler=gnu95
-                    INSTALL_COMMAND sudo python setup.py install)
 
+#Path mystic: this works on Ubuntu
+get_filename_component(pylib_path ${PYTHON_LIBRARY} PATH)
+get_filename_component(pybin_name ${PYTHON_EXECUTABLE} NAME)
+set(pylib_dir ${pylib_path}/${pybin_name})
+set(pydist_dir /usr/local/lib/${pybin_name}/dist-packages)
 
-ExternalProject_Add(scipy 
-                    URL             ${pypi}/s/scipy/${scipy}.tar.gz
-                    CONFIGURE_COMMAND ""
-                    BUILD_IN_SOURCE ON
-                    BUILD_COMMAND   python setup.py build
-                    INSTALL_COMMAND sudo python setup.py install)
+if(NOT EXISTS ${pydist_dir}/numpy)
+    ExternalProject_Add(numpy
+                        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/numpy
+                        URL             ${pypi}/n/numpy/${numpy}.tar.gz
+                        CONFIGURE_COMMAND ""
+                        BUILD_IN_SOURCE ON
+                        BUILD_COMMAND   python setup.py build --fcompiler=gnu95
+                        INSTALL_COMMAND sudo python setup.py install)
+endif()
+
+if(NOT EXISTS ${pydist_dir}/scipy)
+    ExternalProject_Add(scipy
+                        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/scipy
+                        URL             ${pypi}/s/scipy/${scipy}.tar.gz
+                        CONFIGURE_COMMAND ""
+                        BUILD_IN_SOURCE ON
+                        BUILD_COMMAND   python setup.py build
+                        INSTALL_COMMAND sudo python setup.py install)
+endif()
                    
-                    
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pykstpp_h.py.cmake ${CMAKE_CURRENT_BINARY_DIR}/pykstpp_h.py)
+set(pykstpp_header ${CMAKE_CURRENT_BINARY_DIR}/pykstpp_h.py)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pykstpp_h.py.cmake ${pykstpp_header})
 
-#this works on Ubuntu
-get_filename_component(pyscripts_path ${PYTHON_LIBRARY} PATH)
-get_filename_component(pyscripts_dir ${PYTHON_EXECUTABLE} NAME)
-set(pyscripts_path ${pyscripts_path}/${pyscripts_dir})
-
-
-message(STATUS "Copying Kst's python files into ${pyscripts_path}")
-configure_file(${kstpydir}/pyKst/pykst.py    ${pyscripts_path}/pykst.py COPYONLY)
-configure_file(${kstpydir}/pyKst/pykstpp.py  ${pyscripts_path}/pykstpp.py COPYONLY)
-configure_file(${CMAKE_CURRENT_BINARY_DIR}/pykstpp_h.py ${pyscripts_path}/pykstpp_h.py COPYONLY)
+install(FILES ${kstpydir}/pyKst/pykst.py ${kstpydir}/pyKst/pykstpp.py ${pykstpp_header} 
+        DESTINATION ${pylib_dir})
 
 
