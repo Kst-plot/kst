@@ -1092,6 +1092,7 @@ qDebug() << "y not in bounds"
         overlap = false;
       }
     } // end if hasLines()
+
 #ifdef BENCHMARK
     clock_t linesEnd = clock();
     std::cout << "\n        Lines clocks: " << (linesEnd - linesStart) << "\n";

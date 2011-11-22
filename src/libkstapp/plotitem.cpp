@@ -1003,7 +1003,9 @@ void PlotItem::paintPlot(QPainter *painter, bool xUpdated, bool yUpdated) {
   painter->save();
   painter->setBrush(Qt::NoBrush);
   painter->setPen(pen());
-  painter->drawRect(plotRect());
+  QRectF box(plotRect());
+  box.adjust(-1.0, -1.0, 0.0, 0.0);
+  painter->drawRect(box);
 #if BENCHMARK > 1
     b_3 = benchtmp.elapsed();
 #endif

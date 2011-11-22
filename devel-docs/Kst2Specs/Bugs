@@ -6,10 +6,5 @@ More than one shared axis group.  Tied zoom doesn't work right.
 
 --------------------
 
-Curves are rendered slightly above where they should be.  Take a plot
-that it is of very boring data (like always exactly zero) and it'll be
-drawn one pixel above the axis tick mark for zero.  (This is not always the same - sometimes above, sometimes below, sometimes right.)
-So: it appears that ticks and curves use different rounding
-
-Probably related bug: points don't always appear centered on the line.
+points don't always appear centered on the line.
 

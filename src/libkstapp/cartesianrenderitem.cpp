@@ -71,8 +71,8 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.Hy = plotRect().bottom();
 
     //To convert between the last two...
-    double m_X = double(plotRect().width()-1)/(context.x_max - context.x_min);
-    double m_Y = -double(plotRect().height()-1)/(context.y_max - context.y_min);
+    double m_X = double(plotRect().width())/(context.x_max - context.x_min);
+    double m_Y = -double(plotRect().height())/(context.y_max - context.y_min);
     double b_X = context.Lx - m_X * context.x_min;
     double b_Y = context.Ly - m_Y * context.y_max;
 
