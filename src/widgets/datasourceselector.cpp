@@ -19,7 +19,7 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QFileDialog>
-#include <QDirModel>
+#include <QFileSystemModel>
 #include <QCompleter>
 #include <QPointer>
 
@@ -59,11 +59,13 @@ void DataSourceSelector::setup() {
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SIGNAL(changed(const QString &)));
+  //connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SIGNAL(changed(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(updateFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
-  QDirModel *dirModel = new QDirModel(this);
+  QFileSystemModel *dirModel = new QFileSystemModel;
   dirModel->setFilter(QDir::AllEntries);
+  dirModel->setRootPath(QString('/'));
 
   QCompleter *completer = new QCompleter(this);
   completer->setModel(dirModel); 
@@ -85,6 +87,27 @@ void DataSourceSelector::setFile(const QString &file) {
   _fileEdit->blockSignals(false);
   emit changed(file);
 }
+
+void DataSourceSelector::updateFile(const QString &file) {
+  if (file.contains('~')) {
+    QString home = qgetenv("HOME"); // linux
+    if (!home.isEmpty()) {
+      QString changed_file = file;
+      changed_file.replace('~', home);
+      setFile(changed_file);
+      return;
+    }
+    home = qgetenv("USERPROFILE"); // windows, maybe (?)
+    if (!home.isEmpty()) {
+      QString changed_file = file;
+      changed_file.replace('~', home);
+      setFile(changed_file);
+      return;
+    }
+  }
+  emit changed(file);
+}
+
 
 
 void DataSourceSelector::chooseFile() {

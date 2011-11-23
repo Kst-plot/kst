@@ -36,6 +36,7 @@ class KSTWIDGETS_EXPORT DataSourceSelector : public QWidget {
     QLineEdit *_fileEdit;
   public Q_SLOTS:
     void setFile(const QString &file);
+    void updateFile(const QString &file);
 
   Q_SIGNALS:
     void changed(const QString &file);

@@ -17,7 +17,7 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QFileDialog>
-#include <QDirModel>
+#include <QFileSystemModel>
 #include <QCompleter>
 
 #include <QDebug>
@@ -52,8 +52,9 @@ void FileRequester::setup() {
   connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(updateFile(const QString &)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
-  QDirModel *dirModel = new QDirModel(this);
+  QFileSystemModel *dirModel = new QFileSystemModel(this);
   dirModel->setFilter(QDir::AllEntries);
+  dirModel->setRootPath(QString('/'));
 
   QCompleter *completer = new QCompleter(this);
   completer->setModel(dirModel); 
@@ -77,6 +78,23 @@ void FileRequester::setFile(const QString &file) {
 }
 
 void FileRequester::updateFile(const QString &file) {
+  if (file.contains('~')) {
+    QString home = qgetenv("HOME"); // linux
+    if (!home.isEmpty()) {
+      QString changed_file = file;
+      changed_file.replace('~', home);
+      setFile(changed_file);
+      return;
+    }
+    home = qgetenv("USERPROFILE"); // windows, maybe (?)
+    if (!home.isEmpty()) {
+      QString changed_file = file;
+      changed_file.replace('~', home);
+      setFile(changed_file);
+      return;
+    }
+  }
+
   _file = file;
   emit changed(file);
 }
