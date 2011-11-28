@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
+    <width>649</width>
     <height>452</height>
    </rect>
   </property>
@@ -363,13 +363,19 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>_allFromFile</tabstop>
+  <tabstop>_files</tabstop>
   <tabstop>_changeFilePrimitiveList</tabstop>
-  <tabstop>_removeAll</tabstop>
+  <tabstop>_selectedFilePrimitiveList</tabstop>
   <tabstop>_addAll</tabstop>
-  <tabstop>_dataFile</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_removeAll</tabstop>
+  <tabstop>_configure</tabstop>
   <tabstop>_changeSelected</tabstop>
   <tabstop>_duplicateSelected</tabstop>
   <tabstop>_duplicateDependents</tabstop>
+  <tabstop>_buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>

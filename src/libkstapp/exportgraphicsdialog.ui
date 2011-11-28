@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>278</height>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -388,6 +388,9 @@
  </customwidgets>
  <tabstops>
   <tabstop>_comboBoxFormats</tabstop>
+  <tabstop>_listVectorFormats</tabstop>
+  <tabstop>_listBitmapFormats</tabstop>
+  <tabstop>_autoExtension</tabstop>
   <tabstop>_comboBoxSizeOption</tabstop>
   <tabstop>_xSize</tabstop>
   <tabstop>_ySize</tabstop>

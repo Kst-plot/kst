@@ -316,12 +316,20 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>_displayedRelationList</tabstop>
   <tabstop>_availableRelationList</tabstop>
-  <tabstop>_down</tabstop>
-  <tabstop>_add</tabstop>
-  <tabstop>_remove</tabstop>
   <tabstop>_up</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_displayedRelationList</tabstop>
+  <tabstop>_deselectAllAvailable</tabstop>
+  <tabstop>_selectAllAvailable</tabstop>
+  <tabstop>_editSelectedAvailable</tabstop>
+  <tabstop>_deselectAllDisplayed</tabstop>
+  <tabstop>_selectAllDisplayed</tabstop>
+  <tabstop>_editSelectedDisplayed</tabstop>
+  <tabstop>_scriptLineEdit1</tabstop>
+  <tabstop>_scriptLineEdit2</tabstop>
  </tabstops>
  <resources/>
  <connections>

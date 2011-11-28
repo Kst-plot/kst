@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>383</width>
-    <height>278</height>
+    <width>388</width>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../images/images.qrc">:/kst.png</pixmap>
+        <pixmap resource="../images/icons.qrc">:/kst.png</pixmap>
        </property>
       </widget>
      </item>
@@ -76,6 +76,7 @@
   </layout>
  </widget>
  <resources>
+  <include location="../images/icons.qrc"/>
   <include location="../images/images.qrc"/>
  </resources>
  <connections>

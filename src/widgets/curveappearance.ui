@@ -344,7 +344,18 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>_showLines</tabstop>
+  <tabstop>_color</tabstop>
+  <tabstop>_comboLineStyle</tabstop>
+  <tabstop>_spinBoxLineWidth</tabstop>
   <tabstop>_showPoints</tabstop>
+  <tabstop>_comboPointSymbol</tabstop>
+  <tabstop>_comboPointDensity</tabstop>
+  <tabstop>_showHead</tabstop>
+  <tabstop>_comboHeadSymbol</tabstop>
+  <tabstop>_headColor</tabstop>
+  <tabstop>_showBars</tabstop>
+  <tabstop>_barFillColor</tabstop>
  </tabstops>
  <includes>
   <include location="global">kst_export.h</include>

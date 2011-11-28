@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
+    <width>565</width>
     <height>338</height>
    </rect>
   </property>
@@ -191,6 +191,19 @@
    <header>colorbutton.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_fillBox</tabstop>
+  <tabstop>_strokeBox</tabstop>
+  <tabstop>_fontBox</tabstop>
+  <tabstop>_labelFontScale</tabstop>
+  <tabstop>_bold</tabstop>
+  <tabstop>_italic</tabstop>
+  <tabstop>_labelColor</tabstop>
+  <tabstop>_family</tabstop>
+  <tabstop>_saveAsDefault</tabstop>
+  <tabstop>_applyToExisting</tabstop>
+  <tabstop>_buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

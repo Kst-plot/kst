@@ -199,6 +199,14 @@
    <header>colorbutton.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_useDefault</tabstop>
+  <tabstop>_fontSize</tabstop>
+  <tabstop>_bold</tabstop>
+  <tabstop>_italic</tabstop>
+  <tabstop>_labelColor</tabstop>
+  <tabstop>_family</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

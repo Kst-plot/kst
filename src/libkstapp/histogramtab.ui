@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>898</width>
+    <width>662</width>
     <height>298</height>
    </rect>
   </property>
@@ -272,10 +272,10 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true"/>
    </item>
-   <item row="1" column="1" colspan="2">
+   <item row="1" column="0">
     <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true"/>
    </item>
   </layout>
@@ -307,7 +307,6 @@
   <tabstop>_realTimeAutoBin</tabstop>
   <tabstop>_normalizationIsNumber</tabstop>
   <tabstop>_curveAppearance</tabstop>
-  <tabstop>_curvePlacement</tabstop>
  </tabstops>
  <resources/>
  <connections/>

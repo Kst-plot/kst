@@ -319,6 +319,17 @@
    <header>datasourceselector.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_generatedVectorGroup</tabstop>
+  <tabstop>_numberOfSamples</tabstop>
+  <tabstop>_from</tabstop>
+  <tabstop>_to</tabstop>
+  <tabstop>_dataVectorGroup</tabstop>
+  <tabstop>_field</tabstop>
+  <tabstop>_connect</tabstop>
+  <tabstop>_configure</tabstop>
+  <tabstop>_updateBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

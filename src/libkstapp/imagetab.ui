@@ -476,6 +476,21 @@
    <header>matrixselector.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_colorOnly</tabstop>
+  <tabstop>_contourOnly</tabstop>
+  <tabstop>_colorAndContour</tabstop>
+  <tabstop>_realTimeAutoThreshold</tabstop>
+  <tabstop>_lowerThreshold</tabstop>
+  <tabstop>_upperThreshold</tabstop>
+  <tabstop>_autoThreshold</tabstop>
+  <tabstop>_smartThreshold</tabstop>
+  <tabstop>_smartThresholdValue</tabstop>
+  <tabstop>_numContourLines</tabstop>
+  <tabstop>_contourColor</tabstop>
+  <tabstop>_contourWeight</tabstop>
+  <tabstop>_useVariableWeight</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

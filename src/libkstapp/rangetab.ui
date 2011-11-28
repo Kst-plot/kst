@@ -338,6 +338,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_xAuto</tabstop>
+  <tabstop>_xBorder</tabstop>
+  <tabstop>_xSpike</tabstop>
+  <tabstop>_xMean</tabstop>
+  <tabstop>_xRange</tabstop>
+  <tabstop>_xFixed</tabstop>
+  <tabstop>_xMin</tabstop>
+  <tabstop>_xMax</tabstop>
+  <tabstop>_xHidden</tabstop>
+  <tabstop>_yAuto</tabstop>
+  <tabstop>_yBorder</tabstop>
+  <tabstop>_ySpike</tabstop>
+  <tabstop>_yMean</tabstop>
+  <tabstop>_yRange</tabstop>
+  <tabstop>_yFixed</tabstop>
+  <tabstop>_yMin</tabstop>
+  <tabstop>_yMax</tabstop>
+  <tabstop>_yHidden</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

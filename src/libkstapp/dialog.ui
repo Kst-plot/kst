@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>538</width>
+    <width>563</width>
     <height>299</height>
    </rect>
   </property>
@@ -156,6 +156,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_listWidget</tabstop>
+  <tabstop>_saveAsDefault</tabstop>
+  <tabstop>_applyToExisting</tabstop>
+  <tabstop>_buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

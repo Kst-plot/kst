@@ -90,6 +90,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>_useOpenGL</tabstop>
+  <tabstop>_transparentDrag</tabstop>
+  <tabstop>_maxUpdate</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

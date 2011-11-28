@@ -203,6 +203,8 @@
   <tabstop>_existingPlot</tabstop>
   <tabstop>_plotList</tabstop>
   <tabstop>_newPlot</tabstop>
+  <tabstop>_newTab</tabstop>
+  <tabstop>_scaleFonts</tabstop>
   <tabstop>_autoLayout</tabstop>
   <tabstop>_customGrid</tabstop>
   <tabstop>_gridColumns</tabstop>

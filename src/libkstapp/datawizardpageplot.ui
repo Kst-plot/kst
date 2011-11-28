@@ -342,6 +342,33 @@
    <header>combobox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_onePlot</tabstop>
+  <tabstop>_multiplePlots</tabstop>
+  <tabstop>_cycleThrough</tabstop>
+  <tabstop>_plotNumber</tabstop>
+  <tabstop>_cycleExisting</tabstop>
+  <tabstop>_existingPlot</tabstop>
+  <tabstop>_existingPlotName</tabstop>
+  <tabstop>_autoLayout</tabstop>
+  <tabstop>_customGrid</tabstop>
+  <tabstop>_gridColumns</tabstop>
+  <tabstop>_protectLayout</tabstop>
+  <tabstop>_currentTab</tabstop>
+  <tabstop>_newTab</tabstop>
+  <tabstop>_separateTabs</tabstop>
+  <tabstop>_rescaleFonts</tabstop>
+  <tabstop>_shareAxis</tabstop>
+  <tabstop>_legendsOn</tabstop>
+  <tabstop>_legendsVertical</tabstop>
+  <tabstop>_legendsOff</tabstop>
+  <tabstop>_legendsAuto</tabstop>
+  <tabstop>_psdLogX</tabstop>
+  <tabstop>_psdLogY</tabstop>
+  <tabstop>_drawLines</tabstop>
+  <tabstop>_drawPoints</tabstop>
+  <tabstop>_drawBoth</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -845,8 +845,8 @@
  <tabstops>
   <tabstop>_readFromSource</tabstop>
   <tabstop>_generateGradient</tabstop>
-  <tabstop>_fileName</tabstop>
   <tabstop>_field</tabstop>
+  <tabstop>_connect</tabstop>
   <tabstop>_configure</tabstop>
   <tabstop>_xStart</tabstop>
   <tabstop>_xStartCountFromEnd</tabstop>
@@ -866,8 +866,8 @@
   <tabstop>_nX</tabstop>
   <tabstop>_nY</tabstop>
   <tabstop>_minX</tabstop>
-  <tabstop>_minY</tabstop>
   <tabstop>_xStep</tabstop>
+  <tabstop>_minY</tabstop>
   <tabstop>_yStep</tabstop>
  </tabstops>
  <resources/>

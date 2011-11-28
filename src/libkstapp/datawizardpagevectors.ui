@@ -214,13 +214,13 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>_vectorReduction</tabstop>
-  <tabstop>_vectors</tabstop>
-  <tabstop>_vectorsToPlot</tabstop>
-  <tabstop>_add</tabstop>
-  <tabstop>_remove</tabstop>
-  <tabstop>_up</tabstop>
-  <tabstop>_down</tabstop>
   <tabstop>_vectorSearch</tabstop>
+  <tabstop>_vectors</tabstop>
+  <tabstop>_up</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_vectorsToPlot</tabstop>
  </tabstops>
  <resources/>
  <connections>

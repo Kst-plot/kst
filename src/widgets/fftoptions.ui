@@ -396,13 +396,17 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>_removeMean</tabstop>
   <tabstop>_apodize</tabstop>
   <tabstop>_apodizeFunction</tabstop>
   <tabstop>_sigma</tabstop>
+  <tabstop>_interleavedAverage</tabstop>
   <tabstop>_FFTLength</tabstop>
+  <tabstop>_interpolateOverHoles</tabstop>
   <tabstop>_sampleRate</tabstop>
   <tabstop>_vectorUnits</tabstop>
   <tabstop>_rateUnits</tabstop>
+  <tabstop>_output</tabstop>
  </tabstops>
  <resources/>
  <connections/>

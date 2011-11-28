@@ -84,6 +84,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>_filterEdit</tabstop>
+  <tabstop>_selectNoneBut</tabstop>
+  <tabstop>_selectAllBut</tabstop>
+  <tabstop>_objectList</tabstop>
  </tabstops>
  <resources/>
  <connections>

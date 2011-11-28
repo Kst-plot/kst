@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>601</width>
+    <width>630</width>
     <height>364</height>
    </rect>
   </property>
@@ -434,6 +434,15 @@ and LaTeX symbols - eg, \theta.  Names and symbols are autocompleted.</string>
   <tabstop>_globalLabelItalic</tabstop>
   <tabstop>_globalLabelColor</tabstop>
   <tabstop>_globalLabelFontFamily</tabstop>
+  <tabstop>_autoScaleNumberAxis</tabstop>
+  <tabstop>_topLabelAuto</tabstop>
+  <tabstop>_topLabelText</tabstop>
+  <tabstop>_bottomLabelAuto</tabstop>
+  <tabstop>_bottomLabelText</tabstop>
+  <tabstop>_leftLabelAuto</tabstop>
+  <tabstop>_leftLabelText</tabstop>
+  <tabstop>_rightLabelAuto</tabstop>
+  <tabstop>_rightLabelText</tabstop>
   <tabstop>_showLegend</tabstop>
   <tabstop>_editLegendContents</tabstop>
  </tabstops>

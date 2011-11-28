@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DifferentiateCurvesDialog</class>
- <widget class="QDialog" name="DifferentiateCurvesDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="DifferentiateCurvesDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,145 +10,145 @@
     <height>401</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Differentiate Curves</string>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="cycleOrderGroup" >
-     <property name="title" >
+    <widget class="QGroupBox" name="cycleOrderGroup">
+     <property name="title">
       <string>Property Selection and Cycle Order</string>
      </property>
-     <layout class="QGridLayout" >
-      <property name="margin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>0</number>
       </property>
-      <item row="1" column="1" >
-       <layout class="QGridLayout" >
-        <property name="margin" >
+      <item row="1" column="1">
+       <layout class="QGridLayout">
+        <property name="margin">
          <number>0</number>
         </property>
-        <item row="1" column="1" >
-         <widget class="QPushButton" name="_up" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+        <item row="1" column="1">
+         <widget class="QPushButton" name="_up">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="toolTip" >
+          <property name="toolTip">
            <string>Raise in Selection Order: Alt+up</string>
           </property>
-          <property name="text" >
+          <property name="text">
            <string/>
           </property>
-          <property name="shortcut" >
+          <property name="shortcut">
            <string>Alt+Up</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1" >
-         <widget class="QPushButton" name="_down" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+        <item row="3" column="1">
+         <widget class="QPushButton" name="_down">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="toolTip" >
+          <property name="toolTip">
            <string>Lower in Selection Order: Alt+down</string>
           </property>
-          <property name="text" >
+          <property name="text">
            <string/>
           </property>
-          <property name="shortcut" >
+          <property name="shortcut">
            <string>Alt+Down</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2" >
-         <widget class="QPushButton" name="_add" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+        <item row="2" column="2">
+         <widget class="QPushButton" name="_add">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="toolTip" >
+          <property name="toolTip">
            <string>Select: Alt+s</string>
           </property>
-          <property name="text" >
+          <property name="text">
            <string/>
           </property>
          </widget>
         </item>
-        <item row="2" column="0" >
-         <widget class="QPushButton" name="_remove" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+        <item row="2" column="0">
+         <widget class="QPushButton" name="_remove">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="toolTip" >
+          <property name="toolTip">
            <string>Remove: Alt+r</string>
           </property>
-          <property name="text" >
+          <property name="text">
            <string/>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item rowspan="3" row="0" column="0" >
-       <layout class="QVBoxLayout" >
-        <property name="margin" >
+      <item row="0" column="0" rowspan="3">
+       <layout class="QVBoxLayout">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="textLabel1" >
-          <property name="text" >
+         <widget class="QLabel" name="textLabel1">
+          <property name="text">
            <string>Available:</string>
           </property>
-          <property name="wordWrap" >
+          <property name="wordWrap">
            <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="_availableListBox" />
+         <widget class="QListWidget" name="_availableListBox"/>
         </item>
        </layout>
       </item>
-      <item rowspan="3" row="0" column="2" >
-       <layout class="QVBoxLayout" >
-        <property name="margin" >
+      <item row="0" column="2" rowspan="3">
+       <layout class="QVBoxLayout">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="textLabel2" >
-          <property name="text" >
+         <widget class="QLabel" name="textLabel2">
+          <property name="text">
            <string>Selected:</string>
           </property>
-          <property name="wordWrap" >
+          <property name="wordWrap">
            <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="_selectedListBox" />
+         <widget class="QListWidget" name="_selectedListBox"/>
         </item>
        </layout>
       </item>
-      <item row="0" column="1" >
+      <item row="0" column="1">
        <spacer>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>21</width>
           <height>61</height>
@@ -155,15 +156,15 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="1" >
+      <item row="2" column="1">
        <spacer>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>51</height>
@@ -175,23 +176,23 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="optionsGroup" >
-     <property name="title" >
+    <widget class="QGroupBox" name="optionsGroup">
+     <property name="title">
       <string>Options</string>
      </property>
-     <layout class="QGridLayout" >
-      <property name="margin" >
+     <layout class="QGridLayout">
+      <property name="margin">
        <number>0</number>
       </property>
-      <item row="0" column="1" >
+      <item row="0" column="1">
        <spacer>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>16</width>
           <height>20</height>
@@ -199,64 +200,64 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="0" >
-       <layout class="QGridLayout" >
-        <property name="margin" >
+      <item row="0" column="0">
+       <layout class="QGridLayout">
+        <property name="margin">
          <number>0</number>
         </property>
-        <item row="0" column="1" >
-         <widget class="QSpinBox" name="_maxLineWidth" >
-          <property name="minimum" >
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="_maxLineWidth">
+          <property name="minimum">
            <number>1</number>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="textLabel3" >
-          <property name="text" >
+        <item row="0" column="0">
+         <widget class="QLabel" name="textLabel3">
+          <property name="text">
            <string>Maximum line width:</string>
           </property>
-          <property name="wordWrap" >
+          <property name="wordWrap">
            <bool>false</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="0" column="2" >
-       <layout class="QGridLayout" >
-        <property name="margin" >
+      <item row="0" column="2">
+       <layout class="QGridLayout">
+        <property name="margin">
          <number>0</number>
         </property>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="textLabel4" >
-          <property name="text" >
+        <item row="0" column="0">
+         <widget class="QLabel" name="textLabel4">
+          <property name="text">
            <string>Point density:</string>
           </property>
-          <property name="wordWrap" >
+          <property name="wordWrap">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="0" column="1" >
-         <widget class="QComboBox" name="_pointDensity" >
+        <item row="0" column="1">
+         <widget class="QComboBox" name="_pointDensity">
           <item>
-           <property name="text" >
+           <property name="text">
             <string>All</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>High</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Medium</string>
            </property>
           </item>
           <item>
-           <property name="text" >
+           <property name="text">
             <string>Low</string>
            </property>
           </item>
@@ -264,15 +265,15 @@
         </item>
        </layout>
       </item>
-      <item row="0" column="3" >
+      <item row="0" column="3">
        <spacer>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeType" >
+        <property name="sizeType">
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
           <height>20</height>
@@ -284,18 +285,29 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="_buttonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="_buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>_availableListBox</tabstop>
+  <tabstop>_up</tabstop>
+  <tabstop>_remove</tabstop>
+  <tabstop>_add</tabstop>
+  <tabstop>_down</tabstop>
+  <tabstop>_selectedListBox</tabstop>
+  <tabstop>_maxLineWidth</tabstop>
+  <tabstop>_pointDensity</tabstop>
+  <tabstop>_buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

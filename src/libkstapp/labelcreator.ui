@@ -168,6 +168,15 @@
    <header>labelbuilder.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_labelFontScale</tabstop>
+  <tabstop>_bold</tabstop>
+  <tabstop>_italic</tabstop>
+  <tabstop>_labelColor</tabstop>
+  <tabstop>_family</tabstop>
+  <tabstop>_saveAsDefault</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

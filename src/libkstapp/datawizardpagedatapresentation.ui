@@ -82,14 +82,14 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Kst::ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>combobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::DataRange</class>
    <extends>QWidget</extends>
    <header>datarange.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>combobox.h</header>
   </customwidget>
   <customwidget>
    <class>Kst::VectorSelector</class>
@@ -102,6 +102,12 @@
    <header>fftoptions.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>_xAxisGroup</tabstop>
+  <tabstop>_xAxisCreateFromField</tabstop>
+  <tabstop>_xVector</tabstop>
+  <tabstop>_xAxisUseExisting</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
