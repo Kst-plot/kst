@@ -86,6 +86,7 @@ class PlotRenderItem : public ViewItem
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    virtual void wheelEvent(QGraphicsSceneWheelEvent *event);
 
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 

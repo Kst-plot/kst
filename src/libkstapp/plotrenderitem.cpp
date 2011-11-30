@@ -502,6 +502,44 @@ void PlotRenderItem::updateSelectionRect() {
   }
 }
 
+void PlotRenderItem::wheelEvent(QGraphicsSceneWheelEvent *event) {
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  bool zoom = false;
+  if (modifiers & Qt::SHIFT) {
+    if (event->delta()>0) {
+      plotItem()->zoomYIn(true);
+    } else {
+      plotItem()->zoomYOut(true);
+    }
+    zoom = true;
+  }
+  if (modifiers & Qt::CTRL){
+    if (event->delta()>0) {
+      plotItem()->zoomXIn(true);
+    } else {
+      plotItem()->zoomXOut(true);
+    }
+    zoom = true;
+  }
+
+  if (zoom) {
+    return;
+  }
+
+  if ((modifiers & Qt::ALT) || zoomOnlyMode() == View::ZoomOnlyY) {
+    if (event->delta()>0) {
+      plotItem()->zoomYDown(true);
+    } else {
+      plotItem()->zoomYUp(true);
+    }
+  } else {
+    if (event->delta()>0) {
+      plotItem()->zoomXLeft(true);
+    } else {
+      plotItem()->zoomXRight(true);
+    }
+  }
+}
 
 void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (view()->viewMode() != View::Data) {
