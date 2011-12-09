@@ -161,100 +161,111 @@ void LegendItem::paint(QPainter *painter) {
 
   QSize legendSize(0, 0);
   QSize titleSize(0,0);
-  for (int draw = 0; draw<=1; draw++){ // do twice: once to get sizes; second to draw it.
+  Label::Parsed *parsed = Label::parse(_title);
+  int pad = painter->fontMetrics().ascent()/4;
+  Label::RenderContext rc(painter->font(), painter);
+  Label::renderLabel(rc, parsed->chunk, false, false);
 
-    if (draw) {
-      painter->drawRect(rect());
-    }
-    int x=rect().x();
-    int y=rect().y();
-    if (!_title.isEmpty()) {
-      int pad = painter->fontMetrics().ascent()/4;
-      Label::Parsed *parsed = Label::parse(_title);
-      Label::RenderContext rc(painter->font(), painter);
-      titleSize.setHeight(painter->fontMetrics().height()+pad);
-
-      rc.y = rect().y() + titleSize.height()-pad;
-      rc.x = qMax(rect().x()+pad, rect().x() + legendSize.width()/2 - titleSize.width()/2);
-      int x0 = rc.x;
-
-      Label::renderLabel(rc, parsed->chunk, false, true);
-
-      titleSize.setWidth(rc.x - x0 + 3*pad);
-      y+= titleSize.height();
-    }
-    legendSize.setWidth(0);
-    legendSize.setHeight(0);
-    for (int i = 0; i<count; i++) {
-      RelationPtr relation = legendItems.at(i);
-      QSize size;
-      painter->save();
-      painter->translate(x,y);
-      size = paintRelation(names.at(i), relation, painter, draw);
-      painter->restore();
-
-      if (_verticalDisplay) {
-        legendSize.setWidth(qMax(legendSize.width(), size.width()));
-        legendSize.setHeight(legendSize.height() + size.height());
-        y+=size.height();
-      } else {
-        legendSize.setHeight(qMax(legendSize.height(), size.height()));
-        legendSize.setWidth(legendSize.width() + size.width());
-        x+=size.width();
-      }
-    }
-    if (!draw) {
-      setViewRect(rect().x(), rect().y(), qMax(legendSize.width(), titleSize.width()), legendSize.height() + titleSize.height());
-    }
+  if (!_title.isEmpty()) {
+    titleSize.setWidth(rc.x+3*pad);
+    titleSize.setHeight(painter->fontMetrics().height()+pad);
   }
 
+  QList<QSize> sizes;
+  int max_w = 0;
+  int max_h = 0;
+  for (int i = 0; i<count; i++) {
+    RelationPtr relation = legendItems.at(i);
+    QSize size;
+    painter->save();
+    size = paintRelation(names.at(i), relation, painter, false);
+    painter->restore();
+    sizes.append(size);
+    max_w = qMax(max_w, size.width());
+    max_h = qMax(max_h, size.height());
+  }
 
-
-#if 0
-  if (!_title.isEmpty()) {
-    // Paint the title
-    Label::Parsed *parsed = Label::parse(_title);
-
-    if (parsed) {
-      painter->save();
-
-      QPixmap pixmap(400, 100);
-      pixmap.fill(Qt::transparent);
-      QPainter pixmapPainter(&pixmap);
-
-      Label::RenderContext rc(font, &pixmapPainter);
-      QFontMetrics fm(font);
-      rc.y = fm.ascent();
-      Label::renderLabel(rc, parsed->chunk, false, true);
-
-      int startPoint = qMax(0, (legendSize.width() / 2) - (rc.x / 2));
-      int paddingValue = fm.height() / 4;
-    
-      setViewRect(viewRect().x(), viewRect().y(), qMax(rc.x, legendSize.width()), rc.y + legendSize.height() + paddingValue * 3);
-      painter->drawRect(rect());
-
-      painter->drawPixmap(QPoint(x + startPoint, y + paddingValue), pixmap, QRect(0, 0, rc.x, fm.height()));
-      painter->restore();
-      y += fm.height() + (paddingValue *2);
-      delete parsed;
-      parsed = 0;
+  // determine number of rows and number of columns
+  int n_rows = 0;
+  int n_cols = 0;
+  if (_verticalDisplay) {
+    int h=titleSize.height();
+    for (int i = 0; i<count; i++) {
+      h+=sizes.at(i).height();
+    }
+    int max_legend_height = _plotItem->plotRect().height()*0.6+1;
+    n_cols = qMin(count, h / max_legend_height + 1);
+    n_rows = count / n_cols;
+    while (n_rows*n_cols<count) {
+      n_rows++;
     }
   } else {
-    // No Title
-    setViewRect(viewRect().x(), viewRect().y(), legendSize.width(), legendSize.height());
-    painter->drawRect(rect());
-  }
-
-
-  foreach(const DrawnLegendItem &item, legendPixmaps) {
-    painter->drawPixmap(QPoint(x, y), item.pixmap, QRect(0, 0, item.size.width(), item.size.height()));
-    if (_verticalDisplay) {
-      y += item.size.height();
-    } else {
-      x += item.size.width();
+    int w = 0;
+    for (int i = 0; i<count; i++) {
+      w+=sizes.at(i).width();
+    }
+    int max_legend_width = _plotItem->plotRect().width()*0.8+1;
+    n_rows = qMin(count, w / max_legend_width+1);
+    n_cols = count/n_rows;
+    while (n_rows*n_cols<count) {
+      n_cols++;
     }
   }
-#endif
+
+  // determine the dimensions of each column
+  QList<QSize> col_sizes;
+  for (int i=0; i<n_cols; i++) {
+    col_sizes.append(QSize(0,0));
+  }
+  for (int i = 0; i<count; i++) {
+    int col = i/n_rows;
+    col_sizes[col].rheight()+= sizes.at(i).height();
+    col_sizes[col].setWidth(qMax(sizes.at(i).width(), col_sizes.at(col).width()));
+  }
+
+  // determine the dimensions of the legend
+  int w = 0;
+  int h = 0;
+  for (int col = 0; col < n_cols; col++) {
+    w += col_sizes.at(col).width();
+    h = qMax(h, col_sizes.at(col).height());
+  }
+  legendSize.setHeight(h + titleSize.height());
+  legendSize.setWidth(qMax(titleSize.width(), w));
+  setViewRect(rect().x(), rect().y(), legendSize.width()+pad, legendSize.height()+pad);
+
+  // Now paint everything
+  painter->drawRect(rect());
+
+  int x=rect().x();
+  int y=rect().y();
+
+  if (!_title.isEmpty()) {
+    rc.y = rect().y() + titleSize.height()-pad;
+    rc.x = qMax(rect().x()+pad, rect().x() + legendSize.width()/2 - titleSize.width()/2);
+    Label::renderLabel(rc, parsed->chunk, false, true);
+    y+= titleSize.height();
+  }
+
+  legendSize.setWidth(0);
+  legendSize.setHeight(0);
+  for (int i = 0; i<count; i++) {
+    RelationPtr relation = legendItems.at(i);
+    painter->save();
+    painter->translate(x,y);
+    paintRelation(names.at(i), relation, painter, true);
+    painter->restore();
+
+    int col = i/n_rows;
+    int row = i%n_rows;
+    if (row == n_rows-1) { // end of a column
+      x += col_sizes.at(col).width();
+      y = rect().y() + titleSize.height();
+    } else {
+      y += sizes.at(i).height();
+    }
+  }
+
 }
 
 
