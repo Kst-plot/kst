@@ -58,7 +58,7 @@ class KSTCORE_EXPORT Data
       */
     virtual int columns() const;
 
-    static unsigned long AvailableMemory();
+    static double AvailableMemory();
 };
 
 /** Bad choice for location - maybe move it later */

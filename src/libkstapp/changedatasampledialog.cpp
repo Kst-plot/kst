@@ -245,11 +245,11 @@ void ChangeDataSampleDialog::apply() {
   // see if we have enough memory
   //FIXME: doesn't consider data objects that depend on this, and it should
   //FIXME: doesn't work under windows or mac
-  long current_memory_used = 0;
-  long memory_needed = 0;
+  double current_memory_used = 0.0;
+  double memory_needed = 0.0;
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
-      current_memory_used += vector->length()*sizeof(double);
+      current_memory_used += double(vector->length())*sizeof(double);
       long ns=0;
       if (_dataRange->readToEnd()) {
         ns = vector->fileLength() - (int)_dataRange->start();
@@ -261,11 +261,11 @@ void ChangeDataSampleDialog::apply() {
       } else {
         ns *= vector->samplesPerFrame();
       }
-      memory_needed += ns*sizeof(double);
+      memory_needed += double(ns)*sizeof(double);
     }
   }
 
-  long memory_available = Data::AvailableMemory();
+  double memory_available = Data::AvailableMemory();
   if (memory_needed-current_memory_used > memory_available) {
     //QApplication::restoreOverrideCursor();
     QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."

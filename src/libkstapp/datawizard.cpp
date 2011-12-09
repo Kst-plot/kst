@@ -776,8 +776,8 @@ void DataWizard::finished() {
   emit dataSourceLoaded(ds->fileName());
 
   // check for sufficient memory
-  unsigned long memoryRequested = 0;
-  unsigned long memoryAvailable = Data::AvailableMemory();
+  double memoryRequested = 0;
+  double memoryAvailable = Data::AvailableMemory();
   double frames;
 
   ds->writeLock();
@@ -793,9 +793,9 @@ void DataWizard::finished() {
     }
 
     if (_pageDataPresentation->dataRange()->doSkip() && _pageDataPresentation->dataRange()->skip() > 0) {
-      memoryRequested += frames / _pageDataPresentation->dataRange()->skip() * sizeof(double);
+      memoryRequested += double(frames) / _pageDataPresentation->dataRange()->skip() * sizeof(double);
     } else {
-      memoryRequested += frames * ds->vector().dataInfo(_pageDataPresentation->vectorField()).samplesPerFrame * sizeof(double);
+      memoryRequested += double(frames) * ds->vector().dataInfo(_pageDataPresentation->vectorField()).samplesPerFrame * sizeof(double);
     }
   }
 
@@ -816,12 +816,12 @@ void DataWizard::finished() {
       }
 
       if (_pageDataPresentation->dataRange()->doSkip() && _pageDataPresentation->dataRange()->skip() > 0) {
-        memoryRequested += frames / _pageDataPresentation->dataRange()->skip()*sizeof(double);
+        memoryRequested += double(frames) / _pageDataPresentation->dataRange()->skip()*sizeof(double);
       } else {
-        memoryRequested += frames * ds->vector().dataInfo(field).samplesPerFrame * sizeof(double);
+        memoryRequested += double(frames) * ds->vector().dataInfo(field).samplesPerFrame * sizeof(double);
       }
       if (_pageDataPresentation->plotPSD()) {
-        memoryRequested += fftLen * 6;
+        memoryRequested += fftLen * 6.0;
       }
     }
   }

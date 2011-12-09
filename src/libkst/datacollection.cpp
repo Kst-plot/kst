@@ -37,8 +37,8 @@ void *malloc(size_t size) {
   return ::malloc(size);
 }
 
-unsigned long Data::AvailableMemory() {
-  unsigned long available_memory = 1024*1024*1024;
+double Data::AvailableMemory() {
+  double available_memory = 1024.0*1024.0*1024.0;
   // FIXME: under windows or mac, this is totally wrong.
   // Under windows, try GlobalMemoryStatusEx
   // (http://msdn.microsoft.com/en-us/library/aa366589)
@@ -47,7 +47,7 @@ unsigned long Data::AvailableMemory() {
 #ifdef __linux__
   QMutexLocker ml(&bigLock);
   meminfo();
-  available_memory = S(kb_main_free + kb_main_cached) - 30*1024*1024; // 30MB margin
+  available_memory = double(S(kb_main_free + kb_main_cached)) - 30.0*1024.0*1024.0; // 30MB margin
 #endif
   return available_memory;
 }
