@@ -1066,7 +1066,8 @@ void PlotItem::updateXAxisLines() {
   }
   _xPlotMarkerLines.clear();
   foreach (double x, _xAxis->axisPlotMarkers().markers()) {
-    if (x > _xMin && x < _xMax) {
+    double xx = _xAxis->axisLog() ? logXLo(x) : x;
+    if (xx > _xMin && xx < _xMax) {
       QPointF p1 = QPointF(mapXToPlot(x), rect.bottom());
       QPointF p2 = p1 - QPointF(0, rect.height());
       _xPlotMarkerLines << QLineF(p1, p2);
@@ -1180,7 +1181,8 @@ void PlotItem::updateYAxisLines() {
   }
   _yPlotMarkerLines.clear();
   foreach (double y, _yAxis->axisPlotMarkers().markers()) {
-    if (y > _yMin && y < _yMax) {
+    double yy = _yAxis->axisLog() ? logYLo(y) : y;
+    if (yy > _yMin && yy < _yMax) {
       QPointF p1 = QPointF(rect.left(), mapYToPlot(y));
       QPointF p2 = p1 + QPointF(rect.width(), 0);
       _yPlotMarkerLines << QLineF(p1, p2);
@@ -1510,7 +1512,6 @@ void PlotItem::paintPlotMarkers(QPainter *painter) {
     painter->drawLines(_yPlotMarkerLines);
     painter->restore();
   }
-
 }
 
 
