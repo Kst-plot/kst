@@ -27,7 +27,6 @@ void setGenVectorDefaults(GeneratedVectorPtr V) {
   _dialogDefaults->setValue("genVector/min", V->min());
   _dialogDefaults->setValue("genVector/max", V->max()); 
   _dialogDefaults->setValue("genVector/length", V->length());
-  qDebug() << "set gen vector defaults:" << V->min() << V->max();
 }
 
 void setDataMatrixDefaults(DataMatrixPtr M) {

@@ -666,16 +666,12 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   QPainter *p = context.painter;
   p->save();
 
-  //p->setRenderHint(QPainter::Antialiasing);
+  p->setRenderHint(QPainter::Antialiasing);
   Qt::PenStyle style = Kst::LineStyle[lineStyle()];
 
   if (hasBars()) {
 
-    //if (barStyle() == 1) { // filled
-      p->setPen(QPen(barFillColor(), _width, style));
-    //} else {
-      //p->setPen(QPen(color(), _width, style));
-    //}
+    p->setPen(QPen(barFillColor(), _width, style));
 
     foreach(const QRectF& rect, _filledRects) {
         p->fillRect(rect, barFillColor());

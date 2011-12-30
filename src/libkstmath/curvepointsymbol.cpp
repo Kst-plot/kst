@@ -34,9 +34,9 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
   }
 
   if (lineSize == 0 || lineSize == 1) {
-    s = 3;
+    s = 3.0;
   } else {
-    s = ( 3 * lineSize ) / 2;
+    s = ( 3.0 * lineSize ) / 2.0;
   }
 
   switch (Type) {
@@ -46,16 +46,16 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
       break;
     case 1:
       p->setBrush(Qt::NoBrush);
-      p->drawRect(QRectF(x-s, y-s, 2*s, 2*s));
+      p->drawRect(QRectF(x-s, y-s, 2.0*s, 2.0*s));
       break;
     case 2:
       p->setBrush(Qt::NoBrush);
-      p->drawEllipse(x-s, y-s, 2*s, 2*s);
+      p->drawEllipse(QPointF(x,y), s, s);
       break;
     case 3:
       p->setBrush(Qt::SolidPattern);
       p->setBrush(p->pen().color());
-      p->drawEllipse(x-s, y-s, 2*s, 2*s);
+      p->drawEllipse(QPointF(x,y), s, s);
       break;
     case 4:
       {
@@ -68,9 +68,9 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
       break;
     case 5:
       {
-        QPolygon pts(3);
+        QPolygonF pts;
 
-        pts.putPoints( 0, 3, int(x-s), int(y+s), int(x), int(y-s), int(x+s), int(y+s) );
+        pts << QPointF(x-s, y+s) <<  QPointF(x,y-s) <<  QPointF(x+s,y+s);
         p->setBrush(Qt::NoBrush);
         p->drawPolygon(pts);
       }
@@ -78,7 +78,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
     case 6:
       p->setBrush(Qt::SolidPattern);
       p->setBrush(p->pen().color());
-      p->drawRect(QRectF(x-s, y-s, 2*s+1, 2*s+1));
+      p->drawRect(QRectF(x-s, y-s, 2.0*s+1.0, 2.0*s+1.0));
       break;
     case 7:
       p->drawLine(QLineF(x-s, y, x+s, y));
@@ -92,9 +92,8 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
       break;    
     case 9:
       {
-        QPolygon pts(3);
-
-        pts.putPoints( 0, 3, int(x-s), int(y-s), int(x), int(y+s), int(x+s), int(y-s) );
+        QPolygonF pts;
+        pts << QPointF(x-s, y-s) <<  QPointF(x, y+s) <<  QPointF(x+s, y-s);
         p->setBrush(Qt::SolidPattern);
         p->setBrush(p->pen().color());
         p->drawPolygon(pts);
@@ -102,9 +101,10 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
       break;
     case 10:
       {
-        QPolygon pts(3);
+        QPolygonF pts;
 
-        pts.putPoints( 0, 3, int(x-s), int(y+s), int(x), int(y-s), int(x+s), int(y+s) );
+        pts << QPointF(x-s, y+s) <<  QPointF(x, y-s) <<  QPointF(x+s,y+s);
+
         p->setBrush(Qt::SolidPattern);
         p->setBrush(p->pen().color());
         p->drawPolygon(pts);
@@ -112,24 +112,26 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
       break;
     case 11:
       {
-        QPolygon pts(4);
+        QPolygonF pts;
 
-        pts.putPoints( 0, 4,   int(x+s), int(y),
-                               int(x), int(y+s),
-                               int(x-s), int(y),
-                               int(x), int(y-s) );
+        pts << QPointF(x+s, y)
+            << QPointF(x, y+s)
+            << QPointF(x-s, y)
+            << QPointF(x, y-s);
+
         p->setBrush(Qt::NoBrush);
         p->drawPolygon(pts);
       }
       break;
     case 12:
       {    
-        QPolygon pts(4);
+        QPolygonF pts;
 
-        pts.putPoints( 0, 4,   int(x+s), int(y),
-                               int(x), int(y+s),
-                               int(x-s), int(y),
-                               int(x), int(y-s) );
+        pts << QPointF(x+s, y)
+            << QPointF(x, y+s)
+            << QPointF(x-s, y)
+            << QPointF(x, y-s);
+
         p->setBrush(Qt::SolidPattern);
         p->setBrush(p->pen().color());
         p->drawPolygon(pts);
