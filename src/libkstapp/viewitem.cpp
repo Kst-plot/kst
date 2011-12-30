@@ -2248,13 +2248,6 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
     return; //not added to undostack
   }
 
-  //foreach (QGraphicsItem *item, list) {
-  //  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-  //  if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
-  //    continue;
-    //viewItems.append(viewItem);
-  //}
-
   viewItems = ViewItemManager::layoutableViewItemsForView(_item->view());
 
   if (viewItems.isEmpty()) {
@@ -2264,12 +2257,6 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
   _layout = new ViewGridLayout(_item);
 
   FormatGridHelper grid(viewItems, preserve);
-
-  if (grid.n_cols == columns) {
-    if (grid.numHoles()<columns) {
-      //columns = 0; // already in correct columns - just line stuff up
-    }
-  }
 
   if (columns == 0) {
     int n_view_items = viewItems.size();
