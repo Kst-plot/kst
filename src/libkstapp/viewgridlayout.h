@@ -40,6 +40,7 @@ class ViewGridLayout : public QObject
 
     int rowCount() const;
     int columnCount() const;
+    void setColumnCount(int count) {_columnCount = (count>_columnCount)? count : _columnCount ;}
 
     QSizeF spacing() const { return _spacing; }
     void setSpacing(const QSizeF &spacing) { _spacing = spacing; }

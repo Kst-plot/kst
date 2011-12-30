@@ -1161,6 +1161,9 @@ void DataWizard::finished() {
       plot->update();
       plot->view()->appendToLayout(layout_type, plot, num_columns);
     }
+    if (layout_type == CurvePlacement::Custom) {
+      plotList.at(0)->createCustomLayout(num_columns);
+    }
 
   }
   foreach (PlotItem* plot, plotList) {

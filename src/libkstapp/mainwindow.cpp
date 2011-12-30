@@ -195,7 +195,7 @@ void MainWindow::allPlotsTiedZoom() {
 
 
 bool MainWindow::promptSave() {
-  int rc = QMessageBox::warning(this, tr("Kst"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+  int rc = QMessageBox::warning(this, tr("Kst: Save Promp"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
   if (rc == QMessageBox::Save) {
     save();
   } else if (rc == QMessageBox::Cancel) {

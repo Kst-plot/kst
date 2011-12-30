@@ -20,6 +20,7 @@
 #include "datacollection.h"
 #include "formatgridhelper.h"
 #include "dialogdefaults.h"
+#include "viewitemmanager.h"
 
 #include "layoutboxitem.h"
 
@@ -129,10 +130,13 @@ ViewItem::ViewItem(View *parentView) :
   // only drop plots onto TabBar
   setAcceptDrops(false);
 
+  ViewItemManager::self()->addViewItem(this);
+
 }
 
 
 ViewItem::~ViewItem() {
+  ViewItemManager::self()->removeViewItem(this);
 }
 
 void ViewItem::_initializeShortName() {
@@ -850,15 +854,18 @@ void ViewItem::createProtectedLayout() {
 }
 
 
-void ViewItem::createCustomLayout() {
-  bool ok;
+void ViewItem::createCustomLayout(int columns) {
+  bool ok = true;
   int default_cols = qMax(1,int(sqrt((double)Data::self()->plotList().count())));
-  int columns = QInputDialog::getInteger(view(), tr("Kst"),
-                                      tr("Select Number of Columns"),default_cols, 0,
-                                      10, 1, &ok);
+
+  if (columns<1) {
+    columns = QInputDialog::getInt(view(), tr("Kst: Column Layout"),
+                                       tr("Layout in columns in order of creation.\nSelect number of columns:"),default_cols, 1,
+                                       15, 1, &ok);
+  }
 
   if (ok) {
-    if (parentViewItem()) {
+    if (parentViewItem() && false) {
       LayoutCommand *layout = new LayoutCommand(parentViewItem());
       layout->createLayout(false, columns);
     } else if (view()) {
@@ -2240,12 +2247,15 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
   if (list.isEmpty()) {
     return; //not added to undostack
   }
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
-      continue;
-    viewItems.append(viewItem);
-  }
+
+  //foreach (QGraphicsItem *item, list) {
+  //  ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+  //  if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
+  //    continue;
+    //viewItems.append(viewItem);
+  //}
+
+  viewItems = ViewItemManager::layoutableViewItemsForView(_item->view());
 
   if (viewItems.isEmpty()) {
     return; //not added to undostack
@@ -2257,25 +2267,25 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
 
   if (grid.n_cols == columns) {
     if (grid.numHoles()<columns) {
-      columns = 0; // already in correct columns - just line stuff up
+      //columns = 0; // already in correct columns - just line stuff up
     }
   }
 
   if (columns == 0) {
-    int n_views = viewItems.size();
-    for (int i_view = 0; i_view<n_views; i_view++) {
-      ViewItem *v = viewItems.at(i_view);
-      struct AutoFormatRC rc = grid.rcList.at(i_view);
+    int n_view_items = viewItems.size();
+    for (int i_view_item = 0; i_view_item<n_view_items; i_view_item++) {
+      ViewItem *v = viewItems.at(i_view_item);
+      struct AutoFormatRC rc = grid.rcList.at(i_view_item);
       _layout->addViewItem(v, rc.row, rc.col, rc.row_span, rc.col_span);
     }
 
   } else {
     int row = 0;
     int col = 0;
-    int n_views = viewItems.size();
+    int n_view_items = viewItems.size();
 
-    for (int i_view = 0; i_view<n_views; i_view++) {
-      ViewItem *v = viewItems.at(i_view);
+    for (int i_view_item = 0; i_view_item<n_view_items; i_view_item++) {
+      ViewItem *v = viewItems.at(i_view_item);
       _layout->addViewItem(v, row, col, 1, 1);
       col++;
       if (col>=columns) {
@@ -2316,6 +2326,7 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     columns = 0;
   }
 
+  if (layout == CurvePlacement::Custom) layout = CurvePlacement::Protect;
   if (layout == CurvePlacement::Protect) {
     _layout = new ViewGridLayout(_item);
 
@@ -2325,20 +2336,13 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     item->setPos(center);
     item->setViewRect(0.0, 0.0, 200.0, 200.0);
     _item->view()->scene()->addItem(item);
-    _item->view()->undoStack()->push(this);
+    //_item->view()->undoStack()->push(this);
     return;
   }
 
 
   QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
-
-  foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
-    if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != _item)
-      continue;
-    viewItems.append(viewItem);
-  }
+  viewItems = ViewItemManager::layoutableViewItemsForView(_item->view());
 
   _layout = new ViewGridLayout(_item);
 
@@ -2399,14 +2403,15 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
     }
     _item->view()->scene()->addItem(item);
     _layout->addViewItem(item, row, col, 1,1);
+    _layout->setColumnCount(columns);
   }
+
   if (qobject_cast<LayoutBoxItem*>(_item)) {
     QObject::connect(_layout, SIGNAL(enabledChanged(bool)),
                     _item, SLOT(setEnabled(bool)));
   }
 
   _layout->apply();
-  _item->view()->undoStack()->push(this);
 }
 
 

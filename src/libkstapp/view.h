@@ -69,7 +69,7 @@ class View : public QGraphicsView
 
     QPolygonF creationPolygon(CreationEvents events) const;
 
-    LayoutBoxItem* layoutBoxItem() const { return _layoutBoxItem; }
+    //LayoutBoxItem* layoutBoxItem() const { return _layoutBoxItem; }
     void setLayoutBoxItem(LayoutBoxItem *layoutBoxItem) { _layoutBoxItem = layoutBoxItem; }
 
     bool showGrid() const { return _showGrid; }

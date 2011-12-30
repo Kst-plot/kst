@@ -28,10 +28,8 @@ class LayoutBoxItem : public ViewItem
     const QString defaultsGroupName() const {return QString("layoutbox");}
 
     void appendItem(ViewItem *item);
-    bool appendItemFromXml(QXmlStreamReader &xml);
 
     virtual void save(QXmlStreamWriter &xml);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
   public Q_SLOTS:
     void setEnabled(bool enabled);

@@ -372,9 +372,9 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 void View::createCustomLayout() {
   bool ok;
   int default_cols = qMax(1,int(sqrt((double)Data::self()->plotList().count())));
-  int columns = QInputDialog::getInteger(this, tr("Kst"),
-                                      tr("Select Number of Columns"),default_cols, 0,
-                                      10, 1, &ok);
+  int columns = QInputDialog::getInt(this, tr("Kst: Column Layout"),
+                                      tr("Layout in columns in order of creation.\nSelect number of columns:"),default_cols, 1,
+                                      15, 1, &ok);
   if (ok) {
     createLayout(false, columns);
   }

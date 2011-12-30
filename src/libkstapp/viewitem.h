@@ -244,7 +244,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void lower();
     virtual void createAutoLayout();
     virtual void createProtectedLayout();
-    virtual void createCustomLayout();
+    virtual void createCustomLayout(int columns = 0);
     virtual void sharePlots(QPainter *painter, bool creation);
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
