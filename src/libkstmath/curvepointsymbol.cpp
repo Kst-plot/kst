@@ -24,19 +24,20 @@ namespace Kst {
 
 namespace CurvePointSymbol {
 
-void draw(int Type, QPainter *p, double x, double y, int lineSize, int size) {
-  Q_UNUSED(size)
-  
+void draw(int Type, QPainter *p, double x, double y, int lineSize) {
+
   double s;
+
+  s = (p->window().width()+p->window().height())*0.003;
+  if (s<3.0) s = 3.0;
 
   if (Type < 0 || Type > KSTPOINT_MAXTYPE) {
     Type = 0;
   }
 
   if (lineSize == 0 || lineSize == 1) {
-    s = 3.0;
   } else {
-    s = ( 3.0 * lineSize ) / 2.0;
+    s = ( s * lineSize ) / 2.0;
   }
 
   switch (Type) {

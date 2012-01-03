@@ -1588,7 +1588,7 @@ void Curve::paintLegendSymbol(QPainter *p, const QSize &size) {
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, width, 600);
+    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, width);
   }
   p->restore();
 }
