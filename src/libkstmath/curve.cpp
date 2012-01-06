@@ -37,8 +37,11 @@
 #include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
-#define BENCHMARK
+//#define BENCHMARK
 
+// NOTE: on a modern (eg, sandybridge or later) cpu
+// the cpu's branch prediction is so good, this does
+// more or less nothing
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
 # define KDE_ISLIKELY( x )    __builtin_expect(!!(x),1)
