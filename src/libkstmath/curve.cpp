@@ -37,7 +37,7 @@
 #include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
-// #define BENCHMARK
+#define BENCHMARK
 
 #ifndef KDE_IS_LIKELY
 #if __GNUC__ - 0 >= 3
@@ -846,7 +846,8 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
                 ++numberOfLinesDrawn;
 #endif
-                _lines.append(QLineF(X2, minY, X2, maxY));
+                double fX2 = floor(X2);
+                _lines.append(QLineF(fX2, minY, fX2, maxY));
               }
             }
             overlap = false;
@@ -895,23 +896,24 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
                     ++numberOfLinesDrawn;
 #endif
                   }
+                  double fX2 = floor(X2);
 
                   if (KDE_ISUNLIKELY(minY == maxY)) {
-                    points.append(QPointF(X2, maxY));
+                    points.append(QPointF(fX2, maxY));
                   } else if (KDE_ISUNLIKELY(Y2 == minY)) {
-                    points.append(QPointF(X2, maxY));
-                    points.append(QPointF(X2, minY));
+                    points.append(QPointF(fX2, maxY));
+                    points.append(QPointF(fX2, minY));
                   } else if (KDE_ISUNLIKELY(Y2 == maxY)) {
-                    points.append(QPointF(X2, minY));
-                    points.append(QPointF(X2, maxY));
+                    points.append(QPointF(fX2, minY));
+                    points.append(QPointF(fX2, maxY));
                   } else {
-                    points.append(QPointF(X2, minY));
-                    points.append(QPointF(X2, maxY));
+                    points.append(QPointF(fX2, minY));
+                    points.append(QPointF(fX2, maxY));
                     if (KDE_ISLIKELY(Y2 >= Ly && Y2 <= Hy)) {
-                      points.append(QPointF(X2, Y2));
+                      points.append(QPointF(fX2, Y2));
                     }
                   }
-                  lastPlottedX = X2;
+                  lastPlottedX = fX2;
                   lastPlottedY = Y2;
                 } else {
                   if (KDE_ISUNLIKELY(maxY > Hy && minY <= Hy)) {
@@ -931,10 +933,12 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    _lines.append(QLineF(X2, minY, X2, maxY));
+                    double fX2 = floor(X2);
+                    _lines.append(QLineF(fX2, minY, fX2, maxY));
                   }
                 }
               }
+
               overlap = false;
             }
 
@@ -1434,15 +1438,15 @@ qDebug() << "y not in bounds"
   //qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn;
   //qDebug() << "    Number of points drawn:" << numberOfPointsDrawn;
   //qDebug() << "    Number of bars drawn:" << numberOfBarsDrawn;
-  std::cout << "\nPlotting curve " << (void *)this << ": " << i << "ms";
+  std::cout << "\nPlotting curve " << (void *)this << ": " << i << " ms";
   std::cout << "\n    Without locks: " << b_4 << "ms";
   std::cout << "\n    Number of lines drawn:" << numberOfLinesDrawn;
   std::cout << "\n    Number of points drawn:" << numberOfPointsDrawn;
   std::cout << "\n    Number of bars drawn:" << numberOfBarsDrawn;
-  if (b_1 > 0)       std::cout << "\n            Lines: " << b_1 << "ms\n";
-  if (b_2 - b_1 > 0) std::cout << "\n             Bars: " << (b_2 - b_1) << "ms\n";
-  if (b_3 - b_2 > 0) std::cout << "\n           Points: " << (b_3 - b_2) << "ms\n";
-  if (b_4 - b_3 > 0) std::cout << "\n           Errors: " << (b_4 - b_3) << "ms\n";
+  if (b_1 > 0)       std::cout << "\n            Lines: " << b_1 << " ms\n";
+  if (b_2 - b_1 > 0) std::cout << "\n             Bars: " << (b_2 - b_1) << " ms\n";
+  if (b_3 - b_2 > 0) std::cout << "\n           Points: " << (b_3 - b_2) << " ms\n";
+  if (b_4 - b_3 > 0) std::cout << "\n           Errors: " << (b_4 - b_3) << " ms\n";
 #endif
 }
 
