@@ -849,7 +849,7 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
                 ++numberOfLinesDrawn;
 #endif
-                double fX2 = floor(X2);
+                double fX2 = floor(X2)+0.5;
                 _lines.append(QLineF(fX2, minY, fX2, maxY));
               }
             }
@@ -899,7 +899,7 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
                     ++numberOfLinesDrawn;
 #endif
                   }
-                  double fX2 = floor(X2);
+                  double fX2 = floor(X2)+0.5;
 
                   if (KDE_ISUNLIKELY(minY == maxY)) {
                     points.append(QPointF(fX2, maxY));
@@ -936,7 +936,7 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
   ++numberOfLinesDrawn;
 #endif
-                    double fX2 = floor(X2);
+                    double fX2 = floor(X2)+0.5;
                     _lines.append(QLineF(fX2, minY, fX2, maxY));
                   }
                 }

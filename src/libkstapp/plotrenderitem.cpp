@@ -303,6 +303,7 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
     QPointF point = plotItem()->mapToPlot(_referencePoint);
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
+    painter->setRenderHint(QPainter::Antialiasing, true);
     CurvePointSymbol::draw(7, painter, point.x(), point.y(), 1);
     painter->restore();
   }
@@ -320,7 +321,10 @@ void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
       highlightColor = QColor(255, 255, 255, 127);
     }
     painter->setBrush(highlightColor);
-    painter->drawEllipse(point.x()-3, point.y()-3, 7, 7);
+
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    painter->drawEllipse(point, 3, 3);
     painter->restore();
   }
 }

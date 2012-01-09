@@ -59,6 +59,7 @@ QList<ViewItem*> ViewItemManager::layoutableViewItemsForView(View *view) {
   QList<ViewItem*> layoutable_view_items;
   foreach (ViewItem *item, view_items) {
     if (item && (!item->hasStaticGeometry()) &&
+        item->isVisible() &&
         item->allowsLayout() &&
         ((dynamic_cast<LayoutBoxItem*>(item->parentViewItem())!=0) || (!item->parentViewItem()))) {
       layoutable_view_items.append(item);
