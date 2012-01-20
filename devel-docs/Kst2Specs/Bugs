@@ -4,7 +4,3 @@ Names from matrixes are not properly escaped (eg, a field called flux_89)
 
 More than one shared axis group.  Tied zoom doesn't work right.
 
---------------------
-
-points don't always appear centered on the line.
-

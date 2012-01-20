@@ -34,11 +34,17 @@ DimensionsTab::~DimensionsTab() {
 
 
 void DimensionsTab::setupDimensions() {
-  _x->setValue(_viewItem->relativeCenter().x());
-  _y->setValue(_viewItem->relativeCenter().y());
-  _width->setValue(_viewItem->relativeWidth());
-  _height->setValue(_viewItem->relativeHeight());
-  _rotation->setValue(_viewItem->rotationAngle());
+  double x0 = _viewItem->relativeCenter().x();
+  double y0 = _viewItem->relativeCenter().y();
+  double w = _viewItem->relativeWidth();
+  double h = _viewItem->relativeHeight();
+  double theta = _viewItem->rotationAngle();
+
+  _x->setValue(x0);
+  _y->setValue(y0);
+  _width->setValue(w);
+  _height->setValue(h);
+  _rotation->setValue(theta);
 
   _fixAspectRatio->setChecked(_viewItem->lockAspectRatio());
   _fixAspectRatio->setEnabled(!_viewItem->lockAspectRatioFixed());

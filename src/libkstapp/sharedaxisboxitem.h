@@ -94,6 +94,7 @@ class SharedAxisBoxItem : public ViewItem
     void zoomYIn(PlotItem* originPlotItem);
     void zoomNormalizeYtoX(PlotItem* originPlotItem);
     void zoomLogY(PlotItem* originPlotItem, bool autoEnable = true, bool enable = true);
+    QList<PlotItem*> getSharedPlots();
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
@@ -106,7 +107,6 @@ class SharedAxisBoxItem : public ViewItem
     QRectF computeRect(PlotAxis::ZoomMode xMode, PlotAxis::ZoomMode yMode);
     void applyZoom(const QRectF &projection, PlotItem* originPlotItem, bool applyX = true, bool applyY = true);
 
-    QList<PlotItem*> getSharedPlots();
     QList<PlotItem*> getTiedPlots(PlotItem* originPlotItem);
 
     QAction *_breakAction;

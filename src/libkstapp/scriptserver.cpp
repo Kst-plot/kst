@@ -786,12 +786,11 @@ QByteArray ScriptServer::newBasicPlugin(QByteArray&command, QLocalSocket* s,Obje
 }
 
 
-
 QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     QString a;
     for(int i=0;i<DataObject::dataObjectPluginList().size();i++) {
-        a.push_back(DataObject::dataObjectPluginList()[i].toAscii()%"\n");
+        a.push_back(DataObject::dataObjectPluginList()[i].toAscii()+"\n");
     }
     return handleResponse(a.toAscii(),s,ifMode,ifEqual,_if,var);
 }
@@ -1320,7 +1319,7 @@ QByteArray ScriptServer::commands(QByteArray&, QLocalSocket* s,ObjectStore*,cons
         }
         return handleResponse((join(v,'\n')+builtIns+"\n"),s,ifMode,ifEqual,_if,var);
     } else {
-        QString a="endEdit()\n"%join(_interface->commands(),'\n');
+        QString a="endEdit()\n"+join(_interface->commands(),'\n');
         return handleResponse(a.toAscii(),s,ifMode,ifEqual,_if,var);
     }
 }

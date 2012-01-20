@@ -73,7 +73,8 @@ VectorPtr VectorSelector::selectedVector() const {
     QString shortName;
     QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
     rx.indexIn(_vector->currentText());
-    shortName = rx.cap(2);
+    shortName = '('+rx.cap(2)+')';
+
 
     for(int i=0;i<_vector->count();i++) {
         if(_vector->itemText(i).contains(shortName)) {
@@ -195,6 +196,9 @@ void VectorSelector::fillVectors() {
     return;
   }
 
+  int current_index = _vector->currentIndex();
+  VectorPtr current = selectedVector();
+
   QHash<QString, VectorPtr> vectors;
 
   VectorList vectorList = _store->getObjects<Vector>();
@@ -213,9 +217,6 @@ void VectorSelector::fillVectors() {
   QStringList list = vectors.keys();
 
   qSort(list);
-
-  int current_index = _vector->currentIndex();
-  VectorPtr current = selectedVector();
 
   _vector->clear();
   foreach (const QString &string, list) {

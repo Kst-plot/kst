@@ -17,12 +17,6 @@ Fixup line/arrow dimensions tab:
 
 Edit multiple for other view objects (arrow, line, label...)
 
---------
-
-data source text box doesn't recognise initial ~ as a euphemism for
-   the user's home directory (QDirModel doesn't handle this...)
-   (nor QDir, though QDir seems to know about $HOME).
-
 ------------
 
 1.x kst file read compatibility...
@@ -42,10 +36,6 @@ tell any of the numbers apart).
 in <ctrl> or <shift> zoom modes the line cursor should appear in all tied plots.
 
 --------------------
-
-Legends can get larger than the plot if there are enought things in them.  This should not be. 
-
--------
 
 Some automagic way of deciding if plugin dialogs can make plots.
 

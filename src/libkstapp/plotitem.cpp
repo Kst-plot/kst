@@ -2877,6 +2877,9 @@ void PlotItem::plotMaximize() {
 void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
   if (projection.isValid()) {
     if (isInSharedAxisBox()) {
+      ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection, force);
+      _undoStack->push(cmd);
+      cmd->redo();
       if (!force) {
         sharedAxisBox()->zoomFixedExpression(projection, this);
       } else {
