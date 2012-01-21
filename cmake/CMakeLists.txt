@@ -28,7 +28,7 @@ kst_option(rpath "Use rpath" ON gcc)
 kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
 kst_option(console "Open console on Windows" OFF win)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
-kst_option(python "Build Python support" OFF gcc)
+kst_option(python "Build Python support" OFF all)
 
 message(STATUS)
 
