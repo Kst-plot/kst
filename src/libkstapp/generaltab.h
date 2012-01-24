@@ -32,6 +32,9 @@ class GeneralTab : public DialogTab, Ui::GeneralTab {
     bool transparentDrag() const;
     void setTransparentDrag(const bool transparent_drag);
 
+    bool antialiasPlot() const;
+    void setAntialiasPlot(bool antialias);
+
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int Period);
 

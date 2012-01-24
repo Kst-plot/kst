@@ -20,6 +20,7 @@
 #include "sharedaxisboxitem.h"
 #include "image.h"
 #include "debug.h"
+#include "applicationsettings.h"
 
 #include <QTime>
 #include <QMenu>
@@ -303,7 +304,7 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
     QPointF point = plotItem()->mapToPlot(_referencePoint);
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
-    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
     CurvePointSymbol::draw(7, painter, point.x(), point.y(), 1);
     painter->restore();
   }
@@ -322,7 +323,7 @@ void PlotRenderItem::paintHighlightPoint(QPainter *painter) {
     }
     painter->setBrush(highlightColor);
 
-    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
 
     painter->drawEllipse(point, 3, 3);
     painter->restore();

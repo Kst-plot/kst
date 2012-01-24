@@ -43,7 +43,7 @@ class CurveRenderContext {
                               x_max(0.0), y_max(0.0), x_min(0.0), y_min(0.0),
                               XMin(0.0), YMin(0.0), XMax(0.0), YMax(0.0),
                               xLog(false), yLog(false), xLogBase(0.0),
-                              yLogBase(0.0), penWidth(0)
+                              yLogBase(0.0), penWidth(0), antialias(false)
     {}
 
     QPainter* painter;
@@ -57,6 +57,7 @@ class CurveRenderContext {
     QColor foregroundColor; // plot foreground color
     QColor backgroundColor; // plot background color
     int penWidth;
+    bool antialias;
 };
 
   struct CurveContextDetails {

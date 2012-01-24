@@ -17,6 +17,7 @@
 #include "math_kst.h"
 
 #include "plotitem.h"
+#include "applicationsettings.h"
 
 namespace Kst {
 
@@ -80,6 +81,7 @@ void CartesianRenderItem::paintRelations(QPainter *painter) {
     context.m_Y = m_Y;
     context.b_X = b_X;
     context.b_Y = b_Y;
+    context.antialias = ApplicationSettings::self()->antialiasPlots();
 
     relation->paint(context);
   }

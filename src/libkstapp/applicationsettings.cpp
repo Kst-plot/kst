@@ -57,6 +57,7 @@ ApplicationSettings::ApplicationSettings() {
   _snapToGrid = _settings->value("grid/snaptogrid", QVariant(false)).toBool();
   _gridHorSpacing = _settings->value("grid/horizontalspacing", 20.0).toDouble();
   _gridVerSpacing = _settings->value("grid/verticalspacing", 20.0).toDouble();
+  _antialiasPlots = _settings->value("general/antialiasplots", QVariant(true)).toBool();
 
   Qt::BrushStyle style = (Qt::BrushStyle)_settings->value("fill/style", "0").toInt();
   if (style < Qt::LinearGradientPattern) {
@@ -187,6 +188,18 @@ bool ApplicationSettings::showGrid() const {
 void ApplicationSettings::setShowGrid(bool showGrid) {
   _showGrid = showGrid;
   _settings->setValue("grid/showgrid", showGrid);
+  emit modified();
+}
+
+
+bool ApplicationSettings::antialiasPlots() const {
+  return _antialiasPlots;
+}
+
+
+void ApplicationSettings::setAntialiasPlots(bool antialias) {
+  _antialiasPlots = antialias;
+  _settings->setValue("general/antialiasplots", antialias);
   emit modified();
 }
 

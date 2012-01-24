@@ -70,6 +70,9 @@ class ApplicationSettings : public QObject
     QSizeF layoutSpacing() const;
     void setLayoutSpacing(QSizeF spacing);
 
+    bool antialiasPlots() const;
+    void setAntialiasPlots(bool antialias);
+
   Q_SIGNALS:
     void modified();
 
@@ -94,6 +97,7 @@ class ApplicationSettings : public QObject
     QGradientStops _gradientStops;
     QSizeF _layoutMargins;
     QSizeF _layoutSpacing;
+    bool _antialiasPlots;
 
     friend class ApplicationSettingsDialog;
 };

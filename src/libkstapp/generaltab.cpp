@@ -46,6 +46,14 @@ void GeneralTab::setTransparentDrag(const bool transparent_drag) {
   _transparentDrag->setChecked(transparent_drag);
 }
 
+bool GeneralTab::antialiasPlot() const {
+  return _antialiasPlots->isChecked();
+}
+
+void GeneralTab::setAntialiasPlot(bool antialias) {
+  _antialiasPlots->setChecked(antialias);
+}
+
 int GeneralTab::minimumUpdatePeriod() const {
   return _maxUpdate->value();
 }

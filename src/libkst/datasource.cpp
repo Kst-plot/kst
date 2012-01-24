@@ -31,7 +31,6 @@
 #include <QXmlStreamWriter>
 #include <QTimer>
 #include <QFileSystemWatcher>
-#include <QFSFileEngine>
 
 #include "kst_i18n.h"
 #include "datacollection.h"
@@ -254,9 +253,6 @@ const QString& DataSource::typeString() const {
 }
 
 
-
-
-
 QString DataSource::fileName() const {
   // Look to see if it was a URL and save the URL instead
   const QMap<QString,QString> urlMap = DataSourcePluginManager::urlMap();
@@ -267,15 +263,6 @@ QString DataSource::fileName() const {
   }
   return _filename;
 }
-
-
-
-
-
-
-
-
-
 
 
 QString DataSource::fileType() const {
