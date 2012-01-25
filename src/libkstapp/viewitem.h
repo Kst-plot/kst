@@ -320,7 +320,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void updateView();
 
   protected:
-  public: // TODO why does View need it?
+  public:
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
   protected:
     virtual QString _automaticDescriptiveName() const;

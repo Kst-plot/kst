@@ -37,7 +37,7 @@
 #include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
-//#define BENCHMARK
+// #define BENCHMARK
 
 // NOTE: on a modern (eg, sandybridge or later) cpu
 // the cpu's branch prediction is so good, this does
@@ -53,7 +53,7 @@
 #endif
 
 // for painting
-#define MAX_NUM_POLYLINES       1000
+#define MAX_NUM_POLYLINES       10
 
 namespace Kst {
 
@@ -666,6 +666,11 @@ RelationPtr Curve::makeDuplicate() const {
 
 
 void Curve::paintObjects(const CurveRenderContext& context) {
+#ifdef BENCHMARK
+  QTime bench_time;
+  bench_time.start();
+#endif
+
   QPainter *p = context.painter;
   p->save();
 
@@ -700,6 +705,9 @@ void Curve::paintObjects(const CurveRenderContext& context) {
     CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), _width);
   }
   p->restore();
+#ifdef BENCHMARK
+  std::cout << "curve drawing:" << bench_time.elapsed() << "ms\n";
+#endif
 }
 
 

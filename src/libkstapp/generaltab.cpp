@@ -23,6 +23,8 @@ GeneralTab::GeneralTab(QWidget *parent)
 
   connect(_useOpenGL, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_maxUpdate, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_transparentDrag, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_antialiasPlots, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 }
 
 

@@ -1776,7 +1776,6 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 #endif
 
   QRectF itemRect = rect();
-
   //Lock aspect ratio for rotating objects or children with a lockedAspectRatio
   //FIXME is the child rotated with respect to the parent is the real question...
   if (transform().isRotating() || lockAspectRatio()) {

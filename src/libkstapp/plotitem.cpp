@@ -926,6 +926,7 @@ void PlotItem::paint(QPainter *painter) {
 void PlotItem::paintPixmap(QPainter *painter) {
   if ((view()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) && rect().isValid()) {
     ViewGridLayout::standardizePlotMargins(this, painter);
+    // this might be a good place to update child view items locked to data rather than window.
     setPlotBordersDirty(false);
   }
 
