@@ -572,6 +572,9 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
 
   _FFTOptions->GroupBoxFFTOptions->setChecked(_dialogDefaults->value("wizard/doPSD",false).toBool());
   _xAxisGroup->setChecked(_dialogDefaults->value("wizard/doXY",true).toBool());
+
+  connect(_xAxisGroup, SIGNAL(clicked()), this, SLOT(optionsUpdated()));
+  connect(_FFTOptions->GroupBoxFFTOptions, SIGNAL(clicked()), this, SLOT(optionsUpdated()));
 }
 
 
@@ -655,6 +658,10 @@ bool DataWizardPageDataPresentation::isComplete() const {
 
 
 bool DataWizardPageDataPresentation::validOptions() {
+  if (!_FFTOptions->GroupBoxFFTOptions->isChecked() && !_xAxisGroup->isChecked()) {
+    return false;
+  }
+
   if (!_xAxisGroup->isEnabled()) {
     return true;
   }
@@ -1161,7 +1168,7 @@ void DataWizard::finished() {
       plot->update();
       plot->view()->appendToLayout(layout_type, plot, num_columns);
     }
-    if (layout_type == CurvePlacement::Custom) {
+    if (!plotList.isEmpty() && layout_type == CurvePlacement::Custom) {
       plotList.at(0)->createCustomLayout(num_columns);
     }
 
