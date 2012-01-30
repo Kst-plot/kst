@@ -47,6 +47,7 @@ void ViewMatrixDialog::show() {
 void ViewMatrixDialog::matrixSelected() {
   if (_model) {
     delete _model;
+    _model = 0;
   }
 
   MatrixPtr m = matrixSelector->selectedMatrix();
