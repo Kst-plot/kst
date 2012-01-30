@@ -53,7 +53,7 @@
 #endif
 
 // for painting
-#define MAX_NUM_POLYLINES       10
+#define MAX_NUM_POLYLINES       3
 
 namespace Kst {
 
