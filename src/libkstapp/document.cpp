@@ -131,7 +131,7 @@ bool Document::save(const QString& to) {
   xml.writeEndDocument();
 
   setChanged(false);
-
+  _isOpen = true; // Set _isOpen when saving into a new file so that kst does not ask for the filename again
   return true;
 }
 
