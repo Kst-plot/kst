@@ -77,7 +77,8 @@ void ChooseColorDialog::updateColorGroup() {
 
   _grid = new QGridLayout(colorFrame);
   _grid->setSpacing(8);
-  _grid->setColumnStretch(1,0);
+  _grid->setColumnStretch(0,1);
+  _grid->setColumnMinimumWidth(0,450);
 
   int i=0;
   QMapIterator<DataSourcePtr, QColor> it(_dataSourceColors);
@@ -99,8 +100,6 @@ void ChooseColorDialog::updateColorGroup() {
   }
 
   adjustSize();
-  resize(QSize(500, minimumSizeHint().height()));
-  setFixedHeight(height());
 }
 
 
