@@ -26,6 +26,7 @@ LineEditItem::LineEditItem(View *parent) : ViewItem(parent), _lineEdit(new QLine
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
   _lineEdit->setAutoFillBackground(0);
   QPalette pal=_lineEdit->palette();
   pal.setColor(_lineEdit->backgroundRole(),"white");

@@ -34,6 +34,7 @@ LineItem::LineItem(View *parent)
   p.setWidthF(1);
   setPen(p);
   applyDialogDefaultsStroke();
+  applyDialogDefaultsLockPosToData();
 }
 
 

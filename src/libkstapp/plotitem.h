@@ -233,10 +233,12 @@ class PlotItem : public ViewItem, public PlotItemInterface
     bool showLegend() const;
     void setShowLegend(const bool show, const bool resetFonts = false);
 
+    // Data Coordinates to Screen coordinates
     qreal mapXToPlot(const qreal &x);
     qreal mapYToPlot(const qreal &y);
     QPointF mapToPlot(const QPointF &point);
 
+    // Screen Coordinates to data coordinates
     QPointF mapToProjection(const QPointF &point);
     QRectF mapToProjection(const QRectF &rect);
 

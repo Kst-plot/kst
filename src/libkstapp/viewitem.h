@@ -98,6 +98,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setParentViewItem(ViewItem *parent);
 
     virtual void updateRelativeSize();
+    virtual void updateDataRelativeRect();
 
     void moveTo(const QPointF& pos);
     
@@ -143,6 +144,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     bool isHighlighted() const { return _highlighted; }
     void setHighlighted(bool highlighted ) { _highlighted = highlighted; }
+
+    bool lockPosToData() const {return _lockPosToData; }
+    void setLockPosToData(bool lockPosToData) { _lockPosToData = lockPosToData; }
 
     //NOTE This should be used in place of QGraphicsRectItem::setRect()...
     QRectF viewRect() const;
@@ -232,6 +236,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     virtual void applyDialogDefaultsFill();
     virtual void applyDialogDefaultsStroke();
+    void applyDialogDefaultsLockPosToData();
+
+    virtual void applyDataLockedDimensions();
 
   Q_SIGNALS:
     void geometryChanged();
@@ -359,6 +366,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
+    QRectF _dataRelativeRect;
+
+    bool _lockPosToData;
 
     QSizeF _layoutMargins, _layoutSpacing;    
 

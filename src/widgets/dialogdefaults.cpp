@@ -51,6 +51,11 @@ void setHistogramDefaults(HistogramPtr H) {
   _dialogDefaults->setValue("histogram/normalizationType",H->normalizationType());
 }
 
+void saveDialogDefaultsLockPosToData(const QString &group_name, const bool lockPosToData) {
+  _dialogDefaults->setValue(group_name+"/lockPosToData", QVariant(lockPosToData).toString());
+}
+
+
 void saveDialogDefaultsBrush(const QString &group_name, const QBrush &b) {
   // Save the brush
   _dialogDefaults->setValue(group_name+"/fillBrushColor", QVariant(b.color()).toString());
@@ -124,5 +129,7 @@ QPen dialogDefaultsPen(const QString &group_name) {
   return pen;
 }
 
-
+bool dialogDefaultsLockPosToData(const QString &group_name) {
+  return _dialogDefaults->value(group_name+"/lockPosToData",false).toBool();
+}
 }

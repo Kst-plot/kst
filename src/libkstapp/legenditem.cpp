@@ -49,6 +49,7 @@ LegendItem::LegendItem(PlotItem *parentPlot)
   applyDefaults();
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
 }
 
 void LegendItem::_initializeShortName() {

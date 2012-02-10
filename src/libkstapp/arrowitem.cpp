@@ -37,6 +37,7 @@ ArrowItem::ArrowItem(View *parent)
   setBrush(b);
 
   applyDialogDefaultsStroke();
+  applyDialogDefaultsLockPosToData();
 }
 
 

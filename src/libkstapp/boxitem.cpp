@@ -25,6 +25,7 @@ BoxItem::BoxItem(View *parent)
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
 }
 
 

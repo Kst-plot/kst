@@ -35,9 +35,11 @@ namespace Kst {
   KSTWIDGETS_EXPORT void setDataMatrixDefaults(DataMatrixPtr M);
   KSTWIDGETS_EXPORT void setHistogramDefaults(HistogramPtr H);
   KSTWIDGETS_EXPORT void saveDialogDefaultsBrush(const QString &group_name, const QBrush &b);
+  KSTWIDGETS_EXPORT void saveDialogDefaultsLockPosToData(const QString &group_name, const bool lockPosToData);
   KSTWIDGETS_EXPORT void saveDialogDefaultsPen(const QString &group_name, const QPen &p);
   KSTWIDGETS_EXPORT QBrush dialogDefaultsBrush(const QString &group_name);
   KSTWIDGETS_EXPORT QPen dialogDefaultsPen(const QString &group_name);
+  KSTWIDGETS_EXPORT bool dialogDefaultsLockPosToData(const QString &group_name);
 }
 
 #endif

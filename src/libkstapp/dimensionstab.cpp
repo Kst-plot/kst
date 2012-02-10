@@ -57,6 +57,7 @@ void DimensionsTab::setupDimensions() {
     _width->setEnabled(false);
     _fixAspectRatio->setHidden(true);
   }
+  _lockPosToData->setChecked(_viewItem->lockPosToData());
 }
 
 
@@ -104,5 +105,9 @@ bool DimensionsTab::fixedAspectDirty() const {
   return _fixAspectRatio->checkState() != Qt::PartiallyChecked;
 }
 
+
+bool DimensionsTab::lockPosToDataDirty() const {
+  return _lockPosToData->checkState() != Qt::PartiallyChecked;
+}
 
 }

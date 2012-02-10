@@ -45,6 +45,9 @@ class DimensionsTab : public DialogTab, Ui::DimensionsTab {
     bool fixedAspect() {return _fixAspectRatio->isChecked();}
     bool fixedAspectDirty() const;
 
+    bool lockPosToData() const {return _lockPosToData->isChecked();}
+    bool lockPosToDataDirty() const;
+
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
 

@@ -27,6 +27,7 @@ CircleItem::CircleItem(View *parent)
   setLockAspectRatioFixed(true);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
 }
 
 

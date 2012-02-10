@@ -21,6 +21,7 @@
 #include "formatgridhelper.h"
 #include "dialogdefaults.h"
 #include "viewitemmanager.h"
+#include "cartesianrenderitem.h"
 
 #include "layoutboxitem.h"
 
@@ -168,6 +169,14 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("centery", QVariant(_parentRelativeCenter.y()).toString());
   xml.writeAttribute("posx", QVariant(_parentRelativePosition.x()).toString());
   xml.writeAttribute("posy", QVariant(_parentRelativePosition.y()).toString());
+  xml.writeAttribute("fixaspect", QVariant(_lockAspectRatio).toString());
+  xml.writeAttribute("lockpostodata", QVariant(_lockPosToData).toString());
+  if (_lockPosToData) { // meaningless if not locked: why pollute the file?
+    xml.writeAttribute("datarect_x", QVariant(_dataRelativeRect.x()).toString());
+    xml.writeAttribute("datarect_y", QVariant(_dataRelativeRect.y()).toString());
+    xml.writeAttribute("datarect_width", QVariant(_dataRelativeRect.width()).toString());
+    xml.writeAttribute("datarect_height", QVariant(_dataRelativeRect.height()).toString());
+  }
   xml.writeEndElement();
   xml.writeStartElement("transform");
   xml.writeAttribute("m11", QVariant(transform().m11()).toString());
@@ -232,6 +241,50 @@ void ViewItem::applyDialogDefaultsStroke() {
     // set the pen
     QPen pen = dialogDefaultsPen(defaultsGroupName());
     setPen(pen);
+  }
+}
+
+void ViewItem::applyDialogDefaultsLockPosToData() {
+  setLockPosToData(dialogDefaultsLockPosToData(defaultsGroupName()));
+}
+
+void ViewItem::applyDataLockedDimensions() {
+  PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+  if (render_item) {
+    qreal parentWidth = render_item->width();
+    qreal parentHeight = render_item->height();
+    qreal parentX = render_item->rect().x();
+    qreal parentY = render_item->rect().y();
+
+    qreal aspectRatio;
+    if (rect().width() > 0) {
+      aspectRatio = qreal(rect().height()) / qreal(rect().width());
+    } else {
+      aspectRatio = 10000.0;
+    }
+
+    qreal relativeWidth = _dataRelativeRect.width()/(render_item->plotItem()->xMax() - render_item->plotItem()->xMin());
+    qreal relativeHeight = _dataRelativeRect.height()/(render_item->plotItem()->yMax() - render_item->plotItem()->yMin());
+    qreal relativeX = (_dataRelativeRect.center().x() - render_item->plotItem()->xMin())/
+        (render_item->plotItem()->xMax() - render_item->plotItem()->xMin());
+    qreal relativeY = (_dataRelativeRect.center().y() - render_item->plotItem()->yMin())/
+        (render_item->plotItem()->yMax() - render_item->plotItem()->yMin());
+
+    qreal width = relativeWidth * parentWidth;
+    qreal height;
+    if (lockAspectRatio()) {
+      height = width * aspectRatio;
+    } else {
+      height = relativeHeight * parentHeight;
+    }
+
+    setPos(parentX + relativeX*parentWidth, parentY + (1.0-relativeY)*parentHeight);
+    setViewRect(-width/2, -height/2, width, height);
+
+    updateRelativeSize();
+
+  } else {
+    qDebug() << "apply data locked dimensions called without a render item (!)";
   }
 }
 
@@ -357,6 +410,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     } else if (xml.name().toString() == "relativesize") {
       knownTag = true;
       double width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
+      bool lock_aspect_ratio = false;
       av = attrs.value("width");
       if (!av.isNull()) {
         width = av.toString().toDouble();
@@ -381,10 +435,40 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       if (!av.isNull()) {
         posy = av.toString().toDouble();
       }
+      av = attrs.value("fixaspect");
+      if (!av.isNull()) {
+        lock_aspect_ratio = QVariant(av.toString()).toBool();
+      }
       setRelativeWidth(width);
       setRelativeHeight(height);
       setRelativeCenter(QPointF(centerx, centery));
       setRelativePosition(QPointF(posx, posy));
+      setLockAspectRatio(lock_aspect_ratio);
+      av = attrs.value("lockpostodata");
+      if (!av.isNull()) {
+        bool lock_pos_to_data = QVariant(av.toString()).toBool();
+        setLockPosToData(lock_pos_to_data);
+        if (lock_pos_to_data) {
+          double x=0, y=0, w=0.1, h=0.1;
+          av = attrs.value("datarect_x");
+          if (!av.isNull()) {
+            x = av.toString().toDouble();
+          }
+          av = attrs.value("datarect_y");
+          if (!av.isNull()) {
+            y = av.toString().toDouble();
+          }
+          av = attrs.value("datarect_width");
+          if (!av.isNull()) {
+            w = av.toString().toDouble();
+          }
+          av = attrs.value("datarect_height");
+          if (!av.isNull()) {
+            h = av.toString().toDouble();
+          }
+          _dataRelativeRect = QRectF(x,y,w,h);
+        }
+      }
     } else if (xml.name().toString() == "transform") {
       knownTag = true;
       double m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
@@ -743,12 +827,21 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   if ((!isMaximized()) && view()->childMaximized()) {
     return;
   }
+  painter->save();
   painter->setPen(pen());
   painter->setBrush(brush());
+  if (_lockPosToData) {
+    PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+    if (render_item) {
+      QPolygonF PF = mapFromParent(render_item->rect());
+      QPainterPath path;
+      path.addPolygon(PF);
+      painter->setClipPath(path);
+    }
+  }
   paint(painter); //this is the overload that subclasses should use...
 
   if (!view()->isPrinting() && !view()->childMaximized()) {
-    painter->save();
     painter->setPen(Qt::DotLine);
     painter->setBrush(Qt::NoBrush);
     if ((isSelected() || isHovering())
@@ -810,8 +903,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawText(rect().bottomLeft(), "BL");
     painter->drawText(rect().bottomRight(), "BR");
 #endif
-    painter->restore();
   }
+  painter->restore();
 }
 
 
@@ -1543,7 +1636,6 @@ void ViewItem::normalizePosition() {
   qreal parentHeight;
   qreal parentX;
   qreal parentY;
-
   if (parentViewItem()) {
     parentWidth = parentViewItem()->width();
     parentHeight = parentViewItem()->height();
@@ -1744,6 +1836,21 @@ bool ViewItem::updateViewItemParent() {
 }
 
 
+void ViewItem::updateDataRelativeRect() {
+  CartesianRenderItem* plot = dynamic_cast<CartesianRenderItem*>(parentViewItem());
+  if (plot) {
+    qreal rotation = rotationAngle();
+    QTransform transform;
+    setTransform(transform);
+    QPointF top_left = mapToParent(rect().topLeft());
+    QPointF bottom_right = mapToParent(rect().bottomRight());
+    QRectF localRect(top_left, bottom_right);
+    _dataRelativeRect = plot->plotItem()->mapToProjection(localRect);
+    transform.rotate(rotation);
+    setTransform(transform);
+  }
+}
+
 void ViewItem::updateRelativeSize() {
   if (parentViewItem()) {
     _parentRelativeHeight = (height() / parentViewItem()->height());
@@ -1752,6 +1859,7 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
     _parentRelativePosition =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
     _parentRelativePosition =  QPointF(_parentRelativePosition.x() / parentViewItem()->width(), _parentRelativePosition.y() / parentViewItem()->height());
+    updateDataRelativeRect();
    } else if (view()) {
     _parentRelativeHeight = (height() / view()->height());
     _parentRelativeWidth = (width() / view()->width());
@@ -1785,6 +1893,10 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
 #endif
 
     if (!_fixedSize) {
+#if DEBUG_CHILD_GEOMETRY
+      qDebug() << "not fixed size";
+#endif
+
       qreal newHeight = relativeHeight() * newParentRect.height();
       qreal newWidth = relativeWidth() * newParentRect.width();
 

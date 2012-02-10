@@ -959,8 +959,8 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
 void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const {
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
-  qreal minimum=-0.1;
-  qreal maximum= 0.1;;
+  qreal minimum =-0.1;
+  qreal maximum = 0.1;;
   bool unInitialized = true;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
@@ -973,16 +973,22 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
       qreal min_ = orientation == Qt::Horizontal ? relation->minX() : relation->minY();
       qreal max_ = orientation == Qt::Horizontal ? relation->maxX() : relation->maxY();
 
-      //If the axis is in log mode, the lower extent will be the
-      //minimum value larger than zero.
-      if (axisLog)
-        minimum = unInitialized ? minPos_ : qMin(minPos_, minimum);
-      else
-        minimum = unInitialized ? min_ : qMin(min_, minimum);
+      if (min_==min_) { // don't use NaN's
+        //If the axis is in log mode, the lower extent will be the
+        //minimum value larger than zero.
+        if (axisLog) {
+          minimum = unInitialized ? minPos_ : qMin(minPos_, minimum);
+        } else {
+          minimum = unInitialized ? min_ : qMin(min_, minimum);
+        }
+      }
 
-      maximum = unInitialized ? max_ : qMax(max_, maximum);
-
-      unInitialized = false;
+      if (max_==max_) {
+        maximum = unInitialized ? max_ : qMax(max_, maximum);
+        if (min_==min_) {
+          unInitialized = false;
+        }
+      }
   }
 
   if (axisLog) {

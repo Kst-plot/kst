@@ -26,6 +26,7 @@ ButtonItem::ButtonItem(View *parent) : ViewItem(parent), _pushButton(new QPushBu
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
   _pushButton->setAutoFillBackground(0);
   QPalette pal=_pushButton->palette();
   pal.setColor(_pushButton->backgroundRole(),"white");

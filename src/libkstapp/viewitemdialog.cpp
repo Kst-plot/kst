@@ -307,6 +307,10 @@ void ViewItemDialog::dimensionsChanged() {
   } else {
     saveDimensions(_item);
   }
+  if (_saveAsDefault->isChecked()) {
+    saveDialogDefaultsLockPosToData(_item->defaultsGroupName(), _item->lockPosToData());
+  }
+
   kstApp->mainWindow()->document()->setChanged(true);
 }
 
@@ -335,7 +339,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   }
 
   qreal aspectRatio;
-  if (rect().width() > 0) {
+  if (item->rect().width() > 0) {
     aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
   } else {
     aspectRatio = 10000.0;
@@ -344,6 +348,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
   qreal relativeWidth = _dimensionsTab->widthDirty() ? _dimensionsTab->width() :item->relativeWidth();
   qreal relativeHeight = _dimensionsTab->heightDirty() ? _dimensionsTab->height() :item->relativeHeight();
   bool fixedAspect = _dimensionsTab->fixedAspectDirty() ? _dimensionsTab->fixedAspect() :item->lockAspectRatio();
+  bool lockPosToData = _dimensionsTab->lockPosToDataDirty() ? _dimensionsTab->lockPosToData() : item->lockPosToData();
 
   qreal width = relativeWidth * parentWidth;
   qreal height;
@@ -355,6 +360,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     item->setLockAspectRatio(false);
   }
 
+  item->setLockPosToData(lockPosToData);
 
   if (_mode == Multiple) {
     item->setPos(parentX + item->relativeCenter().x()*parentWidth,

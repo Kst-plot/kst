@@ -150,6 +150,7 @@ PlotItem::PlotItem(View *parent)
   applyDefaults();
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
+  applyDialogDefaultsLockPosToData();
 }
 
 void PlotItem::applyDefaults() {
@@ -926,7 +927,6 @@ void PlotItem::paint(QPainter *painter) {
 void PlotItem::paintPixmap(QPainter *painter) {
   if ((view()->plotBordersDirty() || (creationState() == ViewItem::InProgress)) && rect().isValid()) {
     ViewGridLayout::standardizePlotMargins(this, painter);
-    // this might be a good place to update child view items locked to data rather than window.
     setPlotBordersDirty(false);
   }
 
@@ -2649,6 +2649,18 @@ void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
     emit updateAxes();
     update(); //slow, but need to update everything...
   }
+  // Need to update data relative rect for all children.
+  foreach (PlotRenderItem *render_item, renderItems()) {
+    QList<QGraphicsItem*> children = render_item->childItems();
+    foreach(QGraphicsItem* child, children) {
+      ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
+      if (item && !item->lockPosToData()) {
+        item->updateDataRelativeRect();
+      } else {
+        item->applyDataLockedDimensions();
+      }
+    }
+  }
 }
 
 
@@ -2880,7 +2892,7 @@ void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
     if (isInSharedAxisBox()) {
       ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection, force);
       _undoStack->push(cmd);
-      cmd->redo();
+      // cmd->redo();
       if (!force) {
         sharedAxisBox()->zoomFixedExpression(projection, this);
       } else {
@@ -2891,7 +2903,7 @@ void PlotItem::zoomFixedExpression(const QRectF &projection, bool force) {
     } else {
       ZoomCommand *cmd = new ZoomFixedExpressionCommand(this, projection, force);
       _undoStack->push(cmd);
-      cmd->redo();
+      // cmd->redo();
     }
   }
 }
@@ -2909,7 +2921,7 @@ void PlotItem::zoomXRange(const QRectF &projection, bool force) {
     } else {
       ZoomCommand *cmd = new ZoomXRangeCommand(this, projection, force);
       _undoStack->push(cmd);
-      cmd->redo();
+      // cmd->redo();
     }
   }
 }
@@ -2927,7 +2939,7 @@ void PlotItem::zoomYRange(const QRectF &projection, bool force) {
     } else {
       ZoomCommand *cmd = new ZoomYRangeCommand(this, projection, force);
       _undoStack->push(cmd);
-      cmd->redo();
+      // cmd->redo();
     }
   }
 }
@@ -2939,7 +2951,7 @@ void PlotItem::zoomMaximum(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomMaximumCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    //cmd->redo();
   }
 }
 
@@ -2969,7 +2981,7 @@ void PlotItem::zoomMaxSpikeInsensitive(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomMaxSpikeInsensitiveCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    //cmd->redo();
   }
 }
 
@@ -3007,7 +3019,7 @@ void PlotItem::zoomMeanCentered(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomMeanCenteredCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3018,7 +3030,7 @@ void PlotItem::zoomYMeanCentered(qreal dY, bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this, dY, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3029,7 +3041,7 @@ void PlotItem::zoomXMeanCentered(qreal dX, bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXMeanCenteredCommand(this, dX, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3040,7 +3052,7 @@ void PlotItem::zoomXMaximum(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXMaximumCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3051,7 +3063,7 @@ void PlotItem::zoomXNoSpike(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXNoSpikeCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3062,7 +3074,7 @@ void PlotItem::zoomXAutoBorder(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXAutoBorderCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3077,7 +3089,7 @@ void PlotItem::zoomXRight(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXRightCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    //cmd->redo();
   }
 }
 
@@ -3092,7 +3104,7 @@ void PlotItem::zoomXLeft(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXLeftCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    //cmd->redo();
   }
 }
 
@@ -3104,7 +3116,7 @@ void PlotItem::zoomXOut(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXOutCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3116,7 +3128,7 @@ void PlotItem::zoomXIn(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomXInCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3130,7 +3142,7 @@ void PlotItem::zoomNormalizeXtoY(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomNormalizeXToYCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3145,7 +3157,7 @@ void PlotItem::zoomLogX(bool force, bool autoLog, bool enableLog) {
     }
     ZoomCommand *cmd = new ZoomXLogCommand(this, log, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3156,7 +3168,7 @@ void PlotItem::zoomYLocalMaximum(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYLocalMaximumCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3167,7 +3179,7 @@ void PlotItem::zoomYMaximum(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYMaximumCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3178,7 +3190,7 @@ void PlotItem::zoomYNoSpike(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYNoSpikeCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3189,7 +3201,7 @@ void PlotItem::zoomYAutoBorder(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYAutoBorderCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3200,7 +3212,7 @@ void PlotItem::zoomYUp(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYUpCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3211,7 +3223,7 @@ void PlotItem::zoomYDown(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYDownCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    //cmd->redo();
   }
 }
 
@@ -3223,7 +3235,7 @@ void PlotItem::zoomYOut(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYOutCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3235,7 +3247,7 @@ void PlotItem::zoomYIn(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomYInCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3249,7 +3261,7 @@ void PlotItem::zoomNormalizeYtoX(bool force) {
   } else {
     ZoomCommand *cmd = new ZoomNormalizeYToXCommand(this, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
@@ -3264,7 +3276,7 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
     }
     ZoomCommand *cmd = new ZoomYLogCommand(this, log, force);
     _undoStack->push(cmd);
-    cmd->redo();
+    // cmd->redo();
   }
 }
 
