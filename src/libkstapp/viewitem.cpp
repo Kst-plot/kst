@@ -48,8 +48,6 @@ static const int DRAWING_ZORDER = 500;
 
 #define DEBUG_GEOMETRY 0
 #define DEBUG_REPARENT 0
-#define DEBUG_CHILD_GEOMETRY 0
-
 
 // enable drag & drop
 #define KST_ENABLE_DD
@@ -277,7 +275,6 @@ void ViewItem::applyDataLockedDimensions() {
     } else {
       height = relativeHeight * parentHeight;
     }
-
     setPos(parentX + relativeX*parentWidth, parentY + (1.0-relativeY)*parentHeight);
     setViewRect(-width/2, -height/2, width, height);
 
@@ -540,7 +537,7 @@ ViewItem *ViewItem::parentViewItem() const {
 
 void ViewItem::setParentViewItem(ViewItem* parent) {
   QGraphicsItem::setParentItem(parent);
-  updateRelativeSize();
+  updateRelativeSize(true);
 }
 
 
@@ -1339,7 +1336,7 @@ void ViewItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       break;
     }
   }
-  updateRelativeSize();
+  updateRelativeSize(true);
 }
 
 
@@ -1836,22 +1833,24 @@ bool ViewItem::updateViewItemParent() {
 }
 
 
-void ViewItem::updateDataRelativeRect() {
+void ViewItem::updateDataRelativeRect(bool force) {
   CartesianRenderItem* plot = dynamic_cast<CartesianRenderItem*>(parentViewItem());
   if (plot) {
-    qreal rotation = rotationAngle();
-    QTransform transform;
-    setTransform(transform);
-    QPointF top_left = mapToParent(rect().topLeft());
-    QPointF bottom_right = mapToParent(rect().bottomRight());
-    QRectF localRect(top_left, bottom_right);
-    _dataRelativeRect = plot->plotItem()->mapToProjection(localRect);
-    transform.rotate(rotation);
-    setTransform(transform);
+    if ((!lockPosToData()) || force) {
+      qreal rotation = rotationAngle();
+      QTransform transform;
+      setTransform(transform);
+      QPointF top_left = mapToParent(rect().topLeft());
+      QPointF bottom_right = mapToParent(rect().bottomRight());
+      QRectF localRect(top_left, bottom_right);
+      _dataRelativeRect = plot->plotItem()->mapToProjection(localRect);
+      transform.rotate(rotation);
+      setTransform(transform);
+    }
   }
 }
 
-void ViewItem::updateRelativeSize() {
+void ViewItem::updateRelativeSize(bool force_data) {
   if (parentViewItem()) {
     _parentRelativeHeight = (height() / parentViewItem()->height());
     _parentRelativeWidth = (width() / parentViewItem()->width());
@@ -1859,7 +1858,7 @@ void ViewItem::updateRelativeSize() {
     _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
     _parentRelativePosition =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
     _parentRelativePosition =  QPointF(_parentRelativePosition.x() / parentViewItem()->width(), _parentRelativePosition.y() / parentViewItem()->height());
-    updateDataRelativeRect();
+    updateDataRelativeRect(force_data);
    } else if (view()) {
     _parentRelativeHeight = (height() / view()->height());
     _parentRelativeWidth = (width() / view()->width());
@@ -1877,26 +1876,13 @@ void ViewItem::updateRelativeSize() {
 
 
 void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
-#if DEBUG_CHILD_GEOMETRY
-  qDebug() << "ViewItem::updateChildGeometry" << this << oldParentRect << newParentRect << endl;
-#else
   Q_UNUSED(oldParentRect);
-#endif
 
   QRectF itemRect = rect();
   //Lock aspect ratio for rotating objects or children with a lockedAspectRatio
   //FIXME is the child rotated with respect to the parent is the real question...
   if (transform().isRotating() || lockAspectRatio()) {
-
-#if DEBUG_CHILD_GEOMETRY
-    qDebug() << "ViewItem::updateChildGeometry Fixed Ratio" << mapToParent(rect().center()) << _parentRelativeCenter;
-#endif
-
     if (!_fixedSize) {
-#if DEBUG_CHILD_GEOMETRY
-      qDebug() << "not fixed size";
-#endif
-
       qreal newHeight = relativeHeight() * newParentRect.height();
       qreal newWidth = relativeWidth() * newParentRect.width();
 
@@ -1922,10 +1908,6 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
     qreal newHeight = relativeHeight() * newParentRect.height();
     qreal newWidth = relativeWidth() * newParentRect.width();
 
-#if DEBUG_CHILD_GEOMETRY
-    qDebug() << "ViewItem::updateChildGeometry non-Fixed Ratio" << "relativeHeight = " << relativeHeight() << "relative Width" << relativeWidth();
-#endif
-
     QPointF newTopLeft = newParentRect.topLeft() - itemRect.topLeft() +
                          QPointF(newParentRect.width() * _parentRelativePosition.x(),
                                  newParentRect.height() * _parentRelativePosition.y());
@@ -1934,13 +1916,6 @@ void ViewItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &ne
     itemRect.setHeight(newHeight);
     setPos(newTopLeft);
   }
-
-#if DEBUG_CHILD_GEOMETRY
-  qDebug() << "resize"
-            << "\nbefore:" << rect()
-            << "\nafter:" << itemRect
-            << endl;
-#endif
 
   setViewRect(itemRect, true);
 }
@@ -2126,7 +2101,7 @@ void ViewItem::moveTo(const QPointF& pos)
   setPos(newpos);
   new MoveCommand(this, _originalPosition, pos);
   updateViewItemParent();
-  updateRelativeSize();
+  updateRelativeSize(true);
 }
 
 void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
@@ -2218,6 +2193,11 @@ void ViewItem::updateView() {
 
 qreal ViewItem::rotationAngle() const {
   return 180.0/ONE_PI * atan2(transform().m12(), transform().m11());
+}
+
+
+qreal ViewItem::rotationAngleRadians() const {
+  return atan2(transform().m12(), transform().m11());
 }
 
 

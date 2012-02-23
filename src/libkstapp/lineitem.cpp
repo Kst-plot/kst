@@ -21,6 +21,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
 
+#include "plotitem.h"
+#include "cartesianrenderitem.h"
+
 namespace Kst {
 
 LineItem::LineItem(View *parent)
@@ -187,24 +190,97 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     return QGraphicsRectItem::mouseMoveEvent(event);
 
   QPointF p = event->pos();
-  //QPointF s = event->scenePos();
+
+  double width = 0;
+  double height = 0;
+  double theta = 0;
+  QPointF centerP;
+  QPointF P1, P2;
 
   if (gripMode() == ViewItem::Resize) {
     switch(activeGrip()) {
     case RightMidGrip:
-      resizeRight(p.x() - rightMidGrip().controlPointRect().center().x());
-      rotateTowards(rightMidGrip().controlPointRect().center(), p);
+      P1 = mapToParent(QPoint(rect().left(), rect().center().y()));
+      P2 = mapToParent(event->pos());
       break;
     case LeftMidGrip:
-      resizeLeft(p.x() - leftMidGrip().controlPointRect().center().x());
-      rotateTowards(leftMidGrip().controlPointRect().center(), p);
+      P1 = mapToParent(event->pos());
+      P2 = mapToParent(QPoint(rect().right(), rect().center().y()));
       break;
     default:
       break;
     }
+    centerP = (P1 + P2) * 0.5;
+    theta = atan2(P2.y() - P1.y(), P2.x() - P1.x());
+    height = rect().height();
+    double dx = P1.x() - P2.x();
+    double dy = P1.y() - P2.y();
+    width = sqrt(dx*dx + dy*dy)+1.0;
+  }
+
+  setPos(centerP.x(), centerP.y());
+  setViewRect(-width*0.5, -height*0.5, width, height);
+
+  QTransform transform;
+  transform.rotateRadians(theta);
+
+  setTransform(transform);
+  updateRelativeSize(true);
+
+}
+
+
+void LineItem::updateDataRelativeRect(bool force) {
+  CartesianRenderItem* plot = dynamic_cast<CartesianRenderItem*>(parentViewItem());
+  if (plot) {
+    if ((!lockPosToData()) || force) {
+      QPointF P1 = (rect().topLeft() + rect().bottomLeft())/2;
+      QPointF P2 = (rect().topRight() + rect().bottomRight())/2;
+      _dataRelativeRect.setTopLeft(plot->plotItem()->mapToProjection(mapToParent(P1)));
+      _dataRelativeRect.setBottomRight(plot->plotItem()->mapToProjection(mapToParent(P2)));
+    }
   }
 }
 
+
+void LineItem::applyDataLockedDimensions() {
+  PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+  if (render_item) {
+    qreal parentWidth = render_item->width();
+    qreal parentHeight = render_item->height();
+    qreal parentX = render_item->rect().x();
+    qreal parentY = render_item->rect().y();
+    qreal parentDX = render_item->plotItem()->xMax() - render_item->plotItem()->xMin();
+    qreal parentDY = render_item->plotItem()->yMax() - render_item->plotItem()->yMin();
+
+    QPointF drP1 = _dataRelativeRect.topLeft();
+    QPointF drP2 = _dataRelativeRect.bottomRight();
+
+    QPointF P1(parentX + parentWidth*(drP1.x()-render_item->plotItem()->xMin())/parentDX,
+                       parentY + parentHeight*(render_item->plotItem()->yMax() - drP1.y())/parentDY);
+    QPointF P2(parentX + parentWidth*(drP2.x()-render_item->plotItem()->xMin())/parentDX,
+                       parentY + parentHeight*(render_item->plotItem()->yMax() - drP2.y())/parentDY);
+
+    QPointF centerP = (P1 + P2) * 0.5;
+    qreal theta = atan2(P2.y() - P1.y(), P2.x() - P1.x());
+    qreal height = rect().height();
+    qreal dx = P1.x() - P2.x();
+    qreal dy = P1.y() - P2.y();
+    qreal width = sqrt(dx*dx + dy*dy)+1.0;
+
+    setPos(centerP.x(), centerP.y());
+    setViewRect(-width*0.5, -height*0.5, width, height);
+
+    QTransform transform;
+    transform.rotateRadians(theta);
+
+    setTransform(transform);
+    updateRelativeSize();
+
+  } else {
+    qDebug() << "apply data locked dimensions called without a render item (!)";
+  }
+}
 
 void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   ViewItem::mousePressEvent(event);

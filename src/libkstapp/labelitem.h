@@ -58,6 +58,9 @@ class LabelItem : public ViewItem {
 
     virtual void setFont(const QFont &f, const QColor &c);
 
+    virtual void updateDataRelativeRect(bool force = false);
+    virtual void applyDataLockedDimensions();
+
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; };

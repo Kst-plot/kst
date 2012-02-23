@@ -21,6 +21,8 @@
 
 #include "debug.h"
 #include "dialogdefaults.h"
+#include "plotitem.h"
+#include "cartesianrenderitem.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -361,6 +363,57 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
   return rc;
 }
 
+
+void LabelItem::updateDataRelativeRect( bool force) {
+  CartesianRenderItem* plot = dynamic_cast<CartesianRenderItem*>(parentViewItem());
+  if (plot) {
+    if ((!lockPosToData()) || force) {
+      QPointF P1 = (rect().topLeft() + rect().bottomLeft())/2;
+      QPointF P2 = (rect().topRight() + rect().bottomRight())/2;
+      _dataRelativeRect.setTopLeft(plot->plotItem()->mapToProjection(mapToParent(P1)));
+      _dataRelativeRect.setBottomRight(plot->plotItem()->mapToProjection(mapToParent(P2)));
+      _dataRelativeRect.moveCenter(plot->plotItem()->mapToProjection(mapToParent(rect().center())));
+    }
+  }
+}
+
+
+void LabelItem::applyDataLockedDimensions() {
+  PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+  if (render_item) {
+    qreal parentWidth = render_item->width();
+    qreal parentHeight = render_item->height();
+    qreal parentX = render_item->rect().x();
+    qreal parentY = render_item->rect().y();
+    qreal parentDX = render_item->plotItem()->xMax() - render_item->plotItem()->xMin();
+    qreal parentDY = render_item->plotItem()->yMax() - render_item->plotItem()->yMin();
+
+    QPointF drP1 = _dataRelativeRect.topLeft();
+    QPointF drP2 = _dataRelativeRect.bottomRight();
+
+    QPointF P1(parentX + parentWidth*(drP1.x()-render_item->plotItem()->xMin())/parentDX,
+                       parentY + parentHeight*(render_item->plotItem()->yMax() - drP1.y())/parentDY);
+    QPointF P2(parentX + parentWidth*(drP2.x()-render_item->plotItem()->xMin())/parentDX,
+                       parentY + parentHeight*(render_item->plotItem()->yMax() - drP2.y())/parentDY);
+
+    QPointF centerP = (P1 + P2) * 0.5;
+    qreal theta = atan2(P2.y() - P1.y(), P2.x() - P1.x());
+    qreal height = rect().height();
+    qreal width = rect().width();
+
+    setPos(centerP.x(), centerP.y());
+    setViewRect(-width*0.5, -height*0.5, width, height);
+
+    QTransform transform;
+    transform.rotateRadians(theta);
+
+    setTransform(transform);
+    updateRelativeSize();
+
+  } else {
+    qDebug() << "apply data locked dimensions called without a render item (!)";
+  }
+}
 
 }
 

@@ -42,6 +42,9 @@ class LineItem : public ViewItem
 
     virtual QPointF centerOfRotation() const;
 
+    virtual void updateDataRelativeRect(bool force = false);
+    virtual void applyDataLockedDimensions();
+
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
 

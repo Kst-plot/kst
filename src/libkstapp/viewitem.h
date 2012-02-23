@@ -97,8 +97,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     ViewItem *parentViewItem() const;
     void setParentViewItem(ViewItem *parent);
 
-    virtual void updateRelativeSize();
-    virtual void updateDataRelativeRect();
+    virtual void updateRelativeSize(bool force_data = false);
+    virtual void updateDataRelativeRect(bool force = false);
 
     void moveTo(const QPointF& pos);
     
@@ -113,6 +113,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setRelativePosition(const QPointF pos) { _parentRelativePosition = pos; }
     
     qreal rotationAngle() const;
+    qreal rotationAngleRadians() const;
 
     GripMode gripMode() const;
     void setGripMode(GripMode mode);
@@ -335,6 +336,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QPointF dragStartPosition;
     void startDragging(QWidget *widget, const QPointF& hotspot);
     ActiveGrip _activeGrip;
+    QRectF _dataRelativeRect;
 
   private:
     GripMode _gripMode;
@@ -366,7 +368,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
     qreal _parentRelativeHeight, _parentRelativeWidth;
-    QRectF _dataRelativeRect;
 
     bool _lockPosToData;
 
