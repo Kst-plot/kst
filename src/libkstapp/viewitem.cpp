@@ -1791,7 +1791,7 @@ bool ViewItem::updateViewItemParent() {
 
     setParentViewItem(viewItem);
     setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
-    updateRelativeSize();
+    updateRelativeSize(true);
 
 #if DEBUG_REPARENT
     qDebug() << "after new parent"
@@ -2077,9 +2077,9 @@ void ViewItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 
-QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value) {
-
-if (change == ItemSelectedChange) {
+QVariant ViewItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+  if (change == ItemSelectedChange) {
     bool selected = value.toBool();
     if (!selected) {
       setGripMode(ViewItem::Move);

@@ -216,17 +216,16 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     double dx = P1.x() - P2.x();
     double dy = P1.y() - P2.y();
     width = sqrt(dx*dx + dy*dy)+1.0;
+
+    setPos(centerP.x(), centerP.y());
+    setViewRect(-width*0.5, -height*0.5, width, height);
+
+    QTransform transform;
+    transform.rotateRadians(theta);
+
+    setTransform(transform);
+    updateRelativeSize(true);
   }
-
-  setPos(centerP.x(), centerP.y());
-  setViewRect(-width*0.5, -height*0.5, width, height);
-
-  QTransform transform;
-  transform.rotateRadians(theta);
-
-  setTransform(transform);
-  updateRelativeSize(true);
-
 }
 
 

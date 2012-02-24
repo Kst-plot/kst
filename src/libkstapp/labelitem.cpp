@@ -47,6 +47,7 @@ void LabelItem::applyDefaults() {
   _font  = font;
   _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
   _scale = _dialogDefaults->value(defaultsGroupName()+"/fontScale",12).toDouble();
+  applyDialogDefaultsLockPosToData();
 }
 
 void LabelItem::saveAsDialogDefaults() const {
