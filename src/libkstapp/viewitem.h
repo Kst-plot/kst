@@ -147,7 +147,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setHighlighted(bool highlighted ) { _highlighted = highlighted; }
 
     bool lockPosToData() const {return _lockPosToData; }
-    void setLockPosToData(bool lockPosToData) { _lockPosToData = lockPosToData; }
 
     //NOTE This should be used in place of QGraphicsRectItem::setRect()...
     QRectF viewRect() const;
@@ -271,6 +270,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setBottom(qreal y);
     void setLeft(qreal x);
     void setRight(qreal x);
+    void setLockPosToData(bool lockPosToData);
 
   protected:
     virtual QPainterPath topLeftGrip() const;
@@ -318,6 +318,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QAction *_autoLayoutAction;
     QAction *_protectedLayoutAction;
     QAction *_customLayoutAction;
+    QAction *_lockPosToDataAction;
 
     bool _isXTiedZoom;
     bool _isYTiedZoom;

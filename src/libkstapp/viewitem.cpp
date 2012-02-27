@@ -126,6 +126,10 @@ ViewItem::ViewItem(View *parentView) :
   _customLayoutAction = new QAction(tr("Columns"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
+  _lockPosToDataAction = new QAction(tr("&Lock Position to Data"),this);
+  _lockPosToDataAction->setCheckable(true);
+  connect(_lockPosToDataAction, SIGNAL(toggled(bool)), this, SLOT(setLockPosToData(bool)));
+
   // only drop plots onto TabBar
   setAcceptDrops(false);
 
@@ -244,6 +248,11 @@ void ViewItem::applyDialogDefaultsStroke() {
 
 void ViewItem::applyDialogDefaultsLockPosToData() {
   setLockPosToData(dialogDefaultsLockPosToData(defaultsGroupName()));
+}
+
+void ViewItem::setLockPosToData(bool lockPosToData) {
+  _lockPosToData = lockPosToData;
+  _lockPosToDataAction->setChecked(lockPosToData);
 }
 
 void ViewItem::applyDataLockedDimensions() {
@@ -1109,6 +1118,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   addTitle(&menu);
 
   menu.addAction(_editAction);
+  menu.addAction(_lockPosToDataAction);
 
   QMenu layoutMenu;
   if (!(lockParent() || (parentViewItem() && parentViewItem()->lockParent()))) {

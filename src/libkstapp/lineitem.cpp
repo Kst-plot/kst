@@ -189,8 +189,6 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (activeGrip() == NoGrip)
     return QGraphicsRectItem::mouseMoveEvent(event);
 
-  QPointF p = event->pos();
-
   double width = 0;
   double height = 0;
   double theta = 0;

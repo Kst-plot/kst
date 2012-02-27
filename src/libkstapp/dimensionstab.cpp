@@ -26,6 +26,7 @@ DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent)
   label->setProperty("si","pos X");
   label_2->setProperty("si","pos Y");
   _fixAspectRatio->setProperty("si","&Fix aspect ratio");
+  _lockPosToData->setProperty("si", "Lock Position To Data");
 }
 
 
