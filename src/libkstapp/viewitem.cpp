@@ -1118,21 +1118,23 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   addTitle(&menu);
 
   menu.addAction(_editAction);
-  menu.addAction(_lockPosToDataAction);
 
-  QMenu layoutMenu;
+//  QMenu layoutMenu;
   if (!(lockParent() || (parentViewItem() && parentViewItem()->lockParent()))) {
     menu.addAction(_raiseAction);
     menu.addAction(_lowerAction);
 
-    layoutMenu.setTitle(tr("Cleanup Layout"));
-    layoutMenu.addAction(_autoLayoutAction);
-    layoutMenu.addAction(_protectedLayoutAction);
-    layoutMenu.addAction(_customLayoutAction);
-    menu.addMenu(&layoutMenu);
+//    layoutMenu.setTitle(tr("Cleanup Layout"));
+//    layoutMenu.addAction(_autoLayoutAction);
+//    layoutMenu.addAction(_protectedLayoutAction);
+//    layoutMenu.addAction(_customLayoutAction);
+//    menu.addMenu(&layoutMenu);
 
+    menu.addSeparator();
     menu.addAction(_deleteAction);
   }
+  menu.addSeparator();
+  menu.addAction(_lockPosToDataAction);
 
 
   addToMenuForContextEvent(menu);
