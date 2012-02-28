@@ -662,6 +662,7 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
     if (view()->viewMode() == View::Data) {
 
+      menu.addSeparator();
       menu.addMenu(_sharedAxisBoxMenu);
 
       menu.addAction(_breakSharedBox);
@@ -673,6 +674,7 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
   if (view()->viewMode() == View::Data) {
     _plotMaximize->setChecked(_plotMaximized);
+    menu.addSeparator();
     menu.addAction(_plotMaximize);
   }
 
