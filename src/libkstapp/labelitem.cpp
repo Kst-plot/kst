@@ -416,6 +416,20 @@ void LabelItem::applyDataLockedDimensions() {
   }
 }
 
+void LabelItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect) {
+  Q_UNUSED(oldParentRect);
+
+  QRectF itemRect = rect();
+
+  QPointF newTopLeft = newParentRect.topLeft() - itemRect.topLeft() +
+      QPointF(newParentRect.width() * _parentRelativePosition.x(),
+              newParentRect.height() * _parentRelativePosition.y());
+
+  setPos(newTopLeft);
+
+  setViewRect(itemRect, true);
+}
+
 }
 
 // vim: ts=2 sw=2 et

@@ -151,14 +151,15 @@ void LegendItem::paint(QPainter *painter) {
       } else {
         RelationPtr dup_relation = legendItems.at(i_dup);
         if (!dup_relation->yLabelInfo().file.isEmpty()) {
-          names.replace(i_dup, label + " (" + dup_relation->yLabelInfo().file + ')');
+          names.replace(i_dup, label + " (" + dup_relation->yLabelInfo().escapedFile() + ')');
         }
         if (!relation->yLabelInfo().file.isEmpty()) {
-          names.append(label + " (" + relation->yLabelInfo().file + ')');
+          names.append(label + " (" + relation->yLabelInfo().escapedFile() + ')');
         }
       }
     }
   }
+
 
   QSize legendSize(0, 0);
   QSize titleSize(0,0);

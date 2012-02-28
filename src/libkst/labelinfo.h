@@ -36,6 +36,7 @@ struct KSTCORE_EXPORT LabelInfo
   QString quantity;
   QString units;
   QString file;
+  QString escapedFile();
   QString singleRenderItemLabel() const;
 };
 

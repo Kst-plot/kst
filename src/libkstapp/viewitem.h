@@ -338,6 +338,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void startDragging(QWidget *widget, const QPointF& hotspot);
     ActiveGrip _activeGrip;
     QRectF _dataRelativeRect;
+    QPointF _originalPosition;
+    QPointF _parentRelativeCenter;
+    QPointF _parentRelativePosition;
 
   private:
     GripMode _gripMode;
@@ -358,9 +361,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     bool _acceptsContextMenuEvents;
     bool _updatingLayout;
     bool _highlighted;
-    QPointF _originalPosition;
-    QPointF _parentRelativeCenter;
-    QPointF _parentRelativePosition;
     QRectF _originalRect;
     QTransform _originalTransform;
     QLineF _normalLine;

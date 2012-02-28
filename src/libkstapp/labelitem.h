@@ -60,6 +60,7 @@ class LabelItem : public ViewItem {
 
     virtual void updateDataRelativeRect(bool force = false);
     virtual void applyDataLockedDimensions();
+    virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
   public Q_SLOTS:
     virtual void edit();

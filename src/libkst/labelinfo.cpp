@@ -47,5 +47,10 @@ QString LabelInfo::singleRenderItemLabel() const {
   }
 }
 
+QString LabelInfo::escapedFile() {
+  QString escaped_file = file;
+  escaped_file.replace('_', "\\_").replace('^', "\\^").replace('[', "\\[").replace(']', "\\]");
+  return escaped_file;
+}
 
 }
