@@ -105,7 +105,7 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   _dimensionsTab = new DimensionsTab(_item, this);
   DialogPage *dimensionsPage = new DialogPage(this);
-  dimensionsPage->setPageTitle(tr("Dimensions"));
+  dimensionsPage->setPageTitle(tr("Size/Position"));
   dimensionsPage->addDialogTab(_dimensionsTab);
   addDialogPage(dimensionsPage);
   connect(_dimensionsTab, SIGNAL(apply()), this, SLOT(dimensionsChanged()));

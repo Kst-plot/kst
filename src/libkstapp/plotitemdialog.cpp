@@ -141,7 +141,7 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   
   QList<QList<QListWidgetItem*> > moveItems;
   moveItems << _listWidget->findItems("Appearance", Qt::MatchFixedString);
-  moveItems << _listWidget->findItems("Dimensions", Qt::MatchFixedString);
+  moveItems << _listWidget->findItems("Size/Position", Qt::MatchFixedString);
   foreach(const QList<QListWidgetItem*>& found, moveItems) {
     if (found.size() > 0) {
       _listWidget->addItem(_listWidget->takeItem(_listWidget->row(found.first())));

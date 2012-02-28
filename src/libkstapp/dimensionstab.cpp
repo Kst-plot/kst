@@ -16,7 +16,7 @@ namespace Kst {
 DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent) 
     : DialogTab(parent), _viewItem(viewItem) {
   setupUi(this);
-  setTabTitle(tr("Dimensions"));
+  setTabTitle(tr("Size/Position"));
 
   connect(_fixAspectRatio, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
 
