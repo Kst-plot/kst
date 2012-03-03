@@ -1133,15 +1133,19 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     menu.addSeparator();
     menu.addAction(_deleteAction);
   }
-  menu.addSeparator();
-  menu.addAction(_lockPosToDataAction);
-
+  if (dataPosLockable()) {
+    menu.addSeparator();
+    menu.addAction(_lockPosToDataAction);
+  }
 
   addToMenuForContextEvent(menu);
 
   menu.exec(event->screenPos());
 }
 
+bool ViewItem::dataPosLockable() const {
+  return bool(qgraphicsitem_cast<PlotRenderItem *>(parentViewItem()));
+}
 
 void ViewItem::addToMenuForContextEvent(QMenu &menu) {
   Q_UNUSED(menu);

@@ -239,6 +239,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void applyDialogDefaultsLockPosToData();
 
     virtual void applyDataLockedDimensions();
+    virtual bool dataPosLockable() const;
 
   Q_SIGNALS:
     void geometryChanged();

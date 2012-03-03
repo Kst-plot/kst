@@ -28,6 +28,7 @@ class CartesianRenderItem : public PlotRenderItem
 
     bool configureFromXml(QXmlStreamReader &xml, ObjectStore *store);
     const QString defaultsGroupName() const {return QString("plot");}
+    virtual bool dataPosLockable() const {return false;}
 };
 
 }

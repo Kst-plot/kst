@@ -36,7 +36,7 @@ static const int KstColorsCount = sizeof(KstColors) / sizeof(char*);
 static const QString KstColorsName = "Kst Colors";
 
 static const int CycleCount = 1021;
-static const QString CycleName = "Cyclical Spectrum";
+static const QString CycleName = "Spectrum (Cyclical)";
 static unsigned char Cycle[1022][3] = {
 {128, 238, 17},
 {128, 238, 16},

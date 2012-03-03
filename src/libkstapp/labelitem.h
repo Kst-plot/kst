@@ -83,6 +83,8 @@ class LabelItem : public ViewItem {
     QFont _font;
     qreal _height;
     bool _resized;
+    bool _dataRelativeDimValid;
+    bool _fixleft;
 };
 
 

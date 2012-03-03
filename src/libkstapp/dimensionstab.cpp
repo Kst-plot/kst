@@ -10,6 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "dimensionstab.h"
+#include "plotitem.h"
 #include <QDebug>
 
 namespace Kst {
@@ -59,6 +60,11 @@ void DimensionsTab::setupDimensions() {
     _fixAspectRatio->setHidden(true);
   }
   _lockPosToData->setChecked(_viewItem->lockPosToData());
+  if (_viewItem->dataPosLockable()) {
+      _lockPosToData->show();
+  } else {
+      _lockPosToData->hide();
+  }
 }
 
 

@@ -32,7 +32,7 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false) {
+  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false), _dataRelativeDimValid(false), _fixleft(false) {
   setTypeName("Label");
   setFixedSize(true);
   setLockAspectRatio(true);
@@ -368,12 +368,16 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
 void LabelItem::updateDataRelativeRect( bool force) {
   CartesianRenderItem* plot = dynamic_cast<CartesianRenderItem*>(parentViewItem());
   if (plot) {
-    if ((!lockPosToData()) || force) {
-      QPointF P1 = (rect().topLeft() + rect().bottomLeft())/2;
-      QPointF P2 = (rect().topRight() + rect().bottomRight())/2;
+    if ((!lockPosToData()) || force || (!_dataRelativeDimValid)) {
+      _dataRelativeDimValid = ((fabs(rect().width())>1.1) && (fabs(rect().height())>1.1));
+      //QPointF P1 = (rect().topLeft() + rect().bottomLeft())/2;
+      //QPointF P2 = (rect().topRight() + rect().bottomRight())/2;
+      QPointF P1 = rect().bottomLeft();
+      QPointF P2 = rect().bottomRight();
       _dataRelativeRect.setTopLeft(plot->plotItem()->mapToProjection(mapToParent(P1)));
       _dataRelativeRect.setBottomRight(plot->plotItem()->mapToProjection(mapToParent(P2)));
-      _dataRelativeRect.moveCenter(plot->plotItem()->mapToProjection(mapToParent(rect().center())));
+      //qDebug() << "rel rect tl" << _dataRelativeRect.topLeft() << "rel rect br" << _dataRelativeRect.bottomRight();
+      //_dataRelativeRect.moveCenter(plot->plotItem()->mapToProjection(mapToParent(rect().center())));
     }
   }
 }
@@ -397,14 +401,17 @@ void LabelItem::applyDataLockedDimensions() {
     QPointF P2(parentX + parentWidth*(drP2.x()-render_item->plotItem()->xMin())/parentDX,
                        parentY + parentHeight*(render_item->plotItem()->yMax() - drP2.y())/parentDY);
 
-    QPointF centerP = (P1 + P2) * 0.5;
     qreal theta = atan2(P2.y() - P1.y(), P2.x() - P1.x());
     qreal height = rect().height();
     qreal width = rect().width();
 
-    setPos(centerP.x(), centerP.y());
-    setViewRect(-width*0.5, -height*0.5, width, height);
-
+    if (_fixleft) {
+      setPos(P1);
+      setViewRect(0, -height, width, height);
+    } else {
+      setPos(P2);
+      setViewRect(-width, -height, width, height);
+    }
     QTransform transform;
     transform.rotateRadians(theta);
 
