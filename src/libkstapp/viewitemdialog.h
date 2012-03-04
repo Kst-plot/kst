@@ -50,7 +50,6 @@ class ViewItemDialog : public Dialog
 
     EditMode editMode() const { return _mode; }
 
-    DialogPage *dimensionsPage;
     DimensionsTab *_dimensionsTab;
   public Q_SLOTS:
     void setSingleEdit();
@@ -77,7 +76,7 @@ class ViewItemDialog : public Dialog
     void saveFill(ViewItem *item);
     void saveStroke(ViewItem *item);
     void saveLayout(ViewItem *item);
-    void saveDimensions(ViewItem *item);
+    virtual void saveDimensions(ViewItem *item);
 
   private:
     QPointer<ViewItem> _item;

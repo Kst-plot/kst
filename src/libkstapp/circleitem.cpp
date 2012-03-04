@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "circleitem.h"
+#include "circleitemdialog.h"
 
 #include <debug.h>
 
@@ -86,6 +87,12 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
     emit creationComplete();
     return;
   }
+}
+
+
+void CircleItem::edit() {
+  CircleItemDialog *editDialog = new CircleItemDialog(this);
+  editDialog->show();
 }
 
 

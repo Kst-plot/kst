@@ -64,7 +64,7 @@ class LabelItem : public ViewItem {
 
   public Q_SLOTS:
     virtual void edit();
-    void setDirty() { _dirty = true; };
+    void setDirty() { _dirty = true; }
     void triggerUpdate();
 
   protected Q_SLOTS:

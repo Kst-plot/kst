@@ -370,14 +370,10 @@ void LabelItem::updateDataRelativeRect( bool force) {
   if (plot) {
     if ((!lockPosToData()) || force || (!_dataRelativeDimValid)) {
       _dataRelativeDimValid = ((fabs(rect().width())>1.1) && (fabs(rect().height())>1.1));
-      //QPointF P1 = (rect().topLeft() + rect().bottomLeft())/2;
-      //QPointF P2 = (rect().topRight() + rect().bottomRight())/2;
       QPointF P1 = rect().bottomLeft();
       QPointF P2 = rect().bottomRight();
       _dataRelativeRect.setTopLeft(plot->plotItem()->mapToProjection(mapToParent(P1)));
       _dataRelativeRect.setBottomRight(plot->plotItem()->mapToProjection(mapToParent(P2)));
-      //qDebug() << "rel rect tl" << _dataRelativeRect.topLeft() << "rel rect br" << _dataRelativeRect.bottomRight();
-      //_dataRelativeRect.moveCenter(plot->plotItem()->mapToProjection(mapToParent(rect().center())));
     }
   }
 }

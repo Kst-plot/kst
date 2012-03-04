@@ -35,6 +35,10 @@ class CircleItem : public ViewItem
     virtual void save(QXmlStreamWriter &xml);
     virtual void paint(QPainter *painter);
     virtual void creationPolygonChanged(View::CreationEvent event);
+    virtual bool customDimensionsTab() {return true;}
+  public Q_SLOTS:
+    virtual void edit();
+
 };
 
 class CreateCircleCommand : public CreateCommand

@@ -103,12 +103,16 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   page->addDialogTab(_layoutTab);
   addDialogPage(page);
 
-  _dimensionsTab = new DimensionsTab(_item, this);
-  DialogPage *dimensionsPage = new DialogPage(this);
-  dimensionsPage->setPageTitle(tr("Size/Position"));
-  dimensionsPage->addDialogTab(_dimensionsTab);
-  addDialogPage(dimensionsPage);
-  connect(_dimensionsTab, SIGNAL(apply()), this, SLOT(dimensionsChanged()));
+  if (!_item->customDimensionsTab()) {
+    _dimensionsTab = new DimensionsTab(_item, this);
+    DialogPage *dimensionsPage = new DialogPage(this);
+    dimensionsPage->setPageTitle(tr("Size/Position"));
+    dimensionsPage->addDialogTab(_dimensionsTab);
+    addDialogPage(dimensionsPage);
+    connect(_dimensionsTab, SIGNAL(apply()), this, SLOT(dimensionsChanged()));
+  } else {
+    _dimensionsTab = 0;
+  }
 
   QList<DialogPage*> dialogPages = _item->dialogPages();
   foreach (DialogPage *dialogPage, dialogPages)
@@ -121,7 +125,9 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   selectDialogPage(page);
 
-  connect(_dimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
+  if (!_item->customDimensionsTab()) {
+    connect(_dimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
+  }
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(setMultipleEdit()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(setSingleEdit()));
@@ -219,8 +225,10 @@ void ViewItemDialog::setupLayout() {
 
 
 void ViewItemDialog::setupDimensions() {
-  _dimensionsTab->enableSingleEditOptions(true);
-  _dimensionsTab->setupDimensions();
+  if (_dimensionsTab) {
+    _dimensionsTab->enableSingleEditOptions(true);
+    _dimensionsTab->setupDimensions();
+  }
 }
 
 

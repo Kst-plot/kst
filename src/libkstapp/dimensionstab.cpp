@@ -81,6 +81,7 @@ void DimensionsTab::modified() {
 
 void DimensionsTab::clearTabValues() {
   _fixAspectRatio->setCheckState(Qt::PartiallyChecked);
+  _lockPosToData->setCheckState(Qt::PartiallyChecked);
   _width->clear();
   _height->clear();
   _rotation->clear();

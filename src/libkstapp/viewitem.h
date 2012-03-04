@@ -272,6 +272,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setLeft(qreal x);
     void setRight(qreal x);
     void setLockPosToData(bool lockPosToData);
+    virtual bool customDimensionsTab() {return false;}
 
   protected:
     virtual QPainterPath topLeftGrip() const;
