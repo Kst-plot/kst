@@ -1,0 +1,64 @@
+*** Introduction ***
+You can find here detailed instructions how to add a custom datasource to Kst (version 2.x), i.e. make it read a new file format.
+
+Kst offers a plugin-based framework for datasources, allowing you to add support for your own datasource (or file format) fairly easily.
+You basically need to implement 3 classes derived from classes provided by Kst. 
+A good starting point is to copy the sampledatasource/ directory and start implementing the functions. It is advisable to have some 
+understanding of C++, and to have a look at other implementations, particularly the initial svn commit for this file which shows more or less 
+all the bits required to add complete support for a new file type, in that case Matlab's .mat using the matio/ library.
+
+The use of the excellent QtCreator tool can make your life much easier, with code-completion, code navigation and integrated documentation.
+If you have plans to develop for Kst, we recommend contacting us on the kst@kde.org mailing list to announce your plans and discuss technical
+issues as well as to get some support.
+
+
+*** Outline ***
+The way Kst accesses data is completely decoupled from the internal plotting and computation logics. 
+Basically, you *have to* implement the following methods for your new datasource:
+- Test if a file is supported (may be as simple as checking the file extension, or some magic number in the header)
+- Return the list of scalars, vectors, matrices and strings available. Don't worry if only some of the types are supported.
+- For a given data item, return the number of samples available
+- For a given data item, return a range of values (i.e. samples #100 to #199)
+When this is done, just add the new datasource to the build (details below) and start debugging (unless you're a code guru and got it right directly)!
+
+On top of that basic functionality, you *may* also add the following optional features:
+- Support for file or data item metadata, e.g. scalars or strings adding some information to the data item like units or experiment conditions.
+  If you want to support metadata, you may want to look at the netCDF datasource which currently has a quite extensive support for metadata. 
+  Metadata can be browsed via the View->Scalars/Vectors/Strings/Matrices menus.
+- Support for real-time (streaming) data, i.e. files which are being written to and read/plotted from simultaneously. ASCII and dirfilesource
+  implement such a feature (check the internalDataSourceUpdate() method)
+- Support for time-based access (warning: this feature is not really used right now and probably still has some rough edges)
+
+
+*** Step-by-step instructions (minimal datasource), based on the matlab example - replace "matlab" with you file type ***
+** Step 1: Create the source directory and do the initial configuration **
+- Copy the sampledatasource directory (warning: don't copy the .svn subfolder!!!): "mkdir matlab; cp sampledatasource/* matlab/"
+- Change the names of all files to something more relevant (sampledatasource -> matio)
+- Edit the contents of the .desktop file, especially the X-KDE-Library entry
+- Edit the .pro file (if you are using qmake, which is being deprecated) or the [root]/cmake/src/datasources/CMakeList.txt file to activate the build.
+  If needed, look at other examples to see how to detect the presence of the required librqries to make it conditional (check [root]/cmake/modules)
+- Once the output of cmake is as wished, the data source will be compiled: start filling out the contents of the actual code files
+
+** Step 2: Implement the important classes **
+To get your datasource to work, you have to:
+  1) Implement the MatlabSourcePlugin::provides() (trivial) and MatlabSourcePlugin::understands()functions. For that second function, the easiest is to
+     check only the file extension. All plugins are queried to select the most appropriate one, if you return a value of 80 your plugin should be picked.
+  2) Decide which kind of primitives you want to support. Primitives are scalars (1 value), strings, vectors (an array of values) and matrices (2-dimensional arrays). 
+     The most usual type to support is vector, you will probably want to start with that. The interface between Kst core and the datasource plugins uses templates. 
+     See the definition of DataInterfaceMatlabVector for an example, and note that since it uses templates the declaration and implementation have to be in the .cpp file.
+     The classes you implement (as a minimum MatlabSourcePlugin, MatlabSource and DataInterfaceMatlabVector) can be all together in the same file, or one per file.
+  3) Implement the most important functions: MatlabSource::MatlabSource, MatlabSource::~MatlabSource, MatlabSource::init() where most of the interesting data is usually 
+     gathered and cached into member variables, MatlabSource::readField() which returns a range of values for a given vector, and possibly some others in MatlabSource. 
+  4) Implement the interface for each primitive, which is mostly only a thin layer above the data source class. Start with DataInterfaceMatlabVector and add other types
+     progressively.
+Hints: you can use qDebug() as a stream to produce debug output, and the Help->Debug Dialog also provides some interesting information, in particular plugin loading errors.
+
+** Step 3: Polish **
+This step is important, don't neglect it! It is important to check:
+- That your code is well documented/commented and easy to understand
+- That you don't have crashes or memleaks. Beware the conversions to double, this can be tricky and Kst always expects double values!
+- If you can add some metadata support. Each primitive supports meta-strings and meta-scalars. See netCDF for details.
+- Whether you can improve your data source by adding a configuration widget. Currently only ASCII provides one, so look there for inspiration (warning: ASCII is complex!)
+- If performance can be improved (performance is very important to Kst!!!)
+- If some sample files can be added to the sample_data/ subdir so that others can perform some tests if required
+

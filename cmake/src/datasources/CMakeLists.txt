@@ -51,5 +51,11 @@ if(dmc)
   #kst_link(${DMC_LIBRARIES})
 endif()
 
+if(matio)
+	include_directories(${MATIO_INCLUDE_DIR})
+	kst_add_plugin(. matlab) # Directory named after the file format, not the lib
+	kst_link(${MATIO_LIBRARIES})
+endif()
+
 
 
