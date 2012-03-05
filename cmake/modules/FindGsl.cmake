@@ -3,7 +3,7 @@
 # but use this iformation in find_* only
 
 include(FindPkgConfig)
-pkg_check_modules(PKGGSL QUIET gsl)
+pkg_check_modules(PKGGSL gsl)
 
 if(NOT PKGGSL_LIBRARIES)
 	set(PKGGSL_LIBRARIES gsl)
