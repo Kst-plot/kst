@@ -503,7 +503,7 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
     int8_t *dataPointer = (int8_t*)matvar->data;
     for (int i = 0; i < n; ++i) {
       v[i] = (double)dataPointer[i+s];
-cd     }
+    }
   }
     break;
 
