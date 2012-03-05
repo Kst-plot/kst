@@ -62,7 +62,7 @@ class ShiftPlugin : public QObject, public Kst::DataObjectPluginInterface {
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;
 
-    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Generic; }
+    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Filter; }
 
     virtual bool hasConfigWidget() const { return true; }
 
