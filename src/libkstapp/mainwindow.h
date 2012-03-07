@@ -79,6 +79,7 @@ class MainWindow : public QMainWindow
     void showChangeDataSampleDialog();
     void showChangeFileDialog();
     void showDataWizard();
+    void showDataWizard(const QString &dataFile);
     void showBugReportWizard();
     void showPluginDialog(QString &pluginName);
 
@@ -166,11 +167,13 @@ class MainWindow : public QMainWindow
 
     void readSettings();
     void writeSettings();
-    bool promptSave();
+    bool promptSaveDone();
 
     QAction* createRecentFileAction(const QString& filename, int idx, const QString& text, const char* openslot);
     void updateRecentFiles(const QString& key, QMenu *menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot);
     
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
   private:
     Document *_doc;

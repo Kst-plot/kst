@@ -105,6 +105,7 @@ MainWindow::MainWindow() :
   _tabWidget->createView();
 
   setCentralWidget(_tabWidget);
+  _tabWidget->setAcceptDrops(false); // Force drops to be passed to parent
   connect(_tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentViewChanged()));
   connect(_tabWidget, SIGNAL(currentViewModeChanged()), this, SLOT(currentViewModeChanged()));
   connect(PlotItemManager::self(), SIGNAL(tiedZoomRemoved()), this, SLOT(tiedZoomRemoved()));
@@ -116,6 +117,7 @@ MainWindow::MainWindow() :
   QTimer::singleShot(0, this, SLOT(performHeavyStartupActions()));
 
   updateRecentKstFiles();
+  setAcceptDrops(true);
 }
 
 
@@ -194,19 +196,24 @@ void MainWindow::allPlotsTiedZoom() {
 }
 
 
-bool MainWindow::promptSave() {
-  int rc = QMessageBox::warning(this, tr("Kst: Save Promp"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
-  if (rc == QMessageBox::Save) {
-    save();
-  } else if (rc == QMessageBox::Cancel) {
-    return false;
+bool MainWindow::promptSaveDone() {
+  if (! _doc->isChanged()) {
+    return true; // No need to ask if there is no unsaved change -> we're done
   }
-  return true;
+  else { // Changes registered: ask the user
+    int rc = QMessageBox::warning(this, tr("Kst: Save Prompt"), tr("Your document has been modified.\nSave changes?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+    if (rc == QMessageBox::Save) {
+      save();
+    } else if (rc == QMessageBox::Cancel) {
+      return false;
+    }
+    return true;
+  }
 }
 
 
 void MainWindow::closeEvent(QCloseEvent *e) {
-  if (_doc->isChanged() && !promptSave()) {
+  if (!promptSaveDone()) {
     e->ignore();
     return;
   }
@@ -258,11 +265,8 @@ void MainWindow::newDoc(bool force) {
   bool clearApproved = false;
   if (force) {
     clearApproved = true;
-  } else if (_doc->isChanged()) {
-    clearApproved = promptSave();
   } else {
-    int rc = QMessageBox::warning(this, tr("Kst"), tr("Delete everything?"), QMessageBox::Ok, QMessageBox::Cancel);
-    clearApproved = (rc == QMessageBox::Ok);
+    clearApproved = promptSaveDone();
   }
 
   if (clearApproved) {
@@ -271,16 +275,17 @@ void MainWindow::newDoc(bool force) {
     delete _doc;
     _doc = new Document(this);
     _scriptServer->setStore(_doc->objectStore());
+    tabWidget()->clear();
+    tabWidget()->createView();
+    return;
   } else {
     return;
   }
 
-  tabWidget()->clear();
-  tabWidget()->createView();
 }
 
 void MainWindow::open() {
-  if (_doc->isChanged() && !promptSave()) {
+  if (!promptSaveDone()) {
     return;
   }
   QSettings settings("Kst2");
@@ -425,12 +430,7 @@ void MainWindow::openFile(const QString &file) {
   QDir::setCurrent(file.left(file.lastIndexOf('/')));
 
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-  delete _dataManager;
-  _dataManager = 0;
-  delete _doc;
-  _doc = new Document(this);
-  _scriptServer->setStore(_doc->objectStore());
-
+  newDoc(true); // Does all the init stuff, but does not ask for override as it's supposed to be done elsewhere
   bool ok = _doc->open(file);
   QApplication::restoreOverrideCursor();
 
@@ -438,9 +438,6 @@ void MainWindow::openFile(const QString &file) {
     QMessageBox::critical(this, tr("Kst"),
         tr("Error opening document '%1':\n%2\n"
            "Maybe it is a Kst 1 file which could not be read by Kst 2.").arg(file, _doc->lastError()));
-    delete _doc;
-    _doc = new Document(this);
-    _scriptServer->setStore(_doc->objectStore());
   }
 
   setWindowTitle("Kst - " + file);
@@ -1835,6 +1832,11 @@ void MainWindow::showDataWizard() {
   dataWizard->show();
 }
 
+void MainWindow::showDataWizard(const QString &dataFile) {
+  DataWizard *dataWizard = new DataWizard(this, dataFile);
+  dataWizard->show();
+}
+
 
 void MainWindow::openRecentDataFile()
 {
@@ -1907,6 +1909,30 @@ void MainWindow::setWidgetFlags(QWidget* widget)
 #endif
 );
   }
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+     if (event->mimeData()->hasUrls()) {
+       event->acceptProposedAction();
+     }
+}
+
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+  QString path = event->mimeData()->urls().first().toLocalFile();
+  if (path.endsWith(QString(".kst"))) {
+     if (!promptSaveDone()) { // There are things to save => cancel
+       event->ignore();
+       return;
+     }
+     openFile(path);
+   }
+   else {
+     showDataWizard(path); // This is not destructive: it only add data, no need to ask for confirmation
+   }
+   event->accept();
 }
 
 }
