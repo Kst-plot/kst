@@ -134,7 +134,6 @@ ViewItem::ViewItem(View *parentView) :
   setAcceptDrops(false);
 
   ViewItemManager::self()->addViewItem(this);
-
 }
 
 
@@ -2330,6 +2329,7 @@ void CreateCommand::createItem() {
 void CreateCommand::creationComplete() {
   _view->undoStack()->push(this);
   kstApp->mainWindow()->clearDrawingMarker();
+  kstApp->mainWindow()->document()->setChanged(true);
 }
 
 
