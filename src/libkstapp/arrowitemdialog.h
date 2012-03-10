@@ -13,7 +13,7 @@
 #ifndef ARROWITEMDIALOG_H
 #define ARROWITEMDIALOG_H
 
-#include "viewitemdialog.h"
+#include "lineitemdialog.h"
 
 #include "kst_export.h"
 
@@ -22,7 +22,7 @@ namespace Kst {
 class ArrowPropertiesTab;
 class ArrowItem;
 
-class ArrowItemDialog : public ViewItemDialog
+class ArrowItemDialog : public LineItemDialog
 {
   Q_OBJECT
   public:

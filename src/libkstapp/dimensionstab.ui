@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
-    <height>174</height>
+    <width>361</width>
+    <height>189</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,6 +90,25 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&amp;,</string>
+       </property>
+       <property name="buddy">
+        <cstring>_y</cstring>
+       </property>
+       <property name="si" stdset="0">
+        <string>pos Y</string>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="3">
       <widget class="QDoubleSpinBox" name="_height">
        <property name="decimals">
@@ -116,25 +135,6 @@
        </property>
        <property name="si" stdset="0">
         <string>pos X</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>&amp;,</string>
-       </property>
-       <property name="buddy">
-        <cstring>_y</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string>pos Y</string>
        </property>
       </widget>
      </item>
@@ -197,6 +197,7 @@
  </widget>
  <tabstops>
   <tabstop>_fixAspectRatio</tabstop>
+  <tabstop>_lockPosToData</tabstop>
   <tabstop>_x</tabstop>
   <tabstop>_y</tabstop>
   <tabstop>_width</tabstop>

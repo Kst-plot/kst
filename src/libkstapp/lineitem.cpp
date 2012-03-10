@@ -12,6 +12,7 @@
 
 
 #include "lineitem.h"
+#include "lineitemdialog.h"
 
 #include "view.h"
 
@@ -27,7 +28,7 @@
 namespace Kst {
 
 LineItem::LineItem(View *parent)
-  : ViewItem(parent) {
+  : ViewItem(parent), _lineEditDialog(0) {
   _created = false;
   setTypeName("Line");
   setAllowedGrips(RightMidGrip | LeftMidGrip);
@@ -42,6 +43,15 @@ LineItem::LineItem(View *parent)
 
 
 LineItem::~LineItem() {
+}
+
+
+void LineItem::edit() {
+  if (!_lineEditDialog) {
+    _lineEditDialog = new LineItemDialog(this);
+  }
+  _lineEditDialog->show();
+  _lineEditDialog->raise();
 }
 
 
@@ -62,20 +72,6 @@ void LineItem::save(QXmlStreamWriter &xml) {
 QLineF LineItem::line() const {
   return QLineF(rect().left(), rect().center().y(), rect().right(), rect().center().y());
 }
-
-
-//void LineItem::setLine(const QLineF &line_) {
-//  setPos(line_.p1());
-//  setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
-//
-//  if (!rect().isEmpty()) {
-//    rotateTowards(line().p2(), line_.p2());
-//  }
-//
-//  QRectF r = rect();
-//  r.setSize(QSizeF(QLineF(line().p1(), line_.p2()).length(), r.height()));
-//  setViewRect(r);
-//}
 
 
 QPainterPath LineItem::leftMidGrip() const {
@@ -206,7 +202,7 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
       P2 = mapToParent(QPoint(rect().right(), rect().center().y()));
       break;
     default:
-      break;
+      return;
     }
     centerP = (P1 + P2) * 0.5;
     theta = atan2(P2.y() - P1.y(), P2.x() - P1.x());
@@ -215,8 +211,15 @@ void LineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     double dy = P1.y() - P2.y();
     width = sqrt(dx*dx + dy*dy)+1.0;
 
-    setPos(centerP.x(), centerP.y());
-    setViewRect(-width*0.5, -height*0.5, width, height);
+    if (activeGrip() == RightMidGrip) {
+      setPos(P1);
+      setViewRect(0,-height*0.5,width,height);
+    } else if (activeGrip() == LeftMidGrip) {
+      setPos(P2);
+      setViewRect(-width, -height*0.5, width, height);
+    }
+    //setPos(centerP.x(), centerP.y());
+    //setViewRect(-width*0.5, -height*0.5, width, height);
 
     QTransform transform;
     transform.rotateRadians(theta);

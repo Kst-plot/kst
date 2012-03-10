@@ -9,37 +9,47 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "circledimensionstab.h"
+#include "linedimensionstab.h"
 #include "plotitem.h"
 #include <QDebug>
 
 namespace Kst {
-CircleDimensionsTab::CircleDimensionsTab(ViewItem* viewItem, QWidget *parent)
+
+LineDimensionsTab::LineDimensionsTab(ViewItem* viewItem, QWidget *parent)
   : DialogTab(parent), _viewItem(viewItem) {
   setupUi(this);
 
   connect(_lockPosToData, SIGNAL(clicked(bool)), this, SLOT(fillDimensions(bool)));
 }
 
-void CircleDimensionsTab::fillDimensions(bool lock_pos_to_data) {
+void LineDimensionsTab::fillDimensions(bool lock_pos_to_data) {
   if (lock_pos_to_data) {
-    _x->setRange(-1E308, 1E308);
-    _y->setRange(-1E308, 1E308);
-    _radius->setRange(0,1E308);
-    _x->setValue(_viewItem->dataRelativeRect().center().x());
-    _y->setValue(_viewItem->dataRelativeRect().center().y());
-    _radius->setValue(0.5*_viewItem->dataRelativeRect().width());
+    _p1X->setRange(-1E308, 1E308);
+    _p2X->setRange(-1E308, 1E308);
+    _p1Y->setRange(-1E308, 1E308);
+    _p2Y->setRange(-1E308, 1E308);
+    QPointF P1 = _viewItem->dataRelativeRect().topLeft();
+    QPointF P2 = _viewItem->dataRelativeRect().bottomRight();
+    _p1X->setValue(P1.x());
+    _p1Y->setValue(P1.y());
+    _p2X->setValue(P2.x());
+    _p2Y->setValue(P2.y());
   } else {
-    _x->setRange(0, 1);
-    _y->setRange(0, 1);
-    _radius->setRange(0,1);
-    _x->setValue(_viewItem->relativeCenter().x());
-    _y->setValue(_viewItem->relativeCenter().y());
-    _radius->setValue(0.5*_viewItem->relativeWidth());
+    _p1X->setRange(0, 1);
+    _p1Y->setRange(0, 1);
+    _p2X->setRange(0, 1);
+    _p2Y->setRange(0, 1);
+    QRectF pr = _viewItem->parentRect();
+    QPointF P1 = _viewItem->mapToParent(QPoint(_viewItem->rect().left(), _viewItem->rect().center().y()));
+    QPointF P2 = _viewItem->mapToParent(QPoint(_viewItem->rect().right(), _viewItem->rect().center().y()));
+    _p1X->setValue(P1.x()/pr.width());
+    _p2X->setValue(P2.x()/pr.width());
+    _p1Y->setValue(P1.y()/pr.height());
+    _p2Y->setValue(P2.y()/pr.height());
   }
 }
 
-void CircleDimensionsTab::setupDimensions() {
+void LineDimensionsTab::setupDimensions() {
 
   fillDimensions(_viewItem->dataPosLockable() && _viewItem->lockPosToData());
 
@@ -52,29 +62,23 @@ void CircleDimensionsTab::setupDimensions() {
 }
 
 
-void CircleDimensionsTab::modified() {
+void LineDimensionsTab::modified() {
   emit tabModified();
 }
 
 
-void CircleDimensionsTab::clearTabValues() {
-  _radius->clear();
+void LineDimensionsTab::clearTabValues() {
   _lockPosToData->setCheckState(Qt::PartiallyChecked);
 }
 
 
-void CircleDimensionsTab::enableSingleEditOptions(bool enabled) {
-  _x->setEnabled(enabled);
-  _y->setEnabled(enabled);
+void LineDimensionsTab::enableSingleEditOptions(bool enabled) {
+  //_x->setEnabled(enabled);
+  //_y->setEnabled(enabled);
 }
 
 
-bool CircleDimensionsTab::radiusDirty() const {
-  return (!_radius->text().isEmpty());
-}
-
-
-bool CircleDimensionsTab::lockPosToDataDirty() const {
+bool LineDimensionsTab::lockPosToDataDirty() const {
   return _lockPosToData->checkState() != Qt::PartiallyChecked;
 }
 

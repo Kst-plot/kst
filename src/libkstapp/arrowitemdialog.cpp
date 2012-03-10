@@ -23,7 +23,7 @@
 namespace Kst {
 
 ArrowItemDialog::ArrowItemDialog(ArrowItem *item, QWidget *parent)
-    : ViewItemDialog(item, parent), _arrowItem(item) {
+    : LineItemDialog(item, parent), _arrowItem(item) {
 
   _propertiesTab = new ArrowPropertiesTab(this);
   DialogPage *propertiesPage = new DialogPage(this);

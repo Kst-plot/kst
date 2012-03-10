@@ -51,9 +51,11 @@ class ViewItemDialog : public Dialog
     EditMode editMode() const { return _mode; }
 
     DimensionsTab *_dimensionsTab;
+
   public Q_SLOTS:
     void setSingleEdit();
     void setMultipleEdit();
+    virtual void setupDimensions();
 
   Q_SIGNALS:
     void editMultipleMode();
@@ -71,7 +73,6 @@ class ViewItemDialog : public Dialog
     void setupStroke();
     void setupLayout();
     void setupChildViewOptions();
-    void setupDimensions();
 
     void saveFill(ViewItem *item);
     void saveStroke(ViewItem *item);
@@ -79,7 +80,6 @@ class ViewItemDialog : public Dialog
     virtual void saveDimensions(ViewItem *item);
 
   private:
-    QPointer<ViewItem> _item;
 
     QMap <QString, QString> _multiNameShortName;
     QLabel *_tagStringLabel;
@@ -90,6 +90,7 @@ class ViewItemDialog : public Dialog
     QWidget *_editMultipleBox;
     
   protected:
+    QPointer<ViewItem> _item;
     FillTab *_fillTab;
     StrokeTab *_strokeTab;
     LayoutTab *_layoutTab;

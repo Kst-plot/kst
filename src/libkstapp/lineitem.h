@@ -18,6 +18,8 @@
 
 namespace Kst {
 
+class LineItemDialog;
+
 class LineItem : public ViewItem
 {
   Q_OBJECT
@@ -44,6 +46,9 @@ class LineItem : public ViewItem
 
     virtual void updateDataRelativeRect(bool force = false);
     virtual void applyDataLockedDimensions();
+    virtual void clearEditDialogPtr() {_lineEditDialog = 0;}
+
+    virtual bool customDimensionsTab() {return true;}
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
@@ -61,6 +66,13 @@ class LineItem : public ViewItem
   private:
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
     bool _created;
+    LineItemDialog *_lineEditDialog;
+
+  public Q_SLOTS:
+    virtual void edit();
+
+  private:
+
 };
 
 class CreateLineCommand : public CreateCommand

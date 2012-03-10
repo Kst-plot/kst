@@ -28,8 +28,6 @@ class DimensionsTab : public DialogTab, Ui::DimensionsTab {
     explicit DimensionsTab(ViewItem* viewItem, QWidget *parent = 0);
     virtual ~DimensionsTab();
 
-    void setupDimensions();
-
     double x() {return _x->value();}  
     double y() {return _y->value();}
 
@@ -50,6 +48,11 @@ class DimensionsTab : public DialogTab, Ui::DimensionsTab {
 
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
+
+    void setupDimensions();
+
+  public Q_SLOTS:
+    void fillDimensions(bool lock_pos_to_data);
 
   private:
     ViewItem *_viewItem;

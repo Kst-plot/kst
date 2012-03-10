@@ -18,6 +18,8 @@
 
 namespace Kst {
 
+class CircleItemDialog;
+
 class CircleItem : public ViewItem
 {
   Q_OBJECT
@@ -36,8 +38,12 @@ class CircleItem : public ViewItem
     virtual void paint(QPainter *painter);
     virtual void creationPolygonChanged(View::CreationEvent event);
     virtual bool customDimensionsTab() {return true;}
+    virtual void clearEditDialogPtr() {_circleEditDialog = 0;}
   public Q_SLOTS:
     virtual void edit();
+
+  private:
+    CircleItemDialog *_circleEditDialog;
 
 };
 

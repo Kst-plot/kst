@@ -10,29 +10,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CIRCLEDIMENSIONSTAB_H
-#define CIRCLEDIMENSIONSTAB_H
+#ifndef LINEDIMENSIONSTAB_H
+#define LINEDIMENSIONSTAB_H
 
 #include "dialogtab.h"
 #include "viewitem.h"
-#include "ui_circledimensionstab.h"
+#include "ui_linedimensionstab.h"
 
 #include "kst_export.h"
 
 namespace Kst {
 
-class CircleDimensionsTab : public DialogTab, Ui::CircleDimensionsTab {
+class LineDimensionsTab : public DialogTab, Ui::LineDimensionsTab {
     Q_OBJECT
   public:
-    explicit CircleDimensionsTab(ViewItem* viewItem, QWidget *parent);
+    explicit LineDimensionsTab(ViewItem* viewItem, QWidget *parent);
 
     void setupDimensions();
 
-    double x() {return _x->value();}
-    double y() {return _y->value();}
-
-    double radius() {return _radius->value();}
-    bool radiusDirty() const;
+    double x1() {return _p1X->value();}
+    double x2() {return _p2X->value();}
+    double y1() {return _p1Y->value();}
+    double y2() {return _p2Y->value();}
 
     bool lockPosToData() const {return _lockPosToData->isChecked();}
     bool lockPosToDataDirty() const;
@@ -54,4 +53,5 @@ class CircleDimensionsTab : public DialogTab, Ui::CircleDimensionsTab {
 };
 
 }
-#endif // CIRCLEDIMENSIONSTAB_H
+
+#endif // LINEDIMENSIONSTAB_H

@@ -21,7 +21,7 @@
 namespace Kst {
 
 CircleItem::CircleItem(View *parent)
-    : ViewItem(parent) {
+  : ViewItem(parent), _circleEditDialog(0) {
   setTypeName("Circle");
   setBrush(Qt::white);
   setLockAspectRatio(true);
@@ -91,8 +91,11 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
 
 
 void CircleItem::edit() {
-  CircleItemDialog *editDialog = new CircleItemDialog(this);
-  editDialog->show();
+  if (!_circleEditDialog) {
+    _circleEditDialog = new CircleItemDialog(this);
+  }
+  _circleEditDialog->show();
+  _circleEditDialog->raise();
 }
 
 

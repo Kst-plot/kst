@@ -35,6 +35,7 @@ namespace Kst {
 class DialogPage;
 class ViewGridLayout;
 class ViewItem;
+class ViewItemDialog;
 
 typedef QList<ViewItem *> ViewItemList;
 
@@ -111,6 +112,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setRelativeCenter(const QPointF center) { _parentRelativeCenter = center; }
     QPointF relativePosition() const { return _parentRelativePosition; }
     void setRelativePosition(const QPointF pos) { _parentRelativePosition = pos; }
+
+    QRectF dataRelativeRect() const { return _dataRelativeRect;}
+    void setDataRelativeRect(QRectF r) { _dataRelativeRect = r;}
     
     qreal rotationAngle() const;
     qreal rotationAngleRadians() const;
@@ -241,9 +245,12 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void applyDataLockedDimensions();
     virtual bool dataPosLockable() const;
 
+    QRectF parentRect() const;
+
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
+    void relativeSizeUpdated();
 
   /*FIXME these should be made private for only undo commands to access*/
   public Q_SLOTS:
@@ -274,6 +281,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setLockPosToData(bool lockPosToData);
     virtual bool customDimensionsTab() {return false;}
 
+    virtual void clearEditDialogPtr() {_editDialog = 0;}
   protected:
     virtual QPainterPath topLeftGrip() const;
     virtual QPainterPath topRightGrip() const;
@@ -383,6 +391,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     // use setParentViewItem(ViewItem*)
     void setParentItem(QGraphicsItem*);
 
+    ViewItemDialog *_editDialog;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)

@@ -20,6 +20,7 @@ DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent)
   setTabTitle(tr("Size/Position"));
 
   connect(_fixAspectRatio, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
+  connect(_lockPosToData, SIGNAL(clicked(bool)), this, SLOT(fillDimensions(bool)));
 
   label_5->setProperty("si","&Rotation:");
   label_3->setProperty("si","geo X");
@@ -35,17 +36,34 @@ DimensionsTab::~DimensionsTab() {
 }
 
 
+void DimensionsTab::fillDimensions(bool lock_pos_to_data) {
+  if (lock_pos_to_data) {
+    _x->setRange(-1E308, 1E308);
+    _y->setRange(-1E308, 1E308);
+    _width->setRange(0,1E308);
+    _height->setRange(0,1E308);
+    _x->setValue(_viewItem->dataRelativeRect().center().x());
+    _y->setValue(_viewItem->dataRelativeRect().center().y());
+    _width->setValue(_viewItem->dataRelativeRect().width());
+    _height->setValue(_viewItem->dataRelativeRect().height());
+  } else {
+    _x->setRange(0, 1);
+    _y->setRange(0, 1);
+    _width->setRange(0,1);
+    _height->setRange(0,1);
+    _x->setValue(_viewItem->relativeCenter().x());
+    _y->setValue(_viewItem->relativeCenter().y());
+    _width->setValue(_viewItem->relativeWidth());
+    _height->setValue(_viewItem->relativeHeight());
+  }
+}
+
 void DimensionsTab::setupDimensions() {
-  double x0 = _viewItem->relativeCenter().x();
-  double y0 = _viewItem->relativeCenter().y();
-  double w = _viewItem->relativeWidth();
-  double h = _viewItem->relativeHeight();
+
+  fillDimensions(_viewItem->dataPosLockable() && _viewItem->lockPosToData());
+
   double theta = _viewItem->rotationAngle();
 
-  _x->setValue(x0);
-  _y->setValue(y0);
-  _width->setValue(w);
-  _height->setValue(h);
   _rotation->setValue(theta);
 
   _fixAspectRatio->setChecked(_viewItem->lockAspectRatio());

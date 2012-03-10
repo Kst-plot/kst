@@ -82,7 +82,8 @@ ViewItem::ViewItem(View *parentView) :
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                   TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _parentRelativeHeight(0),
-    _parentRelativeWidth(0)
+    _parentRelativeWidth(0),
+    _editDialog(0)
 {
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
@@ -252,7 +253,21 @@ void ViewItem::applyDialogDefaultsLockPosToData() {
 void ViewItem::setLockPosToData(bool lockPosToData) {
   _lockPosToData = lockPosToData;
   _lockPosToDataAction->setChecked(lockPosToData);
+  emit(relativeSizeUpdated());
 }
+
+
+QRectF ViewItem::parentRect() const {
+  if (parentViewItem()) {
+    return parentViewItem()->rect().normalized();
+  } else if (view()) {
+    return view()->rect();
+  } else {
+    Q_ASSERT_X(false,"parent test", "item has no parentview item");
+  }
+  return QRectF(0,0,1,1); // shouldn't get here
+}
+
 
 void ViewItem::applyDataLockedDimensions() {
   PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
@@ -919,8 +934,11 @@ void ViewItem::paint(QPainter *painter) {
 
 
 void ViewItem::edit() {
-  ViewItemDialog *editDialog = new ViewItemDialog(this, kstApp->mainWindow());
-  editDialog->show();
+  if (!_editDialog) {
+    _editDialog = new ViewItemDialog(this, kstApp->mainWindow());
+  }
+  _editDialog->show();
+  _editDialog->raise();
 }
 
 
@@ -1644,25 +1662,11 @@ void ViewItem::rotateTowards(const QPointF &corner, const QPointF &point) {
 }
 
 void ViewItem::normalizePosition() {
-  qreal parentWidth;
-  qreal parentHeight;
-  qreal parentX;
-  qreal parentY;
-  if (parentViewItem()) {
-    parentWidth = parentViewItem()->width();
-    parentHeight = parentViewItem()->height();
-    parentX = parentViewItem()->rect().x();
-    parentY = parentViewItem()->rect().y();
-  } else if (view()) {
-    parentWidth = view()->width();
-    parentHeight = view()->height();
-    parentX = view()->rect().x();
-    parentY = view()->rect().y();
-  } else {
-    Q_ASSERT_X(false,"parent test", "item has no parentview item");
-    parentWidth = parentHeight = 1.0;
-    parentX = parentY = 0.0;
-  }
+
+  qreal parentWidth = parentRect().width();
+  qreal parentHeight = parentRect().height();
+  qreal parentX = parentRect().x();
+  qreal parentY = parentRect().y();
 
   qreal w = relativeWidth() * parentWidth;
   qreal h = relativeHeight() * parentHeight;
@@ -1887,6 +1891,7 @@ void ViewItem::updateRelativeSize(bool force_data) {
     _parentRelativeCenter = QPointF(0, 0);
     _parentRelativePosition = QPointF(0, 0);
   }
+  emit relativeSizeUpdated();
 }
 
 

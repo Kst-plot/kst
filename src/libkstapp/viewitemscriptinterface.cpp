@@ -186,26 +186,11 @@ QString DimensionTabSI::doCommand(QString x) {
        !command.contains("checkFixAspect")&&!command.contains("setRotation")) {
         return "";
     }
-    qreal parentWidth;
-    qreal parentHeight;
-    qreal parentX;
-    qreal parentY;
-
-    if (item->parentViewItem()) {
-        parentWidth = item->parentViewItem()->width();
-        parentHeight = item->parentViewItem()->height();
-        parentX = item->parentViewItem()->rect().x();
-        parentY = item->parentViewItem()->rect().y();
-    } else if (item->view()) {
-        parentWidth = item->view()->width();
-        parentHeight = item->view()->height();
-        parentX = item->view()->rect().x();
-        parentY = item->view()->rect().y();
-    } else {
-        Q_ASSERT_X(false,"parent test", "item has no parentview item");
-        parentWidth = parentHeight = 1.0;
-        parentX = parentY = 0.0;
-    }
+    QRectF parentRect = item->parentRect();
+    qreal parentWidth = parentRect.width();
+    qreal parentHeight = parentRect.height();
+    qreal parentX = parentRect.x();
+    qreal parentY = parentRect.y();
 
     qreal aspectRatio;
     if (item->rect().width()==0) {

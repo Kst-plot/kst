@@ -35,7 +35,7 @@
 namespace Kst {
 
 ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
-    : Dialog(parent), _item(item), _mode(Single) {
+    : Dialog(parent), _mode(Single), _item(item) {
 
   setWindowTitle(tr("Edit View Item"));
 
@@ -131,6 +131,8 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(setMultipleEdit()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(setSingleEdit()));
+  connect(_item, SIGNAL(relativeSizeUpdated()), this, SLOT(setupDimensions()));
+
   _saveAsDefault->show();
 
   _tagStringLabel->setProperty("si","&Name:");
@@ -139,6 +141,8 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
 
 
 ViewItemDialog::~ViewItemDialog() {
+  disconnect(_item, SIGNAL(relativeSizeUpdated()), this, SLOT(setupDimensions()));
+  _item->clearEditDialogPtr();
 }
 
 
@@ -325,59 +329,55 @@ void ViewItemDialog::dimensionsChanged() {
 
 void ViewItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
-  qreal parentWidth;
-  qreal parentHeight;
-  qreal parentX;
-  qreal parentY;
 
-  if (item->parentViewItem()) {
-    parentWidth = item->parentViewItem()->width();
-    parentHeight = item->parentViewItem()->height();
-    parentX = item->parentViewItem()->rect().x();
-    parentY = item->parentViewItem()->rect().y();
-  } else if (item->view()) {
-    parentWidth = item->view()->width();
-    parentHeight = item->view()->height();
-    parentX = item->view()->rect().x();
-    parentY = item->view()->rect().y();
+  if (_dimensionsTab->lockPosToData() && item->dataPosLockable()) {
+    QRectF dr;
+    dr.setWidth(_dimensionsTab->width());
+    dr.setHeight(_dimensionsTab->height());
+    dr.moveCenter(QPointF(_dimensionsTab->x(), _dimensionsTab->y()));
+
+    item->setDataRelativeRect(dr);
+
+    item->applyDataLockedDimensions();
   } else {
-    Q_ASSERT_X(false,"parent test", "item has no parentview item");
-    parentWidth = parentHeight = 1.0;
-    parentX = parentY = 0.0;
+    QRectF parentRect = item->parentRect();
+    qreal parentWidth = parentRect.width();
+    qreal parentHeight = parentRect.height();
+    qreal parentX = parentRect.x();
+    qreal parentY = parentRect.y();
+
+    qreal aspectRatio;
+    if (item->rect().width() > 0) {
+      aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
+    } else {
+      aspectRatio = 10000.0;
+    }
+
+    qreal relativeWidth = _dimensionsTab->widthDirty() ? _dimensionsTab->width() :item->relativeWidth();
+    qreal relativeHeight = _dimensionsTab->heightDirty() ? _dimensionsTab->height() :item->relativeHeight();
+    bool fixedAspect = _dimensionsTab->fixedAspectDirty() ? _dimensionsTab->fixedAspect() :item->lockAspectRatio();
+    bool lockPosToData = _dimensionsTab->lockPosToDataDirty() ? _dimensionsTab->lockPosToData() : item->lockPosToData();
+
+    qreal width = relativeWidth * parentWidth;
+    qreal height;
+    if (fixedAspect) {
+      height = width * aspectRatio;
+      item->setLockAspectRatio(true);
+    } else {
+      height = relativeHeight * parentHeight;
+      item->setLockAspectRatio(false);
+    }
+
+    item->setLockPosToData(lockPosToData);
+
+    if (_mode == Multiple) {
+      item->setPos(parentX + item->relativeCenter().x()*parentWidth,
+                   parentY + item->relativeCenter().y()*parentHeight);
+    } else {
+      item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
+    }
+    item->setViewRect(-width/2, -height/2, width, height);
   }
-
-  qreal aspectRatio;
-  if (item->rect().width() > 0) {
-    aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
-  } else {
-    aspectRatio = 10000.0;
-  }
-
-  qreal relativeWidth = _dimensionsTab->widthDirty() ? _dimensionsTab->width() :item->relativeWidth();
-  qreal relativeHeight = _dimensionsTab->heightDirty() ? _dimensionsTab->height() :item->relativeHeight();
-  bool fixedAspect = _dimensionsTab->fixedAspectDirty() ? _dimensionsTab->fixedAspect() :item->lockAspectRatio();
-  bool lockPosToData = _dimensionsTab->lockPosToDataDirty() ? _dimensionsTab->lockPosToData() : item->lockPosToData();
-
-  qreal width = relativeWidth * parentWidth;
-  qreal height;
-  if (fixedAspect) {
-    height = width * aspectRatio;
-    item->setLockAspectRatio(true);
-  } else {
-    height = relativeHeight * parentHeight;
-    item->setLockAspectRatio(false);
-  }
-
-  item->setLockPosToData(lockPosToData);
-
-  if (_mode == Multiple) {
-    item->setPos(parentX + item->relativeCenter().x()*parentWidth,
-                 parentY + item->relativeCenter().y()*parentHeight);
-  } else {
-    item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
-  }
-  item->setViewRect(-width/2, -height/2, width, height);
-
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 
   QTransform transform;

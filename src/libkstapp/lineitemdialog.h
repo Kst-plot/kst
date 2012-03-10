@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CIRCLEITEMDIALOG_H
-#define CIRCLEITEMDIALOG_H
+#ifndef LINEITEMDIALOG_H
+#define LINEITEMDIALOG_H
 
 #include "viewitemdialog.h"
 
@@ -19,26 +19,24 @@
 
 namespace Kst {
 
-class CircleItem;
-class CircleDimensionsTab;
+class LineItem;
+class LineDimensionsTab;
 
-class CircleItemDialog : public ViewItemDialog
+class LineItemDialog : public ViewItemDialog
 {
     Q_OBJECT
   public:
-    explicit CircleItemDialog(CircleItem *item, QWidget *parent = 0);
+    explicit LineItemDialog(LineItem *item, QWidget *parent = 0);
 
   public Q_SLOTS:
     virtual void saveDimensions(ViewItem *item);
 
   private:
     virtual void setupDimensions();
-    CircleDimensionsTab *_circleDimensionsTab;
+    LineDimensionsTab *_lineDimensionsTab;
 
     ViewItem *_viewItem;
 };
-
 }
 
-#endif // CIRCLEITEMDIALOG_H
-
+#endif // LINEITEMDIALOG_H

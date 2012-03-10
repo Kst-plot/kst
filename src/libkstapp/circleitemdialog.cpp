@@ -34,58 +34,59 @@ CircleItemDialog::CircleItemDialog(CircleItem *item, QWidget *parent)
   selectDialogPage(circleDimensionsPage);
 
   connect(_circleDimensionsTab, SIGNAL(apply()), this, SLOT(dimensionsChanged()));
-  setupProperties();
+
+  setupDimensions();
 
   connect(_circleDimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
 
 }
 
-void CircleItemDialog::setupProperties() {
+
+void CircleItemDialog::setupDimensions() {
   _circleDimensionsTab->enableSingleEditOptions(true);
   _circleDimensionsTab->setupDimensions();
 }
 
 void CircleItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
-  qreal parentWidth;
-  qreal parentHeight;
-  qreal parentX;
-  qreal parentY;
 
-  if (item->parentViewItem()) {
-    parentWidth = item->parentViewItem()->width();
-    parentHeight = item->parentViewItem()->height();
-    parentX = item->parentViewItem()->rect().x();
-    parentY = item->parentViewItem()->rect().y();
-  } else if (item->view()) {
-    parentWidth = item->view()->width();
-    parentHeight = item->view()->height();
-    parentX = item->view()->rect().x();
-    parentY = item->view()->rect().y();
+  if (_circleDimensionsTab->lockPosToData() && item->dataPosLockable()) {
+    QRectF dr;
+    dr.setWidth(2*_circleDimensionsTab->radius());
+    dr.setHeight(2*_circleDimensionsTab->radius());
+    dr.moveCenter(QPointF(_circleDimensionsTab->x(), _circleDimensionsTab->y()));
+
+    item->setDataRelativeRect(dr);
+    bool lockPosToData = _circleDimensionsTab->lockPosToDataDirty() ? _circleDimensionsTab->lockPosToData() : item->lockPosToData();
+    item->setLockPosToData(lockPosToData);
+
+    item->applyDataLockedDimensions();
   } else {
-    Q_ASSERT_X(false,"parent test", "item has no parentview item");
-    parentWidth = parentHeight = 1.0;
-    parentX = parentY = 0.0;
+
+    QRectF parentRect = item->parentRect();
+    qreal parentWidth = parentRect.width();
+    qreal parentHeight = parentRect.height();
+    qreal parentX = parentRect.x();
+    qreal parentY = parentRect.y();
+
+    qreal relativeRadius = _circleDimensionsTab->radiusDirty() ? _circleDimensionsTab->radius() :item->relativeWidth()*0.5;
+    bool lockPosToData = _circleDimensionsTab->lockPosToDataDirty() ? _circleDimensionsTab->lockPosToData() : item->lockPosToData();
+
+    qreal radius = relativeRadius * parentWidth;
+    item->setLockPosToData(lockPosToData);
+
+    if (editMode() == Multiple) {
+      item->setPos(parentX + item->relativeCenter().x()*parentWidth,
+                   parentY + item->relativeCenter().y()*parentHeight);
+    } else {
+      item->setPos(parentX + _circleDimensionsTab->x()*parentWidth, parentY + _circleDimensionsTab->y()*parentHeight);
+    }
+    item->setViewRect(-radius, -radius, radius*2.0, radius*2.0);
+
+    QTransform transform;
+
+    item->setTransform(transform);
+    item->updateRelativeSize();
   }
-
-  qreal relativeRadius = _circleDimensionsTab->radiusDirty() ? _circleDimensionsTab->radius() :item->relativeWidth()*0.5;
-  bool lockPosToData = _circleDimensionsTab->lockPosToDataDirty() ? _circleDimensionsTab->lockPosToData() : item->lockPosToData();
-
-  qreal radius = relativeRadius * parentWidth;
-  item->setLockPosToData(lockPosToData);
-
-  if (editMode() == Multiple) {
-    item->setPos(parentX + item->relativeCenter().x()*parentWidth,
-                 parentY + item->relativeCenter().y()*parentHeight);
-  } else {
-    item->setPos(parentX + _circleDimensionsTab->x()*parentWidth, parentY + _circleDimensionsTab->y()*parentHeight);
-  }
-  item->setViewRect(-radius, -radius, radius*2.0, radius*2.0);
-
-  QTransform transform;
-
-  item->setTransform(transform);
-  item->updateRelativeSize();
 }
-
 }
