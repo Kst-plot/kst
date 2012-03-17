@@ -110,8 +110,6 @@ void View::init()
   connect(this, SIGNAL(viewModeChanged(View::ViewMode)), PlotItemManager::self(), SLOT(clearFocusedPlots()));
 
   applyDialogDefaultsFill();
-
-  setAcceptDrops(false); // Pass event to parent
 }
 
 

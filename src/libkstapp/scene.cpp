@@ -64,6 +64,8 @@ void Scene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
   if (MimeDataViewItem::downcast(event->mimeData())) {
       event->acceptProposedAction();
+  } else if (event->mimeData()->hasUrls()) {
+    event->ignore();
   }
 }
 
