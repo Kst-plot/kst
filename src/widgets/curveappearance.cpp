@@ -129,30 +129,36 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
 void CurveAppearance::enableSettings() {
   bool enable;
 
+  // Use an intermediate boolean to avoid having to use setEnabled(true) and setEnabled(false)
+  // Leave text labels enabled for now, it should be enough to disable the widgets
+
+  // Line appearance options common to lines and bars
   enable = showLines() || showBars();
+  _color->setEnabled(enable);
   _comboLineStyle->setEnabled(enable);
-  //_textLabelLineStyle->setEnabled(enable);
-
-  enable = enable || showPoints();
-  _textLabelWeight->setEnabled(enable);
+  //  _textLabelWeight->setEnabled(enable);
   _spinBoxLineWidth->setEnabled(enable);
-
+  // Option specific to bars
   enable = showBars();
-  _textLabelBarStyle->setEnabled(enable);
   _barFillColor->setEnabled(enable);
+  //  _textLabelBarStyle->setEnabled(enable);
 
+  // Now point options
   enable = showPoints();
-  _textLabelPointStyle->setEnabled(enable);
   _comboPointSymbol->setEnabled(enable);
-
+  //  _textLabelPointStyle->setEnabled(enable);
+  // Set point density to all by default
+  _comboPointDensity->setCurrentIndex(0); // 0 is "All"
+  // and disable widget if not using lines, as using only points and not plotting all of them sounds weird
   enable = enable && showLines();
-  _textLabelPointDensity->setEnabled(enable);
   _comboPointDensity->setEnabled(enable);
+  //  _textLabelPointDensity->setEnabled(enable);
 
+  // Heads
   enable = showHead();
-  _textLabelHeadStyle->setEnabled(enable);
   _comboHeadSymbol->setEnabled(enable);
   _headColor->setEnabled(enable);
+  //  _textLabelHeadStyle->setEnabled(enable);
 
 }
 
