@@ -118,7 +118,6 @@ set(CFITSIO_INCLUDEDIR ${install_dir}/include/cfitsio PARENT_SCOPE)
 set(CFITSIO_LIBRARIES  ${install_dir}/lib/libcfitsio.a PARENT_SCOPE)
 
 
-if(DISABLE) # linker errors
 # GSL
 ExternalProject_Add(gsl
                     PREFIX ${build_dir}/gsl
@@ -136,7 +135,7 @@ ExternalProject_Add(gsl
 set(GSL_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
 set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a PARENT_SCOPE)
 
-endif()
+
 
 
 
