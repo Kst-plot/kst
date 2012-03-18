@@ -62,18 +62,18 @@ if(kst_3rdparty_build)
 	add_subdirectory(3rdparty)
 elseif(kst_3rdparty_download)
 	message(STATUS "Checking downloaded 3rd party binaries.")
-	set(_deps kst-3rdparty-win32-deps)
-	set(_file ${_deps}.tar.bz2)
+	set(_deps kst-3rdparty-win32-gcc4.4)
+	set(_file ${_deps}.zip)
 	set(_downloaded _downloaded-NOTFOUND CACHE PATH "3rd party binaries already downloaded" FORCE)
 	find_file(_downloaded ${_file} ${CMAKE_BINARY_DIR})
 	if (NOT _downloaded)
-		# TODO move to sf.net, but sf.net is broken atm (Jan 30 2011)
-		file(DOWNLOAD http://kst-plot.kde.org/download/${_file} ${CMAKE_BINARY_DIR}/${_file}
-			EXPECTED_MD5 d2ffdb6dad509fe40f1cc9f60c88ddd5
+		file(DOWNLOAD http://sourceforge.net/projects/kst/files/3rdparty/${_file}
+            ${CMAKE_BINARY_DIR}/${_file}
+			EXPECTED_MD5 999248fb40a44543af4dd4cd1be0ceeb
 			SHOW_PROGRESS)
 		execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xfj ${CMAKE_BINARY_DIR}/${_file})
 	endif()
-	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/${_deps}-1.0)
+	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/${_deps})
 endif()
 
 

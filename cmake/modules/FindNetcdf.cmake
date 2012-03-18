@@ -1,5 +1,5 @@
 
-if(NOTNETCDF_INCLUDEDIR)
+if(NOT NETCDF_INCLUDEDIR)
 include(FindPkgConfig)
 
 pkg_check_modules(NETCDF QUIET netcdf)
