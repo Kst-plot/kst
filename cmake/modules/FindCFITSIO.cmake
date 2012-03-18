@@ -1,4 +1,5 @@
 
+if(NOT CFITSIO_INCLUDEDIR)
 include(FindPkgConfig)
 
 pkg_check_modules(cfitsio QUIET cfitsio)
@@ -20,6 +21,7 @@ else()
 		PATHS ${kst_3rdparty_dir}
 		)
 endif()
+endif()
 
 #message(STATUS "CFITSIO: ${CFITSIO_INCLUDEDIR}")
 #message(STATUS "CFITSIO: ${CFITSIO_LIBRARIES}")
@@ -36,6 +38,6 @@ IF(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
 ELSE()
 	MESSAGE(STATUS "Not found: CFITSIO, set CFITSIO_DIR")
 ENDIF()
-
+message(STATUS "")
 
 

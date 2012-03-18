@@ -1,4 +1,5 @@
 
+if(NOTNETCDF_INCLUDEDIR)
 include(FindPkgConfig)
 
 pkg_check_modules(NETCDF QUIET netcdf)
@@ -45,6 +46,7 @@ else()
 		set(NETCDF_LIBRARY_CPP ${netcdf_cpp})
 	endif()
 endif()
+endif()
 
 #message(STATUS "NETCDF: ${NETCDF_INCLUDEDIR}")
 #message(STATUS "NETCDF: ${NETCDF_LIBRARY_C}")
@@ -60,5 +62,5 @@ ELSE()
 	MESSAGE(STATUS "Not found: NetCDF, set NETCDF_DIR")
 ENDIF()
 
-
+message(STATUS "")
 

@@ -1,6 +1,7 @@
 
 # copied from FindGsl.cmake
 
+if(NOT MATIO_INCLUDEDIR)
 include(FindPkgConfig)
 pkg_check_modules(PKGMATIO matio)
 
@@ -28,6 +29,7 @@ foreach(it ${PKGMATIO_LIBRARIES})
 	list(APPEND MATIO_LIBRARIES ${lib})
 endforeach()
 
+endif()
 
 if(MATIO_INCLUDEDIR AND MATIO_LIBRARIES)
 	set(MATIO_INCLUDE_DIR ${MATIO_INCLUDEDIR} ${MATIO_INCLUDEDIR}/..)
@@ -39,5 +41,5 @@ else()
 	message(STATUS "Not found: matio, set MATIO_DIR")
 endif()
 
-
+message(STATUS "")
 

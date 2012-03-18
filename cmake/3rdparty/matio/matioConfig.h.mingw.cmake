@@ -97,7 +97,7 @@
 /* #undef HAVE___VA_COPY */
 
 /* OS is Linux */
-#define LINUX /**/
+//#define LINUX /**/
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

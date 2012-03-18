@@ -1,7 +1,7 @@
 
 # use pkg to find the library name and pathes,
 # but use this iformation in find_* only
-
+if(NOT GSL_INCLUDEDIR)
 include(FindPkgConfig)
 pkg_check_modules(PKGGSL gsl)
 
@@ -28,7 +28,7 @@ foreach(it ${PKGGSL_LIBRARIES})
 		PATHS ${kst_3rdparty_dir} ${PKGGSL_LIBRARY_DIRS})
 	list(APPEND GSL_LIBRARIES ${lib})
 endforeach()
-
+endif()
 
 if(GSL_INCLUDEDIR AND GSL_LIBRARIES)
 	set(GSL_INCLUDE_DIR ${GSL_INCLUDEDIR} ${GSL_INCLUDEDIR}/..)
@@ -40,5 +40,5 @@ else()
 	message(STATUS "Not found: Gsl, set GSL_DIR")
 endif()
 
-
+message(STATUS "")
 

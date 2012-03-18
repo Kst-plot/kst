@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
+# figure out if we use MinGW with Ninja: call with -DCC=gcc
+if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
+    find_file(mingw_make mingw32-make.exe)
+    get_filename_component(mingw_bin_dir ${mingw_make} PATH)
+    set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
+endif()
+
 project(Kst)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
@@ -25,12 +32,20 @@ kst_option(test "Build unit tests" OFF all)
 kst_option(pch "Use precompiled headers" ON all)
 kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
 kst_option(rpath "Use rpath" ON gcc)
+kst_option(3rdparty_build "Download and build 3rd party libraries" OFF win)
 kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
 kst_option(console "Open console on Windows" OFF win)
 kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
 kst_option(python "Build Python support" OFF all)
 
 message(STATUS)
+
+
+if(kst_release)
+	set(CMAKE_BUILD_TYPE Release)
+else()
+	set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 
 set(kst_version_major 2)
@@ -42,8 +57,10 @@ else()
 	set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 endif()
 
-
-if(kst_3rdparty_download)
+if(kst_3rdparty_build)
+	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
+	add_subdirectory(3rdparty)
+elseif(kst_3rdparty_download)
 	message(STATUS "Checking downloaded 3rd party binaries.")
 	set(_deps kst-3rdparty-win32-deps)
 	set(_file ${_deps}.tar.bz2)
@@ -89,15 +106,10 @@ message(STATUS)
 if(kst_3rdparty)
   message(STATUS "3rd party libs for plugins--------------------")
   find_package(Getdata)
-  message(STATUS "")
   find_package(Gsl)
-  message(STATUS "")
   find_package(Netcdf)
-  message(STATUS "")
   find_package(Matio)
-  message(STATUS "")
   find_package(CFITSIO)
-  #find_package(Dmc)
   message(STATUS "----------------------------------------------")
 else()
   message(STATUS "Building plugins depending on 3rd party libraries suppressed")
@@ -107,11 +119,6 @@ message(STATUS)
 
 # React on options
 
-if(kst_release)
-	set(CMAKE_BUILD_TYPE Release)
-else()
-	set(CMAKE_BUILD_TYPE Debug)
-endif()
 
 if(kst_verbose)
 	set(CMAKE_VERBOSE_MAKEFILE 1)
@@ -182,7 +189,7 @@ endif()
 
 
 
-if(WIN32)
+if(MSVC)
 	set(kst_debug_postfix d)
 endif()
 

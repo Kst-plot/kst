@@ -8,7 +8,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 
 
-set(GSL_DIR ${CMAKE_SOURCE_DIR})
+if(NOT GSL_DIR)
+    set(GSL_DIR ${CMAKE_SOURCE_DIR})
+endif()
 
 set(gsl_source_list 
   ${GSL_DIR}/version.c
@@ -632,13 +634,14 @@ set(cblas_source_list
   ${GSL_DIR}/cblas/ztrsv.c
 )
 
+include_directories(${CMAKE_SOURCE_DIR})
 
 macro(GSL_FILES name folder)
 	file(GLOB ${name}_folder_sources ${GSL_DIR}/${folder}/*.c) 
 	file(GLOB ${name}_folder_headers ${GSL_DIR}/${folder}/*.h) 
 	set(${name}_sources ${${name}_sources} ${${name}_folder_sources})
 	set(${name}_headers ${${name}_headers} ${${name}_folder_headers})
-	include_directories(${CMAKE_SOURCE_DIR}/${folder})
+	include_directories(${GSL_DIR}/${folder})
 endmacro()
 
 set(gsl_folders . blas block bspline cblas cdf cheb combination complex const deriv dht diff eigen err fft fit gsl 
@@ -663,7 +666,7 @@ if(MSVC)
 endif()
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}
+  ${GSL_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 

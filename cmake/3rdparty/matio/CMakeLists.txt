@@ -7,6 +7,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib) 
 
+if(NOT ZLIB_INCLUDE_DIR OR NOT ZLIB_LIBRARY)
+    find_package(ZLIB)
+endif()
+if(ZLIB_INCLUDE_DIR AND ZLIB_LIBRARY)
+    message(STATUS "Building with zlib support")
+    set(zlib 1)
+    add_definitions(-DHAVE_ZLIB=1)
+    include_directories(${ZLIB_INCLUDE_DIR})
+endif()
+
 if(NOT matio_dir)
     set(matio_dir ${CMAKE_SOURCE_DIR})
 endif()
@@ -26,13 +36,16 @@ set(matio_src
     ${matio_dir}/src/snprintf.c
     ${matio_dir}/src/endian.c
     ${matio_dir}/src/io.c
-    #${matio_dir}/src/io.c $(ZLIB_SRC)
     ${matio_dir}/src/read_data.c
     ${matio_dir}/src/mat5.c
     ${matio_dir}/src/mat4.c
     ${matio_dir}/src/mat.c
     ${matio_dir}/src/matvar_cell.c
     ${matio_dir}/src/matvar_struct.c)
+
+if(zlib)
+    list(APPEND matio_src ${matio_dir}/src/inflate.c)
+endif()
 
 set(matio_h
     ${CMAKE_BINARY_DIR}/matioConfig.h
