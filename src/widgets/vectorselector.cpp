@@ -155,7 +155,10 @@ void VectorSelector::newVector() {
 
 
 void VectorSelector::editVector() {
-  if (selectedVector()->provider()) {
+  if (!selectedVector()) {
+    return; // Don't crash when the user clicks the Edit vector button and there is no selected vector
+  }
+  else if (selectedVector()->provider()) {
     DialogLauncher::self()->showObjectDialog(selectedVector()->provider());
   } else {
     QString vectorname;
