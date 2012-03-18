@@ -742,7 +742,7 @@ int MatlabSource::samplesPerFrame(const QString& field) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString MatlabSourcePlugin::pluginName() const { return "Matlad Datasource Reader"; }
+QString MatlabSourcePlugin::pluginName() const { return "Matlab Datasource Reader"; }
 QString MatlabSourcePlugin::pluginDescription() const { return "Matlab's .mat Datasource Reader"; }
 
 /**********************
