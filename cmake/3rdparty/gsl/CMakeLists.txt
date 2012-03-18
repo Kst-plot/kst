@@ -16,7 +16,6 @@ set(gsl_source_list
   ${GSL_DIR}/version.c
   ${GSL_DIR}/block/block.c
   ${GSL_DIR}/block/file.c
-  ${GSL_DIR}/block/init.c
   ${GSL_DIR}/fft/dft.c
   ${GSL_DIR}/fft/factorize.c
   ${GSL_DIR}/fft/fft.c
@@ -190,7 +189,6 @@ set(gsl_source_list
   ${GSL_DIR}/matrix/prop.c
   ${GSL_DIR}/matrix/rowcol.c
   ${GSL_DIR}/matrix/submatrix.c
-  ${GSL_DIR}/matrix/swap.c
   ${GSL_DIR}/matrix/view.c
   ${GSL_DIR}/monte/miser.c
   ${GSL_DIR}/monte/plain.c
@@ -484,6 +482,10 @@ set(gsl_source_list
   ${GSL_DIR}/wavelet/haar.c
   ${GSL_DIR}/wavelet/wavelet.c
   ${GSL_DIR}/bspline/bspline.c
+  
+  # prevent linker errors
+  ${GSL_DIR}/matrix/swap.c
+  ${GSL_DIR}/block/init.c
 )
 
 
