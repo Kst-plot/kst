@@ -3,7 +3,7 @@
 
 if(NOT MATIO_INCLUDEDIR)
 include(FindPkgConfig)
-pkg_check_modules(PKGMATIO matio)
+pkg_check_modules(PKGMATIO QUIET matio)
 
 if(NOT PKGMATIO_LIBRARIES)
 	set(PKGMATIO_LIBRARIES matio)
@@ -19,6 +19,7 @@ find_path(MATIO_INCLUDEDIR matio.h
 	PATH_SUFFIXES include
 	PATHS ${kst_3rdparty_dir} ${PKGMATIO_INCLUDEDIR})
 
+set(MATIO_LIBRARY_LIST)
 foreach(it ${PKGMATIO_LIBRARIES})
 	set(lib lib-NOTFOUND CACHE STRING "" FORCE)
 	FIND_LIBRARY(lib ${it} 
@@ -26,10 +27,12 @@ foreach(it ${PKGMATIO_LIBRARIES})
 		ENV MATIO_DIR
 		PATH_SUFFIXES lib
 		PATHS ${kst_3rdparty_dir} ${PKGMATIO_LIBRARY_DIRS})
-	list(APPEND MATIO_LIBRARIES ${lib})
+	list(APPEND MATIO_LIBRARY_LIST ${lib})
 endforeach()
+set(MATIO_LIBRARIES ${MATIO_LIBRARY_LIST} CACHE STRING "" FORCE)
 
 endif()
+
 
 if(MATIO_INCLUDEDIR AND MATIO_LIBRARIES)
 	set(MATIO_INCLUDE_DIR ${MATIO_INCLUDEDIR} ${MATIO_INCLUDEDIR}/..)
