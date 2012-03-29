@@ -61,6 +61,8 @@ ViewItem::ViewItem(View *parentView) :
     _isYTiedZoom(false),
     _plotMaximized(false),
     _activeGrip(NoGrip),
+    _parentRelativeHeight(0),
+    _parentRelativeWidth(0),
     _gripMode(Move),
     _allowedGripModes(Move | Resize | Rotate /*| Scale*/),
     _creationState(None),
@@ -80,9 +82,7 @@ ViewItem::ViewItem(View *parentView) :
     _updatingLayout(false),
     _highlighted(false),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
-                  TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
-    _parentRelativeHeight(0),
-    _parentRelativeWidth(0),
+                TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _editDialog(0)
 {
   _initializeShortName();
@@ -171,6 +171,10 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("centery", QVariant(_parentRelativeCenter.y()).toString());
   xml.writeAttribute("posx", QVariant(_parentRelativePosition.x()).toString());
   xml.writeAttribute("posy", QVariant(_parentRelativePosition.y()).toString());
+  xml.writeAttribute("leftx", QVariant(_parentRelativeLeft.x()).toString());
+  xml.writeAttribute("lefty", QVariant(_parentRelativeLeft.y()).toString());
+  xml.writeAttribute("rightx", QVariant(_parentRelativeRight.x()).toString());
+  xml.writeAttribute("righty", QVariant(_parentRelativeRight.y()).toString());
   xml.writeAttribute("fixaspect", QVariant(_lockAspectRatio).toString());
   xml.writeAttribute("lockpostodata", QVariant(_lockPosToData).toString());
   if (_lockPosToData) { // meaningless if not locked: why pollute the file?
@@ -430,6 +434,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     } else if (xml.name().toString() == "relativesize") {
       knownTag = true;
       double width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
+      double leftx = 0, lefty = 0, rightx = 0, righty = 0;
       bool lock_aspect_ratio = false;
       av = attrs.value("width");
       if (!av.isNull()) {
@@ -455,6 +460,22 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       if (!av.isNull()) {
         posy = av.toString().toDouble();
       }
+      av = attrs.value("leftx");
+      if (!av.isNull()) {
+        leftx = av.toString().toDouble();
+      }
+      av = attrs.value("lefty");
+      if (!av.isNull()) {
+        lefty = av.toString().toDouble();
+      }
+      av = attrs.value("rightx");
+      if (!av.isNull()) {
+        rightx = av.toString().toDouble();
+      }
+      av = attrs.value("righty");
+      if (!av.isNull()) {
+        righty = av.toString().toDouble();
+      }
       av = attrs.value("fixaspect");
       if (!av.isNull()) {
         lock_aspect_ratio = QVariant(av.toString()).toBool();
@@ -463,7 +484,10 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       setRelativeHeight(height);
       setRelativeCenter(QPointF(centerx, centery));
       setRelativePosition(QPointF(posx, posy));
+      setRelativeLeft(QPointF(leftx, lefty));
+      setRelativeRight(QPointF(rightx, righty));
       setLockAspectRatio(lock_aspect_ratio);
+
       av = attrs.value("lockpostodata");
       if (!av.isNull()) {
         bool lock_pos_to_data = QVariant(av.toString()).toBool();
@@ -1161,7 +1185,7 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 }
 
 bool ViewItem::dataPosLockable() const {
-  return bool(qgraphicsitem_cast<PlotRenderItem *>(parentViewItem()));
+  return bool(dynamic_cast<PlotRenderItem *>(parentViewItem()));
 }
 
 void ViewItem::addToMenuForContextEvent(QMenu &menu) {
@@ -1871,26 +1895,48 @@ void ViewItem::updateDataRelativeRect(bool force) {
 
 void ViewItem::updateRelativeSize(bool force_data) {
   if (parentViewItem()) {
+    QPointF P;
     _parentRelativeHeight = (height() / parentViewItem()->height());
     _parentRelativeWidth = (width() / parentViewItem()->width());
-    _parentRelativeCenter =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
-    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / parentViewItem()->width(), _parentRelativeCenter.y() / parentViewItem()->height());
-    _parentRelativePosition =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
-    _parentRelativePosition =  QPointF(_parentRelativePosition.x() / parentViewItem()->width(), _parentRelativePosition.y() / parentViewItem()->height());
+
+    P =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
+    _parentRelativeCenter =  QPointF(P.x() / parentViewItem()->width(),
+                                     P.y() / parentViewItem()->height());
+    P =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
+    _parentRelativePosition =  QPointF(P.x() / parentViewItem()->width(),
+                                       P.y() / parentViewItem()->height());
+    P =  mapToParent(rect().bottomLeft()) - parentViewItem()->rect().topLeft();
+    _parentRelativeLeft = QPointF(P.x() / parentViewItem()->width(),
+                                      P.y() / parentViewItem()->height());
+    P =  mapToParent(rect().bottomRight()) - parentViewItem()->rect().topLeft();
+    _parentRelativeRight =  QPointF(P.x() / parentViewItem()->width(),
+                                    P.y() / parentViewItem()->height());
     updateDataRelativeRect(force_data);
    } else if (view()) {
+    QPointF P;
     _parentRelativeHeight = (height() / view()->height());
     _parentRelativeWidth = (width() / view()->width());
-    _parentRelativeCenter =  mapToParent(rect().center()) - view()->rect().topLeft();
-    _parentRelativeCenter =  QPointF(_parentRelativeCenter.x() / view()->width(), _parentRelativeCenter.y() / view()->height());
-    _parentRelativePosition =  mapToParent(rect().topLeft()) - view()->rect().topLeft();
-    _parentRelativePosition =  QPointF(_parentRelativePosition.x() / view()->width(), _parentRelativePosition.y() / view()->height());
+    P =  mapToParent(rect().center()) - view()->rect().topLeft();
+    _parentRelativeCenter =  QPointF(P.x() / view()->width(),
+                                     P.y() / view()->height());
+    P =  mapToParent(rect().topLeft()) - view()->rect().topLeft();
+    _parentRelativePosition =  QPointF(P.x() / view()->width(),
+                                       P.y() / view()->height());
+    P =  mapToParent(rect().bottomLeft()) - view()->rect().topLeft();
+    _parentRelativeLeft =  QPointF(P.x() / view()->width(),
+                                   P.y() / view()->height());
+    P =  mapToParent(rect().bottomRight()) - view()->rect().topLeft();
+    _parentRelativeRight =  QPointF(P.x() / view()->width(),
+                                   P.y() / view()->height());
   } else {
     _parentRelativeHeight = 0;
     _parentRelativeWidth = 0;
     _parentRelativeCenter = QPointF(0, 0);
     _parentRelativePosition = QPointF(0, 0);
+    _parentRelativeLeft = QPointF(0, 0);
+    _parentRelativeRight = QPointF(0, 0);
   }
+
   emit relativeSizeUpdated();
 }
 

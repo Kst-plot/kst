@@ -112,6 +112,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setRelativeCenter(const QPointF center) { _parentRelativeCenter = center; }
     QPointF relativePosition() const { return _parentRelativePosition; }
     void setRelativePosition(const QPointF pos) { _parentRelativePosition = pos; }
+    void setRelativeLeft(const QPointF &pos) { _parentRelativeLeft = pos;}
+    void setRelativeRight(const QPointF &pos) { _parentRelativeRight = pos;}
 
     QRectF dataRelativeRect() const { return _dataRelativeRect;}
     void setDataRelativeRect(QRectF r) { _dataRelativeRect = r;}
@@ -351,6 +353,10 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QPointF _originalPosition;
     QPointF _parentRelativeCenter;
     QPointF _parentRelativePosition;
+    QPointF _parentRelativeLeft;
+    QPointF _parentRelativeRight;
+    qreal _parentRelativeHeight, _parentRelativeWidth;
+
 
   private:
     GripMode _gripMode;
@@ -378,7 +384,6 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     ActiveGrips _allowedGrips;
     QTransform _rotationTransform;
     QHash<QString, QAction*> _shortcutMap;
-    qreal _parentRelativeHeight, _parentRelativeWidth;
 
     bool _lockPosToData;
 

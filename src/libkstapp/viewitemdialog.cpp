@@ -329,6 +329,7 @@ void ViewItemDialog::dimensionsChanged() {
 
 void ViewItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
+  qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 
   if (_dimensionsTab->lockPosToData() && item->dataPosLockable()) {
     QRectF dr;
@@ -378,13 +379,12 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     }
     item->setViewRect(-width/2, -height/2, width, height);
   }
-  qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 
   QTransform transform;
   transform.rotate(rotation);
 
   item->setTransform(transform);
-  item->updateRelativeSize();
+  item->updateRelativeSize(true);
 }
 
 

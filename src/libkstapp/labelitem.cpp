@@ -77,7 +77,6 @@ void LabelItem::generateLabel(QPainter *p) {
   if (parsed) {
     parsed->chunk->attributes.color = _color;
     _dirty = false;
-    QRectF box = rect();
     QFont font(_font);
     if (_resized) {
       font.setPointSizeF(view()->scaledFontSize(_scale, *p->device()));
@@ -87,9 +86,8 @@ void LabelItem::generateLabel(QPainter *p) {
       delete tmpRc;
     }
     font.setPointSizeF(view()->scaledFontSize(_scale, *p->device()));
+
     _labelRc = new Label::RenderContext(font, p);
-    _paintTransform.reset();
-    _paintTransform.translate(box.x(), box.y() + _labelRc->fontAscent());
     Label::renderLabel(*_labelRc, parsed->chunk, true, false);
 
     _height = _labelRc->fontHeight();
@@ -120,8 +118,17 @@ void LabelItem::generateLabel(QPainter *p) {
         break;
       }
     } else {
-      setViewRect(QRectF(rect().x(), rect().y(), _labelRc->xMax, (_labelRc->lines+1) * _height));
+      if (fixLeft()) {
+        setViewRect(QRectF(rect().left(), rect().bottom() - (_labelRc->lines+1) * _height,
+                    _labelRc->xMax, (_labelRc->lines+1) * _height),true);
+      } else {
+        setViewRect(QRectF(rect().right()-_labelRc->xMax, rect().bottom() - (_labelRc->lines+1) * _height,
+                    _labelRc->xMax, (_labelRc->lines+1) * _height),true);
+      }
     }
+    _paintTransform.reset();
+    _paintTransform.translate(rect().x(), rect().y() + _labelRc->fontAscent());
+
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(setDirty()));
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(triggerUpdate()));
 
@@ -158,6 +165,7 @@ void LabelItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("scale", QVariant(_scale).toString());
     xml.writeAttribute("color", QVariant(_color).toString());
     xml.writeAttribute("font", QVariant(_font).toString());
+    xml.writeAttribute("fixleft", QVariant(_fixleft).toString());
     ViewItem::save(xml);
     xml.writeEndElement();
   }
@@ -232,22 +240,11 @@ void LabelItem::creationPolygonChanged(View::CreationEvent event) {
       setDirty();
     }
   } else if (event == View::MouseRelease) {
-    const QPointF P = mapFromScene(view()->creationPolygon(event).last());
-    QRectF newRect(rect().x(), rect().y(),
-                   P.x() - rect().x(),
-                   P.y() - rect().y());
-
-    if (newRect.isNull()) {
-      // Special case for labels that don't need to have a size for creation to ensure proper parenting.
-      newRect.setSize(QSize(1, 1));
-    }
-
-    setViewRect(newRect.normalized());
-
     view()->disconnect(this, SLOT(deleteLater())); //Don't delete ourself
     view()->disconnect(this, SLOT(creationPolygonChanged(View::CreationEvent)));
     view()->setMouseMode(View::Default);
     updateViewItemParent();
+    updateRelativeSize();
     emit creationComplete();
     setDirty();
     return;
@@ -338,6 +335,10 @@ ViewItem* LabelItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
           font.fromString(av.toString());
           rc->setLabelFont(font);
         }
+        av = attrs.value("fixleft");
+        if (!av.isNull()) {
+          rc->setFixLeft(QVariant(av.toString()).toBool());
+        }
       } else {
         Q_ASSERT(rc);
         if (!rc->parse(xml, validTag) && validTag) {
@@ -424,13 +425,24 @@ void LabelItem::updateChildGeometry(const QRectF &oldParentRect, const QRectF &n
 
   QRectF itemRect = rect();
 
-  QPointF newTopLeft = newParentRect.topLeft() - itemRect.topLeft() +
-      QPointF(newParentRect.width() * _parentRelativePosition.x(),
-              newParentRect.height() * _parentRelativePosition.y());
+  if (fixLeft()) {
+    QPointF newBottomLeft = newParentRect.topLeft() +
+        QPointF(newParentRect.width() * _parentRelativeLeft.x(),
+                newParentRect.height() * _parentRelativeLeft.y());
 
-  setPos(newTopLeft);
+    setPos(newBottomLeft);
+    setViewRect(QRectF(0, -itemRect.height(), itemRect.width(), itemRect.height()), true);
 
-  setViewRect(itemRect, true);
+  } else {
+    QPointF newBottomRight = newParentRect.topLeft() +
+        QPointF(newParentRect.width() * _parentRelativeRight.x(),
+                newParentRect.height() * _parentRelativeRight.y());
+
+    setPos(newBottomRight);
+    setViewRect(QRectF(-itemRect.width(), -itemRect.height(), itemRect.width(), itemRect.height()), true);
+  }
+
+  //setViewRect(itemRect, true);
 }
 
 }

@@ -62,6 +62,11 @@ class LabelItem : public ViewItem {
     virtual void applyDataLockedDimensions();
     virtual void updateChildGeometry(const QRectF &oldParentRect, const QRectF &newParentRect);
 
+    bool fixLeft() const {return _fixleft;}
+    void setFixLeft(bool fix_left) {_fixleft = fix_left;}
+
+    virtual bool customDimensionsTab() {return true;}
+
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; }

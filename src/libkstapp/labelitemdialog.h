@@ -20,6 +20,7 @@
 namespace Kst {
 
 class LabelPropertiesTab;
+class LabelDimensionsTab;
 class LabelItem;
 
 class LabelItemDialog : public ViewItemDialog
@@ -31,11 +32,16 @@ class LabelItemDialog : public ViewItemDialog
 
   private Q_SLOTS:
     void propertiesChanged();
+    virtual void saveDimensions(ViewItem *item);
+
 
   private:
+    virtual void setupDimensions();
     void setupProperties();
 
     LabelPropertiesTab *_propertiesTab;
+    LabelDimensionsTab *_labelDimensionsTab;
+
     LabelItem *_labelItem;
 };
 
