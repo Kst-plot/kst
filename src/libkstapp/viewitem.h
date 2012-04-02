@@ -113,6 +113,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QPointF relativePosition() const { return _parentRelativePosition; }
     void setRelativePosition(const QPointF pos) { _parentRelativePosition = pos; }
     void setRelativeLeft(const QPointF &pos) { _parentRelativeLeft = pos;}
+    QPointF relativeRight() const {return _parentRelativeRight;}
     void setRelativeRight(const QPointF &pos) { _parentRelativeRight = pos;}
 
     QRectF dataRelativeRect() const { return _dataRelativeRect;}

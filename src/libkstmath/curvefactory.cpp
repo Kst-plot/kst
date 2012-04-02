@@ -159,6 +159,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setPointType(pointType);
   curve->setHeadType(headType);
   curve->setPointDensity(pointDensity);
+  curve->setIgnoreAutoScale(ignoreAutoScale);
 
   curve->setDescriptiveName(descriptiveName);
 

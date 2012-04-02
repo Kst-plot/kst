@@ -83,6 +83,7 @@ ViewItem::ViewItem(View *parentView) :
     _highlighted(false),
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                 TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
+    _lockPosToData(false),
     _editDialog(0)
 {
   _initializeShortName();
@@ -434,7 +435,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
     } else if (xml.name().toString() == "relativesize") {
       knownTag = true;
       double width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
-      double leftx = 0, lefty = 0, rightx = 0, righty = 0;
+      double leftx = -1.0, lefty = -1.0, rightx = -1.0, righty = -1.0;
       bool lock_aspect_ratio = false;
       av = attrs.value("width");
       if (!av.isNull()) {
@@ -480,6 +481,12 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       if (!av.isNull()) {
         lock_aspect_ratio = QVariant(av.toString()).toBool();
       }
+      if (rightx <-0.99) { // old kst file: generate from center
+        rightx = centerx + width/2.0;
+        leftx  = centerx - width/2.0;
+        righty = centery + height/2.0;
+        lefty  = centery + height/2.0;
+      }
       setRelativeWidth(width);
       setRelativeHeight(height);
       setRelativeCenter(QPointF(centerx, centery));
@@ -512,6 +519,8 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
           }
           _dataRelativeRect = QRectF(x,y,w,h);
         }
+      } else {
+        setLockPosToData(false);
       }
     } else if (xml.name().toString() == "transform") {
       knownTag = true;

@@ -19,7 +19,6 @@ LabelDimensionsTab::LabelDimensionsTab(LabelItem* labelItem, QWidget *parent)
   : DialogTab(parent), _labelItem(labelItem) {
   setupUi(this);
 
-  qDebug() << "label dim tab const" << _labelItem->fixLeft();
   connect(_lockPosToData, SIGNAL(clicked(bool)), this, SLOT(lockPosToDataChanged(bool)));
   connect(_left, SIGNAL(toggled(bool)), this, SLOT(fixLeftChanged(bool)));
 }

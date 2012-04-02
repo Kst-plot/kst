@@ -81,7 +81,7 @@ PlotItem::PlotItem(View *parent)
   _bottomPadding(0.0),
   _rightPadding(0.0),
   _topPadding(0.0),
-  _globalFontScale(0.0),
+  _globalFontScale(14.0),
   _numberAxisLabelScaleFactor(1.0),
   _useNumberAxisLabelScale(true),
   _showLegend(false),
@@ -3659,10 +3659,15 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
           font.fromString(av.toString());
           rc->setGlobalFont(font);
         }
+        double fontscale = 0.0;
         av = attrs.value("globalfontscale");
         if (!av.isNull()) {
-          rc->setGlobalFontScale(QVariant(av.toString()).toDouble());
+          fontscale = QVariant(av.toString()).toDouble();
         }
+        if (fontscale < 0.1) {
+          fontscale = 14.0;
+        }
+        rc->setGlobalFontScale(fontscale);
         av = attrs.value("globalfontcolor");
         if (!av.isNull()) {
           rc->setGlobalFontColor(QColor(av.toString()));

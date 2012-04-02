@@ -71,8 +71,8 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   ScalarPtr scalar = store->createObject<Scalar>();
   scalar->setValue(value);
-  scalar->setOrphan(true);
-  scalar->setEditable(true);
+  scalar->setOrphan(orphan);
+  scalar->setEditable(editable);
   scalar->setDescriptiveName(descriptiveName);
 
   return scalar;

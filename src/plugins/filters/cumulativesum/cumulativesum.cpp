@@ -128,7 +128,11 @@ CumulativeSumSource::~CumulativeSumSource() {
 
 
 QString CumulativeSumSource::_automaticDescriptiveName() const {
-  return QString(vector()->descriptiveName() + " Integral");
+  if (vector()) {
+    return QString(vector()->descriptiveName() + " Integral");
+  } else {
+    return QString("Integral");
+  }
 }
 
 QString CumulativeSumSource::descriptionTip() const {
