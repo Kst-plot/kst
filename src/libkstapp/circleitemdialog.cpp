@@ -28,7 +28,7 @@ CircleItemDialog::CircleItemDialog(CircleItem *item, QWidget *parent)
   _circleDimensionsTab = new CircleDimensionsTab(item, this);
 
   DialogPage *circleDimensionsPage = new DialogPage(this);
-  circleDimensionsPage->setPageTitle(tr("Position/Size"));
+  circleDimensionsPage->setPageTitle(tr("Size/Position"));
   circleDimensionsPage->addDialogTab(_circleDimensionsTab);
   addDialogPage(circleDimensionsPage);
   selectDialogPage(circleDimensionsPage);

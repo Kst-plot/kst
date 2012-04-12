@@ -135,6 +135,12 @@ bool Document::save(const QString& to) {
   return true;
 }
 
+void Document::updateRecentDataFiles(const QStringList &datafiles) {
+  foreach(const QString &file, datafiles) {
+    _win->updateRecentDataFiles(file);
+  }
+}
+
 bool Document::initFromCommandLine(CommandLineParser *P) {
 
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -150,6 +156,7 @@ bool Document::initFromCommandLine(CommandLineParser *P) {
       if (dataPlotted) {
         UpdateManager::self()->doUpdates(true);
         setChanged(false);
+        _win->updateRecentKstFiles(kstfile);
       }
     }
   }

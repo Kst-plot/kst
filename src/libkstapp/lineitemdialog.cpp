@@ -27,7 +27,7 @@ LineItemDialog::LineItemDialog(LineItem *item, QWidget *parent)
   _lineDimensionsTab = new LineDimensionsTab(item, this);
 
   DialogPage *lineDimensionsPage = new DialogPage(this);
-  lineDimensionsPage->setPageTitle(tr("Position/Size"));
+  lineDimensionsPage->setPageTitle(tr("Size/Position"));
   lineDimensionsPage->addDialogTab(_lineDimensionsTab);
   addDialogPage(lineDimensionsPage);
   selectDialogPage(lineDimensionsPage);

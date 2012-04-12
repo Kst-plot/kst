@@ -41,7 +41,7 @@ LabelItemDialog::LabelItemDialog(LabelItem *item, QWidget *parent)
   _labelDimensionsTab = new LabelDimensionsTab(item, this);
 
   DialogPage *labelDimensionsPage = new DialogPage(this);
-  labelDimensionsPage->setPageTitle(tr("Position/Size"));
+  labelDimensionsPage->setPageTitle(tr("Size/Position"));
   labelDimensionsPage->addDialogTab(_labelDimensionsTab);
   addDialogPage(labelDimensionsPage);
   selectDialogPage(labelDimensionsPage);

@@ -412,26 +412,63 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   } while (bufread == MAXBUFREADLEN  && read_completely);
 
-  _rowIndex.resize(_numFrames + 1);
+  _rowIndex.resize(_numFrames+1);
 
   return (!new_data && !force_update ? NoChange : Updated);
 }
 
-
+#if 1
 template<typename IsLineBreak, typename CommentDelimiter>
 bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
   const IsWhiteSpace isWhiteSpace;
   
   bool new_data = false;
+  bool row_has_data = false;
+  bool is_comment = false;
+  const int row_offset = bufstart + isLineBreak.size;
+  int row_start = bufstart;
+
+  for (int i = 0; i < bufread; i++) {
+    if (comment_del(buffer[i])) {
+      is_comment = true;
+    } else if (isLineBreak(buffer[i])) {
+      if (row_has_data) {
+        _rowIndex[_numFrames] = row_start;
+        ++_numFrames;
+        if (_numFrames >= _rowIndex.size()) {
+          _rowIndex.resize(_rowIndex.size() + MAXBUFREADLEN);
+        }
+        new_data = true;
+        row_start = row_offset+i;
+      } else if (is_comment) {
+        row_start = row_offset+i;
+      }
+      row_has_data = false;
+      is_comment = false;
+    } else if (!row_has_data && !isWhiteSpace(buffer[i]) && !is_comment) {
+      row_has_data = true;
+    }
+  }
+  _rowIndex[_numFrames] = row_start;
+  return new_data;
+}
+#endif
+
+#if 0
+template<typename IsLineBreak, typename CommentDelimiter>
+bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
+{
+  const IsWhiteSpace isWhiteSpace;
+
+  bool new_data = false;
   bool is_data = false;
   bool is_comment = false;
-
   const int row_offset = bufstart + isLineBreak.size;
-
   for (int i = 0; i < bufread; i++) {
       if (comment_del(buffer[i])) {
         is_comment = true;
+        is_data = false;
       } else if (isLineBreak(buffer[i])) {
         is_comment = false;
         if (is_data) {
@@ -444,13 +481,12 @@ bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, co
           new_data = true;
         }
       } else if (!is_data && !isWhiteSpace(buffer[i]) && !comment_del(buffer[i])) {
-        is_data = is_comment ? false : true;
+        is_data = !is_comment;
       }
   }
   return new_data;
 }
-
-
+#endif
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const
 {

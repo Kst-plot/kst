@@ -45,8 +45,8 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
       if (n == Scalar::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         value = attrs.value("value").toString().toDouble();
-        orphan = attrs.value("orphan").toString() == "true" ? true : false;
-        editable = attrs.value("editable").toString() == "true" ? true : false;
+        orphan = attrs.value("orphan").toString() != "false" ? true : false;
+        editable = attrs.value("editable").toString() != "false" ? true : false;
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }

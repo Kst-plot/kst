@@ -125,6 +125,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
     i_loop++;
   } while ((n_deferred + n_updated > 0) && (i_loop<=maxloop));
 
+  //qDebug() << " update elapsed:" << i_loop << double(_time.elapsed())/1000.0;
   emit objectsUpdated(_serial);
 }
 }

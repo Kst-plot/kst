@@ -603,6 +603,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _paperSize = QPrinter::Letter;
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
+        if (dataPlotted) {
+          _document->updateRecentDataFiles(_fileNames);
+        }
         _fileNames.clear();
         new_fileList = false;
       }
@@ -648,6 +651,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         }
       }
     }
+  }
+  if (dataPlotted) {
+    _document->updateRecentDataFiles(_fileNames);
   }
 
   // set defaults to match what has been set.

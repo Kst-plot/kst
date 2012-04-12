@@ -61,6 +61,7 @@ class MainWindow : public QMainWindow
     void setStatusMessage(QString message);
 
     static void setWidgetFlags(QWidget*);
+    void updateRecentKstFiles(const QString& newfilename = QString());
 
   public Q_SLOTS:
     void showDataManager();
@@ -153,7 +154,6 @@ class MainWindow : public QMainWindow
 
     void openRecentKstFile();
     void openRecentDataFile();
-    void updateRecentKstFiles(const QString& newfilename = QString());
     void checkRecentFilesOnExistence();
 
   protected:

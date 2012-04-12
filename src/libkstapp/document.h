@@ -50,6 +50,8 @@ class Document : public CoreDocument {
 
     View *currentView() const;
 
+    void updateRecentDataFiles(const QStringList &datafiles);
+
   private:
     QPointer<MainWindow> _win;
     SessionModel *_session;
