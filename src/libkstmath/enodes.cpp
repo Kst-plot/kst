@@ -867,6 +867,12 @@ double Negation::value(Context *ctx) {
   return (v == v) ? -v : v;
 }
 
+bool Negation::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t) {
+  bool ok = _n->collectObjects(v, s, t);
+  return ok;
+}
+
+
 
 bool Negation::isConst() {
   return _n->isConst();

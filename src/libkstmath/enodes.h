@@ -228,6 +228,7 @@ namespace Equations {
       bool isConst();
       double value(Context*);
       QString text() const;
+      bool collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringMap& t);
 
     protected:
       Node *_n;

@@ -202,6 +202,8 @@ void DataObject::scanPlugins() {
             tmpList.append(dataObjectPlugin);
             Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
           }
+        } else {
+          Debug::self()->log(QString("Plugin failed to load: %1").arg(fileName));
         }
     }
   }
