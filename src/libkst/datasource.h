@@ -59,6 +59,7 @@ class KSTCORE_EXPORT DataSource : public Object
     struct DataInterface
     {
 
+      virtual ~DataInterface() {}
       // read one element
       virtual int read(const QString& name, typename T::ReadInfo&) = 0;
 

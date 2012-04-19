@@ -2686,7 +2686,7 @@ QRectF PlotItem::computedProjectionRect() {
 
 
 void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
-  QRectF rect;
+  //QRectF rect;
   foreach (PlotRenderItem *renderer, renderItems()) {
     foreach (RelationPtr relation, renderer->relationList()) {
       if (relation->ignoreAutoScale())
@@ -2711,7 +2711,7 @@ void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
 
 
 void PlotItem::computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const {
-  QRectF rect;
+  //QRectF rect;
   foreach (PlotRenderItem *renderer, renderItems()) {
     qreal min = maximum;
     qreal max = minimum;

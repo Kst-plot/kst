@@ -825,43 +825,22 @@ void SharedAxisBoxItem::zoomLogX(PlotItem* originPlotItem, bool autoEnable, bool
 
 
 void SharedAxisBoxItem::zoomYLocalMaximum(PlotItem* originPlotItem) {
-
-  bool origin_tied = false;
-  if (originPlotItem) {
-    origin_tied = originPlotItem->isTiedZoom();
+  if (!originPlotItem) {
+    originPlotItem = keyPlot();
   }
 
-  if (!(_shareY || origin_tied)) {
+  _yAxisZoomMode = PlotAxis::FixedExpression;
+  if (originPlotItem) {
+    originPlotItem->zoomYLocalMaximum(true);
+    if (originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
+      QList<PlotItem*> plotTied = PlotItemManager::tiedZoomPlotsForView(view());
 
-    if (originPlotItem) {
-      originPlotItem->zoomYLocalMaximum(true);
-    }
-  } else {
-    QRectF computedRect;
-    foreach(PlotItem *plotItem, getSharedPlots()) {
-      qreal minimum = plotItem->yAxis()->axisLog() ? 0.0 : -0.1;
-      qreal maximum = 0.1;
-      plotItem->computedRelationalMax(minimum, maximum);
-      plotItem->computeBorder(Qt::Vertical, minimum, maximum);
-
-      QRectF compute = plotItem->projectionRect();
-      compute.setTop(minimum);
-      compute.setBottom(maximum);
-
-      if (computedRect.isValid()) {
-        computedRect = computedRect.united(compute);
-      } else {
-        computedRect = compute;
+      foreach(PlotItem* plotItem, plotTied) {
+        plotItem->zoomYLocalMaximum(true);
       }
     }
-    _yAxisZoomMode = PlotAxis::FixedExpression;
-    if (originPlotItem) {
-      originPlotItem->zoomYLocalMaximum(true);
-    }
-    applyZoom(computedRect, originPlotItem, false, true);
   }
 }
-
 
 void SharedAxisBoxItem::zoomYMaximum(PlotItem* originPlotItem) {
   _yAxisZoomMode = PlotAxis::Auto;
@@ -1112,6 +1091,7 @@ void SharedAxisBoxItem::zoomLogY(PlotItem* originPlotItem, bool autoEnable, bool
     }
   }
 }
+
 
 
 void SharedAxisBoxItem::updateZoomForDataUpdate(qint64 serial) {
