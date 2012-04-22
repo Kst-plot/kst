@@ -1,7 +1,7 @@
 
-rmdir /q/s build-mingw-release
-mkdir build-mingw-release
-cd build-mingw-release
+rmdir /s/q mingw-release-download-deps
+mkdir      mingw-release-download-deps
+cd         mingw-release-download-deps
 
 cmake ..\kst\cmake -G"MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=1 -Dkst_install_prefix=Kst-%1 -Dkst_version_string=%1
 

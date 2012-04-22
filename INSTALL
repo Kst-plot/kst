@@ -105,6 +105,7 @@ Options
 	Available options will be listed on each cmake run.
 	Here the options with their default value:
 
+	-- kst_version_string       = ON     : Version string
 	-- kst_release              = OFF    : Build release version: optimize for speed, don't embedded debug symbols
 	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
 	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
@@ -117,13 +118,14 @@ Options
 	-- kst_pch                  = ON     : Use precompiled headers
 	-- kst_svnversion           = ON     : Use svnversion's output for Kst's version information
 	-- kst_rpath                = ON     : Use rpath
+	-- kst_3rdparty_build       = OFF    : Download and build 3rd party libraries
 	-- kst_3rdparty_download    = OFF    : Download precompiled 3rd party libraries
 	-- kst_console              = OFF    : Open console on Windows
 	-- kst_edit_cont            = OFF    : Enable "Edit and Continue" for Visual Studio
+	-- kst_python               = OFF    : Build Python suppor
 
 	To enable a option pass the value ON or 1, eg
 		cmake ../kst/cmake -Dkst_merge_files=1
-
 
 
 Using the merged files build
@@ -190,7 +192,9 @@ Releasing
 ----------
 
 	To build a release for Windows install the "Qt SDK for Windows"
-	(it comes with MinGW) and call in a build folder
+	(it ships also MinGW) and call in the folder which contains the 
+	kst dir:
 	
-		..\kst\misc\mingw-release-download-deps
+		kst\misc\mingw-release-download-deps.bat <Kst version name>
+		
 
