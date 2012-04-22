@@ -195,7 +195,6 @@ set(gsl_source_list
   ${GSL_DIR}/monte/vegas.c
   ${GSL_DIR}/multifit/convergence.c
   ${GSL_DIR}/multifit/covar.c
-  ${GSL_DIR}/multifit/fdfsolver.c
   ${GSL_DIR}/multifit/fsolver.c
   ${GSL_DIR}/multifit/gradient.c
   ${GSL_DIR}/multifit/lmder.c
@@ -485,6 +484,7 @@ set(gsl_source_list
   
   # prevent linker errors
   ${GSL_DIR}/matrix/swap.c
+  ${GSL_DIR}/multifit/fdfsolver.c
   ${GSL_DIR}/block/init.c
 )
 
