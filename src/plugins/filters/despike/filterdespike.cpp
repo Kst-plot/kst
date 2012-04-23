@@ -143,7 +143,11 @@ FilterDespikeSource::~FilterDespikeSource() {
 
 
 QString FilterDespikeSource::_automaticDescriptiveName() const {
-  return QString(vector()->descriptiveName() + " Despike");
+  if (vector()) {
+    return QString(vector()->descriptiveName() + " Despike");
+  } else {
+    return QString("Despike");
+  }
 }
 
 

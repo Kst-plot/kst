@@ -32,6 +32,7 @@ String::String(ObjectStore *store)
     : Primitive(store, 0L), _orphan(false), _editable(false) {
 
   _value.clear();
+  setFlag(true);
   _initializeShortName();
 
 }

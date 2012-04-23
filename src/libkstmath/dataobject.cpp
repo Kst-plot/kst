@@ -174,6 +174,28 @@ PrimitiveList DataObject::outputPrimitives(bool include_decendants)  const {
 }
 
 
+// set flags on all output primitives
+// used for sorting dataobjects by Document::sortedDataObjectList()
+void DataObject::setOutputFlags(bool flag) {
+  PrimitiveList output_primitives = outputPrimitives();
+  int n = output_primitives.count();
+  for (int i=0; i<n; i++) {
+    output_primitives[i]->setFlag(flag);
+  }
+}
+
+
+bool DataObject::inputFlagsSet() const {
+  PrimitiveList input_primitives = inputPrimitives();
+  int n = input_primitives.count();
+  bool all_set = true;
+  for (int i=0; i<n; i++) {
+    all_set &= input_primitives[i]->flagSet();
+  }
+
+  return all_set;
+}
+
 // Scans for plugins and stores the information for them
 void DataObject::scanPlugins() {
   Debug::self()->log(i18n("Scanning for data-object plugins."));

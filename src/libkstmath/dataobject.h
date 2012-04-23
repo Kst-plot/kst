@@ -129,6 +129,11 @@ class KSTMATH_EXPORT DataObject : public Object
 
     void showDialog(bool isNew = true);
 
+    // used for sorting dataobjects by Document::sortedDataObjectList()
+    void setOutputFlags(bool flag);
+    bool inputFlagsSet() const;
+
+
   protected slots:
     virtual void showNewDialog() = 0;
     virtual void showEditDialog() = 0;

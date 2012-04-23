@@ -17,7 +17,7 @@
 #include <QString>
 
 #include "coredocument.h"
-
+#include "dataobject.h"
 namespace Kst {
 
 class MainWindow;
@@ -39,6 +39,9 @@ class Document : public CoreDocument {
 
     bool open(const QString& file);
     bool save(const QString& to = QString());
+
+    ObjectList<DataObject> sortedDataObjectList();
+
 
     bool isChanged() const;
     void setChanged(bool changed);

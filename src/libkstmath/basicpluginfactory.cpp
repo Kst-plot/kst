@@ -61,7 +61,6 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
         }
 
         dataObject = kst_cast<BasicPlugin>(DataObject::createPlugin(pluginName, store, configWidget, false));
-
         QString expectedEnd;
         while (!(xml.isEndElement() && (xml.name().toString() == BasicPlugin::staticTypeTag))) {
           if (xml.isStartElement() && xml.name().toString() == "inputvector") {

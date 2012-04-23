@@ -112,7 +112,6 @@ bool Equation::isValid() const {
 
 void Equation::internalUpdate() {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
-
   if (!_pe) {
     return;
   }
@@ -126,10 +125,6 @@ void Equation::internalUpdate() {
   _pe->update(&ctx);
 
   _isValid = FillY(true);
-
-  //  should this be updated by the update manager?
-  //_yOutVector->internalUpdate();
-  //_xOutVector->internalUpdate();
 
   unlockInputsAndOutputs();
 
@@ -202,6 +197,7 @@ void Equation::save(QXmlStreamWriter &s) {
 void Equation::setEquation(const QString& in_fn) {
   // assert(*_xVector); - ugly, we have to allow this here due to
   // document loading with vector lazy-loading
+
   _equation = in_fn;
 
   VectorsUsed.clear();

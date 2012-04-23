@@ -34,6 +34,7 @@ const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
 Scalar::Scalar(ObjectStore *store)
     : Primitive(store, 0L), _value(0.0), _orphan(false), _displayable(true), _editable(false) {
 
+  setFlag(true);
   _initializeShortName();
 }
 

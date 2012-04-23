@@ -56,6 +56,53 @@ QString Document::fileName() const {
   return _fileName;
 }
 
+/** return a list of data objects where all dependencies appear earlier in the list */
+ObjectList<DataObject> Document::sortedDataObjectList() {
+  ObjectList<DataObject> sorted;
+  ObjectList<DataObject> raw = objectStore()->getObjects<DataObject>();
+  sorted.clear();
+
+
+  // set the flag for all primitives: not strictly necessary
+  // since it should have been done in the constructor, but...
+  PrimitiveList all_primitives = objectStore()->getObjects<Primitive>();
+  int n = all_primitives.size();
+  for (int i=0; i<n; i++) {
+    all_primitives[i]->setFlag(true);
+  }
+
+  // now unset the flags of all output primitives to indicate their parents haven't been
+  // put in the sorted list yet
+  n = raw.size();
+  for (int i=0; i<n; i++) {
+    raw[i]->setOutputFlags(false);
+  }
+
+  // now place into the sorted list all data objects whose inputs haven't got parents
+  // or whose inputs have parents which are already in the sorted list.
+  // do this at most n^2 times, which is worse than worse case.
+  int i=0;
+  while (!raw.isEmpty() && (++i < n*n)) {
+    DataObjectPtr D = raw.takeFirst();
+    if (D->inputFlagsSet()) {
+      D->setOutputFlags(true);
+      sorted.append(D);
+    } else {
+      raw.append(D); // try again later
+    }
+  }
+
+  if (i== n*n) {
+    qDebug() << "Warning: loop detected, File will not be able to be loaded correctly!";
+    while (!raw.isEmpty()) {
+      DataObjectPtr D = raw.takeFirst();
+      sorted.append(D);
+    }
+  }
+
+  return sorted;
+}
+
 
 bool Document::save(const QString& to) {
 
@@ -105,9 +152,11 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("objects");
-  foreach (DataObjectPtr s, objectStore()->getObjects<DataObject>()) {
+  ObjectList<DataObject> dataObjects = sortedDataObjectList();
+  foreach (DataObjectPtr s, dataObjects) {
     s->save(xml);
   }
+  dataObjects.clear();
   xml.writeEndElement();
 
   xml.writeStartElement("relations");

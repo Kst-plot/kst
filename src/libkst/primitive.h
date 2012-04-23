@@ -57,6 +57,9 @@ class KSTCORE_EXPORT Primitive : public Object
 
     virtual PrimitiveMap metas() const = 0;
 
+    // used for sorting dataobjects by Document::sortedDataObjectList()
+    virtual bool flagSet() const { return _flag; }
+    virtual void setFlag(bool f) { _flag = f;}
 
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
@@ -77,6 +80,9 @@ class KSTCORE_EXPORT Primitive : public Object
      * FIXME: pretty sure this is wrong: it shouldn't be a qpointer... not sure
      * what should be going on here! */
     QPointer<Object> _provider;
+
+  private:
+    bool _flag; // used for sorting dataobjects by Document::sortedDataObjectList()
 };
 
 typedef SharedPtr<Primitive> PrimitivePtr;

@@ -74,6 +74,8 @@ Vector::Vector(ObjectStore *store)
   _strings.clear();
 
   CreateScalars(store);
+  setFlag(true);
+
   blank();
 
 }

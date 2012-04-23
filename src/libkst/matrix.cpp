@@ -47,6 +47,8 @@ Matrix::Matrix(ObjectStore *store)
   _strings.clear();
   _vectors.clear();
 
+  setFlag(true);
+
   createScalars(store);
 
 }
