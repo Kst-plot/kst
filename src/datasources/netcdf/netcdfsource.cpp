@@ -221,7 +221,7 @@ QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& fie
   for (int i=0; i<var->num_atts(); ++i) {
     NcAtt *att = var->get_att(i);
     // Only handle char/unspecified attributes as fieldStrings, the others as fieldScalars
-    if (att->type() == ncChar || att->type() == NC_UNSPECIFIED) {
+    if (att->type() == ncChar || att->type() == ncNoType) {
       fieldStrings[att->name()] = QString(att->values()->as_string(0));
     }
     // qDebug() << att->name() << ": " << att->values()->num() << endl;
