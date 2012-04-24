@@ -65,7 +65,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 #ifdef SVN_REVISION
   << tr("Revision "SVN_REVISION"<br><hr>")
 #endif
-  << tr("Copyright &copy; 2000-2011 Barth Netterfield<br><hr>")
+  << tr("Copyright &copy; 2000-2012 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst-plot.kde.org/\">http://kst-plot.kde.org/</a><br>")
   << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")
   << tr("<br>Authors and contributors (sorted alphabetically):")
