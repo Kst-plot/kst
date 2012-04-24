@@ -33,7 +33,8 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   Q_ASSERT(store);
 
-  bool orphan, editable;
+  bool orphan = true;
+  bool editable = true;
   QString value, descriptiveName;
 
   while (!xml.atEnd()) {
@@ -68,8 +69,8 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   StringPtr string = store->createObject<String>();
   string->setValue(value);
-  string->setOrphan(true);
-  string->setEditable(true);
+  string->setOrphan(orphan);
+  string->setEditable(editable);
   string->setDescriptiveName(descriptiveName);
 
   return string;

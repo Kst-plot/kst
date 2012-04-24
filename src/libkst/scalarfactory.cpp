@@ -36,7 +36,8 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   Q_ASSERT(store);
 
-  bool orphan, editable;
+  bool orphan = true;
+  bool editable = true;
   double value=0.0;
 
   while (!xml.atEnd()) {
