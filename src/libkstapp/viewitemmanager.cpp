@@ -22,19 +22,19 @@
 
 namespace Kst {
 
-static ViewItemManager *_self = 0;
+static ViewItemManager *_vim_self = 0;
 
 void ViewItemManager::cleanup() {
-  delete _self;
-  _self = 0;
+  delete _vim_self;
+  _vim_self = 0;
 }
 
 ViewItemManager *ViewItemManager::self() {
-  if (!_self) {
-    _self = new ViewItemManager;
+  if (!_vim_self) {
+    _vim_self = new ViewItemManager;
     qAddPostRoutine(cleanup);
   }
-  return _self;
+  return _vim_self;
 }
 
 
