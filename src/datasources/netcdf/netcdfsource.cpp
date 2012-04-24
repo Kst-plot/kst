@@ -195,8 +195,8 @@ QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& fiel
   for (int i=0; i<var->num_atts(); ++i) {
     NcAtt *att = var->get_att(i);
     // Only handle char attributes as fieldStrings, the others as fieldScalars
-    if (att->type() == NC_BYTE || att->type() == NC_SHORT || att->type() == NC_INT
-        || att->type() == NC_LONG || att->type() == NC_FLOAT || att->type() == NC_DOUBLE) {
+    if (att->type() == ncByte || att->type() == ncShort || att->type() == ncInt
+        || att->type() == ncLong || att->type() == ncFloat || att->type() == ncDouble) {
       // Some attributes may have multiple values => load the first as is, and for the others
       // add a -2, -3, etc... suffix as obviously we can have only one value per scalar.
       // Do it in two steps to avoid a test in the loop while keeping a "clean" name for the first one
@@ -221,7 +221,7 @@ QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& fie
   for (int i=0; i<var->num_atts(); ++i) {
     NcAtt *att = var->get_att(i);
     // Only handle char/unspecified attributes as fieldStrings, the others as fieldScalars
-    if (att->type() == NC_CHAR || att->type() == NC_UNSPECIFIED) {
+    if (att->type() == ncChar || att->type() == NC_UNSPECIFIED) {
       fieldStrings[att->name()] = QString(att->values()->as_string(0));
     }
     // qDebug() << att->name() << ": " << att->values()->num() << endl;

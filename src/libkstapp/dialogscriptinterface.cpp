@@ -86,6 +86,10 @@
 
 using namespace std;
 
+#ifdef TEXT
+#undef TEXT
+#endif
+
 #define TEXT(T) (T->property("si").isValid()?T->property("si").toString().toAscii():T->text().toAscii())
 #define ORIGTEXT(T) T->text().toAscii()
 #define CBTEXT(T) (T->property("si").isValid()?T->property("si").toString().toAscii():"")

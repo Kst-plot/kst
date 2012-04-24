@@ -203,7 +203,7 @@ bool FitLinearWeightedSource::algorithm() {
   outputVectorYHi->setLabelInfo(label_info);
 
   int i = 0;
-  int iLength;
+  int iLength = 0;
   bool bReturn = false;
   double* pInputs[3];
   double c0 = 0.0;

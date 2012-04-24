@@ -173,7 +173,7 @@ bool FitLinearUnweightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   int i = 0;
-  int iLength;
+  int iLength = 0;
   bool bReturn = false;
   double* pInputs[3];
   double c0 = 0.0;
