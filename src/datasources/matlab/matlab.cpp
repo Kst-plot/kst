@@ -348,7 +348,7 @@ MatlabSource::~MatlabSource() {
 
 
 void MatlabSource::reset() {
-  delete _matfile;
+  Mat_Close(_matfile);
   _matfile = 0L;
   _maxFrameCount = 0;
   _valid = init();
