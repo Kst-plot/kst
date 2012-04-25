@@ -464,13 +464,10 @@ void DataVector::internalUpdate() {
     } else {
       shift = SPF*(new_f0 - F0);
       NF -= (new_f0 - F0);
-      _numSamples = (NF-1)*SPF+1;
+      _numSamples = (NF-1)*SPF;
     }
 
-    // FIXME: use memmove()
-    for (i = 0; i < _numSamples; i++) {
-      _v[i] = _v[i+shift];
-    }
+    memmove(_v, _v+shift, _numSamples*sizeof(double));
   }
 
   if (DoSkip) {
@@ -559,8 +556,8 @@ void DataVector::internalUpdate() {
       int safe_nf = (new_nf>0 ? new_nf : 0);
 
       assert(new_f0 + NF >= 0);
-      if (new_f0 + safe_nf - 1 >= 0) {
       //assert(new_f0 + safe_nf - 1 >= 0);
+      if (new_f0 + safe_nf - 1 >= 0) {
         n_read = readField(_v+NF*SPF, _field, new_f0 + NF, safe_nf - NF - 1);
         n_read += readField(_v+(safe_nf-1)*SPF, _field, new_f0 + safe_nf - 1, -1);
       }
@@ -571,7 +568,6 @@ void DataVector::internalUpdate() {
       }
     }
   }
-
   NumNew = _size - _numSamples;
   NF = new_nf;
   F0 = new_f0;
