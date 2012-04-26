@@ -192,7 +192,8 @@ QMap<QString, QString> DataInterfaceDirFileVector::metaStrings(const QString& fi
 
 DirFileSource::DirFileSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
     Kst::DataSource(store, cfg, filename, type), _config(0L),
-    iv(new DataInterfaceDirFileVector(*this)), ix(new DataInterfaceDirFileScalar(*this)), is(new DataInterfaceDirFileString(*this))
+  iv(new DataInterfaceDirFileVector(*this)), ix(new DataInterfaceDirFileScalar(*this)),
+  is(new DataInterfaceDirFileString(*this)), _resetNeeded(false)
 {
   setInterface(iv);
   setInterface(ix);
@@ -288,11 +289,12 @@ bool DirFileSource::init() {
 Kst::Object::UpdateType DirFileSource::internalDataSourceUpdate() {
   int newNF = _dirfile->NFrames();
   bool isnew = newNF != _frameCount;
-  bool isNewFile = (_frameCount>newNF);
+  _resetNeeded |= (_frameCount>newNF);
 
   _frameCount = newNF;
 
-  if (isNewFile) {
+  if (_resetNeeded && newNF>0) {
+    _resetNeeded = false;
     reset();
   }
   return (isnew ? Updated : NoChange);

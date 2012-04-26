@@ -67,9 +67,15 @@ int main() {
   sprintf(tmpstr,"%s/format", dirfilename);
 
   fpf = fopen(tmpstr,"w");
-  
+  /* make curfile */
+  unlink("dm.lnk");
+  symlink(dirfilename, "dm.lnk");
+
+  sleep(1);
   for (i=0; i<NDF; i++) {
     fprintf(fpf,"%s RAW %c %d\n", df[i].field, df[i].type, df[i].spf);
+    fflush(fpf);
+    usleep(100000);
     sprintf(tmpstr,"%s/%s", dirfilename, df[i].field);
     df[i].fp = open(tmpstr, O_WRONLY|O_CREAT, 00644);
   }
@@ -82,9 +88,6 @@ int main() {
   fprintf(fpf, "cos/units STRING ^o\ncos/quantity STRING Angle\n");
   fclose(fpf);
 
-  /* make curfile */
-  unlink("dm.lnk");
-  symlink(dirfilename, "dm.lnk");
 
   printf("starting loop\n");
   while (1) {

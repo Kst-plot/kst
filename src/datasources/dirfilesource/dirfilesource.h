@@ -95,6 +95,7 @@ class DirFileSource : public Kst::DataSource {
     friend class DataInterfaceDirFileVector;
     friend class DataInterfaceDirFileScalar;
     friend class DataInterfaceDirFileString;
+    bool _resetNeeded;
 };
 
 
