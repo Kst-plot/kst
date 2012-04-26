@@ -331,6 +331,11 @@ class KSTCORE_EXPORT DataSourceConfigWidget : public QWidget
     DataSourcePtr instance() const;
     bool hasInstance() const;
 
+    // Check if the widget could be closed,
+    // and the user has not entered invalid parameters.
+    virtual bool isOkAcceptabe() const;
+
+
   public slots:
     virtual void load() = 0;
     virtual void save() = 0;

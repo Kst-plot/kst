@@ -123,7 +123,10 @@ DataSourceConfigWidget* DataSource::configWidget() {
 
   //This is still ugly to me...
   w->_instance = this;
+
+  // TODO check if not all plugins already have load() called
   w->load();
+
   return w;
 }
 
@@ -420,6 +423,9 @@ QSettings& DataSourceConfigWidget::settings() const {
   return _cfg;
 }
 
+bool DataSourceConfigWidget::isOkAcceptabe() const {
+  return true;
+}
 
 bool DataSourceConfigWidget::hasInstance() const {
   return _instance != 0L;

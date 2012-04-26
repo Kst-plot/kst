@@ -93,11 +93,11 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
   private Q_SLOTS:
     void columnLayoutChanged(int);
     void showBeginning();
+    void updateUnitLineEnabled(bool);
 
   private:
     const int _index_offset;
     QString _filename;
-
 };
 
 
@@ -109,6 +109,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
 
     void load();
     void save();
+    bool isOkAcceptabe() const;
 
     void setFilename(const QString& filename);
 

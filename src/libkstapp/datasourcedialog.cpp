@@ -26,8 +26,8 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
   QVBoxLayout *layout = new QVBoxLayout(this);
 
   _dataSource->readLock();
-  QWidget *widget = _dataSource->configWidget();
-  connect(this, SIGNAL(ok()), widget, SLOT(save()));
+  _configWidget = _dataSource->configWidget();
+  connect(this, SIGNAL(ok()), _configWidget, SLOT(save()));
 
   if (mode == DataDialog::Edit) {
     connect(this, SIGNAL(ok()), this, SLOT(disableReuse()));
@@ -35,8 +35,8 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
 
   _dataSource->unlock();
 
-  widget->setParent(this);
-  layout->addWidget(widget);
+  _configWidget->setParent(this);
+  layout->addWidget(_configWidget);
 
   _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   layout->addWidget(_buttonBox);
@@ -59,13 +59,14 @@ void DataSourceDialog::disableReuse() {
   _dataSource->disableReuse();
 }
 
-
 void DataSourceDialog::buttonClicked(QAbstractButton *button) {
   QDialogButtonBox::StandardButton std = _buttonBox->standardButton(button);
   switch(std) {
   case QDialogButtonBox::Ok:
-    emit ok();
-    accept();
+    if (_configWidget->isOkAcceptabe()) {
+      emit ok();
+      accept();
+    }
     break;
   case QDialogButtonBox::Cancel:
     emit cancel();

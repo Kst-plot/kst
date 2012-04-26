@@ -46,6 +46,7 @@ class DataSourceDialog : public QDialog
   private:
     DataSourcePtr _dataSource;
     QDialogButtonBox *_buttonBox;
+    DataSourceConfigWidget* _configWidget;
 };
 
 }

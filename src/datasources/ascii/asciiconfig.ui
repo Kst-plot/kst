@@ -476,38 +476,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>_readFields</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_readUnits</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>62</x>
-     <y>162</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>65</x>
-     <y>186</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_readFields</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_unitsLine</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>100</x>
-     <y>162</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>192</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>_custom</sender>
    <signal>toggled(bool)</signal>
    <receiver>_columnDelimiter</receiver>
@@ -520,6 +488,22 @@
     <hint type="destinationlabel">
      <x>158</x>
      <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_readFields</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_readUnits</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>62</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>65</x>
+     <y>186</y>
     </hint>
    </hints>
   </connection>

@@ -23,7 +23,7 @@
 #include <QFileInfo>
 #include <QButtonGroup>
 #include <QPlainTextEdit>
-
+#include <QMessageBox>
 
 //
 // ConfigWidgetAsciiInternal
@@ -48,8 +48,17 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) :
   _showBeginning->setReadOnly(true);
   _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
 
+  connect(_readFields, SIGNAL(toggled(bool)), this, SLOT(updateUnitLineEnabled(bool)));
 }
 
+void ConfigWidgetAsciiInternal::updateUnitLineEnabled(bool checked)
+{
+  if (checked && _readUnits->isChecked()) {
+    _unitsLine->setEnabled(true);
+  } else {
+    _unitsLine->setEnabled(false);
+  }
+}
 
 void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
 {
@@ -111,7 +120,6 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   return config;
 }
 
-
 void ConfigWidgetAsciiInternal::setFilename(const QString& filename)
 {
   _filename = filename;
@@ -130,6 +138,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
   _useComma->setChecked(!config._useDot);
+  updateUnitLineEnabled(config._readFields);
   
   _startLine->setValue(config._dataLine + _index_offset);
   _fieldsLine->setValue(config._fieldsLine + _index_offset);
@@ -213,7 +222,28 @@ void ConfigWidgetAscii::save() {
   }
 }
 
-
+bool ConfigWidgetAscii::isOkAcceptabe() const {
+  AsciiSourceConfig config = _ac->config();
+  QString msg;
+  if (config._readFields) {
+    if (config._fieldsLine == config._dataLine) {
+      msg = QString("Line %1 could not list field names AND values!").arg(config._fieldsLine + 1);
+    }
+    if (config._readUnits) {
+      if (config._unitsLine == config._dataLine) {
+        msg = QString("Line %1 could not list units AND values!").arg(config._unitsLine + 1);
+      }
+      if (config._unitsLine == config._fieldsLine) {
+        msg = QString("Line %1 could not list field names AND units!").arg(config._unitsLine + 1);
+      }
+    }
+  }
+  if (!msg.isEmpty()) {
+    QMessageBox::critical(0, "Inconsistent parameters", msg);
+    return false;
+  }
+  return true;
+}
 
 //
 // AsciiPlugin
