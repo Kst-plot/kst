@@ -183,7 +183,9 @@ if(kst_merge_files)
 endif()
 
 
-
+if(WIN32)
+	add_definitions(-D_WIN32_WINNT=0x0501) # Windows XP
+endif()
 
 if(MSVC)
 	add_definitions(-D_USE_MATH_DEFINES -DNOMINMAX)

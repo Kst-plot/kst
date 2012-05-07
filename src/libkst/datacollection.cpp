@@ -21,9 +21,13 @@
 #include <stdlib.h>
 #include <qapplication.h>
 
-
+#include "debug.h"
 #include "sysinfo.h"
 #include "psversion.h"
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
 
 namespace Kst {
 
@@ -38,17 +42,25 @@ void *malloc(size_t size) {
 }
 
 double Data::AvailableMemory() {
-  double available_memory = 1024.0*1024.0*1024.0;
-  // FIXME: under windows or mac, this is totally wrong.
-  // Under windows, try GlobalMemoryStatusEx
+  double one_GB = 1024.0*1024.0*1024.0;
+  double available_memory = 0;
+  
+#ifdef Q_OS_WIN
   // (http://msdn.microsoft.com/en-us/library/aa366589)
-  // but, I don't have access to a windows devel environment...
-
-#ifdef __linux__
+  MEMORYSTATUSEX statex;
+  statex.dwLength = sizeof(statex);
+  GlobalMemoryStatusEx(&statex);
+  available_memory = statex.ullAvailPhys;
+#elif Q_OS_LINUX
   QMutexLocker ml(&bigLock);
   meminfo();
   available_memory = double(S(kb_main_free + kb_main_cached)) - 30.0*1024.0*1024.0; // 30MB margin
+#else
+  // TODO other OSs
+  // or assume 32-bit on a big system
+  available_memory = 4 * one_GB;
 #endif
+  Debug::self()->log(QString("Available memory: %1 GB").arg(available_memory/one_GB));
   return available_memory;
 }
 
