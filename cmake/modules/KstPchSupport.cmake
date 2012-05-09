@@ -70,7 +70,7 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header}.tmp ${_header}.cpp)
 		
 		if(MSVC_IDE)
-			set(use_pch "/Fp${_header}.\$(Configuration).pch")
+			set(use_pch "/Fp${_header}.\$(ConfigurationName).pch")
 		else()
 			set(use_pch /Fp${_header}.pch)
 		endif()
