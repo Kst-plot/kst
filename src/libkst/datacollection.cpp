@@ -51,7 +51,7 @@ double Data::AvailableMemory() {
   statex.dwLength = sizeof(statex);
   GlobalMemoryStatusEx(&statex);
   available_memory = statex.ullAvailPhys;
-#elif Q_OS_LINUX
+#elif defined Q_OS_LINUX
   QMutexLocker ml(&bigLock);
   meminfo();
   available_memory = double(S(kb_main_free + kb_main_cached)) - 30.0*1024.0*1024.0; // 30MB margin
