@@ -375,9 +375,9 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     QVarLengthArray<char, MAXBUFREADLEN + 1> varBuffer;
     varBuffer.resize(varBuffer.capacity());
 
-    bufstart += bufread;
+    //bufstart += bufread;
+    bufstart = _rowIndex[_numFrames]; // always read from the start of a line
     bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
-
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
     const char* bufferData = varBuffer.constData();
     const char* buffer = bufferData;
@@ -385,7 +385,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     QVarLengthArray<char, MAXBUFREADLEN + 1>& bufferData = varBuffer;
     const char* buffer = bufferData.data();
 #endif
-
 
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
@@ -417,7 +416,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   return (!new_data && !force_update ? NoChange : Updated);
 }
 
-#if 1
 template<typename IsLineBreak, typename CommentDelimiter>
 bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
@@ -453,40 +451,7 @@ bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, co
   _rowIndex[_numFrames] = row_start;
   return new_data;
 }
-#endif
 
-#if 0
-template<typename IsLineBreak, typename CommentDelimiter>
-bool AsciiSource::findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
-{
-  const IsWhiteSpace isWhiteSpace;
-
-  bool new_data = false;
-  bool is_data = false;
-  bool is_comment = false;
-  const int row_offset = bufstart + isLineBreak.size;
-  for (int i = 0; i < bufread; i++) {
-      if (comment_del(buffer[i])) {
-        is_comment = true;
-        is_data = false;
-      } else if (isLineBreak(buffer[i])) {
-        is_comment = false;
-        if (is_data) {
-          is_data = false;
-          ++_numFrames;
-          if (_numFrames >= _rowIndex.size()) {
-            _rowIndex.resize(_rowIndex.size() + MAXBUFREADLEN);
-          }
-          _rowIndex[_numFrames] = row_offset + i;
-          new_data = true;
-        }
-      } else if (!is_data && !isWhiteSpace(buffer[i]) && !comment_del(buffer[i])) {
-        is_data = !is_comment;
-      }
-  }
-  return new_data;
-}
-#endif
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const
 {
