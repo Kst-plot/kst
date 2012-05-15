@@ -328,7 +328,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 #define MAXBUFREADLEN KST_PREALLOC
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
-  MeasureTime t("AsciiSource::internalDataSourceUpdate");
+  MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();

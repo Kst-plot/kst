@@ -35,6 +35,7 @@ namespace Kst {
 SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
     : ViewItem(parent),
       _layout(0),
+      _keyPlot(0),
       _loaded(false),
       _firstPaint(true),
       _dirty(false),
@@ -140,7 +141,6 @@ void SharedAxisBoxItem::setYAxisShared(const bool shared) {
 
 bool SharedAxisBoxItem::acceptItems() {
   bool bReturn = false;
-
   if (_loaded) {
     return true;
   } else {
@@ -164,7 +164,8 @@ bool SharedAxisBoxItem::acceptItems() {
           ViewItem *parent = static_cast<ViewItem*>(plotItem->parentItem());
           SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(parent);
           if (shareBox) {
-            shareBox->breakShare();
+            // share boxes can't contain share boxes.  Bail out now!
+            return false;
           } else if (parent != parentItem()) {
             continue;
           }
@@ -1172,9 +1173,9 @@ void CreateSharedAxisBoxCommand::creationComplete() {
     if (shareBox->acceptItems()) {
       CreateCommand::creationComplete();
     } else {
-      delete _item;
-      deleteLater();
       kstApp->mainWindow()->clearDrawingMarker();
+      deleteLater();
+      _item->deleteLater();
     }
   }
 }
