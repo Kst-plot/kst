@@ -23,11 +23,12 @@ endif()
 
 if(MINGW)
 	get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
-	install(FILES 
-		${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll
-        ${MINGW_BIN_PATH}/libstdc++-6.dll
-		${MINGW_BIN_PATH}/mingwm10.dll
-		DESTINATION bin)
+	if(GCC_VERSION VERSION_LESS 4.7)
+		set(runtime ${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll ${MINGW_BIN_PATH}/mingwm10.dll)
+	else()
+		set(runtime ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll ${MINGW_BIN_PATH}/libwinpthread-1.dll)
+	endif()
+	install(FILES ${runtime} ${MINGW_BIN_PATH}/libstdc++-6.dll DESTINATION bin)
 endif()
 
 
