@@ -19,9 +19,9 @@ if [ -z ${4} ]
 then
 	cmake ../kst/cmake -Dkst_release=1 -Dkst_merge_files=1 -Dkst_version_string=$1 -Dkst_install_prefix=$kst_install_prefix -Dkst_3rdparty_build=1 -Dkst_deploy=1
 	cd 3rdparty
-	make -j
+	make -j8
 	cd ..
-	make -j
+	make -j8
 	make 
 	make install/strip
 	strip ${kst_install_prefix}/lib
