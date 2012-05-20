@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 # figure out if we use MinGW with Ninja: call with -DCC=gcc
 if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
-    find_file(mingw_make mingw32-make.exe)
-    get_filename_component(mingw_bin_dir ${mingw_make} PATH)
-    set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
+	find_file(mingw_make mingw32-make.exe)
+	get_filename_component(mingw_bin_dir ${mingw_make} PATH)
+	set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
 endif()
 
 project(Kst)
@@ -19,24 +19,26 @@ set(kst_binary_name kst2)
 
 
 kst_option_init()
-kst_option(version_string "Version string" OFF all)
-kst_option(release "Build release version: optimize for speed, don't embedded debug symbols" OFF all)
-kst_option(merge_files "Merge files to speedup build about factor 5" OFF all)
-kst_option(merge_rebuild "Rebuild generated files from merged files build" OFF all)
-kst_option(verbose "Make verbose CMake run and Makefiles" OFF all)
-kst_option(install_prefix "Install path for Kst, using a default if not set" OFF all)
-kst_option(install_libdir "Install directory name for libraries" OFF all)
-kst_option(3rdparty "Build plugins depending on 3rd party libraries" ON all)
-kst_option(dataobjects "Build dataobject plugins" ON all)
-kst_option(test "Build unit tests" OFF all)
-kst_option(pch "Use precompiled headers" ON all)
-kst_option(svnversion "Use svnversion's output for Kst's version information" ON all)
-kst_option(rpath "Use rpath" ON gcc)
-kst_option(3rdparty_build "Download and build 3rd party libraries" OFF win)
-kst_option(3rdparty_download "Download precompiled 3rd party libraries" OFF win)
-kst_option(console "Open console on Windows" OFF win)
-kst_option(edit_cont "Enable \"Edit and Continue\" for Visual Studio" OFF win)
-kst_option(python "Build Python support" OFF all)
+kst_option(string ""  all version_string    "Version string")
+kst_option(bool   OFF all release           "Build release version: optimize for speed, don't embedded debug symbols")
+kst_option(bool   OFF gcc deploy            "Deploy into install dir")
+kst_option(bool   OFF all merge_files       "Merge files to speedup build about factor 5")
+kst_option(bool   OFF all merge_rebuild     "Rebuild generated files from merged files build")
+kst_option(bool   OFF all verbose           "Make verbose CMake run and Makefiles")
+kst_option(string ""  all install_prefix    "Install path for Kst, using a default if not set")
+kst_option(string ""  all install_libdir    "Install directory name for libraries")
+kst_option(bool   ON  all 3rdparty          "Build plugins depending on 3rd party libraries")
+kst_option(bool   ON  all dataobjects       "Build dataobject plugins")
+kst_option(bool   OFF all test              "Build unit tests")
+kst_option(bool   ON  all pch               "Use precompiled headers")
+kst_option(bool   ON  all svnversion        "Use svnversion's output for Kst's version information")
+kst_option(bool   OFF gcc rpath             "Use rpath")
+kst_option(bool   OFF all 3rdparty_build    "Download and build 3rd party libraries")
+kst_option(bool   OFF win 3rdparty_download "Download precompiled 3rd party libraries")
+kst_option(bool   OFF win console           "Open console on Windows")
+kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Visual Studio")
+kst_option(bool   OFF all python            "Build Python support")
+
 
 message(STATUS)
 
@@ -55,6 +57,12 @@ else()
 	set(kst_version_minor 0)
 	set(kst_version_patch x)
 	set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
+	set(kst_version_string ${kst_version})
+endif()
+
+if(MINGW)
+	execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+	message(STATUS "Using GCC version ${GCC_VERSION}")
 endif()
 
 if(MINGW)
@@ -66,17 +74,17 @@ if(kst_3rdparty_build)
 	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
 	add_subdirectory(3rdparty)
 elseif(kst_3rdparty_download)
-    if(MINGW)
-        if(GCC_VERSION VERSION_LESS 4.6)
-            set(ver 4.4)
-            set(md5 999248fb40a44543af4dd4cd1be0ceeb)
-        else(GCC_VERSION VERSION_GREATER 4.6)
-            set(ver 4.6)
-            set(md5 70d8670af9c21eb8fb466654c95d8e4d)
-        else()
-            message(FATA_ERROR "MinGW version ${GCC_VERSION} not supported")
-        endif()
-    endif()
+	if(MINGW)
+		if(GCC_VERSION VERSION_LESS 4.6)
+			set(ver 4.4)
+			set(md5 999248fb40a44543af4dd4cd1be0ceeb)
+		else(GCC_VERSION VERSION_GREATER 4.6)
+			set(ver 4.6)
+			set(md5 70d8670af9c21eb8fb466654c95d8e4d)
+		else()
+			message(FATA_ERROR "MinGW version ${GCC_VERSION} not supported")
+		endif()
+	endif()
 	message(STATUS "Checking downloaded 3rd party binaries.")
 	set(_deps kst-3rdparty-win32-gcc${ver})
 	set(_file ${_deps}.zip)
@@ -84,7 +92,7 @@ elseif(kst_3rdparty_download)
 	find_file(_downloaded ${_file} ${CMAKE_BINARY_DIR})
 	if (NOT _downloaded)
 		file(DOWNLOAD http://sourceforge.net/projects/kst/files/3rdparty/${_file}
-            ${CMAKE_BINARY_DIR}/${_file}
+			${CMAKE_BINARY_DIR}/${_file}
 			EXPECTED_MD5 ${md5}
 			SHOW_PROGRESS)
 		execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xfj ${CMAKE_BINARY_DIR}/${_file})
@@ -146,7 +154,7 @@ if(kst_install_prefix)
 	set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
 	set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 else()
-	set(kst_install_prefix INSTALLED)
+	set(kst_install_prefix ${CMAKE_BINARY_DIR}/INSTALLED)
 	set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "Kst's default install prefix" FORCE)
 endif()
 
@@ -224,9 +232,8 @@ message(STATUS "        ${kst_install_prefix}/bin")
 message(STATUS "        ${kst_install_prefix}/${kst_install_libdir}")
 message(STATUS "        ${kst_install_prefix}/${kst_install_plugins}")
 message(STATUS)
-message(STATUS "Options:")
+message(STATUS "Used options:")
 kst_option_list_all()
-message(STATUS)
 message(STATUS "-----------------------------------------------")
 message(STATUS)
 
@@ -243,7 +250,7 @@ if (NOT APPLE)
 endif()
 
 if(kst_python)
-    add_subdirectory(pyKst)
+	add_subdirectory(pyKst)
 endif()
 
 # CPack packaging
@@ -255,11 +262,12 @@ if(WIN32)
 	set(CPACK_BINARY_ZIP 1)
 endif()
 
+
 if(kst_install_prefix)
 	if(WIN32)
 		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win32)
 	else()
-		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-binary)
+		set(CPACK_PACKAGE_FILE_NAME kst-${kst_version_string}-binary)
 	endif()
 	set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix})
 else()
@@ -297,6 +305,7 @@ else()
 	set(CPACK_SOURCE_GENERATOR TGZ)
 endif()
 
+
 # rpm
 set(CPACK_SET_DESTDIR "ON")
 FILE(READ ${CPACK_RESOURCE_FILE_LICENSE} CPACK_RPM_PACKAGE_LICENSE)
@@ -326,8 +335,8 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 #
 # Binary .rpm:
 # create : cpack -G RPM --config CPackConfig.cmake
-# list   : rpm -qlp Kst-*.rpm              
-# install: rpm -U Kst-*.rpm                
+# list   : rpm -qlp Kst-*.rpm
+# install: rpm -U Kst-*.rpm
 
 
 # CPack and Ubuntu
@@ -337,30 +346,32 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 
 if(APPLE)
 	# We start from build/bin/kst2.app, all is build into the final bundle folder
-	# On the mac the pathes to needed shared libraries are hardcoded in the binary/library 
-	# which could be changed by the macro 'fixup_bundle' 
+	# On the mac the pathes to needed shared libraries are hardcoded in the binary/library
+	# which could be changed by the macro 'fixup_bundle'
 	# libs which are hardcoded are resolved automatically
-	# but the plugins must be passed as extra argument because they are not hardcoded in the binary 
-	
+	# but the plugins must be passed as extra argument because they are not hardcoded in the binary
+
 	set(bundle_dir ${kst_build_dir}/bin)
 	set(contents_dir ${kst_binary_name}.app/Contents)
-	
+
 	set(app ${bundle_dir}/${kst_binary_name}.app)
 	install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${bundle_dir}/${contents_dir}/plugins COMPONENT Runtime)
-	
-	install(CODE 
+
+	install(CODE
 		"file(GLOB qt_plugins \"${bundle_dir}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
 		file(GLOB kst_plugins \"${bundle_dir}/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
 		set(libs \${qt_plugins} \${kst_plugins})
-		include(BundleUtilities) 
+		include(BundleUtilities)
 		fixup_bundle(\"${app}\" \"\${libs}\" \"${dir}\") "
 		COMPONENT RUNTIME)
-	
+
 	file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
 	install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
 
 	set(CPACK_GENERATOR DragNDrop)
 endif()
 
+
 include(CPack)
+
 
