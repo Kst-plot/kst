@@ -95,17 +95,17 @@ void DataSourceSelector::updateFile(const QString &file) {
       QString changed_file = file;
       changed_file.replace('~', home);
       setFile(changed_file);
-      return;
     }
     home = qgetenv("USERPROFILE"); // windows, maybe (?)
     if (!home.isEmpty()) {
       QString changed_file = file;
       changed_file.replace('~', home);
       setFile(changed_file);
-      return;
     }
+  } else {
+    _file = file;
+    emit changed(file);
   }
-  emit changed(file);
 }
 
 
