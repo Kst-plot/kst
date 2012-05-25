@@ -822,7 +822,6 @@ QString DataNode::text() const {
 /////////////////////////////////////////////////////////////////
 Number::Number(double n)
 : Node(), _n(n) {
-  //printf("%p: New Number: %lf\n", (void*)this, n);
 }
 
 
