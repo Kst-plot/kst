@@ -15,6 +15,7 @@ macx:CONFIG += lib_bundle
 }
 
 INCLUDEPATH += tmp \
+    $$TOPLEVELDIR/src/widgets \
     $$OUTPUT_DIR/src/libkst/tmp
 
 SOURCES += builtindatasources.cpp \

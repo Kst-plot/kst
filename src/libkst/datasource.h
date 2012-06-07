@@ -40,7 +40,7 @@ class QFileSystemWatcher;
 namespace Kst {
 
 class DataSourceConfigWidget;
-class DataSourcePlugin;
+//class DataSourcePlugin;
 
 
 class KSTCORE_EXPORT DataSource : public Object
@@ -163,6 +163,8 @@ class KSTCORE_EXPORT DataSource : public Object
     virtual bool isValid() const; // generally you don't need to change this
 
     virtual QString fileName() const;
+    QString alternateFilename() const;
+    void setAlternateFilename(const QString &file);
 
     QMap<QString, QString> fileMetas() const;
 
@@ -221,7 +223,10 @@ class KSTCORE_EXPORT DataSource : public Object
     /** The filename.  Populated by the base class constructor.  */
     QString _filename;
 
-    friend class DataSourcePlugin;
+    /** an alias for the file: for example if the file were replaced at load time */
+    QString _alternateFilename;
+
+    //friend class DataSourcePlugin;
 
     /** The source type name. */
     QString _source;
@@ -284,8 +289,12 @@ class DataSourceList : public QList<DataSourcePtr> {
     // @since 1.1.0
     DataSourcePtr findReusableFileName(const QString& x) {
       for (DataSourceList::Iterator it = begin(); it != end(); ++it) {
-        if ((*it)->reusable() && (*it)->fileName() == x) {
-          return *it;
+        if ((*it)->reusable()) {
+          if ((*it)->fileName() == x) {
+            return *it;
+          } else if ((*it)->alternateFilename() == x) {
+            return *it;
+          }
         }
       }
       return 0;

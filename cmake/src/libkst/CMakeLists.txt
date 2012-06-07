@@ -1,5 +1,7 @@
 kst_init(${kst_binary_name} core)
 
+kst_include_directories(widgets)
+
 kst_files_ignore(stdinsource timezones)
 
 if(WIN32 OR APPLE OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")

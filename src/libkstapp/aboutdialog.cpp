@@ -42,6 +42,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 // qmake support
   QStringList authors = QStringList()
     << "Barth Netterfield"
+    << "Joshua Netterfield"
     << "Matthew Truch"
     << "Nicolas Brisset"
     << "Staikos Computing Services Inc."

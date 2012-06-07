@@ -135,6 +135,7 @@ DataSourceConfigWidget* DataSource::configWidget() {
 DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type) :
   Object(),
   _filename(filename),
+  _alternateFilename(QString()),
   _cfg(cfg),
   interf_scalar(new NotSupportedImp<DataScalar>),
   interf_string(new NotSupportedImp<DataString>),
@@ -267,6 +268,13 @@ QString DataSource::fileName() const {
   return _filename;
 }
 
+QString DataSource::alternateFilename() const {
+  return _alternateFilename;
+}
+
+void DataSource::setAlternateFilename(const QString &file) {
+  _alternateFilename = file;
+}
 
 QString DataSource::fileType() const {
   return QString();

@@ -21,6 +21,7 @@
 
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
+static qreal JD1899_12_30 = 2415018.5;
 static qreal JD1970 = 2440587.5;
 static qreal JD_RJD = 2400000.0;
 static qreal JD_MJD = 2400000.5;
@@ -118,6 +119,9 @@ double PlotAxis::convertTimeValueToJD(double valueIn) {
       break;
     case AXIS_INTERP_RJD:
       value += JD_RJD;
+      break;
+    case AXIS_INTERP_EXCEL:
+      value += JD1899_12_30;
       break;
     case AXIS_INTERP_AIT:
       value -= 86400.0 * (365.0 * 12.0 + 3.0);

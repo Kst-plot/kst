@@ -437,7 +437,7 @@ void MainWindow::openFile(const QString &file) {
   if (!ok) {
     QMessageBox::critical(this, tr("Kst"),
         tr("Error opening document '%1':\n%2\n"
-           "Maybe it is a Kst 1 file which could not be read by Kst 2.").arg(file, _doc->lastError()));
+           ).arg(file, _doc->lastError()));
   }
 
   setWindowTitle("Kst - " + file);

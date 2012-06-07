@@ -25,7 +25,8 @@ enum AxisInterpretationType {
   AXIS_INTERP_JD,
   AXIS_INTERP_MJD,
   AXIS_INTERP_RJD,
-  AXIS_INTERP_AIT };
+  AXIS_INTERP_AIT,
+  AXIS_INTERP_EXCEL};
 
 enum AxisDisplayType { 
   AXIS_DISPLAY_YEAR,
@@ -53,7 +54,8 @@ const AxisInterpretation AxisInterpretations[] = {
   { I18N_NOOP2("Julian Date", "JD"), AXIS_INTERP_JD },
   { I18N_NOOP2("Modified Julian Date", "MJD"), AXIS_INTERP_MJD },
   { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_INTERP_RJD },
-  { I18N_NOOP2("Temps Atomique International", "TAI"), AXIS_INTERP_AIT }
+  { I18N_NOOP2("Temps Atomique International", "TAI"), AXIS_INTERP_AIT },
+  { I18N_NOOP("Excel time (Windows)"), AXIS_INTERP_EXCEL }
 };
 
 const AxisDisplay AxisDisplays[] = {

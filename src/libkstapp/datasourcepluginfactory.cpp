@@ -17,6 +17,7 @@
 #include "datacollection.h"
 #include "objectstore.h"
 #include "datasourcepluginmanager.h"
+#include "baddatasourcedialog.h"
 
 namespace Kst {
 
@@ -69,12 +70,25 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     fileName = store->override.fileName;
   }
 
-  DataSourcePtr dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
-  if (dataSource) {
-    dataSource->parseProperties(propertyAttributes);
-  }
+  DataSourcePtr dataSource = 0L;
+  QString alternate_filename = fileName;
+  do {
+    dataSource = 0L;
+    dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
+    if (dataSource) {
+      dataSource->parseProperties(propertyAttributes);
+      if (fileName != alternate_filename) {
+        dataSource->setAlternateFilename(alternate_filename);
+      }
+      return dataSource;
+    } else {
+      alternate_filename = fileName;
+      BadDatasourceDialog dialog(&fileName, store);
+      dialog.exec();
+    }
+  } while (!fileName.isEmpty());
 
-  return dataSource;
+  return NULL;
 }
 
 }

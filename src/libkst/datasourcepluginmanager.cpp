@@ -324,7 +324,7 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
   }
 
   if (!QFileInfo(fn).exists()) {
-    Debug::self()->log(QObject::tr("File '%1' does not exists.").arg(fn), Debug::Warning);
+    Debug::self()->log(QObject::tr("File '%1' does not exist.").arg(fn), Debug::Warning);
     return 0;
   }
 
