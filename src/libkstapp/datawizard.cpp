@@ -1163,6 +1163,9 @@ void DataWizard::finished() {
     }
     if (!plotList.isEmpty() && layout_type == CurvePlacement::Custom) {
       plotList.at(0)->createCustomLayout(num_columns);
+      if (_pageDataPresentation->plotDataPSD()) {
+        plotList.at(plotList.count()/2)->createCustomLayout(num_columns);
+      }
     }
 
   }
