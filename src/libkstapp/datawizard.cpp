@@ -784,6 +784,10 @@ void DataWizard::finished() {
 
   double startOffset = _pageDataPresentation->dataRange()->start();
   double rangeCount = _pageDataPresentation->dataRange()->range();
+  bool separate_tabs =
+      ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
+       && _pageDataPresentation->plotData());
+
   // only add to memory requirement if xVector is to be created
   if (_pageDataPresentation->createXAxisFromField()) {
     if (_pageDataPresentation->dataRange()->readToEnd()) {
@@ -897,8 +901,8 @@ void DataWizard::finished() {
   }
 
   // Create a new tab, if we asked for it and the current tab isn't empty.
-  if ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::NewTab) ||
-      (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs)) {
+  if ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::NewTab) || separate_tabs) {
+//      (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs)) {
     if (_document->currentView()->scene()->items().count()>0) {
      _document->createView();
    }
@@ -910,9 +914,6 @@ void DataWizard::finished() {
   PlotItem *plotItem = 0;
   bool relayout = true;
   int plotsInPage = _document->currentView()->scene()->items().count();
-  bool separate_plots =
-      ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
-       && _pageDataPresentation->plotData());
 
   switch (_pagePlot->curvePlacement()) {
     case DataWizardPagePlot::ExistingPlot:
@@ -930,6 +931,9 @@ void DataWizard::finished() {
       plotItem = static_cast<PlotItem*>(cmd->item());
       plotList.append(plotItem);
       if (_pageDataPresentation->plotDataPSD()) {
+        if (separate_tabs) {
+          _document->createView();
+        }
         CreatePlotForCurve *cmd = new CreatePlotForCurve();
         cmd->createItem();
 
@@ -942,7 +946,7 @@ void DataWizard::finished() {
     {
       int nplots = vectors.count() * (_pageDataPresentation->plotPSD() + _pageDataPresentation->plotData());
 
-      if (separate_plots)
+      if (separate_tabs)
         nplots/=2;
 
       for (int i = 0; i < nplots; ++i) {
@@ -952,7 +956,7 @@ void DataWizard::finished() {
         plotItem = static_cast<PlotItem*>(cmd->item());
         plotList.append(plotItem);
       }
-      if (separate_plots) {
+      if (separate_tabs) {
         _document->createView();
         for (int i = 0; i < nplots; ++i) {
           CreatePlotForCurve *cmd = new CreatePlotForCurve();
@@ -1150,7 +1154,8 @@ void DataWizard::finished() {
     if (plotsInPage == 0) { // no format to protext
       if (layout_type != CurvePlacement::Custom) {
         layout_type = CurvePlacement::Custom;
-        if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
+        if (separate_tabs) {
+//        if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
           num_columns = sqrt((double)plotList.size()/2);
         } else {
           num_columns = sqrt((double)plotList.size());
