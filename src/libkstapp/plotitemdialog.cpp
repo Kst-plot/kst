@@ -29,6 +29,7 @@
 #include "plotitem.h"
 #include "image.h"
 #include "imagedialog.h"
+#include "dimensionstab.h"
 
 #include "filltab.h"
 #include "stroketab.h"
@@ -150,6 +151,10 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
 
   selectDialogPage(contentsPage);
   _saveAsDefault->show();
+
+  if (item->isInSharedAxisBox()) {
+    _dimensionsTab->setEnabled(false);
+  }
 
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultiple()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingle()));
