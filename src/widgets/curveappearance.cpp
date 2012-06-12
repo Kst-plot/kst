@@ -134,10 +134,10 @@ void CurveAppearance::enableSettings() {
 
   // Line appearance options common to lines and bars
   enable = showLines() || showBars();
-  _color->setEnabled(enable);
+  // _color->setEnabled(enable); Leave color enabled, even if using only points since they also have a color
   _comboLineStyle->setEnabled(enable);
   //  _textLabelWeight->setEnabled(enable);
-  _spinBoxLineWidth->setEnabled(enable);
+  // _spinBoxLineWidth->setEnabled(enable); Leave lineWidth enabled, even if using only points since they also use this setting
   // Option specific to bars
   enable = showBars();
   _barFillColor->setEnabled(enable);
