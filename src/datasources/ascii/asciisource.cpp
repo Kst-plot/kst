@@ -596,6 +596,8 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
   lexc.setDecimalSeparator(_config._useDot);
   const QString delimiters = _config._delimiters.value();
 
+  bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
+
   int col_start = -1;
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
@@ -613,6 +615,12 @@ int AsciiSource::readColumns(double* v, const char* buffer, int bufstart, int bu
       if (isLineBreak(buffer[ch])) {
         break;
       } else if (column_del(buffer[ch])) { //<- check for column start
+        if ((!incol) && is_custom) {
+          ++i_col;
+          if (i_col == col) {
+            v[i] = NAN;
+          }
+        }
         incol = false;
       } else if (comment_del(buffer[ch])) {
         break;
