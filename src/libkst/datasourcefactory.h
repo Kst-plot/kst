@@ -23,7 +23,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class DataSourceFactory {
+class KSTCORE_EXPORT DataSourceFactory {
   public:
     DataSourceFactory();
     virtual ~DataSourceFactory();
@@ -31,7 +31,7 @@ class DataSourceFactory {
     // This takes ownership
     static void registerFactory(const QString& node, DataSourceFactory *factory);
     static void registerFactory(const QStringList& nodes, DataSourceFactory *factory);
-    KSTCORE_EXPORT static DataSourcePtr parse(ObjectStore *store, QXmlStreamReader& stream);
+    static DataSourcePtr parse(ObjectStore *store, QXmlStreamReader& stream);
     virtual DataSourcePtr generateDataSource(ObjectStore *store, QXmlStreamReader& stream) = 0;
 };
 

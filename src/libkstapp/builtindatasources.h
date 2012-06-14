@@ -13,13 +13,12 @@
 #ifndef BUILTINDATASOURCES_H
 #define BUILTINDATASOURCES_H
 
-#include "kst_export.h"
 
 namespace Kst {
   class ObjectStore;
 
   namespace Builtins {
-    KSTCORE_EXPORT void initDataSources();
+    void initDataSources();
   }
 }
 

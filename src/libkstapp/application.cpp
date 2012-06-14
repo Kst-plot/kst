@@ -39,7 +39,7 @@ Application::Application(int &argc, char **argv)
   _dialogDefaults = new QSettings("kst", "dialog");
 
   Builtins::initPrimitives(); //libkst
-  Builtins::initDataSources(); //libkst
+  Builtins::initDataSources(); //libkstapp
   Builtins::initObjects();    //libkstmath
   Builtins::initRelations();  //libkstmath
   Builtins::initGraphics();   //libkstapp
