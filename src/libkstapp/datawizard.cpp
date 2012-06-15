@@ -247,6 +247,7 @@ void DataWizardPageVectors::remove() {
 
 
 void DataWizardPageVectors::add() {
+
   for (int i = 0; i < _vectors->count(); i++) {
     if (_vectors->item(i) && _vectors->item(i)->isSelected()) {
       _vectorsToPlot->addItem(_vectors->takeItem(i));
@@ -297,6 +298,7 @@ void DataWizardPageVectors::filterVectors(const QString& filter) {
 
   QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
   QStringList selected;
+
   for (int i = 0; i < _vectors->count(); i++) {
     QListWidgetItem *item = _vectors->item(i);
     if (re.exactMatch(item->text())) {
@@ -305,10 +307,24 @@ void DataWizardPageVectors::filterVectors(const QString& filter) {
       i--;
     }
   }
+
   _vectors->insertItems(0, selected);
-  for (int i=0; i<selected.count(); i++) {
-    _vectors->item(i)->setSelected(true);
+
+  // special case optimization:
+  // selecting and unselecting individual items is expensive,
+  // but selecting all of them is fast,
+  // so either select or select all, then unselect, which ever is fewer.
+  if (selected.count() > _vectors->count()/2) {
+    _vectors->selectAll();
+    for (int i=selected.count(); i<_vectors->count(); i++) {
+      _vectors->item(i)->setSelected(false);
+    }
+  } else {
+    for (int i=0; i<selected.count(); i++) {
+      _vectors->item(i)->setSelected(true);
+    }
   }
+
   if (selected.count()>0) {
     _vectors->scrollToTop();
   }
@@ -870,7 +886,6 @@ void DataWizard::finished() {
     xv = kst_cast<Vector>(_pageDataPresentation->selectedVector());
   }
 
-  // only create create the y-vectors
   {
     DataVectorPtr vector;
     for (int i = 0; i < _pageVectors->plotVectors()->count(); i++) {
@@ -993,7 +1008,7 @@ void DataWizard::finished() {
       break;
   }
 
-   // create the data curves
+  // create the data curves
   QList<QColor> colors;
   QColor color;
   int ptype = 0;

@@ -121,7 +121,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
       else if (retval == Object::NoChange) n_unchanged++;
     }
     maxloop = qMin(maxloop,n_deferred);
-    //qDebug() << "loop: " << i_loop << " obj up: " << n_updated << "  obj def: " << n_deferred << " obj_no: " << n_unchanged;
+    //qDebug() << "loop: " << i_loop << " obj up: " << n_updated << "  obj def: " << n_deferred << " obj_no: " << n_unchanged << "dt:" << double(_time.elapsed())/1000.0;
     i_loop++;
   } while ((n_deferred + n_updated > 0) && (i_loop<=maxloop));
 

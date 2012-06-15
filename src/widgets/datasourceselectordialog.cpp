@@ -41,20 +41,20 @@ QString DataSourceSelectorDialog::selectedDataSource() {
 
 
 void DataSourceSelectorDialog::currentChanged(const QString &current) {
-//   qDebug() << "currentChanged" << current;
+  //qDebug() << "currentChanged" << current;
   if (current.isEmpty()) {
     setFileMode(QFileDialog::Directory);
   } else {
     QFileInfo fileInfo(current);
     if (fileInfo.isDir()) {
-//       qDebug() << "Directory Selected - valid?" << DataSourcePluginManager::validSource(current);
+      //qDebug() << "Directory Selected - valid?" << DataSourcePluginManager::validSource(current);
       if (DataSourcePluginManager::validSource(current)) {
         setFileMode(QFileDialog::Directory);
       } else {
         setFileMode(QFileDialog::ExistingFile);
       }
     } else if (fileInfo.exists()) {
-//       qDebug() << "File Selected - valid?" << DataSourcePluginManager::validSource(current);
+      //qDebug() << "File Selected - valid?" << DataSourcePluginManager::validSource(current);
       if (DataSourcePluginManager::validSource(current)) {
         setFileMode(QFileDialog::ExistingFile);
       } else {
