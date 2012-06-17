@@ -82,6 +82,8 @@ class AsciiSource : public Kst::DataSource
     // TODO Is this too big or should we use even more: 1MB on the stack?
 #define KST_PREALLOC 1 * 1024 * 1024
     QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
+    int _bufferedS;
+    int _bufferedN;
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
 
     friend class ConfigWidgetAscii;
@@ -92,6 +94,7 @@ class AsciiSource : public Kst::DataSource
     int _byteLength;
     bool _haveHeader;
     bool _fieldListComplete;
+
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;
@@ -117,6 +120,7 @@ class AsciiSource : public Kst::DataSource
       bool isLF() const { return character == '\n'; }
     };
     LineEndingType detectLineEndingType(QFile& file) const;
+    LineEndingType _lineending;
 
     // column and comment delimiter functions
 

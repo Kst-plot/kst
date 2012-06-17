@@ -187,6 +187,8 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),  
   _tmpBuffer(),
+  _bufferedS(-10),
+  _bufferedN(-10),
   _rowIndex(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
@@ -224,6 +226,10 @@ AsciiSource::~AsciiSource()
 //-------------------------------------------------------------------------------------------
 void AsciiSource::reset() 
 {
+  // forget about cached data
+  _bufferedN = -10;
+  _bufferedS = -10;
+
   _tmpBuffer.clear();
   _rowIndex.clear();
 
@@ -329,6 +335,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
+
+  // forget about cached data
+  _bufferedN = -10;
+  _bufferedS = -10;
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -498,14 +508,19 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     return 0;
   }
 
-  QFile file(_filename);
-  if (!openValidFile(file)) {
-    return 0;
-  }
-  
-  LineEndingType lineending = detectLineEndingType(file);
+  if ((s != _bufferedS) || (n != _bufferedN)) {
+    QFile file(_filename);
+    if (!openValidFile(file)) {
+      return 0;
+    }
 
-  bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
+    _lineending = detectLineEndingType(file);
+
+
+    bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
+    _bufferedS = s;
+    _bufferedN = n;
+  }
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
   const char* buffer = _tmpBuffer.constData();
@@ -528,16 +543,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
       const IsCharacter column_del(_config._columnDelimiter.value()[0].toAscii());
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
       const IsInString column_del(_config._columnDelimiter.value());
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     MeasureTime t("AsciiSource::readField: whitespace separated columns");
     const IsWhiteSpace column_del;
-    return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del);
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
   }
 
   return 0;
