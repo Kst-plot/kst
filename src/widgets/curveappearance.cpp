@@ -176,6 +176,7 @@ bool CurveAppearance::showLinesDirty() const {
 
 void CurveAppearance::setShowLines(const bool showLines) {
   _showLines->setChecked(showLines);
+  _showLines->setTristate(false);
   enableSettings();
   drawSampleLine();
 }
@@ -193,6 +194,7 @@ bool CurveAppearance::showPointsDirty() const {
 
 void CurveAppearance::setShowPoints(const bool showPoints) {
   _showPoints->setChecked(showPoints);
+  _showPoints->setTristate(false);
   enableSettings();
   drawSampleLine();
 }
@@ -210,6 +212,7 @@ bool CurveAppearance::showHeadDirty() const {
 
 void CurveAppearance::setShowHead(const bool showHead) {
   _showHead->setChecked(showHead);
+  _showHead->setTristate(false);
   enableSettings();
   drawSampleLine();
 }
@@ -227,6 +230,7 @@ bool CurveAppearance::showBarsDirty() const {
 
 void CurveAppearance::setShowBars(const bool showBars) {
   _showBars->setChecked(showBars);
+  _showBars->setTristate(false);
   enableSettings();
   drawSampleLine();
 }
