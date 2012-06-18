@@ -38,7 +38,7 @@ SvgItem::SvgItem(View *parent, const QString &file)
   }
   setTypeName("Svg");
   setLockAspectRatio(true);
-  setLockAspectRatioFixed(true);
+  //setLockAspectRatioFixed(true);
 }
 
 

@@ -31,7 +31,7 @@ PictureItem::PictureItem(View *parent, const QImage &image)
   }
   setTypeName("Picture");
   setLockAspectRatio(true);
-  setLockAspectRatioFixed(true);
+  //setLockAspectRatioFixed(true);
 }
 
 
