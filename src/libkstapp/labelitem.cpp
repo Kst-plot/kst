@@ -78,6 +78,7 @@ void LabelItem::generateLabel(QPainter *p) {
     parsed->chunk->attributes.color = _color;
     _dirty = false;
     QFont font(_font);
+
     if (_resized) {
       font.setPointSizeF(view()->scaledFontSize(_scale, *p->device()));
       Label::RenderContext *tmpRc = new Label::RenderContext(font, p);

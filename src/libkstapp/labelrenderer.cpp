@@ -40,6 +40,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
   int oldSize = rc.size = rc.fontSize();
   int oldY = rc.y;
   int oldX = rc.x;
+  bool boldFont = rc.font().bold();
+  bool italicFont = rc.font().italic();
 
   Kst::Document *doc = kstApp->mainWindow()->document();
   Q_ASSERT(doc);
@@ -64,8 +66,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
       f.setPointSizeF(rc.size);
     }
 
-    f.setBold(fi->attributes.bold);
-    f.setItalic(fi->attributes.italic);
+    f.setBold(fi->attributes.bold || boldFont);
+    f.setItalic(fi->attributes.italic || italicFont);
     f.setUnderline(fi->attributes.underline);
     f.setOverline(fi->attributes.overline);
 
