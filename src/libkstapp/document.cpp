@@ -92,7 +92,7 @@ ObjectList<DataObject> Document::sortedDataObjectList() {
     }
   }
 
-  if (i== n*n) {
+  if ((i== n*n) && (n>1)) {
     qDebug() << "Warning: loop detected, File will not be able to be loaded correctly!";
     while (!raw.isEmpty()) {
       DataObjectPtr D = raw.takeFirst();

@@ -164,7 +164,7 @@ void View::applyDialogDefaultsFill() {
 }
 
 void View::save(QXmlStreamWriter &xml) {
-  QList<QGraphicsItem*> items = scene()->items();
+  QList<QGraphicsItem*> items = scene()->items(Qt::AscendingOrder);
   xml.writeAttribute("width", QVariant(sceneRect().width()).toString());
   xml.writeAttribute("height", QVariant(sceneRect().height()).toString());
   xml.writeAttribute("color", backgroundBrush().color().name());
