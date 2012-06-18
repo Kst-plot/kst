@@ -51,6 +51,7 @@ LabelItemDialog::LabelItemDialog(LabelItem *item, QWidget *parent)
   setupDimensions();
 
   connect(_labelDimensionsTab, SIGNAL(tabModified()), this, SLOT(modified()));
+  connect(_saveAsDefault, SIGNAL(clicked()), this, SLOT(modified()));
 
 }
 

@@ -132,6 +132,7 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(setMultipleEdit()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(setSingleEdit()));
   connect(_item, SIGNAL(relativeSizeUpdated()), this, SLOT(setupDimensions()));
+  connect(_saveAsDefault, SIGNAL(clicked()), this, SLOT(modified()));
 
   _saveAsDefault->show();
 
