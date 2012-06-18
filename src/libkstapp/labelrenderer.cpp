@@ -218,6 +218,12 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
     fi = fi->next;
   }
 
+  QFont f = rc.font();
+  if (rc.fontSize() != oldSize) {
+    f.setPointSizeF(oldSize);
+    rc.setFont(f);
+  }
+
   rc.size = oldSize;
   rc.y = oldY;
 }

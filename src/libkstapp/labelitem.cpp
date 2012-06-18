@@ -92,7 +92,6 @@ void LabelItem::generateLabel(QPainter *p) {
     Label::renderLabel(*_labelRc, parsed->chunk, true, false);
 
     _height = _labelRc->fontHeight();
-
     // Make sure we have a rect for selection, movement, etc
     if (_resized) {
       _resized = false;
@@ -261,7 +260,6 @@ void LabelItem::setFont(const QFont &f, const QColor &c) {
 }
 
 void CreateLabelCommand::createItem(QString *inText) {
-
   if (inText) {
     _item = new LabelItem(_view, *inText);
   } else {
