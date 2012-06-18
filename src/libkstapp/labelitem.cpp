@@ -51,7 +51,7 @@ void LabelItem::applyDefaults() {
 }
 
 void LabelItem::saveAsDialogDefaults() const {
-  QFont F;
+  QFont F = _font;
   F.setPointSize(_scale);
   LabelItem::saveDialogDefaultsFont(F, _color);
 }
