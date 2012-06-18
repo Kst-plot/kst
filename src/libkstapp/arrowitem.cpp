@@ -14,6 +14,7 @@
 
 #include "view.h"
 #include "arrowitemdialog.h"
+#include "dialogdefaults.h"
 
 #include "math_kst.h"
 
@@ -38,6 +39,7 @@ ArrowItem::ArrowItem(View *parent)
 
   applyDialogDefaultsStroke();
   applyDialogDefaultsLockPosToData();
+  applyDialogDefaultsHeads();
 }
 
 
@@ -199,6 +201,17 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
   }
 
   return rc;
+}
+
+void ArrowItem::applyDialogDefaultsHeads() {
+  _endArrowHead = _dialogDefaults->value("arrow/hasEndHead",true).toBool();
+  if (_endArrowHead) {
+    _endArrowScale = _dialogDefaults->value("arrow/endHeadScale",12).toDouble();
+  }
+  _startArrowHead = _dialogDefaults->value("arrow/hasStartHead",false).toBool();
+  if (_startArrowHead) {
+    _startArrowScale = _dialogDefaults->value("arrow/startHeadScale",12).toDouble();
+  }
 }
 
 }

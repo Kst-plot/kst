@@ -50,6 +50,7 @@ class ArrowItem : public LineItem
     virtual QPainterPath shape() const;
 
     virtual bool customDimensionsTab() {return true;}
+    void applyDialogDefaultsHeads();
 
   public Q_SLOTS:
     virtual void edit();

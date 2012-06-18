@@ -15,6 +15,7 @@
 #include "arrowitem.h"
 #include "arrowpropertiestab.h"
 #include "dialogpage.h"
+#include "dialogdefaults.h"
 #include "application.h"
 #include "objectstore.h"
 #include "mainwindow.h"
@@ -55,6 +56,16 @@ void ArrowItemDialog::propertiesChanged() {
   _arrowItem->setStartArrowScale(_propertiesTab->startArrowScale());
   _arrowItem->setEndArrowScale(_propertiesTab->endArrowScale());
 
+  if (_saveAsDefault->isChecked()) {
+    _dialogDefaults->setValue("arrow/hasEndHead", QVariant(_arrowItem->endArrowHead()).toString());
+    if (_arrowItem->endArrowHead()) {
+      _dialogDefaults->setValue("arrow/endHeadScale", _arrowItem->endArrowScale());
+    }
+    _dialogDefaults->setValue("arrow/hasStartHead", QVariant(_arrowItem->startArrowHead()).toString());
+    if (_arrowItem->startArrowHead()) {
+      _dialogDefaults->setValue("arrow/startHeadScale", _arrowItem->startArrowScale());
+    }
+  }
 }
 
 }
