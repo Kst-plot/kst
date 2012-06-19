@@ -35,6 +35,7 @@ ArrowItem::ArrowItem(View *parent)
   setTypeName("Arrow");
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
+  b.setColor(pen().color());
   setBrush(b);
 
   applyDialogDefaultsStroke();
@@ -49,6 +50,11 @@ ArrowItem::~ArrowItem() {
 
 void ArrowItem::paint(QPainter *painter) {
   painter->drawLine(line());
+
+  QBrush b = brush();
+  b.setStyle(Qt::SolidPattern);
+  b.setColor(pen().color());
+  setBrush(b);
 
   start.clear();
   end.clear();
