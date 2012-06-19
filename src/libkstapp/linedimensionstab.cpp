@@ -42,10 +42,11 @@ void LineDimensionsTab::fillDimensions(bool lock_pos_to_data) {
     QRectF pr = _viewItem->parentRect();
     QPointF P1 = _viewItem->mapToParent(QPoint(_viewItem->rect().left(), _viewItem->rect().center().y()));
     QPointF P2 = _viewItem->mapToParent(QPoint(_viewItem->rect().right(), _viewItem->rect().center().y()));
-    _p1X->setValue(P1.x()/pr.width());
-    _p2X->setValue(P2.x()/pr.width());
-    _p1Y->setValue(P1.y()/pr.height());
-    _p2Y->setValue(P2.y()/pr.height());
+    //qDebug() << pr << P1 << P2;
+    _p1X->setValue((P1.x()-pr.left())/pr.width());
+    _p2X->setValue((P2.x()-pr.left())/pr.width());
+    _p1Y->setValue((P1.y()-pr.top())/pr.height());
+    _p2Y->setValue((P2.y()-pr.top())/pr.height());
   }
 }
 
