@@ -91,6 +91,7 @@ void LineItemDialog::saveDimensions(ViewItem *item) {
 
     item->setTransform(transform);
     item->updateRelativeSize();
+    item->setLockPosToData(false);
   }
 }
 }
