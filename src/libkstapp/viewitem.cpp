@@ -153,6 +153,32 @@ void ViewItem::_initializeShortName() {
 
 
 void ViewItem::save(QXmlStreamWriter &xml) {
+
+  // when saving, check to see if your parent is a cartesianrenderitem.
+  // if so, we'll need to adjust to take into account that when loaded,
+  // the object will be created in a cartesian render item with no plot
+  // borders, and then resized.
+  // this keeps line end points in the right place.
+  CartesianRenderItem *cri = qgraphicsitem_cast<CartesianRenderItem *>(parentItem());
+  QTransform tr;
+  double w = _parentRelativeWidth;
+  if (cri) {
+    QRectF cri_rect = cri->rect();
+    QRectF plot_rect = cri->parentRect();
+    double oldL = relativeWidth()*cri_rect.width();
+
+    double r0 = rotationAngleRadians();
+    double dy = oldL*sin(r0)*plot_rect.height()/cri_rect.height();
+    double dx = oldL*cos(r0)*plot_rect.width()/cri_rect.width();
+    double r1 = atan2(dy, dx);
+
+    w = sqrt(dy*dy + dx*dx)/plot_rect.width();
+
+    tr.rotateRadians(r1);
+  } else {
+    tr = transform();
+  }
+
   xml.writeAttribute("name", typeName());
   xml.writeStartElement("position");
   xml.writeAttribute("x", QVariant(pos().x()).toString());
@@ -166,7 +192,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("height", QVariant(viewRect().height()).toString());
   xml.writeEndElement();
   xml.writeStartElement("relativesize");
-  xml.writeAttribute("width", QVariant(_parentRelativeWidth).toString());
+  xml.writeAttribute("width", QVariant(w).toString());
   xml.writeAttribute("height", QVariant(_parentRelativeHeight).toString());
   xml.writeAttribute("centerx", QVariant(_parentRelativeCenter.x()).toString());
   xml.writeAttribute("centery", QVariant(_parentRelativeCenter.y()).toString());
@@ -185,16 +211,17 @@ void ViewItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("datarect_height", QVariant(_dataRelativeRect.height()).toString());
   }
   xml.writeEndElement();
+
   xml.writeStartElement("transform");
-  xml.writeAttribute("m11", QVariant(transform().m11()).toString());
-  xml.writeAttribute("m12", QVariant(transform().m12()).toString());
-  xml.writeAttribute("m13", QVariant(transform().m13()).toString());
-  xml.writeAttribute("m21", QVariant(transform().m21()).toString());
-  xml.writeAttribute("m22", QVariant(transform().m22()).toString());
-  xml.writeAttribute("m23", QVariant(transform().m23()).toString());
-  xml.writeAttribute("m31", QVariant(transform().m31()).toString());
-  xml.writeAttribute("m32", QVariant(transform().m32()).toString());
-  xml.writeAttribute("m33", QVariant(transform().m33()).toString());
+  xml.writeAttribute("m11", QVariant(tr.m11()).toString());
+  xml.writeAttribute("m12", QVariant(tr.m12()).toString());
+  xml.writeAttribute("m13", QVariant(tr.m13()).toString());
+  xml.writeAttribute("m21", QVariant(tr.m21()).toString());
+  xml.writeAttribute("m22", QVariant(tr.m22()).toString());
+  xml.writeAttribute("m23", QVariant(tr.m23()).toString());
+  xml.writeAttribute("m31", QVariant(tr.m31()).toString());
+  xml.writeAttribute("m32", QVariant(tr.m32()).toString());
+  xml.writeAttribute("m33", QVariant(tr.m33()).toString());
   xml.writeEndElement();
   xml.writeStartElement("pen");
   xml.writeAttribute("style", QVariant(pen().style()).toString());
