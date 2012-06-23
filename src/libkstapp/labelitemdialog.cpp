@@ -77,6 +77,8 @@ void LabelItemDialog::propertiesChanged() {
   if (_saveAsDefault->isChecked()) {
     _labelItem->saveAsDialogDefaults();
   }
+  kstApp->mainWindow()->document()->setChanged(true);
+
 }
 
 

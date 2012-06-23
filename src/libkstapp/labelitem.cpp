@@ -380,7 +380,7 @@ void LabelItem::updateDataRelativeRect( bool force) {
 
 
 void LabelItem::applyDataLockedDimensions() {
-  PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+  PlotRenderItem *render_item = dynamic_cast<PlotRenderItem *>(parentViewItem());
   if (render_item) {
     qreal parentWidth = render_item->width();
     qreal parentHeight = render_item->height();

@@ -36,7 +36,7 @@ void LabelDimensionsTab::lockPosToDataChanged(bool lock_pos_to_data) {
 void LabelDimensionsTab::fillDimensions(bool lock_pos_to_data, bool fix_left) {
 
   if (lock_pos_to_data && _labelItem->dataPosLockable()) {
-    PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(_labelItem->parentViewItem());
+    PlotRenderItem *render_item = dynamic_cast<PlotRenderItem *>(_labelItem->parentViewItem());
     if (render_item) {
       qreal parentWidth = render_item->width();
       qreal parentHeight = render_item->height();

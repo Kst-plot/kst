@@ -159,7 +159,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   // the object will be created in a cartesian render item with no plot
   // borders, and then resized.
   // this keeps line end points in the right place.
-  CartesianRenderItem *cri = qgraphicsitem_cast<CartesianRenderItem *>(parentItem());
+  CartesianRenderItem *cri = dynamic_cast<CartesianRenderItem *>(parentItem());
   QTransform tr;
   double w = _parentRelativeWidth;
   if (cri) {
@@ -302,7 +302,7 @@ QRectF ViewItem::parentRect() const {
 
 
 void ViewItem::applyDataLockedDimensions() {
-  PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+  PlotRenderItem *render_item = dynamic_cast<PlotRenderItem *>(parentViewItem());
   if (render_item) {
     qreal parentWidth = render_item->width();
     qreal parentHeight = render_item->height();
@@ -911,7 +911,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->setPen(pen());
   painter->setBrush(brush());
   if (_lockPosToData) {
-    PlotRenderItem *render_item = qgraphicsitem_cast<PlotRenderItem *>(parentViewItem());
+    PlotRenderItem *render_item = dynamic_cast<PlotRenderItem *>(parentViewItem());
     if (render_item) {
       QPolygonF PF = mapFromParent(render_item->rect());
       QPainterPath path;
