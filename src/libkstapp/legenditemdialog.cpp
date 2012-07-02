@@ -164,6 +164,7 @@ void LegendItemDialog::saveLegend(LegendItem *legendItem, bool save_relations) {
     }
     legendItem->setRelations(newRelations);
   }
+  legendItem->update();
 }
 
 }

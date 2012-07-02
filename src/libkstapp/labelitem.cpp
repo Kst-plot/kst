@@ -47,6 +47,7 @@ void LabelItem::applyDefaults() {
   _font  = font;
   _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
   _scale = _dialogDefaults->value(defaultsGroupName()+"/fontScale",12).toDouble();
+  _fixleft = _dialogDefaults->value(defaultsGroupName()+"/fixLeft",true).toBool();
   applyDialogDefaultsLockPosToData();
 }
 
@@ -281,8 +282,12 @@ void CreateLabelCommand::createItem(QString *inText) {
     label->setLabelScale(dialog.labelScale());
     label->setLabelColor(dialog.labelColor());
     label->setLabelFont(dialog.labelFont());
+    label->setFixLeft(dialog.fixLeft());
+    label->setLockPosToData(dialog.lockPosToData());
     if (dialog.saveAsDefaults()) {
       label->saveAsDialogDefaults();
+      _dialogDefaults->setValue(label->staticDefaultsGroupName()+"/fixLeft",dialog.fixLeft());
+      _dialogDefaults->setValue(label->staticDefaultsGroupName()+"/lockPosToData",dialog.lockPosToData());
     }
   }
   _item->view()->scene()->addItem(_item);

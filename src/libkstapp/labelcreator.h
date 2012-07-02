@@ -35,6 +35,8 @@ class LabelCreator : public QDialog, Ui::LabelCreator
     qreal labelScale() const;
     QColor labelColor() const;
     QFont labelFont() const;
+    bool fixLeft() const;
+    bool lockPosToData() const;
     bool saveAsDefaults() const {return _saveAsDefault->isChecked();}
 };
 

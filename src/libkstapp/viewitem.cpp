@@ -1252,7 +1252,8 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   if (ApplicationSettings::self()->transparentDrag()) {
     pixmap.fill(Qt::transparent);
   } else {
-    pixmap.fill(brush().color());
+    //pixmap.fill(brush().color());
+    pixmap.fill(view()->backgroundBrush().color());
   }
   QPainter painter(&pixmap);
 

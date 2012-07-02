@@ -47,7 +47,12 @@ LabelCreator::LabelCreator(QWidget *parent)
 
   _labelColor->setColor(_dialogDefaults->value("label/color",QColor(Qt::black)).value<QColor>());
   _labelFontScale->setValue(_dialogDefaults->value("label/fontScale",12).toDouble());
-
+  if (_dialogDefaults->value("label/fixLeft",true).toBool()) {
+    _left->setChecked(true);
+  } else {
+    _right->setChecked(true);
+  }
+  _lockPosToData->setChecked(dialogDefaultsLockPosToData("label"));
   _saveAsDefault->show();
 
   _Label_11->setProperty("si","Font &size:");
@@ -79,6 +84,13 @@ QFont LabelCreator::labelFont() const {
   font.setItalic(_italic->isChecked());
   font.setBold(_bold->isChecked());
   return font;
+}
+
+bool LabelCreator::fixLeft() const {
+  return _left->isChecked();
+}
+bool LabelCreator::lockPosToData() const {
+  return _lockPosToData->isChecked();
 }
 
 }

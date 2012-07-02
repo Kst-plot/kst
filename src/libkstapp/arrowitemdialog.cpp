@@ -66,6 +66,7 @@ void ArrowItemDialog::propertiesChanged() {
       _dialogDefaults->setValue("arrow/startHeadScale", _arrowItem->startArrowScale());
     }
   }
+  _arrowItem->update();
 }
 
 }

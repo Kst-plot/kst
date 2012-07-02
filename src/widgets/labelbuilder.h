@@ -19,6 +19,7 @@
 #include <string_kst.h>
 
 #include "kstwidgets_export.h"
+#include "modelessinfobox.h"
 
 namespace Kst {
 
@@ -38,8 +39,12 @@ class KSTWIDGETS_EXPORT LabelBuilder : public QWidget, public Ui::LabelBuilder {
   Q_SIGNALS:
     void labelChanged();
 
+  public Q_SLOTS:
+    void showHelp();
+
   private:
     ObjectStore *_store;
+    ModelessInfoBox *_helpBox;
 };
 
 }

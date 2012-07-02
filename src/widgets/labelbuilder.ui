@@ -23,6 +23,24 @@
    </size>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>Supports LaTeX symbols, live strings &amp; scalars, and embedded equations.</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="_Label_13">
      <property name="sizePolicy">
@@ -42,28 +60,21 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="Kst::SVCCTextEdit" name="_label"/>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="label">
+   <item row="1" column="2">
+    <widget class="QPushButton" name="_help">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <italic>true</italic>
-      </font>
-     </property>
      <property name="text">
-      <string>Supports scalars &amp; strings (name in square brackets) - eg,  [INDEX:Max (X2)],
-embedded equations  - eg, [=[INDEX:Max] / 2]
-and LaTeX symbols - eg, \theta.  Names and symbols are autocompleted.</string>
+      <string>More</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="Kst::SVCCTextEdit" name="_label"/>
    </item>
   </layout>
  </widget>

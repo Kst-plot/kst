@@ -21,6 +21,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "dialogdefaults.h"
 
 namespace Kst {
 
@@ -78,7 +79,7 @@ void LabelItemDialog::propertiesChanged() {
     _labelItem->saveAsDialogDefaults();
   }
   kstApp->mainWindow()->document()->setChanged(true);
-
+  _labelItem->update();
 }
 
 
@@ -138,6 +139,9 @@ void LabelItemDialog::saveDimensions(ViewItem *viewitem) {
   item->setTransform(transform);
   item->updateRelativeSize(true);
 
+  if (_saveAsDefault->isChecked()) {
+    _dialogDefaults->setValue(item->staticDefaultsGroupName()+"/fixLeft",_labelDimensionsTab->fixLeft());
+  }
 }
 }
 
