@@ -313,13 +313,14 @@ bool View::event(QEvent *event) {
         }
       }
     }
-  } else if (event->type() == QEvent::MouseButtonPress) {
-    QMouseEvent *e = static_cast<QMouseEvent*>(event);
-    if (e->button() == Qt::RightButton) {
-      contextMenuEvent();
-      return true;
-    }
   }
+//  } else if (event->type() == QEvent::MouseButtonPress) {
+//    QMouseEvent *e = static_cast<QMouseEvent*>(event);
+//    if (e->button() == Qt::RightButton) {
+//      //contextMenuEvent();
+//      //return true;
+//    }
+//  }
 
   return QGraphicsView::event(event);
 }
