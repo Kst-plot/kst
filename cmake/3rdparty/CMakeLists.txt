@@ -38,7 +38,7 @@ endif()
 # GETDATA
 set(ext_src ${build_dir}/getdata/src/getdata)
 if(WIN32)
-	set(ext_url http://sourceforge.net/projects/kst/files/3rdparty/getdata_win-0.7.3-mingw-fixed.zip)
+	set(ext_url http://sourceforge.net/projects/getdata/files/getdata/0.8.0/getdata_win-0.8.0.zip)
 	set(ext_configure cmake ${ext_src}/cmake ${generator} ${rc_compiler} ${install_prefix} ${build_type})
 	set(ext_install ${install_target})
 	set(ext_make ${CMAKE_MAKE_PROGRAM})
