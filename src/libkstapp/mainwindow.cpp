@@ -219,6 +219,7 @@ void MainWindow::closeEvent(QCloseEvent *e) {
   }
   //cleanup();
   QMainWindow::closeEvent(e);
+  kstApp->closeAllWindows();
 }
 
 

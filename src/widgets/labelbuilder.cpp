@@ -34,7 +34,7 @@ LabelBuilder::LabelBuilder(QWidget *parent, ObjectStore *store)
                              "Scalar: <i>[V1/Mean]</i>.  Vector Element: <i>[V1[4]]</i>.  "
                              "Equation: <i>[=[V1/Mean]^2]</i>.  A [ character can be inserted as <i>\\[</i>."));
 
-  _label->setToolTip(tr("Label text.  A subset of LaTeX is supported.  See What's This."));
+  _label->setToolTip(tr("Label text.  A subset of LaTeX is supported.  Click 'Help' for help."));
 
   connect(_label, SIGNAL(textChanged()), this, SIGNAL(labelChanged()));
   connect(_help, SIGNAL(clicked()), this, SLOT(showHelp()));
