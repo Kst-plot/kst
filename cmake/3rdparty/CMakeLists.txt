@@ -35,6 +35,9 @@ endif()
 
 
 # GETDATA
+if(APPLE)
+	set(gddeps -lbz2 -lz) 
+endif()
 set(ext_src ${build_dir}/getdata/src/getdata)
 if(WIN32)
 	set(ext_url http://sourceforge.net/projects/getdata/files/getdata/0.8.0/getdata_win-0.8.0.zip)
@@ -58,7 +61,7 @@ ExternalProject_Add(getdata
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
 set(GETDATA_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a -lbz2 -lz ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
+set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a ${gddeps} ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
 
 
 # ZLIB needed by MATIO
