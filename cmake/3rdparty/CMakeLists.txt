@@ -35,9 +35,6 @@ endif()
 
 
 # GETDATA
-if(APPLE)
-	set(gddeps -lbz2 -lz) 
-endif()
 set(ext_src ${build_dir}/getdata/src/getdata)
 if(WIN32)
 	set(ext_url http://sourceforge.net/projects/getdata/files/getdata/0.8.0/getdata_win-0.8.0.zip)
@@ -60,6 +57,9 @@ ExternalProject_Add(getdata
 					BUILD_COMMAND ${ext_make}
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
+if(APPLE)
+	set(gddeps -lbz2 -lz)
+endif()
 set(GETDATA_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
 set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a ${gddeps} ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
 
@@ -217,8 +217,11 @@ ExternalProject_Add(gsl
 					BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
+if(APPLE)
+	set(gsldeps ${install_dir}/lib/libgslcblas.a)
+endif()
 set(GSL_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a ${install_dir}/lib/libgslcblas.a PARENT_SCOPE)
+set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a ${gsldeps} PARENT_SCOPE)
 
 
 
