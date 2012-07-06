@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=MimeType
-MimeType=application/x-kst
+MimeType=application/x-kst;
 Icon=kst
 DefaultApp=kst2
 Patterns=*.kst;*.KST;

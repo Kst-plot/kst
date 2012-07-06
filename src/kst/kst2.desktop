@@ -4,7 +4,7 @@ Exec=kst2
 Icon=kst
 DocPath=kst2/index.html
 MimeType=application/x-kst;
-Categories=Qt;KDE;Science;
+Categories=Qt;KDE;Education;Science;
 Name=Kst2
 Name[hi]=केएसटी
 Name[ta]=கேஎஸ்டி
@@ -41,4 +41,3 @@ GenericName[vi]=Bộ xem dữ liệu
 GenericName[xx]=xxData Viewerxx
 GenericName[zh_CN]=数据查看器
 
-Encoding=UTF-8
