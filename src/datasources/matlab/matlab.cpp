@@ -394,7 +394,7 @@ bool MatlabSource::init() {
       if ( (matvar->rank == 1 && matvar->dims[0] == 1) ||
            (matvar->rank == 2 && matvar->dims[0] == 1 && matvar->dims[1] == 1) ) {
         _scalarList << QString(matvar->name);
-        qDebug() << "Found a scalar: " << matvar->name;
+        // qDebug() << "Found a scalar: " << matvar->name;
       }
       // Vector
       if ( (matvar->rank == 1 && matvar->dims[0] > 1) ||
@@ -404,12 +404,12 @@ bool MatlabSource::init() {
         int fc = (matvar->rank == 1) ? matvar->dims[0] : qMax(matvar->dims[0], matvar->dims[1]);
         _maxFrameCount = qMax(_maxFrameCount, fc);
         _frameCounts[matvar->name] = fc;
-        qDebug() << "Found a vector: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
+        // qDebug() << "Found a vector: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
       }
       // Dimension 2 matrix
       if ( matvar->rank == 2 && matvar->dims[0] > 1 && matvar->dims[1] > 1 )  {
         _matrixList << QString(matvar->name);
-        qDebug() << "Found a matrix: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
+        // qDebug() << "Found a matrix: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
       }
       break;
 
@@ -417,12 +417,12 @@ bool MatlabSource::init() {
       matvar_t *string = Mat_VarRead(_matfile, matvar->name);
       _strings[QString(matvar->name)] = QString((char*)string->data);
       Mat_VarFree(string);
-      qDebug() << "Found a string: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
+      // qDebug() << "Found a string: " << matvar->name << ", size: [" << matvar->dims[0] << "x" << matvar->dims[1] << "]";
       break;
     }
 
     default:
-      qDebug() << "Variable " << matvar->name << ", type not supported (" << matvar->class_type << ")";
+      // qDebug() << "Variable " << matvar->name << ", type not supported (" << matvar->class_type << ")";
       break;
     }
 
