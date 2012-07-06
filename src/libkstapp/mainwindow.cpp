@@ -940,8 +940,8 @@ void MainWindow::createActions() {
   _saveAsAct->setIcon(QPixmap(":document-save-as.png"));
   connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-  _closeAct = new QAction(tr("C&lose"), this);
-  _closeAct->setStatusTip(tr("Close current session"));
+  _closeAct = new QAction(tr("Ne&w Session"), this);
+  _closeAct->setStatusTip(tr("Close current session and start a new, empty one"));
   _closeAct->setIcon(QPixmap(":document-close.png"));
   connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
