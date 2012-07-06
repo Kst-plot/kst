@@ -34,7 +34,6 @@ else()
 endif()
 
 
-
 # GETDATA
 set(ext_src ${build_dir}/getdata/src/getdata)
 if(WIN32)
@@ -59,7 +58,7 @@ ExternalProject_Add(getdata
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
 set(GETDATA_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a  ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
+set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a -lbz2 -lz ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
 
 
 # ZLIB needed by MATIO
@@ -137,7 +136,7 @@ if(WIN32)
 else()
 	set(ext_url ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.1.3.tar.gz)
 	set(ext_configure ${ext_src}/configure  --with-pic  --disable-netcdf-4
-											--enable-static --disable-shared
+											--enable-static --disable-shared   --disable-curl --disable-dap 
 											--prefix=${install_dir} --with-zlib=${install_dir})
 	set(ext_install install)
 	set(ext_insource ON)
@@ -216,7 +215,7 @@ ExternalProject_Add(gsl
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
 set(GSL_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a PARENT_SCOPE)
+set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a ${install_dir}/lib/libgslcblas.a PARENT_SCOPE)
 
 
 
