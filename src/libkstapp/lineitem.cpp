@@ -129,7 +129,7 @@ void LineItem::creationPolygonChanged(View::CreationEvent event) {
   if (event == View::MousePress) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MousePress));
     setPos(poly.first().x(), poly.first().y());
-    setViewRect(QRectF(0.0, 0.0, 0.0, sizeOfGrip().height()));
+    setViewRect(QRectF(0.0, -sizeOfGrip().height()*0.5, 0.0, sizeOfGrip().height()));
     view()->scene()->addItem(this);
     return;
   }
