@@ -21,9 +21,11 @@ GridTab::GridTab(QWidget *parent)
   setTabTitle(tr("Grid"));
 
   connect(_showGrid, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_snapToGrid, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  //connect(_snapToGrid, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_gridHorSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_gridVerSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
+
+  _snapToGrid->hide();
 }
 
 
@@ -42,7 +44,7 @@ void GridTab::setShowGrid(bool showGrid) {
 
 
 bool GridTab::snapToGrid() const {
-  return _snapToGrid->isChecked();
+  return false; //_snapToGrid->isChecked();
 }
 
 
