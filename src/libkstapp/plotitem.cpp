@@ -2564,7 +2564,14 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
     while (yLabelIt.hasNext()) {
       yLabelIt.next();
 
-      QRectF bound = painter->boundingRect(QRectF(), flags, yLabelIt.value());
+      // a hacky heuristic to guess the right width of the widest number for very small scientific notation numbers.
+      // 'label' is only used to find its width.  This is not exact but seems to work.
+      QString label = yLabelIt.value();
+      if (label.contains("e-")) {
+        label.append('+');
+      }
+
+      QRectF bound = painter->boundingRect(QRectF(), flags, label);
       QPointF p(plotRect().left() - bound.width() / 2.0 - _calculatedAxisMarginHLead, mapYToPlot(yLabelIt.key()));
       bound.moveCenter(p);
 
