@@ -105,24 +105,27 @@ Options
 	Available options will be listed on each cmake run.
 	Here the options with their default value:
 
-	-- kst_version_string       = ON     : Version string
-	-- kst_release              = OFF    : Build release version: optimize for speed, don't embedded debug symbols
-	-- kst_merge_files          = OFF    : Merge files to speedup build about factor 5
-	-- kst_merge_rebuild        = OFF    : Rebuild generated files from merged files build
-	-- kst_verbose              = OFF    : Make verbose CMake run and Makefiles
-	-- kst_install_prefix       = ON     : Install path for Kst, using a default if not set
-	-- kst_install_libdir       = ON     : Install directory name for libraries
-	-- kst_3rdparty             = ON     : Build plugins depending on 3rd party libraries
-	-- kst_dataobjects          = ON     : Build dataobject plugins
-	-- kst_test                 = OFF    : Build unit tests
-	-- kst_pch                  = ON     : Use precompiled headers
-	-- kst_svnversion           = ON     : Use svnversion's output for Kst's version information
-	-- kst_rpath                = ON     : Use rpath
-	-- kst_3rdparty_build       = OFF    : Download and build 3rd party libraries
-	-- kst_3rdparty_download    = OFF    : Download precompiled 3rd party libraries
-	-- kst_console              = OFF    : Open console on Windows
-	-- kst_edit_cont            = OFF    : Enable "Edit and Continue" for Visual Studio
-	-- kst_python               = OFF    : Build Python suppor
+    -- kst_version_string       = 2.0.x   : Version string. 
+    -- kst_release              = OFF   : Build release version: optimize for speed, don't embedded debug symbols. Toggle with '-Dkst_release=1'
+    -- kst_deploy               = OFF   : Deploy into install dir. Toggle with '-Dkst_deploy=1'
+    -- kst_merge_files          = OFF   : Merge files to speedup build about factor 5. Toggle with '-Dkst_merge_files=1'
+    -- kst_merge_rebuild        = OFF   : Rebuild generated files from merged files build. Toggle with '-Dkst_merge_rebuild=1'
+    -- kst_verbose              = OFF   : Make verbose CMake run and Makefiles. Toggle with '-Dkst_verbose=1'
+    -- kst_install_prefix       = /home/synth/sandbox/kst/kst/_b/INSTALLED   : Install path for Kst, using a default if not set. 
+    -- kst_install_libdir       = lib   : Install directory name for libraries. 
+    -- kst_3rdparty             = ON    : Build plugins depending on 3rd party libraries. Toggle with '-Dkst_3rdparty=0'
+    -- kst_dataobjects          = ON    : Build dataobject plugins. Toggle with '-Dkst_dataobjects=0'
+    -- kst_test                 = OFF   : Build unit tests. Toggle with '-Dkst_test=1'
+    -- kst_pch                  = ON    : Use precompiled headers. Toggle with '-Dkst_pch=0'
+    -- kst_svnversion           = ON    : Use svnversion's output for Kst's version information. Toggle with '-Dkst_svnversion=0'
+    -- kst_rpath                = OFF   : Use rpath. Toggle with '-Dkst_rpath=1'
+    -- kst_3rdparty_build       = OFF   : Download and build 3rd party libraries. Toggle with '-Dkst_3rdparty_build=1'
+    -- kst_3rdparty_download    = OFF   : Download precompiled 3rd party libraries. Toggle with '-Dkst_3rdparty_download=1'
+    -- kst_console              = OFF   : Open console on Windows. Toggle with '-Dkst_console=1'
+    -- kst_edit_cont            = OFF   : Enable "Edit and Continue" for Visual Studio. Toggle with '-Dkst_edit_cont=1'
+    -- kst_python               = OFF   : Install Python support. Toggle with '-Dkst_python=1'
+    -- kst_python_build         = OFF   : Download and build NumPy/SciPy then install Python support. Toggle with '-Dkst_python_build=1'
+
 
 	To enable a option pass the value ON or 1, eg
 		cmake ../kst/cmake -Dkst_merge_files=1

@@ -37,8 +37,8 @@ kst_option(bool   OFF all 3rdparty_build    "Download and build 3rd party librar
 kst_option(bool   OFF win 3rdparty_download "Download precompiled 3rd party libraries")
 kst_option(bool   OFF win console           "Open console on Windows")
 kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Visual Studio")
-kst_option(bool   OFF all python            "Build Python support")
-
+kst_option(bool   OFF all python            "Install Python support")
+kst_option(bool   OFF all python_build      "Download and build NumPy/SciPy then install Python support")
 
 message(STATUS)
 
