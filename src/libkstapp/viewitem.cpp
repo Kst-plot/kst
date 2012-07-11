@@ -1307,6 +1307,8 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   if (dropAction != Qt::MoveAction) {
     show();
   }
+  kstApp->mainWindow()->document()->setChanged(true);
+
 }
 
 void ViewItem::paintChildItems(QPainter &painter) {
@@ -2119,6 +2121,7 @@ void ViewItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     view()->setMouseMode(View::Default);
     view()->undoStack()->endMacro();
   }
+  kstApp->mainWindow()->document()->setChanged(true);
 
   QGraphicsRectItem::mouseReleaseEvent(event);
 }
