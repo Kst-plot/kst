@@ -121,6 +121,7 @@ class KSTMATH_EXPORT PSD : public DataObject {
     PSDType _prevOutput;
     int _last_n_subsets;
     int _last_n_new;
+    int _last_n;
     double _Frequency;
 
     int _PSDLength;

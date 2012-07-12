@@ -99,6 +99,7 @@ void PSD::change(VectorPtr in_V,
 
   _last_n_subsets = 0;
   _last_n_new = 0;
+  _last_n_new = 0;
 
   _PSDLength = 1;
 
@@ -124,7 +125,6 @@ const CurveHintList *PSD::curveHints() const {
 
 
 void PSD::internalUpdate() {
-
   writeLockInputsAndOutputs();
 
   VectorPtr iv = _inputVectors[INVECTOR];
@@ -134,15 +134,18 @@ void PSD::internalUpdate() {
   _last_n_new += iv->numNew();
   assert(_last_n_new >= 0);
 
-  int n_subsets = v_len/_PSDLength;
+  int n_subsets = (v_len)/_PSDLength;
 
   // determine if the PSD needs to be updated.
   // if not using averaging, then we need at least _PSDLength/16 new data points.
   // if averaging, then we want enough new data for a complete subset.
-  if ( ((_last_n_new < _PSDLength/16) || (_Average && (n_subsets - _last_n_subsets < 1))) &&
+  // ... unless we are counting from end at fixed length (scrolling data).
+  bool scrolling_data = (_last_n == iv->length());
+  if ( ((_last_n_new < _PSDLength/16) ||
+        (_Average && scrolling_data && (_last_n_new < _PSDLength/16)) ||
+        (_Average && !scrolling_data && (n_subsets - _last_n_subsets < 1))) &&
        iv->length() != iv->numNew()) {
     unlockInputsAndOutputs();
-
     return;
   }
 
@@ -161,6 +164,7 @@ void PSD::internalUpdate() {
 
   _last_n_subsets = n_subsets;
   _last_n_new = 0;
+  _last_n = iv->length();
 
   updateVectorLabels();
 
