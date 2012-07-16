@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 import pykst as kst
 from datetime import datetime
 from numpy import *
@@ -7,7 +7,7 @@ from time import sleep
 
 client=kst.Client()
 dt=datetime.now()
-vec=kst.GeneratedVector(client,0,1000,100000,"Alfred")
+vec=kst.GeneratedVector(client,0,1000,100000,"Generated Vector")
 print("Took "+str((datetime.now()-dt))+" to generate an 100000-sample vector.")
 dt=datetime.now()
 pyar=vec.getNumPyArray()

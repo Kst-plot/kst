@@ -199,7 +199,6 @@ bool CommandLineParser::_setDoubleArg(double *arg, QString Message) {
 
 bool CommandLineParser::_setStringArg(QString &arg, QString Message) {
   bool ok = true;
-
   if (_arguments.count()> 0) {
     arg = _arguments.takeFirst();
   } else {
@@ -522,7 +521,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       QString field;
       *ok = _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
 
-      if (!*ok) {
+      if (*ok) {
         for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
           QString file = _fileNames.at ( i_file );
           QFileInfo info ( file );
