@@ -39,6 +39,7 @@ kst_option(bool   OFF win console           "Open console on Windows")
 kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Visual Studio")
 kst_option(bool   OFF all python            "Install Python support")
 kst_option(bool   OFF all python_build      "Download and build NumPy/SciPy then install Python support")
+kst_option(string ""  all python_prefix "Path for installing python bindings")
 
 message(STATUS)
 

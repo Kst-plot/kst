@@ -13,10 +13,16 @@ endif()
 find_package(PythonInterp REQUIRED)
 find_package(PythonLibs REQUIRED)
 
-# find install path for pykst files
-execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/finddistdir.py
+if(kst_python_prefix)
+    set(pydist_dir ${kst_python_prefix})
+    message(STATUS "Installing python support into ${pydist_dir}")
+else()
+    # find install path for pykst files
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/finddistdir.py
                 OUTPUT_VARIABLE pydist_dir
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+    message(STATUS "Installing python support into ${pydist_dir}. Overwrite using -Dkst_python_prefix=")
+endif()
 
 if(NOT kst_python_build)
     macro(checkversion _name _required)
