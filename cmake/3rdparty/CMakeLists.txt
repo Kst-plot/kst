@@ -33,6 +33,9 @@ else()
 	set(install_target install/strip)
 endif()
 
+if(NOT kst_make_program)
+	set(kst_make_program ${CMAKE_MAKE_PROGRAM})
+endif()
 
 # GETDATA
 set(ext_src ${build_dir}/getdata/src/getdata)
@@ -40,7 +43,7 @@ if(WIN32)
 	set(ext_url http://sourceforge.net/projects/getdata/files/getdata/0.8.0/getdata_win-0.8.0.zip)
 	set(ext_configure cmake ${ext_src}/cmake ${generator} ${rc_compiler} ${install_prefix} ${build_type})
 	set(ext_install ${install_target})
-	set(ext_make ${CMAKE_MAKE_PROGRAM})
+	set(ext_make ${kst_make_program})
 else()
 	set(ver 0.7.3)
 	set(ext_url http://sourceforge.net/projects/getdata/files/getdata/${ver}/getdata-${ver}.tar.gz)
@@ -72,7 +75,7 @@ if(WIN32)
 	set(ext_install ${install_target})
 	set(ext_insource OFF )
 	set(zlib_library ${install_dir}/lib/libzlibstatic.a)
-	set(ext_make ${CMAKE_MAKE_PROGRAM})
+	set(ext_make ${kst_make_program})
 else()
 	set(ext_url http://zlib.net/zlib-1.2.7.tar.gz)
 	set(ext_configure ${ext_src}/configure --static --prefix=${install_dir})
@@ -104,7 +107,7 @@ if(WIN32)
 											${build_type})
 	set(ext_install ${install_target})
 	set(ext_insource OFF )
-	set(ext_make ${CMAKE_MAKE_PROGRAM})
+	set(ext_make ${kst_make_program})
 else()
 	set(ext_url http://sourceforge.net/projects/matio/files/matio/1.5.0/matio-1.5.0.tar.gz)
 	set(ext_configure ${ext_src}/configure --with-pic --enable-static --disable-shared --prefix=${install_dir} --with-zlib=${install_dir})
@@ -135,7 +138,8 @@ if(WIN32)
 											${install_prefix}
 											${build_type})
 	set(ext_install ${install_target})
-	set(ext_insource OFF )
+	set(ext_insource OFF)
+	set(ext_make ${kst_make_program})
 else()
 	set(ext_url ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.1.3.tar.gz)
 	set(ext_configure ${ext_src}/configure  --with-pic  --disable-netcdf-4
@@ -143,14 +147,15 @@ else()
 											--prefix=${install_dir} --with-zlib=${install_dir})
 	set(ext_install install)
 	set(ext_insource ON)
+	set(ext_make ${CMAKE_MAKE_PROGRAM})
 endif()
 ExternalProject_Add(netcdf
 					PREFIX ${build_dir}/netcdf
 					URL ${ext_url}
 					CONFIGURE_COMMAND ${ext_configure}
 					BUILD_IN_SOURCE OFF
-					BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
+					BUILD_COMMAND ${ext_make}
+					INSTALL_COMMAND ${ext_make} ${ext_install})
 
 set(NETCDF_INCLUDEDIR  ${install_dir}/include PARENT_SCOPE)
 set(NETCDF_LIBRARY_C   ${install_dir}/lib/libnetcdf.a PARENT_SCOPE)
@@ -168,7 +173,7 @@ if(WIN32)
 											${build_type})
 	set(ext_install ${install_target})
 	set(ext_insource OFF)
-	set(ext_make ${CMAKE_MAKE_PROGRAM})
+	set(ext_make ${kst_make_program})
 else()
 	set(ext_url ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3300.tar.gz)
 	set(ext_configure ${ext_src}/configure  --with-pic
@@ -200,7 +205,8 @@ if(WIN32)
 											${install_prefix}
 											${build_type})
 	set(ext_install ${install_target})
-	set(ext_insource OFF )
+	set(ext_insource OFF)
+	set(ext_make ${kst_make_program})
 else()
 	set(ext_url ftp://ftp.gnu.org/gnu/gsl/gsl-1.15.tar.gz)
 	set(ext_configure ${ext_src}/configure  --with-pic
@@ -208,14 +214,15 @@ else()
 											--prefix=${install_dir} --with-zlib=${install_dir})
 	set(ext_install install)
 	set(ext_insource ON)
+	set(ext_make ${CMAKE_MAKE_PROGRAM})
 endif()
 ExternalProject_Add(gsl
 					PREFIX ${build_dir}/gsl
 					URL ${ext_url}
 					CONFIGURE_COMMAND ${ext_configure}
 					BUILD_IN_SOURCE OFF
-					BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}
-					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
+					BUILD_COMMAND ${ext_make}
+					INSTALL_COMMAND ${ext_make} ${ext_install})
 
 if(APPLE)
 	set(gsldeps ${install_dir}/lib/libgslcblas.a)
