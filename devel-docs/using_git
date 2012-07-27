@@ -45,6 +45,15 @@ Update existing repository with svn commits
     git svn rebase
     
     
+Rebase errors
+-------------
+When there are errors while rebasing, fix the mentioned <files>
+then
+
+   git add <files>
+   git rebase --continue
+   
+    
 
 Committing
 ----------
