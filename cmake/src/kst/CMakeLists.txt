@@ -7,7 +7,7 @@ kst_files_find(src/kst)
 if(WIN32)
 	if(MINGW)
 		add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o
-						   COMMAND windres.exe -I${CMAKE_CURRENT_BINARY_DIR}
+						   COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_BINARY_DIR}
 						   -i${kst_dir}/src/kst/kst_icon.rc
 						   -o ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o)
 		set(rc_file ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o)

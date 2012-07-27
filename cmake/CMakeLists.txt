@@ -7,7 +7,6 @@ if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
 	set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
 endif()
 
-project(Kst)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
 include(KstMacros)
@@ -39,9 +38,17 @@ kst_option(bool   OFF win console           "Open console on Windows")
 kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Visual Studio")
 kst_option(bool   OFF all python            "Install Python support")
 kst_option(bool   OFF all python_build      "Download and build NumPy/SciPy then install Python support")
-kst_option(string ""  all python_prefix "Path for installing python bindings")
+kst_option(string ""  all python_prefix     "Path for installing python bindings")
+kst_option(string OFF all cross             "Cross-compile on Linux for Windows")
 
 message(STATUS)
+
+if(kst_cross)
+    include(KstCrossCompile)
+endif()
+
+
+project(Kst)
 
 
 if(kst_release)
@@ -262,7 +269,11 @@ endif()
 # http://cmake.org/cmake/help/cmake-2-8-docs.html#module:CPack
 
 if(WIN32)
-	set(CPACK_GENERATOR NSIS ZIP)
+	if(kst_cross)
+		set(CPACK_GENERATOR ZIP)
+	else()
+		set(CPACK_GENERATOR NSIS)
+	endif()
 	set(CPACK_BINARY_ZIP 1)
 endif()
 

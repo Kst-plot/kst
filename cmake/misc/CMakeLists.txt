@@ -21,7 +21,7 @@ if(WIN32)
 		CONFIGURATIONS Debug)
 endif()
 
-if(MINGW)
+if(MINGW AND NOT kst_cross)
 	get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
 	if(EXISTS ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
 		list(APPEND runtime ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
