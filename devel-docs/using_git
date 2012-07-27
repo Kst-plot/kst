@@ -1,50 +1,68 @@
 Using Git as subversion client
 
 http://git-scm.com/
-(Newer packages for Ubuntu:
-http://ppa.launchpad.net/pdoes/ppa/ubuntu karmic main)
+
+Help:
+    git help svn
 
 
-Set up git repository, done only once
---------------------------------------
-Init your git repository with the svn path
+Set up svn mirror, done only once
+---------------------------------
+Create a new directory e.g 'kst', and init your git repository with the svn path
     
-    git svn init svn+ssh://YOU_USERNAME@svn.kde.org/home/kde/branches/work/kst/portto4
+    git svn init svn+ssh://YOU_USERNAME@svn.kde.org/home/kde/branches/work/kst/portto4/kst
 
-Get an old revision as starting point (git slang: basepoint)
-e.g http://mail.kde.org/pipermail/kst/2008-January/015217.html
+Download the author mapping file into your new 'kst' folder from,
+    https://github.com/downloads/syntheticpp/kst/.svn-author-file
+or copy it from a svn checkout. Without this file git doesn't know the name 
+and email address of the committer.
 
-    git svn fetch -r768342
+Configure git to use this file:
 
-(without the revision it starts checking for commit at revsion 100,
-but also only getting all changes from january takes a while)
+    git config --add svn.authorfile .svn-author-file
 
 
-Update
-------
-Update your local clone
+Then get all commits 
 
     git svn fetch
-    
-Update your local branch 'master' (git slang: move basepoint of master 
-to HEAD of the fetched data)
 
-    git checkout master
+this will take a while. (It is possible to start at a later revision, 
+for instance -r1307223, but then it is not possible to use other remote branches)
+
+When finished there is an internally managed remote branch 'git-svn',
+listed by 'git branch -r'.
+
+Update the current local branch ('master' by default) with the fetched
+svn commits:
+
+    git svn rebase
+
+
+Update existing repository with svn commits
+-------------------------------------------
+
+    git svn fetch
     git svn rebase
     
+    
+
+Committing
+----------
+First commit your changes to your local branch
+ 
+     git commit "message" -a
+     
+then commit to the svn repository
+ 
+     git svn dcommit
+
 
 History
 -------
 Browse history offline with a git-GUI gitk, gitg, qgit, ...
 
 
-Commiting
-----------
- Commit your changes to your local repository
- 
-     git commit "message" -a
-     
- Commit to public svn repository
- 
-     git svn dcommit
+
+
+
 
