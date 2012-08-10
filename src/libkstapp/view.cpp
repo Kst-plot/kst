@@ -712,6 +712,27 @@ void View::viewChanged() {
   //kstApp->mainWindow()->document()->setChanged(true);
 }
 
+
+QList<ViewItem*> View::layoutableViewItems() {
+  QList<QGraphicsItem*> graphics_items = scene()->items();
+  QList<ViewItem *> layoutable_view_items;
+
+  foreach(QGraphicsItem* graphics_item, graphics_items) {
+    ViewItem *item = dynamic_cast<ViewItem*>(graphics_item);
+    if (item && (!item->hasStaticGeometry()) &&
+        item->isVisible() &&
+        item->allowsLayout() &&
+        ((dynamic_cast<LayoutBoxItem*>(item->parentViewItem())!=0) || (!item->parentViewItem()))) {
+      layoutable_view_items.append(item);
+    }
+  }
+
+  qSort(layoutable_view_items.begin(), layoutable_view_items.end(), shortNameLessThan);
+
+  return layoutable_view_items;
+
+}
+
 }
 
 // vim: ts=2 sw=2 et

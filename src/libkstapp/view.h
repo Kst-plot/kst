@@ -123,6 +123,8 @@ class View : public QGraphicsView
     void referenceFontsToView() { _referenceFontSizeToView = true;}
     void referenceFontsToPainter() { _referenceFontSizeToView = false;}
 
+    QList<ViewItem*> layoutableViewItems();
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);

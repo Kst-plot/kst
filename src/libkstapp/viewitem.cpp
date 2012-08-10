@@ -20,12 +20,9 @@
 #include "datacollection.h"
 #include "formatgridhelper.h"
 #include "dialogdefaults.h"
-#include "viewitemmanager.h"
 #include "cartesianrenderitem.h"
 
 #include "layoutboxitem.h"
-
-//#include "gridlayouthelper.h"
 
 #include <math.h>
 
@@ -135,12 +132,10 @@ ViewItem::ViewItem(View *parentView) :
   // only drop plots onto TabBar
   setAcceptDrops(false);
 
-  ViewItemManager::self()->addViewItem(this);
 }
 
 
 ViewItem::~ViewItem() {
-  ViewItemManager::self()->removeViewItem(this);
 }
 
 void ViewItem::_initializeShortName() {
@@ -2446,7 +2441,7 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
     return; //not added to undostack
   }
 
-  viewItems = ViewItemManager::layoutableViewItemsForView(_item->view());
+  viewItems = _item->view()->layoutableViewItems();
 
   if (viewItems.isEmpty()) {
     return; //not added to undostack
@@ -2527,7 +2522,7 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
 
 
   QList<ViewItem*> viewItems;
-  viewItems = ViewItemManager::layoutableViewItemsForView(_item->view());
+  viewItems = _item->view()->layoutableViewItems();
 
   _layout = new ViewGridLayout(_item);
 

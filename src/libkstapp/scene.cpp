@@ -95,6 +95,7 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
       }
       m->item->setParentViewItem(0);
       addItem(m->item);
+
     }
     m->item->show();
     QPointF viewpos = view->mapFromScene(event->scenePos());

@@ -273,6 +273,16 @@ void NamedObject::resetNameIndex() {
   max_dsnum = 0;
 }
 
+// for sorting a list in order of creation (ie, short name number)
+bool shortNameLessThan(NamedObject *o1, NamedObject *o2) {
+  QString n1 = o1->shortName();
+  QString n2 = o2->shortName();
+
+  n1.remove(0,1);
+  n2.remove(0,1);
+  return (n1.toInt() < n2.toInt());
+}
+
 //void NamedObject::_initializeShortName() {
 //}
 

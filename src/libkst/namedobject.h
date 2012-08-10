@@ -126,5 +126,7 @@ public:
     int _initial_dsnum; // datasource
 };
 
+bool shortNameLessThan(NamedObject *n1, NamedObject *n2);
+
 }
 #endif
