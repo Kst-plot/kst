@@ -1,7 +1,7 @@
 # Travis-CI Build for kst2
 # see travis-ci.org for details
 
-language: erlang
+language: cpp
 
       
 install:

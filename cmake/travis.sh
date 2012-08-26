@@ -109,8 +109,8 @@ fi
 
 
 if [ "$iam" = "$travis" ]; then
-    git config --global user.name "vargant"
-    git config --global user.email vargant@ci.org
+    git config --global user.name "travis"
+    git config --global user.email travis@noreply.org
 fi
 git clone --quiet git@github.com:syntheticpp/kstbinary.git
 cd kstbinary
