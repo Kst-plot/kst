@@ -25,7 +25,8 @@ processors=`grep -c processor /proc/cpuinfo`
 echo number of processors: $processors
 dpkg --get-selections | grep mingw
 iam=`whoami`
-if [ "$iam" = "vagrant" ]; then
+travis=travis
+if [ "$iam" = "$travis" ]; then
     sudo rm -rf /usr/lib/jvm
     df -h
 fi
@@ -99,7 +100,7 @@ if [ ! -e $installed-win32.zip ]; then
     exit 1
 fi
 
-if [ "$iam" = "vagrant" ]; then
+if [ "$iam" = "$travis" ]; then
     cd ~
     tar xf $startdir/cmake/kstdeploy.tar.gz
     checkExitCode
@@ -107,7 +108,7 @@ if [ "$iam" = "vagrant" ]; then
 fi
 
 
-if [ "$iam" = "vagrant" ]; then
+if [ "$iam" = "$travis" ]; then
     git config --global user.name "vargant"
     git config --global user.email vargant@ci.org
 fi
