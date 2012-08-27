@@ -1,24 +1,35 @@
 # install runtime files
 
 if(WIN32)
-	install(FILES
-		${QT_BINARY_DIR}/QtCore4.dll
-		${QT_BINARY_DIR}/QtGui4.dll
-		${QT_BINARY_DIR}/QtXml4.dll
-		${QT_BINARY_DIR}/QtOpenGL4.dll
-		${QT_BINARY_DIR}/QtSvg4.dll
-		${QT_BINARY_DIR}/QtNetwork4.dll
-		DESTINATION bin
-		CONFIGURATIONS Release)
-	install(FILES
-		${QT_BINARY_DIR}/QtCored4.dll
-		${QT_BINARY_DIR}/QtGuid4.dll
-		${QT_BINARY_DIR}/QtXmld4.dll
-		${QT_BINARY_DIR}/QtOpenGLd4.dll
-		${QT_BINARY_DIR}/QtSvgd4.dll
-		${QT_BINARY_DIR}/QtNetworkd4.dll
-		DESTINATION bin
-		CONFIGURATIONS Debug)
+	if (kst_qt5)
+		install(FILES
+			${QT_BINARY_DIR}/QtCore5.dll
+			${QT_BINARY_DIR}/QtGui5.dll
+			${QT_BINARY_DIR}/QtWidgets5.dll
+			${QT_BINARY_DIR}/QtXml5.dll
+			${QT_BINARY_DIR}/QtNetwork5.dll				
+			DESTINATION bin
+			CONFIGURATIONS Release)
+	else()
+		install(FILES
+			${QT_BINARY_DIR}/QtCore4.dll
+			${QT_BINARY_DIR}/QtGui4.dll
+			${QT_BINARY_DIR}/QtXml4.dll
+			${QT_BINARY_DIR}/QtOpenGL4.dll
+			${QT_BINARY_DIR}/QtSvg4.dll
+			${QT_BINARY_DIR}/QtNetwork4.dll
+			DESTINATION bin
+			CONFIGURATIONS Release)
+		install(FILES
+			${QT_BINARY_DIR}/QtCored4.dll
+			${QT_BINARY_DIR}/QtGuid4.dll
+			${QT_BINARY_DIR}/QtXmld4.dll
+			${QT_BINARY_DIR}/QtOpenGLd4.dll
+			${QT_BINARY_DIR}/QtSvgd4.dll
+			${QT_BINARY_DIR}/QtNetworkd4.dll
+			DESTINATION bin
+			CONFIGURATIONS Debug)
+	endif()
 endif()
 
 if(MINGW AND NOT kst_cross)

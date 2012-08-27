@@ -1,19 +1,19 @@
 # Travis-CI Build for kst2
 # see travis-ci.org for details
 
-language: cpp
+language: erlang
 
       
 install:
- - sudo apt-get remove mingw32-binutils mingw32-runtime mingw32 qt4-qmake
+ - sudo apt-get remove cmake mingw32-binutils mingw32-runtime mingw32 qt4-qmake
  - sudo apt-get autoremove
- - sudo apt-get install cmake mingw-w64
+ - sudo apt-get install mingw-w64
 
 script:
- - ./cmake/travis.sh w64
+ - ./cmake/travis.sh w64 
+# - ./cmake/travis.sh w64 qt5
 
 branches:
  only:
    - master
    
-

@@ -58,32 +58,62 @@ fi
 
 
 #
+# get actual cmake 
+#
+cd ..
+wget http://www.cmake.org/files/v2.8/cmake-2.8.9-Linux-i386.tar.gz
+tar xf cmake-2.8.9-Linux-i386.tar.gz
+cmakebin=$PWD/cmake-2.8.9-Linux-i386/bin/cmake
+cd $builddir
+
+#
 # download and install Qt
 #
-if [ ! -d /usr/local/Trolltech/Qt-win32-g++-$mingw ]; then
-    #qttar=Qt-win32-g++-$mingw-4.6.3-dlls-Ubuntu-12.04.tar
-    qttar=Qt-win32-g++-$mingw-4.6.1-Ubuntu-11.10.tar
-    qt=$builddir/$qttar
-    wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
-    checkExitCode
-    xz -d $qttar.xz
-    cd /
-    sudo tar xf $qt
-    checkExitCode
-    echo Checking Qt installation ...
-    /usr/local/Trolltech/Qt-win32-g++-$mingw/bin/qmake -query
-    checkExitCode
+if [ "$2" = "qt5" ]; then
+    if [ ! -d /usr/local/Qt-5.0.0-win32-g++-$mingw ]; then
+        qttar=Qt-5.0.0-win32-g++-$mingw-4.6.1-Ubuntu-11.10.tar
+        qt=$builddir/$qttar
+        wget https://github.com/downloads/syntheticpp/kst/$qttar.bz2
+        checkExitCode
+        bzip2 -d $qttar.bz2
+        cd /usr/local
+        sudo tar xf $qt
+        checkExitCode
+        echo Checking Qt installation ...
+        /usr/local/Qt-5.0.0-win32-g++-$mingw/bin/qmake -query
+        checkExitCode
+    fi
+else
+    if [ ! -d /usr/local/Trolltech/Qt-win32-g++-$mingw ]; then
+        #qttar=Qt-win32-g++-$mingw-4.6.3-dlls-Ubuntu-12.04.tar
+        qttar=Qt-win32-g++-$mingw-4.6.1-Ubuntu-11.10.tar
+        qt=$builddir/$qttar
+        wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
+        checkExitCode
+        xz -d $qttar.xz
+        cd /
+        sudo tar xf $qt
+        checkExitCode
+        echo Checking Qt installation ...
+        /usr/local/Trolltech/Qt-win32-g++-$mingw/bin/qmake -query
+        checkExitCode
+    fi
 fi
-
 
 #
 # build Kst
 #
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 ver=2.0.6
-installed=Kst-$ver-$date
 cd $builddir
-cmake ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=$mingw -Dkst_install_prefix=./$installed
+if [ "$2" = "qt5" ]; then
+    ver=$ver-Qt5
+    qt5opt="-Dkst_qt5=/usr/local/Qt-5.0.0-win32-g++-$mingw -Dkst_opengl=0"
+else
+	ver=$ver-Qt4
+fi
+installed=Kst-$ver-$date
+$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=$mingw -Dkst_install_prefix=./$installed $qt5opt
 checkExitCode
 
 make -j $processors

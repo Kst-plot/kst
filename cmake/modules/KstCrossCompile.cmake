@@ -12,11 +12,14 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-# Cross-compiled Qt, branch cross-mingw from https://gitorious.org/~syntheticpp/qt/qt4
-set(QT_MINGW_DIR /usr/local/Trolltech/Qt-win32-g++-${TOOLNAME} CACHE PATH "Qt for Mingw" FORCE)
+if (NOT kst_qt5)
+	# Cross-compiled Qt, branch cross-mingw from https://gitorious.org/~syntheticpp/qt/qt4
+	set(QT_MINGW_DIR /usr/local/Trolltech/Qt-win32-g++-${TOOLNAME} CACHE PATH "Qt for Mingw" FORCE)
+	set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
+endif()
+
 set(QT_QMAKE_EXECUTABLE ${QT_MINGW_DIR}/bin/qmake CACHE PATH "Qt's qmake" FORCE)
 set(QT_BINARY_DIR       ${QT_MINGW_DIR}/bin       CACHE PATH "Qt's bin dir" FORCE)
 
-set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
 
 message(STATUS "Using qmake from ${QT_QMAKE_EXECUTABLE}")
