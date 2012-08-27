@@ -629,7 +629,8 @@ Kst::DataSourceConfigWidget *DirFilePlugin::configWidget(QSettings *cfg, const Q
 
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstdata_dirfile, DirFilePlugin)
-
+#endif
 
 // vim: ts=2 sw=2 et

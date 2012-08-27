@@ -59,6 +59,7 @@ class FitGradientWeightedSource : public Kst::BasicPlugin {
 class FitGradientWeightedPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
+    Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0")
   public:
     virtual ~FitGradientWeightedPlugin() {}
 

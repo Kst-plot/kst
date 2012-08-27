@@ -908,7 +908,8 @@ Kst::DataSourceConfigWidget *MatlabSourcePlugin::configWidget(QSettings *cfg, co
 }
 
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstdata_matlab, MatlabSourcePlugin)
-
+#endif
 
 // vim: ts=2 sw=2 et

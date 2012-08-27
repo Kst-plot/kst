@@ -307,6 +307,8 @@ Kst::DataObjectConfigWidget *AutoCorrelationPlugin::configWidget(QSettings *sett
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, AutoCorrelationPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

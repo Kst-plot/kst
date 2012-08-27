@@ -480,6 +480,8 @@ Kst::DataObjectConfigWidget *FitKneeFrequencyPlugin::configWidget(QSettings *set
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_FitKneeFrequencyPlugin, FitKneeFrequencyPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

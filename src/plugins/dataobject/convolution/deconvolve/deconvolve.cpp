@@ -347,6 +347,8 @@ Kst::DataObjectConfigWidget *DeconvolvePlugin::configWidget(QSettings *settingsO
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_DeconvolvePlugin, DeconvolvePlugin)
+#endif
 
 // vim: ts=2 sw=2 et

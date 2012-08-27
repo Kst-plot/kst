@@ -338,6 +338,8 @@ Kst::DataObjectConfigWidget *FitLorentzianUnweightedPlugin::configWidget(QSettin
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_FitLorentzianUnweightedPlugin, FitLorentzianUnweightedPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

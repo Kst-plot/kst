@@ -58,9 +58,7 @@ class CrossSpectrumSource : public Kst::BasicPlugin {
 class CrossSpectrumPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
-#ifdef QT5
     Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0")
-#endif
   public:
     virtual ~CrossSpectrumPlugin() {}
 

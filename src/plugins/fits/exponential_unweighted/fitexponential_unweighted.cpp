@@ -333,6 +333,8 @@ Kst::DataObjectConfigWidget *FitExponentialUnweightedPlugin::configWidget(QSetti
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_FitExponentialUnweightedPlugin, FitExponentialUnweightedPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

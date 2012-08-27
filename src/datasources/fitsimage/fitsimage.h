@@ -63,6 +63,7 @@ class FitsImageSource : public Kst::DataSource {
 class FitsImagePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
+    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
   public:
     virtual ~FitsImagePlugin() {}
 
