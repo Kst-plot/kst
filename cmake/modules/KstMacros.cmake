@@ -171,13 +171,6 @@ macro(kst_add_plugin folder name)
 	if(kst_verbose)
 	  message(STATUS "Building plugin ${kst_name}")
 	endif()
-	if(kst_qt5)
-		set(keyfile ${kst_dir}/${kst_plugin_dir}/${folder}/${name}/pluginkey.json)
-		if(NOT EXISTS ${keyfile})
-			message(STATUS "Creating plugin key file ${keyfile}")
-			file(WRITE ${keyfile} "{ \"Keys\": [ \"key-is-not-evaluated\" ] }")
-		endif()
-	endif()
 endmacro()
 
 
