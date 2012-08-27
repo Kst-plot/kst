@@ -34,7 +34,11 @@
 #include <QResizeEvent>
 #include <QMenu>
 #include <QWidgetAction>
+#ifdef KST_NO_OPENGL
+#define QGLWidget QWidget
+#else
 #include <QGLWidget>
+#endif
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -127,6 +131,9 @@ bool View::useOpenGL() const {
 
 
 void View::setUseOpenGL(bool useOpenGL) {
+#ifndef KST_NO_OPENGL
+    useOpenGL = false;
+#endif
   //This is an expensive operation...
   if (_useOpenGL == useOpenGL)
     return;

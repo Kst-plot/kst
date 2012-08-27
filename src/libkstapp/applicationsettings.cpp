@@ -16,7 +16,9 @@
 #include "defaultlabelpropertiestab.h"
 
 #include <QCoreApplication>
+#ifndef KST_NO_OPENGL
 #include <QGLPixelBuffer>
+#endif
 #include <QSettings>
 
 #include <QDebug>

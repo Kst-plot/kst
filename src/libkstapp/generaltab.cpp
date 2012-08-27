@@ -32,12 +32,20 @@ GeneralTab::~GeneralTab() {
 }
 
 bool GeneralTab::useOpenGL() const {
+#ifdef KST_NO_OPENGL
+    return false;
+#else
   return _useOpenGL->isChecked();
+#endif
 }
 
 
 void GeneralTab::setUseOpenGL(const bool useOpenGL) {
+#ifdef KST_NO_OPENGL
+  _useOpenGL->setChecked(false);
+#else
   _useOpenGL->setChecked(useOpenGL);
+#endif
 }
 
 bool GeneralTab::transparentDrag() const {
