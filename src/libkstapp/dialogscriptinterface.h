@@ -81,7 +81,9 @@ class DialogLauncherSI {
     ScriptInterface* newPicture(QByteArray file);
     ScriptInterface* newPlot();
     ScriptInterface* newSharedAxisBox();
+#ifndef KST_NO_SVG
     ScriptInterface* newSvgItem(QByteArray path);
+#endif
 
     //plugins
     DialogSI* showBasicPluginDialog(QByteArray pluginName, ObjectPtr objectPtr = 0, VectorPtr vectorX = 0, VectorPtr vectorY = 0, PlotItemInterface *plotItem = 0 );

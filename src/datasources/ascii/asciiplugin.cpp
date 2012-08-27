@@ -461,6 +461,8 @@ Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QSt
   return config;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstdata_ascii, AsciiPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

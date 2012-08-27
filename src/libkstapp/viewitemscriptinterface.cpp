@@ -155,7 +155,7 @@ QString StrokeTabSI::doCommand(QString x) {
     p.setJoinStyle(this_joinStyle);
     p.setCapStyle(this_capStyle);
     p.setBrush(b);
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
     if (p.isCosmetic()) {
         p.setWidth(1);
     }

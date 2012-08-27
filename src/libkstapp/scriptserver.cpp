@@ -165,8 +165,10 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getSharedAxisBoxList()",&ScriptServer::getSharedAxisBoxList);
     _fnMap.insert("newSharedAxisBox()",&ScriptServer::newSharedAxisBox);
 
+#ifndef KST_NO_SVG
     _fnMap.insert("getSvgItemList()",&ScriptServer::getSvgItemList);
     _fnMap.insert("newSvgItem()",&ScriptServer::newSvgItem);
+#endif
 
     _fnMap.insert("beginEdit()",&ScriptServer::beginEdit);
     _fnMap.insert("endEdit()",&ScriptServer::endEdit);
@@ -946,7 +948,7 @@ QByteArray ScriptServer::newSharedAxisBox(QByteArray&, QLocalSocket* s,ObjectSto
 }
 
 
-
+#ifndef KST_NO_SVG
 QByteArray ScriptServer::getSvgItemList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
                                         const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     return outputViewItemList<SvgItem>(s,ifMode,ifEqual,_if,var);
@@ -960,6 +962,7 @@ QByteArray ScriptServer::newSvgItem(QByteArray&command, QLocalSocket* s,ObjectSt
     else { _interface = DialogLauncherSI::self->newSvgItem(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 
 }
+#endif
 
 QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {

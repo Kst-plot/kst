@@ -37,7 +37,9 @@ namespace Kst {
       new LineItemFactory;
       new PictureItemFactory;
       new PlotItemFactory;
+#ifndef KST_NO_SVG
       new SvgItemFactory;
+#endif
       new SharedAxisBoxItemFactory;
     }
   }

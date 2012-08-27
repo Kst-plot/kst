@@ -54,6 +54,9 @@ class DifferentiationSource : public Kst::BasicPlugin {
 class DifferentiationPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
+#ifdef QT5
+    Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0" FILE "pluginkey.json")
+#endif
   public:
     virtual ~DifferentiationPlugin() {}
 

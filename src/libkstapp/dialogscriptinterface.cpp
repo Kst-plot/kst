@@ -193,6 +193,7 @@ ScriptInterface* DialogLauncherSI::newSharedAxisBox() {
     return showViewItemDialog(bi);
 }
 
+#ifndef KST_NO_SVG
 ScriptInterface* DialogLauncherSI::newSvgItem(QByteArray path) {
     SvgItem* bi=new SvgItem(kstApp->mainWindow()->tabWidget()->currentView(),path);
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
@@ -201,6 +202,7 @@ ScriptInterface* DialogLauncherSI::newSvgItem(QByteArray path) {
     bi->updateViewItemParent();
     return new ViewItemSI(bi);
 }
+#endif
 
 DialogSI* DialogLauncherSI::showVectorDialog(QByteArray &vectorname, ObjectPtr objectPtr) {
     VectorDialog *dialog = new VectorDialog(objectPtr, kstApp->mainWindow());

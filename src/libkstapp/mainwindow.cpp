@@ -60,9 +60,14 @@
 #include "dialoglauncher.h"
 #include "scriptserver.h"
 
+#ifndef KST_NO_SVG
 #include <QSvgGenerator>
+#endif
+
 #include <QUndoGroup>
+#ifndef KST_NO_PRINTER
 #include <QPrintDialog>
+#endif
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QProgressBar>
@@ -416,7 +421,9 @@ bool MainWindow::initFromCommandLine() {
     ok = false;
   }
   if (!P.printFile().isEmpty()) {
+#ifndef KST_NO_PRINTER
     printFromCommandLine(P.printFile());
+#endif
     ok = false;
   }
   if (!P.kstFileName().isEmpty()) {
@@ -479,6 +486,7 @@ void MainWindow::exportGraphicsFile(
              QFI.suffix();
     }
     if (format == QString("svg")) {
+#ifndef KST_NO_SVG
       QPainter painter;
       QSvgGenerator generator;
 
@@ -499,9 +507,9 @@ void MainWindow::exportGraphicsFile(
       view->setPrinting(false);
       view->resize(currentSize);
       view->processResize(currentSize);
-
-
+#endif
     } else if (format == QString("eps")) {
+#ifndef KST_NO_PRINTER
       QPrinter printer(QPrinter::ScreenResolution);
       printer.setOutputFormat(QPrinter::PostScriptFormat);
       printer.setOutputFileName(file);
@@ -525,7 +533,7 @@ void MainWindow::exportGraphicsFile(
 
       printer.setPaperSize(size, QPrinter::DevicePixel);
       printToPrinter(&printer);
-
+#endif
     } else {
       QPainter painter;
       QImage image(size, QImage::Format_ARGB32);
@@ -598,8 +606,8 @@ void MainWindow::exportLog(const QString &imagename, QString &msgfilename, const
 
 }
 
+#ifndef KST_NO_PRINTER
 void MainWindow::printToPrinter(QPrinter *printer) {
-
   QPainter painter(printer);
   QList<View*> pages;
 
@@ -703,6 +711,7 @@ void MainWindow::print() {
   _dialogDefaults->setValue("print/path", printer.outputFileName());
   delete pd;
 }
+#endif
 
 void MainWindow::currentViewChanged() {
   if(!_tabWidget->currentView())
@@ -745,7 +754,9 @@ void MainWindow::clearDrawingMarker() {
   _createArrowAct->setChecked(false);
   _createPictureAct->setChecked(false);
   _createPlotAct->setChecked(false);
+#ifndef KST_NO_SVG
   _createSvgAct->setChecked(false);
+#endif
   _tabWidget->currentView()->setMouseMode(View::Default);
 }
 
@@ -881,7 +892,7 @@ void MainWindow::createPlot() {
   }
 }
 
-
+#ifndef KST_NO_SVG
 void MainWindow::createSvg() {
   if (_createSvgAct->isChecked()) {
     clearDrawingMarker();
@@ -892,6 +903,7 @@ void MainWindow::createSvg() {
     _tabWidget->currentView()->setMouseMode(View::Default);
   }
 }
+#endif
 
 void MainWindow::createCurve() {
   DialogLauncher::self()->showCurveDialog();
@@ -1135,12 +1147,14 @@ void MainWindow::createActions() {
   _createPictureAct->setCheckable(true);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
+#ifndef KST_NO_SVG
   _createSvgAct = new QAction(tr("&Svg"), this);
   _createSvgAct->setStatusTip(tr("Create a svg for the current view"));
   _createSvgAct->setIcon(QPixmap(":draw-bezier-curves.png"));
   _createSvgAct->setShortcut(QString("F10"));
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
+#endif
 
   _createSharedAxisBoxAct = new QAction(tr("Shared Axis &Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
@@ -1366,7 +1380,9 @@ void MainWindow::createMenus() {
   annotations->addAction(_createLineAct);
   annotations->addAction(_createArrowAct);
   annotations->addAction(_createPictureAct);
+#ifndef KST_NO_SVG
   annotations->addAction(_createSvgAct);
+#endif
 
   _modeMenu = menuBar()->addMenu(tr("&Mode"));
   // Interaction mode
@@ -1463,8 +1479,9 @@ void MainWindow::createToolBars() {
   _annotationToolBar->addAction(_createLineAct);
   _annotationToolBar->addAction(_createArrowAct);
   _annotationToolBar->addAction(_createPictureAct);
+#ifndef KST_NO_SVG
   _annotationToolBar->addAction(_createSvgAct);
-
+#endif
 }
 
 

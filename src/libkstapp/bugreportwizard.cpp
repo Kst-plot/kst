@@ -32,9 +32,9 @@ BugReportWizard::BugReportWizard(QWidget *parent)
   _OS->setText("Mac OS 9");
 #elif defined(Q_WS_MACX)
   _OS->setText("Mac OS X");
-#elif defined(Q_WS_WIN32)
+#elif defined(Q_OS_WIN32)
   _OS->setText("Windows 32-Bit");
-#elif defined(Q_WS_WIN64)
+#elif defined(Q_OS_WIN64)
   _OS->setText("Windows 64-Bit");
 #else
   _OS->setText("Linux");

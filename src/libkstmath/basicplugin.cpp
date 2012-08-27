@@ -16,7 +16,7 @@
 
 #include <QXmlStreamWriter>
 
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
 #include <unistd.h>
 #endif
 

@@ -98,11 +98,13 @@ class MainWindow : public QMainWindow
     void open();
     void newDoc(bool force=false);
     void openFile(const QString &file);
+#ifndef KST_NO_PRINTER
     void print();
     void setPrinterDefaults(QPrinter *printer);
     void savePrinterDefaults(QPrinter *printer);
     void printToPrinter(QPrinter *printer);
     void printFromCommandLine(const QString &printFileName);
+#endif
     void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
     void exportLog(const QString &imagename, QString &msgfilename, const QString &_format, int x_size, int y_size,
                    int size_option_index, const QString &message);
@@ -128,7 +130,9 @@ class MainWindow : public QMainWindow
     void createArrow();
     void createPicture();
     void createPlot();
+#ifndef KST_NO_SVG
     void createSvg();
+#endif
     void createSharedAxisBox();
 
     void createScalar();
@@ -233,7 +237,9 @@ class MainWindow : public QMainWindow
     QAction *_createArrowAct;
     QAction *_createPictureAct;
     QAction *_createPlotAct;
+#ifndef KST_NO_SVG
     QAction *_createSvgAct;
+#endif
     QAction *_createSharedAxisBoxAct;
 
     QAction *_aboutAct;    

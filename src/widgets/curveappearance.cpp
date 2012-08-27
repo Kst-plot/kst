@@ -465,7 +465,7 @@ void CurveAppearance::drawSampleLine() {
     p.drawRect(rectBar);
   }
 
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
   // Note:  This modification was made in response to an apparent bug in Qt 4.4.0 in which any
   // painting done with a cosmetic pen resulted in a crash.
 

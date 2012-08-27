@@ -19,7 +19,9 @@
 #include "mainwindow.h"
 
 #include <QStringList>
+#ifndef KST_NO_PRINTER
 #include <QPrinter>
+#endif
 
 namespace Kst {
 /**
@@ -57,7 +59,9 @@ private:
   QString _pngFile;
   QString _printFile;
   bool _landscape;
+#ifndef KST_NO_PRINTER
   QPrinter::PaperSize _paperSize;
+#endif
 
   QStringList _fileNames;
   QStringList _arguments;

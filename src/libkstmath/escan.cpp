@@ -513,7 +513,7 @@ char *dataSpecPtr;
  * down here because we want the user's section 1 to have been scanned first.
  * The user has a chance to override it with an option.
  */
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
 #include <unistd.h>
 #endif
 #endif
@@ -1537,7 +1537,7 @@ static void yy_load_buffer_state  (void)
 }
 
 #ifndef __cplusplus
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
 extern int isatty (int );
 #endif
 #endif /* __cplusplus */
@@ -1564,7 +1564,7 @@ extern int isatty (int );
         b->yy_bs_lineno = 1;
         b->yy_bs_column = 0;
     }
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
         b->yy_is_interactive = false;
 #else
         b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;

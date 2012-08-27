@@ -281,7 +281,8 @@ Kst::DataSourceConfigWidget *SampleDatasourcePlugin::configWidget(QSettings *cfg
 
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstdata_sampledatasource, SampleDatasourcePlugin)
-
+#endif
 
 // vim: ts=2 sw=2 et

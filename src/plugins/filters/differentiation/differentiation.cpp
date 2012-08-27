@@ -258,6 +258,8 @@ Kst::DataObjectConfigWidget *DifferentiationPlugin::configWidget(QSettings *sett
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, DifferentiationPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

@@ -23,7 +23,9 @@
 #include <qpair.h>
 #include <qstring.h>
 #include <qvariant.h>
+#ifndef KST_NO_PRINTER
 #include <QPrinter>
+#endif
 
 #include "vector.h"
 #include "scalar.h"

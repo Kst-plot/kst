@@ -362,6 +362,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   bool new_fileList=true;
   bool dataPlotted = false;
 
+#ifndef KST_NO_PRINTER
   // set paper settings to match defaults.
   _paperSize = QPrinter::PaperSize(_dialogDefaults->value("print/paperSize", QPrinter::Letter).toInt());
   if (_dialogDefaults->value("print/landscape",true).toBool()) {
@@ -369,6 +370,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   } else {
     _landscape = false;
   }
+#endif
 
   while (*ok) {
     if (_arguments.count() < 1) {
@@ -590,6 +592,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = _setStringArg(_document->objectStore()->override.fileName, i18n("Usage: -F <datafile>\n"));
     } else if (arg == "--png") {
       *ok = _setStringArg(_pngFile, i18n("Usage: --png <filename>\n"));
+#ifndef KST_NO_PRINTER
     } else if (arg == "--print") {
       *ok = _setStringArg(_printFile, i18n("Usage: --print <filename>\n"));
     } else if (arg == "--landscape") {
@@ -600,6 +603,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _paperSize = QPrinter::A4;
     } else if (arg == "--letter") {
       _paperSize = QPrinter::Letter;
+#endif
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         if (dataPlotted) {
@@ -655,9 +659,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     _document->updateRecentDataFiles(_fileNames);
   }
 
+#ifndef KST_NO_PRINTER
   // set defaults to match what has been set.
   _dialogDefaults->setValue("print/landscape", _landscape);
   _dialogDefaults->setValue("print/paperSize", int(_paperSize));
+#endif
 
   if (_plotItem) {
     _plotItem->view()->resetPlotFontSizes();

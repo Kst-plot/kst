@@ -312,7 +312,7 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
 
 DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QString& filename, const QString& type) {
 
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
   //if (filename == "stdin" || filename == "-") {
     // FIXME: what store do we put this in?
   //  return new StdinSource(0, settingsObject);
@@ -351,7 +351,7 @@ DataSourcePtr DataSourcePluginManager::findOrLoadSource(ObjectStore *store, cons
 
 
 bool DataSourcePluginManager::validSource(const QString& filename) {
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
 //  if (filename == "stdin" || filename == "-") {
 //    return true;
 //  }

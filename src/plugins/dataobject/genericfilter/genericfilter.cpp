@@ -324,6 +324,8 @@ Kst::DataObjectConfigWidget *GenericFilterPlugin::configWidget(QSettings *settin
   return widget;
 }
 
+#ifndef QT5
 Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, GenericFilterPlugin)
+#endif
 
 // vim: ts=2 sw=2 et

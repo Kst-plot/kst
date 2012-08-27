@@ -1,5 +1,9 @@
 kst_init(${kst_binary_name} widgets)
 
+if(kst_qt5)
+    kst_files_ignore(widgets)
+endif()
+
 kst_files_find(src/widgets)
 
 kst_include_directories(core app math)

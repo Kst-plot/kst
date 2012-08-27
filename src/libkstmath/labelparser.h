@@ -64,7 +64,7 @@ namespace Label {
     bool tab : 1;
     bool vector : 1;
     VOffset vOffset
-#ifndef Q_WS_WIN32
+#ifndef Q_OS_WIN32
     : 2
 #endif
     ;

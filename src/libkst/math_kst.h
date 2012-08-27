@@ -88,7 +88,7 @@ inline bool samePixel(double x1, double x2) {
 inline int isinf(double x) { return x == x && !finite(x); }
 #endif
 
-#ifdef Q_WS_WIN32
+#ifdef Q_CC_MSVC
 #ifndef isnan
 #define isnan _isnan
 #endif

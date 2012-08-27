@@ -1,5 +1,10 @@
 kst_init(${kst_binary_name} app)
 
+if(kst_qt5 AND kst_qt5base_only)
+    kst_files_ignore(svgitem)
+    add_definitions(-DKST_NO_PRINTER -DKST_NO_SVG)
+endif()
+
 kst_files_find(src/libkstapp)
 
 kst_include_directories(core math widgets)

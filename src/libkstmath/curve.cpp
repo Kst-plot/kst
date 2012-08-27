@@ -567,7 +567,7 @@ void Curve::setHasBars(bool in_HasBars) {
 
 
 void Curve::setLineWidth(int in_LineWidth) {
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
   if (in_LineWidth == 0) {
     in_LineWidth = 1;
   }

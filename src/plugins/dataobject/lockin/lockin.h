@@ -54,6 +54,9 @@ class LockInSource : public Kst::BasicPlugin {
 class LockInPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
+#ifdef QT5
+    Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0" FILE "pluginkey.json")
+#endif
   public:
     virtual ~LockInPlugin() {}
 
