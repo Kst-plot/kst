@@ -10,6 +10,11 @@ if(WIN32)
 			${QT_BINARY_DIR}/QtNetwork5.dll				
 			DESTINATION bin
 			CONFIGURATIONS Release)
+		install(FILES
+			${QT_BINARY_DIR}/../plugins/platforms/qminimal5.dll
+			${QT_BINARY_DIR}/../plugins/platforms/windows5.dll			
+			DESTINATION bin/platforms
+			CONFIGURATIONS Release)
 	else()
 		install(FILES
 			${QT_BINARY_DIR}/QtCore4.dll
@@ -32,14 +37,20 @@ if(WIN32)
 	endif()
 endif()
 
-if(MINGW AND NOT kst_cross)
-	get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
+if(MINGW)
+	if(kst_cross)
+		set(MINGW_BIN_PATH /usr/lib/gcc/${kst_cross}/4.6)
+	else()
+		get_filename_component(MINGW_BIN_PATH ${CMAKE_CXX_COMPILER} PATH)
+	endif()
 	if(EXISTS ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
 		list(APPEND runtime ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
 	elseif(EXISTS ${MINGW_BIN_PATH}/libwinpthread-1.dll)
 		list(APPEND runtime ${MINGW_BIN_PATH}/libwinpthread-1.dll)
 	endif()
-	list(APPEND runtime ${MINGW_BIN_PATH}/libstdc++-6.dll)
+	if(EXISTS ${MINGW_BIN_PATH}/libstdc++-6.dll)
+		list(APPEND runtime ${MINGW_BIN_PATH}/libstdc++-6.dll)
+	endif()
 	install(FILES ${runtime} DESTINATION bin)
 endif()
 

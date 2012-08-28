@@ -50,54 +50,46 @@ cd $builddir
 #
 # select mingw version
 #
-if [ "$1" = "w64" ]; then
-    mingw=i686-w64-mingw32
-else
-    mingw=i586-mingw32msvc
-fi
+mingw=i686-w64-mingw32
 
 
 #
 # get actual cmake 
 #
-cd ..
-wget http://www.cmake.org/files/v2.8/cmake-2.8.9-Linux-i386.tar.gz
-tar xf cmake-2.8.9-Linux-i386.tar.gz
-cmakebin=$PWD/cmake-2.8.9-Linux-i386/bin/cmake
-cd $builddir
+if [ "$iam" = "$travis" ]; then
+    cd ..
+    if [ ! -d $PWD/cmake-2.8.9-Linux-i386 ]; then
+        wget http://www.cmake.org/files/v2.8/cmake-2.8.9-Linux-i386.tar.gz
+        tar xf cmake-2.8.9-Linux-i386.tar.gz
+    fi
+    cmakebin=$PWD/cmake-2.8.9-Linux-i386/bin/cmake
+    cd $builddir
+else
+    cmakebin=cmake
+fi
 
 #
 # download and install Qt
 #
-if [ "$2" = "qt5" ]; then
-    if [ ! -d /usr/local/Qt-5.0.0-win32-g++-$mingw ]; then
-        qttar=Qt-5.0.0-win32-g++-$mingw-4.6.1-Ubuntu-11.10.tar
-        qt=$builddir/$qttar
-        wget https://github.com/downloads/syntheticpp/kst/$qttar.bz2
-        checkExitCode
-        bzip2 -d $qttar.bz2
-        cd /usr/local
-        sudo tar xf $qt
-        checkExitCode
-        echo Checking Qt installation ...
-        /usr/local/Qt-5.0.0-win32-g++-$mingw/bin/qmake -query
-        checkExitCode
-    fi
+if [ "$1" = "qt5" ]; then
+    qtver=5.0.0
 else
-    if [ ! -d /usr/local/Trolltech/Qt-win32-g++-$mingw ]; then
-        #qttar=Qt-win32-g++-$mingw-4.6.3-dlls-Ubuntu-12.04.tar
-        qttar=Qt-win32-g++-$mingw-4.6.1-Ubuntu-11.10.tar
-        qt=$builddir/$qttar
-        wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
-        checkExitCode
-        xz -d $qttar.xz
-        cd /
-        sudo tar xf $qt
-        checkExitCode
-        echo Checking Qt installation ...
-        /usr/local/Trolltech/Qt-win32-g++-$mingw/bin/qmake -query
-        checkExitCode
-    fi
+    qtver=4.8.3
+fi
+qtver=Qt-$qtver-win32-g++-$mingw
+    
+if [ ! -d /opt/$qtver ]; then
+    qttar=$qtver-Ubuntu-11.10.tar
+    wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
+    checkExitCode
+    xz -d $qttar.xz
+    cd /
+    sudo tar xf $builddir/$qttar
+    checkExitCode
+    echo Checking Qt installation ...
+    readelf -h  /opt/$qtver/bin/qmake
+    /opt/$qtver/bin/qmake -query
+    checkExitCode
 fi
 
 #
@@ -106,14 +98,15 @@ fi
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 ver=2.0.6
 cd $builddir
-if [ "$2" = "qt5" ]; then
+if [ "$1" = "qt5" ]; then
     ver=$ver-Qt5
-    qt5opt="-Dkst_qt5=/usr/local/Qt-5.0.0-win32-g++-$mingw -Dkst_opengl=0"
+    qtopt="-Dkst_qt5=/opt/$qtver -Dkst_opengl=0"
 else
-	ver=$ver-Qt4
+    ver=$ver-Qt4
+    qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
 installed=Kst-$ver-$date
-$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=$mingw -Dkst_install_prefix=./$installed $qt5opt
+$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=$mingw -Dkst_install_prefix=./$installed $qtopt
 checkExitCode
 
 make -j $processors
@@ -141,19 +134,24 @@ fi
 if [ "$iam" = "$travis" ]; then
     git config --global user.name "travis"
     git config --global user.email travis@noreply.org
+
+    git clone --quiet git@github.com:syntheticpp/kstbinary.git
+    cd kstbinary
+    if [ "$1" = "qt5" ]; then
+        git checkout Qt5
+    fi
+    git reset --hard HEAD^
+    cp -f ../$installed-win32.zip .
+    git add $installed-win32.zip
+    checkExitCode
+    
+    git commit --quiet -m"Update win32 binary to version Kst-$ver-$date"
+    checkExitCode
+
+    git push --quiet -f
+    checkExitCode
 fi
-git clone --quiet git@github.com:syntheticpp/kstbinary.git
-cd kstbinary
-git reset --hard HEAD^
-cp -f ../$installed-win32.zip .
-git add $installed-win32.zip
-checkExitCode
 
-git commit --quiet -m"Update win32 binary to version Kst-$ver-$date"
-checkExitCode
-
-git push --quiet -f
-checkExitCode
 
 cd $startdir
 

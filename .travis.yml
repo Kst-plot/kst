@@ -10,8 +10,8 @@ install:
  - sudo apt-get install mingw-w64
 
 script:
- - ./cmake/travis.sh w64 
-# - ./cmake/travis.sh w64 qt5
+ - ./cmake/travis.sh qt4
+ - ./cmake/travis.sh qt5
 
 branches:
  only:

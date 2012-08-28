@@ -12,9 +12,9 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-if (NOT kst_qt5)
+if(kst_qt4)
 	# Cross-compiled Qt, branch cross-mingw from https://gitorious.org/~syntheticpp/qt/qt4
-	set(QT_MINGW_DIR /usr/local/Trolltech/Qt-win32-g++-${TOOLNAME} CACHE PATH "Qt for Mingw" FORCE)
+	set(QT_MINGW_DIR ${kst_qt4} CACHE PATH "Qt for Mingw" FORCE)
 	set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
 endif()
 
