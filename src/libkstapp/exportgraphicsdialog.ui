@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>304</height>
+    <height>310</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;Save location:</string>
+      <string>&amp;Base name:</string>
      </property>
      <property name="wordWrap">
       <bool>false</bool>

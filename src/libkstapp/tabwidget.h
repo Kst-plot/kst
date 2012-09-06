@@ -33,6 +33,7 @@ class TabWidget : public QTabWidget
     void addView(View*);
     void deleteView(View* view);
     void clear();
+    QTabBar *tabBar() const { return QTabWidget::tabBar(); }
 
   Q_SIGNALS:
         void currentViewModeChanged();

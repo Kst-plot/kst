@@ -460,18 +460,18 @@ void MainWindow::exportGraphicsFile(
   for (int i_view = 0; i_view<n_views; i_view++) {
     View *view = _tabWidget->views().at(i_view);
     QSize size;
-    if (display == 0) {
+    if (display == 0) { // Width set by user, maintain aspect ratio
       QSize sizeWindow(view->geometry().size());
       size.setWidth(width);
       size.setHeight((int)((double)width * (double)sizeWindow.height() / (double)sizeWindow.width()));
-    } else if (display == 1){
+    } else if (display == 1){ // Height set by user, maintain aspect ratio
       QSize sizeWindow(view->geometry().size());
       size.setHeight(height);
       size.setWidth((int)((double)height * (double)sizeWindow.width() / (double)sizeWindow.height()));
-    } else if (display == 2) {
+    } else if (display == 2) { // Width and height set by user
       size.setWidth(width);
       size.setHeight(height);
-    } else { //if (display == 3) {
+    } else { //if (display == 3) { // Square (width x width)
       size.setWidth(width);
       size.setHeight(width);
     }
@@ -482,7 +482,7 @@ void MainWindow::exportGraphicsFile(
       QFileInfo QFI(filename);
       file = QFI.dir().path() + '/' + QFI.completeBaseName() +
              '_' +
-             QString::number(viewCount+1) + '.' +
+          _tabWidget->tabBar()->tabText(viewCount).replace(QString("&"),QString()) + '.' +
              QFI.suffix();
     }
     if (format == QString("svg")) {
