@@ -57,6 +57,8 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
 
   initializeEntries();
   updateButtons();
+  updateIndexEntries();
+
 }
 
 
@@ -78,6 +80,8 @@ void ChangeDataSampleDialog::removeButtonClicked() {
 
   _vectorList->clearSelection();
   updateButtons();
+  updateIndexEntries();
+
 }
 
 
@@ -86,6 +90,7 @@ void ChangeDataSampleDialog::selectedDoubleClicked(QListWidgetItem * item) {
     _vectorList->addItem(_selectedVectorList->takeItem(_selectedVectorList->row(item)));
     _vectorList->clearSelection();
     updateButtons();
+    updateIndexEntries();
   }
 }
 
@@ -96,6 +101,7 @@ void ChangeDataSampleDialog::addButtonClicked() {
   }
   _selectedVectorList->clearSelection();
   updateButtons();
+  updateIndexEntries();
 }
 
 
@@ -104,7 +110,46 @@ void ChangeDataSampleDialog::availableDoubleClicked(QListWidgetItem * item) {
     _selectedVectorList->addItem(_vectorList->takeItem(_vectorList->row(item)));
     _selectedVectorList->clearSelection();
     updateButtons();
+    updateIndexEntries();
   }
+}
+
+
+void ChangeDataSampleDialog::updateIndexEntries() {
+
+  // Make a list of all the data sources for all of the vectors which have been selected.
+  QList<DataSourcePtr> data_sources;
+
+  _selectedVectorList->blockSignals(true);
+  _selectedVectorList->selectAll();
+  QList<QListWidgetItem*> selectedItems = _selectedVectorList->selectedItems();
+  _selectedVectorList->clearSelection();
+  _selectedVectorList->blockSignals(false);
+
+  for (int i = 0; i < selectedItems.size(); ++i) {
+    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      if (!data_sources.contains(vector->dataSource())) {
+        data_sources.append(vector->dataSource());
+      }
+    }
+  }
+
+  QStringList index_fields;
+
+  // make a list of fields which are provided by all data sources...
+  if (data_sources.size()>0) {
+    foreach (const QString &field, data_sources[0]->indexFields()) {
+      bool in_all = true;
+      for (int i=1; i<data_sources.size(); i++) {
+        in_all = in_all && (data_sources[i]->indexFields().contains(field));
+      }
+      if (in_all) {
+        index_fields.append(field);
+      }
+    }
+  }
+
+  _dataRange->updateIndexList(index_fields);
 }
 
 
@@ -208,6 +253,8 @@ void ChangeDataSampleDialog::initializeEntries() {
   _dataRange->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
   _dataRange->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
   _dataRange->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+  _dataRange->setStartUnits(_dialogDefaults->value("vector/startUnits",i18n("frames")).toString());
+  _dataRange->setRangeUnits(_dialogDefaults->value("vector/rangeUnits",i18n("frames")).toString());
 }
 
 
@@ -242,47 +289,90 @@ void ChangeDataSampleDialog::apply() {
   _selectedVectorList->selectAll();
   QList<QListWidgetItem*> selectedItems = _selectedVectorList->selectedItems();
 
-  // see if we have enough memory
-  //FIXME: doesn't consider data objects that depend on this, and it should
-  //FIXME: doesn't work under windows or mac
-  double current_memory_used = 0.0;
-  double memory_needed = 0.0;
-  for (int i = 0; i < selectedItems.size(); ++i) {
-    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
-      current_memory_used += double(vector->length())*sizeof(double);
-      long ns=0;
-      if (_dataRange->readToEnd()) {
-        ns = vector->fileLength() - (int)_dataRange->start();
-      } else {
-        ns = (int)_dataRange->range();
+  QString start_units;
+  QString range_units;
+  QHash<QString, int> f0_map;
+  QHash<QString, int> r_map;
+  bool custom_start_index = (_dataRange->_startUnits->currentIndex() != 0) && (!_dataRange->countFromEnd());
+
+  bool custom_range_index = (_dataRange->_rangeUnits->currentIndex() != 0) && (!_dataRange->readToEnd());
+
+  if (!custom_start_index && !custom_range_index) { // FIXME: also for custom index.
+    start_units.clear();
+
+    // see if we have enough memory
+    //FIXME: doesn't consider data objects that depend on this, and it should
+    //FIXME: doesn't work under windows or mac
+    double current_memory_used = 0.0;
+    double memory_needed = 0.0;
+    for (int i = 0; i < selectedItems.size(); ++i) {
+      if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+        current_memory_used += double(vector->length())*sizeof(double);
+        long ns=0;
+        if (_dataRange->readToEnd()) {
+          ns = vector->fileLength() - (int)_dataRange->start();
+        } else {
+          ns = (int)_dataRange->range();
+        }
+        if (_dataRange->doSkip()) {
+          ns/=_dataRange->skip();
+        } else {
+          ns *= vector->samplesPerFrame();
+        }
+        memory_needed += double(ns)*sizeof(double);
       }
-      if (_dataRange->doSkip()) {
-        ns/=_dataRange->skip();
-      } else {
-        ns *= vector->samplesPerFrame();
-      }
-      memory_needed += double(ns)*sizeof(double);
+    }
+
+    double memory_available = Data::AvailableMemory();
+    if (memory_needed-current_memory_used > memory_available) {
+      //QApplication::restoreOverrideCursor();
+      QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
+                                                                   ).arg((memory_needed-current_memory_used)/(1024*1024)).arg(memory_available/(1024*1024)));
+      return;
     }
   }
 
-  double memory_available = Data::AvailableMemory();
-  if (memory_needed-current_memory_used > memory_available) {
-    //QApplication::restoreOverrideCursor();
-    QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
-                                                                 ).arg((memory_needed-current_memory_used)/(1024*1024)).arg(memory_available/(1024*1024)));
-    return;
+  start_units = _dataRange->_startUnits->currentText();
+  range_units = _dataRange->_rangeUnits->currentText();
+
+  for (int i = 0; i < selectedItems.size(); ++i) {
+    if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      QString filename = vector->filename();
+      if (!f0_map.contains(filename)) {
+        int f0;
+        int r;
+        if (custom_start_index) {
+          f0 = vector->dataSource()->indexToFrame(_dataRange->start(), start_units);
+        } else if (_dataRange->countFromEnd()) {
+          f0 = -1;
+        } else {
+          f0 = _dataRange->start();
+        }
+        if (custom_range_index) {
+          r = _dataRange->range()*vector->dataSource()->framePerIndex(range_units);
+        } else if (_dataRange->readToEnd()) {
+          r = -1;
+        } else {
+          r = (int)_dataRange->range();
+        }
+        f0_map.insert(filename, f0);
+        r_map.insert(filename, r);
+      }
+    }
   }
 
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       vector->writeLock();
-      int from = (_dataRange->countFromEnd() ? -1 : (int)_dataRange->start());
-      int range = (_dataRange->readToEnd() ? -1 : (int)_dataRange->range());
+      int from = f0_map.value(vector->filename());
+      int range = r_map.value(vector->filename());
       vector->changeFrames( from, 
                             range,
                             _dataRange->skip(),
                             _dataRange->doSkip(),
                             _dataRange->doFilter());
+      vector->setStartUnits(start_units);
+      vector->setRangeUnits(start_units);
       vector->registerChange();
       vector->unlock();
     }
@@ -297,6 +387,8 @@ void ChangeDataSampleDialog::apply() {
   _dialogDefaults->setValue("vector/skip", _dataRange->skip());
   _dialogDefaults->setValue("vector/doSkip", _dataRange->doSkip());
   _dialogDefaults->setValue("vector/doAve", _dataRange->doFilter());
+  _dialogDefaults->setValue("vector/startUnits", _dataRange->_startUnits->currentText());
+  _dialogDefaults->setValue("vector/rangeUnits", _dataRange->_rangeUnits->currentText());
 
   updateCurveListDialog();
   kstApp->mainWindow()->document()->setChanged(true);

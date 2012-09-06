@@ -75,6 +75,8 @@ class VectorTab : public DataTab, Ui::VectorTab {
 
     bool validating;
 
+    void updateIndexList(DataSourcePtr dataSource);
+
   Q_SIGNALS:
     void sourceChanged();
     void fieldChanged();
@@ -86,6 +88,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
     void showConfigWidget();
     void sourceValid(QString filename, int requestID);
     void updateTypeActivated(int);
+    void clearIndexList();
 
   private:
     VectorMode _mode;

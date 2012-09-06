@@ -656,6 +656,8 @@ void DataWizardPageDataPresentation::updateVectors() {
   }
   _xVector->setCurrentIndex(x_index);
 
+  dataRange()->updateIndexList(((DataWizard*)wizard())->dataSourceIndexList());
+
   emit completeChanged();
 }
 
@@ -757,6 +759,10 @@ QStringList DataWizard::dataSourceFieldList() const {
   return _pageDataSource->dataSourceFieldList();
 }
 
+QStringList DataWizard::dataSourceIndexList() const {
+  return _pageDataSource->dataSource()->indexFields();
+}
+
 
 void DataWizard::finished() {
   DataVectorList vectors;
@@ -800,6 +806,20 @@ void DataWizard::finished() {
 
   double startOffset = _pageDataPresentation->dataRange()->start();
   double rangeCount = _pageDataPresentation->dataRange()->range();
+
+  bool customStartIndex = (_pageDataPresentation->dataRange()->_startUnits->currentIndex() != 0) &&
+                          (!_pageDataPresentation->dataRange()->countFromEnd());
+  bool customRangeCount = (_pageDataPresentation->dataRange()->_rangeUnits->currentIndex() != 0) &&
+                          (!_pageDataPresentation->dataRange()->readToEnd());
+
+  if (customStartIndex) {
+    startOffset = ds->indexToFrame(_pageDataPresentation->dataRange()->start(), _pageDataPresentation->dataRange()->startUnits());
+  }
+
+  if (customRangeCount) {
+    rangeCount = _pageDataPresentation->dataRange()->range()*ds->framePerIndex(_pageDataPresentation->dataRange()->rangeUnits());
+  }
+
   bool separate_tabs =
       ((_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) && _pageDataPresentation->plotPSD()
        && _pageDataPresentation->plotData());
@@ -878,6 +898,14 @@ void DataWizard::finished() {
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
+    if (customStartIndex) {
+      dxv->setStartUnits(_pageDataPresentation->dataRange()->_startUnits->currentText());
+    }
+
+    if (customRangeCount) {
+      dxv->setRangeUnits(_pageDataPresentation->dataRange()->_rangeUnits->currentText());
+    }
+
     dxv->registerChange();
     dxv->unlock();
     xv = dxv;
@@ -902,6 +930,14 @@ void DataWizard::finished() {
           _pageDataPresentation->dataRange()->skip(),
           _pageDataPresentation->dataRange()->doSkip(),
           _pageDataPresentation->dataRange()->doFilter());
+
+      if (customStartIndex) {
+        vector->setStartUnits(_pageDataPresentation->dataRange()->_startUnits->currentText());
+      }
+
+      if (customRangeCount) {
+        vector->setRangeUnits(_pageDataPresentation->dataRange()->_rangeUnits->currentText());
+      }
 
       vector->registerChange();
       vector->unlock();

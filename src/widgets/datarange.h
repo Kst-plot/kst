@@ -32,17 +32,21 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
     bool startDirty() const;
     void setStart(qreal start);
 
-    //FIXME Probably should be an enum...
     QString startUnits() const;
-    void setStartUnits(const QString &startUnits) const;
+    int startUnitsIndex() const;
+    void setStartUnits(const QString &startUnits);
 
     qreal range() const;
     bool rangeDirty() const;
     void setRange(qreal range);
 
+    void updateIndexList(const QStringList &indexFields);
+    void clearIndexList();
+
     //FIXME Probably should be an enum...
     QString rangeUnits() const;
-    void setRangeUnits(const QString &rangeUnits) const;
+    int rangeUnitsIndex() const;
+    void setRangeUnits(const QString &rangeUnits);
 
     int skip() const;
     bool skipDirty() const;
@@ -76,6 +80,10 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
     void countFromEndChanged();
     void readToEndChanged();
     void doSkipChanged();
+
+  private:
+    QString _requestedRangeUnits;
+    QString _requestedStartUnits;
 
 };
 

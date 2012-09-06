@@ -381,6 +381,136 @@ double DataSource::relativeTimeForSample(int sample, bool *ok) {
 }
 
 
+double DataSource::frameToIndex(int frame, const QString &field) {
+  return readDespikedIndex(frame+1, field);
+}
+
+
+int DataSource::indexToFrame(double X, const QString &field) {
+  const DataVector::DataInfo info = vector().dataInfo(field);
+  int Fmin = 0;
+  int Fmax = info.frameCount-1;
+  double Xmin = readDespikedIndex(Fmin, field);
+  double Xmax = readDespikedIndex(Fmax, field);
+  int F0 = (Fmin + Fmax)/2;
+  double X0;
+
+  if (X>=Xmax) {
+    return Fmax;
+  }
+  if (X<=Xmin) {
+    return Fmin;
+  }
+
+  while (F0 != Fmin) {
+    X0 = readDespikedIndex(F0, field);
+    if ((X0>Xmax) || (X0<Xmin)) { // not monotoically rising!
+      return (-1);
+    }
+
+    if (X <= X0) {
+      Xmax = X0;
+      Fmax = F0;
+    } else {
+      Xmin = X0;
+      Fmin = F0;
+    }
+    F0 = (Fmin + Fmax)/2;
+  }
+  return F0;
+}
+
+double DataSource::framePerIndex(const QString &field) {
+  // FIXME: for now, calculate the sample rate, but later allow us to define it
+  const DataVector::DataInfo info = vector().dataInfo(field);
+  int f0 = info.frameCount/4;
+  int fn = f0*11/10;
+  if (f0 == fn) {
+    return 1.0;
+  }
+
+  double x0 = readDespikedIndex(f0, field);
+  double xn = readDespikedIndex(fn, field);
+
+  if (xn == x0) {
+    return 1.0;
+  }
+
+  return double(fn-f0)/(xn - x0);
+}
+
+double DataSource::readDespikedIndex(int frame_in, const QString &field) {
+
+  // we want a despike buffer which is an integer number of frames and
+  // at least 5 samples on each side of our desired sample
+  int frame = frame_in;
+  const int min_despike_margin = 5; // samples
+  const DataVector::DataInfo info = vector().dataInfo(field);
+  int margin_frames = qMax(1,min_despike_margin/info.samplesPerFrame);
+  int margin_samp = margin_frames * info.samplesPerFrame;
+  double *data = new double[2*margin_samp];
+  double x;
+
+  frame -= margin_frames;
+  if (frame<0) {
+    frame = 0;
+  }
+  if (frame + 2*margin_frames >= info.frameCount) {
+    frame = info.frameCount - 2*margin_frames;
+  }
+  DataVector::ReadInfo par = {data, frame, 2*margin_frames, -1, 0L};
+
+  vector().read(field, par);
+
+  bool spike_found;
+  int n = 2*margin_samp-1;
+  do {
+    int j=0;
+    spike_found = false;
+    for (int i = 0; i < n; i++) {
+      if (data[i+1] >= data[i]) { // increasing.  This point is probably ok.
+        data[j++] = data[i];
+      } else {
+        i++; // this point and the next one are now suspect - skip them
+        spike_found = true;
+      }
+    }
+    n  = j;
+  } while(spike_found); // We found a spike - better check for wider ones.
+
+  x = data[n/2]; // FIXME: we might be off by a couple samples if there were spikes.
+
+  delete data;
+
+  return(x);
+}
+
+QStringList &DataSource::indexFields() {
+  if (_frameFields.size() == 0) {
+    // FIXME: this must be created by the UI somehow.
+    // or by the datasource itself.  Or something
+    // different than this!
+    QStringList requestedFields;
+    requestedFields.append("TIME");
+    requestedFields.append("Time");
+    requestedFields.append("time");
+    requestedFields.append("Temps");
+    requestedFields.append("TEMPS");
+    requestedFields.append("temps");
+
+    _frameFields.append(i18n("frames"));
+
+    // Make sure the requested fields actually exist.
+    foreach (const QString &field, requestedFields) {
+      if (vector().list().contains(field)) {
+        _frameFields.append(field);
+      }
+    }
+  }
+
+  return(_frameFields);
+}
+
 bool DataSource::reusable() const {
   return _reusable;
 }

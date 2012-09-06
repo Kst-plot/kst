@@ -37,15 +37,13 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
   public:
 
     /** Parameters for reading vectors a field from a file.  Data is returned in the data;
-      data points to aloocated array which should be filled
+      data points to allocated array which should be filled
       startingFrame is the starting frame
       numberOfFrames is the number of frames to read
         if numberOfFrames is -1, it means to read 1 -sample- from startingFrame.
-      skipFrame skip this frame      
-      returns the number of samples read.
-      If it returns -9999, use the skipFrame= -1. 
+      skipFrame: currently ignored by all data sources
+      lastFrameRead: currently ignored
      */
-
     struct KSTCORE_EXPORT ReadInfo {
       double*  data;
       int startingFrame;
@@ -98,6 +96,12 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     bool doSkip() const;                                        //si^3
     bool doAve() const;
     int skip() const;
+
+    /** Return field used for generalized lookup */
+    QString startUnits() {return _startUnits;}
+    void setStartUnits(const QString &field) {_startUnits = field;}
+    QString rangeUnits() {return _rangeUnits;}
+    void setRangeUnits(const QString &field) {_rangeUnits = field;}
 
     /** Reload the contents of the vector */
     void reload();                                              //si
@@ -172,6 +176,10 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     /** Requested Starting Frame */
     int ReqF0;
 
+    /** generalized index field - empty if we are using frames. */
+    QString _startUnits;
+    QString _rangeUnits;
+
     /** Number of Samples allocated to the vector */
     int _numSamples;
 
@@ -180,7 +188,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
     void checkIntegrity(); // must be called with a lock
 
-    bool _dontUseSkipAccel;
+    //bool _dontUseSkipAccel;
 
     // wrappers around DataSource interface functions
     int readField(double *v, const QString& field, int s, int n, int skip = -1, int *lastFrameRead = 0L);

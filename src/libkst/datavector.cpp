@@ -68,7 +68,7 @@ DataVector::DataVector(ObjectStore *store)
 : Vector(store), DataPrimitive(this) {
 
   _saveable = true;
-  _dontUseSkipAccel = false;
+  //_dontUseSkipAccel = false;
   _numSamples = 0;
   _scalars["sum"]->setValue(0.0);
   _scalars["sumsquared"]->setValue(0.0);
@@ -125,7 +125,7 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
     Skip = 1;
   }
 
-  _dontUseSkipAccel = false;
+  //_dontUseSkipAccel = false;
   setDataSource(in_file);
   ReqF0 = in_f0;
   ReqNF = in_n;
@@ -339,7 +339,7 @@ LabelInfo DataVector::labelInfo() const {
 void DataVector::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  _dontUseSkipAccel = false;
+  //_dontUseSkipAccel = false;
   if (dataSource()) {
     SPF = dataInfo(_field).samplesPerFrame;
   }
@@ -478,13 +478,14 @@ void DataVector::internalUpdate() {
         // FIXME: handle failed resize
       }
     }
-    // FIXME:
+    // FIXME maybe.
     //   -skip acceleration is not supported by any current data sources.
     //   -there is no API implemented to report if a data source implements skip accel
     // so: for now, just say it isn't supported here.  Fix if we ever implement a data source
     //     where skip accel is important (eg, planck HFI...)
+#if 0
     _dontUseSkipAccel = true;
-    if (!_dontUseSkipAccel) {
+    if (!_dontUseSkipAccel) { // ie, use skip accel.  Not used.
       int rc;
       int lastRead = -1;
       if (DoAve) {
@@ -503,37 +504,38 @@ void DataVector::internalUpdate() {
         }
       }
     }
-    if (_dontUseSkipAccel) {
-      n_read = 0;
-      /** read each sample from the File */
-      double *t = _v + _numSamples;
-      int new_nf_Skip = new_nf - Skip;
-      if (DoAve) {
-        for (i = NF; new_nf_Skip >= i; i += Skip) {
-          /* enlarge AveReadBuf if necessary */
-          if (N_AveReadBuf < Skip*SPF) {
-            N_AveReadBuf = Skip*SPF;
-            AveReadBuf = static_cast<double*>(realloc(AveReadBuf, N_AveReadBuf*sizeof(double)));
-            if (!AveReadBuf) {
-              // FIXME: handle failed resize
-            }
+#endif
+//  if (_dontUseSkipAccel) {
+    n_read = 0;
+    /** read each sample from the File */
+    double *t = _v + _numSamples;
+    int new_nf_Skip = new_nf - Skip;
+    if (DoAve) {
+      for (i = NF; new_nf_Skip >= i; i += Skip) {
+        /* enlarge AveReadBuf if necessary */
+        if (N_AveReadBuf < Skip*SPF) {
+          N_AveReadBuf = Skip*SPF;
+          AveReadBuf = static_cast<double*>(realloc(AveReadBuf, N_AveReadBuf*sizeof(double)));
+          if (!AveReadBuf) {
+            // FIXME: handle failed resize
           }
-          ave_nread = readField(AveReadBuf, _field, new_f0+i, Skip);
-          for (k = 1; k < ave_nread; k++) {
-            AveReadBuf[0] += AveReadBuf[k];
-          }
-          if (ave_nread > 0) {
-            *t = AveReadBuf[0]/double(ave_nread);
-            n_read++;
-          }
-          ++t;
         }
-      } else {
-        for (i = NF; new_nf_Skip >= i; i += Skip) {
-          n_read += readField(t++, _field, new_f0 + i, -1);
+        ave_nread = readField(AveReadBuf, _field, new_f0+i, Skip);
+        for (k = 1; k < ave_nread; k++) {
+          AveReadBuf[0] += AveReadBuf[k];
         }
+        if (ave_nread > 0) {
+          *t = AveReadBuf[0]/double(ave_nread);
+          n_read++;
+        }
+        ++t;
+      }
+    } else {
+      for (i = NF; new_nf_Skip >= i; i += Skip) {
+        n_read += readField(t++, _field, new_f0 + i, -1);
       }
     }
+//  } // end if _dontUseSkipAccel
   } else {
     // reallocate V if necessary
     if ((new_nf - 1)*SPF + 1 != _size) {

@@ -268,8 +268,10 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   updateUpdateBox();
+  updateIndexList(_dataSource);
 
   _dataSource->unlock();
+
 
   validating = false;
 
@@ -281,6 +283,7 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->clear();
   _field->setEnabled(false);
   _configure->setEnabled(false);
+  clearIndexList();
   emit sourceChanged();
 
   _requestID += 1;
@@ -364,9 +367,28 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
     _vectorTab->setDataSource(dataVector->dataSource());
+    _vectorTab->updateIndexList(dataVector->dataSource());
     _vectorTab->setField(dataVector->field());
-    _vectorTab->dataRange()->setRange(dataVector->numFrames());
-    _vectorTab->dataRange()->setStart(dataVector->startFrame());
+
+    _vectorTab->dataRange()->setRangeUnits(dataVector->rangeUnits());
+    if ( _vectorTab->dataRange()->rangeUnitsIndex()>0) {
+      double frame_per_index = dataVector->dataSource()->framePerIndex(dataVector->startUnits());
+      if (frame_per_index == 0) {
+        frame_per_index = 1.0;
+      }
+      _vectorTab->dataRange()->setRange(dataVector->numFrames()/frame_per_index);
+
+    } else {
+      _vectorTab->dataRange()->setRange(dataVector->numFrames());
+    }
+
+    _vectorTab->dataRange()->setStartUnits(dataVector->startUnits());
+    if (_vectorTab->dataRange()->startUnitsIndex()>0) {
+      _vectorTab->dataRange()->setStart(dataVector->dataSource()->frameToIndex(dataVector->startFrame(),dataVector->startUnits()));
+    } else {
+      _vectorTab->dataRange()->setStart(dataVector->startFrame());
+    }
+
     _vectorTab->dataRange()->setCountFromEnd(dataVector->countFromEOF());
     _vectorTab->dataRange()->setReadToEnd(dataVector->readToEOF());
     _vectorTab->dataRange()->setSkip(dataVector->skip());
@@ -409,6 +431,16 @@ ObjectPtr VectorDialog::createNewDataObject() {
 }
 
 
+void VectorTab::updateIndexList(DataSourcePtr dataSource) {
+  dataRange()->updateIndexList(dataSource->indexFields());
+}
+
+
+void VectorTab::clearIndexList() {
+  dataRange()->clearIndexList();
+}
+
+
 ObjectPtr VectorDialog::createNewDataVector() {
   const DataSourcePtr dataSource = _vectorTab->dataSource();
 
@@ -423,13 +455,27 @@ ObjectPtr VectorDialog::createNewDataVector() {
 
   DataVectorPtr vector = _document->objectStore()->createObject<DataVector>();
 
+  double startOffset = dataRange->start();
+  double rangeCount = dataRange->range();
+
+  if ((dataRange->_startUnits->currentIndex() != 0) && (!dataRange->countFromEnd())) {
+    startOffset = _vectorTab->dataSource()->indexToFrame(dataRange->start(), dataRange->startUnits());
+  }
+
+  if ((dataRange->_rangeUnits->currentIndex() != 0) && (!dataRange->readToEnd())) {
+    rangeCount = dataRange->range()*_vectorTab->dataSource()->framePerIndex(dataRange->rangeUnits());
+  }
+
   vector->writeLock();
   vector->change(dataSource, field,
-      dataRange->countFromEnd() ? -1 : int(dataRange->start()),
-      dataRange->readToEnd() ? -1 : int(dataRange->range()),
+      dataRange->countFromEnd() ? -1 : int(startOffset),
+      dataRange->readToEnd() ? -1 : int(rangeCount),
       dataRange->skip(),
       dataRange->doSkip(),
       dataRange->doFilter());
+
+  vector->setRangeUnits(dataRange->rangeUnits());
+  vector->setStartUnits(dataRange->startUnits());
 
   if (DataDialog::tagStringAuto()) {
      vector->setDescriptiveName(QString());
@@ -507,10 +553,22 @@ ObjectPtr VectorDialog::editExistingDataObject() const {
       const QString field = _vectorTab->field();
       const DataRange *dataRange = _vectorTab->dataRange();
 
+      double startOffset = dataRange->start();
+      double rangeCount = dataRange->range();
+
+      if ((dataRange->_startUnits->currentIndex() != 0) && (!dataRange->countFromEnd())) {
+        startOffset = _vectorTab->dataSource()->indexToFrame(dataRange->start(), dataRange->startUnits());
+      }
+
+      if ((dataRange->_rangeUnits->currentIndex() != 0) && (!dataRange->readToEnd())) {
+        rangeCount = dataRange->range()*_vectorTab->dataSource()->framePerIndex(dataRange->rangeUnits()) + 0.0001;
+      }
+
+
       dataVector->writeLock();
       dataVector->change(dataSource, field,
-        dataRange->countFromEnd() ? -1 : int(dataRange->start()),
-        dataRange->readToEnd() ? -1 : int(dataRange->range()),
+        dataRange->countFromEnd() ? -1 : int(startOffset),
+        dataRange->readToEnd() ? -1 : int(rangeCount),
         dataRange->skip(),
         dataRange->doSkip(),
         dataRange->doFilter());

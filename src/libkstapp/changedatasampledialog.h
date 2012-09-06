@@ -54,6 +54,8 @@ class ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
   private:
     void updateCurveListDialog();
 
+    void updateIndexEntries();
+
     ObjectStore *_store;
 
 };

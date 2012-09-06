@@ -225,11 +225,6 @@
         <property name="si" stdset="0">
          <string>start units</string>
         </property>
-        <item>
-         <property name="text">
-          <string>frames</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="1" column="3">
@@ -240,11 +235,6 @@
         <property name="si" stdset="0">
          <string>range units</string>
         </property>
-        <item>
-         <property name="text">
-          <string>frames</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>

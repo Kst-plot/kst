@@ -60,7 +60,7 @@ class KSTCORE_EXPORT DataSource : public Object
     {
 
       virtual ~DataInterface() {}
-      // read one element
+      // read data.  The buffer and range info are in ReadInfo
       virtual int read(const QString& name, typename T::ReadInfo&) = 0;
 
       // named elements
@@ -137,6 +137,18 @@ class KSTCORE_EXPORT DataSource : public Object
     // in (ms)
     virtual double relativeTimeForSample(int sample, bool *ok = 0L);
 
+    /************************************************************/
+    /* Methods for using custom lookup vectors, like TIME.      */
+    /* "Index" refers to custom lookup vector.                  */
+    /* For all of these, a default implementation is provided   */
+    /* in the base class.                                       */
+    /************************************************************/
+    /** returns the frame number corresponding to an index value from a frame */
+    virtual int indexToFrame(double index, const QString &field);
+    virtual double frameToIndex(int frame, const QString &field);
+    virtual double readDespikedIndex(int frame, const QString &field);
+    virtual double framePerIndex(const QString &field);
+    virtual QStringList &indexFields();
 
 
     /************************************************************/
@@ -244,6 +256,7 @@ class KSTCORE_EXPORT DataSource : public Object
     void setInterface(DataInterface<DataVector>*);
     void setInterface(DataInterface<DataMatrix>*);
 
+    QStringList _frameFields;
   private:
     DataSource();
 

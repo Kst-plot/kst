@@ -63,7 +63,22 @@ bool DataRange::startDirty() const {
 
 
 void DataRange::setStart(qreal start) {
-  _start->setText(QString::number(start));
+  _start->setText(QString::number(start, 'g', 12));
+}
+
+void DataRange::clearIndexList() {
+  _startUnits->clear();
+  _rangeUnits->clear();
+}
+
+
+void DataRange::updateIndexList(const QStringList &indexFields) {
+  _startUnits->clear();
+  _startUnits->addItems(indexFields);
+  setStartUnits(_requestedStartUnits);
+  _rangeUnits->clear();
+  _rangeUnits->addItems(indexFields);
+  setRangeUnits(_requestedRangeUnits);
 }
 
 
@@ -72,13 +87,27 @@ QString DataRange::startUnits() const {
 }
 
 
-void DataRange::setStartUnits(const QString &startUnits) const {
-  _startUnits->setItemText(_startUnits->currentIndex(), startUnits);
+int DataRange::startUnitsIndex() const {
+  return _startUnits->currentIndex();
+}
+
+
+void DataRange::setStartUnits(const QString &startUnits) {
+  _requestedStartUnits = startUnits;
+  int i = _startUnits->findText(startUnits);
+  if (i>=0) {
+    _startUnits->setCurrentIndex(i);
+  }
 }
 
 
 qreal DataRange::range() const {
   return _range->text().toDouble();
+}
+
+
+int DataRange::rangeUnitsIndex()  const {
+  return _rangeUnits->currentIndex();
 }
 
 
@@ -97,8 +126,14 @@ QString DataRange::rangeUnits() const {
 }
 
 
-void DataRange::setRangeUnits(const QString &rangeUnits) const {
-  _rangeUnits->setItemText(_startUnits->currentIndex(), rangeUnits);
+void DataRange::setRangeUnits(const QString &rangeUnits) {
+  _requestedRangeUnits = rangeUnits;
+  int i = _rangeUnits->findText(rangeUnits);
+  if (i>=0) {
+    _rangeUnits->setCurrentIndex(i);
+  } else {
+    _rangeUnits->setCurrentIndex(0);
+  }
 }
 
 
@@ -212,6 +247,8 @@ void DataRange::setWidgetDefaults() {
   _dialogDefaults->setValue("vector/skip", skip());
   _dialogDefaults->setValue("vector/doSkip", doSkip());
   _dialogDefaults->setValue("vector/doAve", doFilter());
+  _dialogDefaults->setValue("vector/rangeUnits", rangeUnits());
+  _dialogDefaults->setValue("vector/startUnits", rangeUnits());
 }
 
 void DataRange::loadWidgetDefaults() {
@@ -222,6 +259,8 @@ void DataRange::loadWidgetDefaults() {
   setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
   setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
   setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
+  setRangeUnits(_dialogDefaults->value("vector/rangeUnits",tr("frames")).toString());
+  setStartUnits(_dialogDefaults->value("vector/startUnits",tr("frames")).toString());
 }
 
 }

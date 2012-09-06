@@ -44,7 +44,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     bool isComplete() const;
     QStringList dataSourceFieldList() const;
 
-  DataSourcePtr dataSource() const;
+    DataSourcePtr dataSource() const;
 
   public Q_SLOTS:
     void sourceChanged(const QString&);
@@ -181,6 +181,7 @@ class DataWizard : public QWizard
     virtual ~DataWizard();
 
     QStringList dataSourceFieldList() const;
+    QStringList dataSourceIndexList() const;
 
   private:
     DataWizardPageDataSource *_pageDataSource;
