@@ -967,7 +967,7 @@ void MainWindow::createActions() {
   _printAct->setIcon(QPixmap(":document-print.png"));
   connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
 
-  _exportGraphicsAct = new QAction(tr("&Export as Image..."), this);
+  _exportGraphicsAct = new QAction(tr("&Export as Image(s)..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   _exportGraphicsAct->setIcon(QPixmap(":image-x-generic.png"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
