@@ -636,7 +636,7 @@ void DataObject::unlockInputsAndOutputs() const {
 }
 
 
-bool DataObject::isValid() const {
+bool DataObject::isValid() {
   return true;
 }
 

@@ -36,7 +36,7 @@ class EventMonitorTab : public DataTab, Ui::EventMonitorTab {
     bool scriptDirty() const;
     void setScript(const QString script);
 
-    QString event() const;
+    QString kstEvent() const;
     bool eventDirty() const;
     void setEvent(const QString event);
 

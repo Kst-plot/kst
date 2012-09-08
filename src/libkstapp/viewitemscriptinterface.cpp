@@ -201,8 +201,7 @@ QString DimensionTabSI::doCommand(QString x) {
 
     qreal relativeWidth = (command == "setGeoX") ? parameter :item->relativeWidth();
     qreal relativeHeight = (command == "setGeoY") ? parameter :item->relativeHeight();
-    bool fixedAspect = (command == "checkFixAspectRatio") ? true :item->lockAspectRatio();
-    fixedAspect = (command == "uncheckFixAspectRatio") ? false :item->lockAspectRatio();
+    bool fixedAspect = (command == "uncheckFixAspectRatio") ? false :item->lockAspectRatio();
 
     qreal width = relativeWidth * parentWidth;
     qreal height;

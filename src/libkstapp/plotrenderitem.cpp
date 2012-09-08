@@ -98,12 +98,12 @@ void PlotRenderItem::setReferencePoint(const QPointF& point) {
 }
 
 
-PlotRenderItem::RenderType PlotRenderItem::type() {
+PlotRenderItem::RenderType PlotRenderItem::renderType() const {
   return _type;
 }
 
 
-void PlotRenderItem::setType(PlotRenderItem::RenderType type) {
+void PlotRenderItem::setRenderType(PlotRenderItem::RenderType type) {
   _type = type;
 }
 
@@ -200,7 +200,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
   QStringRef av;
   av = attrs.value("type");
   if (!av.isNull()) {
-    setType((RenderType)av.toString().toInt());
+    setRenderType((RenderType)av.toString().toInt());
   }
   QString expectedEnd;
   while (!(xml.isEndElement() && (xml.name().toString() == primaryTag))) {
@@ -866,8 +866,8 @@ void PlotRenderItem::createAutoLayout() {
 }
 
 
-void PlotRenderItem::createCustomLayout() {
-  plotItem()->createCustomLayout();
+void PlotRenderItem::createCustomLayout(int columns) {
+  plotItem()->createCustomLayout(columns);
 }
 
 

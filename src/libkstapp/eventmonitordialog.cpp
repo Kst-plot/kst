@@ -99,7 +99,7 @@ void EventMonitorTab::setScript(const QString script) {
 }
 
 
-QString EventMonitorTab::event() const {
+QString EventMonitorTab::kstEvent() const {
   return _equation->text();
 }
 
@@ -288,7 +288,7 @@ void EventMonitorDialog::editSingleMode() {
 void EventMonitorDialog::configureTab(ObjectPtr object) {
   if (EventMonitorEntryPtr eventMonitorEntry = kst_cast<EventMonitorEntry>(object)) {
     _eventMonitorTab->setScript(eventMonitorEntry->scriptCode());
-    _eventMonitorTab->setEvent(eventMonitorEntry->event());
+    _eventMonitorTab->setEvent(eventMonitorEntry->kstEvent());
     _eventMonitorTab->setDescription(eventMonitorEntry->description());
     _eventMonitorTab->setLogLevel(eventMonitorEntry->level());
     _eventMonitorTab->setLogDebug(eventMonitorEntry->logDebug());
@@ -307,7 +307,7 @@ void EventMonitorDialog::configureTab(ObjectPtr object) {
 
 
 void EventMonitorDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_eventMonitorTab->event().isEmpty() || (editMode() == EditMultiple));
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_eventMonitorTab->kstEvent().isEmpty() || (editMode() == EditMultiple));
 }
 
 
@@ -316,7 +316,7 @@ ObjectPtr EventMonitorDialog::createNewDataObject() {
   EventMonitorEntryPtr eventMonitor = _document->objectStore()->createObject<EventMonitorEntry>();
 
   eventMonitor->setScriptCode(_eventMonitorTab->script());
-  eventMonitor->setEvent(_eventMonitorTab->event());
+  eventMonitor->setEvent(_eventMonitorTab->kstEvent());
   eventMonitor->setDescription(_eventMonitorTab->description());
   eventMonitor->setLevel(_eventMonitorTab->logLevel());
   eventMonitor->setLogDebug(_eventMonitorTab->logDebug());
@@ -342,7 +342,7 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
         EventMonitorEntryPtr eventMonitor = kst_cast<EventMonitorEntry>(_document->objectStore()->retrieveObject(objectName));
         if (eventMonitor) {
           const QString script = _eventMonitorTab->scriptDirty() ? _eventMonitorTab->script() : eventMonitor->scriptCode();
-          const QString event = _eventMonitorTab->eventDirty() ? _eventMonitorTab->event() : eventMonitor->event();
+          const QString event = _eventMonitorTab->eventDirty() ? _eventMonitorTab->kstEvent() : eventMonitor->kstEvent();
           const QString description = _eventMonitorTab->descriptionDirty() ? _eventMonitorTab->description() : eventMonitor->description();
           const QString emailRecipients = _eventMonitorTab->emailRecipientsDirty() ? _eventMonitorTab->emailRecipients() : eventMonitor->eMailRecipients();
           const Debug::LogLevel logLevel = _eventMonitorTab->logLevelDirty() ?  _eventMonitorTab->logLevel() : eventMonitor->level();
@@ -368,7 +368,7 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
     } else {
       eventMonitor->writeLock();
       eventMonitor->setScriptCode(_eventMonitorTab->script());
-      eventMonitor->setEvent(_eventMonitorTab->event());
+      eventMonitor->setEvent(_eventMonitorTab->kstEvent());
       eventMonitor->setDescription(_eventMonitorTab->description());
       eventMonitor->setLevel(_eventMonitorTab->logLevel());
       eventMonitor->setLogDebug(_eventMonitorTab->logDebug());

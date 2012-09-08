@@ -219,7 +219,7 @@ bool GenericFilterSource::algorithm() {
   // Create filter
   filter<double> theFilter(Num,Den,DeltaT);
   double in = 0.0;
-  theFilter.ConnectTo(in);
+  theFilter.ConnectTo(in); // the filter keeps a pointer to "in"
   theFilter.Reset();
   for (int i=0; i<length; i++) {
     in = inputVector->value()[i];

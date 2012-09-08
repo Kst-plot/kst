@@ -37,8 +37,8 @@ class PlotRenderItem : public ViewItem
 
     PlotItem *plotItem() const;
 
-    RenderType type();
-    void setType(RenderType type);
+    virtual RenderType renderType() const;
+    void setRenderType(RenderType type);
 
     QRectF plotRect() const;
 
@@ -76,7 +76,7 @@ class PlotRenderItem : public ViewItem
     virtual void raise();
     virtual void lower();
     virtual void createAutoLayout();
-    virtual void createCustomLayout();
+    virtual void createCustomLayout(int columns = 0);
     virtual void remove();
     virtual void referenceMode();
     virtual void referenceModeDisabled();

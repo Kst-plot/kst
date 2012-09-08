@@ -218,7 +218,6 @@ void Matrix::calcNoSpikeRange(double per) {
 
   // prefill the list
   for (i=0; i<n_list; i++) {
-    j = int(i*n_skip);
     min_list[i] = 1E+300;
     max_list[i] = -1E+300;
   }

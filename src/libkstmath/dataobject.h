@@ -108,7 +108,7 @@ class KSTMATH_EXPORT DataObject : public Object
     virtual void writeLock() const;
     virtual void unlock() const;
 
-    virtual bool isValid() const;
+    virtual bool isValid();
 
     virtual const CurveHintList* curveHints() const;
 

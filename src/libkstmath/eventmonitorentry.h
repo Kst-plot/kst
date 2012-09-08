@@ -41,10 +41,10 @@ class KSTMATH_EXPORT EventMonitorEntry : public DataObject {
     void showEditDialog();
 
     bool needToEvaluate();
-    bool isValid() const { return _isValid; }
+    bool isValid() { return _isValid; }
 
     void log(int idx);
-    const QString& event() const { return _event; }
+    const QString& kstEvent() const { return _event; }
     const QString& description() const { return _description; }
     Debug::LogLevel level() const { return _level; }
     Equations::Node* expression() const { return _pExpression; }

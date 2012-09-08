@@ -104,7 +104,7 @@ class View : public QGraphicsView
     void setDataMode(bool dataMode) { _dataMode = dataMode; }
     bool isDataMode() { return _dataMode; }
 
-    virtual void contextMenuEvent();
+    virtual void contextMenuEvent( QContextMenuEvent * event = 0);
 
     bool plotBordersDirty() const {return _plotBordersDirty;}
     void setPlotBordersDirty(bool dirty) {_plotBordersDirty = dirty;}

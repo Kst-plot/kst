@@ -53,7 +53,7 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     virtual QString descriptionTip() const;
 
     // Validator of plugin data.  Expensive, only use to verify successful creation.
-    bool isValid() { return (inputsExist() && algorithm()); }
+    virtual bool isValid() { return (inputsExist() && algorithm()); }
     QString errorMessage() { return _errorString; }
 
   public slots:

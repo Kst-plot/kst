@@ -63,7 +63,7 @@ class KSTMATH_EXPORT Equation : public DataObject {
 
     bool doInterp() const { return _doInterp; }
 
-    bool isValid() const;
+    bool isValid();
 
     void showNewDialog();
     void showEditDialog();

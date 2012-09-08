@@ -105,7 +105,7 @@ const CurveHintList *Equation::curveHints() const {
 }
 
 
-bool Equation::isValid() const {
+bool Equation::isValid() {
   return _isValid;
 }
 
