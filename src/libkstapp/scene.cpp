@@ -41,7 +41,7 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QList<QGraphicsItem*> list = items(event->scenePos());
   if (list.isEmpty()) {
     if (View *view = qobject_cast<View*>(parent())) {
-      view->contextMenuEvent();
+      view->viewContextMenuEvent();
     }
   } else {
     foreach (QGraphicsItem *item, list) {

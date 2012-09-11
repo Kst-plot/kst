@@ -226,6 +226,8 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   QString descriptiveName;
   int start=0, count=0, skip = -1;
   bool doAve=false;
+  QString start_units;
+  QString range_units;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -240,6 +242,8 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         count = attrs.value("count").toString().toInt();
         skip = attrs.value("skip").toString().toInt();
         doAve = attrs.value("doAve").toString() == "true" ? true : false;
+        start_units = attrs.value("startUnits").toString();
+        range_units = attrs.value("rangeUnits").toString();
 
         // set overrides if set from command line
         if (!store->override.fileName.isEmpty()) {
@@ -304,6 +308,8 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
       doAve);
 
   vector->setDescriptiveName(descriptiveName);
+  vector->setStartUnits(start_units);
+  vector->setRangeUnits(range_units);
   vector->registerChange();
   vector->unlock();
 

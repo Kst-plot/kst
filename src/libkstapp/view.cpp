@@ -675,8 +675,7 @@ void View::configurePlotFontDefaults(PlotItem *plot) {
 }
 
 
-void View::contextMenuEvent( QContextMenuEvent * event ) {
-  Q_UNUSED(event)
+void View::viewContextMenuEvent() {
   QMenu menu;
 
   addTitle(&menu);
