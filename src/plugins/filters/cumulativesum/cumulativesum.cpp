@@ -33,7 +33,7 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
       _store = store; 
       _vector->setObjectStore(store); 
       _scalarStep->setObjectStore(store);
-      _scalarStep->setDefaultValue(0);
+      _scalarStep->setDefaultValue(1.0);
     }
 
     void setupSlots(QWidget* dialog) {
@@ -171,11 +171,11 @@ bool CumulativeSumSource::algorithm() {
 
 
   /* Memory allocation */
-  outputVector->resize(inputVector->length()+1, true);
+  outputVector->resize(inputVector->length(), true);
 
-  outputVector->value()[0] = 0.0;
+  outputVector->value()[0] = inputVector->value()[0];
 
-  for (int i = 0; i < inputVector->length(); i++) {
+  for (int i = 0; i < inputVector->length()-1; i++) {
     outputVector->value()[i+1] = inputVector->value()[i]*inputScalar->value() + outputVector->value()[i];
   }
 

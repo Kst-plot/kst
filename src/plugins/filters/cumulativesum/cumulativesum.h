@@ -65,7 +65,7 @@ class CumulativeSumPlugin : public QObject, public Kst::DataObjectPluginInterfac
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;
 
-    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Filter; }
+    virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Generic; }
 
     virtual bool hasConfigWidget() const { return true; }
 
