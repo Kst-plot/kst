@@ -12,15 +12,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CUMULATIVESUMPLUGIN_H
-#define CUMULATIVESUMPLUGIN_H
+#ifndef CUMULATIVEAVERAGEPLUGIN_H
+#define CUMULATIVEAVERAGEPLUGIN_H
 
 #include <QFile>
 
 #include <basicplugin.h>
 #include <dataobjectplugin.h>
 
-class CumulativeSumSource : public Kst::BasicPlugin {
+class CumulativeAverageSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
@@ -29,7 +29,6 @@ class CumulativeSumSource : public Kst::BasicPlugin {
     virtual QString descriptionTip() const;
 
     Kst::VectorPtr vector() const;
-    Kst::ScalarPtr scalarStep() const;
 
     virtual void change(Kst::DataObjectConfigWidget *configWidget);
 
@@ -46,8 +45,8 @@ class CumulativeSumSource : public Kst::BasicPlugin {
     virtual void saveProperties(QXmlStreamWriter &s);
 
   protected:
-    CumulativeSumSource(Kst::ObjectStore *store);
-    ~CumulativeSumSource();
+    CumulativeAverageSource(Kst::ObjectStore *store);
+    ~CumulativeAverageSource();
 
   friend class Kst::ObjectStore;
 
@@ -55,12 +54,11 @@ class CumulativeSumSource : public Kst::BasicPlugin {
 };
 
 
-class CumulativeSumPlugin : public QObject, public Kst::DataObjectPluginInterface {
+class CumulativeAveragePlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0")
   public:
-    virtual ~CumulativeSumPlugin() {}
+    virtual ~CumulativeAveragePlugin() {}
 
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;

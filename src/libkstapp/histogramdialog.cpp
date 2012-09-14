@@ -437,6 +437,9 @@ ObjectPtr HistogramDialog::createNewDataObject() {
 
           if (_histogramTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
               plotItem->view()->appendToLayout(_histogramTab->curvePlacement()->layout(), plotItem, _histogramTab->curvePlacement()->gridColumns());
+              if (_histogramTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+                plotItem->createCustomLayout(_histogramTab->curvePlacement()->gridColumns());
+              }
           }
       }
   }

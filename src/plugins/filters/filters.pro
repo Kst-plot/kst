@@ -6,7 +6,8 @@ CONFIG += ordered
 SUBDIRS += \
     despike \
     cumulativesum \
-    differentiation
+    differentiation \
+    cumulativeaverage
 
 LibExists(gsl) {
      SUBDIRS += butterworth_bandpass \

@@ -60,6 +60,7 @@ QString Document::fileName() const {
 ObjectList<DataObject> Document::sortedDataObjectList() {
   ObjectList<DataObject> sorted;
   ObjectList<DataObject> raw = objectStore()->getObjects<DataObject>();
+
   sorted.clear();
 
 
@@ -82,7 +83,7 @@ ObjectList<DataObject> Document::sortedDataObjectList() {
   // or whose inputs have parents which are already in the sorted list.
   // do this at most n^2 times, which is worse than worse case.
   int i=0;
-  while (!raw.isEmpty() && (++i < n*n)) {
+  while (!raw.isEmpty() && (++i <= n*n)) {
     DataObjectPtr D = raw.takeFirst();
     if (D->inputFlagsSet()) {
       D->setOutputFlags(true);

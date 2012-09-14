@@ -286,6 +286,9 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
 
           if (_powerSpectrumTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
               plotItem->view()->appendToLayout(_powerSpectrumTab->curvePlacement()->layout(), plotItem, _powerSpectrumTab->curvePlacement()->gridColumns());
+              if (_powerSpectrumTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+                plotItem->createCustomLayout(_powerSpectrumTab->curvePlacement()->gridColumns());
+              }
           }
       }
   }

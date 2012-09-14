@@ -109,7 +109,7 @@ StatisticsSource::~StatisticsSource() {
 
 
 QString StatisticsSource::_automaticDescriptiveName() const {
-  return QString("Statistics Plugin Object");
+  return _inputVectors[VECTOR_IN]->descriptiveName() + QString("Statistics");
 }
 
 

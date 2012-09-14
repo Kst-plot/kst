@@ -41,6 +41,8 @@ FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
   _curveAppearance->setVisible(false);
   _curvePlacement->setVisible(false);
   _ignoreAutoScale->setVisible(false);
+  _curvePlacement->setPlace(CurvePlacement::NoPlot);
+
   pluginChanged(pluginName);
   connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
 }
@@ -235,6 +237,9 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
           }
           plotItem->view()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
                                            _filterFitTab->curvePlacement()->gridColumns());
+          if (_filterFitTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+            plotItem->createCustomLayout(_filterFitTab->curvePlacement()->gridColumns());
+          }
           break;
       }
       default:

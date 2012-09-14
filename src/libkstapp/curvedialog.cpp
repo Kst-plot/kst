@@ -466,6 +466,9 @@ ObjectPtr CurveDialog::createNewDataObject() {
 
           if (_curveTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
               plotItem->view()->appendToLayout(_curveTab->curvePlacement()->layout(), plotItem, _curveTab->curvePlacement()->gridColumns());
+              if (_curveTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+                plotItem->createCustomLayout(_curveTab->curvePlacement()->gridColumns());
+              }
           }
       }
   }

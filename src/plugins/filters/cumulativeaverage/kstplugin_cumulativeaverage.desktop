@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=cumulativeaverage
+X-Kst-Plugin-Author=dkruger
+Name=Cumulative Average Data Object Plugin
+Comment=Implements a Cumulative Averge Data Object Plugin for Kst.

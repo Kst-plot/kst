@@ -506,6 +506,9 @@ ObjectPtr ImageDialog::createNewDataObject() {
 
           if (_imageTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
               plotItem->view()->appendToLayout(_imageTab->curvePlacement()->layout(), plotItem, _imageTab->curvePlacement()->gridColumns());
+              if (_imageTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+                plotItem->createCustomLayout(_imageTab->curvePlacement()->gridColumns());
+              }
           }
       }
   }

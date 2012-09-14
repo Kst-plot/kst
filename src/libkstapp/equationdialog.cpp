@@ -373,6 +373,9 @@ ObjectPtr EquationDialog::createNewDataObject() {
 
           if (_equationTab->curvePlacement()->place() != CurvePlacement::ExistingPlot) {
               plotItem->view()->appendToLayout(_equationTab->curvePlacement()->layout(), plotItem, _equationTab->curvePlacement()->gridColumns());
+              if (_equationTab->curvePlacement()->layout() == CurvePlacement::Custom) {
+                plotItem->createCustomLayout(_equationTab->curvePlacement()->gridColumns());
+              }
           }
       }
   }
