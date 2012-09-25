@@ -475,7 +475,7 @@ class DataVector(Vector):
     import pykst as kst
     client = kst.Client()
     v = kst.DataVector(client,"/foo.bar","foo",False,True,False,3,10,2,False) """
-  def __init__(self,client,filename,field="INDEX",changeDetection=True,timeInterval=False,dontUpdate=False,start=0,drange=-1,skip=False,boxcarFirst=False,name="") : 
+  def __init__(self,client,filename,field="INDEX",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=-1,skip=False,boxcarFirst=False,name="") : 
     Vector.__init__(self,client)
     self.handle=QtCore.QString(self.client.send("#newVectorFromDataSource("+b2str(filename)+","+b2str(field)+","+b2str(changeDetection)+","+b2str(timeInterval)+","+b2str(dontUpdate)+","+b2str(start)+","+b2str(drange)+","+b2str(skip)+","+b2str(boxcarFirst)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -722,13 +722,23 @@ class NewCurve(Curve) :
   headtype is the index of a point style. See details for pointtype.
     
   To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be True or False. If the descriptive names could be True or False either leave a space
-  after the name, or better yet, use short names.
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,xaxis,yaxis,plusxerrorbar="",plusyerrorbar="",minusxerrorbar="",minusyerrorbar="",usexplusforminus=True,useyplusforminus=True,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=False,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,xaxis,yaxis,plusxerrorbar="",plusyerrorbar="",minusxerrorbar="",minusyerrorbar="",usexplusforminus=True,useyplusforminus=True,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Curve.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+      
     self.handle=QtCore.QString(self.client.send("#newCurve("+b2str(xaxis)+","+b2str(yaxis)+","+b2str(plusxerrorbar)+","+b2str(plusyerrorbar)+","+b2str(minusxerrorbar)+","+b2str(minusyerrorbar)+","+b2str(usexplusforminus)+","+b2str(useyplusforminus)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
@@ -777,8 +787,9 @@ class NewEquation(Equation) :
   headtype is the index of a point style. See details for pointtype.
     
   To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be True or False. If the descriptive names could be True or False either leave a space
-  after the name, or better yet, use short names.
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI).
@@ -790,8 +801,17 @@ class NewEquation(Equation) :
     x=kst.GeneratedVector(client,-100,100,1000000)
     eq = st.NewEquation(client,"x^2","["+self.genVec.handle+"]",True,"black",0,1,True,False,"","",False,"","",False,"","",False,"Plot",False,False,"","","")"""
   
-  def __init__(self,client,equation,xvector,interploate=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=False,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,equation,xvector,interploate=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Equation.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+      
     self.handle=QtCore.QString(self.client.send("#newEquation("+b2str(equation)+","+b2str(xvector)+","+b2str(interploate)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
@@ -831,14 +851,24 @@ class ColorImage(Image) :
   The parameters of this function mirror the parameters within "Create>Image>Color Map".
     
   To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be True or False. If the descriptive names could be True or False either leave a space
-  after the name, or better yet, use short names.
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
   
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,donotplaceinanyplot=False,placeinexistingplot=False,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+
     self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
@@ -849,13 +879,23 @@ class ContourImage(Image) :
   The parameters of this function mirror the parameters within "Create>Image>Contour Map".
     
   To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be True or False. If the descriptive names could be True or False either leave a space
-  after the name, or better yet, use short names.
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,matrix,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=False,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+
     self.handle=QtCore.QString(self.client.send("#newImageFromContourMap("+b2str(matrix)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
@@ -866,13 +906,23 @@ class ColorContourImage(Image) :
   The parameters of this function mirror the parameters within "Create>Image>Color Map and Contour Map".
     
   To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be True or False. If the descriptive names could be True or False either leave a space
-  after the name, or better yet, use short names.
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=False,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+
     self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
@@ -899,14 +949,132 @@ class ExistingImage(Image) :
 
 
 
-class PowerSpectrum(NamedObject):
+class Spectrum(NamedObject):
   """ TODO... """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
 
+class NewSpectrum(Spectrum) :
+  """ This class represents an spectrum you would create via "Create>Spectrum" from the menubar inside kst.
+  The parameters of this function mirror the parameters within "Create>Spectrum".
+        
+  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
+    
+  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
+    
+  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
+  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
+  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
+    
+  headtype is the index of a point style. See details for pointtype.
+    
+  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
+    
+  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
+  by the GUI).
+    
+  ToDo: examples """
+  
+  def __init__(self,client,vector,removeMean=True,apodize=True,function="",sigma=1.0,interleaved=True,length=10,interpolate=True,rate=1.0,vectorUnits="",rateUnits="",outputType="",curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+    Spectrum.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+      
+    self.handle=QtCore.QString(self.client.send("#newSpectrum("+b2str(vector)+","+b2str(removeMean)+","+b2str(apodize)+","+b2str(function)+","+b2str(sigma)+","+b2str(interleaved)+","+b2str(length)+","+b2str(interpolate)+","+b2str(rate)+","+b2str(vectorUnits)+","+b2str(rateUnits)+","+b2str(outputType)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+class ExistingSpectrum(Spectrum) :
+  """ This class allows access to an spectrum created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of an spectrum created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    Spectrum.__init__(self,client)
+    self.handle=handle
+    
+  @classmethod
+  def getList(cls,client):
+    x=QtCore.QString(client.send("getPSDList()"))
+    ret=[]
+    while x.contains('['):
+      y=QtCore.QString(x)
+      y.remove(0,1)
+      y.remove(y.indexOf(']'),9999999)
+      x.remove(0,x.indexOf(']')+1)
+      ret.append(ExistingSpectrum(client,y))
+    return ret
 
 
+class Histogram(NamedObject):
+  """ TODO... """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
 
+class NewHistogram(Histogram) :
+  """ This class represents an histogram you would create via "Create>Histogram" from the menubar inside kst.
+  The parameters of this function mirror the parameters within "Create>Histogram".
+        
+  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
+    
+  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
+    
+  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
+  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
+  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
+    
+  headtype is the index of a point style. See details for pointtype.
+    
+  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
+  The descriptive name should never be " ".  If it is, include the short name.
+  
+  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
+    
+  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
+  by the GUI).
+    
+  ToDo: examples """
+  
+  def __init__(self,client,vector,rtAutoBin=True,binsFrom=0,binsTo=1,nbins=40,yaxisNormNumInBin=True,yaxisNormFracInBin=False,yaxisNormPercentInBin=False,yaxisNormPeakAt1=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+    Histogram.__init__(self,client)
+    if placeinexistingplot != " ":
+      donotplaceinanyplot=False
+      placeinnewplot=False
+      placeinnewtab=False
+    if donotplaceinanyplot == True:
+      placeinnewplot=False
+      placeinnewtab=False
+      placeinexistingplot = " "
+      
+    self.handle=QtCore.QString(self.client.send("#newHistogram("+b2str(vector)+","+b2str(rtAutoBin)+","+b2str(binsFrom)+","+b2str(binsTo)+","+b2str(nbins)+","+b2str(yaxisNormNumInBin)+","+b2str(yaxisNormFracInBin)+","+b2str(yaxisNormPercentInBin)+","+b2str(yaxisNormPeakAt1)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+class ExistingHistogram(Histogram) :
+  """ This class allows access to an histogram created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of an histogram created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    Histogram.__init__(self,client)
+    self.handle=handle
+    
+  @classmethod
+  def getList(cls,client):
+    x=QtCore.QString(client.send("getPSDList()"))
+    ret=[]
+    while x.contains('['):
+      y=QtCore.QString(x)
+      y.remove(0,1)
+      y.remove(y.indexOf(']'),9999999)
+      x.remove(0,x.indexOf(']')+1)
+      ret.append(ExistingHistogram(client,y))
+    return ret
 
 class Spectrogram(NamedObject):
   """ TODO... """

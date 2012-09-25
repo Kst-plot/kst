@@ -221,6 +221,7 @@ void BasicPlugin::setOutputString(const QString &type, const QString &name) {
 
 
 void BasicPlugin::internalUpdate() {
+
   //Make sure we have all the necessary inputs
   if (!inputsExist())
     return;
@@ -289,7 +290,9 @@ QString BasicPlugin::label(int precision) const {
   QString label;
   QString paramName;
 
-  label = Name();
+  VectorPtr yVector = outputVectors().value(outputVectorList().first());
+
+  label = yVector->labelInfo().name;
 
   if (hasParameterVector()) {
     VectorPtr vectorParam = _outputVectors["Parameters Vector"];

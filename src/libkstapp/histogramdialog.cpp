@@ -55,6 +55,7 @@ HistogramTab::HistogramTab(QWidget *parent)
   connect(_normalizationIsFraction, SIGNAL(clicked()), this, SLOT(normalizationChanged()));
   connect(_normalizationIsPercent, SIGNAL(clicked()), this, SLOT(normalizationChanged()));
   connect(_normalizationMaximumOne, SIGNAL(clicked()), this, SLOT(normalizationChanged()));
+  connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
 
   _vectorLabel->setBuddy(_vector->_vector);
 

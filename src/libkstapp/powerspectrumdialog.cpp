@@ -42,6 +42,7 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_FFTOptions, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
 
   _vectorLabel->setBuddy(_vector->_vector);
 

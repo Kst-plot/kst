@@ -303,6 +303,11 @@ QString PlotItem::plotSizeLimitedName(const QWidget *widget) const {
 
 void PlotItem::save(QXmlStreamWriter &xml) {
   if (isVisible()) {
+    bool plot_maximized = _plotMaximized;
+    // We don't save 'plot maximized' mode - so un-do it before saving
+    if (plot_maximized) {
+      plotMaximize();
+    }
     xml.writeStartElement("plot");
     xml.writeAttribute("tiedxzoom", QVariant(isXTiedZoom()).toString());
     xml.writeAttribute("tiedyzoom", QVariant(isYTiedZoom()).toString());
@@ -341,6 +346,9 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("height", QVariant(projectionRect().height()).toString());
     xml.writeEndElement();
     xml.writeEndElement();
+    if (plot_maximized) {
+      plotMaximize(); // re-maximize it if we just un-maximized it.
+    }
   }
 }
 

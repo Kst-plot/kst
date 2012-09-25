@@ -45,6 +45,7 @@ FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
 
   pluginChanged(pluginName);
   connect(_pluginCombo, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(pluginChanged(const QString&)));
+  connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
 }
 
 
@@ -80,8 +81,9 @@ void FilterFitTab::setPlotMode(PlotItem* plot) {
 
   _curvePlacement->setPlace(CurvePlacement::ExistingPlot);
   _curvePlacement->setExistingPlots(Data::self()->plotList());
-  _curvePlacement->setCurrentPlot(plot);
-
+  if (plot) {
+    _curvePlacement->setCurrentPlot(plot);
+  }
   _curveAppearance->setVisible(true);
   _curvePlacement->setVisible(true);
   _ignoreAutoScale->setVisible(true);

@@ -724,10 +724,11 @@ QByteArray ScriptServer::getPSDList(QByteArray&, QLocalSocket* s,ObjectStore*_st
 
 QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else {
-        _interface = DialogLauncherSI::self->showPowerSpectrumDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+    } else {
+      _interface = DialogLauncherSI::self->showPowerSpectrumDialog();
+      return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
     }
 }
 

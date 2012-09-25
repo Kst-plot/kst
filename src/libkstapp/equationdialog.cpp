@@ -50,6 +50,8 @@ EquationTab::EquationTab(QWidget *parent)
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
   connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
+  connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
+
 
   TextLabel1_11->setProperty("si","Eq&uation:");
   _xVectorLabel->setProperty("si","&X vector:");
