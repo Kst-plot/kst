@@ -44,47 +44,6 @@ PlotItemManager::~PlotItemManager() {
 }
 
 
-void PlotItemManager::addPlot(PlotItem *plotItem) {
-  if (!_plotLists.contains(plotItem->view())) {
-    _plotLists.insert(plotItem->view(), QList<PlotItem*>() << plotItem);
-  } else {
-    QList<PlotItem*> list = _plotLists.value(plotItem->view());
-    list << plotItem;
-    _plotLists.insert(plotItem->view(), list);
-  }
-}
-
-
-void PlotItemManager::addViewItem(ViewItem *viewItem) {
-  if (!_viewItemLists.contains(viewItem->view())) {
-    _viewItemLists.insert(viewItem->view(), QList<ViewItem*>() << viewItem);
-  } else {
-    QList<ViewItem*> list = _viewItemLists.value(viewItem->view());
-    list << viewItem;
-    _viewItemLists.insert(viewItem->view(), list);
-  }
-}
-
-
-void PlotItemManager::removePlot(PlotItem *plotItem) {
-  if (!_plotLists.contains(plotItem->view()))
-    return;
-  QList<PlotItem*> list = _plotLists.value(plotItem->view());
-  list.removeAll(plotItem);
-  _plotLists.insert(plotItem->view(), list);
-}
-
-
-void PlotItemManager::removeViewItem(ViewItem *viewItem) {
-  if (!_viewItemLists.contains(viewItem->view()))
-    return;
-
-  QList<ViewItem*> list = _viewItemLists.value(viewItem->view());
-  list.removeAll(viewItem);
-  _viewItemLists.insert(viewItem->view(), list);
-}
-
-
 void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAll) {
   if (!_tiedZoomViewPlotLists.contains(plotItem->view())) {
     _tiedZoomViewPlotLists.insert(plotItem->view(), QList<PlotItem*>() << plotItem);
@@ -101,18 +60,10 @@ void PlotItemManager::addTiedZoomPlot(PlotItem *plotItem, bool checkAll) {
 
 void PlotItemManager::checkAllTied(View* view) {
   bool bAllTied = true;
-  if (_plotLists.contains(view)) {
-    foreach(PlotItem* plot, _plotLists[view]) {
-      if (plot->supportsTiedZoom() && !plot->isTiedZoom()) {
-        bAllTied = false;
-      }
-    }
-  }
-  if (_viewItemLists.contains(view)) {
-    foreach(ViewItem* viewItem, _viewItemLists[view]) {
-      if (viewItem->supportsTiedZoom() && !viewItem->isTiedZoom()) {
-        bAllTied = false;
-      }
+  QList<ViewItem*> items = tieableItemsForView(view);
+  foreach (ViewItem* item, items) {
+    if (!item->isTiedZoom()) {
+      bAllTied = false;
     }
   }
   if (bAllTied) {
@@ -127,13 +78,12 @@ void PlotItemManager::toggleAllTiedZoom(View *view) {
 
   // vote on if we should tie all, or untie all
   int n_plots=0, n_tied=0;
-  if (_viewItemLists.contains(view)) {
-    foreach(ViewItem* viewItem, _viewItemLists[view]) {
-      if (viewItem->supportsTiedZoom()) {
-        ++n_plots;
-        if (viewItem->isTiedZoom()) {
-          ++n_tied;
-        }
+  QList<ViewItem *> tieableItems = tieableItemsForView(view);
+  foreach(ViewItem* viewItem, tieableItems) {
+    if (viewItem->supportsTiedZoom()) {
+      ++n_plots;
+      if (viewItem->isTiedZoom()) {
+        ++n_tied;
       }
     }
   }
@@ -144,11 +94,9 @@ void PlotItemManager::toggleAllTiedZoom(View *view) {
     tiedZoom = true;
   }
 
-  if (_viewItemLists.contains(view)) {
-    foreach(ViewItem* viewItem, _viewItemLists[view]) {
-      if (viewItem->supportsTiedZoom()) {
-        viewItem->setTiedZoom(tiedZoom, tiedZoom, false);
-      }
+  foreach(ViewItem* viewItem, tieableItems) {
+    if (viewItem->supportsTiedZoom()) {
+      viewItem->setTiedZoom(tiedZoom, tiedZoom, false);
     }
   }
 }
@@ -191,21 +139,38 @@ void PlotItemManager::removeTiedZoomViewItem(ViewItem *viewItem) {
   }
 }
 
-
 QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
-  if (PlotItemManager::self()->_plotLists.contains(view)) {
-    return PlotItemManager::self()->_plotLists.value(view);
+  QList<QGraphicsItem*> graphics_items = view->scene()->items();
+  QList<PlotItem *> plot_items;
+
+  foreach(QGraphicsItem* graphics_item, graphics_items) {
+    PlotItem *item = dynamic_cast<PlotItem*>(graphics_item);
+    if (item && item->isVisible()) {
+      plot_items.append(item);
+    }
   }
-  return QList<PlotItem*>();
+
+  qSort(plot_items.begin(), plot_items.end(), shortNameLessThan);
+
+  return plot_items;
 }
 
+QList<ViewItem*> PlotItemManager::tieableItemsForView(View *view) {
+  QList<QGraphicsItem*> graphics_items = view->scene()->items();
+  QList<ViewItem *> view_items;
 
-void PlotItemManager::clearPlotsForView(View *view) {
-  if (PlotItemManager::self()->_plotLists.contains(view)) {
-    PlotItemManager::self()->_plotLists.remove(view);
+  foreach(QGraphicsItem* graphics_item, graphics_items) {
+    ViewItem *item = dynamic_cast<ViewItem*>(graphics_item);
+    if (item && item->isVisible() && item->supportsTiedZoom()) {
+      view_items.append(item);
+    }
   }
-}
 
+  qSort(view_items.begin(), view_items.end(), shortNameLessThan);
+
+  return view_items;
+
+}
 
 QList<PlotItem*> PlotItemManager::tiedZoomPlotsForView(View *view) {
   if (kstApp->mainWindow()->isTiedTabs()) {
@@ -243,11 +208,10 @@ QList<PlotItem*> PlotItemManager::tiedZoomPlotsForViewItem(ViewItem *viewItem) {
 
 void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
   _focusedPlots.append(plotItem);
-  if (_plotLists.contains(plotItem->view())) {
-    foreach (PlotItem* plot, _plotLists.value(plotItem->view())) {
-      if (plotItem != plot) {
-        plot->setAllowUpdates(false);
-      }
+  QList<PlotItem*> plots = plotsForView(plotItem->view());
+  foreach (PlotItem* plot, plots) {
+    if (plotItem != plot) {
+      plot->setAllowUpdates(false);
     }
   }
 }
@@ -282,11 +246,10 @@ QList<ViewItem*> PlotItemManager::tiedZoomViewItems(PlotItem* plotItem) {
 
 void PlotItemManager::removeFocusPlot(PlotItem *plotItem) {
   _focusedPlots.removeAll(plotItem);
-  if (_plotLists.contains(plotItem->view())) {
-    foreach (PlotItem* plot, _plotLists.value(plotItem->view())) {
-      if (plotItem != plot) {
-        plot->setAllowUpdates(true);
-      }
+  QList<PlotItem*> plots = plotsForView(plotItem->view());
+  foreach (PlotItem* plot, plots) {
+    if (plotItem != plot) {
+      plot->setAllowUpdates(true);
     }
   }
 }

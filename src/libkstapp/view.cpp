@@ -119,7 +119,6 @@ void View::init()
 
 View::~View() {
   // PlotItems are QGraphicsItems and managed by Qt's graphic view
-  PlotItemManager::clearPlotsForView(this);
   delete _undoStack;
   delete _layoutBoxItem;
 }

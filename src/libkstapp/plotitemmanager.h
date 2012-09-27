@@ -33,6 +33,7 @@ public:
     static PlotItemManager *self();
 
     static QList<PlotItem*> plotsForView(View *view);
+    static QList<ViewItem*> tieableItemsForView(View *view);
     static void clearPlotsForView(View *view);
 
     static QList<PlotItem*> tiedZoomPlotsForView(View *view);
@@ -55,11 +56,6 @@ private:
     PlotItemManager();
     virtual ~PlotItemManager();
 
-    void addPlot(PlotItem *plotItem);
-    void addViewItem(ViewItem *viewItem);
-    void removePlot(PlotItem *plotItem);
-    void removeViewItem(ViewItem *viewItem);
-
     void addTiedZoomPlot(PlotItem *plotItem, bool checkAll = true);
     void addTiedZoomViewItem(ViewItem *viewItem, bool checkAll = true);
     void removeTiedZoomPlot(PlotItem *plotItem);
@@ -74,8 +70,6 @@ private:
     friend class ViewItem;
     friend class PlotItem;
     friend class SharedAxisBoxItem;
-    QHash< View*, QList<PlotItem*> > _plotLists;
-    QHash< View*, QList<ViewItem*> > _viewItemLists;
     QHash< View*, QList<PlotItem*> > _tiedZoomViewPlotLists;
     QHash< View*, QList<ViewItem*> > _tiedZoomViewItemLists;
     QHash< ViewItem*, QList<PlotItem*> > _tiedZoomViewItemPlotLists;

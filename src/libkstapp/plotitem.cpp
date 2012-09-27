@@ -135,8 +135,6 @@ PlotItem::PlotItem(View *parent)
 
   createActions();
 
-  PlotItemManager::self()->addPlot(this);
-
   // Set the initial projection.
   setProjectionRect(QRectF(QPointF(-0.1, -0.1), QPointF(0.1, 0.1)));
   renderItem(PlotRenderItem::Cartesian);
@@ -281,8 +279,6 @@ PlotItem::~PlotItem() {
   delete _filterMenu;
   delete _fitMenu;
   delete _editMenu;
-
-  PlotItemManager::self()->removePlot(this);
 }
 
 void PlotItem::_initializeShortName() {

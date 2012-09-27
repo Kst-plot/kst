@@ -2311,11 +2311,8 @@ void ViewItem::setSupportsTiedZoom(const bool supports) {
       setLayoutMargins(layoutMargins().expandedTo(tiedZoomSize()));
     }
 
-    if (_supportsTiedZoom) {
-      PlotItemManager::self()->addViewItem(this);
-    } else {
+    if (!_supportsTiedZoom) {
       setTiedZoom(false, false, false);
-      PlotItemManager::self()->removeViewItem(this);
     }
   }
 }
