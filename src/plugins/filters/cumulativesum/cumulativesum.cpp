@@ -175,8 +175,8 @@ bool CumulativeSumSource::algorithm() {
 
   outputVector->value()[0] = inputVector->value()[0];
 
-  for (int i = 0; i < inputVector->length()-1; i++) {
-    outputVector->value()[i+1] = inputVector->value()[i]*inputScalar->value() + outputVector->value()[i];
+  for (int i = 1; i < inputVector->length(); i++) {
+    outputVector->value()[i] = inputVector->value()[i]*inputScalar->value() + outputVector->value()[i-1];
   }
 
   return true;
