@@ -34,6 +34,8 @@ public:
 
     static QList<PlotItem*> plotsForView(View *view);
     static QList<ViewItem*> tieableItemsForView(View *view);
+    static QList<ViewItem*> tieableItems();
+
     static void clearPlotsForView(View *view);
 
     static QList<PlotItem*> tiedZoomPlotsForView(View *view);
@@ -73,7 +75,6 @@ private:
     QHash< View*, QList<PlotItem*> > _tiedZoomViewPlotLists;
     QHash< View*, QList<ViewItem*> > _tiedZoomViewItemLists;
     QHash< ViewItem*, QList<PlotItem*> > _tiedZoomViewItemPlotLists;
-    QList<PlotItem*> _focusedPlots;
 };
 
 }

@@ -181,10 +181,13 @@ void MainWindow::changeZoomOnlyMode(QAction* act) {
 
 void MainWindow::toggleTiedZoom() {
   if (isTiedTabs()) {
+    PlotItemManager::self()->toggleAllTiedZoom(0);
+    /*
     QList<View*> views = tabWidget()->views();
     foreach (View* view, views) {
       PlotItemManager::self()->toggleAllTiedZoom(view);
     }
+    */
   } else {
     PlotItemManager::self()->toggleAllTiedZoom(tabWidget()->currentView());
   }

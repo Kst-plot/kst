@@ -78,8 +78,14 @@ void PlotItemManager::toggleAllTiedZoom(View *view) {
 
   // vote on if we should tie all, or untie all
   int n_plots=0, n_tied=0;
-  QList<ViewItem *> tieableItems = tieableItemsForView(view);
-  foreach(ViewItem* viewItem, tieableItems) {
+  QList<ViewItem *> tieable_items;
+  if (view) {
+    tieable_items = tieableItemsForView(view);
+  } else {
+    tieable_items = tieableItems();
+  }
+
+  foreach(ViewItem* viewItem, tieable_items) {
     if (viewItem->supportsTiedZoom()) {
       ++n_plots;
       if (viewItem->isTiedZoom()) {
@@ -94,7 +100,7 @@ void PlotItemManager::toggleAllTiedZoom(View *view) {
     tiedZoom = true;
   }
 
-  foreach(ViewItem* viewItem, tieableItems) {
+  foreach(ViewItem* viewItem, tieable_items) {
     if (viewItem->supportsTiedZoom()) {
       viewItem->setTiedZoom(tiedZoom, tiedZoom, false);
     }
@@ -155,6 +161,17 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
   return plot_items;
 }
 
+QList<ViewItem*> PlotItemManager::tieableItems() {
+  QList<ViewItem*> allViewItems = ViewItem::getItems<ViewItem>();
+  QList<ViewItem*> view_items;
+  foreach (ViewItem *item, allViewItems) {
+    if (item && item->isVisible() && item->supportsTiedZoom()) {
+      view_items.append(item);
+    }
+  }
+  return view_items;
+}
+
 QList<ViewItem*> PlotItemManager::tieableItemsForView(View *view) {
   QList<QGraphicsItem*> graphics_items = view->scene()->items();
   QList<ViewItem *> view_items;
@@ -207,7 +224,6 @@ QList<PlotItem*> PlotItemManager::tiedZoomPlotsForViewItem(ViewItem *viewItem) {
 
 
 void PlotItemManager::setFocusPlot(PlotItem *plotItem) {
-  _focusedPlots.append(plotItem);
   QList<PlotItem*> plots = plotsForView(plotItem->view());
   foreach (PlotItem* plot, plots) {
     if (plotItem != plot) {
@@ -245,7 +261,6 @@ QList<ViewItem*> PlotItemManager::tiedZoomViewItems(PlotItem* plotItem) {
 
 
 void PlotItemManager::removeFocusPlot(PlotItem *plotItem) {
-  _focusedPlots.removeAll(plotItem);
   QList<PlotItem*> plots = plotsForView(plotItem->view());
   foreach (PlotItem* plot, plots) {
     if (plotItem != plot) {
@@ -256,8 +271,11 @@ void PlotItemManager::removeFocusPlot(PlotItem *plotItem) {
 
 
 void PlotItemManager::clearFocusedPlots() {
-  foreach (PlotItem* plotItem, _focusedPlots) {
-    plotItem->plotMaximize();
+  QList<PlotItem*> plotItems = ViewItem::getItems<PlotItem>();
+  foreach (PlotItem* plotItem, plotItems) {
+    if (plotItem->isMaximized()) {
+      plotItem->plotMaximize();
+    }
   }
 }
 
