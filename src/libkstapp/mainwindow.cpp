@@ -90,7 +90,10 @@ MainWindow::MainWindow() :
     _applicationSettingsDialog(0),
     _themeDialog(0),
     _aboutDialog(0),
-    _highlightPoint(false) 
+    _highlightPoint(false)
+#if defined(__QNX__)
+  , _qnxToolbarsVisible(true)
+#endif 
 {
   _doc = new Document(this);
   _scriptServer = new ScriptServer(_doc->objectStore());
@@ -123,6 +126,12 @@ MainWindow::MainWindow() :
 
   updateRecentKstFiles();
   setAcceptDrops(true);
+
+#if defined(__QNX__)
+  // We want to be able to intercept bezel gestures, which show up in Qt as menu button keyPressEvents.
+  qApp->installEventFilter(this);
+  qnxToggleToolbarVisibility();
+#endif
 }
 
 
@@ -142,7 +151,6 @@ void MainWindow::performHeavyStartupActions() {
   DataObject::init();
   DataSourcePluginManager::init();
 }
-
 
 void MainWindow::cleanup() {
   if (document() && document()->objectStore()) {
@@ -193,7 +201,6 @@ void MainWindow::toggleTiedZoom() {
   }
 }
 
-
 void MainWindow::tiedZoomRemoved() {
   _tiedZoomAct->setChecked(false);
 }
@@ -224,11 +231,11 @@ void MainWindow::closeEvent(QCloseEvent *e) {
   if (!promptSaveDone()) {
     e->ignore();
     return;
+    }
+    //cleanup();
+    QMainWindow::closeEvent(e);
+    kstApp->closeAllWindows();
   }
-  //cleanup();
-  QMainWindow::closeEvent(e);
-  kstApp->closeAllWindows();
-}
 
 
 Document *MainWindow::document() const {
@@ -251,7 +258,7 @@ void MainWindow::save() {
     _doc->save();
   } else {
     saveAs();
-  }
+    }
 }
 
 
@@ -265,10 +272,10 @@ void MainWindow::saveAs() {
   QDir::setCurrent(kstfiledir);
   QString currentP = QDir::currentPath();
   _doc->save(fn);
-  QDir::setCurrent(restorePath);
-  setWindowTitle("Kst - " + fn);
-  updateRecentKstFiles(fn);
-}
+    QDir::setCurrent(restorePath);
+    setWindowTitle("Kst - " + fn);
+    updateRecentKstFiles(fn);
+  }
 
 void MainWindow::newDoc(bool force) {
   bool clearApproved = false;
@@ -466,11 +473,11 @@ void MainWindow::exportGraphicsFile(
     if (display == 0) { // Width set by user, maintain aspect ratio
       QSize sizeWindow(view->geometry().size());
       size.setWidth(width);
-      size.setHeight((int)((double)width * (double)sizeWindow.height() / (double)sizeWindow.width()));
+      size.setHeight((int)((qreal)width * (qreal)sizeWindow.height() / (qreal)sizeWindow.width()));
     } else if (display == 1){ // Height set by user, maintain aspect ratio
       QSize sizeWindow(view->geometry().size());
       size.setHeight(height);
-      size.setWidth((int)((double)height * (double)sizeWindow.width() / (double)sizeWindow.height()));
+      size.setWidth((int)((qreal)height * (qreal)sizeWindow.width() / (qreal)sizeWindow.height()));
     } else if (display == 2) { // Width and height set by user
       size.setWidth(width);
       size.setHeight(height);
@@ -576,12 +583,12 @@ void MainWindow::exportLog(const QString &imagename, QString &msgfilename, const
     QSize sizeWindow(view->geometry().size());
 
     size.setWidth(x_size);
-    size.setHeight((int)((double)x_size * (double)sizeWindow.height() / (double)sizeWindow.width()));
+    size.setHeight((int)((qreal)x_size * (qreal)sizeWindow.height() / (qreal)sizeWindow.width()));
   } else {
     QSize sizeWindow(view->geometry().size());
 
     size.setHeight(y_size);
-    size.setWidth((int)((double)y_size * (double)sizeWindow.width() / (double)sizeWindow.height()));
+    size.setWidth((int)((qreal)y_size * (qreal)sizeWindow.width() / (qreal)sizeWindow.height()));
   }
 
   QImage image(size, QImage::Format_ARGB32);
@@ -684,7 +691,7 @@ void MainWindow::savePrinterDefaults(QPrinter *printer) {
   _dialogDefaults->setValue("print/landscape", printer->orientation() == QPrinter::Landscape);
   _dialogDefaults->setValue("print/paperSize", int(printer->paperSize()));
 
-  double left, top, right, bottom;
+  qreal left, top, right, bottom;
   printer->getPageMargins(&left, &top, &right, &bottom, QPrinter::Millimeter);
   _dialogDefaults->setValue("print/topLeftMargin", QPointF(left, top));
   _dialogDefaults->setValue("print/bottomRightMargin", QPointF(right, bottom));
@@ -1902,12 +1909,17 @@ bool MainWindow::isTiedTabs() {
 
 void MainWindow::readSettings() {
   QSettings settings("Kst2");
+#if defined(__QNX__) || defined(__ANDROID__)
+  // There is only one size we want on mobile platforms - full screen!
+  setWindowState(Qt::WindowFullScreen);
+#else
   QByteArray geo = settings.value("geometry").toByteArray();
   if (!geo.isEmpty()) {
       restoreGeometry(geo);
   } else {
       setGeometry(50, 50, 800, 600);
   }
+#endif // defined(__QNX__) || defined(__ANDROID__)
   restoreState(settings.value("toolbarState").toByteArray());
   _tabTiedAct->setChecked(settings.value("tieTabs").toBool());
 }
@@ -1955,6 +1967,53 @@ void MainWindow::dropEvent(QDropEvent *event)
    }
    event->accept();
 }
+
+#if defined(__QNX__)
+bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
+  if (!qApp->activeWindow()) {
+    activateWindow();
+  }
+  if (event->type() == QEvent::KeyPress) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    if (keyEvent->key()==Qt::Key_Menu) { // i.e., bezel swipe gesture...
+      qnxToggleToolbarVisibility();
+    }
+    return false;
+  } else if (event->type() == QEvent::MouseButtonPress && obj != menuBar()) {
+    if (_qnxToolbarsVisible) qnxToggleToolbarVisibility();
+    update();
+    return false;
+  } else if (event->type() == QEvent::WindowActivate) {
+    update();
+    return false;
+  } else {
+    return QObject::eventFilter(obj, event);
+  }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+  if ((event->type() == QEvent::KeyPress && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Menu)) {
+    qnxToggleToolbarVisibility();
+  }
+}
+
+void MainWindow::qnxToggleToolbarVisibility() {
+  if (_qnxLastToolbarEvent.msecsTo(QDateTime::currentDateTime()) < 100) {
+    return; // HACK
+  }
+  _qnxLastToolbarEvent = QDateTime::currentDateTime();
+  menuBar()->setVisible(!_qnxToolbarsVisible);
+  statusBar()->setVisible(!_qnxToolbarsVisible);
+  _fileToolBar->setVisible(!_qnxToolbarsVisible);
+  _editToolBar->setVisible(!_qnxToolbarsVisible);
+  _toolsToolBar->setVisible(!_qnxToolbarsVisible);
+  _rangeToolBar->setVisible(!_qnxToolbarsVisible);
+  _modeToolBar->setVisible(!_qnxToolbarsVisible);
+  _plotLayoutToolBar->setVisible(!_qnxToolbarsVisible);
+  _annotationToolBar->setVisible(!_qnxToolbarsVisible);
+  _qnxToolbarsVisible = !_qnxToolbarsVisible;
+}
+#endif
 
 }
 

@@ -13,6 +13,7 @@
 #include "plottickcalculator.h"
 
 #include <QtGlobal>
+#include <math.h>
 #include <cmath>
 
 namespace Kst {

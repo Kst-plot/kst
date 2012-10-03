@@ -17,6 +17,10 @@
 #include <QPointer>
 #include <QLabel>
 
+#if defined(__QNX__)
+#include <QDateTime>
+#endif // defined(__QNX__)
+
 class QMenu;
 class QAction;
 class QProgressBar;
@@ -178,6 +182,11 @@ class MainWindow : public QMainWindow
     
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+#if defined(__QNX__)
+    void keyPressEvent(QKeyEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
+    void qnxToggleToolbarVisibility();
+#endif // defined(__QNX__)
 
   private:
     Document *_doc;
@@ -302,6 +311,10 @@ class MainWindow : public QMainWindow
     QMenu* _recentDataFilesMenu;
     QList<QAction*> _bottomRecentKstActions;
     QList<QAction*> _bottomRecentDataActions;
+#if defined(__QNX__)
+    bool _qnxToolbarsVisible;
+    QDateTime _qnxLastToolbarEvent;
+#endif // defined(__QNX__)
 
     friend class ScriptServer;
 };

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>                                                                                                                              
+    <qnx >
+        <id>org.kde.kst</id>
+        <name>Kst</name>
+        <versionNumber>2.0.6</versionNumber>
+        <description>Kst is the fastest real-time large-dataset viewing and plotting tool available. Now for PlayBook.</description>
+       
+        <initialWindow>
+            <systemChrome>none</systemChrome>
+            <transparent>false</transparent>
+            <autoOrients>true</autoOrients>
+            <aspectRatio>landscape</aspectRatio>
+        </initialWindow>
+     
+        <env var="QML_IMPORT_PATH" value="app/native/imports"/>
+        <env var="QT_PLUGIN_PATH" value="app/native/plugins"/>
+        <env var="LD_LIBRARY_PATH" value="app/native/lib"/>
+     
+        <arg>-platform</arg>
+        <arg>blackberry</arg>
+        <author>Nettek</author>
+        <authorId>gYAAgISyPff3icYT0zYNfxjXN6g</authorId>
+        <action system="true">run_native</action>
+        <action>access_shared</action>
+        <platformArchitecture>armle-v7</platformArchitecture>
+        <asset entry="true" path="kst/kst" type="Qnx/Elf">kst</asset>
+        <asset path="deploy/pbsplash.png">pbsplash.png</asset>
+        <asset path="deploy/pbicon.png">pbicon.png</asset>
+        <asset path="kst/lib">lib</asset>
+        <asset path="kst/lib/kst2/plugins">plugins</asset>
+        <icon><image>pbicon.png</image></icon>
+        <splashscreen>pbsplash.png</splashscreen>
+    </qnx>
+

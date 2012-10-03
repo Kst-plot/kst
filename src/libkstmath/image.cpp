@@ -567,7 +567,7 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
             x_index = (int)((new_x - m_minX)*m_stepXr);
             double z = m->Z(x_index * m_numY + y_index);
 
-            okZ = (finite(z));
+            okZ = (isfinite(z));
 
             if (okZ && okY) {
               scanLine[x] = _pal.rgb((int)(((z - _zLower) * palCountMin1_OverDZ)));

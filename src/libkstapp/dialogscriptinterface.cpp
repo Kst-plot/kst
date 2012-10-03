@@ -883,7 +883,7 @@ QByteArray DialogSI::getLineEditText(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::getTextEditText(QByteArray&y,QWidget*obj){
-    return dynamic_cast<QTextEdit*>(obj)->toPlainText().toAscii();
+    return qobject_cast<QTextEdit*>(obj)->toPlainText().toAscii();
 }
 
 QByteArray DialogSI::getSpinBoxValue(QByteArray&y,QWidget*obj){

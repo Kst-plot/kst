@@ -1,0 +1,24 @@
+Kst works on the PlayBook! It's not in the App World yet (I'll send out a message to kst-dev if this ever changes), but it's only a little bit of a pain to get it working!
+
+1) Sign up for signing keys at https://www.blackberry.com/SignedKeys/codesigning.html and follow the instructions in your email to get a debug token installed on the PlayBook via Momentics. Keep note of where it is (usually /home/[USER]/.rim/debugtoken*.bar).
+2) Install the PlayBook 2.1.x beta at https://developer.blackberry.com/register/
+3) Download the BBNDK 2.1 beta at https://developer.blackberry.com/native/download
+
+ | |   The remaining steps take place in a bbndk environment, i.e., after
+ | |   running "source bbndk-evn.sh" and with a PlayBook in developer mode.
+
+4) Build Qt for QNX via the instructions at http://qt-project.org/wiki/QNX
+5a) Copy the needed Qt ARM libraries (usually from /usr/local/Trolltech/lib) to kst/qnk/kst/lib AND...
+5b) ** cp -rf /usr/local/Trolltech/plugins/platforms/ ./kst/lib/kst2/plugins/ **
+6) cd kst/build
+   ccmake -DCMAKE_BUILD_TYPE=Debug -Dkst_pch=0 -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake ../cmake # In ccmake, configure the project.
+   cmake -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake ../cmake
+   make 
+   cd ../qnx
+   ./stage.sh
+   blackberry-nativepackager -package out.bar -devMode ./kst-descriptor.xml -debugToken /home/[USER]/.rim/debugtoken[].bar
+   blackberry-deploy -installApp -device xxx.xxx.xxx.xxx -password hunter2 out.bar
+7) Find the Kst icon on your PlayBook and hack away.
+
+You may usually always want to preform incremental updates because they are a lot faster. If you want to just update libkst2widgets for example, you should run:
+   blackberry-deploy -putFile ./kst/lib/libkst2widgets.so.2 app/native/lib/libkst2widgets.so.2 xxx.xxx.xxx.xxx -package out.bar -password hunter2

@@ -20,6 +20,8 @@
 #ifndef CCLINEEDIT_P_H
 #define CCLINEEDIT_P_H
 
+class QPushButton;
+
 namespace Kst {
 
 class CCTableModel;
@@ -89,6 +91,9 @@ class CCTableView : public QTableView {
     CCTextEdit* _te;
     QString _prefix;
     bool _goingRight;
+#if defined(__QNX__) || defined(__ANDROID__)
+    QPushButton* _close;
+#endif
 
 public:
     friend class CCLineEdit;

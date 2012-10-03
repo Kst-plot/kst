@@ -155,8 +155,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QRectF projectionRect() const;
     void setProjectionRect(const QRectF &rect, bool forceAxisUpdate = false);
     QRectF computedProjectionRect();
-    void computedRelationalMax(qreal &minimum, qreal &maximum);
-    void computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const;
+    void computedRelationalMax(double &minimum, double &maximum);
+    void computeBorder(Qt::Orientation orientation, double &minimum, double &maximum) const;
 
     PlotAxis* xAxis() { return _xAxis; }
     PlotAxis* yAxis() { return _yAxis; }

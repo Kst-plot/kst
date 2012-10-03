@@ -403,7 +403,7 @@ void Curve::showEditDialog() {
 
 
 int Curve::samplesPerFrame() const {
-  const DataVector *rvp = dynamic_cast<const DataVector*>(_inputVectors[YVECTOR].data());
+  const DataVector *rvp = qobject_cast<const DataVector*>(_inputVectors[YVECTOR].data());
   return rvp ? rvp->samplesPerFrame() : 1;
 }
 

@@ -20,6 +20,7 @@
 
 #include <QCompleter>
 #include <QAbstractItemView>
+#include <QPushButton>
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 #include <QComboBox>
@@ -51,6 +52,7 @@ CategoricalCompleter::CategoricalCompleter(QLineEdit *lineEdit, QList<Completion
     _data(data), _tableView(new CCTableView(&_data[0])), _currentSubset(&data[0])
 {
     setPopup(_tableView);
+    lineEdit->setWindowModality(Qt::NonModal);
     lineEdit->setCompleter(this);
     _tableView->setCompleter(this);
     _tableView->updateSuggestions();
@@ -64,6 +66,8 @@ CategoricalCompleter::CategoricalCompleter(QLineEdit *lineEdit, QList<Completion
 CategoricalCompleter::CategoricalCompleter(QTextEdit *textEdit, QList<CompletionCase> data) : QCompleter(getDefault(data)),
     _data(data), _tableView(new CCTableView(&_data[0])), _currentSubset(&data[0])
 {
+    if(_tableView) _tableView->setWindowModality(Qt::NonModal);
+    textEdit->setWindowModality(Qt::NonModal);
     setPopup(_tableView);
     _tableView->setCompleter(this);
     _tableView->updateSuggestions();
@@ -81,6 +85,12 @@ bool CategoricalCompleter::eventFilter(QObject *o, QEvent *e)
     } else {
         QKeyEvent *ke = static_cast<QKeyEvent *>(e);
         int key=ke->key();
+#if defined(__QNX__) || defined(__ANDROID__)
+        if (key == Qt::Key_Return || key == Qt::Key_Enter) {
+            _tableView->hide();
+            return 1;
+        }
+#endif
         int cc=_tableView->currentIndex().column();
         bool cantMoveRight=(cc==_tableView->model()->columnCount()-1);
         bool cantMoveLeft=!cc;
@@ -163,7 +173,7 @@ void CategoricalCompleter::verifyPrefix()
 
     for(int i=_data.size()-1;i>=0;i--) {
         if(!_data[i].prefix().size()||!search.indexOf(_data[i].prefix())) {
-            SVCCLineEdit* hack=dynamic_cast<SVCCLineEdit*>(widget());
+            SVCCLineEdit* hack=qobject_cast<SVCCLineEdit*>(widget());
             if(hack&&_data[i].prefix()==""&&_data[i].size()&&_data[i][0].title().contains("Fun")) {
                 QString operatorNextList="])0123456789";
                 QString functionNextList="&=<>!+-/*&^|(";
@@ -428,7 +438,9 @@ void CCLineEdit::insert(const QString &i,bool stringIsCompletion)
     connect(timer,SIGNAL(timeout()),_cc->_tableView,SLOT(updateSuggestions()));
     connect(timer,SIGNAL(timeout()),timer,SLOT(deleteLater()));
     timer->start(0);
+#if !defined(__QNX__) && !defined(__ANDROID__)
     setFocus();
+#endif
 }
 
 void CCLineEdit::divide(QString x)
@@ -954,10 +966,18 @@ QVariant CCTableModel::headerData ( int section, Qt::Orientation orientation, in
 // CCTableView
 CCTableView::CCTableView(CompletionCase* data) : _data(data), origModel(0), completer(0), _le(0), _te(0), _goingRight(0)
 {
+#if defined(__QNX__) || defined(__ANDROID__)
+    _close = new QPushButton("X", this);
+    _close->setGeometry(width()-50,0,40,40);
+    _close->show();
+    connect(_close, SIGNAL(clicked()), this, SLOT(hide()));
+#endif
+
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setMinimumHeight(150);
     verticalHeader()->hide();
+    setWindowModality(Qt::NonModal);
 }
 
 void CCTableView::updateSuggestions()
@@ -1040,6 +1060,7 @@ void CCTableView::setColumnHeaders(QStringList columnHeaders)
 
 void CCTableView::setCompleter(CategoricalCompleter* completer)
 {
+    setWindowModality(Qt::NonModal);
     this->completer=completer;
 }
 
@@ -1071,6 +1092,9 @@ void CCTableView::mousePressEvent(QMouseEvent *event)
             _te->insert(completer->completionPrefix());
         }
         hide();
+    } else {
+        hide();
+        return;
     }
     completer->verifyPrefix();
     updateSuggestions();
@@ -1078,14 +1102,15 @@ void CCTableView::mousePressEvent(QMouseEvent *event)
 
 void CCTableView::showEvent(QShowEvent *)
 {
-    //    resizeColumnsToContents();
-//    int bestWidth=qMax(width(),(int)((horizontalHeader()->length()+verticalScrollBar()->width())));
     horizontalHeader()->setResizeMode(QHeaderView::Interactive);
     horizontalHeader()->setStretchLastSection(1);
 }
 
 void CCTableView::resizeEvent(QResizeEvent*ev)
 {
+#if defined(__QNX__) || defined(__ANDROID__)
+    _close->setGeometry(width()-50,0,40,40);
+#endif
     QTableView::resizeEvent(ev);
 }
 

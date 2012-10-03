@@ -42,6 +42,15 @@ Dialog::Dialog(QWidget *parent)
 
   _saveAsDefault->setProperty("si","Save as default");
   _applyToExisting->setProperty("si","Apply to existing objects");
+#if defined(__QNX__) || defined(__ANDROID__)
+  // Mobile environments don't have window managers, and so dialogs
+  // are not a native concept. We may consider adding a "Back"
+  // button to dialogs on mobile platform...
+  //
+  // In the meantime, dialogs should be fullscreen. A dialog without
+  // borders looks really bad, and getting the size right is difficult.
+  setWindowState(Qt::WindowFullScreen);
+#endif
 }
 
 

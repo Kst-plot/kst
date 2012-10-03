@@ -38,9 +38,9 @@
 #include <QMimeData>
 #include <QtAlgorithms>
 
-static const double ONE_PI = 3.14159265358979323846264338327950288419717;
-static double TWO_PI = 2.0 * ONE_PI;
-static double RAD2DEG = 180.0 / ONE_PI;
+static const qreal ONE_PI = 3.14159265358979323846264338327950288419717;
+static qreal TWO_PI = 2.0 * ONE_PI;
+static qreal RAD2DEG = 180.0 / ONE_PI;
 static const int DRAWING_ZORDER = 500;
 
 #define DEBUG_GEOMETRY 0
@@ -156,16 +156,16 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   // this keeps line end points in the right place.
   CartesianRenderItem *cri = dynamic_cast<CartesianRenderItem *>(parentItem());
   QTransform tr;
-  double w = _parentRelativeWidth;
+  qreal w = _parentRelativeWidth;
   if (cri) {
     QRectF cri_rect = cri->rect();
     QRectF plot_rect = cri->parentRect();
-    double oldL = relativeWidth()*cri_rect.width();
+    qreal oldL = relativeWidth()*cri_rect.width();
 
-    double r0 = rotationAngleRadians();
-    double dy = oldL*sin(r0)*plot_rect.height()/cri_rect.height();
-    double dx = oldL*cos(r0)*plot_rect.width()/cri_rect.width();
-    double r1 = atan2(dy, dx);
+    qreal r0 = rotationAngleRadians();
+    qreal dy = oldL*sin(r0)*plot_rect.height()/cri_rect.height();
+    qreal dx = oldL*cos(r0)*plot_rect.width()/cri_rect.width();
+    qreal r1 = atan2(dy, dx);
 
     w = sqrt(dy*dy + dx*dx)/plot_rect.width();
 
@@ -249,7 +249,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
 
   QList<QGraphicsItem*> list = QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
       continue;
 
@@ -350,7 +350,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
      }
     } else if (xml.name().toString() == "position") {
       knownTag = true;
-      double x = 0, y = 0, z = DRAWING_ZORDER;
+      qreal x = 0, y = 0, z = DRAWING_ZORDER;
       av = attrs.value("x");
       if (!av.isNull()) {
         x = av.toString().toDouble();
@@ -436,7 +436,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       setPen(pen);
     } else if (xml.name().toString() == "rect") {
       knownTag = true;
-      double x = 0, y = 0, w = 10, h = 10;
+      qreal x = 0, y = 0, w = 10, h = 10;
       av = attrs.value("width");
       if (!av.isNull()) {
         w = av.toString().toDouble();
@@ -456,8 +456,8 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       setViewRect(QRectF(QPointF(x, y), QSizeF(w, h)));
     } else if (xml.name().toString() == "relativesize") {
       knownTag = true;
-      double width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
-      double leftx = -1.0, lefty = -1.0, rightx = -1.0, righty = -1.0;
+      qreal width = 0, height = 0, centerx = 0, centery = 0, posx = 0, posy = 0;
+      qreal leftx = -1.0, lefty = -1.0, rightx = -1.0, righty = -1.0;
       bool lock_aspect_ratio = false;
       av = attrs.value("width");
       if (!av.isNull()) {
@@ -522,7 +522,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
         bool lock_pos_to_data = QVariant(av.toString()).toBool();
         setLockPosToData(lock_pos_to_data);
         if (lock_pos_to_data) {
-          double x=0, y=0, w=0.1, h=0.1;
+          qreal x=0, y=0, w=0.1, h=0.1;
           av = attrs.value("datarect_x");
           if (!av.isNull()) {
             x = av.toString().toDouble();
@@ -546,7 +546,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       }
     } else if (xml.name().toString() == "transform") {
       knownTag = true;
-      double m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
+      qreal m11 = 1.0, m12 = 0, m13 = 0, m21 = 0, m22 = 1.0, m23 = 0, m31 = 0, m32= 0, m33 = 1.0;
       av = attrs.value("m11");
       if (!av.isNull()) {
         m11 = av.toString().toDouble();
@@ -609,7 +609,7 @@ void ViewItem::setView(View* parentView) {
 
 
 ViewItem *ViewItem::parentViewItem() const {
-  return qgraphicsitem_cast<ViewItem*>(parentItem());
+  return dynamic_cast<ViewItem*>(parentItem());
 }
 
 
@@ -668,7 +668,7 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     if (item->parentItem() != this)
       continue;
 
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
 
     if (!viewItem)
       continue;
@@ -1027,7 +1027,7 @@ void ViewItem::createProtectedLayout() {
 
 void ViewItem::createCustomLayout(int columns) {
   bool ok = true;
-  int default_cols = qMax(1,int(sqrt((double)Data::self()->plotList().count())));
+  int default_cols = qMax(1,int(sqrt((qreal)Data::self()->plotList().count())));
 
   if (columns<1) {
     columns = QInputDialog::getInt(view(), tr("Kst: Column Layout"),
@@ -1082,8 +1082,8 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseMove) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
-    double x0 = qMin(0.0, poly.last().x());
-    double y0 = qMin(0.0, poly.last().y());
+    qreal x0 = qMin(qreal(0.0), poly.last().x());
+    qreal y0 = qMin(qreal(0.0), poly.last().y());
     QRectF newRect(x0, y0, fabs(poly.last().x()), fabs(poly.last().y()));
     setViewRect(newRect);
     return;
@@ -1091,14 +1091,14 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
   if (event == View::MouseRelease) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseRelease));
-    double x0 = qMin(0.0, poly.last().x());
-    double y0 = qMin(0.0, poly.last().y());
+    qreal x0 = qMin(qreal(0.0), poly.last().x());
+    qreal y0 = qMin(qreal(0.0), poly.last().y());
     QRectF newRect(x0, y0, fabs(poly.last().x()), fabs(poly.last().y()));
 
     if (!newRect.isValid()) {
       newRect = newRect.normalized();
-      newRect.setWidth(qMax(3.0, newRect.width()));
-      newRect.setHeight(qMax(3.0, newRect.height()));
+      newRect.setWidth(qMax(qreal(3.0), newRect.width()));
+      newRect.setHeight(qMax(qreal(3.0), newRect.height()));
       setPos(pos() + newRect.topLeft());
 
       newRect.moveTopLeft(QPointF(0, 0));
@@ -1123,7 +1123,7 @@ void ViewItem::creationPolygonChanged(View::CreationEvent event) {
 
 
 
-void ViewItem::creationPolygonChangedFixedAspect(View::CreationEvent event, double aspect) {
+void ViewItem::creationPolygonChangedFixedAspect(View::CreationEvent event, qreal aspect) {
 
   if (event == View::EscapeEvent) {
     ViewItem::creationPolygonChanged(event);
@@ -1257,7 +1257,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   qreal x2 = x1+x3;
   qreal dx;
 
-  dx = qMin(0.0, x1);
+  dx = qMin(qreal(0.0), x1);
   dx = qMin(x2,dx);
   dx = qMin(x3,dx);
 
@@ -1266,7 +1266,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   qreal y2 = y1+y3;
   qreal dy;
 
-  dy = qMin(0.0, y1);
+  dy = qMin(qreal(0.0), y1);
   dy = qMin(y2,dy);
   dy = qMin(y3,dy);
 
@@ -1309,7 +1309,7 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
 void ViewItem::paintChildItems(QPainter &painter) {
   QList<QGraphicsItem*> children = childItems();
   foreach(QGraphicsItem* child, children) {
-    ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
+    ViewItem* item = dynamic_cast<ViewItem*>(child);
     if (item) {
       painter.save();
       painter.translate(item->pos().x(),
@@ -1830,7 +1830,7 @@ bool ViewItem::updateViewItemParent() {
 
   //Look for collisions that completely contain us
   foreach (QGraphicsItem *item, collisions) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
 
     if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect)) {
 #if DEBUG_REPARENT

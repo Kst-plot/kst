@@ -10,6 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef __QNX__
 #include "widgets.h"
 
 namespace Kst {
@@ -109,5 +110,7 @@ void WidgetPlugin::initialize(QDesignerFormEditorInterface *) {
 Q_EXPORT_PLUGIN2(widgets, Widgets)
 
 }
+
+#endif // __QNX__
 
 // vim: ts=2 sw=2 et

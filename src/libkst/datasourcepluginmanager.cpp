@@ -54,6 +54,9 @@ QStringList Kst::pluginSearchPaths()
   QString path = rootDir.canonicalPath() + '/';
   pluginPaths << path + QLatin1String("plugins");
   pluginPaths << path + QLatin1String(KST_INSTALL_PLUGINS);
+#if defined(__QNX__)
+  pluginPaths << "app/native/plugins";
+#endif
   
   rootDir.cdUp();
   path = rootDir.canonicalPath() + '/';
@@ -88,12 +91,12 @@ void DataSourcePluginManager::init() {
 
 struct FoundPlugin
 {
-  FoundPlugin(const SharedPtr<PluginInterface>& plug, const QString& path) :
+  FoundPlugin(const SharedPtr<DataSourcePluginInterface>& plug, const QString& path) :
     plugin(plug),
     filePath(path)
    {}
 
-  SharedPtr<PluginInterface> plugin;
+  SharedPtr<DataSourcePluginInterface> plugin;
   // TODO add filepath to PluginInterface
   QString filePath;
 };
@@ -156,7 +159,7 @@ static void scanPlugins() {
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
-    if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
+    if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
       tmpList.append(FoundPlugin(ds, ""));
     }
   }
@@ -172,7 +175,7 @@ static void scanPlugins() {
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
-          if (DataSourcePluginInterface *ds = dynamic_cast<DataSourcePluginInterface*>(plugin)) {
+          if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
 
             tmpList.append(FoundPlugin(ds, d.absoluteFilePath(fileName)));
             Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
@@ -238,7 +241,7 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
 
   if (!type.isEmpty()) {
     for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-      if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).plugin.data())) {
+      if (DataSourcePluginInterface *p = (*it).plugin.data()) {
         if (p->provides(type)) {
           PluginSortContainer psc;
           psc.match = 100;
@@ -252,7 +255,7 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).plugin.data())) {
+    if (DataSourcePluginInterface *p = (*it).plugin.data()) {
       if ((psc.match = p->understands(&settingsObject, filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
@@ -366,7 +369,7 @@ bool DataSourcePluginManager::validSource(const QString& filename) {
   PluginList info = _pluginList;
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).plugin.data())) {
+    if (DataSourcePluginInterface *p = (*it).plugin.data()) {
       if ((p->understands(&settingsObject, filename)) > 0) {
         return true;
       }
@@ -399,7 +402,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForPlugin(const QSt
   PluginList info = _pluginList;
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
-    if (DataSourcePluginInterface *p = dynamic_cast<DataSourcePluginInterface*>((*it).plugin.data())) {
+    if (DataSourcePluginInterface *p = (*it).plugin.data()) {
       if (p->pluginName() == plugin) {
         return p->configWidget(&settingsObject, QString());
       }

@@ -16,6 +16,7 @@
 #include "kst_export.h"
 
 #include <QStringList>
+#include <time.h>
 
 namespace Kst {
 

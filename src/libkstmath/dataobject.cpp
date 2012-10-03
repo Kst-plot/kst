@@ -208,7 +208,7 @@ void DataObject::scanPlugins() {
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
-    if (DataObjectPluginInterface *basicPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
+    if (DataObjectPluginInterface *basicPlugin = qobject_cast<DataObjectPluginInterface*>(plugin)) {
       tmpList.append(basicPlugin);
     }
   }
@@ -220,7 +220,7 @@ void DataObject::scanPlugins() {
         QPluginLoader loader(d.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if (plugin) {
-          if (DataObjectPluginInterface *dataObjectPlugin = dynamic_cast<DataObjectPluginInterface*>(plugin)) {
+          if (DataObjectPluginInterface *dataObjectPlugin = qobject_cast<DataObjectPluginInterface*>(plugin)) {
             tmpList.append(dataObjectPlugin);
             Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
           }

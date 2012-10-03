@@ -36,11 +36,12 @@
 #include "labelbuilder.h"
 #include "labellineedit.h"
 
-namespace Kst {
+#ifndef QNX // Qt for QNX doesn't include the designer interfaces by default
 
+namespace Kst {
 class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
-  Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
+  Q_OBJECT
   public:
     Widgets(QObject *parent = 0);
     virtual ~Widgets();
@@ -295,6 +296,8 @@ class LabelLineEditPlugin : public WidgetPlugin {
 };
 
 }
+
+#endif // __QNX__
 
 #endif
 

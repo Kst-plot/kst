@@ -167,7 +167,7 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
     return; //not added to undostack
 
   foreach (QGraphicsItem *graphicsItem, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(graphicsItem);
     if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != item)
       continue;
     viewItems.append(viewItem);
@@ -199,7 +199,7 @@ void ViewGridLayout::standardizePlotMargins(ViewItem *item, QPainter *painter) {
   if (item->view()) {
     QList<QGraphicsItem*> list = item->view()->items();
     foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem || !viewItem->isVisible())
         continue;
       if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
@@ -697,7 +697,7 @@ void ViewGridLayout::updateProjections(ViewItem *item, bool forceXShare, bool fo
     return; //not added to undostack
 
   foreach (QGraphicsItem *graphicsItem, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(graphicsItem);
     if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != item)
       continue;
 
@@ -749,7 +749,7 @@ void ViewGridLayout::updateProjections(ViewItem *item, bool forceXShare, bool fo
   QRectF projectionRect(QPointF(xMin, yMin), QPointF(xMax, yMax));
 
   foreach (QGraphicsItem *graphicsItem, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(graphicsItem);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(graphicsItem);
     if (!viewItem || viewItem->hasStaticGeometry() || !viewItem->allowsLayout() || viewItem->parentItem() != item)
       continue;
 

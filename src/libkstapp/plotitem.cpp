@@ -1093,7 +1093,7 @@ void PlotItem::updateXAxisLabels(QPainter* painter) {
   QTransform t;
   t.rotate(rotation);
 
-  QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
+  QMapIterator<double, QString> xLabelIt(_xAxis->axisLabels());
   while (xLabelIt.hasNext()) {
     xLabelIt.next();
 
@@ -1208,7 +1208,7 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
   QTransform t;
   t.rotate(rotation);
 
-  QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
+  QMapIterator<double, QString> yLabelIt(_yAxis->axisLabels());
   while (yLabelIt.hasNext()) {
     yLabelIt.next();
 
@@ -2505,7 +2505,7 @@ void PlotItem::calculateBottomTickLabelBound(QPainter *painter) {
   if (_xAxis->isAxisVisible()) {
     // future potential optimization: only get bounds of the rightmost label 
     // but remember: the axis may be reversed.
-    QMapIterator<qreal, QString> xLabelIt(_xAxis->axisLabels());
+    QMapIterator<double, QString> xLabelIt(_xAxis->axisLabels());
     while (xLabelIt.hasNext()) {
       xLabelIt.next();
 
@@ -2564,7 +2564,7 @@ void PlotItem::calculateLeftTickLabelBound(QPainter *painter) {
 
   if (_yAxis->isAxisVisible()) {
 
-    QMapIterator<qreal, QString> yLabelIt(_yAxis->axisLabels());
+    QMapIterator<double, QString> yLabelIt(_yAxis->axisLabels());
     while (yLabelIt.hasNext()) {
       yLabelIt.next();
 
@@ -2640,7 +2640,7 @@ void PlotItem::setShowLegend(const bool show, const bool resetFonts) {
     legend()->setVisible(show);
     _showLegend = show;
     if (show && resetFonts) {
-      legend()->setFontScale(qMax(globalFontScale()*0.6, ApplicationSettings::self()->minimumFontSize()));
+      legend()->setFontScale(qMax(globalFontScale()*qreal(0.6), ApplicationSettings::self()->minimumFontSize()));
     }
   }
 }
@@ -2666,7 +2666,7 @@ void PlotItem::setProjectionRect(const QRectF &rect, bool forceAxisUpdate) {
   foreach (PlotRenderItem *render_item, renderItems()) {
     QList<QGraphicsItem*> children = render_item->childItems();
     foreach(QGraphicsItem* child, children) {
-      ViewItem* item = qgraphicsitem_cast<ViewItem*>(child);
+      ViewItem* item = dynamic_cast<ViewItem*>(child);
       if (item && !item->lockPosToData()) {
         item->updateDataRelativeRect();
       } else {
@@ -2696,14 +2696,14 @@ QRectF PlotItem::computedProjectionRect() {
 }
 
 
-void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
+void PlotItem::computedRelationalMax(double &minimum, double &maximum) {
   //QRectF rect;
   foreach (PlotRenderItem *renderer, renderItems()) {
     foreach (RelationPtr relation, renderer->relationList()) {
       if (relation->ignoreAutoScale())
         continue;
 
-      qreal min, max;
+      double min, max;
       relation->yRange(projectionRect().left(),
           projectionRect().right(),
           &min, &max);
@@ -2721,11 +2721,11 @@ void PlotItem::computedRelationalMax(qreal &minimum, qreal &maximum) {
 }
 
 
-void PlotItem::computeBorder(Qt::Orientation orientation, qreal &minimum, qreal &maximum) const {
+void PlotItem::computeBorder(Qt::Orientation orientation, double &minimum, double &maximum) const {
   //QRectF rect;
   foreach (PlotRenderItem *renderer, renderItems()) {
-    qreal min = maximum;
-    qreal max = minimum;
+    double min = maximum;
+    double max = minimum;
     renderer->computeBorder(orientation, &min, &max);
     minimum = qMin(min, minimum);
     maximum = qMax(max, maximum);
@@ -4355,8 +4355,8 @@ void ZoomNormalizeXToYCommand::applyZoomTo(ViewItem *item, bool applyX, bool app
 void ZoomYLocalMaximumCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
   Q_UNUSED(applyX);
   if (applyY) {
-    qreal minimum = item->yMax();
-    qreal maximum = item->yMin();
+    double minimum = item->yMax();
+    double maximum = item->yMin();
     item->computedRelationalMax(minimum, maximum);
 
     item->computeBorder(Qt::Vertical, minimum, maximum);

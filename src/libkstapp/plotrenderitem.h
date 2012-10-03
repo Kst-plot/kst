@@ -66,7 +66,7 @@ class PlotRenderItem : public ViewItem
     QString multiRenderItemLabel(bool isX) const;
 
     QRectF computedProjectionRect() const;
-    void computeBorder(Qt::Orientation orientation, qreal *min, qreal *max) const;
+    void computeBorder(Qt::Orientation orientation, double *min, double *max) const;
     void resetSelectionRect();
 
     virtual bool tryShortcut(const QString &keySequence);
@@ -110,11 +110,11 @@ class PlotRenderItem : public ViewItem
     void updateCursor(const QPointF &pos);
     void updateSelectionRect();
 
-    void computeXAxisRange(qreal *min, qreal *max) const;
-    void computeYAxisRange(qreal *min, qreal *max) const;
-    void computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const;
-    void computeMeanCentered(Qt::Orientation orientation, qreal *min, qreal *max) const;
-    void computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const;
+    void computeXAxisRange(double *min, double *max) const;
+    void computeYAxisRange(double *min, double *max) const;
+    void computeAuto(Qt::Orientation orientation, double *min, double *max) const;
+    void computeMeanCentered(Qt::Orientation orientation, double *min, double *max) const;
+    void computeNoSpike(Qt::Orientation orientation, double *min, double *max) const;
 
     void highlightNearestDataPoint(const QPointF& position);
     void setReferencePoint(const QPointF& point);

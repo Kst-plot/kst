@@ -394,7 +394,7 @@ void Vector::internalUpdate() {
     _is_rising = true;
 
     // Look for a valid (finite) point...
-    for (i = 0; i < _size && !finite(_v[i]); i++) {
+    for (i = 0; i < _size && !isfinite(_v[i]); i++) {
       // do nothing
     }
 
@@ -435,7 +435,7 @@ void Vector::internalUpdate() {
     for (i = i0; i < _size; i++) {
       v = _v[i]; // get rid of redirections
 
-      if (finite(v)) {
+      if (isfinite(v)) {
         dv = v - last_v;
         dv2 += dv*dv;
 
@@ -473,7 +473,7 @@ void Vector::internalUpdate() {
 
     for (i = i0; i < _size; i++) {
       v = _v[i]; // get rid of redirections
-      if (finite(v)) {
+      if (isfinite(v)) {
         if (fabs(v - last_v) < no_spike_max_dv) {
           if (v > _ns_max) {
             _ns_max = v;

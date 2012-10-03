@@ -38,14 +38,14 @@ class ApplicationSettings : public QObject
     int referenceViewWidth() const;
     int referenceViewHeight() const;
 
-    double referenceViewWidthCM() const;
-    void setReferenceViewWidthCM(const double width);
+    qreal referenceViewWidthCM() const;
+    void setReferenceViewWidthCM(const qreal width);
 
-    double referenceViewHeightCM() const;
-    void setReferenceViewHeightCM(const double height);
+    qreal referenceViewHeightCM() const;
+    void setReferenceViewHeightCM(const qreal height);
 
-    double minimumFontSize() const;
-    void setMinimumFontSize(const double points);
+    qreal minimumFontSize() const;
+    void setMinimumFontSize(const qreal points);
 
     int minimumUpdatePeriod() const;
     void setMinimumUpdatePeriod(const int period);
@@ -85,9 +85,9 @@ class ApplicationSettings : public QObject
     QSettings *_settings;
     bool _transparentDrag;
     bool _useOpenGL;
-    double _refViewWidth;
-    double _refViewHeight;
-    double _minFontSize;
+    qreal _refViewWidth;
+    qreal _refViewHeight;
+    qreal _minFontSize;
     int _maxUpdate;
     bool _showGrid;
     bool _snapToGrid;

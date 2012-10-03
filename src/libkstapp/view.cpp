@@ -159,7 +159,7 @@ ViewItem *View::selectedViewItem() const {
     return 0;
 
   //return the first item
-  return qgraphicsitem_cast<ViewItem*>(items.first());
+  return dynamic_cast<ViewItem*>(items.first());
 }
 
 void View::applyDialogDefaultsFill() {
@@ -191,7 +191,7 @@ void View::save(QXmlStreamWriter &xml) {
 
   foreach(QGraphicsItem* viewItem, items) {
     if (!viewItem->parentItem()) {
-      qgraphicsitem_cast<ViewItem*>(viewItem)->save(xml);
+      dynamic_cast<ViewItem*>(viewItem)->save(xml);
     }
   }
 }
@@ -307,7 +307,7 @@ bool View::event(QEvent *event) {
       }
     } else {
       foreach (QGraphicsItem *item, list) {
-        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+        ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
         if (!viewItem)
           continue;
 
@@ -378,7 +378,7 @@ bool View::eventFilter(QObject *obj, QEvent *event) {
 
 void View::createCustomLayout() {
   bool ok;
-  int default_cols = qMax(1,int(sqrt((double)Data::self()->plotList().count())));
+  int default_cols = qMax(1,int(sqrt((qreal)Data::self()->plotList().count())));
   int columns = QInputDialog::getInt(this, tr("Kst: Column Layout"),
                                       tr("Layout in columns in order of creation.\nSelect number of columns:"),default_cols, 1,
                                       15, 1, &ok);
@@ -429,7 +429,7 @@ void View::processResize(QSize size) {
       if (item->parentItem())
         continue;
 
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       Q_ASSERT(viewItem);
 
       viewItem->updateChildGeometry(oldSceneRect, sceneRect());
@@ -453,7 +453,7 @@ void View::resizeEvent(QResizeEvent *event) {
       if (item->parentItem())
         continue;
 
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       Q_ASSERT(viewItem);
 
       viewItem->updateChildGeometry(oldSceneRect, sceneRect());
@@ -467,7 +467,7 @@ void View::forceChildResize(QRectF oldRect, QRectF newRect) {
     if (item->parentItem())
       continue;
 
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     Q_ASSERT(viewItem);
 
     viewItem->updateChildGeometry(oldRect, newRect);
@@ -559,7 +559,7 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
     if (item->parentItem())
       continue;
 
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     Q_ASSERT(viewItem);
 
     viewItem->updateChildGeometry(oldSceneRect, sceneRect());
@@ -592,7 +592,7 @@ qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
 #ifdef Q_OS_WIN
   // On Windows more and more memory gets allocated when fontsize
   // is too detailed, somewhere some strange caching happens.
-  const double fontPrecision = 4;
+  const qreal fontPrecision = 4;
   fontSize = floor(fontSize * fontPrecision + 0.5) / fontPrecision;
 #endif
 
@@ -603,16 +603,16 @@ qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
 
 // Set the font sizes of all plots in the view to a default size, scaled
 // by the default global font scale, and the application minimum font scale.
-void View::resetPlotFontSizes(double pointSize) {
+void View::resetPlotFontSizes(qreal pointSize) {
   if (pointSize < 0.1) {
     pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
   }
-  double count = PlotItemManager::self()->plotsForView(this).count();
-  double newPointSize = pointSize/sqrt(count) + ApplicationSettings::self()->minimumFontSize();
+  qreal count = PlotItemManager::self()->plotsForView(this).count();
+  qreal newPointSize = pointSize/sqrt(count) + ApplicationSettings::self()->minimumFontSize();
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }
-  double legendPointSize = qMax(pointSize*0.6, ApplicationSettings::self()->minimumFontSize());
+  qreal legendPointSize = qMax(pointSize*qreal(0.6), ApplicationSettings::self()->minimumFontSize());
 
   foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
     plotItem->setGlobalFontScale(pointSize);

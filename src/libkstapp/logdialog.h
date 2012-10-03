@@ -15,6 +15,8 @@
 #ifndef LOGDIALOG_H
 #define LOGDIALOG_H
 
+#include <time.h>
+
 #include <QDialog>
 #include <QProcess>
 

@@ -112,9 +112,9 @@ class PlotAxis : public QObject
     PlotMarkers axisPlotMarkers() { return _axisPlotMarkers; }
     void setAxisPlotMarkers(const PlotMarkers &plotMarkers) { _axisPlotMarkers = plotMarkers; _ticksUpdated = true; }
 
-    QMap<qreal, QString> axisLabels() { return _axisLabels; }
-    QList<qreal> axisMajorTicks() { return _axisMajorTicks; }
-    QList<qreal> axisMinorTicks() { return _axisMinorTicks; }
+    QMap<double, QString> axisLabels() { return _axisLabels; }
+    QList<double> axisMajorTicks() { return _axisMajorTicks; }
+    QList<double> axisMinorTicks() { return _axisMinorTicks; }
     QString baseLabel() { return _baseLabel; }
 
     void saveInPlot(QXmlStreamWriter &xml, QString axisId);
@@ -161,9 +161,9 @@ class PlotAxis : public QObject
     bool _ticksUpdated;
 
     QRectF _labelRect;
-    QMap<qreal, QString> _axisLabels;
-    QList<qreal> _axisMajorTicks;
-    QList<qreal> _axisMinorTicks;
+    QMap<double, QString> _axisLabels;
+    QList<double> _axisMajorTicks;
+    QList<double> _axisMinorTicks;
 
     QString _baseLabel;
 

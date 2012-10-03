@@ -111,10 +111,10 @@ class View : public QGraphicsView
 
     void configurePlotFontDefaults(PlotItem *plot);
 
-    void resetPlotFontSizes(double pointSize = 0);
+    void resetPlotFontSizes(qreal pointSize = 0);
 
-    void setFontRescale(double rescale) {_fontRescale = rescale;}
-    double fontRescale() const {return _fontRescale;}
+    void setFontRescale(qreal rescale) {_fontRescale = rescale;}
+    qreal fontRescale() const {return _fontRescale;}
 
     void setChildMaximized(bool isMax) { _childMaximized = isMax;}
     bool childMaximized() const {return _childMaximized;}
@@ -178,7 +178,7 @@ class View : public QGraphicsView
     bool _plotBordersDirty;
     bool _printing;
     bool _dataMode;
-    double _fontRescale;
+    qreal _fontRescale;
     bool _childMaximized;
     bool _referenceFontSizeToView;
 };

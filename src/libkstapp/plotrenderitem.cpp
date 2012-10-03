@@ -183,7 +183,7 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
   }
   QList<QGraphicsItem*> list = QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
       continue;
 
@@ -569,7 +569,7 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void PlotRenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   const QPointF point = plotItem()->mapToProjection(event->pos());
-  qreal range = 4.0*(plotItem()->xMax() - plotItem()->xMin())/double(rect().width());
+  double range = 4.0*(plotItem()->xMax() - plotItem()->xMin())/double(rect().width());
   double distance = 1000;
   bool first = true;
   RelationPtr closestRelation = 0;
@@ -711,11 +711,11 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
     bool bFirst = true;
     bool bFoundImage = false;
 
-    qreal distance, minDistance = 1.0E300;
-    qreal x, y;
+    double distance, minDistance = 1.0E300;
+    double x, y;
     QPointF matchedPoint;
-    qreal imageZ;
-    qreal dxPerPix = double(projectionRect().width())/double(rect().width());
+    double imageZ;
+    double dxPerPix = double(projectionRect().width())/double(rect().width());
 
     foreach(RelationPtr relation, relationList()) {
       if (Curve* curve = kst_cast<Curve>(relation)) {
@@ -892,17 +892,22 @@ QRectF PlotRenderItem::computedProjectionRect() const {
   //initialize to current projection rect...
   projectionRect().getCoords(&minX, &minY, &maxX, &maxY);
 
-  computeXAxisRange(&minX, &maxX);
-  computeYAxisRange(&minY, &maxY);
+  double minX_d = minX, minY_d = minY, maxX_d = maxX, maxY_d = maxY;
 
-  return QRectF(QPointF(minX, minY),
-                QPointF(maxX, maxY));
+  // FIXME: We should not be using QRectF, because we should
+  // always use doubles for data ranges, and QRectF uses qreal
+  // which is defined as 'double' on x86 and 'float' on ARM.
+  computeXAxisRange(&minX_d, &maxX_d);
+  computeYAxisRange(&minY_d, &maxY_d);
+
+  return QRectF(QPointF(minX_d, minY_d),
+                QPointF(maxX_d, maxY_d));
 }
 
 
-void PlotRenderItem::computeXAxisRange(qreal *min, qreal *max) const {
-  qreal minimum = *min;
-  qreal maximum = *max;
+void PlotRenderItem::computeXAxisRange(double *min, double *max) const {
+  double minimum = *min;
+  double maximum = *max;
 
   switch (plotItem()->xAxis()->axisZoomMode()) {
   case PlotAxis::Auto:
@@ -928,9 +933,9 @@ void PlotRenderItem::computeXAxisRange(qreal *min, qreal *max) const {
 }
 
 
-void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
-  qreal minimum = *min;
-  qreal maximum = *max;
+void PlotRenderItem::computeYAxisRange(double *min, double *max) const {
+  double minimum = *min;
+  double maximum = *max;
 
   switch (plotItem()->yAxis()->axisZoomMode()) {
   case PlotAxis::Auto:
@@ -956,11 +961,11 @@ void PlotRenderItem::computeYAxisRange(qreal *min, qreal *max) const {
 }
 
 
-void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal *max) const {
+void PlotRenderItem::computeAuto(Qt::Orientation orientation, double *min, double *max) const {
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
-  qreal minimum =-0.1;
-  qreal maximum = 0.1;;
+  double minimum =-0.1;
+  double maximum = 0.1;;
   bool unInitialized = true;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
@@ -969,9 +974,9 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
       if (relation->ignoreAutoScale())
         continue;
 
-      qreal minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
-      qreal min_ = orientation == Qt::Horizontal ? relation->minX() : relation->minY();
-      qreal max_ = orientation == Qt::Horizontal ? relation->maxX() : relation->maxY();
+      double minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
+      double min_ = orientation == Qt::Horizontal ? relation->minX() : relation->minY();
+      double max_ = orientation == Qt::Horizontal ? relation->maxX() : relation->maxY();
 
       if (min_==min_) { // don't use NaN's
         //If the axis is in log mode, the lower extent will be the
@@ -1016,21 +1021,21 @@ void PlotRenderItem::computeAuto(Qt::Orientation orientation, qreal *min, qreal 
 }
 
 
-void PlotRenderItem::computeBorder(Qt::Orientation orientation, qreal *min, qreal *max) const {
-  qreal minimum = *min;
-  qreal maximum = *max;
+void PlotRenderItem::computeBorder(Qt::Orientation orientation, double *min, double *max) const {
+  double minimum = *min;
+  double maximum = *max;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
-  qreal logBase = 10.0/*orientation == Qt::Horizontal ? xLogBase() : yLogBase()*/;
+  double logBase = 10.0/*orientation == Qt::Horizontal ? xLogBase() : yLogBase()*/;
 
   if (axisLog) {
     minimum = log10(minimum)/log10(logBase);
     maximum = maximum > 0.0 ? log10(maximum) : 0.0;
-    qreal d = qAbs(maximum - minimum) * 0.025;
+    double d = qAbs(maximum - minimum) * 0.025;
     maximum = pow(logBase, maximum + d);
     minimum = pow(logBase, minimum - d);
   } else {
-    qreal d = qAbs(maximum - minimum) * 0.025;
+    double d = qAbs(maximum - minimum) * 0.025;
     maximum += d;
     minimum -= d;
   }
@@ -1040,12 +1045,12 @@ void PlotRenderItem::computeBorder(Qt::Orientation orientation, qreal *min, qrea
 }
 
 
-void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min, qreal *max) const {
-  qreal minimum = *min;
-  qreal maximum = *max;
+void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, double *min, double *max) const {
+  double minimum = *min;
+  double maximum = *max;
 
   int count = 0;
-  qreal mid = 0.0;
+  double mid = 0.0;
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
@@ -1056,8 +1061,8 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
   }
 
   if (count) {
-    mid /= qreal(count);
-    qreal delta = maximum - minimum;
+    mid /= double(count);
+    double delta = maximum - minimum;
     minimum = mid - delta / 2.0;
     maximum = mid + delta / 2.0;
   }
@@ -1067,22 +1072,22 @@ void PlotRenderItem::computeMeanCentered(Qt::Orientation orientation, qreal *min
 }
 
 
-void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, qreal *min, qreal *max) const {
+void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, double *min, double *max) const {
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
   bool unInitialized = true;
 
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
-  qreal minimum = axisLog ? 0.0 : -0.1;
-  qreal maximum = 0.2;
+  double minimum = axisLog ? 0.0 : -0.1;
+  double maximum = 0.2;
 
   foreach (RelationPtr relation, relationList()) {
       if (relation->ignoreAutoScale())
         continue;
 
-      qreal minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
-      qreal min_ = orientation == Qt::Horizontal ? relation->ns_minX() : relation->ns_minY();
-      qreal max_ = orientation == Qt::Horizontal ? relation->ns_maxX() : relation->ns_maxY();
+      double minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
+      double min_ = orientation == Qt::Horizontal ? relation->ns_minX() : relation->ns_minY();
+      double max_ = orientation == Qt::Horizontal ? relation->ns_maxX() : relation->ns_maxY();
 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.

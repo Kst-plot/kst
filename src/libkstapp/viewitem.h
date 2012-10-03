@@ -309,7 +309,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
-    void creationPolygonChangedFixedAspect(View::CreationEvent even, double aspect);
+    void creationPolygonChangedFixedAspect(View::CreationEvent even, qreal aspect);
 
   protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -589,7 +589,7 @@ QList<T *> ViewItem::getItems() {
   for (int i_view = 0; i_view<views.count(); i_view++) {
     QList<QGraphicsItem*> items = views.at(i_view)->scene()->items();
     for (int i_item = 0; i_item<items.count(); i_item++) {
-      viewItem = qgraphicsitem_cast<ViewItem *>(items[i_item]);
+      viewItem = dynamic_cast<ViewItem *>(items[i_item]);
       tItem = dynamic_cast<T*>(viewItem);
       if (tItem) {
         tItems.append(tItem);

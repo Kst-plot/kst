@@ -45,7 +45,7 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     }
   } else {
     foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem)
         continue;
 

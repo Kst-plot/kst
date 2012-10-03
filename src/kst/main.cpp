@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include <application.h>
+#include <iostream>
 
 #ifdef Q_CC_MSVC
 __declspec(dllexport)

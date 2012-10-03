@@ -79,8 +79,13 @@ class AsciiSource : public Kst::DataSource
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
   private:
-    // TODO Is this too big or should we use even more: 1MB on the stack?
+    // Question: Is this too big or should we use even more: 1MB on the stack?
+#if defined(__ANDROID__) || defined(__QNX__)
+    // Answer: Depends on the system. Some mobile systems, for example, really do not like you allocating 1MB on the stack.
+#define KST_PREALLOC 1 * 1024
+#else
 #define KST_PREALLOC 1 * 1024 * 1024
+#endif
     QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
     int _bufferedS;
     int _bufferedN;

@@ -384,13 +384,13 @@ void ScriptServer::readSomething()
         for(int h=0;h<2;h++) {
             for(int i=0;i<vi.size();i++) {
                 if(search.contains(vi[i]->shortName().toAscii())) {
-                    ButtonItem* bi=dynamic_cast<ButtonItem*>(vi[i]);
+                    ButtonItem* bi=qobject_cast<ButtonItem*>(vi[i]);
                     if(bi) {
                         bi->addSocket(s);
                         disconnect(s,SIGNAL(readyRead()),this,SLOT(readSomething()));
                         return;
                     }
-                    LineEditItem* li=dynamic_cast<LineEditItem*>(vi[i]);
+                    LineEditItem* li=qobject_cast<LineEditItem*>(vi[i]);
                     if(li) {
                         li->addSocket(s);
                         disconnect(s,SIGNAL(readyRead()),this,SLOT(readSomething()));

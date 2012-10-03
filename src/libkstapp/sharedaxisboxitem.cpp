@@ -153,7 +153,7 @@ bool SharedAxisBoxItem::acceptItems() {
   if (view()) {
     QList<QGraphicsItem*> list = view()->items();
     foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem || !viewItem->isVisible() || viewItem == this ||
           viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
         continue;
@@ -254,7 +254,7 @@ void SharedAxisBoxItem::lockItems() {
   _sharedPlots.clear();
   QList<QGraphicsItem*> list = QGraphicsItem::children();
   foreach (QGraphicsItem *item, list) {
-    ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
       continue;
 
@@ -324,7 +324,7 @@ void SharedAxisBoxItem::creationPolygonChanged(View::CreationEvent event) {
     if (view()) {
       QList<QGraphicsItem*> list = view()->items();
       foreach (QGraphicsItem *item, list) {
-        ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+        ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
         if (!viewItem || !viewItem->isVisible() || viewItem == this ||  viewItem == parentItem() || !collidesWithItem(viewItem, Qt::IntersectsItemBoundingRect)) {
           continue;
         }

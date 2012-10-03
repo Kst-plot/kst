@@ -255,7 +255,11 @@ int PSDCalculator::calculatePowerSpectrum(
 
     nsamples += currentCopyLen;
 
+#if !defined(__QNX__)
     rdft(_awLen, 1, _a); //real discrete fourier transorm on _a.
+#else
+    Q_ASSERT(0); // there is a linking problem when not compling with pch. . .
+#endif
 
     output[0] += _a[0] * _a[0];
     output[outputLen-1] += _a[1] * _a[1];

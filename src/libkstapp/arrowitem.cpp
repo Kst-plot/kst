@@ -59,13 +59,13 @@ void ArrowItem::paint(QPainter *painter) {
   start.clear();
   end.clear();
   if (_startArrowHead) {
-    double deltax = view()->scaledFontSize(_startArrowScale, *painter->device())*0.5; // in points
+    qreal deltax = view()->scaledFontSize(_startArrowScale, *painter->device())*0.5; // in points
     deltax *= painter->device()->logicalDpiX()/72.0; // convert to 'pixels'.
-    double theta = atan2(double(line().y2() - line().y1()), double(line().x2() - line().x1())) - M_PI / 2.0;
-    double sina = sin(theta);
-    double cosa = cos(theta);
-    double yin = sqrt(3.0) * deltax;
-    double x1, y1, x2, y2;
+    qreal theta = atan2(qreal(line().y2() - line().y1()), qreal(line().x2() - line().x1())) - M_PI / 2.0;
+    qreal sina = sin(theta);
+    qreal cosa = cos(theta);
+    qreal yin = sqrt(3.0) * deltax;
+    qreal x1, y1, x2, y2;
     QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
     m.map( deltax, yin, &x1, &y1);
@@ -80,13 +80,13 @@ void ArrowItem::paint(QPainter *painter) {
   }
 
   if (_endArrowHead) {
-    double deltax = view()->scaledFontSize(_endArrowScale, *painter->device())*0.5;
+    qreal deltax = view()->scaledFontSize(_endArrowScale, *painter->device())*0.5;
     deltax *= painter->device()->logicalDpiX()/72.0; // convert points to 'pixels'.
-    double theta = atan2(double(line().y1() - line().y2()), double(line().x1() - line().x2())) - M_PI / 2.0;
-    double sina = sin(theta);
-    double cosa = cos(theta);
-    double yin = sqrt(3.0) * deltax;
-    double x1, y1, x2, y2;
+    qreal theta = atan2(qreal(line().y1() - line().y2()), qreal(line().x1() - line().x2())) - M_PI / 2.0;
+    qreal sina = sin(theta);
+    qreal cosa = cos(theta);
+    qreal yin = sqrt(3.0) * deltax;
+    qreal x1, y1, x2, y2;
     QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
     m.map( deltax, yin, &x1, &y1);

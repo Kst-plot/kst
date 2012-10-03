@@ -67,7 +67,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
   if (enabled) {
     QList<QGraphicsItem*> list = view()->items();
     foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem || viewItem->parentItem() || !viewItem->isVisible() || viewItem == this)
         continue;
 
@@ -80,7 +80,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
   } else {
     QList<QGraphicsItem*> list = QGraphicsItem::children();
     foreach (QGraphicsItem *item, list) {
-      ViewItem *viewItem = qgraphicsitem_cast<ViewItem*>(item);
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem)
         continue;
 

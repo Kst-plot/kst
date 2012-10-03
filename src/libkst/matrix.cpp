@@ -20,6 +20,7 @@
 
 #include "matrix.h"
 
+#include <math.h>
 #include <QDebug>
 #include <QXmlStreamWriter>
 
@@ -96,7 +97,7 @@ double Matrix::value(double x, double y, bool* ok) const {
   int y_index = (int)((y - _minY) / (double)_stepY);
   
   int index = zIndex(x_index, y_index);
-  if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
+  if ((index < 0) || !isfinite(_z[index]) || KST_ISNAN(_z[index])) {
     if (ok) (*ok) = false;
     return 0.0;
   }
@@ -108,7 +109,7 @@ double Matrix::value(double x, double y, bool* ok) const {
 
 double Matrix::valueRaw(int x, int y, bool* ok) const {
   int index = zIndex(x,y);
-  if ((index < 0) || !finite(_z[index]) || KST_ISNAN(_z[index])) {
+  if ((index < 0) || !isfinite(_z[index]) || KST_ISNAN(_z[index])) {
     if (ok) {
       (*ok) = false;
     }
@@ -326,7 +327,7 @@ void Matrix::internalUpdate() {
     _NRealS = 0;
 
     for (int i = 0; i < _zSize; i++) {
-      if (finite(_z[i]) && !KST_ISNAN(_z[i])) {
+      if (isfinite(_z[i]) && !KST_ISNAN(_z[i])) {
         if (!initialized) {
           min = _z[i];
           max = _z[i];

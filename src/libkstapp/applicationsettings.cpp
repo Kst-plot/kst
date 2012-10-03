@@ -116,7 +116,7 @@ void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
 
 
 int ApplicationSettings::referenceViewWidth() const {
-  double dpiScale = 72.0;
+  qreal dpiScale = 72.0;
 #ifdef Q_WS_X11
     dpiScale = QX11Info::appDpiX();
 #endif
@@ -124,12 +124,12 @@ int ApplicationSettings::referenceViewWidth() const {
 }
 
 
-double ApplicationSettings::referenceViewWidthCM() const {
+qreal ApplicationSettings::referenceViewWidthCM() const {
   return _refViewWidth;
 }
 
 
-void ApplicationSettings::setReferenceViewWidthCM(const double width) {
+void ApplicationSettings::setReferenceViewWidthCM(const qreal width) {
   _refViewWidth = width;
   _settings->setValue("general/referenceviewwidth", width);
   emit modified();
@@ -137,7 +137,7 @@ void ApplicationSettings::setReferenceViewWidthCM(const double width) {
 
 
 int ApplicationSettings::referenceViewHeight() const {
-  double dpiScale = 72.0;
+  qreal dpiScale = 72.0;
 #ifdef Q_WS_X11
     dpiScale = QX11Info::appDpiY();
 #endif
@@ -145,24 +145,24 @@ int ApplicationSettings::referenceViewHeight() const {
 }
 
 
-double ApplicationSettings::referenceViewHeightCM() const {
+qreal ApplicationSettings::referenceViewHeightCM() const {
   return _refViewHeight;
 }
 
 
-void ApplicationSettings::setReferenceViewHeightCM(const double height) {
+void ApplicationSettings::setReferenceViewHeightCM(const qreal height) {
   _refViewHeight = height;
   _settings->setValue("general/referenceviewheight", height);
   emit modified();
 }
 
 
-double ApplicationSettings::minimumFontSize() const {
+qreal ApplicationSettings::minimumFontSize() const {
   return _minFontSize;
 }
 
 
-void ApplicationSettings::setMinimumFontSize(double points) {
+void ApplicationSettings::setMinimumFontSize(qreal points) {
   _minFontSize = points;
   _settings->setValue("general/minimumfontsize", points);
   emit modified();

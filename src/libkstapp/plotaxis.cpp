@@ -602,7 +602,7 @@ void PlotAxis::validateDrawingRegion(QPainter *painter) {
   t.rotate(rotation);
 
   QVector<QPolygonF> labels;
-  QMapIterator<qreal, QString> iLabelCheck(_axisLabels);
+  QMapIterator<double, QString> iLabelCheck(_axisLabels);
   while (iLabelCheck.hasNext()) {
     iLabelCheck.next();
     QRectF bound = painter->boundingRect(QRectF(), flags, iLabelCheck.value());
@@ -681,15 +681,15 @@ MajorTickMode PlotAxis::convertToMajorTickMode(int tickCount, MajorTickMode old_
 
 
 void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
-  QMap<qreal, QString> labels;
-  QList<qreal> ticks;
-  QList<qreal> minTicks;
+  QMap<double, QString> labels;
+  QList<double> ticks;
+  QList<double> minTicks;
   const int format_precision = 5;
 
-  qreal min = _orientation == Qt::Horizontal ? plotItem()->xMin() : plotItem()->yMin();
-  qreal max = _orientation == Qt::Horizontal ? plotItem()->xMax() : plotItem()->yMax();
+  double min = _orientation == Qt::Horizontal ? plotItem()->xMin() : plotItem()->yMin();
+  double max = _orientation == Qt::Horizontal ? plotItem()->xMax() : plotItem()->yMax();
 
-  qreal tick;
+  double tick;
   if (max - min <= (double)tickMode*1.5) {
     // show in logarithmic mode with major ticks nicely labelled and the
     // specified number of minor ticks between each major label
@@ -703,7 +703,7 @@ void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
   int High = floor(max)+1;
   bool minorLabels = ((High - Low) <= 1);
   for (int i = Low - 1; i <= High; i+=tick) {
-    qreal majorPoint = pow(10.0, i);
+    double majorPoint = pow(10.0, i);
     if (majorPoint == 0) majorPoint = -350;
     if (i >= min && i <= max) {
       ticks << majorPoint;
@@ -714,9 +714,9 @@ void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
     if (tick == 1.0) {
       // draw minor lines
       bool first = true;
-      qreal powMin = pow(10, min), powMax = pow(10, max);
+      double powMin = pow(10, min), powMax = pow(10, max);
       for (int j = 2; j < 10; j++) {
-        qreal minorPoint = majorPoint * j;
+        double minorPoint = majorPoint * j;
         if (minorPoint >= powMin && minorPoint <= powMax) {
           minTicks << minorPoint;
           if (minorLabels && first) {
@@ -728,7 +728,7 @@ void PlotAxis::updateLogTicks(MajorTickMode tickMode) {
     }
   }
   if (minorLabels && !minTicks.isEmpty()) {
-    qreal lastMinorTick = minTicks.last();
+    double lastMinorTick = minTicks.last();
     if (ticks.isEmpty() || ticks.last() < lastMinorTick) {
       if (labels.contains(lastMinorTick)) {
         labels.insert(lastMinorTick, QString::number(lastMinorTick, 'g', format_precision));
@@ -843,9 +843,9 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
 
   double tick;
   double first_tick;
-  QMap<qreal, QString> labels;
-  QList<qreal> ticks;
-  QList<qreal> minTicks;
+  QMap<double, QString> labels;
+  QList<double> ticks;
+  QList<double> minTicks;
 
   QString tick_label;
   first_tick = base+i0*tickspacing;
@@ -922,18 +922,18 @@ QString PlotAxis::statusBarString(double X) {
 
 
 void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
-  QMap<qreal, QString> labels;
-  QList<qreal> ticks;
-  QList<qreal> minTicks;
-  qreal min;
-  qreal max;
-  qreal R;
-  qreal uR; // range in interpreted units
-  qreal uMin; // min and max in interpreted units
-  qreal uMax;
-  qreal drdu = 1.0; // interpreted units per raw units;
-  qreal rOffset = 0.0; // r = drdu*u + rOffset;
-  qreal uMajorTickSpacing; // major Tick spacing in iterpreted units
+  QMap<double, QString> labels;
+  QList<double> ticks;
+  QList<double> minTicks;
+  double min;
+  double max;
+  double R;
+  double uR; // range in interpreted units
+  double uMin; // min and max in interpreted units
+  double uMax;
+  double drdu = 1.0; // interpreted units per raw units;
+  double rOffset = 0.0; // r = drdu*u + rOffset;
+  double uMajorTickSpacing; // major Tick spacing in iterpreted units
 
   if (_orientation == Qt::Horizontal) {
     min = plotItem()->projectionRect().left();
@@ -959,20 +959,20 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
 
   computeMajorTickSpacing(&uMajorTickSpacing, &_automaticMinorTickCount, tickMode, uR);
 
-  qreal uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
-  qreal firstTick = uFirstTick*drdu + rOffset;
-  qreal majorTickSpacing = uMajorTickSpacing * drdu;
+  double uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
+  double firstTick = uFirstTick*drdu + rOffset;
+  double majorTickSpacing = uMajorTickSpacing * drdu;
 
   int i = 0;
-  qreal lastTick = 12345678;
+  double lastTick = 12345678;
   while (1) {
-    qreal uNextTick = uFirstTick + i++ * uMajorTickSpacing;
+    double uNextTick = uFirstTick + i++ * uMajorTickSpacing;
     if (fabs(uNextTick)<uMajorTickSpacing*0.5) { // fix roundoff...
       uNextTick = 0.0;
     }
     if (uNextTick > uMax)
       break;    
-    qreal nextTick = uNextTick * drdu + rOffset;
+    double nextTick = uNextTick * drdu + rOffset;
     if (lastTick == uNextTick) // prevent endless loop
       break;
     lastTick = nextTick;
@@ -982,7 +982,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
     labels.insert(nextTick, QString::number(uNextTick, 'g', FULL_PRECISION-2));
   }
 
-  qreal minorTickSpacing = 0;
+  double minorTickSpacing = 0;
   int desiredTicks;
   if (_automaticMinorTicks) {
     desiredTicks = _automaticMinorTickCount;
@@ -994,10 +994,10 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
   }
 
   if (minorTickSpacing != 0) {
-    qreal firstMinorTick = (firstTick - majorTickSpacing) + minorTickSpacing;
+    double firstMinorTick = (firstTick - majorTickSpacing) + minorTickSpacing;
 
     i = 0;
-    qreal nextMinorTick = firstMinorTick;
+    double nextMinorTick = firstMinorTick;
     while (1) {
       nextMinorTick = firstMinorTick + (i++ * minorTickSpacing);
       if (nextMinorTick > max)
@@ -1022,8 +1022,8 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
   _baseLabel.clear();
 
   int longest = 0, shortest = 1000;
-  qreal base=10;
-  QMapIterator<qreal, QString> iLabel(labels);
+  double base=10;
+  QMapIterator<double, QString> iLabel(labels);
   while (iLabel.hasNext()) {
     iLabel.next();
     if (iLabel.value().length() < shortest) {
@@ -1040,10 +1040,10 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
   // it wouldn't actually take up less space.
   if (_axisBaseOffset || ((longest > _axisSignificantDigits)&&(shortest>3)) || _axisBaseOffsetOverride ) {
     _baseLabel = QString::number(base, 'g', FULL_PRECISION-2);
-    QMapIterator<qreal, QString> i(labels);
+    QMapIterator<double, QString> i(labels);
     while (i.hasNext()) {
       i.next();
-      qreal offset;
+      double offset;
       offset = i.key() - base;
       QString label, num;
       if (offset < 0) {

@@ -238,7 +238,7 @@ ViewItemSI::ViewItemSI(ViewItem *it) : layout(new LayoutTabSI), dim(new Dimensio
 }
 
 QByteArrayList ViewItemSI::commands() {
-    return layout->commands()<<dim->commands()<<fill->commands()<<stroke->commands()<<(dynamic_cast<LineEditItem*>(layout->vi)||dynamic_cast<ButtonItem*>(layout->vi)?"setText(":"");
+    return layout->commands()<<dim->commands()<<fill->commands()<<stroke->commands()<<(qobject_cast<LineEditItem*>(layout->vi)||qobject_cast<ButtonItem*>(layout->vi)?"setText(":"");
 }
 
 QString ViewItemSI::doCommand(QString x) {
@@ -253,11 +253,11 @@ QString ViewItemSI::doCommand(QString x) {
         v=stroke->doCommand(x);
     }
     if(v.isEmpty()&&x.startsWith("setText(")) {
-        if(dynamic_cast<ButtonItem*>(layout->vi)) {
-            dynamic_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
+        if(qobject_cast<ButtonItem*>(layout->vi)) {
+            qobject_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
             v="Done";
-        } else if(dynamic_cast<LineEditItem*>(layout->vi)) {
-            dynamic_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
+        } else if(qobject_cast<LineEditItem*>(layout->vi)) {
+            qobject_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
             v="Done";
         }
     }
