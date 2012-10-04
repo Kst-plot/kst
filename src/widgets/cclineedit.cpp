@@ -52,7 +52,6 @@ CategoricalCompleter::CategoricalCompleter(QLineEdit *lineEdit, QList<Completion
     _data(data), _tableView(new CCTableView(&_data[0])), _currentSubset(&data[0])
 {
     setPopup(_tableView);
-    lineEdit->setWindowModality(Qt::NonModal);
     lineEdit->setCompleter(this);
     _tableView->setCompleter(this);
     _tableView->updateSuggestions();
@@ -66,8 +65,6 @@ CategoricalCompleter::CategoricalCompleter(QLineEdit *lineEdit, QList<Completion
 CategoricalCompleter::CategoricalCompleter(QTextEdit *textEdit, QList<CompletionCase> data) : QCompleter(getDefault(data)),
     _data(data), _tableView(new CCTableView(&_data[0])), _currentSubset(&data[0])
 {
-    if(_tableView) _tableView->setWindowModality(Qt::NonModal);
-    textEdit->setWindowModality(Qt::NonModal);
     setPopup(_tableView);
     _tableView->setCompleter(this);
     _tableView->updateSuggestions();
