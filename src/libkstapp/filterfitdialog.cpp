@@ -306,6 +306,11 @@ ObjectPtr FilterFitDialog::editExistingDataObject() const {
   if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
     plugin->writeLock();
     plugin->change(_filterFitTab->configWidget());
+    if (DataDialog::tagStringAuto()) {
+       plugin->setDescriptiveName(QString());
+    } else {
+       plugin->setDescriptiveName(DataDialog::tagString());
+    }
     plugin->registerChange();
     plugin->unlock();
   }

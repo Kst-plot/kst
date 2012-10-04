@@ -34,15 +34,18 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
 
   DataObjectConfigWidget* configWidget;
   QString pluginName;
+  QString descriptiveName;
   BasicPluginPtr dataObject;
   bool validTag;
-
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
     if (xml.isStartElement()) {
       if (n == BasicPlugin::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
         pluginName = attrs.value("type").toString();
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
         Object::processShortNameIndexAttributes(attrs);
 
         configWidget = DataObject::pluginWidget(pluginName);
@@ -134,6 +137,8 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
   if (xml.hasError()) {
     return 0;
   }
+
+  dataObject->setDescriptiveName(descriptiveName);
 
   dataObject->writeLock();
   dataObject->registerChange();

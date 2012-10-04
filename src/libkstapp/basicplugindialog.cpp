@@ -98,6 +98,12 @@ ObjectPtr BasicPluginDialog::editExistingDataObject() const {
   if (BasicPlugin* plugin = kst_cast<BasicPlugin>(dataObject())) {
     plugin->writeLock();
     plugin->change(_basicPluginTab->configWidget());
+    if (DataDialog::tagStringAuto()) {
+       plugin->setDescriptiveName(QString());
+    } else {
+       plugin->setDescriptiveName(DataDialog::tagString());
+    }
+
     plugin->registerChange();
     plugin->unlock();
   }
