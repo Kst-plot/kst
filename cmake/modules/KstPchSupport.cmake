@@ -72,19 +72,22 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header}.tmp ${_header}.cpp)
 		
 		if(MSVC_IDE)
-			set(use_pch "/Fp${_header}.\$(ConfigurationName).pch")
+			set(pch_file "${_header}.\$(ConfigurationName).pch")
 		else()
-			set(use_pch /Fp${_header}.pch)
+			set(pch_file ${_header}.pch)
 		endif()
-		set_source_files_properties(${_header}.cpp PROPERTIES COMPILE_FLAGS "/Yc\"${_header}\" ${use_pch}")
 		
+		set_source_files_properties(${_header}.cpp PROPERTIES COMPILE_FLAGS "/Yc\"${_header}\" /Fp${pch_file}"
+		                                                      OBJECT_OUTPUTS ${pch_file})
+
 		# Bug in cmake: next line also compile .c files with pchs
-		#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI${_header} /Yu${_header} ${use_pch}")
+		#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI${_header} /Yu${_header} /Fp${pch_file}")
 		foreach(it ${${_sources}})
 			get_filename_component(ext ${it} EXT)
 			if(ext STREQUAL .c)
 			else()
-				set_source_files_properties(${it} PROPERTIES COMPILE_FLAGS "/FI${_header} /Yu${_header} ${use_pch}")
+				set_source_files_properties(${it} PROPERTIES COMPILE_FLAGS "/FI${_header} /Yu${_header} /Fp${pch_file}"
+				                                             OBJECT_DEPENDS ${pch_file})
 			endif()
 		endforeach()
 			
