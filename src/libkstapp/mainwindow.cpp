@@ -704,7 +704,10 @@ void MainWindow::print() {
 
   setPrinterDefaults(&printer);
 
+#ifndef Q_OS_WIN
+  // QPrintDialog: Cannot be used on non-native printers
   printer.setOutputFileName(_dialogDefaults->value("print/path", "./print.pdf").toString());
+#endif
   QPointer<QPrintDialog> pd = new QPrintDialog(&printer, this);
 #if QT_VERSION >= 0x040500
   pd->setOption(QPrintDialog::PrintToFile);
