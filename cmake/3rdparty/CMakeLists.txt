@@ -37,6 +37,16 @@ if(NOT kst_make_program)
 	set(kst_make_program ${CMAKE_MAKE_PROGRAM})
 endif()
 
+# make dependencies visible for cmake
+# http://public.kitware.com/Bug/view.php?id=13538
+macro(kst_external_static_lib targetName name lib)
+    add_library(${targetName} STATIC IMPORTED GLOBAL)
+    set_target_properties(${targetName} PROPERTIES IMPORTED_LOCATION ${install_dir}/lib/${lib})
+    add_dependencies(${targetName} ${name})
+endmacro()
+
+
+
 # GETDATA
 set(ext_src ${build_dir}/getdata/src/getdata)
 if(WIN32)
@@ -64,7 +74,9 @@ if(APPLE)
 	set(gddeps -lbz2 -lz)
 endif()
 set(GETDATA_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GETDATA_LIBRARIES  ${install_dir}/lib/libgetdata++.a ${gddeps} ${install_dir}/lib/libgetdata.a PARENT_SCOPE)
+kst_external_static_lib(gdc_build   libgetdata libgetdata.a)
+kst_external_static_lib(gdcpp_build libgetdata libgetdata++.a)
+set(GETDATA_LIBRARIES gdc_build gdcpp_build ${gddeps} PARENT_SCOPE)
 
 
 # ZLIB needed by MATIO
@@ -74,14 +86,14 @@ if(WIN32)
 	set(ext_configure cmake ${ext_src} ${generator} -DBUILD_SHARED_LIBS=0 ${rc_compiler} ${install_prefix} ${build_type})
 	set(ext_install ${install_target})
 	set(ext_insource OFF )
-	set(zlib_library ${install_dir}/lib/libzlibstatic.a)
+		set(zlib_library libzlibstatic.a)
 	set(ext_make ${kst_make_program})
 else()
 	set(ext_url http://zlib.net/zlib-1.2.7.tar.gz)
 	set(ext_configure ${ext_src}/configure --static --prefix=${install_dir})
 	set(ext_install install)
 	set(ext_insource ON)
-	set(zlib_library ${install_dir}/lib/libz.a)
+		set(zlib_library libz.a)
 	set(ext_make ${CMAKE_MAKE_PROGRAM} CXXFLAGS=-fPIC CFLAGS=-fPIC)
 endif()
 ExternalProject_Add(zlib
@@ -93,6 +105,7 @@ ExternalProject_Add(zlib
 					BUILD_COMMAND ${ext_make}
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
+kst_external_static_lib(zlib_build zlib ${zlib_library})
 
 # MATIO
 set(ext_src ${build_dir}/matio/src/matio)
@@ -125,7 +138,8 @@ ExternalProject_Add(matio
 add_dependencies(matio zlib)
 
 set(MATIO_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(MATIO_LIBRARIES  ${install_dir}/lib/libmatio.a ${zlib_library} PARENT_SCOPE)
+kst_external_static_lib(matio_build matio libmatio.a)
+set(MATIO_LIBRARIES matio_build zlib_build PARENT_SCOPE)
 
 
 # NETCDF
@@ -143,7 +157,7 @@ if(WIN32)
 else()
 	set(ext_url ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.1.3.tar.gz)
 	set(ext_configure ${ext_src}/configure  --with-pic  --disable-netcdf-4
-											--enable-static --disable-shared   --disable-curl --disable-dap 
+											--enable-static --disable-shared   --disable-curl --disable-dap
 											--prefix=${install_dir} --with-zlib=${install_dir})
 	set(ext_install install)
 	set(ext_insource ON)
@@ -158,9 +172,10 @@ ExternalProject_Add(netcdf
 					INSTALL_COMMAND ${ext_make} ${ext_install})
 
 set(NETCDF_INCLUDEDIR  ${install_dir}/include PARENT_SCOPE)
-set(NETCDF_LIBRARY_C   ${install_dir}/lib/libnetcdf.a PARENT_SCOPE)
-set(NETCDF_LIBRARY_CPP ${install_dir}/lib/libnetcdf_c++.a PARENT_SCOPE)
-
+kst_external_static_lib(netcdf_c_build netcdf libnetcdf.a)
+kst_external_static_lib(netcdf_cpp_build netcdf libnetcdf_c++.a)
+set(NETCDF_LIBRARY_C netcdf_c_build PARENT_SCOPE)
+set(NETCDF_LIBRARY_CPP netcdf_cpp_build PARENT_SCOPE)
 
 # CFITSIO
 set(ext_src ${build_dir}/cfitsio/src/cfitsio)
@@ -191,8 +206,11 @@ ExternalProject_Add(cfitsio
 					BUILD_COMMAND ${ext_make}
 					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
 
+
 set(CFITSIO_INCLUDEDIR ${install_dir}/include/cfitsio PARENT_SCOPE)
-set(CFITSIO_LIBRARIES  ${install_dir}/lib/libcfitsio.a PARENT_SCOPE)
+kst_external_static_lib(cfitsio_build cfitsio libcfitsio.a)
+set(CFITSIO_LIBRARIES cfitsio_build PARENT_SCOPE)
+
 
 
 # GSL
@@ -225,10 +243,11 @@ ExternalProject_Add(gsl
 					INSTALL_COMMAND ${ext_make} ${ext_install})
 
 if(APPLE)
-	set(gsldeps ${install_dir}/lib/libgslcblas.a)
+		set(GSL_DEPS ${install_dir}/lib/libgslcblas.a)
 endif()
 set(GSL_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
-set(GSL_LIBRARIES  ${install_dir}/lib/libgsl.a ${gsldeps} PARENT_SCOPE)
+kst_external_static_lib(gsl_build gsl libgsl.a)
+set(GSL_LIBRARIES gsl_build ${GSL_DEPS} PARENT_SCOPE)
 
 
 

@@ -173,6 +173,9 @@ macro(kst_add_plugin folder name)
 	endif()
 endmacro()
 
+macro(kst_add_dependency name)
+	add_dependencies(${kst_name} ${name})
+endmacro()
 
 macro(kst_include_directories)
 	foreach(_it ${ARGV})
