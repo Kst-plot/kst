@@ -159,7 +159,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   // gmtOffset() is returned in seconds... as it must be since
   //  some time zones are not an integer number of hours offset
   //  from UTC...
-  jd += (_timezone.gmtOffset(convertJDtoCTime(jd)))/(3600.0*24.0);
+  jd += (_timeZone.gmtOffset(convertJDtoCTime(jd)))/(3600.0*24.0);
 
   // get the date from the Julian day number
   double jd_day = floor(jd);
@@ -538,13 +538,13 @@ void PlotAxis::setAxisInterpret(const bool enabled) {
 
 
 QString PlotAxis::timezoneName() const {
-  return _timezone.tzName();
+  return _timeZone.tzName();
 }
 
 
 void PlotAxis::setTimezoneName(QString timezone) {
-  if (_timezone.tzName() != timezone) {
-    _timezone.setTZ(timezone);
+  if (_timeZone.tzName() != timezone) {
+    _timeZone.setTZ(timezone);
     _dirty = true;
   }
 }
@@ -1177,8 +1177,8 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());
   xml.writeAttribute("rotation", QVariant(axisLabelRotation()).toString());
   xml.writeAttribute("zoommode", QVariant(axisZoomMode()).toString());
-  xml.writeAttribute("timezonename", _timezone.tzName());
-  xml.writeAttribute("timezoneoffset", QVariant(_timezone.gmtOffset(0)).toString());
+  xml.writeAttribute("timezonename", _timeZone.tzName());
+  xml.writeAttribute("timezoneoffset", QVariant(_timeZone.gmtOffset(0)).toString());
   _axisPlotMarkers.saveInPlot(xml);
   xml.writeEndElement();
 }

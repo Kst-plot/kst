@@ -176,7 +176,7 @@ class PlotAxis : public QObject
     bool _axisInterpret;
     AxisDisplayType _axisDisplay;
     AxisInterpretationType _axisInterpretation;
-    KstTimeZone _timezone;
+    KstTimeZone _timeZone;
 
     MajorTickMode _axisMajorTickMode;
     MajorTickMode _axisOverrideMajorTicks;

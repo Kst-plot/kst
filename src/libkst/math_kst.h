@@ -101,6 +101,8 @@ inline int isinf(double x) { return x == x && !finite(x); }
 #ifndef isinf
 #define isinf !_finite
 #endif
+template<class T>
+bool isfinite(T value) { return !isinf(value); }
 #endif
 
 #if 0

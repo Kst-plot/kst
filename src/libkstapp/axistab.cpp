@@ -78,7 +78,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_timezone, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_timeZone, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
@@ -89,7 +89,7 @@ AxisTab::AxisTab(QWidget *parent)
 
   connect(_rotation, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
-  _timezone->addItems(KstTimeZone::tzList());
+  _timeZone->addItems(KstTimeZone::tzList());
 
   _scaleLog->setProperty("si","&Logarithmic");
   _scaleReverse->setProperty("si","&Reverse");
@@ -430,17 +430,17 @@ void AxisTab::setAxisDisplay(AxisDisplayType display) {
 
 
 QString AxisTab::timezone() const {
-  return _timezone->currentText();
+  return _timeZone->currentText();
 }
 
 
 bool AxisTab::timezoneDirty() const {
-  return _timezone->currentIndex() != -1;
+  return _timeZone->currentIndex() != -1;
 }
 
 
 void AxisTab::setTimezone(QString timezone) {
-  _timezone->setCurrentIndex(_timezone->findText(timezone));
+  _timeZone->setCurrentIndex(_timeZone->findText(timezone));
 }
 
 
@@ -530,7 +530,7 @@ void AxisTab::clearTabValues() {
   _rotation->clear();
   _scaleInterpretType->setCurrentIndex(-1);
   _scaleDisplayType->setCurrentIndex(-1);
-  _timezone->setCurrentIndex(-1);
+  _timeZone->setCurrentIndex(-1);
 
   _drawAxisMajorTicks->setCheckState(Qt::PartiallyChecked);
   _drawAxisMajorGridLines->setCheckState(Qt::PartiallyChecked);
