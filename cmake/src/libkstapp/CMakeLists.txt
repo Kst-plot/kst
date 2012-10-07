@@ -1,6 +1,6 @@
 kst_init(${kst_binary_name} app)
 
-if(kst_qt5 AND kst_qt5base_only)
+if(kst_qt5)
 	kst_files_ignore(svgitem)
 	add_definitions(-DKST_NO_SVG)
 	#add_definitions(-DKST_NO_PRINTER)

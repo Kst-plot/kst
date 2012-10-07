@@ -90,6 +90,7 @@ if [ ! -d /opt/$qtver ]; then
     readelf -h  /opt/$qtver/bin/qmake
     /opt/$qtver/bin/qmake -query
     checkExitCode
+    export PATH=/opt/$qtver/bin:$PATH
 fi
 
 #
