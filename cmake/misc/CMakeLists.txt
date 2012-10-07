@@ -8,6 +8,7 @@ if(WIN32)
 			${QT_BINARY_DIR}/QtWidgets5.dll
 			${QT_BINARY_DIR}/QtXml5.dll
 			${QT_BINARY_DIR}/QtNetwork5.dll				
+			${QT_BINARY_DIR}/QtPrintSupport5.dll
 			DESTINATION bin
 			CONFIGURATIONS Release)
 		install(FILES
