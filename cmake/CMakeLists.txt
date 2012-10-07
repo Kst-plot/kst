@@ -145,7 +145,7 @@ if (kst_qt5)
         endif()
 	add_definitions(-DQT5=1 -DQT_DISABLE_DEPRECATED_BEFORE)
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
-	set(QT_BINARY_DIR ${kst_qt5}/bin)
+  include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS}) # Qt5 bug?
 else()
 	find_package(Qt4 REQUIRED)
 	include(${QT_USE_FILE})
