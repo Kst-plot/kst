@@ -79,7 +79,7 @@ fi
 qtver=Qt-$qtver-win32-g++-$mingw
     
 if [ ! -d /opt/$qtver ]; then
-    qttar=$qtver-Ubuntu-11.10.tar
+    qttar=$qtver-Ubuntu32-12.04-1.tar
     wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
