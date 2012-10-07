@@ -90,9 +90,9 @@ using namespace std;
 #undef TEXT
 #endif
 
-#define TEXT(T) (T->property("si").isValid()?T->property("si").toString().toAscii():T->text().toAscii())
-#define ORIGTEXT(T) T->text().toAscii()
-#define CBTEXT(T) (T->property("si").isValid()?T->property("si").toString().toAscii():"")
+#define TEXT(T) (T->property("si").isValid()?T->property("si").toString().toLatin1():T->text().toLatin1())
+#define ORIGTEXT(T) T->text().toLatin1()
+#define CBTEXT(T) (T->property("si").isValid()?T->property("si").toString().toLatin1():"")
 
 namespace Kst {
 
@@ -408,7 +408,7 @@ DialogSI* DialogLauncherSI::showObjectDialog(ObjectPtr objectPtr) {
         QByteArray tmp;
         return self->showMatrixDialog(tmp, matrix);
     } else if (BasicPluginPtr plugin = kst_cast<BasicPlugin>(objectPtr)) {
-        return self->showBasicPluginDialog(plugin->pluginName().toAscii(), plugin);
+        return self->showBasicPluginDialog(plugin->pluginName().toLatin1(), plugin);
     }  else if (ScalarPtr scalar = kst_cast<Scalar>(objectPtr)) {
         QByteArray tmp;
         return self->showScalarDialog(tmp, scalar);
@@ -447,7 +447,7 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
                     label->buddy()->inherits("QDoubleSpinBox")||label->buddy()->inherits("QTextEdit")||
                     label->buddy()->inherits("QComboBox")) {
                 _labelsWithBuddies<<label;
-                _camelTextLabels.push_back(toCamelCase(TEXT(_labelsWithBuddies.back())).toAscii());
+                _camelTextLabels.push_back(toCamelCase(TEXT(_labelsWithBuddies.back())).toLatin1());
                 if(_labelsWithBuddies.back()->property("si").isNull()) {
 //                    std::cerr<<qPrintable(_labelsWithBuddies.back()->objectName())<<"->setProperty(\"si\",\""<<qPrintable(QString(TEXT(_labelsWithBuddies.back())))<<"\");\n";
                 }
@@ -455,7 +455,7 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
                     qDebug()<<"Warning:"<<ORIGTEXT(_labelsWithBuddies.back())<<"!="<<_labelsWithBuddies.back()->property("si").toString();
                 }
                 if(_camelTextLabels.size()) {
-                    _camelTextLabels.back()[0]=QString(QString(_camelTextLabels.back())[0].toUpper())[0].toAscii();
+                    _camelTextLabels.back()[0]=QString(QString(_camelTextLabels.back())[0].toUpper())[0].toLatin1();
                 }
             }
         }
@@ -469,9 +469,9 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
                 else if(_colorButtons.back()->property("si").toString()!=TEXT(_colorButtons.back())) {
                     qDebug()<<"Warning:"<<ORIGTEXT(_colorButtons.back())<<"!="<<_colorButtons.back()->property("si").toString();
                 }
-                _camelColorButtons.push_back(toCamelCase(TEXT(_colorButtons.back())).toAscii());
+                _camelColorButtons.push_back(toCamelCase(TEXT(_colorButtons.back())).toLatin1());
                 if(_camelColorButtons.size()) {
-                    _camelColorButtons.back()[0]=QString(QString(_camelColorButtons.back())[0].toUpper())[0].toAscii();
+                    _camelColorButtons.back()[0]=QString(QString(_camelColorButtons.back())[0].toUpper())[0].toLatin1();
                 }
             } else {
                 qDebug()<<"Warning: ColorButton with no text!!"<<c[i]->objectName();
@@ -485,10 +485,10 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
                 else if(_buttons.back()->property("si").toString()!=TEXT(_buttons.back())) {
                     qDebug()<<"Warning:"<<ORIGTEXT(_buttons.back())<<"!="<<_buttons.back()->property("si").toString();
                 }
-                _camelButtons.push_back(toCamelCase(TEXT(_buttons.back())).toAscii());
-                _camelButtonsRev.push_back(toCamelCase(TEXT(_buttons.back())).toAscii());
+                _camelButtons.push_back(toCamelCase(TEXT(_buttons.back())).toLatin1());
+                _camelButtonsRev.push_back(toCamelCase(TEXT(_buttons.back())).toLatin1());
                 if(_camelButtons.size()) {
-                    _camelButtons.back()[0]=QString(QString(_camelButtons.back())[0].toUpper())[0].toAscii();
+                    _camelButtons.back()[0]=QString(QString(_camelButtons.back())[0].toUpper())[0].toLatin1();
                 }
             }
         }
@@ -542,12 +542,12 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
     }
     for(int i=0;i<_labelsWithBuddies.size();i++) {
         if(_labelsWithBuddies[i]->buddy()->inherits("QComboBox")) {
-            QByteArray c=toCamelCase("set index of "+TEXT(_labelsWithBuddies[i])).toAscii()+"()";
+            QByteArray c=toCamelCase("set index of "+TEXT(_labelsWithBuddies[i])).toLatin1()+"()";
             _fnMap.insert(c,&DialogSI::setComboBoxIndex);
             _objMap.insert(c,_labelsWithBuddies[i]->buddy());
         }
-        QByteArray c=toCamelCase("set "+TEXT(_labelsWithBuddies[i])).toAscii()+"()";
-        QByteArray g=toCamelCase("get "+TEXT(_labelsWithBuddies[i])).toAscii()+"()";
+        QByteArray c=toCamelCase("set "+TEXT(_labelsWithBuddies[i])).toLatin1()+"()";
+        QByteArray g=toCamelCase("get "+TEXT(_labelsWithBuddies[i])).toLatin1()+"()";
         if(_labelsWithBuddies[i]->buddy()->inherits("QLineEdit")) {
             _fnMap.insert(c,&DialogSI::setLineEditText);
             _fnMap.insert(g,&DialogSI::getLineEditText);
@@ -574,54 +574,54 @@ DialogSI::DialogSI(QWidget* t,ViewItem*v) : _dialog(t), _valid(1), _subDialog(0)
     }
     for(int i=0;i<_buttons.size();i++) {
         if(_buttons[i]->isCheckable()) {
-            QByteArray c=toCamelCase("check "+TEXT(_buttons[i])).toAscii()+"()";
+            QByteArray c=toCamelCase("check "+TEXT(_buttons[i])).toLatin1()+"()";
             _fnMap.insert(c,&DialogSI::checkButton);
             _objMap.insert(c,_buttons[i]);
-            c=toCamelCase("uncheck "+TEXT(_buttons[i])).toAscii()+"()";
+            c=toCamelCase("uncheck "+TEXT(_buttons[i])).toLatin1()+"()";
             _fnMap.insert(c,&DialogSI::uncheckButton);
             _objMap.insert(c,_buttons[i]);
-            c=toCamelCase(TEXT(_buttons[i])+" is checked").toAscii()+"()";
+            c=toCamelCase(TEXT(_buttons[i])+" is checked").toLatin1()+"()";
             _fnMap.insert(c,&DialogSI::getButtonIsChecked);
             _objMap.insert(c,_buttons[i]);
         } else {
-            QByteArray c=toCamelCase("press "+TEXT(_buttons[i])).toAscii()+"()";
+            QByteArray c=toCamelCase("press "+TEXT(_buttons[i])).toLatin1()+"()";
             _fnMap.insert(c,&DialogSI::pressButton);
             _objMap.insert(c,_buttons[i]);
         }
     }
     for(int i=0;i<_groupBoxes.size();i++) {
-        QByteArray c=toCamelCase("check "+_groupBoxes[i]->title()).toAscii()+"()";
+        QByteArray c=toCamelCase("check "+_groupBoxes[i]->title()).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::checkGroupBox);
         _objMap.insert(c,_groupBoxes[i]);
-        c=toCamelCase("uncheck "+_groupBoxes[i]->title()).toAscii()+"()";
+        c=toCamelCase("uncheck "+_groupBoxes[i]->title()).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::uncheckGroupBox);
         _objMap.insert(c,_groupBoxes[i]);
-        c=toCamelCase(_groupBoxes[i]->title()+" is checked").toAscii()+"()";
+        c=toCamelCase(_groupBoxes[i]->title()+" is checked").toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::getGroupBoxIsChecked);
         _objMap.insert(c,_groupBoxes[i]);
     }
 
     for(int i=0;i<_colorButtons.size();i++) {
-        QByteArray c=toCamelCase("set "+TEXT(_colorButtons[i])).toAscii()+"()";
+        QByteArray c=toCamelCase("set "+TEXT(_colorButtons[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::setColour);
         _objMap.insert(c,_colorButtons[i]);
-        c=toCamelCase("get "+TEXT(_colorButtons[i])).toAscii()+"()";
+        c=toCamelCase("get "+TEXT(_colorButtons[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::getColour);
         _objMap.insert(c,_colorButtons[i]);
     }
 
     for(int i=0;i<_buddylessComboBoxes.size();i++) {
-        QByteArray c=toCamelCase("set index of "+CBTEXT(_buddylessComboBoxes[i])).toAscii()+"()";
+        QByteArray c=toCamelCase("set index of "+CBTEXT(_buddylessComboBoxes[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::setComboBoxIndex);
         _objMap.insert(c,_buddylessComboBoxes[i]);
-        c=toCamelCase("get index of "+CBTEXT(_buddylessComboBoxes[i])).toAscii()+"()";
+        c=toCamelCase("get index of "+CBTEXT(_buddylessComboBoxes[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::getComboBoxIndex);
         _objMap.insert(c,_buddylessComboBoxes[i]);
 
-        c=toCamelCase("set "+CBTEXT(_buddylessComboBoxes[i])).toAscii()+"()";
+        c=toCamelCase("set "+CBTEXT(_buddylessComboBoxes[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::setComboBoxEditValue);
         _objMap.insert(c,_buddylessComboBoxes[i]);
-        c=toCamelCase("get "+CBTEXT(_buddylessComboBoxes[i])).toAscii()+"()";
+        c=toCamelCase("get "+CBTEXT(_buddylessComboBoxes[i])).toLatin1()+"()";
         _fnMap.insert(c,&DialogSI::getComboBoxEditValue);
         _objMap.insert(c,_buddylessComboBoxes[i]);
     }
@@ -720,12 +720,12 @@ QString DialogSI::doCommand(QString x)
         }
         return _subDialog->doCommand(x);
     }
-    QByteArray x_hack=x.toAscii();
+    QByteArray x_hack=x.toLatin1();
     x_hack.remove(x_hack.indexOf('('),9999999);
     x_hack+="()";
     DialogSIMemberFn fn = _fnMap.value(x_hack,&DialogSI::noSuchFn);
     QWidget* obj = _objMap.value(x_hack,0);
-    x_hack=x.toAscii(); // (!!)
+    x_hack=x.toLatin1(); // (!!)
     return CALL_MEMBER_FN(*this,fn)(x_hack,obj);
 }
 
@@ -879,11 +879,11 @@ QByteArray DialogSI::getComboBoxIndex(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::getLineEditText(QByteArray&y,QWidget*obj){
-    return qobject_cast<QLineEdit*>(obj)->text().toAscii();
+    return qobject_cast<QLineEdit*>(obj)->text().toLatin1();
 }
 
 QByteArray DialogSI::getTextEditText(QByteArray&y,QWidget*obj){
-    return qobject_cast<QTextEdit*>(obj)->toPlainText().toAscii();
+    return qobject_cast<QTextEdit*>(obj)->toPlainText().toLatin1();
 }
 
 QByteArray DialogSI::getSpinBoxValue(QByteArray&y,QWidget*obj){
@@ -898,7 +898,7 @@ QByteArray DialogSI::getComboBoxEditValue(QByteArray&y,QWidget*obj){
     if(qobject_cast<QComboBox*>(obj)->currentText().isEmpty()) {
         return "Index "+QByteArray::number(qobject_cast<QComboBox*>(obj)->currentIndex());
     } else {
-        return qobject_cast<QComboBox*>(obj)->currentText().toAscii();
+        return qobject_cast<QComboBox*>(obj)->currentText().toLatin1();
     }
 }
 
@@ -948,7 +948,7 @@ QByteArray DialogSI::getGroupBoxIsChecked(QByteArray&y,QWidget*obj){
 }
 
 QByteArray DialogSI::getColour(QByteArray&x,QWidget*obj){
-    return qobject_cast<ColorButton*>(obj)->color().name().toAscii();
+    return qobject_cast<ColorButton*>(obj)->color().name().toLatin1();
 
 }
 

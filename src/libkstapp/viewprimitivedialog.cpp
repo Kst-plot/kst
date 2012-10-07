@@ -20,6 +20,10 @@
 #include <datacollection.h>
 #include <QHeaderView>
 
+#ifdef QT5
+#define setResizeMode setSectionResizeMode
+#endif
+
 namespace Kst {
 
 ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc)

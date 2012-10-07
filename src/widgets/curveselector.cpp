@@ -45,7 +45,7 @@ void CurveSelector::emitSelectionChanged() {
 
 
 CurvePtr CurveSelector::selectedCurve() const {
-  return qVariantValue<Curve*>(_curve->itemData(_curve->currentIndex()));
+  return _curve->itemData(_curve->currentIndex()).value<Curve*>();
 }
 
 
@@ -60,7 +60,7 @@ void CurveSelector::setSelectedCurve(CurvePtr selectedCurve) {
   //int i = _curve->findData(qVariantFromValue(selectedVector.data()));
   int i=-1,j;
   for (j=0; j<_curve->count() ; j++) {
-    if (selectedCurve.data() == (qVariantValue<Curve*>(_curve->itemData(j)))) {
+    if (selectedCurve.data() == _curve->itemData(j).value<Curve*>()) {
       i=j;
       break;
     }

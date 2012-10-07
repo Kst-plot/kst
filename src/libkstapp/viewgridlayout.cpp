@@ -162,7 +162,7 @@ void ViewGridLayout::sharePlots(ViewItem *item, QPainter *painter, bool creation
 
   // Gather all children of the SharedAxisBoxItem.
   QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = item->QGraphicsItem::children();
+  QList<QGraphicsItem*> list = item->QGraphicsItem::childItems();
   if (list.isEmpty())
     return; //not added to undostack
 
@@ -692,7 +692,7 @@ void ViewGridLayout::updateProjections(ViewItem *item, bool forceXShare, bool fo
   qreal xMin = 0.0, xMax = 0.0, yMin = 0.0, yMax = 0.0;
 
   QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = item->QGraphicsItem::children();
+  QList<QGraphicsItem*> list = item->QGraphicsItem::childItems();
   if (list.isEmpty())
     return; //not added to undostack
 

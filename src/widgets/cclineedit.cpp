@@ -37,6 +37,10 @@
 #include <QTimer>
 #include <QLabel>
 
+#ifdef QT5
+#define setResizeMode setSectionResizeMode
+#endif
+
 namespace Kst {
 
 QList<CCCommonEdit*> CCCommonEdit::_u;

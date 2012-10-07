@@ -249,13 +249,13 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
-      date.setYMD(year, month, day);
-      label = date.toString(Qt::TextDate).toAscii();
+      date.setDate(year, month, day);
+      label = date.toString(Qt::TextDate).toLatin1();
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
-      date.setYMD(year, month, day);
-      label = date.toString(Qt::LocalDate).toAscii();
+      date.setDate(year, month, day);
+      label = date.toString(Qt::LocalDate).toLatin1();
       label += hourminute + seconds;
       break;
     default:

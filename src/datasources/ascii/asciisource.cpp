@@ -405,7 +405,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
         new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() == 1) {
-      const IsCharacter comment_del(_config._delimiters.value()[0].toAscii());
+      const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
       if (lineending.isLF()) {
         new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakLF(lineending), comment_del);
       } else {
@@ -602,7 +602,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
-      const IsCharacter column_del(_config._columnDelimiter.value()[0].toAscii());
+      const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
       return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
@@ -629,7 +629,7 @@ int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufrea
     const NoDelimiter comment_del;
     return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   } else if (_config._delimiters.value().size() == 1) {
-    const IsCharacter comment_del(_config._delimiters.value()[0].toAscii());
+    const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
     return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   } else if (_config._delimiters.value().size() > 1) {
     const IsInString comment_del(_config._delimiters.value());

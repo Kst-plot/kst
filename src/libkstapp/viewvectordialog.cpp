@@ -19,6 +19,10 @@
 #include <objectstore.h>
 #include <QHeaderView>
 
+#ifdef QT5
+#define setResizeMode setSectionResizeMode
+#endif
+
 namespace Kst {
 
 ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
@@ -30,6 +34,7 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   // TODO  ResizeToContents is too expensive
   //_vectors->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+
   _vectors->verticalHeader()->hide();
 
   connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));

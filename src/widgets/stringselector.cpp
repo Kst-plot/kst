@@ -65,14 +65,14 @@ void StringSelector::emitSelectionChanged() {
 
 
 StringPtr StringSelector::selectedString() const {
-  return qVariantValue<String*>(_string->itemData(_string->currentIndex()));
+    return _string->itemData(_string->currentIndex()).value<String*>();
 }
 
 
 void StringSelector::setSelectedString(StringPtr selectedString) {
   int i=-1,j;
   for (j=0; j<_string->count() ; j++) {
-    if (selectedString.data() == (qVariantValue<String*>(_string->itemData(j)))) {
+    if (selectedString.data() == _string->itemData(j).value<String*>()) {
       i=j;
       break;
     }

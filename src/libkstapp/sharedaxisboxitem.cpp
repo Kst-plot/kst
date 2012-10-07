@@ -252,7 +252,7 @@ void SharedAxisBoxItem::breakShare() {
 
 void SharedAxisBoxItem::lockItems() {
   _sharedPlots.clear();
-  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  QList<QGraphicsItem*> list = QGraphicsItem::childItems();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)

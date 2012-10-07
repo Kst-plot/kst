@@ -383,7 +383,7 @@ void ScriptServer::readSomething()
         QString search=command.remove(0,9).remove(command.lastIndexOf(")"),9999);
         for(int h=0;h<2;h++) {
             for(int i=0;i<vi.size();i++) {
-                if(search.contains(vi[i]->shortName().toAscii())) {
+                if(search.contains(vi[i]->shortName().toLatin1())) {
                     ButtonItem* bi=qobject_cast<ButtonItem*>(vi[i]);
                     if(bi) {
                         bi->addSocket(s);
@@ -501,7 +501,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
         }
 
         if(_interface) {
-            return handleResponse(_interface->doCommand(command).toAscii(),s,ifMode,ifEqual,_if,var); //magic
+            return handleResponse(_interface->doCommand(command).toLatin1(),s,ifMode,ifEqual,_if,var); //magic
         } else {
             return handleResponse("Unknown command!",s,ifMode,ifEqual,_if,var);
         }
@@ -589,7 +589,7 @@ QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket
     objectPtr->setDescriptiveName("Script Vector");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
-    return handleResponse("Finished editing "+objectPtr->Name().toAscii(),s,ifMode,ifEqual,_if,var);
+    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
 }
 
 
@@ -639,7 +639,7 @@ QByteArray ScriptServer::newEditableMatrixAndGetHandle(QByteArray&, QLocalSocket
     objectPtr->setDescriptiveName("Script Matrix");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
-    return handleResponse("Finished editing "+objectPtr->Name().toAscii(),s,ifMode,ifEqual,_if,var);
+    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
 }
 
 
@@ -793,9 +793,9 @@ QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,Obj
                                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     QString a;
     for(int i=0;i<DataObject::dataObjectPluginList().size();i++) {
-        a.push_back(DataObject::dataObjectPluginList()[i].toAscii()+"\n");
+        a.push_back(DataObject::dataObjectPluginList()[i].toLatin1()+"\n");
     }
-    return handleResponse(a.toAscii(),s,ifMode,ifEqual,_if,var);
+    return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);
 }
 
 
@@ -978,7 +978,7 @@ QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectSto
         // check if view item
         for(int h=0;h<2;h++) {
             for(int i=0;i<vi.size();i++) {
-                if(command.endsWith('('+vi[i]->shortName().toAscii()+')')) {
+                if(command.endsWith('('+vi[i]->shortName().toLatin1()+')')) {
                     _interface=DialogLauncherSI::self->showViewItemDialog(vi[i]);
                     return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
                 }
@@ -1009,7 +1009,7 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
         // check if view item
         for(int h=0;h<2;h++) {
             for(int i=0;i<vi.size();i++) {
-                if(command.contains(vi[i]->shortName().toAscii())) {
+                if(command.contains(vi[i]->shortName().toLatin1())) {
                     vi[i]->hide();  // goodbye, memory.
                     return handleResponse("It died a peaceful death.",s,ifMode,ifEqual,_if,var);
                 }
@@ -1324,7 +1324,7 @@ QByteArray ScriptServer::commands(QByteArray&, QLocalSocket* s,ObjectStore*,cons
         return handleResponse((join(v,'\n')+builtIns+"\n"),s,ifMode,ifEqual,_if,var);
     } else {
         QString a="endEdit()\n"+join(_interface->commands(),'\n');
-        return handleResponse(a.toAscii(),s,ifMode,ifEqual,_if,var);
+        return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);
     }
 }
 
@@ -1507,7 +1507,7 @@ QByteArray ScriptServer::stringValue(QByteArray&command, QLocalSocket* s,ObjectS
     ObjectPtr o=_store->retrieveObject(command);
     StringPtr str=kst_cast<String>(o);
     if(str) {
-        return handleResponse(str->value().toAscii(),s,0,"",0,0);
+        return handleResponse(str->value().toLatin1(),s,0,"",0,0);
     } else {
         return handleResponse("No such object (variables not supported)",s,0,"",0,0);;
     }

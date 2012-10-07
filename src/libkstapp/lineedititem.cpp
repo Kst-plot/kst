@@ -65,7 +65,7 @@ void LineEditItem::addSocket(QLocalSocket* s) {
 
 void LineEditItem::notifyScripts() {
     foreach(QLocalSocket*s,_sockets) {
-        s->write(QString("valueSet:"+_lineEdit->text()).toAscii());
+        s->write(QString("valueSet:"+_lineEdit->text()).toLatin1());
         s->flush();
     }
 }

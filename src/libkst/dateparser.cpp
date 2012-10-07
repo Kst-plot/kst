@@ -85,17 +85,17 @@ QDateTime parsePlanckDate(const QString& dateString) {
             years += 2000;
           }
         }
-        d.setYMD(years, d.month(), d.day());
+        d.setDate(years, d.month(), d.day());
       }
     case 4:
       {
         unsigned month = mainSplit[i++].toUInt();
-        d.setYMD(d.year(), month, d.day());
+        d.setDate(d.year(), month, d.day());
       }
     case 3:
       {
         unsigned day = mainSplit[i++].toInt();
-        d.setYMD(d.year(), d.month(), day);
+        d.setDate(d.year(), d.month(), day);
       }
       edt.setDate(d);
     case 2:

@@ -101,7 +101,7 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
     if (index.parent().isValid()) {
       Q_ASSERT(!index.parent().parent().isValid());
       QVariant p = data(index.parent(), role);
-      DataObjectPtr parent = qVariantValue<DataObject*>(p);
+      DataObjectPtr parent = p.value<DataObject*>();
       const int vectorCount = parent->outputVectors().count();
       if (index.row() < vectorCount) {
         if (VectorPtr v = parent->outputVectors().values()[index.row()]) {

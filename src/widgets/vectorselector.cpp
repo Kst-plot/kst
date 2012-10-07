@@ -78,10 +78,10 @@ VectorPtr VectorSelector::selectedVector() const {
 
     for(int i=0;i<_vector->count();i++) {
         if(_vector->itemText(i).contains(shortName)) {
-            return qVariantValue<Vector*>(_vector->itemData(i));
+            return _vector->itemData(i).value<Vector*>();
         }
     }
-    return qVariantValue<Vector*>(_vector->itemData(_vector->currentIndex()));
+    return _vector->itemData(_vector->currentIndex()).value<Vector*>();
 }
 
 
@@ -102,7 +102,7 @@ void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
   //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
   int i=-1,j;
   for (j=0; j<_vector->count() ; j++) {
-    if (selectedVector.data() == (qVariantValue<Vector*>(_vector->itemData(j)))) {
+    if (selectedVector.data() == _vector->itemData(j).value<Vector*>()) {
       i=j;
       break;
     }

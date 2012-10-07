@@ -639,7 +639,7 @@ QByteArray DataVector::scriptInterface(QList<QByteArray> &c)
     } else if(c[0]=="countFromEOF") {
         return QByteArray(countFromEOF()?"true":"false");
     } else if(c[0]=="descriptionTip") {
-        return QByteArray(descriptionTip().toAscii());
+        return QByteArray(descriptionTip().toLatin1());
     } else if(c[0]=="isValid") {
         return isValid()?"true":"false";
     }

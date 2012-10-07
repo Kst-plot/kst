@@ -39,6 +39,10 @@
 #include <QMenu>
 #include <QShortcut>
 
+#ifdef QT5
+#define setResizeMode setSectionResizeMode
+#endif
+
 namespace Kst {
 
 DataManager::DataManager(QWidget *parent, Document *doc)
@@ -50,6 +54,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setModel(doc->session());
+
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
   _session->setUniformRowHeights(true);
   connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -371,7 +376,7 @@ void DataManager::deleteObject() {
 }
 
 void DataManager::addToPlot(QAction* action) {
-  PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
+  PlotItem* plotItem = static_cast<PlotItem*>(action->data().value<PlotItemInterface*>());
   RelationPtr relation = kst_cast<Relation>(_currentObject);
   if (plotItem && relation) {
     PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
@@ -384,7 +389,7 @@ void DataManager::addToPlot(QAction* action) {
 void DataManager::removeFromPlot(QAction* action) {
   bool plotUpdated = false;
 
-  PlotItem* plotItem = static_cast<PlotItem*>(qVariantValue<PlotItemInterface*>(action->data()));
+  PlotItem* plotItem = static_cast<PlotItem*>(action->data().value<PlotItemInterface*>());
   RelationPtr relation = kst_cast<Relation>(_currentObject);
   if (plotItem && relation) {
     foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {

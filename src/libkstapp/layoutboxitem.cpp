@@ -78,7 +78,7 @@ void LayoutBoxItem::setEnabled(bool enabled) {
 
     show();
   } else {
-    QList<QGraphicsItem*> list = QGraphicsItem::children();
+    QList<QGraphicsItem*> list = QGraphicsItem::childItems();
     foreach (QGraphicsItem *item, list) {
       ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
       if (!viewItem)

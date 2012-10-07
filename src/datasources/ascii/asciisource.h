@@ -183,7 +183,7 @@ class AsciiSource : public Kst::DataSource
 
     struct IsInString {
       IsInString(const QString& s) : str(s), chars(s.size()) {
-        QByteArray ascii = str.toAscii();
+        QByteArray ascii = str.toLatin1();
         for (int i = 0; i < 6 && i < chars; i++) {
           ch[i] = ascii[i];
         }

@@ -181,7 +181,7 @@ void PlotRenderItem::saveInPlot(QXmlStreamWriter &xml) {
     xml.writeAttribute("tag", relation->Name());
     xml.writeEndElement();
   }
-  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  QList<QGraphicsItem*> list = QGraphicsItem::childItems();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)

@@ -129,7 +129,7 @@ PlotItemInterface *CurvePlacement::existingPlot() const {
       }
   }
   if(xi==-1) ++xi;
-  return qVariantValue<PlotItemInterface*>(_plotList->itemData(xi));
+  return _plotList->itemData(xi).value<PlotItemInterface*>();
 }
 
 
@@ -177,7 +177,7 @@ void CurvePlacement::setCurrentPlot(const PlotItemInterface *currentPlot) {
   if (currentPlot) {
     int n = _plotList->count();
     for (int i=0; i<n; ++i ) {
-      if (qVariantValue<PlotItemInterface*>(_plotList->itemData(i))->plotName() == currentPlot->plotName()) {
+      if (_plotList->itemData(i).value<PlotItemInterface*>()->plotName() == currentPlot->plotName()) {
         _plotList->setCurrentIndex(i);
         return;
       }

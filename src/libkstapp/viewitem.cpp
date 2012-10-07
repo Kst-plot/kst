@@ -247,7 +247,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   }
   xml.writeEndElement();
 
-  QList<QGraphicsItem*> list = QGraphicsItem::children();
+  QList<QGraphicsItem*> list = QGraphicsItem::childItems();
   foreach (QGraphicsItem *item, list) {
     ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
     if (!viewItem)
@@ -664,7 +664,7 @@ void ViewItem::setViewRect(const QRectF &viewRect, bool automaticChange) {
     updateRelativeSize();
   }
 
-  foreach (QGraphicsItem *item, QGraphicsItem::children()) {
+  foreach (QGraphicsItem *item, QGraphicsItem::childItems()) {
     if (item->parentItem() != this)
       continue;
 
@@ -2433,7 +2433,7 @@ void LayoutCommand::createLayout(bool preserve, int columns) {
   Q_ASSERT(_item->view());
 
   QList<ViewItem*> viewItems;
-  QList<QGraphicsItem*> list = _item->QGraphicsItem::children();
+  QList<QGraphicsItem*> list = _item->QGraphicsItem::childItems();
   if (list.isEmpty()) {
     return; //not added to undostack
   }

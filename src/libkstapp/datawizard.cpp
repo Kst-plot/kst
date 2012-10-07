@@ -476,7 +476,7 @@ int DataWizardPagePlot::plotCount() const {
 }
 
 PlotItemInterface *DataWizardPagePlot::existingPlot() const {
-  return qVariantValue<PlotItemInterface*>(_existingPlotName->itemData(_existingPlotName->currentIndex()));
+  return _existingPlotName->itemData(_existingPlotName->currentIndex()).value<PlotItemInterface*>();
 }
 
 

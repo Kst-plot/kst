@@ -84,7 +84,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
     // Value typed in.
     existingScalar = false;
   } else {
-    if (qVariantValue<Scalar*>(_scalar->itemData(_scalar->findText(_scalar->currentText())))) {
+    if (_scalar->itemData(_scalar->findText(_scalar->currentText())).value<Scalar*>()) {
       existingScalar = true;
     } else {
       // Default Value.  Doesn't exist as scalar yet.
@@ -131,7 +131,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
 
     return scalar;
   }
-  return qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
+  return _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();;
 }
 
 
@@ -140,7 +140,7 @@ QString ScalarSelector::selectedScalarString() {
     return _scalar->currentText();
   }
 
-  Scalar* scalar = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));
+  Scalar* scalar = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();;
   if (scalar) {
     return scalar->descriptionTip();
   } else {
@@ -152,7 +152,7 @@ QString ScalarSelector::selectedScalarString() {
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   int i=-1,j;
   for (j=0; j<_scalar->count() ; j++) {
-    if (selectedScalar.data() == (qVariantValue<Scalar*>(_scalar->itemData(j)))) {
+    if (selectedScalar.data() == _scalar->itemData(j).value<Scalar*>()) {
       i=j;
       break;
     }
@@ -222,7 +222,7 @@ void ScalarSelector::fillScalars() {
   qSort(list);
 
   QString current_text = _scalar->currentText();
-  ScalarPtr current = qVariantValue<Scalar*>(_scalar->itemData(_scalar->currentIndex()));;
+  ScalarPtr current = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();
 
   _scalar->clear();
   foreach (const QString &string, list) {
