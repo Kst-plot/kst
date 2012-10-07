@@ -221,20 +221,20 @@ class AsciiSource : public Kst::DataSource
     };
 
 
-    template<typename ColumnDelimiter>
-    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+    template<class Buffer, typename ColumnDelimiter>
+    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&);
 
-    template<typename ColumnDelimiter, typename CommentDelimiter>
-    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+    template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
+    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&, const CommentDelimiter&);
 
-    template<typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-    int readColumns(double* v, const char* buffer, int bufstart, int bufread, int col, int s, int n,
+    template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
+    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
-    template<typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(const char* buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
+    template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
+    bool findDataRows(Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
