@@ -30,7 +30,8 @@
 #include "measuretime.h"
 
 #include <QFile>
-
+#include <QMessageBox>
+        
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -484,8 +485,63 @@ int AsciiSource::columnOfField(const QString& field) const
 
 
 //-------------------------------------------------------------------------------------------
+void AsciiSource::clearFileBuffer()
+{
+  _tmpBuffer.clear();
+  _bufferedS = -10;
+  _bufferedN = -10;
+}
+
+//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
+  bool re_alloc;
+  int n_read = readField(v, field, s, n, re_alloc);
+  if (re_alloc) {
+    // file is now buffered in memory
+    return n_read;
+  }
+
+  // reading whole file into memory failed
+
+  // find a smaller allocatable size
+  clearFileBuffer();
+  int realloc_size = n / 2;
+  _tmpBuffer.resize(realloc_size);
+  while (_tmpBuffer.size() != realloc_size && realloc_size > 0) {
+      realloc_size /= 2;
+      _tmpBuffer.resize(realloc_size);
+  }
+  realloc_size /= 2; // while reading available memory could shrink, just be sure
+  if (realloc_size == 0) {
+    QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
+    return 0;      
+  }
+
+  // read in 
+  int start = s;
+  n_read = 0;
+  while (n_read < n) {
+    clearFileBuffer();
+    int to_read = n_read + realloc_size < n ? realloc_size : n - n_read;
+    n_read += readField(v + start, field, n_read, to_read, re_alloc);
+    if (!re_alloc) {
+      clearFileBuffer();
+      QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
+      return n_read; 
+    }
+    start += to_read;
+  }
+  // don't buffer partial files
+  clearFileBuffer();
+  return n_read;
+}
+
+
+//-------------------------------------------------------------------------------------------
+int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& re_alloc) 
+{
+  re_alloc = true;
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
@@ -518,6 +574,10 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
     bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
+    if (bufread == 0) {
+      re_alloc = false;
+      return 0;
+    }
     _bufferedS = s;
     _bufferedN = n;
   }

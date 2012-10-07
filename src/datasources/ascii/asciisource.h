@@ -50,7 +50,6 @@ class AsciiSource : public Kst::DataSource
 
     int readField(double *v, const QString &field, int s, int n);
 
-
     QString fileType() const;
 
     void save(QXmlStreamWriter &s);
@@ -89,6 +88,7 @@ class AsciiSource : public Kst::DataSource
     QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
     int _bufferedS;
     int _bufferedN;
+    void clearFileBuffer();
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
 
     friend class ConfigWidgetAscii;
@@ -117,6 +117,9 @@ class AsciiSource : public Kst::DataSource
 
     template<class T>
     int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
+    
+    int readField(double *v, const QString &field, int s, int n, bool& re_alloc);
+
 
     struct LineEndingType {
       bool is_crlf;
@@ -250,12 +253,17 @@ class AsciiSource : public Kst::DataSource
 template<class T>
 int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
 {    
+  const int oldSize = buffer.size();
   if (maximalBytes == -1) {
     buffer.resize(bytesToRead + 1);
+    if (buffer.size() == oldSize)
+      return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
     if (buffer.size() <= bytesToRead) {
       buffer.resize(bytesToRead + 1);
+      if (buffer.size() == oldSize)
+        return 0;
     }
   }
   file.seek(start); // expensive?
