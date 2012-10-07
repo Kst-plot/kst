@@ -8,10 +8,10 @@ if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
 endif()
 
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
 include(KstMacros)
 
-get_filename_component(kst_dir ${CMAKE_SOURCE_DIR}/.. ABSOLUTE)
+get_filename_component(kst_dir ${CMAKE_CURRENT_SOURCE_DIR}/.. ABSOLUTE)
 get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 set(kst_binary_name kst2)
