@@ -479,7 +479,9 @@ bool Matrix::resizeZ(int sz, bool reinit) {
 #endif
     }
 #else
-    abort();  // avoid unpleasant surprises
+    // TODO: Is aborting all we can do?
+    fatalError("Not enough memory for matrix data");
+    return false;
 #endif
     _zSize = sz;
     updateScalars();

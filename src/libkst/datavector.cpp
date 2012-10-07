@@ -544,8 +544,9 @@ void DataVector::internalUpdate() {
     if ((new_nf - 1)*SPF + 1 != _size) {
       bool rc = resize((new_nf - 1)*SPF + 1);
       if (!rc) {
-        // FIXME: handle failed resize
-        abort();
+        // TODO: Is aborting all we can do?
+        fatalError("Not enough memory for vector data");
+        return;
       }
     }
 

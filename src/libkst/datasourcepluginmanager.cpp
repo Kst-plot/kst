@@ -61,8 +61,10 @@ QStringList Kst::pluginSearchPaths()
   rootDir.cdUp();
   path = rootDir.canonicalPath() + '/';
   path += QLatin1String(KST_INSTALL_PLUGINS);
+  // Visal Studio paths
   pluginPaths << path + QLatin1String("/Release");
   pluginPaths << path + QLatin1String("/Debug");
+  pluginPaths << path + QLatin1String("/RelWithDebInfo");
 
   Debug::self()->log(QString("\nPlugin Search Pathes:"));
   foreach(const QString& p, pluginPaths) {

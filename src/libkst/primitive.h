@@ -75,6 +75,8 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual qint64 minInputSerial() const;
     virtual qint64 maxInputSerialOfLastChange() const;
 
+    virtual void fatalError(const QString& msg);
+
   protected:
     /** Possibly null.  Be careful, this is non-standard usage of a KstShared.
      * FIXME: pretty sure this is wrong: it shouldn't be a qpointer... not sure

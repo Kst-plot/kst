@@ -19,6 +19,7 @@
 //#define UPDATEDEBUG
 #include "primitive.h"
 #include <QDebug>
+#include <QMessageBox>
 
 #include <limits.h>
 
@@ -94,6 +95,15 @@ bool Primitive::used() const {
   }
 }
 
+
+void Primitive::fatalError(const QString& msg)
+{
+  QString message = msg;
+  QMessageBox::StandardButton btn = QMessageBox::critical(0, "A fatal error occurred", message, QMessageBox::Abort);
+  if (btn == QMessageBox::Abort) {
+    exit(-2);
+  }
+}
 
 
 

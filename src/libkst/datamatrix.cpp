@@ -218,7 +218,9 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
   if (requiredSize != _zSize) {
     bool resizeOK = resizeZ(requiredSize);
     if (!resizeOK) {
-      abort(); // FIXME: what to do?
+      // TODO: Is aborting all we can do?
+      fatalError("Not enough memory for matrix data");
+      return;
     }
   }
 
@@ -305,7 +307,9 @@ void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart) {
   if (requiredSize != _zSize) {
     bool resizeOK = resizeZ(requiredSize);
     if (!resizeOK) {
-      abort(); // FIXME: what to do?
+      // TODO: Is aborting all we can do?
+      fatalError("Not enough memory for matrix data");
+      return;
     }
   }
   // read new data from file
