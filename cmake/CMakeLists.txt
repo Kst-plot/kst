@@ -56,9 +56,9 @@ project(Kst)
 
 
 if(kst_release)
-	set(CMAKE_BUILD_TYPE Release)
+	set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 else()
-	set(CMAKE_BUILD_TYPE Debug)
+	set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
 
@@ -306,7 +306,7 @@ if(WIN32)
 	if(kst_cross)
 		set(CPACK_GENERATOR ZIP)
 	else()
-		set(CPACK_GENERATOR NSIS)
+		set(CPACK_GENERATOR ZIP NSIS)
 	endif()
 	set(CPACK_BINARY_ZIP 1)
 endif()
