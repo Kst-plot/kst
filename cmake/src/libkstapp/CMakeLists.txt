@@ -1,8 +1,9 @@
 kst_init(${kst_binary_name} app)
 
 if(kst_qt5 AND kst_qt5base_only)
-    kst_files_ignore(svgitem)
-    add_definitions(-DKST_NO_PRINTER -DKST_NO_SVG)
+	kst_files_ignore(svgitem)
+	add_definitions(-DKST_NO_SVG)
+	#add_definitions(-DKST_NO_PRINTER)
 	if(UNIX)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 	endif()

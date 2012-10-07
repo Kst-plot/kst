@@ -521,7 +521,11 @@ void MainWindow::exportGraphicsFile(
     } else if (format == QString("eps")) {
 #ifndef KST_NO_PRINTER
       QPrinter printer(QPrinter::ScreenResolution);
+#ifdef QT5
+      printer.setOutputFormat(QPrinter::PdfFormat);
+#else
       printer.setOutputFormat(QPrinter::PostScriptFormat);
+#endif
       printer.setOutputFileName(file);
       printer.setOrientation(QPrinter::Portrait);
 
@@ -979,7 +983,10 @@ void MainWindow::createActions() {
   _printAct->setStatusTip(tr("Print the current view"));
   _printAct->setIcon(QPixmap(":document-print.png"));
   connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
-
+#ifdef KST_NO_PRINTER
+  _printAct->setEnabled(false);
+#endif
+  
   _exportGraphicsAct = new QAction(tr("&Export as Image(s)..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   _exportGraphicsAct->setIcon(QPixmap(":image-x-generic.png"));
