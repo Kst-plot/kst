@@ -85,13 +85,17 @@ class AsciiSource : public Kst::DataSource
 #else
 #define KST_PREALLOC 1 * 1024 * 1024
 #endif
+    QVarLengthArray<int, KST_PREALLOC> _rowIndex;
     typedef QVarLengthArray<char, KST_PREALLOC> FileBuffer;
     FileBuffer* _fileBuffer;
     void clearFileBuffer();
+    bool couldAllocate(int bytes) const;
     int _bufferedS;
     int _bufferedN;
     
-    QVarLengthArray<int, KST_PREALLOC> _rowIndex;
+    template<class T>
+    bool resizeBuffer(T& buffer, int bytes);
+
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
@@ -251,27 +255,37 @@ class AsciiSource : public Kst::DataSource
     friend class DataInterfaceAsciiVector;
 };
 
+template<class T>
+bool AsciiSource::resizeBuffer(T& buffer, int bytes)
+{ 
+  if (!couldAllocate(bytes))
+    return false;
+
+  const int oldSize = buffer.size();
+  buffer.resize(bytes);
+  if (buffer.size() == oldSize)
+      return false;
+  return true;
+}
 
 template<class T>
 int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
 {    
-  const int oldSize = buffer.size();
   if (maximalBytes == -1) {
-    buffer.resize(bytesToRead + 1);
-    if (buffer.size() == oldSize)
+    if (!resizeBuffer(buffer, bytesToRead + 1))
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
     if (buffer.size() <= bytesToRead) {
-      buffer.resize(bytesToRead + 1);
-      if (buffer.size() == oldSize)
+      if (!resizeBuffer(buffer, bytesToRead + 1))
         return 0;
     }
   }
   file.seek(start); // expensive?
   int bytesRead = file.read(buffer.data(), bytesToRead);
   if (buffer.size() <= bytesRead) {
-    buffer.resize(bytesRead + 1);
+    if (!resizeBuffer(buffer, bytesToRead + 1))
+      return 0;
   }
   buffer.data()[bytesRead] = '\0';  
   return bytesRead;

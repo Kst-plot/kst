@@ -479,6 +479,16 @@ int AsciiSource::columnOfField(const QString& field) const
   return -1;
 }
 
+//-------------------------------------------------------------------------------------------
+bool AsciiSource::couldAllocate(int bytes) const
+{
+  void* ptr = qMalloc(bytes);
+  if (ptr) {
+    qFree(ptr);
+    return true;
+  }
+  return false;
+}
 
 //-------------------------------------------------------------------------------------------
 void AsciiSource::clearFileBuffer()
