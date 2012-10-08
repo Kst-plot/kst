@@ -85,10 +85,12 @@ class AsciiSource : public Kst::DataSource
 #else
 #define KST_PREALLOC 1 * 1024 * 1024
 #endif
-    QVarLengthArray<char, KST_PREALLOC> _tmpBuffer;
+    typedef QVarLengthArray<char, KST_PREALLOC> FileBuffer;
+    FileBuffer* _fileBuffer;
+    void clearFileBuffer();
     int _bufferedS;
     int _bufferedN;
-    void clearFileBuffer();
+    
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
 
     friend class ConfigWidgetAscii;

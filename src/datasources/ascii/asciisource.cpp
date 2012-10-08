@@ -187,7 +187,7 @@ const QString AsciiSource::asciiTypeKey()
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),  
-  _tmpBuffer(),
+  _fileBuffer(new FileBuffer),
   _bufferedS(-10),
   _bufferedN(-10),
   _rowIndex(),
@@ -228,10 +228,7 @@ AsciiSource::~AsciiSource()
 void AsciiSource::reset() 
 {
   // forget about cached data
-  _bufferedN = -10;
-  _bufferedS = -10;
-
-  _tmpBuffer.clear();
+  clearFileBuffer();
   _rowIndex.clear();
 
   _valid = false;
@@ -338,8 +335,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
 
   // forget about cached data
-  _bufferedN = -10;
-  _bufferedS = -10;
+  clearFileBuffer();
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -487,7 +483,12 @@ int AsciiSource::columnOfField(const QString& field) const
 //-------------------------------------------------------------------------------------------
 void AsciiSource::clearFileBuffer()
 {
-  _tmpBuffer.clear();
+  // force deletion of internal allocated memory if any
+  const int memoryOnStack = sizeof(FileBuffer) - sizeof(QVarLengthArray<char, 0>);
+  if (_fileBuffer->capacity() > memoryOnStack) {
+    delete _fileBuffer;
+    _fileBuffer = new FileBuffer;
+  }
   _bufferedS = -10;
   _bufferedN = -10;
 }
@@ -507,11 +508,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   // find a smaller allocatable size
   clearFileBuffer();
   int realloc_size = n / 2;
-  _tmpBuffer.resize(realloc_size);
-  while (_tmpBuffer.size() != realloc_size && realloc_size > 0) {
+  _fileBuffer->resize(realloc_size);
+  while (_fileBuffer->size() != realloc_size && realloc_size > 0) {
       realloc_size /= 2;
-      _tmpBuffer.resize(realloc_size);
+      _fileBuffer->resize(realloc_size);
   }
+  clearFileBuffer();
   realloc_size /= 2; // while reading available memory could shrink, just be sure
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
@@ -573,7 +575,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _lineending = detectLineEndingType(file);
 
 
-    bufread = readFromFile(file, _tmpBuffer, bufstart, bufread);
+    bufread = readFromFile(file, *_fileBuffer, bufstart, bufread);
     if (bufread == 0) {
       re_alloc = false;
       return 0;
@@ -583,9 +585,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   }
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-  const char* buffer = _tmpBuffer.constData();
+  const char* buffer = _fileBuffer->constData();
 #else
-  const QVarLengthArray<char, KST_PREALLOC>& buffer = _tmpBuffer;
+  const QVarLengthArray<char, KST_PREALLOC>& buffer = *_fileBuffer;
 #endif
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
