@@ -42,6 +42,9 @@
 // disable QASSERT when using [] on data
 #define KST_DONT_CHECK_INDEX_IN_DEBUG
 
+// simulate out of memory scenario
+//#define KST_TEST_OOM
+
 using namespace Kst;
 
 
@@ -194,6 +197,11 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
+#ifdef KST_TEST_OOM
+  // eat the giga bytes
+	while (qMalloc(1024*1024*1024) != 0) {}
+#endif
+
   setInterface(is);
   setInterface(iv);
 
@@ -480,22 +488,11 @@ int AsciiSource::columnOfField(const QString& field) const
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::couldAllocate(int bytes) const
-{
-  void* ptr = qMalloc(bytes);
-  if (ptr) {
-    qFree(ptr);
-    return true;
-  }
-  return false;
-}
-
-//-------------------------------------------------------------------------------------------
-void AsciiSource::clearFileBuffer()
+void AsciiSource::clearFileBuffer(bool forceDelete)
 {
   // force deletion of internal allocated memory if any
   const int memoryOnStack = sizeof(FileBuffer) - sizeof(QVarLengthArray<char, 0>);
-  if (_fileBuffer->capacity() > memoryOnStack) {
+  if (forceDelete || _fileBuffer->capacity() > memoryOnStack) {
     delete _fileBuffer;
     _fileBuffer = new FileBuffer;
   }
@@ -517,14 +514,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
   // find a smaller allocatable size
   clearFileBuffer();
-  int realloc_size = n / 2;
-  _fileBuffer->resize(realloc_size);
-  while (_fileBuffer->size() != realloc_size && realloc_size > 0) {
+  int realloc_size = n / 4;
+  while (!resizeBuffer(*_fileBuffer, realloc_size) && realloc_size > 0) {
       realloc_size /= 2;
-      _fileBuffer->resize(realloc_size);
   }
   clearFileBuffer();
-  realloc_size /= 2; // while reading available memory could shrink, just be sure
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
     return 0;      

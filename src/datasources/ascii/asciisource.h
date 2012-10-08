@@ -88,8 +88,7 @@ class AsciiSource : public Kst::DataSource
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
     typedef QVarLengthArray<char, KST_PREALLOC> FileBuffer;
     FileBuffer* _fileBuffer;
-    void clearFileBuffer();
-    bool couldAllocate(int bytes) const;
+    void clearFileBuffer(bool forceDelete = false);
     int _bufferedS;
     int _bufferedN;
     
@@ -258,13 +257,13 @@ class AsciiSource : public Kst::DataSource
 template<class T>
 bool AsciiSource::resizeBuffer(T& buffer, int bytes)
 { 
-  if (!couldAllocate(bytes))
+  try {
+    buffer.resize(bytes);
+  } catch (const std::bad_alloc&) {
+    // work around Qt bug
+    clearFileBuffer(true);
     return false;
-
-  const int oldSize = buffer.size();
-  buffer.resize(bytes);
-  if (buffer.size() == oldSize)
-      return false;
+  }
   return true;
 }
 
