@@ -476,9 +476,10 @@ void DataVector::internalUpdate() {
   if (DoSkip) {
     // reallocate V if necessary
     if (new_nf / Skip != _size) {
-      bool rc = resize(new_nf/Skip);
-      if (!rc) {
-        // FIXME: handle failed resize
+      if (! resize(new_nf/Skip)) {
+        // TODO: Is aborting all we can do?
+        fatalError("Not enough memory for vector data");
+        return;
       }
     }
     // FIXME maybe.
@@ -518,7 +519,9 @@ void DataVector::internalUpdate() {
         /* enlarge AveReadBuf if necessary */
         if (N_AveReadBuf < Skip*SPF) {
           N_AveReadBuf = Skip*SPF;
-          AveReadBuf = static_cast<double*>(realloc(AveReadBuf, N_AveReadBuf*sizeof(double)));
+          if (!kstrealloc(AveReadBuf, N_AveReadBuf*sizeof(double))) {
+            qCritical() << "Vector resize failed";
+          }
           if (!AveReadBuf) {
             // FIXME: handle failed resize
           }
@@ -542,8 +545,7 @@ void DataVector::internalUpdate() {
   } else {
     // reallocate V if necessary
     if ((new_nf - 1)*SPF + 1 != _size) {
-      bool rc = resize((new_nf - 1)*SPF + 1);
-      if (!rc) {
+      if (!resize((new_nf - 1)*SPF + 1)) {
         // TODO: Is aborting all we can do?
         fatalError("Not enough memory for vector data");
         return;

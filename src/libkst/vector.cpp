@@ -364,9 +364,9 @@ void Vector::blank() {
 
 bool Vector::resize(int sz, bool init) {
   if (sz > 0) {
-    _v = static_cast<double*>(realloc(_v, sz*sizeof(double)));
-    if (!_v) {
-      return false;
+    if (!kstrealloc(_v, sz*sizeof(double))){
+       qCritical() << "Vector resize failed";
+       return false;
     }
     if (init && _size < sz) {
       for (int i = _size; i < sz; i++) {

@@ -61,9 +61,19 @@ class KSTCORE_EXPORT Data
     static double AvailableMemory();
 };
 
+
 /** Bad choice for location - maybe move it later */
-KSTCORE_EXPORT void *malloc(size_t size);
-KSTCORE_EXPORT void *realloc(void *ptr, size_t size);
+template<class T>
+bool kstrealloc(T* &ptr, size_t size)
+{
+  // don't overwrite old pointer when resize fails
+  // it doesn't free the old pointer
+  void* newptr = qRealloc(static_cast<void*>(ptr), size);
+  if (!newptr)
+    return false;
+  ptr = static_cast<T*>(newptr);
+  return true;
+}
 
 }
 

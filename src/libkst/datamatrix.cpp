@@ -248,7 +248,9 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     // boxcar filtering is not supported by datasources currently; need to manually average
     if (_aveReadBufferSize < _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip) {
       _aveReadBufferSize = _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip;
-      _aveReadBuffer = static_cast<double*>(realloc(_aveReadBuffer, _aveReadBufferSize*sizeof(double)));
+      if (!kstrealloc(_aveReadBuffer, _aveReadBufferSize*sizeof(double))) {
+        qCritical() << "Matrix resize failed";
+      }
     }
     _NS = 0;
     bool first = true;

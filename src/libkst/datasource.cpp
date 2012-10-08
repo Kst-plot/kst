@@ -309,24 +309,6 @@ void DataSource::parseProperties(QXmlStreamAttributes &properties) {
 }
 
 
-void *DataSource::bufferMalloc(size_t size) {
-  return malloc(size);
-}
-
-
-void DataSource::bufferFree(void *ptr) {
-  return ::free(ptr);
-}
-
-
-void *DataSource::bufferRealloc(void *ptr, size_t size) {
-  return realloc(ptr, size);
-}
-
-
-
-
-
 bool DataSource::isEmpty() const {
   return true;
 }

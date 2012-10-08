@@ -33,13 +33,6 @@ namespace Kst {
 
 static QMutex bigLock;
 
-void *realloc(void *ptr, size_t size) {
-  return ::realloc(ptr, size);
-}
-
-void *malloc(size_t size) {
-  return ::malloc(size);
-}
 
 double Data::AvailableMemory() {
   double one_GB = 1024.0*1024.0*1024.0;

@@ -192,11 +192,6 @@ class KSTCORE_EXPORT DataSource : public Object
 
     const QString& sourceName() const { return _source; }
 
-    // These malloc calls do not appear to be used.
-    virtual void *bufferMalloc(size_t size);
-    virtual void bufferFree(void *ptr);
-    virtual void *bufferRealloc(void *ptr, size_t size);
-
     /** Returns true if this file is empty */
     virtual bool isEmpty() const;
 

@@ -462,11 +462,11 @@ void Matrix::updateScalars() {
 bool Matrix::resizeZ(int sz, bool reinit) {
 //   qDebug() << "resizing to: " << sz << endl;
   if (sz >= 1) {
-    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
-    _vectors["z"]->setV(_z, sz);
-    if (!_z) {
+    if (!kstrealloc(_z, sz*sizeof(double))) {
+      qCritical() << "Matrix resize failed";
       return false;
     }
+    _vectors["z"]->setV(_z, sz);
 #ifdef ZERO_MEMORY
     if (reinit && _zSize < sz) {
 #if ZERO_MEMORY == 2
@@ -522,12 +522,11 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
   int sz = xSize * ySize;
   if (sz > _zSize) {
     // array is getting bigger, so resize before moving
-    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
-    _vectors["z"]->setV(_z, sz);
-    if (!_z) {
+    if (!kstrealloc(_z, sz*sizeof(double))) {
       qCritical() << "Matrix resize failed";
       return false;
     }
+    _vectors["z"]->setV(_z, sz);
   }
 
   if (valid && ySize != _nY && _nY > 0) {
@@ -547,12 +546,11 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
 
   if (sz < _zSize) {
     // array is getting smaller, so resize after moving
-    _z = static_cast<double*>(Kst::realloc(_z, sz*sizeof(double)));
-    _vectors["z"]->setV(_z, sz);
-    if (!_z) {
+    if (!kstrealloc(_z, sz*sizeof(double))) {
       qCritical() << "Matrix resize failed";
       return false;
     }
+    _vectors["z"]->setV(_z, sz);
   }
 
   if (reinit && _zSize < sz) {
