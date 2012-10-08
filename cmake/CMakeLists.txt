@@ -238,9 +238,24 @@ if(kst_merge_files)
 	set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
 endif()
 
-
 if(WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501) # Windows XP
+	# on 32 bit Windows we must explicitely enable >2GB support
+	# maybe you have to ' 4-gigabyte tune' your Windows XP 32 bit system:
+	# http://msdn.microsoft.com/en-us/library/windows/desktop/aa366778%28v=vs.85%29.aspx
+	macro(large_address var flag)
+		set(${var} "${${var}} ${flag}")
+	endmacro()
+	macro(link_large_address flag)
+		large_address(CMAKE_EXE_LINKER_FLAGS    ${flag})
+		large_address(CMAKE_SHARED_LINKER_FLAGS ${flag})
+		large_address(CMAKE_MODULE_LINKER_FLAGS ${flag})
+	endmacro()
+	if(MSVC)
+		link_large_address(/LARGEADDRESSAWARE)
+	else()
+		link_large_address(-Wl,--large-address-aware)
+	endif()
 endif()
 
 if(MSVC)
