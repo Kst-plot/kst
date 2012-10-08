@@ -99,7 +99,8 @@ bool Primitive::used() const {
 void Primitive::fatalError(const QString& msg)
 {
   QString message = msg;
-  QMessageBox::StandardButton btn = QMessageBox::critical(0, "A fatal error occurred", message, QMessageBox::Abort);
+  message +="\nError could be ignored, but chances are high that Kst will crash.";
+  QMessageBox::StandardButton btn = QMessageBox::critical(0, "A fatal error occurred", message, QMessageBox::Abort | QMessageBox::Ignore);
   if (btn == QMessageBox::Abort) {
     exit(-2);
   }
