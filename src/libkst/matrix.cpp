@@ -509,6 +509,7 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
 
 // Resize the matrix to xSize x ySize, maintaining the values in the current
 // positions. If reinit is set, new entries will be initialized to 0.
+// Otherwise, they will not be set.  The behavior in that case is undefined.
 bool Matrix::resize(int xSize, int ySize, bool reinit) {
   if (xSize <= 0 || ySize <= 0) {
     return false;

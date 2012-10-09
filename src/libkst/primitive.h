@@ -52,6 +52,7 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual QString  sizeString() const;
 
     virtual bool used() const;
+    virtual void setUsed(bool used_in);
 
     virtual ObjectList<Primitive> outputPrimitives() const = 0;
 

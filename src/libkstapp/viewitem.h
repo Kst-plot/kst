@@ -229,7 +229,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     template<class T> static T* retrieveItem(const QString &name);
 
-    template<class T> static QList<T *> getItems();
+    template<class T> static QList<T *> getItems(bool include_hidden=false);
 
    // TODO: Remove, needed only for a Qt 4.3 bug workaround
     bool doSceneEvent(QGraphicsSceneContextMenuEvent *event) {
@@ -579,7 +579,7 @@ class RotateCommand : public TransformCommand
 
 
 template<class T>
-QList<T *> ViewItem::getItems() {
+QList<T *> ViewItem::getItems(bool include_hidden) {
   QList<T *> tItems;
   ViewItem *viewItem;
   T* tItem;
@@ -591,7 +591,7 @@ QList<T *> ViewItem::getItems() {
     for (int i_item = 0; i_item<items.count(); i_item++) {
       viewItem = dynamic_cast<ViewItem *>(items[i_item]);
       tItem = dynamic_cast<T*>(viewItem);
-      if (tItem) {
+      if ((tItem) && (include_hidden || viewItem->isVisible())) {
         tItems.append(tItem);
       }
     }

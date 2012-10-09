@@ -95,6 +95,12 @@ bool Primitive::used() const {
   }
 }
 
+void Primitive::setUsed(bool used_in) {
+  _used = used_in;
+  if (_used && provider()) {
+    provider()->setUsed(true);
+  }
+}
 
 void Primitive::fatalError(const QString& msg)
 {

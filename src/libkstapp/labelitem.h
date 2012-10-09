@@ -67,6 +67,8 @@ class LabelItem : public ViewItem {
 
     virtual bool customDimensionsTab() {return true;}
 
+    Label::RenderContext *_labelRc;
+
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; }
@@ -79,7 +81,6 @@ class LabelItem : public ViewItem {
   private:
     void generateLabel(QPainter *p);
 
-    Label::RenderContext *_labelRc;
     QTransform _paintTransform;
     bool _dirty;
     QString _text;

@@ -20,6 +20,7 @@
 #include "sessionmodel.h"
 #include "datacollection.h"
 #include "plotitem.h"
+#include "labelitem.h"
 
 #include "objectstore.h"
 #include "dataobject.h"
@@ -420,6 +421,13 @@ void DataManager::setUsedFlags() {
   }
 
   // TODO: for each primitive used in an unhidden label mark 'used' - O(N)
+  QList<LabelItem*> labels = ViewItem::getItems<LabelItem>();
+  foreach (LabelItem * label, labels) {
+    foreach (Primitive* primitive, label->_labelRc->_refObjects) {
+      primitive->setUsed(true);
+    }
+    //qDebug() << "label " << label->Name() << "dependencies: " << label->_labelRc->_refObjects.size();
+  }
 
   // for each primitive used by a relation mark 'used' - O(N)
   ObjectList<Relation> relationList = _doc->objectStore()->getObjects<Relation>();
@@ -428,42 +436,31 @@ void DataManager::setUsedFlags() {
     //set used all input and output primitives
     foreach (VectorPtr v, object->inputVectors()) {
       v->setUsed(true);
-      if (v->provider()) {
-        v->provider()->setUsed(true);
-      }
     }
     foreach (VectorPtr v, object->outputVectors()) {
       v->setUsed(true);
     }
     foreach (ScalarPtr s, object->inputScalars()) {
       s->setUsed(true);
-      if (s->provider()) {
-        s->provider()->setUsed(true);
-      }
     }
     foreach (ScalarPtr s, object->outputScalars()) {
       s->setUsed(true);
     }
     foreach (StringPtr s, object->inputStrings()) {
       s->setUsed(true);
-      if (s->provider()) {
-        s->provider()->setUsed(true);
-      }
     }
     foreach (StringPtr s, object->outputStrings()) {
       s->setUsed(true);
     }
     foreach (MatrixPtr m, object->inputMatrices()) {
       m->setUsed(true);
-      if (m->provider()) {
-        m->provider()->setUsed(true);
-      }
     }
     foreach (MatrixPtr m, object->outputMatrices()) {
       m->setUsed(true);
     }
     object->unlock();
   }
+
 
   ObjectList<DataObject> dataObjectList = _doc->objectStore()->getObjects<DataObject>();
   foreach (DataObjectPtr object, dataObjectList) {
@@ -472,10 +469,6 @@ void DataManager::setUsedFlags() {
     foreach (PrimitivePtr p, object->inputPrimitives()) {
       p->setUsed(true);
     }
-    foreach (PrimitivePtr p, object->outputPrimitives()) {
-      p->setUsed(true);
-    }
-
     object->unlock();
   }
 }

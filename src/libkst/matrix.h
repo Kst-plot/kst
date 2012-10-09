@@ -67,7 +67,7 @@ class KSTCORE_EXPORT Matrix : public Primitive
 
     // set the value of the specified rectangle
     // return false if the rectangle does not exist
-    bool setValueRaw(int x, int y, double z);
+    virtual bool setValueRaw(int x, int y, double z);
 
     // return some stats on the z values
     double minValue() const;

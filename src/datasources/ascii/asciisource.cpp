@@ -190,10 +190,10 @@ const QString AsciiSource::asciiTypeKey()
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),  
+  _rowIndex(),
   _fileBuffer(new FileBuffer),
   _bufferedS(-10),
   _bufferedN(-10),
-  _rowIndex(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
