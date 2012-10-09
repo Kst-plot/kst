@@ -55,6 +55,9 @@ const QString& String::typeString() const {
 
 
 void String::save(QXmlStreamWriter &s) {
+  if (provider()) { // Don't save datasource- or vector-derived strings
+    return;
+  }
   s.writeStartElement("string");
   if (_orphan) {
     s.writeAttribute("orphan", "true");
