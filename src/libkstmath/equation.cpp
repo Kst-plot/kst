@@ -265,8 +265,11 @@ void Equation::updateVectorLabels() {
   LabelInfo label_info;
   label_info.units.clear();
   label_info.quantity.clear();
-  label_info.name = yl;
-
+  if (descriptiveNameIsManual()) {
+    label_info.name = descriptiveName();
+  } else {
+    label_info.name = yl;
+  }
   _yOutVector->setTitleInfo(label_info);
 }
 
