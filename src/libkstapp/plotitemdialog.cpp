@@ -477,9 +477,9 @@ void PlotItemDialog::contentChanged() {
     if (RelationPtr relation = kst_cast<Relation>(_store->retrieveObject(relation_name))) {
       relations.append(relation);
     }
-    _plotItem->renderItem(PlotRenderItem::Cartesian)->setRelationsList(relations);
-    _plotItem->update();
   }
+  _plotItem->renderItem(PlotRenderItem::Cartesian)->setRelationsList(relations);
+  _plotItem->update();
 
 }
 
