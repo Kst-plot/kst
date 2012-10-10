@@ -397,25 +397,6 @@ LabelInfo Image::titleInfo() const {
   }
 }
 
-
-DataObjectPtr Image::providerDataObject() const {
-  DataObjectPtr provider = 0L;
-  // FIXME: fix this.. I don't know what's going on here
-#if 0
-  matrixList.lock().readLock();
-  MatrixPtr mp = *matrixList.findTag(matrixTag());
-  matrixList.lock().unlock();
-  DataObjectPtr provider = 0L;
-  if (mp) {
-    mp->readLock();
-    provider = kst_cast<DataObject>(mp->provider());
-    mp->unlock();
-  }
-#endif
-  return provider;
-}
-
-
 double Image::distanceToPoint(double xpos, double dx, double ypos) const {
   Q_UNUSED(dx)
   // dx is not relevant for double clicks on images - clicks must be inside the image

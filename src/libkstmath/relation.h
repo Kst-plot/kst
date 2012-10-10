@@ -114,12 +114,6 @@ class KSTMATH_EXPORT Relation : public Object {
 
     virtual bool uses(ObjectPtr p) const;
 
-    // this returns the data object providing the data for this basecurve.
-    // E.g. for VCurves, it returns the data object providing the y vector
-    // E.g. for Images, it returns the data object providing the matrix
-    // Null is returned if no provider exists
-    virtual DataObjectPtr providerDataObject() const = 0;
-
     // return closest distance to the given point
     // images always return a rating >= 5
     virtual double distanceToPoint(double xpos, double dx, double ypos) const = 0;

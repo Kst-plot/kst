@@ -405,6 +405,9 @@ void DataManager::removeFromPlot(QAction* action) {
   }
 }
 
+// search through all the objects to see what is a dependency of anything shown.
+// FIXME: this is very fragile - objects use objects in all sorts of ways,
+// all which have to be listed here.
 void DataManager::setUsedFlags() {
   _doc->objectStore()->clearUsedFlags();
 
@@ -417,16 +420,28 @@ void DataManager::setUsedFlags() {
           relation->setUsed(true);
         }
       }
+      if (plot->xAxis()->axisPlotMarkers().isCurveSource()) {
+        plot->xAxis()->axisPlotMarkers().curve()->setUsed(true);
+      }
+      if (plot->yAxis()->axisPlotMarkers().isCurveSource()) {
+        plot->yAxis()->axisPlotMarkers().curve()->setUsed(true);
+      }
+      if (plot->xAxis()->axisPlotMarkers().isVectorSource()) {
+        plot->xAxis()->axisPlotMarkers().vector()->setUsed(true);
+      }
+      if (plot->yAxis()->axisPlotMarkers().isVectorSource()) {
+        plot->yAxis()->axisPlotMarkers().vector()->setUsed(true);
+      }
     }
   }
 
-  // TODO: for each primitive used in an unhidden label mark 'used' - O(N)
   QList<LabelItem*> labels = ViewItem::getItems<LabelItem>();
   foreach (LabelItem * label, labels) {
-    foreach (Primitive* primitive, label->_labelRc->_refObjects) {
-      primitive->setUsed(true);
+    if (label->_labelRc) {
+      foreach (Primitive* primitive, label->_labelRc->_refObjects) {
+        primitive->setUsed(true);
+      }
     }
-    //qDebug() << "label " << label->Name() << "dependencies: " << label->_labelRc->_refObjects.size();
   }
 
   // for each primitive used by a relation mark 'used' - O(N)

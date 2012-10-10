@@ -1506,23 +1506,6 @@ void Curve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
 }
 
 
-DataObjectPtr Curve::providerDataObject() const {
-  DataObjectPtr provider = 0L;
-  // FIXME: fix this.. I don't know what's going on here
-#if 0
-  vectorList.lock().readLock();
-  VectorPtr vp = *vectorList.findTag(yVTag().tag());  // FIXME: should use full tag
-  vectorList.lock().unlock();
-  if (vp) {
-    vp->readLock();
-    provider = kst_cast<DataObject>(vp->provider());
-    vp->unlock();
-  }
-#endif
-  return provider;
-}
-
-
 double Curve::distanceToPoint(double xpos, double dx, double ypos) const {
 // find the y distance between the curve and a point. return 1.0E300 if this distance is undefined. i don't want to use -1 because it will make the code which uses this function messy.
   VectorPtr xv = *_inputVectors.find(XVECTOR);

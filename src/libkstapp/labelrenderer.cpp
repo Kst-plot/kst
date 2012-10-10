@@ -140,6 +140,9 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
       Kst::VectorPtr vp = Kst::kst_cast<Kst::Vector>(store->retrieveObject(fi->text));
       if (vp) {
         if (!fi->expression.isEmpty()) {
+          if (cache) {
+            rc.addObject(vp);
+          }
           // Parse and evaluate as an equation
           bool ok = false;
           // FIXME: make more efficient: cache the parsed equation

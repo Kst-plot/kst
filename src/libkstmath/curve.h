@@ -153,9 +153,6 @@ class KSTMATH_EXPORT Curve: public Relation
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
 
-    // see KstRelation::providerDataObject
-    virtual DataObjectPtr providerDataObject() const;
-
     virtual QString descriptionTip() const;
 
     // labels for plots

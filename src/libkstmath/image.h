@@ -100,9 +100,6 @@ class KSTMATH_EXPORT Image : public Relation {
 
     virtual RelationPtr makeDuplicate() const;
 
-    // see KstRelation::providerDataObject
-    virtual DataObjectPtr providerDataObject() const;
-
     // see KstRelation::distanceToPoint
     virtual double distanceToPoint(double xpos, double dx, double ypos) const;
 
