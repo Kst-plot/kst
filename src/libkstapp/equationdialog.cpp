@@ -22,6 +22,7 @@
 #include "curve.h"
 #include "document.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <QPushButton>
 
@@ -382,6 +383,8 @@ ObjectPtr EquationDialog::createNewDataObject() {
       }
   }
 
+  UpdateManager::self()->doUpdates(true);
+
   return ObjectPtr(equation.data());
 }
 
@@ -418,6 +421,8 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       equation->unlock();
     }
   }
+  UpdateManager::self()->doUpdates(true);
+
   return dataObject();
 }
 

@@ -18,6 +18,7 @@
 #include "datacollection.h"
 #include "document.h"
 #include "basicplugin.h"
+#include "updatemanager.h"
 
 #include <QMessageBox>
 
@@ -89,6 +90,7 @@ ObjectPtr BasicPluginDialog::createNewDataObject() {
 
     return 0;
   }
+  UpdateManager::self()->doUpdates(true);
 
   return dataObject;
 }
@@ -107,6 +109,8 @@ ObjectPtr BasicPluginDialog::editExistingDataObject() const {
     plugin->registerChange();
     plugin->unlock();
   }
+  UpdateManager::self()->doUpdates(true);
+
   return dataObject();
 }
 

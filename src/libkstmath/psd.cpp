@@ -50,6 +50,7 @@ static const QLatin1String& FVECTOR = QLatin1String("F");
 
 PSD::PSD(ObjectStore *store)
 : DataObject(store) {
+  _changed = true;
   _typeString = staticTypeString;
   _type = "PowerSpectrum";
   _initializeShortName();
@@ -106,6 +107,7 @@ void PSD::change(VectorPtr in_V,
   _fVector->resize(_PSDLength);
   _sVector->resize(_PSDLength);
 
+  _changed = true;
   updateVectorLabels();
 }
 
@@ -141,13 +143,15 @@ void PSD::internalUpdate() {
   // if averaging, then we want enough new data for a complete subset.
   // ... unless we are counting from end at fixed length (scrolling data).
   bool scrolling_data = (_last_n == iv->length());
-  if ( ((_last_n_new < _PSDLength/16) ||
+  if ( (!_changed) && ((_last_n_new < _PSDLength/16) ||
         (_Average && scrolling_data && (_last_n_new < _PSDLength/16)) ||
         (_Average && !scrolling_data && (n_subsets - _last_n_subsets < 1))) &&
        iv->length() != iv->numNew()) {
     unlockInputsAndOutputs();
     return;
   }
+
+  _changed = false;
 
   _adjustLengths();
 
@@ -192,6 +196,7 @@ void PSD::_adjustLengths() {
     }
 
     _last_n_subsets = 0;
+    _changed = true;
   }
 }
 
@@ -223,6 +228,7 @@ bool PSD::apodize() const {
 
 void PSD::setApodize(bool in_apodize)  {
   _Apodize = in_apodize;
+  _changed = true;
 }
 
 
@@ -233,6 +239,7 @@ bool PSD::removeMean() const {
 
 void PSD::setRemoveMean(bool in_removeMean) {
   _RemoveMean = in_removeMean;
+  _changed = true;
 }
 
 
@@ -243,6 +250,7 @@ bool PSD::average() const {
 
 void PSD::setAverage(bool in_average) {
   _Average = in_average;
+  _changed = true;
 }
 
 
@@ -257,6 +265,7 @@ void PSD::setFrequency(double in_frequency) {
   } else {
     _Frequency = 1.0;
   }
+  _changed = true;
 }
 
 
@@ -269,6 +278,7 @@ void PSD::setLength(int in_length) {
   if (in_length != _averageLength) {
     _averageLength = in_length;
   }
+  _changed = true;
 }
 
 
@@ -281,6 +291,7 @@ void PSD::setOutput(PSDType in_output)  {
   if (in_output != _Output) {
     _Output = in_output;
   }
+  _changed = true;
 }
 
 
@@ -303,6 +314,7 @@ void PSD::setVector(VectorPtr new_v) {
   _inputVectors.remove(INVECTOR);
   new_v->writeLock();
   _inputVectors[INVECTOR] = new_v;
+  _changed = true;
 }
 
 
@@ -355,6 +367,7 @@ void PSD::setApodizeFxn(ApodizeFunction in_apodizeFxn) {
   if (_apodizeFxn != in_apodizeFxn) {
     _apodizeFxn = in_apodizeFxn;
   }
+  _changed = true;
 }
 
 
@@ -367,6 +380,7 @@ void PSD::setGaussianSigma(double in_gaussianSigma) {
   if (_gaussianSigma != in_gaussianSigma) {
     _gaussianSigma = in_gaussianSigma;
   }
+  _changed = true;
 }
 
 
@@ -407,6 +421,7 @@ void PSD::setInterpolateHoles(bool interpolate) {
   if (interpolate != _interpolateHoles) {
     _interpolateHoles = interpolate;
   }
+  _changed = true;
 }
 
 void PSD::updateVectorLabels() {

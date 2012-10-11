@@ -29,6 +29,7 @@
 
 #include "datacollection.h"
 #include "dialogdefaults.h"
+#include "updatemanager.h"
 
 namespace Kst {
 
@@ -444,6 +445,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
           }
       }
   }
+  UpdateManager::self()->doUpdates(true);
   return ObjectPtr(histogram.data());
 }
 
@@ -493,6 +495,7 @@ ObjectPtr HistogramDialog::editExistingDataObject() const {
       setHistogramDefaults(histogram);
     }
   }
+  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

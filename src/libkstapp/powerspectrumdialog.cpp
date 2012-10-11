@@ -26,6 +26,7 @@
 #include "tabwidget.h"
 #include "view.h"
 #include "editmultiplewidget.h"
+#include "updatemanager.h"
 
 #include <QPushButton>
 
@@ -293,6 +294,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
           }
       }
   }
+  UpdateManager::self()->doUpdates(true);
 
   return ObjectPtr(powerspectrum.data());
 }
@@ -364,6 +366,7 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
     }
   }
+  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

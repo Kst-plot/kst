@@ -26,6 +26,7 @@
 #include "image.h"
 #include "document.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include "datacollection.h"
 
@@ -608,6 +609,7 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
       image->unlock();
     }
   }
+  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

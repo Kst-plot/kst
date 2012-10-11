@@ -27,6 +27,7 @@
 #include "datacollection.h"
 #include "document.h"
 #include "objectstore.h"
+#include "updatemanager.h"
 
 #include <QPushButton>
 
@@ -473,6 +474,8 @@ ObjectPtr CurveDialog::createNewDataObject() {
       }
   }
 
+  UpdateManager::self()->doUpdates(true);
+
   return ObjectPtr(curve.data());
 }
 
@@ -591,6 +594,8 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       _curveTab->curveAppearance()->setWidgetDefaults(false);
     }
   }
+
+  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

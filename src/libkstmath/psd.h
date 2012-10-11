@@ -97,6 +97,8 @@ class KSTMATH_EXPORT PSD : public DataObject {
         double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity, bool interpolateHoles = false);
     virtual void internalUpdate();
 
+    void setChanged() { _changed=true;}
+
   protected:
 
     PSD(ObjectStore *store);
@@ -133,6 +135,7 @@ class KSTMATH_EXPORT PSD : public DataObject {
     QString _rateUnits;
 
     VectorPtr _sVector, _fVector;
+    bool _changed;
 };
 
 typedef SharedPtr<PSD> PSDPtr;
