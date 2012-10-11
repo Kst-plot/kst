@@ -319,6 +319,7 @@ void PlotItem::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("hidetopaxislabel", QVariant(_manuallyHideTopAxisLabel).toString());
     xml.writeAttribute("hideleftaxislabel", QVariant(_manuallyHideLeftAxisLabel).toString());
     xml.writeAttribute("hiderightaxislabel", QVariant(_manuallyHideRightAxisLabel).toString());
+    xml.writeAttribute("numberaxislabelscale", QVariant(_useNumberAxisLabelScale).toString());
     saveNameInfo(xml, PLOTNUM);
 
     ViewItem::save(xml);
@@ -3706,6 +3707,11 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         av = attrs.value("hiderightaxislabel");
         if (!av.isNull()) {
           rc->setManuallyHideRightAxisLabel(QVariant(av.toString()).toBool());
+        }
+
+        av = attrs.value("numberaxislabelscale");
+        if (!av.isNull()) {
+          rc->setUseAxisScale(QVariant(av.toString()).toBool());
         }
 
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
