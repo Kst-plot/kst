@@ -38,10 +38,14 @@
 #include <iostream>
 
 
-// Load faster in debug mode:
-// disable QASSERT when using [] on data
-#define KST_DONT_CHECK_INDEX_IN_DEBUG
-
+// Enable QASSERT in QVarLengthArray  when using [] on data
+#if 0
+  #define constData constArray
+#else
+  #define constData constPointer // loads faster in debug mode
+#endif
+    
+    
 // simulate out of memory scenario
 //#define KST_TEST_OOM
 
@@ -189,9 +193,9 @@ const QString AsciiSource::asciiTypeKey()
 
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
-  Kst::DataSource(store, cfg, filename, type),  
-  _rowIndex(),
+  Kst::DataSource(store, cfg, filename, type),
   _fileBuffer(new FileBuffer),
+  _rowIndex(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -392,34 +396,27 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
     buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, FileBuffer::Prealloc - 1);
-#ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-    const char* bufferData = buf.constData();
-    const char* buffer = bufferData;
-#else
-    FileBuffer::Array& bufferData = *buf._array;
-    const char* buffer = bufferData.data();
-#endif
 
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() == 1) {
       const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() > 1) {
       const IsInString comment_del(_config._delimiters.value());
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedS, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedS, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     }
 
@@ -431,7 +428,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 }
 
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-bool AsciiSource::findDataRows(Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
+bool AsciiSource::findDataRows(const Buffer buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
   const IsWhiteSpace isWhiteSpace;
   
@@ -584,19 +581,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _fileBuffer->_bufferedN = n;
   }
 
-#ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-  const char* buffer = _fileBuffer->constData();
-#else
-  const FileBuffer::Array buffer = *_fileBuffer->_array;
-#endif
-
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     MeasureTime t("AsciiSource::readField: same width for all columns");
     LexicalCast lexc;
     lexc.setDecimalSeparator(_config._useDot);
     // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
     // the column in row i by adding _rowIndex[i] we have to start at:
-    const char* col_start = &buffer[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
+    const char* col_start = &_fileBuffer->constData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
     for (int i = 0; i < n; ++i) {
       v[i] = lexc.toDouble(_rowIndex[i] + col_start);
     }
@@ -605,16 +596,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
       const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
+      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
       const IsInString column_del(_config._columnDelimiter.value());
-      return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
+      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     MeasureTime t("AsciiSource::readField: whitespace separated columns");
     const IsWhiteSpace column_del;
-    return readColumns(v, buffer, bufstart, bufread, col, s, n, _lineending, column_del);
+    return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
   }
 
   return 0;
@@ -623,7 +614,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
-int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del)
 {
 
@@ -642,7 +633,7 @@ int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufrea
 }
 
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
 {
   if (_config._columnWidthIsConst) {
@@ -664,7 +655,7 @@ int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufrea
 
 
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-int AsciiSource::readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                               const IsLineBreak& isLineBreak,
                               const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                               const ColumnWidthsAreConst& are_column_widths_const)

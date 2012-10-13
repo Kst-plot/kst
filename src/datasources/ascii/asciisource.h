@@ -95,7 +95,7 @@ class AsciiSource : public Kst::DataSource
 
       typedef QVarLengthArray<char, Prealloc> Array;
 
-      inline FileBuffer() : _array(new Array), _bufferedS(-10), _bufferedN(-10) {}
+      inline FileBuffer() : _bufferedS(-10), _bufferedN(-10), _array(new Array) {}
       inline ~FileBuffer() { delete _array; }
       
       int _bufferedS;
@@ -106,7 +106,9 @@ class AsciiSource : public Kst::DataSource
       inline void resize(int size) { _array->resize(size); }
       inline int  capacity() const { return _array->capacity(); }
       inline char* data() { return _array->data(); }
-      inline const char* constData() const { return _array->data(); }
+
+      inline const char* const constPointer() const { return _array->data(); }
+      inline const Array& constArray() const{ return *_array; }
 
       void clearFileBuffer(bool forceDelete = false);
 
@@ -258,19 +260,19 @@ class AsciiSource : public Kst::DataSource
 
 
     template<class Buffer, typename ColumnDelimiter>
-    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&);
 
     template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&, const CommentDelimiter&);
 
     template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-    int readColumns(double* v, Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
+    bool findDataRows(const Buffer buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
@@ -314,7 +316,7 @@ int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead
     if (!resizeBuffer(buffer, bytesToRead + 1))
       return 0;
   }
-  buffer.data()[bytesRead] = '\0';  
+  buffer.data()[bytesRead] = '\0';
   return bytesRead;
 }
 
