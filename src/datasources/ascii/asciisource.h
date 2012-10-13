@@ -120,28 +120,5 @@ class AsciiSource : public Kst::DataSource
 };
 
 
-int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
-{    
-  if (maximalBytes == -1) {
-    if (!buffer.resize(bytesToRead + 1))
-      return 0;
-  } else {
-    bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer.size() <= bytesToRead) {
-      if (!buffer.resize(bytesToRead + 1))
-        return 0;
-    }
-  }
-  file.seek(start); // expensive?
-  int bytesRead = file.read(buffer.data(), bytesToRead);
-  if (buffer.size() <= bytesRead) {
-    if (!buffer.resize(bytesToRead + 1))
-      return 0;
-  }
-  buffer.data()[bytesRead] = '\0';
-  return bytesRead;
-}
-
-
 #endif
 // vim: ts=2 sw=2 et

@@ -21,10 +21,12 @@
 
 #include "asciisourceconfig.h"
 #include "asciidatareader.h"
+#include "math_kst.h"
+#include "kst_inf.h"
 
 #include <QVarLengthArray>
-#include <QFile>
-#include <QMap>
+
+class QFile;
 
 
 class DataInterfaceAsciiString;
@@ -34,8 +36,8 @@ struct LexicalCast;
 class AsciiDataReader
 {
   public:
-    AsciiDataReader(AsciiSourceConfig& c) : _config(c){}
-    ~AsciiDataReader() {}
+    AsciiDataReader(AsciiSourceConfig& c);
+    ~AsciiDataReader();
 
     // TODO remove
     mutable AsciiSourceConfig& _config;
@@ -216,17 +218,109 @@ class AsciiDataReader
 };
 
 
-bool AsciiDataReader::FileBuffer::resize(int bytes)
-{ 
-  try {
-    _array->resize(bytes);
-  } catch (const std::bad_alloc&) {
-    // work around Qt bug
-    clearFileBuffer(true);
-    return false;
+
+//-------------------------------------------------------------------------------------------
+template<class Buffer, typename ColumnDelimiter>
+int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+                              const LineEndingType& lineending, const ColumnDelimiter& column_del)
+{
+  if (_config._delimiters.value().size() == 0) {
+    const NoDelimiter comment_del;
+    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
+  } else if (_config._delimiters.value().size() == 1) {
+    const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
+    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
+  } else if (_config._delimiters.value().size() > 1) {
+    const IsInString comment_del(_config._delimiters.value());
+    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   }
-  return true;
+
+  return 0;
 }
+
+template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
+int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+                              const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
+{
+  if (_config._columnWidthIsConst) {
+    const AlwaysTrue column_withs_const;
+    if (lineending.isLF()) {
+      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
+    } else {
+      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
+    }
+  } else {
+    const AlwaysFalse column_withs_const;
+    if (lineending.isLF()) {
+      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
+    } else {
+      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
+    }
+  }
+}
+
+
+template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
+int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+                              const IsLineBreak& isLineBreak,
+                              const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
+                              const ColumnWidthsAreConst& are_column_widths_const)
+{
+  LexicalCast lexc;
+  lexc.setDecimalSeparator(_config._useDot);
+  const QString delimiters = _config._delimiters.value();
+
+  bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
+
+  int col_start = -1;
+  for (int i = 0; i < n; i++, s++) {
+    bool incol = false;
+    int i_col = 0;
+
+    if (are_column_widths_const()) {
+      if (col_start != -1) {
+        v[i] = lexc.toDouble(&buffer[0] + rowIndex[s] + col_start);
+        continue;
+      }
+    }
+
+    v[i] = Kst::NOPOINT;
+    for (int ch = rowIndex[s] - bufstart; ch < bufread; ++ch) {
+      if (isLineBreak(buffer[ch])) {
+        break;
+      } else if (column_del(buffer[ch])) { //<- check for column start
+        if ((!incol) && is_custom) {
+          ++i_col;
+          if (i_col == col) {
+            v[i] = NAN;
+          }
+        }
+        incol = false;
+      } else if (comment_del(buffer[ch])) {
+        break;
+      } else {
+        if (!incol) {
+          incol = true;
+          ++i_col;
+          if (i_col == col) {
+            toDouble(lexc, &buffer[0], bufread, ch, &v[i], i);
+            if (are_column_widths_const()) {
+              if (col_start == -1) {
+                col_start = ch - rowIndex[s];
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+  return n;
+}
+
+
+
+
 
 
 #endif
