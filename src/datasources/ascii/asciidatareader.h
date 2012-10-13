@@ -56,6 +56,7 @@ class AsciiDataReader
       };
 
       typedef QVarLengthArray<char, Prealloc> Array;
+      typedef QVarLengthArray<int, Prealloc> RowIndex;
 
       inline FileBuffer() : _bufferedS(-10), _bufferedN(-10), _array(new Array) {}
       inline ~FileBuffer() { delete _array; }
@@ -74,11 +75,15 @@ class AsciiDataReader
 
       void clearFileBuffer(bool forceDelete = false);
 
+
     private:
+
       Array* _array;
     };
 
-    typedef QVarLengthArray<int, AsciiDataReader::FileBuffer::Prealloc> RowIndex;
+    FileBuffer::RowIndex _rowIndex;
+
+    inline FileBuffer::RowIndex& rowIndex() { return _rowIndex; }
 
     void clearFileBuffer(bool forceDelete = false);
 
@@ -88,7 +93,7 @@ class AsciiDataReader
     
     int readFromFile(QFile&, AsciiDataReader::FileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
     
-    int readField(const RowIndex& _rowIndex, FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+    int readField(FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
                   double *v, const QString& field, int s, int n, bool& re_alloc);
 
 
@@ -196,21 +201,21 @@ class AsciiDataReader
 
 
     template<class Buffer, typename ColumnDelimiter>
-    int readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&);
 
     template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-    int readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const LineEndingType&, const ColumnDelimiter&, const CommentDelimiter&);
 
     template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-    int readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
-    bool findDataRows(RowIndex &rowIndex, int& _numFrames, bool read_completely, QFile& file, int _byteLength);
+    bool findDataRows(int& _numFrames, bool read_completely, QFile& file, int _byteLength);
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(RowIndex &rowIndex, int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
+    bool findDataRows(int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
@@ -222,47 +227,47 @@ class AsciiDataReader
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
-int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del)
 {
   if (_config._delimiters.value().size() == 0) {
     const NoDelimiter comment_del;
-    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   } else if (_config._delimiters.value().size() == 1) {
     const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
-    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   } else if (_config._delimiters.value().size() > 1) {
     const IsInString comment_del(_config._delimiters.value());
-    return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
+    return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   }
 
   return 0;
 }
 
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
 {
   if (_config._columnWidthIsConst) {
     const AlwaysTrue column_withs_const;
     if (lineending.isLF()) {
-      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
     } else {
-      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
     }
   } else {
     const AlwaysFalse column_withs_const;
     if (lineending.isLF()) {
-      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, IsLineBreakLF(lineending), column_del, comment_del, column_withs_const);
     } else {
-      return readColumns(rowIndex, v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
+      return readColumns(v, buffer, bufstart, bufread, col, s, n, IsLineBreakCR(lineending), column_del, comment_del, column_withs_const);
     }
   }
 }
 
 
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const IsLineBreak& isLineBreak,
                               const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                               const ColumnWidthsAreConst& are_column_widths_const)
@@ -280,13 +285,13 @@ int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buff
 
     if (are_column_widths_const()) {
       if (col_start != -1) {
-        v[i] = lexc.toDouble(&buffer[0] + rowIndex[s] + col_start);
+        v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
         continue;
       }
     }
 
     v[i] = Kst::NOPOINT;
-    for (int ch = rowIndex[s] - bufstart; ch < bufread; ++ch) {
+    for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
       if (isLineBreak(buffer[ch])) {
         break;
       } else if (column_del(buffer[ch])) { //<- check for column start
@@ -307,7 +312,7 @@ int AsciiDataReader::readColumns(const RowIndex& rowIndex, double* v, const Buff
             toDouble(lexc, &buffer[0], bufread, ch, &v[i], i);
             if (are_column_widths_const()) {
               if (col_start == -1) {
-                col_start = ch - rowIndex[s];
+                col_start = ch - _rowIndex[s];
               }
             }
             break;

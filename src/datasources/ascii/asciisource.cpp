@@ -61,7 +61,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   Kst::DataSource(store, cfg, filename, type),
   r(_config),
   _fileBuffer(new AsciiDataReader::FileBuffer),
-  _rowIndex(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -106,7 +105,7 @@ void AsciiSource::reset()
 {
   // forget about cached data
   _fileBuffer->clearFileBuffer();
-  _rowIndex.clear();
+  r.rowIndex().clear();
 
   _valid = false;
   _byteLength = 0;
@@ -145,9 +144,9 @@ bool AsciiSource::openValidFile(QFile &file)
 bool AsciiSource::initRowIndex() 
 {
   // capacity is at least the pre-allocated memory
-  _rowIndex.resize(_rowIndex.capacity());
+  r.rowIndex().resize(r.rowIndex().capacity());
 
-  _rowIndex[0] = 0;
+  r.rowIndex()[0] = 0;
   _byteLength = 0;
   _numFrames = 0;
 
@@ -171,7 +170,7 @@ bool AsciiSource::initRowIndex()
       }
       header_row++;
     }
-    _rowIndex[0] = didRead;
+    r.rowIndex()[0] = didRead;
   }
 
   return true;
@@ -230,7 +229,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
 
-  bool new_data = r.findDataRows(_rowIndex, _numFrames, read_completely, file, _byteLength);
+  bool new_data = r.findDataRows(_numFrames, read_completely, file, _byteLength);
 
   return (!new_data && !force_update ? NoChange : Updated);
 }
@@ -322,8 +321,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
 
-  int bufstart = _rowIndex[s];
-  int bufread = _rowIndex[s + n] - bufstart;
+  int bufstart = r.rowIndex()[s];
+  int bufread = r.rowIndex()[s + n] - bufstart;
   if (bufread <= 0) {
     return 0;
   }
@@ -346,7 +345,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _fileBuffer->_bufferedN = n;
   }
 
- return r.readField(_rowIndex, _fileBuffer, col, bufstart, bufread, v, field, s, n, re_alloc);
+ return r.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n, re_alloc);
 }
 
 

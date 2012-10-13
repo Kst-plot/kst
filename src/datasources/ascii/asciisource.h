@@ -80,9 +80,8 @@ class AsciiSource : public Kst::DataSource
 
   private:
     AsciiDataReader r;
-
     AsciiDataReader::FileBuffer* _fileBuffer;
-    AsciiDataReader::RowIndex _rowIndex;
+    
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
