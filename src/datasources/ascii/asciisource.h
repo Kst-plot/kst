@@ -78,35 +78,45 @@ class AsciiSource : public Kst::DataSource
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
   private:
-    // Question: Is this too big or should we use even more: 1MB on the stack?
-#if defined(__ANDROID__) || defined(__QNX__)
-    // Answer: Depends on the system. Some mobile systems, for example, really do not like you allocating 1MB on the stack.
-#define KST_PREALLOC 1 * 1024
-#else
-#define KST_PREALLOC 1 * 1024 * 1024
-#endif
 
-    struct FileBuffer
+    class FileBuffer
     {
-      typedef QVarLengthArray<char, KST_PREALLOC> Array;
+    public:
 
-      FileBuffer() : _array(new Array), _bufferedS(-10), _bufferedN(-10) {}
-      ~FileBuffer() { delete _array; }
+      enum SizeOnStack
+      {
+        Prealloc =
+#if defined(__ANDROID__) || defined(__QNX__) // Some mobile systems really do not like you allocating 1MB on the stack.
+        1 * 1024
+#else
+        1 * 1024 * 1024
+#endif
+      };
 
-      Array* _array;
+      typedef QVarLengthArray<char, Prealloc> Array;
+
+      inline FileBuffer() : _array(new Array), _bufferedS(-10), _bufferedN(-10) {}
+      inline ~FileBuffer() { delete _array; }
+      
       int _bufferedS;
       int _bufferedN;
 
+      inline void clear() { _array->clear(); }
       inline int size() const { return _array->size(); }
       inline void resize(int size) { _array->resize(size); }
+      inline int  capacity() const { return _array->capacity(); }
       inline char* data() { return _array->data(); }
       inline const char* constData() const { return _array->data(); }
+
       void clearFileBuffer(bool forceDelete = false);
+
+    private:
+      Array* _array;
     };
 
     FileBuffer* _fileBuffer;
 
-    QVarLengthArray<int, KST_PREALLOC> _rowIndex;
+    QVarLengthArray<int, FileBuffer::Prealloc> _rowIndex;
 
     void clearFileBuffer(bool forceDelete = false);
 
@@ -293,7 +303,7 @@ int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer._array->size() <= bytesToRead) {
+    if (buffer.size() <= bytesToRead) {
       if (!resizeBuffer(buffer, bytesToRead + 1))
         return 0;
     }

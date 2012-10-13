@@ -382,17 +382,16 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   _byteLength = file.size();
 
   FileBuffer buf;
-  buf._array->resize(buf._array->capacity());
   buf._bufferedS = _rowIndex[_numFrames];
   buf._bufferedN = 0;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
-    buf._array->clear();
-    buf._array->resize(buf._array->capacity());
+    buf.clear();
+    buf.resize(buf.capacity());
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, KST_PREALLOC - 1);
+    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, FileBuffer::Prealloc - 1);
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
     const char* bufferData = buf.constData();
     const char* buffer = bufferData;
@@ -424,7 +423,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
       }
     }
 
-  } while (buf._bufferedN == KST_PREALLOC - 1  && read_completely);
+  } while (buf._bufferedN == FileBuffer::Prealloc - 1  && read_completely);
 
   _rowIndex.resize(_numFrames+1);
 
@@ -450,7 +449,7 @@ bool AsciiSource::findDataRows(Buffer& buffer, int bufstart, int bufread, const 
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + KST_PREALLOC - 1);
+          _rowIndex.resize(_rowIndex.size() + FileBuffer::Prealloc - 1);
         }
         new_data = true;
         row_start = row_offset+i;
@@ -490,14 +489,11 @@ int AsciiSource::columnOfField(const QString& field) const
 //-------------------------------------------------------------------------------------------
 void AsciiSource::clearFileBuffer(bool forceDelete)
 {
-  // force deletion of internal allocated memory if any
-  const int memoryOnStack = sizeof(FileBuffer::Array) - sizeof(QVarLengthArray<char, 0>);
-  if (forceDelete || _fileBuffer->_array->capacity() > memoryOnStack) {
-    delete _fileBuffer->_array;
-    _fileBuffer->_array = new FileBuffer::Array;
+  // force deletion of heap allocated memory if any
+  if (forceDelete || _fileBuffer->capacity() > FileBuffer::Prealloc) {
+    delete _fileBuffer;
+    _fileBuffer = new FileBuffer;
   }
-  _fileBuffer->_bufferedS = -10;
-  _fileBuffer->_bufferedN = -10;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -589,9 +585,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   }
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-  const char* buffer = _fileBuffer->_array->constData();
+  const char* buffer = _fileBuffer->constData();
 #else
-  const QVarLengthArray<char, KST_PREALLOC>& buffer = *_fileBuffer->_array;
+  const FileBuffer::Array buffer = *_fileBuffer->_array;
 #endif
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
