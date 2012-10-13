@@ -24,12 +24,10 @@
 
 #include "math_kst.h"
 #include "kst_inf.h"
-
+#include "kst_atof.h"
 
 class QFile;
-class DataInterfaceAsciiString;
-class DataInterfaceAsciiVector;
-struct LexicalCast;
+
 
 class AsciiDataReader
 {
@@ -38,7 +36,7 @@ class AsciiDataReader
     ~AsciiDataReader();
 
     // TODO remove
-    mutable AsciiSourceConfig& _config;
+    AsciiSourceConfig& _config;
     
     typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
     RowIndex _rowIndex;
