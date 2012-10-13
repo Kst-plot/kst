@@ -428,7 +428,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 }
 
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-bool AsciiSource::findDataRows(const Buffer buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
+bool AsciiSource::findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
   const IsWhiteSpace isWhiteSpace;
   
@@ -611,13 +611,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   return 0;
 }
 
-
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
-int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del)
 {
-
   if (_config._delimiters.value().size() == 0) {
     const NoDelimiter comment_del;
     return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
@@ -633,7 +631,7 @@ int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int b
 }
 
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
 {
   if (_config._columnWidthIsConst) {
@@ -655,7 +653,7 @@ int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int b
 
 
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-int AsciiSource::readColumns(double* v, const Buffer buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiSource::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                               const IsLineBreak& isLineBreak,
                               const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                               const ColumnWidthsAreConst& are_column_widths_const)
