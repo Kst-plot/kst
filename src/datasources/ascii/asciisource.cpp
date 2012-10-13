@@ -191,7 +191,7 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),  
   _rowIndex(),
-  _fileBuffer(new FileBuffer<KST_PREALLOC>),
+  _fileBuffer(new FileBuffer),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -336,7 +336,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 
 
 //-------------------------------------------------------------------------------------------
-#define MAXBUFREADLEN KST_PREALLOC
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
@@ -382,7 +381,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
 
-  FileBuffer<MAXBUFREADLEN + 1> buf;
+  FileBuffer buf;
   buf._array->resize(buf._array->capacity());
   buf._bufferedS = _rowIndex[_numFrames];
   buf._bufferedN = 0;
@@ -393,12 +392,12 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, MAXBUFREADLEN);
+    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, KST_PREALLOC - 1);
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
     const char* bufferData = buf.constData();
     const char* buffer = bufferData;
 #else
-    QVarLengthArray<char, KST_PREALLOC + 1>& bufferData = *buf._array;
+    FileBuffer::Array& bufferData = *buf._array;
     const char* buffer = bufferData.data();
 #endif
 
@@ -425,7 +424,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
       }
     }
 
-  } while (buf._bufferedN == MAXBUFREADLEN  && read_completely);
+  } while (buf._bufferedN == KST_PREALLOC - 1  && read_completely);
 
   _rowIndex.resize(_numFrames+1);
 
@@ -451,7 +450,7 @@ bool AsciiSource::findDataRows(Buffer& buffer, int bufstart, int bufread, const 
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + MAXBUFREADLEN);
+          _rowIndex.resize(_rowIndex.size() + KST_PREALLOC - 1);
         }
         new_data = true;
         row_start = row_offset+i;
@@ -492,10 +491,10 @@ int AsciiSource::columnOfField(const QString& field) const
 void AsciiSource::clearFileBuffer(bool forceDelete)
 {
   // force deletion of internal allocated memory if any
-  const int memoryOnStack = sizeof(FileBuffer<KST_PREALLOC>::Array) - sizeof(QVarLengthArray<char, 0>);
+  const int memoryOnStack = sizeof(FileBuffer::Array) - sizeof(QVarLengthArray<char, 0>);
   if (forceDelete || _fileBuffer->_array->capacity() > memoryOnStack) {
     delete _fileBuffer->_array;
-    _fileBuffer->_array = new FileBuffer<KST_PREALLOC>::Array;
+    _fileBuffer->_array = new FileBuffer::Array;
   }
   _fileBuffer->_bufferedS = -10;
   _fileBuffer->_bufferedN = -10;

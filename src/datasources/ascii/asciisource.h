@@ -86,10 +86,9 @@ class AsciiSource : public Kst::DataSource
 #define KST_PREALLOC 1 * 1024 * 1024
 #endif
 
-    template<int S>
     struct FileBuffer
     {
-      typedef QVarLengthArray<char, S> Array;
+      typedef QVarLengthArray<char, KST_PREALLOC> Array;
 
       FileBuffer() : _array(new Array), _bufferedS(-10), _bufferedN(-10) {}
       ~FileBuffer() { delete _array; }
@@ -105,7 +104,7 @@ class AsciiSource : public Kst::DataSource
       void clearFileBuffer(bool forceDelete = false);
     };
 
-    FileBuffer<KST_PREALLOC>* _fileBuffer;
+    FileBuffer* _fileBuffer;
 
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
 
