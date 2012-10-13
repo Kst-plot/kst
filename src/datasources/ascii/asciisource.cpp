@@ -430,6 +430,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _fileBuffer->_bufferedN = n;
   }
 
+ return r.readField(_rowIndex, _fileBuffer, col, bufstart, bufread, v, field, s, n, re_alloc);
+}
+
+int AsciiDataReader::readField(const RowIndex& _rowIndex, FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+                               double *v, const QString& field, int s, int n, bool& re_alloc) 
+  {
+
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     MeasureTime t("AsciiSource::readField: same width for all columns");
     LexicalCast lexc;
@@ -445,16 +452,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
       const AsciiDataReader::IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
-      return r.readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, r._lineending, column_del);
+      return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
       const AsciiDataReader::IsInString column_del(_config._columnDelimiter.value());
-      return r.readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, r._lineending, column_del);
+      return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     MeasureTime t("AsciiSource::readField: whitespace separated columns");
     const AsciiDataReader::IsWhiteSpace column_del;
-    return r.readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, r._lineending, column_del);
+    return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
   }
 
   return 0;
