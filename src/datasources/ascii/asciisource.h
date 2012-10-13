@@ -84,12 +84,6 @@ class AsciiSource : public Kst::DataSource
     AsciiDataReader::FileBuffer* _fileBuffer;
     AsciiDataReader::RowIndex _rowIndex;
 
-    void clearFileBuffer(bool forceDelete = false);
-
-    template<class T>
-    bool resizeBuffer(T& buffer, int bytes);
-
-
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
        
@@ -113,9 +107,6 @@ class AsciiSource : public Kst::DataSource
 
     bool openValidFile(QFile &file);
     static bool openFile(QFile &file);
-
-    template<class T>
-    int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
     
     int readField(double *v, const QString &field, int s, int n, bool& re_alloc);
 
@@ -123,43 +114,28 @@ class AsciiSource : public Kst::DataSource
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
     bool findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
-    void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
-
     // TODO remove
     friend class DataInterfaceAsciiString;
     friend class DataInterfaceAsciiVector;
 };
 
-template<class T>
-bool AsciiSource::resizeBuffer(T& buffer, int bytes)
-{ 
-  try {
-    buffer.resize(bytes);
-  } catch (const std::bad_alloc&) {
-    // work around Qt bug
-    clearFileBuffer(true);
-    return false;
-  }
-  return true;
-}
 
-template<class T>
-int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
+int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
 {    
   if (maximalBytes == -1) {
-    if (!resizeBuffer(buffer, bytesToRead + 1))
+    if (!buffer.resize(bytesToRead + 1))
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
     if (buffer.size() <= bytesToRead) {
-      if (!resizeBuffer(buffer, bytesToRead + 1))
+      if (!buffer.resize(bytesToRead + 1))
         return 0;
     }
   }
   file.seek(start); // expensive?
   int bytesRead = file.read(buffer.data(), bytesToRead);
   if (buffer.size() <= bytesRead) {
-    if (!resizeBuffer(buffer, bytesToRead + 1))
+    if (!buffer.resize(bytesToRead + 1))
       return 0;
   }
   buffer.data()[bytesRead] = '\0';

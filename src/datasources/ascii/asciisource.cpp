@@ -240,7 +240,7 @@ AsciiSource::~AsciiSource()
 void AsciiSource::reset() 
 {
   // forget about cached data
-  clearFileBuffer();
+  _fileBuffer->clearFileBuffer();
   _rowIndex.clear();
 
   _valid = false;
@@ -346,7 +346,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
 
   // forget about cached data
-  clearFileBuffer();
+  _fileBuffer->clearFileBuffer();
 
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -396,7 +396,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiDataReader::FileBuffer::Prealloc - 1);
+    buf._bufferedN = r.readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiDataReader::FileBuffer::Prealloc - 1);
 
     if (_config._delimiters.value().size() == 0) {
       const AsciiDataReader::NoDelimiter comment_del;
@@ -485,14 +485,17 @@ int AsciiSource::columnOfField(const QString& field) const
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiSource::clearFileBuffer(bool forceDelete)
+void AsciiDataReader::FileBuffer::clearFileBuffer(bool forceDelete)
 {
   // force deletion of heap allocated memory if any
-  if (forceDelete || _fileBuffer->capacity() > AsciiDataReader::FileBuffer::Prealloc) {
-    delete _fileBuffer;
-    _fileBuffer = new AsciiDataReader::FileBuffer;
+  if (forceDelete || _array->capacity() > AsciiDataReader::FileBuffer::Prealloc) {
+    delete _array;
+    _array = new Array;
   }
+  _bufferedS = -10;
+  _bufferedN = -10;
 }
+
 
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
@@ -507,12 +510,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   // reading whole file into memory failed
 
   // find a smaller allocatable size
-  clearFileBuffer();
+  _fileBuffer->clearFileBuffer();
   int realloc_size = n / 4;
-  while (!resizeBuffer(*_fileBuffer, realloc_size) && realloc_size > 0) {
+  while (!_fileBuffer->resize(realloc_size) && realloc_size > 0) {
       realloc_size /= 2;
   }
-  clearFileBuffer();
+  _fileBuffer->clearFileBuffer();
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
     return 0;      
@@ -522,18 +525,18 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   int start = s;
   n_read = 0;
   while (n_read < n) {
-    clearFileBuffer();
+    _fileBuffer->clearFileBuffer();
     int to_read = n_read + realloc_size < n ? realloc_size : n - n_read;
     n_read += readField(v + start, field, n_read, to_read, re_alloc);
     if (!re_alloc) {
-      clearFileBuffer();
+      _fileBuffer->clearFileBuffer();
       QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
       return n_read; 
     }
     start += to_read;
   }
   // don't buffer partial files
-  clearFileBuffer();
+  _fileBuffer->clearFileBuffer();
   return n_read;
 }
 
@@ -573,7 +576,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     r._lineending = r.detectLineEndingType(file);
 
 
-    bufread = readFromFile(file, *_fileBuffer, bufstart, bufread);
+    bufread = r.readFromFile(file, *_fileBuffer, bufstart, bufread);
     if (bufread == 0) {
       re_alloc = false;
       return 0;

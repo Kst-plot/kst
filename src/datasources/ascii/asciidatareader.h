@@ -65,7 +65,7 @@ class AsciiDataReader
 
       inline void clear() { _array->clear(); }
       inline int size() const { return _array->size(); }
-      inline void resize(int size) { _array->resize(size); }
+      inline bool resize(int size);
       inline int  capacity() const { return _array->capacity(); }
       inline char* data() { return _array->data(); }
 
@@ -86,8 +86,7 @@ class AsciiDataReader
     bool resizeBuffer(T& buffer, int bytes);
 
 
-    template<class T>
-    int readFromFile(QFile&, T& buffer, int start, int numberOfBytes, int maximalBytes = -1);
+    int readFromFile(QFile&, AsciiDataReader::FileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
     
     int readField(double *v, const QString &field, int s, int n, bool& re_alloc);
 
@@ -217,40 +216,16 @@ class AsciiDataReader
 };
 
 
-template<class T>
-bool AsciiDataReader::resizeBuffer(T& buffer, int bytes)
+bool AsciiDataReader::FileBuffer::resize(int bytes)
 { 
   try {
-    buffer.resize(bytes);
+    _array->resize(bytes);
   } catch (const std::bad_alloc&) {
     // work around Qt bug
     clearFileBuffer(true);
     return false;
   }
   return true;
-}
-
-template<class T>
-int AsciiDataReader::readFromFile(QFile& file, T& buffer, int start, int bytesToRead, int maximalBytes)
-{    
-  if (maximalBytes == -1) {
-    if (!resizeBuffer(buffer, bytesToRead + 1))
-      return 0;
-  } else {
-    bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer.size() <= bytesToRead) {
-      if (!resizeBuffer(buffer, bytesToRead + 1))
-        return 0;
-    }
-  }
-  file.seek(start); // expensive?
-  int bytesRead = file.read(buffer.data(), bytesToRead);
-  if (buffer.size() <= bytesRead) {
-    if (!resizeBuffer(buffer, bytesToRead + 1))
-      return 0;
-  }
-  buffer.data()[bytesRead] = '\0';
-  return bytesRead;
 }
 
 
