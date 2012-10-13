@@ -37,14 +37,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <iostream>
-    
 
-// Enable QASSERT in QVarLengthArray  when using [] on data
-#if 0
-  #define constData constArray
-#else
-  #define constData constPointer // loads faster in debug mode
-#endif
 
 // simulate out of memory scenario
 //#define KST_TEST_OOM
@@ -240,87 +233,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   bool new_data = r.findDataRows(_rowIndex, _numFrames, read_completely, file, _byteLength);
 
   return (!new_data && !force_update ? NoChange : Updated);
-}
-
-bool AsciiDataReader::findDataRows(RowIndex& rowIndex, int& numFrames, bool read_completely, QFile& file, int _byteLength)
-{
-  AsciiDataReader::LineEndingType lineending = detectLineEndingType(file);
-
-  bool new_data = false;
-
-  AsciiDataReader::FileBuffer buf;
-  do {
-    // Read the tmpbuffer, starting at row_index[_numFrames]
-    buf.clear();
-    buf.resize(buf.capacity());
-
-    //bufstart += bufread;
-    buf._bufferedS = rowIndex[numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiDataReader::FileBuffer::Prealloc - 1);
-
-    if (_config._delimiters.value().size() == 0) {
-      const AsciiDataReader::NoDelimiter comment_del;
-      if (lineending.isLF()) {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
-      } else {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
-      }
-    } else if (_config._delimiters.value().size() == 1) {
-      const AsciiDataReader::IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
-      if (lineending.isLF()) {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
-      } else {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
-      }
-    } else if (_config._delimiters.value().size() > 1) {
-      const AsciiDataReader::IsInString comment_del(_config._delimiters.value());
-      if (lineending.isLF()) {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedS, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
-      } else {
-        new_data = findDataRows(rowIndex, numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
-      }
-    }
-  } while (buf._bufferedN == AsciiDataReader::FileBuffer::Prealloc - 1  && read_completely);
-
-  rowIndex.resize(numFrames + 1);
-    
-  return new_data;
-}
-
-template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-bool AsciiDataReader::findDataRows(RowIndex& _rowIndex, int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
-{
-  const AsciiDataReader::IsWhiteSpace isWhiteSpace;
-  
-  bool new_data = false;
-  bool row_has_data = false;
-  bool is_comment = false;
-  const int row_offset = bufstart + isLineBreak.size;
-  int row_start = bufstart;
-
-  for (int i = 0; i < bufread; i++) {
-    if (comment_del(buffer[i])) {
-      is_comment = true;
-    } else if (isLineBreak(buffer[i])) {
-      if (row_has_data) {
-        _rowIndex[_numFrames] = row_start;
-        ++_numFrames;
-        if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + AsciiDataReader::FileBuffer::Prealloc - 1);
-        }
-        new_data = true;
-        row_start = row_offset+i;
-      } else if (is_comment) {
-        row_start = row_offset+i;
-      }
-      row_has_data = false;
-      is_comment = false;
-    } else if (!row_has_data && !isWhiteSpace(buffer[i]) && !is_comment) {
-      row_has_data = true;
-    }
-  }
-  _rowIndex[_numFrames] = row_start;
-  return new_data;
 }
 
 //-------------------------------------------------------------------------------------------
