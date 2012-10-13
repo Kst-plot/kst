@@ -144,7 +144,7 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buff
 
 
 int AsciiDataReader::readField(FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
-                               double *v, const QString& field, int s, int n, bool& re_alloc) 
+                               double *v, const QString& field, int s, int n) 
   {
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {

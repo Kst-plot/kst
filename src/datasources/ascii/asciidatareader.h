@@ -94,7 +94,7 @@ class AsciiDataReader
     int readFromFile(QFile&, AsciiDataReader::FileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
     
     int readField(FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
-                  double *v, const QString& field, int s, int n, bool& re_alloc);
+                  double *v, const QString& field, int s, int n);
 
 
     struct LineEndingType {

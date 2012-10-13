@@ -260,9 +260,9 @@ int AsciiSource::columnOfField(const QString& field) const
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
-  bool re_alloc;
-  int n_read = readField(v, field, s, n, re_alloc);
-  if (re_alloc) {
+  bool succcess;
+  int n_read = readField(v, field, s, n, succcess);
+  if (succcess) {
     // file is now buffered in memory
     return n_read;
   }
@@ -287,8 +287,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   while (n_read < n) {
     _fileBuffer->clearFileBuffer();
     int to_read = n_read + realloc_size < n ? realloc_size : n - n_read;
-    n_read += readField(v + start, field, n_read, to_read, re_alloc);
-    if (!re_alloc) {
+    n_read += readField(v + start, field, n_read, to_read, succcess);
+    if (!succcess) {
       _fileBuffer->clearFileBuffer();
       QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
       return n_read; 
@@ -302,9 +302,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& re_alloc) 
+int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& success) 
 {
-  re_alloc = true;
+  success = true;
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
@@ -338,14 +338,14 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
 
     bufread = r.readFromFile(file, *_fileBuffer, bufstart, bufread);
     if (bufread == 0) {
-      re_alloc = false;
+      success = false;
       return 0;
     }
     _fileBuffer->_bufferedS = s;
     _fileBuffer->_bufferedN = n;
   }
 
- return r.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n, re_alloc);
+  return r.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n);
 }
 
 

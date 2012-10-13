@@ -50,6 +50,7 @@ class AsciiSource : public Kst::DataSource
     virtual UpdateType internalDataSourceUpdate();
 
     int readField(double *v, const QString &field, int s, int n);
+    int readField(double *v, const QString &field, int s, int n, bool& success);
 
     QString fileType() const;
 
@@ -106,12 +107,6 @@ class AsciiSource : public Kst::DataSource
 
     bool openValidFile(QFile &file);
     static bool openFile(QFile &file);
-    
-    int readField(double *v, const QString &field, int s, int n, bool& re_alloc);
-
-
-    template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     // TODO remove
     friend class DataInterfaceAsciiString;
