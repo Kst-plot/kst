@@ -24,6 +24,14 @@
 #include <iostream>
 
 
+// Enable QASSERT in QVarLengthArray  when using [] on data
+#if 0
+  #define constData constArray
+#else
+  #define constData constPointer // loads faster in debug mode
+#endif
+
+
 AsciiDataReader::AsciiDataReader(AsciiSourceConfig& c) : _config(c)
 {
 }
@@ -134,6 +142,40 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buff
   return bytesRead;
 }
 
+
+int AsciiDataReader::readField(const RowIndex& _rowIndex, FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+                               double *v, const QString& field, int s, int n, bool& re_alloc) 
+  {
+
+  if (_config._columnType == AsciiSourceConfig::Fixed) {
+    MeasureTime t("AsciiSource::readField: same width for all columns");
+    LexicalCast lexc;
+    lexc.setDecimalSeparator(_config._useDot);
+    // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
+    // the column in row i by adding _rowIndex[i] we have to start at:
+    const char* col_start = &_fileBuffer->constData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
+    for (int i = 0; i < n; ++i) {
+      v[i] = lexc.toDouble(_rowIndex[i] + col_start);
+    }
+    return n;
+  } else if (_config._columnType == AsciiSourceConfig::Custom) {
+    if (_config._columnDelimiter.value().size() == 1) {
+      MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
+      const AsciiDataReader::IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
+      return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+    } if (_config._columnDelimiter.value().size() > 1) {
+      MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
+      const AsciiDataReader::IsInString column_del(_config._columnDelimiter.value());
+      return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+    }
+  } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
+    MeasureTime t("AsciiSource::readField: whitespace separated columns");
+    const AsciiDataReader::IsWhiteSpace column_del;
+    return readColumns(_rowIndex, v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+  }
+
+  return 0;
+}
 
 
 // vim: ts=2 sw=2 et

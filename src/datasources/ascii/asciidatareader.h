@@ -27,8 +27,6 @@
 #include <QVarLengthArray>
 
 class QFile;
-
-
 class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
 struct LexicalCast;
@@ -87,7 +85,7 @@ class AsciiDataReader
     template<class T>
     bool resizeBuffer(T& buffer, int bytes);
 
-
+    
     int readFromFile(QFile&, AsciiDataReader::FileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
     
     int readField(const RowIndex& _rowIndex, FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
@@ -209,8 +207,10 @@ class AsciiDataReader
     int readColumns(const RowIndex& rowIndex, double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
 
+    bool findDataRows(RowIndex &rowIndex, int& _numFrames, bool read_completely, QFile& file, int _byteLength);
+
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
+    bool findDataRows(RowIndex &rowIndex, int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 
