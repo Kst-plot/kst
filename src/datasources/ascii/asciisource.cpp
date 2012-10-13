@@ -194,7 +194,7 @@ const QString AsciiSource::asciiTypeKey()
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
-  _fileBuffer(new FileBuffer),
+  _fileBuffer(new AsciiDataReader::FileBuffer),
   _rowIndex(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
@@ -385,7 +385,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
 
-  FileBuffer buf;
+  AsciiDataReader::FileBuffer buf;
   buf._bufferedS = _rowIndex[_numFrames];
   buf._bufferedN = 0;
   do {
@@ -395,7 +395,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, FileBuffer::Prealloc - 1);
+    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiDataReader::FileBuffer::Prealloc - 1);
 
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
@@ -420,7 +420,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
       }
     }
 
-  } while (buf._bufferedN == FileBuffer::Prealloc - 1  && read_completely);
+  } while (buf._bufferedN == AsciiDataReader::FileBuffer::Prealloc - 1  && read_completely);
 
   _rowIndex.resize(_numFrames+1);
 
@@ -446,7 +446,7 @@ bool AsciiSource::findDataRows(const Buffer& buffer, int bufstart, int bufread, 
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + FileBuffer::Prealloc - 1);
+          _rowIndex.resize(_rowIndex.size() + AsciiDataReader::FileBuffer::Prealloc - 1);
         }
         new_data = true;
         row_start = row_offset+i;
@@ -487,9 +487,9 @@ int AsciiSource::columnOfField(const QString& field) const
 void AsciiSource::clearFileBuffer(bool forceDelete)
 {
   // force deletion of heap allocated memory if any
-  if (forceDelete || _fileBuffer->capacity() > FileBuffer::Prealloc) {
+  if (forceDelete || _fileBuffer->capacity() > AsciiDataReader::FileBuffer::Prealloc) {
     delete _fileBuffer;
-    _fileBuffer = new FileBuffer;
+    _fileBuffer = new AsciiDataReader::FileBuffer;
   }
 }
 
@@ -1001,6 +1001,7 @@ Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
   // here we could do more sophisticated stuff when generating a list of curves
   return ObjectList<Kst::Object>();
 }
+
 
 
 // vim: ts=2 sw=2 et

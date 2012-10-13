@@ -22,6 +22,7 @@
 #include "datasource.h"
 #include "dataplugin.h"
 #include "asciisourceconfig.h"
+#include "asciidatareader.h"
 
 #include <QVarLengthArray>
 #include <QFile>
@@ -78,47 +79,11 @@ class AsciiSource : public Kst::DataSource
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
   private:
+    AsciiDataReader r;
 
-    class FileBuffer
-    {
-    public:
+    AsciiDataReader::FileBuffer* _fileBuffer;
 
-      enum SizeOnStack
-      {
-        Prealloc =
-#if defined(__ANDROID__) || defined(__QNX__) // Some mobile systems really do not like you allocating 1MB on the stack.
-        1 * 1024
-#else
-        1 * 1024 * 1024
-#endif
-      };
-
-      typedef QVarLengthArray<char, Prealloc> Array;
-
-      inline FileBuffer() : _bufferedS(-10), _bufferedN(-10), _array(new Array) {}
-      inline ~FileBuffer() { delete _array; }
-      
-      int _bufferedS;
-      int _bufferedN;
-
-      inline void clear() { _array->clear(); }
-      inline int size() const { return _array->size(); }
-      inline void resize(int size) { _array->resize(size); }
-      inline int  capacity() const { return _array->capacity(); }
-      inline char* data() { return _array->data(); }
-
-      inline const char* const constPointer() const { return _array->data(); }
-      inline const Array& constArray() const{ return *_array; }
-
-      void clearFileBuffer(bool forceDelete = false);
-
-    private:
-      Array* _array;
-    };
-
-    FileBuffer* _fileBuffer;
-
-    QVarLengthArray<int, FileBuffer::Prealloc> _rowIndex;
+    QVarLengthArray<int, AsciiDataReader::FileBuffer::Prealloc> _rowIndex;
 
     void clearFileBuffer(bool forceDelete = false);
 
