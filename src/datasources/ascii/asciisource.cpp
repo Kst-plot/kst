@@ -60,7 +60,7 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
   r(_config),
-  _fileBuffer(new AsciiDataReader::FileBuffer),
+  _fileBuffer(new AsciiFileBuffer),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {

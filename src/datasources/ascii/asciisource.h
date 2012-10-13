@@ -24,9 +24,9 @@
 #include "asciisourceconfig.h"
 #include "asciidatareader.h"
 
-#include <QVarLengthArray>
+
 #include <QFile>
-#include <QMap>
+
 
 
 class DataInterfaceAsciiString;
@@ -81,7 +81,7 @@ class AsciiSource : public Kst::DataSource
 
   private:
     AsciiDataReader r;
-    AsciiDataReader::FileBuffer* _fileBuffer;
+    AsciiFileBuffer* _fileBuffer;
     
 
     friend class ConfigWidgetAscii;

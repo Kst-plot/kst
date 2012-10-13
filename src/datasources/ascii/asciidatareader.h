@@ -20,11 +20,11 @@
 #define ASCII_DATA_READER_H
 
 #include "asciisourceconfig.h"
-#include "asciidatareader.h"
+#include "asciifilebuffer.h"
+
 #include "math_kst.h"
 #include "kst_inf.h"
 
-#include <QVarLengthArray>
 
 class QFile;
 class DataInterfaceAsciiString;
@@ -39,51 +39,11 @@ class AsciiDataReader
 
     // TODO remove
     mutable AsciiSourceConfig& _config;
+    
+    typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
+    RowIndex _rowIndex;
 
-
-    class FileBuffer
-    {
-    public:
-
-      enum SizeOnStack
-      {
-        Prealloc =
-#if defined(__ANDROID__) || defined(__QNX__) // Some mobile systems really do not like you allocating 1MB on the stack.
-        1 * 1024
-#else
-        1 * 1024 * 1024
-#endif
-      };
-
-      typedef QVarLengthArray<char, Prealloc> Array;
-      typedef QVarLengthArray<int, Prealloc> RowIndex;
-
-      inline FileBuffer() : _bufferedS(-10), _bufferedN(-10), _array(new Array) {}
-      inline ~FileBuffer() { delete _array; }
-      
-      int _bufferedS;
-      int _bufferedN;
-
-      inline void clear() { _array->clear(); }
-      inline int size() const { return _array->size(); }
-      inline bool resize(int size);
-      inline int  capacity() const { return _array->capacity(); }
-      inline char* data() { return _array->data(); }
-
-      inline const char* const constPointer() const { return _array->data(); }
-      inline const Array& constArray() const{ return *_array; }
-
-      void clearFileBuffer(bool forceDelete = false);
-
-
-    private:
-
-      Array* _array;
-    };
-
-    FileBuffer::RowIndex _rowIndex;
-
-    inline FileBuffer::RowIndex& rowIndex() { return _rowIndex; }
+    inline RowIndex& rowIndex() { return _rowIndex; }
 
     void clearFileBuffer(bool forceDelete = false);
 
@@ -91,9 +51,9 @@ class AsciiDataReader
     bool resizeBuffer(T& buffer, int bytes);
 
     
-    int readFromFile(QFile&, AsciiDataReader::FileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
+    int readFromFile(QFile&, AsciiFileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
     
-    int readField(FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+    int readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
                   double *v, const QString& field, int s, int n);
 
 

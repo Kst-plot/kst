@@ -65,31 +65,6 @@ AsciiDataReader::LineEndingType AsciiDataReader::detectLineEndingType(QFile& fil
 }
 
 
-//-------------------------------------------------------------------------------------------
-bool AsciiDataReader::FileBuffer::resize(int bytes)
-{ 
-  try {
-    _array->resize(bytes);
-  } catch (const std::bad_alloc&) {
-    // work around Qt bug
-    clearFileBuffer(true);
-    return false;
-  }
-  return true;
-}
-
-//-------------------------------------------------------------------------------------------
-void AsciiDataReader::FileBuffer::clearFileBuffer(bool forceDelete)
-{
-  // force deletion of heap allocated memory if any
-  if (forceDelete || _array->capacity() > AsciiDataReader::FileBuffer::Prealloc) {
-    delete _array;
-    _array = new Array;
-  }
-  _bufferedS = -10;
-  _bufferedN = -10;
-}
-
 
 //-------------------------------------------------------------------------------------------
 void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int)
@@ -120,7 +95,7 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
 }
 
 
-int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
+int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
 {    
   if (maximalBytes == -1) {
     if (!buffer.resize(bytesToRead + 1))
@@ -143,7 +118,7 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiDataReader::FileBuffer& buff
 }
 
 
-int AsciiDataReader::readField(FileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
                                double *v, const QString& field, int s, int n) 
   {
 
@@ -184,7 +159,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
 
   bool new_data = false;
 
-  AsciiDataReader::FileBuffer buf;
+  AsciiFileBuffer buf;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
@@ -192,7 +167,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[numFrames]; // always read from the start of a line
-    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiDataReader::FileBuffer::Prealloc - 1);
+    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiFileBuffer::Prealloc - 1);
 
     if (_config._delimiters.value().size() == 0) {
       const AsciiDataReader::NoDelimiter comment_del;
@@ -216,7 +191,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
         new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
       }
     }
-  } while (buf._bufferedN == AsciiDataReader::FileBuffer::Prealloc - 1  && read_completely);
+  } while (buf._bufferedN == AsciiFileBuffer::Prealloc - 1  && read_completely);
 
   _rowIndex.resize(numFrames + 1);
 
@@ -242,7 +217,7 @@ bool AsciiDataReader::findDataRows(int& _numFrames, const Buffer& buffer, int bu
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + AsciiDataReader::FileBuffer::Prealloc - 1);
+          _rowIndex.resize(_rowIndex.size() + AsciiFileBuffer::Prealloc - 1);
         }
         new_data = true;
         row_start = row_offset+i;
