@@ -191,9 +191,7 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),  
   _rowIndex(),
-  _fileBuffer(new FileBuffer),
-  _bufferedS(-10),
-  _bufferedN(-10),
+  _fileBuffer(new FileBuffer<KST_PREALLOC>),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -229,6 +227,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 //-------------------------------------------------------------------------------------------
 AsciiSource::~AsciiSource() 
 {
+  delete _fileBuffer;
 }
 
 
@@ -383,48 +382,50 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
 
-  int bufread = 0;
-  int bufstart = _rowIndex[_numFrames];
+  FileBuffer<MAXBUFREADLEN + 1> buf;
+  buf._array->resize(buf._array->capacity());
+  buf._bufferedS = _rowIndex[_numFrames];
+  buf._bufferedN = 0;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
-    QVarLengthArray<char, MAXBUFREADLEN + 1> varBuffer;
-    varBuffer.resize(varBuffer.capacity());
+    buf._array->clear();
+    buf._array->resize(buf._array->capacity());
 
     //bufstart += bufread;
-    bufstart = _rowIndex[_numFrames]; // always read from the start of a line
-    bufread = readFromFile(file, varBuffer, bufstart, _byteLength - bufstart, MAXBUFREADLEN);
+    buf._bufferedS = _rowIndex[_numFrames]; // always read from the start of a line
+    buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, MAXBUFREADLEN);
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-    const char* bufferData = varBuffer.constData();
+    const char* bufferData = buf.constData();
     const char* buffer = bufferData;
 #else
-    QVarLengthArray<char, MAXBUFREADLEN + 1>& bufferData = varBuffer;
+    QVarLengthArray<char, KST_PREALLOC + 1>& bufferData = *buf._array;
     const char* buffer = bufferData.data();
 #endif
 
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() == 1) {
       const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() > 1) {
       const IsInString comment_del(_config._delimiters.value());
       if (lineending.isLF()) {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedS, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(buffer, bufstart, bufread, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(buffer, buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     }
 
-  } while (bufread == MAXBUFREADLEN  && read_completely);
+  } while (buf._bufferedN == MAXBUFREADLEN  && read_completely);
 
   _rowIndex.resize(_numFrames+1);
 
@@ -491,13 +492,13 @@ int AsciiSource::columnOfField(const QString& field) const
 void AsciiSource::clearFileBuffer(bool forceDelete)
 {
   // force deletion of internal allocated memory if any
-  const int memoryOnStack = sizeof(FileBuffer) - sizeof(QVarLengthArray<char, 0>);
-  if (forceDelete || _fileBuffer->capacity() > memoryOnStack) {
-    delete _fileBuffer;
-    _fileBuffer = new FileBuffer;
+  const int memoryOnStack = sizeof(FileBuffer<KST_PREALLOC>::Array) - sizeof(QVarLengthArray<char, 0>);
+  if (forceDelete || _fileBuffer->_array->capacity() > memoryOnStack) {
+    delete _fileBuffer->_array;
+    _fileBuffer->_array = new FileBuffer<KST_PREALLOC>::Array;
   }
-  _bufferedS = -10;
-  _bufferedN = -10;
+  _fileBuffer->_bufferedS = -10;
+  _fileBuffer->_bufferedN = -10;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -570,7 +571,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
 
-  if ((s != _bufferedS) || (n != _bufferedN)) {
+  if ((s != _fileBuffer->_bufferedS) || (n != _fileBuffer->_bufferedN)) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
@@ -584,14 +585,14 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       re_alloc = false;
       return 0;
     }
-    _bufferedS = s;
-    _bufferedN = n;
+    _fileBuffer->_bufferedS = s;
+    _fileBuffer->_bufferedN = n;
   }
 
 #ifdef KST_DONT_CHECK_INDEX_IN_DEBUG
-  const char* buffer = _fileBuffer->constData();
+  const char* buffer = _fileBuffer->_array->constData();
 #else
-  const QVarLengthArray<char, KST_PREALLOC>& buffer = *_fileBuffer;
+  const QVarLengthArray<char, KST_PREALLOC>& buffer = *_fileBuffer->_array;
 #endif
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {

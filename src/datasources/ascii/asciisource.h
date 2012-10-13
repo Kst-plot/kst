@@ -85,13 +85,32 @@ class AsciiSource : public Kst::DataSource
 #else
 #define KST_PREALLOC 1 * 1024 * 1024
 #endif
+
+    template<int S>
+    struct FileBuffer
+    {
+      typedef QVarLengthArray<char, S> Array;
+
+      FileBuffer() : _array(new Array), _bufferedS(-10), _bufferedN(-10) {}
+      ~FileBuffer() { delete _array; }
+
+      Array* _array;
+      int _bufferedS;
+      int _bufferedN;
+
+      inline int size() const { return _array->size(); }
+      inline void resize(int size) { _array->resize(size); }
+      inline char* data() { return _array->data(); }
+      inline const char* constData() const { return _array->data(); }
+      void clearFileBuffer(bool forceDelete = false);
+    };
+
+    FileBuffer<KST_PREALLOC>* _fileBuffer;
+
     QVarLengthArray<int, KST_PREALLOC> _rowIndex;
-    typedef QVarLengthArray<char, KST_PREALLOC> FileBuffer;
-    FileBuffer* _fileBuffer;
+
     void clearFileBuffer(bool forceDelete = false);
-    int _bufferedS;
-    int _bufferedN;
-    
+
     template<class T>
     bool resizeBuffer(T& buffer, int bytes);
 
@@ -275,7 +294,7 @@ int AsciiSource::readFromFile(QFile& file, T& buffer, int start, int bytesToRead
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer.size() <= bytesToRead) {
+    if (buffer._array->size() <= bytesToRead) {
       if (!resizeBuffer(buffer, bytesToRead + 1))
         return 0;
     }
