@@ -36,7 +36,10 @@ using namespace AsciiCharacterTraits;
 
 
 //-------------------------------------------------------------------------------------------
-AsciiDataReader::AsciiDataReader(AsciiSourceConfig& config) : _config(config)
+AsciiDataReader::AsciiDataReader(AsciiSourceConfig& config) :
+  _config(config),
+  isDigit(),
+  isWhiteSpace()
 {
 }
 
