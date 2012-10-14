@@ -49,12 +49,14 @@ AsciiDataReader::~AsciiDataReader()
 void AsciiDataReader::clear()
 {
   _rowIndex.clear();
+  setRow0Begin(-1);
   _numFrames = 0;
 }
 
 //-------------------------------------------------------------------------------------------
 void AsciiDataReader::setRow0Begin(int begin)
 {
+  _rowIndex.resize(1);
   _rowIndex[0] = begin;
 }
 
