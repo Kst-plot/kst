@@ -33,7 +33,7 @@ public:
 
   typedef QVarLengthArray<char, Prealloc> Array;
   
-  inline AsciiFileBuffer() : _begin(-10), _bytesRead(-10), _array(new Array) {}
+  inline AsciiFileBuffer() : _begin(-1), _bytesRead(-1), _array(new Array) {}
   inline ~AsciiFileBuffer() { delete _array; }
 
   inline int begin() const { return _begin; }

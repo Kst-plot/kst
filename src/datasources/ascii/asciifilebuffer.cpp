@@ -36,15 +36,15 @@ void AsciiFileBuffer::clear(bool forceDeletingArray)
     delete _array;
     _array = new Array;
   }
-  _begin = -10;
-  _bytesRead = -10;
+  _begin = -1;
+  _bytesRead = -1;
 }
 
 //-------------------------------------------------------------------------------------------
 int AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBytes)
 {
-  _begin = -10;
-  _bytesRead = -10;
+  _begin = -1;
+  _bytesRead = -1;
 
   if (maximalBytes == -1) {
     if (!resize(bytesToRead + 1))
