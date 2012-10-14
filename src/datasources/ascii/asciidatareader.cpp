@@ -11,7 +11,6 @@
  ***************************************************************************/
 
 #include "asciidatareader.h"
-
 #include "asciisourceconfig.h"
 
 #include "math_kst.h"
@@ -21,38 +20,30 @@
 #include "measuretime.h"
 
 #include <QFile>
-#include <QMessageBox>
-        
-#include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <iostream>
-
-
-// Enable QASSERT in QVarLengthArray  when using [] on data
-#if 0
-  #define constData constArray
-#else
-  #define constData constPointer // loads faster in debug mode
-#endif
 
 
 using namespace AsciiCharacterTraits;
 
 
-AsciiDataReader::AsciiDataReader(AsciiSourceConfig& c) : _config(c)
+// Enable QASSERT in QVarLengthArray  when using [] on data
+#if 0
+#define constData constArray
+#else
+#define constData constPointer // loads faster in debug mode
+#endif
+
+
+//-------------------------------------------------------------------------------------------
+AsciiDataReader::AsciiDataReader(AsciiSourceConfig& config) : _config(config)
 {
 }
 
-
+//-------------------------------------------------------------------------------------------
 AsciiDataReader::~AsciiDataReader()
 {
 }
-    
-
-
-
-
 
 //-------------------------------------------------------------------------------------------
 void AsciiDataReader::detectLineEndingType(QFile& file)
@@ -60,8 +51,8 @@ void AsciiDataReader::detectLineEndingType(QFile& file)
   QByteArray line;
   int line_size = 0;
   while (line_size < 2 && !file.atEnd()) {
-     line = file.readLine();
-     line_size = line.size();
+    line = file.readLine();
+    line_size = line.size();
   }
   file.seek(0);
   if (line_size < 2) {
@@ -72,16 +63,14 @@ void AsciiDataReader::detectLineEndingType(QFile& file)
   }
 }
 
-
-
 //-------------------------------------------------------------------------------------------
 void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int)
 {
   if (   isDigit(buffer[ch])
-      || buffer[ch] == '-'
-      || buffer[ch] == '.'
-      || buffer[ch] == '+'
-      || isWhiteSpace(buffer[ch])) {
+         || buffer[ch] == '-'
+         || buffer[ch] == '.'
+         || buffer[ch] == '+'
+         || isWhiteSpace(buffer[ch])) {
     *v = lexc.toDouble(&buffer[0] + ch);
   } else if ( ch + 2 < bufread
               && tolower(buffer[ch]) == 'i'
@@ -99,10 +88,9 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
     }
   }
 #endif
-
 }
 
-
+//-------------------------------------------------------------------------------------------
 int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
 {    
   if (maximalBytes == -1) {
@@ -125,48 +113,12 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int star
   return bytesRead;
 }
 
-
-int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
-                               double *v, const QString& field, int s, int n) 
-  {
-
-  if (_config._columnType == AsciiSourceConfig::Fixed) {
-    MeasureTime t("AsciiSource::readField: same width for all columns");
-    LexicalCast lexc;
-    lexc.setDecimalSeparator(_config._useDot);
-    // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
-    // the column in row i by adding _rowIndex[i] we have to start at:
-    const char* col_start = &_fileBuffer->constData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
-    for (int i = 0; i < n; ++i) {
-      v[i] = lexc.toDouble(_rowIndex[i] + col_start);
-    }
-    return n;
-  } else if (_config._columnType == AsciiSourceConfig::Custom) {
-    if (_config._columnDelimiter.value().size() == 1) {
-      MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
-      const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
-      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
-    } if (_config._columnDelimiter.value().size() > 1) {
-      MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
-      const IsInString column_del(_config._columnDelimiter.value());
-      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
-    }
-  } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    MeasureTime t("AsciiSource::readField: whitespace separated columns");
-    const IsWhiteSpace column_del;
-    return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
-  }
-
-  return 0;
-}
-
-
+//-------------------------------------------------------------------------------------------
 bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& file, int _byteLength)
 {
   detectLineEndingType(file);
 
   bool new_data = false;
-
   AsciiFileBuffer buf;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
@@ -176,7 +128,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[numFrames]; // always read from the start of a line
     buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiFileBuffer::Prealloc - 1);
-
+    
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
       if (_lineending.isLF()) {
@@ -206,11 +158,11 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
   return new_data;
 }
 
+//-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
 bool AsciiDataReader::findDataRows(int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
   const IsWhiteSpace isWhiteSpace;
-
   bool new_data = false;
   bool row_has_data = false;
   bool is_comment = false;
@@ -242,11 +194,47 @@ bool AsciiDataReader::findDataRows(int& _numFrames, const Buffer& buffer, int bu
   return new_data;
 }
 
+//-------------------------------------------------------------------------------------------
+int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+                               double *v, const QString& field, int s, int n)
+{
+  if (_config._columnType == AsciiSourceConfig::Fixed) {
+    MeasureTime t("AsciiSource::readField: same width for all columns");
+    LexicalCast lexc;
+    lexc.setDecimalSeparator(_config._useDot);
+    // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
+    // the column in row i by adding _rowIndex[i] we have to start at:
+    const char* col_start = &_fileBuffer->constData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
+    for (int i = 0; i < n; ++i) {
+      v[i] = lexc.toDouble(_rowIndex[i] + col_start);
+    }
+    return n;
+  } else if (_config._columnType == AsciiSourceConfig::Custom) {
+    if (_config._columnDelimiter.value().size() == 1) {
+      MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
+      const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
+      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+    } if (_config._columnDelimiter.value().size() > 1) {
+      MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
+      const IsInString column_del(_config._columnDelimiter.value());
+      return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+    }
+  } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
+    MeasureTime t("AsciiSource::readField: whitespace separated columns");
+    const IsWhiteSpace column_del;
+    return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
+  }
+  return 0;
+}
+
+//
+// template instantiation chain to generate optimal code for all possible data configurations
+//
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                              const LineEndingType& lineending, const ColumnDelimiter& column_del)
+                                 const LineEndingType& lineending, const ColumnDelimiter& column_del)
 {
   if (_config._delimiters.value().size() == 0) {
     const NoDelimiter comment_del;
@@ -258,13 +246,13 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
     const IsInString comment_del(_config._delimiters.value());
     return readColumns(v, buffer, bufstart, bufread, col, s, n, lineending, column_del, comment_del);
   }
-
   return 0;
 }
 
+//-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                              const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
+                                 const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
 {
   if (_config._columnWidthIsConst) {
     const AlwaysTrue column_withs_const;
@@ -283,12 +271,12 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
   }
 }
 
-
+//-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                              const IsLineBreak& isLineBreak,
-                              const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
-                              const ColumnWidthsAreConst& are_column_widths_const)
+                                 const IsLineBreak& isLineBreak,
+                                 const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
+                                 const ColumnWidthsAreConst& are_column_widths_const)
 {
   LexicalCast lexc;
   lexc.setDecimalSeparator(_config._useDot);
@@ -300,7 +288,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
-
+    
     if (are_column_widths_const()) {
       if (col_start != -1) {
         v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);

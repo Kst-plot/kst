@@ -20,10 +20,11 @@ class QFile;
 struct LexicalCast;
 class AsciiSourceConfig;
 
+
 class AsciiDataReader
 {
   public:   
-    AsciiDataReader(AsciiSourceConfig& c);
+    AsciiDataReader(AsciiSourceConfig& config);
     ~AsciiDataReader();
 
     typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
