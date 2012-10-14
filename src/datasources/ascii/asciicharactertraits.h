@@ -21,54 +21,44 @@ namespace AsciiCharacterTraits
 struct LineEndingType {
   bool is_crlf;
   char character;
-  bool isCR() const { return character == '\r'; }
-  bool isLF() const { return character == '\n'; }
+  inline bool isCR() const { return character == '\r'; }
+  inline bool isLF() const { return character == '\n'; }
 };
 
 // column and comment delimiter functions
 
 struct AlwaysTrue {
-  AlwaysTrue() {
-  }
   inline bool operator()() const {
     return true;
   }
 };
 
 struct AlwaysFalse {
-  AlwaysFalse() {
-  }
   inline bool operator()() const {
     return false;
   }
 };
 
 struct NoDelimiter {
-  NoDelimiter() {
-  }
   inline bool operator()(const char) const {
     return false;
   }
 };
 
 struct  IsWhiteSpace {
-  IsWhiteSpace() {
-  }
   inline bool operator()(const char c) const {
     return c == ' ' || c == '\t';
   }
 };
 
 struct IsDigit {
-  IsDigit() {
-  }
   inline bool operator()(const char c) const {
     return (c >= 48) && (c <= 57) ? true : false;
   }
 };
 
 struct IsCharacter {
-  IsCharacter(char c) : character(c) {
+  inline IsCharacter(char c) : character(c) {
   }
   const char character;
   inline bool operator()(const char c) const {
@@ -77,7 +67,7 @@ struct IsCharacter {
 };
 
 struct IsInString {
-  IsInString(const QString& s) : str(s), chars(s.size()) {
+  inline IsInString(const QString& s) : str(s), chars(s.size()) {
     QByteArray ascii = str.toLatin1();
     for (int i = 0; i < 6 && i < chars; i++) {
       ch[i] = ascii[i];
@@ -101,7 +91,7 @@ struct IsInString {
 };
 
 struct IsLineBreakLF {
-  IsLineBreakLF(const LineEndingType&) : size(1) {
+  inline IsLineBreakLF(const LineEndingType&) : size(1) {
   }
   const int size;
   inline bool operator()(const char c) const {
@@ -110,7 +100,7 @@ struct IsLineBreakLF {
 };
 
 struct IsLineBreakCR {
-  IsLineBreakCR(const LineEndingType& t) : size( t.is_crlf ? 2 : 1 ) {
+  inline IsLineBreakCR(const LineEndingType& t) : size( t.is_crlf ? 2 : 1 ) {
   }
   const int size;
   inline bool operator()(const char c) const {
