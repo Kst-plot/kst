@@ -68,7 +68,7 @@ class AsciiSource : public Kst::DataSource
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
   private:
-    AsciiDataReader reader;
+    AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
     
 

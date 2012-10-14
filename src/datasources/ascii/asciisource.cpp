@@ -49,7 +49,7 @@ const QString AsciiSource::asciiTypeKey()
 //-------------------------------------------------------------------------------------------
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
-  reader(_config),
+  _reader(_config),
   _fileBuffer(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
@@ -94,7 +94,7 @@ void AsciiSource::reset()
 {
   // forget about cached data
   _fileBuffer.clear();
-  reader.clear();
+  _reader.clear();
   
   _valid = false;
   _byteLength = 0;
@@ -131,7 +131,7 @@ bool AsciiSource::openValidFile(QFile &file)
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::initRowIndex() 
 {
-  reader.clear();
+  _reader.clear();
   _byteLength = 0;
   
   if (_config._dataLine > 0) {
@@ -154,7 +154,7 @@ bool AsciiSource::initRowIndex()
       }
       header_row++;
     }
-    reader.setRow0Begin(didRead);
+    _reader.setRow0Begin(didRead);
   }
   
   return true;
@@ -211,7 +211,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
   
-  bool new_data = reader.findDataRows(read_completely, file, _byteLength);
+  bool new_data = _reader.findDataRows(read_completely, file, _byteLength);
   
   return (!new_data && !force_update ? NoChange : Updated);
 }
@@ -303,8 +303,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   }
   
   // check if the already in buffer
-  int begin = reader.beginOfRow(s);
-  int bytesToRead = reader.beginOfRow(s + n) - begin;
+  int begin = _reader.beginOfRow(s);
+  int bytesToRead = _reader.beginOfRow(s + n) - begin;
   if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
@@ -315,10 +315,10 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       success = false;
       return 0;
     }
-    reader.detectLineEndingType(file);
+    _reader.detectLineEndingType(file);
   }
   
-  return reader.readField(_fileBuffer, col, v, field, s, n);
+  return _reader.readField(_fileBuffer, col, v, field, s, n);
 }
 
 
@@ -332,7 +332,7 @@ QString AsciiSource::fileType() const
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::isEmpty() const 
 {
-  return reader.numberOfFrames() < 1;
+  return _reader.numberOfFrames() < 1;
 }
 
 

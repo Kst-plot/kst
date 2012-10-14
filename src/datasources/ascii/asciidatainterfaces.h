@@ -62,7 +62,7 @@ const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &fie
   if (!ascii._fieldList.contains(field))
     return DataVector::DataInfo();
 
-  return DataVector::DataInfo(ascii.reader.numberOfFrames(), 1);
+  return DataVector::DataInfo(ascii._reader.numberOfFrames(), 1);
 }
 
 
@@ -78,7 +78,7 @@ int DataInterfaceAsciiVector::read(const QString& field, DataVector::ReadInfo& p
 QMap<QString, double> DataInterfaceAsciiVector::metaScalars(const QString&)
 {
   QMap<QString, double> m;
-  m["FRAMES"] = ascii.reader.numberOfFrames();
+  m["FRAMES"] = ascii._reader.numberOfFrames();
   return m;
 }
 
