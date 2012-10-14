@@ -92,21 +92,19 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
 
 //-------------------------------------------------------------------------------------------
 int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
-{    
+{
   if (maximalBytes == -1) {
     if (!buffer.resize(bytesToRead + 1))
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (!buffer.resize(bytesToRead + 1)) {
+    if (!buffer.resize(bytesToRead + 1))
       return 0;
-    }
   }
   file.seek(start); // expensive?
   int bytesRead = file.read(buffer.data(), bytesToRead);
-  if (!buffer.resize(bytesToRead + 1)) {
+  if (!buffer.resize(bytesRead + 1))
     return 0;
-  }
   buffer.data()[bytesRead] = '\0';
   return bytesRead;
 }
