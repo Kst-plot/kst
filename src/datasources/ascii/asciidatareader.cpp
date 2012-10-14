@@ -121,6 +121,9 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
 
     // always read from the start of a line
     buf.read(file, _rowIndex[_numFrames], _byteLength - buf.begin(), AsciiFileBuffer::Prealloc - 1);
+    if (buf.bytesRead() == 0) {
+      return false;
+    }
     
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;

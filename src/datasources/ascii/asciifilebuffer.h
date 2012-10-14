@@ -39,7 +39,7 @@ public:
   inline int begin() const { return _begin; }
   inline int bytesRead() const { return _bytesRead; }
 
-  int read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
+  void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
 
   inline char* data() { return _array->data(); }
 

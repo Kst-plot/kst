@@ -303,22 +303,20 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
   
+  // check if the already in buffer
   int begin = reader.beginOfRow(s);
   int bytesToRead = reader.beginOfRow(s + n) - begin;
-  // check if the already in buffer
   if ((begin != _fileBuffer->begin()) || (bytesToRead != _fileBuffer->bytesRead())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
     }
-    
-    reader.detectLineEndingType(file);
-    
-    bytesToRead = _fileBuffer->read(file, begin, bytesToRead);
-    if (bytesToRead == 0) {
+    _fileBuffer->read(file, begin, bytesToRead);
+    if (_fileBuffer->bytesRead() == 0) {
       success = false;
       return 0;
     }
+    reader.detectLineEndingType(file);
   }
   
   return reader.readField(_fileBuffer, col, v, field, s, n);

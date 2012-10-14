@@ -41,32 +41,29 @@ void AsciiFileBuffer::clear(bool forceDeletingArray)
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBytes)
+void AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBytes)
 {
   _begin = -1;
-  _bytesRead = -1;
+  _bytesRead = 0;
 
-  if (bytesToRead <= 0) {
-    return 0;
-  }
+  if (bytesToRead <= 0)
+    return;
 
   if (maximalBytes == -1) {
     if (!resize(bytesToRead + 1))
-      return 0;
+      return;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
     if (!resize(bytesToRead + 1))
-      return 0;
+      return;
   }
   file.seek(start); // expensive?
   int bytesRead = file.read(data(), bytesToRead);
   if (!resize(bytesRead + 1))
-    return 0;
+    return;
 
   data()[bytesRead] = '\0';
   _begin = start;
   _bytesRead = bytesRead;
-
-  return bytesRead;
 }
 
