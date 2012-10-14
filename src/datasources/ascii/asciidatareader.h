@@ -28,15 +28,20 @@ class AsciiDataReader
     ~AsciiDataReader();
 
     typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
-    inline RowIndex& rowIndex() { return _rowIndex; }
 
+    // TODO make really private, remove references
+    inline RowIndex& rowIndex() { return _rowIndex; }
+    inline int& numberOfFrames() { return _numFrames; }
+    inline int numberOfFrames() const { return _numFrames; }
+    
     void detectLineEndingType(QFile& file);
     
-    bool findDataRows(int& _numFrames, bool read_completely, QFile& file, int _byteLength);
+    bool findDataRows(bool read_completely, QFile& file, int _byteLength);
     int readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
                   double *v, const QString& field, int s, int n);
 
   private:
+    int _numFrames;
     RowIndex _rowIndex;
     AsciiSourceConfig& _config;
     AsciiCharacterTraits::LineEndingType _lineending;
@@ -60,7 +65,7 @@ class AsciiDataReader
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);    
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
+    bool findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
 };

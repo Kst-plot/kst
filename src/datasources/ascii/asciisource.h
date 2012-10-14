@@ -75,7 +75,6 @@ class AsciiSource : public Kst::DataSource
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
 
-    int _numFrames;
     int _byteLength;
     bool _haveHeader;
     bool _fieldListComplete;

@@ -99,7 +99,7 @@ void AsciiSource::reset()
   
   _valid = false;
   _byteLength = 0;
-  _numFrames = 0;
+  reader.numberOfFrames() = 0;
   _haveHeader = false;
   _fieldListComplete = false;
   
@@ -138,7 +138,7 @@ bool AsciiSource::initRowIndex()
   
   reader.rowIndex()[0] = 0;
   _byteLength = 0;
-  _numFrames = 0;
+  reader.numberOfFrames() = 0;
   
   if (_config._dataLine > 0) {
     QFile file(_filename);
@@ -217,7 +217,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   _byteLength = file.size();
   
-  bool new_data = reader.findDataRows(_numFrames, read_completely, file, _byteLength);
+  bool new_data = reader.findDataRows(read_completely, file, _byteLength);
   
   return (!new_data && !force_update ? NoChange : Updated);
 }
@@ -344,7 +344,7 @@ QString AsciiSource::fileType() const
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::isEmpty() const 
 {
-  return _numFrames < 1;
+  return reader.numberOfFrames() < 1;
 }
 
 
