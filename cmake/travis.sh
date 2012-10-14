@@ -6,6 +6,10 @@
 startdir=$PWD
 
 
+# ---------------------------------------------------------
+# 
+# helper function to check return code
+#
 checkExitCode() {
     exitcode=$?
     if [ $exitcode -ne 0 ]; then
@@ -15,10 +19,14 @@ checkExitCode() {
 }
 
 
+# ---------------------------------------------------------
 #
 # print some info about the system
 #
-echo ------ System
+echo
+echo ----------------------------------- 
+echo Build system:
+echo
 uname -a
 lsb_release -a
 processors=`grep -c processor /proc/cpuinfo`
@@ -30,9 +38,11 @@ if [ "$iam" = "$travis" ]; then
     sudo rm -rf /usr/lib/jvm
     df -h
 fi
-echo ------ 
+echo ----------------------------------- 
+echo
 
 
+# ---------------------------------------------------------
 #
 # make build directory
 #
@@ -47,15 +57,18 @@ builddir=$PWD/$build
 cd $builddir
 
 
+# ---------------------------------------------------------
 #
 # select mingw version
 #
 mingw=i686-w64-mingw32
 
 
+# ---------------------------------------------------------
 #
 # get actual cmake 
 #
+# TODO check for cmake
 if [ "$iam" = "$travis" ]; then
     cd ..
     if [ ! -d $PWD/cmake-2.8.9-Linux-i386 ]; then
@@ -68,52 +81,80 @@ else
     cmakebin=cmake
 fi
 
+
+# ---------------------------------------------------------
+#
+# download and install mingw
+#
+if [ ! -d /opt/mingw32 ]; then
+    mingwtar=i686-w64-mingw32-gcc-4.7.2-release-linux32_rubenvb-Ubuntu32-12.04-1.tar
+    wget https://github.com/downloads/syntheticpp/kst/$mingwtar.xz
+    checkExitCode
+    xz -d $mingwtar.xz
+    cd /opt
+    sudo tar xf $builddir/$mingwtar
+    checkExitCode
+    cd $builddir
+fi
+# when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
+#export PATH=/opt/mingw32/bin:$PATH
+echo Checking mingw installation ...
+/opt/mingw32/bin/i686-w64-mingw32-gcc -dumpversion
+checkExitCode
+
+
+# ---------------------------------------------------------
 #
 # download and install Qt
 #
 if [ "$1" = "qt5" ]; then
     qtver=5.0.0
+    gccver=-4.7.2
 else
     qtver=4.8.3
 fi
-qtver=Qt-$qtver-win32-g++-$mingw
+qtver=Qt-$qtver-win32-g++-$mingw$gccver
     
 if [ ! -d /opt/$qtver ]; then
     qttar=$qtver-Ubuntu32-12.04-1.tar
     wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
-    cd /
+    cd /opt
     sudo tar xf $builddir/$qttar
     checkExitCode
-    echo Checking Qt installation ...
-    readelf -h  /opt/$qtver/bin/qmake
-    /opt/$qtver/bin/qmake -query
-    checkExitCode
-    export PATH=/opt/$qtver/bin:$PATH
+    cd $builddir
 fi
+export PATH=/opt/$qtver/bin:$PATH
+echo Checking Qt installation ...
+which qmake
+checkExitCode
 
+
+# ---------------------------------------------------------
 #
 # build Kst
 #
 date=`date --utc '+%Y.%m.%d-%H.%M'`
-ver=2.0.6
+ver=2.0.x
 cd $builddir
 if [ "$1" = "qt5" ]; then
     ver=$ver-Qt5
-    qtopt="-Dkst_qt5=/opt/$qtver -Dkst_opengl=0"
+    qtopt="-Dkst_qt5=1 -Dkst_opengl=0"
 else
     ver=$ver-Qt4
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
+
 installed=Kst-$ver-$date
-$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=$mingw -Dkst_install_prefix=./$installed $qtopt
+$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/mingw32/bin/$mingw -Dkst_install_prefix=./$installed $qtopt
 checkExitCode
 
 make -j $processors
 checkExitCode
 
 
+# ---------------------------------------------------------
 #
 # deploy
 #
