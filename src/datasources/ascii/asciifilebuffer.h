@@ -40,7 +40,6 @@ public:
   int _bufferedN;
 
   inline int size() const { return _array->size(); }
-  inline int  capacity() const { return _array->capacity(); }
   inline char* data() { return _array->data(); }
 
   inline const char* const constPointer() const { return _array->data(); }

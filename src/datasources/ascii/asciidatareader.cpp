@@ -123,7 +123,6 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
-    buf.resize(buf.capacity());
 
     //bufstart += bufread;
     buf._bufferedS = _rowIndex[numFrames]; // always read from the start of a line
