@@ -325,7 +325,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     }
   }
   
-  return reader.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n);
+  return reader.readField(_fileBuffer, col, v, field, s, n);
 }
 
 
