@@ -11,7 +11,6 @@
  ***************************************************************************/
 
 #include "asciisource.h"
-#include "asciisourceconfig.h"
 #include "asciidatainterfaces.h"
 
 #include "curve.h"
@@ -26,11 +25,8 @@
 
 #include <QFile>
 #include <QMessageBox>
-        
-#include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <iostream>
 
 
 // simulate out of memory scenario
@@ -60,27 +56,27 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 {
 #ifdef KST_TEST_OOM
   // eat the giga bytes
-	while (qMalloc(1024*1024*1024) != 0) {}
+  while (qMalloc(1024*1024*1024) != 0) {}
 #endif
-
+  
   setInterface(is);
   setInterface(iv);
-
+  
   reset();
-
+  
   // TODO only works for local files
   setUpdateType(File);
-
+  
   _source = asciiTypeString;
   if (!type.isEmpty() && type != asciiTypeString) {
     return;
   }
-
+  
   _config.readGroup(*cfg, filename);
   if (!e.isNull()) {
     _config.load(e);
   }
-
+  
   _valid = true;
   registerChange();
   internalDataSourceUpdate(false);
@@ -100,19 +96,19 @@ void AsciiSource::reset()
   // forget about cached data
   _fileBuffer->clearFileBuffer();
   reader.rowIndex().clear();
-
+  
   _valid = false;
   _byteLength = 0;
   _numFrames = 0;
   _haveHeader = false;
   _fieldListComplete = false;
-
+  
   _fieldList.clear();
   _scalarList.clear();
   _strings.clear();
-
+  
   Object::reset();
-
+  
   _strings = fileMetas();
 }
 
@@ -139,11 +135,11 @@ bool AsciiSource::initRowIndex()
 {
   // capacity is at least the pre-allocated memory
   reader.rowIndex().resize(reader.rowIndex().capacity());
-
+  
   reader.rowIndex()[0] = 0;
   _byteLength = 0;
   _numFrames = 0;
-
+  
   if (_config._dataLine > 0) {
     QFile file(_filename);
     if (!openValidFile(file)) {
@@ -166,11 +162,9 @@ bool AsciiSource::initRowIndex()
     }
     reader.rowIndex()[0] = didRead;
   }
-
+  
   return true;
 }
-
-
 
 
 //-------------------------------------------------------------------------------------------
@@ -184,10 +178,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
-
+  
   // forget about cached data
   _fileBuffer->clearFileBuffer();
-
+  
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
     if (!_haveHeader) {
@@ -206,27 +200,28 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
       }
     }
     _fieldListComplete = _fieldList.count() > 1;
-
+    
     // Re-update the scalar list since we have one now
     _scalarList = scalarListFor(_filename, &_config);
   }
-
+  
   QFile file(_filename);
   if (!openValidFile(file)) {
     // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
     return NoChange;
   }
-
+  
   bool force_update = true;
   if (_byteLength == file.size()) {
     force_update = false;
   }
   _byteLength = file.size();
-
+  
   bool new_data = reader.findDataRows(_numFrames, read_completely, file, _byteLength);
-
+  
   return (!new_data && !force_update ? NoChange : Updated);
 }
+
 
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const
@@ -234,21 +229,19 @@ int AsciiSource::columnOfField(const QString& field) const
   if (_fieldList.contains(field)) {
     return _fieldList.indexOf(field);
   } 
-
+  
   if (_fieldListComplete) {
     return -1;
   }
-
+  
   bool ok = false;
   int col = field.toInt(&ok);
   if (ok) {
     return col;
   }
-
+  
   return -1;
 }
-
-
 
 
 //-------------------------------------------------------------------------------------------
@@ -260,21 +253,21 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     // file is now buffered in memory
     return n_read;
   }
-
+  
   // reading whole file into memory failed
-
+  
   // find a smaller allocatable size
   _fileBuffer->clearFileBuffer();
   int realloc_size = n / 4;
   while (!_fileBuffer->resize(realloc_size) && realloc_size > 0) {
-      realloc_size /= 2;
+    realloc_size /= 2;
   }
   _fileBuffer->clearFileBuffer();
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
     return 0;      
   }
-
+  
   // read in 
   int start = s;
   n_read = 0;
@@ -302,33 +295,33 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
-
+  
   if (field == "INDEX") {
     for (int i = 0; i < n; i++) {
       v[i] = double(s + i);
     }
     return n;
   }
-
+  
   int col = columnOfField(field);
   if (col == -1) {
     return 0;
   }
-
+  
   int bufstart = reader.rowIndex()[s];
   int bufread = reader.rowIndex()[s + n] - bufstart;
   if (bufread <= 0) {
     return 0;
   }
-
+  
   if ((s != _fileBuffer->_bufferedS) || (n != _fileBuffer->_bufferedN)) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
     }
-
+    
     reader.detectLineEndingType(file);
-
+    
     bufread = reader.readFromFile(file, *_fileBuffer, bufstart, bufread);
     if (bufread == 0) {
       success = false;
@@ -337,7 +330,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _fileBuffer->_bufferedS = s;
     _fileBuffer->_bufferedN = n;
   }
-
+  
   return reader.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n);
 }
 
@@ -383,7 +376,7 @@ QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConf
 {
   QStringList parts;
   const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter.value())));
-
+  
   if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
     parts += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
   } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
@@ -406,10 +399,10 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   if (!openFile(file)) {
     return QStringList();
   }
-
+  
   QStringList fields;
   fields += "INDEX";
-
+  
   if (cfg->_readFields) {
     int fieldsLine = cfg->_fieldsLine;
     int currentLine = 0; // Explicit line counter, to make the code easier to understand
@@ -428,7 +421,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     }
     return trimmed;
   }
-
+  
   
   QRegExp regex;
   if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
@@ -436,7 +429,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   } else {
     regex.setPattern(QString("^\\s*[%1].*").arg(cfg->_delimiters));
   }
-
+  
   bool done = false;
   int skip = cfg->_dataLine;
   //FIXME This is a hack which should eventually be fixed by specifying
@@ -465,7 +458,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
         if (r > 1 && !regex.exactMatch(line)) {
-          cnt = splitHeaderLine(line, cfg).count();         
+          cnt = splitHeaderLine(line, cfg).count();
           if (cnt > maxcnt) {
             maxcnt = cnt;
           }
@@ -484,24 +477,26 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       return fields;
     }
   }
-
+  
   for (int i = 1; i <= maxcnt; ++i) {
     fields += i18n("Column %1").arg(i).trimmed();
   }
-
+  
   return fields;
 }
 
+
+//-------------------------------------------------------------------------------------------
 QStringList AsciiSource::unitListFor(const QString& filename, AsciiSourceConfig* cfg)
 {
   QFile file(filename);
   if (!openFile(file)) {
     return QStringList();
   }
-
+  
   QStringList units;
   units += ""; // To go with INDEX
-
+  
   int unitsLine = cfg->_unitsLine;
   int currentLine = 0;
   while (currentLine < cfg->_dataLine) {
@@ -549,20 +544,20 @@ bool AsciiSource::supportsTimeConversions() const
 int AsciiSource::sampleForTime(double ms, bool *ok) 
 {
   switch (_config._indexInterpretation) {
-    case AsciiSourceConfig::Seconds:
-      // FIXME: make sure "seconds" exists in _indexVector
-      if (ok) {
-        *ok = true;
-      }
-      return 0;
-    case AsciiSourceConfig::CTime:
-      // FIXME: make sure "seconds" exists in _indexVector (different than above?)
-      if (ok) {
-        *ok = true;
-      }
-      return 0;
-    default:
-      return Kst::DataSource::sampleForTime(ms, ok);
+  case AsciiSourceConfig::Seconds:
+    // FIXME: make sure "seconds" exists in _indexVector
+    if (ok) {
+      *ok = true;
+    }
+    return 0;
+  case AsciiSourceConfig::CTime:
+    // FIXME: make sure "seconds" exists in _indexVector (different than above?)
+    if (ok) {
+      *ok = true;
+    }
+    return 0;
+  default:
+    return Kst::DataSource::sampleForTime(ms, ok);
   }
 }
 
@@ -578,25 +573,25 @@ const QString& AsciiSource::typeString() const
 int AsciiSource::sampleForTime(const QDateTime& time, bool *ok) 
 {
   switch (_config._indexInterpretation) {
-    case AsciiSourceConfig::Seconds:
-      // FIXME: make sure "time" exists in _indexVector
-      if (ok) {
-        *ok = true;
-      }
-      return time.toTime_t();
-    case AsciiSourceConfig::CTime:
-      // FIXME: make sure "time" exists in _indexVector (different than above?)
-      if (ok) {
-        *ok = true;
-      }
-      return time.toTime_t();
-    default:
-      return Kst::DataSource::sampleForTime(time, ok);
+  case AsciiSourceConfig::Seconds:
+    // FIXME: make sure "time" exists in _indexVector
+    if (ok) {
+      *ok = true;
+    }
+    return time.toTime_t();
+  case AsciiSourceConfig::CTime:
+    // FIXME: make sure "time" exists in _indexVector (different than above?)
+    if (ok) {
+      *ok = true;
+    }
+    return time.toTime_t();
+  default:
+    return Kst::DataSource::sampleForTime(time, ok);
   }
 }
 
 
-
+//-------------------------------------------------------------------------------------------
 Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
 {
   // here we could do more sophisticated stuff when generating a list of curves
