@@ -93,6 +93,8 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
 //-------------------------------------------------------------------------------------------
 int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
 {
+  buffer.setRead(0);
+
   if (maximalBytes == -1) {
     if (!buffer.resize(bytesToRead + 1))
       return 0;
@@ -105,7 +107,11 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int star
   int bytesRead = file.read(buffer.data(), bytesToRead);
   if (!buffer.resize(bytesRead + 1))
     return 0;
+
   buffer.data()[bytesRead] = '\0';
+  buffer.setStart(start);
+  buffer.setRead(bytesRead);
+
   return bytesRead;
 }
 
@@ -120,8 +126,8 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
 
-    buf.setStart(_rowIndex[numFrames]); // always read from the start of a line
-    buf.setRead(readFromFile(file, buf, buf.start(), _byteLength - buf.start(), AsciiFileBuffer::Prealloc - 1));
+    // always read from the start of a line
+    readFromFile(file, buf, _rowIndex[numFrames], _byteLength - buf.start(), AsciiFileBuffer::Prealloc - 1);
     
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
