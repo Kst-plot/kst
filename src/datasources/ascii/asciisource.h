@@ -10,22 +10,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ASCII_H
-#define ASCII_H
+#ifndef ASCII_SOURCE_H
+#define ASCII_SOURCE_H
+
+#include "asciidatareader.h"
+#include "asciisourceconfig.h"
 
 #include "datasource.h"
 #include "dataplugin.h"
-#include "asciisourceconfig.h"
-#include "asciidatareader.h"
 
-
-#include <QFile>
-
-
-
+class QFile;
 class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
-struct LexicalCast;
+
 
 class AsciiSource : public Kst::DataSource
 {
@@ -33,9 +30,7 @@ class AsciiSource : public Kst::DataSource
 
   public:
     AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
-
     ~AsciiSource();
-
 
     bool initRowIndex();
 
@@ -59,7 +54,6 @@ class AsciiSource : public Kst::DataSource
 
     int sampleForTime(const QDateTime& time, bool *ok);
 
-
     virtual void reset();
 
     virtual const QString& typeString() const;
@@ -74,19 +68,17 @@ class AsciiSource : public Kst::DataSource
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
   private:
-    AsciiDataReader r;
+    AsciiDataReader reader;
     AsciiFileBuffer* _fileBuffer;
     
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
-       
 
     int _numFrames;
     int _byteLength;
     bool _haveHeader;
     bool _fieldListComplete;
-
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;
