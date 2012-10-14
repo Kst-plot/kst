@@ -13,6 +13,7 @@
 #include "asciidatareader.h"
 
 #include "asciisourceconfig.h"
+
 #include "math_kst.h"
 #include "kst_inf.h"
 #include "kst_i18n.h"
@@ -36,6 +37,9 @@
 #endif
 
 
+using namespace AsciiCharacterTraits;
+
+
 AsciiDataReader::AsciiDataReader(AsciiSourceConfig& c) : _config(c)
 {
 }
@@ -49,8 +53,9 @@ AsciiDataReader::~AsciiDataReader()
 
 
 
+
 //-------------------------------------------------------------------------------------------
-AsciiDataReader::LineEndingType AsciiDataReader::detectLineEndingType(QFile& file) const
+LineEndingType AsciiDataReader::detectLineEndingType(QFile& file) const
 {
   QByteArray line;
   int line_size = 0;
@@ -140,16 +145,16 @@ int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufsta
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
       MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
-      const AsciiDataReader::IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
+      const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
       return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
       MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
-      const AsciiDataReader::IsInString column_del(_config._columnDelimiter.value());
+      const IsInString column_del(_config._columnDelimiter.value());
       return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
     MeasureTime t("AsciiSource::readField: whitespace separated columns");
-    const AsciiDataReader::IsWhiteSpace column_del;
+    const IsWhiteSpace column_del;
     return readColumns(v, _fileBuffer->constData(), bufstart, bufread, col, s, n, _lineending, column_del);
   }
 
@@ -159,7 +164,7 @@ int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufsta
 
 bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& file, int _byteLength)
 {
-  AsciiDataReader::LineEndingType lineending = detectLineEndingType(file);
+  LineEndingType lineending = detectLineEndingType(file);
 
   bool new_data = false;
 
@@ -174,25 +179,25 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
     buf._bufferedN = readFromFile(file, buf, buf._bufferedS, _byteLength - buf._bufferedS, AsciiFileBuffer::Prealloc - 1);
 
     if (_config._delimiters.value().size() == 0) {
-      const AsciiDataReader::NoDelimiter comment_del;
+      const NoDelimiter comment_del;
       if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() == 1) {
-      const AsciiDataReader::IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
+      const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
       if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() > 1) {
-      const AsciiDataReader::IsInString comment_del(_config._delimiters.value());
+      const IsInString comment_del(_config._delimiters.value());
       if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedS, AsciiDataReader::IsLineBreakLF(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedS, IsLineBreakLF(lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, AsciiDataReader::IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
       }
     }
   } while (buf._bufferedN == AsciiFileBuffer::Prealloc - 1  && read_completely);
@@ -205,7 +210,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
 bool AsciiDataReader::findDataRows(int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
-  const AsciiDataReader::IsWhiteSpace isWhiteSpace;
+  const IsWhiteSpace isWhiteSpace;
 
   bool new_data = false;
   bool row_has_data = false;
