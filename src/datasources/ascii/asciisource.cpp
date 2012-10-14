@@ -95,11 +95,10 @@ void AsciiSource::reset()
 {
   // forget about cached data
   _fileBuffer->clear();
-  reader.rowIndex().clear();
+  reader.clear();
   
   _valid = false;
   _byteLength = 0;
-  reader.numberOfFrames() = 0;
   _haveHeader = false;
   _fieldListComplete = false;
   
@@ -133,12 +132,8 @@ bool AsciiSource::openValidFile(QFile &file)
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::initRowIndex() 
 {
-  // capacity is at least the pre-allocated memory
-  reader.rowIndex().resize(reader.rowIndex().capacity());
-  
-  reader.rowIndex()[0] = 0;
+  reader.clear();
   _byteLength = 0;
-  reader.numberOfFrames() = 0;
   
   if (_config._dataLine > 0) {
     QFile file(_filename);
@@ -160,7 +155,7 @@ bool AsciiSource::initRowIndex()
       }
       header_row++;
     }
-    reader.rowIndex()[0] = didRead;
+    reader.setRow0Begin(didRead);
   }
   
   return true;
@@ -308,8 +303,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
   
-  int bufstart = reader.rowIndex()[s];
-  int bufread = reader.rowIndex()[s + n] - bufstart;
+  int bufstart = reader.beginOfRow(s);
+  int bufread = reader.beginOfRow(s + n) - bufstart;
   if (bufread <= 0) {
     return 0;
   }

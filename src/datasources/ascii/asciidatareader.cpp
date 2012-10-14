@@ -46,6 +46,19 @@ AsciiDataReader::~AsciiDataReader()
 }
 
 //-------------------------------------------------------------------------------------------
+void AsciiDataReader::clear()
+{
+  _rowIndex.clear();
+  _numFrames = 0;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiDataReader::setRow0Begin(int begin)
+{
+  _rowIndex[0] = begin;
+}
+
+//-------------------------------------------------------------------------------------------
 void AsciiDataReader::detectLineEndingType(QFile& file)
 {
   QByteArray line;

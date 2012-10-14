@@ -23,17 +23,17 @@ class AsciiSourceConfig;
 
 class AsciiDataReader
 {
-  public:   
+  public:
     AsciiDataReader(AsciiSourceConfig& config);
     ~AsciiDataReader();
 
     typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
 
-    // TODO make really private, remove references
-    inline RowIndex& rowIndex() { return _rowIndex; }
-    inline int& numberOfFrames() { return _numFrames; }
+    void clear();
+    void setRow0Begin(int begin);
+    inline int beginOfRow(int row) const { return _rowIndex[row]; }
     inline int numberOfFrames() const { return _numFrames; }
-    
+
     void detectLineEndingType(QFile& file);
     
     bool findDataRows(bool read_completely, QFile& file, int _byteLength);
