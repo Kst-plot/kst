@@ -20,17 +20,17 @@ bool AsciiFileBuffer::resize(int bytes)
     _array->resize(bytes);
   } catch (const std::bad_alloc&) {
     // work around Qt bug
-    clearFileBuffer(true);
+    clear(true);
     return false;
   }
   return true;
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::clearFileBuffer(bool forceDelete)
+void AsciiFileBuffer::clear(bool forceDeletingArray)
 {
   // force deletion of heap allocated memory if any
-  if (forceDelete || _array->capacity() > Prealloc) {
+  if (forceDeletingArray || _array->capacity() > Prealloc) {
     delete _array;
     _array = new Array;
   }

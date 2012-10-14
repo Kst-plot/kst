@@ -39,7 +39,6 @@ public:
   int _bufferedS;
   int _bufferedN;
 
-  inline void clear() { _array->clear(); }
   inline int size() const { return _array->size(); }
   inline int  capacity() const { return _array->capacity(); }
   inline char* data() { return _array->data(); }
@@ -48,7 +47,7 @@ public:
   inline const Array& constArray() const{ return *_array; }
 
   bool resize(int size);
-  void clearFileBuffer(bool forceDelete = false);
+  void clear(bool forceDeletingArray = false);
 
 private:
 

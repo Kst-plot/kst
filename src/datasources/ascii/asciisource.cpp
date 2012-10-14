@@ -94,7 +94,7 @@ AsciiSource::~AsciiSource()
 void AsciiSource::reset() 
 {
   // forget about cached data
-  _fileBuffer->clearFileBuffer();
+  _fileBuffer->clear();
   reader.rowIndex().clear();
   
   _valid = false;
@@ -180,7 +180,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
   
   // forget about cached data
-  _fileBuffer->clearFileBuffer();
+  _fileBuffer->clear();
   
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -257,12 +257,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   // reading whole file into memory failed
   
   // find a smaller allocatable size
-  _fileBuffer->clearFileBuffer();
+  _fileBuffer->clear();
   int realloc_size = n / 4;
   while (!_fileBuffer->resize(realloc_size) && realloc_size > 0) {
     realloc_size /= 2;
   }
-  _fileBuffer->clearFileBuffer();
+  _fileBuffer->clear();
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
     return 0;      
@@ -272,18 +272,18 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   int start = s;
   n_read = 0;
   while (n_read < n) {
-    _fileBuffer->clearFileBuffer();
+    _fileBuffer->clear();
     int to_read = n_read + realloc_size < n ? realloc_size : n - n_read;
     n_read += readField(v + start, field, n_read, to_read, succcess);
     if (!succcess) {
-      _fileBuffer->clearFileBuffer();
+      _fileBuffer->clear();
       QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
       return n_read; 
     }
     start += to_read;
   }
   // don't buffer partial files
-  _fileBuffer->clearFileBuffer();
+  _fileBuffer->clear();
   return n_read;
 }
 
