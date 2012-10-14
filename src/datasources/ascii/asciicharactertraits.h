@@ -19,6 +19,7 @@ namespace AsciiCharacterTraits
 {
 
 struct LineEndingType {
+  inline LineEndingType() {}
   bool is_crlf;
   char character;
   inline bool isCR() const { return character == '\r'; }
@@ -28,38 +29,42 @@ struct LineEndingType {
 // column and comment delimiter functions
 
 struct AlwaysTrue {
+  inline AlwaysTrue() {}
   inline bool operator()() const {
     return true;
   }
 };
 
 struct AlwaysFalse {
+  inline AlwaysFalse() {}
   inline bool operator()() const {
     return false;
   }
 };
 
 struct NoDelimiter {
+  inline NoDelimiter() {}
   inline bool operator()(const char) const {
     return false;
   }
 };
 
 struct  IsWhiteSpace {
+  inline IsWhiteSpace() {}
   inline bool operator()(const char c) const {
     return c == ' ' || c == '\t';
   }
 };
 
 struct IsDigit {
+  inline IsDigit() {}
   inline bool operator()(const char c) const {
     return (c >= 48) && (c <= 57) ? true : false;
   }
 };
 
 struct IsCharacter {
-  inline IsCharacter(char c) : character(c) {
-  }
+  inline IsCharacter(char c) : character(c) {}
   const char character;
   inline bool operator()(const char c) const {
     return character == c;
@@ -91,8 +96,7 @@ struct IsInString {
 };
 
 struct IsLineBreakLF {
-  inline IsLineBreakLF(const LineEndingType&) : size(1) {
-  }
+  inline IsLineBreakLF(const LineEndingType&) : size(1) {}
   const int size;
   inline bool operator()(const char c) const {
     return c == '\n';
@@ -100,8 +104,7 @@ struct IsLineBreakLF {
 };
 
 struct IsLineBreakCR {
-  inline IsLineBreakCR(const LineEndingType& t) : size( t.is_crlf ? 2 : 1 ) {
-  }
+  inline IsLineBreakCR(const LineEndingType& t) : size( t.is_crlf ? 2 : 1 ) {}
   const int size;
   inline bool operator()(const char c) const {
     return c == '\r';
