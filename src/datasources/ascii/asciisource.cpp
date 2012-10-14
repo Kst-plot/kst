@@ -303,14 +303,14 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
   
-  int bufstart = reader.beginOfRow(s);
-  int bufread = reader.beginOfRow(s + n) - bufstart;
-  if (bufread <= 0) {
+  int begin = reader.beginOfRow(s);
+  int bytesToRead = reader.beginOfRow(s + n) - begin;
+  if (bytesToRead <= 0) {
     return 0;
   }
 
   // check if the already in buffer
-  if ((s != _fileBuffer->begin()) || (bufread != _fileBuffer->bytesRead())) {
+  if ((begin != _fileBuffer->begin()) || (bytesToRead != _fileBuffer->bytesRead())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
@@ -318,8 +318,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     
     reader.detectLineEndingType(file);
     
-    bufread = _fileBuffer->read(file, bufstart, bufread);
-    if (bufread == 0) {
+    bytesToRead = _fileBuffer->read(file, begin, bytesToRead);
+    if (bytesToRead == 0) {
       success = false;
       return 0;
     }
