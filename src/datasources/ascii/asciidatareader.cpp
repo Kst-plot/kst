@@ -98,16 +98,14 @@ int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int star
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (buffer.size() <= bytesToRead) {
-      if (!buffer.resize(bytesToRead + 1))
-        return 0;
+    if (!buffer.resize(bytesToRead + 1)) {
+      return 0;
     }
   }
   file.seek(start); // expensive?
   int bytesRead = file.read(buffer.data(), bytesToRead);
-  if (buffer.size() <= bytesRead) {
-    if (!buffer.resize(bytesToRead + 1))
-      return 0;
+  if (!buffer.resize(bytesToRead + 1)) {
+    return 0;
   }
   buffer.data()[bytesRead] = '\0';
   return bytesRead;
