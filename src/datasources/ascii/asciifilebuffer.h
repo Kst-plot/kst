@@ -13,9 +13,9 @@
 #ifndef ASCII_FILE_BUFFER_H
 #define ASCII_FILE_BUFFER_H
 
-
 #include <QVarLengthArray>
 
+class QFile;
 
 class AsciiFileBuffer
 {
@@ -38,8 +38,8 @@ public:
 
   inline int start() const { return _start; }
   inline int read() const { return _read; }
-  inline void setStart(int value) { _start = value; }
-  inline void setRead(int value) { _read = value; }
+
+  int read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);  
 
   inline char* data() { return _array->data(); }
 

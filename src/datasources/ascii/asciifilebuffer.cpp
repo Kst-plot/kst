@@ -12,6 +12,8 @@
 
 #include "asciifilebuffer.h"
 
+#include <QFile>
+
 
 //-------------------------------------------------------------------------------------------
 bool AsciiFileBuffer::resize(int bytes)

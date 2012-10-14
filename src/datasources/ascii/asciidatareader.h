@@ -33,7 +33,6 @@ class AsciiDataReader
     void detectLineEndingType(QFile& file);
     
     bool findDataRows(int& _numFrames, bool read_completely, QFile& file, int _byteLength);
-    int readFromFile(QFile&, AsciiFileBuffer&, int start, int numberOfBytes, int maximalBytes = -1);  
     int readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
                   double *v, const QString& field, int s, int n);
 

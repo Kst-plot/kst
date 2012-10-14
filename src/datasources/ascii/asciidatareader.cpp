@@ -91,26 +91,27 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::readFromFile(QFile& file, AsciiFileBuffer& buffer, int start, int bytesToRead, int maximalBytes)
+int AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBytes)
 {
-  buffer.setRead(0);
+  _start = -10;
+  _read = -10;
 
   if (maximalBytes == -1) {
-    if (!buffer.resize(bytesToRead + 1))
+    if (!resize(bytesToRead + 1))
       return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
-    if (!buffer.resize(bytesToRead + 1))
+    if (!resize(bytesToRead + 1))
       return 0;
   }
   file.seek(start); // expensive?
-  int bytesRead = file.read(buffer.data(), bytesToRead);
-  if (!buffer.resize(bytesRead + 1))
+  int bytesRead = file.read(data(), bytesToRead);
+  if (!resize(bytesRead + 1))
     return 0;
 
-  buffer.data()[bytesRead] = '\0';
-  buffer.setStart(start);
-  buffer.setRead(bytesRead);
+  data()[bytesRead] = '\0';
+  _start = start;
+  _read =bytesRead;
 
   return bytesRead;
 }
@@ -127,7 +128,7 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
     buf.clear();
 
     // always read from the start of a line
-    readFromFile(file, buf, _rowIndex[numFrames], _byteLength - buf.start(), AsciiFileBuffer::Prealloc - 1);
+    buf.read(file, _rowIndex[numFrames], _byteLength - buf.start(), AsciiFileBuffer::Prealloc - 1);
     
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;

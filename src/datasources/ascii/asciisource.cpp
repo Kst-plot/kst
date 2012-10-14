@@ -323,7 +323,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     
     reader.detectLineEndingType(file);
     
-    bufread = reader.readFromFile(file, *_fileBuffer, bufstart, bufread);
+    bufread = _fileBuffer->read(file, bufstart, bufread);
     if (bufread == 0) {
       success = false;
       return 0;
