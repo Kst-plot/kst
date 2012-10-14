@@ -33,11 +33,13 @@ public:
 
   typedef QVarLengthArray<char, Prealloc> Array;
   
-  inline AsciiFileBuffer() : _bufferedS(-10), _bufferedN(-10), _array(new Array) {}
+  inline AsciiFileBuffer() : _start(-10), _read(-10), _array(new Array) {}
   inline ~AsciiFileBuffer() { delete _array; }
-      
-  int _bufferedS;
-  int _bufferedN;
+
+  inline int start() const { return _start; }
+  inline int read() const { return _read; }
+  inline void setStart(int value) { _start = value; }
+  inline void setRead(int value) { _read = value; }
 
   inline char* data() { return _array->data(); }
 
@@ -48,8 +50,9 @@ public:
   void clear(bool forceDeletingArray = false);
 
 private:
-
   Array* _array;
+  int _start;
+  int _read;
 };
 
 

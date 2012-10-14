@@ -314,7 +314,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     return 0;
   }
   
-  if ((s != _fileBuffer->_bufferedS) || (n != _fileBuffer->_bufferedN)) {
+  if ((s != _fileBuffer->start()) || (n != _fileBuffer->read())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
@@ -327,8 +327,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       success = false;
       return 0;
     }
-    _fileBuffer->_bufferedS = s;
-    _fileBuffer->_bufferedN = n;
+    _fileBuffer->setStart(s);
+    _fileBuffer->setRead(n);
   }
   
   return reader.readField(_fileBuffer, col, bufstart, bufread, v, field, s, n);
