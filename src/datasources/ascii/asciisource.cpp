@@ -50,7 +50,7 @@ const QString AsciiSource::asciiTypeKey()
 AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e) :
   Kst::DataSource(store, cfg, filename, type),
   reader(_config),
-  _fileBuffer(new AsciiFileBuffer),
+  _fileBuffer(),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -86,7 +86,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 //-------------------------------------------------------------------------------------------
 AsciiSource::~AsciiSource() 
 {
-  delete _fileBuffer;
 }
 
 
@@ -94,7 +93,7 @@ AsciiSource::~AsciiSource()
 void AsciiSource::reset() 
 {
   // forget about cached data
-  _fileBuffer->clear();
+  _fileBuffer.clear();
   reader.clear();
   
   _valid = false;
@@ -175,7 +174,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
   
   // forget about cached data
-  _fileBuffer->clear();
+  _fileBuffer.clear();
   
   if (!_haveHeader) {
     _haveHeader = initRowIndex();
@@ -252,12 +251,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   // reading whole file into memory failed
   
   // find a smaller allocatable size
-  _fileBuffer->clear();
+  _fileBuffer.clear();
   int realloc_size = n / 4;
-  while (!_fileBuffer->resize(realloc_size) && realloc_size > 0) {
+  while (!_fileBuffer.resize(realloc_size) && realloc_size > 0) {
     realloc_size /= 2;
   }
-  _fileBuffer->clear();
+  _fileBuffer.clear();
   if (realloc_size == 0) {
     QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
     return 0;      
@@ -267,18 +266,18 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   int start = s;
   n_read = 0;
   while (n_read < n) {
-    _fileBuffer->clear();
+    _fileBuffer.clear();
     int to_read = n_read + realloc_size < n ? realloc_size : n - n_read;
     n_read += readField(v + start, field, n_read, to_read, succcess);
     if (!succcess) {
-      _fileBuffer->clear();
+      _fileBuffer.clear();
       QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
       return n_read; 
     }
     start += to_read;
   }
   // don't buffer partial files
-  _fileBuffer->clear();
+  _fileBuffer.clear();
   return n_read;
 }
 
@@ -306,13 +305,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   // check if the already in buffer
   int begin = reader.beginOfRow(s);
   int bytesToRead = reader.beginOfRow(s + n) - begin;
-  if ((begin != _fileBuffer->begin()) || (bytesToRead != _fileBuffer->bytesRead())) {
+  if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
     }
-    _fileBuffer->read(file, begin, bytesToRead);
-    if (_fileBuffer->bytesRead() == 0) {
+    _fileBuffer.read(file, begin, bytesToRead);
+    if (_fileBuffer.bytesRead() == 0) {
       success = false;
       return 0;
     }

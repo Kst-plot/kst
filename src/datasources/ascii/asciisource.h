@@ -69,7 +69,7 @@ class AsciiSource : public Kst::DataSource
 
   private:
     AsciiDataReader reader;
-    AsciiFileBuffer* _fileBuffer;
+    AsciiFileBuffer _fileBuffer;
     
 
     friend class ConfigWidgetAscii;
