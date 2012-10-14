@@ -36,7 +36,7 @@ void AsciiFileBuffer::clear(bool forceDeletingArray)
     delete _array;
     _array = new Array;
   }
-  _start = -10;
-  _read = -10;
+  _begin = -10;
+  _bytesRead = -10;
 }
 

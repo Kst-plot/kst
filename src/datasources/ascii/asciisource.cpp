@@ -315,7 +315,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   }
 
   // check if the already in buffer
-  if ((s != _fileBuffer->start()) || (bufread != _fileBuffer->read())) {
+  if ((s != _fileBuffer->begin()) || (bufread != _fileBuffer->bytesRead())) {
     QFile file(_filename);
     if (!openValidFile(file)) {
       return 0;
