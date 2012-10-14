@@ -22,30 +22,30 @@ class AsciiSourceConfig;
 
 class AsciiDataReader
 {
-  public:
+  public:   
     AsciiDataReader(AsciiSourceConfig& c);
     ~AsciiDataReader();
 
-    // TODO remove
-    AsciiSourceConfig& _config;
-    
     typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
-    RowIndex _rowIndex;
-
     inline RowIndex& rowIndex() { return _rowIndex; }
 
-    void clearFileBuffer(bool forceDelete = false);
+    void detectLineEndingType(QFile& file);
+    
+    bool findDataRows(int& _numFrames, bool read_completely, QFile& file, int _byteLength);
+    int readFromFile(QFile&, AsciiFileBuffer&, int start, int numberOfBytes, int maximalBytes = -1);  
+    int readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
+                  double *v, const QString& field, int s, int n);
+
+  private:
+    RowIndex _rowIndex;
+    AsciiSourceConfig& _config;
+    AsciiCharacterTraits::LineEndingType _lineending;
+
+    const AsciiCharacterTraits::IsDigit isDigit;
+    const AsciiCharacterTraits::IsWhiteSpace isWhiteSpace;
 
     template<class T>
     bool resizeBuffer(T& buffer, int bytes);
-
-    AsciiCharacterTraits::LineEndingType detectLineEndingType(QFile& file) const;
-    AsciiCharacterTraits::LineEndingType _lineending;
-    
-    int readFromFile(QFile&, AsciiFileBuffer&, int start, int numberOfBytes, int maximalBytes = -1); 
-    
-    int readField(AsciiFileBuffer* _fileBuffer, int col, int bufstart, int bufread,
-                  double *v, const QString& field, int s, int n);
 
     template<class Buffer, typename ColumnDelimiter>
     int readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
@@ -57,17 +57,12 @@ class AsciiDataReader
 
     template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
     int readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                    const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);
-
-    bool findDataRows(int& _numFrames, bool read_completely, QFile& file, int _byteLength);
+                    const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&);    
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
     bool findDataRows(int& _numFrames, const Buffer& buffer, int bufstart, int bufread, const IsLineBreak&, const CommentDelimiter&);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int row);
-
-    const AsciiCharacterTraits::IsDigit isDigit;
-    const AsciiCharacterTraits::IsWhiteSpace isWhiteSpace;
 };
 
 #endif

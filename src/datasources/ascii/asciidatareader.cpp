@@ -55,7 +55,7 @@ AsciiDataReader::~AsciiDataReader()
 
 
 //-------------------------------------------------------------------------------------------
-LineEndingType AsciiDataReader::detectLineEndingType(QFile& file) const
+void AsciiDataReader::detectLineEndingType(QFile& file)
 {
   QByteArray line;
   int line_size = 0;
@@ -65,12 +65,11 @@ LineEndingType AsciiDataReader::detectLineEndingType(QFile& file) const
   }
   file.seek(0);
   if (line_size < 2) {
-    return LineEndingType();
+    _lineending = LineEndingType();
+  } else {
+    _lineending.is_crlf = line[line_size - 2] == '\r' && line[line_size - 1] == '\n' ;
+    _lineending.character =  _lineending.is_crlf ? line[line_size - 2] : line[line_size - 1];
   }
-  LineEndingType end;
-  end.is_crlf = line[line_size - 2] == '\r' && line[line_size - 1] == '\n' ;
-  end.character =  end.is_crlf ? line[line_size - 2] : line[line_size - 1];
-  return end;
 }
 
 
@@ -164,7 +163,7 @@ int AsciiDataReader::readField(AsciiFileBuffer* _fileBuffer, int col, int bufsta
 
 bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& file, int _byteLength)
 {
-  LineEndingType lineending = detectLineEndingType(file);
+  detectLineEndingType(file);
 
   bool new_data = false;
 
@@ -180,24 +179,24 @@ bool AsciiDataReader::findDataRows(int& numFrames, bool read_completely, QFile& 
 
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
-      if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
+      if (_lineending.isLF()) {
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(_lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(_lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() == 1) {
       const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
-      if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(lineending), comment_del);
+      if (_lineending.isLF()) {
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakLF(_lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(_lineending), comment_del);
       }
     } else if (_config._delimiters.value().size() > 1) {
       const IsInString comment_del(_config._delimiters.value());
-      if (lineending.isLF()) {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedS, IsLineBreakLF(lineending), comment_del);
+      if (_lineending.isLF()) {
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedS, IsLineBreakLF(_lineending), comment_del);
       } else {
-        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(lineending), comment_del);
+        new_data = findDataRows(numFrames, buf.constData(), buf._bufferedS, buf._bufferedN, IsLineBreakCR(_lineending), comment_del);
       }
     }
   } while (buf._bufferedN == AsciiFileBuffer::Prealloc - 1  && read_completely);
