@@ -305,10 +305,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   
   int begin = reader.beginOfRow(s);
   int bytesToRead = reader.beginOfRow(s + n) - begin;
-  if (bytesToRead <= 0) {
-    return 0;
-  }
-
   // check if the already in buffer
   if ((begin != _fileBuffer->begin()) || (bytesToRead != _fileBuffer->bytesRead())) {
     QFile file(_filename);

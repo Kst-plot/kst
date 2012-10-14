@@ -46,6 +46,10 @@ int AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBy
   _begin = -1;
   _bytesRead = -1;
 
+  if (bytesToRead <= 0) {
+    return 0;
+  }
+
   if (maximalBytes == -1) {
     if (!resize(bytesToRead + 1))
       return 0;
