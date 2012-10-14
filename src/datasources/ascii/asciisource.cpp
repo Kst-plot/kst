@@ -1,12 +1,7 @@
 /***************************************************************************
-                      ASCII file data source
-                             -------------------
-    begin                : Fri Oct 17 2003
-    copyright            : (C) 2003 The University of Toronto
-     email                : netterfield@astro.utoronto.ca
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   Copyright : (C) 2003 The University of Toronto                        *
+ *   email     : netterfield@astro.utoronto.ca                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,7 +9,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
 
 #include "asciisource.h"
 #include "asciisourceconfig.h"

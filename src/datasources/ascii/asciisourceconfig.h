@@ -1,12 +1,7 @@
 /***************************************************************************
-                     asciisource_p.h
-                             -------------------
-    begin                :  Mar 16 2010
-    copyright            : (C) 2010 The University of Toronto
-    email                :  netterfield@astro.utoronto.ca
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   Copyright : (C) 2010 The University of Toronto                        *
+ *   email     : netterfield@astro.utoronto.ca                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +9,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 #ifndef KST_ASCII_SOURCE_CONFIG_H
 #define KST_ASCII_SOURCE_CONFIG_H
 

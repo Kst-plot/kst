@@ -1,12 +1,7 @@
 /***************************************************************************
-                     namedparameter.h  -
-                             -------------------
-    begin                : Mar 15 2010
-    copyright            : (C) 2010 The University of Toronto
-    email                : netterfield@astro.utoronto.ca
- ***************************************************************************/
-
-/***************************************************************************
+ *                                                                         *
+ *   Copyright : (C) 2010 The University of Toronto                        *
+ *   email     : netterfield@astro.utoronto.ca                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +9,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 #ifndef KST_NAMED_PARAMETER
 #define KST_NAMED_PARAMETER
 
