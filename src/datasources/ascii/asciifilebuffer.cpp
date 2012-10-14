@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   Copyright : (C) 2012 Peter Kümmel                                     *
+ *   Copyright : (C) 2012 Peter KÃ¼mmel                                     *
  *   email     : syntheticpp@gmx.net                                       *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

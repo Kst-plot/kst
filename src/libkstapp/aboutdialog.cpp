@@ -52,7 +52,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     << "The University of British Columbia"
     << "The University of Toronto"
     << "Andrew Walker"
-    << "Peter Kümmel"
+    << "Peter KÃ¼mmel"
     << "Zongyi Zang";
 #endif
 
