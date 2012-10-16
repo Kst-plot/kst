@@ -291,7 +291,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   
 
   int sRead = 0;
-  if (_config._useThreads) {
+  if (_config._useThreads && !useSlidingWindow(bytesToRead)) {
     QFutureSynchronizer<int> readFutures;
     const QVector<AsciiFileData>& data = _fileBuffer.data();
     foreach (const AsciiFileData& chunk, data) {
