@@ -112,8 +112,8 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  //std::cout << qPrintable(name) << ": " << interval << " seconds\n";
-  //Kst::Debug::self()->log(QString("Timing: %2 sec, Scope: %1").arg(name).arg(interval), Kst::Debug::DebugLog);
+  //qDebug() << "MeasureTime in " << name << ": " << interval << " seconds\n";
+  Kst::Debug::self()->log(QString("Timing: %2 sec, Scope: %1").arg(name).arg(interval), Kst::Debug::DebugLog);
 }
 
 

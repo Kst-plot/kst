@@ -69,7 +69,7 @@ class AsciiSource : public Kst::DataSource
   private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
-    
+    const bool _useThreads;
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;
@@ -84,6 +84,7 @@ class AsciiSource : public Kst::DataSource
     QMap<QString, QString> _fieldUnits;
 
     int readField(double *v, const QString &field, int s, int n, bool& success);
+    bool useSlidingWindow(int bytesToRead)  const;
 
     int columnOfField(const QString& field) const;
     static QStringList splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg);

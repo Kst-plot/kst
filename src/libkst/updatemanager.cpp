@@ -15,7 +15,7 @@
 #include "primitive.h"
 #include "datasource.h"
 #include "objectstore.h"
-
+#include "measuretime.h"
 #include <QCoreApplication>
 #include <QTimer>
 #include <QDebug>
@@ -104,10 +104,11 @@ void UpdateManager::doUpdates(bool forceImmediate) {
   }
 
   //qDebug() << "ds up: " << n_updated << "  ds def: " << n_deferred << " n_no: " << n_unchanged;
+  
+  MeasureTime t(" UpdateManager::doUpdates loop");
 
   int i_loop = retval = 0;
   int maxloop = _store->objectList().size();
-  //qDebug() << "starting update loop.  Maxloop: " << maxloop;
   do {
     n_updated = n_unchanged = n_deferred = 0;
     // update data objects
@@ -125,7 +126,6 @@ void UpdateManager::doUpdates(bool forceImmediate) {
     i_loop++;
   } while ((n_deferred + n_updated > 0) && (i_loop<=maxloop));
 
-  //qDebug() << " update elapsed:" << i_loop << double(_time.elapsed())/1000.0;
   emit objectsUpdated(_serial);
 }
 }

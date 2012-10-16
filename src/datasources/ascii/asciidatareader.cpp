@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QMutexLocker>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -83,7 +84,7 @@ void AsciiDataReader::detectLineEndingType(QFile& file)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int)
+void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int) const
 {
   if (   isDigit(buffer[ch])
          || buffer[ch] == '-'
@@ -192,10 +193,16 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufre
 }
 
 //-------------------------------------------------------------------------------------------
+int AsciiDataReader::readFieldChunk(const AsciiFileData& chunk, int col, double *v, QString& field)
+{
+  return readField(chunk, col, v + chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
+}
+
+//-------------------------------------------------------------------------------------------
 int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, const QString& field, int s, int n)
 {
   if (_config._columnType == AsciiSourceConfig::Fixed) {
-    MeasureTime t("AsciiSource::readField: same width for all columns");
+    //MeasureTime t("AsciiSource::readField: same width for all columns");
     LexicalCast lexc;
     lexc.setDecimalSeparator(_config._useDot);
     // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
@@ -207,16 +214,16 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
-      MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
+      //MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
       const IsCharacter column_del(_config._columnDelimiter.value()[0].toLatin1());
       return readColumns(v, buf.constData(), buf.begin(), buf.bytesRead(), col, s, n, _lineending, column_del);
     } if (_config._columnDelimiter.value().size() > 1) {
-      MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
+      //MeasureTime t(QString("AsciiSource::readField: %1 custom column delimiters").arg(_config._columnDelimiter.value().size()));
       const IsInString column_del(_config._columnDelimiter.value());
       return readColumns(v, buf.constData(), buf.begin(), buf.bytesRead(), col, s, n, _lineending, column_del);
     }
   } else if (_config._columnType == AsciiSourceConfig::Whitespace) {
-    MeasureTime t("AsciiSource::readField: whitespace separated columns");
+    //MeasureTime t("AsciiSource::readField: whitespace separated columns");
     const IsWhiteSpace column_del;
     return readColumns(v, buf.constData(), buf.begin(), buf.bytesRead(), col, s, n, _lineending, column_del);
   }
@@ -230,7 +237,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                                 const LineEndingType& lineending, const ColumnDelimiter& column_del)
+                                 const LineEndingType& lineending, const ColumnDelimiter& column_del) const
 {
   if (_config._delimiters.value().size() == 0) {
     const NoDelimiter comment_del;
@@ -248,7 +255,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
-                                 const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del)
+                                 const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del) const
 {
   if (_config._columnWidthIsConst) {
     const AlwaysTrue column_withs_const;
@@ -272,10 +279,13 @@ template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename 
 int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
                                  const IsLineBreak& isLineBreak,
                                  const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
-                                 const ColumnWidthsAreConst& are_column_widths_const)
+                                 const ColumnWidthsAreConst& are_column_widths_const) const
 {
   LexicalCast lexc;
-  lexc.setDecimalSeparator(_config._useDot);
+  {
+    QMutexLocker lock(&_localeMutex);
+    lexc.setDecimalSeparator(_config._useDot);
+  }
   const QString delimiters = _config._delimiters.value();
 
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);

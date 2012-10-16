@@ -123,26 +123,33 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
 
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes)
 {
   clear();
   if (!_file)
     return;
 
-  // first try to read the whole file into one array
-  AsciiFileData wholeFile;
-  wholeFile.read(*_file, start, bytesToRead, maximalBytes);
-  if (bytesToRead == wholeFile.bytesRead()) {
-    wholeFile.setRowBegin(0);
-    wholeFile.setRowsRead(rowIndex.size() - 1);
-    _begin = start;
-    _bytesRead = bytesToRead;
-    _fileData << wholeFile;
-    return;
+  if (numChunks == 1) {
+    // first try to read the whole file into one array
+    AsciiFileData wholeFile;
+    wholeFile.read(*_file, start, bytesToRead, maximalBytes);
+    if (bytesToRead == wholeFile.bytesRead()) {
+      wholeFile.setRowBegin(0);
+      wholeFile.setRowsRead(rowIndex.size() - 1);
+      _begin = start;
+      _bytesRead = bytesToRead;
+      _fileData << wholeFile;
+      return;
+    }
   }
 
-  // reading whole file into one array failed, try to read into smaller arrays
-  int chunkSize = _defaultChunkSize;
+  // reading whole file failed or numChunks > 1: read into smaller arrays
+  int chunkSize;
+  if (numChunks > 1) {
+    chunkSize = bytesToRead / numChunks;
+  } else {
+    chunkSize = _defaultChunkSize;
+  }
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
   for (int i = 0; i < _fileData.size(); i++) {
     // use alread set

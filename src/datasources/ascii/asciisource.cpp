@@ -25,6 +25,9 @@
 
 #include <QFile>
 #include <QMessageBox>
+#include <QThread>
+#include <QtConcurrentRun>
+#include <QFutureSynchronizer>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -48,6 +51,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   Kst::DataSource(store, cfg, filename, type),
   _reader(_config),
   _fileBuffer(),
+  _useThreads(true),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -145,7 +149,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 //-------------------------------------------------------------------------------------------
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
-  MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
+  //MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
   
   // forget about cached data
   _fileBuffer.clear();
@@ -229,6 +233,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
+bool AsciiSource::useSlidingWindow(int bytesToRead)  const
+{
+  return _config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead;
+}
+
+
+//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& success) 
 {
   success = true;
@@ -258,11 +269,19 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       return 0;
     }
 
+    int numThreads;
+    if (!_useThreads) {
+      numThreads = 1;
+    } else {
+      numThreads = QThread::idealThreadCount();
+      numThreads = (numThreads > 0) ? numThreads : 1;
+    }
+
     _fileBuffer.setFile(file);
-    if (_config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead) {
+    if (useSlidingWindow(bytesToRead)) {
       _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead);
     } else {
-      _fileBuffer.readWholeFile(_reader.rowIndex(), begin, bytesToRead);
+      _fileBuffer.readWholeFile(_reader.rowIndex(), begin, bytesToRead, numThreads);
     }
     if (_fileBuffer.bytesRead() == 0) {
       success = false;
@@ -271,13 +290,26 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _reader.detectLineEndingType(*file);
   }
   
-  int sRead = 0;
-  const QVector<AsciiFileData>& data = _fileBuffer.data();
-  foreach (const AsciiFileData& chunk, data) {
-    Q_ASSERT(sRead ==  chunk.rowBegin());
-    sRead += _reader.readField(chunk, col, v +  chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
-  }
 
+  int sRead = 0;
+  if (_useThreads) {
+    QFutureSynchronizer<int> readFutures;
+    const QVector<AsciiFileData>& data = _fileBuffer.data();
+    foreach (const AsciiFileData& chunk, data) {
+      QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldChunk, chunk, col, v, field);
+      readFutures.addFuture(future);
+    }
+    readFutures.waitForFinished();
+    foreach (const QFuture<int> future, readFutures.futures()) {
+      sRead += future.result();
+    }
+  } else  {
+    const QVector<AsciiFileData>& data = _fileBuffer.data();
+    foreach (const AsciiFileData& chunk, data) {
+      Q_ASSERT(sRead ==  chunk.rowBegin());
+      sRead += _reader.readField(chunk, col, v + chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
+    }
+  }
   return sRead;
 }
 
