@@ -14,6 +14,7 @@
 #define ASCII_FILE_DATA_H
 
 #include <QVector>
+#include <QSharedPointer>
 
 class QFile;
 template<class T, int Prealloc>
@@ -47,12 +48,13 @@ public:
   inline void setBegin(int begin) { _begin = begin; }
   inline void setBytesRead(int read) { _bytesRead = read; }
 
+  inline void setFile(QFile* file) { _file = file; }
+  bool read();
   void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
-  bool lazyRead(QFile&);
-  char* data();
 
+  char* data();
   const char* const constPointer() const;
-  inline const Array& constArray() const { return *_array; }
+  const Array& constArray() const;
 
   bool resize(int size);
   void clear(bool forceDeletingArray = false);
@@ -65,13 +67,18 @@ public:
 
   void logData() const;
 
+  void setSharedArray(AsciiFileData&);
+
 private:
-  Array* _array;
+  QSharedPointer<Array> _array;
+  QFile* _file;
   bool _lazyRead;
   int _begin;
   int _bytesRead;
   int _rowBegin;
   int _rowsRead;
+
+  void readLazy() const;
 };
 
 Q_DECLARE_TYPEINFO(AsciiFileData, Q_MOVABLE_TYPE);

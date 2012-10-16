@@ -102,24 +102,6 @@ void AsciiSource::reset()
   _strings = fileMetas();
 }
 
-
-//-------------------------------------------------------------------------------------------
-bool AsciiSource::openFile(QFile &file) 
-{
-  // Don't use 'QIODevice::Text'!
-  // Because CR LF line ending breaks row offset calculation
-  return file.open(QIODevice::ReadOnly);
-}
-
-
-//-------------------------------------------------------------------------------------------
-bool AsciiSource::openValidFile(QFile &file) 
-{
-  _valid = openFile(file);
-  return _valid;
-}
-
-
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::initRowIndex() 
 {
@@ -128,7 +110,7 @@ bool AsciiSource::initRowIndex()
   
   if (_config._dataLine > 0) {
     QFile file(_filename);
-    if (!openValidFile(file)) {
+    if (!AsciiFileBuffer::openFile(file)) {
       return false;
     }
     int header_row = 0;
@@ -192,7 +174,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   
   QFile file(_filename);
-  if (!openValidFile(file)) {
+  if (!AsciiFileBuffer::openFile(file)) {
     // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
     return NoChange;
   }
@@ -301,21 +283,25 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   int begin = _reader.beginOfRow(s);
   int bytesToRead = _reader.beginOfRow(s + n) - begin;
   if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
-    QFile file(_filename);
-    if (!openValidFile(file)) {
+    QFile* file = new QFile(_filename);
+    if (!AsciiFileBuffer::openFile(*file)) {
+      delete file;
       return 0;
     }
-    _fileBuffer.read(file, _reader.rowIndex(), begin, bytesToRead);
+    _fileBuffer.setFile(file);
+    _fileBuffer.read(_reader.rowIndex(), begin, bytesToRead);
     if (_fileBuffer.bytesRead() == 0) {
       success = false;
       return 0;
     }
-    _reader.detectLineEndingType(file);
+    _reader.detectLineEndingType(*file);
   }
   
   int sRead = 0;
-  const QVector<AsciiFileData> data = _fileBuffer.data();
+  const QVector<AsciiFileData>& data = _fileBuffer.data();
+  qDebug() << "Reading vector:";
   foreach (const AsciiFileData& chunk, data) {
+    chunk.logData();
     sRead += _reader.readField(chunk, col, v + sRead, field, chunk.rowBegin(), chunk.rowsRead());
   }
 
@@ -341,7 +327,7 @@ bool AsciiSource::isEmpty() const
 QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfig*) 
 {
   QFile file(filename);
-  if (!openFile(file)) {
+  if (!AsciiFileBuffer::openFile(file)) {
     return QStringList();
   }
   return QStringList() << "FRAMES";
@@ -352,7 +338,7 @@ QStringList AsciiSource::scalarListFor(const QString& filename, AsciiSourceConfi
 QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfig*) 
 {
   QFile file(filename);
-  if (!openFile(file)) {
+  if (!AsciiFileBuffer::openFile(file)) {
     return QStringList();
   }
   return QStringList() << "FILE";
@@ -384,7 +370,7 @@ QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConf
 QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig* cfg) 
 {
   QFile file(filename);
-  if (!openFile(file)) {
+  if (!AsciiFileBuffer::openFile(file)) {
     return QStringList();
   }
   
@@ -478,7 +464,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
 QStringList AsciiSource::unitListFor(const QString& filename, AsciiSourceConfig* cfg)
 {
   QFile file(filename);
-  if (!openFile(file)) {
+  if (!AsciiFileBuffer::openFile(file)) {
     return QStringList();
   }
   

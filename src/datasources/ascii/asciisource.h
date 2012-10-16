@@ -90,9 +90,6 @@ class AsciiSource : public Kst::DataSource
     DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;
 
-    bool openValidFile(QFile &file);
-    static bool openFile(QFile &file);
-
     // TODO remove
     friend class DataInterfaceAsciiString;
     friend class DataInterfaceAsciiVector;

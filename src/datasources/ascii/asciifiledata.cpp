@@ -94,7 +94,9 @@ void fileBufferFree(void* ptr)
 }
 
 //-------------------------------------------------------------------------------------------
-AsciiFileData::AsciiFileData() : _array(new Array), _lazyRead(false), _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
+AsciiFileData::AsciiFileData() : 
+  _array(new Array), _lazyRead(false), _file(0),
+  _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
 }
 
@@ -106,13 +108,35 @@ AsciiFileData::~AsciiFileData()
 //-------------------------------------------------------------------------------------------
 char* AsciiFileData::data()
 {
+  readLazy();
   return _array->data();
 }
 
 //-------------------------------------------------------------------------------------------
 const char* const AsciiFileData::constPointer() const
 {
+  readLazy();
   return _array->data();
+}
+
+const AsciiFileData::Array& AsciiFileData::constArray() const
+{
+  readLazy();
+  return *_array;
+}
+
+void AsciiFileData::readLazy() const
+{
+  AsciiFileData* This = const_cast<AsciiFileData*>(this);
+  if (_lazyRead) {
+    if (!_file) {
+      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: no file"), Kst::Debug::Warning);
+    } else if ( _file->openMode() != QIODevice::ReadOnly) {
+      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: file not open"), Kst::Debug::Warning);
+    } else if (!This->read()) {
+      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: error while reading"), Kst::Debug::Warning);
+    }
+  }
 }
 
 //-------------------------------------------------------------------------------------------
@@ -133,8 +157,7 @@ void AsciiFileData::clear(bool forceDeletingArray)
 {
   // force deletion of heap allocated memory if any
   if (forceDeletingArray || _array->capacity() > Prealloc) {
-    delete _array;
-    _array = new Array;
+    _array = QSharedPointer<Array>(new Array);
   }
   _begin = -1;
   _bytesRead = 0;
@@ -143,11 +166,11 @@ void AsciiFileData::clear(bool forceDeletingArray)
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::release()
 {
-  delete _array;
-  _array = 0;
+  _array.clear();
   _begin = -1;
   _bytesRead = 0;
 }
+
 
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalBytes)
@@ -167,21 +190,24 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
       return;
   }
   file.seek(start); // expensive?
-  int bytesRead = file.read(data(), bytesToRead);
+  int bytesRead = file.read(_array->data(), bytesToRead);
   if (!resize(bytesRead + 1))
     return;
 
-  data()[bytesRead] = '\0';
+  _array->data()[bytesRead] = '\0';
   _begin = start;
   _bytesRead = bytesRead;
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiFileData::lazyRead(QFile& file)
+bool AsciiFileData::read()
 {
+  if (!_file || _file->openMode() != QIODevice::ReadOnly) {
+    return false;
+  }
   int start = _begin;
   int bytesToRead = _bytesRead;
-  read(file, start, bytesToRead);
+  read(*_file, start, bytesToRead);
   if (begin() != start || bytesRead() != bytesToRead) {
     clear(true);
     return false;
@@ -192,12 +218,18 @@ bool AsciiFileData::lazyRead(QFile& file)
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::logData() const
 {
-  QString This = QString::fromLatin1(QByteArray((const char*)this, sizeof(AsciiFileData*)).toHex()).toUpper();
-  QString array = QString::fromLatin1(QByteArray((const char*)_array, sizeof(Array*)).toHex()).toUpper();
-  qDebug() << QString("%1 array %2, byte %3 ... %4, row %5 ... %6")
-    .arg(This).arg(array)
+  qDebug() << QString("AsciiFileData %1, array %2, byte %3 ... %4, row %5 ... %6, lazy: %7")
+    .arg(QString::number((int)this))
+    .arg(QString::number((int)_array.data()))
     .arg(begin(), 8).arg(begin() + bytesRead(), 8)
-    .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8);
+    .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8)
+    .arg(_lazyRead);
 }
 
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileData::setSharedArray(AsciiFileData& arrayData)
+{
+  _array = arrayData._array;
+}
 

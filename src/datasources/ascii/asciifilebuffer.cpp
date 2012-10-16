@@ -23,7 +23,7 @@ extern int MB;
 extern size_t maxAllocate;
 
 //-------------------------------------------------------------------------------------------
-AsciiFileBuffer::AsciiFileBuffer()
+AsciiFileBuffer::AsciiFileBuffer() : _file(0), _begin(-1), _bytesRead(0)
 {
 }
 
@@ -34,12 +34,29 @@ AsciiFileBuffer::~AsciiFileBuffer()
 }
 
 //-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::setFile(QFile* file)
+{
+  delete _file;
+  _file = file; 
+}
+
+//-------------------------------------------------------------------------------------------
+bool AsciiFileBuffer::openFile(QFile &file) 
+{
+  // Don't use 'QIODevice::Text'!
+  // Because CR LF line ending breaks row offset calculation
+  return file.open(QIODevice::ReadOnly);
+}
+
+//-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::clear()
 {
   foreach (AsciiFileData chunk, _fileData) {
     chunk.release();
   }
   _fileData.clear();
+    _begin = -1;
+  _bytesRead = 0;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -49,9 +66,9 @@ const QVector<AsciiFileData>& AsciiFileBuffer::data() const
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::logData() const
+void AsciiFileBuffer::logData(const QVector<AsciiFileData>& chunks) const
 {
-  foreach (const AsciiFileData& chunk, _fileData) {
+  foreach (const AsciiFileData& chunk, chunks) {
     chunk.logData();
   }
 }
@@ -97,20 +114,27 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
     chunk.setRowsRead(lastRow - rowBegin);
     chunks << chunk;
   }
-  //qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData();
+  qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData(chunks);
   return chunks;
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::read(QFile& file, const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+void AsciiFileBuffer::read(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
 {
-  _begin = -1;
-  _bytesRead = 0;
-  _fileData.clear();
+  clear();
+  if (!_file) {
+    return;
+  }
+  //readWholeFile(rowIndex, start, bytesToRead, maximalBytes);
+  readFileSlidingWindow(rowIndex, start, bytesToRead, maximalBytes);
+}
 
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+{
   // first try to read the whole file into one array
   AsciiFileData wholeFile;
-  wholeFile.read(file, start, bytesToRead, maximalBytes);
+  wholeFile.read(*_file, start, bytesToRead, maximalBytes);
   if (bytesToRead == wholeFile.bytesRead()) {
     wholeFile.setRowBegin(0);
     wholeFile.setRowsRead(rowIndex.size());
@@ -128,7 +152,8 @@ void AsciiFileBuffer::read(QFile& file, const RowIndex& rowIndex, int start, int
   _bytesRead = 0;
   foreach (AsciiFileData chunk, _fileData) {
     // use alread set
-    if (!chunk.lazyRead(file)) {
+    chunk.setFile(_file);
+    if (!chunk.read()) {
       Kst::Debug::self()->log(QString("AsciiFileBuffer: error when reading into chunk"));
       chunk.release();
       break;
@@ -137,15 +162,32 @@ void AsciiFileBuffer::read(QFile& file, const RowIndex& rowIndex, int start, int
   }
   if (_bytesRead == bytesToRead) {
     _begin = start;
-    return;
   } else {
     _bytesRead = 0;
     _fileData.clear();
     Kst::Debug::self()->log(QString("AsciiFileBuffer: error while reading %1 chunks").arg(_fileData.size()));
   }
+}
 
-  // sliding window
-  // TODO
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+{
+  int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
+  chunkSize = 2 * MB;
+  _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
+  _bytesRead = 0;
+  AsciiFileData master;
+  if (!master.resize(chunkSize)) {
+    Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for creating sliding window"));
+  }
+  for (int i = 0; i < _fileData.size(); i++) {
+    // use alread set
+    _fileData[i].setLazyRead(true);
+    _fileData[i].setFile(_file);
+    _fileData[i].setSharedArray(master);
+  }
+  _begin = start;
+  _bytesRead = bytesToRead;
 }
 
 
