@@ -145,7 +145,7 @@ bool AsciiFileData::resize(int bytes)
   try {
     _array->resize(bytes);
   } catch (const std::bad_alloc&) {
-    // work around Qt bug
+    // work around Qt bug: Qt4 does not release the heap allocated memory
     clear(true);
     return false;
   }
@@ -162,15 +162,6 @@ void AsciiFileData::clear(bool forceDeletingArray)
   _begin = -1;
   _bytesRead = 0;
 }
-
-//-------------------------------------------------------------------------------------------
-void AsciiFileData::release()
-{
-  _array.clear();
-  _begin = -1;
-  _bytesRead = 0;
-}
-
 
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalBytes)

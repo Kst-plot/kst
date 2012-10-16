@@ -53,11 +53,8 @@ bool AsciiFileBuffer::openFile(QFile &file)
 //-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::clear()
 {
-  foreach (AsciiFileData chunk, _fileData) {
-    chunk.release();
-  }
   _fileData.clear();
-    _begin = -1;
+  _begin = -1;
   _bytesRead = 0;
 }
 
@@ -138,29 +135,24 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
     _bytesRead = bytesToRead;
     _fileData << wholeFile;
     return;
-  } else {
-    wholeFile.release();
   }
 
   // reading whole file into one array failed, try to read into smaller arrays
   int chunkSize = _defaultChunkSize;
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
-  _bytesRead = 0;
-  foreach (AsciiFileData chunk, _fileData) {
+  for (int i = 0; i < _fileData.size(); i++) {
     // use alread set
-    chunk.setFile(_file);
-    if (!chunk.read()) {
+    _fileData[i].setFile(_file);
+    if (!_fileData[i].read()) {
       Kst::Debug::self()->log(QString("AsciiFileBuffer: error when reading into chunk"));
-      chunk.release();
       break;
     }
-    _bytesRead += chunk.bytesRead();
+    _bytesRead += _fileData[i].bytesRead();
   }
   if (_bytesRead == bytesToRead) {
     _begin = start;
   } else {
-    _bytesRead = 0;
-    _fileData.clear();
+    clear();
     Kst::Debug::self()->log(QString("AsciiFileBuffer: error while reading %1 chunks").arg(_fileData.size()));
   }
 }

@@ -58,7 +58,6 @@ public:
 
   bool resize(int size);
   void clear(bool forceDeletingArray = false);
-  void release();
 
   inline int rowBegin() const { return _rowBegin; }
   inline int rowsRead() const { return _rowsRead; }
