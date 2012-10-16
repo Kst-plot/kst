@@ -55,6 +55,8 @@ const char AsciiSourceConfig::Key_limitFileBuffer[] = "Limit file buffer size";
 const char AsciiSourceConfig::Tag_limitFileBuffer[] = "limitFileBuffer";
 const char AsciiSourceConfig::Key_limitFileBufferSize[] = "Size of limited file buffer";
 const char AsciiSourceConfig::Tag_limitFileBufferSize[] = "limitFileBufferSize";
+const char AsciiSourceConfig::Key_useThreads[] = "Use threads when parsing Ascii data";
+const char AsciiSourceConfig::Tag_useThreads[] = "useThreads";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -72,7 +74,8 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _unitsLine(0),
   _useDot(true),
   _limitFileBuffer(false),
-  _limitFileBufferSize(128)
+  _limitFileBufferSize(128),
+  _useThreads(false)
 {
 }
 
@@ -95,6 +98,7 @@ void AsciiSourceConfig::save(QSettings& cfg) {
   _unitsLine >> cfg;
   _limitFileBuffer >> cfg;
   _limitFileBufferSize >> cfg;
+  _useThreads >> cfg;
 }
 
 
@@ -128,6 +132,7 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _unitsLine << cfg;
   _limitFileBuffer << cfg;
   _limitFileBufferSize << cfg;
+  _useThreads << cfg;
 }
 
 
@@ -168,6 +173,7 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _unitsLine >> s;
   _limitFileBuffer >> s;
   _limitFileBufferSize >> s;
+  _useThreads >> s;
 
   s.writeEndElement();
 }
@@ -190,6 +196,7 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _unitsLine << attributes;
   _limitFileBuffer << attributes;
   _limitFileBufferSize << attributes;
+  _useThreads << attributes;
 }
 
 
@@ -215,6 +222,7 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _unitsLine << elem;
         _limitFileBuffer << elem;
         _limitFileBufferSize << elem;
+        _useThreads << elem;
       }
     }
     n = n.nextSibling();

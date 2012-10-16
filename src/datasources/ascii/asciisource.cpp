@@ -51,7 +51,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   Kst::DataSource(store, cfg, filename, type),
   _reader(_config),
   _fileBuffer(),
-  _useThreads(true),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -270,7 +269,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     }
 
     int numThreads;
-    if (!_useThreads) {
+    if (!_config._useThreads) {
       numThreads = 1;
     } else {
       numThreads = QThread::idealThreadCount();
@@ -292,7 +291,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   
 
   int sRead = 0;
-  if (_useThreads) {
+  if (_config._useThreads) {
     QFutureSynchronizer<int> readFutures;
     const QVector<AsciiFileData>& data = _fileBuffer.data();
     foreach (const AsciiFileData& chunk, data) {

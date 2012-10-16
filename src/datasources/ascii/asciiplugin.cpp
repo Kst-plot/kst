@@ -131,6 +131,8 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
     config._limitFileBufferSize = size * 1024 * 1024;
   }
 
+  config._useThreads =_useThreads->isChecked();
+
   return config;
 }
 
@@ -172,6 +174,7 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
   _limitFileBufferSize->setText(QString::number(config._limitFileBufferSize / 1024 / 1024));
   updateFrameBuffer(config._limitFileBuffer);
 
+  _useThreads->setChecked(config._useThreads);
 }
 
 

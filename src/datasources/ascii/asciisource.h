@@ -69,7 +69,6 @@ class AsciiSource : public Kst::DataSource
   private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
-    const bool _useThreads;
 
     friend class ConfigWidgetAscii;
     mutable AsciiSourceConfig _config;

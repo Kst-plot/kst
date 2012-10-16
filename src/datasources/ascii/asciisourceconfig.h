@@ -53,6 +53,8 @@ class AsciiSourceConfig {
     static const char Tag_limitFileBuffer[];
     static const char Key_limitFileBufferSize[];
     static const char Tag_limitFileBufferSize[];
+    static const char Key_useThreads[];
+    static const char Tag_useThreads[];
 
   public:
     AsciiSourceConfig();
@@ -84,7 +86,7 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
     NamedParameter<bool, Key_limitFileBuffer, Tag_limitFileBuffer> _limitFileBuffer;
     NamedParameter<int, Key_limitFileBufferSize, Tag_limitFileBufferSize> _limitFileBufferSize;
-
+    NamedParameter<int, Key_useThreads, Tag_useThreads> _useThreads;
 
   private:
     void save(QSettings& cfg);
