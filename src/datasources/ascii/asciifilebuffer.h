@@ -16,7 +16,7 @@
 #include "asciifiledata.h"
 
 #include <QVector>
-
+#include <stdlib.h>
 
 class AsciiFileBuffer
 {
@@ -44,6 +44,7 @@ private:
   QVector<AsciiFileData> _fileData;
   int _begin;
   int _bytesRead;
+  const int _defaultChunkSize;
 
   void logData(const QVector<AsciiFileData>& chunks) const;
   const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;

@@ -23,7 +23,9 @@ extern int MB;
 extern size_t maxAllocate;
 
 //-------------------------------------------------------------------------------------------
-AsciiFileBuffer::AsciiFileBuffer() : _file(0), _begin(-1), _bytesRead(0)
+AsciiFileBuffer::AsciiFileBuffer() : 
+  _file(0), _begin(-1), _bytesRead(0),
+  _defaultChunkSize(qMin((size_t) 10 * MB, maxAllocate))
 {
 }
 
@@ -141,7 +143,7 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
   }
 
   // reading whole file into one array failed, try to read into smaller arrays
-  int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
+  int chunkSize = _defaultChunkSize;
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
   _bytesRead = 0;
   foreach (AsciiFileData chunk, _fileData) {
@@ -170,8 +172,7 @@ void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start,
   if (!_file)
     return;
 
-  int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
-  chunkSize = 2 * MB;
+  int chunkSize = _defaultChunkSize;
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
   _bytesRead = 0;
   AsciiFileData master;
