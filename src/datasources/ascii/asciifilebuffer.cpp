@@ -25,7 +25,7 @@ extern size_t maxAllocate;
 //-------------------------------------------------------------------------------------------
 AsciiFileBuffer::AsciiFileBuffer() : 
   _file(0), _begin(-1), _bytesRead(0),
-  _defaultChunkSize(qMin((size_t) 10 * MB, maxAllocate))
+  _defaultChunkSize(qMin((size_t) 10 * MB, maxAllocate - 1))
 {
 }
 
@@ -73,7 +73,7 @@ void AsciiFileBuffer::logData(const QVector<AsciiFileData>& chunks) const
 }
 
 //-------------------------------------------------------------------------------------------
-static int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos)
+int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const
 {
   //TODO too expensive?
   const int size = rowIndex.size();
@@ -90,28 +90,32 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
 {
   // reading whole file into one array failed, try to read into smaller arrays
   const int end = start + bytesToRead;
-  int chunkRead = 0;
-  int lastRow = 0;
+  int endsInRow = 0;
   QVector<AsciiFileData> chunks;
-  for (int pos = start; pos < end; pos += chunkRead) {
+  int pos = start;
+  while (pos < end) {
     // use for storing reading information only
     AsciiFileData chunk;
     // read complete chunk or to end of file
-    chunkRead = (pos + chunkSize < end ? chunkSize : end - pos);
+    int endRead = (pos + chunkSize < end ? pos + chunkSize : end);
     // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
-    const int rowBegin = lastRow;
-    lastRow = findRowOfPosition(rowIndex, lastRow, pos + chunkRead);
+    const int rowBegin = endsInRow;
+    endsInRow = findRowOfPosition(rowIndex, endsInRow, endRead);
     // read until the beginning of this row
-    chunkRead = (rowIndex[lastRow] - 1);
+    endRead = rowIndex[endsInRow];
     // check if it is the last row, and read remaining bytes from pos
-    chunkRead = (lastRow == rowIndex.size() - 1) ? end - pos : chunkRead - pos;
+    if (endsInRow == rowIndex.size() - 1)
+      endRead = end;
     // set information about positions in the file
     chunk.setBegin(pos);
-    chunk.setBytesRead(chunkRead);
+    chunk.setBytesRead(endRead - pos);
     // set information about rows
     chunk.setRowBegin(rowBegin);
-    chunk.setRowsRead(lastRow - rowBegin);
+    chunk.setRowsRead(endsInRow - rowBegin);
     chunks << chunk;
+    if (endsInRow ==  rowIndex.size() - 1)
+      break;
+    pos = rowIndex[endsInRow];
   }
   //qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData(chunks);
   return chunks;
@@ -130,7 +134,7 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
   wholeFile.read(*_file, start, bytesToRead, maximalBytes);
   if (bytesToRead == wholeFile.bytesRead()) {
     wholeFile.setRowBegin(0);
-    wholeFile.setRowsRead(rowIndex.size());
+    wholeFile.setRowsRead(rowIndex.size() - 1);
     _begin = start;
     _bytesRead = bytesToRead;
     _fileData << wholeFile;
@@ -172,7 +176,7 @@ void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start,
     Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for creating sliding window"));
   }
   for (int i = 0; i < _fileData.size(); i++) {
-    // use alread set
+    // reading from file is delayed until the data is accessed
     _fileData[i].setLazyRead(true);
     _fileData[i].setFile(_file);
     _fileData[i].setSharedArray(master);

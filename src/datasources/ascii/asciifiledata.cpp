@@ -39,7 +39,7 @@ int MB = 1024*1024;
 //#define KST_TEST_OOM
 
 #ifdef KST_TEST_OOM
-size_t maxAllocate = 2 * MB;
+size_t maxAllocate = 1 * MB;
 #else
 size_t maxAllocate = (size_t) -1;
 #endif
@@ -209,12 +209,12 @@ bool AsciiFileData::read()
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::logData() const
 {
-  qDebug() << QString("AsciiFileData %1, array %2, byte %3 ... %4, row %5 ... %6, lazy: %7")
+  qDebug() << QString("AsciiFileData %1, array %2, byte %3 ... %4 (%8), row %5 ... %6 (%9), lazy: %7")
     .arg(QString::number((int)this))
     .arg(QString::number((int)_array.data()))
     .arg(begin(), 8).arg(begin() + bytesRead(), 8)
     .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8)
-    .arg(_lazyRead);
+    .arg(_lazyRead).arg(bytesRead(), 8).arg(rowsRead(), 8);
 }
 
 

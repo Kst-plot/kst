@@ -48,6 +48,7 @@ private:
 
   void logData(const QVector<AsciiFileData>& chunks) const;
   const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
+  int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const;
 };
 
 #endif
