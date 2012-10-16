@@ -51,6 +51,10 @@ const char AsciiSourceConfig::Key_fieldsLine[] = "Fields Line";
 const char AsciiSourceConfig::Tag_fieldsLine[] = "fields";
 const char AsciiSourceConfig::Key_unitsLine[] = "Units Line";
 const char AsciiSourceConfig::Tag_unitsLine[] = "units";
+const char AsciiSourceConfig::Key_limitFileBuffer[] = "Limit file buffer size";
+const char AsciiSourceConfig::Tag_limitFileBuffer[] = "limitFileBuffer";
+const char AsciiSourceConfig::Key_limitFileBufferSize[] = "Size of limited file buffer";
+const char AsciiSourceConfig::Tag_limitFileBufferSize[] = "limitFileBufferSize";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -66,7 +70,9 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _readUnits(false),
   _fieldsLine(0),
   _unitsLine(0),
-  _useDot(true)
+  _useDot(true),
+  _limitFileBuffer(false),
+  _limitFileBufferSize(128)
 {
 }
 
@@ -87,6 +93,8 @@ void AsciiSourceConfig::save(QSettings& cfg) {
   _columnWidthIsConst >> cfg;
   _readUnits >> cfg;
   _unitsLine >> cfg;
+  _limitFileBuffer >> cfg;
+  _limitFileBufferSize >> cfg;
 }
 
 
@@ -118,6 +126,8 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _columnWidthIsConst << cfg;
   _readUnits << cfg;
   _unitsLine << cfg;
+  _limitFileBuffer << cfg;
+  _limitFileBufferSize << cfg;
 }
 
 
@@ -156,6 +166,8 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _columnWidthIsConst >> s;
   _readUnits >> s;
   _unitsLine >> s;
+  _limitFileBuffer >> s;
+  _limitFileBufferSize >> s;
 
   s.writeEndElement();
 }
@@ -176,6 +188,8 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _columnWidthIsConst << attributes;
   _readUnits << attributes;
   _unitsLine << attributes;
+  _limitFileBuffer << attributes;
+  _limitFileBufferSize << attributes;
 }
 
 
@@ -199,6 +213,8 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _columnWidthIsConst << elem;
         _readUnits << elem;
         _unitsLine << elem;
+        _limitFileBuffer << elem;
+        _limitFileBufferSize << elem;
       }
     }
     n = n.nextSibling();

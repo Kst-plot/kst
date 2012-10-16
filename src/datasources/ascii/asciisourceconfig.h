@@ -49,6 +49,10 @@ class AsciiSourceConfig {
     static const char Tag_fieldsLine[];
     static const char Key_unitsLine[];
     static const char Tag_unitsLine[];
+    static const char Key_limitFileBuffer[];
+    static const char Tag_limitFileBuffer[];
+    static const char Key_limitFileBufferSize[];
+    static const char Tag_limitFileBufferSize[];
 
   public:
     AsciiSourceConfig();
@@ -78,6 +82,8 @@ class AsciiSourceConfig {
     NamedParameter<int, Key_fieldsLine, Tag_fieldsLine> _fieldsLine;
     NamedParameter<int, Key_unitsLine, Tag_unitsLine> _unitsLine;
     NamedParameter<bool, Key_useDot, Tag_useDot> _useDot;
+    NamedParameter<bool, Key_limitFileBuffer, Tag_limitFileBuffer> _limitFileBuffer;
+    NamedParameter<int, Key_limitFileBufferSize, Tag_limitFileBufferSize> _limitFileBufferSize;
 
 
   private:

@@ -44,6 +44,7 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) :
   _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
 
   connect(_readFields, SIGNAL(toggled(bool)), this, SLOT(updateUnitLineEnabled(bool)));
+  connect(_limitFileBuffer, SIGNAL(toggled(bool)), this, SLOT(updateFrameBuffer(bool)));
 }
 
 void ConfigWidgetAsciiInternal::updateUnitLineEnabled(bool checked)
@@ -55,6 +56,16 @@ void ConfigWidgetAsciiInternal::updateUnitLineEnabled(bool checked)
   }
 }
 
+void ConfigWidgetAsciiInternal::updateFrameBuffer(bool checked)
+{
+  if (checked) {
+    _limitFileBufferSize->setEnabled(true);
+  } else {
+    _limitFileBufferSize->setEnabled(false);
+  }
+}
+
+
 void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
 {
   if (idx == AsciiSourceConfig::Fixed) {
@@ -63,6 +74,7 @@ void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
     widthButtonGroup->setEnabled(true);
   }
 }
+
 
 void ConfigWidgetAsciiInternal::showBeginning()
 {
@@ -112,6 +124,13 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   config._fieldsLine = _fieldsLine->value() - _index_offset;
   config._unitsLine = _unitsLine->value() - _index_offset;
 
+  config._limitFileBuffer = _limitFileBuffer->isChecked();
+  bool ok;
+  int size = _limitFileBufferSize->text().toInt(&ok);
+  if (ok) {
+    config._limitFileBufferSize = size * 1024 * 1024;
+  }
+
   return config;
 }
 
@@ -148,6 +167,11 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
     _whitespace->setChecked(true);
   }
   columnLayoutChanged(ct);
+
+  _limitFileBuffer->setChecked(config._limitFileBuffer);
+  _limitFileBufferSize->setText(QString::number(config._limitFileBufferSize / 1024 / 1024));
+  updateFrameBuffer(config._limitFileBuffer);
+
 }
 
 

@@ -32,7 +32,8 @@ public:
   void clear();
 
   void setFile(QFile* file);
-  void read(const RowIndex& rowIndex, int start, int numberOfBytes, int maximalBytes = -1);
+  void readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes = -1);
+  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes = -1);
 
   const QVector<AsciiFileData>& data() const;
 
@@ -46,8 +47,6 @@ private:
 
   void logData(const QVector<AsciiFileData>& chunks) const;
   const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
-  void readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes);
-  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes);
 };
 
 #endif

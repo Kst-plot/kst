@@ -118,20 +118,14 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
   return chunks;
 }
 
-//-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::read(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
-{
-  clear();
-  if (!_file) {
-    return;
-  }
-  //readWholeFile(rowIndex, start, bytesToRead, maximalBytes);
-  readFileSlidingWindow(rowIndex, start, bytesToRead, maximalBytes);
-}
 
 //-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
 {
+  clear();
+  if (!_file)
+    return;
+
   // first try to read the whole file into one array
   AsciiFileData wholeFile;
   wholeFile.read(*_file, start, bytesToRead, maximalBytes);
@@ -172,6 +166,10 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
 //-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
 {
+  clear();
+  if (!_file)
+    return;
+
   int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
   chunkSize = 2 * MB;
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);

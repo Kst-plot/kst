@@ -288,8 +288,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       delete file;
       return 0;
     }
+
     _fileBuffer.setFile(file);
-    _fileBuffer.read(_reader.rowIndex(), begin, bytesToRead);
+    if (_config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead) {
+      _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead);
+    } else {
+      _fileBuffer.readWholeFile(_reader.rowIndex(), begin, bytesToRead);
+    }
     if (_fileBuffer.bytesRead() == 0) {
       success = false;
       return 0;

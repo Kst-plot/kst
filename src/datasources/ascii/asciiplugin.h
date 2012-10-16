@@ -90,6 +90,7 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
     void columnLayoutChanged(int);
     void showBeginning();
     void updateUnitLineEnabled(bool);
+    void updateFrameBuffer(bool);
 
   private:
     const int _index_offset;
