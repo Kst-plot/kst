@@ -114,7 +114,7 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
     chunk.setRowsRead(lastRow - rowBegin);
     chunks << chunk;
   }
-  qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData(chunks);
+  //qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData(chunks);
   return chunks;
 }
 

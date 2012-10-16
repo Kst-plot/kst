@@ -39,7 +39,6 @@ class AsciiSource : public Kst::DataSource
     virtual UpdateType internalDataSourceUpdate();
 
     int readField(double *v, const QString &field, int s, int n);
-    int readField(double *v, const QString &field, int s, int n, bool& success);
 
     QString fileType() const;
 
@@ -83,6 +82,8 @@ class AsciiSource : public Kst::DataSource
     QMap<QString, QString> _strings;
     QStringList _fieldList;
     QMap<QString, QString> _fieldUnits;
+
+    int readField(double *v, const QString &field, int s, int n, bool& success);
 
     int columnOfField(const QString& field) const;
     static QStringList splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg);
