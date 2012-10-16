@@ -36,7 +36,7 @@ void fileBufferFree(void* ptr);
 int MB = 1024*1024;
 
 // Simulate out of memory scenario
-#define KST_TEST_OOM
+//#define KST_TEST_OOM
 
 #ifdef KST_TEST_OOM
 size_t maxAllocate = 2 * MB;
