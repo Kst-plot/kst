@@ -29,21 +29,22 @@ class AsciiDataReader
     AsciiDataReader(AsciiSourceConfig& config);
     ~AsciiDataReader();
 
-    typedef QVarLengthArray<int, AsciiFileBuffer::Prealloc> RowIndex;
-
     void clear();
     void setRow0Begin(int begin);
     inline int beginOfRow(int row) const { return _rowIndex[row]; }
     inline int numberOfFrames() const { return _numFrames; }
 
+    // where
+    const AsciiFileBuffer::RowIndex& rowIndex() const { return _rowIndex; }
+    
     void detectLineEndingType(QFile& file);
     
     bool findDataRows(bool read_completely, QFile& file, int _byteLength);
-    int readField(const AsciiFileBuffer &buf, int col, double *v, const QString& field, int s, int n);
+    int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int s, int n);
 
   private:
     int _numFrames;
-    RowIndex _rowIndex;
+    AsciiFileBuffer::RowIndex _rowIndex;
     AsciiSourceConfig& _config;
     AsciiCharacterTraits::LineEndingType _lineending;
 

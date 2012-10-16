@@ -26,21 +26,21 @@ void fileBufferFree(void* ptr);
 #undef qFree
 
 #include "asciifilebuffer.h"
-
 #include "debug.h"
 
 #include <QFile>
 #include <QDebug>
-#include <QMap>
+
 
 static int MB = 1024*1024;
 
 // Simulate out of memory scenario
 //#define KST_TEST_OOM
+
 #ifdef KST_TEST_OOM
-static const size_t maxMB = 50;
+static size_t maxAllocate = 2 * MB;
 #else
-static const size_t maxMB = 0;
+static size_t maxAllocate = (size_t) -1;
 #endif
 
 #define KST_MEMORY_DEBUG if(1)
@@ -57,25 +57,26 @@ static void logMemoryUsed()
     it.next();
     sum +=  it.value();
   }
-  Kst::Debug::self()->log(QString("AsciiFileBuffer: %1 MB used").arg(sum/MB), Kst::Debug::Warning);
-  KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: " << sum/MB<< "MB used";
+  Kst::Debug::self()->log(QString("AsciiFileData: %1 MB used").arg(sum / MB), Kst::Debug::Warning);
+  KST_MEMORY_DEBUG qDebug() << "AsciiFileData: " << sum / MB<< "MB used";
 }
 
 //-------------------------------------------------------------------------------------------
 void* fileBufferMalloc(size_t bytes)
 {
   void* ptr = 0;
-  if (maxMB == 0 || bytes < maxMB*MB) {
+#ifdef KST_TEST_OOM
+  if (bytes <= maxAllocate)
+#endif
     ptr = malloc(bytes);
-  }
   if (ptr)  {
     allocatedMBs[ptr] = bytes;
-    KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: " << bytes/MB << "MB allocated";
+    KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: " << bytes / MB << "MB allocated";
     KST_MEMORY_DEBUG logMemoryUsed();
   } else {
-    Kst::Debug::self()->log(QString("AsciiFileBuffer: failed to allocate %1 MBs").arg(bytes/MB), Kst::Debug::Warning);
+    Kst::Debug::self()->log(QString("AsciiFileData: failed to allocate %1 MBs").arg(bytes / MB), Kst::Debug::Warning);
     logMemoryUsed();
-    KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: error when allocating " << bytes/MB << "MB";
+    KST_MEMORY_DEBUG qDebug() << "AsciiFileData: error when allocating " << bytes / MB << "MB";
   }
   return ptr;
 }
@@ -84,7 +85,7 @@ void* fileBufferMalloc(size_t bytes)
 void fileBufferFree(void* ptr)
 {
   if (allocatedMBs.contains(ptr)) {
-    KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: " << allocatedMBs[ptr]/MB << "MB freed";
+    KST_MEMORY_DEBUG qDebug() << "AsciiFileData: " << allocatedMBs[ptr] / MB << "MB freed";
     allocatedMBs.remove(ptr);
   }
   KST_MEMORY_DEBUG logMemoryUsed();
@@ -92,31 +93,29 @@ void fileBufferFree(void* ptr)
 }
 
 //-------------------------------------------------------------------------------------------
-AsciiFileBuffer::AsciiFileBuffer() : _array(new Array), _begin(-1), _bytesRead(0)
+AsciiFileData::AsciiFileData() : _array(new Array), _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
 }
 
 //-------------------------------------------------------------------------------------------
-AsciiFileBuffer::~AsciiFileBuffer()
+AsciiFileData::~AsciiFileData()
 {
-  delete _array;
 }
 
-
 //-------------------------------------------------------------------------------------------
-char* AsciiFileBuffer::data()
+char* AsciiFileData::data()
 {
   return _array->data();
 }
 
 //-------------------------------------------------------------------------------------------
-const char* const AsciiFileBuffer::constPointer() const
+const char* const AsciiFileData::constPointer() const
 {
   return _array->data();
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiFileBuffer::resize(int bytes)
+bool AsciiFileData::resize(int bytes)
 { 
   try {
     _array->resize(bytes);
@@ -129,7 +128,7 @@ bool AsciiFileBuffer::resize(int bytes)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::clear(bool forceDeletingArray)
+void AsciiFileData::clear(bool forceDeletingArray)
 {
   // force deletion of heap allocated memory if any
   if (forceDeletingArray || _array->capacity() > Prealloc) {
@@ -141,7 +140,16 @@ void AsciiFileBuffer::clear(bool forceDeletingArray)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalBytes)
+void AsciiFileData::release()
+{
+  delete _array;
+  _array = 0;
+  _begin = -1;
+  _bytesRead = 0;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalBytes)
 {
   _begin = -1;
   _bytesRead = 0;
@@ -166,4 +174,120 @@ void AsciiFileBuffer::read(QFile& file, int start, int bytesToRead, int maximalB
   _begin = start;
   _bytesRead = bytesRead;
 }
+
+
+//-------------------------------------------------------------------------------------------
+AsciiFileBuffer::AsciiFileBuffer()
+{
+}
+
+//-------------------------------------------------------------------------------------------
+AsciiFileBuffer::~AsciiFileBuffer()
+{
+  clear();
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::clear(bool forceDeletingArray)
+{
+  foreach (AsciiFileData chunk, _fileData) {
+    chunk.release();
+  }
+  _fileData.clear();
+}
+
+//-------------------------------------------------------------------------------------------
+const QVector<AsciiFileData>& AsciiFileBuffer::data() const
+{
+  return _fileData;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::logData() const
+{
+  int i = 0;
+  foreach (const AsciiFileData& chunk, _fileData) {
+    qDebug() << "_fileData: " << i << ". " << chunk.rowBegin() << " ... " << chunk.rowBegin() + chunk.rowsRead();
+    i++;
+  }
+}
+
+//-------------------------------------------------------------------------------------------
+static int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos)
+{
+  //TODO too expensive
+  const int size = rowIndex.size();
+  for (int row = searchStart; row != size; row++) {
+    if (rowIndex[row] > pos)
+      return row - 1;
+  }
+  // must be the last row
+  return size - 1;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::read(QFile& file, const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+{
+  _begin = -1;
+  _bytesRead = 0;
+  _fileData.clear();
+
+  // first try to read the whole file into one array
+  AsciiFileData wholeFile;
+  wholeFile.read(file, start, bytesToRead, maximalBytes);
+  if (bytesToRead == wholeFile.bytesRead()) {
+    wholeFile.setRowBegin(0);
+    wholeFile.setRowsRead(rowIndex.size());
+    _begin = start;
+    _bytesRead = bytesToRead;
+    _fileData << wholeFile;
+    return;
+  } else {
+    wholeFile.release();
+  }
+
+
+  // reading whole file into one array failed, try to read into smaller arrays
+  int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
+  int end = start + bytesToRead;
+  int chunkRead = 0;
+  int row = 0;
+  for (int pos = start; pos < end; pos += chunkRead) {
+    AsciiFileData chunk;
+    // remember first row index
+    chunk.setRowBegin(row);
+    // read complete chunk or to end of file
+    chunkRead = (pos + chunkSize < end ? chunkSize : end - pos);  
+    // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
+    row = findRowOfPosition(rowIndex, row, pos + chunkRead);
+    // read until the beginning of this row
+    chunkRead = (rowIndex[row] - 1);
+    // check if it is the last row, and read remaining bytes from pos
+    chunkRead = (row == rowIndex.size() - 1) ? end - pos : chunkRead - pos;
+    // read the rows
+    chunk.read(file, pos, chunkRead);
+    if (chunkRead != chunk.bytesRead()) {
+      Kst::Debug::self()->log(QString("AsciiFileBuffer: error when reading into chunk"));
+      chunk.release();
+      break;
+    }
+    // remember number of read rows
+    chunk.setRowsRead(row - chunk.rowBegin());
+    _fileData << chunk;
+    _bytesRead += chunk.bytesRead();
+  }
+  if (_bytesRead == bytesToRead) {
+    _begin = start;
+    return;
+  } else {
+    _bytesRead = 0;
+    _fileData.clear();
+    Kst::Debug::self()->log(QString("AsciiFileBuffer: error while reading %1 chunks").arg(_fileData.size()));
+  }
+
+  // sliding window
+  // TODO
+}
+
+
 

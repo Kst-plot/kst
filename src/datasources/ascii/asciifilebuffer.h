@@ -13,12 +13,14 @@
 #ifndef ASCII_FILE_BUFFER_H
 #define ASCII_FILE_BUFFER_H
 
+#include <QVector>
+
 template<class T, int Prealloc>
 class QVarLengthArray;
 
 class QFile;
 
-class AsciiFileBuffer
+class AsciiFileData
 {
 public:
 
@@ -34,14 +36,12 @@ public:
 
   typedef QVarLengthArray<char, Prealloc> Array;
   
-  AsciiFileBuffer();
-  ~AsciiFileBuffer();
+  AsciiFileData();
+  ~AsciiFileData();
 
   inline int begin() const { return _begin; }
   inline int bytesRead() const { return _bytesRead; }
-
   void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
-
   char* data();
 
   const char* const constPointer() const;
@@ -49,13 +49,47 @@ public:
 
   bool resize(int size);
   void clear(bool forceDeletingArray = false);
+  void release();
+
+  inline int rowBegin() const { return _rowBegin; }
+  inline int rowsRead() const { return _rowsRead; }
+  inline void setRowBegin(int begin) { _rowBegin = begin; }
+  inline void setRowsRead(int read) { _rowsRead = read; }
 
 private:
   Array* _array;
   int _begin;
   int _bytesRead;
+  int _rowBegin;
+  int _rowsRead;
 };
 
+Q_DECLARE_TYPEINFO(AsciiFileData, Q_MOVABLE_TYPE);
+
+
+class AsciiFileBuffer
+{
+public:
+  AsciiFileBuffer();
+  ~AsciiFileBuffer();
+  
+  typedef QVarLengthArray<int, AsciiFileData::Prealloc> RowIndex;
+
+  inline int begin() const { return _begin; }
+  inline int bytesRead() const { return _bytesRead; }
+
+  void clear(bool forceDeletingArray = false);
+  
+  void read(QFile&, const RowIndex& rowIndex, int start, int numberOfBytes, int maximalBytes = -1);
+  
+  const QVector<AsciiFileData>& data() const;
+  
+private:
+  QVector<AsciiFileData> _fileData;
+  int _begin;
+  int _bytesRead;
+  void logData() const;
+};
 
 #endif
 // vim: ts=2 sw=2 et

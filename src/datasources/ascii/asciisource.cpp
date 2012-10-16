@@ -242,6 +242,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   
   // reading whole file into memory failed
   
+  /*
   // find a smaller allocatable size
   _fileBuffer.clear();
   int realloc_size = n / 4;
@@ -271,6 +272,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   // don't buffer partial files
   _fileBuffer.clear();
   return n_read;
+  */
+  return 0;
 }
 
 
@@ -302,7 +305,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     if (!openValidFile(file)) {
       return 0;
     }
-    _fileBuffer.read(file, begin, bytesToRead);
+    _fileBuffer.read(file, _reader.rowIndex(), begin, bytesToRead);
     if (_fileBuffer.bytesRead() == 0) {
       success = false;
       return 0;
@@ -310,7 +313,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _reader.detectLineEndingType(file);
   }
   
-  return _reader.readField(_fileBuffer, col, v, field, s, n);
+  int sRead = 0;
+  const QVector<AsciiFileData> data = _fileBuffer.data();
+  foreach (const AsciiFileData& chunk, data) {
+    sRead += _reader.readField(chunk, col, v + sRead, field, chunk.rowBegin(), chunk.rowsRead());
+  }
+
+  return sRead;
 }
 
 

@@ -20,6 +20,7 @@
 #include "measuretime.h"
 
 #include <QFile>
+#include <QDebug>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -114,13 +115,13 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
   detectLineEndingType(file);
 
   bool new_data = false;
-  AsciiFileBuffer buf;
+  AsciiFileData buf;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
 
     // always read from the start of a line
-    buf.read(file, _rowIndex[_numFrames], _byteLength - buf.begin(), AsciiFileBuffer::Prealloc - 1);
+    buf.read(file, _rowIndex[_numFrames], _byteLength - buf.begin(), AsciiFileData::Prealloc - 1);
     if (buf.bytesRead() == 0) {
       return false;
     }
@@ -147,7 +148,7 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
         new_data = findDataRows(buf.constData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del);
       }
     }
-  } while (buf.bytesRead() == AsciiFileBuffer::Prealloc - 1  && read_completely);
+  } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
 
   _rowIndex.resize(_numFrames + 1);
 
@@ -173,7 +174,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufre
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + AsciiFileBuffer::Prealloc - 1);
+          _rowIndex.resize(_rowIndex.size() + AsciiFileData::Prealloc - 1);
         }
         new_data = true;
         row_start = row_offset+i;
@@ -191,7 +192,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufre
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::readField(const AsciiFileBuffer& buf, int col, double *v, const QString& field, int s, int n)
+int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, const QString& field, int s, int n)
 {
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     MeasureTime t("AsciiSource::readField: same width for all columns");
