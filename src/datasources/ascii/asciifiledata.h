@@ -39,9 +39,16 @@ public:
   AsciiFileData();
   ~AsciiFileData();
 
+  inline bool lazyRead() const { return _lazyRead; }
+  inline void setLazyRead(bool value) { _lazyRead = value; }
+
   inline int begin() const { return _begin; }
   inline int bytesRead() const { return _bytesRead; }
+  inline void setBegin(int begin) { _begin = begin; }
+  inline void setBytesRead(int read) { _bytesRead = read; }
+
   void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
+  bool lazyRead(QFile&);
   char* data();
 
   const char* const constPointer() const;
@@ -56,8 +63,11 @@ public:
   inline void setRowBegin(int begin) { _rowBegin = begin; }
   inline void setRowsRead(int read) { _rowsRead = read; }
 
+  void logData() const;
+
 private:
   Array* _array;
+  bool _lazyRead;
   int _begin;
   int _bytesRead;
   int _rowBegin;

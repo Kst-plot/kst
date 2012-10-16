@@ -51,10 +51,8 @@ const QVector<AsciiFileData>& AsciiFileBuffer::data() const
 //-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::logData() const
 {
-  int i = 0;
   foreach (const AsciiFileData& chunk, _fileData) {
-    qDebug() << "_fileData: " << i << ". " << chunk.rowBegin() << " ... " << chunk.rowBegin() + chunk.rowsRead();
-    i++;
+    chunk.logData();
   }
 }
 
@@ -69,6 +67,38 @@ static int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int sear
   }
   // must be the last row
   return size - 1;
+}
+
+//-------------------------------------------------------------------------------------------
+const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const
+{
+  // reading whole file into one array failed, try to read into smaller arrays
+  const int end = start + bytesToRead;
+  int chunkRead = 0;
+  int lastRow = 0;
+  QVector<AsciiFileData> chunks;
+  for (int pos = start; pos < end; pos += chunkRead) {
+    // use for storing reading information only
+    AsciiFileData chunk;
+    // read complete chunk or to end of file
+    chunkRead = (pos + chunkSize < end ? chunkSize : end - pos);
+    // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
+    const int rowBegin = lastRow;
+    lastRow = findRowOfPosition(rowIndex, lastRow, pos + chunkRead);
+    // read until the beginning of this row
+    chunkRead = (rowIndex[lastRow] - 1);
+    // check if it is the last row, and read remaining bytes from pos
+    chunkRead = (lastRow == rowIndex.size() - 1) ? end - pos : chunkRead - pos;
+    // set information about positions in the file
+    chunk.setBegin(pos);
+    chunk.setBytesRead(chunkRead);
+    // set information about rows
+    chunk.setRowBegin(rowBegin);
+    chunk.setRowsRead(lastRow - rowBegin);
+    chunks << chunk;
+  }
+  //qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData();
+  return chunks;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -94,31 +124,15 @@ void AsciiFileBuffer::read(QFile& file, const RowIndex& rowIndex, int start, int
 
   // reading whole file into one array failed, try to read into smaller arrays
   int chunkSize = qMin((size_t) 10 * MB, maxAllocate);
-  int end = start + bytesToRead;
-  int chunkRead = 0;
-  int row = 0;
-  for (int pos = start; pos < end; pos += chunkRead) {
-    AsciiFileData chunk;
-    // remember first row index
-    chunk.setRowBegin(row);
-    // read complete chunk or to end of file
-    chunkRead = (pos + chunkSize < end ? chunkSize : end - pos);  
-    // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
-    row = findRowOfPosition(rowIndex, row, pos + chunkRead);
-    // read until the beginning of this row
-    chunkRead = (rowIndex[row] - 1);
-    // check if it is the last row, and read remaining bytes from pos
-    chunkRead = (row == rowIndex.size() - 1) ? end - pos : chunkRead - pos;
-    // read the rows
-    chunk.read(file, pos, chunkRead);
-    if (chunkRead != chunk.bytesRead()) {
+  _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
+  _bytesRead = 0;
+  foreach (AsciiFileData chunk, _fileData) {
+    // use alread set
+    if (!chunk.lazyRead(file)) {
       Kst::Debug::self()->log(QString("AsciiFileBuffer: error when reading into chunk"));
       chunk.release();
       break;
     }
-    // remember number of read rows
-    chunk.setRowsRead(row - chunk.rowBegin());
-    _fileData << chunk;
     _bytesRead += chunk.bytesRead();
   }
   if (_bytesRead == bytesToRead) {

@@ -32,7 +32,7 @@ public:
   void clear();
   
   void read(QFile&, const RowIndex& rowIndex, int start, int numberOfBytes, int maximalBytes = -1);
-  
+
   const QVector<AsciiFileData>& data() const;
   
 private:
@@ -40,6 +40,8 @@ private:
   int _begin;
   int _bytesRead;
   void logData() const;
+
+  const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
 };
 
 #endif

@@ -30,6 +30,7 @@ void fileBufferFree(void* ptr);
 
 #include <QFile>
 #include <QDebug>
+#include <QByteArray>
 
 
 int MB = 1024*1024;
@@ -93,7 +94,7 @@ void fileBufferFree(void* ptr)
 }
 
 //-------------------------------------------------------------------------------------------
-AsciiFileData::AsciiFileData() : _array(new Array), _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
+AsciiFileData::AsciiFileData() : _array(new Array), _lazyRead(false), _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
 }
 
@@ -174,4 +175,29 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
   _begin = start;
   _bytesRead = bytesRead;
 }
+
+//-------------------------------------------------------------------------------------------
+bool AsciiFileData::lazyRead(QFile& file)
+{
+  int start = _begin;
+  int bytesToRead = _bytesRead;
+  read(file, start, bytesToRead);
+  if (begin() != start || bytesRead() != bytesToRead) {
+    clear(true);
+    return false;
+  }
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileData::logData() const
+{
+  QString This = QString::fromLatin1(QByteArray((const char*)this, sizeof(AsciiFileData*)).toHex()).toUpper();
+  QString array = QString::fromLatin1(QByteArray((const char*)_array, sizeof(Array*)).toHex()).toUpper();
+  qDebug() << QString("%1 array %2, byte %3 ... %4, row %5 ... %6")
+    .arg(This).arg(array)
+    .arg(begin(), 8).arg(begin() + bytesRead(), 8)
+    .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8);
+}
+
 
