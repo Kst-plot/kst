@@ -274,7 +274,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   int sRead = 0;
   const QVector<AsciiFileData>& data = _fileBuffer.data();
   foreach (const AsciiFileData& chunk, data) {
-    sRead += _reader.readField(chunk, col, v + sRead, field, chunk.rowBegin(), chunk.rowsRead());
+    Q_ASSERT(sRead ==  chunk.rowBegin());
+    sRead += _reader.readField(chunk, col, v +  chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
   }
 
   return sRead;
