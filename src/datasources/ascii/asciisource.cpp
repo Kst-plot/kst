@@ -29,9 +29,6 @@
 #include <stdlib.h>
 
 
-// simulate out of memory scenario
-//#define KST_TEST_OOM
-
 using namespace Kst;
 
 
@@ -54,11 +51,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
-#ifdef KST_TEST_OOM
-  // eat the giga bytes
-  while (qMalloc(1024*1024*1024) != 0) {}
-#endif
-  
   setInterface(is);
   setInterface(iv);
   

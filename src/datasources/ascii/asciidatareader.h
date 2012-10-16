@@ -16,6 +16,8 @@
 #include "asciifilebuffer.h"
 #include "asciicharactertraits.h"
 
+#include <QVarLengthArray>
+
 class QFile;
 struct LexicalCast;
 class AsciiSourceConfig;

@@ -13,7 +13,8 @@
 #ifndef ASCII_FILE_BUFFER_H
 #define ASCII_FILE_BUFFER_H
 
-#include <QVarLengthArray>
+template<class T, int Prealloc>
+class QVarLengthArray;
 
 class QFile;
 
@@ -33,18 +34,18 @@ public:
 
   typedef QVarLengthArray<char, Prealloc> Array;
   
-  inline AsciiFileBuffer() : _array(new Array), _begin(-1), _bytesRead(0) {}
-  inline ~AsciiFileBuffer() { delete _array; }
+  AsciiFileBuffer();
+  ~AsciiFileBuffer();
 
   inline int begin() const { return _begin; }
   inline int bytesRead() const { return _bytesRead; }
 
   void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
 
-  inline char* data() { return _array->data(); }
+  char* data();
 
-  inline const char* const constPointer() const { return _array->data(); }
-  inline const Array& constArray() const{ return *_array; }
+  const char* const constPointer() const;
+  inline const Array& constArray() const { return *_array; }
 
   bool resize(int size);
   void clear(bool forceDeletingArray = false);
