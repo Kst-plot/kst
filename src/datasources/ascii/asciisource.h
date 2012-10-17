@@ -76,6 +76,7 @@ class AsciiSource : public Kst::DataSource
     int _byteLength;
     bool _haveHeader;
     bool _fieldListComplete;
+    bool _haveWarned;
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;
@@ -84,7 +85,7 @@ class AsciiSource : public Kst::DataSource
 
     bool useSlidingWindow(int bytesToRead)  const;
 
-    int readField(double *v, const QString &field, int s, int n, bool& success);
+    int tryReadField(double *v, const QString &field, int s, int n);
     int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead);
     int parseWindowMultithreaded(QVector<AsciiFileData>& fileData, int col, double* v, const QString& field);
     

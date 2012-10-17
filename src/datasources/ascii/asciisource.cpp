@@ -90,7 +90,8 @@ void AsciiSource::reset()
   // forget about cached data
   _fileBuffer.clear();
   _reader.clear();
-  
+  _haveWarned = false;
+
   _valid = false;
   _byteLength = 0;
   _haveHeader = false;
@@ -225,23 +226,33 @@ bool AsciiSource::useSlidingWindow(int bytesToRead)  const
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
-  bool succcess;
-  int read = readField(v, field, s, n, succcess);
-  if (!succcess) {
-    if (read == 0) {
-      QMessageBox::warning(0, "Error while reading ascii file", "File could not be read because not enough memory is available.");
-    } else if ( read != n) {
-      QMessageBox::warning(0, "Error while reading ascii file", "The file was only read partially not enough memory is available.");
-    }
+  int read = tryReadField(v, field, s, n);
+
+  QString msg("%1 because not enough memory is available.\nSetting a file buffer limit could help.");
+  if (read == n) {
+    return read;
+  } else if (read > 0) {
+    if (!_haveWarned)
+      QMessageBox::warning(0, "Error while reading ASCII file", msg.arg("The file was only read partially"));
+    _haveWarned = true;
+    return read;
+  } else if (read == 0) {
+    if (!_haveWarned)
+      QMessageBox::warning(0, "Error while reading ASCII file", msg.arg("The file could not be read"));
+    _haveWarned = true;
+  } else if (read == -3) {
+    if (!_haveWarned)
+      QMessageBox::warning(0, "Error while reading ASCII file", "The file could not be opened for reading");
+    _haveWarned = true;
   }
-  return read;
+
+  return 0;
 }
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& success) 
+int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 {
-  success = true;
   if (n < 0) {
     n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
@@ -255,7 +266,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   
   int col = columnOfField(field);
   if (col == -1) {
-    return 0;
+    return -2;
   }
   
   // check if the already in buffer
@@ -265,7 +276,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     QFile* file = new QFile(_filename);
     if (!AsciiFileBuffer::openFile(*file)) {
       delete file;
-      return 0;
+      return -3;
     }
 
     // prepare file buffer
@@ -291,9 +302,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     }
 
     if (_fileBuffer.bytesRead() == 0) {
-      success = false;
       return 0;
     }
+
     _reader.detectLineEndingType(*file);
   }
 
@@ -303,12 +314,23 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
 
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
   int sampleRead = 0;
-  for (int i = 0; i< slidingWindow.size(); i++) {
+  for (int i = 0; i < slidingWindow.size(); i++) {
+
+    int read;
     if (_config._useThreads)
-      sampleRead += parseWindowMultithreaded(slidingWindow[i], col, v, field);
+      read = parseWindowMultithreaded(slidingWindow[i], col, v, field);
     else
-      sampleRead += parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);
+      read = parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);
+
+    // something went wrong abort reading
+    if (read == 0) {
+      _fileBuffer.clear();
+      break;
+    }
+
+    sampleRead += read;
   }
+
   return sampleRead;
 }
 
@@ -319,7 +341,7 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
   int read = 0;
   for (int i = 0; i< window.size(); i++) {
     Q_ASSERT(sRead ==  window[i].rowBegin());
-    if (!window[i].read())
+    if (!window[i].read() || window[i].bytesRead() == 0)
       return 0;
     read += _reader.readFieldFromChunk(window[i], col, v, field);
   }
