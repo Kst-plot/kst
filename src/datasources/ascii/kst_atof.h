@@ -17,15 +17,20 @@
 #include <stdlib.h>
 
 
-struct LexicalCast
+class LexicalCast
 {
-  LexicalCast();
-  ~LexicalCast();
-
-  char localSeparator() const;
-
+public:
+  static LexicalCast& instance();
+  
+  struct AutoDot {
+    inline AutoDot(bool useDot) { instance().setDecimalSeparator(useDot); }
+    inline ~AutoDot() { instance().resetLocal(); }
+  };
+  
   // use second parameter when useDot is false
   void setDecimalSeparator(bool useDot);
+
+  char localSeparator() const;
 
 #ifdef KST_USE_KST_ATOF
   double toDouble(const char* p) const;
@@ -34,13 +39,19 @@ struct LexicalCast
 #endif
 
 private:
+  LexicalCast();
+  ~LexicalCast();
+
   char _separator;
   QByteArray _originalLocal;
+
   void resetLocal();
-  bool isDigit(const char) const;
+
+  inline bool isDigit(const char c) const {
+    return (c >= 48) && (c <= 57) ? true : false;
+  }
+
 };
-
-
 
 
 #endif

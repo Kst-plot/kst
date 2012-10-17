@@ -15,7 +15,6 @@
 
 #include "kst_atof.h"
 
-
 #include <math.h>
 #include <ctype.h>
 
@@ -24,10 +23,8 @@
 
 #define LOGHUGE 39
 
-inline bool LexicalCast::isDigit(const char c) const {
-  return (c >= 48) && (c <= 57) ? true : false;
-}
 
+//-------------------------------------------------------------------------------------------
 #ifdef KST_USE_KST_ATOF
 double LexicalCast::toDouble(const char* signedp) const
 {
@@ -121,27 +118,34 @@ double LexicalCast::toDouble(const char* signedp) const
 #endif
 
 
+//-------------------------------------------------------------------------------------------
+LexicalCast& LexicalCast::instance()
+{
+  static LexicalCast lexcInstance;
+  return lexcInstance;
+}
+
+//-------------------------------------------------------------------------------------------
 LexicalCast::LexicalCast()
 {
 }
 
-
+//-------------------------------------------------------------------------------------------
 LexicalCast::~LexicalCast() 
 {
   resetLocal();
-};
+}
 
-
+//-------------------------------------------------------------------------------------------
 void LexicalCast::resetLocal() 
 {
-  
   if (!_originalLocal.isEmpty()) {
     setlocale(LC_NUMERIC, _originalLocal.constData());
     _originalLocal.clear();
   }
 }
 
-
+//-------------------------------------------------------------------------------------------
 void LexicalCast::setDecimalSeparator(bool useDot)
 {
   useDot ? _separator = '.' : _separator = ',';
@@ -158,7 +162,7 @@ void LexicalCast::setDecimalSeparator(bool useDot)
   }
 }
 
-
+//-------------------------------------------------------------------------------------------
 char LexicalCast::localSeparator() const
 {
   return *setlocale(LC_NUMERIC, 0);

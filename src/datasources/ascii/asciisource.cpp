@@ -268,6 +268,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       return 0;
     }
 
+    // prepare file buffer
+
     _fileBuffer.setFile(file);
 
     int numThreads;
@@ -294,7 +296,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     }
     _reader.detectLineEndingType(*file);
   }
-  
+
+  // now start reading
+
+  LexicalCast::AutoDot useDot(_config._useDot);
+
   int sampleRead = 0;
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
   if (_config._useThreads) {

@@ -203,8 +203,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
 {
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     //MeasureTime t("AsciiSource::readField: same width for all columns");
-    LexicalCast lexc;
-    lexc.setDecimalSeparator(_config._useDot);
+    const LexicalCast& lexc = LexicalCast::instance();
     // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
     // the column in row i by adding _rowIndex[i] we have to start at:
     const char* col_start = &buf.constData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
@@ -281,13 +280,8 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
                                  const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                                  const ColumnWidthsAreConst& are_column_widths_const) const
 {
-  LexicalCast& lexc(*new LexicalCast);
-  {
-    // TODO move
-    QMutexLocker lock(&_localeMutex);
-    lexc.setDecimalSeparator(_config._useDot);
-  }
-
+  const LexicalCast& lexc = LexicalCast::instance();
+  
   const QString delimiters = _config._delimiters.value();
 
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
@@ -336,10 +330,6 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
     }
   }
 
-  {
-    QMutexLocker lock(&_localeMutex);
-    delete &lexc;
-  }
   return n;
 }
 

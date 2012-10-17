@@ -20,7 +20,7 @@
 #include <QMutex>
 
 class QFile;
-struct LexicalCast;
+class LexicalCast;
 class AsciiSourceConfig;
 
 
