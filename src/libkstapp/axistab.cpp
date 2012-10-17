@@ -28,20 +28,20 @@ AxisTab::AxisTab(QWidget *parent)
   _axisMajorTickSpacing->addItem(tr("VeryFine"), 15);
   setAxisMajorTickSpacing(TicksNormal);
 
-  _axisMajorLineStyle->addItem("SolidLine", Qt::SolidLine);
-  _axisMajorLineStyle->addItem("DashLine", Qt::DashLine);
-  _axisMajorLineStyle->addItem("DotLine", Qt::DotLine);
-  _axisMajorLineStyle->addItem("DashDotLine", Qt::DashDotLine);
-  _axisMajorLineStyle->addItem("DashDotDotLine", Qt::DashDotDotLine);
-  _axisMajorLineStyle->addItem("CustomDashLine", Qt::CustomDashLine);
+  _axisMajorLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
+  _axisMajorLineStyle->addItem("DashLine", (int)Qt::DashLine);
+  _axisMajorLineStyle->addItem("DotLine", (int)Qt::DotLine);
+  _axisMajorLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
+  _axisMajorLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
+  _axisMajorLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
   setAxisMajorGridLineStyle(Qt::DashLine);
 
-  _axisMinorLineStyle->addItem("SolidLine", Qt::SolidLine);
-  _axisMinorLineStyle->addItem("DashLine", Qt::DashLine);
-  _axisMinorLineStyle->addItem("DotLine", Qt::DotLine);
-  _axisMinorLineStyle->addItem("DashDotLine", Qt::DashDotLine);
-  _axisMinorLineStyle->addItem("DashDotDotLine", Qt::DashDotDotLine);
-  _axisMinorLineStyle->addItem("CustomDashLine", Qt::CustomDashLine);
+  _axisMinorLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
+  _axisMinorLineStyle->addItem("DashLine", (int)Qt::DashLine);
+  _axisMinorLineStyle->addItem("DotLine", (int)Qt::DotLine);
+  _axisMinorLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
+  _axisMinorLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
+  _axisMinorLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
   setAxisMinorGridLineStyle(Qt::DashLine);
 
   setAxisMajorGridLineColor(Qt::gray);
@@ -216,7 +216,7 @@ bool AxisTab::axisMajorGridLineStyleDirty() const {
 
 
 void AxisTab::setAxisMajorGridLineStyle(Qt::PenStyle style) {
-  _axisMajorLineStyle->setCurrentIndex(_axisMajorLineStyle->findData(QVariant(style)));
+  _axisMajorLineStyle->setCurrentIndex(_axisMajorLineStyle->findData(QVariant((int)style)));
 }
 
 
@@ -261,7 +261,7 @@ bool AxisTab::axisMinorGridLineStyleDirty() const {
 
 
 void AxisTab::setAxisMinorGridLineStyle(Qt::PenStyle style) {
-  _axisMinorLineStyle->setCurrentIndex(_axisMinorLineStyle->findData(QVariant(style)));
+  _axisMinorLineStyle->setCurrentIndex(_axisMinorLineStyle->findData(QVariant((int)style)));
 }
 
 

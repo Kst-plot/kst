@@ -219,19 +219,19 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("m33", QVariant(tr.m33()).toString());
   xml.writeEndElement();
   xml.writeStartElement("pen");
-  xml.writeAttribute("style", QVariant(pen().style()).toString());
+  xml.writeAttribute("style", QVariant((int)pen().style()).toString());
   xml.writeAttribute("width", QVariant(pen().widthF()).toString());
   xml.writeAttribute("miterlimit", QVariant(pen().miterLimit()).toString());
   xml.writeAttribute("cap", QVariant(pen().capStyle()).toString());
   xml.writeAttribute("joinStyle", QVariant(pen().joinStyle()).toString());
   xml.writeStartElement("brush");
   xml.writeAttribute("color", pen().brush().color().name());
-  xml.writeAttribute("style", QVariant(pen().brush().style()).toString());
+  xml.writeAttribute("style", QVariant((int)pen().brush().style()).toString());
   xml.writeEndElement();
   xml.writeEndElement();
   xml.writeStartElement("brush");
   xml.writeAttribute("color", brush().color().name());
-  xml.writeAttribute("style", QVariant(brush().style()).toString());
+  xml.writeAttribute("style", QVariant((int)brush().style()).toString());
   if (brush().gradient()) {
     QString stopList;
     foreach(const QGradientStop &stop, brush().gradient()->stops()) {

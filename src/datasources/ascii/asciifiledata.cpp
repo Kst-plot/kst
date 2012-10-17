@@ -10,6 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef QT5
 // needed to track memeory usage
 #include "qplatformdefs.h"
 #include <stdlib.h>
@@ -24,6 +25,7 @@ void fileBufferFree(void* ptr);
 #undef qMalloc
 #undef free
 #undef qFree
+#endif
 
 #include "asciifiledata.h"
 #include "debug.h"

@@ -24,12 +24,12 @@ MarkersTab::MarkersTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Markers"));
 
-  _markerLineStyle->addItem("SolidLine", Qt::SolidLine);
-  _markerLineStyle->addItem("DashLine", Qt::DashLine);
-  _markerLineStyle->addItem("DotLine", Qt::DotLine);
-  _markerLineStyle->addItem("DashDotLine", Qt::DashDotLine);
-  _markerLineStyle->addItem("DashDotDotLine", Qt::DashDotDotLine);
-  _markerLineStyle->addItem("CustomDashLine", Qt::CustomDashLine);
+  _markerLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
+  _markerLineStyle->addItem("DashLine", (int)Qt::DashLine);
+  _markerLineStyle->addItem("DotLine", (int)Qt::DotLine);
+  _markerLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
+  _markerLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
+  _markerLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
 
   connect(_curveMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));
   connect(_vectorMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));
@@ -111,7 +111,7 @@ Qt::PenStyle MarkersTab::lineStyle() const {
 
 
 void MarkersTab::setLineStyle(Qt::PenStyle style) {
-  _markerLineStyle->setCurrentIndex(_markerLineStyle->findData(QVariant(style)));
+  _markerLineStyle->setCurrentIndex(_markerLineStyle->findData(QVariant((int)style)));
 }
 
 

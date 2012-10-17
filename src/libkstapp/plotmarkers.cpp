@@ -83,7 +83,7 @@ void PlotMarkers::saveInPlot(QXmlStreamWriter &xml) {
   xml.writeStartElement("plotmarkers");
   xml.writeAttribute("xaxis", QVariant(_xAxis).toString());
   xml.writeAttribute("linecolor", QVariant(_lineColor).toString());
-  xml.writeAttribute("linestyle", QVariant(_lineStyle).toString());
+  xml.writeAttribute("linestyle", QVariant((int)_lineStyle).toString());
   xml.writeAttribute("linewidth", QVariant(_lineWidth).toString());
   xml.writeAttribute("curvemode", QVariant(_curveMode).toString());
   if (_vector != 0) {

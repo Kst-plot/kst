@@ -20,29 +20,29 @@ StrokeTab::StrokeTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Stroke"));
 
-  _style->addItem("NoPen", Qt::NoPen);
-  _style->addItem("SolidLine", Qt::SolidLine);
-  _style->addItem("DashLine", Qt::DashLine);
-  _style->addItem("DotLine", Qt::DotLine);
-  _style->addItem("DashDotLine", Qt::DashDotLine);
-  _style->addItem("DashDotDotLine", Qt::DashDotDotLine);
-  _style->addItem("CustomDashLine", Qt::CustomDashLine);
+  _style->addItem("NoPen", (int)Qt::NoPen);
+  _style->addItem("SolidLine", (int)Qt::SolidLine);
+  _style->addItem("DashLine", (int)Qt::DashLine);
+  _style->addItem("DotLine", (int)Qt::DotLine);
+  _style->addItem("DashDotLine", (int)Qt::DashDotLine);
+  _style->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
+  _style->addItem("CustomDashLine", (int)Qt::CustomDashLine);
 
-  _brushStyle->addItem("NoBrush", Qt::NoBrush);
-  _brushStyle->addItem("SolidPattern", Qt::SolidPattern);
-  _brushStyle->addItem("Dense1Pattern", Qt::Dense1Pattern);
-  _brushStyle->addItem("Dense2Pattern", Qt::Dense2Pattern);
-  _brushStyle->addItem("Dense3Pattern", Qt::Dense3Pattern);
-  _brushStyle->addItem("Dense4Pattern", Qt::Dense4Pattern);
-  _brushStyle->addItem("Dense5Pattern", Qt::Dense5Pattern);
-  _brushStyle->addItem("Dense6Pattern", Qt::Dense6Pattern);
-  _brushStyle->addItem("Dense7Pattern", Qt::Dense7Pattern);
-  _brushStyle->addItem("HorPattern", Qt::HorPattern);
-  _brushStyle->addItem("VerPattern", Qt::VerPattern);
-  _brushStyle->addItem("CrossPattern", Qt::CrossPattern);
-  _brushStyle->addItem("BDiagPattern", Qt::BDiagPattern);
-  _brushStyle->addItem("FDiagPattern", Qt::FDiagPattern);
-  _brushStyle->addItem("DiagCrossPattern", Qt::DiagCrossPattern);
+  _brushStyle->addItem("NoBrush", (int)Qt::NoBrush);
+  _brushStyle->addItem("SolidPattern", (int)Qt::SolidPattern);
+  _brushStyle->addItem("Dense1Pattern", (int)Qt::Dense1Pattern);
+  _brushStyle->addItem("Dense2Pattern", (int)Qt::Dense2Pattern);
+  _brushStyle->addItem("Dense3Pattern", (int)Qt::Dense3Pattern);
+  _brushStyle->addItem("Dense4Pattern", (int)Qt::Dense4Pattern);
+  _brushStyle->addItem("Dense5Pattern", (int)Qt::Dense5Pattern);
+  _brushStyle->addItem("Dense6Pattern", (int)Qt::Dense6Pattern);
+  _brushStyle->addItem("Dense7Pattern", (int)Qt::Dense7Pattern);
+  _brushStyle->addItem("HorPattern", (int)Qt::HorPattern);
+  _brushStyle->addItem("VerPattern", (int)Qt::VerPattern);
+  _brushStyle->addItem("CrossPattern", (int)Qt::CrossPattern);
+  _brushStyle->addItem("BDiagPattern", (int)Qt::BDiagPattern);
+  _brushStyle->addItem("FDiagPattern", (int)Qt::FDiagPattern);
+  _brushStyle->addItem("DiagCrossPattern", (int)Qt::DiagCrossPattern);
 
   _joinStyle->addItem("MiterJoin", Qt::MiterJoin);
   _joinStyle->addItem("BevelJoin", Qt::BevelJoin);
@@ -122,7 +122,7 @@ bool StrokeTab::styleDirty() const {
 
 
 void StrokeTab::setStyle(Qt::PenStyle style) {
-  _style->setCurrentIndex(_style->findData(QVariant(style)));
+  _style->setCurrentIndex(_style->findData(QVariant((int)style)));
 }
 
 
@@ -167,7 +167,7 @@ bool StrokeTab::brushStyleDirty() const {
 
 
 void StrokeTab::setBrushStyle(Qt::BrushStyle style) {
-  _brushStyle->setCurrentIndex(_brushStyle->findData(QVariant(style)));
+  _brushStyle->setCurrentIndex(_brushStyle->findData(QVariant((int)style)));
 }
 
 

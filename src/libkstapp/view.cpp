@@ -174,7 +174,7 @@ void View::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("width", QVariant(sceneRect().width()).toString());
   xml.writeAttribute("height", QVariant(sceneRect().height()).toString());
   xml.writeAttribute("color", backgroundBrush().color().name());
-  xml.writeAttribute("style", QVariant(backgroundBrush().style()).toString());
+  xml.writeAttribute("style", QVariant((int)backgroundBrush().style()).toString());
   if (backgroundBrush().gradient()) {
     QString stopList;
     foreach(const QGradientStop &stop, backgroundBrush().gradient()->stops()) {

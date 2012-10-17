@@ -23,21 +23,21 @@ FillTab::FillTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Fill"));
 
-  _style->addItem("NoBrush", Qt::NoBrush);
-  _style->addItem("SolidPattern", Qt::SolidPattern);
-  _style->addItem("Dense1Pattern", Qt::Dense1Pattern);
-  _style->addItem("Dense2Pattern", Qt::Dense2Pattern);
-  _style->addItem("Dense3Pattern", Qt::Dense3Pattern);
-  _style->addItem("Dense4Pattern", Qt::Dense4Pattern);
-  _style->addItem("Dense5Pattern", Qt::Dense5Pattern);
-  _style->addItem("Dense6Pattern", Qt::Dense6Pattern);
-  _style->addItem("Dense7Pattern", Qt::Dense7Pattern);
-  _style->addItem("HorPattern", Qt::HorPattern);
-  _style->addItem("VerPattern", Qt::VerPattern);
-  _style->addItem("CrossPattern", Qt::CrossPattern);
-  _style->addItem("BDiagPattern", Qt::BDiagPattern);
-  _style->addItem("FDiagPattern", Qt::FDiagPattern);
-  _style->addItem("DiagCrossPattern", Qt::DiagCrossPattern);
+  _style->addItem("NoBrush", (int)Qt::NoBrush);
+  _style->addItem("SolidPattern", (int)Qt::SolidPattern);
+  _style->addItem("Dense1Pattern", (int)Qt::Dense1Pattern);
+  _style->addItem("Dense2Pattern", (int)Qt::Dense2Pattern);
+  _style->addItem("Dense3Pattern", (int)Qt::Dense3Pattern);
+  _style->addItem("Dense4Pattern", (int)Qt::Dense4Pattern);
+  _style->addItem("Dense5Pattern", (int)Qt::Dense5Pattern);
+  _style->addItem("Dense6Pattern", (int)Qt::Dense6Pattern);
+  _style->addItem("Dense7Pattern", (int)Qt::Dense7Pattern);
+  _style->addItem("HorPattern", (int)Qt::HorPattern);
+  _style->addItem("VerPattern", (int)Qt::VerPattern);
+  _style->addItem("CrossPattern", (int)Qt::CrossPattern);
+  _style->addItem("BDiagPattern", (int)Qt::BDiagPattern);
+  _style->addItem("FDiagPattern", (int)Qt::FDiagPattern);
+  _style->addItem("DiagCrossPattern", (int)Qt::DiagCrossPattern);
 
   connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
@@ -98,7 +98,7 @@ void FillTab::setStyle(Qt::BrushStyle style) {
   if (style == Qt::LinearGradientPattern) {
     _style->setCurrentIndex(Qt::SolidPattern);
   } else {
-    _style->setCurrentIndex(_style->findData(QVariant(style)));
+    _style->setCurrentIndex(_style->findData(QVariant((int)style)));
   }
 }
 

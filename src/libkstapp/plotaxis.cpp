@@ -1142,8 +1142,8 @@ void PlotAxis::saveAsDialogDefaults(const QString &group) const {
   _dialogDefaults->setValue(group+"DrawMinorGridLines", QVariant(drawAxisMinorGridLines()).toString());
   _dialogDefaults->setValue(group+"DrawMajorGridLinecolor", QVariant(axisMajorGridLineColor()).toString());
   _dialogDefaults->setValue(group+"DrawMinorGridLinecolor", QVariant(axisMinorGridLineColor()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorGridLinestyle", QVariant(axisMajorGridLineStyle()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorGridLinestyle", QVariant(axisMinorGridLineStyle()).toString());
+  _dialogDefaults->setValue(group+"DrawMajorGridLinestyle", QVariant((int)axisMajorGridLineStyle()).toString());
+  _dialogDefaults->setValue(group+"DrawMinorGridLinestyle", QVariant((int)axisMinorGridLineStyle()).toString());
   _dialogDefaults->setValue(group+"DrawMajorGridLinewidth", QVariant(axisMajorGridLineWidth()).toString());
   _dialogDefaults->setValue(group+"DrawMinorGridLinewidth", QVariant(axisMinorGridLineWidth()).toString());
   _dialogDefaults->setValue(group+"SignificantDigits", QVariant(axisSignificantDigits()).toString());
@@ -1170,8 +1170,8 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("drawminorgridlines", QVariant(drawAxisMinorGridLines()).toString());
   xml.writeAttribute("drawmajorgridlinecolor", QVariant(axisMajorGridLineColor()).toString());
   xml.writeAttribute("drawminorgridlinecolor", QVariant(axisMinorGridLineColor()).toString());
-  xml.writeAttribute("drawmajorgridlinestyle", QVariant(axisMajorGridLineStyle()).toString());
-  xml.writeAttribute("drawminorgridlinestyle", QVariant(axisMinorGridLineStyle()).toString());
+  xml.writeAttribute("drawmajorgridlinestyle", QVariant((int)axisMajorGridLineStyle()).toString());
+  xml.writeAttribute("drawminorgridlinestyle", QVariant((int)axisMinorGridLineStyle()).toString());
   xml.writeAttribute("drawmajorgridlinewidth", QVariant(axisMajorGridLineWidth()).toString());
   xml.writeAttribute("drawminorgridlinewidth", QVariant(axisMinorGridLineWidth()).toString());
   xml.writeAttribute("significantdigits", QVariant(axisSignificantDigits()).toString());

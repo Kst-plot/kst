@@ -59,7 +59,7 @@ void saveDialogDefaultsLockPosToData(const QString &group_name, const bool lockP
 void saveDialogDefaultsBrush(const QString &group_name, const QBrush &b) {
   // Save the brush
   _dialogDefaults->setValue(group_name+"/fillBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue(group_name+"/fillBrushStyle", QVariant(b.style()).toString());
+  _dialogDefaults->setValue(group_name+"/fillBrushStyle", QVariant((int)b.style()).toString());
   _dialogDefaults->setValue(group_name+"/fillBrushUseGradient", QVariant(bool(b.gradient())).toString());
   if (b.gradient()) {
     QString stopList;
@@ -80,12 +80,12 @@ void saveDialogDefaultsPen(const QString &group_name, const QPen &p) {
   // Save stroke...
   QBrush b = p.brush();
 
-  _dialogDefaults->setValue(group_name+"/strokeStyle", QVariant(p.style()).toString());
+  _dialogDefaults->setValue(group_name+"/strokeStyle", QVariant((int)p.style()).toString());
   _dialogDefaults->setValue(group_name+"/strokeWidth", p.widthF());
   _dialogDefaults->setValue(group_name+"/strokeJoinStyle", QVariant(p.joinStyle()).toString());
   _dialogDefaults->setValue(group_name+"/strokeCapStyle", QVariant(p.capStyle()).toString());
   _dialogDefaults->setValue(group_name+"/strokeBrushColor", QVariant(b.color()).toString());
-  _dialogDefaults->setValue(group_name+"/strokeBrushStyle", QVariant(b.style()).toString());
+  _dialogDefaults->setValue(group_name+"/strokeBrushStyle", QVariant((int)b.style()).toString());
 
 }
 
