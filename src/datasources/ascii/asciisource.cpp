@@ -301,24 +301,14 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
 
   LexicalCast::AutoDot useDot(_config._useDot);
 
-  int sampleRead = 0;
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
-  if (_config._useThreads) {
-    if (useSlidingWindow(bytesToRead)) { 
-      for (int i = 0; i< slidingWindow.size(); i++) {
-        sampleRead += parseWindowMultithreaded(slidingWindow[i], col, v, field);
-      }
-    } else {
-      Q_ASSERT(slidingWindow.size() == 1);
-      sampleRead = parseWindowMultithreaded(slidingWindow[0], col, v, field);
-    }
-  } else {
-    sampleRead = 0;
-    for (int i = 0; i < slidingWindow.size(); i++) {
+  int sampleRead = 0;
+  for (int i = 0; i< slidingWindow.size(); i++) {
+    if (_config._useThreads)
+      sampleRead += parseWindowMultithreaded(slidingWindow[i], col, v, field);
+    else
       sampleRead += parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);
-    }
   }
-
   return sampleRead;
 }
 
