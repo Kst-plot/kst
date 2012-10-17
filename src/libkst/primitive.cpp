@@ -106,6 +106,7 @@ void Primitive::fatalError(const QString& msg)
 {
   QString message = msg;
   message +="\nError could be ignored, but chances are high that Kst will crash.";
+  message += "\nWhen reading ASCII data you could limit the size of the file buffer to save memory.";
   QMessageBox::StandardButton btn = QMessageBox::critical(0, "A fatal error occurred", message, QMessageBox::Abort | QMessageBox::Ignore);
   if (btn == QMessageBox::Abort) {
     exit(-2);
