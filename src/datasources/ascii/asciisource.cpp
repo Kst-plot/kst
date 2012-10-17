@@ -281,7 +281,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       if (_config._useThreads) {
         _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
       } else {
-        _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead);
+        _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
       }
     } else {
       _fileBuffer.readWholeFile(_reader.rowIndex(), begin, bytesToRead, numThreads);

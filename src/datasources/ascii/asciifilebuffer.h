@@ -35,7 +35,7 @@ public:
   void readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes = -1);
   const QVector<AsciiFileData>& data() const; // -> wholeFile();
   
-  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes = -1);
+  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize);
   void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks);
 
   const QVector<QVector<AsciiFileData> >& slidingWindow() const { return _slidingWindow; }

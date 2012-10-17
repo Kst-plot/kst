@@ -201,13 +201,12 @@ void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start,
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes)
+void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize)
 {
   clear();
   if (!_file)
     return;
 
-  int chunkSize = _defaultChunkSize;
   _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
   _bytesRead = 0;
   AsciiFileData master;
