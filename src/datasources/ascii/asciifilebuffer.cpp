@@ -145,14 +145,9 @@ void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int s
   if (bytesToRead == windowSize)
   {
     for (int i = 0; i < chunks.size(); i++) {
-      AsciiFileData& chunk = chunks[i];
-      if (!chunk.resize(chunk.bytesRead())) {
-        Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available to read whole file"));
-        return;
-      }
-      chunk.setFile(_file);
-      chunk.setReread(reread);
-      _bytesRead += chunk.bytesRead();
+      chunks[i].setFile(_file);
+      chunks[i].setReread(reread);
+      _bytesRead += chunks[i].bytesRead();
     }
     _fileData.push_back(chunks);
   }
