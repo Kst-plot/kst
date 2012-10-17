@@ -216,6 +216,13 @@ int AsciiSource::columnOfField(const QString& field) const
 
 
 //-------------------------------------------------------------------------------------------
+bool AsciiSource::useSlidingWindow(int bytesToRead)  const
+{
+  return _config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead;
+}
+
+
+//-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
   bool succcess;
@@ -228,13 +235,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     }
   }
   return read;
-}
-
-
-//-------------------------------------------------------------------------------------------
-bool AsciiSource::useSlidingWindow(int bytesToRead)  const
-{
-  return _config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead;
 }
 
 
@@ -280,12 +280,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
 
     if (useSlidingWindow(bytesToRead)) {
       if (_config._useThreads) {
-        _fileBuffer.readSliding(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
+        _fileBuffer.useSlidingWindowWithChunks(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
       } else {
-        _fileBuffer.readLazy(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
+        _fileBuffer.useSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
       }
     } else {
-      _fileBuffer.readComplete(_reader.rowIndex(), begin, bytesToRead, numThreads);
+      _fileBuffer.useOneWindowWithChunks(_reader.rowIndex(), begin, bytesToRead, numThreads);
     }
 
     if (_fileBuffer.bytesRead() == 0) {
@@ -295,57 +295,59 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
     _reader.detectLineEndingType(*file);
   }
   
+  int sampleRead = 0;
+  QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
   if (_config._useThreads) {
-    if (useSlidingWindow(bytesToRead)) {
-      const QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.slidingFileData();
-      int sRead = 0;
-      //int sRead_check = 0;
-      foreach (const QVector<AsciiFileData>& window, slidingWindow) {
-        foreach(AsciiFileData fileData, window) {
-          if (!fileData.read()) {
-            return 0;
-          }
-        }
-        //Q_ASSERT(sRead_check = readFieldSingleThreaded(window, col, v, field, sRead_check));
-        sRead += readFieldMultiThreaded(window, col, v, field);
+    if (useSlidingWindow(bytesToRead)) { 
+      for (int i = 0; i< slidingWindow.size(); i++) {
+        sampleRead += parseWindowMultithreaded(slidingWindow[i], col, v, field);
       }
-      return sRead;
     } else {
-      //Q_ASSERT(n == readFieldSingleThreaded(_fileBuffer.data(), col, v, field));
-      return readFieldMultiThreaded(_fileBuffer.fileData(), col, v, field);
+      Q_ASSERT(slidingWindow.size() == 1);
+      sampleRead = parseWindowMultithreaded(slidingWindow[0], col, v, field);
+    }
+  } else {
+    sampleRead = 0;
+    for (int i = 0; i < slidingWindow.size(); i++) {
+      sampleRead += parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);
     }
   }
 
-  return readFieldSingleThreaded(_fileBuffer.fileData(), col, v, field);
+  return sampleRead;
 }
 
+
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readFieldSingleThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead)
+int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, const QString& field, int sRead)
 {
-  AsciiFileData::logData(fileData);
-  foreach (const AsciiFileData& chunk, fileData) {
-    Q_ASSERT(sRead ==  chunk.rowBegin());
-    sRead += _reader.readField(chunk, col, v + chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
+  int read = 0;
+  for (int i = 0; i< window.size(); i++) {
+    Q_ASSERT(sRead ==  window[i].rowBegin());
+    if (!window[i].read())
+      return 0;
+    read += _reader.readFieldFromChunk(window[i], col, v, field);
   }
-  return sRead;
+  return read;
 }
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readFieldMultiThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field)
+int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, const QString& field)
 {
+  if (!_fileBuffer.readWindow(window))
+    return 0;
+
   QFutureSynchronizer<int> readFutures;
-  const QVector<AsciiFileData>& data = _fileBuffer.fileData();
-  foreach (const AsciiFileData& chunk, fileData) {
-    QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldChunk, chunk, col, v, field);
+  foreach (const AsciiFileData& chunk, window) {
+    QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, field);
     readFutures.addFuture(future);
   }
   readFutures.waitForFinished();
-  int sRead = 0;
+  int sampleRead = 0;
   foreach (const QFuture<int> future, readFutures.futures()) {
-    sRead += future.result();
+    sampleRead += future.result();
   }
-  return sRead;
+  return sampleRead;
 }
 
 

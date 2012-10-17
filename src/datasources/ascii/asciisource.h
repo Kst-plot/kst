@@ -85,8 +85,8 @@ class AsciiSource : public Kst::DataSource
     bool useSlidingWindow(int bytesToRead)  const;
 
     int readField(double *v, const QString &field, int s, int n, bool& success);
-    int readFieldSingleThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead = 0);
-    int readFieldMultiThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field);
+    int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead);
+    int parseWindowMultithreaded(QVector<AsciiFileData>& fileData, int col, double* v, const QString& field);
     
     
 

@@ -40,8 +40,8 @@ public:
   AsciiFileData();
   ~AsciiFileData();
 
-  inline bool lazyRead() const { return _lazyRead; }
-  inline void setLazyRead(bool value) { _lazyRead = value; }
+  inline bool reread() const { return _reread; }
+  inline void setReread(bool value) { _reread = value; }
 
   inline int begin() const { return _begin; }
   inline int bytesRead() const { return _bytesRead; }
@@ -73,13 +73,13 @@ public:
 private:
   QSharedPointer<Array> _array;
   QFile* _file;
-  bool _lazyRead;
+  bool _fileRead;
+  bool _reread;
   int _begin;
   int _bytesRead;
   int _rowBegin;
   int _rowsRead;
 
-  void readLazy() const;
 };
 
 Q_DECLARE_TYPEINFO(AsciiFileData, Q_MOVABLE_TYPE);

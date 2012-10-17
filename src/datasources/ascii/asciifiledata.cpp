@@ -93,9 +93,11 @@ void fileBufferFree(void* ptr)
   free(ptr);
 }
 
+
+
 //-------------------------------------------------------------------------------------------
 AsciiFileData::AsciiFileData() : 
-  _array(new Array), _lazyRead(false), _file(0),
+  _array(new Array), _reread(false), _file(0), _fileRead(false),
   _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
 }
@@ -108,35 +110,18 @@ AsciiFileData::~AsciiFileData()
 //-------------------------------------------------------------------------------------------
 char* AsciiFileData::data()
 {
-  readLazy();
   return _array->data();
 }
 
 //-------------------------------------------------------------------------------------------
 const char* const AsciiFileData::constPointer() const
 {
-  readLazy();
   return _array->data();
 }
 
 const AsciiFileData::Array& AsciiFileData::constArray() const
 {
-  readLazy();
   return *_array;
-}
-
-void AsciiFileData::readLazy() const
-{
-  AsciiFileData* This = const_cast<AsciiFileData*>(this);
-  if (_lazyRead) {
-    if (!_file) {
-      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: no file"), Kst::Debug::Warning);
-    } else if ( _file->openMode() != QIODevice::ReadOnly) {
-      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: file not open"), Kst::Debug::Warning);
-    } else if (!This->read()) {
-      Kst::Debug::self()->log(QString("AsciiFileData::lazyRead error: error while reading"), Kst::Debug::Warning);
-    }
-  }
 }
 
 //-------------------------------------------------------------------------------------------
@@ -161,6 +146,7 @@ void AsciiFileData::clear(bool forceDeletingArray)
   }
   _begin = -1;
   _bytesRead = 0;
+  _fileRead = false;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -193,9 +179,14 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
 //-------------------------------------------------------------------------------------------
 bool AsciiFileData::read()
 {
+  if (_fileRead && !_reread) {
+    return true;
+  }
+
   if (!_file || _file->openMode() != QIODevice::ReadOnly) {
     return false;
   }
+
   int start = _begin;
   int bytesToRead = _bytesRead;
   read(*_file, start, bytesToRead);
@@ -203,6 +194,8 @@ bool AsciiFileData::read()
     clear(true);
     return false;
   }
+
+  _fileRead = true;
   return true;
 }
 
@@ -214,7 +207,7 @@ void AsciiFileData::logData() const
     .arg(QString::number((int)_array.data()))
     .arg(begin(), 8).arg(begin() + bytesRead(), 8)
     .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8)
-    .arg(_lazyRead).arg(bytesRead(), 8).arg(rowsRead(), 8);
+    .arg(_reread).arg(bytesRead(), 8).arg(rowsRead(), 8);
 }
 
 //-------------------------------------------------------------------------------------------

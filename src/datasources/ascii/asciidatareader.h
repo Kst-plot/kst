@@ -42,7 +42,7 @@ class AsciiDataReader
     
     bool findDataRows(bool read_completely, QFile& file, int _byteLength);
     int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int s, int n);
-    int readFieldChunk(const AsciiFileData& chunk, int col, double *v, QString& field);
+    int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, const QString& field);
 
   private:
     int _numFrames;

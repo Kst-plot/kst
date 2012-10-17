@@ -193,7 +193,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufre
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::readFieldChunk(const AsciiFileData& chunk, int col, double *v, QString& field)
+int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, const QString& field)
 {
   return readField(chunk, col, v + chunk.rowBegin(), field, chunk.rowBegin(), chunk.rowsRead());
 }

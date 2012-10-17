@@ -24,8 +24,7 @@ extern size_t maxAllocate;
 
 //-------------------------------------------------------------------------------------------
 AsciiFileBuffer::AsciiFileBuffer() : 
-  _file(0), _begin(-1), _bytesRead(0),
-  _defaultChunkSize(qMin((size_t) 10 * MB, maxAllocate - 1))
+  _file(0), _begin(-1), _bytesRead(0)
 {
 }
 
@@ -54,17 +53,9 @@ bool AsciiFileBuffer::openFile(QFile &file)
 void AsciiFileBuffer::clear()
 {
   _fileData.clear();
-  _slidingFileData.clear();
   _begin = -1;
   _bytesRead = 0;
 }
-
-//-------------------------------------------------------------------------------------------
-const QVector<AsciiFileData>& AsciiFileBuffer::fileData() const
-{
-  return _fileData;
-}
-
 
 //-------------------------------------------------------------------------------------------
 int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const
@@ -86,6 +77,9 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
   const int end = start + bytesToRead;
   int endsInRow = 0;
   QVector<AsciiFileData> chunks;
+  if (chunkSize == 0)
+    return chunks;
+  chunks.reserve(bytesToRead / chunkSize);
   int pos = start;
   while (pos < end) {
     // use for storing reading information only
@@ -111,118 +105,110 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
       break;
     pos = rowIndex[endsInRow];
   }
-  //qDebug() << "File splitted into " << chunks.size() << " chunks:"; logData(chunks);
+  //qDebug() << "File splitted into " << chunks.size() << " chunks:"; AsciiFileData::logData(chunks);
   return chunks;
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readComplete(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes)
+void AsciiFileBuffer::useOneWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks)
+{
+  useSlidingWindowWithChunks(rowIndex, start, bytesToRead, bytesToRead, numChunks, false);
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::useSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize)
+{
+  useSlidingWindowWithChunks(rowIndex, start, bytesToRead, windowSize, 1, true);
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks)
+{
+  useSlidingWindowWithChunks(rowIndex, start, bytesToRead, windowSize, numWindowChunks, true);
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks, bool reread)
 {
   clear();
   if (!_file)
     return;
 
-  if (numChunks == 1) {
-    // first try to read the whole file into one array
-    AsciiFileData wholeFile;
-    wholeFile.read(*_file, start, bytesToRead, maximalBytes);
-    if (bytesToRead == wholeFile.bytesRead()) {
-      wholeFile.setRowBegin(0);
-      wholeFile.setRowsRead(rowIndex.size() - 1);
-      _begin = start;
-      _bytesRead = bytesToRead;
-      _fileData << wholeFile;
-      return;
+  if (bytesToRead == 0 && numWindowChunks == 0 || windowSize == 0)
+    return;
+
+  int chunkSize = windowSize / numWindowChunks;
+  QVector<AsciiFileData> chunks = splitFile(chunkSize, rowIndex, start, bytesToRead);
+  // chunks.size() could be greater than numWindowChunks!
+
+  // no sliding window
+  if (bytesToRead == windowSize)
+  {
+    for (int i = 0; i < chunks.size(); i++) {
+      AsciiFileData& chunk = chunks[i];
+      if (!chunk.resize(chunk.bytesRead())) {
+        Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available to read whole file"));
+        return;
+      }
+      chunk.setFile(_file);
+      chunk.setReread(reread);
+      _bytesRead += chunk.bytesRead();
+    }
+    _fileData.push_back(chunks);
+  }
+  else
+  {
+    // sliding window
+    // prepare window with numSubChunks chunks
+    QVector<AsciiFileData> window;
+    window.reserve(numWindowChunks);
+    for (int i = 0; i < numWindowChunks; i++) {
+      AsciiFileData sharedArray;
+      if (!sharedArray.resize(chunkSize)) {
+        Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for sliding window"));
+        return;
+      }
+      sharedArray.setFile(_file);
+      window.push_back(sharedArray);
+    }
+
+    _fileData.reserve(bytesToRead / windowSize);
+    int i = 0;
+    while (i < chunks.size()) {
+      QVector<AsciiFileData> windowChunks;
+      windowChunks.reserve(window.size());
+      for (int s = 0; s < window.size(); s++) {
+        AsciiFileData chunk = chunks[i];
+        chunk.setSharedArray(window[s]);
+        chunk.setFile(_file);
+        chunk.setReread(reread);
+        _bytesRead += chunk.bytesRead();
+        windowChunks.push_back(chunk);
+        i++;
+        if (i >= chunks.size())
+          break;
+      }
+      // each entry is one slide of the window
+      _fileData.push_back(windowChunks);
+      qDebug() << "Window chunks:"; AsciiFileData::logData(windowChunks);
     }
   }
 
-  // reading whole file failed or numChunks > 1: read into smaller arrays
-  int chunkSize;
-  if (numChunks > 1) {
-    chunkSize = bytesToRead / numChunks;
-  } else {
-    chunkSize = _defaultChunkSize;
-  }
-  _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
-  for (int i = 0; i < _fileData.size(); i++) {
-    // use alread set
-    _fileData[i].setFile(_file);
-    if (!_fileData[i].read()) {
-      Kst::Debug::self()->log(QString("AsciiFileBuffer: error when reading into chunk"));
-      break;
-    }
-    _bytesRead += _fileData[i].bytesRead();
-  }
-  if (_bytesRead == bytesToRead) {
-    _begin = start;
-  } else {
+  _begin = start;
+  if (_bytesRead != bytesToRead) {
     clear();
-    Kst::Debug::self()->log(QString("AsciiFileBuffer: error while reading %1 chunks").arg(_fileData.size()));
+    Kst::Debug::self()->log(QString("AsciiFileBuffer: error while splitting into file %1 chunks").arg(_fileData.size()));
   }
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readSliding(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks)
+bool AsciiFileBuffer::readWindow(QVector<AsciiFileData>& window) const
 {
-  clear();
-  if (!_file)
-    return;
-
-  int subChunkSize = chunkSize / numSubChunks;
-
-  QVector<AsciiFileData> sharedArrays;
-  for (int i = 0; i < numSubChunks; i++) {
-    AsciiFileData sharedArray;
-    sharedArray.setFile(_file);
-    if (!sharedArray.resize(subChunkSize)) {
-      Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for creating sub chunks for sliding window"));
-      return;
+  for (int i = 0; i < window.size(); i++) {
+    if (!window[i].read()) {
+      return false;
     }
-    sharedArrays.push_back(sharedArray);
   }
-
-  QVector<AsciiFileData> chunks = splitFile(subChunkSize, rowIndex, start, bytesToRead);
-  int i = 0;
-  while (i < chunks.size()) {
-    QVector<AsciiFileData> subChunks;
-    for (int s = 0; s < sharedArrays.size(); s++) {
-      chunks[i].setSharedArray(sharedArrays[s]);
-      chunks[i].setFile(_file);
-      chunks[i].setLazyRead(false); //!
-      subChunks.push_back(chunks[i]);
-      i++;
-      if (i >= chunks.size())
-        break;
-    }
-    //qDebug() << "Sub chunks:"; AsciiFileData::logData(subChunks);
-    _slidingFileData.push_back(subChunks);
-  }
-  _begin = start;
-  _bytesRead = bytesToRead;
+  return true;
 }
-
-//-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readLazy(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize)
-{
-  clear();
-  if (!_file)
-    return;
-
-  _fileData = splitFile(chunkSize, rowIndex, start, bytesToRead);
-  _bytesRead = 0;
-  AsciiFileData master;
-  if (!master.resize(chunkSize)) {
-    Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for creating sliding window"));
-  }
-  for (int i = 0; i < _fileData.size(); i++) {
-    // reading from file is delayed until the data is accessed
-    _fileData[i].setLazyRead(true);
-    _fileData[i].setFile(_file);
-    _fileData[i].setSharedArray(master);
-  }
-  _begin = start;
-  _bytesRead = bytesToRead;
-}
-
-
 

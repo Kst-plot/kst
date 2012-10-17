@@ -32,26 +32,26 @@ public:
   void clear();
 
   void setFile(QFile* file);
-  void readComplete(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes = -1);
-  void readLazy(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize);
-  void readSliding(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks);
+  bool readWindow(QVector<AsciiFileData>& window) const;
 
-  const QVector<AsciiFileData>& fileData() const;
-  const QVector<QVector<AsciiFileData> >& slidingFileData() const { return _slidingFileData; }
+  void useOneWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks);
+  void useSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize);
+  void useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks);
+
+  QVector<QVector<AsciiFileData> >& fileData() { return _fileData; }
 
   static bool openFile(QFile &file);
 
 private:
   QFile* _file;
-  QVector<AsciiFileData> _fileData;
-  QVector<QVector<AsciiFileData> > _slidingFileData;
+  QVector<QVector<AsciiFileData> > _fileData;
 
   int _begin;
   int _bytesRead;
-  const int _defaultChunkSize;
 
   const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
   int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const;
+  void useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks, bool reread);
 };
 
 #endif
