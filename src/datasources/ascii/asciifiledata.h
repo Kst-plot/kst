@@ -64,9 +64,11 @@ public:
   inline void setRowBegin(int begin) { _rowBegin = begin; }
   inline void setRowsRead(int read) { _rowsRead = read; }
 
-  void logData() const;
-
   void setSharedArray(AsciiFileData&);
+
+
+  void logData() const;
+  static void logData(const QVector<AsciiFileData>& chunks);
 
 private:
   QSharedPointer<Array> _array;

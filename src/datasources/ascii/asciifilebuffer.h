@@ -33,20 +33,24 @@ public:
 
   void setFile(QFile* file);
   void readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes = -1);
+  const QVector<AsciiFileData>& data() const; // -> wholeFile();
+  
   void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int maximalBytes = -1);
+  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks);
 
-  const QVector<AsciiFileData>& data() const;
+  const QVector<QVector<AsciiFileData> >& slidingWindow() const { return _slidingWindow; }
 
   static bool openFile(QFile &file);
-  
+
 private:
   QFile* _file;
   QVector<AsciiFileData> _fileData;
+  QVector<QVector<AsciiFileData> > _slidingWindow;
+
   int _begin;
   int _bytesRead;
   const int _defaultChunkSize;
 
-  void logData(const QVector<AsciiFileData>& chunks) const;
   const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
   int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const;
 };

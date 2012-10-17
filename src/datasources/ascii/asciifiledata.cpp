@@ -217,6 +217,13 @@ void AsciiFileData::logData() const
     .arg(_lazyRead).arg(bytesRead(), 8).arg(rowsRead(), 8);
 }
 
+//-------------------------------------------------------------------------------------------
+void AsciiFileData::logData(const QVector<AsciiFileData>& chunks)
+{
+  foreach (const AsciiFileData& chunk, chunks) {
+    chunk.logData();
+  }
+}
 
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::setSharedArray(AsciiFileData& arrayData)

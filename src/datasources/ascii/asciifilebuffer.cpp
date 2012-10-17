@@ -64,13 +64,6 @@ const QVector<AsciiFileData>& AsciiFileBuffer::data() const
   return _fileData;
 }
 
-//-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::logData(const QVector<AsciiFileData>& chunks) const
-{
-  foreach (const AsciiFileData& chunk, chunks) {
-    chunk.logData();
-  }
-}
 
 //-------------------------------------------------------------------------------------------
 int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const
@@ -166,6 +159,45 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
     clear();
     Kst::Debug::self()->log(QString("AsciiFileBuffer: error while reading %1 chunks").arg(_fileData.size()));
   }
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks)
+{
+  _slidingWindow.clear();
+  _bytesRead = 0;
+
+  int subChunkSize = chunkSize / numSubChunks;
+
+  QVector<AsciiFileData> sharedArrays;
+  for (int i = 0; i < numSubChunks; i++) {
+    AsciiFileData sharedArray;
+    sharedArray.setFile(_file);
+    if (!sharedArray.resize(subChunkSize)) {
+      Kst::Debug::self()->log(QString("AsciiFileBuffer: not enough memory available for creating sub chunks for sliding window"));
+      return;
+    }
+    sharedArrays.push_back(sharedArray);
+  }
+
+  QVector<AsciiFileData> chunks = splitFile(subChunkSize, rowIndex, start, bytesToRead);
+  int i = 0;
+  while (i < chunks.size()) {
+    QVector<AsciiFileData> subChunks;
+    for (int s = 0; s < sharedArrays.size(); s++) {
+      chunks[i].setSharedArray(sharedArrays[s]);
+      chunks[i].setFile(_file);
+      chunks[i].setLazyRead(false); //!
+      subChunks.push_back(chunks[i]);
+      i++;
+      if (i >= chunks.size())
+        break;
+    }
+    //qDebug() << "Sub chunks:"; AsciiFileData::logData(subChunks);
+    _slidingWindow.push_back(subChunks);
+  }
+  _begin = start;
+  _bytesRead = bytesToRead;
 }
 
 //-------------------------------------------------------------------------------------------

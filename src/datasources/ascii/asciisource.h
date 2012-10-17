@@ -82,8 +82,13 @@ class AsciiSource : public Kst::DataSource
     QStringList _fieldList;
     QMap<QString, QString> _fieldUnits;
 
-    int readField(double *v, const QString &field, int s, int n, bool& success);
     bool useSlidingWindow(int bytesToRead)  const;
+
+    int readField(double *v, const QString &field, int s, int n, bool& success);
+    int readFieldSingleThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead = 0);
+    int readFieldMultiThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field);
+    
+    
 
     int columnOfField(const QString& field) const;
     static QStringList splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg);

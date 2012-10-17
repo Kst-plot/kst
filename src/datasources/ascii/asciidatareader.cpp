@@ -281,11 +281,13 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
                                  const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                                  const ColumnWidthsAreConst& are_column_widths_const) const
 {
-  LexicalCast lexc;
+  LexicalCast& lexc(*new LexicalCast);
   {
+    // TODO move
     QMutexLocker lock(&_localeMutex);
     lexc.setDecimalSeparator(_config._useDot);
   }
+
   const QString delimiters = _config._delimiters.value();
 
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
@@ -294,7 +296,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
-    
+
     if (are_column_widths_const()) {
       if (col_start != -1) {
         v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
@@ -332,6 +334,11 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
         }
       }
     }
+  }
+
+  {
+    QMutexLocker lock(&_localeMutex);
+    delete &lexc;
   }
   return n;
 }
