@@ -268,6 +268,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       return 0;
     }
 
+    _fileBuffer.setFile(file);
+
     int numThreads;
     if (!_config._useThreads) {
       numThreads = 1;
@@ -276,16 +278,16 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
       numThreads = (numThreads > 0) ? numThreads : 1;
     }
 
-    _fileBuffer.setFile(file);
     if (useSlidingWindow(bytesToRead)) {
       if (_config._useThreads) {
-        _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
+        _fileBuffer.readSliding(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
       } else {
-        _fileBuffer.readFileSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
+        _fileBuffer.readLazy(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
       }
     } else {
-      _fileBuffer.readWholeFile(_reader.rowIndex(), begin, bytesToRead, numThreads);
+      _fileBuffer.readComplete(_reader.rowIndex(), begin, bytesToRead, numThreads);
     }
+
     if (_fileBuffer.bytesRead() == 0) {
       success = false;
       return 0;
@@ -294,11 +296,8 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
   }
   
   if (_config._useThreads) {
-    if (!useSlidingWindow(bytesToRead)) {
-      //Q_ASSERT(n == readFieldSingleThreaded(_fileBuffer.data(), col, v, field));
-      return readFieldMultiThreaded(_fileBuffer.data(), col, v, field);
-    } else {
-      const QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.slidingWindow();
+    if (useSlidingWindow(bytesToRead)) {
+      const QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.slidingFileData();
       int sRead = 0;
       //int sRead_check = 0;
       foreach (const QVector<AsciiFileData>& window, slidingWindow) {
@@ -311,10 +310,13 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n, bool& 
         sRead += readFieldMultiThreaded(window, col, v, field);
       }
       return sRead;
+    } else {
+      //Q_ASSERT(n == readFieldSingleThreaded(_fileBuffer.data(), col, v, field));
+      return readFieldMultiThreaded(_fileBuffer.fileData(), col, v, field);
     }
-  } else  {
-    return readFieldSingleThreaded(_fileBuffer.data(), col, v, field);
   }
+
+  return readFieldSingleThreaded(_fileBuffer.fileData(), col, v, field);
 }
 
 //-------------------------------------------------------------------------------------------
@@ -333,7 +335,7 @@ int AsciiSource::readFieldSingleThreaded(const QVector<AsciiFileData>& fileData,
 int AsciiSource::readFieldMultiThreaded(const QVector<AsciiFileData>& fileData, int col, double* v, const QString& field)
 {
   QFutureSynchronizer<int> readFutures;
-  const QVector<AsciiFileData>& data = _fileBuffer.data();
+  const QVector<AsciiFileData>& data = _fileBuffer.fileData();
   foreach (const AsciiFileData& chunk, fileData) {
     QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldChunk, chunk, col, v, field);
     readFutures.addFuture(future);

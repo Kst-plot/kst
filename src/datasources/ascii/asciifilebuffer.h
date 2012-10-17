@@ -32,20 +32,19 @@ public:
   void clear();
 
   void setFile(QFile* file);
-  void readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes = -1);
-  const QVector<AsciiFileData>& data() const; // -> wholeFile();
-  
-  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize);
-  void readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks);
+  void readComplete(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes = -1);
+  void readLazy(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize);
+  void readSliding(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks);
 
-  const QVector<QVector<AsciiFileData> >& slidingWindow() const { return _slidingWindow; }
+  const QVector<AsciiFileData>& fileData() const;
+  const QVector<QVector<AsciiFileData> >& slidingFileData() const { return _slidingFileData; }
 
   static bool openFile(QFile &file);
 
 private:
   QFile* _file;
   QVector<AsciiFileData> _fileData;
-  QVector<QVector<AsciiFileData> > _slidingWindow;
+  QVector<QVector<AsciiFileData> > _slidingFileData;
 
   int _begin;
   int _bytesRead;

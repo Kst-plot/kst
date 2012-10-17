@@ -54,12 +54,13 @@ bool AsciiFileBuffer::openFile(QFile &file)
 void AsciiFileBuffer::clear()
 {
   _fileData.clear();
+  _slidingFileData.clear();
   _begin = -1;
   _bytesRead = 0;
 }
 
 //-------------------------------------------------------------------------------------------
-const QVector<AsciiFileData>& AsciiFileBuffer::data() const
+const QVector<AsciiFileData>& AsciiFileBuffer::fileData() const
 {
   return _fileData;
 }
@@ -114,9 +115,8 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
   return chunks;
 }
 
-
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes)
+void AsciiFileBuffer::readComplete(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks, int maximalBytes)
 {
   clear();
   if (!_file)
@@ -162,10 +162,11 @@ void AsciiFileBuffer::readWholeFile(const RowIndex& rowIndex, int start, int byt
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks)
+void AsciiFileBuffer::readSliding(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize, int numSubChunks)
 {
-  _slidingWindow.clear();
-  _bytesRead = 0;
+  clear();
+  if (!_file)
+    return;
 
   int subChunkSize = chunkSize / numSubChunks;
 
@@ -194,14 +195,14 @@ void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start,
         break;
     }
     //qDebug() << "Sub chunks:"; AsciiFileData::logData(subChunks);
-    _slidingWindow.push_back(subChunks);
+    _slidingFileData.push_back(subChunks);
   }
   _begin = start;
   _bytesRead = bytesToRead;
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::readFileSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize)
+void AsciiFileBuffer::readLazy(const RowIndex& rowIndex, int start, int bytesToRead, int chunkSize)
 {
   clear();
   if (!_file)
