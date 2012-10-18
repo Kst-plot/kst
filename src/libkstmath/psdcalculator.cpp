@@ -29,6 +29,7 @@
 
 #include <qnamespace.h>
 #include <math_kst.h>
+#include "measuretime.h"
 
 extern "C" void rdft(int n, int isgn, double *a);
 
@@ -189,6 +190,9 @@ int PSDCalculator::calculatePowerSpectrum(
   int i_samp, i_subset, ioffset;
 
   memset(output, 0, sizeof(double)*outputLen); // initialize output.
+
+  // Mingw build could be 10 times slower (Gaussian apod, mostly 0 then?)
+  //MeasureTime time_in_rfdt("rdft()");
 
   bool done = false;
   for (i_subset = 0; !done; i_subset++) {
