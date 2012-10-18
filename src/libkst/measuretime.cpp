@@ -14,40 +14,30 @@
 
 #include "debug.h"
 
+#include <iostream>
+#include <time.h>
+
+
 #ifdef Q_OS_WIN
 #include <windows.h>
-#else
-#include <time.h>
+static qint64 largeIntToInt64(const LARGE_INTEGER& i)
+{
+  return ((qint64)i.HighPart) << 32 | i.LowPart;
+}
+static double readFrequency()
+{
+  LARGE_INTEGER largeInt;
+  if (!QueryPerformanceFrequency(&largeInt))
+    return 0;
+  return 1.0 / largeIntToInt64(largeInt);
+}
+static double frequency = readFrequency();
 #endif
 
-#include <iostream>
- 
+
 MeasureTime::MeasureTime(const QString& n) :
     started(0),
-    interval(0),
-    name(n),
-    other_interval(0)
-{
-  setFrequency();
-  restart();
-}
-
-
-void MeasureTime::setFrequency()
-{
-#ifdef Q_OS_WIN
-  LARGE_INTEGER proc_freq;
-  QueryPerformanceFrequency(&proc_freq);
-  frequency =  1.0 / proc_freq.QuadPart;
-#endif
-}
-
-
-MeasureTime::MeasureTime(MeasureTime& rhs) :
-      started(0),
-      interval(0),
-      frequency(rhs.frequency),
-      other_interval(&rhs.interval)
+    name(n)
 {
   restart();
 }
@@ -55,12 +45,7 @@ MeasureTime::MeasureTime(MeasureTime& rhs) :
 
 MeasureTime::~MeasureTime()
 {
-  if (other_interval) {
-    measure();
-    *other_interval += interval;
-  } else {
-    print();
-  }
+  print();
 }
 
 
@@ -68,9 +53,10 @@ double MeasureTime::getTime() const
 {
 #ifdef Q_OS_WIN
 
-  LARGE_INTEGER st;
-  QueryPerformanceCounter(&st);
-  return st.QuadPart * frequency;
+  LARGE_INTEGER largeInt;
+  if (!QueryPerformanceCounter(&largeInt))
+    return 0;
+  return  largeIntToInt64(largeInt) * frequency;
 
 #else
 
@@ -112,7 +98,7 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  //qDebug() << "MeasureTime in " << name << ": " << interval << " seconds\n";
+  qWarning(qPrintable(QString("MeasureTime in %1: %2 sec").arg(name ).arg(interval)));
   Kst::Debug::self()->log(QString("Timing: %2 sec, Scope: %1").arg(name).arg(interval), Kst::Debug::DebugLog);
 }
 
