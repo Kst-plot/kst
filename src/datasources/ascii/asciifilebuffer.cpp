@@ -185,7 +185,7 @@ void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int s
       }
       // each entry is one slide of the window
       _fileData.push_back(windowChunks);
-      qDebug() << "Window chunks:"; AsciiFileData::logData(windowChunks);
+      //qDebug() << "Window chunks:"; AsciiFileData::logData(windowChunks);
     }
   }
 
