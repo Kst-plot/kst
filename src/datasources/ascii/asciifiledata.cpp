@@ -99,7 +99,7 @@ void fileBufferFree(void* ptr)
 
 //-------------------------------------------------------------------------------------------
 AsciiFileData::AsciiFileData() : 
-  _array(new Array), _reread(false), _file(0), _fileRead(false),
+  _array(new Array), _file(0), _fileRead(false), _reread(false),
   _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
 }

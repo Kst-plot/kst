@@ -134,7 +134,7 @@ void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int s
   if (!_file)
     return;
 
-  if (bytesToRead == 0 && numWindowChunks == 0 || windowSize == 0)
+  if (bytesToRead == 0 || numWindowChunks == 0 || windowSize == 0)
     return;
 
   int chunkSize = windowSize / numWindowChunks;

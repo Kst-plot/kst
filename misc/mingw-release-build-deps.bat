@@ -18,7 +18,7 @@ if "%2" == "" (
 
 echo cmake ..\kst\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=1 -Dkst_3rdparty_build=1 -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
 
-cmake ..\kst\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=1 -Dkst_3rdparty_build=1 -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
+cmake ..\kst\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_build=1 -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
 
 %make%
 %make% install/strip

@@ -76,7 +76,7 @@ endif()
 set(GETDATA_INCLUDEDIR ${install_dir}/include PARENT_SCOPE)
 kst_external_static_lib(gdc_build   libgetdata libgetdata.a)
 kst_external_static_lib(gdcpp_build libgetdata libgetdata++.a)
-set(GETDATA_LIBRARIES gdc_build gdcpp_build ${gddeps} PARENT_SCOPE)
+set(GETDATA_LIBRARIES gdcpp_build gdc_build ${gddeps} PARENT_SCOPE)
 
 
 # ZLIB needed by MATIO

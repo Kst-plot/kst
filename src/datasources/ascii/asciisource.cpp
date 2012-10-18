@@ -18,7 +18,6 @@
 #include "objectstore.h"
 
 #include "math_kst.h"
-#include "kst_inf.h"
 #include "kst_i18n.h"
 #include "kst_atof.h"
 #include "measuretime.h"
