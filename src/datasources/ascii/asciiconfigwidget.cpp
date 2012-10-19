@@ -21,12 +21,12 @@
 #include <QMessageBox>
 
 //
-// ConfigWidgetAsciiInternal
+// AsciiConfigWidgetInternal
 //
 
 
 
-ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) : 
+AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) : 
     QWidget(parent), 
     Ui_AsciiConfig(),
     _index_offset(1)
@@ -47,7 +47,7 @@ ConfigWidgetAsciiInternal::ConfigWidgetAsciiInternal(QWidget *parent) :
   connect(_limitFileBuffer, SIGNAL(toggled(bool)), this, SLOT(updateFrameBuffer(bool)));
 }
 
-void ConfigWidgetAsciiInternal::updateUnitLineEnabled(bool checked)
+void AsciiConfigWidgetInternal::updateUnitLineEnabled(bool checked)
 {
   if (checked && _readUnits->isChecked()) {
     _unitsLine->setEnabled(true);
@@ -56,7 +56,7 @@ void ConfigWidgetAsciiInternal::updateUnitLineEnabled(bool checked)
   }
 }
 
-void ConfigWidgetAsciiInternal::updateFrameBuffer(bool checked)
+void AsciiConfigWidgetInternal::updateFrameBuffer(bool checked)
 {
   if (checked) {
     _limitFileBufferSize->setEnabled(true);
@@ -66,7 +66,7 @@ void ConfigWidgetAsciiInternal::updateFrameBuffer(bool checked)
 }
 
 
-void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
+void AsciiConfigWidgetInternal::columnLayoutChanged(int idx)
 {
   if (idx == AsciiSourceConfig::Fixed) {
     widthButtonGroup->setEnabled(false);
@@ -76,7 +76,7 @@ void ConfigWidgetAsciiInternal::columnLayoutChanged(int idx)
 }
 
 
-void ConfigWidgetAsciiInternal::showBeginning()
+void AsciiConfigWidgetInternal::showBeginning()
 {
   QFile file(_filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -98,7 +98,7 @@ void ConfigWidgetAsciiInternal::showBeginning()
 }
 
 
-AsciiSourceConfig ConfigWidgetAsciiInternal::config()
+AsciiSourceConfig AsciiConfigWidgetInternal::config()
 {
   AsciiSourceConfig config;
   config._fileNamePattern = _fileNamePattern->text();
@@ -136,14 +136,14 @@ AsciiSourceConfig ConfigWidgetAsciiInternal::config()
   return config;
 }
 
-void ConfigWidgetAsciiInternal::setFilename(const QString& filename)
+void AsciiConfigWidgetInternal::setFilename(const QString& filename)
 {
   _filename = filename;
   showBeginning();
 }
 
 
-void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
+void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
 {
   _delimiters->setText(config._delimiters);
   _fileNamePattern->setText(config._fileNamePattern);
@@ -178,25 +178,25 @@ void ConfigWidgetAsciiInternal::setConfig(const AsciiSourceConfig& config)
 }
 
 
-ConfigWidgetAscii::ConfigWidgetAscii(QSettings& s) : Kst::DataSourceConfigWidget(s) {
+AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget(s) {
   QGridLayout *layout = new QGridLayout(this);
-  _ac = new ConfigWidgetAsciiInternal(this);
+  _ac = new AsciiConfigWidgetInternal(this);
   layout->addWidget(_ac, 0, 0);
   layout->activate();
 }
 
 
-ConfigWidgetAscii::~ConfigWidgetAscii() {
+AsciiConfigWidget::~AsciiConfigWidget() {
 }
 
 
-void ConfigWidgetAscii::setFilename(const QString& filename)
+void AsciiConfigWidget::setFilename(const QString& filename)
 {
   _ac->setFilename(filename);
 }
 
 
-void ConfigWidgetAscii::load() {
+void AsciiConfigWidget::load() {
   AsciiSourceConfig config;
   if (hasInstance())
     config.readGroup(settings(), instance()->fileName());
@@ -227,7 +227,7 @@ void ConfigWidgetAscii::load() {
 }
 
 
-void ConfigWidgetAscii::save() {
+void AsciiConfigWidget::save() {
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     if (_ac->_applyDefault->isChecked()) {
@@ -244,7 +244,7 @@ void ConfigWidgetAscii::save() {
   }
 }
 
-bool ConfigWidgetAscii::isOkAcceptabe() const {
+bool AsciiConfigWidget::isOkAcceptabe() const {
   AsciiSourceConfig config = _ac->config();
   QString msg;
   if (config._readFields) {

@@ -226,7 +226,7 @@ QStringList AsciiPlugin::provides() const {
 
 Kst::DataSourceConfigWidget *AsciiPlugin::configWidget(QSettings *cfg, const QString& filename) const {
   Q_UNUSED(filename)
-  ConfigWidgetAscii *config = new ConfigWidgetAscii(*cfg);
+  AsciiConfigWidget *config = new AsciiConfigWidget(*cfg);
   config->load();
   config->setFilename(filename);
   return config;

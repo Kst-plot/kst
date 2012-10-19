@@ -20,12 +20,12 @@
 
 
 
-class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
+class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
 {
   Q_OBJECT
 
   public:
-    ConfigWidgetAsciiInternal(QWidget *parent);
+    AsciiConfigWidgetInternal(QWidget *parent);
 
     AsciiSourceConfig config();
     void setConfig(const AsciiSourceConfig&);
@@ -43,11 +43,11 @@ class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
 };
 
 
-class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
+class AsciiConfigWidget : public Kst::DataSourceConfigWidget
 {
   public:
-    ConfigWidgetAscii(QSettings&);
-    ~ConfigWidgetAscii();
+    AsciiConfigWidget(QSettings&);
+    ~AsciiConfigWidget();
 
     void load();
     void save();
@@ -55,7 +55,7 @@ class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
 
     void setFilename(const QString& filename);
 
-    ConfigWidgetAsciiInternal *_ac;
+    AsciiConfigWidgetInternal *_ac;
 };
 
 
