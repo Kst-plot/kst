@@ -13,11 +13,8 @@
 #ifndef ASCII_PLUGIN_H
 #define ASCII_PLUGIN_H
 
-
 #include "asciisource.h"
 #include "dataplugin.h"
-
-#include "ui_asciiconfig.h"
 
 
 class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
@@ -72,47 +69,6 @@ class AsciiPlugin : public QObject, public Kst::DataSourcePluginInterface
 
     virtual Kst::DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const;
 };
-
-
-
-class ConfigWidgetAsciiInternal : public QWidget, public Ui_AsciiConfig
-{
-  Q_OBJECT
-
-  public:
-    ConfigWidgetAsciiInternal(QWidget *parent);
-
-    AsciiSourceConfig config();
-    void setConfig(const AsciiSourceConfig&);
-    void setFilename(const QString& filename);
-
-  private Q_SLOTS:
-    void columnLayoutChanged(int);
-    void showBeginning();
-    void updateUnitLineEnabled(bool);
-    void updateFrameBuffer(bool);
-
-  private:
-    const int _index_offset;
-    QString _filename;
-};
-
-
-class ConfigWidgetAscii : public Kst::DataSourceConfigWidget
-{
-  public:
-    ConfigWidgetAscii(QSettings&);
-    ~ConfigWidgetAscii();
-
-    void load();
-    void save();
-    bool isOkAcceptabe() const;
-
-    void setFilename(const QString& filename);
-
-    ConfigWidgetAsciiInternal *_ac;
-};
-
 
 
 #endif
