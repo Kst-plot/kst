@@ -6,9 +6,10 @@
 
 # ---------------------------------------------------------
 #
-# set versionname to overwrite generated one
+# set 'versionname' to overwrite generated one based on 'ver'
 #
-versionname=Kst-2.0.7-Beta1
+#versionname=Kst-2.0.7-Beta1
+ver=2.0.7-Beta
 
 
 
@@ -178,7 +179,6 @@ fi
 #
 # build Kst
 #
-ver=2.0.x
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 cd $builddir
 if [ "$1" = "qt5" ]; then
