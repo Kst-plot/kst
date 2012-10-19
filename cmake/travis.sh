@@ -6,9 +6,9 @@
 
 # ---------------------------------------------------------
 #
-# set kstversion to overwrite generated one
+# set versionname to overwrite generated one
 #
-#kstversion=
+#versionname=
 
 
 
@@ -178,8 +178,8 @@ fi
 #
 # build Kst
 #
-date=`date --utc '+%Y.%m.%d-%H.%M'`
 ver=2.0.x
+date=`date --utc '+%Y.%m.%d-%H.%M'`
 cd $builddir
 if [ "$1" = "qt5" ]; then
     ver=$ver-Qt5
@@ -189,10 +189,8 @@ else
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
 
-if [ -z $kstversion ]; then
+if [ -z $versionname ]; then
     versionname=Kst-$ver-$date
-else
-    versionname=Kst-$kstversion
 fi
 
 $cmakebin ../kst/cmake/ \
