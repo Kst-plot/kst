@@ -144,7 +144,7 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
     } else if (_config._delimiters.value().size() > 1) {
       const IsInString comment_del(_config._delimiters.value());
       if (_lineending.isLF()) {
-        new_data = findDataRows(buf.constData(), buf.begin(), buf.begin(), IsLineBreakLF(_lineending), comment_del);
+        new_data = findDataRows(buf.constData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del);
       } else {
         new_data = findDataRows(buf.constData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del);
       }
