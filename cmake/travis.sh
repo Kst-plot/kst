@@ -184,7 +184,9 @@ cd $builddir
 if [ "$1" = "qt5" ]; then
     ver=$ver-Qt5
     qtopt="-Dkst_qt5=1 -Dkst_opengl=0"
-    versionname=$versionname-Qt5
+    if [ ! -z $versionname ]; then
+        versionname=$versionname-Qt5
+    fi
 else
     ver=$ver-Qt4
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
