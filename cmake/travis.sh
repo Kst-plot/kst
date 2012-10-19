@@ -4,12 +4,48 @@
 #
 
 
+
 # ---------------------------------------------------------
 #
 # set 'versionname' to overwrite generated one based on 'ver'
 #
+
 #versionname=Kst-2.0.7-Beta1
+
 ver=2.0.7-Beta
+date=`date --utc '+%Y.%m.%d-%H.%M'`
+if [ -z $versionname ]; then
+    versionname=Kst-$ver-$date
+fi
+if [ "$1" = "qt5" ]; then
+    versionname=$versionname-Qt5
+fi
+echo ---------------------------------------------------------
+echo ---------- Building $versionname
+echo ---------------------------------------------------------
+
+
+
+# ---------------------------------------------------------
+#
+# print some info about the system
+#
+echo
+echo Build system:
+echo
+uname -a
+lsb_release -a
+processors=`grep -c processor /proc/cpuinfo`
+echo number of processors: $processors
+dpkg --get-selections | grep mingw
+iam=`whoami`
+travis=travis
+if [ "$iam" = "$travis" ]; then
+    sudo rm -rf /usr/lib/jvm
+    df -h
+fi
+echo ---------------------------------------------------------
+echo
 
 
 
@@ -24,30 +60,6 @@ checkExitCode() {
         exit 1
     fi
 }
-
-
-
-# ---------------------------------------------------------
-#
-# print some info about the system
-#
-echo
-echo ----------------------------------- 
-echo Build system:
-echo
-uname -a
-lsb_release -a
-processors=`grep -c processor /proc/cpuinfo`
-echo number of processors: $processors
-dpkg --get-selections | grep mingw
-iam=`whoami`
-travis=travis
-if [ "$iam" = "$travis" ]; then
-    sudo rm -rf /usr/lib/jvm
-    df -h
-fi
-echo ----------------------------------- 
-echo
 
 
 
@@ -179,21 +191,11 @@ fi
 #
 # build Kst
 #
-date=`date --utc '+%Y.%m.%d-%H.%M'`
 cd $builddir
 if [ "$1" = "qt5" ]; then
-    ver=$ver-Qt5
     qtopt="-Dkst_qt5=1 -Dkst_opengl=0"
-    if [ ! -z $versionname ]; then
-        versionname=$versionname-Qt5
-    fi
 else
-    ver=$ver-Qt4
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
-fi
-
-if [ -z $versionname ]; then
-    versionname=Kst-$ver-$date
 fi
 
 $cmakebin ../kst/cmake/ \
