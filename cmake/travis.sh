@@ -8,7 +8,7 @@
 #
 # set versionname to overwrite generated one
 #
-#versionname=
+versionname=Kst-2.0.7-Beta1
 
 
 
