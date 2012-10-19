@@ -453,9 +453,10 @@ void MainWindow::openFile(const QString &file) {
   QApplication::restoreOverrideCursor();
 
   if (!ok) {
-    QMessageBox::critical(this, tr("Kst"),
-        tr("Error opening document '%1':\n%2\n"
-           ).arg(file, _doc->lastError()));
+    QString lastError = _doc->lastError();
+    if (lastError.isEmpty())
+      lastError = tr("For details see Help->Debug Dialog->Log.");
+    QMessageBox::critical(this, tr("Kst"),tr("Error opening document:\n  '%1'\n%2\n").arg(file, lastError));
   }
 
   setWindowTitle("Kst - " + file);
