@@ -87,7 +87,8 @@ else
     qtver=4.8.4
     gccver=4.7.2
     dw2=-dw2
-    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=-Dkst_3rdpartylibs/opt/"$extlib
+    extlib=kst-3rdparty-win32-gcc-dw2-4.7.2
+    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
 fi
 qtver=Qt-$qtver-win32-g++-$mingw$dw2-$gccver
 mingwver=i686-w64-mingw32-gcc$dw2-$gccver
@@ -141,8 +142,7 @@ checkExitCode
 # ---------------------------------------------------------
 #
 # download 3rdparty
-
-extlib=kst-3rdparty-win32-gcc-dw2-4.7.2
+#
 if [ ! -d /opt/$extlib ]; then
     wget https://github.com/downloads/syntheticpp/kst/$extlib.zip
     checkExitCode
@@ -150,6 +150,7 @@ if [ ! -d /opt/$extlib ]; then
     sudo unzip $builddir/$extlib.zip
     checkExitCode
     cd $builddir
+    sudo cp /opt/$extlib/include/matio_pubConf.h /opt/$extlib/include/matio_pubconf.h
 fi
 
 
@@ -171,7 +172,7 @@ fi
 
 
 installed=Kst-$ver-$date
-$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/$mingwdir/bin/$mingw -Dkst_install_prefix=./$installed $qtopt  $useext
+$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/$mingwdir/bin/$mingw -Dkst_install_prefix=./$installed $qtopt $useext
 checkExitCode
 
 make -j $processors

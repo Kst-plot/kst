@@ -13,7 +13,7 @@ install:
 
 script:
  - ./cmake/travis.sh qt4
-# - ./cmake/travis.sh qt5
+ - ./cmake/travis.sh qt5
 
 branches:
  only:

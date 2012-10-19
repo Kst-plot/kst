@@ -82,6 +82,7 @@ if(MINGW)
 	message(STATUS "Using GCC version ${GCC_VERSION}")
 endif()
 
+
 if(kst_3rdparty_build)
 	set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
 	add_subdirectory(3rdparty)
@@ -169,7 +170,7 @@ else()
 endif()
 
 message(STATUS)
-if(kst_3rdparty)
+if(kst_3rdparty AND NOT kst_cross)
   message(STATUS "3rd party libs for plugins--------------------")
   find_package(Getdata)
   find_package(Gsl)
