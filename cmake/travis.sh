@@ -3,7 +3,12 @@
 #set -x
 #
 
-startdir=$PWD
+
+# ---------------------------------------------------------
+#
+# set kstversion to overwrite generated one
+#
+#kstversion=
 
 
 
@@ -46,9 +51,23 @@ echo
 
 
 # ---------------------------------------------------------
+# 
+# get sha1 when git is used
+#
+sha1=`git rev-parse master`
+exitcode=$?
+
+if [ $exitcode -eq 0 ]; then
+    rev="-Dkst_revision=$sha1"
+fi
+
+
+
+# ---------------------------------------------------------
 #
 # make build directory
 #
+startdir=$PWD
 cd ..
 build=_b
 if [ -d "$build" ]; then
@@ -66,7 +85,7 @@ cd $builddir
 # get actual cmake 
 #
 cmakever=cmake-2.8.9-Linux-i386
-$cmakebin=x
+cmakebin=x
 if [ ! -d /opt/$cmakever ]; then
     wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
     checkExitCode
@@ -147,7 +166,7 @@ if [ ! -d /opt/$extlib ]; then
     wget https://github.com/downloads/syntheticpp/kst/$extlib.zip
     checkExitCode
     cd /opt
-    sudo unzip $builddir/$extlib.zip
+    sudo unzip -q $builddir/$extlib.zip
     checkExitCode
     cd $builddir
     sudo cp /opt/$extlib/include/matio_pubConf.h /opt/$extlib/include/matio_pubconf.h
@@ -170,9 +189,19 @@ else
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
 
+if [ -z $kstversion ]; then
+    versionname=Kst-$ver-$date
+else
+    versionname=Kst-$kstversion
+fi
 
-installed=Kst-$ver-$date
-$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/$mingwdir/bin/$mingw -Dkst_install_prefix=./$installed $qtopt $useext
+$cmakebin ../kst/cmake/ \
+    -Dkst_release=1  \
+    -Dkst_version_string=$versionname \
+    -Dkst_install_prefix=./$versionname \
+    -Dkst_cross=/opt/$mingwdir/bin/$mingw \
+    $rev $qtopt $useext
+
 checkExitCode
 
 make -j $processors
@@ -187,7 +216,7 @@ checkExitCode
 make package
 checkExitCode
 
-if [ ! -e $installed-win32.zip ]; then
+if [ ! -e $versionname-win32.zip ]; then
     exit 1
 fi
 
@@ -211,11 +240,11 @@ if [ "$iam" = "$travis" ]; then
         git checkout master
     fi
     git reset --hard HEAD^
-    cp -f ../$installed-win32.zip .
-    git add $installed-win32.zip
+    cp -f ../$versionname-win32.zip .
+    git add $versionname-win32.zip
     checkExitCode
     
-    git commit --quiet -m"Update win32 binary to version Kst-$ver-$date"
+    git commit --quiet -m"Update win32 binary to version $versionname"
     checkExitCode
 
     git push --quiet -f
