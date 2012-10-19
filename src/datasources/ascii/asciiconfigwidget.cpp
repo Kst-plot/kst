@@ -183,6 +183,7 @@ AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget
   _ac = new AsciiConfigWidgetInternal(this);
   layout->addWidget(_ac, 0, 0);
   layout->activate();
+  _oldConfig = _ac->config();
 }
 
 
@@ -224,6 +225,7 @@ void AsciiConfigWidget::load() {
     }
   }
   _ac->_indexVector->setEnabled(hasInstance());
+  _oldConfig = _ac->config();
 }
 
 
@@ -238,8 +240,10 @@ void AsciiConfigWidget::save() {
     // Update the instance from our new settings
     if (src->reusable()) {
       src->_config.readGroup(settings(), src->fileName());
-      src->reset();
-      src->internalDataSourceUpdate();
+      if (_ac->config().isUdateNecessary(_oldConfig)) {
+        src->reset();
+        src->internalDataSourceUpdate();
+      }
     }
   }
 }

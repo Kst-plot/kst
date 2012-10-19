@@ -28,7 +28,7 @@ public:
       _value_set(false) {
   }
 
-  void operator>>(QSettings& settings) {
+  void operator>>(QSettings& settings) const {
     const QVariant var = QVariant::fromValue<T>(value());
     settings.setValue(Key, var);
   }
@@ -76,6 +76,14 @@ public:
   NamedParameter& operator=(const T& t) {
     setValue(t);
     return *this;
+  }
+
+  bool operator==(const T& rhs) const {
+    return value() == rhs;
+  }
+
+   bool operator!=(const T& rhs) const {
+    return !operator==(rhs);
   }
 
 private:

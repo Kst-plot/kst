@@ -81,7 +81,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
 
 
 
-void AsciiSourceConfig::save(QSettings& cfg) {
+void AsciiSourceConfig::save(QSettings& cfg) const {
   _fileNamePattern >> cfg;
   _indexVector >> cfg;
   _delimiters >> cfg;
@@ -102,7 +102,7 @@ void AsciiSourceConfig::save(QSettings& cfg) {
 }
 
 
-void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) {
+void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) const {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
   if (fileName.isEmpty()) {
     save(cfg);
@@ -228,4 +228,51 @@ void AsciiSourceConfig::load(const QDomElement& e) {
     n = n.nextSibling();
   }
 }
+
+
+bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
+{
+  return _fileNamePattern == rhs._fileNamePattern &&
+      _indexVector == rhs._indexVector &&
+      _delimiters == rhs._delimiters &&
+      _indexInterpretation == rhs._indexInterpretation &&
+      _columnType == rhs._columnType &&
+      _columnDelimiter == rhs._columnDelimiter &&
+      _columnWidth == rhs._columnWidth &&
+      _dataLine == rhs._dataLine &&
+      _readFields == rhs._readFields &&
+      _useDot == rhs._useDot &&
+      _fieldsLine == rhs._fieldsLine &&
+      _columnWidthIsConst == rhs._columnWidthIsConst &&
+      _readUnits == rhs._readUnits &&
+      _unitsLine == rhs._unitsLine &&
+      _limitFileBuffer == rhs._limitFileBuffer &&
+      _limitFileBufferSize == rhs._limitFileBufferSize &&
+      _useThreads == rhs._useThreads;
+}
+
+bool AsciiSourceConfig::operator!=(const AsciiSourceConfig& rhs) const
+{
+  return !operator==(rhs);
+}
+
+bool AsciiSourceConfig::isUdateNecessary(const AsciiSourceConfig& rhs) const
+{
+  return _fileNamePattern != rhs._fileNamePattern ||
+      _indexVector != rhs._indexVector ||
+      _delimiters != rhs._delimiters ||
+      _indexInterpretation != rhs._indexInterpretation ||
+      _columnType != rhs._columnType ||
+      _columnDelimiter != rhs._columnDelimiter ||
+      _columnWidth != rhs._columnWidth ||
+      _dataLine != rhs._dataLine ||
+      _readFields != rhs._readFields ||
+      _useDot != rhs._useDot ||
+      _fieldsLine != rhs._fieldsLine ||
+      _columnWidthIsConst != rhs._columnWidthIsConst ||
+      _readUnits != rhs._readUnits ||
+      _unitsLine != rhs._unitsLine ;
+}
+
+
 

@@ -59,7 +59,11 @@ class AsciiSourceConfig {
   public:
     AsciiSourceConfig();
 
-    void saveGroup(QSettings& cfg, const QString& fileName = QString());
+    bool operator==(const AsciiSourceConfig&) const;
+    bool operator!=(const AsciiSourceConfig& rhs) const;
+    bool isUdateNecessary(const AsciiSourceConfig& rhs) const;
+
+    void saveGroup(QSettings& cfg, const QString& fileName = QString()) const;
     void readGroup(QSettings& cfg, const QString& fileName = QString());
 
     void save(QXmlStreamWriter& s);
@@ -89,7 +93,7 @@ class AsciiSourceConfig {
     NamedParameter<int, Key_useThreads, Tag_useThreads> _useThreads;
 
   private:
-    void save(QSettings& cfg);
+    void save(QSettings& cfg) const;
     void read(QSettings& cfg);
 };
 

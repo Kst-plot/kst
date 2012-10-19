@@ -56,6 +56,7 @@ class AsciiConfigWidget : public Kst::DataSourceConfigWidget
     void setFilename(const QString& filename);
 
     AsciiConfigWidgetInternal *_ac;
+    AsciiSourceConfig _oldConfig;
 };
 
 
