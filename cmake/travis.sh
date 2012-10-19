@@ -6,6 +6,7 @@
 startdir=$PWD
 
 
+
 # ---------------------------------------------------------
 # 
 # helper function to check return code
@@ -17,6 +18,7 @@ checkExitCode() {
         exit 1
     fi
 }
+
 
 
 # ---------------------------------------------------------
@@ -42,6 +44,7 @@ echo -----------------------------------
 echo
 
 
+
 # ---------------------------------------------------------
 #
 # make build directory
@@ -57,37 +60,47 @@ builddir=$PWD/$build
 cd $builddir
 
 
-# ---------------------------------------------------------
-#
-# select mingw version
-#
-mingw=i686-w64-mingw32
-
 
 # ---------------------------------------------------------
 #
 # get actual cmake 
 #
-# TODO check for cmake
-if [ "$iam" = "$travis" ]; then
-    cd ..
-    if [ ! -d $PWD/cmake-2.8.9-Linux-i386 ]; then
-        wget http://www.cmake.org/files/v2.8/cmake-2.8.9-Linux-i386.tar.gz
-        tar xf cmake-2.8.9-Linux-i386.tar.gz
-    fi
-    cmakebin=$PWD/cmake-2.8.9-Linux-i386/bin/cmake
+cmakever=cmake-2.8.9-Linux-i386
+$cmakebin=x
+if [ ! -d /opt/$cmakever ]; then
+    wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
+    checkExitCode
+    cd /opt
+    sudo tar xf $builddir/cmake-2.8.9-Linux-i386.tar.gz
+    checkExitCode
     cd $builddir
-else
-    cmakebin=cmake
 fi
+cmakebin=/opt/$cmakever/bin/cmake
+$cmakebin --version
+checkExitCode
+
+mingw=i686-w64-mingw32
+if [ "$1" = "qt5" ]; then
+    qtver=5.0.0
+    gccver=4.7.2
+else
+    qtver=4.8.4
+    gccver=4.7.2
+    dw2=-dw2
+    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=-Dkst_3rdpartylibs/opt/"$extlib
+fi
+qtver=Qt-$qtver-win32-g++-$mingw$dw2-$gccver
+mingwver=i686-w64-mingw32-gcc$dw2-$gccver
+mingwdir=mingw32$dw2
+
 
 
 # ---------------------------------------------------------
 #
 # download and install mingw
 #
-if [ ! -d /opt/mingw32 ]; then
-    mingwtar=i686-w64-mingw32-gcc-4.7.2-release-linux32_rubenvb-Ubuntu32-12.04-1.tar
+if [ ! -d /opt/$mingwdir ]; then
+    mingwtar=$mingwver-release-linux32_rubenvb-Ubuntu32-12.04.tar
     wget https://github.com/downloads/syntheticpp/kst/$mingwtar.xz
     checkExitCode
     xz -d $mingwtar.xz
@@ -99,24 +112,17 @@ fi
 # when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
 #export PATH=/opt/mingw32/bin:$PATH
 echo Checking mingw installation ...
-/opt/mingw32/bin/i686-w64-mingw32-gcc -dumpversion
+/opt/$mingwdir/bin/i686-w64-mingw32-gcc -dumpversion
 checkExitCode
+
 
 
 # ---------------------------------------------------------
 #
 # download and install Qt
 #
-if [ "$1" = "qt5" ]; then
-    qtver=5.0.0
-    gccver=-4.7.2
-else
-    qtver=4.8.3
-fi
-qtver=Qt-$qtver-win32-g++-$mingw$gccver
-    
 if [ ! -d /opt/$qtver ]; then
-    qttar=$qtver-Ubuntu32-12.04-1.tar
+    qttar=$qtver-Ubuntu32-12.04.tar
     wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
@@ -129,6 +135,23 @@ export PATH=/opt/$qtver/bin:$PATH
 echo Checking Qt installation ...
 which qmake
 checkExitCode
+
+
+
+# ---------------------------------------------------------
+#
+# download 3rdparty
+
+extlib=kst-3rdparty-win32-gcc-dw2-4.7.2
+if [ ! -d /opt/$extlib ]; then
+    wget https://github.com/downloads/syntheticpp/kst/$extlib.zip
+    checkExitCode
+    cd /opt
+    sudo unzip $builddir/$extlib.zip
+    checkExitCode
+    cd $builddir
+fi
+
 
 
 # ---------------------------------------------------------
@@ -146,12 +169,14 @@ else
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
 
+
 installed=Kst-$ver-$date
-$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/mingw32/bin/$mingw -Dkst_install_prefix=./$installed $qtopt
+$cmakebin ../kst/cmake/ -Dkst_release=1 -Dkst_version_string=$ver-$date -Dkst_cross=/opt/$mingwdir/bin/$mingw -Dkst_install_prefix=./$installed $qtopt  $useext
 checkExitCode
 
 make -j $processors
 checkExitCode
+
 
 
 # ---------------------------------------------------------
@@ -181,6 +206,8 @@ if [ "$iam" = "$travis" ]; then
     cd kstbinary
     if [ "$1" = "qt5" ]; then
         git checkout Qt5
+    else 
+        git checkout master
     fi
     git reset --hard HEAD^
     cp -f ../$installed-win32.zip .
