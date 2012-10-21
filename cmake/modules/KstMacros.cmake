@@ -84,6 +84,26 @@ macro(kst_add_executable)
 endmacro()
 
 
+macro(kst_add_test _source_file)
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${kst_build_dir}/bin)
+	get_filename_component(_file_name ${_source_file} NAME)
+	if(CMAKE_GENERATOR MATCHES Ninja) 
+	set(_moced ${CMAKE_CURRENT_BINARY_DIR}/moc_${_file_name}) # ninja generator bug
+	else()
+	set(_moced moc_${_file_name})
+	endif()
+	qt4_generate_moc(${_source_file} ${_moced})
+	set_source_files_properties(${_source_file} PROPERTIES OBJECT_DEPENDS ${_moced}) # moc on source file changes
+	add_executable(${kst_name} ${_source_file})
+	set_target_properties(${kst_name} PROPERTIES DEPEND ${_moced})
+	target_link_libraries(${kst_name} ${QT_QTTEST_LIBRARY})
+	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
+	kst_link(${libcore} ${libmath} ${libapp} ${libwidgets} ${QT_QTTEST_LIBRARY})
+	set_target_properties(${kst_name} PROPERTIES DEBUG_POSTFIX ${kst_debug_postfix})
+	add_test(NAME ${kst_name} COMMAND ${kst_name})
+endmacro()
+
+
 macro(kst_install_executable)
 	install(TARGETS ${kst_name}
 		RUNTIME DESTINATION bin COMPONENT Runtime
@@ -153,7 +173,7 @@ macro(kst_init_plugin dir)
 endmacro()
 
 
-macro(kst_add_plugin folder name)
+macro(kst_add_plugin_internal folder name libtype postfix)
 	set(_name _${kst_plugin_prefix}_${folder}_${name})
 	string(REPLACE . _  _name ${_name})
 	string(REPLACE / _  _name ${_name})
@@ -161,17 +181,24 @@ macro(kst_add_plugin folder name)
 	string(REPLACE __ _ _name ${_name})
 	kst_init(${kst_binary_name} ${_name})
 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
-	add_library(${kst_name} MODULE ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
-	kst_link(${libcore} ${libmath} ${libwidgets})
-	if(NOT APPLE)
-		install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
-#		kst_find_install_desktop_file(${kst_plugin_dir}/${folder}/${name})
-	endif()
+	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
 	add_dependencies(${kst_binary_name} ${kst_name})
 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
 	if(kst_verbose)
-	  message(STATUS "Building plugin ${kst_name}")
+		message(STATUS "Building plugin ${kst_name}")
 	endif()
+endmacro()
+
+macro(kst_add_plugin folder name)
+	kst_add_plugin_internal(${folder} ${name} MODULE "")
+    kst_link(${libcore} ${libmath} ${libwidgets})
+	if(NOT APPLE)
+		install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
+	endif()
+endmacro()
+
+macro(kst_add_plugin_lib folder name)
+	kst_add_plugin_internal(${folder} ${name} STATIC _lib)
 endmacro()
 
 macro(kst_add_dependency name)

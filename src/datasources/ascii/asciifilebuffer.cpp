@@ -60,50 +60,72 @@ void AsciiFileBuffer::clear()
 //-------------------------------------------------------------------------------------------
 int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const
 {
-  //TODO too expensive?
-  const int size = rowIndex.size();
-  for (int row = searchStart; row != size; row++) {
-    if (rowIndex[row] > pos)
+  if (rowIndex.isEmpty() ||
+      pos < 0 || pos >= rowIndex[rowIndex.size() - 1] || // within the file
+      searchStart > rowIndex.size()-1 || pos < rowIndex[searchStart]) //within the search region
+    return -1;
+
+  // is expensive  for large index with searchStart == 0
+  const int indexOfLastRow = rowIndex.size() - 2;
+  for (int row = searchStart; row <= indexOfLastRow; row++) {
+    if (pos < rowIndex[row])
       return row - 1;
   }
-  // must be the last row
-  return size - 1;
+  if (pos < rowIndex[indexOfLastRow + 1]) // length of file in the last element 
+    return indexOfLastRow;
+  return -1;
 }
 
 //-------------------------------------------------------------------------------------------
 const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const
 {
-  // reading whole file into one array failed, try to read into smaller arrays
-  const int end = start + bytesToRead;
-  int endsInRow = 0;
+  const int end = start + bytesToRead; // position behind last valid seekable byte in file
+  if (chunkSize <= 0 || rowIndex.isEmpty() || start >= end || start < 0
+      || bytesToRead <= 0 || start + bytesToRead > rowIndex[rowIndex.size() - 1])
+    return QVector<AsciiFileData>();
+
+  int nextRow = 0;
   QVector<AsciiFileData> chunks;
-  if (chunkSize == 0)
-    return chunks;
   chunks.reserve(bytesToRead / chunkSize);
   int pos = start;
+  int rows = rowIndex.size();
   while (pos < end) {
     // use for storing reading information only
     AsciiFileData chunk;
+    // error if chunkSize is too small for one row
+    if (nextRow + 1 < rows && rowIndex[nextRow + 1] - rowIndex[nextRow] > chunkSize)
+      return  QVector<AsciiFileData>();
     // read complete chunk or to end of file
     int endRead = (pos + chunkSize < end ? pos + chunkSize : end);
     // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
-    const int rowBegin = endsInRow;
-    endsInRow = findRowOfPosition(rowIndex, endsInRow, endRead);
-    // read until the beginning of this row
-    endRead = rowIndex[endsInRow];
-    // check if it is the last row, and read remaining bytes from pos
-    if (endsInRow == rowIndex.size() - 1)
-      endRead = end;
+    const int rowBegin = nextRow;
+    nextRow = findRowOfPosition(rowIndex, nextRow, endRead - 1);
+    if (nextRow == -1 || nextRow >= rows)
+      return  QVector<AsciiFileData>();
+    // read until the beginning of the found row
+    if (nextRow == rows - 2) { // last valid row
+      // if exactly at the end of the row, read this row
+      if (endRead == rowIndex[rows - 1]) {
+        nextRow++;
+        endRead = end;
+      }  else {
+        // find complete last row next time
+        endRead = end - 1;
+      }
+    } else {
+      // if exactly at the end of the row, read this row
+      if (endRead == rowIndex[nextRow + 1])
+        nextRow++;
+      endRead = rowIndex[nextRow];
+    }
     // set information about positions in the file
-    chunk.setBegin(pos);
-    chunk.setBytesRead(endRead - pos);
+    chunk.setBegin(rowIndex[rowBegin]);
+    chunk.setBytesRead(rowIndex[nextRow] - rowIndex[rowBegin]);
     // set information about rows
     chunk.setRowBegin(rowBegin);
-    chunk.setRowsRead(endsInRow - rowBegin);
+    chunk.setRowsRead(nextRow - rowBegin);
     chunks << chunk;
-    if (endsInRow ==  rowIndex.size() - 1)
-      break;
-    pos = rowIndex[endsInRow];
+    pos = rowIndex[nextRow];
   }
   //qDebug() << "File splitted into " << chunks.size() << " chunks:"; AsciiFileData::logData(chunks);
   return chunks;
@@ -134,7 +156,7 @@ void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int s
   if (!_file)
     return;
 
-  if (bytesToRead == 0 || numWindowChunks == 0 || windowSize == 0)
+  if (bytesToRead <= 0 || numWindowChunks <= 0 || windowSize <= 0)
     return;
 
   int chunkSize = windowSize / numWindowChunks;

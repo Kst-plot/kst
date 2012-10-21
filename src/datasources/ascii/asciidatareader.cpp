@@ -54,7 +54,7 @@ AsciiDataReader::~AsciiDataReader()
 void AsciiDataReader::clear()
 {
   _rowIndex.clear();
-  setRow0Begin(-1);
+  setRow0Begin(0);
   _numFrames = 0;
 }
 
@@ -121,8 +121,8 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
 
-    // always read from the start of a line
-    buf.read(file, _rowIndex[_numFrames], _byteLength - buf.begin(), AsciiFileData::Prealloc - 1);
+    int bufstart = _rowIndex[_numFrames]; // always read from the start of a line
+    buf.read(file, bufstart, _byteLength - bufstart, AsciiFileData::Prealloc - 1);
     if (buf.bytesRead() == 0) {
       return false;
     }
@@ -151,8 +151,6 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
     }
   } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
 
-  _rowIndex.resize(_numFrames + 1);
-
   return new_data;
 }
 
@@ -175,7 +173,9 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufre
         _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
-          _rowIndex.resize(_rowIndex.size() + AsciiFileData::Prealloc - 1);
+          if (_rowIndex.capacity() < _numFrames + 1)
+            _rowIndex.reserve(_numFrames + AsciiFileData::Prealloc);
+          _rowIndex.resize(_numFrames + 1);
         }
         new_data = true;
         row_start = row_offset+i;

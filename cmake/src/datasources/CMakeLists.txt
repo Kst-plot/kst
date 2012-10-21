@@ -56,6 +56,3 @@ if(matio)
 	kst_add_plugin(. matlab) # Directory named after the file format, not the lib
 	kst_link(${MATIO_LIBRARIES})
 endif()
-
-
-

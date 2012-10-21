@@ -28,7 +28,8 @@ public:
   enum SizeOnStack
   {
     Prealloc =
-#if defined(__ANDROID__) || defined(__QNX__) // Some mobile systems really do not like you allocating 1MB on the stack.
+#if defined(__ANDROID__) || defined(__QNX__) || defined(KST_SMALL_PRREALLOC)
+    // Some mobile systems really do not like you allocating 1MB on the stack.
     1 * 1024
 #else
     1 * 1024 * 1024

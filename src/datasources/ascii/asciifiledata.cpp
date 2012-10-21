@@ -60,8 +60,8 @@ static void logMemoryUsed()
     it.next();
     sum +=  it.value();
   }
-  Kst::Debug::self()->log(QString("AsciiFileData: %1 MB used").arg(sum / MB), Kst::Debug::Warning);
-  KST_MEMORY_DEBUG qDebug() << "AsciiFileData: " << sum / MB<< "MB used";
+  if(sum / MB != 0) Kst::Debug::self()->log(QString("AsciiFileData: %1 MB used").arg(sum / MB), Kst::Debug::Warning);
+  KST_MEMORY_DEBUG if(sum / MB != 0) qDebug() << "AsciiFileData: " << sum / MB<< "MB used";
 }
 
 //-------------------------------------------------------------------------------------------
@@ -74,8 +74,8 @@ void* fileBufferMalloc(size_t bytes)
     ptr = malloc(bytes);
   if (ptr)  {
     allocatedMBs[ptr] = bytes;
-    KST_MEMORY_DEBUG qDebug() << "AsciiFileBuffer: " << bytes / MB << "MB allocated";
-    KST_MEMORY_DEBUG logMemoryUsed();
+    KST_MEMORY_DEBUG if(bytes / MB != 0) qDebug() << "AsciiFileBuffer: " << bytes / MB << "MB allocated";
+    KST_MEMORY_DEBUG if(bytes / MB != 0) logMemoryUsed();
   } else {
     Kst::Debug::self()->log(QString("AsciiFileData: failed to allocate %1 MBs").arg(bytes / MB), Kst::Debug::Warning);
     logMemoryUsed();
@@ -88,7 +88,7 @@ void* fileBufferMalloc(size_t bytes)
 void fileBufferFree(void* ptr)
 {
   if (allocatedMBs.contains(ptr)) {
-    KST_MEMORY_DEBUG qDebug() << "AsciiFileData: " << allocatedMBs[ptr] / MB << "MB freed";
+    KST_MEMORY_DEBUG if(allocatedMBs[ptr] / MB != 0) qDebug() << "AsciiFileData: " << allocatedMBs[ptr] / MB << "MB freed";
     allocatedMBs.remove(ptr);
   }
   KST_MEMORY_DEBUG logMemoryUsed();
@@ -157,7 +157,7 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
   _begin = -1;
   _bytesRead = 0;
 
-  if (bytesToRead <= 0)
+  if (bytesToRead <= 0 || start < 0)
     return;
 
   if (maximalBytes == -1) {
@@ -168,7 +168,8 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
     if (!resize(bytesToRead + 1))
       return;
   }
-  file.seek(start); // expensive?
+  if (!file.seek(start)) // expensive?
+    return; 
   int bytesRead = file.read(_array->data(), bytesToRead);
   if (!resize(bytesRead + 1))
     return;
