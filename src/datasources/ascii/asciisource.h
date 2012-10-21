@@ -92,7 +92,7 @@ class AsciiSource : public Kst::DataSource
     
 
     int columnOfField(const QString& field) const;
-    static QStringList splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg);
+    static int splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg, QStringList& result);
 
     DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;

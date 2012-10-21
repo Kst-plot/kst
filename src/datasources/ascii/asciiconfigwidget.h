@@ -18,7 +18,7 @@
 
 #include "ui_asciiconfig.h"
 
-
+class QTextStream;
 
 class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
 {
@@ -40,6 +40,7 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
   private:
     const int _index_offset;
     QString _filename;
+    QString readLine(QTextStream& in, int maxLength);
 };
 
 

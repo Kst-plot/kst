@@ -405,9 +405,9 @@ QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfi
 
 
 //-------------------------------------------------------------------------------------------
-QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg)
+int AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg, QStringList& parts)
 {
-  QStringList parts;
+  parts.clear();
   const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter.value())));
   
   if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
@@ -421,7 +421,7 @@ QStringList AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConf
   } else {
     parts += QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts);
   }
-  return parts;
+  return parts.count();
 }
 
 
@@ -443,7 +443,9 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       const QByteArray line = file.readLine();
       int r = line.size();
       if (currentLine == fieldsLine && r >= 0) {
-        fields += AsciiSource::splitHeaderLine(line, cfg);
+        QStringList parts;
+        AsciiSource::splitHeaderLine(line, cfg, parts);
+        fields += parts;
         break;
       }
       currentLine++;
@@ -478,6 +480,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   int cnt;
   int nextscan = 0;
   int curscan = 0;
+  QStringList parts;
   while (!file.atEnd() && !done && (nextscan < 200)) {
     QByteArray line = file.readLine();
     int r = line.size();
@@ -491,7 +494,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
         if (r > 1 && !regex.exactMatch(line)) {
-          cnt = splitHeaderLine(line, cfg).count();
+          cnt = splitHeaderLine(line, cfg, parts);
           if (cnt > maxcnt) {
             maxcnt = cnt;
           }
@@ -504,7 +507,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       continue;
     }
     if (r > 1 && !regex.exactMatch(line)) { //at desired line, find count
-      maxcnt = splitHeaderLine(line, cfg).count(); 
+      maxcnt = splitHeaderLine(line, cfg, parts);
       done = true;
     } else if (r < 0) {
       return fields;
@@ -536,7 +539,9 @@ QStringList AsciiSource::unitListFor(const QString& filename, AsciiSourceConfig*
     const QByteArray line = file.readLine();
     int r = line.size();
     if (currentLine == unitsLine && r >= 0) {
-      units += AsciiSource::splitHeaderLine(line, cfg);
+      QStringList parts;
+      AsciiSource::splitHeaderLine(line, cfg, parts);
+      units += parts;
       break;
     }
     currentLine++;

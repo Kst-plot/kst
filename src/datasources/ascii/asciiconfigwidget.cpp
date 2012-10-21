@@ -75,6 +75,15 @@ void AsciiConfigWidgetInternal::columnLayoutChanged(int idx)
   }
 }
 
+QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
+{
+  const QString line = in.readLine();
+  if (line.size() > maxLength) {
+    // very log line, don't show it complete
+    return line.mid(0, maxLength) + " ...";
+  }
+  return line;
+}
 
 void AsciiConfigWidgetInternal::showBeginning()
 {
@@ -87,7 +96,7 @@ void AsciiConfigWidgetInternal::showBeginning()
   QTextStream in(&file);
   QStringList lines;
   while (!in.atEnd() && lines_read <= 100) {
-    lines << QString("%1:").arg(lines_read, 3) + in.readLine();
+    lines << QString("%1: ").arg(lines_read, 3) + readLine(in, 1000);
     lines_read++;
   }
 
