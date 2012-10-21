@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QMutexLocker>
+#include <QStringList>
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -228,6 +229,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
   }
   return 0;
 }
+#undef constData
 
 //
 // template instantiation chain to generate optimal code for all possible data configurations
@@ -331,6 +333,45 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
   }
 
   return n;
+}
+
+//-------------------------------------------------------------------------------------------
+template<>
+int AsciiDataReader::splitColumns<IsWhiteSpace>(const QByteArray& line, const IsWhiteSpace& isWhitespace, QStringList* cols)
+{
+  int colstart = 0;
+  const int size =  line.size();
+  //ignore whitespace at the beginning
+  for (; colstart < size && isWhitespace(line[colstart]); colstart++) {}
+  int count = 0;
+  int incol = true;
+  for (int i = colstart; i < size; i++) {
+    // entering column
+    if (!incol && !isWhitespace(line[i])) {
+      incol = true;
+      colstart = i;
+      continue;
+    }
+    // leaving column
+    if (incol && isWhitespace(line[i])) {
+      count++;
+      if (cols) {
+        const QByteArray col(line.constData() + colstart, i - colstart);
+        cols->push_back(QString(col));
+      }
+      incol = false;
+    }
+  }
+  if (incol) {
+    const QByteArray col(line.begin() + colstart, size - 1 - colstart);
+    QString lastCol = QString(col).simplified();
+    if (!lastCol.isEmpty()) {
+      count++;
+      if (cols)
+        cols->push_back(lastCol);
+    }
+  }
+  return count;
 }
 
 

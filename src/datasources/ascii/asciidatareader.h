@@ -44,6 +44,9 @@ class AsciiDataReader
     int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int s, int n);
     int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, const QString& field);
 
+    template<typename ColumnDelimiter>
+    static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);
+
   private:
     int _numFrames;
     AsciiFileBuffer::RowIndex _rowIndex;
@@ -75,6 +78,10 @@ class AsciiDataReader
 
     mutable QMutex _localeMutex;
 };
+
+
+template<>
+int AsciiDataReader::splitColumns<AsciiCharacterTraits::IsWhiteSpace>(const QByteArray& line, const AsciiCharacterTraits::IsWhiteSpace& column_del, QStringList* cols);
 
 #endif
 // vim: ts=2 sw=2 et

@@ -405,21 +405,32 @@ QStringList AsciiSource::stringListFor(const QString& filename, AsciiSourceConfi
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::splitHeaderLine(const QByteArray& line, AsciiSourceConfig* cfg, QStringList& parts)
+int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig& cfg, QStringList* stringList)
 {
+  QStringList dummy;
+  QStringList& parts(stringList ? *stringList : dummy);
   parts.clear();
-  const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg->_columnDelimiter.value())));
+  const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg._columnDelimiter.value())));
   
-  if (cfg->_columnType == AsciiSourceConfig::Custom && !cfg->_columnDelimiter.value().isEmpty()) {
+  if (cfg._columnType == AsciiSourceConfig::Custom && !cfg._columnDelimiter.value().isEmpty()) {
     parts += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
-  } else if (cfg->_columnType == AsciiSourceConfig::Fixed) {
-    int cnt = line.length() / cfg->_columnWidth;
+  } else if (cfg._columnType == AsciiSourceConfig::Fixed) {
+    int cnt = line.length() / cfg._columnWidth;
     for (int i = 0; i < cnt; ++i) {
-      QString sub = line.mid(i * cfg->_columnWidth).left(cfg->_columnWidth);
+      QString sub = line.mid(i * cfg._columnWidth).left(cfg._columnWidth);
       parts += sub.trimmed();
     }
   } else {
-    parts += QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts);
+    if (!stringList) {
+      //MeasureTime t("AsciiDataReader::countColumns()");
+      int columns = AsciiDataReader::splitColumns(line, AsciiCharacterTraits::IsWhiteSpace());
+      Q_ASSERT(columns == QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts).size());
+      return columns;
+    } else {
+      //MeasureTime t("AsciiDataReader::countColumns(parts)");
+      AsciiDataReader::splitColumns(line, AsciiCharacterTraits::IsWhiteSpace(), &parts);
+      Q_ASSERT(parts == QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts));
+    }
   }
   return parts.count();
 }
@@ -444,7 +455,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       int r = line.size();
       if (currentLine == fieldsLine && r >= 0) {
         QStringList parts;
-        AsciiSource::splitHeaderLine(line, cfg, parts);
+        AsciiSource::splitHeaderLine(line, *cfg, &parts);
         fields += parts;
         break;
       }
@@ -480,7 +491,6 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   int cnt;
   int nextscan = 0;
   int curscan = 0;
-  QStringList parts;
   while (!file.atEnd() && !done && (nextscan < 200)) {
     QByteArray line = file.readLine();
     int r = line.size();
@@ -494,7 +504,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
         if (r > 1 && !regex.exactMatch(line)) {
-          cnt = splitHeaderLine(line, cfg, parts);
+          cnt = splitHeaderLine(line, *cfg);
           if (cnt > maxcnt) {
             maxcnt = cnt;
           }
@@ -507,7 +517,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       continue;
     }
     if (r > 1 && !regex.exactMatch(line)) { //at desired line, find count
-      maxcnt = splitHeaderLine(line, cfg, parts);
+      maxcnt = splitHeaderLine(line, *cfg);
       done = true;
     } else if (r < 0) {
       return fields;
@@ -540,7 +550,7 @@ QStringList AsciiSource::unitListFor(const QString& filename, AsciiSourceConfig*
     int r = line.size();
     if (currentLine == unitsLine && r >= 0) {
       QStringList parts;
-      AsciiSource::splitHeaderLine(line, cfg, parts);
+      AsciiSource::splitHeaderLine(line, *cfg, &parts);
       units += parts;
       break;
     }
