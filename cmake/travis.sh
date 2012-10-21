@@ -2,7 +2,7 @@
 #
 #set -x
 #
-
+startdir=$PWD
 
 
 # ---------------------------------------------------------
@@ -65,6 +65,29 @@ checkExitCode() {
 
 # ---------------------------------------------------------
 # 
+# checkout kstbinary
+#
+if [ "$iam" = "$travis" ]; then
+    cd ~
+    tar xf $startdir/cmake/kstdeploy.tar.gz
+    checkExitCode
+    
+    cd $startdir
+    git config --global user.name "travis"
+    git config --global user.email travis@noreply.org
+    git clone --quiet git@github.com:syntheticpp/kstbinary.git
+    exitcode=$?
+    if [ $exitcode -ne 0 ]; then
+        rm -rf kstbinary
+        git clone --quiet git@github.com:syntheticpp/kstbinary.git
+    fi
+    checkExitCode
+fi
+
+
+
+# ---------------------------------------------------------
+# 
 # get sha1 when git is used
 #
 sha1=`git rev-parse master`
@@ -80,7 +103,6 @@ fi
 #
 # make build directory
 #
-startdir=$PWD
 cd ..
 build=_b
 if [ -d "$build" ]; then
@@ -224,26 +246,14 @@ if [ ! -e $versionname-win32.zip ]; then
 fi
 
 if [ "$iam" = "$travis" ]; then
-    cd ~
-    tar xf $startdir/cmake/kstdeploy.tar.gz
-    checkExitCode
-    cd $builddir
-fi
-
-
-if [ "$iam" = "$travis" ]; then
-    git config --global user.name "travis"
-    git config --global user.email travis@noreply.org
-
-    git clone --quiet git@github.com:syntheticpp/kstbinary.git
-    cd kstbinary
+    cd $startdir/kstbinary
     if [ "$1" = "qt5" ]; then
         git checkout Qt5
     else 
         git checkout master
     fi
     git reset --hard HEAD^
-    cp -f ../$versionname-win32.zip .
+    cp -f $builddir/$versionname-win32.zip .
     git add $versionname-win32.zip
     checkExitCode
     
