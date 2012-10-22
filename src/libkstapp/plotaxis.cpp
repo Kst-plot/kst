@@ -42,6 +42,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisBaseOffsetOverride(false),
   _axisInterpret(false),
   _axisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
+  _axisDisplayFormatString("hh:mm:ss.zzz"),
   _axisInterpretation(AXIS_INTERP_CTIME),
   _axisMajorTickMode(TicksNormal),
   _axisOverrideMajorTicks(TicksNormal),
@@ -182,6 +183,8 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   int hour   = int(dDayFraction*24.0);
   int minute = int((dDayFraction*24.0 - double(hour))*60.0);
   double second = ((dDayFraction*24.0 - double(hour))*60.0 - double(minute))*60.0;
+  double fullseconds;
+  double millisec = modf(second + 0.5, &fullseconds) * 1000;
 
   if (accuracy >= 0) {
     second *= pow(10.0, accuracy);
@@ -257,6 +260,10 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
       date.setDate(year, month, day);
       label = date.toString(Qt::LocalDate).toLatin1();
       label += hourminute + seconds;
+      break;
+    case AXIS_DISPLAY_QTDATETIME_FORMAT:
+      label += QDateTime(QDate(year, month, day), QTime(hour, minute, second, millisec))
+                        .toString(_axisDisplayFormatString);
       break;
     default:
       label = QString::number(convertJDtoDisplayTime(jd), 'G', FULL_PRECISION-2);
@@ -554,6 +561,10 @@ AxisDisplayType PlotAxis::axisDisplay() const {
   return _axisDisplay;
 }
 
+QString PlotAxis::axisDisplayFormatString() const {
+  return _axisDisplayFormatString;
+}
+
 
 void PlotAxis::setAxisDisplay(const AxisDisplayType display) {
   if (_axisDisplay != display) {
@@ -562,6 +573,12 @@ void PlotAxis::setAxisDisplay(const AxisDisplayType display) {
   }
 }
 
+void PlotAxis::setAxisDisplayFormatString(const QString& formatString) {
+  if (_axisDisplayFormatString != formatString) {
+    _axisDisplayFormatString = formatString;
+    _dirty = true;
+  }
+}
 
 AxisInterpretationType PlotAxis::axisInterpretation() const {
   return _axisInterpretation;
@@ -763,6 +780,7 @@ bool PlotAxis::isLinearTickMode() {
     case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
     case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
     case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
+    case AXIS_DISPLAY_QTDATETIME_FORMAT:
       return false;
     default:
       return true;
@@ -1103,6 +1121,7 @@ void PlotAxis::copyProperties(PlotAxis *source) {
     setAxisInterpret(source->axisInterpret());
     setAxisInterpretation(source->axisInterpretation());
     setAxisDisplay(source->axisDisplay());
+    setAxisDisplayFormatString(source->axisDisplayFormatString());
     setAxisMajorTickMode(source->axisMajorTickMode());
     setAxisMinorTickCount(source->axisMinorTickCount());
     setAxisAutoMinorTicks(source->axisAutoMinorTicks());
@@ -1131,6 +1150,7 @@ void PlotAxis::saveAsDialogDefaults(const QString &group) const {
   _dialogDefaults->setValue(group+"Interpret", QVariant(axisInterpret()).toString());
   _dialogDefaults->setValue(group+"Interpretation", QVariant(axisInterpretation()).toString());
   _dialogDefaults->setValue(group+"Display", QVariant(axisDisplay()).toString());
+  _dialogDefaults->setValue(group+"DisplayFormatString", QVariant(axisDisplayFormatString()).toString());
   _dialogDefaults->setValue(group+"Timezone", QVariant(timezoneName()));
   _dialogDefaults->setValue(group+"MajorTickMode", QVariant(axisMajorTickMode()).toString());
   _dialogDefaults->setValue(group+"MinorTickCount", QVariant(axisMinorTickCount()).toString());
@@ -1161,6 +1181,7 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("interpret", QVariant(axisInterpret()).toString());
   xml.writeAttribute("interpretation", QVariant(axisInterpretation()).toString());
   xml.writeAttribute("display", QVariant(axisDisplay()).toString());
+  xml.writeAttribute("displayformatstring", QVariant(axisDisplayFormatString()).toString());
   xml.writeAttribute("majortickmode", QVariant(axisMajorTickMode()).toString());
   xml.writeAttribute("minortickcount", QVariant(axisMinorTickCount()).toString());
   xml.writeAttribute("autominortickcount", QVariant(axisAutoMinorTicks()).toString());

@@ -103,6 +103,9 @@ class PlotAxis : public QObject
     AxisDisplayType axisDisplay() const;
     void setAxisDisplay(const AxisDisplayType display);
 
+    QString axisDisplayFormatString() const;
+    void setAxisDisplayFormatString(const QString& formatString);
+
     AxisInterpretationType axisInterpretation() const;
     void setAxisInterpretation(const AxisInterpretationType interpret);
 
@@ -175,6 +178,7 @@ class PlotAxis : public QObject
 
     bool _axisInterpret;
     AxisDisplayType _axisDisplay;
+    QString _axisDisplayFormatString;
     AxisInterpretationType _axisInterpretation;
     KstTimeZone _timeZone;
 

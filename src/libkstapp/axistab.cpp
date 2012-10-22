@@ -77,6 +77,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleDisplayFormatString, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_timeZone, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
@@ -418,14 +419,24 @@ AxisDisplayType AxisTab::axisDisplay() const {
   return AxisDisplayType(_scaleDisplayType->itemData(_scaleDisplayType->currentIndex()).toInt());
 }
 
-
 bool AxisTab::axisDisplayDirty() const {
   return _scaleDisplayType->currentIndex() != -1;
 }
 
-
 void AxisTab::setAxisDisplay(AxisDisplayType display) {
   _scaleDisplayType->setCurrentIndex(_scaleDisplayType->findData(QVariant(display)));
+}
+
+QString AxisTab::axisDisplayFormatString() const {
+  return _scaleDisplayFormatString->text();
+}
+
+bool AxisTab::axisDisplayFormatStringDirty() const {
+  return !_scaleDisplayFormatString->text().isEmpty();
+}
+
+void AxisTab::setAxisDisplayFormatString(const QString& formatString) {
+  _scaleDisplayFormatString->setText(formatString);
 }
 
 
@@ -530,6 +541,7 @@ void AxisTab::clearTabValues() {
   _rotation->clear();
   _scaleInterpretType->setCurrentIndex(-1);
   _scaleDisplayType->setCurrentIndex(-1);
+  _scaleDisplayFormatString->setText("hh:mm:ss.zzz");
   _timeZone->setCurrentIndex(-1);
 
   _drawAxisMajorTicks->setCheckState(Qt::PartiallyChecked);
@@ -556,3 +568,4 @@ void AxisTab::setAsYAxis() {
 }
 
 // vim: ts=2 sw=2 et
+
