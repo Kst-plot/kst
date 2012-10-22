@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
-    <height>413</height>
+    <width>642</width>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,13 +15,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <layout class="QGridLayout" name="gridLayout_5">
+    <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="0">
       <widget class="QGroupBox" name="_scaleGroup">
        <property name="title">
         <string>Scale</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
+       <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QCheckBox" name="_scaleLog">
           <property name="toolTip">
@@ -32,7 +32,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="0" column="1" colspan="2">
          <widget class="QCheckBox" name="_scaleReverse">
           <property name="whatsThis">
            <string>Reverse the direction of the axis, so the numbers are decreasing, rather than increasing.f</string>
@@ -61,7 +61,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="1" column="1" colspan="2">
          <widget class="QComboBox" name="_scaleInterpretType">
           <property name="enabled">
            <bool>false</bool>
@@ -96,7 +96,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="2" column="1" colspan="2">
          <widget class="QComboBox" name="_scaleDisplayType">
           <property name="enabled">
            <bool>false</bool>
@@ -109,7 +109,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
+        <item row="2" column="3" colspan="2">
          <widget class="QLabel" name="label_7">
           <property name="enabled">
            <bool>false</bool>
@@ -125,7 +125,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="2" column="5">
          <widget class="QComboBox" name="_timeZone">
           <property name="enabled">
            <bool>false</bool>
@@ -138,7 +138,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="3" column="0" colspan="2">
          <widget class="QLabel" name="_timeFormaLabel">
           <property name="enabled">
            <bool>false</bool>
@@ -160,14 +160,14 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1" colspan="2">
+        <item row="3" column="2" colspan="2">
          <widget class="QLineEdit" name="_scaleDisplayFormatString">
           <property name="text">
            <string>hh:mm.ss.zzz</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="3">
+        <item row="3" column="4" colspan="2">
          <widget class="QLabel" name="label_8">
           <property name="text">
            <string>Date: y,M,d Time: h,m,s,z</string>
@@ -219,70 +219,6 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Base / Offset Mode</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="_significantDigits">
-          <property name="whatsThis">
-           <string>If this many digits are required to display the tick numbers, then the axis will revert to Base/Offset mode.</string>
-          </property>
-          <property name="minimum">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <number>15</number>
-          </property>
-          <property name="value">
-           <number>9</number>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QCheckBox" name="_scaleBaseOffset">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="whatsThis">
-           <string>The axis numbers are displayed relative to a reference value, which is displayed on the same line as the axis label.  This option is designed to allow small differences from large offsets to be easily seen.</string>
-          </property>
-          <property name="text">
-           <string>&amp;Base and offset mode</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="_scaleAutoBaseOffset">
-          <property name="text">
-           <string>Auto base / offset mode</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <property name="tristate">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Digits before automatic base/offset mode:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>_significantDigits</cstring>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
@@ -322,6 +258,110 @@
            </size>
           </property>
          </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Base / Offset Mode</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="_scaleAutoBaseOffset">
+            <property name="text">
+             <string>Auto</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="_scaleBaseOffset">
+            <property name="text">
+             <string>On</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="_baseOffsetOff">
+            <property name="text">
+             <string>Off</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="_significantDigitsLabel">
+            <property name="text">
+             <string>Digits before automatic base/offset mode:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>_significantDigits</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="_significantDigits">
+            <property name="whatsThis">
+             <string>If this many digits are required to display the tick numbers, then the axis will revert to Base/Offset mode.</string>
+            </property>
+            <property name="minimum">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <number>15</number>
+            </property>
+            <property name="value">
+             <number>9</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QCheckBox" name="_forceOffsetMin">
+            <property name="text">
+             <string>Force Offset to axis minimum</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -642,28 +682,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>299</y>
+     <x>280</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>34</x>
-     <y>366</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_drawAxisMajorGridLines</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_10</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>170</x>
-     <y>299</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>57</x>
-     <y>397</y>
+     <x>58</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -674,12 +698,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>243</x>
-     <y>299</y>
+     <x>280</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>128</x>
-     <y>400</y>
+     <x>132</x>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -690,12 +714,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>247</x>
-     <y>318</y>
+     <x>280</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>254</x>
-     <y>366</y>
+     <x>311</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -706,28 +730,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>516</x>
-     <y>318</y>
+     <x>598</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>340</x>
-     <y>366</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_drawAxisMinorGridLines</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_12</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>407</x>
-     <y>300</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>342</x>
-     <y>397</y>
+     <x>433</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -738,12 +746,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>407</x>
-     <y>300</y>
+     <x>598</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>409</x>
-     <y>396</y>
+     <x>463</x>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -754,28 +762,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>407</x>
-     <y>300</y>
+     <x>598</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>527</x>
-     <y>366</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_scaleInterpret</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_scaleDisplayType</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>76</x>
-     <y>81</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>224</x>
-     <y>117</y>
+     <x>629</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -786,60 +778,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>81</y>
+     <x>114</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>109</x>
-     <y>117</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_scaleInterpret</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_scaleInterpretType</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>109</x>
-     <y>86</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>305</x>
-     <y>84</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_scaleAutoBaseOffset</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_2</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>122</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>245</x>
-     <y>220</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_scaleAutoBaseOffset</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_significantDigits</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>122</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>340</x>
-     <y>209</y>
+     <x>114</x>
+     <y>108</y>
     </hint>
    </hints>
   </connection>
@@ -850,12 +794,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>247</x>
-     <y>318</y>
+     <x>280</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>156</x>
-     <y>381</y>
+     <x>175</x>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -866,12 +810,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>247</x>
-     <y>318</y>
+     <x>280</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>206</x>
-     <y>386</y>
+     <x>311</x>
+     <y>372</y>
     </hint>
    </hints>
   </connection>
@@ -882,12 +826,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>516</x>
-     <y>318</y>
+     <x>598</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>424</x>
-     <y>376</y>
+     <x>506</x>
+     <y>374</y>
     </hint>
    </hints>
   </connection>
@@ -898,28 +842,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>516</x>
-     <y>318</y>
+     <x>598</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
-     <x>487</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_scaleInterpret</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_timeZone</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>70</x>
-     <y>69</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>291</x>
-     <y>104</y>
+     <x>629</x>
+     <y>372</y>
     </hint>
    </hints>
   </connection>
@@ -930,11 +858,59 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>70</y>
+     <x>73</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>237</x>
+     <x>295</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_scaleInterpretType</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>154</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_scaleDisplayType</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>17</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>97</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_scaleInterpret</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_timeZone</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>375</x>
      <y>97</y>
     </hint>
    </hints>

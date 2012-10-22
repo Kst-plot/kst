@@ -90,11 +90,15 @@ class AxisTab : public DialogTab, Ui::AxisTab {
 
     bool isAutoBaseOffset() const;
     bool isAutoBaseOffsetDirty() const;
-    void setAutoBaseOffset(const bool enabled);
 
     bool isBaseOffset() const;
     bool isBaseOffsetDirty() const;
-    void setBaseOffset(const bool enabled);
+
+    bool isForceOffsetMin() const;
+    bool isForceOffsetMinDirty() const;
+    void setForceOffsetMin(bool enabled);
+
+    void setBaseOffsetMode(bool auto_on, bool on);
 
     bool isReversed() const;
     bool isReversedDirty() const;
@@ -139,6 +143,9 @@ class AxisTab : public DialogTab, Ui::AxisTab {
 
   public Q_SLOTS:
     void updateButtons();
+    void offsetAutoPressed();
+    void offsetOnPressed();
+    void offsetOffPressed();
 
 };
 

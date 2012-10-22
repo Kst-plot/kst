@@ -288,8 +288,8 @@ void PlotItemDialog::setupAxis() {
   _xAxisTab->setAxisMinorGridLineStyle(_plotItem->xAxis()->axisMinorGridLineStyle());
   _xAxisTab->setLog(_plotItem->xAxis()->axisLog());
   _xAxisTab->setReversed(_plotItem->xAxis()->axisReversed());
-  _xAxisTab->setAutoBaseOffset(_plotItem->xAxis()->axisAutoBaseOffset());
-  _xAxisTab->setBaseOffset(_plotItem->xAxis()->axisBaseOffset());
+  _xAxisTab->setBaseOffsetMode(_plotItem->xAxis()->axisAutoBaseOffset(), _plotItem->xAxis()->axisBaseOffset());
+  _xAxisTab->setForceOffsetMin(_plotItem->xAxis()->axisForceOffsetMin());
   _xAxisTab->setInterpret(_plotItem->xAxis()->axisInterpret());
   _xAxisTab->setAxisDisplay(_plotItem->xAxis()->axisDisplay());
   _xAxisTab->setAxisDisplayFormatString(_plotItem->xAxis()->axisDisplayFormatString());
@@ -316,8 +316,8 @@ void PlotItemDialog::setupAxis() {
   _yAxisTab->setAxisMinorGridLineStyle(_plotItem->yAxis()->axisMinorGridLineStyle());
   _yAxisTab->setLog(_plotItem->yAxis()->axisLog());
   _yAxisTab->setReversed(_plotItem->yAxis()->axisReversed());
-  _yAxisTab->setAutoBaseOffset(_plotItem->yAxis()->axisAutoBaseOffset());
-  _yAxisTab->setBaseOffset(_plotItem->yAxis()->axisBaseOffset());
+  _yAxisTab->setBaseOffsetMode(_plotItem->yAxis()->axisAutoBaseOffset(), _plotItem->yAxis()->axisBaseOffset());
+  _yAxisTab->setForceOffsetMin(_plotItem->yAxis()->axisForceOffsetMin());
   _yAxisTab->setInterpret(_plotItem->yAxis()->axisInterpret());
   _yAxisTab->setAxisDisplay(_plotItem->yAxis()->axisDisplay());
   _yAxisTab->setAxisDisplayFormatString(_plotItem->yAxis()->axisDisplayFormatString());
@@ -770,6 +770,9 @@ void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
   if (axisTab->isBaseOffsetDirty()) {
     axis->setAxisBaseOffset(axisTab->isBaseOffset());
   }
+  if (axisTab->isForceOffsetMinDirty()) {
+    axis->setAxisForceOffsetMin(axisTab->isForceOffsetMin());
+  }
   if (axisTab->axisMinorTickCountDirty()) {
     axis->setAxisMinorTickCount(axisTab->axisMinorTickCount());
   }
@@ -778,9 +781,6 @@ void PlotItemDialog::saveAxis(PlotAxis *axis, AxisTab *axisTab) {
   }
   if (axisTab->significantDigitsDirty()) {
     axis->setAxisSignificantDigits(axisTab->significantDigits());
-  }
-  if (axisTab->isBaseOffsetDirty()) {
-    axis->setAxisBaseOffset(axisTab->isBaseOffset());
   }
   if (axisTab->isAutoBaseOffsetDirty()) {
     axis->setAxisAutoBaseOffset(axisTab->isAutoBaseOffset());

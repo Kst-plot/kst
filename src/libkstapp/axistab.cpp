@@ -83,10 +83,14 @@ AxisTab::AxisTab(QWidget *parent)
 
   connect(_axisMinorTickCount, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
-  connect(_scaleAutoBaseOffset, SIGNAL(stateChanged(int)), this, SLOT(updateButtons()));
+  connect(_scaleAutoBaseOffset, SIGNAL(clicked()), this, SLOT(offsetAutoPressed()));
+  connect(_scaleBaseOffset, SIGNAL(clicked()), this, SLOT(offsetOnPressed()));
+  connect(_baseOffsetOff, SIGNAL(clicked()), this, SLOT(offsetOffPressed()));
+
   connect(_scaleAutoBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleBaseOffset, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_significantDigits, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_forceOffsetMin, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
   connect(_rotation, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
@@ -100,6 +104,7 @@ AxisTab::AxisTab(QWidget *parent)
   _hideBottomLeft->setProperty("si","Hide left");
   _scaleAutoBaseOffset->setProperty("si","Auto base / offset mode");
   _scaleBaseOffset->setProperty("si","&Base and offset mode");
+  _forceOffsetMin->setProperty("si","Force offset to axis min");
   _drawAxisMajorTicks->setProperty("si","Dra&w ticks");
   _drawAxisMajorGridLines->setProperty("si","Draw &grid lines");
   _drawAxisMinorTicks->setProperty("si","Dr&aw ticks");
@@ -365,11 +370,6 @@ bool AxisTab::isAutoBaseOffsetDirty() const {
 }
 
 
-void AxisTab::setAutoBaseOffset(const bool enabled) {
-  _scaleAutoBaseOffset->setChecked(enabled);
-}
-
-
 bool AxisTab::isBaseOffset() const {
   return _scaleBaseOffset->isChecked();
 }
@@ -380,8 +380,36 @@ bool AxisTab::isBaseOffsetDirty() const {
 }
 
 
-void AxisTab::setBaseOffset(const bool enabled) {
-  _scaleBaseOffset->setChecked(enabled);
+bool AxisTab::isForceOffsetMin() const {
+  return _forceOffsetMin->isChecked();
+}
+
+
+bool AxisTab::isForceOffsetMinDirty() const {
+  return _forceOffsetMin->checkState() != Qt::PartiallyChecked;
+}
+
+
+void AxisTab::setForceOffsetMin(bool enabled) {
+  _forceOffsetMin->setChecked(enabled);
+}
+
+
+void AxisTab::setBaseOffsetMode(bool auto_on, bool on) {
+  if (auto_on) {
+    _scaleAutoBaseOffset->setChecked(true);
+    _scaleBaseOffset->setChecked(false);
+    _baseOffsetOff->setChecked(false);
+  } else if (on) {
+    _scaleAutoBaseOffset->setChecked(false);
+    _scaleBaseOffset->setChecked(true);
+    _baseOffsetOff->setChecked(false);
+  } else {
+    _scaleAutoBaseOffset->setChecked(false);
+    _scaleBaseOffset->setChecked(false);
+    _baseOffsetOff->setChecked(true);
+  }
+  updateButtons();
 }
 
 
@@ -509,8 +537,64 @@ void AxisTab::setHideBottomLeft(bool hide) {
 }
 
 
+void AxisTab::offsetAutoPressed() {
+  if (_scaleAutoBaseOffset->checkState() == Qt::Checked) {
+    _scaleBaseOffset->setChecked(false);
+    _baseOffsetOff->setChecked(false);
+  } else if (_scaleAutoBaseOffset->checkState() == Qt::Unchecked) {
+    _scaleBaseOffset->setChecked(true);
+    _baseOffsetOff->setChecked(false);
+  } else if (_scaleAutoBaseOffset->checkState() == Qt::PartiallyChecked) {
+    _scaleBaseOffset->setCheckState(Qt::PartiallyChecked);
+    _baseOffsetOff->setCheckState(Qt::PartiallyChecked);
+  }
+  _forceOffsetMin->setEnabled(true);
+  updateButtons();
+}
+
+void AxisTab::offsetOnPressed() {
+  if (_scaleBaseOffset->checkState() == Qt::Checked) {
+    _scaleAutoBaseOffset->setChecked(false);
+    _baseOffsetOff->setChecked(false);
+  } else if (_scaleBaseOffset->checkState() == Qt::Unchecked) {
+    _scaleAutoBaseOffset->setChecked(true);
+    _baseOffsetOff->setChecked(false);
+  } else if (_scaleBaseOffset->checkState() == Qt::PartiallyChecked) {
+    _scaleAutoBaseOffset->setCheckState(Qt::PartiallyChecked);
+    _baseOffsetOff->setCheckState(Qt::PartiallyChecked);
+  }
+  updateButtons();
+}
+
+void AxisTab::offsetOffPressed() {
+  if (_baseOffsetOff->checkState() == Qt::Checked) {
+    _scaleBaseOffset->setChecked(false);
+    _scaleAutoBaseOffset->setChecked(false);
+  } else if (_baseOffsetOff->checkState() == Qt::Unchecked) {
+    _scaleAutoBaseOffset->setChecked(true);
+    _scaleBaseOffset->setChecked(false);
+  } else if (_baseOffsetOff->checkState() == Qt::PartiallyChecked) {
+    _scaleAutoBaseOffset->setCheckState(Qt::PartiallyChecked);
+    _scaleBaseOffset->setCheckState(Qt::PartiallyChecked);
+  }
+  updateButtons();
+}
+
+
 void AxisTab::updateButtons() {
-  _scaleBaseOffset->setEnabled(!(_scaleInterpret->checkState() == Qt::PartiallyChecked || _scaleAutoBaseOffset->checkState() == Qt::PartiallyChecked));
+  bool interpret = (_scaleInterpret->checkState() == Qt::Checked);
+  bool interpret_unchecked = (_scaleInterpret->checkState() == Qt::Unchecked);
+  bool base_on_unchecked = (_scaleBaseOffset->checkState() == Qt::Unchecked);
+  bool auto_unchecked = (_scaleAutoBaseOffset->checkState() == Qt::Unchecked);
+
+  _scaleBaseOffset->setEnabled(!interpret);
+  _scaleAutoBaseOffset->setEnabled(!interpret);
+  _baseOffsetOff->setEnabled(!interpret);
+
+  _significantDigits->setEnabled((!auto_unchecked) && (!interpret));
+  _significantDigitsLabel->setEnabled((!auto_unchecked) && (!interpret));
+  _forceOffsetMin->setEnabled((!interpret_unchecked) || (!base_on_unchecked));
+
   _axisMinorTickCount->setEnabled(_autoMinorTicks->checkState() != Qt::Checked);
 }
 
@@ -519,6 +603,8 @@ void AxisTab::enableSingleEditOptions(bool enabled) {
   if (enabled) {
     _scaleLog->setTristate(false);
     _scaleBaseOffset->setTristate(false);
+    _scaleAutoBaseOffset->setTristate(false);
+    _baseOffsetOff->setTristate(false);
     _scaleReverse->setTristate(false);
     _scaleInterpret->setTristate(false);
     _drawAxisMajorTicks->setTristate(false);
@@ -534,6 +620,8 @@ void AxisTab::clearTabValues() {
   _scaleLog->setCheckState(Qt::PartiallyChecked);
   _scaleAutoBaseOffset->setCheckState(Qt::PartiallyChecked);
   _scaleBaseOffset->setCheckState(Qt::PartiallyChecked);
+  _baseOffsetOff->setCheckState(Qt::PartiallyChecked);
+  _forceOffsetMin->setCheckState(Qt::PartiallyChecked);
   _scaleReverse->setCheckState(Qt::PartiallyChecked);
   _scaleInterpret->setCheckState(Qt::PartiallyChecked);
   _autoMinorTicks->setCheckState(Qt::PartiallyChecked);

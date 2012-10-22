@@ -96,6 +96,7 @@ void DataDialog::createGui(bool edit_multiple) {
   _tagStringAuto = new QCheckBox(tr("&Auto","automatic"), box);
   _tagStringAuto->setObjectName("_tagStringAuto");
   connect(_tagStringAuto, SIGNAL(toggled(bool)), _tagString, SLOT(setDisabled(bool)));
+  connect(_tagStringAuto, SIGNAL(toggled(bool)), this, SLOT(modified()));
 
   if (edit_multiple) {
     _editMultipleButton = new QPushButton(tr("Edit Multiple >>"));

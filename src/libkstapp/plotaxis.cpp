@@ -40,6 +40,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _axisAutoBaseOffset(true),
   _axisBaseOffset(false),
   _axisBaseOffsetOverride(false),
+  _axisForceOffsetMin(false),
   _axisInterpret(false),
   _axisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS),
   _axisDisplayFormatString("hh:mm:ss.zzz"),
@@ -531,6 +532,14 @@ void PlotAxis::setAxisBaseOffset(const bool enabled) {
 }
 
 
+void PlotAxis::setAxisForceOffsetMin(bool enabled) {
+  if (_axisForceOffsetMin != enabled) {
+     _axisForceOffsetMin = enabled;
+     _dirty = true;
+  }
+}
+
+
 bool PlotAxis::axisInterpret() const {
   return _axisInterpret;
 }
@@ -855,6 +864,10 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   }
   tickspacing = tickspacing_u * range/range_u;
 
+
+  if (_axisForceOffsetMin) {
+    base_jd = min_jd;
+  }
   double base = (base_jd - min_jd) * range/range_jd + min;
 
   int i0 = -floor((base-min)/tickspacing);
@@ -977,7 +990,13 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
 
   computeMajorTickSpacing(&uMajorTickSpacing, &_automaticMinorTickCount, tickMode, uR);
 
-  double uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
+  double uFirstTick;
+  bool offset_is_min = (_axisInterpret || _axisBaseOffset || _axisBaseOffsetOverride ) && (_axisForceOffsetMin);
+  if (offset_is_min) {
+    uFirstTick = uMin;
+  } else {
+    uFirstTick = ceil(uMin / uMajorTickSpacing) * uMajorTickSpacing;
+  }
   double firstTick = uFirstTick*drdu + rOffset;
   double majorTickSpacing = uMajorTickSpacing * drdu;
 
@@ -1052,7 +1071,9 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
       longest = iLabel.value().length();
     }
   }
-
+  if (offset_is_min) {
+    base = ticks[0];
+  }
 
   // (shortest > 3) so that you don't use automatic base/offset mode when
   // it wouldn't actually take up less space.
@@ -1118,6 +1139,7 @@ void PlotAxis::copyProperties(PlotAxis *source) {
     setAxisLog(source->axisLog());
     setAxisReversed(source->axisReversed());
     setAxisBaseOffset(source->axisBaseOffset());
+    setAxisForceOffsetMin(source->axisForceOffsetMin());
     setAxisInterpret(source->axisInterpret());
     setAxisInterpretation(source->axisInterpretation());
     setAxisDisplay(source->axisDisplay());
@@ -1178,6 +1200,7 @@ void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {
   xml.writeAttribute("reversed", QVariant(axisReversed()).toString());
   xml.writeAttribute("autobaseoffset", QVariant(axisAutoBaseOffset()).toString());
   xml.writeAttribute("baseoffset", QVariant(axisBaseOffset()).toString());
+  xml.writeAttribute("forceoffsetmin", QVariant(axisForceOffsetMin()).toString());
   xml.writeAttribute("interpret", QVariant(axisInterpret()).toString());
   xml.writeAttribute("interpretation", QVariant(axisInterpretation()).toString());
   xml.writeAttribute("display", QVariant(axisDisplay()).toString());
@@ -1229,6 +1252,10 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   av = attrs.value("baseoffset");
   if (!av.isNull()) {
     setAxisBaseOffset(QVariant(av.toString()).toBool());
+  }
+  av = attrs.value("forceoffsetmin");
+  if (!av.isNull()) {
+    setAxisForceOffsetMin(QVariant(av.toString()).toBool());
   }
   av = attrs.value("interpret");
   if (!av.isNull()) {

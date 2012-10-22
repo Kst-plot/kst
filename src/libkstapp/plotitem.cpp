@@ -208,6 +208,7 @@ void PlotItem::applyDefaults() {
   xAxis()->setAxisReversed(_dialogDefaults->value(defaultsGroupName()+"/xAxisReversed", false).toBool());
   xAxis()->setAxisAutoBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/xAxisAutoBaseOffset", true).toBool());
   xAxis()->setAxisBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/xAxisBaseOffset", false).toBool());
+  xAxis()->setAxisForceOffsetMin(_dialogDefaults->value(defaultsGroupName()+"/xAxisForceOffsetMin", false).toBool());
   xAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpret", false).toBool());
   xAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/xAxisInterpretation", 1).toInt());
   xAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/xAxisDisplay", 4).toInt());
@@ -239,6 +240,7 @@ void PlotItem::applyDefaults() {
   yAxis()->setAxisReversed(_dialogDefaults->value(defaultsGroupName()+"/yAxisReversed", false).toBool());
   yAxis()->setAxisAutoBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/yAxisAutoBaseOffset", true).toBool());
   yAxis()->setAxisBaseOffset(_dialogDefaults->value(defaultsGroupName()+"/yAxisBaseOffset", false).toBool());
+  yAxis()->setAxisForceOffsetMin(_dialogDefaults->value(defaultsGroupName()+"/yAxisForceOffsetMin", false).toBool());
   yAxis()->setAxisInterpret(_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpret", false).toBool());
   yAxis()->setAxisInterpretation((AxisInterpretationType)_dialogDefaults->value(defaultsGroupName()+"/yAxisInterpretation", 1).toInt());
   yAxis()->setAxisDisplay((AxisDisplayType)_dialogDefaults->value(defaultsGroupName()+"/yAxisDisplay", 4).toInt());

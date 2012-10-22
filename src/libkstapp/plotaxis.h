@@ -94,6 +94,9 @@ class PlotAxis : public QObject
     bool axisBaseOffset() const;
     void setAxisBaseOffset(const bool enabled);
 
+    bool axisForceOffsetMin() const {return _axisForceOffsetMin;}
+    void setAxisForceOffsetMin(bool enabled);
+
     bool axisInterpret() const;
     void setAxisInterpret(const bool enabled);
 
@@ -175,6 +178,7 @@ class PlotAxis : public QObject
     bool _axisAutoBaseOffset;
     bool _axisBaseOffset;
     bool _axisBaseOffsetOverride;
+    bool _axisForceOffsetMin;
 
     bool _axisInterpret;
     AxisDisplayType _axisDisplay;

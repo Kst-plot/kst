@@ -205,9 +205,14 @@ bool AsciiFileData::read()
 //-------------------------------------------------------------------------------------------
 void AsciiFileData::logData() const
 {
+  QString this_str;
+  QString data_str;
+
+  this_str.sprintf("%p", this);
+  data_str.sprintf("%p", _array.data());
   qDebug() << QString("AsciiFileData %1, array %2, byte %3 ... %4 (%8), row %5 ... %6 (%9), lazy: %7")
-    .arg(QString::number((int)this))
-    .arg(QString::number((int)_array.data()))
+    .arg(this_str)
+    .arg(data_str)
     .arg(begin(), 8).arg(begin() + bytesRead(), 8)
     .arg(rowBegin(), 8).arg(rowBegin() + rowsRead(), 8)
     .arg(_reread).arg(bytesRead(), 8).arg(rowsRead(), 8);

@@ -105,7 +105,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
 
   //qDebug() << "ds up: " << n_updated << "  ds def: " << n_deferred << " n_no: " << n_unchanged;
   
-  MeasureTime t(" UpdateManager::doUpdates loop");
+  //MeasureTime t(" UpdateManager::doUpdates loop");
 
   int i_loop = retval = 0;
   int maxloop = _store->objectList().size();
