@@ -14,6 +14,7 @@
 #define KST_ATOF_H
 
 #include <QByteArray>
+#include <QString>
 #include <stdlib.h>
 
 
@@ -22,9 +23,9 @@ class LexicalCast
 public:
   static LexicalCast& instance();
   
-  struct AutoDot {
-    inline AutoDot(bool useDot) { instance().setDecimalSeparator(useDot); }
-    inline ~AutoDot() { instance().resetLocal(); }
+  struct AutoReset {
+    AutoReset(bool useDot);
+    ~AutoReset();
   };
   
   // use second parameter when useDot is false
@@ -33,17 +34,24 @@ public:
   char localSeparator() const;
 
 #ifdef KST_USE_KST_ATOF
-  double toDouble(const char* p) const;
+  double fromDouble(const char* p) const;
 #else
-  inline double toDouble(const char* p) const { return atof(p); }
+  inline double fromDouble(const char* p) const { return atof(p); }
 #endif
+  double fromTime(const char*) const;
+  inline double toDouble(const char* p) const { return _isTime ? fromTime(p) : fromDouble(p); }
 
+  void setTimeFormat(const QString& format);
+  
 private:
   LexicalCast();
   ~LexicalCast();
 
   char _separator;
   QByteArray _originalLocal;
+  QString _timeFormat;
+  bool _isTime;
+  bool _timeWithDate;
 
   void resetLocal();
 

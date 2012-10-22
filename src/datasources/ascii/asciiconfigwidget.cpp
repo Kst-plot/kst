@@ -111,6 +111,7 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
 {
   AsciiSourceConfig config;
   config._fileNamePattern = _fileNamePattern->text();
+  config._indexVector = _indexVector->currentText();
   config._indexInterpretation = (AsciiSourceConfig::Interpretation) (1 + _indexType->currentIndex());
   config._delimiters = _delimiters->text();
   
@@ -141,6 +142,7 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   }
 
   config._useThreads =_useThreads->isChecked();
+  config._indexTimeFormat = _indexTimeFormat->text();
 
   return config;
 }
@@ -184,6 +186,7 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   updateFrameBuffer(config._limitFileBuffer);
 
   _useThreads->setChecked(config._useThreads);
+  _indexTimeFormat->setText(config._indexTimeFormat);
 }
 
 
@@ -220,9 +223,12 @@ void AsciiConfigWidget::load() {
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     _ac->_indexVector->addItems(src->vector().list());
-    _ac->_indexVector->setCurrentIndex(src->_config._indexInterpretation - 1);
+    _ac->_indexType->setCurrentIndex(src->_config._indexInterpretation - 1);
     if (src->vector().list().contains(src->_config._indexVector)) {
-      _ac->_indexVector->setEditText(src->_config._indexVector);
+      int idx = _ac->_indexVector->findText(src->_config._indexVector);
+      if (idx == -1)
+        idx = _ac->_indexVector->findText("INDEX");
+      _ac->_indexVector->setCurrentIndex(idx == -1 ? 0 : idx);
     }
   } else {
     _ac->_indexVector->addItem("INDEX");

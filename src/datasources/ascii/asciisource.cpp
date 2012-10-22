@@ -317,7 +317,11 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
   // now start reading
 
-  LexicalCast::AutoDot useDot(_config._useDot);
+  LexicalCast::AutoReset useDot(_config._useDot);
+  
+  if (field == _config._indexVector && _config._indexInterpretation == AsciiSourceConfig::FormatedTime) {
+    LexicalCast::instance().setTimeFormat(_config._indexTimeFormat);
+  }
 
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
   int sampleRead = 0;

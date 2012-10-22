@@ -29,6 +29,8 @@ class AsciiSourceConfig {
     static const char Tag_indexVector[];
     static const char Key_indexInterpretation[];
     static const char Tag_indexInterpretation[];
+    static const char Key_indexTimeFormat[];
+    static const char Tag_indexTimeFormat[];
     static const char Key_columnType[];
     static const char Tag_columnType[];
     static const char Key_columnDelimiter[];
@@ -71,13 +73,14 @@ class AsciiSourceConfig {
 
     void load(const QDomElement& e);
 
-    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, IntEnd = 0xffff };
+    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, FormatedTime, IntEnd = 0xffff };
     enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
 
     NamedParameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
     NamedParameter<QString, Key_indexVector, Tag_indexVector> _indexVector;
-    NamedParameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
     NamedParameter<int, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
+    NamedParameter<QString, Key_indexTimeFormat, Tag_indexTimeFormat> _indexTimeFormat;
+    NamedParameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
     NamedParameter<int, Key_columnType, Tag_columnType> _columnType;
     NamedParameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
     NamedParameter<int, Key_columnWidth, Tag_columnWidth> _columnWidth;

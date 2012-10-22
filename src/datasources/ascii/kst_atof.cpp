@@ -14,19 +14,22 @@
 // http://www.bsdlover.cn/study/UnixTree/V7/usr/src/libc/gen/atof.c.html
 
 #include "kst_atof.h"
+#include "math_kst.h"
 
 #include <math.h>
 #include <ctype.h>
 
 #include <QLocale>
-
+#include <QTime>
+#include <QDateTime>
+#include <QDebug>
 
 #define LOGHUGE 39
 
 
 //-------------------------------------------------------------------------------------------
 #ifdef KST_USE_KST_ATOF
-double LexicalCast::toDouble(const char* signedp) const
+double LexicalCast::fromDouble(const char* signedp) const
 {
 	unsigned char* p = (unsigned char*)signedp;
 	unsigned char c;
@@ -119,6 +122,20 @@ double LexicalCast::toDouble(const char* signedp) const
 
 
 //-------------------------------------------------------------------------------------------
+LexicalCast::AutoReset::AutoReset(bool useDot)
+{
+  instance().setDecimalSeparator(useDot);
+}
+
+//-------------------------------------------------------------------------------------------
+LexicalCast::AutoReset::~AutoReset()
+{
+  instance().resetLocal();
+  instance()._isTime = false;
+  instance()._timeFormat.clear();
+}
+
+//-------------------------------------------------------------------------------------------
 LexicalCast& LexicalCast::instance()
 {
   static LexicalCast lexcInstance;
@@ -126,7 +143,7 @@ LexicalCast& LexicalCast::instance()
 }
 
 //-------------------------------------------------------------------------------------------
-LexicalCast::LexicalCast()
+LexicalCast::LexicalCast() : _isTime(false), _timeWithDate(false)
 {
 }
 
@@ -167,6 +184,39 @@ char LexicalCast::localSeparator() const
 {
   return *setlocale(LC_NUMERIC, 0);
 }
+
+//-------------------------------------------------------------------------------------------
+void LexicalCast::setTimeFormat(const QString& format)
+{
+  _timeFormat = format;
+  _isTime = !format.isEmpty();
+  _timeWithDate = format.contains("d") || format.contains("M") || format.contains("y");
+}
+
+//-------------------------------------------------------------------------------------------
+double LexicalCast::fromTime(const char* p) const
+{
+  int maxScan = 100;
+  int end = 0;
+  for (; *(p + end) != ' ' && *(p + end) != '\t'; end++) {
+    if (end > maxScan)
+      return Kst::NOPOINT;
+  }
+
+  const QString time = QString::fromLatin1(p, end);
+  double sec = Kst::NOPOINT;
+  if (_timeWithDate) {
+    const QDateTime t = QDateTime::fromString(time, _timeFormat);
+    if (t.isValid())
+      sec = QDateTime::fromString(time, _timeFormat).toMSecsSinceEpoch() / 1000;
+  } else {
+    const QTime t = QTime::fromString(time, _timeFormat);
+    if (t.isValid())
+      sec = QTime(0, 0, 0).msecsTo(t) / 1000;
+  }
+  return sec;
+}
+
 
 
 // vim: ts=2 sw=2 et

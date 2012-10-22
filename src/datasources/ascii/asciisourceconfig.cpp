@@ -31,6 +31,8 @@ const char AsciiSourceConfig::Key_indexVector[] ="Index";
 const char AsciiSourceConfig::Tag_indexVector[] ="vector";
 const char AsciiSourceConfig::Key_indexInterpretation[] = "Default INDEX Interpretation";
 const char AsciiSourceConfig::Tag_indexInterpretation[] = "interpretation";
+const char AsciiSourceConfig::Key_indexTimeFormat[] = "Time format";
+const char AsciiSourceConfig::Tag_indexTimeFormat[] = "timeFormat";
 const char AsciiSourceConfig::Key_columnType[] = "Column Type";
 const char AsciiSourceConfig::Tag_columnType[] = "columntype";
 const char AsciiSourceConfig::Key_columnDelimiter[] = "Column Delimiter";
@@ -61,8 +63,9 @@ const char AsciiSourceConfig::Tag_useThreads[] = "useThreads";
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
   _indexVector("INDEX"),
-  _fileNamePattern(""),
   _indexInterpretation(Unknown),
+  _indexTimeFormat("hh:mm:ss.zzz"),
+  _fileNamePattern(""),
   _columnType(Whitespace),
   _columnDelimiter(","),
   _columnWidth(DEFAULT_COLUMN_WIDTH),
@@ -99,6 +102,7 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
   _limitFileBuffer >> cfg;
   _limitFileBufferSize >> cfg;
   _useThreads >> cfg;
+  _indexTimeFormat >> cfg;
 }
 
 
@@ -133,6 +137,7 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _limitFileBuffer << cfg;
   _limitFileBufferSize << cfg;
   _useThreads << cfg;
+  _indexTimeFormat << cfg;
 }
 
 
@@ -174,6 +179,7 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _limitFileBuffer >> s;
   _limitFileBufferSize >> s;
   _useThreads >> s;
+  _indexTimeFormat >> s;
 
   s.writeEndElement();
 }
@@ -197,6 +203,7 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _limitFileBuffer << attributes;
   _limitFileBufferSize << attributes;
   _useThreads << attributes;
+  _indexTimeFormat << attributes;
 }
 
 
@@ -223,6 +230,7 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _limitFileBuffer << elem;
         _limitFileBufferSize << elem;
         _useThreads << elem;
+        _indexTimeFormat << elem;
       }
     }
     n = n.nextSibling();
@@ -248,7 +256,8 @@ bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
       _unitsLine == rhs._unitsLine &&
       _limitFileBuffer == rhs._limitFileBuffer &&
       _limitFileBufferSize == rhs._limitFileBufferSize &&
-      _useThreads == rhs._useThreads;
+      _useThreads == rhs._useThreads &&
+      _indexTimeFormat == rhs._indexTimeFormat;
 }
 
 bool AsciiSourceConfig::operator!=(const AsciiSourceConfig& rhs) const
@@ -271,7 +280,8 @@ bool AsciiSourceConfig::isUdateNecessary(const AsciiSourceConfig& rhs) const
       _fieldsLine != rhs._fieldsLine ||
       _columnWidthIsConst != rhs._columnWidthIsConst ||
       _readUnits != rhs._readUnits ||
-      _unitsLine != rhs._unitsLine ;
+      _unitsLine != rhs._unitsLine ||
+      _indexTimeFormat != rhs._indexTimeFormat;
 }
 
 
