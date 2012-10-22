@@ -250,6 +250,14 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
+bool AsciiSource::useThreads() const
+{
+  // only use threads for files > 1 MB
+  return _config._useThreads && _byteLength > 1 * 1024 * 1024;
+}
+
+
+//-------------------------------------------------------------------------------------------
 int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 {
   if (n < 0) {
@@ -283,7 +291,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.setFile(file);
 
     int numThreads;
-    if (!_config._useThreads) {
+    if (!useThreads()) {
       numThreads = 1;
     } else {
       numThreads = QThread::idealThreadCount();
@@ -291,7 +299,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     }
 
     if (useSlidingWindow(bytesToRead)) {
-      if (_config._useThreads) {
+      if (useThreads()) {
         _fileBuffer.useSlidingWindowWithChunks(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize, numThreads);
       } else {
         _fileBuffer.useSlidingWindow(_reader.rowIndex(), begin, bytesToRead, _config._limitFileBufferSize);
@@ -316,7 +324,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   for (int i = 0; i < slidingWindow.size(); i++) {
 
     int read;
-    if (_config._useThreads)
+    if (useThreads())
       read = parseWindowMultithreaded(slidingWindow[i], col, v, field);
     else
       read = parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);

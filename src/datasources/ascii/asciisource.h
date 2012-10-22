@@ -83,6 +83,7 @@ class AsciiSource : public Kst::DataSource
     QStringList _fieldList;
     QMap<QString, QString> _fieldUnits;
 
+    bool useThreads() const;
     bool useSlidingWindow(int bytesToRead)  const;
 
     int tryReadField(double *v, const QString &field, int s, int n);
