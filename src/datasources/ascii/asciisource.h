@@ -73,7 +73,7 @@ class AsciiSource : public Kst::DataSource
     friend class AsciiConfigWidget;
     mutable AsciiSourceConfig _config;
 
-    int _byteLength;
+    int _fileSize;
     bool _haveHeader;
     bool _fieldListComplete;
     bool _haveWarned;

@@ -92,7 +92,7 @@ void AsciiSource::reset()
   _haveWarned = false;
 
   _valid = false;
-  _byteLength = 0;
+  _fileSize = 0;
   _haveHeader = false;
   _fieldListComplete = false;
   
@@ -109,7 +109,7 @@ void AsciiSource::reset()
 bool AsciiSource::initRowIndex() 
 {
   _reader.clear();
-  _byteLength = 0;
+  _fileSize = 0;
   
   if (_config._dataLine > 0) {
     QFile file(_filename);
@@ -183,12 +183,12 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   
   bool force_update = true;
-  if (_byteLength == file.size()) {
+  if (_fileSize == file.size()) {
     force_update = false;
   }
-  _byteLength = file.size();
+  _fileSize = file.size();
   
-  bool new_data = _reader.findDataRows(read_completely, file, _byteLength);
+  bool new_data = _reader.findDataRows(read_completely, file, _fileSize);
   
   return (!new_data && !force_update ? NoChange : Updated);
 }
@@ -253,7 +253,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 bool AsciiSource::useThreads() const
 {
   // only use threads for files > 1 MB
-  return _config._useThreads && _byteLength > 1 * 1024 * 1024;
+  return _config._useThreads && _fileSize > 1 * 1024 * 1024;
 }
 
 
