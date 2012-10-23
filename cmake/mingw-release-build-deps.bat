@@ -1,4 +1,4 @@
-echo off 
+echo off
 
 rmdir /s/q mingw-release-build-deps
 mkdir      mingw-release-build-deps
@@ -16,13 +16,10 @@ if "%2" == "" (
 	set make=%2
 )
 
-echo cmake ..\kst\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=1 -Dkst_3rdparty_build=1 -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
+if "%3" == "" (
+	set kstdir=..\kst
+) else (
+	set kstdir=%3
+)
 
-cmake ..\kst\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_build=1 -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
-
-%make%
-%make% install/strip
-%make% package
-%make% package_source
-
-cd ..
+%kstdir%\cmake\mingw-release-download-deps.bat %ver% %make% %kstdir% build
