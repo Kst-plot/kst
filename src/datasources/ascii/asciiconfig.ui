@@ -6,11 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>932</width>
-    <height>677</height>
+    <width>715</width>
+    <height>554</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_7">
+  <layout class="QGridLayout" name="gridLayout_6">
    <item row="0" column="0">
     <widget class="QLabel" name="_labelBeginning">
      <property name="text">
@@ -32,7 +32,10 @@
        <property name="title">
         <string>Header</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="1,0" columnminimumwidth="0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="textLabel1_3">
           <property name="sizePolicy">
@@ -132,16 +135,6 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string> Line numbers start at 1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </item>
@@ -188,7 +181,7 @@
            <bool>false</bool>
           </property>
           <property name="suffix">
-           <string> characters</string>
+           <string> </string>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -202,72 +195,63 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="widthButtonGroup">
-       <property name="title">
-        <string>Data Column Width Options</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0">
-         <widget class="QRadioButton" name="radioButton">
-          <property name="text">
-           <string>Do not make assumptions on column width</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QRadioButton" name="_columnWidthIsConst">
-          <property name="text">
-           <string>Each column has its own constant width</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Decimal Separator</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0">
-         <widget class="QRadioButton" name="_useDot">
-          <property name="text">
-           <string>Dot</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QRadioButton" name="_useComma">
-          <property name="text">
-           <string>Comma</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>204</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="widthButtonGroup">
+         <property name="title">
+          <string>Data Column Width Options</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="radioButton">
+            <property name="text">
+             <string>Do not make assumptions on column width</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="_columnWidthIsConst">
+            <property name="text">
+             <string>Each column has its own constant width</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Decimal Separator</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="_useDot">
+            <property name="text">
+             <string>Dot</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="_useComma">
+            <property name="text">
+             <string>Comma</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QGroupBox" name="generalOptionsButtonGroup">
@@ -409,42 +393,25 @@
        <property name="title">
         <string>File Buffer Options</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QCheckBox" name="_limitFileBuffer">
-            <property name="text">
-             <string>Limit file buffer size to, in MB:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="_limitFileBufferSize">
-            <property name="text">
-             <string>128</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="_limitFileBuffer">
+          <property name="text">
+           <string>Limit size  in MB:</string>
+          </property>
+         </widget>
         </item>
-        <item row="1" column="0">
+        <item>
+         <widget class="QLineEdit" name="_limitFileBufferSize">
+          <property name="text">
+           <string>128</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QCheckBox" name="_useThreads">
           <property name="text">
-           <string>Use threads for parsing Ascii data</string>
+           <string>Use threads</string>
           </property>
          </widget>
         </item>
