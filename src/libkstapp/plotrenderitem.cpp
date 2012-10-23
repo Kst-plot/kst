@@ -512,17 +512,17 @@ void PlotRenderItem::wheelEvent(QGraphicsSceneWheelEvent *event) {
   bool zoom = false;
   if (modifiers & Qt::SHIFT) {
     if (event->delta()>0) {
-      plotItem()->zoomYIn(true);
+      plotItem()->zoomYIn();
     } else {
-      plotItem()->zoomYOut(true);
+      plotItem()->zoomYOut();
     }
     zoom = true;
   }
   if (modifiers & Qt::CTRL){
     if (event->delta()>0) {
-      plotItem()->zoomXIn(true);
+      plotItem()->zoomXIn();
     } else {
-      plotItem()->zoomXOut(true);
+      plotItem()->zoomXOut();
     }
     zoom = true;
   }
@@ -533,15 +533,15 @@ void PlotRenderItem::wheelEvent(QGraphicsSceneWheelEvent *event) {
 
   if ((modifiers & Qt::ALT) || zoomOnlyMode() == View::ZoomOnlyY) {
     if (event->delta()>0) {
-      plotItem()->zoomYDown(true);
+      plotItem()->zoomYDown();
     } else {
-      plotItem()->zoomYUp(true);
+      plotItem()->zoomYUp();
     }
   } else {
     if (event->delta()>0) {
-      plotItem()->zoomXLeft(true);
+      plotItem()->zoomXLeft();
     } else {
-      plotItem()->zoomXRight(true);
+      plotItem()->zoomXRight();
     }
   }
 }

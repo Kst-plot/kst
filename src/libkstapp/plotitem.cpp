@@ -3096,10 +3096,6 @@ void PlotItem::zoomXAutoBorder(bool force) {
 
 
 void PlotItem::zoomXRight(bool force) {
-  //if (zoomOnlyMode() == View::ZoomOnlyX) {
-  //  zoomXOut(force);
-  //  return;
-  //}
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXRight(this);
   } else {
@@ -3111,10 +3107,6 @@ void PlotItem::zoomXRight(bool force) {
 
 
 void PlotItem::zoomXLeft(bool force) {
-  //if (zoomOnlyMode() == View::ZoomOnlyX) {
-  //  zoomXIn(force);
-  //  return;
-  //}
   if (isInSharedAxisBox() && !force) {
     sharedAxisBox()->zoomXLeft(this);
   } else {
