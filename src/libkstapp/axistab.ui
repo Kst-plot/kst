@@ -139,9 +139,9 @@
          </widget>
         </item>
         <item row="3" column="0" colspan="2">
-         <widget class="QLabel" name="_timeFormaLabel">
+         <widget class="QLabel" name="_timeFormatLabel">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -168,9 +168,9 @@
          </widget>
         </item>
         <item row="3" column="4" colspan="2">
-         <widget class="QLabel" name="label_8">
+         <widget class="QLabel" name="_timeFormatHelp">
           <property name="text">
-           <string>Date: y,M,d Time: h,m,s,z</string>
+           <string>Date: y/M/d Time: h/m/s/z</string>
           </property>
          </widget>
         </item>

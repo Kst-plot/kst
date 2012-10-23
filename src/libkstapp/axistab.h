@@ -143,6 +143,7 @@ class AxisTab : public DialogTab, Ui::AxisTab {
 
   public Q_SLOTS:
     void updateButtons();
+    void updateFormatString();
     void offsetAutoPressed();
     void offsetOnPressed();
     void offsetOffPressed();

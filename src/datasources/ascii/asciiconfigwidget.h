@@ -36,6 +36,7 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
     void showBeginning();
     void updateUnitLineEnabled(bool);
     void updateFrameBuffer(bool);
+    void updateFormatString();
 
   private:
     const int _index_offset;

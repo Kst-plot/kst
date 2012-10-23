@@ -77,6 +77,7 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_scaleLog, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleReverse, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
+  connect(_scaleDisplayType, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
   connect(_scaleDisplayFormatString, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_scaleInterpretType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_timeZone, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
@@ -580,6 +581,13 @@ void AxisTab::offsetOffPressed() {
   updateButtons();
 }
 
+void AxisTab::updateFormatString() {
+  bool enable = (AxisDisplayType(_scaleDisplayType->itemData(_scaleDisplayType->currentIndex()).toInt())
+                  == AXIS_DISPLAY_QTDATETIME_FORMAT);
+  _scaleDisplayFormatString->setEnabled(enable);
+  _timeFormatLabel->setEnabled(enable);
+  _timeFormatHelp->setEnabled(enable);
+}
 
 void AxisTab::updateButtons() {
   bool interpret = (_scaleInterpret->checkState() == Qt::Checked);

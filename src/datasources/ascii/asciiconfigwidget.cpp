@@ -45,6 +45,7 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
 
   connect(_readFields, SIGNAL(toggled(bool)), this, SLOT(updateUnitLineEnabled(bool)));
   connect(_limitFileBuffer, SIGNAL(toggled(bool)), this, SLOT(updateFrameBuffer(bool)));
+  connect(_indexType, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
 }
 
 void AsciiConfigWidgetInternal::updateUnitLineEnabled(bool checked)
@@ -73,6 +74,13 @@ void AsciiConfigWidgetInternal::columnLayoutChanged(int idx)
   } else {
     widthButtonGroup->setEnabled(true);
   }
+}
+
+void AsciiConfigWidgetInternal::updateFormatString() {
+  bool enable = (AsciiSourceConfig::Interpretation)(_indexType->currentIndex() + 1)
+                  == AsciiSourceConfig::FormatedTime;
+  _indexTimeFormat->setEnabled(enable);
+  _timeFormatLabel->setEnabled(enable);
 }
 
 QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
@@ -187,6 +195,7 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
 
   _useThreads->setChecked(config._useThreads);
   _indexTimeFormat->setText(config._indexTimeFormat);
+  updateFormatString();
 }
 
 
