@@ -52,6 +52,7 @@ private:
   QString _timeFormat;
   bool _isTime;
   bool _timeWithDate;
+  bool _timeInTwoColumns;
 
   void resetLocal();
 

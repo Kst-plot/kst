@@ -188,20 +188,29 @@ char LexicalCast::localSeparator() const
 //-------------------------------------------------------------------------------------------
 void LexicalCast::setTimeFormat(const QString& format)
 {
-  _timeFormat = format;
+  _timeFormat = format.trimmed(); // remove space at start/end
   _isTime = !format.isEmpty();
   _timeWithDate = format.contains("d") || format.contains("M") || format.contains("y");
-}
+  if (_timeWithDate) {
+    _timeInTwoColumns = _timeFormat.contains(' ');
+  }
+} 
 
 //-------------------------------------------------------------------------------------------
 double LexicalCast::fromTime(const char* p) const
 {
   int maxScan = 100;
   int end = 0;
-  for (; *(p + end) != ' ' && *(p + end) != '\t'; end++) {
+  int columnEnd = _timeInTwoColumns ? 2 : 1;
+  int inCol = 0;
+  for (; inCol != columnEnd; end++) {
+    if (*(p + end) == ' ' || *(p + end) == '\t') {
+      inCol++;
+    }
     if (end > maxScan)
       return Kst::NOPOINT;
   }
+  end--;
 
   const QString time = QString::fromLatin1(p, end);
   double sec = Kst::NOPOINT;
