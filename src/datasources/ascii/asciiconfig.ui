@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>715</width>
-    <height>554</height>
+    <height>573</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_6">
@@ -181,7 +181,7 @@
            <bool>false</bool>
           </property>
           <property name="suffix">
-           <string> </string>
+           <string/>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -355,7 +355,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Formated Time</string>
+              <string>Formatted Time</string>
              </property>
             </item>
            </widget>
@@ -378,7 +378,7 @@
         <item row="3" column="2">
          <widget class="QLineEdit" name="_indexTimeFormat">
           <property name="toolTip">
-           <string>You can use more than one symbol here, like &quot;#!C&quot; for instance, but it will slow down reading ASCII files</string>
+           <string>Refer to the documentation of QDateTime for details.&lt;br&gt;You can use a combination of y,M,d for dates and h,m,s,z for times (z for milliseconds).&lt;br&gt;Space is allowed between date and time columns, but you must select the first column as X vector.</string>
           </property>
           <property name="text">
            <string>hh:mm:ss.zzz</string>
