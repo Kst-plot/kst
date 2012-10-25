@@ -78,7 +78,7 @@ void AsciiConfigWidgetInternal::columnLayoutChanged(int idx)
 
 void AsciiConfigWidgetInternal::updateFormatString() {
   bool enable = (AsciiSourceConfig::Interpretation)(_indexType->currentIndex() + 1)
-                  == AsciiSourceConfig::FormatedTime;
+                  == AsciiSourceConfig::FormattedTime;
   _indexTimeFormat->setEnabled(enable);
   _timeFormatLabel->setEnabled(enable);
 }

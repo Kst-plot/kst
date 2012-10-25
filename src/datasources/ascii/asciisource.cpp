@@ -319,7 +319,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
   LexicalCast::AutoReset useDot(_config._useDot);
   
-  if (field == _config._indexVector && _config._indexInterpretation == AsciiSourceConfig::FormatedTime) {
+  if (field == _config._indexVector && _config._indexInterpretation == AsciiSourceConfig::FormattedTime) {
     LexicalCast::instance().setTimeFormat(_config._indexTimeFormat);
   }
 

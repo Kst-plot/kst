@@ -73,7 +73,7 @@ class AsciiSourceConfig {
 
     void load(const QDomElement& e);
 
-    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, FormatedTime, IntEnd = 0xffff };
+    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, FormattedTime, IntEnd = 0xffff };
     enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
 
     NamedParameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
