@@ -116,9 +116,9 @@ bool AsciiSource::initRowIndex()
     if (!AsciiFileBuffer::openFile(file)) {
       return false;
     }
-    int header_row = 0;
-    int left = _config._dataLine;
-    int didRead = 0;
+    qint64 header_row = 0;
+    qint64 left = _config._dataLine;
+    qint64 didRead = 0;
     while (left > 0) {
       QByteArray line = file.readLine();
       if (line.isEmpty() || file.atEnd()) {
@@ -216,7 +216,7 @@ int AsciiSource::columnOfField(const QString& field) const
 
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::useSlidingWindow(int bytesToRead)  const
+bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 {
   return _config._limitFileBuffer && _config._limitFileBufferSize < bytesToRead;
 }
@@ -277,8 +277,8 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   }
   
   // check if the already in buffer
-  int begin = _reader.beginOfRow(s);
-  int bytesToRead = _reader.beginOfRow(s + n) - begin;
+  qint64 begin = _reader.beginOfRow(s);
+  qint64 bytesToRead = _reader.beginOfRow(s + n) - begin;
   if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
     QFile* file = new QFile(_filename);
     if (!AsciiFileBuffer::openFile(*file)) {
@@ -350,7 +350,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, const QString& field, int sRead)
 {
   int read = 0;
-  for (int i = 0; i< window.size(); i++) {
+  for (int i = 0; i < window.size(); i++) {
     Q_ASSERT(sRead ==  window[i].rowBegin());
     if (!window[i].read() || window[i].bytesRead() == 0)
       return 0;

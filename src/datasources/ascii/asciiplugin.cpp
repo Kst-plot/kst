@@ -179,7 +179,7 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     bool done = false;
     while (!done) {
       const QByteArray line = f.readLine();
-      const qint64 rc = line.size();
+      const int rc = line.size();
       if (skip > 0) {
         --skip;
         if (rc <= 0) {

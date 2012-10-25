@@ -73,7 +73,7 @@ class AsciiSource : public Kst::DataSource
     friend class AsciiConfigWidget;
     mutable AsciiSourceConfig _config;
 
-    int _fileSize;
+    qint64 _fileSize;
     bool _haveHeader;
     bool _fieldListComplete;
     bool _haveWarned;
@@ -84,7 +84,7 @@ class AsciiSource : public Kst::DataSource
     QMap<QString, QString> _fieldUnits;
 
     bool useThreads() const;
-    bool useSlidingWindow(int bytesToRead)  const;
+    bool useSlidingWindow(qint64 bytesToRead)  const;
 
     int tryReadField(double *v, const QString &field, int s, int n);
     int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, const QString& field, int sRead);

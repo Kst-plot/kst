@@ -58,7 +58,7 @@ void AsciiFileBuffer::clear()
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const
+qint64 AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, qint64 searchStart, qint64 pos) const
 {
   if (rowIndex.isEmpty() ||
       pos < 0 || pos >= rowIndex[rowIndex.size() - 1] || // within the file
@@ -66,8 +66,8 @@ int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex
     return -1;
 
   // is expensive  for large index with searchStart == 0
-  const int indexOfLastRow = rowIndex.size() - 2;
-  for (int row = searchStart; row <= indexOfLastRow; row++) {
+  const qint64 indexOfLastRow = rowIndex.size() - 2;
+  for (qint64 row = searchStart; row <= indexOfLastRow; row++) {
     if (pos < rowIndex[row])
       return row - 1;
   }
@@ -77,18 +77,18 @@ int AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex
 }
 
 //-------------------------------------------------------------------------------------------
-const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const
+const QVector<AsciiFileData> AsciiFileBuffer::splitFile(qint64 chunkSize, const RowIndex& rowIndex, qint64 start, qint64 bytesToRead) const
 {
-  const int end = start + bytesToRead; // position behind last valid seekable byte in file
+  const qint64 end = start + bytesToRead; // position behind last valid seekable byte in file
   if (chunkSize <= 0 || rowIndex.isEmpty() || start >= end || start < 0
       || bytesToRead <= 0 || start + bytesToRead > rowIndex[rowIndex.size() - 1])
     return QVector<AsciiFileData>();
 
-  int nextRow = 0;
+  qint64 nextRow = 0;
   QVector<AsciiFileData> chunks;
   chunks.reserve(bytesToRead / chunkSize);
-  int pos = start;
-  int rows = rowIndex.size();
+  qint64 pos = start;
+  qint64 rows = rowIndex.size();
   while (pos < end) {
     // use for storing reading information only
     AsciiFileData chunk;
@@ -96,9 +96,9 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
     if (nextRow + 1 < rows && rowIndex[nextRow + 1] - rowIndex[nextRow] > chunkSize)
       return  QVector<AsciiFileData>();
     // read complete chunk or to end of file
-    int endRead = (pos + chunkSize < end ? pos + chunkSize : end);
+    qint64 endRead = (pos + chunkSize < end ? pos + chunkSize : end);
     // adjust to row end: pos + chunkRead is in the middle of a row, find index of this row
-    const int rowBegin = nextRow;
+    const qint64 rowBegin = nextRow;
     nextRow = findRowOfPosition(rowIndex, nextRow, endRead - 1);
     if (nextRow == -1 || nextRow >= rows)
       return  QVector<AsciiFileData>();
@@ -132,25 +132,25 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(int chunkSize, const Row
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::useOneWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks)
+void AsciiFileBuffer::useOneWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, int numChunks)
 {
   useSlidingWindowWithChunks(rowIndex, start, bytesToRead, bytesToRead, numChunks, false);
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::useSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize)
+void AsciiFileBuffer::useSlidingWindow(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize)
 {
   useSlidingWindowWithChunks(rowIndex, start, bytesToRead, windowSize, 1, true);
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks)
+void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize, int numWindowChunks)
 {
   useSlidingWindowWithChunks(rowIndex, start, bytesToRead, windowSize, numWindowChunks, true);
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks, bool reread)
+void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize, int numWindowChunks, bool reread)
 {
   clear();
   if (!_file)
@@ -159,7 +159,7 @@ void AsciiFileBuffer::useSlidingWindowWithChunks(const RowIndex& rowIndex, int s
   if (bytesToRead <= 0 || numWindowChunks <= 0 || windowSize <= 0)
     return;
 
-  int chunkSize = windowSize / numWindowChunks;
+  qint64 chunkSize = windowSize / numWindowChunks;
   QVector<AsciiFileData> chunks = splitFile(chunkSize, rowIndex, start, bytesToRead);
   // chunks.size() could be greater than numWindowChunks!
 

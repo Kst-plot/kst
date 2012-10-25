@@ -44,26 +44,26 @@ public:
   inline bool reread() const { return _reread; }
   inline void setReread(bool value) { _reread = value; }
 
-  inline int begin() const { return _begin; }
-  inline int bytesRead() const { return _bytesRead; }
-  inline void setBegin(int begin) { _begin = begin; }
-  inline void setBytesRead(int read) { _bytesRead = read; }
+  inline qint64 begin() const { return _begin; }
+  inline qint64 bytesRead() const { return _bytesRead; }
+  inline void setBegin(qint64 begin) { _begin = begin; }
+  inline void setBytesRead(qint64 read) { _bytesRead = read; }
 
   inline void setFile(QFile* file) { _file = file; }
   bool read();
-  void read(QFile&, int start, int numberOfBytes, int maximalBytes = -1);
+  void read(QFile&, qint64 start, qint64 numberOfBytes, qint64 maximalBytes = -1);
 
   char* data();
   const char* const constPointer() const;
   const Array& constArray() const;
 
-  bool resize(int size);
+  bool resize(qint64 size);
   void clear(bool forceDeletingArray = false);
 
-  inline int rowBegin() const { return _rowBegin; }
-  inline int rowsRead() const { return _rowsRead; }
-  inline void setRowBegin(int begin) { _rowBegin = begin; }
-  inline void setRowsRead(int read) { _rowsRead = read; }
+  inline qint64 rowBegin() const { return _rowBegin; }
+  inline qint64 rowsRead() const { return _rowsRead; }
+  inline void setRowBegin(qint64 begin) { _rowBegin = begin; }
+  inline void setRowsRead(qint64 read) { _rowsRead = read; }
 
   void setSharedArray(AsciiFileData&);
 
@@ -76,10 +76,10 @@ private:
   QFile* _file;
   bool _fileRead;
   bool _reread;
-  int _begin;
-  int _bytesRead;
-  int _rowBegin;
-  int _rowsRead;
+  qint64 _begin;
+  qint64 _bytesRead;
+  qint64 _rowBegin;
+  qint64 _rowsRead;
 
 };
 

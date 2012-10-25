@@ -24,19 +24,19 @@ public:
   AsciiFileBuffer();
   ~AsciiFileBuffer();
   
-  typedef QVarLengthArray<int, AsciiFileData::Prealloc> RowIndex;
+  typedef QVarLengthArray<qint64, AsciiFileData::Prealloc> RowIndex;
 
-  inline int begin() const { return _begin; }
-  inline int bytesRead() const { return _bytesRead; }
+  inline qint64 begin() const { return _begin; }
+  inline qint64 bytesRead() const { return _bytesRead; }
   
   void clear();
 
   void setFile(QFile* file);
   bool readWindow(QVector<AsciiFileData>& window) const;
 
-  void useOneWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks);
-  void useSlidingWindow(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize);
-  void useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks);
+  void useOneWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, int numChunks);
+  void useSlidingWindow(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize);
+  void useSlidingWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize, int numWindowChunks);
 
   QVector<QVector<AsciiFileData> >& fileData() { return _fileData; }
 
@@ -46,12 +46,12 @@ private:
   QFile* _file;
   QVector<QVector<AsciiFileData> > _fileData;
 
-  int _begin;
-  int _bytesRead;
+  qint64 _begin;
+  qint64 _bytesRead;
 
-  const QVector<AsciiFileData> splitFile(int chunkSize, const RowIndex& rowIndex, int start, int bytesToRead) const;
-  int findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, int searchStart, int pos) const;
-  void useSlidingWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int windowSize, int numWindowChunks, bool reread);
+  const QVector<AsciiFileData> splitFile(qint64 chunkSize, const RowIndex& rowIndex, qint64 start, qint64 bytesToRead) const;
+  qint64 findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIndex, qint64 searchStart, qint64 pos) const;
+  void useSlidingWindowWithChunks(const RowIndex& rowIndex, qint64 start, qint64 bytesToRead, qint64 windowSize, int numWindowChunks, bool reread);
 
   friend class AsciiSourceTest;
 };

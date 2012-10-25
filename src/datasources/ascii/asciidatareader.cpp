@@ -60,7 +60,7 @@ void AsciiDataReader::clear()
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiDataReader::setRow0Begin(int begin)
+void AsciiDataReader::setRow0Begin(qint64 begin)
 {
   _rowIndex.resize(1);
   _rowIndex[0] = begin;
@@ -85,7 +85,7 @@ void AsciiDataReader::detectLineEndingType(QFile& file)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int bufread, int ch, double* v, int) const
+void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, qint64 bufread, qint64 ch, double* v, int) const
 {
   if (   isDigit(buffer[ch])
          || buffer[ch] == '-'
@@ -112,7 +112,7 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, int 
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteLength)
+bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _byteLength)
 {
   detectLineEndingType(file);
 
@@ -122,7 +122,7 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
 
-    int bufstart = _rowIndex[_numFrames]; // always read from the start of a line
+    qint64 bufstart = _rowIndex[_numFrames]; // always read from the start of a line
     buf.read(file, bufstart, _byteLength - bufstart, AsciiFileData::Prealloc - 1);
     if (buf.bytesRead() == 0) {
       return false;
@@ -157,16 +157,16 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, int _byteL
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-bool AsciiDataReader::findDataRows(const Buffer& buffer, int bufstart, int bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
+bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64 bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
 {
   const IsWhiteSpace isWhiteSpace;
   bool new_data = false;
   bool row_has_data = false;
   bool is_comment = false;
-  const int row_offset = bufstart + isLineBreak.size;
-  int row_start = bufstart;
+  const qint64 row_offset = bufstart + isLineBreak.size;
+  qint64 row_start = bufstart;
 
-  for (int i = 0; i < bufread; i++) {
+  for (qint64 i = 0; i < bufread; i++) {
     if (comment_del(buffer[i])) {
       is_comment = true;
     } else if (isLineBreak(buffer[i])) {
@@ -236,7 +236,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
                                  const LineEndingType& lineending, const ColumnDelimiter& column_del) const
 {
   if (_config._delimiters.value().size() == 0) {
@@ -254,7 +254,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
                                  const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del) const
 {
   if (_config._columnWidthIsConst) {
@@ -276,7 +276,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, int bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
                                  const IsLineBreak& isLineBreak,
                                  const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                                  const ColumnWidthsAreConst& are_column_widths_const) const
@@ -287,7 +287,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
 
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
 
-  int col_start = -1;
+  qint64 col_start = -1;
   for (int i = 0; i < n; i++, s++) {
     bool incol = false;
     int i_col = 0;
@@ -300,7 +300,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, int bufstart, 
     }
 
     v[i] = Kst::NOPOINT;
-    for (int ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+    for (qint64 ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
       if (isLineBreak(buffer[ch])) {
         break;
       } else if (column_del(buffer[ch])) { //<- check for column start

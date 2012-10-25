@@ -127,7 +127,7 @@ const AsciiFileData::Array& AsciiFileData::constArray() const
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiFileData::resize(int bytes)
+bool AsciiFileData::resize(qint64 bytes)
 { 
   try {
     _array->resize(bytes);
@@ -152,7 +152,7 @@ void AsciiFileData::clear(bool forceDeletingArray)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalBytes)
+void AsciiFileData::read(QFile& file, qint64 start, qint64 bytesToRead, qint64 maximalBytes)
 {
   _begin = -1;
   _bytesRead = 0;
@@ -170,7 +170,7 @@ void AsciiFileData::read(QFile& file, int start, int bytesToRead, int maximalByt
   }
   if (!file.seek(start)) // expensive?
     return; 
-  int bytesRead = file.read(_array->data(), bytesToRead);
+  qint64 bytesRead = file.read(_array->data(), bytesToRead);
   if (!resize(bytesRead + 1))
     return;
 
@@ -190,8 +190,8 @@ bool AsciiFileData::read()
     return false;
   }
 
-  int start = _begin;
-  int bytesToRead = _bytesRead;
+  qint64 start = _begin;
+  qint64 bytesToRead = _bytesRead;
   read(*_file, start, bytesToRead);
   if (begin() != start || bytesRead() != bytesToRead) {
     clear(true);
