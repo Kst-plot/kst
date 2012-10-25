@@ -862,7 +862,10 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
     if (base_jd < min_jd) base_jd = min_jd;
     if (base_jd > max_jd) base_jd = min_jd;
   }
-  tickspacing = tickspacing_u * range/range_u;
+
+  //TODO Why could range_u be 0? Then it hangs in while(1)
+  if (range_u != 0)
+    tickspacing = tickspacing_u * range/range_u;
 
 
   if (_axisForceOffsetMin) {
