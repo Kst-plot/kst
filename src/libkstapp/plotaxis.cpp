@@ -185,7 +185,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   int minute = int((dDayFraction*24.0 - double(hour))*60.0);
   double second = ((dDayFraction*24.0 - double(hour))*60.0 - double(minute))*60.0;
   double fullseconds;
-  double millisec = modf(second + 0.5, &fullseconds) * 1000;
+  double millisec = modf(second + 0.0005, &fullseconds) * 1000;
 
   if (accuracy >= 0) {
     second *= pow(10.0, accuracy);
