@@ -217,11 +217,11 @@ double LexicalCast::fromTime(const char* p) const
   if (_timeWithDate) {
     const QDateTime t = QDateTime::fromString(time, _timeFormat);
     if (t.isValid())
-      sec = QDateTime::fromString(time, _timeFormat).toMSecsSinceEpoch() / 1000;
+      sec = QDateTime::fromString(time, _timeFormat).toMSecsSinceEpoch() / 1000.0;
   } else {
     const QTime t = QTime::fromString(time, _timeFormat);
     if (t.isValid())
-      sec = QTime(0, 0, 0).msecsTo(t) / 1000;
+      sec = QTime(0, 0, 0).msecsTo(t) / 1000.0;
   }
   return sec;
 }
