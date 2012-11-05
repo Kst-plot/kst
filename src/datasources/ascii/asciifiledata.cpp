@@ -46,7 +46,7 @@ size_t maxAllocate = 1 * MB;
 size_t maxAllocate = (size_t) -1;
 #endif
 
-#define KST_MEMORY_DEBUG if(1)
+#define KST_MEMORY_DEBUG if(0)
 
 //-------------------------------------------------------------------------------------------
 static QMap<void*, size_t> allocatedMBs;
