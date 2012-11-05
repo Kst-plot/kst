@@ -136,9 +136,14 @@ checkExitCode
 mingw=i686-w64-mingw32
 if [ "$1" = "qt5" ]; then
     qtver=5.0.0
+    tarver=-3
     gccver=4.7.2
+    dw2=-dw2
+    extlib=
+    useext=
 else
     qtver=4.8.4
+    tarver=
     gccver=4.7.2
     dw2=-dw2
     extlib=kst-3rdparty-win32-gcc-dw2-4.7.2
@@ -177,7 +182,7 @@ checkExitCode
 # download and install Qt
 #
 if [ ! -d /opt/$qtver ]; then
-    qttar=$qtver-Ubuntu32-12.04.tar
+    qttar=$qtver-Ubuntu32-12.04$tarver.tar
     wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
     checkExitCode
     xz -d $qttar.xz

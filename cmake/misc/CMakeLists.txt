@@ -12,8 +12,8 @@ if(WIN32)
 			DESTINATION bin
 			CONFIGURATIONS Release)
 		install(FILES
-			${QT_BINARY_DIR}/../plugins/platforms/qminimal5.dll
-			${QT_BINARY_DIR}/../plugins/platforms/windows5.dll			
+			${QT_BINARY_DIR}/../plugins/platforms/qminimal.dll
+			${QT_BINARY_DIR}/../plugins/platforms/windows.dll			
 			DESTINATION bin/platforms
 			CONFIGURATIONS Release)
 	else()
