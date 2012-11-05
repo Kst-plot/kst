@@ -98,7 +98,7 @@ void MeasureTime::measure()
 void MeasureTime::print()
 {
   measure();
-  qWarning(qPrintable(QString("MeasureTime in %1: %2 sec").arg(name ).arg(interval)));
+  qWarning("MeasureTime in %s: %g sec", qPrintable(name), interval);
   Kst::Debug::self()->log(QString("Timing: %2 sec, Scope: %1").arg(name).arg(interval), Kst::Debug::DebugLog);
 }
 
