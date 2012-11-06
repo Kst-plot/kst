@@ -68,7 +68,7 @@ const AxisDisplay AxisDisplays[] = {
   { I18N_NOOP2("Julian Date", "JD"), AXIS_DISPLAY_JD },
   { I18N_NOOP2("Modified Julian Date", "MJD"), AXIS_DISPLAY_MJD },
   { I18N_NOOP2("Reduced Julian Date", "RJD"), AXIS_DISPLAY_RJD },
-  { I18N_NOOP("QDateTime format string"), AXIS_DISPLAY_QTDATETIME_FORMAT }
+  { I18N_NOOP("Formatted String"), AXIS_DISPLAY_QTDATETIME_FORMAT }
 };
 
 const unsigned int numAxisInterpretations = sizeof( AxisInterpretations ) / sizeof( AxisInterpretation );

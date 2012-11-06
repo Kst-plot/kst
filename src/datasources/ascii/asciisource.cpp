@@ -227,12 +227,12 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   int read = tryReadField(v, field, s, n);
 
-  QString msg("%1 because not enough memory is available.\nSetting a file buffer limit could help.");
+  QString msg("%1 because not enough memory is available.\nTry setting a file buffer limit in the configuration options.");
   if (read == n) {
     return read;
   } else if (read > 0) {
     if (!_haveWarned)
-      QMessageBox::warning(0, "Error while reading ASCII file", msg.arg("The file was only read partially"));
+      QMessageBox::warning(0, "Error while reading ASCII file", msg.arg("The file was read only partially"));
     _haveWarned = true;
     return read;
   } else if (read == 0) {
