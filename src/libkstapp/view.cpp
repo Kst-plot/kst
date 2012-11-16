@@ -612,7 +612,6 @@ double View::resetPlotFontSizes(int num_adding) {
     pointSize = newPointSize;
   }
   qreal legendPointSize = qMax(pointSize*qreal(0.6), ApplicationSettings::self()->minimumFontSize());
-  qDebug() << "reset plot font size to" << pointSize << " for " << PlotItemManager::self()->plotsForView(this).size();
   foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
     plotItem->setGlobalFontScale(pointSize);
     plotItem->rightLabelDetails()->setFontScale(pointSize);

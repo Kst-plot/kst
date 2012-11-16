@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>687</width>
-    <height>674</height>
+    <height>525</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Power Spectrum Contents</string>
@@ -43,14 +43,14 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0" colspan="2">
     <widget class="Kst::FFTOptions" name="_FFTOptions" native="true"/>
    </item>
-   <item>
-    <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true"/>
-   </item>
-   <item>
+   <item row="2" column="0">
     <widget class="Kst::CurveAppearance" name="_curveAppearance" native="true"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="Kst::CurvePlacement" name="_curvePlacement" native="true"/>
    </item>
   </layout>
  </widget>
