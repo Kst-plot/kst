@@ -29,9 +29,6 @@
       <string>E-Mail Notification</string>
      </property>
      <layout class="QHBoxLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item>
        <widget class="QCheckBox" name="_emailNotify">
         <property name="text">
@@ -61,9 +58,6 @@
       <string>Expression</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item row="1" column="0">
        <widget class="QLabel" name="textLabel2">
         <property name="text">
@@ -318,9 +312,6 @@
       <string>KstScript</string>
      </property>
      <layout class="QHBoxLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item>
        <widget class="QCheckBox" name="_executeScript">
         <property name="text">
@@ -344,9 +335,6 @@
       <string>ELOG</string>
      </property>
      <layout class="QHBoxLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item>
        <widget class="QCheckBox" name="_ELOGNotify">
         <property name="text">
@@ -395,9 +383,6 @@
       <string>Kst Debug Log</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item row="0" column="5">
        <spacer>
         <property name="orientation">

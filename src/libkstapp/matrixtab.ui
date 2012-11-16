@@ -26,7 +26,10 @@
       <string>Scaling and Translation</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="1" column="0">
@@ -69,9 +72,6 @@
       </item>
       <item row="0" column="1" rowspan="2">
        <layout class="QVBoxLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
         <item>
          <widget class="QLineEdit" name="_minX">
           <property name="sizePolicy">
@@ -207,14 +207,14 @@
       <string>Gradient Parameters</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="0" column="0">
        <layout class="QGridLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="textLabel5">
           <property name="text">
@@ -262,9 +262,6 @@
       </item>
       <item row="1" column="0">
        <layout class="QGridLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
         <item row="1" column="1">
          <widget class="QSpinBox" name="_nX">
           <property name="minimum">
@@ -361,14 +358,14 @@
       <string>Data Range</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="0" column="0">
        <layout class="QGridLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
         <item row="3" column="2">
          <widget class="QLabel" name="textLabel4_4">
           <property name="sizePolicy">
@@ -635,9 +632,6 @@
       </item>
       <item row="1" column="0">
        <layout class="QGridLayout">
-        <property name="margin">
-         <number>0</number>
-        </property>
         <item row="0" column="1">
          <widget class="QSpinBox" name="_skip">
           <property name="enabled">
@@ -682,7 +676,10 @@
       <string>Source</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="0" column="0">
@@ -733,7 +730,10 @@
       <string>Data Source Parameters</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="1" column="0">

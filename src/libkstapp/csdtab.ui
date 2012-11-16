@@ -80,9 +80,6 @@
       <string>Image Options</string>
      </property>
      <layout class="QGridLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item row="0" column="0">
        <widget class="Kst::ColorPalette" name="_colorPalette" native="true"/>
       </item>
@@ -97,14 +94,14 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Kst::CurvePlacement</class>
-   <extends>QWidget</extends>
-   <header>curveplacement.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>
    <header>vectorselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::CurvePlacement</class>
+   <extends>QWidget</extends>
+   <header>curveplacement.h</header>
   </customwidget>
   <customwidget>
    <class>Kst::FFTOptions</class>
