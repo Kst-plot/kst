@@ -111,7 +111,7 @@ class View : public QGraphicsView
 
     void configurePlotFontDefaults(PlotItem *plot);
 
-    void resetPlotFontSizes(qreal pointSize = 0);
+    double resetPlotFontSizes(int num_adding=0);
 
     void setFontRescale(qreal rescale) {_fontRescale = rescale;}
     qreal fontRescale() const {return _fontRescale;}

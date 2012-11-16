@@ -603,17 +603,16 @@ qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
 
 // Set the font sizes of all plots in the view to a default size, scaled
 // by the default global font scale, and the application minimum font scale.
-void View::resetPlotFontSizes(qreal pointSize) {
-  if (pointSize < 0.1) {
-    pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
-  }
-  qreal count = PlotItemManager::self()->plotsForView(this).count();
+double View::resetPlotFontSizes(int num_adding) {
+  qreal pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
+
+  qreal count = PlotItemManager::self()->plotsForView(this).count() + num_adding;
   qreal newPointSize = pointSize/sqrt(count) + ApplicationSettings::self()->minimumFontSize();
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }
   qreal legendPointSize = qMax(pointSize*qreal(0.6), ApplicationSettings::self()->minimumFontSize());
-
+  qDebug() << "reset plot font size to" << pointSize << " for " << PlotItemManager::self()->plotsForView(this).size();
   foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
     plotItem->setGlobalFontScale(pointSize);
     plotItem->rightLabelDetails()->setFontScale(pointSize);
@@ -625,6 +624,7 @@ void View::resetPlotFontSizes(qreal pointSize) {
       plotItem->legend()->setFontScale(legendPointSize);
     }
   }
+  return pointSize;
 }
 
 // copy the font settings of the first plotItem in the view into

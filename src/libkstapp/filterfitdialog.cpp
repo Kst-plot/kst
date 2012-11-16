@@ -236,7 +236,8 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
 
           plotItem = static_cast<PlotItem*>(cmd->item());
           if (_filterFitTab->curvePlacement()->scaleFonts()) {
-              plotItem->view()->resetPlotFontSizes();
+              plotItem->view()->resetPlotFontSizes(1);
+              plotItem->view()->configurePlotFontDefaults(plotItem); // copy plots already in window
           }
           plotItem->view()->appendToLayout(_filterFitTab->curvePlacement()->layout(), plotItem,
                                            _filterFitTab->curvePlacement()->gridColumns());

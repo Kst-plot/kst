@@ -259,7 +259,8 @@ ObjectPtr CSDDialog::createNewDataObject() {
 
           plotItem = static_cast<PlotItem*>(cmd->item());
           if (_CSDTab->curvePlacement()->scaleFonts()) {
-              plotItem->view()->resetPlotFontSizes();
+              plotItem->view()->resetPlotFontSizes(1);
+              plotItem->view()->configurePlotFontDefaults(plotItem); // copy plots already in window
           }
           break;
       }

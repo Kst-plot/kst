@@ -1188,16 +1188,20 @@ void DataWizard::finished() {
   if (relayout) {
     if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
       int np = plotList.count();
-      if (np > 0) {
-        plotList.at(0)->view()->resetPlotFontSizes(); // set font sizes on first page.
-        if (plotList.at(np-1)->view() != plotList.at(0)->view()) { // and second, if there is one.
-          plotList.at(np-1)->view()->resetPlotFontSizes();
+      int n_add = np;
+      bool two_pages = (plotList.at(np-1)->view() != plotList.at(0)->view());
+      if (two_pages) {
+        n_add/=2;
+      }
+      if (np > 0) { // don't crash if there are no plots
+        plotList.at(0)->view()->resetPlotFontSizes(n_add); // set font sizes on first page.
+        if (two_pages) { // and second, if there is one.
+          plotList.at(np-1)->view()->resetPlotFontSizes(n_add);
         }
       }
-    } else {
-      foreach (PlotItem* plot, plotList) {
-        _document->currentView()->configurePlotFontDefaults(plot); // copy plots already in window
-      }
+    }
+    foreach (PlotItem* plot, plotList) {
+      plot->view()->configurePlotFontDefaults(plot); // copy plots already in window
     }
 
     CurvePlacement::Layout layout_type = _pagePlot->layout();
