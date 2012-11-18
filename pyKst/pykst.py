@@ -174,7 +174,6 @@ class Client:
             color="white"
           
           s=-2
-            
         NewCurve(self,x.handle,y.handle,"<None>","<None>","<None>","<None>",False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)
         plot=ExistingPlot.getList(self)[-1]   #i.e., last
         makecurve=False
@@ -190,7 +189,7 @@ class Client:
             x=arg
             break
           elif isinstance(arg,Matrix):
-            ColorImage(self,arg.handle,0,0,0,0,0,True,0,False,False if not isinstance(plot,Plot) else plot.handle,True if not isinstance(plot,Plot) else False)
+            ColorImage(self,arg.handle,0,0,0,0,0,True,0,False," " if not isinstance(plot,Plot) else plot.handle,True if not isinstance(plot,Plot) else False)
             plot=ExistingPlot.getList(self)[-1]   #i.e., last
             s=-1
             break
@@ -222,13 +221,13 @@ class Client:
         bargraphfill="black"
         ignoreinauto=False
         donotplaceinanyplot=False
-        placeinexistingplot=False if not isinstance(plot,Plot) else plot.handle
+        placeinexistingplot=" " if not isinstance(plot,Plot) else plot.handle
         placeinnewplot=True if not isinstance(plot,Plot) else False
         #no args after this
         makecurve=True
         s=-1
     if makecurve:
-      NewCurve(self,x.handle,y.handle,"<None>","<None>","<None>","<None>",False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)
+      NewCurve(self,x.handle,y.handle,"<None>","<None>","<None>","<None>",False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)                                                                                                                                                                        
       plot=ExistingPlot.getList(self)[-1]   #i.e., last
     return plot
     
