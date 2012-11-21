@@ -866,6 +866,8 @@ void DataWizard::finished() {
     }
   }
 
+  QString timeFormatString = ds->timeFormatString();
+
   ds->unlock();
   if (memoryRequested > memoryAvailable) {
     QApplication::restoreOverrideCursor();
@@ -1218,6 +1220,13 @@ void DataWizard::finished() {
       }
     }
     foreach (PlotItem* plot, plotList) {
+      if (!timeFormatString.isEmpty()) {
+        plot->xAxis()->setAxisInterpret(true);
+        plot->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTDATETIME_FORMAT);
+        plot->xAxis()->setAxisDisplayFormatString(timeFormatString);
+        // start axis with first time in data
+        plot->xAxis()->setAxisForceOffsetMin(true);
+      }
       plot->update();
       plot->view()->appendToLayout(layout_type, plot, num_columns);
     }

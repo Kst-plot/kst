@@ -134,6 +134,8 @@ class KSTCORE_EXPORT DataSource : public Object
 
     virtual QDateTime timeForSample(int sample, bool *ok = 0L);
 
+    virtual QString timeFormatString() const;
+
     // in (ms)
     virtual double relativeTimeForSample(int sample, bool *ok = 0L);
 

@@ -53,6 +53,8 @@ class AsciiSource : public Kst::DataSource
 
     int sampleForTime(const QDateTime& time, bool *ok);
 
+    QString timeFormatString() const;
+
     virtual void reset();
 
     virtual const QString& typeString() const;

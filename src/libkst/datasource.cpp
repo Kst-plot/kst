@@ -353,6 +353,9 @@ QDateTime DataSource::timeForSample(int sample, bool *ok) {
 }
 
 
+QString DataSource::timeFormatString() const {
+  return QString();
+}
 
 double DataSource::relativeTimeForSample(int sample, bool *ok) {
   Q_UNUSED(sample)

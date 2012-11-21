@@ -650,6 +650,11 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
   }
 }
 
+//-------------------------------------------------------------------------------------------
+QString AsciiSource::timeFormatString() const
+{
+  return _config._indexTimeFormat;
+}
 
 //-------------------------------------------------------------------------------------------
 Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
