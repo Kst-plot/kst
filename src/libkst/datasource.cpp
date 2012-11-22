@@ -353,8 +353,8 @@ QDateTime DataSource::timeForSample(int sample, bool *ok) {
 }
 
 
-QString DataSource::timeFormatString() const {
-  return QString();
+bool DataSource::isTime() const {
+  return false;
 }
 
 double DataSource::relativeTimeForSample(int sample, bool *ok) {
