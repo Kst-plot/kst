@@ -218,7 +218,11 @@ double LexicalCast::fromTime(const char* p) const
     QDateTime t = QDateTime::fromString(time, _timeFormat);
     if (t.isValid()) {
       t.setTimeSpec(Qt::UTC);
+#if QT_VERSION >= 0x040700
       sec = t.toMSecsSinceEpoch() / 1000.0;
+#else
+      sec = t.toTime_t();
+#endif
     }
   } else {
     const QTime t = QTime::fromString(time, _timeFormat);
