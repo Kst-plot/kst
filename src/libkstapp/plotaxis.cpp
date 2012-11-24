@@ -1172,6 +1172,7 @@ void PlotAxis::saveAsDialogDefaults(const QString &group) const {
   _dialogDefaults->setValue(group+"Reversed", QVariant(axisReversed()).toString());
   _dialogDefaults->setValue(group+"AutoBaseOffset", QVariant(axisAutoBaseOffset()).toString());
   _dialogDefaults->setValue(group+"BaseOffset", QVariant(axisBaseOffset()).toString());
+  _dialogDefaults->setValue(group+"ForceOffsetMin", QVariant(axisForceOffsetMin()).toString());
   _dialogDefaults->setValue(group+"Interpret", QVariant(axisInterpret()).toString());
   _dialogDefaults->setValue(group+"Interpretation", QVariant(axisInterpretation()).toString());
   _dialogDefaults->setValue(group+"Display", QVariant(axisDisplay()).toString());
