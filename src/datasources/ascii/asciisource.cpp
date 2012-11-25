@@ -653,7 +653,7 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
 //-------------------------------------------------------------------------------------------
 bool AsciiSource::isTime() const
 {
-  return !_config._indexTimeFormat.value().isEmpty();
+  return _config._indexInterpretation.value() != AsciiSourceConfig::INDEX;
 }
 
 //-------------------------------------------------------------------------------------------
