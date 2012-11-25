@@ -46,6 +46,7 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   connect(_readFields, SIGNAL(toggled(bool)), this, SLOT(updateUnitLineEnabled(bool)));
   connect(_limitFileBuffer, SIGNAL(toggled(bool)), this, SLOT(updateFrameBuffer(bool)));
   connect(_indexType, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
+  connect(_indexVector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
 }
 
 void AsciiConfigWidgetInternal::updateUnitLineEnabled(bool checked)
