@@ -124,7 +124,7 @@ double LexicalCast::fromDouble(const char* signedp) const
 //-------------------------------------------------------------------------------------------
 LexicalCast::AutoReset::AutoReset(bool useDot)
 {
-  instance().setDecimalSeparator(useDot);
+  instance().setUseDotAsDecimalSeparator(useDot);
 }
 
 //-------------------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ void LexicalCast::resetLocal()
 }
 
 //-------------------------------------------------------------------------------------------
-void LexicalCast::setDecimalSeparator(bool useDot)
+void LexicalCast::setUseDotAsDecimalSeparator(bool useDot)
 {
   useDot ? _separator = '.' : _separator = ',';
 
@@ -191,28 +191,18 @@ void LexicalCast::setTimeFormat(const QString& format)
   _timeFormat = format.trimmed(); // remove space at start/end
   _isTime = !format.isEmpty();
   _timeWithDate = format.contains("d") || format.contains("M") || format.contains("y");
-  if (_timeWithDate) {
-    _timeInTwoColumns = _timeFormat.contains(' ');
-  }
+  _timeFormatLength = _timeFormat.size();
 } 
 
 //-------------------------------------------------------------------------------------------
 double LexicalCast::fromTime(const char* p) const
 {
-  int maxScan = 100;
-  int end = 0;
-  int columnEnd = _timeInTwoColumns ? 2 : 1;
-  int inCol = 0;
-  for (; inCol != columnEnd; end++) {
-    if (*(p + end) == ' ' || *(p + end) == '\t') {
-      inCol++;
-    }
-    if (end > maxScan)
+  for (int i = 0; i < _timeFormatLength; i++) {
+    if (*(p + i) == '\0')
       return Kst::NOPOINT;
   }
-  end--;
 
-  const QString time = QString::fromLatin1(p, end);
+  const QString time = QString::fromLatin1(p, _timeFormatLength);
   double sec = Kst::NOPOINT;
   if (_timeWithDate) {
     QDateTime t = QDateTime::fromString(time, _timeFormat);

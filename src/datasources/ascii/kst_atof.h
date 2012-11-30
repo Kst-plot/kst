@@ -28,8 +28,7 @@ public:
     ~AutoReset();
   };
   
-  // use second parameter when useDot is false
-  void setDecimalSeparator(bool useDot);
+  void setUseDotAsDecimalSeparator(bool useDot);
 
   char localSeparator() const;
 
@@ -50,9 +49,9 @@ private:
   char _separator;
   QByteArray _originalLocal;
   QString _timeFormat;
+  int _timeFormatLength;
   bool _isTime;
   bool _timeWithDate;
-  bool _timeInTwoColumns;
 
   void resetLocal();
 
