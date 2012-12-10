@@ -94,6 +94,9 @@ protected:
     QByteArray getPSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
+    QByteArray getPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+
     QByteArray getImageList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 

@@ -27,8 +27,8 @@ static const QString& VECTOR_IN_Y = "Y Vector";
 static const QString& SCALAR_IN_MAX = "Max 1/f^a Freq Scalar";
 static const QString& SCALAR_IN_MIN = "Min. White Noise Freq Scalar";
 static const QString& SCALAR_IN_WHITENOISE = "White Noise C Scalar";
-static const QString& VECTOR_OUT_Y_FITTED = "Y Fitted Vector";
-static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals Vector";
+static const QString& VECTOR_OUT_Y_FITTED = "Fit";
+static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals";
 static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
 
 class ConfigWidgetFitKneeFrequencyPlugin : public Kst::DataObjectConfigWidget, public Ui_FitKneeFrequencyConfig {

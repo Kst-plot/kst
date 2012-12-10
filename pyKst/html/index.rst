@@ -106,18 +106,6 @@ Curves
    :members:
    :inherited-members:
 
-Equations
----------
-An equation is not a relation, but creates a curve which is a relation.
-
-.. autoclass:: NewEquation
-   :members:
-   :inherited-members:
-
-.. autoclass:: ExistingEquation
-   :members:
-   :inherited-members:
-
 Images
 ------
 An image is a representation of a matrix
@@ -140,7 +128,39 @@ An image is a representation of a matrix
 
 Other data objects...
 **********************
-Histograms, power spectrums and spectrograms will hopefully be implemented in a later release!
+Equations
+---------
+
+.. autoclass:: NewEquation
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingEquation
+   :members:
+   :inherited-members:
+
+Power Spectra
+---------
+
+.. autoclass:: NewSpectrum
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingSpectrum
+   :members:
+   :inherited-members:
+
+Histograms
+---------
+
+.. autoclass:: NewHistogram
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingHistogram
+   :members:
+   :inherited-members:
+
 
 Annotations
 ***********

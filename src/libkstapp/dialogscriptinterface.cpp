@@ -75,6 +75,7 @@
 
 #include "datasourcepluginmanager.h"
 #include "viewitemscriptinterface.h"
+#include "pluginscriptinterface.h"
 #include <QAbstractButton>
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -184,7 +185,6 @@ ScriptInterface* DialogLauncherSI::newPlot() {
     PlotItem* bi=new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     return new PlotSI(bi);
-    //return showViewItemDialog(bi);
 }
 
 ScriptInterface* DialogLauncherSI::newSharedAxisBox() {
@@ -347,6 +347,21 @@ DialogSI* DialogLauncherSI::showEventMonitorDialog(ObjectPtr objectPtr) {
     dialog->hide();
     return new DialogSI(dialog);
 }
+
+
+ScriptInterface* DialogLauncherSI::newPlugin(ObjectStore* store, QString pluginName) {
+    DataObjectConfigWidget* configWidget = DataObject::pluginWidget(pluginName);
+    if (configWidget) {
+        BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(pluginName, store, configWidget));
+        return new PluginSI(plugin, store);
+    }
+    //CircleItem* bi=new CircleItem(kstApp->mainWindow()->tabWidget()->currentView());
+    //bi->setViewRect(-0.1/2.0, -0.1/2.0, 0.1/2.0, 0.1/2.0);
+    //kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    //return new ViewItemSI(bi);
+    return 0L;
+}
+
 
 
 DialogSI* DialogLauncherSI::showBasicPluginDialog(QByteArray pluginName_ba, ObjectPtr objectPtr, VectorPtr vectorX, VectorPtr vectorY, PlotItemInterface *plotItem) {

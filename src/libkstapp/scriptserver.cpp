@@ -122,6 +122,9 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getPSDList()",&ScriptServer::getPSDList);
     _fnMap.insert("newPSD()",&ScriptServer::newPSD);
 
+    _fnMap.insert("getPluginList()", &ScriptServer::getPluginList);
+    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
+
     _fnMap.insert("getImageList()",&ScriptServer::getImageList);
     _fnMap.insert("newImage()",&ScriptServer::newImage);
 
@@ -554,7 +557,28 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
                 return handleResponse("No such object",s,0,"",0,0);
             }
         }
-    }
+    } else if(command.startsWith("DataObject::")) {
+      command.replace("DataObject::","");
+      QByteArray actc=command;
+      command.remove(command.indexOf("("),999999);
+      actc.remove(0,actc.indexOf("("));
+      actc.remove(actc.lastIndexOf(")"),909099);
+      QByteArrayList m;
+      m.push_back(command);
+      m<<actc.split(',');
+      if(m.size()<2) {
+          return handleResponse("Invalid call to dataobject",s,0,"",0,0);
+      } else {
+          QByteArray b=m.takeAt(1);
+          ObjectPtr o=_store->retrieveObject(b);
+          DataObjectPtr x=kst_cast<DataObject>(o);
+          if (x) {
+              return handleResponse(x->scriptInterface(m),s,0,"",0,0);
+          } else {
+              return handleResponse("No such object",s,0,"",0,0);
+          }
+      }
+  }
 
     return "";
 }
@@ -732,6 +756,24 @@ QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*,const 
     }
 }
 
+
+QByteArray ScriptServer::getPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
+                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+    return outputObjectList<BasicPlugin>(s,_store,ifMode,ifEqual,_if,var);
+}
+
+
+QByteArray ScriptServer::newPlugin(QByteArray& plugin, QLocalSocket* s,ObjectStore* store,const int&ifMode,
+                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+    } else {
+      plugin.replace("newPlugin(","");
+      plugin.remove(plugin.lastIndexOf(")"),1);
+      _interface = DialogLauncherSI::self->newPlugin(store, plugin);
+      return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+    }
+}
 
 
 QByteArray ScriptServer::getImageList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,

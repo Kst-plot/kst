@@ -20,8 +20,9 @@ class KsNspire:
     self.genVec=kst.GeneratedVector(self.client,-100,100,1000)
     
   def create(self):
-    kst.NewEquation(self.client,self.text,"["+self.genVec.handle+"]",True,"black","0","1",True,False,"","",False,"","",False,"","",False,"KsNspirePLOT",False,False,"","","")
-    
+    eq = kst.NewEquation(self.client,self.text,self.genVec)
+    kst.NewCurve(client,eq.X(), eq.Y(), curvecolor="black", curveweight=1, placeinexistingplot=self.plot)
+
   def changeValue(self):
     strx=QtCore.QString(self.s2.read(8000))
     if strx.contains("valueSet:"):

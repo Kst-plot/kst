@@ -68,7 +68,7 @@ class DialogLauncherSI {
     DialogSI* showCSDDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
     DialogSI* showEventMonitorDialog(ObjectPtr objectPtr = 0);
 
-    //view items [grr...]
+    //view items
     ScriptInterface* showViewItemDialog(ViewItem* x);
     ScriptInterface* newArrow();
     ScriptInterface* newBox();
@@ -85,7 +85,11 @@ class DialogLauncherSI {
     ScriptInterface* newSvgItem(QByteArray path);
 #endif
 
+
     //plugins
+    ScriptInterface* newPlugin(ObjectStore* store, QString pluginName);
+
+    // I think showbasicplugindialog doesn't work and should be deleted.
     DialogSI* showBasicPluginDialog(QByteArray pluginName, ObjectPtr objectPtr = 0, VectorPtr vectorX = 0, VectorPtr vectorY = 0, PlotItemInterface *plotItem = 0 );
 
     //show appropriate dialog

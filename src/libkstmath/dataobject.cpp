@@ -826,5 +826,57 @@ bool DataObjectConfigWidget::configurePropertiesFromXml(ObjectStore *store, QXml
   return true;
 }
 
+QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
+  Q_ASSERT(c.size());
+  if(c[0]=="outputVectorHandle") {
+    if (c.size()==2) {
+      QString c1 = QString(c[1]).trimmed();
+      if (_outputVectors.contains(c1)) {
+        return _outputVectors[c1]->Name().toAscii();
+      } else {
+        return QByteArray("vector not found: ").append(c[1]);
+      }
+    } else {
+      return "outputVectorHandle takes one arg";
+    }
+  } else if(c[0]=="outputScalarHandle") {
+    if (c.size()==2) {
+      QString c1 = QString(c[1]).trimmed();
+      if (_outputScalars.contains(c1)) {
+        return _outputScalars[c1]->Name().toAscii();
+      } else {
+        return QByteArray("scalar not found: ").append(c[1]);
+      }
+    } else {
+      return "outputScalarHandle takes one arg";
+    }
+  } else if(c[0]=="outputMatrixHandle") {
+    if (c.size()==2) {
+      QString c1 = QString(c[1]).trimmed();
+      if (_outputMatrices.contains(c1)) {
+        return _outputMatrices[c1]->Name().toAscii();
+      } else {
+        return QByteArray("Matrix not found: ").append(c[1]);
+      }
+    } else {
+      return "outputMatrixHandle takes one arg";
+    }
+  } else if(c[0]=="outputStringHandle") {
+    if (c.size()==2) {
+      QString c1 = QString(c[1]).trimmed();
+      if (_outputStrings.contains(c1)) {
+        return _outputStrings[c1]->Name().toAscii();
+      } else {
+        return QByteArray("String not found: ").append(c[1]);
+      }
+    } else {
+      return "outputStringHandle takes one arg";
+    }
+  }
+
+  return "No such command...";
+}
+
+
 }
 // vim: ts=2 sw=2 et

@@ -624,7 +624,7 @@ void PlotItem::createEditMenu() {
   }
 
   _editMenu = new QMenu;
-  _editMenu->setTitle(tr("Edit"));
+  _editMenu->setTitle(tr("Edit Curve"));
 
   RelationList relations = relationList();
   foreach (const RelationPtr& relation, relations) {

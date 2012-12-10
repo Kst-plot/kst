@@ -99,14 +99,22 @@ class Client:
     
     Arguments may be 1D numPy arrays, 2D numPy arrays, pykst vectors or pykst matricies. In the case of the first two, they would be imported into kst.
 
-    Formating based loosly on matplotlib.pyplot.plot strings like "r+" is also provided.
+    Formating based loosly on matplotlib.pyplot.plot strings like "r+" is also provided.  
+    
+    Some examples::
+    
+      client.plot(x, y)         # plot x and y using default line style and color
+      client.plot(x, y, 'bo')   # plot x and y using blue circle markers
+      client.plot(y)            # plot y using x as index array 0..N-1
+      client.plot(y, 'r+')      # ditto, but with red plusses
+    
 
     See http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.plot
 
     A reference to the created plot is returned. """
 
     s=-1
-    plot=None
+    plot=0
     makecurve=False
     for arg in args:
       if s==-1 and makecurve:
@@ -174,11 +182,13 @@ class Client:
             color="white"
           
           s=-2
-        NewCurve(self,x.handle,y.handle,"<None>","<None>","<None>","<None>",False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)
+        NewCurve(self,x,y,0,0,0,0,False,False,color,curvelinetype,curveweight,
+                 uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,
+                 ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)
         plot=ExistingPlot.getList(self)[-1]   #i.e., last
         makecurve=False
-        x=None
-        y=None
+        x=0
+        y=0
         if s==-2:
           s=-1
           continue
@@ -221,14 +231,14 @@ class Client:
         bargraphfill="black"
         ignoreinauto=False
         donotplaceinanyplot=False
-        placeinexistingplot=" " if not isinstance(plot,Plot) else plot.handle
+        placeinexistingplot=0 if not isinstance(plot,Plot) else plot
         placeinnewplot=True if not isinstance(plot,Plot) else False
         #no args after this
         makecurve=True
         s=-1
     if makecurve:
-      NewCurve(self,x.handle,y.handle,"<None>","<None>","<None>","<None>",False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)                                                                                                                                                                        
-      plot=ExistingPlot.getList(self)[-1]   #i.e., last
+      NewCurve(self,x,y,0,0,0,0,False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)                                                                                                                                                                        
+      plot=ExistingPlot(self,ExistingPlot.getList(self)[-1])   #i.e., last
     return plot
     
 
@@ -706,6 +716,7 @@ class Curve(NamedObject) :
   def __init__(self,client) :
     NamedObject.__init__(self,client)
     
+
 class NewCurve(Curve) :
   """ This class represents a string you would create via "Create>Curve" from the menubar inside kst.
   The parameters of this function mirror the parameters within "Create>Curve".
@@ -727,19 +738,42 @@ class NewCurve(Curve) :
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,xaxis,yaxis,plusxerrorbar="",plusyerrorbar="",minusxerrorbar="",minusyerrorbar="",usexplusforminus=True,useyplusforminus=True,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,xaxis,yaxis,plusxerrorbar=0,plusyerrorbar=0,minusxerrorbar=0,minusyerrorbar=0,usexplusforminus=True,useyplusforminus=True,curvecolor="",curvelinetype="",curveweight="",uselines=True,usepoints=False,pointtype="",pointdensity="",usehead=False,headtype="",headcolor="",usebargraph=False,bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Curve.__init__(self,client)
-    if placeinexistingplot != " ":
+    if placeinexistingplot != 0:
       donotplaceinanyplot=False
       placeinnewplot=False
       placeinnewtab=False
+      existingplothandle = placeinexistingplot.handle
+    else:
+      existingplothandle = " "
+      
     if donotplaceinanyplot == True:
       placeinnewplot=False
       placeinnewtab=False
-      placeinexistingplot = " "
-      
-    self.handle=QtCore.QString(self.client.send("#newCurve("+b2str(xaxis)+","+b2str(yaxis)+","+b2str(plusxerrorbar)+","+b2str(plusyerrorbar)+","+b2str(minusxerrorbar)+","+b2str(minusyerrorbar)+","+b2str(usexplusforminus)+","+b2str(useyplusforminus)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+      existingplothandle = " "
+
+    if plusxerrorbar==0:
+      plusxerrorbarhandle = ""
+    else:
+      plusxerrorbarhandle = plusxerrorbar.handle
+    if minusxerrorbar==0:
+      minusxerrorbarhandle = ""
+    else:
+      minusxerrorbarhandle = minusxerrorbar.handle
+    if plusyerrorbar==0:
+      plusyerrorbarhandle = ""
+    else:
+      plusyerrorbarhandle = plusyerrorbar.handle
+    if minusyerrorbar==0:
+      minusyerrorbarhandle = ""
+    else:
+      minusyerrorbarhandle = minusyerrorbar.handle
+
+    self.handle=QtCore.QString(self.client.send("#newCurve("+b2str(xaxis.handle)+","+b2str(yaxis.handle)+","+b2str(plusxerrorbarhandle)+","+b2str(plusyerrorbarhandle)+","+b2str(minusxerrorbarhandle)+","+b2str(minusyerrorbarhandle)+","+b2str(usexplusforminus)+","+b2str(useyplusforminus)+")"))
+    self.client.send("#setCurveParameters("+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")")
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
 
 class ExistingCurve(Curve) :
   """ This class allows access to a curve created inside kst or through a script given a descriptive or short name.
@@ -761,6 +795,7 @@ class ExistingCurve(Curve) :
       ret.append(ExistingCurve(client,y))
     return ret
 
+
 # EQUATIONS ###################################################################
 class Equation(NamedObject) :
   """ This is a class which some convenience classes within pykst use. You should not use it directly.
@@ -768,50 +803,36 @@ class Equation(NamedObject) :
   TODO: edit functions..."""
   def __init__(self,client) :
     NamedObject.__init__(self,client)
+
+  def Y(self) :
+    """ Returns a vector containing the output of the equation (ie, f(x)) """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", O)"))
+    return ExistingVector(self.client, YHandle)
+
+  def X(self) :
+    """ Returns the vector which has been used as the independent variable of the equation """
+    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", XO)"))
+    return ExistingVector(self.client, XHandle)
     
 class NewEquation(Equation) :
   """ This class represents an equation you would create via "Create>Equation" from the menubar inside kst.
   The parameters of this function mirror the parameters within "Create>Equation".
-    
-  If you do not specify an X vector, kst will try to choose an x-vector.
-    
-  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
-    
-  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
-    
-  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
-  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
-  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
-    
-  headtype is the index of a point style. See details for pointtype.
-    
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI).
-    
+        
   To plot f(x)=x^2 with x in range(-100,100) with 1000000 samples ::
   
     import pykst as kst
     client = kst.Client()
     x=kst.GeneratedVector(client,-100,100,1000000)
-    eq = st.NewEquation(client,"x^2","["+self.genVec.handle+"]",True,"black",0,1,True,False,"","",False,"","",False,"","",False,"Plot",False,False,"","","")"""
+    GYEquation=kst.NewEquation(client, "x^2", x)
+    GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", 
+                curveweight=1, placeinnewplot=True)"""
   
-  def __init__(self,client,equation,xvector,interploate=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  #def __init__(self,client,equation,xvector,interploate=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,equation,xvector,interploate=False,name="") :
     Equation.__init__(self,client)
-    if placeinexistingplot != " ":
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      placeinexistingplot = " "
-      
-    self.handle=QtCore.QString(self.client.send("#newEquation("+b2str(equation)+","+b2str(xvector)+","+b2str(interploate)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+ 
+    self.handle=QtCore.QString(self.client.send("#newEquation("+b2str(equation)+","+b2str(xvector.handle)+","+b2str(interploate)+")"))
+    #self.client.send("#setCurveParameters("+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")")
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
 class ExistingEquation(Equation) :
@@ -835,6 +856,187 @@ class ExistingEquation(Equation) :
     return ret
 
 
+# FIT ###################################################################
+class Fit(NamedObject) :
+  """ This is a class which provides some methods common to all fits """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Fit(self) :
+    """ a vector containing the fit  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Fit)"))
+    return ExistingVector(self.client, YHandle)
+
+  def Residuals(self) :
+    """ a vector containing the Residuals  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Residuals)"))
+    return ExistingVector(self.client, YHandle)
+
+  def Parameters(self) :
+    """ a vector containing the Parameters of the fit  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Parameters Vector)"))
+    return ExistingVector(self.client, YHandle)
+
+  def Covariance(self) :
+    """ a vector containing the Covariance of the fit parameters """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Covariance)"))
+    return ExistingVector(self.client, YHandle)
+
+  def ReducedChi2(self) :
+    """ a scalar containing the reduced chi2 of the fit """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputScalarHandle("+self.handle+", chi^2/nu)"))
+    return ExistingScalar(self.client, YHandle)
+
+
+# LINEAR FIT #################################################################
+class LinearFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def Low(self) :
+    """ a vector containing the 1 sigma lower limit of the fit  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Lo Vector)"))
+    return ExistingVector(self.client, YHandle)
+
+  def High(self) :
+    """ a vector containing the 1 sigma upper limit of the fit  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Hi Vector)"))
+    return ExistingVector(self.client, YHandle)
+    
+class NewLinearFit(LinearFit) :
+  """ This class represents a fit you would create via "Create>Plugin->Linear Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename], and then selecting "Linear Fit" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog. """
+  
+  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
+    LinearFit.__init__(self,client)
+    
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Linear Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Linear Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+      
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingLinearFit(LinearFit) :
+  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    LinearFit.__init__(self,client)
+    self.handle=handle
+
+# LORENTZIAN FIT #################################################################
+class LorentzianFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+class NewLorentzianFit(LorentzianFit) :
+  """ This class represents a linear fit you would create via "Create>Plugin->Lorentzian Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename], and then selecting "Lorentzian Fit" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog. """
+  
+  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
+    LorentzianFit.__init__(self,client)
+    
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Lorentzian Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Lorentzian Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingLorentzianFit(LorentzianFit) :
+  """ This class allows access to an Lorentzian Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Lorentzian Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    LorentzianFit.__init__(self,client)
+    self.handle=handle
+
+# GAUSSIAN FIT #################################################################
+class GaussianFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+class NewGaussianFit(GaussianFit) :
+  """ This class represents a fit you would create via "Create>Plugin->Gaussian Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename], and then selecting "Gaussian Fit" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog. """
+  
+  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
+    GaussianFit.__init__(self,client)
+    
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Gaussian Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Gaussian Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingGaussianFit(GaussianFit) :
+  """ This class allows access to an Gaussian Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Gaussian Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    GaussianFit.__init__(self,client)
+    self.handle=handle
+
+# EXPONENTIAL FIT #################################################################
+class ExponentialFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+class NewExponentialFit(ExponentialFit) :
+  """ This class represents an exponential fit you would create via "Create>Plugin->Exponential Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename], and then selecting "Exponential Fit" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog. """
+  
+  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
+    ExponentialFit.__init__(self,client)
+    
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Exponential Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Exponential Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+      
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingExponentialFit(ExponentialFit) :
+  """ This class allows access to an Exponential Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Exponential Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    ExponentialFit.__init__(self,client)
+    self.handle=handle
 
 class Image(NamedObject) :
   """ This is a class which some convenience classes within pykst use. You should not use it directly.
@@ -953,28 +1155,20 @@ class Spectrum(NamedObject):
   def __init__(self,client) :
     NamedObject.__init__(self,client)
 
+  def Y(self) :
+    """ Returns the Y vector of a spectrum """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", S)"))
+    return ExistingVector(self.client, YHandle)
+
+  def X(self) :
+    """ Returns the X vector of a spectrum (ie, the frequency) """
+    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", F)"))
+    return ExistingVector(self.client, XHandle)
+
 class NewSpectrum(Spectrum) :
   """ This class represents an spectrum you would create via "Create>Spectrum" from the menubar inside kst.
   The parameters of this function mirror the parameters within "Create>Spectrum".
-        
-  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
-    
-  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
-    
-  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
-  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
-  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
-    
-  headtype is the index of a point style. See details for pointtype.
-    
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI).
-    
+            
   ToDo: examples """
   
   def __init__(self,client,vector,removeMean=True,apodize=True,function="",sigma=1.0,interleaved=True,length=10,interpolate=True,rate=1.0,vectorUnits="",rateUnits="",outputType="",curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
@@ -988,7 +1182,7 @@ class NewSpectrum(Spectrum) :
       placeinnewtab=False
       placeinexistingplot = " "
       
-    self.handle=QtCore.QString(self.client.send("#newSpectrum("+b2str(vector)+","+b2str(removeMean)+","+b2str(apodize)+","+b2str(function)+","+b2str(sigma)+","+b2str(interleaved)+","+b2str(length)+","+b2str(interpolate)+","+b2str(rate)+","+b2str(vectorUnits)+","+b2str(rateUnits)+","+b2str(outputType)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newSpectrum("+b2str(vector.handle)+","+b2str(removeMean)+","+b2str(apodize)+","+b2str(function)+","+b2str(sigma)+","+b2str(interleaved)+","+b2str(length)+","+b2str(interpolate)+","+b2str(rate)+","+b2str(vectorUnits)+","+b2str(rateUnits)+","+b2str(outputType)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
 class ExistingSpectrum(Spectrum) :
@@ -1017,42 +1211,27 @@ class Histogram(NamedObject):
   def __init__(self,client) :
     NamedObject.__init__(self,client)
 
+  def Y(self) :
+    """ Returns the Y vector of a histogram """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", H)"))
+    return ExistingVector(self.client, YHandle)
+
+  def X(self) :
+    """ Returns the X vector of a histogram """
+    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", B)"))
+    return ExistingVector(self.client, XHandle)
+    
+
 class NewHistogram(Histogram) :
   """ This class represents an histogram you would create via "Create>Histogram" from the menubar inside kst.
   The parameters of this function mirror the parameters within "Create>Histogram".
-        
-  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
-    
-  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
-    
-  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
-  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
-  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
-    
-  headtype is the index of a point style. See details for pointtype.
-    
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI).
-    
+            
   ToDo: examples """
   
-  def __init__(self,client,vector,rtAutoBin=True,binsFrom=0,binsTo=1,nbins=40,yaxisNormNumInBin=True,yaxisNormFracInBin=False,yaxisNormPercentInBin=False,yaxisNormPeakAt1=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,vector,rtAutoBin=True,binsFrom=0,binsTo=1,nbins=40,yaxisNormNumInBin=True,yaxisNormFracInBin=False,yaxisNormPercentInBin=False,yaxisNormPeakAt1=False,name="") :
     Histogram.__init__(self,client)
-    if placeinexistingplot != " ":
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      placeinexistingplot = " "
       
-    self.handle=QtCore.QString(self.client.send("#newHistogram("+b2str(vector)+","+b2str(rtAutoBin)+","+b2str(binsFrom)+","+b2str(binsTo)+","+b2str(nbins)+","+b2str(yaxisNormNumInBin)+","+b2str(yaxisNormFracInBin)+","+b2str(yaxisNormPercentInBin)+","+b2str(yaxisNormPeakAt1)+","+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newHistogram("+b2str(vector.handle)+","+b2str(rtAutoBin)+","+b2str(binsFrom)+","+b2str(binsTo)+","+b2str(nbins)+","+b2str(yaxisNormNumInBin)+","+b2str(yaxisNormFracInBin)+","+b2str(yaxisNormPercentInBin)+","+b2str(yaxisNormPeakAt1)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
 class ExistingHistogram(Histogram) :
@@ -1281,7 +1460,7 @@ class Box(ViewItem) :
 
   @classmethod
   def getList(cls,client):
-    x=QtCore.QString(client.send("getCircleList()"))
+    x=QtCore.QString(client.send("getBoxList()"))
     ret=[]
     while x.contains('['):
       y=QtCore.QString(x)

@@ -20,7 +20,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="_vectorXLabel">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -32,6 +32,9 @@
        </property>
        <property name="wordWrap">
         <bool>false</bool>
+       </property>
+       <property name="buddy">
+        <cstring>_vectorX</cstring>
        </property>
       </widget>
      </item>
@@ -50,7 +53,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="_vectorYLabel">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -62,6 +65,9 @@
        </property>
        <property name="wordWrap">
         <bool>false</bool>
+       </property>
+       <property name="buddy">
+        <cstring>_vectorY</cstring>
        </property>
       </widget>
      </item>
@@ -80,7 +86,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
-
  <customwidgets>
   <customwidget>
    <class>Kst::VectorSelector</class>
