@@ -199,8 +199,8 @@ class Client:
             x=arg
             break
           elif isinstance(arg,Matrix):
-            ColorImage(self,arg.handle,0,0,0,0,0,True,0,False," " if not isinstance(plot,Plot) else plot.handle,True if not isinstance(plot,Plot) else False)
-            plot=ExistingPlot.getList(self)[-1]   #i.e., last
+            ColorImage(self,arg,0,0,0,0,0,True,0,False,0 if not isinstance(plot,Plot) else plot,True if not isinstance(plot,Plot) else False)
+            plot=ExistingPlot(self,ExistingPlot.getList(self)[-1])   #i.e., last
             s=-1
             break
           elif isinstance(arg,ndarray):
@@ -731,8 +731,7 @@ class NewCurve(Curve) :
     
   headtype is the index of a point style. See details for pointtype.
     
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
+  To place in an existing plot, set placeinexistingplot = plot
   
   To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
@@ -827,12 +826,10 @@ class NewEquation(Equation) :
     GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", 
                 curveweight=1, placeinnewplot=True)"""
   
-  #def __init__(self,client,equation,xvector,interploate=False,curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
   def __init__(self,client,equation,xvector,interploate=False,name="") :
     Equation.__init__(self,client)
  
     self.handle=QtCore.QString(self.client.send("#newEquation("+b2str(equation)+","+b2str(xvector.handle)+","+b2str(interploate)+")"))
-    #self.client.send("#setCurveParameters("+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")")
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
 class ExistingEquation(Equation) :
@@ -909,7 +906,7 @@ class LinearFit(Fit) :
 class NewLinearFit(LinearFit) :
   """ This class represents a fit you would create via "Create>Plugin->Linear Fit" from the menubar inside kst or by using
   "rmb->fit->[curvename], and then selecting "Linear Fit" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog. """
+  the latter dialog. If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
   
   def __init__(self,client,xvector,yvector,weightvector=0,name="") :
     LinearFit.__init__(self,client)
@@ -931,6 +928,94 @@ class ExistingLinearFit(LinearFit) :
   handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     LinearFit.__init__(self,client)
+    self.handle=handle
+
+# POLYNOMIAL FIT #################################################################
+class PolynomialFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+class NewPolynomialFit(PolynomialFit) :
+  """ This class represents a fit you would create via "Create>Plugin->Polynomial Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename]", and then selecting "Polynomial Fit" in the plugin combo. Order can be either a Scalar or a number. 
+  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
+  
+  def __init__(self,client,xvector,yvector,order_in,name="", weightvector=0) :
+    PolynomialFit.__init__(self,client)
+    
+    if isinstance(order_in, Scalar):
+      order = order_in
+    else :
+      order = GeneratedScalar(client, order_in);
+
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Polynomial Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Polynomial Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+      
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingPolynomialFit(PolynomialFit) :
+  """ This class allows access to an Polynomial Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Polynomial Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    PolynomialFit.__init__(self,client)
+    self.handle=handle
+
+# SINUSOID FIT #################################################################
+class SinusoidFit(Fit) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+class NewSinusoidFit(SinusoidFit) :
+  """ This class represents a fit you would create via "Create>Plugin->Sinusoid Fit" from the menubar inside kst or by using
+  "rmb->fit->[curvename]", and then selecting "Sinusoid Fit" in the plugin combo. Period and Harmonics can be either a Scalar or a number. 
+  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
+  
+  def __init__(self,client,xvector,yvector,period_in, harmonics_in, weightvector=0, name = "") :
+    SinusoidFit.__init__(self,client)
+    
+    if isinstance(period_in, Scalar):
+      period = period_in
+    else :
+      period = GeneratedScalar(client, period_in);
+
+    if isinstance(harmonics_in, Scalar):
+      harmonics = harmonics_in;
+    else :
+      harmonics = GeneratedScalar(client, harmonics_in);
+
+    if weightvector==0:
+      QtCore.QString(self.client.send("newPlugin(Sinusoid Fit)"))
+    else:
+      QtCore.QString(self.client.send("newPlugin(Sinusoid Weighted Fit)"))
+      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
+      
+    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Period Scalar,"+period.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Harmonics Scalar,"+harmonics.handle+")"))
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingSinusoidFit(SinusoidFit) :
+  """ This class allows access to an Sinusoid Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Sinusoid Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    SinusoidFit.__init__(self,client)
     self.handle=handle
 
 # LORENTZIAN FIT #################################################################
@@ -1051,26 +1136,29 @@ class ColorImage(Image) :
   
   The parameters of this function mirror the parameters within "Create>Image>Color Map".
     
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
+  To place in an existing plot, specify placeinexistingplot = plot.
   
   To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
   
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
-    if placeinexistingplot != " ":
+    if placeinexistingplot != 0:
       donotplaceinanyplot=False
       placeinnewplot=False
       placeinnewtab=False
+      existingplothandle = placeinexistingplot.handle
+    else:
+      existingplothandle = " "
+      
     if donotplaceinanyplot == True:
       placeinnewplot=False
       placeinnewtab=False
-      placeinexistingplot = " "
+      existingplothandle = " "
 
-    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix.handle)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
 class ContourImage(Image) :
@@ -1079,25 +1167,28 @@ class ContourImage(Image) :
   
   The parameters of this function mirror the parameters within "Create>Image>Contour Map".
     
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
+  To place in an existing plot, specify placeinexistingplot = plot.
   
   To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,matrix,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
-    if placeinexistingplot != " ":
+    if placeinexistingplot != 0:
       donotplaceinanyplot=False
       placeinnewplot=False
       placeinnewtab=False
+      existingplothandle = placeinexistingplot.handle
+    else:
+      existingplothandle = " "
+      
     if donotplaceinanyplot == True:
       placeinnewplot=False
       placeinnewtab=False
-      placeinexistingplot = " "
+      existingplothandle = " "
 
-    self.handle=QtCore.QString(self.client.send("#newImageFromContourMap("+b2str(matrix)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newImageFromContourMap("+b2str(matrix.handle)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
 class ColorContourImage(Image) :
@@ -1106,25 +1197,29 @@ class ColorContourImage(Image) :
   
   The parameters of this function mirror the parameters within "Create>Image>Color Map and Contour Map".
     
-  To place in an existing plot, specify the plot's descriptive or short name (which can be acessed via plot.handle) as placeinexistingplot
-  The descriptive name should never be " ".  If it is, include the short name.
+  To place in an existing plot, specify placeinexistingplot = plot.
   
   To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
     
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
     Image.__init__(self,client)
-    if placeinexistingplot != " ":
+    
+    if placeinexistingplot != 0:
       donotplaceinanyplot=False
       placeinnewplot=False
       placeinnewtab=False
+      existingplothandle = placeinexistingplot.handle
+    else:
+      existingplothandle = " "
+      
     if donotplaceinanyplot == True:
       placeinnewplot=False
       placeinnewtab=False
-      placeinexistingplot = " "
+      existingplothandle = " "
 
-    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(placeinexistingplot)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
+    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
     
 class ExistingImage(Image) :
@@ -1171,16 +1266,8 @@ class NewSpectrum(Spectrum) :
             
   ToDo: examples """
   
-  def __init__(self,client,vector,removeMean=True,apodize=True,function="",sigma=1.0,interleaved=True,length=10,interpolate=True,rate=1.0,vectorUnits="",rateUnits="",outputType="",curvecolor="",curvelinetype="",curveweight="",uselines="",usepoints="",pointtype="",pointdensity="",usehead="",headtype="",headcolor="",usebargraph="",bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=" ",placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
+  def __init__(self,client,vector,removeMean=True,apodize=True,function="",sigma=1.0,interleaved=True,length=10,interpolate=True,rate=1.0,vectorUnits="",rateUnits="",outputType="",name="") :
     Spectrum.__init__(self,client)
-    if placeinexistingplot != " ":
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      placeinexistingplot = " "
       
     self.handle=QtCore.QString(self.client.send("#newSpectrum("+b2str(vector.handle)+","+b2str(removeMean)+","+b2str(apodize)+","+b2str(function)+","+b2str(sigma)+","+b2str(interleaved)+","+b2str(length)+","+b2str(interpolate)+","+b2str(rate)+","+b2str(vectorUnits)+","+b2str(rateUnits)+","+b2str(outputType)+")"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)

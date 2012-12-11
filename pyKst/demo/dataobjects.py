@@ -25,7 +25,7 @@ GYSpecCurve = kst.NewCurve(client,GYSpectrum.X(), GYSpectrum.Y(), curvecolor="gr
 GYHist=kst.NewHistogram(client, dataVectorGY1, rtAutoBin=True)
 GYHistCurve = kst.NewCurve(client,GYHist.X(), GYHist.Y(), curvecolor="black", curveweight=1, uselines=False, usebargraph=True,bargraphfill="green",placeinexistingplot=P4)
 
-LFit=kst.NewExponentialFit(client, dataVectorIndex, dataVectorGY1, dataVectorGY1)
+LFit=kst.NewSinusoidFit(client, dataVectorIndex, dataVectorGY1, 1000, 3)
 GYFitCurve = kst.NewCurve(client,dataVectorIndex, LFit.Fit(), curvecolor="black", curveweight=1, placeinexistingplot=P1)
 
 Fit=kst.NewGaussianFit(client, GYHist.X(), GYHist.Y(), GYHist.Y())

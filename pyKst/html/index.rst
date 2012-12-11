@@ -161,6 +161,49 @@ Histograms
    :members:
    :inherited-members:
 
+Linear Fit
+---------
+
+.. autoclass:: NewLinearFit
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingLinearFit
+   :members:
+   :inherited-members:
+
+Gaussian Fit
+---------
+
+.. autoclass:: NewGaussianFit
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingGaussianFit
+   :members:
+   :inherited-members:
+
+Lorentzian Fit
+---------
+
+.. autoclass:: NewLorentzianFit
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingLorentzianFit
+   :members:
+   :inherited-members:
+
+Exponential Fit
+---------
+
+.. autoclass:: NewExponentialFit
+   :members:
+   :inherited-members:
+
+.. autoclass:: ExistingExponentialFit
+   :members:
+   :inherited-members:
 
 Annotations
 ***********
