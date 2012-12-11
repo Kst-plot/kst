@@ -1123,6 +1123,200 @@ class ExistingExponentialFit(ExponentialFit) :
     ExponentialFit.__init__(self,client)
     self.handle=handle
 
+# FILTER ###################################################################
+class Filter(NamedObject) :
+  """ This is a class which provides some methods common to all filters """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Y(self) :
+    """ a vector containing the filtered output  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y Vector)"))
+    return ExistingVector(self.client, YHandle)
+
+
+# LOW PASS FILTER #################################################################
+class LowPassFilter(Filter) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+class NewLowPassFilter(LowPassFilter) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Low Pass Filter" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Low Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog."""
+  
+  def __init__(self,client,yvector,order_in, cutoff_in,name="") :
+    LowPassFilter.__init__(self,client)
+
+    if isinstance(order_in, Scalar):
+      order = order_in
+    else :
+      order = GeneratedScalar(client, order_in);
+
+    if isinstance(cutoff_in, Scalar):
+      cutoff = cutoff_in
+    else :
+      cutoff = GeneratedScalar(client, cutoff_in);
+    
+    QtCore.QString(self.client.send("newPlugin(Low Pass Filter)"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Cutoff / Spacing Scalar,"+cutoff.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingLowPassFilter(LowPassFilter) :
+  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    LowPassFilter.__init__(self,client)
+    self.handle=handle
+
+# HIGH PASS FILTER #################################################################
+class HighPassFilter(Filter) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+class NewHighPassFilter(HighPassFilter) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->High Pass Filter" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "High Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog."""
+  
+  def __init__(self,client,yvector,order_in, cutoff_in,name="") :
+    HighPassFilter.__init__(self,client)
+
+    if isinstance(order_in, Scalar):
+      order = order_in
+    else :
+      order = GeneratedScalar(client, order_in);
+
+    if isinstance(cutoff_in, Scalar):
+      cutoff = cutoff_in
+    else :
+      cutoff = GeneratedScalar(client, cutoff_in);
+    
+    QtCore.QString(self.client.send("newPlugin(High Pass Filter)"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Cutoff / Spacing Scalar,"+cutoff.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingHighPassFilter(HighPassFilter) :
+  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    HighPassFilter.__init__(self,client)
+    self.handle=handle
+
+# BAND PASS FILTER #################################################################
+class BandPassFilter(Filter) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+class NewBandPassFilter(BandPassFilter) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Band Pass Filter" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog."""
+  
+  def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
+    BandPassFilter.__init__(self,client)
+
+    if isinstance(order_in, Scalar):
+      order = order_in
+    else :
+      order = GeneratedScalar(client, order_in);
+
+    if isinstance(central_in, Scalar):
+      central = central_in
+    else :
+      central = GeneratedScalar(client, central_in);
+    
+    if isinstance(bandwidth_in, Scalar):
+      bandwidth = bandwidth_in
+    else :
+      bandwidth = GeneratedScalar(client, bandwidth_in);
+
+    QtCore.QString(self.client.send("newPlugin(Band Pass Filter)"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Central Frequency / Sample Rate Scalar,"+central.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Band width Scalar,"+bandwidth.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingBandPassFilter(BandPassFilter) :
+  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    BandPassFilter.__init__(self,client)
+    self.handle=handle
+
+# BAND STOP FILTER #################################################################
+class BandStopFilter(Filter) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+class NewBandStopFilter(BandStopFilter) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Band Stop Filter" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
+  the latter dialog."""
+  
+  def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
+    BandStopFilter.__init__(self,client)
+
+    if isinstance(order_in, Scalar):
+      order = order_in
+    else :
+      order = GeneratedScalar(client, order_in);
+
+    if isinstance(central_in, Scalar):
+      central = central_in
+    else :
+      central = GeneratedScalar(client, central_in);
+    
+    if isinstance(bandwidth_in, Scalar):
+      bandwidth = bandwidth_in
+    else :
+      bandwidth = GeneratedScalar(client, bandwidth_in);
+
+    QtCore.QString(self.client.send("newPlugin(Band Stop Filter)"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Central Frequency / Sample Rate Scalar,"+central.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Band width Scalar,"+bandwidth.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingBandStopFilter(BandStopFilter) :
+  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  
+  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    BandStopFilter.__init__(self,client)
+    self.handle=handle
+
+# IMAGE #################################################################
+
 class Image(NamedObject) :
   """ This is a class which some convenience classes within pykst use. You should not use it directly.
   

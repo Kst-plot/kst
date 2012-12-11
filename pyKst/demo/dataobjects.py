@@ -16,6 +16,9 @@ dataVectorIndex=kst.DataVector(client,"/data/blast2003",field="INDEX",changeDete
 dataVectorGY1=kst.DataVector(client,"/data/blast2003",field="GYRO1",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=1000)
 GYCurve=kst.NewCurve(client,dataVectorIndex, dataVectorGY1, curvecolor="blue", curveweight=1, placeinexistingplot=P1)
 
+Filter = kst.NewBandStopFilter(client, dataVectorGY1, 4, 0.05, 0.01)
+FiltCurve = kst.NewCurve(client,dataVectorIndex, Filter.Y(), curvecolor="red", curveweight=1, placeinexistingplot=P1)
+
 GYEquation=kst.NewEquation(client, "x^2", dataVectorIndex)
 GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", curveweight=1, placeinexistingplot=P2)
 
