@@ -63,6 +63,7 @@ class MainWindow : public QMainWindow
     bool isHighlightPoint() { return _highlightPoint; }
     bool isTiedTabs();
     void setStatusMessage(QString message);
+    QString statusMessage();
 
     static void setWidgetFlags(QWidget*);
     void updateRecentKstFiles(const QString& newfilename = QString());

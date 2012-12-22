@@ -44,6 +44,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QClipboard>
 
 // Benchmark drawing
 // undefined = None, 1 = PlotItem, 2 = More Details
@@ -530,8 +531,38 @@ void PlotItem::createActions() {
   _breakSharedBox->setShortcut(Qt::Key_B);
   registerShortcut(_breakSharedBox);
   connect(_breakSharedBox, SIGNAL(triggered()), this, SIGNAL(breakShareTriggered()));
+
+  _copyStatus = new QAction(tr("Copy Coordinates"), this);
+  _copyStatus->setShortcut(Qt::CTRL + Qt::Key_C);
+  registerShortcut(_copyStatus);
+  connect(_copyStatus, SIGNAL(triggered()), this, SLOT(copyStatus()));
+
+  _copyXCoord = new QAction(tr("Copy X Coordinate"), this);
+  _copyXCoord->setShortcut(Qt::Key_X);
+  registerShortcut(_copyXCoord);
+  connect(_copyXCoord, SIGNAL(triggered()), this, SLOT(copyXCoord()));
+
+  _copyYCoord = new QAction(tr("Copy Y Coordinate"), this);
+  _copyYCoord->setShortcut(Qt::Key_Y);
+  registerShortcut(_copyYCoord);
+  connect(_copyYCoord, SIGNAL(triggered()), this, SLOT(copyYCoord()));
+
+  createCopyMenu();
 }
 
+void PlotItem::createCopyMenu() {
+  if (_copyMenu) {
+    delete _copyMenu;
+  }
+
+  _copyMenu = new QMenu;
+  _copyMenu->setTitle(tr("Copy"));
+
+  _copyMenu->addAction(_copyStatus);
+  _copyMenu->addAction(_copyXCoord);
+  _copyMenu->addAction(_copyYCoord);
+
+}
 
 void PlotItem::createZoomMenu() {
   if (_zoomMenu) {
@@ -707,6 +738,8 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     createEditMenu();
     menu.addMenu(_editMenu);
   }
+  menu.addMenu(_copyMenu);
+
 }
 
 
@@ -3288,6 +3321,23 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
   }
 }
 
+void PlotItem::copyStatus() {
+  kstApp->clipboard()->setText(kstApp->mainWindow()->statusMessage().remove('(').remove(')'));
+}
+
+void PlotItem::copyXCoord() {
+  QStringList args = kstApp->mainWindow()->statusMessage().remove('(').split(',');
+  if (args.size()>0) {
+    kstApp->clipboard()->setText(args.at(0));
+  }
+}
+
+void PlotItem::copyYCoord() {
+  QStringList args = kstApp->mainWindow()->statusMessage().remove(')').replace('[',',').split(',');
+  if (args.size()>1) {
+    kstApp->clipboard()->setText(args.at(1));
+  }
+}
 
 QString PlotItem::descriptionTip() const {
   QString contents;

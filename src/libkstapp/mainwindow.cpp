@@ -1527,6 +1527,10 @@ void MainWindow::setStatusMessage(QString message) {
   _messageLabel->setText(message);
 }
 
+QString MainWindow::statusMessage() {
+  return _messageLabel->text();
+}
+
 QProgressBar *MainWindow::progressBar() const {
   return _progressBar;
 }

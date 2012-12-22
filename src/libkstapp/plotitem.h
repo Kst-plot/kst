@@ -335,6 +335,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomNormalizeYtoX(bool force = false);
     void zoomLogY(bool force = false, bool autoLog = true, bool enableLog = false);
 
+    void copyStatus();
+    void copyXCoord();
+    void copyYCoord();
+
     void setPlotBordersDirty(bool dirty = true);
 
     virtual void edit(PlotClickEditRegion region);
@@ -359,6 +363,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
   private:
     void createActions();
     void createZoomMenu();
+    void createCopyMenu();
     void createFilterMenu();
     void createFitMenu();
     void createEditMenu();
@@ -542,6 +547,11 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QAction *_shareBoxShareX;
     QAction *_shareBoxShareY;
     QAction *_breakSharedBox;
+
+    QMenu *_copyMenu;
+    QAction *_copyStatus;
+    QAction *_copyXCoord;
+    QAction *_copyYCoord;
 
     SharedAxisBoxItem * _sharedBox;
 
