@@ -405,11 +405,22 @@ int DataSource::indexToFrame(double X, const QString &field) {
   return F0;
 }
 
+/* generic determination of frames per index (eg, frames per unit "TIME")
+ * This is a challenge because:
+ *  i) the index may not change every frame (eg, ctime index w/ 5 samples/frame
+ *  ii) the starting frame may not be frame 0
+ * Here, as a hacky heuristic, we will see how much index changes in the last
+ * 1000 frames... hoping that index changes enough to make this accurate, and that
+ * there are at least 1000 valid frames in the file, or that the first frame is frame 0.
+ */
 double DataSource::framePerIndex(const QString &field) {
   // FIXME: for now, calculate the sample rate, but later allow us to define it
   const DataVector::DataInfo info = vector().dataInfo(field);
-  int f0 = info.frameCount/4;
-  int fn = f0*11/10;
+  int fn = info.frameCount-2;
+  int f0 = fn-1000.0; //FIXME: not general (but maybe nothing is...)
+  if (f0<0) {
+    f0 = 0;
+  }
   if (f0 == fn) {
     return 1.0;
   }
