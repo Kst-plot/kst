@@ -21,7 +21,7 @@
 #include "math_kst.h"
 
 static const QString& VECTOR_IN = "Vector In";
-static const QString& SCALAR_IN = "Shift value (# points, negative allowed)";
+static const QString& SCALAR_IN = "dX";
 static const QString& VECTOR_OUT = "Shifted Vector";
 
 class ConfigWidgetShiftPlugin : public Kst::DataObjectConfigWidget, public Ui_ShiftConfig {

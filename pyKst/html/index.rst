@@ -126,82 +126,196 @@ An image is a representation of a matrix
    :members:
    :inherited-members:
 
-Other data objects...
+Data Objects
 **********************
+Data objects take primitives as inputs and produce primitives as outputs.
+
 Equations
 ---------
 
-.. autoclass:: NewEquation
+.. autoclass:: Equation
    :members:
    :inherited-members:
+
+.. autoclass:: NewEquation
+   :members:
 
 .. autoclass:: ExistingEquation
    :members:
-   :inherited-members:
 
 Power Spectra
----------
+-------------
+
+.. autoclass:: Spectrum
+   :members:
+   :inherited-members:
 
 .. autoclass:: NewSpectrum
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingSpectrum
    :members:
-   :inherited-members:
 
 Histograms
----------
+----------
+
+.. autoclass:: Histogram
+   :members:
+   :inherited-members:
 
 .. autoclass:: NewHistogram
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingHistogram
    :members:
-   :inherited-members:
 
 Linear Fit
----------
+----------
 
 .. autoclass:: NewLinearFit
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingLinearFit
    :members:
    :inherited-members:
 
+Polynomial Fit
+--------------
+
+.. autoclass:: NewPolynomialFit
+   :members:
+
+.. autoclass:: ExistingPolynomialFit
+   :members:
+   :inherited-members:
+
+Sinusoid Fit
+------------
+
+.. autoclass:: NewSinusoidFit
+   :members:
+
+.. autoclass:: ExistingSinusoidFit
+   :members:
+   :inherited-members:
+
 Gaussian Fit
----------
+------------
 
 .. autoclass:: NewGaussianFit
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingGaussianFit
    :members:
    :inherited-members:
 
 Lorentzian Fit
----------
+--------------
 
 .. autoclass:: NewLorentzianFit
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingLorentzianFit
    :members:
    :inherited-members:
 
 Exponential Fit
----------
+---------------
 
 .. autoclass:: NewExponentialFit
    :members:
-   :inherited-members:
 
 .. autoclass:: ExistingExponentialFit
+   :members:
+   :inherited-members:
+
+Low Pass Filter
+---------------
+
+.. autoclass:: NewLowPassFilter
+   :members:
+
+.. autoclass:: ExistingLowPassFilter
+   :members:
+   :inherited-members:
+
+High Pass Filter
+----------------
+
+.. autoclass:: NewHighPassFilter
+   :members:
+
+.. autoclass:: ExistingHighPassFilter
+   :members:
+   :inherited-members:
+
+Band Pass Filter
+----------------
+
+.. autoclass:: NewBandPassFilter
+   :members:
+
+.. autoclass:: ExistingBandPassFilter
+   :members:
+   :inherited-members:
+
+Band Stop Filter
+----------------
+
+.. autoclass:: NewBandStopFilter
+   :members:
+
+.. autoclass:: ExistingBandStopFilter
+   :members:
+   :inherited-members:
+
+Cumulative Sum (Integral)
+-------------------------
+
+.. autoclass:: NewCumulativeSum
+   :members:
+
+.. autoclass:: ExistingCumulativeSum
+   :members:
+   :inherited-members:
+
+Differentiation
+---------------
+
+.. autoclass:: NewDifferentiation
+   :members:
+
+.. autoclass:: ExistingDifferentiation
+   :members:
+   :inherited-members:
+
+Despike Filter
+--------------
+
+.. autoclass:: NewDespikeFilter
+   :members:
+
+.. autoclass:: ExistingDespikeFilter
+   :members:
+   :inherited-members:
+
+Shift
+-----
+
+.. autoclass:: NewShift
+   :members:
+
+.. autoclass:: ExistingShift
+   :members:
+   :inherited-members:
+
+CumulativeAverage
+-----------------
+
+.. autoclass:: NewCumulativeAverage
+   :members:
+
+.. autoclass:: ExistingCumulativeAverage
    :members:
    :inherited-members:
 

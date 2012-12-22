@@ -320,7 +320,7 @@ class GeneratedScalar(Scalar):
 class ExistingScalar(Scalar):
   """ This class allows access to a scalar created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a scalar created inside kst or through a script.
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script.
   
   To print out the name and value of all scalars::
     
@@ -353,7 +353,7 @@ class ExistingScalar(Scalar):
 class Vector(NamedObject):
   """ This is a class which some convenience classes within pykst use. You should not use it directly.
   
-  handle is a descriptive or short name of a scalar created inside kst or through a script. """
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
     
@@ -534,7 +534,7 @@ class EditableVector(Vector) :
 class ExistingVector(Vector) :
   """ This class allows access to a non-editable vector created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a vector created inside kst or through a script. """
+  "handle" is a descriptive or short name of a vector created inside kst or through a script. """
   def __init__(self,client,handle) :
     Vector.__init__(self,client)
     self.handle=handle
@@ -611,7 +611,7 @@ class DataMatrix(Matrix) :
 class ExistingMatrix(Matrix) :
   """ This class allows access to a matrix created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a vector created inside kst or through a script. """
+  "handle" is a descriptive or short name of a vector created inside kst or through a script. """
   def __init__(self,client,handle) :
     Matrix.__init__(self,client)
     self.handle=handle
@@ -688,7 +688,7 @@ class DataSourceString(String) :
 class ExistingString(String) :
   """ This class allows access to a string created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a string created inside kst or through a script. """
+  "handle" is a descriptive or short name of a string created inside kst or through a script. """
   def __init__(self,client,handle) :
     String.__init__(self,client)
     self.handle=handle
@@ -777,7 +777,7 @@ class NewCurve(Curve) :
 class ExistingCurve(Curve) :
   """ This class allows access to a curve created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a curve created inside kst or through a script. """
+  "handle" is a descriptive or short name of a curve created inside kst or through a script. """
   def __init__(self,client,handle) :
     Curve.__init__(self,client)
     self.handle=handle
@@ -797,7 +797,17 @@ class ExistingCurve(Curve) :
 
 # EQUATIONS ###################################################################
 class Equation(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  """ This is the base class for Kst Equations.  To create a new equation use pykst.NewEquation() or
+  to access an existing equation use pykst.ExistingEquation()
+
+  For example, to plot f(x)=x^2 with x in range(-100,100) with 1000000 samples: ::
+  
+    import pykst as kst
+    client = kst.Client()
+    x=kst.GeneratedVector(client,-100,100,1000000)
+    GYEquation=kst.NewEquation(client, "x^2", x)
+    GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", 
+                curveweight=1, placeinnewplot=True)
   
   TODO: edit functions..."""
   def __init__(self,client) :
@@ -815,16 +825,8 @@ class Equation(NamedObject) :
     
 class NewEquation(Equation) :
   """ This class represents an equation you would create via "Create>Equation" from the menubar inside kst.
-  The parameters of this function mirror the parameters within "Create>Equation".
+  """
         
-  To plot f(x)=x^2 with x in range(-100,100) with 1000000 samples ::
-  
-    import pykst as kst
-    client = kst.Client()
-    x=kst.GeneratedVector(client,-100,100,1000000)
-    GYEquation=kst.NewEquation(client, "x^2", x)
-    GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", 
-                curveweight=1, placeinnewplot=True)"""
   
   def __init__(self,client,equation,xvector,interploate=False,name="") :
     Equation.__init__(self,client)
@@ -834,8 +836,7 @@ class NewEquation(Equation) :
   
 class ExistingEquation(Equation) :
   """ This class allows access to an equation created inside kst or through a script given a descriptive or short name.
-  
-  handle is a descriptive or short name of an equation created inside kst or through a script. """
+  "handle" is a descriptive or short name of an equation created inside kst or through a script. """
   def __init__(self,client,handle) :
     Equation.__init__(self,client)
     self.handle=handle
@@ -905,8 +906,10 @@ class LinearFit(Fit) :
     
 class NewLinearFit(LinearFit) :
   """ This class represents a fit you would create via "Create>Plugin->Linear Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Linear Fit" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog. If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
+  "rmb->fit->[curvename]", and then selecting "Linear Fit" in the plugin combo.  If the weightvector is listed, then it will be a weighted fit.  
+  Otherwise it will be unweighted. 
+  
+  NewLinearFit() and ExistingLinearFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,weightvector=0,name="") :
     LinearFit.__init__(self,client)
@@ -925,7 +928,7 @@ class NewLinearFit(LinearFit) :
 class ExistingLinearFit(LinearFit) :
   """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Linear Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     LinearFit.__init__(self,client)
     self.handle=handle
@@ -940,8 +943,10 @@ class PolynomialFit(Fit) :
 
 class NewPolynomialFit(PolynomialFit) :
   """ This class represents a fit you would create via "Create>Plugin->Polynomial Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename]", and then selecting "Polynomial Fit" in the plugin combo. Order can be either a Scalar or a number. 
-  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
+  "rmb->fit->[curvename]", and then selecting "Polynomial Fit" in the plugin combo. "order" can be either a Scalar or a number. 
+  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted. 
+  
+  NewPolynomialFit() and ExistingPolynomialFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,order_in,name="", weightvector=0) :
     PolynomialFit.__init__(self,client)
@@ -966,7 +971,7 @@ class NewPolynomialFit(PolynomialFit) :
 class ExistingPolynomialFit(PolynomialFit) :
   """ This class allows access to an Polynomial Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Polynomial Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Polynomial Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     PolynomialFit.__init__(self,client)
     self.handle=handle
@@ -982,7 +987,9 @@ class SinusoidFit(Fit) :
 class NewSinusoidFit(SinusoidFit) :
   """ This class represents a fit you would create via "Create>Plugin->Sinusoid Fit" from the menubar inside kst or by using
   "rmb->fit->[curvename]", and then selecting "Sinusoid Fit" in the plugin combo. Period and Harmonics can be either a Scalar or a number. 
-  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted."""
+  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted. 
+  
+  NewSinusoidFit() and ExistingSinusoidFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,period_in, harmonics_in, weightvector=0, name = "") :
     SinusoidFit.__init__(self,client)
@@ -1013,7 +1020,7 @@ class NewSinusoidFit(SinusoidFit) :
 class ExistingSinusoidFit(SinusoidFit) :
   """ This class allows access to an Sinusoid Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Sinusoid Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Sinusoid Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     SinusoidFit.__init__(self,client)
     self.handle=handle
@@ -1028,8 +1035,9 @@ class LorentzianFit(Fit) :
 
 class NewLorentzianFit(LorentzianFit) :
   """ This class represents a linear fit you would create via "Create>Plugin->Lorentzian Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Lorentzian Fit" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog. """
+  "rmb->fit->[curvename], and then selecting "Lorentzian Fit" in the plugin combo.  
+  
+  NewLorentzianFit() and ExistingLorentzianFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,weightvector=0,name="") :
     LorentzianFit.__init__(self,client)
@@ -1048,7 +1056,7 @@ class NewLorentzianFit(LorentzianFit) :
 class ExistingLorentzianFit(LorentzianFit) :
   """ This class allows access to an Lorentzian Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Lorentzian Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Lorentzian Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     LorentzianFit.__init__(self,client)
     self.handle=handle
@@ -1063,8 +1071,9 @@ class GaussianFit(Fit) :
 
 class NewGaussianFit(GaussianFit) :
   """ This class represents a fit you would create via "Create>Plugin->Gaussian Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Gaussian Fit" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog. """
+  "rmb->fit->[curvename], and then selecting "Gaussian Fit" in the plugin combo.  
+  
+  NewGaussianFit() and ExistingGaussianFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,weightvector=0,name="") :
     GaussianFit.__init__(self,client)
@@ -1083,7 +1092,7 @@ class NewGaussianFit(GaussianFit) :
 class ExistingGaussianFit(GaussianFit) :
   """ This class allows access to an Gaussian Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Gaussian Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Gaussian Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     GaussianFit.__init__(self,client)
     self.handle=handle
@@ -1098,8 +1107,9 @@ class ExponentialFit(Fit) :
     
 class NewExponentialFit(ExponentialFit) :
   """ This class represents an exponential fit you would create via "Create>Plugin->Exponential Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Exponential Fit" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog. """
+  "rmb->fit->[curvename], and then selecting "Exponential Fit" in the plugin combo.  
+  
+  NewExponentialFit() and ExistingExponentialFit() have the same methods."""
   
   def __init__(self,client,xvector,yvector,weightvector=0,name="") :
     ExponentialFit.__init__(self,client)
@@ -1118,14 +1128,14 @@ class NewExponentialFit(ExponentialFit) :
 class ExistingExponentialFit(ExponentialFit) :
   """ This class allows access to an Exponential Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Exponential Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a Exponential Fit created inside kst or through a script. """
   def __init__(self,client,handle) :
     ExponentialFit.__init__(self,client)
     self.handle=handle
 
 # FILTER ###################################################################
 class Filter(NamedObject) :
-  """ This is a class which provides some methods common to all filters """
+  """ This is a class which provides some methods common to many filters """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
     
@@ -1146,7 +1156,9 @@ class LowPassFilter(Filter) :
 class NewLowPassFilter(LowPassFilter) :
   """ This class represents a filter you would create via "Create>Filter Plugin->Low Pass Filter" from the menubar inside kst or by using
   "rmb->filter->[curvename], and then selecting "Low Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog."""
+  the latter dialog.
+
+  NewLowPassFilter() and ExistingLowPassFilter() have the same methods."""
   
   def __init__(self,client,yvector,order_in, cutoff_in,name="") :
     LowPassFilter.__init__(self,client)
@@ -1172,7 +1184,7 @@ class NewLowPassFilter(LowPassFilter) :
 class ExistingLowPassFilter(LowPassFilter) :
   """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a LowPassFilter created inside kst or through a script. """
   def __init__(self,client,handle) :
     LowPassFilter.__init__(self,client)
     self.handle=handle
@@ -1188,7 +1200,9 @@ class HighPassFilter(Filter) :
 class NewHighPassFilter(HighPassFilter) :
   """ This class represents a filter you would create via "Create>Filter Plugin->High Pass Filter" from the menubar inside kst or by using
   "rmb->filter->[curvename], and then selecting "High Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog."""
+  the latter dialog.
+
+  NewHighPassFilter() and ExistingHighPassFilter() have the same methods."""
   
   def __init__(self,client,yvector,order_in, cutoff_in,name="") :
     HighPassFilter.__init__(self,client)
@@ -1212,9 +1226,10 @@ class NewHighPassFilter(HighPassFilter) :
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
 class ExistingHighPassFilter(HighPassFilter) :
-  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  """ This class allows access to an HighPassFilter created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a HighPassFilter created inside kst or through a script. """
+  
   def __init__(self,client,handle) :
     HighPassFilter.__init__(self,client)
     self.handle=handle
@@ -1230,7 +1245,9 @@ class BandPassFilter(Filter) :
 class NewBandPassFilter(BandPassFilter) :
   """ This class represents a filter you would create via "Create>Filter Plugin->Band Pass Filter" from the menubar inside kst or by using
   "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog."""
+  the latter dialog.
+
+  NewBandPassFilter() and ExistingBandPassFilter() have the same methods."""
   
   def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
     BandPassFilter.__init__(self,client)
@@ -1260,13 +1277,13 @@ class NewBandPassFilter(BandPassFilter) :
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
 class ExistingBandPassFilter(BandPassFilter) :
-  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  """ This class allows access to a BandPassFilter created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a BandPassFilter created inside kst or through a script. """
   def __init__(self,client,handle) :
     BandPassFilter.__init__(self,client)
     self.handle=handle
-
+    
 # BAND STOP FILTER #################################################################
 class BandStopFilter(Filter) :
   """ This is a class which some convenience classes within pykst use. You should not use it directly.
@@ -1278,7 +1295,9 @@ class BandStopFilter(Filter) :
 class NewBandStopFilter(BandStopFilter) :
   """ This class represents a filter you would create via "Create>Filter Plugin->Band Stop Filter" from the menubar inside kst or by using
   "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog."""
+  the latter dialog.
+
+  NewBandStopFilter() and ExistingBandStopFilter() have the same methods."""
   
   def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
     BandStopFilter.__init__(self,client)
@@ -1308,11 +1327,226 @@ class NewBandStopFilter(BandStopFilter) :
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
   
 class ExistingBandStopFilter(BandStopFilter) :
-  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
+  """ This class allows access to an BandStopFilter created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of a Linear Fit created inside kst or through a script. """
+  "handle" is a descriptive or short name of a BandPassFilter created inside kst or through a script. """
   def __init__(self,client,handle) :
     BandStopFilter.__init__(self,client)
+    self.handle=handle
+
+
+# CUMULATIVE SUM #################################################################
+class CumulativeSum(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Y(self) :
+    """ a vector containing the cumulative sum  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", sum(Y)dX)"))
+    return ExistingVector(self.client, YHandle)
+
+class NewCumulativeSum(CumulativeSum) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Cumulative Sum" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Cumulative Sum" in the plugin combo.  A cumulative sum is a a descrete integral.
+
+  NewCumulativeSum() and ExistingCumulativeSum() have the same methods."""
+  
+  def __init__(self,client,yvector,dx_in,name="") :
+    CumulativeSum.__init__(self,client)
+
+    if isinstance(dx_in, Scalar):
+      dx = dx_in
+    else :
+      dx = GeneratedScalar(client, dx_in);
+
+    QtCore.QString(self.client.send("newPlugin(Cumulative Sum)"))
+    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Scale Scalar,"+dx.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingCumulativeSum(CumulativeSum) :
+  """ This class allows access to a CumulativeSum created inside kst or through a script given a descriptive or short name.
+  
+  "handle" is a descriptive or short name of a CumulativeSum created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    CumulativeSum.__init__(self,client)
+    self.handle=handle
+
+
+# Despike Filter #################################################################
+class DespikeFilter(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Y(self) :
+    """ a vector containing the despiked timestream  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y)"))
+    return ExistingVector(self.client, YHandle)
+
+class NewDespikeFilter(DespikeFilter) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Despike Filter" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Despike Filter" in the plugin combo.
+
+  NewDespikeFilter() and ExistingDespikeFilter() have the same methods."""
+  
+  def __init__(self,client,yvector,nsigma_in, spacing_in,name="") :
+    DespikeFilter.__init__(self,client)
+
+    if isinstance(nsigma_in, Scalar):
+      nsigma = nsigma_in
+    else :
+      nsigma = GeneratedScalar(client, nsigma_in);
+
+    if isinstance(spacing_in, Scalar):
+      spacing = spacing_in
+    else :
+      spacing = GeneratedScalar(client, spacing_in);
+
+    QtCore.QString(self.client.send("newPlugin(Despike Filter)"))
+    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(NSigma Scalar,"+nsigma.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Spacing Scalar,"+spacing.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingDespikeFilter(DespikeFilter) :
+  """ This class allows access to a DespikeFilter created inside kst or through a script given a descriptive or short name.
+  
+  "handle" is a descriptive or short name of a DespikeFilter created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    DespikeFilter.__init__(self,client)
+    self.handle=handle
+
+
+
+# DIFFERENTIATION #################################################################
+class Differentiation(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Y(self) :
+    """ a vector containing the Derrivative  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y')"))
+    return ExistingVector(self.client, YHandle)
+
+class NewDifferentiation(Differentiation) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Fixed Step Differentiation" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Fixed Step Differentiation" in the plugin combo.
+
+  NewDifferentiation() and ExistingDifferentiation() have the same methods."""
+  
+  def __init__(self,client,yvector,dx_in, name="") :
+    Differentiation.__init__(self,client)
+
+    if isinstance(dx_in, Scalar):
+      dx = dx_in
+    else :
+      dx = GeneratedScalar(client, dx_in);
+
+    QtCore.QString(self.client.send("newPlugin(Fixed Step Differentiation)"))
+    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(Scalar In,"+dx.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingDifferentiation(Differentiation) :
+  """ This class allows access to an Differentiation filter created inside kst or through a script given a descriptive or short name.
+  
+  "handle" is a descriptive or short name of a Differentiation filter created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    Differentiation.__init__(self,client)
+    self.handle=handle
+
+# SHIFT #################################################################
+class Shift(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+    
+  def Y(self) :
+    """ a vector containing the shifted vector  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Shifted Vector)"))
+    return ExistingVector(self.client, YHandle)
+
+class NewShift(Shift) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Shift" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "Shift" in the plugin combo.
+
+  NewShift() and ExistingShift() have the same methods."""
+  
+  def __init__(self,client,yvector,dx_in, name="") :
+    Shift.__init__(self,client)
+
+    if isinstance(dx_in, Scalar):
+      dx = dx_in
+    else :
+      dx = GeneratedScalar(client, dx_in);
+
+    QtCore.QString(self.client.send("newPlugin(Shift)"))
+    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
+    QtCore.QString(self.client.send("setInputScalar(dX,"+dx.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingShift(Shift) :
+  """ This class allows access to an Shift filter created inside kst or through a script given a descriptive or short name.
+  
+  "handle" is a descriptive or short name of a Shift filter created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    Shift.__init__(self,client)
+    self.handle=handle
+
+
+# CUMULATIVE AVERAGE #################################################################
+class CumulativeAverage(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+  
+  TODO: edit functions..."""
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def Y(self) :
+    """ a vector containing the cumulative average  """
+    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Avg(Y)"))
+    return ExistingVector(self.client, YHandle)
+    
+class NewCumulativeAverage(CumulativeAverage) :
+  """ This class represents a filter you would create via "Create>Filter Plugin->Cumulative Average" from the menubar inside kst or by using
+  "rmb->filter->[curvename], and then selecting "CumulativeAverage" in the plugin combo.
+
+  NewCumulativeAverage() and ExistingCumulativeAverage() have the same methods."""
+  
+  def __init__(self,client,yvector,name="") :
+    CumulativeAverage.__init__(self,client)
+
+    QtCore.QString(self.client.send("newPlugin(Cumulative Average)"))
+    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
+    
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+  
+class ExistingCumulativeAverage(CumulativeAverage) :
+  """ This class allows access to Cumulative Average created inside kst or through a script given a descriptive or short name.
+  
+  "handle" is a descriptive or short name of a Cumulative Average created inside kst or through a script. """
+  def __init__(self,client,handle) :
+    CumulativeAverage.__init__(self,client)
     self.handle=handle
 
 # IMAGE #################################################################
@@ -1419,7 +1653,7 @@ class ColorContourImage(Image) :
 class ExistingImage(Image) :
   """ This class allows access to an image created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of an image created inside kst or through a script. """
+  "handle" is a descriptive or short name of an image created inside kst or through a script. """
   def __init__(self,client,handle) :
     Image.__init__(self,client,handle)
     self.handle=handle
@@ -1440,7 +1674,17 @@ class ExistingImage(Image) :
 
 
 class Spectrum(NamedObject):
-  """ TODO... """
+  """ This is the base class for Kst Spectra.  To create a new spectrum, use pykst.NewSpectrum() or
+  to access an existing equation use pykst.ExistingSpectrum()
+
+  For example, to plot the spectrum of a pykst.DataVector() "dataVectorGY1": ::
+  
+      GYSpectrum=kst.NewSpectrum(client, dataVectorGY1, length = 12, vectorUnits="^o/s", 
+                                 rateUnits="Hz", rate=100.16)
+      GYSpecCurve = kst.NewCurve(client,GYSpectrum.X(), GYSpectrum.Y(), curvecolor="green", 
+                                 curveweight=1, placeinnewplot=True)
+
+  """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
 
@@ -1468,8 +1712,7 @@ class NewSpectrum(Spectrum) :
 
 class ExistingSpectrum(Spectrum) :
   """ This class allows access to an spectrum created inside kst or through a script given a descriptive or short name.
-  
-  handle is a descriptive or short name of an spectrum created inside kst or through a script. """
+  "handle" is a descriptive or short name of an spectrum created inside kst or through a script. """
   def __init__(self,client,handle) :
     Spectrum.__init__(self,client)
     self.handle=handle
@@ -1488,7 +1731,17 @@ class ExistingSpectrum(Spectrum) :
 
 
 class Histogram(NamedObject):
-  """ TODO... """
+  """ This is the base class for Kst Histograms.  To create a new histogram, use pykst.NewHistogram() or
+  to access an existing histogram use pykst.ExistingHistogram()
+
+  For example, to plot the histogram of a pykst.DataVector() "dataVectorGY1": ::
+  
+      GYHist=kst.NewHistogram(client, dataVectorGY1, rtAutoBin=True)
+      GYHistCurve = kst.NewCurve(client,GYHist.X(), GYHist.Y(), curvecolor="black", 
+                                 curveweight=1, uselines=False, usebargraph=True,
+                                 bargraphfill="green",placeinnewplot=True)
+
+  """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
 
@@ -1505,9 +1758,7 @@ class Histogram(NamedObject):
 
 class NewHistogram(Histogram) :
   """ This class represents an histogram you would create via "Create>Histogram" from the menubar inside kst.
-  The parameters of this function mirror the parameters within "Create>Histogram".
-            
-  ToDo: examples """
+  The parameters of this function mirror the parameters within "Create>Histogram"."""
   
   def __init__(self,client,vector,rtAutoBin=True,binsFrom=0,binsTo=1,nbins=40,yaxisNormNumInBin=True,yaxisNormFracInBin=False,yaxisNormPercentInBin=False,yaxisNormPeakAt1=False,name="") :
     Histogram.__init__(self,client)
@@ -1518,7 +1769,7 @@ class NewHistogram(Histogram) :
 class ExistingHistogram(Histogram) :
   """ This class allows access to an histogram created inside kst or through a script given a descriptive or short name.
   
-  handle is a descriptive or short name of an histogram created inside kst or through a script. """
+  "handle" is a descriptive or short name of an histogram created inside kst or through a script. """
   def __init__(self,client,handle) :
     Histogram.__init__(self,client)
     self.handle=handle
