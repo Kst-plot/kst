@@ -93,6 +93,7 @@ PlotItem::PlotItem(View *parent)
   _fitMenu(0),
   _editMenu(0),
   _sharedAxisBoxMenu(0),
+  _copyMenu(0),
   _sharedBox(0),
   _axisLabelsDirty(true),
 

@@ -173,11 +173,10 @@ bool kstfit_nonlinear(
           do {
             iStatus = gsl_multifit_fdfsolver_iterate( pSolver );
             if( iStatus == GSL_SUCCESS ) {
-              iStatus = gsl_multifit_test_delta( pSolver->dx, pSolver->x, 1.0e-4, 1.0e-4 );
+              iStatus = gsl_multifit_test_delta( pSolver->dx, pSolver->x, 1.0e-6, 1.0e-6 );
             }
             iIterations++;
-          }
-          while( iStatus == GSL_CONTINUE && iIterations < MAX_NUM_ITERATIONS );
+          } while( iStatus == GSL_CONTINUE && iIterations < MAX_NUM_ITERATIONS );
 
           gsl_multifit_covar( pSolver->J, 0.0, pMatrixCovariance );
 
