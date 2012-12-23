@@ -169,7 +169,7 @@ void function_initial_estimate( const double X[], const double Y[], int npts, do
   double x_at_min_y;
   double x_at_max_y;
 
-  double A, B, C, D;
+  double A, C, D;
 
   // find peak, vally, and mean
   for (int i = 0; i<npts; i++) {
@@ -208,10 +208,9 @@ void function_initial_estimate( const double X[], const double Y[], int npts, do
     C = x_at_min_y;
   }
   // guess that the width of the gaussian is around 1/4 of the x range (?)
-  B = (max_x - min_x)*0.25;
 
   P[0] = A;
-  P[1] = 1.0/(sqrt(2.0*B));
+  P[1] = (max_x - min_x)*0.1;
   P[2] = C;
   P[3] = D;
 
