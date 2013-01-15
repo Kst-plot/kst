@@ -866,6 +866,9 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   //TODO Why could range_u be 0? Then it hangs in while(1)
   if (range_u != 0)
     tickspacing = tickspacing_u * range/range_u;
+  else
+    tickspacing = range;
+
 
 
   if (_axisForceOffsetMin) {
@@ -908,7 +911,7 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
     double nextMinorTick = firstMinorTick;
     while (1) {
       nextMinorTick = firstMinorTick + (i_minor++ * minorTickSpacing);
-      if (nextMinorTick > max)
+      if (nextMinorTick > max || isnan(nextMinorTick))
         break;
       if (!ticks.contains(nextMinorTick) && (nextMinorTick > min)) {
         minTicks << nextMinorTick;
