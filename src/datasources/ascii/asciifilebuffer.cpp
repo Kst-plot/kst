@@ -84,7 +84,7 @@ const QVector<AsciiFileData> AsciiFileBuffer::splitFile(qint64 chunkSize, const 
       || bytesToRead <= 0 || start + bytesToRead > rowIndex[rowIndex.size() - 1])
     return QVector<AsciiFileData>();
 
-  qint64 nextRow = 0;
+  qint64 nextRow = findRowOfPosition(rowIndex, 0, start);
   QVector<AsciiFileData> chunks;
   chunks.reserve(bytesToRead / chunkSize);
   qint64 pos = start;

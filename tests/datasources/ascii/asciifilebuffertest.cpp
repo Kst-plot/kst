@@ -307,6 +307,21 @@ private slots:
     }
     
 
+    void split_equal_chunkSize_is_bytesToRead()
+    {
+      int rows = 20;
+      int rowLength = 10;
+      int offset = 5;
+      int bytesToRead = (rows - offset) * rowLength;
+      initRowIndex(rows, rowLength);
+      int start = offset * rowLength;
+      QVector<AsciiFileData> c = buf.splitFile(bytesToRead, idx, start, bytesToRead);
+      QCOMPARE(c.size(), 1);
+      QCOMPARE(c[0].bytesRead(), bytesToRead);
+      QCOMPARE(c[0].begin(), idx[offset]);
+      QCOMPARE(c[0].rowsRead(), rows - offset);
+    }
+
     //void useOneWindowWithChunks(const RowIndex& rowIndex, int start, int bytesToRead, int numChunks);
 
     void useOneWindowWithChunks_small()

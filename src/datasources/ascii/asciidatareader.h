@@ -41,8 +41,8 @@ class AsciiDataReader
     void detectLineEndingType(QFile& file);
     
     bool findDataRows(bool read_completely, QFile& file, qint64 _byteLength);
-    int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int s, int n);
-    int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, const QString& field);
+    int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int start, int n);
+    int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field);
 
     template<typename ColumnDelimiter>
     static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);

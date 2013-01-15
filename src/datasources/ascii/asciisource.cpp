@@ -329,9 +329,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
     int read;
     if (useThreads())
-      read = parseWindowMultithreaded(slidingWindow[i], col, v, field);
+      read = parseWindowMultithreaded(slidingWindow[i], col, v, s, field);
     else
-      read = parseWindowSinglethreaded(slidingWindow[i], col, v, field, sampleRead);
+      read = parseWindowSinglethreaded(slidingWindow[i], col, v, s, field, sampleRead);
 
     // something went wrong abort reading
     if (read == 0) {
@@ -347,28 +347,28 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, const QString& field, int sRead)
+int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field, int sRead)
 {
   int read = 0;
   for (int i = 0; i < window.size(); i++) {
-    Q_ASSERT(sRead ==  window[i].rowBegin());
+    Q_ASSERT(sRead + start ==  window[i].rowBegin());
     if (!window[i].read() || window[i].bytesRead() == 0)
       return 0;
-    read += _reader.readFieldFromChunk(window[i], col, v, field);
+    read += _reader.readFieldFromChunk(window[i], col, v, start, field);
   }
   return read;
 }
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, const QString& field)
+int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
 {
   if (!_fileBuffer.readWindow(window))
     return 0;
 
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
-    QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, field);
+    QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
     readFutures.addFuture(future);
   }
   readFutures.waitForFinished();
