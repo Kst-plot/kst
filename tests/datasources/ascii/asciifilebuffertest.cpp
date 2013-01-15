@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-//#define KST_SMALL_PRREALLOC
+#define KST_SMALL_PRREALLOC
 
 #include "asciifilebuffer.h"
 
