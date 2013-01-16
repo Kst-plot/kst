@@ -3,17 +3,17 @@
 if(WIN32)
 	if (kst_qt5)
 		install(FILES
-			${QT_BINARY_DIR}/QtCore5.dll
-			${QT_BINARY_DIR}/QtGui5.dll
-			${QT_BINARY_DIR}/QtWidgets5.dll
-			${QT_BINARY_DIR}/QtXml5.dll
-			${QT_BINARY_DIR}/QtNetwork5.dll				
-			${QT_BINARY_DIR}/QtPrintSupport5.dll
+			${QT_BINARY_DIR}/Qt5Core.dll
+			${QT_BINARY_DIR}/Qt5Gui.dll
+			${QT_BINARY_DIR}/Qt5Widgets.dll
+			${QT_BINARY_DIR}/Qt5Xml.dll
+			${QT_BINARY_DIR}/Qt5Network.dll				
+			${QT_BINARY_DIR}/Qt5PrintSupport.dll
 			DESTINATION bin
 			CONFIGURATIONS Release)
 		install(FILES
 			${QT_BINARY_DIR}/../plugins/platforms/qminimal.dll
-			${QT_BINARY_DIR}/../plugins/platforms/windows.dll			
+			${QT_BINARY_DIR}/../plugins/platforms/qwindows.dll			
 			DESTINATION bin/platforms
 			CONFIGURATIONS Release)
 	else()
@@ -47,6 +47,8 @@ if(MINGW)
 	endif()
 	if(EXISTS ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
 		list(APPEND runtime ${MINGW_BIN_PATH}/libgcc_s_sjlj-1.dll)
+	elseif(EXISTS ${MINGW_BIN_PATH}/libgcc_s_seh-1.dll)
+		list(APPEND runtime ${MINGW_BIN_PATH}/libgcc_s_seh-1.dll)
 	elseif(EXISTS ${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll)
 		list(APPEND runtime ${MINGW_BIN_PATH}/libgcc_s_dw2-1.dll)
 	endif()

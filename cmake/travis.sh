@@ -119,49 +119,52 @@ cd $builddir
 #
 # get actual cmake 
 #
-cmakever=cmake-2.8.9-Linux-i386
-cmakebin=x
+cmakever=cmake-2.8.10.2-Linux-i386
+
 if [ ! -d /opt/$cmakever ]; then
-    wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
-    checkExitCode
-    cd /opt
-    sudo tar xf $builddir/cmake-2.8.9-Linux-i386.tar.gz
-    checkExitCode
-    cd $builddir
+	cmakebin=x
+	if [ ! -d /opt/$cmakever ]; then
+		wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
+		checkExitCode
+		cd /opt
+		sudo tar xf $builddir/$cmakever.tar.gz
+		checkExitCode
+		cd $builddir
+	fi
 fi
 cmakebin=/opt/$cmakever/bin/cmake
 $cmakebin --version
 checkExitCode
 
-mingw=i686-w64-mingw32
+mingw=x86_64-w64-mingw32
 if [ "$1" = "qt5" ]; then
-    qtver=5.0.0
-    tarver=-3
+    qtver=5.0.1
+    tarver=
     gccver=4.7.2
-    dw2=-dw2
+    exc=-seh # or -dw2
     extlib=
     useext=
 else
     qtver=4.8.4
     tarver=
     gccver=4.7.2
-    dw2=-dw2
-    extlib=kst-3rdparty-win32-gcc-dw2-4.7.2
+    exc=-dw2
+    extlib=kst-3rdparty-win32-gcc-$exc-4.7.2
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
 fi
-qtver=Qt-$qtver-win32-g++-$mingw$dw2-$gccver
-mingwver=i686-w64-mingw32-gcc$dw2-$gccver
-mingwdir=mingw32$dw2
+qtver=Qt-$qtver-win32-g++-$mingw$exc-$gccver
+mingwver=x86_64-w64-mingw32-gcc$exc-$gccver
+mingwdir=mingw64$exc
 
 
-
+server=http://sourceforge.net/projects/kst/files/3rdparty
 # ---------------------------------------------------------
 #
 # download and install mingw
 #
 if [ ! -d /opt/$mingwdir ]; then
-    mingwtar=$mingwver-release-linux32_rubenvb-Ubuntu32-12.04.tar
-    wget https://github.com/downloads/syntheticpp/kst/$mingwtar.xz
+    mingwtar=$mingwver-Ubuntu64-12.04.tar
+    wget $server/$mingwtar.xz
     checkExitCode
     xz -d $mingwtar.xz
     cd /opt
@@ -172,7 +175,7 @@ fi
 # when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
 #export PATH=/opt/mingw32/bin:$PATH
 echo Checking mingw installation ...
-/opt/$mingwdir/bin/i686-w64-mingw32-gcc -dumpversion
+/opt/$mingwdir/bin/x86_64-w64-mingw32-gcc -dumpversion
 checkExitCode
 
 
@@ -182,8 +185,8 @@ checkExitCode
 # download and install Qt
 #
 if [ ! -d /opt/$qtver ]; then
-    qttar=$qtver-Ubuntu32-12.04$tarver.tar
-    wget https://github.com/downloads/syntheticpp/kst/$qttar.xz
+    qttar=$qtver-Ubuntu64-12.04$tarver.tar
+    wget $server/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
     cd /opt
@@ -203,7 +206,7 @@ checkExitCode
 # download 3rdparty
 #
 if [ ! -d /opt/$extlib ]; then
-    wget https://github.com/downloads/syntheticpp/kst/$extlib.zip
+    wget $server/$extlib.zip
     checkExitCode
     cd /opt
     sudo unzip -q $builddir/$extlib.zip
@@ -234,6 +237,7 @@ $cmakebin ../kst/cmake/ \
 
 checkExitCode
 
+processors=4 # /proc reports 32
 make -j $processors
 checkExitCode
 

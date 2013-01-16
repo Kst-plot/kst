@@ -261,7 +261,7 @@ if(WIN32)
 	endmacro()
 	if(MSVC)
 		link_large_address(/LARGEADDRESSAWARE)
-	else()
+	elseif(NOT kst_cross) # TODO check for x86_64
 		link_large_address(-Wl,--large-address-aware)
 	endif()
 endif()
