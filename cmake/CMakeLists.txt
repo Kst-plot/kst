@@ -133,6 +133,23 @@ else()
 	configure_file(${CMAKE_BINARY_DIR}/svnrevision.h.tmp ${CMAKE_BINARY_DIR}/svnrevision.h COPYONLY)
 endif()
 
+
+# Find 3rd party libraries
+if(kst_3rdparty)
+  message(STATUS "3rd party libs for plugins--------------------")
+  find_package(Getdata)
+  find_package(Gsl)
+  find_package(Netcdf)
+  find_package(Matio)
+  find_package(CFITSIO)
+  message(STATUS "----------------------------------------------")
+else()
+  message(STATUS "Building plugins depending on 3rd party libraries suppressed")
+endif()
+message(STATUS)
+
+
+
 # Find 3rd party libraries
 if (kst_qt5)
 	# http://doc-snapshot.qt-project.org/5.0/cmake-manual.html
@@ -160,6 +177,11 @@ if (kst_qt5)
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
 	include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS}) # Qt5 bug?
 else()
+	if(kst_cross)
+		# Cross-compiled Qt, branch 4.8.4 from https://gitorious.org/~syntheticpp/qt/qt4
+		set(QT_MINGW_DIR ${kst_qt4} CACHE PATH "Qt for Mingw" FORCE)
+		set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
+	endif()
 	find_package(Qt4 REQUIRED)
 	include(${QT_USE_FILE})
 	if(MINGW)
@@ -176,18 +198,7 @@ else()
 endif()
 
 message(STATUS)
-if(kst_3rdparty AND NOT kst_cross)
-  message(STATUS "3rd party libs for plugins--------------------")
-  find_package(Getdata)
-  find_package(Gsl)
-  find_package(Netcdf)
-  find_package(Matio)
-  find_package(CFITSIO)
-  message(STATUS "----------------------------------------------")
-else()
-  message(STATUS "Building plugins depending on 3rd party libraries suppressed")
-endif()
-message(STATUS)
+
 
 
 # React on options
@@ -246,6 +257,11 @@ if(kst_merge_files)
 	set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
 endif()
 
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(x64 TRUE)
+endif()
+
+
 if(WIN32)
 	add_definitions(-D_WIN32_WINNT=0x0501) # Windows XP
 	# on 32 bit Windows we must explicitely enable >2GB support
@@ -261,7 +277,7 @@ if(WIN32)
 	endmacro()
 	if(MSVC)
 		link_large_address(/LARGEADDRESSAWARE)
-	elseif(NOT kst_cross) # TODO check for x86_64
+	elseif(NOT x64)
 		link_large_address(-Wl,--large-address-aware)
 	endif()
 endif()
@@ -337,7 +353,11 @@ endif()
 
 if(kst_install_prefix)
 	if(WIN32)
-		set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win32)
+		if(x64)
+			set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win64)
+		else()
+			set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win32)
+		endif()
 	else()
 		set(CPACK_PACKAGE_FILE_NAME kst-${kst_version_string}-binary)
 	endif()

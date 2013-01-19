@@ -2,12 +2,15 @@
 # use pkg to find the library name and pathes,
 # but use this iformation in find_* only
 if(NOT GSL_INCLUDEDIR)
-include(FindPkgConfig)
-pkg_check_modules(PKGGSL QUIET gsl)
+
+if(NOT kst_cross)
+	include(FindPkgConfig)
+	pkg_check_modules(PKGGSL QUIET gsl)
+endif()
 
 if(NOT PKGGSL_LIBRARIES)
 	set(PKGGSL_LIBRARIES gsl)
-	if (UNIX)
+	if (UNIX AND NOT kst_cross)
 		set(PKGGSL_LIBRARIES ${PKGGSL_LIBRARIES} m gslcblas)
 	endif()
 endif()

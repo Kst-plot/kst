@@ -13,6 +13,7 @@ install:
  - sudo apt-get autoremove
 
 script:
+ - ./cmake/travis.sh qt4
  - ./cmake/travis.sh qt5 
  - ./cmake/travis.sh qt5 x64
 

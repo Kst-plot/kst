@@ -1,11 +1,12 @@
 
 if(NOT GETDATA_INCLUDEDIR)
-include(FindPkgConfig)
 
-pkg_check_modules(PKGGETDATA QUIET getdata>=0.6.0)
+if(NOT kst_cross)
+	include(FindPkgConfig)
+	pkg_check_modules(PKGGETDATA QUIET getdata>=0.6.0)
 #message(STATUS "GD inc: ${PKGGETDATA_INCLUDEDIR}")
 #message(STATUS "GD libs: ${PKGGETDATA_LIBRARIES}")
-
+endif()
 
 # Apple: install getdata with --prefix /opt/local
 

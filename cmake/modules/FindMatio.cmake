@@ -2,8 +2,11 @@
 # copied from FindGsl.cmake
 
 if(NOT MATIO_INCLUDEDIR)
-include(FindPkgConfig)
-pkg_check_modules(PKGMATIO QUIET matio)
+
+if(NOT kst_cross)
+	include(FindPkgConfig)
+	pkg_check_modules(PKGMATIO QUIET matio)
+endif()
 
 if(NOT PKGMATIO_LIBRARIES)
 	set(PKGMATIO_LIBRARIES matio)
@@ -20,6 +23,9 @@ find_path(MATIO_INCLUDEDIR matio.h
 	PATHS ${kst_3rdparty_dir} ${PKGMATIO_INCLUDEDIR})
 
 set(MATIO_LIBRARY_LIST)
+if(kst_3rdparty_dir)
+    list(APPEND PKGMATIO_LIBRARIES zlibstatic)
+endif()
 foreach(it ${PKGMATIO_LIBRARIES})
 	set(lib lib-NOTFOUND CACHE STRING "" FORCE)
 	FIND_LIBRARY(lib ${it} 

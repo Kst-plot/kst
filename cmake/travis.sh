@@ -139,19 +139,21 @@ checkExitCode
 
 gccver=4.7.2
 if [ "$2" = "x64" ]; then
+	win=win64
 	mingw=x86_64-w64-mingw32
     exc=-seh
 	mingwdir=mingw64$exc
-	branch=Kst-64bit
+	branch=Kst-64bit-no-3rdparty-plugins-Qt5
     extlib=
     useext=
 else
+	win=win32
 	mingw=i686-w64-mingw32
 	exc=-dw2
 	mingwdir=mingw32$exc
-	branch=Kst-32bit
-    extlib=
-    useext=
+	branch=Kst-32bit-3rdparty-plugins-Qt5
+    extlib=kst-3rdparty-win32-gcc$exc-4.7.2
+    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
 fi
 
 if [ "$1" = "qt5" ]; then
@@ -160,12 +162,10 @@ if [ "$1" = "qt5" ]; then
 else
     qtver=4.8.4
     tarver=
-    branch=Kst-32bit-Qt4
-    extlib=kst-3rdparty-win32-gcc$exc-4.7.2
-    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
+    branch=Kst-32bit-3rdparty-plugins-Qt4
 fi
 
-qtver=Qt-$qtver-win32-g++-$mingw$exc-$gccver
+qtver=Qt-$qtver-$win-g++-$mingw$exc-$gccver
 mingwver=$mingw-gcc$exc-$gccver
 
 
@@ -262,23 +262,19 @@ checkExitCode
 make package
 checkExitCode
 
-if [ ! -e $versionname-win32.zip ]; then
+if [ ! -e $versionname-$win.zip ]; then
     exit 1
 fi
 
 if [ "$iam" = "$travis" ]; then
     cd $startdir/kstbinary
-    if [ "$1" = "qt5" ]; then
-        git checkout $branch
-    else 
-        git checkout master
-    fi
+    git checkout $branch
     git reset --hard HEAD^
-    cp -f $builddir/$versionname-win32.zip .
-    git add $versionname-win32.zip
+    cp -f $builddir/$versionname-$win.zip .
+    git add $versionname-$win.zip
     checkExitCode
     
-    git commit --quiet -m"Update win32 binary to version $versionname"
+    git commit --quiet -m"Update $win binary to version $versionname"
     checkExitCode
 
     git push --quiet -f

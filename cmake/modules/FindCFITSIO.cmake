@@ -1,8 +1,10 @@
 
 if(NOT CFITSIO_INCLUDEDIR)
-include(FindPkgConfig)
 
-pkg_check_modules(cfitsio QUIET cfitsio)
+if(NOT kst_cross)
+	include(FindPkgConfig)
+	pkg_check_modules(cfitsio QUIET cfitsio)
+endif()
 
 if(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
 	set(CFITSIO_LIBRARY -L${CFITSIO_LIBRARY_DIRS} ${CFITSIO_LIBRARIES})
