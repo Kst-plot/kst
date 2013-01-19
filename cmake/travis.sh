@@ -73,6 +73,7 @@ if [ "$iam" = "$travis" ]; then
     checkExitCode
     
     cd $startdir
+    git config --global push.default matching
     git config --global user.name "travis"
     git config --global user.email travis@noreply.org
     git clone --quiet git@github.com:syntheticpp/kstbinary.git
@@ -136,25 +137,36 @@ cmakebin=/opt/$cmakever/bin/cmake
 $cmakebin --version
 checkExitCode
 
-mingw=x86_64-w64-mingw32
-if [ "$1" = "qt5" ]; then
-    qtver=5.0.1
-    tarver=
-    gccver=4.7.2
-    exc=-seh # or -dw2
+gccver=4.7.2
+if [ "$2" = "x64" ]; then
+	mingw=x86_64-w64-mingw32
+    exc=-seh
+	mingwdir=mingw64$exc
+	branch=Kst-64bit
     extlib=
     useext=
 else
+	mingw=i686-w64-mingw32
+	exc=-dw2
+	mingwdir=mingw32$exc
+	branch=Kst-32bit
+    extlib=
+    useext=
+fi
+
+if [ "$1" = "qt5" ]; then
+    qtver=5.0.1
+    tarver=
+else
     qtver=4.8.4
     tarver=
-    gccver=4.7.2
-    exc=-dw2
-    extlib=kst-3rdparty-win32-gcc-$exc-4.7.2
+    branch=Kst-32bit-Qt4
+    extlib=kst-3rdparty-win32-gcc$exc-4.7.2
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
 fi
+
 qtver=Qt-$qtver-win32-g++-$mingw$exc-$gccver
-mingwver=x86_64-w64-mingw32-gcc$exc-$gccver
-mingwdir=mingw64$exc
+mingwver=$mingw-gcc$exc-$gccver
 
 
 server=http://sourceforge.net/projects/kst/files/3rdparty
@@ -175,7 +187,7 @@ fi
 # when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
 #export PATH=/opt/mingw32/bin:$PATH
 echo Checking mingw installation ...
-/opt/$mingwdir/bin/x86_64-w64-mingw32-gcc -dumpversion
+/opt/$mingwdir/bin/$mingw-gcc -dumpversion
 checkExitCode
 
 
@@ -257,7 +269,7 @@ fi
 if [ "$iam" = "$travis" ]; then
     cd $startdir/kstbinary
     if [ "$1" = "qt5" ]; then
-        git checkout Qt5
+        git checkout $branch
     else 
         git checkout master
     fi

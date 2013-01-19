@@ -16,6 +16,15 @@ if(WIN32)
 			${QT_BINARY_DIR}/../plugins/platforms/qwindows.dll			
 			DESTINATION bin/platforms
 			CONFIGURATIONS Release)
+		install(FILES
+			${QT_BINARY_DIR}/../plugins/printsupport/windowsprintersupport.dll		
+			DESTINATION bin/printsupport
+			CONFIGURATIONS Release)
+		install(FILES
+			${QT_BINARY_DIR}/../plugins/imageformats/qgif.dll
+			${QT_BINARY_DIR}/../plugins/imageformats/qjpeg.dll				
+			DESTINATION bin/imageformats
+			CONFIGURATIONS Release)
 	else()
 		install(FILES
 			${QT_BINARY_DIR}/QtCore4.dll
