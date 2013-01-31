@@ -130,35 +130,26 @@ void CurveAppearance::enableSettings() {
   bool enable;
 
   // Use an intermediate boolean to avoid having to use setEnabled(true) and setEnabled(false)
-  // Leave text labels enabled for now, it should be enough to disable the widgets
+  enable = showLines() || showBars();
 
   // Line appearance options common to lines and bars
-  enable = showLines() || showBars();
-  // _color->setEnabled(enable); Leave color enabled, even if using only points since they also have a color
   _comboLineStyle->setEnabled(enable);
-  //  _textLabelWeight->setEnabled(enable);
-  // _spinBoxLineWidth->setEnabled(enable); Leave lineWidth enabled, even if using only points since they also use this setting
+
   // Option specific to bars
   enable = showBars();
   _barFillColor->setEnabled(enable);
-  //  _textLabelBarStyle->setEnabled(enable);
 
   // Now point options
   enable = showPoints();
   _comboPointSymbol->setEnabled(enable);
-  //  _textLabelPointStyle->setEnabled(enable);
-  // Set point density to all by default
-  _comboPointDensity->setCurrentIndex(0); // 0 is "All"
   // and disable widget if not using lines, as using only points and not plotting all of them sounds weird
   enable = enable && showLines();
   _comboPointDensity->setEnabled(enable);
-  //  _textLabelPointDensity->setEnabled(enable);
 
   // Heads
   enable = showHead();
   _comboHeadSymbol->setEnabled(enable);
   _headColor->setEnabled(enable);
-  //  _textLabelHeadStyle->setEnabled(enable);
 
 }
 
