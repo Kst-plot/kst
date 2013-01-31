@@ -17,7 +17,7 @@
 #include "objectstore.h"
 #include "ui_fitlorentzian_unweightedconfig.h"
 
-#define NUM_PARAMS 3
+#define NUM_PARAMS 4
 #define MAX_NUM_ITERATIONS 500
 
 #include <gsl/gsl_fit.h>
@@ -160,51 +160,92 @@ void FitLorentzianUnweightedSource::setupOutputs() {
 }
 
 
-void function_initial_estimate( const double* pdX, const double* pdY, int iLength, double* pdParameterEstimates ) {
-  double dMin;
-  double dMax;
+void function_initial_estimate(const double X[], const double Y[], int npts, double P[]) {
+  double min_y = 1E300;
+  double max_y = -1E300;
+  double min_x = 1E300;
+  double max_x = -1E300;
+  double mean_y = 0.0;
+  double x_at_min_y;
+  double x_at_max_y;
 
-  gsl_stats_minmax( &dMin, &dMax, pdX, 1, iLength );
+  double A, B, D;
 
-  pdParameterEstimates[0] = gsl_stats_mean( pdX, 1, iLength );
-  pdParameterEstimates[1] = ( dMax - dMin ) / 2.0;
-  pdParameterEstimates[2] = gsl_stats_max( pdY, 1, iLength );
+  // find peak, vally, and mean
+  for (int i = 0; i<npts; i++) {
+    if (min_y > Y[i]) {
+      min_y = Y[i];
+      x_at_min_y = X[i];
+    }
+    if (max_y < Y[i]) {
+      max_y = Y[i];
+      x_at_max_y = X[i];
+    }
+    mean_y += Y[i];
+
+    if (min_x > X[i]) {
+      min_x = X[i];
+    }
+    if (max_x < X[i]) {
+      max_x = X[i];
+    }
+  }
+  if (npts>0) {
+    mean_y /= double(npts);
+  }
+
+  // Heuristic for finding the sign : less time is spent in the peak than
+  // in background if the range covers more than ~+- 2 sigma.
+  // It will fail if you are
+  // really zoomed in.  Not sure what happens then :-(
+  if (max_y - mean_y > mean_y - min_y) { // positive going gaussian
+    A = max_y - min_y;
+    D = min_y;
+    B = x_at_max_y;
+  } else { // negative going gaussian
+    A = min_y - mean_y;
+    D = max_y;
+    B = x_at_min_y;
+  }
+
+  P[0] = A; // amplitude
+  P[1] = B; // x0
+  P[2] = (max_x - min_x)*0.1; // Half Width: guess 1/10 the fit range
+  P[3] = D; // offset
 }
 
 
-double function_calculate( double dX, double* pdParameters ) {
-  double dMean  = pdParameters[0];
-  double dHW    = pdParameters[1];
-  double dScale = pdParameters[2];
-  double dY;
+double function_calculate(double x, double P[]) {
+  double A = P[0]; // amplitude
+  double B = P[1]; // x0
+  double C = P[2]; // Half Width
+  double D = P[3]; // offset
 
-  dY  = ( dScale / M_PI ) * ( dHW / 2.0 );
-  dY /= ( ( dX - dMean ) * ( dX - dMean ) )+( ( dHW / 2.0 ) * ( dHW / 2.0 ) );
+  x -= B;
 
-  return dY;
+  double Y = A/(1.0 + x*x/(C*C)) + D;
+
+  return Y;
+
 }
 
+void function_derivative(double x, double P[], double dFdP[]) {
 
-void function_derivative( double dX, double* pdParameters, double* pdDerivatives ) {
-  double dMean  = pdParameters[0];
-  double dHW    = pdParameters[1];
-  double dScale = pdParameters[2];
-  double dDenom;  
-  double ddMean;
-  double ddHW;
-  double ddScale;
+  double A = P[0]; // amplitude
+  double B = P[1]; // x0
+  double C = P[2]; // Half Width
 
-  dDenom  = ( ( dX - dMean ) * ( dX - dMean ) ) + ( ( dHW / 2.0 ) * ( dHW / 2.0 ) );
-  ddMean  = ( dScale / M_PI ) * dHW * ( dMean - dX ) / ( dDenom * dDenom );
-  ddHW    = ( dScale / ( 2.0 * M_PI ) ) / ( dDenom * dDenom );
-  ddHW   *= dDenom - ( dHW * dHW / 2.0 );
-  ddScale = ( 1.0 / M_PI ) * ( dHW / 2.0 ) / dDenom;
+  double C2 = C*C;
+  x -= B;
+  double x2 = x*x;
+  double m = (x2 + C2);
 
-  pdDerivatives[0] = ddMean;
-  pdDerivatives[1] = ddHW;
-  pdDerivatives[2] = ddScale;
+
+  dFdP[0] = 1.0/(1.0 + x2/C2); // dF/dA
+  dFdP[1] = 2.0*A*C2*x/(m*m);
+  dFdP[2] = 2.0*A*C*x2/(m*m);
+  dFdP[3] = 1.0;
 }
-
 
 bool FitLorentzianUnweightedSource::algorithm() {
   Kst::VectorPtr inputVectorX = _inputVectors[VECTOR_IN_X];
@@ -290,13 +331,16 @@ QString FitLorentzianUnweightedSource::parameterName(int index) const {
   QString parameter;
   switch (index) {
     case 0:
-      parameter = "Mean";
+      parameter = "Amplitide";
       break;
     case 1:
-      parameter = "Half-width";
+      parameter = "x_o";
       break;
     case 2:
-      parameter = "Scale";
+      parameter = "Half Width";
+      break;
+    case 3:
+      parameter = "Offset";
       break;
   }
 
