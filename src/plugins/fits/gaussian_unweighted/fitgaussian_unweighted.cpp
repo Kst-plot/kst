@@ -207,7 +207,7 @@ void function_initial_estimate( const double X[], const double Y[], int npts, do
     D = max_y;
     C = x_at_min_y;
   }
-  // guess that the width of the gaussian is around 1/4 of the x range (?)
+  // guess that the width of the gaussian is around 1/10 of the x range (?)
 
   P[0] = A;
   P[1] = (max_x - min_x)*0.1;
