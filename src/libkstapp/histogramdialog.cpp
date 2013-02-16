@@ -395,6 +395,7 @@ ObjectPtr HistogramDialog::createNewDataObject() {
   curve->setHasBars(_histogramTab->curveAppearance()->showBars());
   curve->setHasHead(_histogramTab->curveAppearance()->showHead());
   curve->setLineWidth(_histogramTab->curveAppearance()->lineWidth());
+  curve->setPointSize(_histogramTab->curveAppearance()->pointSize());
   curve->setLineStyle(_histogramTab->curveAppearance()->lineStyle());
   curve->setPointType(_histogramTab->curveAppearance()->pointType());
   curve->setHeadType(_histogramTab->curveAppearance()->headType());

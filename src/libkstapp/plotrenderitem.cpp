@@ -305,7 +305,7 @@ void PlotRenderItem::paintReferencePoint(QPainter *painter) {
     painter->save();
     painter->setPen(QPen(QColor("gray"), 1));
     painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
-    CurvePointSymbol::draw(7, painter, point.x(), point.y(), 1);
+    CurvePointSymbol::draw(7, painter, point.x(), point.y(), -7);
     painter->restore();
   }
 }

@@ -361,6 +361,7 @@ void CurveDialog::configureTab(ObjectPtr object) {
     _curveTab->curveAppearance()->setShowBars(curve->hasBars());
     _curveTab->curveAppearance()->setShowHead(curve->hasHead());
     _curveTab->curveAppearance()->setLineWidth(curve->lineWidth());
+    _curveTab->curveAppearance()->setPointSize(curve->pointSize());
     _curveTab->curveAppearance()->setLineStyle(curve->lineStyle());
     _curveTab->curveAppearance()->setPointType(curve->pointType());
     _curveTab->curveAppearance()->setPointDensity(curve->pointDensity());
@@ -413,6 +414,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
   curve->setHasBars(_curveTab->curveAppearance()->showBars());
   curve->setHasHead(_curveTab->curveAppearance()->showHead());
   curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
+  curve->setPointSize(_curveTab->curveAppearance()->pointSize());
   curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
   curve->setPointType(_curveTab->curveAppearance()->pointType());
   curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
@@ -521,6 +523,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           QColor barFillColor = _curveTab->curveAppearance()->barFillColorDirty() ? _curveTab->curveAppearance()->barFillColor() : curve->barFillColor();
 
           int lineWidth = _curveTab->curveAppearance()->lineWidthDirty() ?  _curveTab->curveAppearance()->lineWidth() : curve->lineWidth();
+          double pointSize = _curveTab->curveAppearance()->pointSizeDirty() ?  _curveTab->curveAppearance()->pointSize() : curve->pointSize();
           int lineStyle = _curveTab->curveAppearance()->lineStyleDirty() ?  _curveTab->curveAppearance()->lineStyle() : curve->lineStyle();
           int pointType = _curveTab->curveAppearance()->pointTypeDirty() ?  _curveTab->curveAppearance()->pointType() : curve->pointType();
           int pointDensity = _curveTab->curveAppearance()->pointDensityDirty() ?  _curveTab->curveAppearance()->pointDensity() : curve->pointDensity();
@@ -547,6 +550,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
           curve->setHasBars(showBars);
           curve->setHasHead(showHead);
           curve->setLineWidth(lineWidth);
+          curve->setPointSize(pointSize);
           curve->setLineStyle(lineStyle);
           curve->setPointType(pointType);
           curve->setPointDensity(pointDensity);
@@ -578,6 +582,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setHasBars(_curveTab->curveAppearance()->showBars());
       curve->setHasHead(_curveTab->curveAppearance()->showHead());
       curve->setLineWidth(_curveTab->curveAppearance()->lineWidth());
+      curve->setPointSize(_curveTab->curveAppearance()->pointSize());
       curve->setLineStyle(_curveTab->curveAppearance()->lineStyle());
       curve->setPointType(_curveTab->curveAppearance()->pointType());
       curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());

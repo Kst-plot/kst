@@ -269,6 +269,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
           curve->setHasLines(_filterFitTab->curveAppearance()->showLines());
           curve->setHasBars(_filterFitTab->curveAppearance()->showBars());
           curve->setLineWidth(_filterFitTab->curveAppearance()->lineWidth());
+          curve->setPointSize(_filterFitTab->curveAppearance()->pointSize());
           curve->setLineStyle(_filterFitTab->curveAppearance()->lineStyle());
           curve->setPointType(_filterFitTab->curveAppearance()->pointType());
           curve->setPointDensity(_filterFitTab->curveAppearance()->pointDensity());

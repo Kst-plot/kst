@@ -76,6 +76,7 @@ Curve::Curve(ObjectStore *store)
   setLineWidth(1);
   setLineStyle(0);
   setPointDensity(0);
+  setPointSize(CURVE_DEFAULT_POINT_SIZE);
 
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
@@ -304,6 +305,7 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("haspoints", QVariant(HasPoints).toString());
   s.writeAttribute("pointtype", QString::number(PointType));
   s.writeAttribute("pointdensity", QString::number(PointDensity));
+  s.writeAttribute("pointsize", QString::number(PointSize));
 
   s.writeAttribute("hasbars", QVariant(HasBars).toString());
   s.writeAttribute("ignoreautoscale", QVariant(_ignoreAutoScale).toString());
@@ -591,6 +593,11 @@ void Curve::setPointType(int in_PointType) {
 }
 
 
+void Curve::setPointSize(double in_PointSize) {
+  PointSize = in_PointSize;
+}
+
+
 void Curve::setHeadType(int in_HeadType) {
   HeadType = in_HeadType;
 }
@@ -655,6 +662,7 @@ RelationPtr Curve::makeDuplicate() const {
   curve->setLineWidth(LineWidth);
   curve->setLineStyle(LineStyle);
   curve->setPointType(PointDensity);
+  curve->setPointSize(PointSize);
   curve->setPointDensity(PointDensity);
 
   curve->writeLock();
@@ -663,7 +671,6 @@ RelationPtr Curve::makeDuplicate() const {
 
   return RelationPtr(curve);
 }
-
 
 void Curve::paintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
@@ -696,13 +703,14 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   foreach(const QRectF& rect, _rects) {
     p->drawRect(rect);
   }
+
   foreach(const QPointF& point, _points) {
-    CurvePointSymbol::draw(PointType, p, point.x(), point.y(), _width);
+    CurvePointSymbol::draw(PointType, p, point.x(), point.y(), pointSize());
   }
 
   if (hasHead() && _head_valid) {
     p->setPen(QPen(headColor(), _width, style));
-    CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), _width);
+    CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), pointSize());
   }
   p->restore();
 #ifdef BENCHMARK
@@ -1586,7 +1594,7 @@ void Curve::paintLegendSymbol(QPainter *p, const QSize &size) {
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, width);
+    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, pointSize());
   }
   p->restore();
 }

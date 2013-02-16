@@ -33,7 +33,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   Q_ASSERT(store);
 
-  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, headType=0;
+  int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, pointSize = 0, headType=0;
   QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName;
   QString errorYMinusVectorName, color, headColor;
   QString barFillColor;
@@ -64,6 +64,10 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         hasPoints = attrs.value("haspoints").toString() == "true" ? true : false;
         pointType = attrs.value("pointtype").toString().toInt();
         pointDensity = attrs.value("pointdensity").toString().toInt();
+        pointSize = attrs.value("pointsize").toString().toInt();
+        if (pointSize < 1) {
+          pointSize = CURVE_DEFAULT_POINT_SIZE; // FIXME: default if we were reading a pre kst2.0.7 kst file
+        }
 
         hasHead = attrs.value("hashead").toString() == "true" ? true : false;
         headType = attrs.value("headtype").toString().toInt();
@@ -157,6 +161,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setLineWidth(lineWidth);
   curve->setLineStyle(lineStyle);
   curve->setPointType(pointType);
+  curve->setPointSize(pointSize);
   curve->setHeadType(headType);
   curve->setPointDensity(pointDensity);
   curve->setIgnoreAutoScale(ignoreAutoScale);

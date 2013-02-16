@@ -30,6 +30,8 @@
  *@author C. Barth Netterfield
  */
 
+#define CURVE_DEFAULT_POINT_SIZE 12
+
 namespace Kst {
 
 class KSTMATH_EXPORT Curve: public Relation 
@@ -102,6 +104,7 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual void setLineStyle(int in_LineStyle);
     virtual void setPointDensity(int in_PointDensity);
     virtual void setPointType(int in_PointType);
+    virtual void setPointSize(double in_PointSize);
     virtual void setHeadType(int in_HeadType);
 
     virtual int lineWidth()     const { return LineWidth; }
@@ -109,6 +112,7 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual int pointDensity()  const { return PointDensity; }
     virtual int pointType()  const { return PointType; }
     virtual int headType()  const { return HeadType; }
+    virtual double pointSize() const { return PointSize; }
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);
@@ -178,6 +182,7 @@ class KSTMATH_EXPORT Curve: public Relation
     int LineStyle;
     int PointDensity;
     int PointType;
+    double PointSize;
     int HeadType;
 
     bool HasPoints;

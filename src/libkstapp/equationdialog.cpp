@@ -329,6 +329,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->setHasBars(_equationTab->curveAppearance()->showBars());
   curve->setHasHead(_equationTab->curveAppearance()->showHead());
   curve->setLineWidth(_equationTab->curveAppearance()->lineWidth());
+  curve->setPointSize(_equationTab->curveAppearance()->pointSize());
   curve->setLineStyle(_equationTab->curveAppearance()->lineStyle());
   curve->setPointType(_equationTab->curveAppearance()->pointType());
   curve->setHeadType(_equationTab->curveAppearance()->headType());

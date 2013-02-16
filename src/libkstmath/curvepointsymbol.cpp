@@ -24,41 +24,65 @@ namespace Kst {
 
 namespace CurvePointSymbol {
 
-void draw(int Type, QPainter *p, double x, double y, int lineSize) {
+void draw(int Type, QPainter *p, double x, double y, double pointSize) {
 
-  double s;
+  double s = pointSize;
+  double lw;
+  bool int_draw = !(p->testRenderHint(QPainter::Antialiasing));
 
-  s = (p->window().width()+p->window().height())*0.003;
-  if (s<3.0) s = 3.0;
+  if (s>0) {
+    s = (p->window().width()+p->window().height()) * pointSize*0.00025;
+  } else {
+    s *= -1.0;
+  }
+  if (s<1.0) {
+    s = 1.0;
+  }
+
+  p->save();
+  QPen pen = p->pen();
+  lw = p->pen().widthF();
+  if (lw<=1.0) lw = 1.01; // QT4 line drawing is buggy for width < 1.0
+  pen.setWidthF(lw);
+  pen.setJoinStyle(Qt::MiterJoin);
+  p->setPen(pen);
 
   if (Type < 0 || Type > KSTPOINT_MAXTYPE) {
     Type = 0;
   }
 
-  if (lineSize == 0 || lineSize == 1) {
-  } else {
-    s = ( s * lineSize ) / 2.0;
+  if (int_draw) {
+    x = floor(x+0.5);
+    y = floor(y+0.5);
+    s = floor(s+0.5);
+    if (p->transform().isTranslating()) { // translate to nearest pixel
+      qreal dx = p->transform().dx();
+      qreal dy = p->transform().dy();
+      QTransform T;
+      T.translate(floor(dx+0.5), floor(dy+0.5));
+      p->setTransform(T);
+    }
   }
 
   switch (Type) {
-    case 0:
-      p->drawLine(QLineF(x-s, y-s, x+s, y+s));
-      p->drawLine(QLineF(x-s, y+s, x+s, y-s));
+    case 0: // X
+        p->drawLine(QPointF(x-s, y-s), QPointF(x+s, y+s));
+        p->drawLine(QPointF(x-s, y+s), QPointF(x+s, y-s));
       break;
-    case 1:
+    case 1: // unfilled square
       p->setBrush(Qt::NoBrush);
       p->drawRect(QRectF(x-s, y-s, 2.0*s, 2.0*s));
       break;
-    case 2:
+    case 2: // unfilled circle
       p->setBrush(Qt::NoBrush);
       p->drawEllipse(QPointF(x,y), s, s);
       break;
-    case 3:
+    case 3: // filled circle
       p->setBrush(Qt::SolidPattern);
       p->setBrush(p->pen().color());
       p->drawEllipse(QPointF(x,y), s, s);
       break;
-    case 4:
+    case 4: // unfilled down triangle
       {
         QPolygonF pts;
 
@@ -67,7 +91,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
         p->drawPolygon(pts);
       }
       break;
-    case 5:
+    case 5: // unfilled up triangle
       {
         QPolygonF pts;
 
@@ -76,22 +100,36 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
         p->drawPolygon(pts);
       }
       break;
-    case 6:
+    case 6: // filled square
       p->setBrush(Qt::SolidPattern);
       p->setBrush(p->pen().color());
       p->drawRect(QRectF(x-s, y-s, 2.0*s+1.0, 2.0*s+1.0));
       break;
-    case 7:
-      p->drawLine(QLineF(x-s, y, x+s, y));
-      p->drawLine(QLineF(x, y-s, x, y+s));
+    case 7: // +
+      p->drawLine(QPointF(x-s, y), QPointF(x+s, y));
+      p->drawLine(QPointF(x, y-s), QPointF(x, y+s));
       break;
-    case 8:
-      p->drawLine(QLineF(x-s, y-s, x+s, y+s));
-      p->drawLine(QLineF(x-s, y+s, x+s, y-s));
-      p->drawLine(QLineF(x-s, y, x+s, y));
-      p->drawLine(QLineF(x, y-s, x, y+s));
-      break;    
-    case 9:
+    case 8: // *
+      if (int_draw) { // diagonal lines need to be even num pix wide w/out antialiasing
+        lw = floor(lw*0.5) * 2.0;
+      }
+      pen = p->pen();
+      pen.setWidthF(lw);
+      p->setPen(pen);
+      p->drawLine(QPointF(x-s, y-s), QPointF(x+s, y+s));
+      p->drawLine(QPointF(x-s, y+s), QPointF(x+s, y-s));
+      if (int_draw) { // vertical lines need to be odd num pix wide w/out antialiasing
+        lw-=1;
+        if (lw<0) lw = 0;
+        pen = p->pen();
+        pen.setWidthF(lw);
+        p->setPen(pen);
+      }
+      s*=1.4;
+      p->drawLine(QPointF(x-s, y), QPointF(x+s, y));
+      p->drawLine(QPointF(x, y-s), QPointF(x, y+s));
+      break;
+    case 9: // filled down triangle
       {
         QPolygonF pts;
         pts << QPointF(x-s, y-s) <<  QPointF(x, y+s) <<  QPointF(x+s, y-s);
@@ -100,7 +138,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
         p->drawPolygon(pts);
       }
       break;
-    case 10:
+    case 10: // filled up triangle
       {
         QPolygonF pts;
 
@@ -111,7 +149,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
         p->drawPolygon(pts);
       }
       break;
-    case 11:
+    case 11: // unfilled diamond
       {
         QPolygonF pts;
 
@@ -124,7 +162,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
         p->drawPolygon(pts);
       }
       break;
-    case 12:
+    case 12: // filled diamond
       {    
         QPolygonF pts;
 
@@ -141,6 +179,7 @@ void draw(int Type, QPainter *p, double x, double y, int lineSize) {
   }
 
   p->setBrush(Qt::NoBrush);
+  p->restore();
 }
 
 

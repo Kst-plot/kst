@@ -48,6 +48,7 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_comboLineStyle, SIGNAL(currentIndexChanged(int)), this, SLOT(drawSampleLine()));
   connect(_comboHeadSymbol, SIGNAL(currentIndexChanged(int)), this, SLOT(drawSampleLine()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SLOT(drawSampleLine()));
+  connect(_spinBoxPointSize, SIGNAL(valueChanged(double)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
 
   connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
@@ -61,6 +62,7 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_comboHeadSymbol, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_comboLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_spinBoxPointSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
 
   _showLines->setProperty("si","&Lines");
@@ -116,7 +118,7 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
-    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, 0);
+    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, -3);
     combo->addItem(QIcon(ppix), QString());
   }
 
@@ -142,9 +144,13 @@ void CurveAppearance::enableSettings() {
   // Now point options
   enable = showPoints();
   _comboPointSymbol->setEnabled(enable);
+  _spinBoxPointSize->setEnabled(enable);
+  _textLabelPointSize->setEnabled(enable);
+
   // and disable widget if not using lines, as using only points and not plotting all of them sounds weird
   enable = enable && showLines();
   _comboPointDensity->setEnabled(enable);
+  _textLabelPointDensity->setEnabled(enable);
 
   // Heads
   enable = showHead();
@@ -372,11 +378,36 @@ void CurveAppearance::setLineWidth(const int lineWidth) {
 }
 
 
+double CurveAppearance::pointSize() const {
+  if (_spinBoxPointSize->text() == " ") {
+    return CURVE_DEFAULT_POINT_SIZE;
+  } else {
+    return _spinBoxPointSize->value();
+  }
+}
+
+
+bool CurveAppearance::pointSizeDirty() const {
+  return !_spinBoxPointSize->text().isEmpty();
+}
+
+
+void CurveAppearance::setPointSize(double pointSize) {
+  if (pointSize<0.1) {
+    pointSize = CURVE_DEFAULT_POINT_SIZE;
+  }
+  _spinBoxPointSize->setValue(pointSize);
+  enableSettings();
+  drawSampleLine();
+}
+
+
 void CurveAppearance::clearValues() {
   _color->clearSelection();
   _headColor->clearSelection();
   _barFillColor->clearSelection();
   _spinBoxLineWidth->clear();
+  _spinBoxPointSize->clear();
   _comboHeadSymbol->setCurrentIndex(-1);
   _comboPointSymbol->setCurrentIndex(-1);
   _comboPointDensity->setCurrentIndex(-1);
@@ -478,14 +509,14 @@ void CurveAppearance::drawSampleLine() {
   if (showPoints()) {
     pen.setStyle(Qt::SolidLine);
     p.setPen(pen);
-    CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, lineWidth());
+    CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, -1.0/2.7*pointSize());
   }
 
   if (showHead()) {
     pen.setStyle(Qt::SolidLine);
     pen.setColor(headColor());
     p.setPen(pen);
-    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, lineWidth());
+    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, -1.0/2.7*pointSize());
   }
   _label->setPixmap(pix);
 }
@@ -499,6 +530,7 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
   _dialogDefaults->setValue("curves/showLines", showLines());
   _dialogDefaults->setValue("curves/showBars",showBars());
   _dialogDefaults->setValue("curves/lineWidth",lineWidth());
+  _dialogDefaults->setValue("curves/pointSize",pointSize());
   _dialogDefaults->setValue("curves/lineStyle",lineStyle());
   _dialogDefaults->setValue("curves/pointType", pointType());
   _dialogDefaults->setValue("curves/headType", headType());
@@ -519,6 +551,7 @@ void CurveAppearance::loadWidgetDefaults() {
   setShowBars(_dialogDefaults->value("curves/showBars",false).toBool());
   setShowHead(_dialogDefaults->value("curves/showHead",false).toBool());
   setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
+  setPointSize(_dialogDefaults->value("curves/pointSize",0).toInt());
   setLineStyle(_dialogDefaults->value("curves/lineStyle",0).toInt());
   setPointType(_dialogDefaults->value("curves/pointType",0).toInt());
   setHeadType(_dialogDefaults->value("curves/headType",0).toInt());

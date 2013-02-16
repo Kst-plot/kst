@@ -242,6 +242,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->setHasBars(_powerSpectrumTab->curveAppearance()->showBars());
   curve->setHasHead(_powerSpectrumTab->curveAppearance()->showHead());
   curve->setLineWidth(_powerSpectrumTab->curveAppearance()->lineWidth());
+  curve->setPointSize(_powerSpectrumTab->curveAppearance()->pointSize());
   curve->setLineStyle(_powerSpectrumTab->curveAppearance()->lineStyle());
   curve->setPointType(_powerSpectrumTab->curveAppearance()->pointType());
   curve->setHeadType(_powerSpectrumTab->curveAppearance()->headType());

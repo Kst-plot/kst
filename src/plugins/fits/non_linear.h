@@ -177,7 +177,6 @@ bool kstfit_nonlinear(
             }
             iIterations++;
           } while( iStatus == GSL_CONTINUE && iIterations < MAX_NUM_ITERATIONS );
-
           gsl_multifit_covar( pSolver->J, 0.0, pMatrixCovariance );
 
           //
