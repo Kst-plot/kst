@@ -269,7 +269,7 @@ void ViewItem::applyDialogDefaultsStroke() {
   if (hasStroke()) {
     // set the pen
     QPen pen = dialogDefaultsPen(defaultsGroupName());
-    setPen(pen);
+    storePen(pen);
   }
 }
 
@@ -433,7 +433,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
         }
         xml.readNext();
       }
-      setPen(pen);
+      storePen(pen);
     } else if (xml.name().toString() == "rect") {
       knownTag = true;
       qreal x = 0, y = 0, w = 10, h = 10;
@@ -902,6 +902,11 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   if ((!isMaximized()) && view()->childMaximized()) {
     return;
   }
+
+  QPen rescaled_pen(_storedPen);
+  rescaled_pen.setWidth(Curve::lineDim(painter->window(),rescaled_pen.widthF()));
+  setPen(rescaled_pen);
+
   painter->save();
   painter->setPen(pen());
   painter->setBrush(brush());
@@ -915,7 +920,6 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
   }
   paint(painter); //this is the overload that subclasses should use...
-
   if (!view()->isPrinting() && !view()->childMaximized()) {
     painter->setPen(Qt::DotLine);
     painter->setBrush(Qt::NoBrush);

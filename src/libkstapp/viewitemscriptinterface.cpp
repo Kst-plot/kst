@@ -161,7 +161,7 @@ QString StrokeTabSI::doCommand(QString x) {
     }
 #endif
 
-    item->setPen(p);
+    item->storePen(p);
     return "Done";
 }
 

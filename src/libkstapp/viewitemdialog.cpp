@@ -214,7 +214,7 @@ void ViewItemDialog::setupFill() {
 void ViewItemDialog::setupStroke() {
   Q_ASSERT(_item);
   if (_item->hasStroke()) {
-    QPen p = _item->pen();
+    QPen p = _item->storedPen();
 
     _strokeTab->initialize(&p);
   }

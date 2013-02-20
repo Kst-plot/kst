@@ -122,7 +122,7 @@ void ThemeDialog::apply() {
 
     foreach (ViewItem *item, view_items) {
       if (item->hasStroke()) {
-        item->setPen(p); // fixme: plots don't get repainted
+        item->storePen(p); // fixme: plots don't get repainted
       }
       if (item->hasBrush()) {
         item->setBrush(b);

@@ -224,7 +224,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     CreationState creationState() const { return _creationState; }
 
-    virtual void setItemPen(const QPen & pen) { setPen(pen); }
+    virtual void setItemPen(const QPen & pen) { storePen(pen); }
     virtual void setItemBrush(const QBrush & brush) { setBrush(brush); }
 
     template<class T> static T* retrieveItem(const QString &name);
@@ -249,6 +249,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual bool dataPosLockable() const;
 
     QRectF parentRect() const;
+
+    void storePen(const QPen &pen) {_storedPen = pen; setPen(pen);}
+    QPen storedPen() const { return _storedPen;}
 
   Q_SIGNALS:
     void geometryChanged();
@@ -398,6 +401,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void setParentItem(QGraphicsItem*);
 
     ViewItemDialog *_editDialog;
+    QPen _storedPen;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)

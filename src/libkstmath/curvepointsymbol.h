@@ -28,8 +28,6 @@ namespace Kst {
 namespace  CurvePointSymbol {
     /** draw the point on a painter the scale of the point is based on size */
     KSTMATH_EXPORT void draw(int type, QPainter *p, double x, double y, double pointSize=4);
-    /** Get the dimension of a point */
-    KSTMATH_EXPORT int dim(const QRect &window);
 }
 
 }

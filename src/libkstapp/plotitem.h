@@ -262,7 +262,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     void setAllowUpdates(bool allowed);
 
-    virtual void setItemPen(const QPen & pen) { ViewItem::setPen(pen); setPlotPixmapDirty();}
+    virtual void setItemPen(const QPen & pen) { ViewItem::storePen(pen); setPlotPixmapDirty();}
 
     void scaleAxisLabels(qreal scaleFactor);
     void resetScaleAxisLabels();

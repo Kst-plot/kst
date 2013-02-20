@@ -1310,7 +1310,9 @@ void PlotItem::updateYAxisLabels(QPainter* painter) {
 void PlotItem::paintMajorGridLines(QPainter *painter) {
   if (xAxis()->drawAxisMajorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()), _xAxis->axisMajorGridLineWidth(), _xAxis->axisMajorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisMajorGridLineColor()),
+                         Curve::lineDim(painter->window(),_xAxis->axisMajorGridLineWidth()),
+                         _xAxis->axisMajorGridLineStyle()));
     painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
     painter->drawLines(_xMajorGridLines);
     painter->restore();
@@ -1318,7 +1320,9 @@ void PlotItem::paintMajorGridLines(QPainter *painter) {
 
   if (yAxis()->drawAxisMajorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()), _yAxis->axisMajorGridLineWidth(), _yAxis->axisMajorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisMajorGridLineColor()),
+                         Curve::lineDim(painter->window(),_yAxis->axisMajorGridLineWidth()),
+                         _yAxis->axisMajorGridLineStyle()));
     painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
     painter->drawLines(_yMajorGridLines);
     painter->restore();
@@ -1329,7 +1333,9 @@ void PlotItem::paintMajorGridLines(QPainter *painter) {
 void PlotItem::paintMinorGridLines(QPainter *painter) {
   if (xAxis()->drawAxisMinorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()), _xAxis->axisMinorGridLineWidth(), _xAxis->axisMinorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisMinorGridLineColor()),
+                         Curve::lineDim(painter->window(),_xAxis->axisMinorGridLineWidth()),
+                         _xAxis->axisMinorGridLineStyle()));
     painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
     painter->drawLines(_xMinorGridLines);
     painter->restore();
@@ -1337,7 +1343,9 @@ void PlotItem::paintMinorGridLines(QPainter *painter) {
 
   if (yAxis()->drawAxisMinorGridLines()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()), _yAxis->axisMinorGridLineWidth(), _yAxis->axisMinorGridLineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisMinorGridLineColor()),
+                         Curve::lineDim(painter->window(),_yAxis->axisMinorGridLineWidth()),
+                         _yAxis->axisMinorGridLineStyle()));
     painter->setRenderHint(QPainter::Antialiasing, ApplicationSettings::self()->antialiasPlots());
     painter->drawLines(_yMinorGridLines);
     painter->restore();
@@ -1557,13 +1565,17 @@ void PlotItem::paintTickLabels(QPainter *painter) {
 void PlotItem::paintPlotMarkers(QPainter *painter) {
   if (!_xPlotMarkerLines.isEmpty()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_xAxis->axisPlotMarkers().lineColor()), _xAxis->axisPlotMarkers().lineWidth(), _xAxis->axisPlotMarkers().lineStyle()));
+    painter->setPen(QPen(QBrush(_xAxis->axisPlotMarkers().lineColor()),
+                         Curve::lineDim(painter->window(),_xAxis->axisPlotMarkers().lineWidth()),
+                         _xAxis->axisPlotMarkers().lineStyle()));
     painter->drawLines(_xPlotMarkerLines);
     painter->restore();
   }
   if (!_yPlotMarkerLines.isEmpty()) {
     painter->save();
-    painter->setPen(QPen(QBrush(_yAxis->axisPlotMarkers().lineColor()), _yAxis->axisPlotMarkers().lineWidth(), _yAxis->axisPlotMarkers().lineStyle()));
+    painter->setPen(QPen(QBrush(_yAxis->axisPlotMarkers().lineColor()),
+                         Curve::lineDim(painter->window(),_yAxis->axisPlotMarkers().lineWidth()),
+                         _yAxis->axisPlotMarkers().lineStyle()));
     painter->drawLines(_yPlotMarkerLines);
     painter->restore();
   }

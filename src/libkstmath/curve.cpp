@@ -672,6 +672,23 @@ RelationPtr Curve::makeDuplicate() const {
   return RelationPtr(curve);
 }
 
+// FIXME: magic numbers (1/4000 and 1/2000) should be based on the reference plot size,
+// and not just pulled out of the air by what looks ~good.
+// They are currently "about right" for printing to US Letter.
+double Curve::pointDim(QRectF w) const {
+  return qMax(1.01, PointSize * ((w.width() + w.height()) * (1.0 / 4000.0)));
+}
+
+double Curve::lineDim(const QRectF &R, double linewidth) {
+  double lw = qMax(1.01, linewidth*(R.width()+R.height())*(1.0/2000.0));
+  // if you ask for a thicker line, make sure it is at least 2 px wide
+  if (linewidth>1.9) {
+    lw = qMax(2.0,lw);
+  }
+
+  return (int(lw+0.5));
+}
+
 void Curve::paintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
   QTime bench_time;
@@ -679,6 +696,7 @@ void Curve::paintObjects(const CurveRenderContext& context) {
 #endif
 
   QPainter *p = context.painter;
+  double point_dim = pointDim(p->window());
   p->save();
 
   p->setRenderHint(QPainter::Antialiasing, context.antialias);
@@ -705,12 +723,12 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   }
 
   foreach(const QPointF& point, _points) {
-    CurvePointSymbol::draw(PointType, p, point.x(), point.y(), pointSize());
+    CurvePointSymbol::draw(PointType, p, point.x(), point.y(), point_dim);
   }
 
   if (hasHead() && _head_valid) {
     p->setPen(QPen(headColor(), _width, style));
-    CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), pointSize());
+    CurvePointSymbol::draw(HeadType, p, _head.x(), _head.y(), point_dim);
   }
   p->restore();
 #ifdef BENCHMARK
@@ -757,15 +775,12 @@ void Curve::updatePaintObjects(const CurveRenderContext& context) {
   int numberOfBarsDrawn = 0;
 #endif
 
-  if (lineWidth() == 0) {
-    _width = context.penWidth;
-  } else if (context.penWidth > 0) {
-    _width = lineWidth() * context.penWidth;
-  } else {
-    _width = lineWidth();
-  }
+  _width = lineDim(context.painter->window(), lineWidth());
 
-  int pointDim = CurvePointSymbol::dim(context.window);
+  //qDebug() << context.painter->device()->width() << context.painter->device()->logicalDpiX() <<
+  //            context.painter->device()->width()/context.painter->device()->logicalDpiX();
+
+  double errorFlagDim = pointDim(context.painter->window());
   if (sampleCount() > 0) {
     int i0, iN;
 
@@ -1346,10 +1361,10 @@ qDebug() << "y not in bounds"
         if (X1 >= Lx && X2 <= Hx && Y1 >= Ly && Y1 <= Hy) {
           _lines.append(QLineF(X1, Y1, X2, Y1));
           if (do_low_flag) {
-            _lines.append(QLineF(X1, Y1 + pointDim, X1, Y1 - pointDim));
+            _lines.append(QLineF(X1, Y1 + errorFlagDim, X1, Y1 - errorFlagDim));
           }
           if (do_high_flag) {
-            _lines.append(QLineF(X2, Y1 + pointDim, X2, Y1 - pointDim));
+            _lines.append(QLineF(X2, Y1 + errorFlagDim, X2, Y1 - errorFlagDim));
           }
         }
       }
@@ -1436,10 +1451,10 @@ qDebug() << "y not in bounds"
         if (X1 >= Lx && X1 <= Hx && Y1 >= Ly && Y2 <= Hy) {
           _lines.append(QLineF(X1, Y1, X1, Y2));
           if (do_low_flag) {
-          _lines.append(QLineF(X1 + pointDim, Y1, X1 - pointDim, Y1));
+          _lines.append(QLineF(X1 + errorFlagDim, Y1, X1 - errorFlagDim, Y1));
           }
           if (do_high_flag) {
-          _lines.append(QLineF(X1 + pointDim, Y2, X1 - pointDim, Y2));
+          _lines.append(QLineF(X1 + errorFlagDim, Y2, X1 - errorFlagDim, Y2));
           }
         }
       }
@@ -1594,7 +1609,8 @@ void Curve::paintLegendSymbol(QPainter *p, const QSize &size) {
   if (hasPoints()) {
     // draw a point in the middle
     p->setPen(QPen(color(), width));
-    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, pointSize());
+    double point_dim = pointDim(p->window());
+    CurvePointSymbol::draw(PointType, p, bound.left() + bound.width()*.5, bound.top() + bound.height()*.5, point_dim);
   }
   p->restore();
 }

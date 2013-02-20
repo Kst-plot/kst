@@ -36,7 +36,7 @@ LineItem::LineItem(View *parent)
   setAllowsLayout(false);
   QPen p = pen();
   p.setWidthF(1);
-  setPen(p);
+  storePen(p);
   applyDialogDefaultsStroke();
   applyDialogDefaultsLockPosToData();
 }

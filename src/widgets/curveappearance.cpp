@@ -118,7 +118,7 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
-    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, -3);
+    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, 3);
     combo->addItem(QIcon(ppix), QString());
   }
 
@@ -509,14 +509,14 @@ void CurveAppearance::drawSampleLine() {
   if (showPoints()) {
     pen.setStyle(Qt::SolidLine);
     p.setPen(pen);
-    CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, -1.0/2.7*pointSize());
+    CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, 1.0/2.7*pointSize());
   }
 
   if (showHead()) {
     pen.setStyle(Qt::SolidLine);
     pen.setColor(headColor());
     p.setPen(pen);
-    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, -1.0/2.7*pointSize());
+    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, 1.0/2.7*pointSize());
   }
   _label->setPixmap(pix);
 }

@@ -156,7 +156,6 @@ void ApplicationSettings::setReferenceViewHeightCM(const qreal height) {
   emit modified();
 }
 
-
 qreal ApplicationSettings::minimumFontSize() const {
   return _minFontSize;
 }

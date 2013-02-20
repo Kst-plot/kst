@@ -28,7 +28,7 @@ LayoutBoxItem::LayoutBoxItem(View *parent)
   setAllowsLayout(false);
 
   setTypeName("Layout Box");
-  setPen(Qt::NoPen);
+  storePen(Qt::NoPen);
   setBrush(Qt::NoBrush);
   setAllowedGripModes(Move);
 

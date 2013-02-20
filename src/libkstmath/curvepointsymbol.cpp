@@ -19,6 +19,7 @@
 
 #include "curvepointsymbol.h"
 #include <QPolygon>
+#include <math.h>
 
 namespace Kst {
 
@@ -30,21 +31,11 @@ void draw(int Type, QPainter *p, double x, double y, double pointSize) {
   double lw;
   bool int_draw = !(p->testRenderHint(QPainter::Antialiasing));
 
-  if (s>0) {
-    s = (p->window().width()+p->window().height()) * pointSize*0.00025;
-  } else {
-    s *= -1.0;
-  }
-  if (s<1.0) {
-    s = 1.0;
-  }
-
   p->save();
   QPen pen = p->pen();
   lw = p->pen().widthF();
   if (lw<=1.0) lw = 1.01; // QT4 line drawing is buggy for width < 1.0
   pen.setWidthF(lw);
-  pen.setJoinStyle(Qt::MiterJoin);
   p->setPen(pen);
 
   if (Type < 0 || Type > KSTPOINT_MAXTYPE) {
@@ -180,11 +171,6 @@ void draw(int Type, QPainter *p, double x, double y, double pointSize) {
 
   p->setBrush(Qt::NoBrush);
   p->restore();
-}
-
-
-int dim(const QRect &window) {
-  return qMax(1, ((window.width() + window.height()) / 400));
 }
 
 }

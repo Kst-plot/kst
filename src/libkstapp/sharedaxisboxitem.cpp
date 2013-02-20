@@ -191,7 +191,7 @@ bool SharedAxisBoxItem::acceptItems() {
       }
     }
     if (child) {
-      setPen(QPen(Qt::white));
+      storePen(QPen(Qt::white));
       setBrush(Qt::white);
       ViewGridLayout::updateProjections(this);
       _dirty = true;
@@ -266,7 +266,7 @@ void SharedAxisBoxItem::lockItems() {
     }
   }
   if (!list.isEmpty()) {
-    setPen(QPen(Qt::white));
+    storePen(QPen(Qt::white));
     setBrush(Qt::white);
   }
 }

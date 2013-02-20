@@ -108,11 +108,13 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual void setHeadType(int in_HeadType);
 
     virtual int lineWidth()     const { return LineWidth; }
+    static double lineDim(const QRectF &R, double linewidth);
     virtual int lineStyle()     const { return LineStyle; }
     virtual int pointDensity()  const { return PointDensity; }
     virtual int pointType()  const { return PointType; }
     virtual int headType()  const { return HeadType; }
     virtual double pointSize() const { return PointSize; }
+    virtual double pointDim(QRectF w) const;
 
     virtual QColor color() const { return Color; }
     virtual void setColor(const QColor& new_c);

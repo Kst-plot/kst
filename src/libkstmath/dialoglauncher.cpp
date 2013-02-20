@@ -140,7 +140,6 @@ void DialogLauncher::showObjectDialog(ObjectPtr objectPtr) {
 void DialogLauncher::showMultiObjectDialog(QList<ObjectPtr> objects) {
   Q_UNUSED(objects);
 }
-
 }
 
 // vim: ts=2 sw=2 et

@@ -571,6 +571,15 @@ void View::updateChildGeometry(const QRectF &oldSceneRect) {
 qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
   qreal fontSize;
 
+  qreal height_inch = qreal(height())/qreal(p.logicalDpiY());
+  qreal width_inch = qreal(width())/qreal(p.logicalDpiX());
+
+  qreal scale =  2.54*(width_inch + height_inch)/(ApplicationSettings::self()->referenceViewHeightCM() +
+                                      ApplicationSettings::self()->referenceViewWidthCM());
+
+  fontSize = pointSize * scale * _fontRescale;
+
+  /*
   if (!_printing) {
       fontSize = (qreal)(height() + width()) /
               (ApplicationSettings::self()->referenceViewHeight() +
@@ -582,6 +591,8 @@ qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
                ApplicationSettings::self()->referenceViewWidthCM()) *
               pointSize * _fontRescale;
   }
+*/
+
   if (fontSize < ApplicationSettings::self()->minimumFontSize()) {
       fontSize = ApplicationSettings::self()->minimumFontSize();
   }
