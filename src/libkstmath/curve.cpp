@@ -1242,7 +1242,7 @@ qDebug() << "y not in bounds"
         pt.setX(m_X * rX + b_X);
         pt.setY(m_Y * rY + b_Y);
         if (rect.contains(pt) && pt != lastPt &&
-            (lastPt.isNull() || (abs(pt.x() - lastPt.x()) > size))) { // || (abs(pt.y() - lastPt.y()) > size))) {
+            (lastPt.isNull() || (abs(pt.x() - lastPt.x()) > size) || ((size==0) && (abs(pt.y() - lastPt.y()) > 0)))) {
 #ifdef BENCHMARK
           ++numberOfPointsDrawn;
 #endif
