@@ -66,6 +66,8 @@ private:
   QStringList _fileNames;
   QStringList _arguments;
   PlotItem *_plotItem;
+  QString _xlabel;
+  QString _ylabel;
   
   // lists of command line named plot items (and their names).
   QList<PlotItem*> _plotItems;
@@ -83,6 +85,7 @@ private:
   void createImageInPlot(MatrixPtr m);
   void addCurve(CurvePtr curve);
   ObjectList<Object> autoCurves(DataSourcePtr ds);
+  void applyLabels();
 };
 
 }

@@ -77,6 +77,10 @@ namespace Kst {
 "      -d:                      use points for the next curve\n"
 "      -l:                      use lines for the next curve\n"
 "      -b:                      use bargraph for the next curve\n"
+"      --xlabel <X Label>       Set X label of all future plots.\n"
+"      --ylabel <Y Label>       Set Y label of all future plots.\n"
+"      --xlabelauto             AutoSet X label of all future plots.\n"
+"      --ylabelauto             AutoSet Y label of all future plots.\n"
 "Data Object Modifiers\n"
 "      -x <field>:              Create vector and use as X vector for curves.\n"
 "      -e <field>:              Create vector and use as Y-error vector for next -y.\n"
@@ -156,6 +160,8 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
   _fileNames.clear();
   _vectors.clear();
   _plotItems.clear();
+  _xlabel.clear();
+  _ylabel.clear();
 }
 
 
@@ -296,6 +302,7 @@ void CommandLineParser::addCurve(CurvePtr curve)
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
       _plotItem->view()->appendToLayout(CurvePlacement::Auto, _plotItem);
+      applyLabels();
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
@@ -316,6 +323,7 @@ void CommandLineParser::createImageInPlot(MatrixPtr m) {
       cmd->createItem();
       _plotItem = static_cast<PlotItem*>(cmd->item());
       _plotItem->view()->appendToLayout(CurvePlacement::Auto, _plotItem);
+      applyLabels();
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(image));
@@ -344,8 +352,27 @@ void CommandLineParser::createOrFindPlot( const QString plot_name ) {
       pi->setDescriptiveName( plot_name );
       _plotItems.append(pi);
       pi->view()->appendToLayout(CurvePlacement::Auto, pi);
+      _plotItem = pi;
+      applyLabels();
     }
     _plotItem = pi;
+
+}
+
+void CommandLineParser::applyLabels() {
+  if (!_plotItem) {
+    return;
+  }
+
+  if (!_xlabel.isEmpty()) {
+    _plotItem->bottomLabelDetails()->setText(_xlabel);
+    _plotItem->bottomLabelDetails()->setIsAuto(false);
+  }
+  if (!_ylabel.isEmpty()) {
+    _plotItem->leftLabelDetails()->setText(_ylabel);
+    _plotItem->leftLabelDetails()->setIsAuto(false);
+  }
+
 }
 
 QString CommandLineParser::kstFileName() {
@@ -406,7 +433,6 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       QString plot_name;
       *ok = _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
       _doConsecutivePlots=false;
-
       createOrFindPlot(plot_name);
     } else if (arg == "-A") {
       _doConsecutivePlots = true;
@@ -519,6 +545,14 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         new_fileList = true;
         _overrideStyle = false;
       }
+    } else if (arg == "--xlabel") {
+      *ok = _setStringArg(_xlabel, "Usage -xlabel <label>\n");
+    } else if (arg == "--ylabel") {
+      *ok = _setStringArg(_ylabel, "Usage -ylabel <label>\n");
+    } else if (arg == "--xlabelauto") {
+      _xlabel.clear();
+    } else if (arg == "--ylabelauto") {
+      _ylabel.clear();
     } else if (arg == "-h") {
       QString field;
       *ok = _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
