@@ -134,10 +134,14 @@ class KSTCORE_EXPORT DataSource : public Object
 
     virtual QDateTime timeForSample(int sample, bool *ok = 0L);
 
-    virtual bool isTime() const;
-
     // in (ms)
     virtual double relativeTimeForSample(int sample, bool *ok = 0L);
+
+    /************************************************************/
+    /* Methods for handling time in vectors.                    */
+    /************************************************************/
+    virtual bool isTime(const QString &field) const; // now used by ascii
+
 
     /************************************************************/
     /* Methods for using custom lookup vectors, like TIME.      */

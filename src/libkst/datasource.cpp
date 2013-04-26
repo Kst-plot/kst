@@ -353,7 +353,8 @@ QDateTime DataSource::timeForSample(int sample, bool *ok) {
 }
 
 
-bool DataSource::isTime() const {
+bool DataSource::isTime(const QString& field) const {
+  Q_UNUSED(field)
   return false;
 }
 

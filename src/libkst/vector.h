@@ -173,6 +173,9 @@ class KSTCORE_EXPORT Vector : public Primitive
       */
     QByteArray getBinaryArray() const;
 
+    /** does the vector represent time? */
+    virtual bool isTime() const {return false;}
+
   protected:
     /** current number of samples */
     int _size;

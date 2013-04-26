@@ -53,7 +53,7 @@ class AsciiSource : public Kst::DataSource
 
     int sampleForTime(const QDateTime& time, bool *ok);
 
-    bool isTime() const;
+    bool isTime(const QString &field) const;
 
     virtual void reset();
 

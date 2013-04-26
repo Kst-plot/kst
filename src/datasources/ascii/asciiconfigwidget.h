@@ -31,12 +31,8 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
     void setConfig(const AsciiSourceConfig&);
     void setFilename(const QString& filename);
 
-  private Q_SLOTS:
-    void columnLayoutChanged(int);
+private Q_SLOTS:
     void showBeginning();
-    void updateUnitLineEnabled(bool);
-    void updateFrameBuffer(bool);
-    void updateFormatString();
 
   private:
     const int _index_offset;

@@ -125,6 +125,10 @@ class View : public QGraphicsView
 
     QList<ViewItem*> layoutableViewItems();
 
+    virtual int nRows() {return 1.0;}
+    virtual int nCols() {return 1.0;}
+
+
   Q_SIGNALS:
     void viewModeChanged(View::ViewMode oldMode);
     void mouseModeChanged(View::MouseMode oldMode);

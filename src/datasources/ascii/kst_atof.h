@@ -38,7 +38,7 @@ public:
   inline double fromDouble(const char* p) const { return atof(p); }
 #endif
   double fromTime(const char*) const;
-  inline double toDouble(const char* p) const { return _isTime ? fromTime(p) : fromDouble(p); }
+  inline double toDouble(const char* p) const { return _isFormattedTime ? fromTime(p) : fromDouble(p); }
 
   void setTimeFormat(const QString& format);
   
@@ -50,7 +50,7 @@ private:
   QByteArray _originalLocal;
   QString _timeFormat;
   int _timeFormatLength;
-  bool _isTime;
+  bool _isFormattedTime;
   bool _timeWithDate;
 
   void resetLocal();

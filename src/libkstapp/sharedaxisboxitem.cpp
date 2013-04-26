@@ -205,6 +205,31 @@ bool SharedAxisBoxItem::acceptItems() {
   return bReturn;
 }
 
+int SharedAxisBoxItem::nRows() {
+  QList<PlotItem*> plotList = getSharedPlots();
+  QList<ViewItem*> viewItemList;
+  int n_plots = plotList.size();
+  for (int i_plot = 0; i_plot<n_plots; i_plot++) {
+    viewItemList.append(dynamic_cast<ViewItem*>(plotList.at(i_plot)));
+  }
+
+  FormatGridHelper grid(viewItemList);
+  return grid.n_rows;
+}
+
+
+int SharedAxisBoxItem::nCols() {
+  QList<PlotItem*> plotList = getSharedPlots();
+  QList<ViewItem*> viewItemList;
+  int n_plots = plotList.size();
+  for (int i_plot = 0; i_plot<n_plots; i_plot++) {
+    viewItemList.append(dynamic_cast<ViewItem*>(plotList.at(i_plot)));
+  }
+
+  FormatGridHelper grid(viewItemList);
+  return grid.n_cols;
+}
+
 
 void SharedAxisBoxItem::breakShare() {
   _loaded = false;

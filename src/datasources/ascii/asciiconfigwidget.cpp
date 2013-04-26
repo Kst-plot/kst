@@ -37,52 +37,14 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   bgroup->addButton(_whitespace, AsciiSourceConfig::Whitespace);
   bgroup->addButton(_custom, AsciiSourceConfig::Custom);
   bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
-  connect(bgroup, SIGNAL(buttonClicked(int)), this, SLOT(columnLayoutChanged(int)));
 
   _showBeginning->setFont(  QFont("Courier"));
   _showBeginning->setReadOnly(true);
   _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
+  _showBeginning->setMinimumSize(640, 100);
 
-  connect(_readFields, SIGNAL(toggled(bool)), this, SLOT(updateUnitLineEnabled(bool)));
-  connect(_limitFileBuffer, SIGNAL(toggled(bool)), this, SLOT(updateFrameBuffer(bool)));
-  connect(_indexType, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
-  connect(_indexVector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFormatString()));
 }
 
-void AsciiConfigWidgetInternal::updateUnitLineEnabled(bool checked)
-{
-  if (checked && _readUnits->isChecked()) {
-    _unitsLine->setEnabled(true);
-  } else {
-    _unitsLine->setEnabled(false);
-  }
-}
-
-void AsciiConfigWidgetInternal::updateFrameBuffer(bool checked)
-{
-  if (checked) {
-    _limitFileBufferSize->setEnabled(true);
-  } else {
-    _limitFileBufferSize->setEnabled(false);
-  }
-}
-
-
-void AsciiConfigWidgetInternal::columnLayoutChanged(int idx)
-{
-  if (idx == AsciiSourceConfig::Fixed) {
-    widthButtonGroup->setEnabled(false);
-  } else {
-    widthButtonGroup->setEnabled(true);
-  }
-}
-
-void AsciiConfigWidgetInternal::updateFormatString() {
-  bool enable = (AsciiSourceConfig::Interpretation)(_indexType->currentIndex() + 1)
-                  == AsciiSourceConfig::FormattedTime;
-  _indexTimeFormat->setEnabled(enable);
-  _timeFormatLabel->setEnabled(enable);
-}
 
 QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
 {
@@ -112,7 +74,7 @@ void AsciiConfigWidgetInternal::showBeginning()
   _showBeginning->setPlainText(lines.join("\n"));
   _showBeginning->moveCursor(QTextCursor::Start);
 
-  _labelBeginning->setText(QString("First 100 lines in file '%1'").arg(QFileInfo(_filename).fileName()));
+  _labelBeginning->setText(QString("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
 }
 
 
@@ -121,7 +83,23 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   AsciiSourceConfig config;
   config._fileNamePattern = _fileNamePattern->text();
   config._indexVector = _indexVector->currentText();
-  config._indexInterpretation = (AsciiSourceConfig::Interpretation) (1 + _indexType->currentIndex());
+
+  if (_interpret->isChecked()) {
+    if (_ctime->isChecked()) {
+      config._indexInterpretation = AsciiSourceConfig::CTime;
+    } else if (_seconds->isChecked()) {
+      config._indexInterpretation = AsciiSourceConfig::Seconds;
+    } else if (_formattedString->isChecked()) {
+      config._indexInterpretation = AsciiSourceConfig::FormattedTime;
+    } else if (_indexFreq->isChecked()) {
+      config._indexInterpretation = AsciiSourceConfig::FixedRate;
+    } else {
+      config._indexInterpretation = AsciiSourceConfig::NoInterpretation;
+    }
+  } else {
+    config._indexInterpretation = AsciiSourceConfig::NoInterpretation;
+  }
+
   config._delimiters = _delimiters->text();
   
   if (_whitespace->isChecked()) {
@@ -134,7 +112,7 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
 
   config._columnDelimiter = _columnDelimiter->text();
   config._columnWidth = _columnWidth->value();
-  config._columnWidthIsConst = _columnWidthIsConst->isChecked();
+  config._columnWidthIsConst = _colWidthConst->isChecked();
   config._readFields = _readFields->isChecked();
   config._readUnits = _readUnits->isChecked();
   config._useDot = _useDot->isChecked();
@@ -151,14 +129,21 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   }
 
   config._useThreads =_useThreads->isChecked();
-  config._indexTimeFormat = _indexTimeFormat->text();
-
+  config._timeAsciiFormatString = _timeAsciiFormatString->text();
+  config._dataRate = _dataRate->value();
+  config._useOffset = _useOffset->isChecked();
+  config._offsetDateTime = _offsetDateTime->isChecked();
+  config._offsetFileDate = _offsetFileDate->isChecked();
+  config._offsetRelative = _offsetRelative->isChecked();
+  config._dateTimeOffset = _dateTimeOffset->dateTime();
+  config._relativeOffset = _relativeOffset->value();
   return config;
 }
 
 void AsciiConfigWidgetInternal::setFilename(const QString& filename)
 {
   _filename = filename;
+  //_dateTimeOffset->setDateTime(QFileInfo(_filename).lastModified());
   showBeginning();
 }
 
@@ -169,12 +154,11 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   _fileNamePattern->setText(config._fileNamePattern);
   _columnDelimiter->setText(config._columnDelimiter);
   _columnWidth->setValue(config._columnWidth);
-  _columnWidthIsConst->setChecked(config._columnWidthIsConst);
+  _colWidthConst->setChecked(config._columnWidthIsConst);
   _readFields->setChecked(config._readFields);
   _readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
   _useComma->setChecked(!config._useDot);
-  updateUnitLineEnabled(config._readFields);
   
   _startLine->setValue(config._dataLine + _index_offset);
   _fieldsLine->setValue(config._fieldsLine + _index_offset);
@@ -188,15 +172,20 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   } else {
     _whitespace->setChecked(true);
   }
-  columnLayoutChanged(ct);
 
   _limitFileBuffer->setChecked(config._limitFileBuffer);
   _limitFileBufferSize->setText(QString::number(config._limitFileBufferSize / 1024 / 1024));
-  updateFrameBuffer(config._limitFileBuffer);
 
   _useThreads->setChecked(config._useThreads);
-  _indexTimeFormat->setText(config._indexTimeFormat);
-  updateFormatString();
+  _timeAsciiFormatString->setText(config._timeAsciiFormatString);
+  _dataRate->setValue(config._dataRate.value());
+  _useOffset->setChecked(config._useOffset.value());
+  _offsetDateTime->setChecked(config._offsetDateTime.value());
+  _offsetFileDate->setChecked(config._offsetFileDate.value());
+  _offsetRelative->setChecked(config._offsetRelative.value());
+  _dateTimeOffset->setDateTime(config._dateTimeOffset.value());
+  _relativeOffset->setValue(config._relativeOffset.value());
+
 }
 
 
@@ -233,7 +222,23 @@ void AsciiConfigWidget::load() {
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     _ac->_indexVector->addItems(src->vector().list());
-    _ac->_indexType->setCurrentIndex(src->_config._indexInterpretation - 1);
+
+    if (src->_config._indexInterpretation == AsciiSourceConfig::CTime) {
+      _ac->_interpret->setChecked(true);
+      _ac->_ctime->setChecked(true);
+    } else if (src->_config._indexInterpretation == AsciiSourceConfig::Seconds) {
+      _ac->_interpret->setChecked(true);
+      _ac->_seconds->setChecked(true);
+    } else if (src->_config._indexInterpretation == AsciiSourceConfig::FormattedTime) {
+      _ac->_interpret->setChecked(true);
+      _ac->_formattedString->setChecked(true);
+    } else if (src->_config._indexInterpretation == AsciiSourceConfig::FixedRate) {
+      _ac->_interpret->setChecked(true);
+      _ac->_indexFreq->setChecked(true);
+    } else if (src->_config._indexInterpretation == AsciiSourceConfig::NoInterpretation) {
+      _ac->_interpret->setChecked(false);
+    }
+
     if (src->vector().list().contains(src->_config._indexVector)) {
       int idx = _ac->_indexVector->findText(src->_config._indexVector);
       if (idx == -1)
@@ -242,14 +247,27 @@ void AsciiConfigWidget::load() {
     }
   } else {
     _ac->_indexVector->addItem("INDEX");
-    int x = config._indexInterpretation;
-    if (x > 0 && x <= _ac->_indexType->count()) {
-      _ac->_indexType->setCurrentIndex(x - 1);
-    } else {
-      _ac->_indexType->setCurrentIndex(0);
+
+    if (config._indexInterpretation == AsciiSourceConfig::CTime) {
+      _ac->_interpret->setChecked(true);
+      _ac->_ctime->setChecked(true);
+    } else if (config._indexInterpretation == AsciiSourceConfig::Seconds) {
+      _ac->_interpret->setChecked(true);
+      _ac->_seconds->setChecked(true);
+    } else if (config._indexInterpretation == AsciiSourceConfig::FormattedTime) {
+      _ac->_interpret->setChecked(true);
+      _ac->_formattedString->setChecked(true);
+    } else if (config._indexInterpretation == AsciiSourceConfig::FixedRate) {
+      _ac->_interpret->setChecked(true);
+      _ac->_indexFreq->setChecked(true);
+    } else if (config._indexInterpretation == AsciiSourceConfig::NoInterpretation) {
+      _ac->_interpret->setChecked(false);
     }
+
   }
-  _ac->_indexVector->setEnabled(hasInstance());
+  if (_ac->_interpret->isChecked()) {
+    _ac->_indexVector->setEnabled(hasInstance());
+  }
   _oldConfig = _ac->config();
 }
 
@@ -278,14 +296,14 @@ bool AsciiConfigWidget::isOkAcceptabe() const {
   QString msg;
   if (config._readFields) {
     if (config._fieldsLine == config._dataLine) {
-      msg = QString("Line %1 could not list field names AND values!").arg(config._fieldsLine + 1);
+      msg = QString("Line %1 can not list field names AND values!").arg(config._fieldsLine + 1);
     }
     if (config._readUnits) {
       if (config._unitsLine == config._dataLine) {
-        msg = QString("Line %1 could not list units AND values!").arg(config._unitsLine + 1);
+        msg = QString("Line %1 can not list units AND values!").arg(config._unitsLine + 1);
       }
       if (config._unitsLine == config._fieldsLine) {
-        msg = QString("Line %1 could not list field names AND units!").arg(config._unitsLine + 1);
+        msg = QString("Line %1 can not list field names AND units!").arg(config._unitsLine + 1);
       }
     }
   }
@@ -295,5 +313,6 @@ bool AsciiConfigWidget::isOkAcceptabe() const {
   }
   return true;
 }
+
 
 // vim: ts=2 sw=2 et

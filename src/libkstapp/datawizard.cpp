@@ -866,7 +866,6 @@ void DataWizard::finished() {
     }
   }
 
-  bool xAxisIsTime = ds->isTime();
 
   ds->unlock();
   if (memoryRequested > memoryAvailable) {
@@ -911,10 +910,11 @@ void DataWizard::finished() {
     dxv->registerChange();
     dxv->unlock();
     xv = dxv;
-
   } else {
     xv = kst_cast<Vector>(_pageDataPresentation->selectedVector());
   }
+
+  bool xAxisIsTime = xv->isTime();
 
   {
     DataVectorPtr vector;

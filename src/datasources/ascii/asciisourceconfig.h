@@ -16,6 +16,7 @@
 #include "namedparameter.h"
 
 #include <QDomElement>
+#include <QDateTime>
 
 
 class AsciiSourceConfig {
@@ -29,8 +30,8 @@ class AsciiSourceConfig {
     static const char Tag_indexVector[];
     static const char Key_indexInterpretation[];
     static const char Tag_indexInterpretation[];
-    static const char Key_indexTimeFormat[];
-    static const char Tag_indexTimeFormat[];
+    static const char Key_timeAsciiFormatString[];
+    static const char Tag_timeAsciiFormatString[];
     static const char Key_columnType[];
     static const char Tag_columnType[];
     static const char Key_columnDelimiter[];
@@ -57,6 +58,20 @@ class AsciiSourceConfig {
     static const char Tag_limitFileBufferSize[];
     static const char Key_useThreads[];
     static const char Tag_useThreads[];
+    static const char Key_dataRate[];
+    static const char Tag_dataRate[];
+    static const char Key_useOffset[];
+    static const char Tag_useOffset[];
+    static const char Key_offsetDateTime[];
+    static const char Tag_offsetDateTime[];
+    static const char Key_offsetFileDate[];
+    static const char Tag_offsetFileDate[];
+    static const char Key_offsetRelative[];
+    static const char Tag_offsetRelative[];
+    static const char Key_dateTimeOffset[];
+    static const char Tag_dateTimeOffset[];
+    static const char Key_relativeOffset[];
+    static const char Tag_relativeOffset[];
 
   public:
     AsciiSourceConfig();
@@ -73,13 +88,13 @@ class AsciiSourceConfig {
 
     void load(const QDomElement& e);
 
-    enum Interpretation { Unknown = 0, INDEX, CTime, Seconds, FormattedTime, IntEnd = 0xffff };
+    enum Interpretation { Unknown = 0, NoInterpretation, CTime, Seconds, FormattedTime, FixedRate, IntEnd = 0xffff };
     enum ColumnType { Whitespace = 0, Fixed, Custom, ColEnd = 0xffff };
 
     NamedParameter<QString, Key_delimiters, Tag_delimiters> _delimiters;
     NamedParameter<QString, Key_indexVector, Tag_indexVector> _indexVector;
     NamedParameter<int, Key_indexInterpretation, Tag_indexInterpretation> _indexInterpretation;
-    NamedParameter<QString, Key_indexTimeFormat, Tag_indexTimeFormat> _indexTimeFormat;
+    NamedParameter<QString, Key_timeAsciiFormatString, Tag_timeAsciiFormatString> _timeAsciiFormatString;
     NamedParameter<QString, Key_fileNamePattern, Tag_fileNamePattern> _fileNamePattern;
     NamedParameter<int, Key_columnType, Tag_columnType> _columnType;
     NamedParameter<QString, Key_columnDelimiter, Tag_columnDelimiter> _columnDelimiter;
@@ -94,6 +109,13 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_limitFileBuffer, Tag_limitFileBuffer> _limitFileBuffer;
     NamedParameter<int, Key_limitFileBufferSize, Tag_limitFileBufferSize> _limitFileBufferSize;
     NamedParameter<int, Key_useThreads, Tag_useThreads> _useThreads;
+    NamedParameter<double, Key_dataRate, Tag_dataRate> _dataRate;
+    NamedParameter<bool, Key_useOffset, Tag_useOffset> _useOffset;
+    NamedParameter<bool, Key_offsetDateTime, Tag_offsetDateTime> _offsetDateTime;
+    NamedParameter<bool, Key_offsetFileDate, Tag_offsetFileDate> _offsetFileDate;
+    NamedParameter<bool, Key_offsetRelative, Tag_offsetRelative> _offsetRelative;
+    NamedParameter<QDateTime, Key_dateTimeOffset, Tag_dateTimeOffset> _dateTimeOffset;
+    NamedParameter<double, Key_relativeOffset, Tag_relativeOffset> _relativeOffset;
 
   private:
     void save(QSettings& cfg) const;

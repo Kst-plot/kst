@@ -54,6 +54,9 @@ class SharedAxisBoxItem : public ViewItem
     PlotItem* keyPlot() { return _keyPlot; };
     const QString defaultsGroupName() const {return QString("plot");}
 
+    virtual int nRows();
+    virtual int nCols();
+
   Q_SIGNALS:
     void breakShareSignal();
 

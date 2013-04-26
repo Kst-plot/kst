@@ -31,8 +31,8 @@ const char AsciiSourceConfig::Key_indexVector[] ="Index";
 const char AsciiSourceConfig::Tag_indexVector[] ="vector";
 const char AsciiSourceConfig::Key_indexInterpretation[] = "Default INDEX Interpretation";
 const char AsciiSourceConfig::Tag_indexInterpretation[] = "interpretation";
-const char AsciiSourceConfig::Key_indexTimeFormat[] = "Time format";
-const char AsciiSourceConfig::Tag_indexTimeFormat[] = "timeFormat";
+const char AsciiSourceConfig::Key_timeAsciiFormatString[] = "ASCII Time format";
+const char AsciiSourceConfig::Tag_timeAsciiFormatString[] = "asciiTimeFormat";
 const char AsciiSourceConfig::Key_columnType[] = "Column Type";
 const char AsciiSourceConfig::Tag_columnType[] = "columntype";
 const char AsciiSourceConfig::Key_columnDelimiter[] = "Column Delimiter";
@@ -59,12 +59,26 @@ const char AsciiSourceConfig::Key_limitFileBufferSize[] = "Size of limited file 
 const char AsciiSourceConfig::Tag_limitFileBufferSize[] = "limitFileBufferSize";
 const char AsciiSourceConfig::Key_useThreads[] = "Use threads when parsing Ascii data";
 const char AsciiSourceConfig::Tag_useThreads[] = "useThreads";
+const char AsciiSourceConfig::Key_dataRate[] = "Data Rate for index";
+const char AsciiSourceConfig::Tag_dataRate[] = "dataRate";
+const char AsciiSourceConfig::Key_useOffset[] = "Use time offset for interpreted time fields";
+const char AsciiSourceConfig::Tag_useOffset[] = "useOffset";
+const char AsciiSourceConfig::Key_offsetDateTime[] = "use an explicit date/time offset";
+const char AsciiSourceConfig::Tag_offsetDateTime[] = "offsetDateTime";
+const char AsciiSourceConfig::Key_offsetFileDate[] = "use file time/date as offset";
+const char AsciiSourceConfig::Tag_offsetFileDate[] = "offsetFileDate";
+const char AsciiSourceConfig::Key_offsetRelative[] = "use relative file time offset";
+const char AsciiSourceConfig::Tag_offsetRelative[] = "offsetRelavive";
+const char AsciiSourceConfig::Key_dateTimeOffset[] = "date/time offset";
+const char AsciiSourceConfig::Tag_dateTimeOffset[] = "dateTimeOffset";
+const char AsciiSourceConfig::Key_relativeOffset[] = "relative offset";
+const char AsciiSourceConfig::Tag_relativeOffset[] = "relativeOffset";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
   _indexVector("INDEX"),
   _indexInterpretation(Unknown),
-  _indexTimeFormat("hh:mm:ss.zzz"),
+  _timeAsciiFormatString("hh:mm:ss.zzz"),
   _fileNamePattern(""),
   _columnType(Whitespace),
   _columnDelimiter(","),
@@ -78,7 +92,14 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _useDot(true),
   _limitFileBuffer(false),
   _limitFileBufferSize(128),
-  _useThreads(false)
+  _useThreads(false),
+  _dataRate(1.0),
+  _useOffset(false),
+  _offsetDateTime(false),
+  _offsetFileDate(false),
+  _offsetRelative(true),
+  _dateTimeOffset(QDateTime::currentDateTime()),
+  _relativeOffset(0)
 {
 }
 
@@ -102,7 +123,14 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
   _limitFileBuffer >> cfg;
   _limitFileBufferSize >> cfg;
   _useThreads >> cfg;
-  _indexTimeFormat >> cfg;
+  _timeAsciiFormatString >> cfg;
+  _dataRate >> cfg;
+  _useOffset >> cfg;
+  _offsetDateTime >> cfg;
+  _offsetFileDate >> cfg;
+  _offsetRelative >> cfg;
+  _dateTimeOffset >> cfg;
+  _relativeOffset >> cfg;
 }
 
 
@@ -137,7 +165,14 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _limitFileBuffer << cfg;
   _limitFileBufferSize << cfg;
   _useThreads << cfg;
-  _indexTimeFormat << cfg;
+  _timeAsciiFormatString << cfg;
+  _dataRate << cfg;
+  _useOffset << cfg;
+  _offsetDateTime << cfg;
+  _offsetFileDate << cfg;
+  _offsetRelative << cfg;
+  _dateTimeOffset << cfg;
+  _relativeOffset << cfg;
 }
 
 
@@ -179,7 +214,14 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _limitFileBuffer >> s;
   _limitFileBufferSize >> s;
   _useThreads >> s;
-  _indexTimeFormat >> s;
+  _timeAsciiFormatString >> s;
+  _dataRate >> s;
+  _useOffset >> s;
+  _offsetDateTime >> s;
+  _offsetFileDate >> s;
+  _offsetRelative >> s;
+  _dateTimeOffset >> s;
+  _relativeOffset >> s;
 
   s.writeEndElement();
 }
@@ -203,7 +245,14 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _limitFileBuffer << attributes;
   _limitFileBufferSize << attributes;
   _useThreads << attributes;
-  _indexTimeFormat << attributes;
+  _timeAsciiFormatString << attributes;
+  _dataRate << attributes;
+  _useOffset << attributes;
+  _offsetDateTime << attributes;
+  _offsetFileDate << attributes;
+  _offsetRelative << attributes;
+  _dateTimeOffset << attributes;
+  _relativeOffset << attributes;
 }
 
 
@@ -230,7 +279,14 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _limitFileBuffer << elem;
         _limitFileBufferSize << elem;
         _useThreads << elem;
-        _indexTimeFormat << elem;
+        _timeAsciiFormatString << elem;
+        _dataRate << elem;
+        _useOffset << elem;
+        _offsetDateTime << elem;
+        _offsetFileDate << elem;
+        _offsetRelative << elem;
+        _dateTimeOffset << elem;
+        _relativeOffset << elem;
       }
     }
     n = n.nextSibling();
@@ -257,7 +313,15 @@ bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
       _limitFileBuffer == rhs._limitFileBuffer &&
       _limitFileBufferSize == rhs._limitFileBufferSize &&
       _useThreads == rhs._useThreads &&
-      _indexTimeFormat == rhs._indexTimeFormat;
+      _timeAsciiFormatString == rhs._timeAsciiFormatString &&
+      _dataRate == rhs._dataRate &&
+      _useOffset == rhs._useOffset &&
+      _offsetDateTime == rhs._offsetDateTime &&
+      _offsetFileDate == rhs._offsetFileDate &&
+      _offsetRelative == rhs._offsetRelative &&
+      _dateTimeOffset == rhs._dateTimeOffset &&
+      _relativeOffset == rhs._relativeOffset;
+
 }
 
 bool AsciiSourceConfig::operator!=(const AsciiSourceConfig& rhs) const
@@ -281,7 +345,14 @@ bool AsciiSourceConfig::isUdateNecessary(const AsciiSourceConfig& rhs) const
       _columnWidthIsConst != rhs._columnWidthIsConst ||
       _readUnits != rhs._readUnits ||
       _unitsLine != rhs._unitsLine ||
-      _indexTimeFormat != rhs._indexTimeFormat;
+      _timeAsciiFormatString != rhs._timeAsciiFormatString ||
+      _dataRate != rhs._dataRate ||
+      _useOffset != rhs._useOffset ||
+      _offsetDateTime != rhs._offsetDateTime ||
+      _offsetFileDate != rhs._offsetFileDate ||
+      _offsetRelative != rhs._offsetRelative ||
+      _dateTimeOffset != rhs._dateTimeOffset ||
+      _relativeOffset != rhs._relativeOffset;
 }
 
 

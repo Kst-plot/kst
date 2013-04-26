@@ -320,7 +320,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   LexicalCast::AutoReset useDot(_config._useDot);
   
   if (field == _config._indexVector && _config._indexInterpretation == AsciiSourceConfig::FormattedTime) {
-    LexicalCast::instance().setTimeFormat(_config._indexTimeFormat);
+    LexicalCast::instance().setTimeFormat(_config._timeAsciiFormatString);
   }
 
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
@@ -651,9 +651,10 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::isTime() const
+bool AsciiSource::isTime(const QString &field) const
 {
-  return _config._indexInterpretation.value() != AsciiSourceConfig::INDEX;
+  return (_config._indexInterpretation.value() != AsciiSourceConfig::NoInterpretation) &&
+      (field == _config._indexVector);
 }
 
 //-------------------------------------------------------------------------------------------

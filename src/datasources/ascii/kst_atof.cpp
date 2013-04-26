@@ -131,7 +131,7 @@ LexicalCast::AutoReset::AutoReset(bool useDot)
 LexicalCast::AutoReset::~AutoReset()
 {
   instance().resetLocal();
-  instance()._isTime = false;
+  instance()._isFormattedTime = false;
   instance()._timeFormat.clear();
 }
 
@@ -143,7 +143,7 @@ LexicalCast& LexicalCast::instance()
 }
 
 //-------------------------------------------------------------------------------------------
-LexicalCast::LexicalCast() : _isTime(false), _timeWithDate(false)
+LexicalCast::LexicalCast() : _isFormattedTime(false), _timeWithDate(false)
 {
 }
 
@@ -189,7 +189,7 @@ char LexicalCast::localSeparator() const
 void LexicalCast::setTimeFormat(const QString& format)
 {
   _timeFormat = format.trimmed(); // remove space at start/end
-  _isTime = !format.isEmpty();
+  _isFormattedTime = !format.isEmpty();
   _timeWithDate = format.contains("d") || format.contains("M") || format.contains("y");
   _timeFormatLength = _timeFormat.size();
 } 

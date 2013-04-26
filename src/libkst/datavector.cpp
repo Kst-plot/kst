@@ -830,5 +830,9 @@ const DataVector::DataInfo DataVector::dataInfo(const QString& field) const
   return info;
 }
 
+bool DataVector::isTime() const {
+  return dataSource()->isTime(_field);
+}
+
 }
 // vim: ts=2 sw=2 et

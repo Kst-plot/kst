@@ -46,7 +46,7 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
 
   setLayout(layout);
 
-  setMaximumSize(QSize(1024, 768));
+  setMaximumSize(QSize(1280, 1024));
   resize(minimumSizeHint());
 }
 

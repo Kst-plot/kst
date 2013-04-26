@@ -137,6 +137,9 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     //implemented in Vector too but must not be virtual.
     QByteArray scriptInterface(QList<QByteArray> &command);
 
+    /** does the vector represent time? */
+    virtual bool isTime() const;
+
   protected:
     DataVector(ObjectStore *store);
     virtual ~DataVector();
