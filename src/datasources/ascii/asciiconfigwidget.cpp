@@ -43,6 +43,11 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
   _showBeginning->setMinimumSize(640, 100);
 
+  QObject::connect(_ctime, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
+  QObject::connect(_seconds, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
+  QObject::connect(_indexFreq, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
+  QObject::connect(_formattedString, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
+
 }
 
 
@@ -77,6 +82,27 @@ void AsciiConfigWidgetInternal::showBeginning()
   _labelBeginning->setText(QString("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
 }
 
+void AsciiConfigWidgetInternal::interpretationChanged(bool enabled) {
+  if (enabled) {
+    if (_ctime->isChecked()) {
+      _offsetDateTime->setEnabled(false);
+      _offsetFileDate->setEnabled(false);
+      _offsetRelative->setEnabled(true);
+      _offsetRelative->setChecked(true);
+    } else if (_formattedString->isChecked()) {
+      _offsetDateTime->setEnabled(true);
+      _offsetFileDate->setEnabled(true);
+      _offsetRelative->setEnabled(true);
+    } else {
+      _offsetDateTime->setEnabled(true);
+      _offsetFileDate->setEnabled(true);
+      _offsetRelative->setEnabled(false);
+      if (_offsetRelative->isChecked()) {
+        _offsetDateTime->setChecked(true);
+      }
+    }
+  }
+}
 
 AsciiSourceConfig AsciiConfigWidgetInternal::config()
 {
@@ -131,7 +157,6 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   config._useThreads =_useThreads->isChecked();
   config._timeAsciiFormatString = _timeAsciiFormatString->text();
   config._dataRate = _dataRate->value();
-  config._useOffset = _useOffset->isChecked();
   config._offsetDateTime = _offsetDateTime->isChecked();
   config._offsetFileDate = _offsetFileDate->isChecked();
   config._offsetRelative = _offsetRelative->isChecked();
@@ -179,7 +204,6 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   _useThreads->setChecked(config._useThreads);
   _timeAsciiFormatString->setText(config._timeAsciiFormatString);
   _dataRate->setValue(config._dataRate.value());
-  _useOffset->setChecked(config._useOffset.value());
   _offsetDateTime->setChecked(config._offsetDateTime.value());
   _offsetFileDate->setChecked(config._offsetFileDate.value());
   _offsetRelative->setChecked(config._offsetRelative.value());

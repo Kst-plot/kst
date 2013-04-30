@@ -61,8 +61,6 @@ const char AsciiSourceConfig::Key_useThreads[] = "Use threads when parsing Ascii
 const char AsciiSourceConfig::Tag_useThreads[] = "useThreads";
 const char AsciiSourceConfig::Key_dataRate[] = "Data Rate for index";
 const char AsciiSourceConfig::Tag_dataRate[] = "dataRate";
-const char AsciiSourceConfig::Key_useOffset[] = "Use time offset for interpreted time fields";
-const char AsciiSourceConfig::Tag_useOffset[] = "useOffset";
 const char AsciiSourceConfig::Key_offsetDateTime[] = "use an explicit date/time offset";
 const char AsciiSourceConfig::Tag_offsetDateTime[] = "offsetDateTime";
 const char AsciiSourceConfig::Key_offsetFileDate[] = "use file time/date as offset";
@@ -94,7 +92,6 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _limitFileBufferSize(128),
   _useThreads(false),
   _dataRate(1.0),
-  _useOffset(false),
   _offsetDateTime(false),
   _offsetFileDate(false),
   _offsetRelative(true),
@@ -125,7 +122,6 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
   _useThreads >> cfg;
   _timeAsciiFormatString >> cfg;
   _dataRate >> cfg;
-  _useOffset >> cfg;
   _offsetDateTime >> cfg;
   _offsetFileDate >> cfg;
   _offsetRelative >> cfg;
@@ -167,7 +163,6 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _useThreads << cfg;
   _timeAsciiFormatString << cfg;
   _dataRate << cfg;
-  _useOffset << cfg;
   _offsetDateTime << cfg;
   _offsetFileDate << cfg;
   _offsetRelative << cfg;
@@ -216,7 +211,6 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _useThreads >> s;
   _timeAsciiFormatString >> s;
   _dataRate >> s;
-  _useOffset >> s;
   _offsetDateTime >> s;
   _offsetFileDate >> s;
   _offsetRelative >> s;
@@ -247,7 +241,6 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _useThreads << attributes;
   _timeAsciiFormatString << attributes;
   _dataRate << attributes;
-  _useOffset << attributes;
   _offsetDateTime << attributes;
   _offsetFileDate << attributes;
   _offsetRelative << attributes;
@@ -281,7 +274,6 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _useThreads << elem;
         _timeAsciiFormatString << elem;
         _dataRate << elem;
-        _useOffset << elem;
         _offsetDateTime << elem;
         _offsetFileDate << elem;
         _offsetRelative << elem;
@@ -315,7 +307,6 @@ bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
       _useThreads == rhs._useThreads &&
       _timeAsciiFormatString == rhs._timeAsciiFormatString &&
       _dataRate == rhs._dataRate &&
-      _useOffset == rhs._useOffset &&
       _offsetDateTime == rhs._offsetDateTime &&
       _offsetFileDate == rhs._offsetFileDate &&
       _offsetRelative == rhs._offsetRelative &&
@@ -347,7 +338,6 @@ bool AsciiSourceConfig::isUdateNecessary(const AsciiSourceConfig& rhs) const
       _unitsLine != rhs._unitsLine ||
       _timeAsciiFormatString != rhs._timeAsciiFormatString ||
       _dataRate != rhs._dataRate ||
-      _useOffset != rhs._useOffset ||
       _offsetDateTime != rhs._offsetDateTime ||
       _offsetFileDate != rhs._offsetFileDate ||
       _offsetRelative != rhs._offsetRelative ||

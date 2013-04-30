@@ -79,6 +79,7 @@ class AsciiSource : public Kst::DataSource
     bool _haveHeader;
     bool _fieldListComplete;
     bool _haveWarned;
+    double _fileCreationTime_t;
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;

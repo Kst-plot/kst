@@ -23,6 +23,7 @@
 #include "measuretime.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QThread>
 #include <QtConcurrentRun>
@@ -187,7 +188,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     force_update = false;
   }
   _fileSize = file.size();
-  
+  _fileCreationTime_t = QFileInfo(file).created().toTime_t();
+
   bool new_data = _reader.findDataRows(read_completely, file, _fileSize);
   
   return (!new_data && !force_update ? NoChange : Updated);
@@ -226,6 +228,35 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
   int read = tryReadField(v, field, s, n);
+
+  if (isTime(field)) {
+    if (_config._indexInterpretation == AsciiSourceConfig::FixedRate ) {
+      double rate = _config._dataRate.value();
+      if (rate>0) {
+        rate = 1.0/rate;
+      } else {
+        rate = 1.0;
+      }
+
+      for (int i=0; i<read; i++) {
+        v[i] *= rate;
+      }
+    }
+
+    double dT = 0.0;
+    if (_config._offsetDateTime.value()) {
+      dT = (double)_config._dateTimeOffset.value().toTime_t();
+    } else if (_config._offsetRelative.value()) {
+      dT = _config._relativeOffset.value();
+    } else if (_config._offsetFileDate.value()) {
+      dT = _fileCreationTime_t;
+    }
+
+    for (int i=0; i<read; i++) {
+      v[i] += dT;
+    }
+
+  }
 
   QString msg("%1 because not enough memory is available.\nTry setting a file buffer limit in the configuration options.");
   if (read == n) {

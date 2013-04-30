@@ -60,8 +60,6 @@ class AsciiSourceConfig {
     static const char Tag_useThreads[];
     static const char Key_dataRate[];
     static const char Tag_dataRate[];
-    static const char Key_useOffset[];
-    static const char Tag_useOffset[];
     static const char Key_offsetDateTime[];
     static const char Tag_offsetDateTime[];
     static const char Key_offsetFileDate[];
@@ -110,7 +108,6 @@ class AsciiSourceConfig {
     NamedParameter<int, Key_limitFileBufferSize, Tag_limitFileBufferSize> _limitFileBufferSize;
     NamedParameter<int, Key_useThreads, Tag_useThreads> _useThreads;
     NamedParameter<double, Key_dataRate, Tag_dataRate> _dataRate;
-    NamedParameter<bool, Key_useOffset, Tag_useOffset> _useOffset;
     NamedParameter<bool, Key_offsetDateTime, Tag_offsetDateTime> _offsetDateTime;
     NamedParameter<bool, Key_offsetFileDate, Tag_offsetFileDate> _offsetFileDate;
     NamedParameter<bool, Key_offsetRelative, Tag_offsetRelative> _offsetRelative;
