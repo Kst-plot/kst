@@ -3,10 +3,11 @@
 # Travis-CI Build for kst2
 # see travis-ci.org for details
 
-language: erlang
+language: cpp
 
       
 install:
+ - sudo apt-get update -qq
  - sudo apt-get remove cmake mingw32-binutils mingw32-runtime mingw32 libqt4-dev qt4-qmake mingw-w64 g++-mingw-w64 gcc-mingw-w64
  - sudo apt-get install m4 bison flex
  - sudo apt-get install libc6:i386 libgcc1:i386 gcc-4.6-base:i386 libstdc++5:i386 libstdc++6:i386 # cmake is 32bit
