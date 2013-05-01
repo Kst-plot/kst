@@ -36,7 +36,7 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
   QString pluginName;
   QString descriptiveName;
   BasicPluginPtr dataObject;
-  bool validTag;
+  //bool validTag;
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
     if (xml.isStartElement()) {
@@ -113,7 +113,7 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
             dataObject->setOutputString(type, tagName);
           } else if (xml.isEndElement()) {
             if (xml.name().toString() != expectedEnd) {
-              validTag = false;
+              //validTag = false;
               break;
             }
           }
