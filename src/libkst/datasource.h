@@ -29,7 +29,7 @@
 #include "datamatrix.h"
 
 #include <QRunnable>
-#include <QWidget>
+#include <QDialog>
 #include <QMap>
 
 class QSettings;
@@ -358,6 +358,7 @@ class KSTCORE_EXPORT DataSourceConfigWidget : public QWidget
     // and the user has not entered invalid parameters.
     virtual bool isOkAcceptabe() const;
 
+    virtual void setDialogParent(QDialog* parent) { setParent(parent); }
 
   public slots:
     virtual void load() = 0;

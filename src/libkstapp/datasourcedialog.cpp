@@ -35,7 +35,7 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
 
   _dataSource->unlock();
 
-  _configWidget->setParent(this);
+  _configWidget->setDialogParent(this);
   layout->addWidget(_configWidget);
 
   _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

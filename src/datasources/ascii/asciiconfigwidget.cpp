@@ -38,18 +38,22 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   bgroup->addButton(_custom, AsciiSourceConfig::Custom);
   bgroup->addButton(_fixed, AsciiSourceConfig::Fixed);
 
-  _showBeginning->setFont(  QFont("Courier"));
+  _showBeginning->setFont(QFont("Courier"));
   _showBeginning->setReadOnly(true);
   _showBeginning->setLineWrapMode(QPlainTextEdit::NoWrap);
   _showBeginning->setMinimumSize(640, 100);
+
+  _previewWidget.setFont(QFont("Courier"));
+  _previewWidget.setReadOnly(true);
+  _previewWidget.setLineWrapMode(QPlainTextEdit::NoWrap);
+  _previewWidget.setMinimumSize(640, 300);
 
   QObject::connect(_ctime, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_seconds, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_indexFreq, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_formattedString, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
-
+  QObject::connect(_previewButton, SIGNAL(clicked()), this, SLOT(showPreviewWindow()));
 }
-
 
 QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
 {
@@ -63,6 +67,20 @@ QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
 
 void AsciiConfigWidgetInternal::showBeginning()
 {
+  showBeginning(_showBeginning, 100);
+  _labelBeginning->setText(QString("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
+}
+
+
+void AsciiConfigWidgetInternal::showPreviewWindow()
+{
+  showBeginning(&_previewWidget, 1000);
+  _previewWidget.setWindowTitle(_filename);
+  _previewWidget.show();
+}
+
+void AsciiConfigWidgetInternal::showBeginning(QPlainTextEdit* widget, int numberOfLines)
+{
   QFile file(_filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     return;
@@ -71,15 +89,13 @@ void AsciiConfigWidgetInternal::showBeginning()
   int lines_read = 1;
   QTextStream in(&file);
   QStringList lines;
-  while (!in.atEnd() && lines_read <= 100) {
+  while (!in.atEnd() && lines_read <= numberOfLines) {
     lines << QString("%1: ").arg(lines_read, 3) + readLine(in, 1000);
     lines_read++;
   }
 
-  _showBeginning->setPlainText(lines.join("\n"));
-  _showBeginning->moveCursor(QTextCursor::Start);
-
-  _labelBeginning->setText(QString("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
+  widget->setPlainText(lines.join("\n"));
+  widget->moveCursor(QTextCursor::Start);
 }
 
 void AsciiConfigWidgetInternal::interpretationChanged(bool enabled) {
@@ -225,6 +241,12 @@ AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget
 AsciiConfigWidget::~AsciiConfigWidget() {
 }
 
+
+void AsciiConfigWidget::setDialogParent(QDialog* parent)
+{
+  parent->setWindowModality(Qt::WindowModal);
+  DataSourceConfigWidget::setDialogParent(parent);
+}
 
 void AsciiConfigWidget::setFilename(const QString& filename)
 {

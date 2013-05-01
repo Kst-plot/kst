@@ -33,6 +33,7 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
 
   private Q_SLOTS:
     void showBeginning();
+    void showPreviewWindow();
 
   protected Q_SLOTS:
     void interpretationChanged(bool enabled);
@@ -40,7 +41,9 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
   private:
     const int _index_offset;
     QString _filename;
+    QPlainTextEdit _previewWidget;
     QString readLine(QTextStream& in, int maxLength);
+    void showBeginning(QPlainTextEdit* widget, int numberOfLines);
 };
 
 
@@ -53,6 +56,7 @@ class AsciiConfigWidget : public Kst::DataSourceConfigWidget
     void load();
     void save();
     bool isOkAcceptabe() const;
+    void setDialogParent(QDialog* parent);
 
     void setFilename(const QString& filename);
 

@@ -34,9 +34,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="_previewButton">
        <property name="text">
-        <string>Preview First 100 Lines in New Window</string>
+        <string>Preview First 1000 Lines in New Window</string>
        </property>
       </widget>
      </item>
