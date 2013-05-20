@@ -499,7 +499,7 @@
    <item row="5" column="0">
     <widget class="QGroupBox" name="_interpret">
      <property name="title">
-      <string>Interpret field as time</string>
+      <string>Date/Time Interpretation</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -507,165 +507,192 @@
      <property name="checked">
       <bool>false</bool>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0" colspan="3">
-       <layout class="QHBoxLayout" name="horizontalLayout_8">
-        <item>
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Interpret field</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="_indexVector">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="_indexTypeLabel">
-          <property name="text">
-           <string>as:</string>
-          </property>
-          <property name="wordWrap">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item row="1" column="0">
-       <widget class="QRadioButton" name="_ctime">
-        <property name="text">
-         <string>C Time</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Interpret field</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="_indexVector">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>1</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="_indexTypeLabel">
+             <property name="text">
+              <string>as:</string>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QRadioButton" name="_ctime">
+             <property name="text">
+              <string>C Time</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="_seconds">
+             <property name="text">
+              <string>Seconds</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="_indexFreq">
+             <property name="text">
+              <string>Index with frequency</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="_dataRate">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>10000000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.001000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Hz</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>   d=day, M=month, Y=year, h=hour, m=minute, s=second, z=millisecond</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QRadioButton" name="_formattedString">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Formatted String.  Format:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="_timeAsciiFormatString">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>200</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Refer to the documentation of QDateTime for details.&lt;br&gt;You can use a combination of y,M,d for dates and h,m,s,z for times (z for milliseconds).&lt;br&gt;Space is allowed between date and time columns, but you must select the first column as X vector.</string>
+               </property>
+               <property name="text">
+                <string>hh:mm:ss.zzz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+        <zorder></zorder>
+        <zorder>_indexFreq</zorder>
+        <zorder>_ctime</zorder>
+        <zorder>_seconds</zorder>
+        <zorder>_indexFreq</zorder>
+        <zorder>_dataRate</zorder>
+        <zorder>label_7</zorder>
+        <zorder></zorder>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QRadioButton" name="_seconds">
-        <property name="text">
-         <string>Seconds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <widget class="QRadioButton" name="_indexFreq">
-          <property name="text">
-           <string>Index with frequency</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="_dataRate">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <double>10000000.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Hz</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0" colspan="3">
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>   d=day, M=month, Y=year, h=hour, m=minute, s=second, z=millisecond</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QRadioButton" name="_formattedString">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Formatted String.  Format:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="_timeAsciiFormatString">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>200</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>Refer to the documentation of QDateTime for details.&lt;br&gt;You can use a combination of y,M,d for dates and h,m,s,z for times (z for milliseconds).&lt;br&gt;Space is allowed between date and time columns, but you must select the first column as X vector.</string>
-            </property>
-            <property name="text">
-             <string>hh:mm:ss.zzz</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="3" rowspan="3">
+      <item>
        <widget class="QGroupBox" name="_useOffset">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -777,6 +804,8 @@
        </widget>
       </item>
      </layout>
+     <zorder>groupBox</zorder>
+     <zorder>_useOffset</zorder>
     </widget>
    </item>
   </layout>
@@ -913,22 +942,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>_formattedString</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_timeAsciiFormatString</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>167</x>
-     <y>479</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>234</x>
-     <y>484</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>_limitFileBuffer</sender>
    <signal>toggled(bool)</signal>
    <receiver>_limitFileBufferSize</receiver>
@@ -957,38 +970,6 @@
     <hint type="destinationlabel">
      <x>915</x>
      <y>214</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_indexFreq</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_7</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>266</x>
-     <y>444</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>475</x>
-     <y>441</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_indexFreq</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>_dataRate</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>260</x>
-     <y>451</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>385</x>
-     <y>446</y>
     </hint>
    </hints>
   </connection>
