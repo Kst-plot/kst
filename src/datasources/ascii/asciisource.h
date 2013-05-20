@@ -68,7 +68,9 @@ class AsciiSource : public Kst::DataSource
 
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
-  private:
+    QString timeFormat() const;
+
+private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
 

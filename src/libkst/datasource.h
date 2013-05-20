@@ -124,6 +124,7 @@ class KSTCORE_EXPORT DataSource : public Object
     /* if you use it)                                           */
     /************************************************************/
     static bool supportsTime(const QString& plugin, const QString& type = QString());
+    virtual QString timeFormat() const; // Used by the data wizard to set X axis display format
 
     /** Does it support time conversion of sample numbers, in general? */
     virtual bool supportsTimeConversions() const;

@@ -689,6 +689,17 @@ bool AsciiSource::isTime(const QString &field) const
 }
 
 //-------------------------------------------------------------------------------------------
+QString AsciiSource::timeFormat() const
+{
+  if (_config._indexInterpretation.value() != AsciiSourceConfig::FormattedTime) {
+    return QString("");
+  }
+  else {
+    return _config._timeAsciiFormatString;
+  }
+}
+
+//-------------------------------------------------------------------------------------------
 Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
 {
   // here we could do more sophisticated stuff when generating a list of curves

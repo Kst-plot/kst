@@ -1224,6 +1224,14 @@ void DataWizard::finished() {
     foreach (PlotItem* plot, plotList) {
       if (xAxisIsTime) {
         plot->xAxis()->setAxisInterpret(true);
+        // For ASCII, we can get the time/date format string from the datasource config
+        DataSourcePtr ds = _pageDataSource->dataSource();
+        if (ds->typeString() == "ASCII file") {
+          if (!ds->timeFormat().isEmpty()) { // Only set it when we use a specific ASCII format
+            plot->xAxis()->setAxisDisplayFormatString(ds->timeFormat());
+            plot->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTDATETIME_FORMAT);
+          }
+        }
       }
       plot->update();
       plot->view()->appendToLayout(layout_type, plot, num_columns);

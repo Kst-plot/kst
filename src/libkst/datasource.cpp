@@ -323,6 +323,9 @@ bool DataSource::supportsTimeConversions() const {
   return false;
 }
 
+QString DataSource::timeFormat() const {
+  return QString();
+}
 
 int DataSource::sampleForTime(const QDateTime& time, bool *ok) {
   Q_UNUSED(time)
