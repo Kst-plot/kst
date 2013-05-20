@@ -1005,6 +1005,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_formattedString</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_timeAsciiFormatString</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>480</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>214</x>
+     <y>488</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>interpretationChanged()</slot>
