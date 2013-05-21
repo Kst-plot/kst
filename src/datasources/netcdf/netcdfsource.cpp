@@ -496,20 +496,35 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
   bool oneSample = n < 0;
   int recSize = var->rec_size();
-
+  double add_offset = 1.0, scale_factor = 1.0;
   switch (dataType) {
     case ncShort:
       {
+        // Check for special attributes add_offset and scale_factor indicating the use of the convention described in
+        // <http://www.unidata.ucar.edu/software/netcdf/docs/netcdf/Attribute-Conventions.html>
+        bool packed = iv->metaScalars(field).contains("add_offset") && iv->metaScalars(field).contains("scale_factor");
+        if (packed) {
+          // Get the values into local vars
+            add_offset = iv->metaScalars(field)["add_offset"];
+            scale_factor = iv->metaScalars(field)["scale_factor"];
+        }
         if (oneSample) {
           record = var->get_rec(s);
-          v[0] = record->as_short(0);
+          v[0] = packed ? record->as_short(0)*scale_factor+add_offset : record->as_short(0);
           delete record;
         } else {
-          for (int i = 0; i < n; i++) {
-            record = var->get_rec(i+s);
-            for (int j = 0; j < recSize; j++) {
-              v[i*recSize + j] = record->as_short(j);
-            }
+            for (int i = 0; i < n; i++) {
+              record = var->get_rec(i+s);
+              if (packed) {
+                for (int j = 0; j < recSize; j++) {
+                  v[i*recSize + j] = record->as_short(j)*scale_factor+add_offset;
+                }
+              }
+              else {
+                for (int j = 0; j < recSize; j++) {
+                  v[i*recSize + j] = record->as_short(j);
+                }
+              }
             delete record;
           }
         }
