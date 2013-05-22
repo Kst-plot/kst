@@ -37,6 +37,7 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
 
   protected Q_SLOTS:
     void interpretationChanged(bool enabled);
+    void testAsciiFormatString(QString format);
 
   private:
     const int _index_offset;
@@ -49,6 +50,8 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
 
 class AsciiConfigWidget : public Kst::DataSourceConfigWidget
 {
+  Q_OBJECT
+
   public:
     AsciiConfigWidget(QSettings&);
     ~AsciiConfigWidget();
@@ -62,6 +65,11 @@ class AsciiConfigWidget : public Kst::DataSourceConfigWidget
 
     AsciiConfigWidgetInternal *_ac;
     AsciiSourceConfig _oldConfig;
+
+  public Q_SLOTS:
+    void updateIndexVector();
+    virtual void cancel();
+
 };
 
 

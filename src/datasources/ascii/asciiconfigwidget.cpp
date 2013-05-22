@@ -53,6 +53,11 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   QObject::connect(_indexFreq, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_formattedString, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_previewButton, SIGNAL(clicked()), this, SLOT(showPreviewWindow()));
+  //QObject::connect(_timeAsciiFormatString, SIGNAL(textEdited(QString)), this, SLOT(testAsciiFormatString(QString)));
+}
+
+void AsciiConfigWidgetInternal::testAsciiFormatString(QString format) {
+  // FIXME: add a format validator
 }
 
 QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
@@ -235,6 +240,8 @@ AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget
   layout->addWidget(_ac, 0, 0);
   layout->activate();
   _oldConfig = _ac->config();
+  connect(_ac->_readFields, SIGNAL(clicked()), this, SLOT(updateIndexVector()));
+  connect(_ac->_fieldsLine, SIGNAL(valueChanged(int)), this, SLOT(updateIndexVector()));
 }
 
 
@@ -251,6 +258,37 @@ void AsciiConfigWidget::setDialogParent(QDialog* parent)
 void AsciiConfigWidget::setFilename(const QString& filename)
 {
   _ac->setFilename(filename);
+}
+
+void AsciiConfigWidget::updateIndexVector() {
+  save();
+  _ac->_indexVector->clear();
+
+  if (hasInstance()) {
+    Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
+    _ac->_indexVector->addItems(src->vector().list());
+  }
+}
+
+
+void AsciiConfigWidget::cancel() {
+  // revert to _oldConfig
+  _oldConfig.saveGroup(settings());
+  _ac->setConfig(_oldConfig);
+
+  if (hasInstance()) {
+    Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
+    _ac->config().saveGroup(settings(), src->fileName());
+
+    // Update the instance from our new settings
+    if (src->reusable()) {
+      src->_config.readGroup(settings(), src->fileName());
+      if (_ac->config().isUdateNecessary(_oldConfig)) {
+        src->reset();
+        src->internalDataSourceUpdate();
+      }
+    }
+  }
 }
 
 

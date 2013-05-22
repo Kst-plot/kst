@@ -28,6 +28,7 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
   _dataSource->readLock();
   _configWidget = _dataSource->configWidget();
   connect(this, SIGNAL(ok()), _configWidget, SLOT(save()));
+  connect(this, SIGNAL(cancel()), _configWidget, SLOT(cancel()));
 
   if (mode == DataDialog::Edit) {
     connect(this, SIGNAL(ok()), this, SLOT(disableReuse()));

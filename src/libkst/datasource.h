@@ -364,6 +364,7 @@ class KSTCORE_EXPORT DataSourceConfigWidget : public QWidget
   public slots:
     virtual void load() = 0;
     virtual void save() = 0;
+    virtual void cancel() {return;}
 
   private:
     DataSourcePtr _instance;
