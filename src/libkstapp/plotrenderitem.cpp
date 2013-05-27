@@ -486,7 +486,14 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
     view()->setCursor(Qt::SizeHorCursor);
   } else {
     view()->setCursor(Qt::CrossCursor);
-    resetSelectionRect();
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->resetSelectionRect();
+      }
+    } else {
+      resetSelectionRect();
+    }
   }
   ViewItem::keyReleaseEvent(event);
 }
@@ -553,12 +560,37 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   }
 
   const QPointF p = event->pos();
+
+  double y = (p.y() - rect().bottom())/(rect().top()-rect().bottom())*(plotItem()->yMax()-plotItem()->yMin())+plotItem()->yMin();
+  y = qMin(y, plotItem()->yMax());
+  y = qMax(y, plotItem()->yMin());
+
+  double x = (p.x() - rect().left())/(rect().right()-rect().left())*(plotItem()->xMax()-plotItem()->xMin())+plotItem()->xMin();
+  x = qMin(x, plotItem()->xMax());
+  x = qMax(x, plotItem()->xMin());
+
+
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     view()->setCursor(Qt::SizeVerCursor);
-    _selectionRect.setTo(QPointF(rect().right(), p.y()));
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->dragYZoomMouseCursor(y);
+      }
+    } else {
+      dragYZoomMouseCursor(y);
+    }
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
-    _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->dragXZoomMouseCursor(x);
+      }
+    } else {
+      dragXZoomMouseCursor(x);
+    }
+
   } else {
     _selectionRect.setTo(p);
   }
@@ -627,8 +659,15 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
   updateCursor(event->pos());
   const QRectF projection = plotItem()->mapToProjection(_selectionRect.rect());
-  _selectionRect.reset();
 
+  if (plotItem()->isTiedZoom()) {
+    QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->_selectionRect.reset();
+    }
+  } else {
+    _selectionRect.reset();
+  }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     plotItem()->zoomYRange(projection);
@@ -637,6 +676,58 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   } else {
     plotItem()->zoomFixedExpression(projection);
   }
+}
+
+void PlotRenderItem::hoverYZoomMouseCursor(double y) {
+  double py;
+
+  py = (y-plotItem()->yMin())/(plotItem()->yMax() - plotItem()->yMin())*(rect().top()-rect().bottom()) + rect().bottom();
+  py = qMin(py, rect().bottom());
+  py = qMax(py, rect().top());
+
+  _selectionRect.setFrom(QPointF(rect().left(), py));
+  _selectionRect.setTo(QPointF(rect().right(), py));
+
+  //qDebug() << "tied: " << plotItem()->isTiedZoom() << PlotItemManager::self()->tiedZoomPlotsForView(view()).size();
+  update(); //FIXME should optimize instead of redrawing entire curve!
+
+}
+
+void PlotRenderItem::hoverXZoomMouseCursor(double x) {
+  double px;
+
+  px = (x-plotItem()->xMin())/(plotItem()->xMax() - plotItem()->xMin())*(rect().right()-rect().left()) + rect().left();
+  px = qMax(px, rect().left());
+  px = qMin(px, rect().right());
+
+
+  _selectionRect.setFrom(QPointF(px, rect().top()));
+  _selectionRect.setTo(QPointF(px, rect().bottom()));
+
+  update(); //FIXME should optimize instead of redrawing entire curve!
+}
+
+void PlotRenderItem::dragYZoomMouseCursor(double y) {
+  double py;
+
+  py = (y-plotItem()->yMin())/(plotItem()->yMax() - plotItem()->yMin())*(rect().top()-rect().bottom()) + rect().bottom();
+  py = qMin(py, rect().bottom());
+  py = qMax(py, rect().top());
+
+  _selectionRect.setTo(QPointF(rect().right(), py));
+  update(); //FIXME should optimize instead of redrawing entire curve!
+
+}
+
+void PlotRenderItem::dragXZoomMouseCursor(double x) {
+  double px;
+
+  px = (x-plotItem()->xMin())/(plotItem()->xMax() - plotItem()->xMin())*(rect().right()-rect().left()) + rect().left();
+  px = qMax(px, rect().left());
+  px = qMin(px, rect().right());
+
+  _selectionRect.setTo(QPointF(px, rect().bottom()));
+  update(); //FIXME should optimize instead of redrawing entire curve!
 }
 
 //FIXME: store event or pos, and re-call this when window is redrawn
@@ -650,22 +741,44 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   }
 
   QPointF p = event->pos();
+
+  double y = (p.y() - rect().bottom())/(rect().top()-rect().bottom())*(plotItem()->yMax()-plotItem()->yMin())+plotItem()->yMin();
+  double x = (p.x() - rect().left())/(rect().right()-rect().left())*(plotItem()->xMax()-plotItem()->xMin())+plotItem()->xMin();
+
   _hoverPos = p;
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     _lastPos = p;
     view()->setCursor(Qt::SizeVerCursor);
-    _selectionRect.setFrom(QPointF(rect().left(), p.y()));
-    _selectionRect.setTo(QPointF(rect().right(), p.y()));
-    update(); //FIXME should optimize instead of redrawing entire curve!
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->hoverYZoomMouseCursor(y);
+      }
+    } else {
+      hoverYZoomMouseCursor(y);
+    }
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _lastPos = p;
     view()->setCursor(Qt::SizeHorCursor);
-    _selectionRect.setFrom(QPointF(p.x(), rect().top()));
-    _selectionRect.setTo(QPointF(p.x(), rect().bottom()));
-    update(); //FIXME should optimize instead of redrawing entire curve!
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->hoverXZoomMouseCursor(x);
+      }
+    } else {
+      hoverXZoomMouseCursor(x);
+    }
   } else {
-    resetSelectionRect();
+    if (plotItem()->isTiedZoom()) {
+      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+      foreach (PlotItem *plot, plots) {
+        plot->renderItem()->resetSelectionRect();
+      }
+    } else {
+      resetSelectionRect();
+    }
+
     updateCursor(p);
   }
 

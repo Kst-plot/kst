@@ -71,6 +71,11 @@ class PlotRenderItem : public ViewItem
 
     virtual bool tryShortcut(const QString &keySequence);
 
+    void hoverYZoomMouseCursor(double y);
+    void hoverXZoomMouseCursor(double x);
+
+    void dragYZoomMouseCursor(double y);
+    void dragXZoomMouseCursor(double x);
   public Q_SLOTS:
     virtual void edit();
     virtual void raise();
