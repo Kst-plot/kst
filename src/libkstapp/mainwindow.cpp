@@ -272,10 +272,10 @@ void MainWindow::saveAs() {
   QDir::setCurrent(kstfiledir);
   QString currentP = QDir::currentPath();
   _doc->save(fn);
-    QDir::setCurrent(restorePath);
-    setWindowTitle("Kst - " + fn);
-    updateRecentKstFiles(fn);
-  }
+  QDir::setCurrent(restorePath);
+  setWindowTitle("Kst - " + fn);
+  updateRecentKstFiles(fn);
+}
 
 void MainWindow::newDoc(bool force) {
   bool clearApproved = false;
@@ -444,9 +444,6 @@ bool MainWindow::initFromCommandLine() {
 }
 
 void MainWindow::openFile(const QString &file) {
-  QDir::setCurrent(file.left(file.lastIndexOf('/')) + '/');
-  QDir::setCurrent(file.left(file.lastIndexOf('/')));
-
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
   newDoc(true); // Does all the init stuff, but does not ask for override as it's supposed to be done elsewhere
   bool ok = _doc->open(file);
@@ -464,8 +461,7 @@ void MainWindow::openFile(const QString &file) {
 }
 
 
-void MainWindow::exportGraphicsFile(
-    const QString &filename, const QString &format, int width, int height, int display) {
+void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
   for (int i_view = 0; i_view<n_views; i_view++) {
@@ -475,7 +471,7 @@ void MainWindow::exportGraphicsFile(
       QSize sizeWindow(view->geometry().size());
       size.setWidth(width);
       size.setHeight((int)((qreal)width * (qreal)sizeWindow.height() / (qreal)sizeWindow.width()));
-    } else if (display == 1){ // Height set by user, maintain aspect ratio
+    } else if (display == 1) { // Height set by user, maintain aspect ratio
       QSize sizeWindow(view->geometry().size());
       size.setHeight(height);
       size.setWidth((int)((qreal)height * (qreal)sizeWindow.width() / (qreal)sizeWindow.height()));

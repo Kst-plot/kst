@@ -232,7 +232,8 @@ bool Document::open(const QString& file) {
     _lastError = QObject::tr("File could not be opened for reading.");
     return false;
   }
-
+  // Set the application dir to the current dir to be able to load data using the "fileRelative" attribute
+  QDir::setCurrent(file.left(file.lastIndexOf('/')) + '/');
   _fileName = file;
 
   // If we move this into the <graphics> block then we could, if desired, open
