@@ -45,6 +45,7 @@ kst_option(string ""  all qt5               "Use Qt5")
 kst_option(bool   ON  all qt5base_only      "Only use Qt5 features available in qtbase")
 kst_option(bool   ON  all opengl            "Use OpenGL")
 kst_option(bool   OFF all clang             "Use Clang compiler")
+kst_option(bool   OFF all sanitize          "Use Clang's sanitizers")
 
 message(STATUS)
 
@@ -60,6 +61,13 @@ if(kst_release)
 	set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 else()
 	set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
+
+if(kst_sanitize)
+    include(Clang-sanitize)
+    set(clang_flags "${clang_flags}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${clang_flags}")
 endif()
 
 
