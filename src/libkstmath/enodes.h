@@ -132,8 +132,8 @@ namespace Equations {
       void *_f;
 
     private:
-      int _inputScalarCnt, _inputVectorCnt, _inputStringCnt;
-      int _inPid, _outputScalarCnt, _outputVectorCnt, _outputStringCnt;
+      int _inputVectorCnt;
+      int _inPid, _outputVectorCnt;
       int *_inArrayLens, *_outArrayLens;
       double *_inScalars, *_outScalars;
       double **_inVectors, **_outVectors;

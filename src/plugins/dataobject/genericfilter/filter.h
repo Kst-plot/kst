@@ -59,7 +59,7 @@ template<class S> filter<S>::filter(polynom<S>& Ns, polynom<S>& Ds, double dT)
     // z+1
     polynom<S> zp1(1); zp1[1]=1.0; zp1[0]=1.0;
     // (z+1)^(n-i)
-    for (int j=i+1; j<=n; j++) pozp1 = pozp1 * zp1;
+    for (int j=i+1; j<=n; j++) pozp1 = (pozp1 * zp1);
     polynom<S> dNz(0); dNz[0]=Ns[i];
     dNz = dNz * pozp1 * potzm1odt;
     Nz = Nz + dNz;

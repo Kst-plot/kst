@@ -339,11 +339,11 @@ QString FitSinusoidWeightedSource::parameterName(int index) const {
       break;
     case 1:
       parameter = "cos(%1 2PI x/P)";
-      parameter.arg((index + 1 ) / 2);
+      parameter = parameter.arg((index + 1 ) / 2);
       break;
     case 2:
       parameter = "-sin(%1 2PI x/P)";
-      parameter.arg((index + 0 ) / 2);
+      parameter = parameter.arg((index + 0 ) / 2);
       break;
   }
 
