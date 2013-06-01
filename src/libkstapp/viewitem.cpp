@@ -1934,21 +1934,23 @@ void ViewItem::updateDataRelativeRect(bool force) {
 void ViewItem::updateRelativeSize(bool force_data) {
   if (parentViewItem()) {
     QPointF P;
-    _parentRelativeHeight = (height() / parentViewItem()->height());
-    _parentRelativeWidth = (width() / parentViewItem()->width());
+    int parentHeight = parentViewItem()->height() == 0 ? 1 : parentViewItem()->height();
+    int parentWidth  = parentViewItem()->width() == 0 ? 1 : parentViewItem()->height();
+    _parentRelativeHeight = (height() / parentHeight);
+    _parentRelativeWidth = (width() / parentWidth);
 
     P =  mapToParent(rect().center()) - parentViewItem()->rect().topLeft();
-    _parentRelativeCenter =  QPointF(P.x() / parentViewItem()->width(),
-                                     P.y() / parentViewItem()->height());
+    _parentRelativeCenter =  QPointF(P.x() / parentWidth,
+                                     P.y() / parentHeight);
     P =  mapToParent(rect().topLeft()) - parentViewItem()->rect().topLeft();
-    _parentRelativePosition =  QPointF(P.x() / parentViewItem()->width(),
-                                       P.y() / parentViewItem()->height());
+    _parentRelativePosition =  QPointF(P.x() / parentWidth,
+                                       P.y() / parentHeight);
     P =  mapToParent(rect().bottomLeft()) - parentViewItem()->rect().topLeft();
-    _parentRelativeLeft = QPointF(P.x() / parentViewItem()->width(),
-                                      P.y() / parentViewItem()->height());
+    _parentRelativeLeft = QPointF(P.x() / parentWidth,
+                                      P.y() / parentHeight);
     P =  mapToParent(rect().bottomRight()) - parentViewItem()->rect().topLeft();
-    _parentRelativeRight =  QPointF(P.x() / parentViewItem()->width(),
-                                    P.y() / parentViewItem()->height());
+    _parentRelativeRight =  QPointF(P.x() / parentWidth,
+                                    P.y() / parentHeight);
     updateDataRelativeRect(force_data);
    } else if (view()) {
     QPointF P;
