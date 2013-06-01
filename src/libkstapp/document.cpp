@@ -233,7 +233,8 @@ bool Document::open(const QString& file) {
     _lastError = QObject::tr("File could not be opened for reading.");
     return false;
   }
-  // Set the application dir to the current dir to be able to load data using the "fileRelative" attribute
+  // Temporarily set the application dir to the current dir to be able to load data using the "fileRelative" attribute
+  QString restorePath = QDir::currentPath();
   QDir::setCurrent(file.left(file.lastIndexOf('/')) + '/');
   _fileName = file;
 
@@ -414,6 +415,8 @@ bool Document::open(const QString& file) {
 
   UpdateManager::self()->doUpdates(true);
   setChanged(false);
+  // Restore current app path
+  QDir::setCurrent(restorePath);
 
   return _isOpen = true;
 }

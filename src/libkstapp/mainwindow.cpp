@@ -350,6 +350,8 @@ void MainWindow::updateRecentDataFiles(const QString& filename)
 
 void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
+  // Always add absolute paths to the recent file lists, otherwise they are not very reusable
+  QString absoluteFilePath = newfilename.startsWith("/") ? newfilename : QDir::currentPath() + "/" + newfilename;
   foreach(QAction* it, actions) {
     menu->removeAction(it);
     delete it;
@@ -360,9 +362,9 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
   if (recentFiles.removeDuplicates() > 0) {
     settings.setValue(key, recentFiles);
   }
-  if (!newfilename.isEmpty()) {
-    recentFiles.removeOne(newfilename);
-    recentFiles.push_front(newfilename);
+  if (!absoluteFilePath.isEmpty()) {
+    recentFiles.removeOne(absoluteFilePath);
+    recentFiles.push_front(absoluteFilePath);
     recentFiles = recentFiles.mid(0, 30);
     settings.setValue(key, recentFiles);
   }
