@@ -40,7 +40,7 @@ class AsciiDataReader
     
     void detectLineEndingType(QFile& file);
     
-    bool findDataRows(bool read_completely, QFile& file, qint64 _byteLength);
+    bool findDataRows(bool read_completely, QFile& file, qint64 _byteLength, int col_count);
     int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int start, int n);
     int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field);
 
@@ -72,7 +72,7 @@ class AsciiDataReader
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&) const;
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-    bool findDataRows(const Buffer& buffer, qint64 bufstart, qint64 bufread, const IsLineBreak&, const CommentDelimiter&);
+    bool findDataRows(const Buffer& buffer, qint64 bufstart, qint64 bufread, const IsLineBreak&, const CommentDelimiter&, int col_count);
 
     void toDouble(const LexicalCast& lexc, const char* buffer, qint64 bufread, qint64 ch, double* v, int row) const;
 

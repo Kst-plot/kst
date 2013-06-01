@@ -190,7 +190,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   _fileSize = file.size();
   _fileCreationTime_t = QFileInfo(file).created().toTime_t();
 
-  bool new_data = _reader.findDataRows(read_completely, file, _fileSize);
+  int col_count = _fieldList.size() - 1; // minus INDEX
+  bool new_data = _reader.findDataRows(read_completely, file, _fileSize, col_count);
   
   return (!new_data && !force_update ? NoChange : Updated);
 }

@@ -112,7 +112,7 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, qint
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _byteLength)
+bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _byteLength, int col_count)
 {
   detectLineEndingType(file);
 
@@ -131,23 +131,23 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _by
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
       if (_lineending.isLF()) {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del, col_count);
       } else {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del, col_count);
       }
     } else if (_config._delimiters.value().size() == 1) {
       const IsCharacter comment_del(_config._delimiters.value()[0].toLatin1());
       if (_lineending.isLF()) {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del, col_count);
       } else {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del, col_count);
       }
     } else if (_config._delimiters.value().size() > 1) {
       const IsInString comment_del(_config._delimiters.value());
       if (_lineending.isLF()) {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakLF(_lineending), comment_del, col_count);
       } else {
-        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del);
+        new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del, col_count);
       }
     }
   } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
@@ -157,7 +157,7 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _by
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename CommentDelimiter>
-bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64 bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del)
+bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64 bufread, const IsLineBreak& isLineBreak, const CommentDelimiter& comment_del, int col_count)
 {
   const IsWhiteSpace isWhiteSpace;
   bool new_data = false;
@@ -190,6 +190,19 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
     }
   }
   _rowIndex[_numFrames] = row_start;
+
+  if (_config._columnType == AsciiSourceConfig::Fixed) {
+    // only read complete lines, last  column could be only 1 char long
+    if (_rowIndex.size() > 1) {
+      for (int i = 1; i <= _numFrames; i++) {
+        if (_rowIndex[i] <= _rowIndex[i - 1] + col_count * (_config._columnWidth - 1) + 1) {
+        _rowIndex.resize(i);
+        _numFrames = i - 1;
+        }
+      }
+    }
+  }
+
   return new_data;
 }
 
@@ -208,7 +221,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
     const LexicalCast& lexc = LexicalCast::instance();
     // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
     // the column in row i by adding _rowIndex[i] we have to start at:
-    const char* col_start = &buf.checkedData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
+    const char*const col_start = &buf.checkedData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
     for (int i = 0; i < n; ++i) {
       v[i] = lexc.toDouble(_rowIndex[i] + col_start);
     }
