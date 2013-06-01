@@ -27,6 +27,7 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include <QXmlStreamReader>
 
 

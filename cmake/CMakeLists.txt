@@ -44,6 +44,7 @@ kst_option(string ""  all qt4               "Use cross compiled Qt4 at given pat
 kst_option(string ""  all qt5               "Use Qt5")
 kst_option(bool   ON  all qt5base_only      "Only use Qt5 features available in qtbase")
 kst_option(bool   ON  all opengl            "Use OpenGL")
+kst_option(bool   OFF all clang             "Use Clang compiler")
 
 message(STATUS)
 
@@ -249,7 +250,7 @@ if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
 	set(kst_win32 MACOSX_BUNDLE)
 endif()
 
-if(APPLE)
+if(APPLE OR kst_clang)
 	set(kst_pch 0 CACHE BOOL "Disable pch on Mac, not supported yet" FORCE)
 endif()
 
