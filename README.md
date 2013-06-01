@@ -5,6 +5,6 @@ Kst - Visualize your data
 
 Git mirror of the svn repository.
 
-Windows binaries are automatically build into [kstbinary](https://github.com/syntheticpp/kstbinary/downloads)
+Windows binaries are automatically build into [kstbinary](http://syntheticpp.github.io/kstbinary/)
 
 
