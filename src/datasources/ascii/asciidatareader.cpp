@@ -164,22 +164,23 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
   bool row_has_data = false;
   bool is_comment = false;
   const qint64 row_offset = bufstart + isLineBreak.size;
-  qint64 row_start = bufstart;
+  qint64 row_start = 0;
 
+  // _rowIndex[_numFrames] already set, find next row
   for (qint64 i = 0; i < bufread; i++) {
     if (comment_del(buffer[i])) {
       is_comment = true;
     } else if (isLineBreak(buffer[i])) {
       if (row_has_data) {
-        _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames >= _rowIndex.size()) {
           if (_rowIndex.capacity() < _numFrames + 1)
             _rowIndex.reserve(_numFrames + AsciiFileData::Prealloc);
           _rowIndex.resize(_numFrames + 1);
         }
+        row_start = row_offset + i;
+        _rowIndex[_numFrames] = row_start;
         new_data = true;
-        row_start = row_offset+i;
       } else if (is_comment) {
         row_start = row_offset+i;
       }
