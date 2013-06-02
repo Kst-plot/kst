@@ -203,11 +203,11 @@ bool Document::initFromCommandLine(CommandLineParser *P) {
     QString kstfile = P->kstFileName();
     if (!kstfile.isEmpty()) {
       dataPlotted = open(kstfile);
+      _win->updateRecentKstFiles(kstfile);
 
       if (dataPlotted) {
         UpdateManager::self()->doUpdates(true);
         setChanged(false);
-        _win->updateRecentKstFiles(kstfile);
       }
     }
   }

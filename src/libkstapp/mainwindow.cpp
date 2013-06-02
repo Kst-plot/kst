@@ -74,6 +74,7 @@
 #include <QMessageBox>
 #include <QImageWriter>
 #include <QToolBar>
+#include <QDebug>
 
 namespace Kst {
 
@@ -351,7 +352,10 @@ void MainWindow::updateRecentDataFiles(const QString& filename)
 void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable
-  QString absoluteFilePath = newfilename.startsWith("/") ? newfilename : QDir::currentPath() + "/" + newfilename;
+  QString absoluteFilePath = newfilename;
+  if (!newfilename.isEmpty() && !newfilename.startsWith("/")) { // If it's not empty and not absolute either, add the dir
+    absoluteFilePath = QDir::currentPath() + "/" + newfilename;
+  }
   foreach(QAction* it, actions) {
     menu->removeAction(it);
     delete it;
@@ -381,7 +385,7 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
   foreach(const QString& it, recentFiles) {
     i++;
     if (i <= 5) {
-      // don't make file menu to wide, show complete path in statusbar
+      // don't make file menu too wide, show complete path in statusbar
       QAction* action = createRecentFileAction(it, i, QFileInfo(it).fileName(), openslot);
       actions << action;
       menu->addAction(action);
