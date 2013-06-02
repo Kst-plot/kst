@@ -220,11 +220,10 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     //MeasureTime t("AsciiSource::readField: same width for all columns");
     const LexicalCast& lexc = LexicalCast::instance();
-    // &buffer[0] points to first row at _rowIndex[0] , so if we wanna find
-    // the column in row i by adding _rowIndex[i] we have to start at:
-    const char*const col_start = &buf.checkedData()[0] - _rowIndex[0] + _config._columnWidth * (col - 1);
+    // buf[0] points to some row start, _rowIndex[i] is absolute, so we have to substract buf.begin().
+    const char*const col_start = &buf.checkedData()[0] + _config._columnWidth * (col - 1) - buf.begin();
     for (int i = 0; i < n; ++i) {
-      v[i] = lexc.toDouble(_rowIndex[i] + col_start);
+      v[i] = lexc.toDouble(col_start + _rowIndex[i + s] );
     }
     return n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
