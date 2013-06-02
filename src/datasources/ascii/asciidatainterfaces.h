@@ -41,7 +41,7 @@ public:
   // named elements
   QStringList list() const { return ascii._fieldList; }
   bool isListComplete() const { return ascii._fieldListComplete; }
-  bool isValid(const QString& field) const { return ascii._fieldList.contains( field ); }
+  bool isValid(const QString& field) const { return ascii._fieldLookup.contains( field ); }
 
   // T specific
   const DataVector::DataInfo dataInfo(const QString&) const;
@@ -59,7 +59,7 @@ public:
 //-------------------------------------------------------------------------------------------
 const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &field) const
 {
-  if (!ascii._fieldList.contains(field))
+  if (!ascii._fieldLookup.contains(field))
     return DataVector::DataInfo();
 
   return DataVector::DataInfo(ascii._reader.numberOfFrames(), 1);

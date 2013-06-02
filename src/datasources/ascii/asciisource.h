@@ -86,6 +86,7 @@ private:
     QStringList _scalarList;
     QMap<QString, QString> _strings;
     QStringList _fieldList;
+    QHash<QString, int> _fieldLookup;
     QMap<QString, QString> _fieldUnits;
 
     bool useThreads() const;

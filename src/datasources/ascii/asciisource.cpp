@@ -98,6 +98,7 @@ void AsciiSource::reset()
   _fieldListComplete = false;
   
   _fieldList.clear();
+  _fieldLookup.clear();
   _scalarList.clear();
   _strings.clear();
   
@@ -173,6 +174,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     }
     _fieldListComplete = _fieldList.count() > 1;
     
+    _fieldLookup.clear();
+    for (int i = 0; i < _fieldList.size(); i++)
+        _fieldLookup[_fieldList[i]] = i;
+
     // Re-update the scalar list since we have one now
     _scalarList = scalarListFor(_filename, &_config);
   }
@@ -200,8 +205,8 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const
 {
-  if (_fieldList.contains(field)) {
-    return _fieldList.indexOf(field);
+  if (_fieldLookup.contains(field)) {
+    return _fieldLookup[field];
   } 
   
   if (_fieldListComplete) {
