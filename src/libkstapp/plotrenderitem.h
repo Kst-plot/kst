@@ -71,6 +71,8 @@ class PlotRenderItem : public ViewItem
 
     virtual bool tryShortcut(const QString &keySequence);
 
+    QList<PlotItem*> sharedOrTiedPlots(bool sharedX, bool sharedY);
+
     void hoverYZoomMouseCursor(double y);
     void hoverXZoomMouseCursor(double x);
 

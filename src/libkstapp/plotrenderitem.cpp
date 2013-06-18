@@ -486,13 +486,9 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
     view()->setCursor(Qt::SizeHorCursor);
   } else {
     view()->setCursor(Qt::CrossCursor);
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->resetSelectionRect();
-      }
-    } else {
-      resetSelectionRect();
+    QList<PlotItem*> plots = sharedOrTiedPlots(true, true);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->resetSelectionRect();
     }
   }
   ViewItem::keyReleaseEvent(event);
@@ -573,24 +569,15 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     view()->setCursor(Qt::SizeVerCursor);
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->dragYZoomMouseCursor(y);
-      }
-    } else {
-      dragYZoomMouseCursor(y);
+    QList<PlotItem*> plots = sharedOrTiedPlots(false, true);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->dragYZoomMouseCursor(y);
     }
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->dragXZoomMouseCursor(x);
-      }
-    } else {
-      dragXZoomMouseCursor(x);
+    QList<PlotItem*> plots = sharedOrTiedPlots(true, false);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->dragXZoomMouseCursor(x);
     }
-
   } else {
     _selectionRect.setTo(p);
   }
@@ -660,13 +647,9 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   updateCursor(event->pos());
   const QRectF projection = plotItem()->mapToProjection(_selectionRect.rect());
 
-  if (plotItem()->isTiedZoom()) {
-    QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-    foreach (PlotItem *plot, plots) {
-      plot->renderItem()->_selectionRect.reset();
-    }
-  } else {
-    _selectionRect.reset();
+  QList<PlotItem*> plots = sharedOrTiedPlots(true, true);
+  foreach (PlotItem *plot, plots) {
+    plot->renderItem()->_selectionRect.reset();
   }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
@@ -730,6 +713,41 @@ void PlotRenderItem::dragXZoomMouseCursor(double x) {
   update(); //FIXME should optimize instead of redrawing entire curve!
 }
 
+
+QList<PlotItem*> PlotRenderItem::sharedOrTiedPlots(bool sharedX, bool sharedY) {
+  QList<PlotItem*> plots;
+  QList<PlotItem*> shared_plots;
+  QList<PlotItem*> tied_plots;
+
+  if (plotItem()->isInSharedAxisBox()) {
+    shared_plots = plotItem()->sharedAxisBox()->getSharedPlots();
+    bool keep;
+    foreach (PlotItem *plot, shared_plots) {
+      keep = (sharedX && plotItem()->sharedAxisBox()->isXAxisShared()) ||
+             (sharedY && plotItem()->sharedAxisBox()->isYAxisShared());
+      if (keep) {
+        plots.append(plot);
+      }
+    }
+  }
+
+  if (plotItem()->isTiedZoom()) {
+    tied_plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
+    foreach (PlotItem *plot, tied_plots) {
+      if (!plots.contains(plot)) {
+        plots.append(plot);
+      }
+    }
+  }
+
+  if (plots.size()<1) {
+    plots.append(plotItem());
+  }
+
+  return plots;
+}
+
+
 //FIXME: store event or pos, and re-call this when window is redrawn
 void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
@@ -750,35 +768,22 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     _lastPos = p;
     view()->setCursor(Qt::SizeVerCursor);
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->hoverYZoomMouseCursor(y);
-      }
-    } else {
-      hoverYZoomMouseCursor(y);
+    QList<PlotItem*> plots = sharedOrTiedPlots(false,true);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->hoverYZoomMouseCursor(y);
     }
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
     _lastPos = p;
     view()->setCursor(Qt::SizeHorCursor);
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->hoverXZoomMouseCursor(x);
-      }
-    } else {
-      hoverXZoomMouseCursor(x);
+    QList<PlotItem*> plots = sharedOrTiedPlots(true,false);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->hoverXZoomMouseCursor(x);
     }
   } else {
-    if (plotItem()->isTiedZoom()) {
-      QList<PlotItem*> plots = PlotItemManager::self()->tiedZoomPlotsForView(view());
-      foreach (PlotItem *plot, plots) {
-        plot->renderItem()->resetSelectionRect();
-      }
-    } else {
-      resetSelectionRect();
+    QList<PlotItem*> plots = sharedOrTiedPlots(true,true);
+    foreach (PlotItem *plot, plots) {
+      plot->renderItem()->resetSelectionRect();
     }
-
     updateCursor(p);
   }
 
