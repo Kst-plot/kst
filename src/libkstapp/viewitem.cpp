@@ -1934,8 +1934,8 @@ void ViewItem::updateDataRelativeRect(bool force) {
 void ViewItem::updateRelativeSize(bool force_data) {
   if (parentViewItem()) {
     QPointF P;
-    int parentHeight = parentViewItem()->height() == 0 ? 1 : parentViewItem()->height();
-    int parentWidth  = parentViewItem()->width() == 0 ? 1 : parentViewItem()->height();
+    qreal parentHeight = parentViewItem()->height() == 0 ? 1 : parentViewItem()->height();
+    qreal parentWidth  = parentViewItem()->width() == 0 ? 1 : parentViewItem()->width();
     _parentRelativeHeight = (height() / parentHeight);
     _parentRelativeWidth = (width() / parentWidth);
 
