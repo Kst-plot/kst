@@ -86,13 +86,7 @@ void Scene::dropEvent(QGraphicsSceneDragDropEvent* event)
     }
     if (view != m->item->view()) {
       m->item->setView(view);
-      PlotItem* plotItem = qobject_cast<PlotItem*>(m->item);
-      if (plotItem) {
-        QList<PlotRenderItem*> renderItems = plotItem->renderItems();
-        foreach (PlotRenderItem* renderItem, renderItems) {
-          renderItem->setView(view);
-        }
-      }
+
       m->item->setParentViewItem(0);
       addItem(m->item);
 

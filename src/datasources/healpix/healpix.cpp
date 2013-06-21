@@ -406,7 +406,7 @@ class HealpixSource::Config {
 
 
 HealpixSource::HealpixSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
-: Kst::DataSource(store, cfg, filename, type, None), _config(0L) {
+: Kst::DataSource(store, cfg, filename, type), _config(0L) {
   _valid = false;
 
   if (!type.isEmpty() && type != "HEALPIX Source") {
@@ -440,8 +440,8 @@ HealpixSource::~HealpixSource() {
 }
 
 
-bool HealpixSource::reset() {
-  return true;
+void HealpixSource::reset() {
+  return;
 }
 
 

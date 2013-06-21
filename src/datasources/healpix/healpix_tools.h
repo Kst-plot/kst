@@ -19,7 +19,8 @@
 #define HEALPIX_TOOLS_H
 
 #include <math.h>
-#include <libcfitsio0/fitsio.h>
+//#include <libcfitsio0/fitsio.h>
+#include <fitsio.h>
 #include <datasource.h>
 
 #  ifdef HEALPIX_PI

@@ -605,6 +605,14 @@ View *ViewItem::view() const {
 void ViewItem::setView(View* parentView) {
   QObject::setParent(parentView);
   reRegisterShortcut();
+
+  QList<QGraphicsItem*> list = QGraphicsItem::childItems();
+  foreach (QGraphicsItem *item, list) {
+    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+    if (viewItem) {
+      viewItem->setView(parentView);
+    }
+  }
 }
 
 

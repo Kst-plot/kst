@@ -29,7 +29,7 @@ class HealpixSource : public Kst::DataSource {
     ~HealpixSource();
 
     bool init();
-    bool reset();
+    virtual void reset();
 
     Kst::Object::UpdateType update();
 
