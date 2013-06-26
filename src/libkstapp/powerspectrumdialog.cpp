@@ -274,7 +274,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
 
           plotItem = static_cast<PlotItem*>(cmd->item());
           if (_powerSpectrumTab->curvePlacement()->scaleFonts()) {
-            plotItem->view()->resetPlotFontSizes(1);
+            plotItem->view()->resetPlotFontSizes(plotItem);
             plotItem->view()->configurePlotFontDefaults(plotItem); // copy plots already in window
           }
           break;

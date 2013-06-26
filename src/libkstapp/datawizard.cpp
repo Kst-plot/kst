@@ -1198,9 +1198,9 @@ void DataWizard::finished() {
         n_add/=2;
       }
       if (np > 0) { // don't crash if there are no plots
-        plotList.at(0)->view()->resetPlotFontSizes(n_add); // set font sizes on first page.
+        plotList.at(0)->view()->resetPlotFontSizes(plotList.mid(0, n_add)); // set font sizes on first page.
         if (two_pages) { // and second, if there is one.
-          plotList.at(np-1)->view()->resetPlotFontSizes(n_add);
+          plotList.at(np-1)->view()->resetPlotFontSizes(plotList.mid(n_add, n_add));
         }
       }
     }

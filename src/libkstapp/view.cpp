@@ -614,16 +614,28 @@ qreal View::scaledFontSize(qreal pointSize, const QPaintDevice &p) const {
 
 // Set the font sizes of all plots in the view to a default size, scaled
 // by the default global font scale, and the application minimum font scale.
-double View::resetPlotFontSizes(int num_adding) {
+double View::resetPlotFontSizes(PlotItem* plot) {
+  QList<PlotItem*> plots;
+  plots.append(plot);
+  return resetPlotFontSizes(plots);
+}
+
+double View::resetPlotFontSizes(QList<PlotItem*> new_plots) {
+  QList<PlotItem*> plots(new_plots);
+  plots.append(PlotItemManager::self()->plotsForView(this));
   qreal pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
 
-  qreal count = PlotItemManager::self()->plotsForView(this).count() + num_adding;
-  qreal newPointSize = pointSize/sqrt(count) + ApplicationSettings::self()->minimumFontSize();
+  // the 6 in the line below is a magic number that impedes scaling until you
+  // have more than a couple of rows/columns.  A 1 would make it scale more
+  // agressively.  The behavior looks pretty good to me with 6.
+  qreal count = qMax(plots.count()-6, 1);
+
+  qreal newPointSize = qMax(pointSize/sqrt(count) , ApplicationSettings::self()->minimumFontSize());
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }
   qreal legendPointSize = qMax(pointSize*qreal(0.6), ApplicationSettings::self()->minimumFontSize());
-  foreach(PlotItem* plotItem, PlotItemManager::self()->plotsForView(this)) {
+  foreach(PlotItem* plotItem, plots) {
     plotItem->setGlobalFontScale(pointSize);
     plotItem->rightLabelDetails()->setFontScale(pointSize);
     plotItem->leftLabelDetails()->setFontScale(pointSize);

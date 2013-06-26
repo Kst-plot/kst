@@ -24,6 +24,7 @@ endif()
 if(cfitsio)
 	include_directories(${CFITSIO_INCLUDE_DIR})
 	kst_add_plugin(. fitsimage)
+	#kst_add_plugin(. healpix)
 	kst_link(${CFITSIO_LIBRARIES})
 endif()
 
