@@ -330,6 +330,11 @@ void ViewItemDialog::dimensionsChanged() {
 
 void ViewItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
+
+  if (editMode() == Multiple) { // saving dimensions not supported for edit multiple mode
+    return;
+  }
+
   qreal rotation = _dimensionsTab->rotationDirty() ? _dimensionsTab->rotation() :item->rotationAngle();
 
   if (_dimensionsTab->lockPosToData() && item->dataPosLockable()) {
@@ -340,6 +345,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
 
     item->setDataRelativeRect(dr);
 
+    item->setLockPosToData(true);
     item->applyDataLockedDimensions();
   } else {
     QRectF parentRect = item->parentRect();
@@ -358,7 +364,6 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     qreal relativeWidth = _dimensionsTab->widthDirty() ? _dimensionsTab->width() :item->relativeWidth();
     qreal relativeHeight = _dimensionsTab->heightDirty() ? _dimensionsTab->height() :item->relativeHeight();
     bool fixedAspect = _dimensionsTab->fixedAspectDirty() ? _dimensionsTab->fixedAspect() :item->lockAspectRatio();
-    bool lockPosToData = _dimensionsTab->lockPosToDataDirty() ? _dimensionsTab->lockPosToData() : item->lockPosToData();
 
     qreal width = relativeWidth * parentWidth;
     qreal height;
@@ -370,13 +375,16 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
       item->setLockAspectRatio(false);
     }
 
-    item->setLockPosToData(lockPosToData);
+    double x = _dimensionsTab->x();
+    double y = _dimensionsTab->y();
+
+    item->setLockPosToData(false);
 
     if (_mode == Multiple) {
       item->setPos(parentX + item->relativeCenter().x()*parentWidth,
                    parentY + item->relativeCenter().y()*parentHeight);
     } else {
-      item->setPos(parentX + _dimensionsTab->x()*parentWidth, parentY + _dimensionsTab->y()*parentHeight);
+      item->setPos(parentX + x*parentWidth, parentY + y*parentHeight);
     }
     item->setViewRect(-width/2, -height/2, width, height);
   }
@@ -403,6 +411,7 @@ void ViewItemDialog::setMultipleEdit() {
   _mode = Multiple;
   _dimensionsTab->clearTabValues();
   _dimensionsTab->enableSingleEditOptions(false);
+  _dimensionsTab->setEnabled(false); // FIXME: pretty draconian... maybe we can enable some later.
   if (_item->hasBrush()) {
     _fillTab->clearTabValues();
   }
