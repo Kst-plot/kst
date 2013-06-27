@@ -861,7 +861,7 @@ void PlotItemDialog::saveLabels(PlotItem *item) {
   item->setGlobalFontColor(globalFontColor);
   item->setUseAxisScale(axisLabelScale);
 
-  item->setShowLegend(showLegend);
+  item->setShowLegend(showLegend, !item->showLegend()); // reset font size if legend isn't already shown.
 }
 
 
