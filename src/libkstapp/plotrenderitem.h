@@ -78,6 +78,7 @@ class PlotRenderItem : public ViewItem
 
     void dragYZoomMouseCursor(double y);
     void dragXZoomMouseCursor(double x);
+    QPointF statusMessagePoint;
   public Q_SLOTS:
     virtual void edit();
     virtual void raise();

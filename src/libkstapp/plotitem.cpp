@@ -3335,21 +3335,15 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
 }
 
 void PlotItem::copyStatus() {
-  kstApp->clipboard()->setText(kstApp->mainWindow()->statusMessage().remove('(').remove(')'));
+  kstApp->clipboard()->setText(kstApp->mainWindow()->statusMessage());
 }
 
 void PlotItem::copyXCoord() {
-  QStringList args = kstApp->mainWindow()->statusMessage().remove('(').split(',');
-  if (args.size()>0) {
-    kstApp->clipboard()->setText(args.at(0));
-  }
+  kstApp->clipboard()->setText(QString::number(renderItem()->statusMessagePoint.x(), 'g', 12));
 }
 
 void PlotItem::copyYCoord() {
-  QStringList args = kstApp->mainWindow()->statusMessage().remove(')').replace('[',',').split(',');
-  if (args.size()>1) {
-    kstApp->clipboard()->setText(args.at(1));
-  }
+  kstApp->clipboard()->setText(QString::number(renderItem()->statusMessagePoint.y(), 'g', 12));
 }
 
 QString PlotItem::descriptionTip() const {

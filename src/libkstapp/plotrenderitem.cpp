@@ -801,6 +801,7 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
   }
 
   const QPointF point = plotItem()->mapToProjection(p);
+  statusMessagePoint = point;
   if (kstApp->mainWindow()->isHighlightPoint()) {
     highlightNearestDataPoint(point);
   } else {
@@ -842,6 +843,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
         distance = fabs(position.y() - y);
         if (bFirst || distance < minDistance) {
           matchedPoint = QPointF(x, y);
+          statusMessagePoint = matchedPoint;
           bFirst = false;
           minDistance = distance;
           curveName = curve->CleanedName();
@@ -869,6 +871,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
     } else if (!imageName.isEmpty()) {
+      statusMessagePoint = position;
       QString message = imageName + QString(" (%1, %2, %3)").
                         arg(plotItem()->xAxis()->statusBarString(position.x())).
                         arg(QString::number(position.y())).
@@ -904,6 +907,7 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   updateCursor(event->pos());
 
   const QPointF p = plotItem()->mapToProjection(event->pos());
+  statusMessagePoint = p;
   QString message = QString("(%1, %2)").
                     arg(plotItem()->xAxis()->statusBarString(p.x())).
                     arg(QString::number(p.y()));
