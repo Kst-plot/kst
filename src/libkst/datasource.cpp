@@ -357,9 +357,9 @@ QDateTime DataSource::timeForSample(int sample, bool *ok) {
 
 
 bool DataSource::isTime(const QString& field) const {
-  Q_UNUSED(field)
-  return false;
+  return (_timeFields.contains(field));
 }
+
 
 double DataSource::relativeTimeForSample(int sample, bool *ok) {
   Q_UNUSED(sample)
@@ -485,8 +485,9 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
   return(x);
 }
 
-QStringList &DataSource::indexFields() {
-  if (_frameFields.size() == 0) {
+
+QStringList &DataSource::timeFields() {
+  if (_timeFields.size() == 0) {
     // FIXME: this must be created by the UI somehow.
     // or by the datasource itself.  Or something
     // different than this!
@@ -498,14 +499,21 @@ QStringList &DataSource::indexFields() {
     requestedFields.append("TEMPS");
     requestedFields.append("temps");
 
-    _frameFields.append(i18n("frames"));
-
     // Make sure the requested fields actually exist.
     foreach (const QString &field, requestedFields) {
       if (vector().list().contains(field)) {
-        _frameFields.append(field);
+        _timeFields.append(field);
       }
     }
+  }
+
+  return(_timeFields);
+}
+
+QStringList &DataSource::indexFields() {
+  if (_frameFields.size() == 0) {
+    _frameFields.append(i18n("frames"));
+    _frameFields.append(timeFields());
   }
 
   return(_frameFields);

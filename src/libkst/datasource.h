@@ -155,6 +155,7 @@ class KSTCORE_EXPORT DataSource : public Object
     virtual double frameToIndex(int frame, const QString &field);
     virtual double readDespikedIndex(int frame, const QString &field);
     virtual double framePerIndex(const QString &field);
+    virtual QStringList &timeFields();
     virtual QStringList &indexFields();
 
 
@@ -259,6 +260,7 @@ class KSTCORE_EXPORT DataSource : public Object
     void setInterface(DataInterface<DataMatrix>*);
 
     QStringList _frameFields;
+    QStringList _timeFields;
   private:
     DataSource();
 
