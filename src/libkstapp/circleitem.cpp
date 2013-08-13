@@ -70,7 +70,7 @@ void CircleItem::creationPolygonChanged(View::CreationEvent event) {
     const QPolygonF poly = mapFromScene(view()->creationPolygon(View::MouseMove));
     qreal dx = poly.last().x();
     qreal dy = poly.last().y();
-    qreal r = qMax(qreal(2.0),sqrt(dx*dx + dy*dy));
+    qreal r = qMax(qreal(2.0),qSqrt(dx*dx + dy*dy));
 
     QRectF newRect(-r, -r, 2.0*r, 2.0*r);
     setViewRect(newRect);

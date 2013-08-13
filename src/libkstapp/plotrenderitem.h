@@ -73,11 +73,11 @@ class PlotRenderItem : public ViewItem
 
     QList<PlotItem*> sharedOrTiedPlots(bool sharedX, bool sharedY);
 
-    void hoverYZoomMouseCursor(double y);
-    void hoverXZoomMouseCursor(double x);
+    void hoverYZoomMouseCursor(qreal y);
+    void hoverXZoomMouseCursor(qreal x);
 
-    void dragYZoomMouseCursor(double y);
-    void dragXZoomMouseCursor(double x);
+    void dragYZoomMouseCursor(qreal y);
+    void dragXZoomMouseCursor(qreal x);
     QPointF statusMessagePoint;
   public Q_SLOTS:
     virtual void edit();

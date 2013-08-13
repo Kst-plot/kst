@@ -630,7 +630,7 @@ double View::resetPlotFontSizes(QList<PlotItem*> new_plots) {
   // agressively.  The behavior looks pretty good to me with 6.
   qreal count = qMax(plots.count()-6, 1);
 
-  qreal newPointSize = qMax(pointSize/sqrt(count) , ApplicationSettings::self()->minimumFontSize());
+  qreal newPointSize = qMax(pointSize/qSqrt(count) , ApplicationSettings::self()->minimumFontSize());
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }

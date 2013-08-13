@@ -557,11 +557,11 @@ void PlotRenderItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   const QPointF p = event->pos();
 
-  double y = (p.y() - rect().bottom())/(rect().top()-rect().bottom())*(plotItem()->yMax()-plotItem()->yMin())+plotItem()->yMin();
+  qreal y = (p.y() - rect().bottom())/(rect().top()-rect().bottom())*(plotItem()->yMax()-plotItem()->yMin())+plotItem()->yMin();
   y = qMin(y, plotItem()->yMax());
   y = qMax(y, plotItem()->yMin());
 
-  double x = (p.x() - rect().left())/(rect().right()-rect().left())*(plotItem()->xMax()-plotItem()->xMin())+plotItem()->xMin();
+  qreal x = (p.x() - rect().left())/(rect().right()-rect().left())*(plotItem()->xMax()-plotItem()->xMin())+plotItem()->xMin();
   x = qMin(x, plotItem()->xMax());
   x = qMax(x, plotItem()->xMin());
 
@@ -661,8 +661,8 @@ void PlotRenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   }
 }
 
-void PlotRenderItem::hoverYZoomMouseCursor(double y) {
-  double py;
+void PlotRenderItem::hoverYZoomMouseCursor(qreal y) {
+  qreal py;
 
   py = (y-plotItem()->yMin())/(plotItem()->yMax() - plotItem()->yMin())*(rect().top()-rect().bottom()) + rect().bottom();
   py = qMin(py, rect().bottom());
@@ -676,8 +676,8 @@ void PlotRenderItem::hoverYZoomMouseCursor(double y) {
 
 }
 
-void PlotRenderItem::hoverXZoomMouseCursor(double x) {
-  double px;
+void PlotRenderItem::hoverXZoomMouseCursor(qreal x) {
+  qreal px;
 
   px = (x-plotItem()->xMin())/(plotItem()->xMax() - plotItem()->xMin())*(rect().right()-rect().left()) + rect().left();
   px = qMax(px, rect().left());
@@ -690,8 +690,8 @@ void PlotRenderItem::hoverXZoomMouseCursor(double x) {
   update(); //FIXME should optimize instead of redrawing entire curve!
 }
 
-void PlotRenderItem::dragYZoomMouseCursor(double y) {
-  double py;
+void PlotRenderItem::dragYZoomMouseCursor(qreal y) {
+  qreal py;
 
   py = (y-plotItem()->yMin())/(plotItem()->yMax() - plotItem()->yMin())*(rect().top()-rect().bottom()) + rect().bottom();
   py = qMin(py, rect().bottom());
@@ -702,8 +702,8 @@ void PlotRenderItem::dragYZoomMouseCursor(double y) {
 
 }
 
-void PlotRenderItem::dragXZoomMouseCursor(double x) {
-  double px;
+void PlotRenderItem::dragXZoomMouseCursor(qreal x) {
+  qreal px;
 
   px = (x-plotItem()->xMin())/(plotItem()->xMax() - plotItem()->xMin())*(rect().right()-rect().left()) + rect().left();
   px = qMax(px, rect().left());
