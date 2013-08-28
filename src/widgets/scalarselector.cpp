@@ -40,8 +40,8 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
-  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(emitSelectionChanged()));
-  connect(_scalar, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
+  connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
+  connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
 }
 
 
@@ -93,7 +93,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
   }
 
   if (!existingScalar) {
-    // Create the Scalar.
+     // Create the Scalar.
     bool ok = false;
     double value = _scalar->currentText().toDouble(&ok);
     if (!ok) {
@@ -117,11 +117,10 @@ ScalarPtr ScalarSelector::selectedScalar() {
     scalar->setValue(value);
     scalar->setEditable(true);
     scalar->setDescriptiveName(QString());
-    scalar->setOrphan(false);
+    scalar->setOrphan(true);
 
     _scalar->clearEditText();
     fillScalars();
-    scalar->setOrphan(true);
 
     scalar->writeLock();
     scalar->registerChange();
