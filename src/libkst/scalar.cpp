@@ -141,11 +141,7 @@ QString Scalar::descriptionTip() const {
 }
 
 QString Scalar::_automaticDescriptiveName() const {
-  if (_orphan) {
-    return QString::number(value());
-  } else {
-    return Primitive::_automaticDescriptiveName();
-  }
+  return QString::number(value());
 }
 
 QString Scalar::sizeString() const {
