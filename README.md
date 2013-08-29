@@ -1,10 +1,13 @@
 Kst - Visualize your data
 =========================
 
-[![Build Status](https://secure.travis-ci.org/syntheticpp/kst.png?branch=cross-compile-for-win32)](http://travis-ci.org/syntheticpp/kst)
+This application is used to display scientific data.  More to come later.
 
-Git mirror of the svn repository.
+Please see INSTALL for installation details.
 
-Windows binaries are automatically build into [kstbinary](http://syntheticpp.github.io/kstbinary/)
+Please direct questions or concerns to kst@kde.org.
+
+
+Windows binaries are automatically build into [kst-build](http://kst-plot.github.io/kst-build/)
 
 

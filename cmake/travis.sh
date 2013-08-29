@@ -10,9 +10,9 @@ startdir=$PWD
 # set 'versionname' to overwrite generated one based on 'ver'
 #
 
-#versionname=Kst-2.0.7-Beta1
+#versionname=Kst-2.0.8-Beta
 
-ver=2.0.7-Beta
+ver=2.0.x
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 if [ -z $versionname ]; then
     versionname=Kst-$ver-$date
@@ -76,11 +76,12 @@ if [ "$iam" = "$travis" ]; then
     git config --global push.default matching
     git config --global user.name "travis"
     git config --global user.email travis@noreply.org
-    git clone --quiet git@github.com:syntheticpp/kstbinary.git
+    kstbinary=kst-build
+    git clone --quiet git@github.com:Kst-plot/$kstbinary.git
     exitcode=$?
     if [ $exitcode -ne 0 ]; then
-        rm -rf kstbinary
-        git clone --quiet git@github.com:syntheticpp/kstbinary.git
+        rm -rf $kstbinary
+        git clone --quiet git@github.com:Kst-plot/$kstbinary.git
     fi
     checkExitCode
 fi
@@ -267,9 +268,10 @@ if [ ! -e $versionname-$win.zip ]; then
 fi
 
 if [ "$iam" = "$travis" ]; then
-    cd $startdir/kstbinary
-    git checkout $branch
-    git reset --hard HEAD^
+    cd $startdir/$kstbinary
+    git checkout master
+    git branch -D $branch
+    git checkout -b $branch
     cp -f $builddir/$versionname-$win.zip .
     git add $versionname-$win.zip
     checkExitCode
