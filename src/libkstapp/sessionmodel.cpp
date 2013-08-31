@@ -52,9 +52,8 @@ void SessionModel::generateObjectList() {
   ObjectList<Relation> rol = _store->getObjects<Relation>();
   ObjectList<DataObject> dol = _store->getObjects<DataObject>();
   _objectList.clear();
-
   foreach(Primitive* P, pol) {
-    if (!P->provider()) {
+    if ((!P->provider()) && (!P->hidden())) {
       _objectList.append(P);
     }
   }
@@ -120,7 +119,6 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole) {
     return QVariant();
   }
-
   if (index.internalPointer()) { //parent().isValid()) {
     Q_ASSERT(!index.parent().parent().isValid());
     DataObject *parent = static_cast<DataObject*>(index.internalPointer());

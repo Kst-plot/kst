@@ -104,9 +104,9 @@ ScalarPtr ScalarSelector::selectedScalar() {
       return 0;
     }
 
-    // Check if a scalar with this value exist & is orphan.
+    // Check if a scalar with this value exist & is hidden.
     foreach(Scalar* scalar, _store->getObjects<Scalar>()) {
-      if (scalar->orphan()) {
+      if (scalar->hidden()) {
         if (scalar->value() == value) {
           return scalar;
         }
@@ -115,9 +115,10 @@ ScalarPtr ScalarSelector::selectedScalar() {
 
     ScalarPtr scalar = _store->createObject<Scalar>();
     scalar->setValue(value);
-    scalar->setEditable(true);
+    scalar->setEditable(false);
     scalar->setDescriptiveName(QString());
     scalar->setOrphan(true);
+    scalar->setHidden(true);
 
     _scalar->clearEditText();
     fillScalars();
@@ -210,7 +211,7 @@ void ScalarSelector::fillScalars() {
     ScalarPtr scalar = (*it);
 
     scalar->readLock();
-    if (!scalar->orphan()) {
+    if (!scalar->hidden()) {
       scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
     }
     scalar->unlock();

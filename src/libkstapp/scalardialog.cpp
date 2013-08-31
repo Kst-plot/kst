@@ -325,7 +325,7 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
 
   ScalarPtr scalar = _document->objectStore()->createObject<Scalar>();
   scalar->setValue(value);
-  scalar->setOrphan(false);
+  scalar->setOrphan(true);
   scalar->setEditable(true);
   if (DataDialog::tagStringAuto()) {
      scalar->setDescriptiveName(QString());

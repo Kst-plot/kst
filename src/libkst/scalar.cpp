@@ -71,6 +71,9 @@ void Scalar::save(QXmlStreamWriter &s) {
   if (_editable) {
     s.writeAttribute("editable", "true");
   }
+  if (hidden()) {
+    s.writeAttribute("hidden", "true");
+  }
   s.writeAttribute("value", QString::number(value()));
   saveNameInfo(s, XNUM);
   s.writeEndElement();
@@ -141,7 +144,11 @@ QString Scalar::descriptionTip() const {
 }
 
 QString Scalar::_automaticDescriptiveName() const {
-  return QString::number(value());
+  if (_orphan) {
+    return QString::number(value());
+  } else {
+    return Primitive::_automaticDescriptiveName();
+  }
 }
 
 QString Scalar::sizeString() const {

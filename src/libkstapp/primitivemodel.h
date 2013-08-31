@@ -116,7 +116,7 @@ void PrimitiveModel::createTree() {
     {
       addPrimitivesMetas<T>(kst_cast<Primitive>(obj));
     } else if (kst_cast<T>(obj)) {
-      if (kst_cast<T>(obj) && kst_cast<T>(obj)->orphan()) {
+      if (kst_cast<T>(obj) && kst_cast<T>(obj)->orphan() && !(kst_cast<T>(obj)->hidden())) {
         addOrphanMeta<T>(kst_cast<T>(obj));
       }
     } else if (kst_cast<DataObject>(obj)) {

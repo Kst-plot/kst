@@ -38,6 +38,7 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
 
   bool orphan = true;
   bool editable = true;
+  bool hidden = false;
   double value=0.0;
 
   while (!xml.atEnd()) {
@@ -48,6 +49,7 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
         value = attrs.value("value").toString().toDouble();
         orphan = attrs.value("orphan").toString() != "false" ? true : false;
         editable = attrs.value("editable").toString() != "false" ? true : false;
+        hidden = attrs.value("hidden").toString() == "true" ? true : false;
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }
@@ -73,6 +75,7 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   ScalarPtr scalar = store->createObject<Scalar>();
   scalar->setValue(value);
   scalar->setOrphan(orphan);
+  scalar->setHidden(hidden);
   scalar->setEditable(editable);
   scalar->setDescriptiveName(descriptiveName);
 

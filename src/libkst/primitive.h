@@ -36,6 +36,7 @@ class KSTCORE_EXPORT Primitive : public Object
 {
     Q_OBJECT
     Q_PROPERTY(Object* provider READ provider WRITE setProvider)
+    Q_PROPERTY(bool hidden READ hidden WRITE setHidden)
 
   public:
     virtual const QString& typeString() const;
@@ -62,6 +63,10 @@ class KSTCORE_EXPORT Primitive : public Object
     virtual bool flagSet() const { return _flag; }
     virtual void setFlag(bool f) { _flag = f;}
 
+  public slots:
+    bool hidden() const;
+    void setHidden(bool hidden);
+
   protected:
     Primitive(ObjectStore *store, Object* provider = 0L);
 
@@ -86,6 +91,7 @@ class KSTCORE_EXPORT Primitive : public Object
 
   private:
     bool _flag; // used for sorting dataobjects by Document::sortedDataObjectList()
+    bool _hidden; // don't show in lists
 };
 
 typedef SharedPtr<Primitive> PrimitivePtr;

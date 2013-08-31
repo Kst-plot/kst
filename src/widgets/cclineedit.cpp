@@ -629,8 +629,10 @@ void SVCCLineEdit::fillKstObjects()
         ScalarPtr scalar = (*scalarIt);
 
         scalar->readLock();
-        _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
-        _svData->front()[0].push_back("["+scalar->SIZE_LIMITED_NAME+"]");
+        if (!scalar->hidden()) {
+          _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
+          _svData->front()[0].push_back("["+scalar->SIZE_LIMITED_NAME+"]");
+        }
         scalar->unlock();
     }
 

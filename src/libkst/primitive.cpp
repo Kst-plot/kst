@@ -35,6 +35,8 @@ Primitive::Primitive(ObjectStore *store, Object *provider)
   : Object(), _provider(provider) {
   Q_UNUSED(store);
   _slaveName = "fixme: set _slaveName";
+
+  _hidden = false;
 }
 
 
@@ -113,6 +115,14 @@ void Primitive::fatalError(const QString& msg)
   }
 }
 
+bool Primitive::hidden() const
+{
+  return _hidden;
+}
+
+void Primitive::setHidden(bool hidden) {
+  _hidden = hidden;
+}
 
 
 }
