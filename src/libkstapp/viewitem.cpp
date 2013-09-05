@@ -15,6 +15,7 @@
 #include "viewitemdialog.h"
 #include "viewgridlayout.h"
 #include "plotitem.h"
+#include "sharedaxisboxitem.h"
 #include "plotitemmanager.h"
 #include "document.h"
 #include "datacollection.h"

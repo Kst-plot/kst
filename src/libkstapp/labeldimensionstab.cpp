@@ -11,6 +11,7 @@
  ***************************************************************************/
 #include "labeldimensionstab.h"
 #include "plotitem.h"
+#include "sharedaxisboxitem.h"
 #include <QDebug>
 
 namespace Kst {
@@ -34,7 +35,6 @@ void LabelDimensionsTab::lockPosToDataChanged(bool lock_pos_to_data) {
 }
 
 void LabelDimensionsTab::fillDimensions(bool lock_pos_to_data, bool fix_left) {
-
   if (lock_pos_to_data && _labelItem->dataPosLockable()) {
     PlotRenderItem *render_item = dynamic_cast<PlotRenderItem *>(_labelItem->parentViewItem());
     if (render_item) {
@@ -92,10 +92,10 @@ void LabelDimensionsTab::fillDimensions(bool lock_pos_to_data, bool fix_left) {
 
 
 void LabelDimensionsTab::setupDimensions() {
+  _lockPosToData->setChecked(_labelItem->lockPosToData());
 
   fillDimensions(_labelItem->dataPosLockable() && _labelItem->lockPosToData(), _labelItem->fixLeft());
 
-  _lockPosToData->setChecked(_labelItem->lockPosToData());
   if (_labelItem->dataPosLockable()) {
       _lockPosToData->show();
   } else {

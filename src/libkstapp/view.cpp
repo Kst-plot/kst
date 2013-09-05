@@ -44,6 +44,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QInputDialog>
 #include <QKeyEvent>
+#include <QtCore/qmath.h>
 
 namespace Kst {
 

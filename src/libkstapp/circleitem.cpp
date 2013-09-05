@@ -17,6 +17,7 @@
 
 #include <QDebug>
 #include <QGraphicsScene>
+#include <qmath.h>
 
 namespace Kst {
 
