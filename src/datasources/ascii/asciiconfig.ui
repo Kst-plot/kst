@@ -639,7 +639,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>   d=day, M=month, Y=year, h=hour, m=minute, s=second, z=millisecond</string>
+              <string>   d=day, M=month, y=year, h=hour, m=minute, s=second, z=millisecond</string>
              </property>
             </widget>
            </item>
@@ -683,12 +683,6 @@
          </item>
         </layout>
         <zorder></zorder>
-        <zorder>_indexFreq</zorder>
-        <zorder>_ctime</zorder>
-        <zorder>_seconds</zorder>
-        <zorder>_indexFreq</zorder>
-        <zorder>_dataRate</zorder>
-        <zorder>label_7</zorder>
         <zorder></zorder>
        </widget>
       </item>
@@ -804,8 +798,6 @@
        </widget>
       </item>
      </layout>
-     <zorder>groupBox</zorder>
-     <zorder>_useOffset</zorder>
     </widget>
    </item>
   </layout>
