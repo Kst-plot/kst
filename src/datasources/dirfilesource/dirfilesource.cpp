@@ -277,7 +277,6 @@ bool DirFileSource::init() {
 
   if (_fieldList.count() > 1) {
     QString filePath = _dirfile->ReferenceFilename();
-    //setUpdateType(File, filePath);
   }
   setUpdateType(Timer);
 

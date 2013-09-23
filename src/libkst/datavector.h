@@ -49,7 +49,6 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
       int startingFrame;
       int numberOfFrames;
       int skipFrame;
-      int *lastFrameRead;
     };
 
 
@@ -194,7 +193,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     //bool _dontUseSkipAccel;
 
     // wrappers around DataSource interface functions
-    int readField(double *v, const QString& field, int s, int n, int skip = -1, int *lastFrameRead = 0L);
+    int readField(double *v, const QString& field, int s, int n, int skip = -1);
     const DataInfo dataInfo(const QString& field) const;
 
     QHash<QString, ScalarPtr> _fieldScalars;

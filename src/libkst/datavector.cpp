@@ -816,9 +816,9 @@ QString DataVector::propertyString() const {
 }
 
 
-int DataVector::readField(double *v, const QString& field, int s, int n, int skip, int *lastFrameRead)
+int DataVector::readField(double *v, const QString& field, int s, int n, int skip)
 {
-  ReadInfo par = {v, s, n, skip, lastFrameRead};
+  ReadInfo par = {v, s, n, skip};
   return dataSource()->vector().read(field, par);
 }
 

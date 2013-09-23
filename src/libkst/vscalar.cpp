@@ -125,7 +125,7 @@ void VScalar::internalUpdate() {
       f0 = _f0;
     }
     _file->writeLock();
-    DataVector::ReadInfo p = {&_value, f0, -1, -1, 0};
+    DataVector::ReadInfo p = {&_value, f0, -1, -1};
     _file->vector().read(_field, p);
     _file->unlock();
   }

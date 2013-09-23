@@ -52,7 +52,7 @@ public:
   QMap<QString, QString> metaStrings(const QString&);
 
 
-  AsciiSource& ascii;
+   AsciiSource& ascii;
 };
 
 

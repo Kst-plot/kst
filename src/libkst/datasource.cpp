@@ -458,7 +458,7 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
   if (frame + 2*margin_frames >= info.frameCount) {
     frame = info.frameCount - 2*margin_frames;
   }
-  DataVector::ReadInfo par = {data, frame, 2*margin_frames, -1, 0L};
+  DataVector::ReadInfo par = {data, frame, 2*margin_frames, -1};
 
   vector().read(field, par);
 
