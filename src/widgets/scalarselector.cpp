@@ -56,7 +56,9 @@ void ScalarSelector::setObjectStore(ObjectStore *store) {
 
 
 void ScalarSelector::updateDescriptionTip() {
-  setToolTip(selectedScalarString());
+  bool editable;
+  setToolTip(selectedScalarString(&editable));
+  _editScalar->setEnabled(editable);
 }
 
 
@@ -135,15 +137,24 @@ ScalarPtr ScalarSelector::selectedScalar() {
 }
 
 
-QString ScalarSelector::selectedScalarString() {
+QString ScalarSelector::selectedScalarString(bool *editable) {
   if (_scalar->findText(_scalar->currentText(),Qt::MatchExactly) == -1) {
+    if (editable) {
+      *editable = false;
+    }
     return _scalar->currentText();
   }
 
   Scalar* scalar = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();;
   if (scalar) {
+    if (editable) {
+      *editable = scalar->editable();
+    }
     return scalar->descriptionTip();
   } else {
+    if (editable) {
+      *editable = false;
+    }
     return QString();
   }
 }
@@ -243,6 +254,7 @@ void ScalarSelector::fillScalars() {
 
   _editScalar->setEnabled(_scalar->count() > 0);
   _selectScalar->setEnabled(_scalar->count() > 0);
+  updateDescriptionTip();
 }
 
 

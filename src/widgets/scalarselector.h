@@ -39,7 +39,7 @@ class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelect
 
     void fillScalars();
 
-    QString selectedScalarString();
+    QString selectedScalarString(bool *editable = NULL);
 
     void setDefaultValue(double value);
 
