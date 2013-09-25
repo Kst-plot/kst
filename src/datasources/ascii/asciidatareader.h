@@ -48,7 +48,7 @@ class AsciiDataReader
     static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);
 
   private:
-    int _numFrames;
+    qint64 _numFrames;
     AsciiFileBuffer::RowIndex _rowIndex;
     AsciiSourceConfig& _config;
     AsciiCharacterTraits::LineEndingType _lineending;
