@@ -1189,7 +1189,7 @@ void DataWizard::finished() {
     }
   }
 
-  if (relayout) {
+  if (relayout && !plotList.isEmpty()) {
     if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
       int np = plotList.count();
       int n_add = np;
