@@ -165,6 +165,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
   bool is_comment = false;
   const qint64 row_offset = bufstart + isLineBreak.size;
   qint64 row_start = 0;
+  int old_numFrames = _numFrames;
 
   // _rowIndex[_numFrames] already set, find next row
   for (qint64 i = 0; i < bufread; i++) {
@@ -190,7 +191,9 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
       row_has_data = true;
     }
   }
-  _rowIndex[_numFrames] = row_start;
+  if (_numFrames > old_numFrames)
+    _rowIndex[_numFrames] = row_start;
+
 
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     // only read complete lines, last  column could be only 1 char long
