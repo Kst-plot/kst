@@ -35,7 +35,8 @@ ScalarTab::ScalarTab(ObjectStore *store, QWidget *parent)
   setDataOptions();
 
   connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
-  connect(_start, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_start, SIGNAL(valueChanged(int)), this, SLOT(entryChanged()));
+  connect(_countFromEnd, SIGNAL(clicked()), this, SLOT(entryChanged()));
   connect(_field, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
   connect(_fieldRV, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
@@ -60,6 +61,7 @@ void ScalarTab::setValue(const QString &value) {
 
 
 void ScalarTab::entryChanged() {
+  _start->setEnabled(_readFromRVector->isChecked() && !_countFromEnd->isChecked());
   emit valueChanged();
 }
 
@@ -81,7 +83,7 @@ void ScalarTab::readFromSourceChanged() {
 
   label_6->setEnabled(isRV);
   label_7->setEnabled(isRV);
-  _start->setEnabled(isRV);
+  _start->setEnabled(isRV && !_countFromEnd->isChecked());
   _countFromEnd->setEnabled(isRV);
 
  _generatedScalarGroup->setEnabled(_generateX->isChecked());
@@ -166,11 +168,15 @@ void ScalarTab::setFieldRV(const QString &field) {
 }
 
 void ScalarTab::setF0(int f0) {
-  _start->setText(QString::number(f0));
+  _start->setValue(f0);
 }
 
 int ScalarTab::F0() const {
-  return _start->text().toInt();
+  if (_countFromEnd->isChecked() == true) {
+    return -1;
+  } else {
+    return _start->text().toInt();
+  }
 }
 
 void ScalarTab::updateDataSource() {
@@ -427,7 +433,7 @@ ObjectPtr ScalarDialog::editExistingDataObject() const {
 
     if (dataSource) {
       const QString field = _scalarTab->fieldRV();
-      int f0 = _scalarTab->F0();;
+      int f0 = _scalarTab->F0();
       scalar->writeLock();
       scalar->change(dataSource, field, f0);
 

@@ -32,13 +32,31 @@
 namespace Kst {
 
 LabelItem::LabelItem(View *parent, const QString& txt)
-  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false), _dataRelativeDimValid(false), _fixleft(false) {
+  : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false),
+    _dataRelativeDimValid(false), _fixleft(false), _serialOfLastChange(0) {
   setTypeName("Label");
   setFixedSize(true);
   setLockAspectRatio(true);
   setAllowedGripModes(Move | Resize | Rotate /*| Scale*/);
 
   applyDefaults();
+}
+
+bool LabelItem::inputsChanged(qint64 serial) {
+  bool no_change = true;
+
+  foreach (Primitive* primitive, _labelRc->_refObjects) {
+    if (primitive->serialOfLastChange() > _serialOfLastChange) {
+      no_change = false;
+    }
+  }
+
+  if (!no_change) {
+    triggerUpdate();
+  }
+
+  _serialOfLastChange = serial;
+  return !no_change;
 }
 
 void LabelItem::applyDefaults() {

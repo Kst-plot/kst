@@ -69,6 +69,8 @@ class LabelItem : public ViewItem {
 
     Label::RenderContext *_labelRc;
 
+    bool inputsChanged(qint64 serial);
+
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; }
@@ -91,6 +93,7 @@ class LabelItem : public ViewItem {
     bool _resized;
     bool _dataRelativeDimValid;
     bool _fixleft;
+    qint64 _serialOfLastChange;
 };
 
 

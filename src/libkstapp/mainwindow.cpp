@@ -1726,6 +1726,14 @@ void MainWindow::updateViewItems(qint64 serial) {
     changed |= plot->handleChangedInputs(serial);
   }
 
+  QList<LabelItem*> labels = ViewItem::getItems<LabelItem>();
+  foreach (LabelItem * label, labels) {
+    if (label->_labelRc) {
+      label->inputsChanged(serial);
+    }
+  }
+
+
   if (changed) {
     _tabWidget->currentView()->update();
   }
