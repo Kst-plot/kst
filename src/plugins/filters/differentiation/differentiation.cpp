@@ -171,13 +171,12 @@ bool DifferentiationSource::algorithm() {
   /* Memory allocation */
   outputVector->resize(inputVector->length(), true);
 
-  outputVector->value()[0] = (inputVector->value()[1] - inputVector->value()[0]) / inputScalar->value();
-
-  int i = 1;
+  int i = 0;
   for (; i < inputVector->length()-1; i++) {
-      outputVector->value()[i] = (inputVector->value()[i+1] - inputVector->value()[i-1])/(2*inputScalar->value());
+      outputVector->value()[i] = (inputVector->value()[i+1] - inputVector->value()[i]) / inputScalar->value();
   }
 
+  // Repeat the last point to keep the vector length, even though it does not bring much additional info
   outputVector->value()[i] = (inputVector->value()[i] - inputVector->value()[i-1]) / inputScalar->value();
   return true;
 }
