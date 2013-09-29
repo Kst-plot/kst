@@ -13,7 +13,6 @@ kst_add_plugin(dataobject shift)
 kst_add_plugin(dataobject statistics)
 kst_add_plugin(dataobject syncbin)
 kst_add_plugin(dataobject crossspectrum)
-kst_add_plugin(dataobject differentiation)
 kst_add_plugin(dataobject effectivebandwidth)
 kst_add_plugin(dataobject genericfilter)
 

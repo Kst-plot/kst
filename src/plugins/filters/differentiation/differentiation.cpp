@@ -17,7 +17,7 @@
 #include "objectstore.h"
 #include "ui_differentiationconfig.h"
 
-static const QString& VECTOR_IN = "Y Vector";
+static const QString& VECTOR_IN = "Vector In";
 static const QString& SCALAR_IN = "Scale Scalar";
 static const QString& VECTOR_OUT = "dY/dX";
 
@@ -128,7 +128,11 @@ DifferentiationSource::~DifferentiationSource() {
 
 
 QString DifferentiationSource::_automaticDescriptiveName() const {
-  return QString(vector()->descriptiveName() + " Derivative");
+    if (vector()) {
+      return QString(vector()->descriptiveName() + " Derivative");
+    } else {
+      return QString("Derivative");
+    }
 }
 
 QString DifferentiationSource::descriptionTip() const {

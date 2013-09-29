@@ -46,6 +46,18 @@ class ConfigWidgetShiftPlugin : public Kst::DataObjectConfigWidget, public Ui_Sh
       }
     }
 
+    void setVectorX(Kst::VectorPtr vector) {
+      setSelectedVector(vector);
+    }
+
+    void setVectorY(Kst::VectorPtr vector) {
+      setSelectedVector(vector);
+    }
+
+    void setVectorsLocked(bool locked = true) {
+      _vector->setEnabled(!locked);
+    }
+
     Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
     void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };
 
@@ -120,6 +132,15 @@ ShiftSource::~ShiftSource() {
 
 QString ShiftSource::_automaticDescriptiveName() const {
   return QString("Shift Plugin Object");
+}
+
+QString ShiftSource::descriptionTip() const {
+  QString tip;
+
+  tip = i18n("Shift: %1\n  dX: %2\n").arg(Name()).arg(scalar()->value());
+
+  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  return tip;
 }
 
 
