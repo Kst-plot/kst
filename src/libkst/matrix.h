@@ -56,6 +56,7 @@ class KSTCORE_EXPORT Matrix : public Primitive
     // return the z value of the rectangle in which the specified point lies
     // ok is false if the point is out of bounds
     double value(double x, double y, bool *ok = 0L) const;
+    double value(double x, double y, QPointF &matchedPoint, bool *ok = 0L) const;
 
     // set the z value of the rectangle in which the specified point lies
     // return false if the point is out of bounds

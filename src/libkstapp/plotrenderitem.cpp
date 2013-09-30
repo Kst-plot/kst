@@ -805,10 +805,31 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
   if (kstApp->mainWindow()->isHighlightPoint()) {
     highlightNearestDataPoint(point);
   } else {
+    QPointF matchedPoint;
+    double imageZ;
+    bool bFoundImage = false;
+    QString message;
+    QString imageName;
+
+    foreach(RelationPtr relation, relationList()) {
+      if (Image* image = kst_cast<Image>(relation)) {
+        if (!bFoundImage && image->getNearestZ(point.x(), point.y(), imageZ, matchedPoint)) {
+          bFoundImage = true;
+          imageName = image->CleanedName();
+        }
+      }
+    }
     _highlightPointActive = false;
-    QString message = QString("(%1, %2)").
-                      arg(plotItem()->xAxis()->statusBarString(point.x())).
-                      arg(QString::number(point.y()));
+    if (bFoundImage) {
+      message = QString("%1 (%2, %3, %4)").arg(imageName).
+                arg(plotItem()->xAxis()->statusBarString(point.x())).
+                arg(QString::number(point.y())).
+                arg(QString::number(imageZ));
+    } else {
+      message = QString("(%1, %2)").
+                        arg(plotItem()->xAxis()->statusBarString(point.x())).
+                        arg(QString::number(point.y()));
+    }
     if (_referencePointMode) {
       message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
     }
@@ -852,7 +873,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
           }
         }
       } else if (Image* image = kst_cast<Image>(relation)) {
-        if (!bFoundImage && image->getNearestZ(position.x(), position.y(), imageZ)) {
+        if (!bFoundImage && image->getNearestZ(position.x(), position.y(), imageZ, matchedPoint)) {
           bFoundImage = true;
           imageName = image->CleanedName();
         }
@@ -873,9 +894,14 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
     } else if (!imageName.isEmpty()) {
       statusMessagePoint = position;
       QString message = imageName + QString(" (%1, %2, %3)").
-                        arg(plotItem()->xAxis()->statusBarString(position.x())).
-                        arg(QString::number(position.y())).
+                        arg(plotItem()->xAxis()->statusBarString(matchedPoint.x())).
+                        arg(QString::number(matchedPoint.y())).
                         arg(QString::number(imageZ, 'G'));
+      kstApp->mainWindow()->setStatusMessage(message);
+      _highlightPointActive = true;
+      _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
+    } else {
+      QString message = QString("(%1 %2)").arg(QString::number(position.x())).arg(QString::number(position.y()));
       kstApp->mainWindow()->setStatusMessage(message);
     }
   }

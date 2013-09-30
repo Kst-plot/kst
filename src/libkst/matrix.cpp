@@ -106,6 +106,23 @@ double Matrix::value(double x, double y, bool* ok) const {
 
 }
 
+double Matrix::value(double x, double y, QPointF &matchedPoint, bool* ok) const {
+  int x_index = (int)((x - _minX) / (double)_stepX);
+  int y_index = (int)((y - _minY) / (double)_stepY);
+
+  matchedPoint.setX((x_index+0.5)*_stepX+_minX);
+  matchedPoint.setY((y_index+0.5)*_stepY+_minY);
+
+  int index = zIndex(x_index, y_index);
+  if ((index < 0) || !isfinite(_z[index]) || KST_ISNAN(_z[index])) {
+    if (ok) (*ok) = false;
+    return 0.0;
+  }
+  if (ok) (*ok) = true;
+  return _z[index];
+
+}
+
 
 double Matrix::valueRaw(int x, int y, bool* ok) const {
   int index = zIndex(x,y);

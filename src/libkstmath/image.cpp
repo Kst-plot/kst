@@ -280,9 +280,9 @@ void Image::clearContourLines() {
 }
 
 
-bool Image::getNearestZ(double x, double y, double& z) {
+bool Image::getNearestZ(double x, double y, double& z, QPointF &matchedPoint) {
   bool ok;
-  z = _inputMatrices[THEMATRIX]->value(x,y,&ok);
+  z = _inputMatrices[THEMATRIX]->value(x, y, matchedPoint, &ok);
   return ok;
 }
 
