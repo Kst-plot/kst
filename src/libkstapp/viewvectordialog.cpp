@@ -31,22 +31,28 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   Q_ASSERT(_doc && _doc->objectStore());
   setupUi(this);
+  // Set icon size to be the same as other buttons
+  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+  _addVectorToView->setIcon(QPixmap(":magnifying_glass.png"));
+  _addVectorToView->setFixedSize(size + 8, size + 8);
+
   // TODO  ResizeToContents is too expensive
   //_vectors->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-  _vectors->verticalHeader()->hide();
+//  _vectors->verticalHeader()->hide();
 
-  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
+//  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
+  connect(_addVectorToView, SIGNAL(clicked()), this, SLOT(vectorSelected()));
   _vectorSelector->setObjectStore(doc->objectStore());
 
-  setAttribute(Qt::WA_DeleteOnClose);
+//  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 
 ViewVectorDialog::~ViewVectorDialog() {
-  delete _model;
-  _model = 0;
+//  delete _model;
+//  _model = 0;
 }
 
 
@@ -57,14 +63,11 @@ void ViewVectorDialog::show() {
 
 
 void ViewVectorDialog::vectorSelected() {
-  if (_model) {
-    delete _model;
-  }
-
-  VectorPtr vector = _vectorSelector->selectedVector();
-  if (vector) {
-    _model = new VectorModel(vector);
-    _vectors->setModel(_model);
+  if (_model == 0) {
+      _model = new VectorModel(_vectorSelector->selectedVector());
+      _vectors->setModel(_model);
+  } else {
+    _model->addVector(_vectorSelector->selectedVector());
   }
 }
 
