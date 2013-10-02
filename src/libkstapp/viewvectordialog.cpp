@@ -44,6 +44,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
 //  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
   connect(_addVectorToView, SIGNAL(clicked()), this, SLOT(vectorSelected()));
+  connect(_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+
   _vectorSelector->setObjectStore(doc->objectStore());
 
 //  setAttribute(Qt::WA_DeleteOnClose);
@@ -69,6 +71,12 @@ void ViewVectorDialog::vectorSelected() {
   } else {
     _model->addVector(_vectorSelector->selectedVector());
   }
+}
+
+void ViewVectorDialog::reset() {
+  delete _model;
+  _model = 0;
+
 }
 
 }

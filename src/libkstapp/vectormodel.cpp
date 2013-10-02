@@ -52,7 +52,7 @@ bool VectorModel::insertColumn(int column, const QModelIndex &parent)
 
 
 int VectorModel::columnCount(const QModelIndex&) const {
-  return _vectorList.length()+1;
+  return _vectorList.length();
 }
 
 
@@ -69,16 +69,16 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
   if (index.isValid() && !_vectorList.isEmpty()) {
     switch (role) {
       case Qt::DisplayRole:
-        if (index.column() == 0) {
-          return QVariant(index.row());
-        } else {
-          return QVariant(_vectorList.at(index.column()-1)->value(index.row()));
-        }
+//        if (index.column() == 0) {
+//          return QVariant(index.row());
+//        } else {
+          return QVariant(_vectorList.at(index.column())->value(index.row()));
+//        }
         break;
       case Qt::FontRole:
         {
           if (index.column() > 0) {
-            if (_vectorList.at(index.column()-1)->editable()) {
+            if (_vectorList.at(index.column())->editable()) {
               QFont f;
               f.setBold(true);
               return QVariant(f);
@@ -103,12 +103,12 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
   if (_vectorList.isEmpty() || role != Qt::DisplayRole || orientation == Qt::Vertical) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  if (section == 0) {
-    return QVariant("Index");
-  } else {
-    return QVariant(_vectorList.at(section-1)->Name());
-  }
-  return QVariant();
+//  if (section == 0) {
+//    return QVariant("Index");
+//  } else {
+    return QVariant(_vectorList.at(section)->Name());
+//  }
+//  return QVariant();
 }
 
 
@@ -131,7 +131,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
   }
 
-  if (!_vectorList.isEmpty() || !index.isValid() || !_vectorList.at(index.column()-1)->editable() || index.row() < 0 || index.row() >= rowCount()) {
+  if (!_vectorList.isEmpty() || !index.isValid() || !_vectorList.at(index.column())->editable() || index.row() < 0 || index.row() >= rowCount()) {
     return false;
   }
 
@@ -142,7 +142,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
   }
 
   qDebug() << "UGLY!! Add setData API to KstVector!";
-  double *d = const_cast<double*>(_vectorList.at(index.column()-1)->value());
+  double *d = const_cast<double*>(_vectorList.at(index.column())->value());
   d[index.row()] = v;
   return true;
 }

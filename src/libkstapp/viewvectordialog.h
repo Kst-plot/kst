@@ -35,6 +35,7 @@ class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 
 private Q_SLOTS:
     void vectorSelected();
+    void reset();
 
   private:
     Document *_doc;
