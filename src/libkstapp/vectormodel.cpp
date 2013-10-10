@@ -15,6 +15,7 @@
 #include <assert.h>
 
 #include <QFont>
+#include <QMenu>
 
 namespace Kst {
 
@@ -31,22 +32,19 @@ bool VectorModel::addVector(Vector *v)
 {
   assert(v);
   if (!_vectorList.contains(v)) {
-    beginInsertColumns(QModelIndex(), columnCount(), columnCount()+1);
+    beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
-    insertColumn(columnCount());
     endInsertColumns();
+    return true;
   }
-  reset();
-  return true;
+  return false;
 }
 
-bool VectorModel::removeVector(Vector *v)
+bool VectorModel::removeVector(int order)
 {
-    return false;
-}
-
-bool VectorModel::insertColumn(int column, const QModelIndex &parent)
-{
+  beginRemoveColumns(QModelIndex(), order, order);
+  _vectorList.removeAt(order);
+  endRemoveColumns();
   return true;
 }
 
@@ -69,20 +67,14 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
   if (index.isValid() && !_vectorList.isEmpty()) {
     switch (role) {
       case Qt::DisplayRole:
-//        if (index.column() == 0) {
-//          return QVariant(index.row());
-//        } else {
-          return QVariant(_vectorList.at(index.column())->value(index.row()));
-//        }
+        return QVariant(_vectorList.at(index.column())->value(index.row()));
         break;
       case Qt::FontRole:
         {
-          if (index.column() > 0) {
-            if (_vectorList.at(index.column())->editable()) {
-              QFont f;
-              f.setBold(true);
-              return QVariant(f);
-            }
+          if (_vectorList.at(index.column())->editable()) {
+            QFont f;
+            f.setBold(true);
+            return QVariant(f);
           }
         }
         break;
@@ -103,12 +95,7 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
   if (_vectorList.isEmpty() || role != Qt::DisplayRole || orientation == Qt::Vertical) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-//  if (section == 0) {
-//    return QVariant("Index");
-//  } else {
-    return QVariant(_vectorList.at(section)->Name());
-//  }
-//  return QVariant();
+  return QVariant(_vectorList.at(section)->Name());
 }
 
 
@@ -145,14 +132,6 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
   double *d = const_cast<double*>(_vectorList.at(index.column())->value());
   d[index.row()] = v;
   return true;
-}
-
-void VectorModel::beginInsertColumns(const QModelIndex &parent, int first, int last)
-{
-}
-
-void VectorModel::endInsertColumns()
-{
 }
 
 

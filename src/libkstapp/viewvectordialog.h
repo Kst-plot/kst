@@ -33,6 +33,9 @@ class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 
     virtual void show();
 
+public Q_SLOTS:
+  void contextMenu(const QPoint& position);
+
 private Q_SLOTS:
     void vectorSelected();
     void reset();

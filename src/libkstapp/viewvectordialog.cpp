@@ -18,6 +18,7 @@
 #include <datacollection.h>
 #include <objectstore.h>
 #include <QHeaderView>
+#include <QMenu>
 
 #ifdef QT5
 #define setResizeMode setSectionResizeMode
@@ -31,19 +32,18 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   Q_ASSERT(_doc && _doc->objectStore());
   setupUi(this);
-  // Set icon size to be the same as other buttons
-  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
-  _addVectorToView->setIcon(QPixmap(":magnifying_glass.png"));
-  _addVectorToView->setFixedSize(size + 8, size + 8);
 
   // TODO  ResizeToContents is too expensive
-  //_vectors->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+  // Allow reorganizing the columns per drag&drop
+  _vectors->horizontalHeader()->setMovable(true);
 
-//  _vectors->verticalHeader()->hide();
+  // Custom context menu for the remove action
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+          this, SLOT(contextMenu(const QPoint&)));
 
-//  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
-  connect(_addVectorToView, SIGNAL(clicked()), this, SLOT(vectorSelected()));
+  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
   connect(_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 
   _vectorSelector->setObjectStore(doc->objectStore());
@@ -53,14 +53,40 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
 
 ViewVectorDialog::~ViewVectorDialog() {
-//  delete _model;
-//  _model = 0;
+  delete _model;
 }
 
 
 void ViewVectorDialog::show() {
-  vectorSelected();
+  // vectorSelected();
   QDialog::show();
+}
+
+void ViewVectorDialog::contextMenu(const QPoint& position)
+{
+  QMenu menu;
+  QPoint cursor = QCursor::pos();
+  QAction* removeAction = menu.addAction(tr("Remove"));
+  QAction* selectedItem = menu.exec(cursor);
+  if (selectedItem == removeAction) {
+    // Get current selection
+    QModelIndexList sel = _vectors->selectionModel()->selectedIndexes();
+    // Now go through the list to see how may columns it spans
+    QList<int> columns;
+    QModelIndex index;
+    foreach (index, sel) {
+      if (!columns.contains(index.column())) {
+        columns << index.column();
+      }
+    }
+    // Sort the columns in descending order
+    qSort(columns.begin(), columns.end(), qGreater<int>());
+    // Remove columns starting from the highest index to avoid shifting them
+    int column;
+    foreach (column, columns) {
+      _model->removeVector(column);
+    }
+  }
 }
 
 

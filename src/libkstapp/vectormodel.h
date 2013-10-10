@@ -26,8 +26,7 @@ public:
   ~VectorModel();
 
   bool addVector(Vector *v);
-  bool removeVector(Vector *v);
-  bool insertColumn(int column, const QModelIndex &parent = QModelIndex());
+  bool removeVector(int order);
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
@@ -35,10 +34,6 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex& index) const;
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-
-protected:
-  virtual void beginInsertColumns(const QModelIndex &parent, int first, int last);
-  void endInsertColumns();
 
 private:
   QList<Vector *> _vectorList;

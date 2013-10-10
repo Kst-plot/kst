@@ -17,6 +17,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Select:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="Kst::VectorSelector" name="_vectorSelector" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -26,29 +33,14 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QToolButton" name="_addVectorToView">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>Add vector to the table view</string>
-       </property>
-       <property name="whatsThis">
-        <string>Adds the selected vector to the table view</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
-    <widget class="QTableView" name="_vectors"/>
+    <widget class="QTableView" name="_vectors">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vector from the drop-down menu to add it to the view.&lt;/p&gt;&lt;p&gt;You can remove vectors from the view using the context menu (right click).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
