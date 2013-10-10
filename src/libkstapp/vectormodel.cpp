@@ -19,7 +19,7 @@
 
 namespace Kst {
 
-VectorModel::VectorModel(Vector *v)
+VectorModel::VectorModel(VectorPtr v)
 : QAbstractTableModel () {
   addVector(v);
 }
@@ -28,7 +28,7 @@ VectorModel::VectorModel(Vector *v)
 VectorModel::~VectorModel() {
 }
 
-bool VectorModel::addVector(Vector *v)
+bool VectorModel::addVector(VectorPtr v)
 {
   assert(v);
   if (!_vectorList.contains(v)) {

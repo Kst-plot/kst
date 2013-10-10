@@ -22,10 +22,10 @@ namespace Kst {
 class VectorModel : public QAbstractTableModel
 {
 public:
-  VectorModel(Vector *v);
+  VectorModel(VectorPtr v);
   ~VectorModel();
 
-  bool addVector(Vector *v);
+  bool addVector(VectorPtr v);
   bool removeVector(int order);
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -36,7 +36,7 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 private:
-  QList<Vector *> _vectorList;
+  VectorList _vectorList;
 };
 
 }
