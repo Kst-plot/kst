@@ -196,7 +196,6 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
 
   _vectors->setSortingEnabled(false);
   _vectorsToPlot->setSortingEnabled(false);
-
 }
 
 
@@ -214,6 +213,7 @@ void DataWizardPageVectors::updateVectors() {
   _vectorsToPlot->clear();
 
   _vectors->addItems(((DataWizard*)wizard())->dataSourceFieldList());
+  _availableLabel->setText(QString::number(_vectors->count()) + i18n(" vector(s) available"));
 }
 
 
@@ -242,6 +242,8 @@ void DataWizardPageVectors::remove() {
   _vectorsToPlot->setCurrentRow(j);
   _vectors->clearSelection();
 
+  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + i18n(" vector(s) selected"));
+
   emit completeChanged();
 }
 
@@ -256,7 +258,7 @@ void DataWizardPageVectors::add() {
   }
 
   _vectorsToPlot->setCurrentRow(_vectorsToPlot->count() - 1);
-
+  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + i18n(" vector(s) selected"));
   emit completeChanged();
 }
 
