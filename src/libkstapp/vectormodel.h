@@ -22,7 +22,7 @@ namespace Kst {
 class VectorModel : public QAbstractTableModel
 {
 public:
-  VectorModel(VectorPtr v);
+  VectorModel();
   ~VectorModel();
 
   bool addVector(VectorPtr v);

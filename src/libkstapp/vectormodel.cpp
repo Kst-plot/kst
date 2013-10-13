@@ -19,9 +19,8 @@
 
 namespace Kst {
 
-VectorModel::VectorModel(VectorPtr v)
+VectorModel::VectorModel()
 : QAbstractTableModel () {
-  addVector(v);
 }
 
 
@@ -35,6 +34,7 @@ bool VectorModel::addVector(VectorPtr v)
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
     endInsertColumns();
+//    reset();
     return true;
   }
   return false;

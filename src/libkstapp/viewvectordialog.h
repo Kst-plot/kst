@@ -23,6 +23,7 @@ namespace Kst {
 
 class Document;
 class VectorModel;
+class EditMultipleWidget;
 
 class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 {
@@ -37,12 +38,14 @@ public Q_SLOTS:
   void contextMenu(const QPoint& position);
 
 private Q_SLOTS:
-    void vectorSelected();
-    void reset();
+  void addSelected();
+  void removeSelected();
+  void reset();
 
-  private:
-    Document *_doc;
-    VectorModel *_model;
+private:
+  Document *_doc;
+  VectorModel *_model;
+  EditMultipleWidget *_showMultipleWidget;
 };
 
 }
