@@ -34,7 +34,7 @@ bool VectorModel::addVector(VectorPtr v)
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
     endInsertColumns();
-//    reset();
+    reset();
     return true;
   }
   return false;
