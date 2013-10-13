@@ -139,6 +139,9 @@
        <property name="whatsThis">
         <string>Selected data: All fields in this list are plotted.  To remove fields from this list, drag them to the Available data list, double click on them, or select them and use the Remove button (right arrow icon or Alt-r).  The order in which fields appear in this list is the order in which they will be plotted.</string>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
@@ -251,8 +254,8 @@
      <y>152</y>
     </hint>
     <hint type="destinationlabel">
-     <x>256</x>
-     <y>43</y>
+     <x>257</x>
+     <y>39</y>
     </hint>
    </hints>
   </connection>
