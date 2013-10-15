@@ -36,6 +36,7 @@ class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
 
 public Q_SLOTS:
   void contextMenu(const QPoint& position);
+  void update();
 
 private Q_SLOTS:
   void addSelected();

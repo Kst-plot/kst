@@ -1739,6 +1739,9 @@ void MainWindow::updateViewItems(qint64 serial) {
 
   if (changed) {
     _tabWidget->currentView()->update();
+    if (_viewVectorDialog) {
+      _viewVectorDialog->update();
+    }
   }
 
   QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished()));

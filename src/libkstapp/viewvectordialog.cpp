@@ -48,17 +48,15 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   // Add vector list, reusing the editmultiplewidget class + some tweaking
   _showMultipleWidget = new EditMultipleWidget();
-  QPushButton *addButton = new QPushButton("+");
-  QPushButton *removeButton = new QPushButton("-");
+  QPushButton *addButton = new QPushButton();
+  addButton->setIcon(QPixmap(":kst_rightarrow.png"));
+  QPushButton *removeButton = new QPushButton();
+  removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
   if (_showMultipleWidget) {
     // Set header
     _showMultipleWidget->setHeader(i18n("Select Vectors to View"));
     // Populate the list
-    VectorList objects = _doc->objectStore()->getObjects<Vector>();
-    _showMultipleWidget->clearObjects();
-    foreach(VectorPtr object, objects) {
-      _showMultipleWidget->addObject(object->Name(), object->descriptionTip());
-    }
+    update();
     // Finish setting up the layout
     _listLayout->addWidget(_showMultipleWidget,0,0,Qt::AlignLeft);
     QVBoxLayout *addRemoveButtons = new QVBoxLayout();
@@ -95,6 +93,15 @@ void ViewVectorDialog::contextMenu(const QPoint& position)
   QAction* selectedItem = menu.exec(cursor);
   if (selectedItem == removeAction) {
     removeSelected();
+  }
+}
+
+void ViewVectorDialog::update()
+{
+  VectorList objects = _doc->objectStore()->getObjects<Vector>();
+  _showMultipleWidget->clearObjects();
+  foreach(VectorPtr object, objects) {
+    _showMultipleWidget->addObject(object->Name(), object->descriptionTip());
   }
 }
 
