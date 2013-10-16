@@ -67,7 +67,12 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
   if (index.isValid() && !_vectorList.isEmpty()) {
     switch (role) {
       case Qt::DisplayRole:
-        return QVariant(_vectorList.at(index.column())->value(index.row()));
+        // If vector is shorter display nothing
+        if (index.row() >= _vectorList.at(index.column())->length()) {
+            return QVariant(QString(""));
+        } else {
+          return QVariant(_vectorList.at(index.column())->value(index.row()));
+        }
         break;
       case Qt::FontRole:
         {
