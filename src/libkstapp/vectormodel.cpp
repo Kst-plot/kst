@@ -20,7 +20,7 @@
 namespace Kst {
 
 VectorModel::VectorModel()
-: QAbstractTableModel () {
+  : QAbstractTableModel (), _rows(0) {
 }
 
 
@@ -35,6 +35,7 @@ bool VectorModel::addVector(VectorPtr v)
     _vectorList.append(v);
     endInsertColumns();
     reset();
+    _rows = rowCount();
     return true;
   }
   return false;
@@ -69,7 +70,7 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
       case Qt::DisplayRole:
         // If vector is shorter display nothing
         if (index.row() >= _vectorList.at(index.column())->length()) {
-            return QVariant(QString(""));
+          return QVariant();
         } else {
           return QVariant(_vectorList.at(index.column())->value(index.row()));
         }
@@ -139,6 +140,12 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
   return true;
 }
 
+void VectorModel::resetIfChanged() {
+  if (_rows!=rowCount()) {
+    reset();
+    _rows = rowCount();
+  }
+}
 
 }
 

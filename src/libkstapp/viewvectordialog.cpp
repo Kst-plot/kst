@@ -103,6 +103,10 @@ void ViewVectorDialog::update()
   foreach(VectorPtr object, objects) {
     _showMultipleWidget->addObject(object->Name(), object->descriptionTip());
   }
+  if (_model) {
+    _model->resetIfChanged();
+    _vectors->viewport()->update();
+  }
 }
 
 void ViewVectorDialog::addSelected() {
