@@ -14,10 +14,12 @@
 
 #include "document.h"
 #include "vectormodel.h"
+#include "editmultiplewidget.h"
 
 #include <datacollection.h>
 #include <objectstore.h>
 #include <QHeaderView>
+#include <QMenu>
 
 #ifdef QT5
 #define setResizeMode setSectionResizeMode
@@ -31,42 +33,126 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   Q_ASSERT(_doc && _doc->objectStore());
   setupUi(this);
+
   // TODO  ResizeToContents is too expensive
-  //_vectors->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+  // Allow reorganizing the columns per drag&drop
+  _vectors->horizontalHeader()->setMovable(true);
 
-  _vectors->verticalHeader()->hide();
+  // Custom context menu for the remove action
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+          this, SLOT(contextMenu(const QPoint&)));
 
-  connect(_vectorSelector, SIGNAL(selectionChanged(const QString&)), this, SLOT(vectorSelected()));
-  _vectorSelector->setObjectStore(doc->objectStore());
+  connect(_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 
-  setAttribute(Qt::WA_DeleteOnClose);
+  // Add vector list, reusing the editmultiplewidget class + some tweaking
+  _showMultipleWidget = new EditMultipleWidget();
+  QPushButton *addButton = new QPushButton();
+  addButton->setIcon(QPixmap(":kst_rightarrow.png"));
+  QPushButton *removeButton = new QPushButton();
+  removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
+  if (_showMultipleWidget) {
+    // Set header
+    _showMultipleWidget->setHeader(i18n("Select Vectors to View"));
+    // Populate the list
+    update();
+    // Finish setting up the layout
+    _listLayout->addWidget(_showMultipleWidget,0,0,Qt::AlignLeft);
+    QVBoxLayout *addRemoveButtons = new QVBoxLayout();
+    addRemoveButtons->addStretch();
+    addRemoveButtons->addWidget(addButton);
+    addRemoveButtons->addWidget(removeButton);
+    addRemoveButtons->addStretch();
+    _listLayout->addLayout(addRemoveButtons,0,1);
+  }
+  _splitter->setStretchFactor(0,0);
+  _splitter->setStretchFactor(1,1);
+  connect(addButton, SIGNAL(clicked()), this, SLOT(addSelected()));
+  connect(removeButton, SIGNAL(clicked()), this, SLOT(removeSelected()));
+//  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 
 ViewVectorDialog::~ViewVectorDialog() {
   delete _model;
-  _model = 0;
+  delete _showMultipleWidget;
 }
 
 
 void ViewVectorDialog::show() {
-  vectorSelected();
+  // vectorSelected();
   QDialog::show();
 }
 
-
-void ViewVectorDialog::vectorSelected() {
-  if (_model) {
-    delete _model;
-  }
-
-  VectorPtr vector = _vectorSelector->selectedVector();
-  if (vector) {
-    _model = new VectorModel(vector);
-    _vectors->setModel(_model);
+void ViewVectorDialog::contextMenu(const QPoint& position)
+{
+  QMenu menu;
+  QPoint cursor = QCursor::pos();
+  QAction* removeAction = menu.addAction(tr("Remove"));
+  QAction* selectedItem = menu.exec(cursor);
+  if (selectedItem == removeAction) {
+    removeSelected();
   }
 }
+
+void ViewVectorDialog::update()
+{
+  VectorList objects = _doc->objectStore()->getObjects<Vector>();
+  _showMultipleWidget->clearObjects();
+  foreach(VectorPtr object, objects) {
+    _showMultipleWidget->addObject(object->Name(), object->descriptionTip());
+  }
+  if (_model) {
+    _model->resetIfChanged();
+    _vectors->viewport()->update();
+  }
+}
+
+void ViewVectorDialog::addSelected() {
+  if (_model == 0) {
+      _model = new VectorModel();
+      _vectors->setModel(_model);
+  }
+  // Retrieve list of selected objects by name
+  QStringList objects = _showMultipleWidget->selectedObjects();
+  // Get to the pointers and add them to the model
+  foreach (const QString &objectName, objects) {
+    VectorPtr vector = kst_cast<Vector>(_doc->objectStore()->retrieveObject(objectName));
+    if (vector) {
+      _model->addVector(vector);
+    }
+  }
+}
+
+void ViewVectorDialog::removeSelected() {
+  if (!_model) {
+    return;
+  }
+  // Get current selection
+  QModelIndexList sel = _vectors->selectionModel()->selectedIndexes();
+  // Now go through the list to see how may columns it spans
+  QList<int> columns;
+  QModelIndex index;
+  foreach (index, sel) {
+    if (!columns.contains(index.column())) {
+        columns << index.column();
+    }
+  }
+  // Sort the columns in descending order
+  qSort(columns.begin(), columns.end(), qGreater<int>());
+  // Remove columns starting from the highest index to avoid shifting them
+  int column;
+  foreach (column, columns) {
+    _model->removeVector(column);
+  }
+}
+
+void ViewVectorDialog::reset() {
+  delete _model;
+  _model = 0;
+}
+
 
 }
 

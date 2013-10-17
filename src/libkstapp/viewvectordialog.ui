@@ -1,81 +1,113 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ViewVectorDialog</class>
- <widget class="QDialog" name="ViewVectorDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="ViewVectorDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
+    <width>468</width>
     <height>536</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
    <string>View Vector Values</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="Kst::VectorSelector" native="1" name="_vectorSelector" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QTableView" name="_vectors" />
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+    <widget class="QSplitter" name="_splitter">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Close</set>
-     </property>
+     <widget class="QWidget" name="gridLayoutWidget">
+      <layout class="QGridLayout" name="_listLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="_viewLayout">
+       <item>
+        <widget class="QTableView" name="_vectors">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>450</width>
+           <height>450</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="_resetButton">
+           <property name="text">
+            <string>Reset View</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="_closeButton">
+           <property name="text">
+            <string>Close</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
+  <zorder>splitter</zorder>
+  <zorder>gridLayoutWidget</zorder>
+  <zorder>_vectors</zorder>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>Kst::VectorSelector</class>
-   <extends>QWidget</extends>
-   <header>vectorselector.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <sender>_closeButton</sender>
+   <signal>clicked()</signal>
    <receiver>ViewVectorDialog</receiver>
-   <slot>accept()</slot>
+   <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>263</x>
-     <y>513</y>
+    <hint type="sourcelabel">
+     <x>490</x>
+     <y>516</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>263</x>
-     <y>267</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ViewVectorDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>263</x>
-     <y>513</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>263</x>
-     <y>267</y>
+    <hint type="destinationlabel">
+     <x>17</x>
+     <y>518</y>
     </hint>
    </hints>
   </connection>

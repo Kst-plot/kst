@@ -15,42 +15,69 @@
 #include <assert.h>
 
 #include <QFont>
+#include <QMenu>
 
 namespace Kst {
 
-VectorModel::VectorModel(Vector *v)
-: QAbstractTableModel (), _vector(v) {
-  assert(v);
+VectorModel::VectorModel()
+  : QAbstractTableModel (), _rows(0) {
 }
 
 
 VectorModel::~VectorModel() {
 }
 
+bool VectorModel::addVector(VectorPtr v)
+{
+  assert(v);
+  if (!_vectorList.contains(v)) {
+    beginInsertColumns(QModelIndex(), columnCount(), columnCount());
+    _vectorList.append(v);
+    endInsertColumns();
+    reset();
+    _rows = rowCount();
+    return true;
+  }
+  return false;
+}
+
+bool VectorModel::removeVector(int order)
+{
+  beginRemoveColumns(QModelIndex(), order, order);
+  _vectorList.removeAt(order);
+  endRemoveColumns();
+  return true;
+}
+
 
 int VectorModel::columnCount(const QModelIndex&) const {
-  return 2;
+  return _vectorList.length();
 }
 
 
 int VectorModel::rowCount(const QModelIndex&) const {
-  return _vector ? _vector->length() : 0;
+  int length = 0;
+  for(int i=0;i<_vectorList.length();i++) {
+      length = qMax(length, _vectorList.at(i)->length());
+  }
+  return length;
 }
 
 
 QVariant VectorModel::data(const QModelIndex& index, int role) const {
-  if (index.isValid() && _vector) {
+  if (index.isValid() && !_vectorList.isEmpty()) {
     switch (role) {
       case Qt::DisplayRole:
-        if (index.column() == 0) {
-          return QVariant(index.row());
-        } else if (index.column() == 1) {
-          return QVariant(_vector->value(index.row()));
+        // If vector is shorter display nothing
+        if (index.row() >= _vectorList.at(index.column())->length()) {
+          return QVariant();
+        } else {
+          return QVariant(_vectorList.at(index.column())->value(index.row()));
         }
         break;
       case Qt::FontRole:
         {
-          if (_vector->editable()) {
+          if (_vectorList.at(index.column())->editable()) {
             QFont f;
             f.setBold(true);
             return QVariant(f);
@@ -71,27 +98,22 @@ QModelIndex VectorModel::parent(const QModelIndex&) const {
 
 
 QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int role) const {
-  if (!_vector || role != Qt::DisplayRole || orientation == Qt::Vertical || section > 1) {
+  if (_vectorList.isEmpty() || role != Qt::DisplayRole || orientation == Qt::Vertical) {
     return QAbstractItemModel::headerData(section, orientation, role);
   }
-  if (section == 0) {
-    return QVariant("Index");
-  } else if(section == 1) {
-    return QVariant(_vector->Name());
-  }
-  return QVariant();
+  return QVariant(_vectorList.at(section)->Name());
 }
 
 
 Qt::ItemFlags VectorModel::flags(const QModelIndex& index) const {
   Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!_vector || !index.isValid()) {
+  if (!_vectorList.isEmpty() || !index.isValid()) {
     return f;
   }
 
-  if (_vector->editable() && index.row() >= 0 && index.row() < _vector->length()) {
-    f |= Qt::ItemIsEditable;
-  }
+//  if (_vector->editable() && index.row() >= 0 && index.row() < _vector->length()) {
+//    f |= Qt::ItemIsEditable;
+//  }
 
   return f;
 }
@@ -102,7 +124,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
   }
 
-  if (!_vector || !index.isValid() || !_vector->editable() || index.row() < 0 || index.row() >= _vector->length()) {
+  if (!_vectorList.isEmpty() || !index.isValid() || !_vectorList.at(index.column())->editable() || index.row() < 0 || index.row() >= rowCount()) {
     return false;
   }
 
@@ -113,11 +135,17 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
   }
 
   qDebug() << "UGLY!! Add setData API to KstVector!";
-  double *d = const_cast<double*>(_vector->value());
+  double *d = const_cast<double*>(_vectorList.at(index.column())->value());
   d[index.row()] = v;
   return true;
 }
 
+void VectorModel::resetIfChanged() {
+  if (_rows!=rowCount()) {
+    reset();
+    _rows = rowCount();
+  }
+}
 
 }
 

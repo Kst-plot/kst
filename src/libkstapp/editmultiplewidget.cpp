@@ -91,6 +91,12 @@ void EditMultipleWidget::selectObjects(const QStringList &objects) {
     }
   }
 }
+
+void EditMultipleWidget::setHeader(const QString &header)
+{
+  _header->setText(header);
+}
+
 }
 
 // vim: ts=2 sw=2 et

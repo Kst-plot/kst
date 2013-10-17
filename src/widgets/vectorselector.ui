@@ -44,7 +44,7 @@
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string>Create a new vector.</string>
+      <string>Create a new vector</string>
      </property>
      <property name="whatsThis">
       <string>Opens a vector dialog to create a new vector, which will become the selected vector.</string>

@@ -46,6 +46,7 @@ class AboutDialog;
 class TabWidget;
 class View;
 class ScriptServer;
+class ViewVectorDialog;
 
 
 class MainWindow : public QMainWindow
@@ -208,6 +209,7 @@ class MainWindow : public QMainWindow
     ApplicationSettingsDialog *_applicationSettingsDialog;
     ThemeDialog *_themeDialog;
     AboutDialog* _aboutDialog;
+    ViewVectorDialog* _viewVectorDialog;
 
     QPointer<QProgressBar> _progressBar;
     QLabel *_messageLabel;

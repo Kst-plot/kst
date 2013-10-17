@@ -91,6 +91,7 @@ MainWindow::MainWindow() :
     _applicationSettingsDialog(0),
     _themeDialog(0),
     _aboutDialog(0),
+    _viewVectorDialog(0),
     _highlightPoint(false)
 #if defined(__QNX__)
   , _qnxToolbarsVisible(true)
@@ -141,6 +142,8 @@ MainWindow::~MainWindow() {
   _dataManager = 0;
   delete _doc;
   _doc = 0;
+  delete _viewVectorDialog;
+  _viewVectorDialog = 0;
   delete _scriptServer;
   _scriptServer = 0;
 }
@@ -1736,14 +1739,23 @@ void MainWindow::updateViewItems(qint64 serial) {
 
   if (changed) {
     _tabWidget->currentView()->update();
+    if (_viewVectorDialog) {
+      _viewVectorDialog->update();
+    }
   }
 
   QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished()));
 }
 
 void MainWindow::showVectorEditor() {
-  ViewVectorDialog *viewVectorDialog = new ViewVectorDialog(this, _doc);
-  viewVectorDialog->show();
+    if (!_viewVectorDialog) {
+      _viewVectorDialog = new ViewVectorDialog(this, _doc);
+    }
+    if (_viewVectorDialog->isVisible()) {
+      _viewVectorDialog->raise();
+      _viewVectorDialog->activateWindow();
+    }
+    _viewVectorDialog->show();
 }
 
 

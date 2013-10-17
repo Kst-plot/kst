@@ -31,6 +31,7 @@ class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
     void addObject(QString name, QString descriptionTip);
     QStringList selectedObjects() const;
     void selectObjects(const QStringList &objects);
+    void setHeader(const QString &header);
 
   private Q_SLOTS:
     void selectAllObjects();

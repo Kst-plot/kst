@@ -228,18 +228,14 @@ bool DataWizardPageVectors::isComplete() const {
 
 
 void DataWizardPageVectors::remove() {
-  int j=0;
-  for (int i = 0; i < _vectorsToPlot->count(); i++) {
-    if (_vectorsToPlot->item(i) && _vectorsToPlot->item(i)->isSelected()) {
-      _vectors->addItem(_vectorsToPlot->takeItem(i));
-      j = i;
+  int j=0, i=0;
+  int count = _vectorsToPlot->count();
+  for (i = 0; i < count; ++i) {
+    if (_vectorsToPlot->item(i-j) && _vectorsToPlot->item(i-j)->isSelected()) {
+      _vectors->addItem(_vectorsToPlot->takeItem(i-j));
+      j += 1;
     }
   }
-  if (j>=_vectorsToPlot->count()) {
-    j = _vectorsToPlot->count()-1;
-  }
-  _vectorsToPlot->setFocus();
-  _vectorsToPlot->setCurrentRow(j);
   _vectors->clearSelection();
 
   _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + i18n(" vector(s) selected"));
