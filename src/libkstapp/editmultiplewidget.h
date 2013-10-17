@@ -33,6 +33,9 @@ class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
     void selectObjects(const QStringList &objects);
     void setHeader(const QString &header);
 
+  Q_SIGNALS:
+    void itemDoubleClicked();
+
   private Q_SLOTS:
     void selectAllObjects();
     void applyFilter(const QString &filter);

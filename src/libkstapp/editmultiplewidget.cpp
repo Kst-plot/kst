@@ -29,6 +29,7 @@ EditMultipleWidget::EditMultipleWidget(QWidget *parent)
   textLabel1->setProperty("si","Filter:");
   _selectNoneBut->setProperty("si","Clear");
   _selectAllBut->setProperty("si","Select &All");
+  connect(_objectList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SIGNAL(itemDoubleClicked()));
 }
 
 

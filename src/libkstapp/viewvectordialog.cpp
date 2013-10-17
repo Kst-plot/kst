@@ -72,6 +72,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   _splitter->setStretchFactor(1,1);
   connect(addButton, SIGNAL(clicked()), this, SLOT(addSelected()));
   connect(removeButton, SIGNAL(clicked()), this, SLOT(removeSelected()));
+  connect(_showMultipleWidget, SIGNAL(itemDoubleClicked()), this, SLOT(addSelected()));
+
 //  setAttribute(Qt::WA_DeleteOnClose);
 }
 
