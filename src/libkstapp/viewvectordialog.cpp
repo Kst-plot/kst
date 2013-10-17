@@ -50,8 +50,10 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   _showMultipleWidget = new EditMultipleWidget();
   QPushButton *addButton = new QPushButton();
   addButton->setIcon(QPixmap(":kst_rightarrow.png"));
+  addButton->setShortcut(i18n("Alt+S"));
   QPushButton *removeButton = new QPushButton();
   removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
+  removeButton->setShortcut(i18n("Alt+R"));
   if (_showMultipleWidget) {
     // Set header
     _showMultipleWidget->setHeader(i18n("Select Vectors to View"));
