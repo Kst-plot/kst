@@ -33,6 +33,8 @@ bool VectorModel::addVector(VectorPtr v)
   if (!_vectorList.contains(v)) {
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
+    // Standard nb of digits after comma: 6
+    _digitNbList.append(6);
     endInsertColumns();
     reset();
     _rows = rowCount();
@@ -45,6 +47,7 @@ bool VectorModel::removeVector(int order)
 {
   beginRemoveColumns(QModelIndex(), order, order);
   _vectorList.removeAt(order);
+  _digitNbList.removeAt(order);
   endRemoveColumns();
   return true;
 }
@@ -72,7 +75,22 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
         if (index.row() >= _vectorList.at(index.column())->length()) {
           return QVariant();
         } else {
-          return QVariant(_vectorList.at(index.column())->value(index.row()));
+            double value = _vectorList.at(index.column())->value(index.row());
+            // Return string depending on number of digits, for 0 try to print as int
+            switch (_digitNbList.at(index.column())) {
+              case 0:
+                // Cast to long int if not too big
+                if (value < (double) LLONG_MAX && value > (double) -LLONG_MIN) {
+                  return QVariant(QString::number((qlonglong) value));
+                }
+                else {
+                  return QVariant(value);
+                }
+                break;
+              default:
+                return QVariant(QString::number(value, 'g', _digitNbList.at(index.column())));
+                break;
+            }
         }
         break;
       case Qt::FontRole:
@@ -145,6 +163,10 @@ void VectorModel::resetIfChanged() {
     reset();
     _rows = rowCount();
   }
+}
+
+void VectorModel::setDigitNumber(int column, int nbDigits) {
+  _digitNbList[column] = nbDigits;
 }
 
 }

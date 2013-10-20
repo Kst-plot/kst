@@ -35,8 +35,10 @@ public:
   Qt::ItemFlags flags(const QModelIndex& index) const;
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
   void resetIfChanged();
+  void setDigitNumber(int column, int nbDigits);
 private:
   VectorList _vectorList;
+  QList<int> _digitNbList;
   int _rows;
 };
 

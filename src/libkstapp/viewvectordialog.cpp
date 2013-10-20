@@ -34,12 +34,15 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   Q_ASSERT(_doc && _doc->objectStore());
   setupUi(this);
 
-  // TODO  ResizeToContents is too expensive
+  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+  _showVectorList->setFixedSize(size + 8, size + 8);
+  _hideVectorList->setFixedSize(size + 8, size + 8);
+
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
   // Allow reorganizing the columns per drag&drop
   _vectors->horizontalHeader()->setMovable(true);
 
-  // Custom context menu for the remove action
+  // Custom context menu for the remove action and display format
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
           this, SLOT(contextMenu(const QPoint&)));
@@ -48,31 +51,39 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   // Add vector list, reusing the editmultiplewidget class + some tweaking
   _showMultipleWidget = new EditMultipleWidget();
-  QPushButton *addButton = new QPushButton();
-  addButton->setIcon(QPixmap(":kst_rightarrow.png"));
-  addButton->setShortcut(i18n("Alt+S"));
-  QPushButton *removeButton = new QPushButton();
-  removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
-  removeButton->setShortcut(i18n("Alt+R"));
   if (_showMultipleWidget) {
     // Set header
     _showMultipleWidget->setHeader(i18n("Select Vectors to View"));
     // Populate the list
     update();
     // Finish setting up the layout
-    _listLayout->addWidget(_showMultipleWidget,0,0,Qt::AlignLeft);
-    QVBoxLayout *addRemoveButtons = new QVBoxLayout();
-    addRemoveButtons->addStretch();
-    addRemoveButtons->addWidget(addButton);
-    addRemoveButtons->addWidget(removeButton);
-    addRemoveButtons->addStretch();
-    _listLayout->addLayout(addRemoveButtons,0,1);
+    _vectorListLayout->addWidget(_showMultipleWidget);
   }
+  // Add/remove buttons
+  _addButton = new QPushButton();
+  _addButton->setIcon(QPixmap(":kst_rightarrow.png"));
+  _addButton->setShortcut(i18n("Alt+S"));
+  _addButton->setToolTip(i18n("View selected vector(s)"));
+  _addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  _removeButton = new QPushButton();
+  _removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
+  _removeButton->setShortcut(i18n("Alt+R"));
+  _removeButton->setToolTip(i18n("Remove selected vector(s) from view"));
+  _removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  _addRemoveLayout->addStretch();
+  _addRemoveLayout->addWidget(_addButton);
+  _addRemoveLayout->addWidget(_removeButton);
+  _addRemoveLayout->addStretch();
+
   _splitter->setStretchFactor(0,0);
   _splitter->setStretchFactor(1,1);
-  connect(addButton, SIGNAL(clicked()), this, SLOT(addSelected()));
-  connect(removeButton, SIGNAL(clicked()), this, SLOT(removeSelected()));
+  _splitter->setCollapsible(1, false);
+  _splitterSizes = _splitter->sizes();
+  connect(_addButton, SIGNAL(clicked()), this, SLOT(addSelected()));
+  connect(_removeButton, SIGNAL(clicked()), this, SLOT(removeSelected()));
   connect(_showMultipleWidget, SIGNAL(itemDoubleClicked()), this, SLOT(addSelected()));
+  connect(_showVectorList, SIGNAL(clicked()), this, SLOT(showVectorList()));
+  connect(_hideVectorList, SIGNAL(clicked()), this, SLOT(hideVectorList()));
 
 //  setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -81,6 +92,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 ViewVectorDialog::~ViewVectorDialog() {
   delete _model;
   delete _showMultipleWidget;
+  delete _addButton;
+  delete _removeButton;
 }
 
 
@@ -89,14 +102,38 @@ void ViewVectorDialog::show() {
   QDialog::show();
 }
 
-void ViewVectorDialog::contextMenu(const QPoint& position)
-{
+void ViewVectorDialog::contextMenu(const QPoint& position) {
   QMenu menu;
   QPoint cursor = QCursor::pos();
-  QAction* removeAction = menu.addAction(tr("Remove"));
+  QAction* removeAction = menu.addAction(i18n("Remove"));
+  // Add submenu to select nb of digits
+  QMenu* submenu = new QMenu(i18n("Significant digits"));
+  QAction* digitNb0Action = submenu->addAction(i18n("Show as int"));
+  QAction* digitNb3Action = submenu->addAction("3");
+  QAction* digitNb6Action = submenu->addAction(i18n("6 (default)"));
+  QAction* digitNb12Action = submenu->addAction("12");
+  QAction* digitNb17Action = submenu->addAction("17");
+  menu.addMenu(submenu);
   QAction* selectedItem = menu.exec(cursor);
+  int digits = 6;
   if (selectedItem == removeAction) {
     removeSelected();
+    return;
+  } else if (selectedItem == digitNb0Action) {
+      digits = 0;
+  } else if (selectedItem == digitNb3Action) {
+      digits = 3;
+  } else if (selectedItem == digitNb6Action) {
+      digits = 6;
+  } else if (selectedItem == digitNb12Action) {
+      digits = 12;
+  } else if (selectedItem == digitNb17Action) {
+      digits = 17;
+  } else {
+      return;
+  }
+  foreach (int column, selectedColumns()) {
+    _model->setDigitNumber(column, digits);
   }
 }
 
@@ -133,21 +170,9 @@ void ViewVectorDialog::removeSelected() {
   if (!_model) {
     return;
   }
-  // Get current selection
-  QModelIndexList sel = _vectors->selectionModel()->selectedIndexes();
-  // Now go through the list to see how may columns it spans
-  QList<int> columns;
-  QModelIndex index;
-  foreach (index, sel) {
-    if (!columns.contains(index.column())) {
-        columns << index.column();
-    }
-  }
-  // Sort the columns in descending order
-  qSort(columns.begin(), columns.end(), qGreater<int>());
   // Remove columns starting from the highest index to avoid shifting them
   int column;
-  foreach (column, columns) {
+  foreach (column, selectedColumns()) {
     _model->removeVector(column);
   }
 }
@@ -157,7 +182,36 @@ void ViewVectorDialog::reset() {
   _model = 0;
 }
 
+void ViewVectorDialog::showVectorList() {
+  _splitterSizes[0] = qMax(_splitterSizes[0],150);
+  _splitter->setSizes(_splitterSizes);
+}
+
+void ViewVectorDialog::hideVectorList() {
+  _splitterSizes = _splitter->sizes();
+  QList<int> sizes;
+  sizes << 0 << width();
+  _splitter->setSizes(sizes);
+}
+
+QList<int> ViewVectorDialog::selectedColumns() {
+  // Get current selection
+  QModelIndexList sel = _vectors->selectionModel()->selectedIndexes();
+  // Now go through the list to see how may columns it spans
+  QList<int> columns;
+  QModelIndex index;
+  foreach (index, sel) {
+    if (!columns.contains(index.column())) {
+      columns << index.column();
+    }
+  }
+  // Sort the columns in descending order
+  qSort(columns.begin(), columns.end(), qGreater<int>());
+  return columns;
+}
+
 
 }
+
 
 // vim: ts=2 sw=2 et

@@ -42,15 +42,20 @@ private Q_SLOTS:
   void addSelected();
   void removeSelected();
   void reset();
+  void showVectorList();
+  void hideVectorList();
 
 private:
+  QList<int> selectedColumns();
   Document *_doc;
   VectorModel *_model;
   EditMultipleWidget *_showMultipleWidget;
+  QPushButton *_addButton;
+  QPushButton *_removeButton;
+  QList<int> _splitterSizes;
 };
 
 }
-
 #endif
 
 // vim: ts=2 sw=2 et
