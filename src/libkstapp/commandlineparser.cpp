@@ -73,6 +73,7 @@ namespace Kst {
 "Position:\n"
 "      -P <plot name>:          Place curves in one plot.\n"
 "      -A                       Place future curves in individual plots.\n"
+"      -T <tab name>            Place future curves a new tab.\n"
 "Appearance\n"
 "      -d:                      use points for the next curve\n"
 "      -l:                      use lines for the next curve\n"
@@ -330,6 +331,25 @@ void CommandLineParser::createImageInPlot(MatrixPtr m) {
     _plotItem->update();
 }
 
+void CommandLineParser::createOrFindTab(const QString name) {
+  bool found = false;
+  int i;
+  int n_tabs = _mainWindow->tabWidget()->count();
+
+  for (i=0; i<n_tabs; i++) {
+    if (_mainWindow->tabWidget()->tabText(i) == name) {
+      found = true;
+      _mainWindow->tabWidget()->setCurrentIndex(i);
+      return;
+    }
+  }
+
+  if (!found) {
+    _mainWindow->tabWidget()->createView();
+    _mainWindow->tabWidget()->setCurrentViewName(name);
+  }
+}
+
 void CommandLineParser::createOrFindPlot( const QString plot_name ) {
     bool found = false;
     PlotItem *pi;
@@ -436,6 +456,15 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       createOrFindPlot(plot_name);
     } else if (arg == "-A") {
       _doConsecutivePlots = true;
+    } else if (arg == "-T") {
+      QString tab_name;
+      _doConsecutivePlots = true;
+      *ok = _setStringArg(tab_name,i18n("Usage: -T <tab name>\n"));
+      if (dataPlotted) {
+        createOrFindTab(tab_name);
+      } else {
+        _mainWindow->tabWidget()->setCurrentViewName(tab_name);
+      }
     } else if (arg == "-d") {
       _useBargraph=false;
       _useLines = false;

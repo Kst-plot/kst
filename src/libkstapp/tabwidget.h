@@ -36,7 +36,7 @@ class TabWidget : public QTabWidget
     QTabBar *tabBar() const { return QTabWidget::tabBar(); }
 
   Q_SIGNALS:
-        void currentViewModeChanged();
+    void currentViewModeChanged();
 
   public Q_SLOTS:
     View *createView();
