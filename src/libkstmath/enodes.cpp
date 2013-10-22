@@ -378,6 +378,46 @@ static double sec(double x) {
   return 1.0/cos(x);
 }
 
+static double acosd(double x) {
+  return 180.0/M_PI*acos(x);
+}
+
+static double asind(double x) {
+  return 180.0/M_PI*asin(x);
+}
+
+static double atand(double x) {
+  return 180.0/M_PI*atan(x);
+}
+
+static double cosd(double x) {
+  return cos(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double cotd(double x) {
+  return cot(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double cscd(double x) {
+  return csc(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double secd(double x) {
+  return sec(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double sind(double x) {
+  return sin(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double tand(double x) {
+  return tan(fmod(x, 360.0)*M_PI/180.0);
+}
+
+static double atanx(double *x) {
+  return atan2(x[0],x[1]);
+}
+
 static double step(double x) {
   if (x>0.0) {
     return 1.0;
@@ -391,30 +431,48 @@ static struct {
   const char *name;
   double (*func)(double);
 } FTable[] = {
-  {"abs",  &fabs},
-  {"acos", &acos},
-  {"asin", &asin},
-  {"atan", &atan},
+  {"abs",   &fabs},
+  {"acos",  &acos},
+  {"acosd", &acosd},
+  {"asin",  &asin},
+  {"asind", &asind},
+  {"atan",  &atan},
+  {"atand", &atand},
 #ifndef Q_OS_WIN32
   {"cbrt", &cbrt},
 #endif
   {"cos",  &cos},
+  {"cosd", &cosd},
   {"cosh", &cosh},
   {"cot",  &cot},
+  {"cotd", &cotd},
   {"csc",  &csc},
+  {"cscd", &cscd},
   {"exp",  &exp},
   {"log",  &log10},
   {"ln",   &log},
   {"sec",  &sec},
+  {"secd", &secd},
   {"sin",  &sin},
+  {"sind", &sind},
   {"sinh", &sinh},
   {"sqrt", &sqrt},
   {"step", &step},
   {"tan",  &tan},
+  {"tand", &tand},
   {"tanh", &tanh},
   {0, 0}
 };
 
+static struct {
+  const char *name;
+  double (*func)(double*);
+} F2Table[] = {
+
+  {"atanx", &atanx},
+  //{"atan2d", &atand2d},
+  {0, 0}
+};
 
 Function::Function(char *name, ArgumentList *args)
 : Node(), _name(name), _args(args), _f(0L) {
@@ -435,6 +493,15 @@ Function::Function(char *name, ArgumentList *args)
     if (strcasecmp(FTable[i].name, name) == 0) {
       _f = (void*)FTable[i].func;
       break;
+    }
+  }
+  if (!_f) {
+    for (int i = 0; F2Table[i].name; ++i) {
+      if (strcasecmp(F2Table[i].name, name) == 0) {
+        _f = (void*)F2Table[i].func;
+        _argCount = 2;
+        break;
+      }
     }
   }
 }
@@ -477,8 +544,9 @@ double Function::value(Context *ctx) {
     for (int i = 0; i < _argCount; ++i) {
       x[i] = _args->at(i, ctx);
     }
+    double r = ((double (*)(double*))_f)(x);
     delete[] x;
-    return ((double (*)(double*))_f)(x);
+    return r;
   } else {
     return ((double (*)())_f)();
   }

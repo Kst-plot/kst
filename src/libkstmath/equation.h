@@ -92,6 +92,9 @@ class KSTMATH_EXPORT Equation : public DataObject {
     virtual qint64 minInputSerial() const;
     virtual qint64 maxInputSerialOfLastChange() const;
 
+    QString readableEquation(const QString &equation) const;
+    QByteArray parseableEquation() const;
+
   private:
     QString _equation;
 

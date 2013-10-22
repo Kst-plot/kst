@@ -143,7 +143,7 @@ const QString Equation::reparsedEquation() const {
     }
 
     yylex_destroy();
-    yy_scan_string(_equation.toLatin1());
+    yy_scan_string(parseableEquation());
     ParsedEquation = 0L;
     int rc = yyparse(store());
     Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
@@ -156,8 +156,30 @@ const QString Equation::reparsedEquation() const {
     delete en;
     ParsedEquation = 0L;
     Equations::mutex().unlock();
+    //etext.replace("atanx(", "atan2(");
+    //etext.replace("atanxd(", "atan2d(");
   }
-  return (etext);
+  return (readableEquation(etext));
+}
+
+/** function names can't have numerals in them, but
+ * the best name for atan2 is ... atan2. So...
+ *  special case it is :-( */
+QByteArray Equation::parseableEquation() const {
+  QString eq = _equation;
+
+  eq.replace("atan2(", "atanx(", Qt::CaseInsensitive);
+  eq.replace("atan2d(", "atanxd(", Qt::CaseInsensitive);
+
+  return eq.toAscii();
+}
+QString Equation::readableEquation(const QString &equation) const {
+  QString eq = equation;
+
+  eq.replace("atanx(", "atan2(", Qt::CaseInsensitive);
+  eq.replace("atanxd(", "atan2d(", Qt::CaseInsensitive);
+
+  return eq;
 }
 
 void Equation::save(QXmlStreamWriter &s) {
@@ -168,7 +190,7 @@ void Equation::save(QXmlStreamWriter &s) {
   if (!_equation.isEmpty()) {
     QMutexLocker ml(&Equations::mutex());
     yylex_destroy();
-    yy_scan_string(_equation.toLatin1());
+    yy_scan_string(parseableEquation());
     ParsedEquation = 0L;
     int rc = yyparse(store());
     Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
@@ -209,7 +231,7 @@ void Equation::setEquation(const QString& in_fn) {
   if (!_equation.isEmpty()) {
     Equations::mutex().lock();
     yylex_destroy();
-    yy_scan_string(_equation.toLatin1());
+    yy_scan_string(parseableEquation());
     int rc = yyparse(store()); 
     _pe = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && _pe) {
@@ -455,7 +477,8 @@ bool Equation::FillY(bool force) {
 
     QMutexLocker ml(&Equations::mutex());
     yylex_destroy();
-    yy_scan_string(_equation.toLatin1());
+    QString eq = _equation;
+    yy_scan_string(parseableEquation());
     int rc = yyparse(store());
     _pe = static_cast<Equations::Node*>(ParsedEquation);
     if (_pe && rc == 0) {
