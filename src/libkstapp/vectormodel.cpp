@@ -80,7 +80,8 @@ QVariant VectorModel::data(const QModelIndex& index, int role) const {
             switch (_digitNbList.at(index.column())) {
               case 0:
                 // Cast to long int if not too big
-                if (value < (double) LLONG_MAX && value > (double) -LLONG_MIN) {
+                if (value < (double) LLONG_MAX && value > (double) LLONG_MIN) {
+                  qDebug() << "print as int";
                   return QVariant(QString::number((qlonglong) value));
                 }
                 else {
