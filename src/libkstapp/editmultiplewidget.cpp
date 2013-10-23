@@ -45,7 +45,7 @@ void EditMultipleWidget::applyFilter(const QString& filter) {
   _objectList->clearSelection();
 
   // case insensitive and wildcards
-  QRegExp re(filter, Qt::CaseInsensitive, QRegExp::Wildcard);
+  QRegExp re("*" + filter + "*", Qt::CaseInsensitive, QRegExp::Wildcard);
 
   uint c = _objectList->count();
   for (uint i = 0; i < c; ++i) {
