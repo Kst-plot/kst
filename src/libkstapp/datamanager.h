@@ -22,6 +22,7 @@
 #include "kst_export.h"
 
 class QToolBar;
+class QSortFilterProxyModel;
 
 namespace Kst {
 
@@ -77,7 +78,13 @@ class DataManager : public QDialog, Ui::DataManager
     QShortcut *_deleteShortcut;
     QMenu *_contextMenu;
 
+    QSortFilterProxyModel *_proxyModel;
+
     void showEvent(QShowEvent* event);
+
+  private Q_SLOTS:
+    void setFilterColumn(int index);
+    void setCaseSensitivity(int state);
 
 };
 

@@ -39,6 +39,7 @@
 #include <QToolBar>
 #include <QMenu>
 #include <QShortcut>
+#include <QSortFilterProxyModel>
 
 #ifdef QT5
 #define setResizeMode setSectionResizeMode
@@ -53,10 +54,21 @@ DataManager::DataManager(QWidget *parent, Document *doc)
 
   MainWindow::setWidgetFlags(this);
 
-  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
-  _session->setModel(doc->session());
+  // Setup proxy model for filtering / sorting
+  _proxyModel = new QSortFilterProxyModel(this);
+  _proxyModel->setSourceModel(doc->session());
+  _proxyModel->setFilterKeyColumn(-1); // Filter on all columns by default
+  _proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+  _session->setModel(_proxyModel);
+  connect(_filterText, SIGNAL(textChanged(QString)), _proxyModel, SLOT(setFilterWildcard(QString)));
+  connect(_caseSensitive, SIGNAL(stateChanged(int)), this, SLOT(setCaseSensitivity(int)));
+  connect(_filterColumn, SIGNAL(currentIndexChanged(int)), this, SLOT(setFilterColumn(int)));
 
+
+  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
+  _session->setSortingEnabled(true);
+  _session->sortByColumn(1); // Sort by type by default
   _session->setUniformRowHeights(true);
   connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
           this, SLOT(showContextMenu(const QPoint &)));
@@ -91,9 +103,9 @@ void DataManager::showEvent(QShowEvent*)
 void DataManager::showContextMenu(const QPoint &position) {
   QList<QAction *> actions;
   if (_session->indexAt(position).isValid()) {
-    SessionModel *model = static_cast<SessionModel*>(_session->model());
-    if (!model->parent(_session->indexAt(position)).isValid()) {
-      _currentObject = model->objectList()->at(_session->indexAt(position).row());
+    SessionModel *model = static_cast<SessionModel*>(_doc->session());
+    if (!model->parent(_proxyModel->mapToSource(_session->indexAt(position))).isValid()) {
+      _currentObject = model->objectList()->at(_proxyModel->mapToSource(_session->indexAt(position)).row());
       if (_currentObject) {
         QAction *action = new QAction(_currentObject->Name(), this);
         action->setEnabled(false);
@@ -185,12 +197,12 @@ void DataManager::showContextMenu(const QPoint &position) {
         actions.append(action);
       }
     } else {
-      DataObjectPtr dataObject = kst_cast<DataObject>(model->objectList()->at(_session->indexAt(position).parent().row()));
+      DataObjectPtr dataObject = kst_cast<DataObject>(model->objectList()->at(_proxyModel->mapToSource(_session->indexAt(position)).parent().row()));
       if (dataObject) {
-        if (dataObject->outputVectors().count() > _session->indexAt(position).row()) {
-          _currentObject = dataObject->outputVectors().values()[_session->indexAt(position).row()];
+        if (dataObject->outputVectors().count() > _proxyModel->mapToSource(_session->indexAt(position)).row()) {
+          _currentObject = dataObject->outputVectors().values()[_proxyModel->mapToSource(_session->indexAt(position)).row()];
         } else {
-          _currentObject = dataObject->outputMatrices().values()[_session->indexAt(position).row() - dataObject->outputVectors().count()];
+          _currentObject = dataObject->outputMatrices().values()[_proxyModel->mapToSource(_session->indexAt(position)).row() - dataObject->outputVectors().count()];
         }
         if (_currentObject) {
           QAction *action = new QAction(_currentObject->Name(), this);
@@ -235,9 +247,9 @@ void DataManager::showContextMenu(const QPoint &position) {
 
 void DataManager::showEditDialog(QModelIndex qml) {
   if (!qml.parent().isValid()) { // don't edit slave objects
-    SessionModel *model = static_cast<SessionModel*>(_session->model());
+    SessionModel *model = static_cast<SessionModel*>(_doc->session());
 
-    _currentObject = model->objectList()->at(qml.row());
+    _currentObject = model->objectList()->at(_proxyModel->mapToSource(qml).row());
 
     showEditDialog();
   }
@@ -357,8 +369,8 @@ void DataManager::showFitDialog() {
 
 
 void DataManager::deleteObject() {
-  SessionModel *model = static_cast<SessionModel*>(_session->model());
-  int row = _session->selectionModel()->selectedIndexes()[0].row(); // Single selection mode => only one selected index
+  SessionModel *model = static_cast<SessionModel*>(_doc->session());
+  int row = _proxyModel->mapToSource(_session->selectionModel()->selectedIndexes()[0]).row(); // Single selection mode => only one selected index
   _currentObject = model->objectList()->at(row);
   if (RelationPtr relation = kst_cast<Relation>(_currentObject)) {
     Data::self()->removeCurveFromPlots(relation);
@@ -371,7 +383,7 @@ void DataManager::deleteObject() {
   _currentObject = 0;
   _doc->session()->triggerReset();
   // Now select the next item
-  _session->selectionModel()->select(model->index(row,0), QItemSelectionModel::Select);
+  _session->selectionModel()->select(_proxyModel->mapFromSource(model->index(row,0)), QItemSelectionModel::Select);
   // Cleanup and return
   _doc->objectStore()->cleanUpDataSourceList();
 }
@@ -496,6 +508,17 @@ void DataManager::purge() {
   _session->reset();
 }
 
+void DataManager::setFilterColumn(int column) {
+  _proxyModel->setFilterKeyColumn(column-1);
 }
 
+void DataManager::setCaseSensitivity(int state) {
+  if (state) {
+    _proxyModel->setFilterCaseSensitivity(Qt::CaseSensitive);
+  } else {
+    _proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+  }
+}
+
+}
 // vim: ts=2 sw=2 et
