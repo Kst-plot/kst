@@ -97,6 +97,15 @@ ViewVectorDialog::~ViewVectorDialog() {
 }
 
 
+bool ViewVectorDialog::event(QEvent * event) {
+  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
+    update();
+  }
+  return QWidget::event(event);
+}
+
+
+
 void ViewVectorDialog::show() {
   // vectorSelected();
   QDialog::show();

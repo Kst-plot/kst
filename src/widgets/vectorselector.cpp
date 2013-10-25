@@ -198,7 +198,6 @@ void VectorSelector::fillVectors() {
   if (!_store) {
     return;
   }
-
   int current_index = _vector->currentIndex();
   VectorPtr current = selectedVector();
 
