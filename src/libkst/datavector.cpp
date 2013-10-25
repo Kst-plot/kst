@@ -449,8 +449,8 @@ void DataVector::internalUpdate() {
   }
 
   if (DoSkip) {
-    // change new_f0 and new_nf so they both lie on skip boundaries
-    if (new_f0 != 0) {
+    // in count from end mode, change new_f0 and new_nf so they both lie on skip boundaries
+    if ((new_f0 != 0) && (ReqF0<0)) {
       new_f0 = ((new_f0-1)/Skip+1)*Skip;
     }
     new_nf = (new_nf/Skip)*Skip;
