@@ -3336,14 +3336,19 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
 
 void PlotItem::copyStatus() {
   kstApp->clipboard()->setText(kstApp->mainWindow()->statusMessage());
+  kstApp->mainWindow()->setStatusMessage(i18n("Info copied to clipboard: ") + kstApp->mainWindow()->statusMessage());
 }
 
 void PlotItem::copyXCoord() {
-  kstApp->clipboard()->setText(QString::number(renderItem()->statusMessagePoint.x(), 'g', 12));
+  QString valueString = QString::number(renderItem()->statusMessagePoint.x(), 'g', 12);
+  kstApp->clipboard()->setText(valueString);
+  kstApp->mainWindow()->setStatusMessage(i18n("X coordinate copied to clipboard: ") + valueString);
 }
 
 void PlotItem::copyYCoord() {
-  kstApp->clipboard()->setText(QString::number(renderItem()->statusMessagePoint.y(), 'g', 12));
+  QString valueString = QString::number(renderItem()->statusMessagePoint.y(), 'g', 12);
+  kstApp->clipboard()->setText(valueString);
+  kstApp->mainWindow()->setStatusMessage(i18n("Y coordinate copied to clipboard: ") + valueString);
 }
 
 QString PlotItem::descriptionTip() const {
