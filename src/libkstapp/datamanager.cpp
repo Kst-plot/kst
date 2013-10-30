@@ -61,6 +61,11 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _proxyModel->setFilterKeyColumn(-1); // Filter on all columns by default
   _proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
   _session->setModel(_proxyModel);
+
+#if QT_VERSION >= 0x040700
+  _filterText->setPlaceholderText(i18n("Enter your filter here (wildcards allowed)"));
+#endif
+
   connect(_filterText, SIGNAL(textChanged(QString)), _proxyModel, SLOT(setFilterWildcard(QString)));
   connect(_caseSensitive, SIGNAL(stateChanged(int)), this, SLOT(setCaseSensitivity(int)));
   connect(_filterColumn, SIGNAL(currentIndexChanged(int)), this, SLOT(setFilterColumn(int)));
