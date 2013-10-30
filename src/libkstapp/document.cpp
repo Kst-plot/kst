@@ -24,6 +24,7 @@
 #include <commandlineparser.h>
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "updateserver.h"
 
 #include <QDebug>
 #include <QFile>
@@ -417,6 +418,9 @@ bool Document::open(const QString& file) {
   setChanged(false);
   // Restore current app path
   QDir::setCurrent(restorePath);
+
+
+  UpdateServer::self()->requestUpdateSignal();
 
   return _isOpen = true;
 }

@@ -862,6 +862,8 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
 
   _dataObjectName = matrix->Name();
 
+  //UpdateServer::self()->requestUpdateSignal();
+
   return static_cast<ObjectPtr>(matrix);
 }
 

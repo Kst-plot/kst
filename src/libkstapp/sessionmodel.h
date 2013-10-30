@@ -25,6 +25,8 @@ class ObjectStore;
 
 class SessionModel : public QAbstractItemModel
 {
+    Q_OBJECT
+
 public:
   SessionModel(ObjectStore *store);
   ~SessionModel();
@@ -36,8 +38,11 @@ public:
   QModelIndex parent(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   void generateObjectList();
-  void triggerReset();
   ObjectList<Object> *objectList() {return &_objectList;}
+
+public Q_SLOTS:
+  void triggerReset();
+
 private:
   QVariant dataObjectOutputData(DataObjectPtr parent, const QModelIndex& index) const;
   QVariant primitiveData(PrimitivePtr parent, const QModelIndex& index) const;

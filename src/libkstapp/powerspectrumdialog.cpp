@@ -296,7 +296,6 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
           }
       }
   }
-  UpdateManager::self()->doUpdates(true);
 
   return ObjectPtr(powerspectrum.data());
 }
@@ -368,7 +367,6 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       _powerSpectrumTab->FFTOptionsWidget()->setWidgetDefaults();
     }
   }
-  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

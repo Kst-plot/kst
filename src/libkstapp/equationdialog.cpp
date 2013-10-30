@@ -395,8 +395,6 @@ ObjectPtr EquationDialog::createNewDataObject() {
       }
   }
 
-  UpdateManager::self()->doUpdates(true);
-
   return ObjectPtr(equation.data());
 }
 
@@ -433,7 +431,6 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       equation->unlock();
     }
   }
-  UpdateManager::self()->doUpdates(true);
 
   return dataObject();
 }

@@ -278,7 +278,6 @@ ObjectPtr CSDDialog::createNewDataObject() {
           }
       }
   }
-  UpdateManager::self()->doUpdates(true);
 
   return ObjectPtr(image.data());
 }
@@ -346,7 +345,6 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
       csd->unlock();
     }
   }
-  UpdateManager::self()->doUpdates(true);
 
   return dataObject();
 }

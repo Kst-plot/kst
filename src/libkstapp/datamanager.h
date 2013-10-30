@@ -60,8 +60,6 @@ class DataManager : public QDialog, Ui::DataManager
     void addToPlot(QAction* action);
     void removeFromPlot(QAction* action);
 
-    virtual bool event(QEvent * event);
-
     void setUsedFlags();
     void purge();
 

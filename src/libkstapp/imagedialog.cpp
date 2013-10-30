@@ -515,6 +515,8 @@ ObjectPtr ImageDialog::createNewDataObject() {
       }
   }
 
+  //UpdateServer::self()->requestUpdateSignal();
+
   return ObjectPtr(image.data());
 }
 
@@ -610,7 +612,6 @@ ObjectPtr ImageDialog::editExistingDataObject() const {
       image->unlock();
     }
   }
-  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

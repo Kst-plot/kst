@@ -35,7 +35,7 @@ class ObjectNameIndex;
 // The ObjectStore is responsible for storing all the Objects in an
 // application.
 
-class KSTCORE_EXPORT ObjectStore 
+class KSTCORE_EXPORT ObjectStore
 {
   public:
     ObjectStore();

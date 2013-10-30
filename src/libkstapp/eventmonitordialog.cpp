@@ -330,7 +330,6 @@ ObjectPtr EventMonitorDialog::createNewDataObject() {
   eventMonitor->writeLock();
   eventMonitor->registerChange();
   eventMonitor->unlock();
-  UpdateManager::self()->doUpdates(true);
 
   return ObjectPtr(eventMonitor.data());
 }
@@ -384,7 +383,6 @@ ObjectPtr EventMonitorDialog::editExistingDataObject() const {
       eventMonitor->unlock();
     }
   }
-  UpdateManager::self()->doUpdates(true);
   return dataObject();}
 
 }

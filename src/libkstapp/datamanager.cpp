@@ -34,6 +34,7 @@
 #include "image.h"
 #include "csd.h"
 #include "basicplugin.h"
+#include "updateserver.h"
 
 #include <QHeaderView>
 #include <QToolBar>
@@ -260,14 +261,6 @@ void DataManager::showEditDialog() {
 }
 
 
-bool DataManager::event(QEvent * event) {
-  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Show)) {
-    _doc->session()->triggerReset();
-  }
-  return QDialog::event(event);
-}
-
-
 void DataManager::showVectorDialog() {
   QString tmp;
   DialogLauncher::self()->showVectorDialog(tmp);
@@ -381,7 +374,8 @@ void DataManager::deleteObject() {
     _doc->objectStore()->removeObject(primitive);
   }
   _currentObject = 0;
-  _doc->session()->triggerReset();
+  UpdateServer::self()->requestUpdateSignal();
+
   // Now select the next item
   _session->selectionModel()->select(_proxyModel->mapFromSource(model->index(row,0)), QItemSelectionModel::Select);
   // Cleanup and return
@@ -504,7 +498,7 @@ void DataManager::purge() {
   do {
     setUsedFlags();
   } while (_doc->objectStore()->deleteUnsetUsedFlags());
-  _doc->session()->triggerReset();
+  UpdateServer::self()->requestUpdateSignal();
   _session->reset();
 }
 

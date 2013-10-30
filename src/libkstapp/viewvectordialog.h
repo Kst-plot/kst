@@ -33,7 +33,6 @@ class ViewVectorDialog : public QDialog, Ui::ViewVectorDialog
     virtual ~ViewVectorDialog();
 
     virtual void show();
-    virtual bool event(QEvent * event);
 
 public Q_SLOTS:
   void contextMenu(const QPoint& position);

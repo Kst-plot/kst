@@ -34,6 +34,7 @@
 #include "datasourcepluginmanager.h"
 #include "sharedaxisboxitem.h"
 #include "boxitem.h"
+#include "updateserver.h"
 
 
 namespace Kst {
@@ -1267,6 +1268,7 @@ void DataWizard::finished() {
   QApplication::restoreOverrideCursor();
   accept();
 
+  UpdateServer::self()->requestUpdateSignal();
 }
 
 }

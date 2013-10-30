@@ -31,6 +31,7 @@
 #include "application.h"
 #include "updatemanager.h"
 #include "sessionmodel.h"
+#include "updateserver.h"
 
 namespace Kst {
 
@@ -175,11 +176,12 @@ void DataDialog::slotApply() {
     ptr = editExistingDataObject();
   }
   setDataObject(ptr);
+
   UpdateManager::self()->doUpdates();
+  UpdateServer::self()->requestUpdateSignal();
+
   kstApp->mainWindow()->document()->setChanged(true);
-  if (do_session_reset) {
-    kstApp->mainWindow()->document()->session()->triggerReset();
-  }
+
   clearModified();
 }
 

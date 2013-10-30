@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "sessionmodel.h"
+#include "updateserver.h"
 
 #include <assert.h>
 #include <objectstore.h>
@@ -28,6 +29,8 @@ namespace Kst {
 SessionModel::SessionModel(ObjectStore *store)
 : QAbstractItemModel(), _store(store) {
   generateObjectList();
+
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(triggerReset()));
 }
 
 

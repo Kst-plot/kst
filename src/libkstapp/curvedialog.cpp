@@ -477,8 +477,6 @@ ObjectPtr CurveDialog::createNewDataObject() {
       }
   }
 
-  UpdateManager::self()->doUpdates(true);
-
   return ObjectPtr(curve.data());
 }
 
@@ -601,7 +599,6 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
     }
   }
 
-  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

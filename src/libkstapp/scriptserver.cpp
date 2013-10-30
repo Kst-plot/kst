@@ -17,6 +17,7 @@
 #include "viewitemscriptinterface.h"
 
 #include "sessionmodel.h"
+#include "updateserver.h"
 #include "datagui.h"
 
 //viewitems
@@ -613,6 +614,7 @@ QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket
     objectPtr->setDescriptiveName("Script Vector");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
+    UpdateServer::self()->requestUpdateSignal();
     return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
 }
 
@@ -663,6 +665,7 @@ QByteArray ScriptServer::newEditableMatrixAndGetHandle(QByteArray&, QLocalSocket
     objectPtr->setDescriptiveName("Script Matrix");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
+    UpdateServer::self()->requestUpdateSignal();
     return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
 }
 
@@ -1065,7 +1068,8 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
             Data::self()->removeCurveFromPlots(relation);
         }
         _store->removeObject(o);
-        kstApp->mainWindow()->document()->session()->triggerReset();
+        UpdateServer::self()->requestUpdateSignal();
+
         return handleResponse("It died a peaceful death.",s,ifMode,ifEqual,_if,var);
     }
 }

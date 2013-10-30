@@ -300,7 +300,6 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
   }
 
   _filterFitTab->configWidget()->save();
-  UpdateManager::self()->doUpdates(true);
 
   return dataObject;
 }
@@ -318,7 +317,6 @@ ObjectPtr FilterFitDialog::editExistingDataObject() const {
     plugin->registerChange();
     plugin->unlock();
   }
-  UpdateManager::self()->doUpdates(true);
   return dataObject();
 }
 

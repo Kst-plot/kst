@@ -491,6 +491,7 @@ ObjectPtr VectorDialog::createNewDataVector() {
 
   _dataObjectName = vector->Name();
 
+  //UpdateServer::self()->requestUpdateSignal();
   return vector;
 }
 
@@ -514,6 +515,7 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
 
   _dataObjectName = vector->Name();
 
+  //UpdateServer::self()->requestUpdateSignal();
   return vector;
 }
 

@@ -15,6 +15,7 @@
 #include "document.h"
 #include "vectormodel.h"
 #include "editmultiplewidget.h"
+#include "updateserver.h"
 
 #include <datacollection.h>
 #include <objectstore.h>
@@ -85,7 +86,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   connect(_showVectorList, SIGNAL(clicked()), this, SLOT(showVectorList()));
   connect(_hideVectorList, SIGNAL(clicked()), this, SLOT(hideVectorList()));
 
-//  setAttribute(Qt::WA_DeleteOnClose);
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(update()));
+
 }
 
 
@@ -95,16 +97,6 @@ ViewVectorDialog::~ViewVectorDialog() {
   delete _addButton;
   delete _removeButton;
 }
-
-
-bool ViewVectorDialog::event(QEvent * event) {
-  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
-    update();
-  }
-  return QWidget::event(event);
-}
-
-
 
 void ViewVectorDialog::show() {
   // vectorSelected();

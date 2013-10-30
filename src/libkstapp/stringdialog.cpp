@@ -281,6 +281,8 @@ ObjectPtr StringDialog::createNewGeneratedString(){
 
   _dataObjectName = string->Name();
 
+  //UpdateServer::self()->requestUpdateSignal();
+
   return static_cast<ObjectPtr>(string);
 }
 
@@ -310,6 +312,8 @@ ObjectPtr StringDialog::createNewDataString() {
   string->unlock();
 
   _dataObjectName = string->Name();
+
+  //UpdateServer::self()->requestUpdateSignal();
 
   return string;
 }

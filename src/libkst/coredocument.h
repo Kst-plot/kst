@@ -27,7 +27,7 @@ namespace Kst {
 
 class ObjectStore;
 
-class KSTCORE_EXPORT CoreDocument 
+class KSTCORE_EXPORT CoreDocument
 {
   public:
     CoreDocument();

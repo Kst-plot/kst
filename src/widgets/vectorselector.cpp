@@ -17,6 +17,7 @@
 #include "objectstore.h"
 #include "dialogdefaults.h"
 #include "curve.h"
+#include "updateserver.h"
 
 namespace Kst {
 
@@ -39,6 +40,7 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
   connect(_vector, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
   connect(_vector, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDescriptionTip()));
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(fillVectors()));
 }
 
 
@@ -240,7 +242,7 @@ void VectorSelector::fillVectors() {
 
 bool VectorSelector::event(QEvent * event) {
   if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
-    fillVectors();
+    //fillVectors();
   }
   return QWidget::event(event);
 }

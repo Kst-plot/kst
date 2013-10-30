@@ -732,6 +732,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     _plotItem->view()->resetPlotFontSizes();
   }
   UpdateManager::self()->doUpdates(true);
+
   return (dataPlotted);
 }
 

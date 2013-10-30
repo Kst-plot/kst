@@ -345,6 +345,8 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
 
   _dataObjectName = scalar->Name();
 
+  //UpdateServer::self()->requestUpdateSignal();
+
   return static_cast<ObjectPtr>(scalar);
 }
 
@@ -374,6 +376,8 @@ ObjectPtr ScalarDialog::createNewDataScalar() {
   scalar->unlock();
 
   _dataObjectName = scalar->Name();
+
+  //UpdateServer::self()->requestUpdateSignal();
 
   return scalar;
 }
@@ -405,6 +409,8 @@ ObjectPtr ScalarDialog::createNewVScalar() {
   scalar->unlock();
 
   _dataObjectName = scalar->Name();
+
+  //UpdateServer::self()->requestUpdateSignal();
 
   return scalar;
 }
