@@ -50,13 +50,14 @@ class ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
     void OKClicked();
     void apply();
 
+    void updateCurveListDialog();
 
   private:
-    void updateCurveListDialog();
 
     void updateIndexEntries();
 
     ObjectStore *_store;
+
 
 };
 

@@ -54,9 +54,9 @@ class ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
     void OKClicked();
     void apply();
 
-  private:
     void updatePrimitiveList();
 
+  private:
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;

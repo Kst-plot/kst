@@ -20,6 +20,7 @@
 #include "application.h"
 #include "dialogdefaults.h"
 #include "updatemanager.h"
+#include "updateserver.h"
 
 #include <QMessageBox>
 
@@ -54,6 +55,7 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updateCurveListDialog()));
 
   initializeEntries();
   updateButtons();
@@ -188,6 +190,7 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
     if (!exists) {
       QListWidgetItem *item = _vectorList->takeItem(i_item);
       delete item;
+      i_item--;
     }
   }
 
@@ -203,6 +206,7 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
     if (!exists) {
       QListWidgetItem *item = _selectedVectorList->takeItem(i_item);
       delete item;
+      i_item--;
     }
   }
 
@@ -379,6 +383,7 @@ void ChangeDataSampleDialog::apply() {
   }
 
   UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
 
   _dialogDefaults->setValue("vector/range", _dataRange->range());
   _dialogDefaults->setValue("vector/start", _dataRange->start());

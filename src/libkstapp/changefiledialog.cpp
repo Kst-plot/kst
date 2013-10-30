@@ -29,6 +29,7 @@
 #include "mainwindow.h"
 #include "application.h"
 #include "updatemanager.h"
+#include "updateserver.h"
 #include "datasourcepluginmanager.h"
 
 #include <QDir>
@@ -71,6 +72,7 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updatePrimitiveList()));
 
   _dataFile->setFile(_dialogDefaults->value("changedatafile/newFileName",QDir::currentPath()).toString());
 
@@ -184,6 +186,7 @@ void ChangeFileDialog::updatePrimitiveList() {
     if (!exists) {
       QListWidgetItem *item = _changeFilePrimitiveList->takeItem(i_item);
       delete item;
+      i_item--;
     }
   }
 
@@ -199,6 +202,7 @@ void ChangeFileDialog::updatePrimitiveList() {
     if (!exists) {
       QListWidgetItem *item = _selectedFilePrimitiveList->takeItem(i_item);
       delete item;
+      i_item--;
     }
   }
 
@@ -477,6 +481,8 @@ void ChangeFileDialog::apply() {
   }
 
   UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+
   kstApp->mainWindow()->document()->setChanged(true);
 
   // store the newly used file as default for the next time the dialog is called
