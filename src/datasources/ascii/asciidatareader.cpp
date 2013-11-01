@@ -309,6 +309,12 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
     bool incol = false;
     int i_col = 0;
 
+    const qint64 chstart = _rowIndex[s] - bufstart;
+    if (is_custom && column_del(buffer[chstart])) {
+        // row could start with delemiter
+        incol = true;
+    }
+
     if (are_column_widths_const()) {
       if (col_start != -1) {
         v[i] = lexc.toDouble(&buffer[0] + _rowIndex[s] + col_start);
@@ -317,7 +323,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
     }
 
     v[i] = Kst::NOPOINT;
-    for (qint64 ch = _rowIndex[s] - bufstart; ch < bufread; ++ch) {
+    for (qint64 ch = chstart; ch < bufread; ++ch) {
       if (isLineBreak(buffer[ch])) {
         break;
       } else if (column_del(buffer[ch])) { //<- check for column start
