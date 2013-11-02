@@ -169,12 +169,7 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   config._unitsLine = _unitsLine->value() - _index_offset;
 
   config._limitFileBuffer = _limitFileBuffer->isChecked();
-  bool ok;
-  int size = _limitFileBufferSize->text().toInt(&ok);
-  if (ok) {
-    config._limitFileBufferSize = size * 1024 * 1024;
-  }
-
+  config._limitFileBufferSize = (qint64)_limitFileBufferSize->value() * 1024 * 1024;
   config._useThreads =_useThreads->isChecked();
   config._timeAsciiFormatString = _timeAsciiFormatString->text();
   config._dataRate = _dataRate->value();
@@ -220,7 +215,7 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   }
 
   _limitFileBuffer->setChecked(config._limitFileBuffer);
-  _limitFileBufferSize->setText(QString::number(config._limitFileBufferSize / 1024 / 1024));
+  _limitFileBufferSize->setValue(config._limitFileBufferSize / 1024 / 1024);
 
   _useThreads->setChecked(config._useThreads);
   _timeAsciiFormatString->setText(config._timeAsciiFormatString);

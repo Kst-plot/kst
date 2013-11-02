@@ -24,6 +24,7 @@ class NamedParameter
 public:
   // this is not nice, it sets not the value but its default
   NamedParameter(const T& default_value) :
+      _value(default_value),
       _default_value(default_value),
       _value_set(false) {
   }

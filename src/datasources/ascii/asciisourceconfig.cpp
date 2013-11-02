@@ -89,7 +89,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _unitsLine(0),
   _useDot(true),
   _limitFileBuffer(false),
-  _limitFileBufferSize(128),
+  _limitFileBufferSize(100),
   _useThreads(false),
   _dataRate(1.0),
   _offsetDateTime(false),

@@ -408,28 +408,24 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="_limitFileBufferSize">
+           <widget class="QSpinBox" name="_limitFileBufferSize">
             <property name="enabled">
              <bool>false</bool>
             </property>
-            <property name="text">
-             <string>256</string>
+            <property name="suffix">
+             <string> MB</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="enabled">
-             <bool>false</bool>
+            <property name="minimum">
+             <number>0</number>
             </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+            <property name="maximum">
+             <number>16000</number>
             </property>
-            <property name="text">
-             <string>MB</string>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>100</number>
             </property>
            </widget>
           </item>
@@ -944,22 +940,6 @@
     <hint type="destinationlabel">
      <x>892</x>
      <y>264</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_limitFileBuffer</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_4</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>751</x>
-     <y>263</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>914</x>
-     <y>259</y>
     </hint>
    </hints>
   </connection>
