@@ -28,11 +28,24 @@
 #include <QThread>
 #include <QtConcurrentRun>
 #include <QFutureSynchronizer>
+#include <QLabel>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QProgressBar>
+
+
 #include <ctype.h>
 #include <stdlib.h>
 
 
 using namespace Kst;
+
+
+//-------------------------------------------------------------------------------------------
+struct ms : QThread
+{
+  static void sleep(int t) { QThread::msleep(t); }
+};
 
 
 //-------------------------------------------------------------------------------------------
@@ -52,7 +65,10 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _reader(_config),
   _fileBuffer(),
   is(new DataInterfaceAsciiString(*this)),
-  iv(new DataInterfaceAsciiVector(*this))
+  iv(new DataInterfaceAsciiVector(*this)),
+  _progress(0),
+  _progressBar(0),
+  _progressLabel(0)
 {
   setInterface(is);
   setInterface(iv);
@@ -75,6 +91,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _valid = true;
   registerChange();
   internalDataSourceUpdate(false);
+
+  connect(this, SIGNAL(signalRowProgress()), this, SLOT(updateRowProgress()));
 }
 
 
@@ -196,11 +214,65 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   _fileCreationTime_t = QFileInfo(file).created().toTime_t();
 
   int col_count = _fieldList.size() - 1; // minus INDEX
-  bool new_data = _reader.findDataRows(read_completely, file, _fileSize, col_count);
+
+  bool new_data = false;
+  if (!useThreads()) {
+    new_data = _reader.findAllDataRows(read_completely, &file, _fileSize, col_count);
+  } else {
+    // TODO ugly
+    _reader._progressRows = &_progressRows;
+    _reader._progress = &_progressValue;
+    _reader._progressObj = this;
+    _reader._updateRowProgress = &AsciiSource::rowProgress;
+    QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
+    bool busy = true;
+    while (busy) {
+      if (future.isFinished()) {
+        new_data = future;
+        busy = false;
+      } else {
+        ms::sleep(500);
+        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+      }
+    }
+    if (_progress) {
+      _progress->hide();
+    }
+  }
   
   return (!new_data && !force_update ? NoChange : Updated);
 }
 
+
+//-------------------------------------------------------------------------------------------
+void AsciiSource::rowProgress(QObject* obj)
+{
+  ((AsciiSource*)obj)->triggerRowProgress();
+}
+
+
+//-------------------------------------------------------------------------------------------
+void AsciiSource::updateRowProgress()
+{
+  if (!_progress) {
+    _progress = new QWidget();
+    _progressLabel = new QLabel;
+    _progressBar = new QProgressBar;
+    _progressLabel->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout* l = new QVBoxLayout;
+    l->addStretch();
+    l->addWidget(_progressBar);
+    l->addWidget(_progressLabel);
+    l->addStretch();
+    _progress->setLayout(l);
+    _progress->setWindowTitle("Kst's ASCII Data Reader");
+    _progress->resize(300, 50);
+  }
+  _progressBar->setValue(_progressValue);
+  double mill = _progressRows * 1e-6;
+  _progressLabel->setText(QString("%1 millon rows found.").arg(mill, 0, 'f', 1));
+  _progress->show();
+}
 
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const

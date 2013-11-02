@@ -51,7 +51,7 @@ public:
 
   inline void setFile(QFile* file) { _file = file; }
   bool read();
-  void read(QFile&, qint64 start, qint64 numberOfBytes, qint64 maximalBytes = -1);
+  qint64 read(QFile&, qint64 start, qint64 numberOfBytes, qint64 maximalBytes = -1);
 
   char* data();
   const char* const constPointer() const;

@@ -23,6 +23,10 @@
 #include <QDebug>
 #include <QMutexLocker>
 #include <QStringList>
+#include <QLabel>
+#include <QApplication>
+
+
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -40,6 +44,13 @@ using namespace AsciiCharacterTraits;
 
 //-------------------------------------------------------------------------------------------
 AsciiDataReader::AsciiDataReader(AsciiSourceConfig& config) :
+  _progress(0),
+  _progressRows(0),
+  _progressObj(0),
+  _updateRowProgress(0),
+  _numFrames(0),
+  _progressMax(0),
+  _progressDone(0),
   _config(config),
   isDigit(),
   isWhiteSpace()
@@ -112,9 +123,12 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, qint
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _byteLength, int col_count)
+bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 byteLength, int col_count)
 {
-  detectLineEndingType(file);
+  detectLineEndingType(*file);
+
+  _progressMax = byteLength;
+  _progressDone = 0;
 
   bool new_data = false;
   AsciiFileData buf;
@@ -123,7 +137,7 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _by
     buf.clear();
 
     qint64 bufstart = _rowIndex[_numFrames]; // always read from the start of a line
-    buf.read(file, bufstart, _byteLength - bufstart, AsciiFileData::Prealloc - 1);
+    _progressDone += buf.read(*file, bufstart, byteLength - bufstart, AsciiFileData::Prealloc - 1);
     if (buf.bytesRead() == 0) {
       return false;
     }
@@ -150,6 +164,13 @@ bool AsciiDataReader::findDataRows(bool read_completely, QFile& file, qint64 _by
         new_data = findDataRows(buf.checkedData(), buf.begin(), buf.bytesRead(), IsLineBreakCR(_lineending), comment_del, col_count);
       }
     }
+
+    if (_updateRowProgress && _progress && _progressRows) {
+      *_progressRows = _numFrames;
+      *_progress = _progressDone * 100 / _progressMax;
+      (*_updateRowProgress)(_progressObj);
+    }
+
   } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
 
   return new_data;

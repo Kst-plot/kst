@@ -152,31 +152,33 @@ void AsciiFileData::clear(bool forceDeletingArray)
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiFileData::read(QFile& file, qint64 start, qint64 bytesToRead, qint64 maximalBytes)
+qint64 AsciiFileData::read(QFile& file, qint64 start, qint64 bytesToRead, qint64 maximalBytes)
 {
   _begin = -1;
   _bytesRead = 0;
 
   if (bytesToRead <= 0 || start < 0)
-    return;
+    return 0;
 
   if (maximalBytes == -1) {
     if (!resize(bytesToRead + 1))
-      return;
+      return 0;
   } else {
     bytesToRead = qMin(bytesToRead, maximalBytes);
     if (!resize(bytesToRead + 1))
-      return;
+      return 0;
   }
   if (!file.seek(start)) // expensive?
-    return; 
+    return 0;
   qint64 bytesRead = file.read(_array->data(), bytesToRead);
   if (!resize(bytesRead + 1))
-    return;
+    return 0;
 
   _array->data()[bytesRead] = '\0';
   _begin = start;
   _bytesRead = bytesRead;
+
+  return bytesRead;
 }
 
 //-------------------------------------------------------------------------------------------

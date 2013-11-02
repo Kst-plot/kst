@@ -39,16 +39,24 @@ class AsciiDataReader
     const AsciiFileBuffer::RowIndex& rowIndex() const { return _rowIndex; }
     
     void detectLineEndingType(QFile& file);
-    
-    bool findDataRows(bool read_completely, QFile& file, qint64 _byteLength, int col_count);
+
+    bool findAllDataRows(bool read_completely, QFile* file, qint64 _byteLength, int col_count);
     int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int start, int n);
     int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field);
 
     template<typename ColumnDelimiter>
     static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);
 
+
+    int* _progress;
+    qint64* _progressRows;
+    QObject* _progressObj;
+    void(*_updateRowProgress)(QObject*);
+
   private:
     qint64 _numFrames;
+    qint64 _progressMax;
+    qint64 _progressDone;
     AsciiFileBuffer::RowIndex _rowIndex;
     AsciiSourceConfig& _config;
     AsciiCharacterTraits::LineEndingType _lineending;

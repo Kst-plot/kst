@@ -22,7 +22,8 @@
 class QFile;
 class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
-
+class QProgressBar;
+class QLabel;
 
 class AsciiSource : public Kst::DataSource
 {
@@ -70,6 +71,15 @@ class AsciiSource : public Kst::DataSource
 
     QString timeFormat() const;
 
+    void triggerRowProgress() { emit signalRowProgress(); }
+
+signals:
+    void signalRowProgress();
+
+
+private slots:
+    void updateRowProgress();
+
 private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
@@ -103,6 +113,13 @@ private:
 
     DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;
+
+    QWidget* _progress;
+    QProgressBar* _progressBar;
+    QLabel* _progressLabel;
+    int _progressValue;
+    qint64 _progressRows;
+    static void rowProgress(QObject*);
 
     // TODO remove
     friend class DataInterfaceAsciiString;
