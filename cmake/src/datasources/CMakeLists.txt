@@ -1,6 +1,7 @@
 
 
 kst_init_plugin(src/datasources datasource)
+kst_include_directories(app)
 
 if(MSVC OR MINGW)
 	add_definitions(-DKST_USE_KST_ATOF)
