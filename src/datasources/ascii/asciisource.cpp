@@ -65,10 +65,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _reader(_config),
   _fileBuffer(),
   is(new DataInterfaceAsciiString(*this)),
-  iv(new DataInterfaceAsciiVector(*this)),
-  _progress(0),
-  _progressBar(0),
-  _progressLabel(0)
+  iv(new DataInterfaceAsciiVector(*this))
 {
   setInterface(is);
   setInterface(iv);
@@ -224,19 +221,18 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     _reader._progress = &_progressValue;
     _reader._progressObj = this;
     _reader._updateRowProgress = &AsciiSource::rowProgress;
+    kstApp->mainWindow()->progressBar()->show();
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     bool busy = true;
     while (busy) {
       if (future.isFinished()) {
         new_data = future;
         busy = false;
+        kstApp->mainWindow()->progressBar()->hide();
       } else {
         ms::sleep(500);
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
       }
-    }
-    if (_progress) {
-      _progress->hide();
     }
   }
   
@@ -254,24 +250,8 @@ void AsciiSource::rowProgress(QObject* obj)
 //-------------------------------------------------------------------------------------------
 void AsciiSource::updateRowProgress()
 {
-  if (!_progress) {
-    _progress = new QWidget();
-    _progressLabel = new QLabel;
-    _progressBar = new QProgressBar;
-    _progressLabel->setAlignment(Qt::AlignHCenter);
-    QVBoxLayout* l = new QVBoxLayout;
-    l->addStretch();
-    l->addWidget(_progressBar);
-    l->addWidget(_progressLabel);
-    l->addStretch();
-    _progress->setLayout(l);
-    _progress->setWindowTitle("Kst's ASCII Data Reader");
-    _progress->resize(300, 50);
-  }
-  _progressBar->setValue(_progressValue);
-  double mill = _progressRows * 1e-6;
-  _progressLabel->setText(QString("%1 millon rows found.").arg(mill, 0, 'f', 1));
-  _progress->show();
+  kstApp->mainWindow()->progressBar()->setValue(_progressValue);
+  kstApp->mainWindow()->setStatusMessage(QString("%1: %2 rows found.").arg(_filename).arg(QString::number(_progressRows)));
 }
 
 //-------------------------------------------------------------------------------------------

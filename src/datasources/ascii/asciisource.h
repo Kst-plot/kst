@@ -13,6 +13,8 @@
 #ifndef ASCII_SOURCE_H
 #define ASCII_SOURCE_H
 
+#include "../libkstapp/application.h"
+
 #include "asciidatareader.h"
 #include "asciisourceconfig.h"
 
@@ -114,9 +116,6 @@ private:
     DataInterfaceAsciiString* is;
     DataInterfaceAsciiVector* iv;
 
-    QWidget* _progress;
-    QProgressBar* _progressBar;
-    QLabel* _progressLabel;
     int _progressValue;
     qint64 _progressRows;
     static void rowProgress(QObject*);
