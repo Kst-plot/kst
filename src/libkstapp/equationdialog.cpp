@@ -23,6 +23,7 @@
 #include "document.h"
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "updateserver.h"
 
 #include <QPushButton>
 
@@ -46,13 +47,13 @@ EquationTab::EquationTab(QWidget *parent)
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
 
-  connect(_xVectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
+  //connect(_xVectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
 
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
   connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
-
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this->_equation, SLOT(fillKstObjects()));
 
   TextLabel1_11->setProperty("si","Eq&uation:");
   _xVectorLabel->setProperty("si","&X vector:");

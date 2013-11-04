@@ -15,6 +15,7 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "updateserver.h"
 
 #include "enodes.h"
 
@@ -42,6 +43,8 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updateScalarList()));
+
 }
 
 
@@ -200,7 +203,6 @@ void ScalarSelector::editScalar() {
   fillScalars();
 }
 
-
 void ScalarSelector::selectScalar() {
   if (_scalarListSelector->exec() == QDialog::Accepted) {
     _scalar->setCurrentIndex(_scalar->findText(_scalarListSelector->selectedScalar()));
@@ -257,19 +259,17 @@ void ScalarSelector::fillScalars() {
   updateDescriptionTip();
 }
 
-
-bool ScalarSelector::event(QEvent * event) {
-  if ((event->type() == QEvent::Resize) || (event->type() == QEvent::WindowActivate)) {
-    if (_defaultsSet) {
-      QString defaultText = _scalar->currentText();
-      fillScalars();
-      setDefaultValue(defaultText.toDouble());
-    } else {
-      fillScalars();
-    }
+void ScalarSelector::updateScalarList() {
+  if (_defaultsSet) {
+    QString defaultText = _scalar->currentText();
+    fillScalars();
+    setDefaultValue(defaultText.toDouble());
+  } else {
+    fillScalars();
   }
-  return QWidget::event(event);
 }
+
+
 }
 
 // vim: ts=2 sw=2 et
