@@ -221,14 +221,14 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     _reader._progress = &_progressValue;
     _reader._progressObj = this;
     _reader._updateRowProgress = &AsciiSource::rowProgress;
-    kstApp->mainWindow()->progressBar()->show();
+    emit progress(0, "Searching for rows");
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     bool busy = true;
     while (busy) {
       if (future.isFinished()) {
         new_data = future;
         busy = false;
-        kstApp->mainWindow()->progressBar()->hide();
+        emit progress(100, "Searching for rows finished");
       } else {
         ms::sleep(500);
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -250,8 +250,7 @@ void AsciiSource::rowProgress(QObject* obj)
 //-------------------------------------------------------------------------------------------
 void AsciiSource::updateRowProgress()
 {
-  kstApp->mainWindow()->progressBar()->setValue(_progressValue);
-  kstApp->mainWindow()->setStatusMessage(QString("%1: %2 rows found.").arg(_filename).arg(QString::number(_progressRows)));
+  emit progress(_progressValue, QString("%1: %2 rows found.").arg(_filename).arg(QString::number(_progressRows)));
 }
 
 //-------------------------------------------------------------------------------------------

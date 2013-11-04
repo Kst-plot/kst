@@ -1540,6 +1540,17 @@ QProgressBar *MainWindow::progressBar() const {
   return _progressBar;
 }
 
+void MainWindow::updateProgress(int percent, const QString& message)
+{
+  if (percent  > 0 && percent < 100) {
+    _progressBar->setValue(percent);
+    _progressBar->show();
+  } else {
+    _progressBar->hide();
+  }
+  setStatusMessage(message);
+}
+
 void MainWindow::readFromEnd() {
   int nf = 0;
   int skip;

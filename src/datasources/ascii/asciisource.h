@@ -13,8 +13,6 @@
 #ifndef ASCII_SOURCE_H
 #define ASCII_SOURCE_H
 
-#include "../libkstapp/application.h"
-
 #include "asciidatareader.h"
 #include "asciisourceconfig.h"
 

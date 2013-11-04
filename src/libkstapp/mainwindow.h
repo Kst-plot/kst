@@ -98,6 +98,7 @@ class MainWindow : public QMainWindow
     void reload();
 
     void updateViewItems(qint64 serial);
+    void updateProgress(int percent, const QString& message);
 
     void save();
     void saveAs();

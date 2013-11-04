@@ -222,6 +222,7 @@ class KSTCORE_EXPORT DataSource : public Object
 
   Q_SIGNALS:
     void sourceUpdated(ObjectPtr sourceObject);
+    void progress(int percent, const QString& message);
 
 
   protected:

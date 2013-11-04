@@ -54,6 +54,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
 
   Q_SIGNALS:
     void dataSourceChanged();
+    void progress(int, const QString&);
 
   private:
     bool _pageValid;

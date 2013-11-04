@@ -136,6 +136,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _pageValid = true;
 
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
+  connect(_dataSource, SIGNAL(progress(int, QString)), this, SIGNAL(progress(int, QString)));
   _fileType->setText(_dataSource->fileType());  
 
   _dataSource->readLock();
@@ -708,16 +709,19 @@ int DataWizardPageDataPresentation::nextId() const {
 DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   : QWizard(parent), _document(0) {
 
-  if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
-    _document = mw->document();
-  } else {
+  MainWindow *mw = qobject_cast<MainWindow*>(parent);
+  if (!mw) {
     // we need a document
     // not sure that this can ever happen.
     qFatal("ERROR: can't construct a DataWizard without a document");
+    return;
   }
 
+  _document = mw->document();
   Q_ASSERT(_document);
+
   _pageDataSource = new DataWizardPageDataSource(_document->objectStore(), this, fileToOpen);
+  connect(_pageDataSource, SIGNAL(progress(int, QString)), mw, SLOT(updateProgress(int, QString)));
   _pageVectors = new DataWizardPageVectors(this);
   _pageDataPresentation = new DataWizardPageDataPresentation(_document->objectStore(), this);
   _pageFilters = new DataWizardPageFilters(this);
