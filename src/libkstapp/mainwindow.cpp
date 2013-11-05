@@ -1517,6 +1517,7 @@ void MainWindow::createStatusBar() {
   setStatusMessage(tr("Ready"));
 
   _progressBar = new QProgressBar(statusBar());
+  _progressBar->setFixedWidth(200);
   _progressBar->hide();
   statusBar()->addPermanentWidget(_progressBar);
   MemoryWidget *mw = new MemoryWidget(statusBar());

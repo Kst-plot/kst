@@ -136,7 +136,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _pageValid = true;
 
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
-  connect(_dataSource, SIGNAL(progress(int, QString)), this, SIGNAL(progress(int, QString)));
+  connect(_dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
   _fileType->setText(_dataSource->fileType());  
 
   _dataSource->readLock();

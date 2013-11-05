@@ -77,9 +77,6 @@ signals:
     void signalRowProgress();
 
 
-private slots:
-    void updateRowProgress();
-
 private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;

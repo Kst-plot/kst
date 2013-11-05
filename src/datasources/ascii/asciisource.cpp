@@ -89,7 +89,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   registerChange();
   internalDataSourceUpdate(false);
 
-  connect(this, SIGNAL(signalRowProgress()), this, SLOT(updateRowProgress()));
 }
 
 
@@ -213,45 +212,23 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   int col_count = _fieldList.size() - 1; // minus INDEX
 
   bool new_data = false;
-  if (!useThreads()) {
-    new_data = _reader.findAllDataRows(read_completely, &file, _fileSize, col_count);
-  } else {
-    // TODO ugly
-    _reader._progressRows = &_progressRows;
-    _reader._progress = &_progressValue;
-    _reader._progressObj = this;
-    _reader._updateRowProgress = &AsciiSource::rowProgress;
-    emit progress(0, "Searching for rows");
-    QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
-    bool busy = true;
-    while (busy) {
-      if (future.isFinished()) {
-        new_data = future;
-        busy = false;
-        emit progress(100, "Searching for rows finished");
-      } else {
-        ms::sleep(500);
-        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
-      }
+  emit progress(0, "Searching for rows");
+  QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
+  bool busy = true;
+  while (busy) {
+    if (future.isFinished()) {
+      new_data = future;
+      busy = false;
+      emit progress(100, "Searching for rows finished");
+    } else {
+      ms::sleep(500);
+      emit progress(_reader.progressValue(), i18n("%1: %2 rows found.").arg(_filename).arg(QString::number(_reader.progressRows())));
     }
   }
   
   return (!new_data && !force_update ? NoChange : Updated);
 }
 
-
-//-------------------------------------------------------------------------------------------
-void AsciiSource::rowProgress(QObject* obj)
-{
-  ((AsciiSource*)obj)->triggerRowProgress();
-}
-
-
-//-------------------------------------------------------------------------------------------
-void AsciiSource::updateRowProgress()
-{
-  emit progress(_progressValue, QString("%1: %2 rows found.").arg(_filename).arg(QString::number(_progressRows)));
-}
 
 //-------------------------------------------------------------------------------------------
 int AsciiSource::columnOfField(const QString& field) const

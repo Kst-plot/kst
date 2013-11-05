@@ -44,10 +44,8 @@ using namespace AsciiCharacterTraits;
 
 //-------------------------------------------------------------------------------------------
 AsciiDataReader::AsciiDataReader(AsciiSourceConfig& config) :
-  _progress(0),
+  _progressValue(0),
   _progressRows(0),
-  _progressObj(0),
-  _updateRowProgress(0),
   _numFrames(0),
   _progressMax(0),
   _progressDone(0),
@@ -165,11 +163,8 @@ bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 
       }
     }
 
-    if (_updateRowProgress && _progress && _progressRows) {
-      *_progressRows = _numFrames;
-      *_progress = _progressDone * 100 / _progressMax;
-      (*_updateRowProgress)(_progressObj);
-    }
+    _progressRows = _numFrames;
+    _progressValue = _progressDone * 100 / _progressMax;
 
   } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
 
@@ -236,6 +231,18 @@ int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, dou
 { 
   Q_ASSERT(chunk.rowBegin() >= start);
   return readField(chunk, col, v + chunk.rowBegin() - start, field, chunk.rowBegin(), chunk.rowsRead());
+}
+
+//-------------------------------------------------------------------------------------------
+int AsciiDataReader::progressValue()
+{
+  return _progressValue;
+}
+
+//-------------------------------------------------------------------------------------------
+qint64 AsciiDataReader::progressRows()
+{
+  return _progressRows;
 }
 
 //-------------------------------------------------------------------------------------------
