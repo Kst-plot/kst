@@ -168,10 +168,8 @@ void DataDialog::addDataTab(DataTab *tab) {
 
 void DataDialog::slotApply() {
   Kst::ObjectPtr ptr;
-  bool do_session_reset = false;
   if (!dataObject()) {
     ptr = createNewDataObject();
-    do_session_reset = true;
   } else {
     ptr = editExistingDataObject();
   }
