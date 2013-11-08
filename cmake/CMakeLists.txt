@@ -46,6 +46,7 @@ kst_option(bool   ON  all qt5base_only      "Only use Qt5 features available in 
 kst_option(bool   ON  all opengl            "Use OpenGL")
 kst_option(bool   OFF all clang             "Use Clang compiler")
 kst_option(bool   OFF all sanitize          "Use Clang's sanitizers")
+kst_option(bool   OFF all dbgsym            "Build with debug symbols enabled")
 
 message(STATUS)
 
@@ -295,6 +296,9 @@ if(MSVC)
 	add_definitions(-D_USE_MATH_DEFINES -DNOMINMAX)
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    if(dbgsym)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+    endif()
 endif()
 
 if(MSVC_IDE AND kst_edit_cont)
