@@ -123,18 +123,22 @@ cd $builddir
 #
 cmakever=cmake-2.8.10.2-Linux-i386
 
-if [ ! -d /opt/$cmakever ]; then
-	cmakebin=x
+if [ "$iam" = "$travis" ]; then
 	if [ ! -d /opt/$cmakever ]; then
-		wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
-		checkExitCode
-		cd /opt
-		sudo tar xf $builddir/$cmakever.tar.gz
-		checkExitCode
-		cd $builddir
+		  cmakebin=x
+		  if [ ! -d /opt/$cmakever ]; then
+			  wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
+			  checkExitCode
+			  cd /opt
+			  sudo tar xf $builddir/$cmakever.tar.gz
+			  checkExitCode
+			  cd $builddir
+		  fi
 	fi
+	cmakebin=/opt/$cmakever/bin/cmake
+else
+	cmakebin=cmake
 fi
-cmakebin=/opt/$cmakever/bin/cmake
 $cmakebin --version
 checkExitCode
 
