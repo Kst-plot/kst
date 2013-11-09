@@ -320,7 +320,7 @@ bool AsciiSourceConfig::operator!=(const AsciiSourceConfig& rhs) const
   return !operator==(rhs);
 }
 
-bool AsciiSourceConfig::isUdateNecessary(const AsciiSourceConfig& rhs) const
+bool AsciiSourceConfig::isUpdateNecessary(const AsciiSourceConfig& rhs) const
 {
   return _fileNamePattern != rhs._fileNamePattern ||
       _indexVector != rhs._indexVector ||

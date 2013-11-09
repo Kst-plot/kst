@@ -76,7 +76,7 @@ class AsciiSourceConfig {
 
     bool operator==(const AsciiSourceConfig&) const;
     bool operator!=(const AsciiSourceConfig& rhs) const;
-    bool isUdateNecessary(const AsciiSourceConfig& rhs) const;
+    bool isUpdateNecessary(const AsciiSourceConfig& rhs) const;
 
     void saveGroup(QSettings& cfg, const QString& fileName = QString()) const;
     void readGroup(QSettings& cfg, const QString& fileName = QString());

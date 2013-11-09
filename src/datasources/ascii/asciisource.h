@@ -57,15 +57,16 @@ class AsciiSource : public Kst::DataSource
     bool isTime(const QString &field) const;
 
     virtual void reset();
+    void updateLists();
 
     virtual const QString& typeString() const;
 
     static const QString asciiTypeKey();
 
-    static QStringList fieldListFor(const QString& filename, AsciiSourceConfig *cfg);
-    static QStringList unitListFor(const QString& filename, AsciiSourceConfig* cfg);
-    static QStringList scalarListFor(const QString& filename, AsciiSourceConfig *cfg);
-    static QStringList stringListFor(const QString& filename, AsciiSourceConfig *cfg);
+    static QStringList fieldListFor(const QString& filename, AsciiSourceConfig cfg);
+    static QStringList unitListFor(const QString& filename, AsciiSourceConfig cfg);
+    static QStringList scalarListFor(const QString& filename, AsciiSourceConfig cfg);
+    static QStringList stringListFor(const QString& filename, AsciiSourceConfig cfg);
 
     Kst::ObjectList<Kst::Object> autoCurves(Kst::ObjectStore& objectStore);
 
@@ -75,7 +76,6 @@ class AsciiSource : public Kst::DataSource
 
 signals:
     void signalRowProgress();
-
 
 private:
     AsciiDataReader _reader;

@@ -73,7 +73,7 @@ QStringList AsciiPlugin::fieldList(QSettings *cfg,
 
   AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
-  QStringList rc = AsciiSource::fieldListFor(filename, &config);
+  QStringList rc = AsciiSource::fieldListFor(filename, config);
 
   if (complete) {
     *complete = rc.count() > 1;
@@ -104,7 +104,7 @@ QStringList AsciiPlugin::scalarList(QSettings *cfg,
 
   AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
-  QStringList rc = AsciiSource::scalarListFor(filename, &config);
+  QStringList rc = AsciiSource::scalarListFor(filename, config);
 
   if (complete) {
     *complete = rc.count() > 1;
@@ -135,7 +135,7 @@ QStringList AsciiPlugin::stringList(QSettings *cfg,
 
   AsciiSourceConfig config;
   config.readGroup(*cfg, filename);
-  QStringList rc = AsciiSource::stringListFor(filename, &config);
+  QStringList rc = AsciiSource::stringListFor(filename, config);
 
   if (complete) {
     *complete = rc.count() > 1;

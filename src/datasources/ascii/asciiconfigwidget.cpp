@@ -237,6 +237,9 @@ AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget
   _oldConfig = _ac->config();
   connect(_ac->_readFields, SIGNAL(clicked()), this, SLOT(updateIndexVector()));
   connect(_ac->_fieldsLine, SIGNAL(valueChanged(int)), this, SLOT(updateIndexVector()));
+  connect(_ac->_whitespace, SIGNAL(clicked()), this, SLOT(updateIndexVector()));
+  connect(_ac->_custom, SIGNAL(clicked()), this, SLOT(updateIndexVector()));
+  connect(_ac->_fixed, SIGNAL(clicked()), this, SLOT(updateIndexVector()));
 }
 
 
@@ -261,7 +264,7 @@ void AsciiConfigWidget::updateIndexVector() {
 
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
-    _ac->_indexVector->addItems(src->vector().list());
+    _ac->_indexVector->addItems(src->fieldListFor(src->fileName(), _ac->config()));
   }
 }
 
@@ -278,9 +281,9 @@ void AsciiConfigWidget::cancel() {
     // Update the instance from our new settings
     if (src->reusable()) {
       src->_config.readGroup(settings(), src->fileName());
-      if (_ac->config().isUdateNecessary(_oldConfig)) {
+      if (_ac->config().isUpdateNecessary(_oldConfig)) {
         src->reset();
-        src->internalDataSourceUpdate();
+        src->updateLists();
       }
     }
   }
@@ -300,7 +303,7 @@ void AsciiConfigWidget::load() {
   _ac->_indexVector->clear();
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
-    _ac->_indexVector->addItems(src->vector().list());
+    _ac->_indexVector->addItems(src->fieldListFor(src->fileName(), _ac->config()));
 
     if (src->_config._indexInterpretation == AsciiSourceConfig::CTime) {
       _ac->_interpret->setChecked(true);
@@ -362,9 +365,9 @@ void AsciiConfigWidget::save() {
     // Update the instance from our new settings
     if (src->reusable()) {
       src->_config.readGroup(settings(), src->fileName());
-      if (_ac->config().isUdateNecessary(_oldConfig)) {
+      if (_ac->config().isUpdateNecessary(_oldConfig)) {
         src->reset();
-        src->internalDataSourceUpdate();
+        src->updateLists();
       }
     }
   }
