@@ -279,7 +279,7 @@ void PlotRenderItem::paint(QPainter *painter) {
   painter->restore();
 
   if (!view()->isPrinting()) {
-    processHoverMoveEvent(_hoverPos);
+    processHoverMoveEvent(_hoverPos, true);
   }
 
   paintReferencePoint(painter);
@@ -794,7 +794,7 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
   }
 }
 
-void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
+void PlotRenderItem::processHoverMoveEvent(const QPointF &p, bool delayed) {
 
   if (p.isNull()) {
     return;
@@ -803,7 +803,7 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
   const QPointF point = plotItem()->mapToProjection(p);
   statusMessagePoint = point;
   if (kstApp->mainWindow()->isHighlightPoint()) {
-    highlightNearestDataPoint(point);
+    highlightNearestDataPoint(point, delayed);
   } else {
     QPointF matchedPoint;
     double imageZ;
@@ -833,12 +833,12 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p) {
     if (_referencePointMode) {
       message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
     }
-    kstApp->mainWindow()->setStatusMessage(message);
+    kstApp->mainWindow()->setStatusMessage(message,0,delayed);
   }
 }
 
 
-void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
+void PlotRenderItem::highlightNearestDataPoint(const QPointF& position, bool delayed) {
   QString curveMsg;
   QString imageMsg;
 
@@ -888,7 +888,7 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
                    arg(QString::number(matchedPoint.x() - _referencePoint.x(), 'G')).
                    arg(QString::number(matchedPoint.y() - _referencePoint.y()));
       }
-      kstApp->mainWindow()->setStatusMessage(message);
+      kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
     } else if (!imageName.isEmpty()) {
@@ -897,12 +897,12 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position) {
                         arg(plotItem()->xAxis()->statusBarString(matchedPoint.x())).
                         arg(QString::number(matchedPoint.y())).
                         arg(QString::number(imageZ, 'G'));
-      kstApp->mainWindow()->setStatusMessage(message);
+      kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
     } else {
       QString message = QString("(%1 %2)").arg(QString::number(position.x())).arg(QString::number(position.y()));
-      kstApp->mainWindow()->setStatusMessage(message);
+      kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
     }
   }
 }

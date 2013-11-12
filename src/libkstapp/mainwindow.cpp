@@ -92,7 +92,8 @@ MainWindow::MainWindow() :
     _themeDialog(0),
     _aboutDialog(0),
     _viewVectorDialog(0),
-    _highlightPoint(false)
+    _highlightPoint(false),
+    _statusBarTimeout(0)
 #if defined(__QNX__)
   , _qnxToolbarsVisible(true)
 #endif 
@@ -1513,8 +1514,7 @@ void MainWindow::createToolBars() {
 
 void MainWindow::createStatusBar() {
   _messageLabel = new QLabel(statusBar());
-  statusBar()->addWidget(_messageLabel);
-  setStatusMessage(tr("Ready"));
+  setStatusMessage(i18n("Ready"), 3000);
 
   _progressBar = new QProgressBar(statusBar());
   _progressBar->setFixedWidth(200);
@@ -1529,12 +1529,23 @@ void MainWindow::createStatusBar() {
   statusBar()->addPermanentWidget(dn);
 }
 
-void MainWindow::setStatusMessage(QString message) {
-  _messageLabel->setText(message);
+/** set the status bar message.  If you are doing this inside a view
+ * object paint() call, then set delayed to true, and call ::updateStatusMessage()
+ * later (after leaving paint). This is currently done for you in updateViewItems */
+void MainWindow::setStatusMessage(QString message, int timeout, bool delayed) {
+  _statusBarMessage = message;
+  _statusBarTimeout = timeout;
+  if (!delayed) {
+    statusBar()->showMessage(message, timeout);
+  }
 }
 
 QString MainWindow::statusMessage() {
-  return _messageLabel->text();
+  return statusBar()->currentMessage();
+}
+
+void MainWindow::updateStatusMessage() {
+  statusBar()->showMessage(_statusBarMessage, _statusBarTimeout);
 }
 
 QProgressBar *MainWindow::progressBar() const {
@@ -1754,6 +1765,7 @@ void MainWindow::updateViewItems(qint64 serial) {
     if (_viewVectorDialog) {
       _viewVectorDialog->update();
     }
+    kstApp->mainWindow()->updateStatusMessage();
   }
 
   QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished()));

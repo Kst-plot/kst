@@ -124,9 +124,9 @@ class PlotRenderItem : public ViewItem
     void computeMeanCentered(Qt::Orientation orientation, double *min, double *max) const;
     void computeNoSpike(Qt::Orientation orientation, double *min, double *max) const;
 
-    void highlightNearestDataPoint(const QPointF& position);
+    void highlightNearestDataPoint(const QPointF& position, bool delayed);
     void setReferencePoint(const QPointF& point);
-    void processHoverMoveEvent(const QPointF& p);
+    void processHoverMoveEvent(const QPointF& p, bool delayed = false);
   private:
     RenderType _type;
     QPointF _lastPos;

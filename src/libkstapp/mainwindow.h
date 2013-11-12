@@ -63,7 +63,8 @@ class MainWindow : public QMainWindow
     bool initFromCommandLine();
     bool isHighlightPoint() { return _highlightPoint; }
     bool isTiedTabs();
-    void setStatusMessage(QString message);
+    void setStatusMessage(QString message, int timeout=0, bool delayed = false);
+    void updateStatusMessage();
     QString statusMessage();
 
     static void setWidgetFlags(QWidget*);
@@ -315,6 +316,8 @@ class MainWindow : public QMainWindow
     QMenu* _recentDataFilesMenu;
     QList<QAction*> _bottomRecentKstActions;
     QList<QAction*> _bottomRecentDataActions;
+    QString _statusBarMessage;
+    int _statusBarTimeout;
 #if defined(__QNX__)
     bool _qnxToolbarsVisible;
     QDateTime _qnxLastToolbarEvent;
