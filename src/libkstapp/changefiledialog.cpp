@@ -295,10 +295,12 @@ void ChangeFileDialog::OKClicked() {
 
 void ChangeFileDialog::apply() {
   Q_ASSERT(_store);
-  if (!_dataSource->isValid() || _dataSource->isEmpty()) {
+  if (!_dataSource->isValid() /*|| _dataSource->isEmpty()*/ ) {
     QMessageBox::critical(this, tr("Kst"), tr("The file could not be loaded or contains no data."), QMessageBox::Ok);
     return;
   }
+  // Hook the new datasource to the status message area to receive progress status
+  connect(_dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
 
   // we need a list which preservs the order things are added, and a map to associate the duplicated
   // primitive with its duplicate.

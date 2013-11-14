@@ -207,29 +207,39 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
 
   bool force_update = true;
+  bool emitProgress = true;
   if (_fileSize == file.size()) {
     force_update = false;
   }
-  _fileSize = file.size();
+  // Don't emit status message if there is less than 10MB to parse
+  if (file.size() - _fileSize < 10*1024*1024) {
+    emitProgress = false;
+  }
+  if (read_completely) { // Update _fileSize only when we read the file completely
+    _fileSize = file.size();
+  }
   _fileCreationTime_t = QFileInfo(file).created().toTime_t();
 
   int col_count = _fieldList.size() - 1; // minus INDEX
 
   bool new_data = false;
-  emit progress(0, "Searching for rows");
-  QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
-  bool busy = true;
-  while (busy) {
-    if (future.isFinished()) {
-      new_data = future;
-      busy = false;
-      emit progress(100, "Searching for rows finished");
-    } else {
-      ms::sleep(500);
-      emit progress(_reader.progressValue(), i18n("%1: %2 rows found.").arg(_filename).arg(QString::number(_reader.progressRows())));
+  if (emitProgress) {
+    emit progress(0, i18n("Parsing ") + _filename);
+    QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
+    bool busy = true;
+    while (busy) {
+      if (future.isFinished()) {
+        new_data = future;
+        busy = false;
+        emit progress(100, i18n("Parsing finished"));
+      } else {
+        ms::sleep(500);
+        emit progress(_reader.progressValue(), i18n("Parsing %1: %2 rows found.").arg(_filename).arg(QString::number(_reader.progressRows())));
+      }
     }
+  } else {
+    new_data = _reader.findAllDataRows(read_completely, &file, _fileSize, col_count);
   }
-  
   return (!new_data && !force_update ? NoChange : Updated);
 }
 
@@ -265,6 +275,7 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n) 
 {
+  emit progress(0, i18n("Reading field: ") + field);
   int read = tryReadField(v, field, s, n);
 
   if (isTime(field)) {
@@ -314,6 +325,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     _haveWarned = true;
   }
 
+  emit progress(100, QString());
   return 0;
 }
 

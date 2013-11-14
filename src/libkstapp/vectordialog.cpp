@@ -11,6 +11,7 @@
  ***************************************************************************/
 #include "vectordialog.h"
 
+#include "application.h"
 #include "dialogpage.h"
 #include "datasourcedialog.h"
 #include "editmultiplewidget.h"
@@ -447,6 +448,8 @@ ObjectPtr VectorDialog::createNewDataVector() {
   //FIXME better validation than this please...
   if (!dataSource)
     return 0;
+
+  connect(dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
 
   const QString field = _vectorTab->field();
   const DataRange *dataRange = _vectorTab->dataRange();
