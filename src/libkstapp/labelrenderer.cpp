@@ -43,6 +43,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
   bool boldFont = rc.font().bold();
   bool italicFont = rc.font().italic();
 
+  QColor default_color = fi->attributes.color;
+
   Kst::Document *doc = kstApp->mainWindow()->document();
   Q_ASSERT(doc);
   Kst::ObjectStore *store = doc->objectStore();
@@ -74,6 +76,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
     QPen pen = rc.pen;
     if (fi->attributes.color.isValid()) {
       pen.setColor(fi->attributes.color);
+    } else if (default_color.isValid()) {
+      pen.setColor(default_color);
     }
     if (draw && rc.p) {
       rc.p->setPen(pen);
