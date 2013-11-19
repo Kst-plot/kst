@@ -96,7 +96,7 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
       if (_cfg) {
         _cfg->beginGroup("Filter Despike Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
-        _cfg->setValue("Spacing Scalar", _scalarNSigma->selectedScalar()->Name());
+        _cfg->setValue("Spacing Scalar", _scalarSpacing->selectedScalar()->Name());
         _cfg->setValue("NSigma Scalar", _scalarNSigma->selectedScalar()->Name());
         _cfg->endGroup();
       }
