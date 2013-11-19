@@ -39,7 +39,7 @@ class ConfigWidgetFilterUnwindPlugin : public Kst::DataObjectConfigWidget, publi
       _scalarStep->setObjectStore(store);
       _scalarMinumum->setDefaultValue(0.0);
       _scalarMaximum->setDefaultValue(360.0);
-      _scalarStep->setDefaultValue(0.5);
+      _scalarStep->setDefaultValue(50.0);
     }
 
     void setupSlots(QWidget* dialog) {
