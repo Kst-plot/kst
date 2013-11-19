@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=filterunwind
+X-Kst-Plugin-Author=C. Barth Netterfield
+Name=Filter - Unwind Plugin
+Comment=Implements an angle unwind Filter Plugin for Kst.
