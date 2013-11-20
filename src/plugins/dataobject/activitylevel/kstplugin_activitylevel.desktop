@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=activitylevel
+X-Kst-Plugin-Author=Nicolas Brisset
+Name=Activity Level Data Object Plugin
+Comment=Computes an activity level (workload) based on signal reversals and amplitude of changes.

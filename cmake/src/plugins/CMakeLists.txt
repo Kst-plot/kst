@@ -15,6 +15,7 @@ kst_add_plugin(dataobject syncbin)
 kst_add_plugin(dataobject crossspectrum)
 kst_add_plugin(dataobject effectivebandwidth)
 kst_add_plugin(dataobject genericfilter)
+kst_add_plugin(dataobject activitylevel)
 
 kst_add_plugin(filters cumulativesum)
 kst_add_plugin(filters cumulativeaverage)

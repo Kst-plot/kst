@@ -1,0 +1,31 @@
+This file summarizes the steps needed to add a plugin to Kst.
+
+Note that in Kst 1.x times it was easier as one could compile a plugin outside of the source tree. At the moment, this is not possible with Kst 2.x.
+Kst 2.x offers more flexibility as to the way the plugin UI can be done, but it requires more code.
+
+First, some info regarding plugins:
+- Plugins are useful when you need to work on many samples at once (statistics, filters, etc...) because that's not possible with equations, which treat vectors one sample at a time
+- Plugins must implement 3 classes. Exampel for a plugin named GreatIdea:
+	* class GreatIdeaSource : public Kst::BasicPlugin, responsible for data transfer, config loading and saving and the algorithm itself
+	* class GreatIdeaPlugin : public QObject, public Kst::DataObjectPluginInterface, which implements the interface with the core of Kst
+	* class ConfigWidgetGreatIdeaPlugin : public Kst::DataObjectConfigWidget, public Ui_GreatIdeaConfig which defines the configuration widget
+- Plugins have a type: either Filter (then they appear in the Filter context menu) or Fit (which puts them in the Fit menu) or Generic, in which case they can be created from the Create->Plugin menu. It is not possible at the moment to have more than one type, though this may change in the future. The type is set by implementing the corresponding method in the class derived, e.g.:
+virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Generic; }
+- Plugins crash the whole session if they crash, so please check all boundary conditions and corner cases.
+- Performance being an important feature in Kst, and some people having vectors with millions of points, try to optimize the code as much as possible.
+
+STEPS TO FOLLOW:
+1. Create the directory and add to CMakeLists.txt
+- Create a directory under the relevant subdirectory and edit cmake/src/plugins/CMakeLists.txt to add it to the list. The easiest way to initialize the plugin is to copy one that is similar (inputs/outputs) and then rename the files
+- If the plugin has a dependency (on an external lib for instance) you may have to add a cmake test for it. In that case take a look at the gsl example, which is required by a lot of plugins
+
+2. Edit the .desktop file
+This is the file that contains information displayed in the interface for the user. It is a simple text file
+
+3. Edit the configuration UI in QT Designer (using Qt Creator, just open the .ui file). Pay attention to the fact that according to how you configured the tool, it could be that you don't see the scalar or vector selectors. Use the object hierarchy to check what widgets are included in your design. Pay attention to the way you name the selector widgets; you'll use them in the code.
+
+4. Edit the .h and .cpp files, replacing the plugin name whereever appropriate and adapting to the given in/outputs. Start from the to and work your way through the file. It is somewhat tedious, but not very complicated. The core of the action goes to GreatIdeaSource::algorithm().
+
+5. Once you've reached the point where it compiles, optimize and debug as much as possible and then either commit it or send a patch to the list for review
+
+Happy hacking!
