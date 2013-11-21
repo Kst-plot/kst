@@ -22,6 +22,9 @@
    </property>
    <item>
     <widget class="Kst::ComboBox" name="_matrix">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
      <item>
       <property name="text">
        <string>M</string>

@@ -225,7 +225,8 @@ void ScalarSelector::fillScalars() {
 
     scalar->readLock();
     if (!scalar->hidden()) {
-      scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
+      // scalars.insert(scalar->sizeLimitedName(_scalar), scalar); // Let Qt take care of limiting the name length
+      scalars.insert(scalar->CleanedName(), scalar);
     }
     scalar->unlock();
   }
@@ -248,11 +249,11 @@ void ScalarSelector::fillScalars() {
 
   if (current) {
     setSelectedScalar(current);
-  } else {
+  } /*else {
     _scalar->addItem(current_text, qVariantFromValue(0));
     _scalar->setCurrentIndex(_scalar->findText(current_text));
     _defaultsSet = true;
-  }
+  }*/
 
   _editScalar->setEnabled(_scalar->count() > 0);
   _selectScalar->setEnabled(_scalar->count() > 0);
