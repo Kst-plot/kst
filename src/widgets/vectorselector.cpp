@@ -214,8 +214,7 @@ void VectorSelector::fillVectors() {
       continue;
 
     vector->readLock();
-//    vectors.insert(vector->sizeLimitedName(_vector), vector); Leave it up to model/view to take care of the name ellipsis
-    vectors.insert(vector->CleanedName(), vector);
+    vectors.insert(vector->sizeLimitedName(_vector), vector);
     vector->unlock();
   }
 
@@ -243,7 +242,7 @@ void VectorSelector::fillVectors() {
 
 bool VectorSelector::event(QEvent * event) {
   if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
-    // fillVectors();
+    //fillVectors();
   }
   return QWidget::event(event);
 }

@@ -117,8 +117,7 @@ void StringSelector::fillStrings() {
     StringPtr string = (*it);
 
     string->readLock();
-    // strings.insert(string->sizeLimitedName(_string), string);
-    strings.insert(string->CleanedName(), string);
+    strings.insert(string->sizeLimitedName(_string), string);
     string->unlock();
   }
 

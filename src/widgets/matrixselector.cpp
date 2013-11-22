@@ -130,8 +130,7 @@ void MatrixSelector::fillMatrices() {
     MatrixPtr matrix = (*it);
 
     matrix->readLock();
-    // matrices.insert(matrix->sizeLimitedName(_matrix), matrix);
-    matrices.insert(matrix->CleanedName(), matrix);
+    matrices.insert(matrix->sizeLimitedName(_matrix), matrix);
     matrix->unlock();
   }
 
