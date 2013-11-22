@@ -35,7 +35,6 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
   _editVector->setFixedSize(size + 8, size + 8);
 
   fillVectors();
-
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
   connect(_vector, SIGNAL(activated(int)), this, SLOT(emitSelectionChanged()));
@@ -241,8 +240,8 @@ void VectorSelector::fillVectors() {
 
 
 bool VectorSelector::event(QEvent * event) {
-  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
-    //fillVectors();
+  if ((event->type() == QEvent::Resize)) {
+    fillVectors();
   }
   return QWidget::event(event);
 }

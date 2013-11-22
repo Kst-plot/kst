@@ -5,5 +5,5 @@
 INCLUDES=["/usr/include/qt4/QtCore","/usr/include/qt4/QtNetwork","/usr/include/qt4"]
 
 LIBS=["QtCore","QtNetwork"]
-LIBDIRS=["/usr/lib/"]
+LIBDIRS=["/usr/lib/x86_64-linux-gnu/", "/usr/lib/"]
 

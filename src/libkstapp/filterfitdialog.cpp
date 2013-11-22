@@ -56,7 +56,7 @@ FilterFitTab::~FilterFitTab() {
 
 void FilterFitTab::setObjectStore(ObjectStore *store) {
   _store = store;
-   _configWidget->setObjectStore(store);
+  _configWidget->setObjectStore(store);
 }
 
 

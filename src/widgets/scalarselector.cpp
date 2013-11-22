@@ -269,6 +269,14 @@ void ScalarSelector::updateScalarList() {
   }
 }
 
+bool ScalarSelector::event(QEvent * event) {
+  if ((event->type() == QEvent::Resize)) {
+    fillScalars();
+  }
+  return QWidget::event(event);
+}
+
+
 
 }
 
