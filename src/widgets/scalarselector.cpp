@@ -38,6 +38,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
   _scalarListSelector = new ScalarListSelector(this);
 
+  _scalar->resize(10,5);
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
@@ -212,6 +213,10 @@ void ScalarSelector::selectScalar() {
 
 void ScalarSelector::fillScalars() {
   if (!_store) {
+    return;
+  }
+
+  if (_scalar->width()<=_scalar->minimumSizeHint().width()) { // not set up yet...
     return;
   }
 

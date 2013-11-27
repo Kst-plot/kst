@@ -18,10 +18,12 @@
 
 #include <QFontMetrics>
 #include <QWidget>
+#include <QDebug>
 
 namespace Kst {
   
-NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName")) {
+NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName"))
+{
 
   _initial_vnum = _vnum; // vectors
   _initial_pnum = _pnum; // plugins
@@ -39,9 +41,14 @@ NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QStri
   _initial_dnum = _dnum; // view image
   _initial_dsnum = _dsnum; // datasource
 
+  _sizeCache = new SizeCache;
+  _sizeCache->fontSize = 0;
+  _sizeCache->nameWidthPixels = 0;
+  _sizeCache->name.clear();
 }
 
 NamedObject::~NamedObject() {
+  delete _sizeCache;
 }
 
 
@@ -75,18 +82,33 @@ QString NamedObject::lengthLimitedName(int length) const {
 
 QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const {
     QFontMetrics fontMetrics=QFontMetrics(font);
-    // initial guess
+
+    int mw = fontMetrics.maxWidth();
+    if ((_sizeCache->fontSize == font.pointSize() ) &&
+        (_sizeCache->name == Name()) &&
+        (_sizeCache->nameWidthPixels < width - mw)) {
+      return (_sizeCache->name);
+    }
+
+    _sizeCache->name = Name();
+    _sizeCache->nameWidthPixels = fontMetrics.width(_sizeCache->name);
+    _sizeCache->fontSize = font.pointSize();
+
+    if (_sizeCache->nameWidthPixels < width - mw) {
+      return _sizeCache->name;
+    }
+
     int combo_chars = width / fontMetrics.averageCharWidth() - 2;
-    int nameLength = Name().length();
+    int nameLength = _sizeCache->name.length();
 
     QString name = lengthLimitedName(combo_chars);
     while ((combo_chars <= nameLength+1) &&
-           (fontMetrics.width(name) < width - fontMetrics.maxWidth())) {
+           (fontMetrics.width(name) < width - mw)) {
       combo_chars++;
       name = lengthLimitedName(combo_chars);
     }
     while ((combo_chars>0) &&
-           (fontMetrics.width(name) > width  - fontMetrics.maxWidth())) {
+           (fontMetrics.width(name) > width  - mw)) {
       combo_chars--;
       name = lengthLimitedName(combo_chars);
     }

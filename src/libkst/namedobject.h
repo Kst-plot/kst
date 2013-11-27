@@ -60,6 +60,12 @@ KSTCORE_EXPORT extern int max_lnum; // legend
 KSTCORE_EXPORT extern int max_dnum; // view item
 KSTCORE_EXPORT extern int max_dsnum; // datasource
 
+struct SizeCache {
+    int nameWidthPixels;
+    int fontSize;
+    QString name;
+};
+
 class KSTCORE_EXPORT NamedObject 
 {
 public: 
@@ -124,6 +130,8 @@ public:
     int _initial_lnum; // legend
     int _initial_dnum; // view item
     int _initial_dsnum; // datasource
+  private:
+    SizeCache *_sizeCache;
 };
 
 KSTCORE_EXPORT bool shortNameLessThan(NamedObject *n1, NamedObject *n2);
