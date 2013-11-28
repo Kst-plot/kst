@@ -18,7 +18,7 @@
 #include <stdlib.h>
 
 #ifdef Q_CC_MSVC
-  #define KST_THREAD_LOCAL __declspec( thread
+  #define KST_THREAD_LOCAL __declspec(thread)
 #else
  #define KST_THREAD_LOCAL __thread
 #endif
