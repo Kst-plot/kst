@@ -169,7 +169,7 @@ QString FilterUnwindSource::_automaticDescriptiveName() const {
 QString FilterUnwindSource::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Unwind Filter: %1\n  %2 - %3\n  Step: %4 \%").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
+  tip = i18n("Unwind Filter: %1\n  %2 - %3\n  Step: %4 %").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
 
   tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
