@@ -10,24 +10,37 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef  KST_ATOF_H
+#ifndef KST_ATOF_H
 #define KST_ATOF_H
 
 #include <QByteArray>
 #include <QString>
 #include <stdlib.h>
 
+#ifdef Q_CC_MSVC
+  #define KST_THREAD_LOCAL __declspec( thread
+#else
+ #define KST_THREAD_LOCAL __thread
+#endif
 
 class LexicalCast
 {
 public:
+
   static LexicalCast& instance();
-  
+
+
+  enum NaNMode {
+    NullValue,
+    NaNValue,
+    PreviousValue
+  };
+
   struct AutoReset {
-    AutoReset(bool useDot);
+    AutoReset(bool useDot, NaNMode);
     ~AutoReset();
   };
-  
+
   void setUseDotAsDecimalSeparator(bool useDot);
 
   char localSeparator() const;
@@ -46,7 +59,10 @@ private:
   LexicalCast();
   ~LexicalCast();
 
+  NaNMode _nanMode;
+  static KST_THREAD_LOCAL double _previousValue;
   char _separator;
+
   QByteArray _originalLocal;
   QString _timeFormat;
   int _timeFormatLength;
@@ -59,6 +75,7 @@ private:
     return (c >= 48) && (c <= 57) ? true : false;
   }
 
+  double nanValue() const;
 };
 
 

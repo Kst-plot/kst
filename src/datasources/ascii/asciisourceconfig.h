@@ -70,6 +70,8 @@ class AsciiSourceConfig {
     static const char Tag_dateTimeOffset[];
     static const char Key_relativeOffset[];
     static const char Tag_relativeOffset[];
+    static const char Key_nanValue[];
+    static const char Tag_nanValue[];
 
   public:
     AsciiSourceConfig();
@@ -113,6 +115,7 @@ class AsciiSourceConfig {
     NamedParameter<bool, Key_offsetRelative, Tag_offsetRelative> _offsetRelative;
     NamedParameter<QDateTime, Key_dateTimeOffset, Tag_dateTimeOffset> _dateTimeOffset;
     NamedParameter<double, Key_relativeOffset, Tag_relativeOffset> _relativeOffset;
+    NamedParameter<int, Key_nanValue, Tag_nanValue> _nanValue;
 
   private:
     void save(QSettings& cfg) const;

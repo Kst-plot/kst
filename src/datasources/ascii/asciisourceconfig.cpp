@@ -71,6 +71,8 @@ const char AsciiSourceConfig::Key_dateTimeOffset[] = "date/time offset";
 const char AsciiSourceConfig::Tag_dateTimeOffset[] = "dateTimeOffset";
 const char AsciiSourceConfig::Key_relativeOffset[] = "relative offset";
 const char AsciiSourceConfig::Tag_relativeOffset[] = "relativeOffset";
+const char AsciiSourceConfig::Key_nanValue[] = "NaN value";
+const char AsciiSourceConfig::Tag_nanValue[] = "nanValue";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -96,7 +98,8 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _offsetFileDate(false),
   _offsetRelative(true),
   _dateTimeOffset(QDateTime::currentDateTime()),
-  _relativeOffset(0)
+  _relativeOffset(0),
+  _nanValue(0)
 {
 }
 
@@ -127,6 +130,7 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
   _offsetRelative >> cfg;
   _dateTimeOffset >> cfg;
   _relativeOffset >> cfg;
+  _nanValue >> cfg;
 }
 
 
@@ -168,6 +172,7 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _offsetRelative << cfg;
   _dateTimeOffset << cfg;
   _relativeOffset << cfg;
+  _nanValue << cfg;
 }
 
 
@@ -216,7 +221,7 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _offsetRelative >> s;
   _dateTimeOffset >> s;
   _relativeOffset >> s;
-
+  _nanValue >> s;
   s.writeEndElement();
 }
 
@@ -246,6 +251,7 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _offsetRelative << attributes;
   _dateTimeOffset << attributes;
   _relativeOffset << attributes;
+  _nanValue << attributes;
 }
 
 
@@ -279,6 +285,7 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _offsetRelative << elem;
         _dateTimeOffset << elem;
         _relativeOffset << elem;
+        _nanValue << elem;
       }
     }
     n = n.nextSibling();
@@ -311,7 +318,8 @@ bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
       _offsetFileDate == rhs._offsetFileDate &&
       _offsetRelative == rhs._offsetRelative &&
       _dateTimeOffset == rhs._dateTimeOffset &&
-      _relativeOffset == rhs._relativeOffset;
+      _relativeOffset == rhs._relativeOffset &&
+      _nanValue == rhs._nanValue;
 
 }
 
@@ -342,7 +350,8 @@ bool AsciiSourceConfig::isUpdateNecessary(const AsciiSourceConfig& rhs) const
       _offsetFileDate != rhs._offsetFileDate ||
       _offsetRelative != rhs._offsetRelative ||
       _dateTimeOffset != rhs._dateTimeOffset ||
-      _relativeOffset != rhs._relativeOffset;
+      _relativeOffset != rhs._relativeOffset ||
+      _nanValue != rhs._nanValue;
 }
 
 

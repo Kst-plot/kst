@@ -397,9 +397,16 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   }
 
   // now start reading
+  LexicalCast::NaNMode nanMode;
+  switch (_config._nanValue.value()) {
+  case 0: nanMode = LexicalCast::NullValue; break;
+  case 1: nanMode = LexicalCast::NaNValue; break;
+  case 2: nanMode = LexicalCast::PreviousValue; break;
+  default:nanMode = LexicalCast::NullValue; break;
+  }
+  LexicalCast::AutoReset useDot(_config._useDot, nanMode);
 
-  LexicalCast::AutoReset useDot(_config._useDot);
-  
+
   if (field == _config._indexVector && _config._indexInterpretation == AsciiSourceConfig::FormattedTime) {
     LexicalCast::instance().setTimeFormat(_config._timeAsciiFormatString);
   }

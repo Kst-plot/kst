@@ -29,12 +29,23 @@
 
 
 //-------------------------------------------------------------------------------------------
+inline double LexicalCast::nanValue() const
+{
+  switch (_nanMode) {
+  case NullValue:     return 0;
+  case NaNValue:      return Kst::NOPOINT;
+  case PreviousValue: return _previousValue;
+  default:            return 0;
+  }
+}
+
+//-------------------------------------------------------------------------------------------
 #ifdef KST_USE_KST_ATOF
 double LexicalCast::fromDouble(const char* signedp) const
 {
 	unsigned char* p = (unsigned char*)signedp;
 	unsigned char c;
-	double fl, flexp, exp5;
+  double fl, flexp, exp5;
 	double big = 72057594037927936.;  /*2^56*/
 	int nd;
 	int eexp, exp, neg, negexp, bexp;
@@ -49,7 +60,12 @@ double LexicalCast::fromDouble(const char* signedp) const
 	else
 		--p;
 
-	exp = 0;
+  if (c != _separator && !isDigit(c)) {
+    return nanValue();
+  }
+
+
+  exp = 0;
 	fl = 0;
 	nd = 0;
 	while ((c = *p++), isDigit(c)) {
@@ -60,7 +76,7 @@ double LexicalCast::fromDouble(const char* signedp) const
 		nd++;
 	}
 
-	if (c == _separator) {
+  if (c == _separator) {
 		while ((c = *p++), isDigit(c)) {
 			if (fl<big) {
 				fl = 10*fl + (c-'0');
@@ -117,15 +133,17 @@ double LexicalCast::fromDouble(const char* signedp) const
 	fl = ldexp(fl, negexp*bexp);
 	if (neg<0)
 		fl = -fl;
+    _previousValue = fl;
 	return(fl);
 }
 #endif
 
 
 //-------------------------------------------------------------------------------------------
-LexicalCast::AutoReset::AutoReset(bool useDot)
+LexicalCast::AutoReset::AutoReset(bool useDot, NaNMode mode)
 {
   instance().setUseDotAsDecimalSeparator(useDot);
+  instance()._nanMode = mode;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -134,6 +152,7 @@ LexicalCast::AutoReset::~AutoReset()
   instance().resetLocal();
   instance()._isFormattedTime = false;
   instance()._timeFormat.clear();
+  instance()._nanMode = NullValue;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -144,9 +163,14 @@ LexicalCast& LexicalCast::instance()
 }
 
 //-------------------------------------------------------------------------------------------
-LexicalCast::LexicalCast() : _isFormattedTime(false), _timeWithDate(false)
+LexicalCast::LexicalCast() :
+  _nanMode(NullValue),
+  _isFormattedTime(false),
+  _timeWithDate(false)
 {
 }
+
+KST_THREAD_LOCAL double LexicalCast::_previousValue = 0;
 
 //-------------------------------------------------------------------------------------------
 LexicalCast::~LexicalCast() 
@@ -200,11 +224,11 @@ double LexicalCast::fromTime(const char* p) const
 {
   for (int i = 0; i < _timeFormatLength; i++) {
     if (*(p + i) == '\0')
-      return Kst::NOPOINT;
+      return nanValue();
   }
 
   const QString time = QString::fromLatin1(p, _timeFormatLength);
-  double sec = Kst::NOPOINT;
+  double sec = nanValue();
   if (_timeWithDate) {
     QDateTime t = QDateTime::fromString(time, _timeFormat);
     if (t.isValid()) {
@@ -220,6 +244,7 @@ double LexicalCast::fromTime(const char* p) const
     if (t.isValid())
       sec = QTime(0, 0, 0).msecsTo(t) / 1000.0;
   }
+  _previousValue = sec;
   return sec;
 }
 

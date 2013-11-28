@@ -178,6 +178,10 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   config._offsetRelative = _offsetRelative->isChecked();
   config._dateTimeOffset = _dateTimeOffset->dateTime();
   config._relativeOffset = _relativeOffset->value();
+  config._nanValue = _nanNull->isChecked()
+                     ? 0 : _nanNAN->isChecked()
+                           ? 1 : _nanPrevious->isChecked()
+                                 ? 2 : 0;
   return config;
 }
 
@@ -225,7 +229,12 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   _offsetRelative->setChecked(config._offsetRelative.value());
   _dateTimeOffset->setDateTime(config._dateTimeOffset.value());
   _relativeOffset->setValue(config._relativeOffset.value());
-
+  switch (config._nanValue.value()) {
+  case 0: _nanNull->setChecked(true); break;
+  case 1: _nanNAN->setChecked(true); break;
+  case 2: _nanPrevious->setChecked(true); break;
+  default: _nanNull->setChecked(true); break;
+  }
 }
 
 

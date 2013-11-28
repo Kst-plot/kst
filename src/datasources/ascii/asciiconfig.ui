@@ -277,6 +277,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>16777215</height>
+             </size>
+            </property>
            </widget>
           </item>
           <item>
@@ -383,7 +389,7 @@
              <string>Reading is faster if each column can be assumed to have its own constant width.</string>
             </property>
             <property name="text">
-             <string>Each collumn has its own constant width</string>
+             <string>Each column has its own constant width</string>
             </property>
            </widget>
           </item>
@@ -394,6 +400,12 @@
      </item>
      <item>
       <widget class="QGroupBox" name="groupBox_2">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="title">
         <string>General Options</string>
        </property>
@@ -462,19 +474,47 @@
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
+         <layout class="QHBoxLayout" name="horizontalLayout_17">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Empty Value:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="_nanNull">
+            <property name="text">
+             <string>Null</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="_nanNAN">
+            <property name="text">
+             <string>NaN</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="_nanPrevious">
+            <property name="text">
+             <string>Previous</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
+       <zorder>_useThreads</zorder>
+       <zorder>layoutWidget</zorder>
+       <zorder>_nanNAN</zorder>
       </widget>
      </item>
      <item>
