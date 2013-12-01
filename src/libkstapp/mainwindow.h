@@ -183,7 +183,7 @@ class MainWindow : public QMainWindow
     bool promptSaveDone();
 
     QAction* createRecentFileAction(const QString& filename, int idx, const QString& text, const char* openslot);
-    void updateRecentFiles(QMenu *menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot);
+    void updateRecentFiles(const QString& key, QMenu *menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot);
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);

@@ -341,20 +341,20 @@ QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, co
 
 void MainWindow::updateRecentKstFiles(const QString& filename)
 {
-  updateRecentFiles(_fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
+  updateRecentFiles("recentKstFileList", _fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
 }
 
 
 void MainWindow::updateRecentDataFiles(const QString& filename)
 {
-  updateRecentFiles(_toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
+  updateRecentFiles("recentDataFileList", _toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
   if (!filename.isEmpty()) {
     dialogDefaults().setValue("vector/datasource", filename);
   }
 }
 
 
-void MainWindow::updateRecentFiles(QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
+void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable
   QString absoluteFilePath = newfilename;
@@ -365,7 +365,6 @@ void MainWindow::updateRecentFiles(QMenu* menu, QList<QAction*>& actions, QMenu*
     menu->removeAction(it);
     delete it;
   }
-  const QString key = "recentDataFileList";
   actions.clear();
   QStringList recentFiles = _settings.value(key).toStringList();
   if (recentFiles.removeDuplicates() > 0) {
