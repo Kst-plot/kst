@@ -250,15 +250,15 @@ void ChangeDataSampleDialog::removeAll() {
 
 
 void ChangeDataSampleDialog::initializeEntries() {
-  _dataRange->setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
-  _dataRange->setStart(_dialogDefaults->value("vector/start", 0).toInt());
-  _dataRange->setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
-  _dataRange->setRange(_dialogDefaults->value("vector/range", 1).toInt());
-  _dataRange->setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
-  _dataRange->setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
-  _dataRange->setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
-  _dataRange->setStartUnits(_dialogDefaults->value("vector/startUnits",i18n("frames")).toString());
-  _dataRange->setRangeUnits(_dialogDefaults->value("vector/rangeUnits",i18n("frames")).toString());
+  _dataRange->setCountFromEnd(dialogDefaults().value("vector/countFromEnd",false).toBool());
+  _dataRange->setStart(dialogDefaults().value("vector/start", 0).toInt());
+  _dataRange->setReadToEnd(dialogDefaults().value("vector/readToEnd",true).toBool());
+  _dataRange->setRange(dialogDefaults().value("vector/range", 1).toInt());
+  _dataRange->setSkip(dialogDefaults().value("vector/skip", 0).toInt());
+  _dataRange->setDoSkip(dialogDefaults().value("vector/doSkip", false).toBool());
+  _dataRange->setDoFilter(dialogDefaults().value("vector/doAve",false).toBool());
+  _dataRange->setStartUnits(dialogDefaults().value("vector/startUnits",i18n("frames")).toString());
+  _dataRange->setRangeUnits(dialogDefaults().value("vector/rangeUnits",i18n("frames")).toString());
 }
 
 
@@ -385,15 +385,15 @@ void ChangeDataSampleDialog::apply() {
   UpdateManager::self()->doUpdates(true);
   UpdateServer::self()->requestUpdateSignal();
 
-  _dialogDefaults->setValue("vector/range", _dataRange->range());
-  _dialogDefaults->setValue("vector/start", _dataRange->start());
-  _dialogDefaults->setValue("vector/countFromEnd", _dataRange->countFromEnd());
-  _dialogDefaults->setValue("vector/readToEnd", _dataRange->readToEnd());
-  _dialogDefaults->setValue("vector/skip", _dataRange->skip());
-  _dialogDefaults->setValue("vector/doSkip", _dataRange->doSkip());
-  _dialogDefaults->setValue("vector/doAve", _dataRange->doFilter());
-  _dialogDefaults->setValue("vector/startUnits", _dataRange->_startUnits->currentText());
-  _dialogDefaults->setValue("vector/rangeUnits", _dataRange->_rangeUnits->currentText());
+  dialogDefaults().setValue("vector/range", _dataRange->range());
+  dialogDefaults().setValue("vector/start", _dataRange->start());
+  dialogDefaults().setValue("vector/countFromEnd", _dataRange->countFromEnd());
+  dialogDefaults().setValue("vector/readToEnd", _dataRange->readToEnd());
+  dialogDefaults().setValue("vector/skip", _dataRange->skip());
+  dialogDefaults().setValue("vector/doSkip", _dataRange->doSkip());
+  dialogDefaults().setValue("vector/doAve", _dataRange->doFilter());
+  dialogDefaults().setValue("vector/startUnits", _dataRange->_startUnits->currentText());
+  dialogDefaults().setValue("vector/rangeUnits", _dataRange->_rangeUnits->currentText());
 
   updateCurveListDialog();
   kstApp->mainWindow()->document()->setChanged(true);

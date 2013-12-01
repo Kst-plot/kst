@@ -624,7 +624,7 @@ double View::resetPlotFontSizes(PlotItem* plot) {
 double View::resetPlotFontSizes(QList<PlotItem*> new_plots) {
   QList<PlotItem*> plots(new_plots);
   plots.append(PlotItemManager::self()->plotsForView(this));
-  qreal pointSize = _dialogDefaults->value("plot/globalFontScale",16.0).toDouble();
+  qreal pointSize = dialogDefaults().value("plot/globalFontScale",16.0).toDouble();
 
   // the 6 in the line below is a magic number that impedes scaling until you
   // have more than a couple of rows/columns.  A 1 would make it scale more

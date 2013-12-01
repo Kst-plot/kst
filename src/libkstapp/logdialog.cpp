@@ -32,21 +32,21 @@ LogDialog::LogDialog(MainWindow *parent)
 
   _formats->addItems(formats);
   _formats->setCurrentIndex(
-        _formats->findText(_dialogDefaults->value("log/format","png").toString()));
+        _formats->findText(dialogDefaults().value("log/format","png").toString()));
 
-  _xSize->setValue(_dialogDefaults->value("log/xsize","1024").toInt());
-  _ySize->setValue(_dialogDefaults->value("log/ysize","768").toInt());
+  _xSize->setValue(dialogDefaults().value("log/xsize","1024").toInt());
+  _ySize->setValue(dialogDefaults().value("log/ysize","768").toInt());
 
-  _sizeOption->setCurrentIndex(_dialogDefaults->value("log/sizeOption","0").toInt());
+  _sizeOption->setCurrentIndex(dialogDefaults().value("log/sizeOption","0").toInt());
   enableWidthHeight();
 
-  _saveLocation->setFile(_dialogDefaults->value("log/logdir",QDir::currentPath()).toString());
+  _saveLocation->setFile(dialogDefaults().value("log/logdir",QDir::currentPath()).toString());
 
-  _script->setText(_dialogDefaults->value("log/script", QString()).toString());
+  _script->setText(dialogDefaults().value("log/script", QString()).toString());
 
   _tab->setCurrentIndex(0);
 
-  _user->setText(_dialogDefaults->value("log/user", QString()).toString());
+  _user->setText(dialogDefaults().value("log/user", QString()).toString());
 
   connect(_message, SIGNAL(textChanged()), this, SLOT(changed()));
   connect(_sizeOption, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -105,13 +105,13 @@ void LogDialog::apply() {
   int y_size = _ySize->value();
   int size_option_index = _sizeOption->currentIndex();
 
-  _dialogDefaults->setValue("log/logdir", _logdir);
-  _dialogDefaults->setValue("log/format", _format);
-  _dialogDefaults->setValue("log/xsize", x_size);
-  _dialogDefaults->setValue("log/ysize", y_size);
-  _dialogDefaults->setValue("log/sizeOption", size_option_index);
-  _dialogDefaults->setValue("log/script", _script->text());
-  _dialogDefaults->setValue("log/user", _username);
+  dialogDefaults().setValue("log/logdir", _logdir);
+  dialogDefaults().setValue("log/format", _format);
+  dialogDefaults().setValue("log/xsize", x_size);
+  dialogDefaults().setValue("log/ysize", y_size);
+  dialogDefaults().setValue("log/sizeOption", size_option_index);
+  dialogDefaults().setValue("log/script", _script->text());
+  dialogDefaults().setValue("log/user", _username);
 
   _logtime = time(NULL);
 

@@ -40,14 +40,14 @@ LabelCreator::LabelCreator(QWidget *parent)
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
   QFont font;
-  font.fromString(_dialogDefaults->value("label/font",font.toString()).toString());
+  font.fromString(dialogDefaults().value("label/font",font.toString()).toString());
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
   _italic->setChecked(font.italic());
 
-  _labelColor->setColor(_dialogDefaults->value("label/color",QColor(Qt::black)).value<QColor>());
-  _labelFontScale->setValue(_dialogDefaults->value("label/fontScale",12).toDouble());
-  if (_dialogDefaults->value("label/fixLeft",true).toBool()) {
+  _labelColor->setColor(dialogDefaults().value("label/color",QColor(Qt::black)).value<QColor>());
+  _labelFontScale->setValue(dialogDefaults().value("label/fontScale",12).toDouble());
+  if (dialogDefaults().value("label/fixLeft",true).toBool()) {
     _left->setChecked(true);
   } else {
     _right->setChecked(true);

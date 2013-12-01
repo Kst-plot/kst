@@ -29,19 +29,19 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   : QDialog(parent) {
   setupUi(this);
 
-  _saveLocation->setFile(_dialogDefaults->value("export/filename",QDir::currentPath()).toString());
+  _saveLocation->setFile(dialogDefaults().value("export/filename",QDir::currentPath()).toString());
 
   _autoSaveTimer = new QTimer(this);
 
-  _listVectorFormats->setChecked(_dialogDefaults->value("export/useVectors",true).toBool());
-  _listBitmapFormats->setChecked(_dialogDefaults->value("export/useBitmaps",true).toBool());
+  _listVectorFormats->setChecked(dialogDefaults().value("export/useVectors",true).toBool());
+  _listBitmapFormats->setChecked(dialogDefaults().value("export/useBitmaps",true).toBool());
 
   updateFormats();
 
-  _xSize->setValue(_dialogDefaults->value("export/xsize","1024").toInt());
-  _ySize->setValue(_dialogDefaults->value("export/ysize","768").toInt());
+  _xSize->setValue(dialogDefaults().value("export/xsize","1024").toInt());
+  _ySize->setValue(dialogDefaults().value("export/ysize","768").toInt());
 
-  _comboBoxSizeOption->setCurrentIndex(_dialogDefaults->value("export/sizeOption","0").toInt());
+  _comboBoxSizeOption->setCurrentIndex(dialogDefaults().value("export/sizeOption","0").toInt());
   enableWidthHeight();
 
   _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
@@ -81,7 +81,7 @@ void ExportGraphicsDialog::updateFormats() {
   _comboBoxFormats->clear();
   _comboBoxFormats->addItems(formats);
 
-  int index = _comboBoxFormats->findText(_dialogDefaults->value("export/format","png").toString());
+  int index = _comboBoxFormats->findText(dialogDefaults().value("export/format","png").toString());
   if (index<0) {
     if (_listBitmapFormats->isChecked()) {
       index = _comboBoxFormats->findText("png");
@@ -152,13 +152,13 @@ void ExportGraphicsDialog::createFile() {
       filename += '.' + format;
     }
   }
-  _dialogDefaults->setValue("export/filename", default_filename);
-  _dialogDefaults->setValue("export/format", format);
-  _dialogDefaults->setValue("export/xsize", _xSize->value());
-  _dialogDefaults->setValue("export/ysize", _ySize->value());
-  _dialogDefaults->setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
-  _dialogDefaults->setValue("export/useVectors", _listVectorFormats->isChecked());
-  _dialogDefaults->setValue("export/useBitmaps", _listBitmapFormats->isChecked());
+  dialogDefaults().setValue("export/filename", default_filename);
+  dialogDefaults().setValue("export/format", format);
+  dialogDefaults().setValue("export/xsize", _xSize->value());
+  dialogDefaults().setValue("export/ysize", _ySize->value());
+  dialogDefaults().setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
+  dialogDefaults().setValue("export/useVectors", _listVectorFormats->isChecked());
+  dialogDefaults().setValue("export/useBitmaps", _listBitmapFormats->isChecked());
   emit exportGraphics(filename, format, _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
 }
 

@@ -158,15 +158,15 @@ void ThemeDialog::setStrokeTab() {
 
 void ThemeDialog::setFontTab() {
   QFont font;
-  font.fromString(_dialogDefaults->value(PlotItem::staticDefaultsGroupName()+"/globalFontFamily",font.toString()).toString());
+  font.fromString(dialogDefaults().value(PlotItem::staticDefaultsGroupName()+"/globalFontFamily",font.toString()).toString());
   QColor color;
-  color = _dialogDefaults->value(PlotItem::staticDefaultsGroupName()+"/globalFontColor", QColor(Qt::black)).value<QColor>();
+  color = dialogDefaults().value(PlotItem::staticDefaultsGroupName()+"/globalFontColor", QColor(Qt::black)).value<QColor>();
 
   _family->setCurrentFont(font);
   _bold->setChecked(font.bold());
   _italic->setChecked(font.italic());
   _labelColor->setColor(color);
-  _labelFontScale->setValue(_dialogDefaults->value(PlotItem::staticDefaultsGroupName()+"/globalFontScale", 13).toDouble());
+  _labelFontScale->setValue(dialogDefaults().value(PlotItem::staticDefaultsGroupName()+"/globalFontScale", 13).toDouble());
 }
 
 void ThemeDialog::buttonClicked(QAbstractButton *button) {

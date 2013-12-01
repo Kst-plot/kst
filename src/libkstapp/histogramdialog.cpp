@@ -69,7 +69,7 @@ HistogramTab::HistogramTab(QWidget *parent)
   _curveAppearance->setShowHead(false);
   _curveAppearance->setShowBars(true);
   _curveAppearance->setPointDensity(0);
-  _curveAppearance->setColor(_dialogDefaults->value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>());
+  _curveAppearance->setColor(dialogDefaults().value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>());
 
   _vectorLabel->setProperty("si","Data vecto&r:");
   TextLabel1_4_2_2->setProperty("si","Bins from&:");
@@ -326,8 +326,8 @@ void HistogramDialog::editSingleMode() {
 
 void HistogramDialog::configureTab(ObjectPtr object) {
   if (!object) {
-    _histogramTab->setRealTimeAutoBin(_dialogDefaults->value("histogram/realTimeAutoBin", false).toBool());
-    _histogramTab->setNormalizationType(Histogram::NormalizationType(_dialogDefaults->value("histogram/normalizationType",Histogram::Number).toInt()));
+    _histogramTab->setRealTimeAutoBin(dialogDefaults().value("histogram/realTimeAutoBin", false).toBool());
+    _histogramTab->setNormalizationType(Histogram::NormalizationType(dialogDefaults().value("histogram/normalizationType",Histogram::Number).toInt()));
   } else if (HistogramPtr histogram = kst_cast<Histogram>(object)) {
     _histogramTab->setVector(histogram->vector());
     _histogramTab->setMin(histogram->xMin());

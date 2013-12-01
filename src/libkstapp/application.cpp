@@ -23,8 +23,9 @@
 #include "dialoglaunchergui.h"
 #include "datasource.h"
 #include "dialogdefaults.h"
-
+#include "datasourcepluginmanager.h"
 #include "dialogscriptinterface.h"
+#include "settings.h"
 
 #include <QIcon>
 
@@ -40,8 +41,6 @@ Application::Application(int &argc, char **argv)
 
   QCoreApplication::setApplicationName("Kst");
   setWindowIcon(QPixmap(":kst.png"));
-
-  _dialogDefaults = new QSettings("kst", "dialog");
 
   Builtins::initPrimitives(); //libkst
   Builtins::initDataSources(); //libkstapp
@@ -71,7 +70,7 @@ Application::~Application() {
   // if we do, we'll end up crashing on exit
   // unless we fix some stuff related to destruction
   delete _mainWindow;
-  delete _dialogDefaults;
+  deleteAllSettings();
 }
 
 

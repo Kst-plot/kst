@@ -276,7 +276,7 @@ void ScalarDialog::configureTab(ObjectPtr object) {
     _scalarTab->hideDataOptions();
     _scalarTab->setValue(QString::number(scalar->value()));
   } else { // new scalar
-    _scalarTab->setFile(_dialogDefaults->value("vector/datasource",_scalarTab->file()).toString());
+    _scalarTab->setFile(dialogDefaults().value("vector/datasource",_scalarTab->file()).toString());
   }
 }
 

@@ -240,27 +240,27 @@ void DataRange::doSkipChanged() {
 
 void DataRange::setWidgetDefaults() {
   //FIXME Do we need a V->readLock() here?
-  _dialogDefaults->setValue("vector/range", range());
-  _dialogDefaults->setValue("vector/start", start());
-  _dialogDefaults->setValue("vector/countFromEnd", countFromEnd());
-  _dialogDefaults->setValue("vector/readToEnd", readToEnd());
-  _dialogDefaults->setValue("vector/skip", skip());
-  _dialogDefaults->setValue("vector/doSkip", doSkip());
-  _dialogDefaults->setValue("vector/doAve", doFilter());
-  _dialogDefaults->setValue("vector/rangeUnits", rangeUnits());
-  _dialogDefaults->setValue("vector/startUnits", rangeUnits());
+  dialogDefaults().setValue("vector/range", range());
+  dialogDefaults().setValue("vector/start", start());
+  dialogDefaults().setValue("vector/countFromEnd", countFromEnd());
+  dialogDefaults().setValue("vector/readToEnd", readToEnd());
+  dialogDefaults().setValue("vector/skip", skip());
+  dialogDefaults().setValue("vector/doSkip", doSkip());
+  dialogDefaults().setValue("vector/doAve", doFilter());
+  dialogDefaults().setValue("vector/rangeUnits", rangeUnits());
+  dialogDefaults().setValue("vector/startUnits", rangeUnits());
 }
 
 void DataRange::loadWidgetDefaults() {
-  setRange(_dialogDefaults->value("vector/range", 1).toInt());
-  setStart(_dialogDefaults->value("vector/start", 0).toInt());
-  setCountFromEnd(_dialogDefaults->value("vector/countFromEnd",false).toBool());
-  setReadToEnd(_dialogDefaults->value("vector/readToEnd",true).toBool());
-  setSkip(_dialogDefaults->value("vector/skip", 0).toInt());
-  setDoSkip(_dialogDefaults->value("vector/doSkip", false).toBool());
-  setDoFilter(_dialogDefaults->value("vector/doAve",false).toBool());
-  setRangeUnits(_dialogDefaults->value("vector/rangeUnits",tr("frames")).toString());
-  setStartUnits(_dialogDefaults->value("vector/startUnits",tr("frames")).toString());
+  setRange(dialogDefaults().value("vector/range", 1).toInt());
+  setStart(dialogDefaults().value("vector/start", 0).toInt());
+  setCountFromEnd(dialogDefaults().value("vector/countFromEnd",false).toBool());
+  setReadToEnd(dialogDefaults().value("vector/readToEnd",true).toBool());
+  setSkip(dialogDefaults().value("vector/skip", 0).toInt());
+  setDoSkip(dialogDefaults().value("vector/doSkip", false).toBool());
+  setDoFilter(dialogDefaults().value("vector/doAve",false).toBool());
+  setRangeUnits(dialogDefaults().value("vector/rangeUnits",tr("frames")).toString());
+  setStartUnits(dialogDefaults().value("vector/startUnits",tr("frames")).toString());
 }
 
 }

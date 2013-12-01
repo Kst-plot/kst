@@ -526,16 +526,16 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
   if (nextColor) {
     ColorSequence::self().next();
   }
-  _dialogDefaults->setValue("curves/showPoints",showPoints());
-  _dialogDefaults->setValue("curves/showLines", showLines());
-  _dialogDefaults->setValue("curves/showBars",showBars());
-  _dialogDefaults->setValue("curves/lineWidth",lineWidth());
-  _dialogDefaults->setValue("curves/pointSize",pointSize());
-  _dialogDefaults->setValue("curves/lineStyle",lineStyle());
-  _dialogDefaults->setValue("curves/pointType", pointType());
-  _dialogDefaults->setValue("curves/headType", headType());
-  _dialogDefaults->setValue("curves/pointDensity", pointDensity());
-  _dialogDefaults->setValue("curves/showHead", showHead());
+  dialogDefaults().setValue("curves/showPoints",showPoints());
+  dialogDefaults().setValue("curves/showLines", showLines());
+  dialogDefaults().setValue("curves/showBars",showBars());
+  dialogDefaults().setValue("curves/lineWidth",lineWidth());
+  dialogDefaults().setValue("curves/pointSize",pointSize());
+  dialogDefaults().setValue("curves/lineStyle",lineStyle());
+  dialogDefaults().setValue("curves/pointType", pointType());
+  dialogDefaults().setValue("curves/headType", headType());
+  dialogDefaults().setValue("curves/pointDensity", pointDensity());
+  dialogDefaults().setValue("curves/showHead", showHead());
 }
 
 // set the widget to the stored default values
@@ -546,16 +546,16 @@ void CurveAppearance::loadWidgetDefaults() {
   ColorSequence::self().next();
   setBarFillColor(ColorSequence::self().current());
 
-  setShowPoints(_dialogDefaults->value("curves/showPoints",false).toBool());
-  setShowLines(_dialogDefaults->value("curves/showLines",true).toBool());
-  setShowBars(_dialogDefaults->value("curves/showBars",false).toBool());
-  setShowHead(_dialogDefaults->value("curves/showHead",false).toBool());
-  setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
-  setPointSize(_dialogDefaults->value("curves/pointSize",0).toInt());
-  setLineStyle(_dialogDefaults->value("curves/lineStyle",0).toInt());
-  setPointType(_dialogDefaults->value("curves/pointType",0).toInt());
-  setHeadType(_dialogDefaults->value("curves/headType",0).toInt());
-  setPointDensity(_dialogDefaults->value("curves/pointDensity",0).toInt());
+  setShowPoints(dialogDefaults().value("curves/showPoints",false).toBool());
+  setShowLines(dialogDefaults().value("curves/showLines",true).toBool());
+  setShowBars(dialogDefaults().value("curves/showBars",false).toBool());
+  setShowHead(dialogDefaults().value("curves/showHead",false).toBool());
+  setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
+  setPointSize(dialogDefaults().value("curves/pointSize",0).toInt());
+  setLineStyle(dialogDefaults().value("curves/lineStyle",0).toInt());
+  setPointType(dialogDefaults().value("curves/pointType",0).toInt());
+  setHeadType(dialogDefaults().value("curves/headType",0).toInt());
+  setPointDensity(dialogDefaults().value("curves/pointDensity",0).toInt());
 }
 
 }

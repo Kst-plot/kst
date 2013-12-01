@@ -140,7 +140,7 @@ void LabelItemDialog::saveDimensions(ViewItem *viewitem) {
   item->updateRelativeSize(true);
 
   if (_saveAsDefault->isChecked()) {
-    _dialogDefaults->setValue(item->staticDefaultsGroupName()+"/fixLeft",_labelDimensionsTab->fixLeft());
+    dialogDefaults().setValue(item->staticDefaultsGroupName()+"/fixLeft",_labelDimensionsTab->fixLeft());
   }
 }
 }

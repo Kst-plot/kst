@@ -71,7 +71,7 @@ void PictureItem::paint(QPainter *painter) {
 
 
 void CreatePictureCommand::createItem() {
-  QString start_dir = _dialogDefaults->value("picture/startdir", ".").toString();
+  QString start_dir = dialogDefaults().value("picture/startdir", ".").toString();
   QString filter = "Images (";
   QList<QByteArray> formats = QImageReader::supportedImageFormats ();
   for (int i=0; i<formats.size(); i++) {
@@ -81,7 +81,7 @@ void CreatePictureCommand::createItem() {
   QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open Image"), start_dir, filter);
   if (file.isEmpty())
     return;
-  _dialogDefaults->setValue("picture/startdir", QFileInfo(file).path());
+  dialogDefaults().setValue("picture/startdir", QFileInfo(file).path());
   _item = new PictureItem(_view, QImage(file));
   _view->setCursor(Qt::CrossCursor);
 

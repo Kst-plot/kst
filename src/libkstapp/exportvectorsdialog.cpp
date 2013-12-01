@@ -31,7 +31,7 @@ ExportVectorsDialog::ExportVectorsDialog(QWidget *parent) :
     MainWindow::setWidgetFlags(this);
 
      _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
-     _saveLocation->setFile(_dialogDefaults->value("vectorexport/filename",QDir::currentPath()).toString());
+     _saveLocation->setFile(dialogDefaults().value("vectorexport/filename",QDir::currentPath()).toString());
 
     if (MainWindow *mw = qobject_cast<MainWindow*>(parent)) {
       _store = mw->document()->objectStore();
@@ -251,7 +251,7 @@ bool ExportVectorsDialog::apply() {
   out.flush();
 
   file.close();
-  _dialogDefaults->setValue("vectorexport/filename", _saveLocation->file());
+  dialogDefaults().setValue("vectorexport/filename", _saveLocation->file());
 
   return(true);
 }

@@ -56,6 +56,7 @@
 #include "datavector.h"
 #include "commandlineparser.h"
 #include "dialogdefaults.h"
+#include "settings.h"
 
 #include "dialoglauncher.h"
 #include "scriptserver.h"
@@ -79,6 +80,7 @@
 namespace Kst {
 
 MainWindow::MainWindow() :
+    _settings(createSettings("application")),
     _dataManager(0),
     _exportGraphics(0),
     _exportVectors(0),
@@ -96,7 +98,7 @@ MainWindow::MainWindow() :
     _statusBarTimeout(0)
 #if defined(__QNX__)
   , _qnxToolbarsVisible(true)
-#endif 
+#endif
 {
   _doc = new Document(this);
   _scriptServer = new ScriptServer(_doc->objectStore());
@@ -173,7 +175,7 @@ void MainWindow::setLayoutMode(bool layoutMode) {
     _highlightPointAct->setEnabled(false);
     _tiedZoomAct->setEnabled(false);
   } else {
-    v->setViewMode(View::Data);    
+    v->setViewMode(View::Data);
     _highlightPointAct->setEnabled(true);
     _tiedZoomAct->setEnabled(true);
   }
@@ -309,9 +311,8 @@ void MainWindow::open() {
   if (!promptSaveDone()) {
     return;
   }
-  QSettings settings("Kst2");
-  const QString lastKey = "lastOpenedKstFile";
-  QString fn = settings.value(lastKey).toString();
+  const QString key = "lastOpenedKstFile";
+  QString fn = _settings.value(key).toString();
   if (fn.isEmpty()) {
       fn = _doc->fileName();
   }
@@ -319,7 +320,7 @@ void MainWindow::open() {
   if (fn.isEmpty()) {
     return;
   }
-  settings.setValue(lastKey, fn);
+  _settings.setValue(key, fn);
   openFile(fn);
 }
 
@@ -340,20 +341,20 @@ QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, co
 
 void MainWindow::updateRecentKstFiles(const QString& filename)
 {
-  updateRecentFiles("recentKstFileList", _fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
+  updateRecentFiles(_fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
 }
 
 
 void MainWindow::updateRecentDataFiles(const QString& filename)
 {
-  updateRecentFiles("recentDataFileList", _toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
+  updateRecentFiles(_toolsMenu, _bottomRecentDataActions, _recentDataFilesMenu, filename, SLOT(openRecentDataFile()));
   if (!filename.isEmpty()) {
-    _dialogDefaults->setValue("vector/datasource", filename);
+    dialogDefaults().setValue("vector/datasource", filename);
   }
 }
 
 
-void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
+void MainWindow::updateRecentFiles(QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable
   QString absoluteFilePath = newfilename;
@@ -364,19 +365,19 @@ void MainWindow::updateRecentFiles(const QString& key, QMenu* menu, QList<QActio
     menu->removeAction(it);
     delete it;
   }
+  const QString key = "recentDataFileList";
   actions.clear();
-  QSettings settings("Kst2");
-  QStringList recentFiles = settings.value(key).toStringList();
+  QStringList recentFiles = _settings.value(key).toStringList();
   if (recentFiles.removeDuplicates() > 0) {
-    settings.setValue(key, recentFiles);
+    _settings.setValue(key, recentFiles);
   }
   if (!absoluteFilePath.isEmpty()) {
     recentFiles.removeOne(absoluteFilePath);
     recentFiles.push_front(absoluteFilePath);
     recentFiles = recentFiles.mid(0, 30);
-    settings.setValue(key, recentFiles);
+    _settings.setValue(key, recentFiles);
   }
-  
+
   submenu->clear();
   QAction* check = new QAction(this);
   check->setText("&Cleanup Non-Existent Files");
@@ -412,15 +413,14 @@ void MainWindow::checkRecentFilesOnExistence()
 {
   QAction *action = qobject_cast<QAction *>(sender());
   if (action) {
-    QSettings settings("Kst2");
-    QStringList recentFiles = settings.value(action->data().toString()).toStringList();
+    QStringList recentFiles = _settings.value(action->data().toString()).toStringList();
     recentFiles.removeDuplicates();
     foreach(const QString& it, recentFiles) {
       if (!QFileInfo(it).exists()) {
         recentFiles.removeOne(it);
       }
     }
-    settings.setValue(action->data().toString(), recentFiles);
+    _settings.setValue(action->data().toString(), recentFiles);
     updateRecentKstFiles();
     updateRecentDataFiles();
   }
@@ -681,16 +681,16 @@ void MainWindow::printFromCommandLine(const QString &printFileName) {
 }
 
 void MainWindow::setPrinterDefaults(QPrinter *printer) {
-  if (_dialogDefaults->value("print/landscape",true).toBool()) {
+  if (dialogDefaults().value("print/landscape",true).toBool()) {
     printer->setOrientation(QPrinter::Landscape);
   } else {
     printer->setOrientation(QPrinter::Portrait);
   }
 
-  printer->setPaperSize(QPrinter::PaperSize(_dialogDefaults->value("print/paperSize", QPrinter::Letter).toInt()));
+  printer->setPaperSize(QPrinter::PaperSize(dialogDefaults().value("print/paperSize", QPrinter::Letter).toInt()));
 
-  QPointF topLeft =_dialogDefaults->value("print/topLeftMargin", QPointF(15.0,15.0)).toPointF();
-  QPointF bottomRight =_dialogDefaults->value("print/bottomRightMargin", QPointF(15.0,15.0)).toPointF();
+  QPointF topLeft =dialogDefaults().value("print/topLeftMargin", QPointF(15.0,15.0)).toPointF();
+  QPointF bottomRight =dialogDefaults().value("print/bottomRightMargin", QPointF(15.0,15.0)).toPointF();
 
   printer->setPageMargins(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y(), QPrinter::Millimeter);
   // Apparent Qt bug: setting the page margins here doesn't set the correspoding values in the print
@@ -699,13 +699,13 @@ void MainWindow::setPrinterDefaults(QPrinter *printer) {
 }
 
 void MainWindow::savePrinterDefaults(QPrinter *printer) {
-  _dialogDefaults->setValue("print/landscape", printer->orientation() == QPrinter::Landscape);
-  _dialogDefaults->setValue("print/paperSize", int(printer->paperSize()));
+  dialogDefaults().setValue("print/landscape", printer->orientation() == QPrinter::Landscape);
+  dialogDefaults().setValue("print/paperSize", int(printer->paperSize()));
 
   qreal left, top, right, bottom;
   printer->getPageMargins(&left, &top, &right, &bottom, QPrinter::Millimeter);
-  _dialogDefaults->setValue("print/topLeftMargin", QPointF(left, top));
-  _dialogDefaults->setValue("print/bottomRightMargin", QPointF(right, bottom));
+  dialogDefaults().setValue("print/topLeftMargin", QPointF(left, top));
+  dialogDefaults().setValue("print/bottomRightMargin", QPointF(right, bottom));
 
 }
 
@@ -717,7 +717,7 @@ void MainWindow::print() {
 
 #ifndef Q_OS_WIN
   // QPrintDialog: Cannot be used on non-native printers
-  printer.setOutputFileName(_dialogDefaults->value("print/path", "./print.pdf").toString());
+  printer.setOutputFileName(dialogDefaults().value("print/path", "./print.pdf").toString());
 #endif
   QPointer<QPrintDialog> pd = new QPrintDialog(&printer, this);
 #if QT_VERSION >= 0x040500
@@ -732,7 +732,7 @@ void MainWindow::print() {
     QApplication::restoreOverrideCursor();
     savePrinterDefaults(&printer);
   }
-  _dialogDefaults->setValue("print/path", printer.outputFileName());
+  dialogDefaults().setValue("print/path", printer.outputFileName());
   delete pd;
 }
 #endif
@@ -993,7 +993,7 @@ void MainWindow::createActions() {
 #ifdef KST_NO_PRINTER
   _printAct->setEnabled(false);
 #endif
-  
+
   _exportGraphicsAct = new QAction(tr("&Export as Image(s)..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
   _exportGraphicsAct->setIcon(QPixmap(":image-x-generic.png"));
@@ -1205,13 +1205,13 @@ void MainWindow::createActions() {
   _tabTiedAct->setCheckable(true);
   //connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
-  
+
   _highlightPointAct = new QAction(tr("&Highlight Data Points"), this);
   _highlightPointAct->setStatusTip(tr("Highlight closest data point"));
   _highlightPointAct->setIcon(QPixmap(":kst_datamode.png"));
   _highlightPointAct->setCheckable(true);
   connect(_highlightPointAct, SIGNAL(toggled(bool)), this, SLOT(setHighlightPoint(bool)));
-  
+
 
   // Then, exclusive interaction modes
   QActionGroup* _interactionModeGroup = new QActionGroup(this);
@@ -1329,7 +1329,7 @@ void MainWindow::createMenus() {
   _fileMenu->addAction(_newTabAct);
   _fileMenu->addAction(_closeTabAct);
   _fileMenu->addSeparator();
-  // exit  
+  // exit
   _fileMenu->addAction(_exitAct);
   // recent files
   _fileMenu->addSeparator();
@@ -1588,9 +1588,9 @@ void MainWindow::readFromEnd() {
     v->unlock();
   }
   UpdateManager::self()->doUpdates(true);
-  _dialogDefaults->setValue("vector/range", nf);
-  _dialogDefaults->setValue("vector/countFromEnd", true);
-  _dialogDefaults->setValue("vector/readToEnd", false);
+  dialogDefaults().setValue("vector/range", nf);
+  dialogDefaults().setValue("vector/countFromEnd", true);
+  dialogDefaults().setValue("vector/readToEnd", false);
 }
 
 void MainWindow::readToEnd() {
@@ -1614,9 +1614,9 @@ void MainWindow::readToEnd() {
     v->registerChange();
     v->unlock();
   }
-  _dialogDefaults->setValue("vector/start", f0);
-  _dialogDefaults->setValue("vector/countFromEnd", false);
-  _dialogDefaults->setValue("vector/readToEnd", true);
+  dialogDefaults().setValue("vector/start", f0);
+  dialogDefaults().setValue("vector/countFromEnd", false);
+  dialogDefaults().setValue("vector/readToEnd", true);
   UpdateManager::self()->doUpdates(true);
 }
 
@@ -1667,10 +1667,10 @@ void MainWindow::forward() {
       v->unlock();
     }
   }
-  _dialogDefaults->setValue("vector/range", nf);
-  _dialogDefaults->setValue("vector/start", f0);
-  _dialogDefaults->setValue("vector/countFromEnd", false);
-  _dialogDefaults->setValue("vector/readToEnd", false);
+  dialogDefaults().setValue("vector/range", nf);
+  dialogDefaults().setValue("vector/start", f0);
+  dialogDefaults().setValue("vector/countFromEnd", false);
+  dialogDefaults().setValue("vector/readToEnd", false);
 
   UpdateManager::self()->doUpdates(true);
 }
@@ -1718,10 +1718,10 @@ void MainWindow::back() {
       v->unlock();
     }
   }
-  _dialogDefaults->setValue("vector/range", nf);
-  _dialogDefaults->setValue("vector/start", f0);
-  _dialogDefaults->setValue("vector/countFromEnd", false);
-  _dialogDefaults->setValue("vector/readToEnd", false);
+  dialogDefaults().setValue("vector/range", nf);
+  dialogDefaults().setValue("vector/start", f0);
+  dialogDefaults().setValue("vector/countFromEnd", false);
+  dialogDefaults().setValue("vector/readToEnd", false);
   UpdateManager::self()->doUpdates(true);
 }
 
@@ -1969,28 +1969,27 @@ bool MainWindow::isTiedTabs() {
 }
 
 void MainWindow::readSettings() {
-  QSettings settings("Kst2");
 #if defined(__QNX__) || defined(__ANDROID__)
   // There is only one size we want on mobile platforms - full screen!
   setWindowState(Qt::WindowFullScreen);
 #else
-  QByteArray geo = settings.value("geometry").toByteArray();
+  QByteArray geo = _settings.value("geometry").toByteArray();
   if (!geo.isEmpty()) {
       restoreGeometry(geo);
   } else {
       setGeometry(50, 50, 800, 600);
   }
 #endif // defined(__QNX__) || defined(__ANDROID__)
-  restoreState(settings.value("toolbarState").toByteArray());
-  _tabTiedAct->setChecked(settings.value("tieTabs").toBool());
+
+  restoreState(_settings.value("toolbarState").toByteArray());
+  _tabTiedAct->setChecked(_settings.value("tieTabs").toBool());
 }
 
 
 void MainWindow::writeSettings() {
-  QSettings settings("Kst2");
-  settings.setValue("geometry", saveGeometry());
-  settings.setValue("toolbarState", saveState());
-  settings.setValue("tieTabs", _tabTiedAct->isChecked());
+  _settings.setValue("geometry", saveGeometry());
+  _settings.setValue("toolbarState", saveState());
+  _settings.setValue("tieTabs", _tabTiedAct->isChecked());
 }
 
 void MainWindow::setWidgetFlags(QWidget* widget)

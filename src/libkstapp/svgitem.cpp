@@ -85,14 +85,14 @@ void SvgItem::setSvgData(const QByteArray &svgData) {
 }
 
 void CreateSvgCommand::createItem() {
-  QString start_dir = _dialogDefaults->value("svg/startdir", ".").toString();
+  QString start_dir = dialogDefaults().value("svg/startdir", ".").toString();
   QString filter = "SVG Images (*.svg *.SVG)";
   QString file = QFileDialog::getOpenFileName(_view, tr("Kst: Open SVG Image"), start_dir, filter);
 
   if (file.isEmpty())
     return;
 
-  _dialogDefaults->setValue("svg/startdir", QFileInfo(file).path());
+  dialogDefaults().setValue("svg/startdir", QFileInfo(file).path());
   _item = new SvgItem(_view, file);
   _view->setCursor(Qt::CrossCursor);
 

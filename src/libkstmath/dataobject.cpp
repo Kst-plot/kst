@@ -25,6 +25,7 @@
 #include "relation.h"
 #include "sharedptr.h"
 #include "primitive.h"
+#include "settings.h"
 
 #include <QApplication>
 #include <QDir>
@@ -39,9 +40,15 @@
 
 //#define LOCKTRACE
 
-namespace Kst {
+using namespace Kst;
 
-QSettings DataObject::settingsObject("kst", "data");
+
+QSettings& DataObject::settingsObject()
+{
+  static QSettings& settingsObject = createSettings("data");
+  return settingsObject;
+}
+
 QMap<QString,QString> DataObject::url_map;
 
 
@@ -316,7 +323,7 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
-        return (*it)->configWidget(&settingsObject);
+        return (*it)->configWidget(&settingsObject());
       }
       break;
     }
@@ -877,6 +884,4 @@ QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
   return "No such command...";
 }
 
-
-}
 // vim: ts=2 sw=2 et

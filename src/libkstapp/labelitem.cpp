@@ -61,11 +61,11 @@ bool LabelItem::inputsChanged(qint64 serial) {
 
 void LabelItem::applyDefaults() {
   QFont font;
-  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/font",font.toString()).toString());
+  font.fromString(dialogDefaults().value(defaultsGroupName()+"/font",font.toString()).toString());
   _font  = font;
-  _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
-  _scale = _dialogDefaults->value(defaultsGroupName()+"/fontScale",12).toDouble();
-  _fixleft = _dialogDefaults->value(defaultsGroupName()+"/fixLeft",true).toBool();
+  _color = dialogDefaults().value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
+  _scale = dialogDefaults().value(defaultsGroupName()+"/fontScale",12).toDouble();
+  _fixleft = dialogDefaults().value(defaultsGroupName()+"/fixLeft",true).toBool();
   applyDialogDefaultsLockPosToData();
 }
 
@@ -76,9 +76,9 @@ void LabelItem::saveAsDialogDefaults() const {
 }
 
 void LabelItem::saveDialogDefaultsFont(const QFont &F, const QColor &C) {
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/color", C.name());
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/fontScale", F.pointSize());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/color", C.name());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/fontScale", F.pointSize());
 }
 
 LabelItem::~LabelItem() {
@@ -304,8 +304,8 @@ void CreateLabelCommand::createItem(QString *inText) {
     label->setLockPosToData(dialog.lockPosToData());
     if (dialog.saveAsDefaults()) {
       label->saveAsDialogDefaults();
-      _dialogDefaults->setValue(label->staticDefaultsGroupName()+"/fixLeft",dialog.fixLeft());
-      _dialogDefaults->setValue(label->staticDefaultsGroupName()+"/lockPosToData",dialog.lockPosToData());
+      dialogDefaults().setValue(label->staticDefaultsGroupName()+"/fixLeft",dialog.fixLeft());
+      dialogDefaults().setValue(label->staticDefaultsGroupName()+"/lockPosToData",dialog.lockPosToData());
     }
   }
   _item->view()->scene()->addItem(_item);

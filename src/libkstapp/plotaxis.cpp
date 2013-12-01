@@ -1170,33 +1170,33 @@ void PlotAxis::copyProperties(PlotAxis *source) {
 }
 
 void PlotAxis::saveAsDialogDefaults(const QString &group) const {
-  _dialogDefaults->setValue(group+"Visible", QVariant(isAxisVisible()).toString());
-  _dialogDefaults->setValue(group+"Log", QVariant(axisLog()).toString());
-  _dialogDefaults->setValue(group+"Reversed", QVariant(axisReversed()).toString());
-  _dialogDefaults->setValue(group+"AutoBaseOffset", QVariant(axisAutoBaseOffset()).toString());
-  _dialogDefaults->setValue(group+"BaseOffset", QVariant(axisBaseOffset()).toString());
-  _dialogDefaults->setValue(group+"ForceOffsetMin", QVariant(axisForceOffsetMin()).toString());
-  _dialogDefaults->setValue(group+"Interpret", QVariant(axisInterpret()).toString());
-  _dialogDefaults->setValue(group+"Interpretation", QVariant(axisInterpretation()).toString());
-  _dialogDefaults->setValue(group+"Display", QVariant(axisDisplay()).toString());
-  _dialogDefaults->setValue(group+"DisplayFormatString", QVariant(axisDisplayFormatString()).toString());
-  _dialogDefaults->setValue(group+"Timezone", QVariant(timezoneName()));
-  _dialogDefaults->setValue(group+"MajorTickMode", QVariant(axisMajorTickMode()).toString());
-  _dialogDefaults->setValue(group+"MinorTickCount", QVariant(axisMinorTickCount()).toString());
-  _dialogDefaults->setValue(group+"AutoMinorTickCount", QVariant(axisAutoMinorTicks()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorTicks", QVariant(drawAxisMajorTicks()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorTicks", QVariant(drawAxisMajorTicks()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorTicks", QVariant(drawAxisMinorTicks()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorGridLines", QVariant(drawAxisMajorGridLines()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorGridLines", QVariant(drawAxisMinorGridLines()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorGridLinecolor", QVariant(axisMajorGridLineColor()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorGridLinecolor", QVariant(axisMinorGridLineColor()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorGridLinestyle", QVariant((int)axisMajorGridLineStyle()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorGridLinestyle", QVariant((int)axisMinorGridLineStyle()).toString());
-  _dialogDefaults->setValue(group+"DrawMajorGridLinewidth", QVariant(axisMajorGridLineWidth()).toString());
-  _dialogDefaults->setValue(group+"DrawMinorGridLinewidth", QVariant(axisMinorGridLineWidth()).toString());
-  _dialogDefaults->setValue(group+"SignificantDigits", QVariant(axisSignificantDigits()).toString());
-  _dialogDefaults->setValue(group+"Rotation", QVariant(axisLabelRotation()).toString());
+  dialogDefaults().setValue(group+"Visible", QVariant(isAxisVisible()).toString());
+  dialogDefaults().setValue(group+"Log", QVariant(axisLog()).toString());
+  dialogDefaults().setValue(group+"Reversed", QVariant(axisReversed()).toString());
+  dialogDefaults().setValue(group+"AutoBaseOffset", QVariant(axisAutoBaseOffset()).toString());
+  dialogDefaults().setValue(group+"BaseOffset", QVariant(axisBaseOffset()).toString());
+  dialogDefaults().setValue(group+"ForceOffsetMin", QVariant(axisForceOffsetMin()).toString());
+  dialogDefaults().setValue(group+"Interpret", QVariant(axisInterpret()).toString());
+  dialogDefaults().setValue(group+"Interpretation", QVariant(axisInterpretation()).toString());
+  dialogDefaults().setValue(group+"Display", QVariant(axisDisplay()).toString());
+  dialogDefaults().setValue(group+"DisplayFormatString", QVariant(axisDisplayFormatString()).toString());
+  dialogDefaults().setValue(group+"Timezone", QVariant(timezoneName()));
+  dialogDefaults().setValue(group+"MajorTickMode", QVariant(axisMajorTickMode()).toString());
+  dialogDefaults().setValue(group+"MinorTickCount", QVariant(axisMinorTickCount()).toString());
+  dialogDefaults().setValue(group+"AutoMinorTickCount", QVariant(axisAutoMinorTicks()).toString());
+  dialogDefaults().setValue(group+"DrawMajorTicks", QVariant(drawAxisMajorTicks()).toString());
+  dialogDefaults().setValue(group+"DrawMajorTicks", QVariant(drawAxisMajorTicks()).toString());
+  dialogDefaults().setValue(group+"DrawMinorTicks", QVariant(drawAxisMinorTicks()).toString());
+  dialogDefaults().setValue(group+"DrawMajorGridLines", QVariant(drawAxisMajorGridLines()).toString());
+  dialogDefaults().setValue(group+"DrawMinorGridLines", QVariant(drawAxisMinorGridLines()).toString());
+  dialogDefaults().setValue(group+"DrawMajorGridLinecolor", QVariant(axisMajorGridLineColor()).toString());
+  dialogDefaults().setValue(group+"DrawMinorGridLinecolor", QVariant(axisMinorGridLineColor()).toString());
+  dialogDefaults().setValue(group+"DrawMajorGridLinestyle", QVariant((int)axisMajorGridLineStyle()).toString());
+  dialogDefaults().setValue(group+"DrawMinorGridLinestyle", QVariant((int)axisMinorGridLineStyle()).toString());
+  dialogDefaults().setValue(group+"DrawMajorGridLinewidth", QVariant(axisMajorGridLineWidth()).toString());
+  dialogDefaults().setValue(group+"DrawMinorGridLinewidth", QVariant(axisMinorGridLineWidth()).toString());
+  dialogDefaults().setValue(group+"SignificantDigits", QVariant(axisSignificantDigits()).toString());
+  dialogDefaults().setValue(group+"Rotation", QVariant(axisLabelRotation()).toString());
 }
 
 void PlotAxis::saveInPlot(QXmlStreamWriter &xml, QString axisId) {

@@ -233,7 +233,7 @@ void StringDialog::configureTab(ObjectPtr object) {
     _stringTab->hideDataOptions();
     _stringTab->setValue(string->value());
   } else { // new string
-    _stringTab->setFile(_dialogDefaults->value("String/datasource",_stringTab->file()).toString());
+    _stringTab->setFile(dialogDefaults().value("String/datasource",_stringTab->file()).toString());
   }
 }
 

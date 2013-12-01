@@ -74,7 +74,7 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updatePrimitiveList()));
 
-  _dataFile->setFile(_dialogDefaults->value("changedatafile/newFileName",QDir::currentPath()).toString());
+  _dataFile->setFile(dialogDefaults().value("changedatafile/newFileName",QDir::currentPath()).toString());
 
   updateButtons();
 }
@@ -488,7 +488,7 @@ void ChangeFileDialog::apply() {
   kstApp->mainWindow()->document()->setChanged(true);
 
   // store the newly used file as default for the next time the dialog is called
-  _dialogDefaults->setValue("changedatafile/newFileName",_dataFile->file());
+  dialogDefaults().setValue("changedatafile/newFileName",_dataFile->file());
 
 }
 

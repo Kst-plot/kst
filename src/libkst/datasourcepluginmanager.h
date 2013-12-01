@@ -60,10 +60,10 @@ class KSTCORE_EXPORT DataSourcePluginManager
 
 
   private:
-    static QSettings settingsObject;
+    static QSettings& settingsObject();
     static QMap<QString,QString> url_map;
     static QString obtainFile(const QString& source);
-    
+
     struct PluginSortContainer {
       SharedPtr<DataSourcePluginInterface> plugin;
       int match;

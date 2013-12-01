@@ -641,17 +641,17 @@ MatrixDialog::~MatrixDialog() {
 void MatrixDialog::configureTab(ObjectPtr matrix) {
   if (!matrix) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
-    _matrixTab->setFile(_dialogDefaults->value("matrix/datasource",_matrixTab->file()).toString());
+    _matrixTab->setFile(dialogDefaults().value("matrix/datasource",_matrixTab->file()).toString());
 
-    _matrixTab->setXStartCountFromEnd(_dialogDefaults->value("matrix/xCountFromEnd",false).toBool());
-    _matrixTab->setYStartCountFromEnd(_dialogDefaults->value("matrix/yCountFromEnd",false).toBool());
-    _matrixTab->setXReadToEnd(_dialogDefaults->value("matrix/xReadToEnd",false).toBool());
-    _matrixTab->setYReadToEnd(_dialogDefaults->value("matrix/yReadToEnd",false).toBool());
+    _matrixTab->setXStartCountFromEnd(dialogDefaults().value("matrix/xCountFromEnd",false).toBool());
+    _matrixTab->setYStartCountFromEnd(dialogDefaults().value("matrix/yCountFromEnd",false).toBool());
+    _matrixTab->setXReadToEnd(dialogDefaults().value("matrix/xReadToEnd",false).toBool());
+    _matrixTab->setYReadToEnd(dialogDefaults().value("matrix/yReadToEnd",false).toBool());
 
-    _matrixTab->setXNumSteps(_dialogDefaults->value("matrix/xNumSteps",1000).toInt());
-    _matrixTab->setYNumSteps(_dialogDefaults->value("matrix/yNumSteps",1000).toInt());
-    _matrixTab->setXStart(_dialogDefaults->value("matrix/reqXStart",0).toInt());
-    _matrixTab->setYStart(_dialogDefaults->value("matrix/reqYStart",0).toInt());
+    _matrixTab->setXNumSteps(dialogDefaults().value("matrix/xNumSteps",1000).toInt());
+    _matrixTab->setYNumSteps(dialogDefaults().value("matrix/yNumSteps",1000).toInt());
+    _matrixTab->setXStart(dialogDefaults().value("matrix/reqXStart",0).toInt());
+    _matrixTab->setYStart(dialogDefaults().value("matrix/reqYStart",0).toInt());
 
 #ifdef NO_GENERATED_OPTIONS
     _matrixTab->hideGeneratedOptions();

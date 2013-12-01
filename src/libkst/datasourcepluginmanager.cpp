@@ -37,7 +37,7 @@
 #include "scalar.h"
 #include "string.h"
 #include "updatemanager.h"
-
+#include "settings.h"
 #include "dataplugin.h"
 
 #define DATASOURCE_UPDATE_TIMER_LENGTH 1000
@@ -57,7 +57,7 @@ QStringList Kst::pluginSearchPaths()
 #if defined(__QNX__)
   pluginPaths << "app/native/plugins";
 #endif
-  
+
   rootDir.cdUp();
   path = rootDir.canonicalPath() + '/';
   path += QLatin1String(KST_INSTALL_PLUGINS);
@@ -75,8 +75,12 @@ QStringList Kst::pluginSearchPaths()
 }
 
 
+QSettings& DataSourcePluginManager::settingsObject()
+{
+  static QSettings& settingsObject = createSettings("data");
+  return settingsObject;
+}
 
-QSettings DataSourcePluginManager::settingsObject("kst", "data");
 QMap<QString,QString> DataSourcePluginManager::url_map;
 
 
@@ -258,7 +262,7 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     PluginSortContainer psc;
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {
-      if ((psc.match = p->understands(&settingsObject, filename)) > 0) {
+      if ((psc.match = p->understands(&settingsObject(), filename)) > 0) {
         psc.plugin = p;
         bestPlugins.append(psc);
       }
@@ -277,7 +281,7 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
 
   // we don't actually iterate here, unless the first plugin fails.  (Not sure this helps at all.)
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourcePtr plugin = (*i).plugin->create(store, &settingsObject, filename, QString(), e);
+    DataSourcePtr plugin = (*i).plugin->create(store, &settingsObject(), filename, QString(), e);
     if (plugin) {
 
       // add strings
@@ -320,7 +324,7 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
 #ifndef Q_OS_WIN32
   //if (filename == "stdin" || filename == "-") {
     // FIXME: what store do we put this in?
-  //  return new StdinSource(0, settingsObject);
+  //  return new StdinSource(0, settingsObject());
   //}
 #endif
   QString fn = obtainFile(filename);
@@ -372,7 +376,7 @@ bool DataSourcePluginManager::validSource(const QString& filename) {
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {
-      if ((p->understands(&settingsObject, filename)) > 0) {
+      if ((p->understands(&settingsObject(), filename)) > 0) {
         return true;
       }
     }
@@ -406,7 +410,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForPlugin(const QSt
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {
       if (p->pluginName() == plugin) {
-        return p->configWidget(&settingsObject, QString());
+        return p->configWidget(&settingsObject(), QString());
       }
     }
   }
@@ -447,7 +451,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForSource(const QSt
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(fn, type);
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
-    DataSourceConfigWidget *w = (*i).plugin->configWidget(&settingsObject, fn);
+    DataSourceConfigWidget *w = (*i).plugin->configWidget(&settingsObject(), fn);
     // Don't iterate.
     return w;
   }
@@ -474,7 +478,7 @@ QStringList DataSourcePluginManager::fieldListForSource(const QString& filename,
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->fieldList(settingsObject, fn, QString(), &typeSuggestion, complete);
+    rc = (*i).plugin->fieldList(settingsObject(), fn, QString(), &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -506,7 +510,7 @@ QStringList DataSourcePluginManager::matrixListForSource(const QString& filename
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->matrixList(settingsObject, fn, QString(), &typeSuggestion, complete);
+    rc = (*i).plugin->matrixList(settingsObject(), fn, QString(), &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -538,7 +542,7 @@ QStringList DataSourcePluginManager::scalarListForSource(const QString& filename
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->scalarList(&settingsObject, fn, QString(), &typeSuggestion, complete);
+    rc = (*i).plugin->scalarList(&settingsObject(), fn, QString(), &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {
@@ -569,7 +573,7 @@ QStringList DataSourcePluginManager::stringListForSource(const QString& filename
   QStringList rc;
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     QString typeSuggestion;
-    rc = (*i).plugin->stringList(&settingsObject, fn, QString(), &typeSuggestion, complete);
+    rc = (*i).plugin->stringList(&settingsObject(), fn, QString(), &typeSuggestion, complete);
     if (!rc.isEmpty()) {
       if (outType) {
         if (typeSuggestion.isEmpty()) {

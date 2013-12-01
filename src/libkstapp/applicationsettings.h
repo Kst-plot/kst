@@ -82,7 +82,7 @@ class ApplicationSettings : public QObject
     static void cleanup();
 
   private:
-    QSettings *_settings;
+    QSettings& _settings;
     bool _transparentDrag;
     bool _useOpenGL;
     qreal _refViewWidth;

@@ -55,7 +55,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 
   if (default_source.isEmpty()) {
-    _url->setFile(_dialogDefaults->value("vector/datasource", ".").toString());
+    _url->setFile(dialogDefaults().value("vector/datasource", ".").toString());
   } else {
     _url->setFile(default_source);
   }
@@ -481,29 +481,29 @@ PlotItemInterface *DataWizardPagePlot::existingPlot() const {
 
 
 void DataWizardPagePlot::updatePlotBox() {
-  _plotNumber->setValue(_dialogDefaults->value("wizard/plotCount",2).toInt());
+  _plotNumber->setValue(dialogDefaults().value("wizard/plotCount",2).toInt());
 
-  if (_dialogDefaults->value("wizard/legendsAuto",true).toBool()) {
+  if (dialogDefaults().value("wizard/legendsAuto",true).toBool()) {
     _legendsOn->setChecked(true);
-  } else if (_dialogDefaults->value("wizard/legendsOn",false).toBool()) {
+  } else if (dialogDefaults().value("wizard/legendsOn",false).toBool()) {
     _legendsAuto->setChecked(true);
   } else {
     _legendsOff->setChecked(true);
   }
-  _psdLogX->setChecked(_dialogDefaults->value("wizard/logX",false).toBool());
-  _psdLogY->setChecked(_dialogDefaults->value("wizard/logY",false).toBool());
+  _psdLogX->setChecked(dialogDefaults().value("wizard/logX",false).toBool());
+  _psdLogY->setChecked(dialogDefaults().value("wizard/logY",false).toBool());
 
-  _legendsOn->setChecked(_dialogDefaults->value("wizard/legendsOn",false).toBool());
-  _legendsAuto->setChecked(_dialogDefaults->value("wizard/legendsAuto",false).toBool());
-  _legendsVertical->setChecked(_dialogDefaults->value("legend/verticalDisplay",false).toBool());
+  _legendsOn->setChecked(dialogDefaults().value("wizard/legendsOn",false).toBool());
+  _legendsAuto->setChecked(dialogDefaults().value("wizard/legendsAuto",false).toBool());
+  _legendsVertical->setChecked(dialogDefaults().value("legend/verticalDisplay",false).toBool());
 
-  _rescaleFonts->setChecked(_dialogDefaults->value("wizard/rescaleFonts", true).toBool());
-  _shareAxis->setChecked(_dialogDefaults->value("wizard/shareAxis", false).toBool());
+  _rescaleFonts->setChecked(dialogDefaults().value("wizard/rescaleFonts", true).toBool());
+  _shareAxis->setChecked(dialogDefaults().value("wizard/shareAxis", false).toBool());
   _shareAxis->hide(); //FIXME - not done yet.
 
-  if (_dialogDefaults->value("wizard/linesOnly", true).toBool()) {
+  if (dialogDefaults().value("wizard/linesOnly", true).toBool()) {
     _drawLines->setChecked(true);
-  } else if (_dialogDefaults->value("wizard/pointsOnly", true).toBool()) {
+  } else if (dialogDefaults().value("wizard/pointsOnly", true).toBool()) {
     _drawPoints->setChecked(true);
   } else {
     _drawBoth->setChecked(true);
@@ -518,7 +518,7 @@ void DataWizardPagePlot::updatePlotBox() {
   _existingPlotName->setEnabled(havePlots && _existingPlot->isChecked());
   _plotLayoutBox->setEnabled(!_existingPlot->isChecked());
 
-  CurvePlotPlacement placement = static_cast<CurvePlotPlacement>(_dialogDefaults->value("wizard/curvePlacement",MultiplePlots).toInt());
+  CurvePlotPlacement placement = static_cast<CurvePlotPlacement>(dialogDefaults().value("wizard/curvePlacement",MultiplePlots).toInt());
   switch (placement) {
   case OnePlot:
     _onePlot->setChecked(true);
@@ -547,7 +547,7 @@ void DataWizardPagePlot::updatePlotBox() {
     _multiplePlots->setChecked(true);
     break;
   }
-  CurvePlacement::Layout layout = static_cast<CurvePlacement::Layout>(_dialogDefaults->value("wizard/plotLayout", CurvePlacement::Auto).toInt());
+  CurvePlacement::Layout layout = static_cast<CurvePlacement::Layout>(dialogDefaults().value("wizard/plotLayout", CurvePlacement::Auto).toInt());
   switch (layout) {
   case CurvePlacement::Auto:
     _autoLayout->setChecked(true);
@@ -560,7 +560,7 @@ void DataWizardPagePlot::updatePlotBox() {
     break;
   }
 
-  _gridColumns->setValue(_dialogDefaults->value("wizard/gridColumns", CurvePlacement::Auto).toInt());
+  _gridColumns->setValue(dialogDefaults().value("wizard/gridColumns", CurvePlacement::Auto).toInt());
 }
 
 
@@ -574,7 +574,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
    setupUi(this);
 
   _xVectorExisting->setObjectStore(store);
-  _xVectorExisting->setToLastX(_dialogDefaults->value("curve/xvectorfield","INDEX").toString());
+  _xVectorExisting->setToLastX(dialogDefaults().value("curve/xvectorfield","INDEX").toString());
   _xAxisUseExisting->setChecked(_xVectorExisting->count()>0);
   dataRange()->loadWidgetDefaults();
   getFFTOptions()->loadWidgetDefaults();
@@ -586,8 +586,8 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
   _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots. Set FFT options below:"));
 
-  _FFTOptions->GroupBoxFFTOptions->setChecked(_dialogDefaults->value("wizard/doPSD",false).toBool());
-  _xAxisGroup->setChecked(_dialogDefaults->value("wizard/doXY",true).toBool());
+  _FFTOptions->GroupBoxFFTOptions->setChecked(dialogDefaults().value("wizard/doPSD",false).toBool());
+  _xAxisGroup->setChecked(dialogDefaults().value("wizard/doXY",true).toBool());
 }
 
 
@@ -647,7 +647,7 @@ void DataWizardPageDataPresentation::updateVectors() {
   _xVector->addItems(((DataWizard*)wizard())->dataSourceFieldList());
   _pageValid = validOptions();
 
-  int x_index = _xVector->findText(_dialogDefaults->value("curve/xvectorfield","INDEX").toString());
+  int x_index = _xVector->findText(dialogDefaults().value("curve/xvectorfield","INDEX").toString());
   if (x_index<0) {
     x_index = _xVector->findText("INDEX");
   }
@@ -745,7 +745,7 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
 
 
   // the dialog needs to know that the default has been set....
-  _pageDataSource->sourceChanged(_dialogDefaults->value("vector/datasource",".").toString());
+  _pageDataSource->sourceChanged(dialogDefaults().value("vector/datasource",".").toString());
 
   if (!fileToOpen.isEmpty()) {
     _pageDataSource->sourceChanged(fileToOpen);
@@ -772,24 +772,24 @@ void DataWizard::finished() {
   uint n_curves = 0;
   uint n_steps = 0;
 
-  _dialogDefaults->setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
-  _dialogDefaults->setValue("wizard/doXY", _pageDataPresentation->plotData());
-  _dialogDefaults->setValue("wizard/curvePlacement", _pagePlot->curvePlacement());
-  _dialogDefaults->setValue("wizard/plotCount", _pagePlot->plotCount());
+  dialogDefaults().setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
+  dialogDefaults().setValue("wizard/doXY", _pageDataPresentation->plotData());
+  dialogDefaults().setValue("wizard/curvePlacement", _pagePlot->curvePlacement());
+  dialogDefaults().setValue("wizard/plotCount", _pagePlot->plotCount());
 
-  _dialogDefaults->setValue("wizard/legendsOn", _pagePlot->legendsOn());
-  _dialogDefaults->setValue("wizard/legendsAuto", _pagePlot->legendsAuto());
-  _dialogDefaults->setValue("legend/verticalDisplay", _pagePlot->legendsVertical());
-  _dialogDefaults->setValue("wizard/logX", _pagePlot->PSDLogX());
-  _dialogDefaults->setValue("wizard/logY", _pagePlot->PSDLogY());
+  dialogDefaults().setValue("wizard/legendsOn", _pagePlot->legendsOn());
+  dialogDefaults().setValue("wizard/legendsAuto", _pagePlot->legendsAuto());
+  dialogDefaults().setValue("legend/verticalDisplay", _pagePlot->legendsVertical());
+  dialogDefaults().setValue("wizard/logX", _pagePlot->PSDLogX());
+  dialogDefaults().setValue("wizard/logY", _pagePlot->PSDLogY());
 
-  _dialogDefaults->setValue("wizard/rescaleFonts", _pagePlot->rescaleFonts());
-  _dialogDefaults->setValue("wizard/shareAxis", _pagePlot->shareAxis());
+  dialogDefaults().setValue("wizard/rescaleFonts", _pagePlot->rescaleFonts());
+  dialogDefaults().setValue("wizard/shareAxis", _pagePlot->shareAxis());
 
-  _dialogDefaults->setValue("wizard/linesOnly", _pagePlot->drawLines());
-  _dialogDefaults->setValue("wizard/pointsOnly", _pagePlot->drawPoints());
-  _dialogDefaults->setValue("wizard/plotLayout", _pagePlot->layout());
-  _dialogDefaults->setValue("wizard/gridColumns", _pagePlot->gridColumns());
+  dialogDefaults().setValue("wizard/linesOnly", _pagePlot->drawLines());
+  dialogDefaults().setValue("wizard/pointsOnly", _pagePlot->drawPoints());
+  dialogDefaults().setValue("wizard/plotLayout", _pagePlot->layout());
+  dialogDefaults().setValue("wizard/gridColumns", _pagePlot->gridColumns());
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
   DataSourcePtr ds = _pageDataSource->dataSource();
@@ -889,7 +889,7 @@ void DataWizard::finished() {
 
     const QString field = _pageDataPresentation->vectorField();
 
-    _dialogDefaults->setValue("curve/xvectorfield",field);
+    dialogDefaults().setValue("curve/xvectorfield",field);
     Q_ASSERT(_document && _document->objectStore());
 
     DataVectorPtr dxv = _document->objectStore()->createObject<DataVector>();
@@ -1074,8 +1074,8 @@ void DataWizard::finished() {
       curve->setColor(color);
       curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
       curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-      curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
-      curve->setPointSize(_dialogDefaults->value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
+      curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
+      curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
       curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
       curve->writeLock();
@@ -1151,8 +1151,8 @@ void DataWizard::finished() {
         curve->setYVector(powerspectrum->vY());
         curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
         curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-        curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
-        curve->setPointSize(_dialogDefaults->value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
+        curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
+        curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
         curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
         if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {

@@ -342,16 +342,16 @@ void LegendItem::setLegendColor(const QColor &color) {
 
 
 void LegendItem::applyDefaults() {
-  _auto = _dialogDefaults->value(defaultsGroupName()+"/auto",true).toBool();
+  _auto = dialogDefaults().value(defaultsGroupName()+"/auto",true).toBool();
 
-  _color = _dialogDefaults->value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
+  _color = dialogDefaults().value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
 
   QFont font;
-  font.fromString(_dialogDefaults->value(defaultsGroupName()+"/font",font.toString()).toString());
+  font.fromString(dialogDefaults().value(defaultsGroupName()+"/font",font.toString()).toString());
   setLegendFont(font);
 
-  setFontScale(_dialogDefaults->value(defaultsGroupName()+"/fontScale", 12.0).toDouble());
-  _verticalDisplay = _dialogDefaults->value(defaultsGroupName()+"/verticalDisplay",true).toBool();
+  setFontScale(dialogDefaults().value(defaultsGroupName()+"/fontScale", 12.0).toDouble());
+  _verticalDisplay = dialogDefaults().value(defaultsGroupName()+"/verticalDisplay",true).toBool();
 }
 
 void LegendItem::setFont(const QFont &f, const QColor &c) {
@@ -361,9 +361,9 @@ void LegendItem::setFont(const QFont &f, const QColor &c) {
 }
 
 void LegendItem::saveAsDialogDefaults() const {
-  _dialogDefaults->setValue(defaultsGroupName()+"/auto",_auto);
-  _dialogDefaults->setValue(defaultsGroupName()+"/title", _title);
-  _dialogDefaults->setValue(defaultsGroupName()+"/verticalDisplay", _verticalDisplay);
+  dialogDefaults().setValue(defaultsGroupName()+"/auto",_auto);
+  dialogDefaults().setValue(defaultsGroupName()+"/title", _title);
+  dialogDefaults().setValue(defaultsGroupName()+"/verticalDisplay", _verticalDisplay);
 
   QFont F = _font;
   F.setPointSize(_fontScale);
@@ -373,9 +373,9 @@ void LegendItem::saveAsDialogDefaults() const {
 }
 
 void LegendItem::saveDialogDefaultsFont(const QFont &F, const QColor &C) {
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/fontScale",F.pointSize());
-  _dialogDefaults->setValue(staticDefaultsGroupName()+"/color", C.name());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/font", QVariant(F).toString());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/fontScale",F.pointSize());
+  dialogDefaults().setValue(staticDefaultsGroupName()+"/color", C.name());
 }
 
 void LegendItem::saveInPlot(QXmlStreamWriter &xml) {

@@ -28,7 +28,7 @@
 class QSettings;
 
 namespace Kst {
-  KSTWIDGETS_EXPORT extern QSettings *_dialogDefaults;
+  KSTWIDGETS_EXPORT QSettings& dialogDefaults();
 
   KSTWIDGETS_EXPORT void setDataVectorDefaults(DataVectorPtr);
   KSTWIDGETS_EXPORT void setGenVectorDefaults(GeneratedVectorPtr V);

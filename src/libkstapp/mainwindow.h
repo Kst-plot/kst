@@ -26,6 +26,7 @@ class QAction;
 class QProgressBar;
 class QUndoGroup;
 class QPrinter;
+class QSettings;
 
 namespace Kst {
 
@@ -182,8 +183,8 @@ class MainWindow : public QMainWindow
     bool promptSaveDone();
 
     QAction* createRecentFileAction(const QString& filename, int idx, const QString& text, const char* openslot);
-    void updateRecentFiles(const QString& key, QMenu *menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot);
-    
+    void updateRecentFiles(QMenu *menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot);
+
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
 #if defined(__QNX__)
@@ -197,6 +198,7 @@ class MainWindow : public QMainWindow
     TabWidget *_tabWidget;
     QUndoGroup *_undoGroup;
     ScriptServer* _scriptServer;
+    QSettings& _settings;
 
     DataManager *_dataManager;
     DebugDialog *_debugDialog;
@@ -256,14 +258,14 @@ class MainWindow : public QMainWindow
 #endif
     QAction *_createSharedAxisBoxAct;
 
-    QAction *_aboutAct;    
+    QAction *_aboutAct;
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_exportVectorsAct;
     QAction *_logAct;
-    QAction *_openAct;    
+    QAction *_openAct;
     QAction *_saveAct;
     QAction *_saveAsAct;
     QAction *_closeAct;

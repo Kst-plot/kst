@@ -278,7 +278,7 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->setHasPoints(_usePoints);
     curve->setHasLines(_useLines);
     curve->setHasBars(_useBargraph);
-    curve->setLineWidth(_dialogDefaults->value("curves/lineWidth",0).toInt());
+    curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
     //curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
     if (ev) {
@@ -411,8 +411,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
 #ifndef KST_NO_PRINTER
   // set paper settings to match defaults.
-  _paperSize = QPrinter::PaperSize(_dialogDefaults->value("print/paperSize", QPrinter::Letter).toInt());
-  if (_dialogDefaults->value("print/landscape",true).toBool()) {
+  _paperSize = QPrinter::PaperSize(dialogDefaults().value("print/paperSize", QPrinter::Letter).toInt());
+  if (dialogDefaults().value("print/landscape",true).toBool()) {
     _landscape = true;
   } else {
     _landscape = false;
@@ -724,8 +724,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
 #ifndef KST_NO_PRINTER
   // set defaults to match what has been set.
-  _dialogDefaults->setValue("print/landscape", _landscape);
-  _dialogDefaults->setValue("print/paperSize", int(_paperSize));
+  dialogDefaults().setValue("print/landscape", _landscape);
+  dialogDefaults().setValue("print/paperSize", int(_paperSize));
 #endif
 
   if (_plotItem) {

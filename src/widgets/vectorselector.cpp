@@ -141,7 +141,7 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
 void VectorSelector::newVector() {
   QString newName;
   if (_isX) {
-    newName = _dialogDefaults->value("curve/xvectorfield","INDEX").toString();
+    newName = dialogDefaults().value("curve/xvectorfield","INDEX").toString();
   }
   DialogLauncher::self()->showVectorDialog(newName, 0, true);
   fillVectors();

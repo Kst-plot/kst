@@ -210,13 +210,13 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
 }
 
 void ArrowItem::applyDialogDefaultsHeads() {
-  _endArrowHead = _dialogDefaults->value("arrow/hasEndHead",true).toBool();
+  _endArrowHead = dialogDefaults().value("arrow/hasEndHead",true).toBool();
   if (_endArrowHead) {
-    _endArrowScale = _dialogDefaults->value("arrow/endHeadScale",12).toDouble();
+    _endArrowScale = dialogDefaults().value("arrow/endHeadScale",12).toDouble();
   }
-  _startArrowHead = _dialogDefaults->value("arrow/hasStartHead",false).toBool();
+  _startArrowHead = dialogDefaults().value("arrow/hasStartHead",false).toBool();
   if (_startArrowHead) {
-    _startArrowScale = _dialogDefaults->value("arrow/startHeadScale",12).toDouble();
+    _startArrowScale = dialogDefaults().value("arrow/startHeadScale",12).toDouble();
   }
 }
 

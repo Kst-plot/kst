@@ -42,7 +42,7 @@ typedef SharedPtr<DataObject> DataObjectPtr;
 typedef ObjectList<DataObject> DataObjectList;
 typedef QMap<DataObjectPtr, DataObjectPtr> DataObjectDataObjectMap;
 
-class KSTMATH_EXPORT DataObject : public Object 
+class KSTMATH_EXPORT DataObject : public Object
 {
     Q_OBJECT
 
@@ -173,7 +173,7 @@ class KSTMATH_EXPORT DataObject : public Object
     virtual qint64 minInputSerial() const;
     virtual qint64 maxInputSerialOfLastChange() const;
 
-  private:    
+  private:
     QString _name;
     QString _author;
     QString _description;
@@ -181,13 +181,13 @@ class KSTMATH_EXPORT DataObject : public Object
     QString _library;
 
   private:
-    static QSettings settingsObject;
+    static QSettings& settingsObject();
     static QMap<QString,QString> url_map;
     static void scanPlugins();
 };
 
 
-class KSTMATH_EXPORT DataObjectConfigWidget : public QWidget 
+class KSTMATH_EXPORT DataObjectConfigWidget : public QWidget
 {
     Q_OBJECT
 

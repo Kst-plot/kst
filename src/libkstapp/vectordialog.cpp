@@ -360,10 +360,10 @@ void VectorDialog::updateButtons() {
 void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
     _vectorTab->dataRange()->loadWidgetDefaults();
-    _vectorTab->setFile(_dialogDefaults->value("vector/datasource",_vectorTab->file()).toString());
-    _vectorTab->setFrom(_dialogDefaults->value("genVector/min",-10).toInt());
-    _vectorTab->setTo(_dialogDefaults->value("genVector/max",10).toInt());
-    _vectorTab->setNumberOfSamples(_dialogDefaults->value("genVector/length",1000).toInt());
+    _vectorTab->setFile(dialogDefaults().value("vector/datasource",_vectorTab->file()).toString());
+    _vectorTab->setFrom(dialogDefaults().value("genVector/min",-10).toInt());
+    _vectorTab->setTo(dialogDefaults().value("genVector/max",10).toInt());
+    _vectorTab->setNumberOfSamples(dialogDefaults().value("genVector/length",1000).toInt());
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
