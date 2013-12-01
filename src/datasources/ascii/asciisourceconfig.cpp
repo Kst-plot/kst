@@ -23,55 +23,30 @@
 #define DEFAULT_COLUMN_WIDTH 16
 
 
-const char AsciiSourceConfig::Key_fileNamePattern[] = "Filename Pattern";
 const char AsciiSourceConfig::Key_fileNamePattern[] = "filenamepattern";
-const char AsciiSourceConfig::Key_delimiters[] = "Comment Delimiters";
 const char AsciiSourceConfig::Key_delimiters[] = "delimiters";
-const char AsciiSourceConfig::Key_indexVector[] ="Index";
 const char AsciiSourceConfig::Key_indexVector[] ="vector";
-const char AsciiSourceConfig::Key_indexInterpretation[] = "Default INDEX Interpretation";
 const char AsciiSourceConfig::Key_indexInterpretation[] = "interpretation";
-const char AsciiSourceConfig::Key_timeAsciiFormatString[] = "ASCII Time format";
 const char AsciiSourceConfig::Key_timeAsciiFormatString[] = "asciiTimeFormat";
-const char AsciiSourceConfig::Key_columnType[] = "Column Type";
 const char AsciiSourceConfig::Key_columnType[] = "columntype";
-const char AsciiSourceConfig::Key_columnDelimiter[] = "Column Delimiter";
 const char AsciiSourceConfig::Key_columnDelimiter[] = "columndelimiter";
-const char AsciiSourceConfig::Key_columnWidth[] = "Column Width";
 const char AsciiSourceConfig::Key_columnWidth[] = "columnwidth";
-const char AsciiSourceConfig::Key_columnWidthIsConst[] = "Column Width is const";
 const char AsciiSourceConfig::Key_columnWidthIsConst[] = "columnwidthisconst";
-const char AsciiSourceConfig::Key_dataLine[] = "Data Start";
 const char AsciiSourceConfig::Key_dataLine[] = "headerstart";
-const char AsciiSourceConfig::Key_readFields[] = "Read Fields";
 const char AsciiSourceConfig::Key_readFields[] = "readfields";
-const char AsciiSourceConfig::Key_readUnits[] = "Read Units";
 const char AsciiSourceConfig::Key_readUnits[] = "readunits";
-const char AsciiSourceConfig::Key_useDot[] = "Use Dot";
 const char AsciiSourceConfig::Key_useDot[] = "usedot";
-const char AsciiSourceConfig::Key_fieldsLine[] = "Fields Line";
 const char AsciiSourceConfig::Key_fieldsLine[] = "fields";
-const char AsciiSourceConfig::Key_unitsLine[] = "Units Line";
 const char AsciiSourceConfig::Key_unitsLine[] = "units";
-const char AsciiSourceConfig::Key_limitFileBuffer[] = "Limit file buffer size";
 const char AsciiSourceConfig::Key_limitFileBuffer[] = "limitFileBuffer";
-const char AsciiSourceConfig::Key_limitFileBufferSize[] = "Size of limited file buffer";
 const char AsciiSourceConfig::Key_limitFileBufferSize[] = "limitFileBufferSize";
-const char AsciiSourceConfig::Key_useThreads[] = "Use threads when parsing Ascii data";
 const char AsciiSourceConfig::Key_useThreads[] = "useThreads";
-const char AsciiSourceConfig::Key_dataRate[] = "Data Rate for index";
 const char AsciiSourceConfig::Key_dataRate[] = "dataRate";
-const char AsciiSourceConfig::Key_offsetDateTime[] = "use an explicit date/time offset";
 const char AsciiSourceConfig::Key_offsetDateTime[] = "offsetDateTime";
-const char AsciiSourceConfig::Key_offsetFileDate[] = "use file time/date as offset";
 const char AsciiSourceConfig::Key_offsetFileDate[] = "offsetFileDate";
-const char AsciiSourceConfig::Key_offsetRelative[] = "use relative file time offset";
 const char AsciiSourceConfig::Key_offsetRelative[] = "offsetRelavive";
-const char AsciiSourceConfig::Key_dateTimeOffset[] = "date/time offset";
 const char AsciiSourceConfig::Key_dateTimeOffset[] = "dateTimeOffset";
-const char AsciiSourceConfig::Key_relativeOffset[] = "relative offset";
 const char AsciiSourceConfig::Key_relativeOffset[] = "relativeOffset";
-const char AsciiSourceConfig::Key_nanValue[] = "NaN value";
 const char AsciiSourceConfig::Key_nanValue[] = "nanValue";
 
 AsciiSourceConfig::AsciiSourceConfig() :
@@ -135,7 +110,7 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
 
 
 void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) const {
-  cfg.beginGroup(AsciiSource::asciiTypeKey());
+  cfg.beginGroup(typeKey());
   if (fileName.isEmpty()) {
     save(cfg);
   } else {
@@ -175,9 +150,13 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _nanValue << cfg;
 }
 
+QString AsciiSourceConfig::typeKey() const {
+  QString typeKey = AsciiSource::asciiTypeKey();
+    return typeKey.replace(" ", "_");
+}
 
 void AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
-  cfg.beginGroup(AsciiSource::asciiTypeKey());
+  cfg.beginGroup(typeKey());
   read(cfg);
   if (!fileName.isEmpty()) {
     cfg.beginGroup(fileName);

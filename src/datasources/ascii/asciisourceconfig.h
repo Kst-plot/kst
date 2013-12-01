@@ -95,6 +95,7 @@ class AsciiSourceConfig {
   private:
     void save(QSettings& cfg) const;
     void read(QSettings& cfg);
+    QString typeKey() const;
 };
 
 Q_DECLARE_METATYPE(AsciiSourceConfig::Interpretation)
