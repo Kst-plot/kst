@@ -27,8 +27,8 @@ QSettings& Kst::createSettings(const QString& scope)
 {
   const QString organization = "kst";
   QSettings* setting =
-    //new QSettings(QApplication::applicationDirPath() + "/" + organization + "-" + scope + ".ini", QSettings::IniFormat);
-    new QSettings(organization, scope);
+    new QSettings(QApplication::applicationDirPath() + "/" + organization + "-" + scope + ".ini", QSettings::IniFormat);
+    //new QSettings(organization, scope);
   s_settings << setting;
   return *setting;
 }

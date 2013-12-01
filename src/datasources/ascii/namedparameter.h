@@ -18,7 +18,7 @@
 #include <QXmlStreamAttributes>
 #include <QDomElement>
 
-template<class T, const char* Key, const char* Tag>
+template<class T, const char* Key>
 class NamedParameter
 {
 public:
@@ -43,16 +43,16 @@ public:
   }
 
   void operator>>(QXmlStreamWriter& xml) {
-    xml.writeAttribute(Tag, QVariant(value()).toString());
+    xml.writeAttribute(Key, QVariant(value()).toString());
   }
 
   void operator<<(QXmlStreamAttributes& att) {
-    setValue(QVariant(att.value(Tag).toString()).value<T>());
+    setValue(QVariant(att.value(Key).toString()).value<T>());
   }
 
   void operator<<(const QDomElement& e) {
-    if (e.hasAttribute(Tag)) {
-      setValue(QVariant(e.attribute(Tag)).value<T>());
+    if (e.hasAttribute(Key)) {
+      setValue(QVariant(e.attribute(Key)).value<T>());
     }
   }
 
