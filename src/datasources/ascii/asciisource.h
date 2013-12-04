@@ -80,6 +80,7 @@ signals:
 private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
+    bool _busy;
 
     friend class AsciiConfigWidget;
     mutable AsciiSourceConfig _config;

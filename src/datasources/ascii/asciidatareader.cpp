@@ -139,7 +139,7 @@ bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 
     if (buf.bytesRead() == 0) {
       return false;
     }
-    
+
     if (_config._delimiters.value().size() == 0) {
       const NoDelimiter comment_del;
       if (_lineending.isLF()) {
@@ -190,7 +190,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
     } else if (isLineBreak(buffer[i])) {
       if (row_has_data) {
         ++_numFrames;
-        if (_numFrames >= _rowIndex.size()) {
+        if (_numFrames + 1 >= _rowIndex.size()) {
           if (_rowIndex.capacity() < _numFrames + 1)
             _rowIndex.reserve(_numFrames + AsciiFileData::Prealloc);
           _rowIndex.resize(_numFrames + 1);
@@ -228,7 +228,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
 
 //-------------------------------------------------------------------------------------------
 int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field)
-{ 
+{
   Q_ASSERT(chunk.rowBegin() >= start);
   return readField(chunk, col, v + chunk.rowBegin() - start, field, chunk.rowBegin(), chunk.rowsRead());
 }
@@ -327,7 +327,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
                                  const ColumnWidthsAreConst& are_column_widths_const) const
 {
   const LexicalCast& lexc = LexicalCast::instance();
-  
+
   const QString delimiters = _config._delimiters.value();
 
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
