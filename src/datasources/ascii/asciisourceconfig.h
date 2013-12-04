@@ -80,7 +80,8 @@ class AsciiSourceConfig {
     bool operator!=(const AsciiSourceConfig& rhs) const;
     bool isUpdateNecessary(const AsciiSourceConfig& rhs) const;
 
-    void saveGroup(QSettings& cfg, const QString& fileName = QString()) const;
+    void saveDefault(QSettings& cfg) const;
+    void saveGroup(QSettings& cfg, const QString& fileName) const;
     void readGroup(QSettings& cfg, const QString& fileName = QString());
 
     void save(QXmlStreamWriter& s);

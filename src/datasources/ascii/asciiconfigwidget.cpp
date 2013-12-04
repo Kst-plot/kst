@@ -26,8 +26,8 @@
 
 
 
-AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) : 
-    QWidget(parent), 
+AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
+    QWidget(parent),
     Ui_AsciiConfig(),
     _index_offset(1)
 {
@@ -148,7 +148,7 @@ AsciiSourceConfig AsciiConfigWidgetInternal::config()
   }
 
   config._delimiters = _delimiters->text();
-  
+
   if (_whitespace->isChecked()) {
     config._columnType = AsciiSourceConfig::Whitespace;
   } else if (_custom->isChecked()) {
@@ -204,7 +204,7 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
   _readUnits->setChecked(config._readUnits);
   _useDot->setChecked(config._useDot);
   _useComma->setChecked(!config._useDot);
-  
+
   _startLine->setValue(config._dataLine + _index_offset);
   _fieldsLine->setValue(config._fieldsLine + _index_offset);
   _unitsLine->setValue(config._unitsLine + _index_offset);
@@ -280,7 +280,6 @@ void AsciiConfigWidget::updateIndexVector() {
 
 void AsciiConfigWidget::cancel() {
   // revert to _oldConfig
-  _oldConfig.saveGroup(settings());
   _ac->setConfig(_oldConfig);
 
   if (hasInstance()) {
@@ -367,7 +366,7 @@ void AsciiConfigWidget::save() {
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     if (_ac->_applyDefault->isChecked()) {
-      _ac->config().saveGroup(settings());
+      _ac->config().saveDefault(settings());
     }
     _ac->config().saveGroup(settings(), src->fileName());
 

@@ -134,15 +134,20 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
 }
 
 
-void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) const {
+void AsciiSourceConfig::saveDefault(QSettings& cfg) const {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
-  if (fileName.isEmpty()) {
-    save(cfg);
-  } else {
-    cfg.beginGroup(fileName);
-    save(cfg);
-    cfg.endGroup();
-  }
+  save(cfg);
+  cfg.endGroup();
+}
+
+
+void AsciiSourceConfig::saveGroup(QSettings& cfg, const QString& fileName) const {
+  if (fileName.isEmpty())
+    return;
+  cfg.beginGroup(AsciiSource::asciiTypeKey());
+  cfg.beginGroup(fileName);
+  save(cfg);
+  cfg.endGroup();
   cfg.endGroup();
 }
 
