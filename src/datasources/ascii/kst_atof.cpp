@@ -60,7 +60,7 @@ double LexicalCast::fromDouble(const char* signedp) const
   else
     --p;
 
-  if (c != '-' && c != '+' && c != _separator && !isDigit(c)) {
+  if (_nanMode != NullValue && c != '-' && c != '+' && c != _separator && !isDigit(c)) {
     return nanValue();
   }
 
