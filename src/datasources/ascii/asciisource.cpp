@@ -243,6 +243,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
       } else {
         ms::sleep(500);
         emit progress(_reader.progressValue(), i18n("Parsing %1: %2 rows found.").arg(_filename).arg(QString::number(_reader.progressRows())));
+        QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
   } else {
@@ -398,6 +399,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     }
 
     if (_fileBuffer.bytesRead() == 0) {
+      _fileBuffer.clear();
       return 0;
     }
 
@@ -431,12 +433,13 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
     // something went wrong abort reading
     if (read == 0) {
-      _fileBuffer.clear();
       break;
     }
 
     sampleRead += read;
   }
+
+  _fileBuffer.clear();
 
   return sampleRead;
 }

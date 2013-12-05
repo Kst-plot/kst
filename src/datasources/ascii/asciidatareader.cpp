@@ -130,12 +130,15 @@ bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 
 
   bool new_data = false;
   AsciiFileData buf;
+  const qint64 more = read_completely
+                        ? qMin<qint64>(qMax<qint64>(byteLength, AsciiFileData::Prealloc - 1), 100 * AsciiFileData::Prealloc)
+                        : AsciiFileData::Prealloc - 1;
   do {
     // Read the tmpbuffer, starting at row_index[_numFrames]
     buf.clear();
 
     qint64 bufstart = _rowIndex[_numFrames]; // always read from the start of a line
-    _progressDone += buf.read(*file, bufstart, byteLength - bufstart, AsciiFileData::Prealloc - 1);
+    _progressDone += buf.read(*file, bufstart, byteLength - bufstart, more);
     if (buf.bytesRead() == 0) {
       return false;
     }
@@ -163,10 +166,11 @@ bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 
       }
     }
 
+    QMutexLocker lock(&_progressMutex);
     _progressRows = _numFrames;
     _progressValue = _progressDone * 100 / _progressMax;
 
-  } while (buf.bytesRead() == AsciiFileData::Prealloc - 1  && read_completely);
+  } while (buf.bytesRead() == more  && read_completely);
 
   return new_data;
 }
@@ -191,8 +195,10 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
       if (row_has_data) {
         ++_numFrames;
         if (_numFrames + 1 >= _rowIndex.size()) {
-          if (_rowIndex.capacity() < _numFrames + 1)
-            _rowIndex.reserve(_numFrames + AsciiFileData::Prealloc);
+          if (_rowIndex.capacity() < _numFrames + 1) {
+            qint64 more = qMin<qint64>(qMax<qint64>(2 * _numFrames, AsciiFileData::Prealloc), 100 * AsciiFileData::Prealloc);
+            _rowIndex.reserve(_numFrames + more);
+          }
           _rowIndex.resize(_numFrames + 1);
         }
         row_start = row_offset + i;
@@ -236,12 +242,14 @@ int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, dou
 //-------------------------------------------------------------------------------------------
 int AsciiDataReader::progressValue()
 {
+  QMutexLocker lock(&_progressMutex);
   return _progressValue;
 }
 
 //-------------------------------------------------------------------------------------------
 qint64 AsciiDataReader::progressRows()
 {
+  QMutexLocker lock(&_progressMutex);
   return _progressRows;
 }
 

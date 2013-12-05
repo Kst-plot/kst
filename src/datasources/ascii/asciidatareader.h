@@ -51,6 +51,7 @@ class AsciiDataReader
     qint64 progressRows();
 
   private:
+    QMutex _progressMutex;
     int _progressValue;
     qint64 _progressRows;
 

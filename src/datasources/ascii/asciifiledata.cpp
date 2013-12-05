@@ -98,7 +98,7 @@ void fileBufferFree(void* ptr)
 
 
 //-------------------------------------------------------------------------------------------
-AsciiFileData::AsciiFileData() : 
+AsciiFileData::AsciiFileData() :
   _array(new Array), _file(0), _fileRead(false), _reread(false),
   _begin(-1), _bytesRead(0), _rowBegin(-1), _rowsRead(0)
 {
@@ -128,7 +128,7 @@ const AsciiFileData::Array& AsciiFileData::constArray() const
 
 //-------------------------------------------------------------------------------------------
 bool AsciiFileData::resize(qint64 bytes)
-{ 
+{
   try {
     _array->resize(bytes);
   } catch (const std::bad_alloc&) {
