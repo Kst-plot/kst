@@ -62,6 +62,7 @@ class KSTCORE_EXPORT DataSource : public Object
       virtual ~DataInterface() {}
       // read data.  The buffer and range info are in ReadInfo
       virtual int read(const QString& name, typename T::ReadInfo&) = 0;
+      virtual void prepareRead(int number_of_read_calls) {}
 
       // named elements
       virtual QStringList list() const = 0;

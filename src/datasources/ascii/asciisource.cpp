@@ -65,6 +65,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _reader(_config),
   _fileBuffer(),
   _busy(false),
+  _read_count_max(-1),
+  _read_count(0),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -287,8 +289,9 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
+  _actualField = field;
   if (_emitProgress) {
-    updateProgress(i18n("Reading field: ") + field);
+    updateProgress(i18n("Reading field"));
   } else {
     emit progress(0, i18n("Reading field: ") + field);
   }
@@ -354,6 +357,13 @@ bool AsciiSource::useThreads() const
   return _config._useThreads && _fileSize > 1 * 1024 * 1024;
 }
 
+//-------------------------------------------------------------------------------------------
+void AsciiSource::prepareRead(int count)
+{
+    _read_count_max = count;
+    _read_count = 0;
+    _progress = 0;
+}
 
 //-------------------------------------------------------------------------------------------
 int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
@@ -367,23 +377,25 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
       v[i] = double(s + i);
     }
     if (_emitProgress) {
-      emit progress(50, i18n("INDEX created"));
+      emit updateProgress(i18n("INDEX created"));
     }
     return n;
   }
 
   int col = columnOfField(field);
   if (col == -1) {
+    _read_count_max = -1;
     return -2;
   }
 
   // check if the already in buffer
-  qint64 begin = _reader.beginOfRow(s);
-  qint64 bytesToRead = _reader.beginOfRow(s + n) - begin;
+  const qint64 begin = _reader.beginOfRow(s);
+  const qint64 bytesToRead = _reader.beginOfRow(s + n) - begin;
   if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
     QFile* file = new QFile(_filename);
     if (!AsciiFileBuffer::openFile(*file)) {
       delete file;
+      _read_count_max = -1;
       return -3;
     }
 
@@ -411,6 +423,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
     if (_fileBuffer.bytesRead() == 0) {
       _fileBuffer.clear();
+      _read_count_max = -1;
       return 0;
     }
 
@@ -436,9 +449,13 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   int sampleRead = 0;
 
   _progressSteps = 0;
-  _progress = 0;
   for (int i = 0; i < slidingWindow.size(); i++) {
       _progressSteps += slidingWindow[i].size() * 2;
+  }
+  if (_read_count_max == -1) {
+    _progress = 0;
+  } else {
+    _progressSteps *= _read_count_max;
   }
 
   for (int i = 0; i < slidingWindow.size(); i++) {
@@ -457,9 +474,16 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     sampleRead += read;
   }
 
-  _fileBuffer.clear();
+  if (useSlidingWindow(bytesToRead)) {
+    // only buffering the complete file makes sense
+    _fileBuffer.clear();
+  }
 
   updateProgress(i18n("Plotting data ..."));
+
+  _read_count++;
+  if (_read_count_max == _read_count)
+    _read_count_max = -1;
 
   return sampleRead;
 }
@@ -511,7 +535,8 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
 void AsciiSource::updateProgress(const QString& message)
 {
   if (_progressSteps != 0) {
-    emit progress(50 + 50 * _progress / _progressSteps, message);
+    const QString msg = _actualField + ": " + message;
+    emit progress(50 + 50 * _progress / _progressSteps, msg);
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
   }
 }

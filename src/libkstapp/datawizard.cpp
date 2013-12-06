@@ -845,6 +845,7 @@ void DataWizard::finished() {
   // memory estimate for the y vectors
   {
     int fftLen = int(pow(2.0, double(_pageDataPresentation->getFFTOptions()->FFTLength() - 1)));
+    ds->vector().prepareRead(_pageVectors->plotVectors()->count());
     for (int i = 0; i < _pageVectors->plotVectors()->count(); i++) {
       QString field = _pageVectors->plotVectors()->item(i)->text();
 

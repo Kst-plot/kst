@@ -35,6 +35,7 @@ class DataInterfaceAsciiVector : public DataSource::DataInterface<DataVector>
 public:
   DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
 
+  void prepareRead(int);
   // read one element
   int read(const QString&, DataVector::ReadInfo&);
 
@@ -65,6 +66,11 @@ const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &fie
   return DataVector::DataInfo(ascii._reader.numberOfFrames(), 1);
 }
 
+//-------------------------------------------------------------------------------------------
+void DataInterfaceAsciiVector::prepareRead(int number_of_read_calls)
+{
+    ascii.prepareRead(number_of_read_calls);
+}
 
 //-------------------------------------------------------------------------------------------
 int DataInterfaceAsciiVector::read(const QString& field, DataVector::ReadInfo& p)

@@ -39,6 +39,7 @@ class AsciiSource : public Kst::DataSource
 
     virtual UpdateType internalDataSourceUpdate();
 
+    void prepareRead(int count);
     int readField(double *v, const QString &field, int s, int n);
 
     QString fileType() const;
@@ -81,6 +82,8 @@ private:
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
     bool _busy;
+    int _read_count_max;
+    int _read_count;
 
     friend class AsciiConfigWidget;
     mutable AsciiSourceConfig _config;
@@ -94,6 +97,7 @@ private:
     double _progress;
     double _progressSteps;
     void updateProgress(const QString&);
+    QString _actualField;
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;
@@ -107,8 +111,6 @@ private:
     int tryReadField(double *v, const QString &field, int s, int n);
     int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, int start, const QString& field, int sRead);
     int parseWindowMultithreaded(QVector<AsciiFileData>& fileData, int col, double* v, int start, const QString& field);
-    
-    
 
     int columnOfField(const QString& field) const;
     static int splitHeaderLine(const QByteArray& line, const AsciiSourceConfig& cfg, QStringList* parts = 0);
