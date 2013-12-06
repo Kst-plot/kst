@@ -1559,8 +1559,7 @@ void MainWindow::updateProgress(int percent, const QString& message)
   } else {
     _progressBar->hide();
   }
-  setStatusMessage(message, 500, true);
-  updateStatusMessage();
+  setStatusMessage(message);
 }
 
 void MainWindow::readFromEnd() {

@@ -231,6 +231,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   bool new_data = false;
   if (_emitProgress) {
     emit progress(1, i18n("Searching for rows ..."));
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
     while (_busy) {
@@ -511,6 +512,7 @@ void AsciiSource::updateProgress(const QString& message)
 {
   if (_progressSteps != 0) {
     emit progress(50 + 50 * _progress / _progressSteps, message);
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
   }
 }
 
