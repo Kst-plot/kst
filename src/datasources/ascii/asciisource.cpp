@@ -89,7 +89,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _valid = true;
   registerChange();
   internalDataSourceUpdate(false);
-
 }
 
 
@@ -211,14 +210,17 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
 
   bool force_update = true;
-  bool emitProgress = true;
   if (_fileSize == file.size()) {
     force_update = false;
   }
-  // Don't emit status message if there is less than 10MB to parse
-  if (file.size() - _fileSize < 10*1024*1024) {
-    emitProgress = false;
+
+  // Emit status message if there is more than 100 MB to parse
+  if (file.size() - _fileSize > 100 * 1024 * 1024 && read_completely) {
+    _emitProgress = true;
+  } else {
+    _emitProgress = false;
   }
+
   if (read_completely) { // Update _fileSize only when we read the file completely
     _fileSize = file.size();
   }
@@ -227,22 +229,22 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   int col_count = _fieldList.size() - 1; // minus INDEX
 
   bool new_data = false;
-  if (emitProgress) {
-    emit progress(0, i18n("Parsing ") + _filename);
+  if (_emitProgress) {
+    emit progress(1, i18n("Searching for rows ..."));
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
     while (_busy) {
       if (future.isFinished()) {
         try {
           new_data = future;
-        } catch ( const std::exception& exp) {
+        } catch ( const std::exception&) {
           // TODO out of memory?
         }
         _busy = false;
-        emit progress(100, i18n("Parsing finished"));
+        emit progress(50, i18n("Searching for rows finished"));
       } else {
         ms::sleep(500);
-        emit progress(_reader.progressValue(), i18n("Parsing %1: %2 rows found.").arg(_filename).arg(QString::number(_reader.progressRows())));
+        emit progress(1 + 49.0 * _reader.progressValue() / 100.0, i18n("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
@@ -284,7 +286,12 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 //-------------------------------------------------------------------------------------------
 int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
-  emit progress(0, i18n("Reading field: ") + field);
+  if (_emitProgress) {
+    updateProgress(i18n("Reading field: ") + field);
+  } else {
+    emit progress(0, i18n("Reading field: ") + field);
+  }
+
   int read = tryReadField(v, field, s, n);
 
   if (isTime(field)) {
@@ -358,6 +365,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     for (int i = 0; i < n; i++) {
       v[i] = double(s + i);
     }
+    if (_emitProgress) {
+      emit progress(50, i18n("INDEX created"));
+    }
     return n;
   }
 
@@ -423,6 +433,13 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
   QVector<QVector<AsciiFileData> >& slidingWindow = _fileBuffer.fileData();
   int sampleRead = 0;
+
+  _progressSteps = 0;
+  _progress = 0;
+  for (int i = 0; i < slidingWindow.size(); i++) {
+      _progressSteps += slidingWindow[i].size() * 2;
+  }
+
   for (int i = 0; i < slidingWindow.size(); i++) {
 
     int read;
@@ -440,6 +457,8 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   }
 
   _fileBuffer.clear();
+
+  updateProgress(i18n("Plotting data ..."));
 
   return sampleRead;
 }
@@ -462,15 +481,24 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
 //-------------------------------------------------------------------------------------------
 int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
 {
-  if (!_fileBuffer.readWindow(window))
-    return 0;
+  updateProgress(i18n("Reading data ..."));
+  for (int i = 0; i < window.size(); i++) {
+    if (!window[i].read()) {
+      return 0;
+    }
+    _progress++;
+    updateProgress(i18n("Reading data ..."));
+  }
 
+  updateProgress(i18n("Parsing data ..."));
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
     QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
     readFutures.addFuture(future);
   }
   readFutures.waitForFinished();
+  _progress += window.size();
+  updateProgress(i18n("Parsing data ..."));
   int sampleRead = 0;
   foreach (const QFuture<int> future, readFutures.futures()) {
     sampleRead += future.result();
@@ -478,6 +506,13 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
   return sampleRead;
 }
 
+//-------------------------------------------------------------------------------------------
+void AsciiSource::updateProgress(const QString& message)
+{
+  if (_progressSteps != 0) {
+    emit progress(50 + 50 * _progress / _progressSteps, message);
+  }
+}
 
 //-------------------------------------------------------------------------------------------
 QString AsciiSource::fileType() const

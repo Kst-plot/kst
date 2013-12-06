@@ -168,7 +168,7 @@ bool AsciiDataReader::findAllDataRows(bool read_completely, QFile* file, qint64 
 
     QMutexLocker lock(&_progressMutex);
     _progressRows = _numFrames;
-    _progressValue = _progressDone * 100 / _progressMax;
+    _progressValue = 100.0 * _progressDone / (1.0 * _progressMax);
 
   } while (buf.bytesRead() == more  && read_completely);
 
@@ -240,7 +240,7 @@ int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, dou
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::progressValue()
+double AsciiDataReader::progressValue()
 {
   QMutexLocker lock(&_progressMutex);
   return _progressValue;

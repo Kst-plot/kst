@@ -90,6 +90,10 @@ private:
     bool _fieldListComplete;
     bool _haveWarned;
     double _fileCreationTime_t;
+    bool _emitProgress;
+    double _progress;
+    double _progressSteps;
+    void updateProgress(const QString&);
 
     QStringList _scalarList;
     QMap<QString, QString> _strings;

@@ -47,12 +47,12 @@ class AsciiDataReader
     template<typename ColumnDelimiter>
     static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);
 
-    int progressValue();
+    double progressValue();
     qint64 progressRows();
 
   private:
     QMutex _progressMutex;
-    int _progressValue;
+    double _progressValue;
     qint64 _progressRows;
 
     qint64 _numFrames;
