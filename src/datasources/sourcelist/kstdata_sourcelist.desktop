@@ -5,3 +5,5 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=sourcelist
 X-Kst-Plugin-Author=C. Barth Netterfield
 Name=Data Source List
+Name[uk]=Список джерел даних
+Name[x-test]=xxData Source Listxx
