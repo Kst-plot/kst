@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>277</width>
-    <height>32</height>
+    <width>273</width>
+    <height>28</height>
    </rect>
   </property>
   <property name="whatsThis">
@@ -22,6 +22,9 @@
    </property>
    <item>
     <widget class="Kst::ComboBox" name="_matrix">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+     </property>
      <item>
       <property name="text">
        <string>M</string>

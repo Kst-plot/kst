@@ -43,8 +43,6 @@ class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelect
 
     void setDefaultValue(double value);
 
-    virtual bool event(QEvent * event);
-
   Q_SIGNALS:
     void selectionChanged(const QString&);
 

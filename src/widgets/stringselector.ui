@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>39</height>
+    <width>296</width>
+    <height>35</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,6 +30,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
      </property>
     </widget>
    </item>

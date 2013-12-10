@@ -20,6 +20,9 @@ CurvePlacement::CurvePlacement(QWidget *parent)
   : QWidget(parent) {
   setupUi(this);
 
+  _plotList->resize(10,5);
+
+
   connect(_existingPlot, SIGNAL(toggled(bool)), _plotList, SLOT(setEnabled(bool)));
   connect(_newPlot, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
   connect(_customGrid, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
@@ -158,7 +161,7 @@ void CurvePlacement::updatePlotListCombo() {
 
   _plotList->clear();
   foreach (PlotItemInterface *plot, _plots) {
-    _plotList->addItem(plot->plotSizeLimitedName(_plotList), qVariantFromValue(plot));
+    _plotList->addItem(plot->plotCleanedName(), qVariantFromValue(plot));
   }
 
   if ((xi>0) && (xi<_plotList->count())) {

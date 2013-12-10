@@ -34,6 +34,7 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
   _newVector->setFixedSize(size + 8, size + 8);
   _editVector->setFixedSize(size + 8, size + 8);
 
+  _vector->resize(10,5);
   fillVectors();
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
@@ -213,7 +214,7 @@ void VectorSelector::fillVectors() {
       continue;
 
     vector->readLock();
-    vectors.insert(vector->sizeLimitedName(_vector), vector);
+    vectors.insert(vector->CleanedName(), vector);
     vector->unlock();
   }
 
@@ -236,14 +237,6 @@ void VectorSelector::fillVectors() {
   } else if (current) {
     setSelectedVector(current);
   }
-}
-
-
-bool VectorSelector::event(QEvent * event) {
-  if ((event->type() == QEvent::Resize)) {
-    fillVectors();
-  }
-  return QWidget::event(event);
 }
 
 }

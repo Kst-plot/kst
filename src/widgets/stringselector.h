@@ -40,8 +40,6 @@ class KSTWIDGETS_EXPORT StringSelector : public QWidget, public Ui::StringSelect
 
     void fillStrings();
 
-    virtual bool event(QEvent * event);
-
   Q_SIGNALS:
     void selectionChanged(const QString&);
 

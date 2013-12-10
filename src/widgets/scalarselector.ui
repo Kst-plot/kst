@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>234</width>
-    <height>31</height>
+    <width>230</width>
+    <height>27</height>
    </rect>
   </property>
   <property name="whatsThis">
@@ -21,6 +21,9 @@
     <widget class="Kst::ComboBox" name="_scalar">
      <property name="editable">
       <bool>true</bool>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
      </property>
     </widget>
    </item>

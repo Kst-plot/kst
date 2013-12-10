@@ -81,6 +81,8 @@ QString NamedObject::lengthLimitedName(int length) const {
 }
 
 QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const {
+  return (CleanedName());
+
     QFontMetrics fontMetrics=QFontMetrics(font);
 
     int mw = fontMetrics.maxWidth();
@@ -116,6 +118,8 @@ QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const 
 }
 
 QString NamedObject::sizeLimitedName(const QWidget *widget ) const {
+  return (CleanedName());
+
   return sizeLimitedName(widget->font(),widget->width());
 }
 

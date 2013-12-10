@@ -216,10 +216,6 @@ void ScalarSelector::fillScalars() {
     return;
   }
 
-  if (_scalar->width()<=_scalar->minimumSizeHint().width()) { // not set up yet...
-    return;
-  }
-
   QHash<QString, ScalarPtr> scalars;
 
   ScalarList scalarList = _store->getObjects<Scalar>();
@@ -230,7 +226,7 @@ void ScalarSelector::fillScalars() {
 
     scalar->readLock();
     if (!scalar->hidden()) {
-      scalars.insert(scalar->sizeLimitedName(_scalar), scalar);
+      scalars.insert(scalar->CleanedName(), scalar);
     }
     scalar->unlock();
   }
@@ -273,15 +269,6 @@ void ScalarSelector::updateScalarList() {
     fillScalars();
   }
 }
-
-bool ScalarSelector::event(QEvent * event) {
-  if ((event->type() == QEvent::Resize)) {
-    fillScalars();
-  }
-  return QWidget::event(event);
-}
-
-
 
 }
 

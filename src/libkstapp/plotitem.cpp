@@ -297,8 +297,8 @@ QString PlotItem::plotName() const {
   return Name();
 }
 
-QString PlotItem::plotSizeLimitedName(const QWidget *widget) const {
-  return sizeLimitedName(widget);
+QString PlotItem::plotCleanedName() const {
+  return CleanedName();
 }
 
 void PlotItem::save(QXmlStreamWriter &xml) {

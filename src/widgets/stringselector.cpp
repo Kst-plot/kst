@@ -117,7 +117,7 @@ void StringSelector::fillStrings() {
     StringPtr string = (*it);
 
     string->readLock();
-    strings.insert(string->sizeLimitedName(_string), string);
+    strings.insert(string->CleanedName(), string);
     string->unlock();
   }
 
@@ -159,14 +159,6 @@ void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _string->insertItem(0, tr("<None>"), qVariantFromValue(0));
     _string->setCurrentIndex(0);
   }
-}
-
-
-bool StringSelector::event(QEvent * event) {
-  if ((event->type() == QEvent::WindowActivate) || (event->type() == QEvent::Resize)) {
-    fillStrings();
-  }
-  return QWidget::event(event);
 }
 
 }
