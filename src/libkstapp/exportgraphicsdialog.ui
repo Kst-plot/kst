@@ -367,7 +367,7 @@
    <item row="2" column="2">
     <widget class="QCheckBox" name="_listBitmapFormats">
      <property name="text">
-      <string>Bitmap fomats</string>
+      <string>Bitmap formats</string>
      </property>
     </widget>
    </item>

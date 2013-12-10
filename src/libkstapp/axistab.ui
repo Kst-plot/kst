@@ -320,7 +320,7 @@
            <string>Time display format</string>
           </property>
           <property name="whatsThis">
-           <string>If the axis is to be intpreted as time, then display the time on the axis with this format.</string>
+           <string>If the axis is to be interpreted as time, then display the time on the axis with this format.</string>
           </property>
          </widget>
         </item>

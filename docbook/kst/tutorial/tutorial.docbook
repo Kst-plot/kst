@@ -414,7 +414,7 @@ click <guibutton>Next</guibutton>.  The following window will be displayed.
 The fields available in <filename>gyrodata.dat</filename> are listed to the left.
 You may filter the list of highlighted fields by entering a
 string to match (wildcards such as <literal>*</literal> are supported) into the text box above the list.
-Enter <literal>*</literal> to match anything (i.e. highlight all the the available fields), and then click
+Enter <literal>*</literal> to match anything (i.e. highlight all the available fields), and then click
 <guibutton>Check Selected</guibutton> to select all the highlighted fields (which in this case happens to be all
 the fields).
 </para>
@@ -725,7 +725,7 @@ Tie the top two plots together using the techniques
 you learned in the previous section.
 Then hold down <keycap>Ctrl</keycap> to enter X Mouse Zoom mode.  Now zoom in on a small region
 of the top plot (say from 50000 to 53000), to cause both tied plots to zoom.
-You will notice that the the blue pitch curve is negatively correlated with the red azimuth curve.
+You will notice that the blue pitch curve is negatively correlated with the red azimuth curve.
 This is because the pitch gyro was slightly rotated relative to the azimuth axis (by -0.69 degrees).
 The true pitch <literal>p'</literal> is:
 </para>

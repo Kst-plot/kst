@@ -812,7 +812,7 @@ What should happen if the Y axis shared box is changed to checked:
   the Y axis should be shared if properly aligned.
   -If all of the plots were in 'm' auto zoom mode, then the shared axis box will
    be in 'm' auto zoom mode, with all plots going from the minimum Y min to
-   the maximum Y max.  Otherwise, the the shared box will be in fixed mode, 
+   the maximum Y max.  Otherwise, the shared box will be in fixed mode, 
    again going from the current displayed minumum Y min to the current 
    displayed maximum Y max.
   -hitting 'm' anywhere in the shared axis box will place the shared axis box 

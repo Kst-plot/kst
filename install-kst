@@ -36,7 +36,7 @@ fi
 
 if [ "$INSTALL_LIBDIR" ]
 then
-  echo "Build will be automatically installed to the the configured location ($INSTALL_PREFIX)"
+  echo "Build will be automatically installed to the configured location ($INSTALL_PREFIX)"
 else
   echo "Build will be automatically install to the default location (/usr)"
 fi

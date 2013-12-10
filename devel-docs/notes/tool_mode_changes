@@ -13,7 +13,7 @@ Handles:
    showing ghost handles would be better.
   -Handle dimensions should be fixed and should not depend on window/object/
    parent size.
-   (It could be cool to have the the size fixed relative to the screen size.)
+   (It could be cool to have the size fixed relative to the screen size.)
   -Handles should lie outside the object so that they are accesible with 0
    size objects (eg, horizontal line).
   -Handles need to have some indication what they are/do (like inkscape).

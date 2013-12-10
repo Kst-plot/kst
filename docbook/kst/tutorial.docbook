@@ -638,7 +638,7 @@ Let us first examine the plots more closely.  Tie the top two plots
 together using the techniques you learned in the previous section.
 Then hold down <keycap>Ctrl</keycap> to enter X Mouse Zoom mode.  Now
 zoom in on a small region of the top plot (say from 50000 to 53000),
-to cause both tied plots to zoom.  You will notice that the the blue
+to cause both tied plots to zoom.  You will notice that the blue
 pitch curve is negatively correlated with the red azimuth curve.  This
 is because the pitch gyro was slightly rotated relative to the azimuth
 axis (by -0.69 degrees).  The true pitch <literal>p'</literal> is:

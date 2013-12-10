@@ -33,7 +33,7 @@ Proposed Functions:
     Returns the number of HDU's in the FITS file.
     
 2.  fitsDim( fitsfile *fp, int HDU )
-    Returns the dimensions of the the image or table contained in the 
+    Returns the dimensions of the image or table contained in the 
     current HDU.  In the case of binary tables with "wide" columns (each
     column entry is a vector), the column entries will be "unrolled" 
     and the returned number of rows will reflect this new size.
