@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=effectivebandwidth
 X-Kst-Plugin-Author=The University of Toronto
 Name=Effective Bandwidth Data Object Plugin
+Name[sv]=Dataobjekt-insticksprogram för effektiv bandbredd
 Name[uk]=Додаток для роботи з об’єктами ефективної смуги даних
 Name[x-test]=xxEffective Bandwidth Data Object Pluginxx
 Comment=Implements a Effective Bandwidth Data Object Plugin for Kst.

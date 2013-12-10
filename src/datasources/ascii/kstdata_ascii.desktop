@@ -7,6 +7,7 @@ X-Kst-Plugin-Author=The University of Toronto
 Name=ASCII File Reader
 Name[de]=ASCII-Dateileser
 Name[nl]=Lezer voor ASCII-bestand
+Name[sk]=Čítač ASCII súborov
 Name[sv]=ASCII-filläsare
 Name[uk]=Засіб читання файлів ASCII
 Name[x-test]=xxASCII File Readerxx

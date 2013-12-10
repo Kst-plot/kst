@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=crossspectrum
 X-Kst-Plugin-Author=The University of Toronto
 Name=Cross Spectrum Data Object Plugin
+Name[sv]=Dataobjekt-insticksprogram för korsspektrum
 Name[uk]=Додаток для роботи з об’єктами перехресного спектра даних
 Name[x-test]=xxCross Spectrum Data Object Pluginxx
 Comment=Implements a Cross Spectrum Data Object Plugin for Kst.

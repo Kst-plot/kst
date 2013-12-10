@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=genericfilter
 X-Kst-Plugin-Author=The University of Toronto
 Name=Generic Filter Data Object Plugin
+Name[sv]=Dataobjekt-insticksprogram för generellt filter
 Name[uk]=Додаток для роботи з об’єктами загального фільтрування даних
 Name[x-test]=xxGeneric Filter Data Object Pluginxx
 Comment=Implements a Generic Filter Data Object Plugin for Kst.
