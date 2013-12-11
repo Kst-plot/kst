@@ -296,6 +296,7 @@ void MainWindow::newDoc(bool force) {
     delete _dataManager;
     _dataManager = 0;
     delete _doc;
+    resetNameIndexes();
     _doc = new Document(this);
     _scriptServer->setStore(_doc->objectStore());
     tabWidget()->clear();

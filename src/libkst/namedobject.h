@@ -66,6 +66,8 @@ struct SizeCache {
     QString name;
 };
 
+void resetNameIndexes();
+
 class KSTCORE_EXPORT NamedObject 
 {
 public: 

@@ -309,6 +309,41 @@ bool shortNameLessThan(NamedObject *o1, NamedObject *o2) {
   return (n1.toInt() < n2.toInt());
 }
 
+void resetNameIndexes() {
+   _vnum = 1; // vectors
+   _pnum = 1; // plugins
+   _csdnum = 1; // csd
+   _cnum = 1; // curves
+   _enum = 1; // equations
+   _hnum = 1; // histograms
+   _inum = 1; // images
+   _psdnum = 1; // psd
+   _xnum = 1; // scalars
+   _tnum = 1; // text string
+   _mnum = 1; // matrix
+   _plotnum = 1; // plots
+   _lnum = 1; // legend
+   _dnum = 1; // view item
+   _dsnum = 1; // datasource
+
+   max_vnum = 0; // vectors
+   max_pnum = 0; // plugins
+   max_csdnum = 0; // csd
+   max_cnum = 0; // curves
+   max_enum = 0; // equations
+   max_hnum = 0; // histograms
+   max_inum = 0; // images
+   max_psdnum = 0; // psd
+   max_xnum = 0; // scalars
+   max_tnum = 0; // text string
+   max_mnum = 0; // matrix
+   max_plotnum = 0; // plots
+   max_lnum = 0; // legends
+   max_dnum = 0; // view item
+   max_dsnum = 0; // datasource
+
+}
+
 //void NamedObject::_initializeShortName() {
 //}
 
