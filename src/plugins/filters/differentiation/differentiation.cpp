@@ -24,6 +24,7 @@ static const QString& VECTOR_OUT = "dY/dX";
 class ConfigDifferentiationPlugin : public Kst::DataObjectConfigWidget, public Ui_DifferentiationConfig {
   public:
     ConfigDifferentiationPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_DifferentiationConfig() {
+      _store = 0;
       setupUi(this);
     }
 

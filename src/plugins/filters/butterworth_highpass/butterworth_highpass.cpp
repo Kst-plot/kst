@@ -27,6 +27,7 @@ static const QString& VECTOR_OUT = "Y";
 class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget, public Ui_FilterButterworthHighPassConfig {
   public:
     ConfigFilterButterworthHighPassPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthHighPassConfig() {
+      _store = 0;
       setupUi(this);
     }
 

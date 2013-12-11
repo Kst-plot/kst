@@ -24,6 +24,7 @@ static const QString& VECTOR_OUT = "sum(Y)dX";
 class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_CumulativeSumConfig {
   public:
     ConfigCumulativeSumPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CumulativeSumConfig() {
+      _store = 0;
       setupUi(this);
     }
 

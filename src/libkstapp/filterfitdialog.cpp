@@ -134,6 +134,7 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
   _configWidget = DataObject::pluginWidget(plugin);
   _configWidget->setupSlots(this);
   if (_store) {
+    qDebug() << "filter fit tab set object store for config widget";
     _configWidget->setObjectStore(_store);
   }
   if (_vectorX) {
@@ -147,7 +148,7 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
   }
   _layout->addWidget(_configWidget, 0, 0);
   _layout->activate();
-  //configWidget()->load();
+  configWidget()->load();
 }
 
 

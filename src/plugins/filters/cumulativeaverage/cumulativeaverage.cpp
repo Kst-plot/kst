@@ -23,6 +23,7 @@ static const QString& VECTOR_OUT = "Avg(Y)";
 class ConfigCumulativeAveragePlugin : public Kst::DataObjectConfigWidget, public Ui_CumulativeAverageConfig {
   public:
     ConfigCumulativeAveragePlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CumulativeAverageConfig() {
+      _store = 0;
       setupUi(this);
     }
 

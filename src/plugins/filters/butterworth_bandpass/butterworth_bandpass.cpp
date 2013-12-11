@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Y";
 class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget, public Ui_FilterButterworthBandPassConfig {
   public:
     ConfigFilterButterworthBandPassPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthBandPassConfig() {
+      _store = 0;
       setupUi(this);
     }
 

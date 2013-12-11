@@ -25,6 +25,7 @@ static const QString& VECTOR_OUT = "Y";
 class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, public Ui_FilterDespikeConfig {
   public:
     ConfigWidgetFilterDespikePlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterDespikeConfig() {
+      _store = 0;
       setupUi(this);
     }
 

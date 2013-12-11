@@ -26,6 +26,7 @@ static const QString& VECTOR_OUT = "Y";
 class ConfigWidgetFilterUnwindPlugin : public Kst::DataObjectConfigWidget, public Ui_FilterUnwindConfig {
   public:
     ConfigWidgetFilterUnwindPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterUnwindConfig() {
+      _store = 0;
       setupUi(this);
     }
 
