@@ -123,23 +123,14 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Order Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* orderScalar = static_cast<Kst::Scalar*>(object);
-        if (orderScalar) {
-          setSelectedOrderScalar(orderScalar);
-        }
+        _scalarOrder->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Central Frequency / Sample Rate Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* rateScalar = static_cast<Kst::Scalar*>(object);
-        if (rateScalar) {
-          setSelectedRateScalar(rateScalar);
-        }
+        _scalarRate->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Band width Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* bandwidthScalar = static_cast<Kst::Scalar*>(object);
-        if (bandwidthScalar) {
-          setSelectedBandwidthScalar(bandwidthScalar);
-        }
+        _scalarBandwidth->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

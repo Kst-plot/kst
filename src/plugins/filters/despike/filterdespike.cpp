@@ -112,17 +112,11 @@ class ConfigWidgetFilterDespikePlugin : public Kst::DataObjectConfigWidget, publ
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Spacing Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* spacingScalar = static_cast<Kst::Scalar*>(object);
-        if (spacingScalar) {
-          setSelectedSpacingScalar(spacingScalar);
-        }
+        _scalarSpacing->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("NSigma Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* nSigmaScalar = static_cast<Kst::Scalar*>(object);
-        if (nSigmaScalar) {
-          setSelectedNSigmaScalar(nSigmaScalar);
-        }
+        _scalarNSigma->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

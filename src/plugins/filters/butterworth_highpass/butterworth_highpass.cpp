@@ -114,17 +114,11 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Order Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* orderScalar = static_cast<Kst::Scalar*>(object);
-        if (orderScalar) {
-          setSelectedOrderScalar(orderScalar);
-        }
+        _scalarOrder->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Cutoff / Spacing Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* cutoffScalar = static_cast<Kst::Scalar*>(object);
-        if (cutoffScalar) {
-          setSelectedCutoffScalar(cutoffScalar);
-        }
+        _scalarCutoff->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

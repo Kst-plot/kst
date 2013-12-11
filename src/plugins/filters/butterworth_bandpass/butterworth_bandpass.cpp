@@ -33,7 +33,7 @@ class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget
 
     ~ConfigFilterButterworthBandPassPlugin() {}
 
-    void setObjectStore(Kst::ObjectStore* store) { 
+    void setObjectStore(Kst::ObjectStore* store) {
       _store = store; 
       _vector->setObjectStore(store);
       _scalarOrder->setObjectStore(store);
@@ -106,9 +106,9 @@ class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget
       if (_cfg) {
         _cfg->beginGroup("Filter Band Pass Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
-        _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
-        _cfg->setValue("Central Frequency / Sample Rate Scalar", _scalarRate->selectedScalar()->Name());
-        _cfg->setValue("Band width Scalar", _scalarBandwidth->selectedScalar()->Name());
+        _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->descriptiveName());
+        _cfg->setValue("Central Frequency / Sample Rate Scalar", _scalarRate->selectedScalar()->descriptiveName());
+        _cfg->setValue("Band width Scalar", _scalarBandwidth->selectedScalar()->descriptiveName());
         _cfg->endGroup();
       }
     }
@@ -122,24 +122,16 @@ class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget
         if (vector) {
           setSelectedVector(vector);
         }
+
         QString scalarName = _cfg->value("Order Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* orderScalar = static_cast<Kst::Scalar*>(object);
-        if (orderScalar) {
-          setSelectedOrderScalar(orderScalar);
-        }
+        _scalarOrder->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Central Frequency / Sample Rate Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* rateScalar = static_cast<Kst::Scalar*>(object);
-        if (rateScalar) {
-          setSelectedRateScalar(rateScalar);
-        }
+        _scalarRate->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Band width Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* bandwidthScalar = static_cast<Kst::Scalar*>(object);
-        if (bandwidthScalar) {
-          setSelectedBandwidthScalar(bandwidthScalar);
-        }
+        _scalarBandwidth->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

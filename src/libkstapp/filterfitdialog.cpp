@@ -147,6 +147,7 @@ void FilterFitTab::pluginChanged(const QString &plugin) {
   }
   _layout->addWidget(_configWidget, 0, 0);
   _layout->activate();
+  //configWidget()->load();
 }
 
 

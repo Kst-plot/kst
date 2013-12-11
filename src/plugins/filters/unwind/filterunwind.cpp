@@ -121,23 +121,14 @@ class ConfigWidgetFilterUnwindPlugin : public Kst::DataObjectConfigWidget, publi
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Maximum Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* maximumScalar = static_cast<Kst::Scalar*>(object);
-        if (maximumScalar) {
-          setSelectedMaximumScalar(maximumScalar);
-        }
+        _scalarMaximum->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Minimum Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* minimumScalar = static_cast<Kst::Scalar*>(object);
-        if (minimumScalar) {
-          setSelectedMinimumScalar(minimumScalar);
-        }
+        _scalarMinumum->setSelectedScalar(scalarName);
+
         scalarName = _cfg->value("Step Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* stepScalar = static_cast<Kst::Scalar*>(object);
-        if (stepScalar) {
-          setSelectedStepScalar(stepScalar);
-        }
+        _scalarStep->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

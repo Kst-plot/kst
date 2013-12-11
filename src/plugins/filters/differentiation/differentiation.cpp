@@ -103,11 +103,8 @@ class ConfigDifferentiationPlugin : public Kst::DataObjectConfigWidget, public U
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Input Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* scalarStep = static_cast<Kst::Scalar*>(object);
-        if (scalarStep) {
-          setSelectedScalar(scalarStep);
-        }
+        _scalarStep->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }

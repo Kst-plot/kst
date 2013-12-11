@@ -164,6 +164,22 @@ QString ScalarSelector::selectedScalarString(bool *editable) {
 }
 
 
+void ScalarSelector::setSelectedScalar(QString Name) {
+  bool ok;
+  double value = Name.toDouble(&ok);
+
+  if (ok) {
+    setDefaultValue(value);
+  } else {
+    Kst::Object* object = _store->retrieveObject(Name);
+    Kst::Scalar* scalar = static_cast<Kst::Scalar*>(object);
+    if (scalar) {
+      setSelectedScalar(scalar);
+    }
+  }
+}
+
+
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   int i=-1,j;
   for (j=0; j<_scalar->count() ; j++) {

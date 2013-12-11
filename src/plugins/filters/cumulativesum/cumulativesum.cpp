@@ -33,7 +33,6 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
       _store = store; 
       _vector->setObjectStore(store); 
       _scalarStep->setObjectStore(store);
-      _scalarStep->setDefaultValue(1.0);
     }
 
     void setupSlots(QWidget* dialog) {
@@ -103,11 +102,8 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
           setSelectedVector(vector);
         }
         QString scalarName = _cfg->value("Input Scalar").toString();
-        object = _store->retrieveObject(scalarName);
-        Kst::Scalar* scalarStep = static_cast<Kst::Scalar*>(object);
-        if (scalarStep) {
-          setSelectedScalar(scalarStep);
-        }
+        _scalarStep->setSelectedScalar(scalarName);
+
         _cfg->endGroup();
       }
     }
