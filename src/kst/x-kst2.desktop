@@ -1,8 +1,12 @@
 [Desktop Entry]
 Type=MimeType
 Name=Kst2
+Name[cs]=Kst2
 Name[de]=Kst2
+Name[fr]=Kst2
+Name[nl]=Kst2
 Name[pt]=Kst2
+Name[pt_BR]=Kst2
 Name[sk]=Kst2
 Name[sv]=Kst2
 Name[uk]=Kst2
@@ -11,8 +15,12 @@ Icon=kst
 DefaultApp=kst2
 Patterns=*.kst;*.KST;
 Comment=Kst Session File
+Comment[cs]=Soubor sezení Kst
 Comment[de]=Kst-Sitzungsdatei
+Comment[fr]=Fichier de s session Kst
+Comment[nl]=Kst sessiebestand
 Comment[pt]=Ficheiro de Sessão do Kst
+Comment[pt_BR]=Arquivo de sessão do Kst
 Comment[sv]=Kst-sessionsfil
 Comment[uk]=Файл сеансу Kst
 Comment[x-test]=xxKst Session Filexx
