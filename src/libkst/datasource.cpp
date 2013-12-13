@@ -583,14 +583,18 @@ ValidateDataSourceThread::ValidateDataSourceThread(const QString& file, const in
   _requestID(requestID) {
 }
 
-
+static QMutex _mutex;
 void ValidateDataSourceThread::run() {
+
   QFileInfo info(_file);
   if (!info.exists()) {
     emit dataSourceInvalid(_requestID);
     return;
   }
 
+  // FIXME validSource(_file) is not thread safe, so wait
+  // if there is another one running
+  QMutexLocker locker(&_mutex);
   if (!DataSourcePluginManager::validSource(_file)) {
     emit dataSourceInvalid(_requestID);
     return;

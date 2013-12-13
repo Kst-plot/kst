@@ -34,6 +34,7 @@ void setGenVectorDefaults(GeneratedVectorPtr V) {
   dialogDefaults().setValue("genVector/min", V->min());
   dialogDefaults().setValue("genVector/max", V->max());
   dialogDefaults().setValue("genVector/length", V->length());
+
 }
 
 void setDataMatrixDefaults(DataMatrixPtr M) {

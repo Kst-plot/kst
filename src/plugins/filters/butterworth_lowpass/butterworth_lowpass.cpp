@@ -107,7 +107,6 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
     }
 
     virtual void load() {
-      qDebug() << "load lowpass";
       if (_cfg && _store) {
         _cfg->beginGroup("Filter Low Pass Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();

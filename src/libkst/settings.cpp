@@ -18,7 +18,7 @@
 
 #include <QApplication>
 #include <QVector>
-
+#include <QDebug>
 
 static QVector<QSettings*> s_settings;
 

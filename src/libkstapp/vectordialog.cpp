@@ -37,8 +37,8 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Vector"));
 
-  connect(_generatedVectorGroup, SIGNAL(toggled(bool)), this, SLOT(generateClicked()));
-  connect(_dataVectorGroup, SIGNAL(toggled(bool)), this, SLOT(readFromSourceClicked()));
+  connect(_generatedVectorGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
+  connect(_dataVectorGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
   connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
   connect(_field, SIGNAL(editTextChanged(const QString &)), this, SIGNAL(fieldChanged()));
@@ -115,9 +115,15 @@ void VectorTab::setDataSource(DataSourcePtr dataSource) {
 
 void VectorTab::setVectorMode(VectorMode mode) {
   _mode = mode;
-  _dataVectorGroup->setChecked(mode == DataVector);
-  _dataRange->setEnabled(mode == DataVector);
-  _generatedVectorGroup->setChecked(mode == GeneratedVector);
+  if (mode == DataVector) {
+    _dataVectorGroup->setChecked(true);
+    _dataRange->setEnabled(true);
+    _generatedVectorGroup->setChecked(false);
+  } else {
+    _generatedVectorGroup->setChecked(true);
+    _dataVectorGroup->setChecked(false);
+    _dataRange->setEnabled(false);
+  }
 }
 
 
@@ -364,6 +370,7 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     _vectorTab->setFrom(dialogDefaults().value("genVector/min",-10).toInt());
     _vectorTab->setTo(dialogDefaults().value("genVector/max",10).toInt());
     _vectorTab->setNumberOfSamples(dialogDefaults().value("genVector/length",1000).toInt());
+    _vectorTab->setVectorMode((VectorTab::VectorMode)dialogDefaults().value("genVector/vectorType",VectorTab::GeneratedVector).toInt()); // FIXME: should be sticky
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::DataVector);
     _vectorTab->setFile(dataVector->dataSource()->fileName());
@@ -423,8 +430,10 @@ void VectorDialog::configureTab(ObjectPtr vector) {
 ObjectPtr VectorDialog::createNewDataObject() {
   switch(_vectorTab->vectorMode()) {
   case VectorTab::DataVector:
+    dialogDefaults().setValue("genVector/vectorType", VectorTab::DataVector);
     return createNewDataVector();
   case VectorTab::GeneratedVector:
+    dialogDefaults().setValue("genVector/vectorType", VectorTab::GeneratedVector);
     return createNewGeneratedVector();
   default:
     return 0;

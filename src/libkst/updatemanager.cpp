@@ -95,6 +95,7 @@ void UpdateManager::doUpdates(bool forceImmediate) {
 
   // update the datasources
   foreach (DataSourcePtr ds, _store->dataSourceList()) {
+    //qDebug() << "updating DS " << ds->Name();
     ds->writeLock();
     retval = ds->objectUpdate(_serial);
     ds->unlock();
