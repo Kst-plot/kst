@@ -14,6 +14,7 @@ Name[sv]=Dataobjekt-insticksprogram för effektiv bandbredd
 Name[uk]=Додаток для роботи з об’єктами ефективної смуги даних
 Name[x-test]=xxEffective Bandwidth Data Object Pluginxx
 Comment=Implements a Effective Bandwidth Data Object Plugin for Kst.
+Comment[de]=Implementiert ein Datenobjekt-Modul effektive Bandbreite für Kst.
 Comment[fr]=Implémente un module DataObject de bande passante effective pour Kst.
 Comment[nl]=Implementeert plug-in voor object met effectieve bandbreedtegegevens voor Kst.
 Comment[pt]=Implementa um 'plugin' de objectos de dados de largura de banda efectiva para o Kst.
