@@ -291,7 +291,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   _actualField = field;
   if (_emitProgress) {
-    updateProgress(i18n("Reading field"));
+    updateProgress(i18n("reading field"));
   } else {
     emit progress(0, i18n("Reading field: ") + field);
   }
@@ -480,7 +480,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  updateProgress(i18n("Plotting data ..."));
+  updateProgress(i18n("column read"));
 
   _read_count++;
   if (_read_count_max == _read_count)
@@ -509,16 +509,16 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
 //-------------------------------------------------------------------------------------------
 int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
 {
-  updateProgress(i18n("Reading data ..."));
+  updateProgress(i18n("reading ..."));
   for (int i = 0; i < window.size(); i++) {
     if (!window[i].read()) {
       return 0;
     }
     _progress++;
-    updateProgress(i18n("Reading data ..."));
+    updateProgress(i18n("reading ..."));
   }
 
-  updateProgress(i18n("Parsing data ..."));
+  updateProgress(i18n("parsing ..."));
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
     QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
@@ -526,7 +526,7 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
   }
   readFutures.waitForFinished();
   _progress += window.size();
-  updateProgress(i18n("Parsing data ..."));
+  updateProgress(i18n("parsing ..."));
   int sampleRead = 0;
   foreach (const QFuture<int> future, readFutures.futures()) {
     sampleRead += future.result();
