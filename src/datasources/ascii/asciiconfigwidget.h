@@ -70,6 +70,8 @@ class AsciiConfigWidget : public Kst::DataSourceConfigWidget
     void updateIndexVector();
     virtual void cancel();
 
+  private:
+    bool _busy_loading;
 };
 
 

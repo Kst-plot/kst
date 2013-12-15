@@ -238,7 +238,9 @@ void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
 }
 
 
-AsciiConfigWidget::AsciiConfigWidget(QSettings& s) : Kst::DataSourceConfigWidget(s) {
+AsciiConfigWidget::AsciiConfigWidget(QSettings& s)
+    : Kst::DataSourceConfigWidget(s),
+    _busy_loading(false) {
   QGridLayout *layout = new QGridLayout(this);
   _ac = new AsciiConfigWidgetInternal(this);
   layout->addWidget(_ac, 0, 0);
@@ -268,6 +270,8 @@ void AsciiConfigWidget::setFilename(const QString& filename)
 }
 
 void AsciiConfigWidget::updateIndexVector() {
+  if (_busy_loading)
+    return;
   save();
   _ac->_indexVector->clear();
 
@@ -299,6 +303,7 @@ void AsciiConfigWidget::cancel() {
 
 
 void AsciiConfigWidget::load() {
+  _busy_loading = true;
   AsciiSourceConfig config;
   if (hasInstance())
     config.readGroup(settings(), instance()->fileName());
@@ -359,10 +364,13 @@ void AsciiConfigWidget::load() {
     _ac->_indexVector->setEnabled(hasInstance());
   }
   _oldConfig = _ac->config();
+  _busy_loading = false;
 }
 
 
 void AsciiConfigWidget::save() {
+  if (_busy_loading)
+    return;
   if (hasInstance()) {
     Kst::SharedPtr<AsciiSource> src = Kst::kst_cast<AsciiSource>(instance());
     if (_ac->_applyDefault->isChecked()) {
