@@ -97,6 +97,7 @@ private:
     double _progress;
     double _progressSteps;
     void updateProgress(const QString&);
+    void emitProgress(int precent, const QString&);
     QString _actualField;
 
     QStringList _scalarList;

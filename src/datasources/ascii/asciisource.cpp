@@ -232,7 +232,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   bool new_data = false;
   if (_emitProgress) {
-    emit progress(1, i18n("Searching for rows ..."));
+    emitProgress(1, i18n("Searching for rows ..."));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
@@ -244,10 +244,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
           // TODO out of memory?
         }
         _busy = false;
-        emit progress(50, i18n("Searching for rows finished"));
+        emitProgress(50, i18n("Searching for rows finished"));
       } else {
         ms::sleep(500);
-        emit progress(1 + 49.0 * _reader.progressValue() / 100.0, i18n("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
+        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, i18n("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
@@ -345,7 +345,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     _haveWarned = true;
   }
 
-  emit progress(100, QString());
+  emitProgress(100, QString());
   return 0;
 }
 
@@ -378,7 +378,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
       v[i] = double(s + i);
     }
     if (_emitProgress) {
-      emit updateProgress(i18n("INDEX created"));
+      updateProgress(i18n("INDEX created"));
     }
     return n;
   }
@@ -535,12 +535,19 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
 }
 
 //-------------------------------------------------------------------------------------------
+void AsciiSource::emitProgress(int percent, const QString& message)
+{
+  if (_read_count_max != -1) {
+    emit progress(percent, message);
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  }
+}
+
+//-------------------------------------------------------------------------------------------
 void AsciiSource::updateProgress(const QString& message)
 {
-  if (_progressSteps != 0) {
-    const QString msg = _actualField + ": " + message;
-    emit progress(50 + 50 * _progress / _progressSteps, msg);
-    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  if (_progressSteps != 0 && _read_count_max != -1) {
+    emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
   }
 }
 
