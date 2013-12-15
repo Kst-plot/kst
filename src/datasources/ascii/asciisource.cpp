@@ -363,6 +363,7 @@ void AsciiSource::prepareRead(int count)
     _read_count_max = count;
     _read_count = 0;
     _progress = 0;
+    _progressSteps = 0;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -497,7 +498,9 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
     Q_ASSERT(sRead + start ==  window[i].rowBegin());
     if (!window[i].read() || window[i].bytesRead() == 0)
       return 0;
+    _progress++;
     read += _reader.readFieldFromChunk(window[i], col, v, start, field);
+    _progress += window.size();
   }
   return read;
 }
