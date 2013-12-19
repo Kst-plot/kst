@@ -12,6 +12,7 @@ Name[pt_BR]=Plugin de objeto de dados de interpolação Akima
 Name[uk]=Додаток для роботи з об’єктами інтерполяції даних за Акімою
 Name[x-test]=xxAkima Interpolation Data Object Pluginxx
 Comment=Implements a Akima Interpolation Data Object Plugin for Kst.
+Comment[de]=Implementiert ein Datenobjekt-Modul für Akima-Interpolation für Kst.
 Comment[fr]=Implémente un module DataObject d'interpolation Akima pour Kst.
 Comment[nl]=Implementeert een plug-in voor object met Akima interpolatiegegevens voor Kst.
 Comment[pt]=Implementa um 'plugin' de objectos de dados com a interpolação Akima para o Kst.
