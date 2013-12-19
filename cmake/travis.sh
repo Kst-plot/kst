@@ -246,6 +246,7 @@ else
 fi
 
 $cmakebin ../kst/cmake/ \
+    -Dkst_console=1 \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
