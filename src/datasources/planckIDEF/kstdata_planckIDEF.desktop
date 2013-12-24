@@ -7,6 +7,7 @@ X-Kst-Plugin-Author=The University of Toronto
 Name=Planck IDIS DMC Exchange Format Reader
 Name[de]=Planck-IDIS-DMC-Austauschformatleser
 Name[fr]=Lecteur de format Planck IDIS DMC Exchange
+Name[nl]=Lezer voor Planck IDIS DMC uitwisselingsformaat
 Name[pt]=Leitor do Formato de Intercâmbio do IDIS DMC do Planck
 Name[pt_BR]=Leitor do formato de intercâmbio do IDIS DMC do Planck
 Name[sv]=Läsare av Planck IDIS DMC-utbytesformat
