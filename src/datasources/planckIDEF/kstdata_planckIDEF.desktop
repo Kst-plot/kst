@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=planckIDEF
 X-Kst-Plugin-Author=The University of Toronto
 Name=Planck IDIS DMC Exchange Format Reader
+Name[ca]=Lector de format d'intercanvi IDIS DMC de Planck
 Name[de]=Planck-IDIS-DMC-Austauschformatleser
 Name[fr]=Lecteur de format Planck IDIS DMC Exchange
 Name[nl]=Lezer voor Planck IDIS DMC uitwisselingsformaat
