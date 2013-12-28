@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
   }
 
 
-  printf("%d frames availible\n", N_frames);
+  printf("%d frames available\n", N_frames);
 
   first_field = P->first_field.field;
   

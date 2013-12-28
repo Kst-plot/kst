@@ -5,7 +5,7 @@ macro(merged_files_build _allinone_name _list)
 	set(_file_const ${CMAKE_CURRENT_BINARY_DIR}/${_allinone_name}_const.cpp)
 	set(_file_touched ${CMAKE_CURRENT_BINARY_DIR}/${_allinone_name}_touched.cpp)
 
-	# don't touch exisiting or non-empty file,
+	# don't touch existing or non-empty file,
 	# so a cmake re-run doesn't touch all created files
 	set(_rebuild_file_const 0)
 	if (NOT EXISTS ${_file_const})

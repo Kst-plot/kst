@@ -259,7 +259,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     //MeasureTime t("AsciiSource::readField: same width for all columns");
     const LexicalCast& lexc = LexicalCast::instance();
-    // buf[0] points to some row start, _rowIndex[i] is absolute, so we have to substract buf.begin().
+    // buf[0] points to some row start, _rowIndex[i] is absolute, so we have to subtract buf.begin().
     const char*const col_start = &buf.checkedData()[0] + _config._columnWidth * (col - 1) - buf.begin();
     for (int i = 0; i < n; ++i) {
       v[i] = lexc.toDouble(col_start + _rowIndex[i + s] );

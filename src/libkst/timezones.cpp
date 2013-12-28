@@ -774,7 +774,7 @@ bool TimezoneSource::parse(const QString &zone, TimezoneDetails &dataReceiver) c
     char *abbrs = array.data();
     if (abbrs[tzh.charcnt - 1] != 0)
     {
-        // These abbrevations are corrupt!
+        // These abbreviations are corrupt!
         return false;
     }
     char *abbr = abbrs;

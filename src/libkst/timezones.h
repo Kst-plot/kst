@@ -203,7 +203,7 @@ private:
  * The TimezoneDetails class contains extended functions related to a
  * timezone.
  *
- * The parser must be customised by overriding the given virtual callbacks:
+ * The parser must be customized by overriding the given virtual callbacks:
  *<ul>
  *    <li>{@link parseEnded() }
  *    <li>{@link parseStarted() }

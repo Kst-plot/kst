@@ -57,7 +57,7 @@ template<class S> polynom<S>::~polynom()
   delete[] C;
 };
 //------------------------------------------------------------------------------
-// coefficient acces (read or write)
+// coefficient access (read or write)
 template<class S> S& polynom<S>::operator[] (int i)
 {
   return i<=n ? C[i] : NulC;

@@ -48,7 +48,7 @@ bool validDatabase(const QString& db) {
 #warning "Kst2 port use PIOQuitDB()"
     //rtc = PIOQuitDB();
     if(rtc != 0) { 
-      // closing failed, dont care
+      // closing failed, do not care
     }
     return true;
   }

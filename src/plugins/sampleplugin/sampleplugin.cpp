@@ -90,7 +90,7 @@ class ConfigWidgetSamplePlugin : public Kst::DataObjectConfigWidget, public Ui_S
   public slots:
     // Dialog Defaults control - Save
     // Uses the provided QSettings Object to save the plugin default details as a new group.
-    // Called everytime a new dialog request is made.  Does not affect editing.
+    // Called every time a new dialog request is made.  Does not affect editing.
     virtual void save() {
       if (_cfg) {
         _cfg->beginGroup("Sample DataObject Plugin");
@@ -101,7 +101,7 @@ class ConfigWidgetSamplePlugin : public Kst::DataObjectConfigWidget, public Ui_S
 
     // Dialog Defaults control - Load
     // Uses the provided QSettings Object to load the plugin default details.
-    // Called everytime a new dialog request is completed.  Does not get called on edit.
+    // Called every time a new dialog request is completed.  Does not get called on edit.
     virtual void load() {
       if (_cfg && _store) {
         _cfg->beginGroup("Sample DataObject Plugin");

@@ -18,7 +18,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 message(STATUS)
-message(STATUS "Using netCDF soures from: ${TOP_DIR}")
+message(STATUS "Using netCDF sources from: ${TOP_DIR}")
 message(STATUS "Installing netCDF at    : ${CMAKE_INSTALL_PREFIX}")
 message(STATUS)
 

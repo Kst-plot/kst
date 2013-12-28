@@ -13,9 +13,6 @@
     <height>229</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="Kst::LabelBuilder" name="_labelText" native="true"/>
@@ -72,9 +69,6 @@
        <property name="text">
         <string/>
        </property>
-       <property name="shortcut">
-        <string>Alt+I</string>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -97,9 +91,6 @@
        </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="shortcut">
-        <string>Alt+B</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

@@ -2,7 +2,7 @@
 Type=Application
 Exec=kst2
 Icon=kst
-DocPath=kst2/index.html
+X-DocPath=kst2/index.html
 MimeType=application/x-kst;
 Categories=Qt;KDE;Education;Science;
 Name=Kst2

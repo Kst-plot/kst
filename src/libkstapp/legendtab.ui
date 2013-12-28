@@ -150,9 +150,6 @@
         <property name="text">
          <string/>
         </property>
-        <property name="shortcut">
-         <string>Alt+R</string>
-        </property>
        </widget>
       </item>
       <item row="3" column="3">
@@ -171,9 +168,6 @@
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="shortcut">
-         <string>Alt+S</string>
         </property>
        </widget>
       </item>
@@ -277,9 +271,6 @@
         <property name="text">
          <string/>
         </property>
-        <property name="shortcut">
-         <string>Alt+B</string>
-        </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
@@ -295,9 +286,6 @@
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="shortcut">
-         <string>Alt+I</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

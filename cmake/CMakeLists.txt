@@ -274,7 +274,7 @@ endif()
 
 if(WIN32)
     add_definitions(-D_WIN32_WINNT=0x0501) # Windows XP
-    # on 32 bit Windows we must explicitely enable >2GB support
+    # on 32 bit Windows we must explicitly enable >2GB support
     # maybe you have to ' 4-gigabyte tune' your Windows XP 32 bit system:
     # http://msdn.microsoft.com/en-us/library/windows/desktop/aa366778%28v=vs.85%29.aspx
     macro(large_address var flag)

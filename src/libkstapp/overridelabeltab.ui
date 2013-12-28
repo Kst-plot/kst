@@ -16,9 +16,6 @@
     <height>0</height>
    </size>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
@@ -80,9 +77,6 @@
          <height>22</height>
         </size>
        </property>
-       <property name="shortcut">
-        <string>Alt+I</string>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -136,9 +130,6 @@
          <width>22</width>
          <height>22</height>
         </size>
-       </property>
-       <property name="shortcut">
-        <string>Alt+B</string>
        </property>
        <property name="checkable">
         <bool>true</bool>

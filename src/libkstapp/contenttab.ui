@@ -155,9 +155,6 @@
            <property name="text">
             <string/>
            </property>
-           <property name="shortcut">
-            <string>Alt+S</string>
-           </property>
           </widget>
          </item>
          <item row="2" column="0">
@@ -176,9 +173,6 @@
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="shortcut">
-            <string>Alt+R</string>
            </property>
           </widget>
          </item>
