@@ -188,7 +188,7 @@ listed in the XML file.
 
 <listitem>
 <para>
-The function must return <literal>0</literal> if it executed succesfully, and
+The function must return <literal>0</literal> if it executed successfully, and
 <literal>-1</literal> otherwise.
 </para>
 </listitem>

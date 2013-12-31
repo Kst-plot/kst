@@ -13,7 +13,7 @@ with the exception of additional convenience dialog functionality accessible fro
 <para>
 By default, the built-in plugins are stored in <filename>/usr/lib/kde3/kstplugins/</filename> (this directory
 may vary, depending on where you installed &kst;). The Plugin Manager can be used to add
-and remove plugins.  It can be acccessed by selecting <guimenuitem>Plugins...</guimenuitem>
+and remove plugins.  It can be accessed by selecting <guimenuitem>Plugins...</guimenuitem>
 from the <guimenu>Settings</guimenu> menu.  A list of the currently installed plugins is displayed in the
 Plugin Manager.
 </para>
