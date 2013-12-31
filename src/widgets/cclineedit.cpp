@@ -31,7 +31,6 @@
 #include <QScrollBar>
 #include <QTableWidget>
 #include <QHeaderView>
-#include <QCompleter>
 #include <QHash>
 #include <QMenu>
 #include <QTimer>

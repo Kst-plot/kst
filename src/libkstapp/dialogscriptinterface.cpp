@@ -74,7 +74,6 @@
 #include "stringscriptinterface.h"
 
 #include "datasourcepluginmanager.h"
-#include "viewitemscriptinterface.h"
 #include "pluginscriptinterface.h"
 #include <QAbstractButton>
 #include <QLocalServer>

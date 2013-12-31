@@ -31,7 +31,6 @@ Kst::VectorPtr xVector;
 
 
 #include <datacollection.h>
-#include <objectstore.h>
 
 static Kst::ObjectStore _store;
 double _NOPOINT = NAN;
