@@ -47,6 +47,7 @@ class SvgItem : public ViewItem
 
 class CreateSvgCommand : public CreateCommand
 {
+  Q_OBJECT
   public:
     CreateSvgCommand() : CreateCommand(QObject::tr("Create Svg")) {}
     CreateSvgCommand(View *view) : CreateCommand(view, QObject::tr("Create Svg")) {}

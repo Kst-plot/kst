@@ -54,6 +54,8 @@ class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface 
 };
 
 class WidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
+  Q_OBJECT
+
   public:
     WidgetPlugin(QObject *parent = 0);
     virtual ~WidgetPlugin();

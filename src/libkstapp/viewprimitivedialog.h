@@ -48,6 +48,8 @@ class ViewPrimitiveDialog : public QDialog, Ui::ViewPrimitiveDialog
 
 class ViewStringDialog : public ViewPrimitiveDialog
 {
+  Q_OBJECT
+
   public:
     ViewStringDialog(QWidget *parent, Document *doc);
 
@@ -58,6 +60,8 @@ class ViewStringDialog : public ViewPrimitiveDialog
 
 class ViewScalarDialog : public ViewPrimitiveDialog
 {
+  Q_OBJECT
+
   public:
     ViewScalarDialog(QWidget *parent, Document *doc);
 

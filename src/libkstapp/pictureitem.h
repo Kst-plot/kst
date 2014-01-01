@@ -44,6 +44,7 @@ class PictureItem : public ViewItem
 
 class CreatePictureCommand : public CreateCommand
 {
+  Q_OBJECT
   public:
     CreatePictureCommand() : CreateCommand(QObject::tr("Create Picture")) {}
     CreatePictureCommand(View *view) : CreateCommand(view, QObject::tr("Create Picture")) {}

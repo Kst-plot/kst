@@ -56,7 +56,7 @@ private:
 
 class PrimitiveModel : public QAbstractItemModel
 {
-
+  Q_OBJECT
   enum ColumnID { Name, Value };
 
 public:
