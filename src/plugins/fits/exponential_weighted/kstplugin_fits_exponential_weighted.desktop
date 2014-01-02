@@ -6,6 +6,7 @@ X-KDE-Library=fitexponential_weighted
 X-Kst-Plugin-Author=The University of Toronto
 Name=Fits - Gradient Exponential Plugin
 Name[ca]=Fits - Connector exponencial en gradient
+Name[de]=Fits - Verlauf-Exponential-Modul
 Name[fr]=Module de régression exponentielle gradient
 Name[pt]='Plugin' de Ajuste Exponencial em Gradiente
 Name[pt_BR]=Plugin de ajuste exponencial em gradiente
