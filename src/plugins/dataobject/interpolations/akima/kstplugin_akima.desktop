@@ -6,6 +6,7 @@ X-KDE-Library=akima
 X-Kst-Plugin-Author=The University of Toronto
 Name=Akima Interpolation Data Object Plugin
 Name[ca]=Connector d'objecte de dades d'interpolació Akima
+Name[de]=Datenobjekt-Modul für Akima-Interpolation
 Name[fr]=Module DataObject d'interpolation Akima
 Name[nl]=Plug-in voor object met Akima interpolatiegegevens
 Name[pt]='Plugin' de Objectos de Dados de Interpolação Akima

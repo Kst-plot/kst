@@ -6,6 +6,7 @@ X-KDE-Library=akimaperiodic
 X-Kst-Plugin-Author=The University of Toronto
 Name=Akima Periodic Interpolation Data Object Plugin
 Name[ca]=Connector d'objecte de dades d'interpolació periòdica Akima
+Name[de]=Datenobjekt-Modul für periodische Akima-Interpolation
 Name[fr]=Module DataObject d'interpolation périodique Akima
 Name[nl]=Plug-in voor object met Akima periodieke interpolatiegegevens
 Name[pt]='Plugin' de Objectos de Dados de Interpolação Periódica Akima
