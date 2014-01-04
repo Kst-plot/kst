@@ -740,6 +740,7 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
 
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageVectors, SLOT(updateVectors()));
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageDataPresentation, SLOT(updateVectors()));
+  connect(_pageDataSource, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
   disconnect(button(QWizard::FinishButton), SIGNAL(clicked()), (QDialog*)this, SLOT(accept()));
   connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finished()));
 

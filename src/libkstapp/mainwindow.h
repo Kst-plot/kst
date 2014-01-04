@@ -107,6 +107,7 @@ class MainWindow : public QMainWindow
     void open();
     void newDoc(bool force=false);
     void openFile(const QString &file);
+    void cleanUpDataSourceList();
 #ifndef KST_NO_PRINTER
     void print();
     void setPrinterDefaults(QPrinter *printer);

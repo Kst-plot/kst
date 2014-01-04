@@ -11,6 +11,7 @@
  ***************************************************************************/
 #include "stringdialog.h"
 
+#include "application.h"
 #include "datasourcedialog.h"
 #include "enodes.h"
 #include "document.h"
@@ -164,8 +165,10 @@ void StringTab::sourceValid(QString filename, int requestID) {
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
   _dataSource->unlock();
+
+  _store->cleanUpDataSourceList();
+
   emit sourceChanged();
-//   emit valueChanged();
 }
 
 
@@ -210,6 +213,7 @@ StringDialog::StringDialog(ObjectPtr dataObject, QWidget *parent)
 
   connect(_stringTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
   connect(_stringTab, SIGNAL(sourceChanged()), this, SLOT(updateButtons()));
+  connect(_stringTab, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
   updateButtons();
 }
 
@@ -281,7 +285,8 @@ ObjectPtr StringDialog::createNewGeneratedString(){
 
   _dataObjectName = string->Name();
 
-  //UpdateServer::self()->requestUpdateSignal();
+  _stringTab->setDataSource(0L);
+  _document->objectStore()->cleanUpDataSourceList();
 
   return static_cast<ObjectPtr>(string);
 }

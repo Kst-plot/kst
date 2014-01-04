@@ -295,6 +295,7 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
           s->setProvider(plugin);
           s->setSlaveName(key);
           s->setValue(value);
+          plugin->slavePrimitives.append(s);
         }
       }
 
@@ -308,6 +309,7 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
           ScalarPtr s = store->createObject<Scalar>();
           s->setProvider(plugin);
           s->setSlaveName(key);
+          plugin->slavePrimitives.append(s);
           s->setValue(value);
         }
       }

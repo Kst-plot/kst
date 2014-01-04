@@ -13,6 +13,7 @@
 #define NO_GENERATED_OPTIONS
 
 #include "matrixdialog.h"
+#include "application.h"
 
 #include "dialogpage.h"
 #include "datasourcedialog.h"
@@ -550,6 +551,8 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
 
   validating = false;
 
+  _store->cleanUpDataSourceList();
+
   emit sourceChanged();
 }
 
@@ -625,6 +628,8 @@ MatrixDialog::MatrixDialog(ObjectPtr dataObject, QWidget *parent)
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
   connect(_matrixTab, SIGNAL(modified()), this, SLOT(modified()));
+  connect(_matrixTab, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
+
   updateButtons();
 }
 

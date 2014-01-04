@@ -249,6 +249,9 @@ void DataSource::checkUpdate() {
 
 
 void DataSource::deleteDependents() {
+  foreach (const PrimitivePtr &p, slavePrimitives) {
+    store()->removeObject(p);
+  }
 }
 
 

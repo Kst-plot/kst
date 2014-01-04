@@ -133,7 +133,6 @@ QString VectorTab::file() const {
 
 
 void VectorTab::setFile(const QString &file) {
-  QFileInfo info(file);
   _fileName->setFile(file);
 }
 
@@ -282,6 +281,8 @@ void VectorTab::sourceValid(QString filename, int requestID) {
 
   validating = false;
 
+  _store->cleanUpDataSourceList();
+
   emit sourceChanged();
 }
 
@@ -334,6 +335,7 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
   connect(this, SIGNAL(editSingleMode()), this, SLOT(editSingleMode()));
 
   connect(_vectorTab, SIGNAL(modified()), this, SLOT(modified()));
+  connect(_vectorTab, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
   updateButtons();
 }
 
@@ -526,6 +528,9 @@ ObjectPtr VectorDialog::createNewGeneratedVector() {
   }
 
   _dataObjectName = vector->Name();
+
+  _vectorTab->setDataSource(0L);
+  _document->objectStore()->cleanUpDataSourceList();
 
   //UpdateServer::self()->requestUpdateSignal();
   return vector;

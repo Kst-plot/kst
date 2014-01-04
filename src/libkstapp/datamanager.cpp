@@ -503,6 +503,7 @@ void DataManager::purge() {
   do {
     setUsedFlags();
   } while (_doc->objectStore()->deleteUnsetUsedFlags());
+  _doc->objectStore()->cleanUpDataSourceList();
   UpdateServer::self()->requestUpdateSignal();
   _session->reset();
 }

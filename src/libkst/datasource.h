@@ -217,6 +217,8 @@ class KSTCORE_EXPORT DataSource : public Object
     */
     virtual ObjectList<Object> autoCurves(ObjectStore&) { return ObjectList<Object>(); }
 
+    PrimitiveList slavePrimitives;
+
 
   public Q_SLOTS:
     virtual void checkUpdate();
@@ -274,6 +276,7 @@ class KSTCORE_EXPORT DataSource : public Object
     QFileSystemWatcher *_watcher;
 
     QColor _color;
+
     // NOTE: You must bump the version key if you add new member variables
     //       or change or add virtual functions.
 };

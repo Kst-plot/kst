@@ -2028,6 +2028,10 @@ void MainWindow::dropEvent(QDropEvent *event)
    event->accept();
 }
 
+void MainWindow::cleanUpDataSourceList() {
+  _doc->objectStore()->cleanUpDataSourceList();
+}
+
 #if defined(__QNX__)
 bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
   if (!qApp->activeWindow()) {

@@ -11,6 +11,8 @@
  ***************************************************************************/
 
 #include "scalardialog.h"
+#include "application.h"
+
 #include "datasourcedialog.h"
 
 #include "enodes.h"
@@ -203,6 +205,8 @@ void ScalarTab::sourceValid(QString filename, int requestID) {
 
   _dataSource->unlock();
   modified();
+
+  _store->cleanUpDataSourceList();
   emit sourceChanged();
 }
 
@@ -251,6 +255,7 @@ ScalarDialog::ScalarDialog(ObjectPtr dataObject, QWidget *parent)
 
   connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(updateButtons()));
   connect(_scalarTab, SIGNAL(valueChanged()), this, SLOT(modified()));
+  connect(_scalarTab, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
   updateButtons();
 }
 
@@ -346,6 +351,8 @@ ObjectPtr ScalarDialog::createNewGeneratedScalar(){
   _dataObjectName = scalar->Name();
 
   //UpdateServer::self()->requestUpdateSignal();
+  _scalarTab->setDataSource(0L);
+  _document->objectStore()->cleanUpDataSourceList();
 
   return static_cast<ObjectPtr>(scalar);
 }

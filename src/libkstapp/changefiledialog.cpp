@@ -66,6 +66,7 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
 
   connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
   connect(_dataFile, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_dataFile, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
   connect(_buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
@@ -143,6 +144,8 @@ void ChangeFileDialog::sourceValid(QString filename, int requestID) {
   _fileType->setText(_dataSource->fileType());
   updateButtons();
   _configure->setEnabled(_dataSource->hasConfigWidget());
+
+  _store->cleanUpDataSourceList();
 
 }
 
