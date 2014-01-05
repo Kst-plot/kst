@@ -97,6 +97,7 @@ class VectorTab : public DataTab, Ui::VectorTab {
     QString _initField;
     int _requestID;
     void updateUpdateBox();
+    bool _valid;
 };
 
 class VectorDialog : public DataDialog {

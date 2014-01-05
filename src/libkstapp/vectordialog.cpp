@@ -32,7 +32,7 @@
 namespace Kst {
 
 VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
-  : DataTab(parent), validating(false), _mode(DataVector), _store(store), _initField(QString()), _requestID(0) {
+  : DataTab(parent), validating(false), _mode(DataVector), _store(store), _initField(QString()), _requestID(0), _valid(false) {
 
   setupUi(this);
   setTabTitle(tr("Vector"));
@@ -76,7 +76,7 @@ VectorTab::~VectorTab() {
 void VectorTab::updateUpdateBox()
 {
   if (_dataSource) {
-    _updateBox->setEnabled(true);
+    _updateBox->setEnabled(_mode == DataVector);
     switch (_dataSource->updateType()) {
       case DataSource::Timer: _updateBox->setCurrentIndex(0); break;
       case DataSource::File:  _updateBox->setCurrentIndex(1); break;
@@ -119,6 +119,9 @@ void VectorTab::setVectorMode(VectorMode mode) {
     _dataVectorGroup->setChecked(true);
     _dataRange->setEnabled(true);
     _generatedVectorGroup->setChecked(false);
+    _field->setEnabled(_valid);
+    _configure->setEnabled(_valid);
+    updateUpdateBox();
   } else {
     _generatedVectorGroup->setChecked(true);
     _dataVectorGroup->setChecked(false);
@@ -261,6 +264,7 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   if (_requestID != requestID) {
     return;
   }
+  _valid = true;
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
   _field->setEnabled(true);
 
@@ -271,7 +275,7 @@ void VectorTab::sourceValid(QString filename, int requestID) {
     setField(_initField);
   }
   _field->setEditable(!_dataSource->vector().isListComplete());
-  _configure->setEnabled(_dataSource->hasConfigWidget());
+  _configure->setEnabled(_dataSource->hasConfigWidget() && (_mode == DataVector));
 
   updateUpdateBox();
   updateIndexList(_dataSource);
@@ -282,6 +286,7 @@ void VectorTab::sourceValid(QString filename, int requestID) {
   validating = false;
 
   _store->cleanUpDataSourceList();
+  _field->setEnabled(_mode == DataVector);
 
   emit sourceChanged();
 }
@@ -291,6 +296,8 @@ void VectorTab::fileNameChanged(const QString &file) {
   _field->clear();
   _field->setEnabled(false);
   _configure->setEnabled(false);
+  _valid = false;
+
   clearIndexList();
   emit sourceChanged();
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
-    <height>550</height>
+    <width>741</width>
+    <height>548</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -191,11 +191,7 @@
        </widget>
       </item>
       <item>
-       <widget class="Kst::ComboBox" name="_field">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
+       <widget class="Kst::ComboBox" name="_field"/>
       </item>
       <item>
        <layout class="QHBoxLayout">
