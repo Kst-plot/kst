@@ -435,8 +435,8 @@ DialogSI* DialogLauncherSI::showObjectDialog(ObjectPtr objectPtr) {
 
 QString DialogSI::toCamelCase(QString x)
 {
-    x.replace('&',"");
-    x.replace(':',"");
+    x.remove('&');
+    x.remove(':');
     x=x.toLower();
     while(x.contains(' ')) {
         int y=x.indexOf(' ');

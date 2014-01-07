@@ -31,7 +31,7 @@ struct LabelTabSI {
             item->setLabelText(x);
             return "Done";
         } else if(x.startsWith("setLabelColor(")) {
-            item->setLabelColor(QColor(x.remove("setLabelColor(").remove(")")));
+            item->setLabelColor(QColor(x.remove("setLabelColor(").remove(')')));
         } else if(x.contains("Italic")) {
             QFont f=item->labelFont();
             f.setItalic(x.contains("un"));
@@ -45,9 +45,9 @@ struct LabelTabSI {
         } else if(x.contains("setFont")) {
             QFont f=item->labelFont();
             if(x.contains("Size")) {
-                item->setLabelScale(x.remove("setFontSize(").remove(")").toInt());
+                item->setLabelScale(x.remove("setFontSize(").remove(')').toInt());
             } else if(x.contains("Family")) {
-                f.setFamily(x.remove("setFontFamily(").remove(")"));
+                f.setFamily(x.remove("setFontFamily(").remove(')'));
             } else {
                 return "";
             }

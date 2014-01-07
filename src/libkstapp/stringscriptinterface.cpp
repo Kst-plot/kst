@@ -27,12 +27,12 @@ QByteArrayList StringGenSI::commands() {
 QString StringGenSI::doCommand(QString x) {
     if(x.startsWith("setName(")) {
         str->writeLock();
-        str->setDescriptiveName(x.remove("setName(").remove(")"));
+        str->setDescriptiveName(x.remove("setName(").remove(')'));
         str->unlock();
         return "Done";
     } else if(x.startsWith("setValue(")) {
         str->writeLock();
-        str->setValue(x.remove("setValue(").remove(")"));
+        str->setValue(x.remove("setValue(").remove(')'));
         str->unlock();
         return "Done";
     } else if(x.startsWith("uncheckAuto()")) {

@@ -97,7 +97,7 @@ bool CategoricalCompleter::eventFilter(QObject *o, QEvent *e)
         if(!cantMoveLeft) {
             bool ok=1;
             for(int i=0;i<cc;i++) {
-                if(_tableView->model()->data(_tableView->model()->index(_tableView->currentIndex().row(),i)).toString()!="") {
+                if(!_tableView->model()->data(_tableView->model()->index(_tableView->currentIndex().row(),i)).toString().isEmpty()) {
                     ok=0;
                     break;
                 }
@@ -107,7 +107,7 @@ bool CategoricalCompleter::eventFilter(QObject *o, QEvent *e)
         if(!cantMoveRight) {
             bool ok=1;
             for(int i=cc+1;i<_tableView->model()->columnCount();i++) {
-                if(_tableView->model()->data(_tableView->model()->index(_tableView->currentIndex().row(),i)).toString()!="") {
+                if(!_tableView->model()->data(_tableView->model()->index(_tableView->currentIndex().row(),i)).toString().isEmpty()) {
                     ok=0;
                     break;
                 }
@@ -167,14 +167,14 @@ void CategoricalCompleter::verifyPrefix()
     if(search.contains("*")) {
         search.remove(search.indexOf('*'),99999);
         altsearch.remove(0,altsearch.indexOf('*')+1);
-        altlist=altsearch.split("*");
+        altlist=altsearch.split('*');
         setCompletionPrefix(search);
     }
 
     for(int i=_data.size()-1;i>=0;i--) {
         if(!_data[i].prefix().size()||!search.indexOf(_data[i].prefix())) {
             SVCCLineEdit* hack=qobject_cast<SVCCLineEdit*>(widget());
-            if(hack&&_data[i].prefix()==""&&_data[i].size()&&_data[i][0].title().contains("Fun")) {
+            if(hack&&_data[i].prefix().isEmpty()&&_data[i].size()&&_data[i][0].title().contains("Fun")) {
                 QString operatorNextList="])0123456789";
                 QString functionNextList="&=<>!+-/*&^|(";
                 int last1=-1,last2=-1;
@@ -235,7 +235,7 @@ QStringList CategoricalCompleter::join(CompletionCase& l,QString prefix,QStringL
 QStringList CategoricalCompleter::getDefault(QList<CompletionCase>& ccl)
 {
     for(int i=0;i<ccl.size();i++) {
-        if(ccl[i].prefix()=="") {
+        if(ccl[i].prefix().isEmpty()) {
             return join(ccl[i]);
         }
     }
@@ -629,8 +629,8 @@ void SVCCLineEdit::fillKstObjects()
 
         scalar->readLock();
         if (!scalar->hidden()) {
-          _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
-          _svData->front()[0].push_back("["+scalar->SIZE_LIMITED_NAME+"]");
+          _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+']');
+          _svData->front()[0].push_back('['+scalar->SIZE_LIMITED_NAME+']');
         }
         scalar->unlock();
     }
@@ -640,8 +640,8 @@ void SVCCLineEdit::fillKstObjects()
         VectorPtr vector = (*vectorIt);
 
         vector->readLock();
-        _svData->back()[1].push_back(vector->SIZE_LIMITED_NAME+"]");
-        _svData->front()[1].push_back("["+vector->SIZE_LIMITED_NAME+"]");
+        _svData->back()[1].push_back(vector->SIZE_LIMITED_NAME+']');
+        _svData->front()[1].push_back('['+vector->SIZE_LIMITED_NAME+']');
         vector->unlock();
     }
 
@@ -675,7 +675,7 @@ void SVCCTextEdit::fillKstObjects()
             ScalarPtr scalar = (*scalarIt);
 
             scalar->readLock();
-            _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+"]");
+            _svData->back()[0].push_back(scalar->SIZE_LIMITED_NAME+']');
             scalar->unlock();
         }
 
@@ -686,7 +686,7 @@ void SVCCTextEdit::fillKstObjects()
         StringPtr string = (*stringIt);
 
         string->readLock();
-        _svData->back()[1].push_back(string->SIZE_LIMITED_NAME+"]");
+        _svData->back()[1].push_back(string->SIZE_LIMITED_NAME+']');
         string->unlock();
     }
 
@@ -815,7 +815,7 @@ void CCCommonEdit::NewVector()
     VectorPtr vector = kst_cast<Vector>(_store->retrieveObject(newName));
 
     if (vector) {
-        QString vName="["+vector->Name()+"]";
+        QString vName='['+vector->Name()+']';
         Insert(vName,0);
     }
 }
@@ -829,7 +829,7 @@ void CCCommonEdit::NewScalar()
     }    ScalarPtr scalar = kst_cast<Scalar>(_store->retrieveObject(scalarName));
 
     if (scalar) {
-        QString sName="["+scalar->Name()+"]";
+        QString sName='['+scalar->Name()+']';
         Insert(sName,0);
     }
 }
@@ -843,7 +843,7 @@ void CCCommonEdit::NewString()
     }    StringPtr string = kst_cast<String>(_store->retrieveObject(stringName));
 
     if (string) {
-        QString sName="["+string->Name()+"]";
+        QString sName='['+string->Name()+']';
         Insert(sName,0);
     }
 }

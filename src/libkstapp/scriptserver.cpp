@@ -343,7 +343,7 @@ template<class T> QByteArray outputObjectList(
     for(; it != vl.end(); ++it) {
         SharedPtr<T> v = (*it);
         v->readLock();
-        a+="["%v->Name()%"]";
+        a+='['%v->Name()%']';
         v->unlock();
     }
     if(a.size()) {
@@ -360,7 +360,7 @@ template<class T> QByteArray outputViewItemList(QLocalSocket* s,const int&ifMode
     typename QList<T*>::iterator it = vl.begin();
     for(; it != vl.end(); ++it) {
         T* v = (*it);
-        a+="["%v->Name()%"]";
+        a+='['%v->Name()%']';
     }
     if(a.size()) {
         return handleResponse(a,s,ifMode,ifString,ifStat,var);
@@ -426,7 +426,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
     }
 
     // MACROS
-    if(command.startsWith("#")) {
+    if(command.startsWith('#')) {
         return procMacro(command,s);
     }
 
@@ -499,7 +499,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
     } else {
         if(command.contains("::")) {
             QByteArray ret=checkPrimatives(command,s);
-            if(ret!="") {
+            if(!ret.isEmpty()) {
                 return ret;
             }
         }
@@ -838,7 +838,7 @@ QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,Obj
                                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     QString a;
     for(int i=0;i<DataObject::dataObjectPluginList().size();i++) {
-        a.push_back(DataObject::dataObjectPluginList()[i].toLatin1()+"\n");
+        a.push_back(DataObject::dataObjectPluginList()[i].toLatin1()+'\n');
     }
     return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);
 }
@@ -1251,7 +1251,7 @@ QByteArray ScriptServer::delMacro(QByteArray&command, QLocalSocket* s,ObjectStor
                 str+=")\n";
 
                 for(int j=0;j<_macroMap.values()[i]->commands.size();j++) {
-                    str+=_macroMap.values()[i]->commands.at(j)%"\n";
+                    str+=_macroMap.values()[i]->commands.at(j)%'\n';
                 }
 
                 str+="endMacro()\n";
@@ -1278,7 +1278,7 @@ QByteArray ScriptServer::endMacro(QByteArray&command, QLocalSocket* s,ObjectStor
             str+=")\n";
 
             for(int j=0;j<_macroMap.values().back()->commands.size();j++) {
-                str+=_macroMap.values().back()->commands[j]%"\n";
+                str+=_macroMap.values().back()->commands[j]%'\n';
             }
 
             str+="endMacro()\n";
@@ -1355,9 +1355,9 @@ QByteArray ScriptServer::commands(QByteArray&, QLocalSocket* s,ObjectStore*,cons
     if(!_interface) {
         QByteArrayList v;
         for(int i=0;i<_macroMap.values().size();i++) {
-            v.push_back("#"+_macroMap.values()[i]->handle+((_macroMap.values()[i]->args.size())?QByteArray("("):QByteArray("()")));
+            v.push_back('#'+_macroMap.values()[i]->handle+((_macroMap.values()[i]->args.size())?QByteArray("("):QByteArray("()")));
             for(int j=0;j<_macroMap.values()[i]->args.size();j++) {
-                if(j) v.back()+=",";
+                if(j) v.back()+=',';
                 v.back()+=_macroMap.values()[i]->args[j];
             }
             v.back()+=")";
@@ -1365,9 +1365,9 @@ QByteArray ScriptServer::commands(QByteArray&, QLocalSocket* s,ObjectStore*,cons
 
         QByteArray builtIns;
         for(int i=0;i<_fnMap.keys().size();i++) {
-            builtIns+="\n"+_fnMap.keys()[i];
+            builtIns+='\n'+_fnMap.keys()[i];
         }
-        return handleResponse((join(v,'\n')+builtIns+"\n"),s,ifMode,ifEqual,_if,var);
+        return handleResponse((join(v,'\n')+builtIns+'\n'),s,ifMode,ifEqual,_if,var);
     } else {
         QString a="endEdit()\n"+join(_interface->commands(),'\n');
         return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);

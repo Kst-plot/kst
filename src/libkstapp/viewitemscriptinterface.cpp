@@ -84,10 +84,10 @@ QString FillTabSI::doCommand(QString x) {
         return "";
     }
     QBrush b=item->brush();
-    QColor this_color = (x.startsWith("setFillColor(")&&x!="setFillColor()") ? QColor(x.remove("setFillColor(").remove(")")) : b.color();
+    QColor this_color = (x.startsWith("setFillColor(")&&x!="setFillColor()") ? QColor(x.remove("setFillColor(").remove(')')) : b.color();
     Qt::BrushStyle this_style = b.style();
     if(x.startsWith("setIndexOfFillStyle(")) {
-        x.remove("setIndexOfFillStyle(").remove(")");
+        x.remove("setIndexOfFillStyle(").remove(')');
         Qt::BrushStyle arr[]={Qt::NoBrush,Qt::SolidPattern,Qt::Dense1Pattern,Qt::Dense2Pattern,Qt::Dense3Pattern,Qt::Dense4Pattern,Qt::Dense5Pattern,
                               Qt::Dense6Pattern,Qt::Dense7Pattern,Qt::HorPattern,Qt::VerPattern,Qt::CrossPattern,Qt::BDiagPattern,Qt::FDiagPattern,
                               Qt::DiagCrossPattern};
@@ -123,27 +123,27 @@ QString StrokeTabSI::doCommand(QString x) {
     Qt::PenCapStyle this_capStyle = p.capStyle();
 
     if(x.startsWith("setIndexOfStrokeStyle(")) {
-        x.remove("setIndexOfStrokeStyle(").remove(")");
+        x.remove("setIndexOfStrokeStyle(").remove(')');
         Qt::PenStyle arr[]={Qt::NoPen,Qt::SolidLine,Qt::DashLine,Qt::DotLine,Qt::DashDotLine,Qt::DashDotDotLine,Qt::CustomDashLine};
         this_style=arr[x.toInt()];
     } else if(x.startsWith("setIndexOfStrokeBrushStyle(")) {
-        x.remove("setIndexOfStrokeBrushStyle(").remove(")");
+        x.remove("setIndexOfStrokeBrushStyle(").remove(')');
         Qt::BrushStyle arr[]={Qt::NoBrush,Qt::SolidPattern,Qt::Dense1Pattern,Qt::Dense2Pattern,Qt::Dense3Pattern,Qt::Dense4Pattern,Qt::Dense5Pattern,
                               Qt::Dense6Pattern,Qt::Dense7Pattern,Qt::HorPattern,Qt::VerPattern,Qt::CrossPattern,Qt::BDiagPattern,Qt::FDiagPattern,
                               Qt::DiagCrossPattern};
         this_brushStyle=arr[x.toInt()];
     } else if(x.startsWith("setIndexOfStrokeJoinStyle(")) {
-        x.remove("setIndexOfStrokeJoinStyle(").remove(")");
+        x.remove("setIndexOfStrokeJoinStyle(").remove(')');
         Qt::PenJoinStyle arr[]={Qt::MiterJoin,Qt::BevelJoin,Qt::RoundJoin,Qt::SvgMiterJoin};
         this_joinStyle=arr[x.toInt()];
     } else if(x.startsWith("setIndexOfStrokeCapStyle(")) {
-        x.remove("setIndexOfStrokeCapStyle(").remove(")");
+        x.remove("setIndexOfStrokeCapStyle(").remove(')');
         Qt::PenCapStyle arr[]={Qt::FlatCap,Qt::SquareCap,Qt::RoundCap};
         this_capStyle=arr[x.toInt()];
     } else if(x.startsWith("setStrokeWidth(")) {
-        this_width=x.remove("setStrokeWidth(").remove(")").toFloat();
+        this_width=x.remove("setStrokeWidth(").remove(')').toFloat();
     } else if(x.startsWith("setStrokeBrushColor(")) {
-        this_brushColor=QColor(x.remove("setStrokeBrushColor(").remove(")"));
+        this_brushColor=QColor(x.remove("setStrokeBrushColor(").remove(')'));
     }
 
     p.setStyle(this_style);
@@ -254,10 +254,10 @@ QString ViewItemSI::doCommand(QString x) {
     }
     if(v.isEmpty()&&x.startsWith("setText(")) {
         if(qobject_cast<ButtonItem*>(layout->vi)) {
-            qobject_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
+            qobject_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
             v="Done";
         } else if(qobject_cast<LineEditItem*>(layout->vi)) {
-            qobject_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(")"));
+            qobject_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
             v="Done";
         }
     }
