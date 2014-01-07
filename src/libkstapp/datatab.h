@@ -26,7 +26,7 @@ class DataTab : public DialogTab
 {
   Q_OBJECT
   public:
-    DataTab(QWidget *parent);
+    explicit DataTab(QWidget *parent);
     virtual ~DataTab();
 
     virtual void setObjectStore(ObjectStore *store);

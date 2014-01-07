@@ -27,7 +27,7 @@ class ExportVectorsDialog : public QDialog, Ui::ExportVectorsDialog
     Q_OBJECT
 
 public:
-    ExportVectorsDialog(QWidget *parent = 0);
+    explicit ExportVectorsDialog(QWidget *parent = 0);
     ~ExportVectorsDialog();
 
     void show();

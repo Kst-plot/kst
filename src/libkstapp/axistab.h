@@ -25,7 +25,7 @@ namespace Kst {
 class AxisTab : public DialogTab, Ui::AxisTab {
   Q_OBJECT
   public:
-    AxisTab(QWidget *parent = 0);
+    explicit AxisTab(QWidget *parent = 0);
     virtual ~AxisTab();
 
     bool drawAxisMajorTicks() const;

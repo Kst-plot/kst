@@ -23,7 +23,7 @@ namespace Kst {
 class LabelPropertiesTab : public DialogTab, Ui::LabelPropertiesTab {
   Q_OBJECT
   public:
-    LabelPropertiesTab(QWidget *parent = 0);
+    explicit LabelPropertiesTab(QWidget *parent = 0);
     virtual ~LabelPropertiesTab();
 
     QString labelText() const;

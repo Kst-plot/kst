@@ -133,7 +133,7 @@ public:
 public slots:
     void invalidate();
 public:
-    DialogSI(QWidget* t,ViewItem* vi=0);
+    explicit DialogSI(QWidget* t,ViewItem* vi=0);
     ~DialogSI();
 
 protected:

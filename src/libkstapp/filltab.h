@@ -23,7 +23,7 @@ namespace Kst {
 class FillTab : public DialogTab, Ui::FillTab {
   Q_OBJECT
   public:
-    FillTab(QWidget *parent = 0);
+    explicit FillTab(QWidget *parent = 0);
     virtual ~FillTab();
 
     void initialize(QBrush *b);

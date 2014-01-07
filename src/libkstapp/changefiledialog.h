@@ -31,7 +31,7 @@ class ChangeFileDialog : public QDialog, Ui::ChangeFileDialog
 {
   Q_OBJECT
   public:
-    ChangeFileDialog(QWidget *parent);
+    explicit ChangeFileDialog(QWidget *parent);
     virtual ~ChangeFileDialog();
 
     void show();

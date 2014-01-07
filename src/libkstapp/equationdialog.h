@@ -25,7 +25,7 @@ namespace Kst {
 class EquationTab : public DataTab, Ui::EquationTab {
   Q_OBJECT
   public:
-    EquationTab(QWidget *parent = 0);
+    explicit EquationTab(QWidget *parent = 0);
     virtual ~EquationTab();
 
     void setObjectStore(ObjectStore *store);

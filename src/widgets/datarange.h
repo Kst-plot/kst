@@ -25,7 +25,7 @@ namespace Kst {
 class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
   Q_OBJECT
   public:
-    DataRange(QWidget *parent = 0);
+    explicit DataRange(QWidget *parent = 0);
     virtual ~DataRange();
 
     qreal start() const;

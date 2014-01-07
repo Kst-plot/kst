@@ -100,7 +100,7 @@ public:
     friend class CCTextEdit;
     friend class CategoricalCompleter;
 
-    CCTableView(CompletionCase* _data);
+    explicit CCTableView(CompletionCase* _data);
     const QString& prefix() { return _prefix; }
 
 protected:

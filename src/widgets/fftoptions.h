@@ -27,7 +27,7 @@ class KSTWIDGETS_EXPORT FFTOptions : public QWidget, public Ui::FFTOptions
     Q_OBJECT
 
   public:
-    FFTOptions(QWidget *parent = 0);
+    explicit FFTOptions(QWidget *parent = 0);
     ~FFTOptions();
 
     double sampleRate() const;

@@ -31,7 +31,7 @@ class LineEditItem : public ViewItem
     QLineEdit* _lineEdit;
     QGraphicsProxyWidget* _proxy;
   public:
-    LineEditItem(View *parent);
+    explicit LineEditItem(View *parent);
     virtual ~LineEditItem();
 
     const QString defaultsGroupName() const {return LineEditItem::staticDefaultsGroupName();}

@@ -23,7 +23,7 @@ namespace Kst {
 class GridTab : public DialogTab, Ui::GridTab {
   Q_OBJECT
   public:
-    GridTab(QWidget *parent = 0);
+    explicit GridTab(QWidget *parent = 0);
     virtual ~GridTab();
 
     bool showGrid() const;

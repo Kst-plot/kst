@@ -25,7 +25,7 @@ class ScalarModel : public PrimitiveModel
   enum ColumnID { Name, Value };
 
 public:
-  ScalarModel(ObjectStore *store) : PrimitiveModel(store) {
+  explicit ScalarModel(ObjectStore *store) : PrimitiveModel(store) {
     createTree<Scalar>();
   }
 

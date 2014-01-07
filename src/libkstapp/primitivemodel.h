@@ -60,7 +60,7 @@ class PrimitiveModel : public QAbstractItemModel
   enum ColumnID { Name, Value };
 
 public:
-  PrimitiveModel(ObjectStore *store);
+  explicit PrimitiveModel(ObjectStore *store);
   ~PrimitiveModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;

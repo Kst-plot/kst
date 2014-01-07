@@ -33,7 +33,7 @@ using namespace Kst;
 class DataInterfaceAsciiVector : public DataSource::DataInterface<DataVector>
 {
 public:
-  DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
+  explicit DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
 
   void prepareRead(int);
   // read one element
@@ -106,7 +106,7 @@ QMap<QString, QString> DataInterfaceAsciiVector::metaStrings(const QString& fiel
 class DataInterfaceAsciiString : public DataSource::DataInterface<DataString>
 {
 public:
-  DataInterfaceAsciiString(AsciiSource& s) : ascii(s) {}
+  explicit DataInterfaceAsciiString(AsciiSource& s) : ascii(s) {}
 
   // read one element
   int read(const QString&, DataString::ReadInfo&);

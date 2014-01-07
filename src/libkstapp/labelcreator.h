@@ -27,7 +27,7 @@ class LabelCreator : public QDialog, Ui::LabelCreator
 {
   Q_OBJECT
   public:
-    LabelCreator(QWidget *parent = 0);
+    explicit LabelCreator(QWidget *parent = 0);
     virtual ~LabelCreator();
 
     QString labelText();

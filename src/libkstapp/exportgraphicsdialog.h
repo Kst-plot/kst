@@ -27,7 +27,7 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
 {
   Q_OBJECT
   public:
-    ExportGraphicsDialog(MainWindow *win);
+    explicit ExportGraphicsDialog(MainWindow *win);
     virtual ~ExportGraphicsDialog();
 
   public slots:

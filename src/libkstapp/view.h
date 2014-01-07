@@ -45,7 +45,7 @@ class View : public QGraphicsView
     Q_DECLARE_FLAGS(CreationEvents, CreationEvent)
 
     View();
-    View(QWidget* parent);
+    explicit View(QWidget* parent);
     virtual ~View();
 
     static QString staticDefaultsGroupName() { return QString("view");}

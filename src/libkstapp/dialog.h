@@ -32,7 +32,7 @@ class Dialog : public QDialog, public Ui::Dialog
   public:
     friend class DialogSI;
     friend class ScriptServer;
-    Dialog(QWidget *parent = 0);
+    explicit Dialog(QWidget *parent = 0);
     virtual ~Dialog();
 
     void addDialogPage(DialogPage *page, bool addMinSize = true);

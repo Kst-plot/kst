@@ -22,7 +22,7 @@ class ArrowItem : public LineItem
 {
   Q_OBJECT
   public:
-    ArrowItem(View *parent);
+    explicit ArrowItem(View *parent);
     virtual ~ArrowItem();
 
     const QString defaultsGroupName() const {return ArrowItem::staticDefaultsGroupName();}

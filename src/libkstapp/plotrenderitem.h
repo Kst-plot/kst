@@ -32,7 +32,7 @@ class PlotRenderItem : public ViewItem
   public:
     enum RenderType {First, Cartesian, Polar, Sinusoidal };
 
-    PlotRenderItem(PlotItem *parentItem);
+    explicit PlotRenderItem(PlotItem *parentItem);
     virtual ~PlotRenderItem();
 
     PlotItem *plotItem() const;

@@ -43,7 +43,7 @@ class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface 
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
   Q_OBJECT
   public:
-    Widgets(QObject *parent = 0);
+    explicit Widgets(QObject *parent = 0);
     virtual ~Widgets();
     QList<QDesignerCustomWidgetInterface*> customWidgets() const {
       return _plugins;
@@ -57,7 +57,7 @@ class WidgetPlugin : public QObject, public QDesignerCustomWidgetInterface {
   Q_OBJECT
 
   public:
-    WidgetPlugin(QObject *parent = 0);
+    explicit WidgetPlugin(QObject *parent = 0);
     virtual ~WidgetPlugin();
 
     QString group() const;
@@ -79,7 +79,7 @@ class ColorButtonPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    ColorButtonPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit ColorButtonPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("ColorButton");
     } //do not translate
@@ -92,7 +92,7 @@ class DataSourceSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    DataSourceSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit DataSourceSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("DataSourceSelector");
     } //do not translate
@@ -105,7 +105,7 @@ class GradientEditorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    GradientEditorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit GradientEditorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("GradientEditor");
     } //do not translate
@@ -118,7 +118,7 @@ class FileRequesterPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    FileRequesterPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit FileRequesterPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("FileRequester");
     } //do not translate
@@ -131,7 +131,7 @@ class ComboBoxPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    ComboBoxPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit ComboBoxPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("ComboBox");
     } //do not translate
@@ -144,7 +144,7 @@ class DataRangePlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    DataRangePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit DataRangePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("DataRange");
     } //do not translate
@@ -157,7 +157,7 @@ class CurveSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    CurveSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit CurveSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("CurveSelector");
     } //do not translate
@@ -170,7 +170,7 @@ class VectorSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    VectorSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit VectorSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("VectorSelector");
     } //do not translate
@@ -183,7 +183,7 @@ class MatrixSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    MatrixSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit MatrixSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("MatrixSelector");
     } //do not translate
@@ -196,7 +196,7 @@ class ScalarSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    ScalarSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit ScalarSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("ScalarSelector");
     } //do not translate
@@ -209,7 +209,7 @@ class StringSelectorPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    StringSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit StringSelectorPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("StringSelector");
     } //do not translate
@@ -222,7 +222,7 @@ class CurveAppearancePlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    CurveAppearancePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit CurveAppearancePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("CurveAppearance");
     } //do not translate
@@ -235,7 +235,7 @@ class CurvePlacementPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    CurvePlacementPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit CurvePlacementPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("CurvePlacement");
     } //do not translate
@@ -248,7 +248,7 @@ class FFTOptionsPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    FFTOptionsPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit FFTOptionsPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("FFTOptions");
     } //do not translate
@@ -262,7 +262,7 @@ class ColorPalettePlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    ColorPalettePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit ColorPalettePlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("ColorPalette");
     } //do not translate
@@ -275,7 +275,7 @@ class LabelBuilderPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    LabelBuilderPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit LabelBuilderPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("LabelBuilder");
     } //do not translate
@@ -288,7 +288,7 @@ class LabelLineEditPlugin : public WidgetPlugin {
   Q_OBJECT
   Q_INTERFACES(QDesignerCustomWidgetInterface)
   public:
-    LabelLineEditPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
+    explicit LabelLineEditPlugin(QObject *parent = 0) : WidgetPlugin(parent) {}
     QString name() const {
       return QLatin1String("LabelLineEdit");
     } //do not translate

@@ -25,7 +25,7 @@ class KSTWIDGETS_EXPORT ColorPalette : public QWidget, public Ui::ColorPalette
     Q_OBJECT
 
   public:
-    ColorPalette(QWidget *parent = 0);
+    explicit ColorPalette(QWidget *parent = 0);
     ~ColorPalette();
 
     QString selectedPalette();

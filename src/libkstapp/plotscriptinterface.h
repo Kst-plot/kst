@@ -22,7 +22,7 @@ class PlotSI : public ScriptInterface
 {
     Q_OBJECT
 public:
-    PlotSI(PlotItem* it);
+    explicit PlotSI(PlotItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();

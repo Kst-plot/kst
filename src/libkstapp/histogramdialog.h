@@ -37,7 +37,7 @@ namespace Kst {
 class HistogramTab : public DataTab, Ui::HistogramTab {
   Q_OBJECT
   public:
-    HistogramTab(QWidget *parent = 0);
+    explicit HistogramTab(QWidget *parent = 0);
     virtual ~HistogramTab();
 
     void setObjectStore(ObjectStore *store);

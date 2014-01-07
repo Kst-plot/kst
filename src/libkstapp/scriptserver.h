@@ -45,7 +45,7 @@ class ScriptServer : public QObject
     QMap<QByteArray,MacroSI*> _macroMap;
     QMap<QByteArray,VarSI*> _varMap;
 public:
-    ScriptServer(ObjectStore*obj);
+    explicit ScriptServer(ObjectStore*obj);
     ~ScriptServer();
     QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
     void setStore(ObjectStore *obj) { _store = obj; vi.clear();}

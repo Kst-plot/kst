@@ -29,7 +29,7 @@ namespace Kst {
 class PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
   Q_OBJECT
   public:
-    PowerSpectrumTab(QWidget *parent = 0);
+    explicit PowerSpectrumTab(QWidget *parent = 0);
     virtual ~PowerSpectrumTab();
 
     void setObjectStore(ObjectStore *store);

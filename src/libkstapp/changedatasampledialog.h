@@ -27,7 +27,7 @@ class ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
 {
   Q_OBJECT
   public:
-    ChangeDataSampleDialog(QWidget *parent);
+    explicit ChangeDataSampleDialog(QWidget *parent);
     virtual ~ChangeDataSampleDialog();
 
     void show();

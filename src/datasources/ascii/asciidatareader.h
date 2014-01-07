@@ -27,7 +27,7 @@ class AsciiSourceConfig;
 class AsciiDataReader
 {
   public:
-    AsciiDataReader(AsciiSourceConfig& config);
+    explicit AsciiDataReader(AsciiSourceConfig& config);
     ~AsciiDataReader();
 
     void clear();

@@ -23,7 +23,7 @@ namespace Kst {
 class KSTWIDGETS_EXPORT LabelLineEdit : public QLineEdit {
   Q_OBJECT
   public:
-    LabelLineEdit(QWidget *parent = 0);
+    explicit LabelLineEdit(QWidget *parent = 0);
     virtual ~LabelLineEdit();
 
     virtual void focusInEvent ( QFocusEvent * event );

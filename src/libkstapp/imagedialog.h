@@ -31,7 +31,7 @@ namespace Kst {
 class ImageTab : public DataTab, Ui::ImageTab {
   Q_OBJECT
   public:
-    ImageTab(QWidget *parent = 0);
+    explicit ImageTab(QWidget *parent = 0);
     virtual ~ImageTab();
 
     CurvePlacement* curvePlacement() const;

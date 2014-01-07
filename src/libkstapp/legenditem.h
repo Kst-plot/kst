@@ -29,7 +29,7 @@ class PlotRenderItem;
 class LegendItem : public ViewItem {
   Q_OBJECT
   public:
-    LegendItem(PlotItem *parent);
+    explicit LegendItem(PlotItem *parent);
     virtual ~LegendItem();
 
     const QString defaultsGroupName() const {return LegendItem::staticDefaultsGroupName();}

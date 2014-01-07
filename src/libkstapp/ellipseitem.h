@@ -22,7 +22,7 @@ class EllipseItem : public ViewItem
 {
   Q_OBJECT
   public:
-    EllipseItem(View *parent);
+    explicit EllipseItem(View *parent);
     virtual ~EllipseItem();
 
     const QString defaultsGroupName() const {return EllipseItem::staticDefaultsGroupName();}

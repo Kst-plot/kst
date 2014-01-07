@@ -25,7 +25,7 @@ class AboutDialog : public QDialog, Ui::AboutDialog
 {
   Q_OBJECT
   public:
-    AboutDialog(QWidget *parent);
+    explicit AboutDialog(QWidget *parent);
     virtual ~AboutDialog();
 
   private Q_SLOTS:

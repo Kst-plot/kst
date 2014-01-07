@@ -23,7 +23,7 @@ namespace Kst {
 class KSTWIDGETS_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppearance {
   Q_OBJECT
   public:
-    CurveAppearance(QWidget *parent = 0);
+    explicit CurveAppearance(QWidget *parent = 0);
     virtual ~CurveAppearance();
 
     bool showLines() const;

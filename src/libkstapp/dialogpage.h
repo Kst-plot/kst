@@ -27,7 +27,7 @@ class DialogPage : public QWidget
 {
   Q_OBJECT
   public:
-    DialogPage(Dialog *parent);
+    explicit DialogPage(Dialog *parent);
     virtual ~DialogPage();
 
     Dialog *dialog() const;
@@ -59,7 +59,7 @@ class DialogPageTab : public DialogPage
 {
   Q_OBJECT
   public:
-    DialogPageTab(Dialog *parent);
+    explicit DialogPageTab(Dialog *parent);
     virtual ~DialogPageTab();
 
     void addDialogTab(DialogTab *tab);

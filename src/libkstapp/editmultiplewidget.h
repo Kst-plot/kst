@@ -23,7 +23,7 @@ namespace Kst {
 class EditMultipleWidget : public QWidget, public Ui::EditMultipleWidget {
   Q_OBJECT
   public:
-    EditMultipleWidget(QWidget *parent = 0);
+    explicit EditMultipleWidget(QWidget *parent = 0);
     virtual ~EditMultipleWidget();
 
 //     void addObjects(QStringList &objects);

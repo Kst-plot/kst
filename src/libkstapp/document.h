@@ -28,7 +28,7 @@ class CommandLineParser;
 
 class Document : public CoreDocument {
   public:
-    Document(MainWindow *win);
+    explicit Document(MainWindow *win);
     ~Document();
 
     SessionModel* session() const;

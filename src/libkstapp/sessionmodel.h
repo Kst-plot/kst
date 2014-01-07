@@ -28,7 +28,7 @@ class SessionModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-  SessionModel(ObjectStore *store);
+  explicit SessionModel(ObjectStore *store);
   ~SessionModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;

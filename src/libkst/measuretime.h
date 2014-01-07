@@ -21,7 +21,7 @@
 class KSTCORE_EXPORT MeasureTime
 {
   public:
-    MeasureTime(const QString& name);
+    explicit MeasureTime(const QString& name);
     ~MeasureTime();
 
     void restart();

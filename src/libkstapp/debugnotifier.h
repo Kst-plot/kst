@@ -29,7 +29,7 @@ namespace Kst {
 class DebugNotifier : public QLabel {
   Q_OBJECT
   public:
-    DebugNotifier(QWidget *parent);
+    explicit DebugNotifier(QWidget *parent);
     ~DebugNotifier();
 
   Q_SIGNALS:

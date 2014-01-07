@@ -65,7 +65,7 @@ class KSTCORE_EXPORT KstRWLock {
 
 class KSTCORE_EXPORT KstReadLocker {
   public:
-    KstReadLocker(KstRWLock *l) : _l(l) { _l->readLock(); }
+    explicit KstReadLocker(KstRWLock *l) : _l(l) { _l->readLock(); }
     ~KstReadLocker() { _l->unlock(); }
   private:
     KstRWLock *_l;
@@ -74,7 +74,7 @@ class KSTCORE_EXPORT KstReadLocker {
 
 class KSTCORE_EXPORT KstWriteLocker {
   public:
-    KstWriteLocker(KstRWLock *l) : _l(l) { _l->writeLock(); }
+    explicit KstWriteLocker(KstRWLock *l) : _l(l) { _l->writeLock(); }
     ~KstWriteLocker() { _l->unlock(); }
   private:
     KstRWLock *_l;

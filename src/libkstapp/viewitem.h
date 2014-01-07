@@ -71,7 +71,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
       Completed
     };
 
-    ViewItem(View *parent);
+    explicit ViewItem(View *parent);
     virtual ~ViewItem();
 
     virtual void save(QXmlStreamWriter &xml);
@@ -445,7 +445,7 @@ class CreateCommand : public QObject, public ViewCommand
 class LayoutCommand : public ViewItemCommand
 {
   public:
-    LayoutCommand(ViewItem *item)
+    explicit LayoutCommand(ViewItem *item)
         : ViewItemCommand(item, QObject::tr("Create layout"), false) {}
 
     virtual ~LayoutCommand() {}
@@ -460,7 +460,7 @@ class LayoutCommand : public ViewItemCommand
 class AppendLayoutCommand : public ViewItemCommand
 {
   public:
-    AppendLayoutCommand(ViewItem *item)
+    explicit AppendLayoutCommand(ViewItem *item)
         : ViewItemCommand(item, QObject::tr("Append Item to Layout"), false) {}
 
     virtual ~AppendLayoutCommand() {}
@@ -512,7 +512,7 @@ class ResizeCommand : public ViewItemCommand
 class RemoveCommand : public ViewItemCommand
 {
   public:
-    RemoveCommand(ViewItem *item)
+    explicit RemoveCommand(ViewItem *item)
         : ViewItemCommand(item, QObject::tr("Remove")) {}
 
     virtual ~RemoveCommand() {}
@@ -524,7 +524,7 @@ class RemoveCommand : public ViewItemCommand
 class RaiseCommand : public ViewItemCommand
 {
   public:
-    RaiseCommand(ViewItem *item)
+    explicit RaiseCommand(ViewItem *item)
         : ViewItemCommand(item, QObject::tr("Raise")) {}
 
     virtual ~RaiseCommand() {}
@@ -536,7 +536,7 @@ class RaiseCommand : public ViewItemCommand
 class LowerCommand : public ViewItemCommand
 {
   public:
-    LowerCommand(ViewItem *item)
+    explicit LowerCommand(ViewItem *item)
         : ViewItemCommand(item, QObject::tr("Lower")) {}
 
     virtual ~LowerCommand() {}

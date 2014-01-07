@@ -23,7 +23,7 @@ namespace Kst {
 class DefaultLabelPropertiesTab : public DialogTab, Ui_DefaultLabelPropertiesTab {
   Q_OBJECT
   public:
-    DefaultLabelPropertiesTab(QWidget *parent = 0);
+    explicit DefaultLabelPropertiesTab(QWidget *parent = 0);
     virtual ~DefaultLabelPropertiesTab();
 
     double referenceViewWidth() const;

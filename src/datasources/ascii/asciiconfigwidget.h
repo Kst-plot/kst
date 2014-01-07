@@ -25,7 +25,7 @@ class AsciiConfigWidgetInternal : public QWidget, public Ui_AsciiConfig
   Q_OBJECT
 
   public:
-    AsciiConfigWidgetInternal(QWidget *parent);
+    explicit AsciiConfigWidgetInternal(QWidget *parent);
 
     AsciiSourceConfig config();
     void setConfig(const AsciiSourceConfig&);
@@ -53,7 +53,7 @@ class AsciiConfigWidget : public Kst::DataSourceConfigWidget
   Q_OBJECT
 
   public:
-    AsciiConfigWidget(QSettings&);
+    explicit AsciiConfigWidget(QSettings&);
     ~AsciiConfigWidget();
 
     void load();

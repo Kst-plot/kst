@@ -70,7 +70,7 @@ struct CachedPlotLabel {
 class PlotLabel : public QObject {
   Q_OBJECT
   public:
-    PlotLabel(PlotItem *plotItem);
+    explicit PlotLabel(PlotItem *plotItem);
 
     bool isVisible() const;
     void setVisible(bool visible);
@@ -121,7 +121,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
   Q_OBJECT
   public:
 
-    PlotItem(View *parent);
+    explicit PlotItem(View *parent);
     virtual ~PlotItem();
 
     const QString defaultsGroupName() const {return PlotItem::staticDefaultsGroupName();}
@@ -610,7 +610,7 @@ class CreatePlotForCurve : public CreateCommand
   public:
     CreatePlotForCurve()
       : CreateCommand(QObject::tr("Create Plot For Curve")) {}
-    CreatePlotForCurve(View *view)
+    explicit CreatePlotForCurve(View *view)
       : CreateCommand(view, QObject::tr("Create Plot For Curve")) {}
     virtual ~CreatePlotForCurve() {}
     virtual void createItem();

@@ -27,7 +27,7 @@ namespace Kst {
 class EventMonitorTab : public DataTab, Ui::EventMonitorTab {
   Q_OBJECT
   public:
-    EventMonitorTab(QWidget *parent = 0);
+    explicit EventMonitorTab(QWidget *parent = 0);
     virtual ~EventMonitorTab();
 
     void setObjectStore(ObjectStore *store);

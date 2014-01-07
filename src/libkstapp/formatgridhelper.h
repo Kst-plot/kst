@@ -39,7 +39,7 @@ struct AutoFormatRC {
 class FormatGridHelper
 {
 public:
-  FormatGridHelper(const QList<ViewItem*> &viewItems, bool protectLayout=true);
+  explicit FormatGridHelper(const QList<ViewItem*> &viewItems, bool protectLayout=true);
 
   QList<AutoFormatRC> rcList;
   QVector< QVector <int> > a;

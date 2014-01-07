@@ -80,7 +80,7 @@ class KSTMATH_EXPORT Relation : public Object {
     static const QString staticTypeString;
     const QString& typeString() const { return staticTypeString; }
 
-    Relation(ObjectStore *store);
+    explicit Relation(ObjectStore *store);
     virtual ~Relation();
 
     virtual void showNewDialog() { }

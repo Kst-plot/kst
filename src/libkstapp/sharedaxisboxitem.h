@@ -25,7 +25,7 @@ class SharedAxisBoxItem : public ViewItem
   public:
     friend class SharedAxisBoxItemFactory;
 
-    SharedAxisBoxItem(View *parent);
+    explicit SharedAxisBoxItem(View *parent);
     virtual ~SharedAxisBoxItem();
 
     virtual void save(QXmlStreamWriter &xml);

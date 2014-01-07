@@ -31,7 +31,7 @@ class ButtonItem : public ViewItem
     QPushButton* _pushButton;
     QGraphicsProxyWidget* _proxy;
   public:
-    ButtonItem(View *parent);
+    explicit ButtonItem(View *parent);
     virtual ~ButtonItem();
 
     const QString defaultsGroupName() const {return ButtonItem::staticDefaultsGroupName();}

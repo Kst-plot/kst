@@ -31,7 +31,7 @@ class StringGenSI : public ScriptInterface
     Q_OBJECT
     StringPtr str;
 public:
-    StringGenSI(StringPtr it);
+    explicit StringGenSI(StringPtr it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();

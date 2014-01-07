@@ -89,8 +89,8 @@ protected:
 
 public:
     friend class CCTableView;
-    CCLineEdit(QWidget*p=0);
-    CCLineEdit(const QString&s,QWidget*p=0);
+    explicit CCLineEdit(QWidget*p=0);
+    explicit CCLineEdit(const QString&s,QWidget*p=0);
     ~CCLineEdit();
     virtual void init(QList<CompletionCase> data);
 
@@ -117,8 +117,8 @@ class KSTWIDGETS_EXPORT SVCCLineEdit : public CCLineEdit
     Q_OBJECT
     QList<CompletionCase> *_extraData, *_svData, *_allData;
 public:
-    SVCCLineEdit(QWidget*p=0);
-    SVCCLineEdit(const QString&s,QWidget*p=0);
+    explicit SVCCLineEdit(QWidget*p=0);
+    explicit SVCCLineEdit(const QString&s,QWidget*p=0);
     ~SVCCLineEdit();
 
     void setObjectStore(ObjectStore *store);
@@ -150,8 +150,8 @@ protected:
     virtual void ChangeCurrentPrefix(QString x);
 public:
     friend class CCTableView;
-    CCTextEdit(QWidget*p=0);
-    CCTextEdit(const QString&s,QWidget*p=0);
+    explicit CCTextEdit(QWidget*p=0);
+    explicit CCTextEdit(const QString&s,QWidget*p=0);
     ~CCTextEdit();
     virtual void init(QList<CompletionCase> data);
 
@@ -176,8 +176,8 @@ class KSTWIDGETS_EXPORT SVCCTextEdit : public CCTextEdit
     Q_OBJECT
     QList<CompletionCase> *_extraData, *_svData, *_allData;
 public:
-    SVCCTextEdit(QWidget*p=0);
-    SVCCTextEdit(const QString&s,QWidget*p=0);
+    explicit SVCCTextEdit(QWidget*p=0);
+    explicit SVCCTextEdit(const QString&s,QWidget*p=0);
     ~SVCCTextEdit();
 
     void setObjectStore(ObjectStore *store);

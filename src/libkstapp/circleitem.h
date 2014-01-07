@@ -24,7 +24,7 @@ class CircleItem : public ViewItem
 {
   Q_OBJECT
   public:
-    CircleItem(View *parent);
+    explicit CircleItem(View *parent);
     virtual ~CircleItem();
 
     const QString defaultsGroupName() const {return CircleItem::staticDefaultsGroupName();}

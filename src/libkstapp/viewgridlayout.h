@@ -30,7 +30,7 @@ class ViewGridLayout : public QObject
 {
   Q_OBJECT
   public:
-    ViewGridLayout(ViewItem *parent);
+    explicit ViewGridLayout(ViewItem *parent);
     virtual ~ViewGridLayout();
 
     ViewItem *parentItem() const;

@@ -27,7 +27,7 @@ class KSTWIDGETS_EXPORT DataSourceSelector : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QString file READ file WRITE setFile USER true)
   public:
-    DataSourceSelector(QWidget *parent = 0);
+    explicit DataSourceSelector(QWidget *parent = 0);
     virtual ~DataSourceSelector();
 
     QString file() const;

@@ -20,7 +20,7 @@ class CartesianRenderItem : public PlotRenderItem
 {
   Q_OBJECT
   public:
-    CartesianRenderItem(PlotItem *parentItem);
+    explicit CartesianRenderItem(PlotItem *parentItem);
     virtual ~CartesianRenderItem();
 
     virtual void saveInPlot(QXmlStreamWriter &xml);

@@ -25,7 +25,7 @@ class StringModel : public PrimitiveModel
   enum ColumnID { Name, Value };
 
 public:
-  StringModel(ObjectStore *store) : PrimitiveModel(store) {
+  explicit StringModel(ObjectStore *store) : PrimitiveModel(store) {
     createTree<String>();
   }
 

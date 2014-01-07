@@ -27,7 +27,7 @@ class KSTWIDGETS_EXPORT FileRequester : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QString file READ file WRITE setFile USER true)
   public:
-    FileRequester(QWidget *parent = 0);
+    explicit FileRequester(QWidget *parent = 0);
     virtual ~FileRequester();
 
     QString file() const;

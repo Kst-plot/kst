@@ -24,7 +24,7 @@ class LineItem : public ViewItem
 {
   Q_OBJECT
   public:
-    LineItem(View *parent);
+    explicit LineItem(View *parent);
     virtual ~LineItem();
 
     const QString defaultsGroupName() const {return LineItem::staticDefaultsGroupName();}

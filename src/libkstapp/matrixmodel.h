@@ -21,7 +21,7 @@ namespace Kst {
 class MatrixModel : public QAbstractItemModel
 {
 public:
-  MatrixModel(MatrixPtr v);
+  explicit MatrixModel(MatrixPtr v);
   ~MatrixModel();
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const;

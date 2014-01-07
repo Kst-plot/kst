@@ -28,7 +28,7 @@ class DebugDialog : public QDialog, Ui::DebugDialog
 {
   Q_OBJECT
   public:
-    DebugDialog(QWidget *parent);
+    explicit DebugDialog(QWidget *parent);
     virtual ~DebugDialog();
 
     void setObjectStore(ObjectStore* store) { _store = store; }

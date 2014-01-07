@@ -68,7 +68,7 @@ class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors
 {
   Q_OBJECT
   public:
-    DataWizardPageVectors(QWidget *parent);
+    explicit DataWizardPageVectors(QWidget *parent);
     virtual ~DataWizardPageVectors();
 
     bool isComplete() const;
@@ -92,7 +92,7 @@ class DataWizardPageFilters : public QWizardPage, Ui::DataWizardPageFilters
 {
   Q_OBJECT
   public:
-    DataWizardPageFilters(QWidget *parent);
+    explicit DataWizardPageFilters(QWidget *parent);
     virtual ~DataWizardPageFilters();
 
 };
@@ -105,7 +105,7 @@ class DataWizardPagePlot : public QWizardPage, Ui::DataWizardPagePlot
 
     enum PlotTabPlacement { CurrentTab, NewTab, SeparateTabs };
 
-    DataWizardPagePlot(QWidget *parent);
+    explicit DataWizardPagePlot(QWidget *parent);
     virtual ~DataWizardPagePlot();
 
     CurvePlacement::Layout layout() const;
@@ -178,7 +178,7 @@ class DataWizard : public QWizard
   public:
     enum DataWizardPages {PageDataSource, PageVectors, PageDataPresentation, PageFilters, PagePlot};
 
-    DataWizard(QWidget *parent, const QString& fn = QString());
+    explicit DataWizard(QWidget *parent, const QString& fn = QString());
     virtual ~DataWizard();
 
     QStringList dataSourceFieldList() const;

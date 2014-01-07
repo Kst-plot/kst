@@ -28,7 +28,7 @@ class DialogTab : public QWidget
 {
   Q_OBJECT
   public:
-    DialogTab(QWidget *parent);
+    explicit DialogTab(QWidget *parent);
     virtual ~DialogTab();
 
     Dialog *dialog() const;

@@ -23,7 +23,7 @@ namespace Kst {
 class KSTWIDGETS_EXPORT ScalarListSelector : public QDialog, public Ui::ScalarListSelector {
   Q_OBJECT
   public:
-    ScalarListSelector(QWidget *parent = 0);
+    explicit ScalarListSelector(QWidget *parent = 0);
     virtual ~ScalarListSelector();
 
     QString selectedScalar() const;

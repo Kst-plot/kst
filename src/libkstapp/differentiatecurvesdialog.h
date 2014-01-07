@@ -27,7 +27,7 @@ class DifferentiateCurvesDialog : public QDialog, Ui::DifferentiateCurvesDialog
 {
   Q_OBJECT
   public:
-    DifferentiateCurvesDialog(QWidget *parent);
+    explicit DifferentiateCurvesDialog(QWidget *parent);
     virtual ~DifferentiateCurvesDialog();
 
     void show();

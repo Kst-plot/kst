@@ -30,7 +30,7 @@ class LabelSI : public ScriptInterface
 {
     Q_OBJECT
 public:
-    LabelSI(LabelItem* it);
+    explicit LabelSI(LabelItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();

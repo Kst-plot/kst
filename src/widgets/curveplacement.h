@@ -27,7 +27,7 @@ class KSTWIDGETS_EXPORT CurvePlacement : public QWidget, public Ui::CurvePlaceme
   public:
     enum Place { NewPlot, ExistingPlot, NoPlot, NewPlotNewTab };
     enum Layout { Auto, Custom, Protect };
-    CurvePlacement(QWidget *parent = 0);
+    explicit CurvePlacement(QWidget *parent = 0);
     virtual ~CurvePlacement();
 
     Place place() const;

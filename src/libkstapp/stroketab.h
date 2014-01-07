@@ -25,7 +25,7 @@ namespace Kst {
 class StrokeTab : public DialogTab, Ui::StrokeTab {
   Q_OBJECT
   public:
-    StrokeTab(QWidget *parent = 0);
+    explicit StrokeTab(QWidget *parent = 0);
     virtual ~StrokeTab();
 
     void initialize(QPen *p);

@@ -146,7 +146,7 @@ namespace Equations {
   class KSTMATH_EXPORT Number : public Node 
   {
     public:
-      Number(double n);
+      explicit Number(double n);
       ~Number();
 
       bool isConst();
@@ -161,7 +161,7 @@ namespace Equations {
   class KSTMATH_EXPORT Identifier : public Node 
   {
     public:
-      Identifier(char *name);
+      explicit Identifier(char *name);
       ~Identifier();
 
       bool isConst();
@@ -223,7 +223,7 @@ namespace Equations {
 
   class KSTMATH_EXPORT Negation : public Node {
     public:
-      Negation(Node *node);
+      explicit Negation(Node *node);
       ~Negation();
       bool isConst();
       double value(Context*);
@@ -236,7 +236,7 @@ namespace Equations {
 
   class KSTMATH_EXPORT LogicalNot : public Node {
     public:
-      LogicalNot(Node *node);
+      explicit LogicalNot(Node *node);
       ~LogicalNot();
       bool isConst();
       double value(Context*);

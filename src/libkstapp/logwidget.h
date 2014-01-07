@@ -24,7 +24,7 @@ class LogWidget : public QTextBrowser
 {
   Q_OBJECT
   public:
-    LogWidget(QWidget *parent);
+    explicit LogWidget(QWidget *parent);
     virtual ~LogWidget();
 
   public Q_SLOTS:

@@ -32,7 +32,7 @@ class KSTMATH_EXPORT Painter : public QPainter
      */
     enum PaintType { P_PAINT = 0, P_PLOT, P_ZOOM, P_UPDATE, P_PRINT, P_EXPORT };
 
-    Painter(PaintType t = P_PAINT);
+    explicit Painter(PaintType t = P_PAINT);
     virtual ~Painter();
 
     // Defalut: P_PAINT

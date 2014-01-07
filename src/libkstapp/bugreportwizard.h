@@ -27,7 +27,7 @@ class BugReportWizard : public QDialog, Ui::BugReportWizard
 {
   Q_OBJECT
   public:
-    BugReportWizard(QWidget *parent);
+    explicit BugReportWizard(QWidget *parent);
     virtual ~BugReportWizard();
 
   private slots:

@@ -32,7 +32,7 @@ class PlotMarkers {
       BothEdges = 2
     };
 
-    PlotMarkers(bool xAxis = true);
+    explicit PlotMarkers(bool xAxis = true);
     virtual ~PlotMarkers();
 
     QList<double> markers();

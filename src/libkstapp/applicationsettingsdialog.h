@@ -30,7 +30,7 @@ class ApplicationSettingsDialog : public Dialog
 {
   Q_OBJECT
   public:
-    ApplicationSettingsDialog(QWidget *parent = 0);
+    explicit ApplicationSettingsDialog(QWidget *parent = 0);
     virtual ~ApplicationSettingsDialog();
 
   private Q_SLOTS:

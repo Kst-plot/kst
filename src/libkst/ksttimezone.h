@@ -23,7 +23,7 @@ namespace Kst {
 class KSTCORE_EXPORT KstTimeZone
 {
 public:
-    KstTimeZone(QString name = "GMT");
+    explicit KstTimeZone(QString name = "GMT");
     int gmtOffset(time_t t);
     bool setTZ(QString name);
     QString tzName() const {return _tzName;}

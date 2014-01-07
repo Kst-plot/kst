@@ -23,7 +23,7 @@ namespace Kst {
 class ArrowPropertiesTab : public DialogTab, Ui::ArrowPropertiesTab {
   Q_OBJECT
   public:
-    ArrowPropertiesTab(QWidget *parent = 0);
+    explicit ArrowPropertiesTab(QWidget *parent = 0);
     virtual ~ArrowPropertiesTab();
 
     bool startArrowHead();

@@ -25,7 +25,7 @@ class ObjectStore;
 class LegendTab : public DialogTab, Ui::LegendTab {
   Q_OBJECT
   public:
-    LegendTab(QWidget *parent = 0);
+    explicit LegendTab(QWidget *parent = 0);
     virtual ~LegendTab();
 
     void setDisplayedRelations(const QStringList& displayedRelations, const QStringList& displayedRelationTips);

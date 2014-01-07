@@ -32,7 +32,7 @@ class KSTMATH_EXPORT Palette
     static QStringList getPaletteList();
 
     Palette();
-    Palette(const QString &paletteName);
+    explicit Palette(const QString &paletteName);
 
     virtual ~Palette();
 

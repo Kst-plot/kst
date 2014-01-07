@@ -54,7 +54,7 @@ class ViewItemSI : public ScriptInterface
 {
     Q_OBJECT
 public:
-    ViewItemSI(ViewItem* it);
+    explicit ViewItemSI(ViewItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();

@@ -22,7 +22,7 @@ class LayoutBoxItem : public ViewItem
 {
   Q_OBJECT
   public:
-    LayoutBoxItem(View *parent);
+    explicit LayoutBoxItem(View *parent);
     virtual ~LayoutBoxItem();
 
     const QString defaultsGroupName() const {return QString("layoutbox");}

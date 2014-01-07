@@ -192,7 +192,7 @@ class KSTMATH_EXPORT DataObjectConfigWidget : public QWidget
     Q_OBJECT
 
   public:
-    DataObjectConfigWidget(QSettings*); // will be reparented later
+    explicit DataObjectConfigWidget(QSettings*); // will be reparented later
     virtual ~DataObjectConfigWidget();
 
     virtual void setupFromObject(Object* dataObject);

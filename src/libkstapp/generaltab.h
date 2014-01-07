@@ -23,7 +23,7 @@ namespace Kst {
 class GeneralTab : public DialogTab, Ui::GeneralTab {
   Q_OBJECT
   public:
-    GeneralTab(QWidget *parent = 0);
+    explicit GeneralTab(QWidget *parent = 0);
     virtual ~GeneralTab();
 
     bool useOpenGL() const;

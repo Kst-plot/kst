@@ -25,7 +25,7 @@ class Scene : public QGraphicsScene
 {
   Q_OBJECT
   public:
-    Scene(View *view);
+    explicit Scene(View *view);
     virtual ~Scene();
 
   protected:

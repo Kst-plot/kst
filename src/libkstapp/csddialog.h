@@ -29,7 +29,7 @@ namespace Kst {
 class CSDTab : public DataTab, Ui::CSDTab {
   Q_OBJECT
   public:
-    CSDTab(QWidget *parent = 0);
+    explicit CSDTab(QWidget *parent = 0);
     virtual ~CSDTab();
 
     void setObjectStore(ObjectStore *store);

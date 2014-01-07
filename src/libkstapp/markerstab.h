@@ -24,7 +24,7 @@ namespace Kst {
 class MarkersTab : public DialogTab, Ui::MarkersTab {
   Q_OBJECT
   public:
-    MarkersTab(QWidget *parent = 0);
+    explicit MarkersTab(QWidget *parent = 0);
     virtual ~MarkersTab();
 
     void setObjectStore(ObjectStore *store);

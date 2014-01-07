@@ -31,7 +31,7 @@ class ChooseColorDialog : public QDialog, Ui::ChooseColorDialog
 {
   Q_OBJECT
   public:
-    ChooseColorDialog(QWidget *parent);
+    explicit ChooseColorDialog(QWidget *parent);
     virtual ~ChooseColorDialog();
 
     void show();

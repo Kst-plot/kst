@@ -31,7 +31,7 @@ class LogDialog : public QDialog, Ui::LogDialog
 {
   Q_OBJECT
   public:
-    LogDialog(MainWindow *parent);
+    explicit LogDialog(MainWindow *parent);
     virtual ~LogDialog();
 
   public slots:

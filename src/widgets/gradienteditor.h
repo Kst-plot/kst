@@ -24,7 +24,7 @@ namespace Kst {
 class KSTWIDGETS_EXPORT GradientEditor : public QWidget {
   Q_OBJECT
 public:
-  GradientEditor(QWidget *parent = 0);
+  explicit GradientEditor(QWidget *parent = 0);
   virtual ~GradientEditor();
 
   virtual QSize sizeHint() const;

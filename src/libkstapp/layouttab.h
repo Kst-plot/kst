@@ -23,7 +23,7 @@ namespace Kst {
 class LayoutTab : public DialogTab, Ui::LayoutTab {
   Q_OBJECT
   public:
-    LayoutTab(QWidget *parent = 0);
+    explicit LayoutTab(QWidget *parent = 0);
     virtual ~LayoutTab();
 
     double horizontalMargin() const;

@@ -27,7 +27,7 @@ namespace Kst {
 class CurveTab : public DataTab, Ui::CurveTab {
   Q_OBJECT
   public:
-    CurveTab(QWidget *parent = 0);
+    explicit CurveTab(QWidget *parent = 0);
     virtual ~CurveTab();
 
     VectorPtr xVector() const;

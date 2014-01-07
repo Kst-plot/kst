@@ -22,7 +22,7 @@ class BoxItem : public ViewItem
 {
   Q_OBJECT
   public:
-    BoxItem(View *parent);
+    explicit BoxItem(View *parent);
     virtual ~BoxItem();
 
     const QString defaultsGroupName() const {return BoxItem::staticDefaultsGroupName();}
