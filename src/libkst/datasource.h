@@ -351,7 +351,7 @@ class KSTCORE_EXPORT DataSourceConfigWidget : public QWidget
   Q_OBJECT
 
   public:
-    DataSourceConfigWidget(QSettings&); // will be reparented later
+    explicit DataSourceConfigWidget(QSettings&); // will be reparented later
     virtual ~DataSourceConfigWidget();
 
     QSettings& settings() const;
