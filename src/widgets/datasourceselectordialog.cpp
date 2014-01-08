@@ -27,7 +27,7 @@ DataSourceSelectorDialog::DataSourceSelectorDialog(QString &file, QWidget *paren
   selectFile(file);
   currentChanged(file);
 
-  connect(this, SIGNAL(currentChanged(const QString &)), this, SLOT(currentChanged(const QString &)));
+  connect(this, SIGNAL(currentChanged(QString)), this, SLOT(currentChanged(QString)));
 }
 
 

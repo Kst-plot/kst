@@ -36,7 +36,7 @@ OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
   connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_labelColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_useDefault, SIGNAL(toggled(bool)), this, SIGNAL(useDefaultChanged(bool)));
 
   connect(_bold, SIGNAL(toggled(bool)), this, SLOT(buttonUpdate()));

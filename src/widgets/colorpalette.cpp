@@ -23,8 +23,8 @@ ColorPalette::ColorPalette(QWidget *parent)
     : QWidget(parent) {
   setupUi(this);
 
-  connect(_palette, SIGNAL(highlighted(const QString&)), this, SLOT(updatePalette(const QString&)));
-  connect(_palette, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(updatePalette(const QString&)));
+  connect(_palette, SIGNAL(highlighted(QString)), this, SLOT(updatePalette(QString)));
+  connect(_palette, SIGNAL(currentIndexChanged(QString)), this, SLOT(updatePalette(QString)));
   connect(_palette, SIGNAL(currentIndexChanged(int)), this, SIGNAL(selectionChanged()));
 
   refresh(DefaultPalette);

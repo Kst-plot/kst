@@ -36,14 +36,14 @@ ScalarTab::ScalarTab(ObjectStore *store, QWidget *parent)
 
   setDataOptions();
 
-  connect(_scalarValue, SIGNAL(textChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_scalarValue, SIGNAL(textChanged(QString)), this, SLOT(entryChanged()));
   connect(_start, SIGNAL(valueChanged(int)), this, SLOT(entryChanged()));
   connect(_countFromEnd, SIGNAL(clicked()), this, SLOT(entryChanged()));
-  connect(_field, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
-  connect(_fieldRV, SIGNAL(editTextChanged(const QString&)), this, SLOT(entryChanged()));
+  connect(_field, SIGNAL(editTextChanged(QString)), this, SLOT(entryChanged()));
+  connect(_fieldRV, SIGNAL(editTextChanged(QString)), this, SLOT(entryChanged()));
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
   connect(_readFromRVector, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
-  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 }
 
@@ -222,7 +222,7 @@ void ScalarTab::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 

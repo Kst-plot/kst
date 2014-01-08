@@ -62,11 +62,11 @@ LegendTab::LegendTab(QWidget *parent)
   connect(_autoContents, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_displayVertically, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
-  connect(_title, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_title, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_fontSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
-  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_labelColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
   _displayedRelationList->setSortingEnabled(false);

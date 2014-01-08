@@ -56,8 +56,8 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_removeAll, SIGNAL(clicked()), this, SLOT(removeAll()));
   connect(_addAll, SIGNAL(clicked()), this, SLOT(addAll()));
 
-  connect(_changeFilePrimitiveList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
-  connect(_selectedFilePrimitiveList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(selectedDoubleClicked(QListWidgetItem *)));
+  connect(_changeFilePrimitiveList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
+  connect(_selectedFilePrimitiveList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(selectedDoubleClicked(QListWidgetItem*)));
 
   connect(_allFromFile, SIGNAL(clicked()), this, SLOT(selectAllFromFile()));
 
@@ -65,7 +65,7 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_selectedFilePrimitiveList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
   connect(_duplicateSelected, SIGNAL(toggled(bool)), _duplicateDependents, SLOT(setEnabled(bool)));
-  connect(_dataFile, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_dataFile, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_dataFile, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
@@ -303,7 +303,7 @@ void ChangeFileDialog::apply() {
     return;
   }
   // Hook the new datasource to the status message area to receive progress status
-  connect(_dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
+  connect(_dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
 
   // we need a list which preservs the order things are added, and a map to associate the duplicated
   // primitive with its duplicate.

@@ -42,8 +42,8 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
   _buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   layout->addWidget(_buttonBox);
 
-  connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
-          this, SLOT(buttonClicked(QAbstractButton *)));
+  connect(_buttonBox, SIGNAL(clicked(QAbstractButton*)),
+          this, SLOT(buttonClicked(QAbstractButton*)));
 
   setLayout(layout);
 

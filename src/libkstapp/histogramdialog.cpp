@@ -44,8 +44,8 @@ HistogramTab::HistogramTab(QWidget *parent)
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
 
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
-  connect(_min, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_max, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_min, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_max, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_numberOfBins, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_realTimeAutoBin, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_normalizationIsNumber, SIGNAL(clicked()), this, SIGNAL(modified()));

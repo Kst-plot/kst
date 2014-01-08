@@ -21,7 +21,7 @@ ScalarListSelector::ScalarListSelector(QWidget *parent)
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-  connect(_search, SIGNAL(textChanged(QString)), this, SLOT(filter(const QString&)));
+  connect(_search, SIGNAL(textChanged(QString)), this, SLOT(filter(QString)));
 }
 
 

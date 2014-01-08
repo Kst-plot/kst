@@ -60,7 +60,7 @@ void DataSourceSelector::setup() {
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   //connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SIGNAL(changed(const QString &)));
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(updateFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(QString)), this, SLOT(updateFile(QString)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
   QFileSystemModel *dirModel = new QFileSystemModel;

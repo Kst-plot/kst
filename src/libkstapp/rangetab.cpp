@@ -37,13 +37,13 @@ RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent)
   connect(_ySpike, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_yFixed, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 
-  connect(_xMin, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_xMax, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_xRange, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_xMin, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_xMax, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_xRange, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
 
-  connect(_yMin, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_yMax, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
-  connect(_yRange, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_yMin, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_yMax, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_yRange, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
 
   connect(this, SIGNAL(modified()), this, SLOT(updateButtons()));
 

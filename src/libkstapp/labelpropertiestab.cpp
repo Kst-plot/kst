@@ -50,7 +50,7 @@ LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
 
   connect(_labelText, SIGNAL(labelChanged()), this, SIGNAL(modified()));
   connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_labelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_labelColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_bold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));

@@ -51,8 +51,8 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
   connect(_up, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_down, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  connect(_availableRelationList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
-  connect(_displayedRelationList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(displayedDoubleClicked(QListWidgetItem *)));
+  connect(_availableRelationList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
+  connect(_displayedRelationList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(displayedDoubleClicked(QListWidgetItem*)));
 
   connect(_availableRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_displayedRelationList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));

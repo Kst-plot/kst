@@ -62,8 +62,8 @@ AxisTab::AxisTab(QWidget *parent)
   connect(_axisMajorTickSpacing, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_axisMajorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_axisMinorLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_axisMajorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
-  connect(_axisMinorLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_axisMajorLineColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
+  connect(_axisMinorLineColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_axisMajorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_axisMinorLineWidth, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_autoMinorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));

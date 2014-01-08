@@ -51,7 +51,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
 
   MainWindow::setWidgetFlags(this);
 
-  connect(_url, SIGNAL(changed(const QString&)), this, SLOT(sourceChanged(const QString&)));
+  connect(_url, SIGNAL(changed(QString)), this, SLOT(sourceChanged(QString)));
   connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
 
   if (default_source.isEmpty()) {
@@ -136,7 +136,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   _pageValid = true;
 
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
-  connect(_dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
+  connect(_dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
   _fileType->setText(_dataSource->fileType());  
 
   _dataSource->readLock();
@@ -164,7 +164,7 @@ void DataWizardPageDataSource::sourceChanged(const QString& file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 
@@ -193,7 +193,7 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   connect(_down, SIGNAL(clicked()), this, SLOT(down()));
   connect(_vectors, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(add()));
   connect(_vectorsToPlot, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(remove()));
-  connect(_vectorReduction, SIGNAL(textChanged(const QString&)), this, SLOT(filterVectors(const QString&)));
+  connect(_vectorReduction, SIGNAL(textChanged(QString)), this, SLOT(filterVectors(QString)));
   connect(_vectorSearch, SIGNAL(clicked()), this, SLOT(searchVectors()));
 
   _vectors->setSortingEnabled(false);
@@ -721,7 +721,7 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
   Q_ASSERT(_document);
 
   _pageDataSource = new DataWizardPageDataSource(_document->objectStore(), this, fileToOpen);
-  connect(_pageDataSource, SIGNAL(progress(int, QString)), mw, SLOT(updateProgress(int, QString)));
+  connect(_pageDataSource, SIGNAL(progress(int,QString)), mw, SLOT(updateProgress(int,QString)));
   _pageVectors = new DataWizardPageVectors(this);
   _pageDataPresentation = new DataWizardPageDataPresentation(_document->objectStore(), this);
   _pageFilters = new DataWizardPageFilters(this);

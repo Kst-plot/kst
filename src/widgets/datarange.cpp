@@ -23,8 +23,8 @@ DataRange::DataRange(QWidget *parent)
   connect(_readToEnd, SIGNAL(toggled(bool)), this, SLOT(readToEndChanged()));
   connect(_doSkip, SIGNAL(toggled(bool)), this, SLOT(doSkipChanged()));
 
-  connect(_start, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_range, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_start, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_range, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_skip, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_doFilter, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));

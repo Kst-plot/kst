@@ -62,8 +62,8 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
   connect(_globalLabelFontSize, SIGNAL(valueChanged(double)), this, SIGNAL(globalFontUpdate()));
   connect(_globalLabelBold, SIGNAL(toggled(bool)), this, SIGNAL(globalFontUpdate()));
   connect(_globalLabelItalic, SIGNAL(toggled(bool)), this, SIGNAL(globalFontUpdate()));
-  connect(_globalLabelFontFamily, SIGNAL(currentFontChanged(const QFont &)), this, SIGNAL(globalFontUpdate()));
-  connect(_globalLabelColor, SIGNAL(changed(const QColor &)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelFontFamily, SIGNAL(currentFontChanged(QFont)), this, SIGNAL(globalFontUpdate()));
+  connect(_globalLabelColor, SIGNAL(changed(QColor)), this, SIGNAL(globalFontUpdate()));
   connect(_globalLabelBold, SIGNAL(toggled(bool)), this, SLOT(buttonUpdate()));
   connect(_globalLabelItalic, SIGNAL(toggled(bool)), this, SLOT(buttonUpdate()));
 

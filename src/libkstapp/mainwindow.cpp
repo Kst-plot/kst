@@ -1816,8 +1816,8 @@ void MainWindow::showDebugDialog() {
 void MainWindow::showExportGraphicsDialog() {
   if (!_exportGraphics) {
     _exportGraphics = new ExportGraphicsDialog(this);
-    connect(_exportGraphics, SIGNAL(exportGraphics(const QString &, const QString &, int, int, int)),
-            this, SLOT(exportGraphicsFile(const QString &, const QString &, int, int, int)));
+    connect(_exportGraphics, SIGNAL(exportGraphics(QString,QString,int,int,int)),
+            this, SLOT(exportGraphicsFile(QString,QString,int,int,int)));
   }
   if (_exportGraphics->isVisible()) {
     _exportGraphics->raise();
@@ -1917,7 +1917,7 @@ void MainWindow::showChangeDataSampleDialog() {
 
 void MainWindow::showDataWizard() {
   DataWizard *dataWizard = new DataWizard(this);
-  connect(dataWizard, SIGNAL(dataSourceLoaded(const QString&)), this, SLOT(updateRecentDataFiles(const QString&)));
+  connect(dataWizard, SIGNAL(dataSourceLoaded(QString)), this, SLOT(updateRecentDataFiles(QString)));
   dataWizard->show();
 }
 
@@ -1932,7 +1932,7 @@ void MainWindow::openRecentDataFile()
   QAction *action = qobject_cast<QAction *>(sender());
   if (action) {
     DataWizard *dataWizard = new DataWizard(this, action->data().toString());
-    connect(dataWizard, SIGNAL(dataSourceLoaded(const QString&)), this, SLOT(updateRecentDataFiles(const QString&)));
+    connect(dataWizard, SIGNAL(dataSourceLoaded(QString)), this, SLOT(updateRecentDataFiles(QString)));
     dataWizard->show();
   }
 }

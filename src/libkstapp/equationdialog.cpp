@@ -45,12 +45,12 @@ EquationTab::EquationTab(QWidget *parent)
   TextLabel1_11->setBuddy(_equation);
   _xVectorLabel->setBuddy(_xVectors->_vector);
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
-  connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
+  connect(_equation, SIGNAL(textChanged(QString)), this, SLOT(selectionChanged()));
 
   //connect(_xVectors, SIGNAL(contentChanged()), this, SLOT(updateVectorCombos()));
 
   connect(_xVectors, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
-  connect(_equation, SIGNAL(textChanged(const QString &)), this, SIGNAL(modified()));
+  connect(_equation, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_doInterpolation, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this->_equation, SLOT(fillKstObjects()));

@@ -44,7 +44,7 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   setTabTitle(tr("Matrix"));
 
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
-  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 
   connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SLOT(xStartCountFromEndClicked()));
@@ -63,12 +63,12 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_skip, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_nX, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_nY, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_gradientZAtMin, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_gradientZAtMax, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_minX, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_minY, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_xStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_yStep, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_gradientZAtMin, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_gradientZAtMax, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_minX, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_minY, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_xStep, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_yStep, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_xStartCountFromEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_yStartCountFromEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_xNumStepsReadToEnd, SIGNAL(clicked()), this, SIGNAL(modified()));
@@ -565,7 +565,7 @@ void MatrixTab::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   validating = true;
   QThreadPool::globalInstance()->start(validateDSThread);
 }

@@ -34,14 +34,14 @@ MarkersTab::MarkersTab(QWidget *parent)
   connect(_curveMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));
   connect(_vectorMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));
   connect(_currentMarkersList, SIGNAL(itemSelectionChanged()), this, SLOT(update()));
-  connect(_newMarker, SIGNAL(textChanged(const QString&)), this, SLOT(update()));
+  connect(_newMarker, SIGNAL(textChanged(QString)), this, SLOT(update()));
 
   connect(_markerLineStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_markerLineColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_markerLineColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_curveMarkers, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_vectorMarkers, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-  connect(_vector, SIGNAL(selectionChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_curve, SIGNAL(selectionChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
+  connect(_curve, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_risingEdge, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_fallingEdge, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_both, SIGNAL(toggled(bool)), this, SIGNAL(modified()));

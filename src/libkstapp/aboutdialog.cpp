@@ -75,7 +75,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   << QString("</ul>");
   
   text->setText(msg.join("\n"));
-  connect(text, SIGNAL(anchorClicked(const QUrl &)), this, SLOT(launchURL(const QUrl&)));
+  connect(text, SIGNAL(anchorClicked(QUrl)), this, SLOT(launchURL(QUrl)));
 }
 
 

@@ -55,7 +55,7 @@ StrokeTab::StrokeTab(QWidget *parent)
 
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
-  connect(_brushColor, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_brushColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_brushStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_joinStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_capStyle, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));

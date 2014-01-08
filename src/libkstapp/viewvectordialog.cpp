@@ -45,8 +45,8 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   // Custom context menu for the remove action and display format
   setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-          this, SLOT(contextMenu(const QPoint&)));
+  connect(this, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(contextMenu(QPoint)));
 
   connect(_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 

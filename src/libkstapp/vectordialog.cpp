@@ -39,14 +39,14 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
 
   connect(_generatedVectorGroup, SIGNAL(clicked(bool)), this, SLOT(generateClicked()));
   connect(_dataVectorGroup, SIGNAL(clicked(bool)), this, SLOT(readFromSourceClicked()));
-  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
-  connect(_field, SIGNAL(editTextChanged(const QString &)), this, SIGNAL(fieldChanged()));
+  connect(_field, SIGNAL(editTextChanged(QString)), this, SIGNAL(fieldChanged()));
 
   connect(_dataRange, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_numberOfSamples, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
-  connect(_from, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_to, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_from, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_to, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
 
   // embed data range in the data source box
   _dataRange->groupBox2->setFlat(true);
@@ -303,7 +303,7 @@ void VectorTab::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   validating = true;
   QThreadPool::globalInstance()->start(validateDSThread);
 }
@@ -467,7 +467,7 @@ ObjectPtr VectorDialog::createNewDataVector() {
   if (!dataSource)
     return 0;
 
-  connect(dataSource, SIGNAL(progress(int, QString)), kstApp->mainWindow(), SLOT(updateProgress(int, QString)));
+  connect(dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
 
   const QString field = _vectorTab->field();
   const DataRange *dataRange = _vectorTab->dataRange();

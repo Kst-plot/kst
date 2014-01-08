@@ -35,8 +35,8 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
 
   connect(_generatedStringGroup, SIGNAL(toggled(bool)), this, SLOT(generateClicked()));
   connect(_dataStringGroup, SIGNAL(toggled(bool)), this, SLOT(readFromSourceClicked()));
-  connect(_stringValue, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
-  connect(_fileName, SIGNAL(changed(const QString &)), this, SLOT(fileNameChanged(const QString &)));
+  connect(_stringValue, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
+  connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
 }
 
@@ -180,7 +180,7 @@ void StringTab::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 

@@ -49,7 +49,7 @@ void FileRequester::setup() {
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-  connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SLOT(updateFile(const QString &)));
+  connect (_fileEdit, SIGNAL(textChanged(QString)), this, SLOT(updateFile(QString)));
   connect (_fileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
   QFileSystemModel *dirModel = new QFileSystemModel(this);

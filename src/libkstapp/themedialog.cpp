@@ -49,8 +49,8 @@ ThemeDialog::ThemeDialog(QWidget *parent) : QDialog(parent) {
   vbox2->addWidget(_strokeTab);
   _strokeBox->setLayout(vbox2);
 
-  connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
-          this, SLOT(buttonClicked(QAbstractButton *)));
+  connect(_buttonBox, SIGNAL(clicked(QAbstractButton*)),
+          this, SLOT(buttonClicked(QAbstractButton*)));
 
   _bold->setFixedWidth(32);
   _bold->setFixedHeight(32);

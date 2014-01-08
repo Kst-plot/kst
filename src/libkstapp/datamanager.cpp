@@ -76,9 +76,9 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _session->setSortingEnabled(true);
   _session->sortByColumn(1); // Sort by type by default
   _session->setUniformRowHeights(true);
-  connect(_session, SIGNAL(customContextMenuRequested(const QPoint &)),
-          this, SLOT(showContextMenu(const QPoint &)));
-  connect(_session, SIGNAL(doubleClicked(const QModelIndex &)),
+  connect(_session, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(showContextMenu(QPoint)));
+  connect(_session, SIGNAL(doubleClicked(QModelIndex)),
           this, SLOT(showEditDialog(QModelIndex)));
 
   // Simple keyboard shortcut for fast object deletion

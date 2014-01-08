@@ -26,7 +26,7 @@ BadDatasourceDialog::BadDatasourceDialog(QString *filename, ObjectStore *store, 
   : QDialog(parent), _store(store), _dataSource(0), _requestID(0), _fileName(filename)  {
    setupUi(this);
 
-   connect(_url, SIGNAL(changed(const QString&)), this, SLOT(fileNameChanged(const QString&)));
+   connect(_url, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
    connect(_configureSource, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
    connect(_skip, SIGNAL(clicked()), this, SLOT(skip()));
    connect(_change, SIGNAL(clicked()), this, SLOT(change()));
@@ -58,7 +58,7 @@ void BadDatasourceDialog::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 

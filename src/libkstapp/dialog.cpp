@@ -30,11 +30,11 @@ Dialog::Dialog(QWidget *parent)
 
   extensionWidget()->hide();
 
-  connect(_listWidget, SIGNAL(itemClicked(QListWidgetItem *)),
-          this, SLOT(selectPageForItem(QListWidgetItem *)));
+  connect(_listWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+          this, SLOT(selectPageForItem(QListWidgetItem*)));
 
-  connect(_buttonBox, SIGNAL(clicked(QAbstractButton *)),
-          this, SLOT(buttonClicked(QAbstractButton *)));
+  connect(_buttonBox, SIGNAL(clicked(QAbstractButton*)),
+          this, SLOT(buttonClicked(QAbstractButton*)));
 
   setAttribute(Qt::WA_DeleteOnClose);
 

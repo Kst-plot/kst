@@ -183,8 +183,8 @@ QMap<QString, QString> DataSource::fileMetas() const
 
 void DataSource::resetFileWatcher() {
   if (_watcher) {
-    disconnect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-    disconnect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+    disconnect(_watcher, SIGNAL(fileChanged(QString)), this, SLOT(checkUpdate()));
+    disconnect(_watcher, SIGNAL(directoryChanged(QString)), this, SLOT(checkUpdate()));
     delete _watcher;
     _watcher = 0L;
   }
@@ -231,8 +231,8 @@ void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
     _watcher = new QFileSystemWatcher();
     const QString usedfile = (file.isEmpty() ? _filename : file);      
     _watcher->addPath(usedfile);
-    connect(_watcher, SIGNAL(fileChanged ( const QString & )), this, SLOT(checkUpdate()));
-    connect(_watcher, SIGNAL(directoryChanged ( const QString & )), this, SLOT(checkUpdate()));
+    connect(_watcher, SIGNAL(fileChanged(QString)), this, SLOT(checkUpdate()));
+    connect(_watcher, SIGNAL(directoryChanged(QString)), this, SLOT(checkUpdate()));
   }
 }
 

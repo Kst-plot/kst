@@ -30,19 +30,19 @@ EventMonitorTab::EventMonitorTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Event Monitor"));
 
-  connect(_equation, SIGNAL(textChanged(const QString &)), this, SLOT(selectionChanged()));
-  connect(_equationOperator, SIGNAL(currentIndexChanged(QString)), this, SLOT(equationOperatorUpdate(const QString&)));
-  connect(_vectorSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
-  connect(_scalarSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(const QString&)));
+  connect(_equation, SIGNAL(textChanged(QString)), this, SLOT(selectionChanged()));
+  connect(_equationOperator, SIGNAL(currentIndexChanged(QString)), this, SLOT(equationOperatorUpdate(QString)));
+  connect(_vectorSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(QString)));
+  connect(_scalarSelector, SIGNAL(selectionChanged(QString)), this, SLOT(equationUpdate(QString)));
 
-  connect(_debugLog, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_emailNotify, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_ELOGNotify, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_executeScript, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+  connect(_debugLog, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_emailNotify, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_ELOGNotify, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_executeScript, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 
-  connect(_equation, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_description, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_emailRecipients, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_equation, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_description, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_emailRecipients, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_script, SIGNAL(textChanged()), this, SIGNAL(modified()));
 
   connect(_debugLogNotice, SIGNAL(clicked()), this, SIGNAL(modified()));

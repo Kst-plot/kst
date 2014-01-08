@@ -38,24 +38,24 @@ ImageTab::ImageTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Image"));
 
-  connect(_realTimeAutoThreshold, SIGNAL(toggled(const bool&)), this, SLOT(realTimeAutoThresholdToggled(const bool&)));
-  connect(_colorOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
-  connect(_colorAndContour, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
-  connect(_contourOnly, SIGNAL(toggled(const bool&)), this, SLOT(updateEnabled(const bool&)));
+  connect(_realTimeAutoThreshold, SIGNAL(toggled(bool)), this, SLOT(realTimeAutoThresholdToggled(bool)));
+  connect(_colorOnly, SIGNAL(toggled(bool)), this, SLOT(updateEnabled(bool)));
+  connect(_colorAndContour, SIGNAL(toggled(bool)), this, SLOT(updateEnabled(bool)));
+  connect(_contourOnly, SIGNAL(toggled(bool)), this, SLOT(updateEnabled(bool)));
   connect(_autoThreshold, SIGNAL(clicked()), this, SLOT(calculateAutoThreshold()));
   connect(_smartThreshold, SIGNAL(clicked()), this, SLOT(calculateSmartThreshold()));
 
   connect(_matrix, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 
   connect(_matrix, SIGNAL(selectionChanged()), this, SIGNAL(modified()));
-  connect(_colorOnly, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_colorAndContour, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_contourOnly, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
-  connect(_lowerThreshold, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_upperThreshold, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_realTimeAutoThreshold, SIGNAL(toggled(const bool&)), this, SIGNAL(modified()));
+  connect(_colorOnly, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_colorAndContour, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_contourOnly, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_lowerThreshold, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_upperThreshold, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_realTimeAutoThreshold, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 
-  connect(_contourColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_contourColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_numContourLines, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_contourWeight, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_useVariableWeight, SIGNAL(clicked()), this, SIGNAL(modified()));

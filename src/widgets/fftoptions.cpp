@@ -31,9 +31,9 @@ FFTOptions::FFTOptions(QWidget *parent)
   connect(_removeMean, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_interleavedAverage, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_interpolateOverHoles, SIGNAL(clicked()), this, SIGNAL(modified()));
-  connect(_sampleRate, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_vectorUnits, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
-  connect(_rateUnits, SIGNAL(textChanged(const QString&)), this, SIGNAL(modified()));
+  connect(_sampleRate, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_vectorUnits, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_rateUnits, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_sigma, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_FFTLength, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 

@@ -39,9 +39,9 @@ FillTab::FillTab(QWidget *parent)
   _style->addItem("FDiagPattern", (int)Qt::FDiagPattern);
   _style->addItem("DiagCrossPattern", (int)Qt::DiagCrossPattern);
 
-  connect(_color, SIGNAL(changed(const QColor &)), this, SIGNAL(modified()));
+  connect(_color, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
-  connect(_gradientEditor, SIGNAL(changed(const QGradient &)), this, SIGNAL(modified()));
+  connect(_gradientEditor, SIGNAL(changed(QGradient)), this, SIGNAL(modified()));
   connect(_gradientReset, SIGNAL(pressed()), this, SIGNAL(modified()));
   connect(_useGradient, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_gradientReset, SIGNAL(pressed()), _gradientEditor, SLOT(resetGradient()));

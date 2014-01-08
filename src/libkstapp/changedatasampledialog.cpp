@@ -44,8 +44,8 @@ ChangeDataSampleDialog::ChangeDataSampleDialog(QWidget *parent)
   connect(_removeAll, SIGNAL(clicked()), this, SLOT(removeAll()));
   connect(_addAll, SIGNAL(clicked()), this, SLOT(addAll()));
 
-  connect(_vectorList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(availableDoubleClicked(QListWidgetItem *)));
-  connect(_selectedVectorList, SIGNAL(itemDoubleClicked ( QListWidgetItem * )), this, SLOT(selectedDoubleClicked(QListWidgetItem *)));
+  connect(_vectorList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
+  connect(_selectedVectorList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(selectedDoubleClicked(QListWidgetItem*)));
 
   connect(_vectorList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_selectedVectorList, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));

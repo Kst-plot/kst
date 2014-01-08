@@ -33,14 +33,14 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_showBars, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
   connect(_showHead, SIGNAL(stateChanged(int)), this, SLOT(enableSettings()));
 
-  connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populateSymbolCombos()));
-  connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(populateLineStyleCombo()));
-  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(populateSymbolCombos()));
-  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(populateLineStyleCombo()));
+  connect(_color, SIGNAL(changed(QColor)), this, SLOT(populateSymbolCombos()));
+  connect(_color, SIGNAL(changed(QColor)), this, SLOT(populateLineStyleCombo()));
+  connect(_headColor, SIGNAL(changed(QColor)), this, SLOT(populateSymbolCombos()));
+  connect(_headColor, SIGNAL(changed(QColor)), this, SLOT(populateLineStyleCombo()));
 
-  connect(_color, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
-  connect(_headColor, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
-  connect(_barFillColor, SIGNAL(changed(const QColor&)), this, SLOT(drawSampleLine()));
+  connect(_color, SIGNAL(changed(QColor)), this, SLOT(drawSampleLine()));
+  connect(_headColor, SIGNAL(changed(QColor)), this, SLOT(drawSampleLine()));
+  connect(_barFillColor, SIGNAL(changed(QColor)), this, SLOT(drawSampleLine()));
   connect(_showLines, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showPoints, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
   connect(_showHead, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
@@ -51,9 +51,9 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_spinBoxPointSize, SIGNAL(valueChanged(double)), this, SLOT(drawSampleLine()));
   connect(_showBars, SIGNAL(clicked()), this, SLOT(drawSampleLine()));
 
-  connect(_color, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
-  connect(_headColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
-  connect(_barFillColor, SIGNAL(changed(const QColor&)), this, SIGNAL(modified()));
+  connect(_color, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
+  connect(_headColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
+  connect(_barFillColor, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_showLines, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showPoints, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_showHead, SIGNAL(clicked()), this, SIGNAL(modified()));
