@@ -1,0 +1,4 @@
+This file has non-functioning data sources from kst1.x which have not been
+ported, and which do not compile.  If you decide to port them, feel free to 
+move them back to datasources.
+
