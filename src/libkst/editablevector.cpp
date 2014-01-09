@@ -34,7 +34,7 @@ EditableVector::EditableVector(ObjectStore *store)
 
 
 const QString& EditableVector::typeString() const {
-  return tr(staticTypeString.toLatin1());
+  return staticTypeString;
 }
 
 
