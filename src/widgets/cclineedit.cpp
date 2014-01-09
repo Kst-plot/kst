@@ -623,8 +623,8 @@ void SVCCLineEdit::fillKstObjects()
         _cc->_tableView->setFixedWidth(_cc->_tableView->width());
     }
 
-    ScalarList::ConstIterator scalarIt = scalarList.begin();
-    for (; scalarIt != scalarList.end(); ++scalarIt) {
+    ScalarList::ConstIterator scalarIt = scalarList.constBegin();
+    for (; scalarIt != scalarList.constEnd(); ++scalarIt) {
         ScalarPtr scalar = (*scalarIt);
 
         scalar->readLock();
@@ -635,8 +635,8 @@ void SVCCLineEdit::fillKstObjects()
         scalar->unlock();
     }
 
-    VectorList::ConstIterator vectorIt = vectorList.begin();
-    for (; vectorIt != vectorList.end(); ++vectorIt) {
+    VectorList::ConstIterator vectorIt = vectorList.constBegin();
+    for (; vectorIt != vectorList.constEnd(); ++vectorIt) {
         VectorPtr vector = (*vectorIt);
 
         vector->readLock();
@@ -670,8 +670,8 @@ void SVCCTextEdit::fillKstObjects()
     ScalarList scalarList = _store->getObjects<Scalar>();
     StringList stringList = _store->getObjects<String>();
 
-        ScalarList::ConstIterator scalarIt = scalarList.begin();
-        for (; scalarIt != scalarList.end(); ++scalarIt) {
+        ScalarList::ConstIterator scalarIt = scalarList.constBegin();
+        for (; scalarIt != scalarList.constEnd(); ++scalarIt) {
             ScalarPtr scalar = (*scalarIt);
 
             scalar->readLock();
@@ -681,8 +681,8 @@ void SVCCTextEdit::fillKstObjects()
 
     _svData->back().push_back(Category("Strings"));
 
-    StringList::ConstIterator stringIt = stringList.begin();
-    for (; stringIt != stringList.end(); ++stringIt) {
+    StringList::ConstIterator stringIt = stringList.constBegin();
+    for (; stringIt != stringList.constEnd(); ++stringIt) {
         StringPtr string = (*stringIt);
 
         string->readLock();

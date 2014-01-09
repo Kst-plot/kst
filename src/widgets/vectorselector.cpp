@@ -207,8 +207,8 @@ void VectorSelector::fillVectors() {
 
   VectorList vectorList = _store->getObjects<Vector>();
 
-  VectorList::ConstIterator it = vectorList.begin();
-  for (; it != vectorList.end(); ++it) {
+  VectorList::ConstIterator it = vectorList.constBegin();
+  for (; it != vectorList.constEnd(); ++it) {
     VectorPtr vector = (*it);
     if (vector->isScalarList())
       continue;

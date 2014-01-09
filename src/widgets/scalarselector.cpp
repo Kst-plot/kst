@@ -236,8 +236,8 @@ void ScalarSelector::fillScalars() {
 
   ScalarList scalarList = _store->getObjects<Scalar>();
 
-  ScalarList::ConstIterator it = scalarList.begin();
-  for (; it != scalarList.end(); ++it) {
+  ScalarList::ConstIterator it = scalarList.constBegin();
+  for (; it != scalarList.constEnd(); ++it) {
     ScalarPtr scalar = (*it);
 
     scalar->readLock();

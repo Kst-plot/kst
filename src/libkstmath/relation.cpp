@@ -211,11 +211,11 @@ void Relation::writeLockInputsAndOutputs() const {
   qSort(inputs);
   qSort(outputs);
 
-  QList<PrimitivePtr>::ConstIterator inputIt = inputs.begin();
-  QList<PrimitivePtr>::ConstIterator outputIt = outputs.begin();
+  QList<PrimitivePtr>::ConstIterator inputIt = inputs.constBegin();
+  QList<PrimitivePtr>::ConstIterator outputIt = outputs.constBegin();
 
-  while (inputIt != inputs.end() || outputIt != outputs.end()) {
-    if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
+  while (inputIt != inputs.constEnd() || outputIt != outputs.constEnd()) {
+    if (inputIt != inputs.constEnd() && (outputIt == outputs.constEnd() || (void*)(*inputIt) < (void*)(*outputIt))) {
       // do input
       if (!(*inputIt)) {
         qWarning() << "Input for data object " << this->Name() << " is invalid." << endl;
@@ -247,7 +247,7 @@ void Relation::unlockInputsAndOutputs() const {
   qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _outputMatrices.constBegin(); i != _outputMatrices.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output matrix for data object " << this->Name() << " is invalid." << endl;
     }
@@ -257,7 +257,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (MatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _inputMatrices.constBegin(); i != _inputMatrices.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input matrix for data object " << this->Name() << " is invalid." << endl;
     }
@@ -267,7 +267,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (VectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
+  for (VectorMap::ConstIterator i = _outputVectors.constBegin(); i != _outputVectors.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output vector for data object " << this->Name() << " is invalid." << endl;
     }
@@ -277,7 +277,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (VectorMap::ConstIterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
+  for (VectorMap::ConstIterator i = _inputVectors.constBegin(); i != _inputVectors.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input vector for data object " << this->Name() << " is invalid." << endl;
     }
@@ -287,7 +287,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (ScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
+  for (ScalarMap::ConstIterator i = _outputScalars.constBegin(); i != _outputScalars.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output scalar for data object " << this->Name() << " is invalid." << endl;
     }
@@ -297,7 +297,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (ScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
+  for (ScalarMap::ConstIterator i = _inputScalars.constBegin(); i != _inputScalars.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input scalar for data object " << this->Name() << " is invalid." << endl;
     }
@@ -307,7 +307,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _outputStrings.constBegin(); i != _outputStrings.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output string for data object " << this->Name() << " is invalid." << endl;
     }
@@ -317,7 +317,7 @@ void Relation::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (StringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _inputStrings.constBegin(); i != _inputStrings.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input string for data object " << this->Name() << " is invalid." << endl;
     }
@@ -332,13 +332,13 @@ void Relation::unlockInputsAndOutputs() const {
 bool Relation::uses(ObjectPtr p) const {
   VectorPtr v = kst_cast<Vector>(p);
   if (v) {
-    for (VectorMap::ConstIterator j = _inputVectors.begin(); j != _inputVectors.end(); ++j) {
+    for (VectorMap::ConstIterator j = _inputVectors.constBegin(); j != _inputVectors.constEnd(); ++j) {
       if (j.value() == v) {
         return true;
       }
     }
     QHashIterator<QString, ScalarPtr> scalarDictIter(v->scalars());
-    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+    for (ScalarMap::ConstIterator j = _inputScalars.constBegin(); j != _inputScalars.constEnd(); ++j) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
         if (scalarDictIter.value() == j.value()) {
@@ -347,7 +347,7 @@ bool Relation::uses(ObjectPtr p) const {
       }
     }
     QHashIterator<QString, StringPtr> stringDictIter(v->strings());
-    for (StringMap::ConstIterator j = _inputStrings.begin(); j != _inputStrings.end(); ++j) {
+    for (StringMap::ConstIterator j = _inputStrings.constBegin(); j != _inputStrings.constEnd(); ++j) {
       while (stringDictIter.hasNext()) {
         stringDictIter.next();
         if (stringDictIter.value() == j.value()) {
@@ -356,13 +356,13 @@ bool Relation::uses(ObjectPtr p) const {
       }
     }
   } else if (MatrixPtr matrix = kst_cast<Matrix>(p)) {
-    for (MatrixMap::ConstIterator j = _inputMatrices.begin(); j != _inputMatrices.end(); ++j) {
+    for (MatrixMap::ConstIterator j = _inputMatrices.constBegin(); j != _inputMatrices.constEnd(); ++j) {
       if (j.value() == matrix) {
         return true;
       }
     }
     QHashIterator<QString, ScalarPtr> scalarDictIter(matrix->scalars());
-    for (ScalarMap::ConstIterator j = _inputScalars.begin(); j != _inputScalars.end(); ++j) {
+    for (ScalarMap::ConstIterator j = _inputScalars.constBegin(); j != _inputScalars.constEnd(); ++j) {
       while (scalarDictIter.hasNext()) {
         scalarDictIter.next();
         if (scalarDictIter.value() == j.value()) {
@@ -373,14 +373,14 @@ bool Relation::uses(ObjectPtr p) const {
   } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
     // check all connections from this object to p
     for (VectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
-      for (VectorMap::ConstIterator k = _inputVectors.begin(); k != _inputVectors.end(); ++k) {
+      for (VectorMap::ConstIterator k = _inputVectors.constBegin(); k != _inputVectors.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }
       }
       // also check dependencies on vector stats
       QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      for (ScalarMap::ConstIterator k = _inputScalars.constBegin(); k != _inputScalars.constEnd(); ++k) {
         while (scalarDictIter.hasNext()) {
           scalarDictIter.next();
           if (scalarDictIter.value() == k.value()) {
@@ -390,7 +390,7 @@ bool Relation::uses(ObjectPtr p) const {
       }
       // also check dependencies on vector strings
       QHashIterator<QString, StringPtr> stringDictIter(j.value()->strings());
-      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+      for (StringMap::ConstIterator k = _inputStrings.constBegin(); k != _inputStrings.constEnd(); ++k) {
         while (stringDictIter.hasNext()) {
           stringDictIter.next();
           if (stringDictIter.value() == k.value()) {
@@ -401,14 +401,14 @@ bool Relation::uses(ObjectPtr p) const {
     }
 
     for (MatrixMap::Iterator j = obj->outputMatrices().begin(); j != obj->outputMatrices().end(); ++j) {
-      for (MatrixMap::ConstIterator k = _inputMatrices.begin(); k != _inputMatrices.end(); ++k) {
+      for (MatrixMap::ConstIterator k = _inputMatrices.constBegin(); k != _inputMatrices.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }
       }
       // also check dependencies on vector stats
       QHashIterator<QString, ScalarPtr> scalarDictIter(j.value()->scalars());
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      for (ScalarMap::ConstIterator k = _inputScalars.constBegin(); k != _inputScalars.constEnd(); ++k) {
         while (scalarDictIter.hasNext()) {
           scalarDictIter.next();
           if (scalarDictIter.value() == k.value()) {
@@ -419,7 +419,7 @@ bool Relation::uses(ObjectPtr p) const {
     }
 
     for (ScalarMap::Iterator j = obj->outputScalars().begin(); j != obj->outputScalars().end(); ++j) {
-      for (ScalarMap::ConstIterator k = _inputScalars.begin(); k != _inputScalars.end(); ++k) {
+      for (ScalarMap::ConstIterator k = _inputScalars.constBegin(); k != _inputScalars.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }
@@ -427,7 +427,7 @@ bool Relation::uses(ObjectPtr p) const {
     }
 
     for (StringMap::Iterator j = obj->outputStrings().begin(); j != obj->outputStrings().end(); ++j) {
-      for (StringMap::ConstIterator k = _inputStrings.begin(); k != _inputStrings.end(); ++k) {
+      for (StringMap::ConstIterator k = _inputStrings.constBegin(); k != _inputStrings.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }

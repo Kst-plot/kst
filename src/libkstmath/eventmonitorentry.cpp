@@ -104,7 +104,7 @@ bool EventMonitorEntry::reparse() {
       StringMap stm;
       _pExpression->collectObjects(_vectorsUsed, _inputScalars, stm);
 
-      for (ScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
+      for (ScalarMap::ConstIterator i = _inputScalars.constBegin(); i != _inputScalars.constEnd(); ++i) {
         if ((*i)->myLockStatus() == KstRWLock::UNLOCKED) {
           (*i)->readLock();
         }
@@ -154,7 +154,7 @@ void EventMonitorEntry::internalUpdate() {
   VectorPtr yv = *_yVector;
   int ns = 1;
 
-  for (VectorMap::ConstIterator i = _vectorsUsed.begin(); i != _vectorsUsed.end(); ++i) {
+  for (VectorMap::ConstIterator i = _vectorsUsed.constBegin(); i != _vectorsUsed.constEnd(); ++i) {
     ns = qMax(ns, i.value()->length());
   }
 
@@ -423,8 +423,8 @@ bool EventMonitorEntry::uses(ObjectPtr p) const {
     }
   } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
     // check all connections from this expression to p
-    for (VectorMap::ConstIterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
-      for (VectorMap::ConstIterator k = _vectorsUsed.begin(); k != _vectorsUsed.end(); ++k) {
+    for (VectorMap::ConstIterator j = obj->outputVectors().constBegin(); j != obj->outputVectors().constEnd(); ++j) {
+      for (VectorMap::ConstIterator k = _vectorsUsed.constBegin(); k != _vectorsUsed.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }

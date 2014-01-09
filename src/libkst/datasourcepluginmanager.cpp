@@ -210,7 +210,7 @@ QStringList DataSourcePluginManager::pluginList() {
   init();
 
   QStringList plugins;
-  for (PluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (PluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     plugins += (*it).plugin->pluginName();
   }
 
@@ -220,12 +220,12 @@ QStringList DataSourcePluginManager::pluginList() {
 
 QString DataSourcePluginManager::pluginFileName(const QString& pluginName)
 {
-  for (PluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (PluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if (it->plugin->pluginName() == pluginName) {
       return it->filePath;
     }
   }
-  return "not avaolable";
+  return "not available";
 }
 
 
@@ -394,7 +394,7 @@ bool DataSourcePluginManager::pluginHasConfigWidget(const QString& plugin) {
 
   PluginList info = _pluginList;
 
-  for (PluginList::ConstIterator it = info.begin(); it != info.end(); ++it) {
+  for (PluginList::ConstIterator it = info.constBegin(); it != info.constEnd(); ++it) {
     if ((*it).plugin->pluginName() == plugin) {
       return (*it).plugin->hasConfigWidget();
     }

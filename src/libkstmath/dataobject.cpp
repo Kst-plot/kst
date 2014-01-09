@@ -257,7 +257,7 @@ QStringList DataObject::pluginList() {
 
   QStringList plugins;
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     plugins += (*it)->pluginName();
   }
 
@@ -271,7 +271,7 @@ QStringList DataObject::dataObjectPluginList() {
 
   QStringList plugins;
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginType() == DataObjectPluginInterface::Generic) {
       plugins += (*it)->pluginName();
     }
@@ -288,7 +288,7 @@ QStringList DataObject::filterPluginList() {
 
   QStringList plugins;
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginType() == DataObjectPluginInterface::Filter) {
       plugins += (*it)->pluginName();
     }
@@ -305,7 +305,7 @@ QStringList DataObject::fitsPluginList() {
 
   QStringList plugins;
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginType() == DataObjectPluginInterface::Fit) {
       plugins += (*it)->pluginName();
     }
@@ -320,7 +320,7 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   // Ensure state.  When using kstapp MainWindow calls init.
   init();
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
         return (*it)->configWidget(&settingsObject());
@@ -336,7 +336,7 @@ QString DataObject::pluginDescription(const QString& name) {
   // Ensure state.  When using kstapp MainWindow calls init.
   init();
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginName() == name) {
       return (*it)->pluginDescription();
     }
@@ -349,7 +349,7 @@ int DataObject::pluginType(const QString& name) {
   // Ensure state.  When using kstapp MainWindow calls init.
   init();
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginName() == name) {
       return (*it)->pluginType();
     }
@@ -362,7 +362,7 @@ DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, 
   // Ensure state.  When using kstapp MainWindow calls init.
   init();
 
-  for (DataObjectPluginList::ConstIterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginName() == name) {
       if (DataObjectPtr object = (*it)->create(store, configWidget, setupInputsOutputs)) {
         return object;
@@ -372,7 +372,7 @@ DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, 
 
 #if 0
   KService::List sl = KServiceTypeTrader::self()->query("Kst Data Object");
-  for (KService::List::ConstIterator it = sl.begin(); it != sl.end(); ++it) {
+  for (KService::List::ConstIterator it = sl.constBegin(); it != sl.constEnd(); ++it) {
     if ((*it)->name() != name) {
       continue;
     } else if (DataObjectPtr object = createPlugin(*it)) {
@@ -410,25 +410,25 @@ void DataObject::save(QXmlStreamWriter& ts) {
 int DataObject::getUsage() const {
   int rc = 0;
 
-  for (VectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
+  for (VectorMap::ConstIterator i = _outputVectors.constBegin(); i != _outputVectors.constEnd(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;
     }
   }
 
-  for (ScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
+  for (ScalarMap::ConstIterator i = _outputScalars.constBegin(); i != _outputScalars.constEnd(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;
     }
   }
 
-  for (StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _outputStrings.constBegin(); i != _outputStrings.constEnd(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;
     }
   }
 
-  for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _outputMatrices.constBegin(); i != _outputMatrices.constEnd(); ++i) {
     if (i.value().data()) {
       rc += i.value()->getUsage() - 1;
     }
@@ -523,11 +523,11 @@ void DataObject::writeLockInputsAndOutputs() const {
   qSort(inputs);
   qSort(outputs);
 
-  QList<PrimitivePtr>::ConstIterator inputIt = inputs.begin();
-  QList<PrimitivePtr>::ConstIterator outputIt = outputs.begin();
+  QList<PrimitivePtr>::ConstIterator inputIt = inputs.constBegin();
+  QList<PrimitivePtr>::ConstIterator outputIt = outputs.constBegin();
 
-  while (inputIt != inputs.end() || outputIt != outputs.end()) {
-    if (inputIt != inputs.end() && (outputIt == outputs.end() || (void*)(*inputIt) < (void*)(*outputIt))) {
+  while (inputIt != inputs.constEnd() || outputIt != outputs.constEnd()) {
+    if (inputIt != inputs.constEnd() && (outputIt == outputs.constEnd() || (void*)(*inputIt) < (void*)(*outputIt))) {
       // do input
       if (!(*inputIt)) {
         qWarning() << "Input for data object " << this->Name() << " is invalid." << endl;
@@ -561,7 +561,7 @@ void DataObject::unlockInputsAndOutputs() const {
   qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
-  for (MatrixMap::ConstIterator i = _outputMatrices.begin(); i != _outputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _outputMatrices.constBegin(); i != _outputMatrices.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output matrix for data object " << this->Name() << " is invalid." << endl;
     }
@@ -571,7 +571,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (MatrixMap::ConstIterator i = _inputMatrices.begin(); i != _inputMatrices.end(); ++i) {
+  for (MatrixMap::ConstIterator i = _inputMatrices.constBegin(); i != _inputMatrices.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input matrix for data object " << this->Name() << " is invalid." << endl;
     }
@@ -581,7 +581,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (VectorMap::ConstIterator i = _outputVectors.begin(); i != _outputVectors.end(); ++i) {
+  for (VectorMap::ConstIterator i = _outputVectors.constBegin(); i != _outputVectors.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output vector for data object " << this->Name() << " is invalid." << endl;
     }
@@ -591,7 +591,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (VectorMap::ConstIterator i = _inputVectors.begin(); i != _inputVectors.end(); ++i) {
+  for (VectorMap::ConstIterator i = _inputVectors.constBegin(); i != _inputVectors.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input vector for data object " << this->Name() << " is invalid." << endl;
     }
@@ -601,7 +601,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (ScalarMap::ConstIterator i = _outputScalars.begin(); i != _outputScalars.end(); ++i) {
+  for (ScalarMap::ConstIterator i = _outputScalars.constBegin(); i != _outputScalars.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output scalar for data object " << this->Name() << " is invalid." << endl;
     }
@@ -611,7 +611,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (ScalarMap::ConstIterator i = _inputScalars.begin(); i != _inputScalars.end(); ++i) {
+  for (ScalarMap::ConstIterator i = _inputScalars.constBegin(); i != _inputScalars.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input scalar for data object " << this->Name() << " is invalid." << endl;
     }
@@ -621,7 +621,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (StringMap::ConstIterator i = _outputStrings.begin(); i != _outputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _outputStrings.constBegin(); i != _outputStrings.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Output string for data object " << this->Name() << " is invalid." << endl;
     }
@@ -631,7 +631,7 @@ void DataObject::unlockInputsAndOutputs() const {
     (*i)->unlock();
   }
 
-  for (StringMap::ConstIterator i = _inputStrings.begin(); i != _inputStrings.end(); ++i) {
+  for (StringMap::ConstIterator i = _inputStrings.constBegin(); i != _inputStrings.constEnd(); ++i) {
     if (!(*i)) {
       qWarning() << "Input string for data object " << this->Name() << " is invalid." << endl;
     }

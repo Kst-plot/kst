@@ -109,8 +109,8 @@ void BasicPlugin::showEditDialog() {
 
 
 VectorPtr BasicPlugin::inputVector(const QString& vector) const {
-  VectorMap::ConstIterator i = _inputVectors.find(vector);
-  if (i != _inputVectors.end())
+  VectorMap::ConstIterator i = _inputVectors.constFind(vector);
+  if (i != _inputVectors.constEnd())
     return *i;
   else
     return 0;
@@ -118,8 +118,8 @@ VectorPtr BasicPlugin::inputVector(const QString& vector) const {
 
 
 ScalarPtr BasicPlugin::inputScalar(const QString& scalar) const {
-  ScalarMap::ConstIterator i = _inputScalars.find(scalar);
-  if (i != _inputScalars.end())
+  ScalarMap::ConstIterator i = _inputScalars.constFind(scalar);
+  if (i != _inputScalars.constEnd())
     return *i;
   else
     return 0;
@@ -127,8 +127,8 @@ ScalarPtr BasicPlugin::inputScalar(const QString& scalar) const {
 
 
 StringPtr BasicPlugin::inputString(const QString& string) const {
-  StringMap::ConstIterator i = _inputStrings.find(string);
-  if (i != _inputStrings.end())
+  StringMap::ConstIterator i = _inputStrings.constFind(string);
+  if (i != _inputStrings.constEnd())
     return *i;
   else
     return 0;
@@ -136,8 +136,8 @@ StringPtr BasicPlugin::inputString(const QString& string) const {
 
 
 VectorPtr BasicPlugin::outputVector(const QString& vector) const {
-  VectorMap::ConstIterator i = _outputVectors.find(vector);
-  if (i != _outputVectors.end())
+  VectorMap::ConstIterator i = _outputVectors.constFind(vector);
+  if (i != _outputVectors.constEnd())
     return *i;
   else
     return 0;
@@ -145,8 +145,8 @@ VectorPtr BasicPlugin::outputVector(const QString& vector) const {
 
 
 ScalarPtr BasicPlugin::outputScalar(const QString& scalar) const {
-  ScalarMap::ConstIterator i = _outputScalars.find(scalar);
-  if (i != _outputScalars.end())
+  ScalarMap::ConstIterator i = _outputScalars.constFind(scalar);
+  if (i != _outputScalars.constEnd())
     return *i;
   else
     return 0;
@@ -154,8 +154,8 @@ ScalarPtr BasicPlugin::outputScalar(const QString& scalar) const {
 
 
 StringPtr BasicPlugin::outputString(const QString& string) const {
-  StringMap::ConstIterator i = _outputStrings.find(string);
-  if (i != _outputStrings.end())
+  StringMap::ConstIterator i = _outputStrings.constFind(string);
+  if (i != _outputStrings.constEnd())
     return *i;
   else
     return 0;
@@ -348,24 +348,24 @@ void BasicPlugin::saveProperties(QXmlStreamWriter &s) {
 bool BasicPlugin::inputsExist() const {
   //First, check the inputVectors...
   QStringList iv = inputVectorList();
-  QStringList::ConstIterator ivI = iv.begin();
-  for (; ivI != iv.end(); ++ivI) {
+  QStringList::ConstIterator ivI = iv.constBegin();
+  for (; ivI != iv.constEnd(); ++ivI) {
     if (!inputVector(*ivI))
       return false;
   }
 
   //Now, check the inputScalars...
   QStringList is = inputScalarList();
-  QStringList::ConstIterator isI = is.begin();
-  for (; isI != is.end(); ++isI) {
+  QStringList::ConstIterator isI = is.constBegin();
+  for (; isI != is.constEnd(); ++isI) {
     if (!inputScalar(*isI))
       return false;
   }
 
   //Finally, check the inputStrings...
   QStringList istr = inputStringList();
-  QStringList::ConstIterator istrI = istr.begin();
-  for (; istrI != istr.end(); ++istrI) {
+  QStringList::ConstIterator istrI = istr.constBegin();
+  for (; istrI != istr.constEnd(); ++istrI) {
     if (!inputString(*istrI))
       return false;
   }
@@ -377,8 +377,8 @@ void BasicPlugin::updateOutput() const {
   //output vectors...
   //FIXME: _outputVectors should be used, not this string list!
   QStringList ov = outputVectorList();
-  QStringList::ConstIterator ovI = ov.begin();
-  for (; ovI != ov.end(); ++ovI) {
+  QStringList::ConstIterator ovI = ov.constBegin();
+  for (; ovI != ov.constEnd(); ++ovI) {
     if (VectorPtr o = outputVector(*ovI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
       vectorRealloced(o, o->value(), o->length()); // why here?

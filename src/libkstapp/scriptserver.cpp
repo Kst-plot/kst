@@ -339,8 +339,8 @@ template<class T> QByteArray outputObjectList(
 
     ObjectList<T> vl=_store->getObjects<T>();
     QByteArray a;
-    typename ObjectList<T>::ConstIterator it = vl.begin();
-    for(; it != vl.end(); ++it) {
+    typename ObjectList<T>::ConstIterator it = vl.constBegin();
+    for(; it != vl.constEnd(); ++it) {
         SharedPtr<T> v = (*it);
         v->readLock();
         a+='['%v->Name()%']';

@@ -112,8 +112,8 @@ void StringSelector::fillStrings() {
 
   StringList stringList = _store->getObjects<String>();
 
-  StringList::ConstIterator it = stringList.begin();
-  for (; it != stringList.end(); ++it) {
+  StringList::ConstIterator it = stringList.constBegin();
+  for (; it != stringList.constEnd(); ++it) {
     StringPtr string = (*it);
 
     string->readLock();

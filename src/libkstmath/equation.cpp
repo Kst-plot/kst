@@ -255,7 +255,7 @@ void Equation::setEquation(const QString& in_fn) {
     } else {
       // Parse error
       Debug::self()->log(i18n("Equation [%1] failed to parse.  Errors follow.").arg(_equation), Debug::Warning);
-      for (QStringList::ConstIterator i = Equations::errorStack.begin(); i != Equations::errorStack.end(); ++i) {
+      for (QStringList::ConstIterator i = Equations::errorStack.constBegin(); i != Equations::errorStack.constEnd(); ++i) {
         Debug::self()->log(i18n("Parse Error: %1").arg(*i), Debug::Warning);
       }
       delete (Equations::Node*)ParsedEquation;
@@ -388,7 +388,7 @@ bool Equation::FillY(bool force) {
   // determine value of Interp
   if (_doInterp) {
     ns = _xInVector->length();
-    for (VectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
+    for (VectorMap::ConstIterator i = VectorsUsed.constBegin(); i != VectorsUsed.constEnd(); ++i) {
       if (i.value()->length() > ns) {
         ns = i.value()->length();
       }
@@ -422,7 +422,7 @@ bool Equation::FillY(bool force) {
     v_shift = _xInVector->numShift();
     v_new = _xInVector->numNew();
 
-    for (VectorMap::ConstIterator i = VectorsUsed.begin(); i != VectorsUsed.end(); ++i) {
+    for (VectorMap::ConstIterator i = VectorsUsed.constBegin(); i != VectorsUsed.constEnd(); ++i) {
       if (v_shift != i.value()->numShift()) {
         v_shift = _ns;
       }
@@ -550,7 +550,7 @@ bool Equation::uses(ObjectPtr p) const {
 
   // check VectorsUsed in addition to _input*'s
   if (VectorPtr vect = kst_cast<Vector>(p)) {
-    for (VectorMap::ConstIterator j = VectorsUsed.begin(); j != VectorsUsed.end(); ++j) {
+    for (VectorMap::ConstIterator j = VectorsUsed.constBegin(); j != VectorsUsed.constEnd(); ++j) {
       if (j.value() == vect) {
         return true;
       }
@@ -558,7 +558,7 @@ bool Equation::uses(ObjectPtr p) const {
   } else if (DataObjectPtr obj = kst_cast<DataObject>(p) ) {
     // check all connections from this expression to p
     for (VectorMap::Iterator j = obj->outputVectors().begin(); j != obj->outputVectors().end(); ++j) {
-      for (VectorMap::ConstIterator k = VectorsUsed.begin(); k != VectorsUsed.end(); ++k) {
+      for (VectorMap::ConstIterator k = VectorsUsed.constBegin(); k != VectorsUsed.constEnd(); ++k) {
         if (j.value() == k.value()) {
           return true;
         }

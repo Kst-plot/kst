@@ -460,7 +460,7 @@ void ChangeFileDialog::apply() {
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
     PlotItem* plotItem = static_cast<PlotItem*>(plot);
     foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
-      for (QMap<RelationPtr, RelationPtr>::ConstIterator iter = duplicatedRelations.begin(); iter != duplicatedRelations.end(); ++iter) {
+      for (QMap<RelationPtr, RelationPtr>::ConstIterator iter = duplicatedRelations.constBegin(); iter != duplicatedRelations.constEnd(); ++iter) {
         if (renderItem->relationList().contains(kst_cast<Relation>(iter.key())) && !renderItem->relationList().contains(kst_cast<Relation>(iter.value()))) {
           renderItem->addRelation(kst_cast<Relation>(iter.value()));
         }

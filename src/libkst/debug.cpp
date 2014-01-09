@@ -153,7 +153,7 @@ QString Debug::text() {
 
   body += i18n("\n\nData-source plugins:");
   QStringList dsp = dataSourcePlugins();
-  for (QStringList::ConstIterator it = dsp.begin(); it != dsp.end(); ++it) {
+  for (QStringList::ConstIterator it = dsp.constBegin(); it != dsp.constEnd(); ++it) {
     body += '\n';
     body += *it;
   }

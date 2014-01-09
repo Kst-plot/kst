@@ -103,8 +103,8 @@ void CurveSelector::fillCurves() {
 
   CurveList curveList = _store->getObjects<Curve>();
 
-  CurveList::ConstIterator it = curveList.begin();
-  for (; it != curveList.end(); ++it) {
+  CurveList::ConstIterator it = curveList.constBegin();
+  for (; it != curveList.constEnd(); ++it) {
     CurvePtr curve = (*it);
 
     curve->readLock();

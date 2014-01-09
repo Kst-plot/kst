@@ -125,8 +125,8 @@ void MatrixSelector::fillMatrices() {
 
   MatrixList matrixList = _store->getObjects<Matrix>();
 
-  MatrixList::ConstIterator it = matrixList.begin();
-  for (; it != matrixList.end(); ++it) {
+  MatrixList::ConstIterator it = matrixList.constBegin();
+  for (; it != matrixList.constEnd(); ++it) {
     MatrixPtr matrix = (*it);
 
     matrix->readLock();
