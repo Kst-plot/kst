@@ -21,7 +21,7 @@
 #include <QProcess>
 
 #include "kst_export.h"
-#include "kst_i18n.h"
+
 
 namespace Kst {
 

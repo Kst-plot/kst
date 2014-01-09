@@ -21,13 +21,11 @@
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
-
 namespace Kst {
 
 
-const QString Scalar::staticTypeString = I18N_NOOP("Scalar");
-const QString Scalar::staticTypeTag = I18N_NOOP("scalar");
+const QString Scalar::staticTypeString = QT_TR_NOOP("Scalar");
+const QString Scalar::staticTypeTag = QT_TR_NOOP("scalar");
 
 
 /** Create the base scalar */
@@ -137,9 +135,9 @@ void Scalar::setEditable(bool editable) {
 
 QString Scalar::descriptionTip() const {
   if (_provider) {
-    return i18n("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
+    return tr("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
   } else {
-    return i18n("Scalar: %1 = %2").arg(Name()).arg(value());
+    return tr("Scalar: %1 = %2").arg(Name()).arg(value());
   }
 }
 
@@ -156,7 +154,7 @@ QString Scalar::sizeString() const {
 }
 
 QString Scalar::propertyString() const {
-  return i18n("Value: %1").arg(value());
+  return tr("Value: %1").arg(value());
 }
 }
 // vim: et ts=2 sw=2

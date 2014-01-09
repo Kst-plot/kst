@@ -33,7 +33,7 @@
 #include "eparse-eh.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "kst_i18n.h"
+
 #include "generatedvector.h"
 #include "objectstore.h"
 
@@ -44,8 +44,8 @@ int yylex_destroy (void );
 
 namespace Kst {
 
-const QString Equation::staticTypeString = I18N_NOOP("Equation");
-const QString Equation::staticTypeTag = I18N_NOOP("equation");
+const QString Equation::staticTypeString = QT_TR_NOOP("Equation");
+const QString Equation::staticTypeTag = QT_TR_NOOP("equation");
 
 static const QLatin1String& XINVECTOR = QLatin1String("X");
 static const QLatin1String& XOUTVECTOR = QLatin1String("XO"); // Output (slave) vector
@@ -56,7 +56,7 @@ Equation::Equation(ObjectStore *store)
 
   _ns = 2;
   _pe = 0L;
-  _typeString = i18n("Equation");
+  _typeString = "Equation";
   _type = "Equation";
   _initializeShortName();
 
@@ -99,7 +99,7 @@ void Equation::attach() {
 
 const CurveHintList *Equation::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new CurveHint(i18n("Equation Curve"),
+  _curveHints->append(new CurveHint(tr("Equation Curve"),
                       _xOutVector->shortName(), _yOutVector->shortName()));
   return _curveHints;
 }
@@ -149,7 +149,7 @@ const QString Equation::reparsedEquation() const {
     Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && en) {
       if (!en->takeVectors(VectorsUsed)) {
-        Debug::self()->log(i18n("Equation [%1] failed to find its vectors when reparsing.").arg(_equation), Debug::Warning);
+        Debug::self()->log(tr("Equation [%1] failed to find its vectors when reparsing.").arg(_equation), Debug::Warning);
       }
       etext = en->text();
     }
@@ -196,7 +196,7 @@ void Equation::save(QXmlStreamWriter &s) {
     Equations::Node *en = static_cast<Equations::Node*>(ParsedEquation);
     if (rc == 0 && en) {
       if (!en->takeVectors(VectorsUsed)) {
-        Debug::self()->log(i18n("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), Debug::Warning);
+        Debug::self()->log(tr("Equation [%1] failed to find its vectors when saving.  Resulting Kst file may have issues.").arg(_equation), Debug::Warning);
       }
       QString etext = en->text();
       s.writeAttribute("expression", etext);
@@ -247,16 +247,16 @@ void Equation::setEquation(const QString& in_fn) {
         _pe->update(&ctx);
       } else {
         //we have bad objects...
-        Debug::self()->log(i18n("Equation [%1] references non-existent objects.").arg(_equation), Debug::Error);
+        Debug::self()->log(tr("Equation [%1] references non-existent objects.").arg(_equation), Debug::Error);
         delete (Equations::Node*)ParsedEquation;
         ParsedEquation = 0L;
         //Equations::mutex().unlock();
       }
     } else {
       // Parse error
-      Debug::self()->log(i18n("Equation [%1] failed to parse.  Errors follow.").arg(_equation), Debug::Warning);
+      Debug::self()->log(tr("Equation [%1] failed to parse.  Errors follow.").arg(_equation), Debug::Warning);
       for (QStringList::ConstIterator i = Equations::errorStack.constBegin(); i != Equations::errorStack.constEnd(); ++i) {
-        Debug::self()->log(i18n("Parse Error: %1").arg(*i), Debug::Warning);
+        Debug::self()->log(tr("Parse Error: %1").arg(*i), Debug::Warning);
       }
       delete (Equations::Node*)ParsedEquation;
       ParsedEquation = 0L;
@@ -576,7 +576,7 @@ QString Equation::descriptionTip() const {
   if(!_xInVector) {
     return QString();
   }
-  return i18n("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(_xInVector->descriptionTip());
+  return tr("Equation: %1\n  %2\nX: %3").arg(Name()).arg(equation()).arg(_xInVector->descriptionTip());
 }
 
 

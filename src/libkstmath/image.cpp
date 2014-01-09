@@ -20,7 +20,7 @@
 #include "objectstore.h"
 #include "plottickcalculator.h"
 
-#include "kst_i18n.h"
+
 
 #include <QImage>
 #include <QPainter>
@@ -32,8 +32,8 @@
 
 namespace Kst {
 
-const QString Image::staticTypeString = I18N_NOOP("Image");
-const QString Image::staticTypeTag = I18N_NOOP("image");
+const QString Image::staticTypeString = QT_TR_NOOP("Image");
+const QString Image::staticTypeTag = QT_TR_NOOP("image");
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 
@@ -140,7 +140,7 @@ void Image::internalUpdate() {
 
 QString Image::propertyString() const {
   if (_inputMatrices.contains(THEMATRIX)) {
-    return i18n("Image of %1" ).arg(_inputMatrices[THEMATRIX]->Name());
+    return tr("Image of %1" ).arg(_inputMatrices[THEMATRIX]->Name());
   } else {
     return QString();
   }
@@ -804,7 +804,7 @@ QString Image::_automaticDescriptiveName() const {
 
 QString Image::descriptionTip() const {
   QString tip;
-  tip = i18n("Image: %1\n" ).arg(Name());
+  tip = tr("Image: %1\n" ).arg(Name());
   if (_hasContourMap) {
     tip += "  Contour Map";
   }

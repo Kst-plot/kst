@@ -25,8 +25,6 @@
 #include <QDebug>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
-
 #include "datacollection.h"
 #include "debug.h"
 #include "datasource.h"
@@ -46,8 +44,8 @@
 
 namespace Kst {
 
-const QString DataVector::staticTypeString = I18N_NOOP("Data Vector");
-const QString DataVector::staticTypeTag = I18N_NOOP("datavector");
+const QString DataVector::staticTypeString = QT_TR_NOOP("Data Vector");
+const QString DataVector::staticTypeTag = QT_TR_NOOP("datavector");
 
 
 DataVector::DataInfo::DataInfo() :
@@ -164,7 +162,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for vector %1 was not opened.").arg(Name()), Debug::Warning);
   }
   setDataSource(in_file);
   if (dataSource()) {
@@ -788,31 +786,31 @@ QString DataVector::descriptionTip() const {
   QString IDstring;
   //QString range_string;
 
-  IDstring = i18n(
+  IDstring = tr(
       "Data Vector: %1\n"
       "  %2\n"
       "  Field: %3"
       ).arg(Name()).arg(dataSource()->fileName()).arg(_field);
 
   if (countFromEOF()) {
-    IDstring += i18n("\n  Last %1 frames.").arg(numFrames());
+    IDstring += tr("\n  Last %1 frames.").arg(numFrames());
   } else if (readToEOF()) {
-    IDstring += i18n("\n  Frame %1 to end.").arg(startFrame());
+    IDstring += tr("\n  Frame %1 to end.").arg(startFrame());
   } else {
-    IDstring += i18n("\n  %1 Frames starting at %2.").arg(numFrames()).arg(startFrame());
+    IDstring += tr("\n  %1 Frames starting at %2.").arg(numFrames()).arg(startFrame());
   }
   if (skip()) {
     if (!doAve()) {
-      IDstring+=i18n("\n  Read 1 sample per %1 frames.").arg(skip());
+      IDstring+=tr("\n  Read 1 sample per %1 frames.").arg(skip());
     } else {
-      IDstring+=i18n("\n  Average each %1 frames.").arg(skip());
+      IDstring+=tr("\n  Average each %1 frames.").arg(skip());
     }
   }
   return IDstring;
 }
 
 QString DataVector::propertyString() const {
-  return i18n("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(_field).arg(startFrame()).arg(numFrames());
+  return tr("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(_field).arg(startFrame()).arg(numFrames());
 }
 
 

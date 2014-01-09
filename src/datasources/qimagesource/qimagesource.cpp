@@ -11,7 +11,7 @@
  ***************************************************************************/
 
 #include "qimagesource.h"
-#include "kst_i18n.h"
+
 
 #include <QXmlStreamWriter>
 #include <QImageReader>
@@ -20,7 +20,7 @@
 
 using namespace Kst;
 
-static const QString qimageTypeString = I18N_NOOP("QImage image");
+static const QString qimageTypeString = "QImage image";
 
 class QImageSource::Config {
   public:

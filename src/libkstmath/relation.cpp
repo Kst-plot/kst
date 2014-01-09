@@ -19,7 +19,7 @@
 #include "relation.h"
 #include "datacollection.h"
 #include "debug.h"
-#include "kst_i18n.h"
+
 
 #include "objectstore.h"
 
@@ -27,7 +27,7 @@
 
 namespace Kst {
 
-const QString Relation::staticTypeString = I18N_NOOP("Relation");
+const QString Relation::staticTypeString = QT_TR_NOOP("Relation");
 
 Relation::Relation(ObjectStore *store) : Object() {
   Q_UNUSED(store);

@@ -28,7 +28,7 @@
 #define strcasecmp _stricmp
 #endif
 
-#include "kst_i18n.h"
+
 
 #include <QMutex>
 #include <QRegExp>
@@ -831,7 +831,7 @@ bool DataNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringM
   } else if (_scalar && !s.contains(_tagName)) {
     s.insert(_tagName, _scalar);
   } else if (!_scalar && !_vector) {
-    Kst::Debug::self()->log(i18n("Equations has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
+    Kst::Debug::self()->log(Kst::Debug::self()->tr("Equations has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
     return false;
   }
   return true;

@@ -22,8 +22,6 @@
 #include <QXmlStreamWriter>
 #include <QVariant>
 
-#include "kst_i18n.h"
-
 #include "datacollection.h"
 #include "debug.h"
 #include "objectstore.h"
@@ -34,8 +32,8 @@
 
 namespace Kst {
 
-const QString DataMatrix::staticTypeString = I18N_NOOP("Data Matrix");
-const QString DataMatrix::staticTypeTag = I18N_NOOP("datamatrix");
+const QString DataMatrix::staticTypeString = QT_TR_NOOP("Data Matrix");
+const QString DataMatrix::staticTypeTag = QT_TR_NOOP("datamatrix");
 
 
 
@@ -172,7 +170,7 @@ QString DataMatrix::label() const {
   if (ok && dataSource()) {
     dataSource()->readLock();
     if (dataSource()->fileType() == "ASCII") {
-      returnLabel = i18n("Column %1").arg(_field);
+      returnLabel = tr("Column %1").arg(_field);
     } else {
       returnLabel = _field;
     }
@@ -589,7 +587,7 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _editable = true;
 
   if (!dataSource()) {
-    Debug::self()->log(i18n("Data file for matrix %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for matrix %1 was not opened.").arg(Name()), Debug::Warning);
   } else {
     const DataInfo info = dataSource()->matrix().dataInfo(_field);
     _samplesPerFrameCache = info.samplesPerFrame;
@@ -648,7 +646,7 @@ void DataMatrix::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for vector %1 was not opened.").arg(Name()), Debug::Warning);
   }
   setDataSource(in_file);
   if (dataSource()) {
@@ -671,7 +669,7 @@ QString DataMatrix::_automaticDescriptiveName() const{
 }
 
 QString DataMatrix::descriptionTip() const {
-  return i18n(
+  return tr(
       "Data Matrix: %1\n"
       "  %2\n"
       "  Field: %3\n"
@@ -680,7 +678,7 @@ QString DataMatrix::descriptionTip() const {
 }
 
 QString DataMatrix::propertyString() const {
-  return i18n("%1 of %2").arg(field()).arg(dataSource()->fileName());
+  return tr("%1 of %2").arg(field()).arg(dataSource()->fileName());
 }
 
 

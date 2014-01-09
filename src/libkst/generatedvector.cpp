@@ -19,13 +19,11 @@
 #include <QDebug>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
-
 
 namespace Kst {
 
-const QString GeneratedVector::staticTypeString = I18N_NOOP("Generated Vector");
-const QString GeneratedVector::staticTypeTag = I18N_NOOP("generatedvector");
+const QString GeneratedVector::staticTypeString = QT_TR_NOOP("Generated Vector");
+const QString GeneratedVector::staticTypeTag = QT_TR_NOOP("generatedvector");
 
 GeneratedVector::GeneratedVector(ObjectStore *store)
     : Vector(store) {
@@ -88,12 +86,12 @@ QString GeneratedVector::_automaticDescriptiveName() const {
 }
 
 QString GeneratedVector::descriptionTip() const {
-  return i18n("Generated Vector: %1\n"
+  return tr("Generated Vector: %1\n"
       "  %2 values from %3 to %4").arg(Name()).arg(length()).arg(_v[0]).arg(_v[length()-1]);
 }
 
 QString GeneratedVector::propertyString() const {
-  return i18n("%3 points from %1 to %2").arg(_v[0]).arg(_v[length()-1]).arg(length());
+  return tr("%3 points from %1 to %2").arg(_v[0]).arg(_v[length()-1]).arg(length());
 }
 
 }

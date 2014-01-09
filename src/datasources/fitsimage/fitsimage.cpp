@@ -17,12 +17,12 @@
 #include <math.h>
 #include <QHash>
 
-#include "kst_i18n.h"
+
 
 using namespace Kst;
 
-static const QString fitsTypeString = I18N_NOOP("FITS image");
-static const QString DefaultMatrixName = I18N_NOOP("1");
+static const QString fitsTypeString = "FITS image";
+static const QString DefaultMatrixName = "1";
 
 class FitsImageSource::Config {
   public:

@@ -257,8 +257,8 @@ void ChangeDataSampleDialog::initializeEntries() {
   _dataRange->setSkip(dialogDefaults().value("vector/skip", 0).toInt());
   _dataRange->setDoSkip(dialogDefaults().value("vector/doSkip", false).toBool());
   _dataRange->setDoFilter(dialogDefaults().value("vector/doAve",false).toBool());
-  _dataRange->setStartUnits(dialogDefaults().value("vector/startUnits",i18n("frames")).toString());
-  _dataRange->setRangeUnits(dialogDefaults().value("vector/rangeUnits",i18n("frames")).toString());
+  _dataRange->setStartUnits(dialogDefaults().value("vector/startUnits",tr("frames")).toString());
+  _dataRange->setRangeUnits(dialogDefaults().value("vector/rangeUnits",tr("frames")).toString());
 }
 
 
@@ -330,7 +330,7 @@ void ChangeDataSampleDialog::apply() {
     double memory_available = Data::AvailableMemory();
     if (memory_needed-current_memory_used > memory_available) {
       //QApplication::restoreOverrideCursor();
-      QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
+      QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
                                                                    ).arg((memory_needed-current_memory_used)/(1024*1024)).arg(memory_available/(1024*1024)));
       return;
     }

@@ -16,13 +16,13 @@
  ***************************************************************************/
 
 #include "object.h"
-#include "kst_i18n.h"
+
 
 #include "objectstore.h"
 
 namespace Kst {
 
-const QString Object::staticTypeString = I18N_NOOP("Object");
+const QString Object::staticTypeString = QT_TR_NOOP("Object");
 
 Object::Object() :
   Shared(), KstRWLock(), NamedObject(),

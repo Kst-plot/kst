@@ -48,11 +48,11 @@ AxisTab::AxisTab(QWidget *parent)
   setAxisMinorGridLineColor(Qt::gray);
 
   for (uint i = 0; i < numAxisDisplays; i++) {
-    _scaleDisplayType->addItem(AxisDisplays[i].label, QVariant(AxisDisplays[i].type));
+    _scaleDisplayType->addItem(tr(AxisDisplays[i].label), QVariant(AxisDisplays[i].type));
   }
 
   for (uint i = 0; i < numAxisInterpretations; i++) {
-    _scaleInterpretType->addItem(AxisInterpretations[i].label, QVariant(AxisInterpretations[i].type));
+    _scaleInterpretType->addItem(tr(AxisInterpretations[i].label), QVariant(AxisInterpretations[i].type));
   }
 
   connect(_drawAxisMajorTicks, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -657,8 +657,8 @@ void AxisTab::clearTabValues() {
 }
 
 void AxisTab::setAsYAxis() {
-  _hideBottomLeft->setText(i18n("Hide left"));
-  _hideTopRight->setText(i18n("Hide right"));
+  _hideBottomLeft->setText(tr("Hide left"));
+  _hideTopRight->setText(tr("Hide right"));
 }
 
 }

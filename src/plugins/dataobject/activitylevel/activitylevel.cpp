@@ -160,9 +160,9 @@ QString ActivityLevelSource::_automaticDescriptiveName() const {
 
 QString ActivityLevelSource::descriptionTip() const {
   QString tip;
-  tip = i18n("Activity Level: %1\n  Sampling Time: %2 (ms)\n  Window width: %3 (s)\n  Noise Threshold: %4 \n").
+  tip = tr("Activity Level: %1\n  Sampling Time: %2 (ms)\n  Window width: %3 (s)\n  Noise Threshold: %4 \n").
                               arg(Name()).arg(samplingTime()->value()).arg(windowWidth()->value()).arg(noiseThreshold()->value());
-  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 

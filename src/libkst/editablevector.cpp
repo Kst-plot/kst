@@ -20,12 +20,10 @@
 #include <QXmlStreamWriter>
 
 #include "debug.h"
-#include "kst_i18n.h"
-
 namespace Kst {
 
-const QString EditableVector::staticTypeString = I18N_NOOP("Editable Vector");
-const QString EditableVector::staticTypeTag = I18N_NOOP("editablevector");
+const QString EditableVector::staticTypeString = QT_TR_NOOP("Editable Vector");
+const QString EditableVector::staticTypeTag = QT_TR_NOOP("editablevector");
 
 EditableVector::EditableVector(ObjectStore *store)
     : Vector(store), _sum(0.0) {
@@ -36,7 +34,7 @@ EditableVector::EditableVector(ObjectStore *store)
 
 
 const QString& EditableVector::typeString() const {
-  return staticTypeString;
+  return tr(staticTypeString.toLatin1());
 }
 
 
@@ -99,7 +97,7 @@ QString EditableVector::_automaticDescriptiveName() const {
 }
 
 QString EditableVector::descriptionTip() const {
-    return i18n("Editable Vector: %1\n"
+    return tr("Editable Vector: %1\n"
       "  %2 values").arg(Name()).arg(length());
 
 }

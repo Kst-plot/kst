@@ -3336,19 +3336,19 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
 
 void PlotItem::copyStatus() {
   kstApp->clipboard()->setText(kstApp->mainWindow()->statusMessage());
-  kstApp->mainWindow()->setStatusMessage(i18n("Info copied to clipboard: ") + kstApp->mainWindow()->statusMessage());
+  kstApp->mainWindow()->setStatusMessage(tr("Info copied to clipboard: ") + kstApp->mainWindow()->statusMessage());
 }
 
 void PlotItem::copyXCoord() {
   QString valueString = QString::number(renderItem()->statusMessagePoint.x(), 'g', 12);
   kstApp->clipboard()->setText(valueString);
-  kstApp->mainWindow()->setStatusMessage(i18n("X coordinate copied to clipboard: ") + valueString);
+  kstApp->mainWindow()->setStatusMessage(tr("X coordinate copied to clipboard: ") + valueString);
 }
 
 void PlotItem::copyYCoord() {
   QString valueString = QString::number(renderItem()->statusMessagePoint.y(), 'g', 12);
   kstApp->clipboard()->setText(valueString);
-  kstApp->mainWindow()->setStatusMessage(i18n("Y coordinate copied to clipboard: ") + valueString);
+  kstApp->mainWindow()->setStatusMessage(tr("Y coordinate copied to clipboard: ") + valueString);
 }
 
 QString PlotItem::descriptionTip() const {
@@ -3359,12 +3359,12 @@ QString PlotItem::descriptionTip() const {
     }
   }
 
-  return i18n("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
+  return tr("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
 }
 
 
 QString PlotItem::_automaticDescriptiveName() const {
-  QString name = i18n("Empty Plot");
+  QString name = tr("Empty Plot");
   int n=0;
   foreach (PlotRenderItem *renderer, renderItems()) {
     foreach (RelationPtr relation, renderer->relationList()) {

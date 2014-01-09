@@ -16,15 +16,13 @@
 #include <QTextStream>
 #include <QTextDocument>
 
-#include "kst_i18n.h"
-
 #include <QXmlStreamWriter>
 #include <QVariant>
 
 namespace Kst {
 
-const QString GeneratedMatrix::staticTypeString = I18N_NOOP("Generated Matrix");
-const QString GeneratedMatrix::staticTypeTag = I18N_NOOP("generatedmatrix");
+const QString GeneratedMatrix::staticTypeString = QT_TR_NOOP("Generated Matrix");
+const QString GeneratedMatrix::staticTypeTag = QT_TR_NOOP("generatedmatrix");
 
 GeneratedMatrix::GeneratedMatrix(ObjectStore *store) : Matrix(store) {
   _saveable = true;

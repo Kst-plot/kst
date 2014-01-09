@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "dirfilesource.h"
-#include "kst_i18n.h"
+
 
 #include <QXmlStreamWriter>
 #include <QFileSystemWatcher>
@@ -24,7 +24,7 @@
 
 using namespace Kst;
 
-static const QString dirfileTypeString = I18N_NOOP("Directory of Binary Files");
+static const QString dirfileTypeString = "Directory of Binary Files";
 
 class DirFileSource::Config {
   public:

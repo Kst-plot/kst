@@ -21,7 +21,6 @@
 #include <QDebug>
 
 #include "kst_export.h"
-#include "kst_i18n.h"
 #include "object.h"
 #include "objectlist.h"
 #include "rwlock.h"

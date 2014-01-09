@@ -149,9 +149,9 @@ QString FilterDespikeSource::_automaticDescriptiveName() const {
 QString FilterDespikeSource::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Despike Filter: %1\n  Spacing: %2\n  NSigma: %3").arg(Name()).arg(spacingScalar()->value()).arg(nSigmaScalar()->value());
+  tip = tr("Despike Filter: %1\n  Spacing: %2\n  NSigma: %3").arg(Name()).arg(spacingScalar()->value()).arg(nSigmaScalar()->value());
 
-  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 
@@ -284,7 +284,7 @@ bool FilterDespikeSource::algorithm() {
   }
 
   Kst::LabelInfo label_info = inputVector->labelInfo();
-  label_info.name = i18n("Despiked %1").arg(label_info.name);
+  label_info.name = tr("Despiked %1").arg(label_info.name);
   outputVector->setLabelInfo(label_info);
 
   return true;

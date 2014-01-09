@@ -23,13 +23,12 @@
 
 #include <limits.h>
 
-#include "kst_i18n.h"
 #include "updatemanager.h"
 #include "datasource.h"
 
 namespace Kst {
 
-const QString Primitive::staticTypeString = I18N_NOOP("Primitive");
+const QString Primitive::staticTypeString = QT_TR_NOOP("Primitive");
 
 Primitive::Primitive(ObjectStore *store, Object *provider)
   : Object(), _provider(provider) {

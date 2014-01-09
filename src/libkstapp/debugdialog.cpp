@@ -17,7 +17,7 @@
 #include "logevents.h"
 #include "datasource.h"
 #include "datasourcepluginmanager.h"
-#include "kst_i18n.h"
+
 
 #include <QDebug>
 
@@ -38,9 +38,9 @@ DebugDialog::DebugDialog(QWidget *parent)
   connect(_showError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
 
   if (!Debug::self()->kstRevision().isEmpty())
-    _buildInfo->setText(i18n("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
+    _buildInfo->setText(tr("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
   else
-    _buildInfo->setText(i18n("<h1>Kst</h1> Version %1").arg(KSTVERSION));
+    _buildInfo->setText(tr("<h1>Kst</h1> Version %1").arg(KSTVERSION));
 }
 
 

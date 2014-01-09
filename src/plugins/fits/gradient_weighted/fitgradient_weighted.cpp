@@ -152,7 +152,7 @@ FitGradientWeightedSource::~FitGradientWeightedSource() {
 
 
 QString FitGradientWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Weighted Gradient");
+  return vectorY()->descriptiveName() + tr(" Weighted Gradient");
 }
 
 
@@ -190,16 +190,16 @@ bool FitGradientWeightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Gradient Fit to %1").arg(label_info.name);
+  label_info.name = tr("Gradient Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Residuals");
+  label_info.name = tr("Gradient Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Lower Limit");
+  label_info.name = tr("Gradient Fit Lower Limit");
   outputVectorYLo->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Upper Limit");
+  label_info.name = tr("Gradient Fit Upper Limit");
   outputVectorYHi->setLabelInfo(label_info);
 
 

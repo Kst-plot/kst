@@ -124,9 +124,9 @@ QString CumulativeAverageSource::_automaticDescriptiveName() const {
 QString CumulativeAverageSource::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Cumulative Average: %1\n").arg(Name());
+  tip = tr("Cumulative Average: %1\n").arg(Name());
 
-  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 

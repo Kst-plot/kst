@@ -19,12 +19,11 @@
 #include "debug.h"
 #include <qbytearray.h>
 #include <QXmlStreamWriter>
-#include "kst_i18n.h"
 
 namespace Kst {
 
-const QString EditableMatrix::staticTypeString = I18N_NOOP("Editable Matrix");
-const QString EditableMatrix::staticTypeTag = I18N_NOOP("editablematrix");
+const QString EditableMatrix::staticTypeString = QT_TR_NOOP("Editable Matrix");
+const QString EditableMatrix::staticTypeTag = QT_TR_NOOP("editablematrix");
 
 EditableMatrix::EditableMatrix(ObjectStore *store)
 : Matrix(store) {

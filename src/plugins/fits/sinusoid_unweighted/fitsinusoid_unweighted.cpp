@@ -166,7 +166,7 @@ FitSinusoidUnweightedSource::~FitSinusoidUnweightedSource() {
 
 
 QString FitSinusoidUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Sinusoid");
+  return vectorY()->descriptiveName() + tr(" Sinusoid");
 }
 
 
@@ -218,10 +218,10 @@ bool FitSinusoidUnweightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Sinusoidal Fit to %1").arg(label_info.name);
+  label_info.name = tr("Sinusoidal Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Sinusoidal Fit Residuals");
+  label_info.name = tr("Sinusoidal Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
   bool bReturn = false;

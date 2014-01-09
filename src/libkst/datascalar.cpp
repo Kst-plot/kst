@@ -20,14 +20,14 @@
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
+
 #include "debug.h"
 #include "objectstore.h"
 
 namespace Kst {
 
-const QString DataScalar::staticTypeString = I18N_NOOP("Data Scalar");
-const QString DataScalar::staticTypeTag = I18N_NOOP("datascalar");
+const QString DataScalar::staticTypeString = QT_TR_NOOP("Data Scalar");
+const QString DataScalar::staticTypeTag = QT_TR_NOOP("datascalar");
 
 /** Create a DataVector: raw data from a file */
 DataScalar::DataScalar(ObjectStore *store)
@@ -90,7 +90,7 @@ void DataScalar::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for scalar %1 was not opened.").arg(Name()), Debug::Warning);
   }
   setDataSource(in_file);
 }
@@ -153,7 +153,7 @@ qint64 DataScalar::maxInputSerialOfLastChange() const {
 QString DataScalar::descriptionTip() const {
   QString IDstring;
 
-  IDstring = i18n(
+  IDstring = tr(
       "Data Scalar: %1 = %4\n"
       "  %2\n"
       "  Field: %3"
@@ -163,7 +163,7 @@ QString DataScalar::descriptionTip() const {
 
 
 QString DataScalar::propertyString() const {
-  return i18n("%2 of %1 = %3").arg(dataSource()->fileName()).arg(_field).arg(value());
+  return tr("%2 of %1 = %3").arg(dataSource()->fileName()).arg(_field).arg(value());
 }
 
 void DataScalar::reload() {

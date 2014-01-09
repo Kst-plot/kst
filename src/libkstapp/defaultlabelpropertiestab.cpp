@@ -11,7 +11,7 @@
  ***************************************************************************/
 #include "defaultlabelpropertiestab.h"
 
-#include "kst_i18n.h"
+
 
 #include <math.h>
 
@@ -30,10 +30,10 @@ DefaultLabelPropertiesTab::DefaultLabelPropertiesTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Fonts"));
 
-  _referenceViewSizeCombo->addItem(i18n("Letter"/*, "US Letter sized paper"*/));
-  _referenceViewSizeCombo->addItem(i18n("A4"/*, "A4 sized paper"*/));
-  _referenceViewSizeCombo->addItem(i18n("Journal Plot"));
-  _referenceViewSizeCombo->addItem(i18n("Custom"/*, "Custom page size"*/));
+  _referenceViewSizeCombo->addItem(tr("Letter"/*, "US Letter sized paper"*/));
+  _referenceViewSizeCombo->addItem(tr("A4"/*, "A4 sized paper"*/));
+  _referenceViewSizeCombo->addItem(tr("Journal Plot"));
+  _referenceViewSizeCombo->addItem(tr("Custom"/*, "Custom page size"*/));
 
   _referenceViewSizeCombo->setCurrentIndex(0);
   referenceViewSizeComboChanged(0);

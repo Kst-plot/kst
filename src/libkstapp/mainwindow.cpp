@@ -1514,7 +1514,7 @@ void MainWindow::createToolBars() {
 
 void MainWindow::createStatusBar() {
   _messageLabel = new QLabel(statusBar());
-  setStatusMessage(i18n("Ready"), 3000);
+  setStatusMessage(tr("Ready"), 3000);
 
   _progressBar = new QProgressBar(statusBar());
   _progressBar->setFixedWidth(200);

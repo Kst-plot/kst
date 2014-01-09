@@ -26,7 +26,7 @@
 #include <QApplication>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
+
 
 #include "datacollection.h"
 #include "math_kst.h"
@@ -38,8 +38,8 @@ namespace Kst {
 
 #define INITSIZE 1
 
-const QString Vector::staticTypeString = I18N_NOOP("Vector");
-const QString Vector::staticTypeTag = I18N_NOOP("vector");
+const QString Vector::staticTypeString = QT_TR_NOOP("Vector");
+const QString Vector::staticTypeTag = QT_TR_NOOP("vector");
 
 /** Create a vector */
 Vector::Vector(ObjectStore *store)
@@ -636,14 +636,14 @@ void Vector::change(QByteArray &data) {
 
 QString Vector::propertyString() const {
   if(_provider) {
-      return i18n("Provider: %1").arg(_provider->Name());
+      return tr("Provider: %1").arg(_provider->Name());
   } else {
       return Name();
   }
 }
 
 QString Vector::descriptionTip() const {
-  return i18n("Vector: %1\n  %2 samples\n%3").arg(Name()).arg(length()).arg(_provider->descriptionTip());
+  return tr("Vector: %1\n  %2 samples\n%3").arg(Name()).arg(length()).arg(_provider->descriptionTip());
 }
 
 QString Vector::sizeString() const {

@@ -137,7 +137,7 @@ FitLinearUnweightedSource::~FitLinearUnweightedSource() {
 
 
 QString FitLinearUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Unweighted Linear");
+  return vectorY()->descriptiveName() + tr(" Unweighted Linear");
 }
 
 
@@ -186,16 +186,16 @@ bool FitLinearUnweightedSource::algorithm() {
   double yErr;
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Linear Fit to %1").arg(label_info.name);
+  label_info.name = tr("Linear Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Residuals");
+  label_info.name = tr("Linear Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Lower Limit");
+  label_info.name = tr("Linear Fit Lower Limit");
   outputVectorYLo->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Upper Limit");
+  label_info.name = tr("Linear Fit Upper Limit");
   outputVectorYHi->setLabelInfo(label_info);
 
   if( precursor( inputVectorX, inputVectorY, 0, &iLength, false, true, 2, pInputs, outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters, outputVectorYCovariance, outputVectorYLo, outputVectorYHi ) ) {

@@ -24,7 +24,7 @@
 #include <qlocale.h>
 #include <qapplication.h>
 #include <qdebug.h>
-#include "kst_i18n.h"
+
 #include "datasourcepluginmanager.h"
 
 #include "ksttimers.h"
@@ -129,29 +129,29 @@ void Debug::clear() {
 QString Debug::label(LogLevel level) const {
   switch (level) {
     case Notice:
-      return i18nc("log level notice", "Notice");
+      return tr("Notice");
     case Warning:
-      return i18nc("log level warning", "Warning");
+      return tr("Warning");
     case Error:
-      return i18nc("log level error", "Error");
+      return tr("Error");
     case DebugLog:
-      return i18nc("log level debug", "Debug");
+      return tr("Debug");
     default:
-      return i18nc("log level other", "Other");
+      return tr("Other");
   }    
 }
 
 
 QString Debug::text() {
   QMutexLocker ml(&_lock);
-  QString body = i18n("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
+  QString body = tr("Kst version %1\n\n\nKst log:\n").arg(KSTVERSION);
 
   QLocale locale;
   for (int i = 0; i < _messages.count(); i++ ) {
-    body += i18nc("date leveltext: message", "%1 %2: %3\n", _messages[i].date.toString(locale.dateFormat()), label(_messages[i].level), _messages[i].msg);
+    body += QString("%1 %2: %3\n").arg(_messages[i].date.toString(locale.dateFormat())).arg(label(_messages[i].level)).arg(_messages[i].msg);
   }
 
-  body += i18n("\n\nData-source plugins:");
+  body += tr("\n\nData-source plugins:");
   QStringList dsp = dataSourcePlugins();
   for (QStringList::ConstIterator it = dsp.constBegin(); it != dsp.constEnd(); ++it) {
     body += '\n';

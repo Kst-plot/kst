@@ -26,7 +26,7 @@
 
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
+
 #include <qdebug.h>
 
 #include "dialoglauncher.h"
@@ -39,8 +39,8 @@ extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
-const QString PSD::staticTypeString = I18N_NOOP("Power Spectrum");
-const QString PSD::staticTypeTag = I18N_NOOP("powerspectrum");
+const QString PSD::staticTypeString = QT_TR_NOOP("Power Spectrum");
+const QString PSD::staticTypeTag = QT_TR_NOOP("powerspectrum");
 
 static const QLatin1String& INVECTOR = QLatin1String("I");
 static const QLatin1String& SVECTOR = QLatin1String("S");
@@ -120,7 +120,7 @@ PSD::~PSD() {
 
 const CurveHintList *PSD::curveHints() const {
   _curveHints->clear();
-  _curveHints->append(new CurveHint(i18n("PSD Curve"), _fVector->shortName(),
+  _curveHints->append(new CurveHint(tr("PSD Curve"), _fVector->shortName(),
                       _sVector->shortName()));
   return _curveHints;
 }
@@ -192,7 +192,7 @@ void PSD::_adjustLengths() {
     if ( (_sVector->length() == nPSDLen) && (_fVector->length() == nPSDLen) ) {
       _PSDLength = nPSDLen;
     } else {
-      Debug::self()->log(i18n("Attempted to create a PSD that used all memory."), Debug::Error);
+      Debug::self()->log(tr("Attempted to create a PSD that used all memory."), Debug::Error);
     }
 
     _last_n_subsets = 0;
@@ -324,7 +324,7 @@ bool PSD::slaveVectorsUsed() const {
 
 
 QString PSD::propertyString() const {
-  return i18n("PSD: %1", _inputVectors[INVECTOR]->Name());
+  return tr("PSD: %1").arg(_inputVectors[INVECTOR]->Name());
 }
 
 
@@ -430,7 +430,7 @@ void PSD::updateVectorLabels() {
   switch (_Output) {
     default:
     case 0: // amplitude spectral density (default) [V/Hz^1/2]
-      label_info.quantity = i18n("Spectral Density");
+      label_info.quantity = tr("Spectral Density");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
         label_info.units.clear();
       } else {
@@ -438,7 +438,7 @@ void PSD::updateVectorLabels() {
       }
       break;
     case 1: // power spectral density [V^2/Hz]
-      label_info.quantity = i18n("PSD");
+      label_info.quantity = tr("PSD");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
         label_info.units.clear();
       } else {
@@ -446,7 +446,7 @@ void PSD::updateVectorLabels() {
       }
       break;
     case 2: // amplitude spectrum [V]
-      label_info.quantity = i18n("Amplitude Spectrum");
+      label_info.quantity = tr("Amplitude Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
         label_info.units.clear();
       } else {
@@ -454,7 +454,7 @@ void PSD::updateVectorLabels() {
       }
       break;
     case 3: // power spectrum [V^2]
-      label_info.quantity = i18n("Power Spectrum");
+      label_info.quantity = tr("Power Spectrum");
       if (_vectorUnits.isEmpty() || _rateUnits.isEmpty()) {
         label_info.units.clear();
       } else {
@@ -465,7 +465,7 @@ void PSD::updateVectorLabels() {
   label_info.name.clear();
   _sVector->setLabelInfo(label_info);
 
-  label_info.quantity = i18n("Frequency");
+  label_info.quantity = tr("Frequency");
   label_info.units = _rateUnits;
   _fVector->setLabelInfo(label_info);
 
@@ -484,15 +484,15 @@ QString PSD::_automaticDescriptiveName() const {
 QString PSD::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Spectrum: %1\n  FFT Length: 2^%2").arg(Name()).arg(length());
+  tip = tr("Spectrum: %1\n  FFT Length: 2^%2").arg(Name()).arg(length());
 
   if (average() || apodize() || removeMean()) {
     tip += "\n  ";
-    if (average()) tip += i18n("Average; ");
-    if (apodize()) tip += i18n("Apodize; ");
-    if (removeMean()) tip += i18n("Remove Mean;");
+    if (average()) tip += tr("Average; ");
+    if (apodize()) tip += tr("Apodize; ");
+    if (removeMean()) tip += tr("Remove Mean;");
   }
-  tip += i18n("\nInput: %1").arg(_inputVectors[INVECTOR]->descriptionTip());
+  tip += tr("\nInput: %1").arg(_inputVectors[INVECTOR]->descriptionTip());
   return tip;
 }
 }

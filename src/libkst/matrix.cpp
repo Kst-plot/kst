@@ -25,7 +25,6 @@
 #include <QXmlStreamWriter>
 
 #include "debug.h"
-#include "kst_i18n.h"
 #include "math_kst.h"
 #include "datacollection.h"
 #include "objectstore.h"
@@ -36,7 +35,7 @@
 
 namespace Kst {
 
-const QString Matrix::staticTypeString = I18N_NOOP("Matrix");
+const QString Matrix::staticTypeString = QT_TR_NOOP("Matrix");
 
 Matrix::Matrix(ObjectStore *store)
     : Primitive(store, 0L), _NS(0), _NRealS(0), _nX(1), _nY(0), _minX(0), _minY(0), _stepX(1), _stepY(1),
@@ -636,14 +635,14 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
     qds >> _z[i];  // stored in the same order as it was saved
   } 
   if (i < nX*nY) {
-    Debug::self()->log(i18n("Saved matrix contains less data than it claims."), Debug::Warning);
+    Debug::self()->log(tr("Saved matrix contains less data than it claims."), Debug::Warning);
     resizeZ(i, false);
   }
   internalUpdate();
 }
 
 QString Matrix::descriptionTip() const {
-  return i18n("Matrix: %1\n %2 x %3").arg(Name()).arg(_nX).arg(_nY);
+  return tr("Matrix: %1\n %2 x %3").arg(Name()).arg(_nX).arg(_nY);
 }
 
 QString Matrix::sizeString() const {

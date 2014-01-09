@@ -127,17 +127,17 @@ void LegendItem::paint(QPainter *painter) {
         QString y_label = label_info.name;
         if (!sameYUnits) {
           if (!label_info.units.isEmpty()) {
-            y_label = i18n("%1 \\[%2\\]").arg(y_label).arg(label_info.units);
+            y_label = tr("%1 \\[%2\\]").arg(y_label).arg(label_info.units);
           }
         }
         if (!y_label.isEmpty()) {
           LabelInfo xlabel_info = relation->xLabelInfo();
           if (!sameX) {
-            label = i18n("%1 vs %2").arg(y_label).arg(xlabel_info.name);
+            label = tr("%1 vs %2").arg(y_label).arg(xlabel_info.name);
           } else if (xlabel_info.quantity.isEmpty()) {
             label = y_label;
           } else if (xlabel_info.quantity != xlabel_info.name) {
-            label = i18n("%1 vs %2").arg(y_label).arg(xlabel_info.name);
+            label = tr("%1 vs %2").arg(y_label).arg(xlabel_info.name);
           } else {
             label = y_label;
           }
@@ -516,7 +516,7 @@ void LegendItem::setFontScale(const qreal scale) {
 
 QString LegendItem::_automaticDescriptiveName() const {
 
-  QString name = i18n("Empty Legend");
+  QString name = tr("Empty Legend");
   if (_auto) {
     name = _plotItem->descriptiveName();
   } else if (_relations.size()>0) {
@@ -535,7 +535,7 @@ QString LegendItem::descriptionTip() const {
     contents += QString("  %1\n").arg(relation->Name());
   }
 
-  return i18n("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
+  return tr("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
 }
 
 }

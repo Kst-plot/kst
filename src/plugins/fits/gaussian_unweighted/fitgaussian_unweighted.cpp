@@ -139,7 +139,7 @@ FitGaussianUnweightedSource::~FitGaussianUnweightedSource() {
 
 
 QString FitGaussianUnweightedSource::_automaticDescriptiveName() const {
-    return vectorY()->descriptiveName() + i18n(" Unweighted Gaussian");
+    return vectorY()->descriptiveName() + tr(" Unweighted Gaussian");
 }
 
 
@@ -258,10 +258,10 @@ bool FitGaussianUnweightedSource::algorithm() {
 
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Gaussian Fit to %1").arg(label_info.name);
+  label_info.name = tr("Gaussian Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gaussian Fit Residuals");
+  label_info.name = tr("Gaussian Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
   bool bReturn = false;

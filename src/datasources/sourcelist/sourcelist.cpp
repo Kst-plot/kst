@@ -19,11 +19,11 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "kst_i18n.h"
+
 
 using namespace Kst;
 
-static const QString sourceListTypeString = I18N_NOOP("List of Datasources");
+static const QString sourceListTypeString = "List of Datasources";
 
 
 //

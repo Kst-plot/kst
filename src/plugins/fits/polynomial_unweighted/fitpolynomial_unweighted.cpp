@@ -151,7 +151,7 @@ FitPolynomialUnweightedSource::~FitPolynomialUnweightedSource() {
 
 
 QString FitPolynomialUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Polynomial");
+  return vectorY()->descriptiveName() + tr(" Polynomial");
 }
 
 
@@ -194,10 +194,10 @@ bool FitPolynomialUnweightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Polynomial Fit to %1").arg(label_info.name);
+  label_info.name = tr("Polynomial Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Polynomial Fit Residuals");
+  label_info.name = tr("Polynomial Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
   bool bReturn = false;

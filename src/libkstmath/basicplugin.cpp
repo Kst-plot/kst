@@ -20,7 +20,7 @@
 #include <unistd.h>
 #endif
 
-#include "kst_i18n.h"
+
 
 #include "debug.h"
 #include "dialoglauncher.h"
@@ -30,12 +30,12 @@
 
 namespace Kst {
 
-const QString BasicPlugin::staticTypeString = I18N_NOOP("Plugin");
-const QString BasicPlugin::staticTypeTag = I18N_NOOP("plugin");
+const QString BasicPlugin::staticTypeString = QT_TR_NOOP("Plugin");
+const QString BasicPlugin::staticTypeTag = QT_TR_NOOP("plugin");
 
 BasicPlugin::BasicPlugin(ObjectStore *store)
 : DataObject(store) {
-  _typeString = i18n("Plugin");
+  _typeString = "Plugin";
   _type = "Plugin";
 
   _initializeShortName();
@@ -231,7 +231,7 @@ void BasicPlugin::internalUpdate() {
   //Call the plugins algorithm to operate on the inputs
   //and produce the outputs
   if ( !algorithm() ) {
-    Debug::self()->log(i18n("There is an error in the %1 algorithm.").arg(propertyString()), Debug::Error);
+    Debug::self()->log(tr("There is an error in the %1 algorithm.").arg(propertyString()), Debug::Error);
     unlockInputsAndOutputs();
     return;
   }
@@ -388,7 +388,7 @@ void BasicPlugin::updateOutput() const {
 }
 
 QString BasicPlugin::descriptionTip() const {
-  return i18n("Plugin: %1").arg(Name());
+  return tr("Plugin: %1").arg(Name());
 }
 
 }

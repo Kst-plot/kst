@@ -52,10 +52,10 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   _down->setIcon(QPixmap(":kst_downarrow.png"));
   _add->setIcon(QPixmap(":kst_rightarrow.png"));
   _remove->setIcon(QPixmap(":kst_leftarrow.png"));
-  _up->setToolTip(i18n("Move the selected property up the priority list"));
-  _down->setToolTip(i18n("Move the selected property down the priority list"));
-  _add->setToolTip(i18n("Add the selected property to the list of properties to cycle through"));
-  _remove->setToolTip(i18n("Remove the selected property from the list of properties to cycle through"));
+  _up->setToolTip(tr("Move the selected property up the priority list"));
+  _down->setToolTip(tr("Move the selected property down the priority list"));
+  _add->setToolTip(tr("Add the selected property to the list of properties to cycle through"));
+  _remove->setToolTip(tr("Remove the selected property from the list of properties to cycle through"));
 
   _maxLineWidth->setMaximum(LINEWIDTH_MAX);
 }

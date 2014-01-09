@@ -441,7 +441,7 @@ QString PlotRenderItem::topLabel() const {
       } else if ((!label_info.name.isEmpty()) && (!label_info.quantity.isEmpty())) {
         LabelInfo xlabel_info = relationList().at(0)->xLabelInfo();
         if ((!xlabel_info.name.isEmpty()) && (!xlabel_info.quantity.isEmpty())) {
-          label = i18n("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
+          label = tr("%1 vs %2").arg(label_info.name).arg(xlabel_info.name);
         } else {
           label = label_info.name;
         }

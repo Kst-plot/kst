@@ -54,7 +54,7 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   _showMultipleWidget = new EditMultipleWidget();
   if (_showMultipleWidget) {
     // Set header
-    _showMultipleWidget->setHeader(i18n("Select Vectors to View"));
+    _showMultipleWidget->setHeader(tr("Select Vectors to View"));
     // Populate the list
     update();
     // Finish setting up the layout
@@ -63,13 +63,13 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   // Add/remove buttons
   _addButton = new QPushButton();
   _addButton->setIcon(QPixmap(":kst_rightarrow.png"));
-  _addButton->setShortcut(i18n("Alt+S"));
-  _addButton->setToolTip(i18n("View selected vector(s)"));
+  _addButton->setShortcut(tr("Alt+S"));
+  _addButton->setToolTip(tr("View selected vector(s)"));
   _addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   _removeButton = new QPushButton();
   _removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
-  _removeButton->setShortcut(i18n("Alt+R"));
-  _removeButton->setToolTip(i18n("Remove selected vector(s) from view"));
+  _removeButton->setShortcut(tr("Alt+R"));
+  _removeButton->setToolTip(tr("Remove selected vector(s) from view"));
   _removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   _addRemoveLayout->addStretch();
   _addRemoveLayout->addWidget(_addButton);
@@ -106,12 +106,12 @@ void ViewVectorDialog::show() {
 void ViewVectorDialog::contextMenu(const QPoint& position) {
   QMenu menu;
   QPoint cursor = QCursor::pos();
-  QAction* removeAction = menu.addAction(i18n("Remove"));
+  QAction* removeAction = menu.addAction(tr("Remove"));
   // Add submenu to select nb of digits
-  QMenu* submenu = new QMenu(i18n("Significant digits"));
-  QAction* digitNb0Action = submenu->addAction(i18n("Show as int"));
+  QMenu* submenu = new QMenu(tr("Significant digits"));
+  QAction* digitNb0Action = submenu->addAction(tr("Show as int"));
   QAction* digitNb3Action = submenu->addAction("3");
-  QAction* digitNb6Action = submenu->addAction(i18n("6 (default)"));
+  QAction* digitNb6Action = submenu->addAction(tr("6 (default)"));
   QAction* digitNb12Action = submenu->addAction("12");
   QAction* digitNb17Action = submenu->addAction("17");
   menu.addMenu(submenu);

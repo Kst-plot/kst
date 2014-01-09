@@ -136,9 +136,9 @@ QString DifferentiationSource::_automaticDescriptiveName() const {
 QString DifferentiationSource::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Derivative: %1\n  dX: %2\n").arg(Name()).arg(scalarStep()->value());
+  tip = tr("Derivative: %1\n  dX: %2\n").arg(Name()).arg(scalarStep()->value());
 
-  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 

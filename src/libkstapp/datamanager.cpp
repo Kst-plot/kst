@@ -63,7 +63,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _session->setModel(_proxyModel);
 
 #if QT_VERSION >= 0x040700
-  _filterText->setPlaceholderText(i18n("Enter your filter here (wildcards allowed)"));
+  _filterText->setPlaceholderText(tr("Enter your filter here (wildcards allowed)"));
 #endif
 
   connect(_filterText, SIGNAL(textChanged(QString)), _proxyModel, SLOT(setFilterWildcard(QString)));

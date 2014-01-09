@@ -21,7 +21,7 @@ LabelBuilder::LabelBuilder(QWidget *parent, ObjectStore *store)
 
   setupUi(this);
 
-   _label->setWhatsThis(i18n("<qt>The syntax for labels is a derivative of a subset of LaTeX.  "
+   _label->setWhatsThis(tr("<qt>The syntax for labels is a derivative of a subset of LaTeX.  "
                              "Supported syntax is: <b>\\[greeklettername]</b> and <b>\\[Greeklettername]</b>, "
                              "<b>\\approx</b>, <b>\\cdot</b>, <b>\\ge</b>, <b>\\geq</b>, <b>\\inf</b> ,"
                              "<b>\\int</b>, <b>\\le</b>, <b>\\leq</b>, <b>\\ne</b>, <b>\\n</b>, "

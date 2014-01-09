@@ -18,7 +18,7 @@
 #include "objectstore.h"
 
 #include "math_kst.h"
-#include "kst_i18n.h"
+
 #include "kst_atof.h"
 #include "measuretime.h"
 
@@ -49,7 +49,7 @@ struct ms : QThread
 
 
 //-------------------------------------------------------------------------------------------
-static const QString asciiTypeString = I18N_NOOP("ASCII file");
+static const QString asciiTypeString = "ASCII file";
 
 
 //-------------------------------------------------------------------------------------------
@@ -232,7 +232,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   bool new_data = false;
   if (_emitProgress) {
-    emitProgress(1, i18n("Searching for rows ..."));
+    emitProgress(1, tr("Searching for rows ..."));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
@@ -244,10 +244,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
           // TODO out of memory?
         }
         _busy = false;
-        emitProgress(50, i18n("Searching for rows finished"));
+        emitProgress(50, tr("Searching for rows finished"));
       } else {
         ms::sleep(500);
-        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, i18n("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
+        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
@@ -291,9 +291,9 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   _actualField = field;
   if (_emitProgress) {
-    updateProgress(i18n("reading field"));
+    updateProgress(tr("reading field"));
   } else {
-    emit progress(0, i18n("Reading field: ") + field);
+    emit progress(0, tr("Reading field: ") + field);
   }
 
   printf("%s: AsciiSource::readField()   %s, s=%s, n=%i\n",
@@ -383,7 +383,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
       v[i] = double(s + i);
     }
     if (_emitProgress) {
-      updateProgress(i18n("INDEX created"));
+      updateProgress(tr("INDEX created"));
     }
     return n;
   }
@@ -485,7 +485,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  updateProgress(i18n("column read"));
+  updateProgress(tr("column read"));
 
   _read_count++;
   if (_read_count_max == _read_count)
@@ -514,16 +514,16 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
 //-------------------------------------------------------------------------------------------
 int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
 {
-  updateProgress(i18n("reading ..."));
+  updateProgress(tr("reading ..."));
   for (int i = 0; i < window.size(); i++) {
     if (!window[i].read()) {
       return 0;
     }
     _progress++;
-    updateProgress(i18n("reading ..."));
+    updateProgress(tr("reading ..."));
   }
 
-  updateProgress(i18n("parsing ..."));
+  updateProgress(tr("parsing ..."));
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
     QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
@@ -531,7 +531,7 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
   }
   readFutures.waitForFinished();
   _progress += window.size();
-  updateProgress(i18n("parsing ..."));
+  updateProgress(tr("parsing ..."));
   int sampleRead = 0;
   foreach (const QFuture<int> future, readFutures.futures()) {
     sampleRead += future.result();
@@ -713,7 +713,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   }
 
   for (int i = 1; i <= maxcnt; ++i) {
-    fields += i18n("Column %1").arg(i).trimmed();
+    fields += tr("Column %1").arg(i).trimmed();
   }
 
   return fields;

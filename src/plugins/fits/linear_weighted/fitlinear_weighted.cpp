@@ -152,7 +152,7 @@ FitLinearWeightedSource::~FitLinearWeightedSource() {
 
 
 QString FitLinearWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Weighted Linear");
+  return vectorY()->descriptiveName() + tr(" Weighted Linear");
 }
 
 
@@ -190,16 +190,16 @@ bool FitLinearWeightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Linear Fit to %1").arg(label_info.name);
+  label_info.name = tr("Linear Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Residuals");
+  label_info.name = tr("Linear Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Lower Limit");
+  label_info.name = tr("Linear Fit Lower Limit");
   outputVectorYLo->setLabelInfo(label_info);
 
-  label_info.name = i18n("Linear Fit Upper Limit");
+  label_info.name = tr("Linear Fit Upper Limit");
   outputVectorYHi->setLabelInfo(label_info);
 
   int i = 0;

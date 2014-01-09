@@ -32,7 +32,7 @@
 #include <QTimer>
 #include <QFileSystemWatcher>
 
-#include "kst_i18n.h"
+
 #include "datacollection.h"
 #include "debug.h"
 #include "objectstore.h"
@@ -71,8 +71,8 @@ struct NotSupportedImp : public DataSource::DataInterface<T>
 };
 
 
-const QString DataSource::staticTypeString = I18N_NOOP("Data Source");
-const QString DataSource::staticTypeTag = I18N_NOOP("source");
+const QString DataSource::staticTypeString = QT_TR_NOOP("Data Source");
+const QString DataSource::staticTypeTag = QT_TR_NOOP("source");
 
 
 Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
@@ -515,7 +515,7 @@ QStringList &DataSource::timeFields() {
 
 QStringList &DataSource::indexFields() {
   if (_frameFields.size() == 0) {
-    _frameFields.append(i18n("frames"));
+    _frameFields.append(tr("frames"));
     _frameFields.append(timeFields());
   }
 

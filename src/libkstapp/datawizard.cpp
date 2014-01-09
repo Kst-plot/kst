@@ -182,10 +182,10 @@ DataWizardPageVectors::DataWizardPageVectors(QWidget *parent)
   _down->setIcon(QPixmap(":kst_downarrow.png"));
   _add->setIcon(QPixmap(":kst_rightarrow.png"));
   _remove->setIcon(QPixmap(":kst_leftarrow.png"));
-  _up->setToolTip(i18n("Raise in plot order: Alt+Up"));
-  _down->setToolTip(i18n("Lower in plot order: Alt+Down"));
-  _add->setToolTip(i18n("Select: Alt+s"));
-  _remove->setToolTip(i18n("Remove: Alt+r"));
+  _up->setToolTip(tr("Raise in plot order: Alt+Up"));
+  _down->setToolTip(tr("Lower in plot order: Alt+Down"));
+  _add->setToolTip(tr("Select: Alt+s"));
+  _remove->setToolTip(tr("Remove: Alt+r"));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(add()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(remove()));
@@ -215,7 +215,7 @@ void DataWizardPageVectors::updateVectors() {
   _vectorsToPlot->clear();
 
   _vectors->addItems(((DataWizard*)wizard())->dataSourceFieldList());
-  _availableLabel->setText(QString::number(_vectors->count()) + i18n(" vector(s) available"));
+  _availableLabel->setText(QString::number(_vectors->count()) + tr(" vector(s) available"));
 }
 
 
@@ -240,7 +240,7 @@ void DataWizardPageVectors::remove() {
   }
   _vectors->clearSelection();
 
-  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + i18n(" vector(s) selected"));
+  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + tr(" vector(s) selected"));
 
   emit completeChanged();
 }
@@ -256,7 +256,7 @@ void DataWizardPageVectors::add() {
   }
 
   _vectorsToPlot->setCurrentRow(_vectorsToPlot->count() - 1);
-  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + i18n(" vector(s) selected"));
+  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + tr(" vector(s) selected"));
   emit completeChanged();
 }
 
@@ -584,7 +584,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(optionsUpdated()));
 
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
-  _FFTOptions->GroupBoxFFTOptions->setTitle(i18n("Create S&pectra Plots. Set FFT options below:"));
+  _FFTOptions->GroupBoxFFTOptions->setTitle(tr("Create S&pectra Plots. Set FFT options below:"));
 
   _FFTOptions->GroupBoxFFTOptions->setChecked(dialogDefaults().value("wizard/doPSD",false).toBool());
   _xAxisGroup->setChecked(dialogDefaults().value("wizard/doXY",true).toBool());
@@ -875,7 +875,7 @@ void DataWizard::finished() {
   ds->unlock();
   if (memoryRequested > memoryAvailable) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::warning(this, i18n("Insufficient Memory"), i18n("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data.").arg(memoryRequested/(1024*1024)).arg(memoryAvailable/(1024*1024)));
+    QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data.").arg(memoryRequested/(1024*1024)).arg(memoryAvailable/(1024*1024)));
     return;
   }
 

@@ -20,14 +20,13 @@
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
 #include "debug.h"
 #include "objectstore.h"
 
 namespace Kst {
 
-const QString DataString::staticTypeString = I18N_NOOP("Data String");
-const QString DataString::staticTypeTag = I18N_NOOP("datastring");
+const QString DataString::staticTypeString = QT_TR_NOOP("Data String");
+const QString DataString::staticTypeTag = QT_TR_NOOP("datastring");
 
 /** Create a DataVector: raw data from a file */
 DataString::DataString(ObjectStore *store)
@@ -92,7 +91,7 @@ void DataString::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for string %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for string %1 was not opened.").arg(Name()), Debug::Warning);
   }
   setDataSource(in_file);
 }
@@ -157,7 +156,7 @@ PrimitivePtr DataString::makeDuplicate() const {
 QString DataString::descriptionTip() const {
   QString IDstring;
 
-  IDstring = i18n(
+  IDstring = tr(
       "Data String: %1 = %4\n"
       "  %2\n"
       "  Field: %3"
@@ -167,7 +166,7 @@ QString DataString::descriptionTip() const {
 
 
 QString DataString::propertyString() const {
-  return i18n("%1 of %2").arg(_field).arg(dataSource()->fileName());
+  return tr("%1 of %2").arg(_field).arg(dataSource()->fileName());
 }
 
 void DataString::reload() {

@@ -152,7 +152,7 @@ FitLorentzianWeightedSource::~FitLorentzianWeightedSource() {
 
 
 QString FitLorentzianWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Weighted Lorentzian");
+  return vectorY()->descriptiveName() + tr(" Weighted Lorentzian");
 }
 
 
@@ -232,10 +232,10 @@ bool FitLorentzianWeightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Lorentzian Fit to %1").arg(label_info.name);
+  label_info.name = tr("Lorentzian Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Lorentzian Fit Residuals");
+  label_info.name = tr("Lorentzian Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
 

@@ -137,7 +137,7 @@ FitGradientUnweightedSource::~FitGradientUnweightedSource() {
 
 
 QString FitGradientUnweightedSource::_automaticDescriptiveName() const {
-    return vectorY()->descriptiveName() + i18n(" Unweighted Gradient");
+    return vectorY()->descriptiveName() + tr(" Unweighted Gradient");
 }
 
 
@@ -174,16 +174,16 @@ bool FitGradientUnweightedSource::algorithm() {
 
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Gradient Fit to %1").arg(label_info.name);
+  label_info.name = tr("Gradient Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Residuals");
+  label_info.name = tr("Gradient Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Lower Limit");
+  label_info.name = tr("Gradient Fit Lower Limit");
   outputVectorYLo->setLabelInfo(label_info);
 
-  label_info.name = i18n("Gradient Fit Upper Limit");
+  label_info.name = tr("Gradient Fit Upper Limit");
   outputVectorYHi->setLabelInfo(label_info);
 
   int i = 0;

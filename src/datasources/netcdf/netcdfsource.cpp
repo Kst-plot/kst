@@ -21,7 +21,7 @@
 #include "sharedptr.h"
 
 #include "netcdfsource.h"
-#include "kst_i18n.h"
+
 #include "debug.h"
 
 #include <QFile>
@@ -33,7 +33,7 @@
 
 using namespace Kst;
 
-static const QString netCdfTypeString = I18N_NOOP("netCDF Files");
+static const QString netCdfTypeString = "netCDF Files";
 
 
 //

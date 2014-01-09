@@ -13,7 +13,7 @@
 
 #include "bugreportwizard.h"
 
-#include "kst_i18n.h"
+
 
 #include <QUrl>
 #include <QDesktopServices>

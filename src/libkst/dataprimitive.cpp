@@ -18,7 +18,6 @@
 #include "dataprimitive.h"
 
 #include "debug.h"
-#include "kst_i18n.h"
 
 #include "datasource.h"
 
@@ -71,7 +70,7 @@ void DataPrimitive::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(d._primitive->myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for vector %1 was not opened.", d._primitive->Name()), Debug::Warning);
+    Debug::self()->log(d._primitive->tr("Data file for vector %1 was not opened.").arg(d._primitive->Name()), Debug::Warning);
   }
   d._file = in_file;
   if (d._file) {

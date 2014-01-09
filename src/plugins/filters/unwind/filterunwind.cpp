@@ -161,9 +161,9 @@ QString FilterUnwindSource::_automaticDescriptiveName() const {
 QString FilterUnwindSource::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Unwind Filter: %1\n  %2 - %3\n  Step: %4 %").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
+  tip = tr("Unwind Filter: %1\n  %2 - %3\n  Step: %4 %").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
 
-  tip += i18n("\nInput: %1").arg(vector()->descriptionTip());
+  tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 
@@ -236,7 +236,7 @@ bool FilterUnwindSource::algorithm() {
   }
 
   Kst::LabelInfo label_info = inputVector->labelInfo();
-  label_info.name = i18n("Unwind %1").arg(label_info.name);
+  label_info.name = tr("Unwind %1").arg(label_info.name);
   outputVector->setLabelInfo(label_info);
 
   return true;

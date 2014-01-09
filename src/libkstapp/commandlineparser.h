@@ -27,8 +27,9 @@ namespace Kst {
 /**
 	@author Barth Netterfield <netterfield@physics.utoronto.ca>
 */
-class CommandLineParser
+class CommandLineParser:QObject
 {
+    Q_OBJECT
 public:
   CommandLineParser(Document *doc, MainWindow* mw);
   ~CommandLineParser();
@@ -87,6 +88,7 @@ private:
   void addCurve(CurvePtr curve);
   ObjectList<Object> autoCurves(DataSourcePtr ds);
   void applyLabels();
+  void printUsage(const QString &t);
 };
 
 }

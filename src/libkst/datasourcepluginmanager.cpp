@@ -30,7 +30,6 @@
 #include <QTimer>
 #include <QFileSystemWatcher>
 
-#include "kst_i18n.h"
 #include "datacollection.h"
 #include "debug.h"
 #include "objectstore.h"
@@ -66,7 +65,7 @@ QStringList Kst::pluginSearchPaths()
   pluginPaths << path + QLatin1String("/Debug");
   pluginPaths << path + QLatin1String("/RelWithDebInfo");
 
-  Debug::self()->log(QString("\nPlugin Search Pathes:"));
+  Debug::self()->log(Debug::self()->tr("\nPlugin Search Pathes:"));
   foreach(const QString& p, pluginPaths) {
     Debug::self()->log(QString("-> %1").arg(p));
   }
@@ -161,7 +160,7 @@ QString DataSourcePluginManager::obtainFile(const QString& source) {
 static void scanPlugins() {
   PluginList tmpList;
 
-  Debug::self()->log(i18n("Scanning for data-source plugins."));
+  Debug::self()->log(Debug::self()->tr("Scanning for data-source plugins."));
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
@@ -184,10 +183,10 @@ static void scanPlugins() {
           if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
 
             tmpList.append(FoundPlugin(ds, d.absoluteFilePath(fileName)));
-            Debug::self()->log(QString("Plugin loaded: %1").arg(fileName));
+            Debug::self()->log(Debug::self()->tr("Plugin loaded: %1").arg(fileName));
           }
         } else {
-            Debug::self()->log(QString("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
+            Debug::self()->log(Debug::self()->tr("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
         }
     }
   }
@@ -436,7 +435,7 @@ bool DataSourcePluginManager::sourceHasConfigWidget(const QString& filename, con
     return (*i).plugin->hasConfigWidget();
   }
 
-  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
+  Debug::self()->log(Debug::self()->tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
   return false;
 }
 
@@ -458,7 +457,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForSource(const QSt
     return w;
   }
 
-  Debug::self()->log(i18n("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.", filename, type), Debug::Error);
+  Debug::self()->log(Debug::self()->tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
   return 0L;
 }
 

@@ -20,7 +20,7 @@
 #include "datacollection.h"
 #include "dataobjectplugin.h"
 #include "debug.h"
-#include "kst_i18n.h"
+
 #include "objectstore.h"
 #include "relation.h"
 #include "sharedptr.h"
@@ -205,13 +205,13 @@ bool DataObject::inputFlagsSet() const {
 
 // Scans for plugins and stores the information for them
 void DataObject::scanPlugins() {
-  Debug::self()->log(i18n("Scanning for data-object plugins."));
+  Debug::self()->log(tr("Scanning for data-object plugins."));
 
   _pluginList.clear(); //FIXME?
 
   DataObjectPluginList tmpList;
 
-  Debug::self()->log(i18n("Scanning for data-object plugins."));
+  Debug::self()->log(tr("Scanning for data-object plugins."));
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
@@ -397,13 +397,13 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 }
 
 void DataObject::load(const QXmlStreamReader &e) {
-  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
+  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(tr(typeString().toLatin1())) << endl;
   Q_UNUSED(e)
 }
 
 
 void DataObject::save(QXmlStreamWriter& ts) {
-  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << endl;
+  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(tr(typeString().toLatin1())) << endl;
   Q_UNUSED(ts)
 }
 
@@ -546,7 +546,7 @@ void DataObject::writeLockInputsAndOutputs() const {
       qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->Name() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
 #endif
       if ((*outputIt)->provider() != this) {
-        Debug::self()->log(i18n("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->Name()), Debug::Error);
+        Debug::self()->log(tr("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->Name()), Debug::Error);
       }
 
       (*outputIt)->writeLock();

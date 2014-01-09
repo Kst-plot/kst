@@ -18,7 +18,7 @@
 #define GENERATEDVECTOR_H
 
 #include "vector.h"
-//#include "kst_i18n.h"
+//
 #include "kst_export.h"
 
 namespace Kst {

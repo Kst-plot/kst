@@ -31,7 +31,7 @@
 #include "datamatrix.h"
 #include "image.h"
 #include "palette.h"
-#include "kst_i18n.h"
+
 #include "updatemanager.h"
 #include "dialogdefaults.h"
 #include "datasourcepluginmanager.h"
@@ -137,11 +137,11 @@ static void printText(const QString& text, const QString& detailText = QString()
 #endif
 }
 
-static void printUsage(const QString &t)
-{
-  printText(QString(usageMessage), QString(usageDetailsMessage), '\n' + t);
-}
 
+void CommandLineParser::printUsage(const QString &t)
+{
+  printText(tr(usageMessage), tr(usageDetailsMessage), '\n' + t);
+}
 
 
 CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
@@ -176,7 +176,7 @@ bool CommandLineParser::_setIntArg(int *arg, QString Message, bool accept_end) {
 
   if (_arguments.count()> 0) {
     param = _arguments.takeFirst();
-    if ((param==i18n("end") || (param=="end")) && (accept_end)) {
+    if ((param==tr("end") || (param=="end")) && (accept_end)) {
       *arg = -1;
     } else {
       *arg = param.toInt(&ok);
@@ -229,7 +229,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     if (ds->fileType() == "ASCII file") {
       QRegExp num("^[0-9]{1,2}$");
       if (num.exactMatch(field)) {
-        field = i18n("Column %1", field);
+        field = tr("Column %1").arg(field);
       }
     }
     // check to see if an identical vector already exists.  If so, use it.
@@ -438,20 +438,20 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
       *ok = false;
     } else if (arg == "-f") {
-      *ok = _setIntArg(&_startFrame, i18n("Usage: -f <startframe>\n"), true);
+      *ok = _setIntArg(&_startFrame, tr("Usage: -f <startframe>\n"), true);
       _document->objectStore()->override.f0 = _startFrame;
     } else if (arg == "-n") {
-      *ok = _setIntArg(&_numFrames, i18n("Usage: -n <numframes>\n"), true);
+      *ok = _setIntArg(&_numFrames, tr("Usage: -n <numframes>\n"), true);
       _document->objectStore()->override.N = _numFrames;
     } else if (arg == "-s") {
-      *ok = _setIntArg(&_skip, i18n("Usage: -s <frames per sample>\n"));
+      *ok = _setIntArg(&_skip, tr("Usage: -s <frames per sample>\n"));
       _document->objectStore()->override.skip = _skip;
     } else if (arg == "-a") {
       _doAve = true;
       _document->objectStore()->override.doAve = _doAve;
     } else if (arg == "-P") {
       QString plot_name;
-      *ok = _setStringArg(plot_name,i18n("Usage: -P <plotname>\n"));
+      *ok = _setStringArg(plot_name,tr("Usage: -P <plotname>\n"));
       _doConsecutivePlots=false;
       createOrFindPlot(plot_name);
     } else if (arg == "-A") {
@@ -459,7 +459,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     } else if (arg == "-T") {
       QString tab_name;
       _doConsecutivePlots = true;
-      *ok = _setStringArg(tab_name,i18n("Usage: -T <tab name>\n"));
+      *ok = _setStringArg(tab_name,tr("Usage: -T <tab name>\n"));
       if (dataPlotted) {
         createOrFindTab(tab_name);
       } else {
@@ -481,17 +481,17 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _usePoints = false;
       _overrideStyle = true;
     } else if (arg == "-x") {
-      *ok = _setStringArg(_xField,i18n("Usage: -x <xfieldname>\n"));
+      *ok = _setStringArg(_xField,tr("Usage: -x <xfieldname>\n"));
     } else if (arg == "-e") {
-      *ok = _setStringArg(_errorField,i18n("Usage: -e <errorfieldname>\n"));
+      *ok = _setStringArg(_errorField,tr("Usage: -e <errorfieldname>\n"));
     } else if (arg == "-r") {
-      *ok = _setDoubleArg(&_sampleRate,i18n("Usage: -r <samplerate>\n"));
+      *ok = _setDoubleArg(&_sampleRate,tr("Usage: -r <samplerate>\n"));
     } else if (arg == "-y") {
       QString field;
-      *ok = _setStringArg(field,i18n("Usage: -y <fieldname>\n"));
+      *ok = _setStringArg(field,tr("Usage: -y <fieldname>\n"));
 
       if (_fileNames.size()<1) {
-        printUsage(i18n("No data files specified\n"));
+        printUsage(tr("No data files specified\n"));
         *ok = false;
         break;
       }
@@ -499,7 +499,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         QString file = _fileNames.at(i_file);
         QFileInfo info(file);
         if (!info.exists()) {
-          printUsage(i18n("file %1 does not exist\n").arg(file));
+          printUsage(tr("file %1 does not exist\n").arg(file));
           *ok = false;
           break;
         }
@@ -535,14 +535,14 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _overrideStyle = false;
     } else if (arg == "-p") {
       QString field;
-      *ok = _setStringArg(field,i18n("Usage: -p <fieldname>\n"));
+      *ok = _setStringArg(field,tr("Usage: -p <fieldname>\n"));
 
       if (*ok) {
         for (int i_file=0; i_file<_fileNames.size(); i_file++) {
           QString file = _fileNames.at(i_file);
           QFileInfo info(file);
           if (!info.exists()) {
-            printUsage(i18n("file %1 does not exist\n").arg(file));
+            printUsage(tr("file %1 does not exist\n").arg(file));
             *ok = false;
             break;
           }
@@ -584,14 +584,14 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _ylabel.clear();
     } else if (arg == "-h") {
       QString field;
-      *ok = _setStringArg(field,i18n("Usage: -h <fieldname>\n"));
+      *ok = _setStringArg(field,tr("Usage: -h <fieldname>\n"));
 
       if (*ok) {
         for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
           QString file = _fileNames.at ( i_file );
           QFileInfo info ( file );
           if ( !info.exists() || !info.isFile() ) {
-            printUsage ( i18n ( "file %1 does not exist\n" ).arg ( file ) );
+            printUsage ( tr ( "file %1 does not exist\n" ).arg ( file ) );
             *ok = false;
             break;
           }
@@ -625,13 +625,13 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       }
     } else if (arg == "-z") {
       QString field;
-      *ok = _setStringArg(field,i18n("Usage: -z <fieldname>\n"));
+      *ok = _setStringArg(field,tr("Usage: -z <fieldname>\n"));
       if (*ok) {
         for (int i_file=0; i_file<_fileNames.size(); i_file++) {
           QString file = _fileNames.at(i_file);
           QFileInfo info(file);
           if (!info.exists() || !info.isFile()) {
-            printUsage(i18n("file %1 does not exist\n").arg(file));
+            printUsage(tr("file %1 does not exist\n").arg(file));
             *ok = false;
             break;
           }
@@ -652,12 +652,12 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         dataPlotted = true;
       }
     } else if (arg == "-F") {
-      *ok = _setStringArg(_document->objectStore()->override.fileName, i18n("Usage: -F <datafile>\n"));
+      *ok = _setStringArg(_document->objectStore()->override.fileName, tr("Usage: -F <datafile>\n"));
     } else if (arg == "--png") {
-      *ok = _setStringArg(_pngFile, i18n("Usage: --png <filename>\n"));
+      *ok = _setStringArg(_pngFile, tr("Usage: --png <filename>\n"));
 #ifndef KST_NO_PRINTER
     } else if (arg == "--print") {
-      *ok = _setStringArg(_printFile, i18n("Usage: --print <filename>\n"));
+      *ok = _setStringArg(_printFile, tr("Usage: --print <filename>\n"));
     } else if (arg == "--landscape") {
       _landscape = true;
     } else if (arg == "--portrait") {

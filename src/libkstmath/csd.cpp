@@ -23,7 +23,7 @@
 #include <QXmlStreamWriter>
 #include <QLatin1String>
 
-#include "kst_i18n.h"
+
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
@@ -35,8 +35,8 @@ extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
-const QString CSD::staticTypeString = I18N_NOOP("Cumulative Spectral Decay");
-const QString CSD::staticTypeTag = I18N_NOOP("csd");
+const QString CSD::staticTypeString = QT_TR_NOOP("Cumulative Spectral Decay");
+const QString CSD::staticTypeTag = QT_TR_NOOP("csd");
 
 static const QLatin1String CSD_INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");
@@ -127,7 +127,7 @@ void CSD::internalUpdate() {
         _outMatrix->setValueRaw(xSize, j, tempOutput[j]);
       }
     } else {
-      Debug::self()->log(i18n("Could not allocate sufficient memory for CSD."), Debug::Error);
+      Debug::self()->log(tr("Could not allocate sufficient memory for CSD."), Debug::Error);
       break;
     }
 
@@ -192,7 +192,7 @@ bool CSD::slaveVectorsUsed() const {
 
 
 QString CSD::propertyString() const {
-  return i18n("CSD: %1").arg(_inputVectors[CSD_INVECTOR]->Name());
+  return tr("CSD: %1").arg(_inputVectors[CSD_INVECTOR]->Name());
 }
 
 
@@ -353,19 +353,19 @@ void CSD::updateMatrixLabels(void) {
   switch (_outputType) {
   default:
   case 0: // amplitude spectral density (default) [V/Hz^1/2]
-    label_info.quantity = i18n("Amplitude Spectral Density");
+    label_info.quantity = tr("Amplitude Spectral Density");
     label_info.units = QString("%1/%2^{1/2}").arg(_vectorUnits).arg(_rateUnits);
     break;
   case 1: // power spectral density [V^2/Hz]
-    label_info.quantity = i18n("Power Spectral Density");
+    label_info.quantity = tr("Power Spectral Density");
     label_info.units = QString("%1^2/%2").arg(_vectorUnits).arg(_rateUnits);
     break;
   case 2: // amplitude spectrum [V]
-    label_info.quantity = i18n("Amplitude Spectrum");
+    label_info.quantity = tr("Amplitude Spectrum");
     label_info.units = QString("%1").arg(_vectorUnits);
     break;
   case 3: // power spectrum [V^2]
-    label_info.quantity = i18n("Power Spectrum");
+    label_info.quantity = tr("Power Spectrum");
     label_info.units = QString("%1^2").arg(_vectorUnits);
     break;
   }
@@ -374,10 +374,10 @@ void CSD::updateMatrixLabels(void) {
 
   label_info.name.clear();
   label_info.units = _rateUnits;
-  label_info.quantity = i18n("Frequency");
+  label_info.quantity = tr("Frequency");
   _outMatrix->setYLabelInfo(label_info);
 
-  label_info.quantity = i18n("Time");
+  label_info.quantity = tr("Time");
   label_info.units = QString('s');
   _outMatrix->setXLabelInfo(label_info);
 
@@ -390,15 +390,15 @@ QString CSD::_automaticDescriptiveName() const {
 QString CSD::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Spectrogram: %1\n  FFT Length: 2^%2").arg(Name()).arg(length());
+  tip = tr("Spectrogram: %1\n  FFT Length: 2^%2").arg(Name()).arg(length());
 
   if (average() || apodize() || removeMean()) {
     tip += "\n  ";
-    if (average()) tip += i18n("Average; ");
-    if (apodize()) tip += i18n("Apodize; ");
-    if (removeMean()) tip += i18n("Remove Mean;");
+    if (average()) tip += tr("Average; ");
+    if (apodize()) tip += tr("Apodize; ");
+    if (removeMean()) tip += tr("Remove Mean;");
   }
-  tip += i18n("\nInput: %1").arg(_inputVectors[CSD_INVECTOR]->descriptionTip());
+  tip += tr("\nInput: %1").arg(_inputVectors[CSD_INVECTOR]->descriptionTip());
   return tip;
  
 }

@@ -17,7 +17,7 @@
 #include "curve.h"
 
 // includes for KDE
-#include "kst_i18n.h"
+
 #include <qdebug.h>
 #include <QPolygonF>
 #include <QXmlStreamWriter>
@@ -57,8 +57,8 @@
 
 namespace Kst {
 
-const QString Curve::staticTypeString = I18N_NOOP("Curve");
-const QString Curve::staticTypeTag = I18N_NOOP("curve");
+const QString Curve::staticTypeString = QT_TR_NOOP("Curve");
+const QString Curve::staticTypeTag = QT_TR_NOOP("curve");
 
 static const QLatin1String& XVECTOR = QLatin1String("X");
 static const QLatin1String& YVECTOR = QLatin1String("Y");
@@ -80,7 +80,7 @@ Curve::Curve(ObjectStore *store)
 
   MaxX = MinX = MeanX = MaxY = MinY = MeanY = MinPosX = MinPosY = 0;
   NS = 0;
-  _typeString = i18n("Curve");
+  _typeString = tr("Curve");
   _type = "Curve";
   _initializeShortName();
   Color = QColor();
@@ -390,7 +390,7 @@ LabelInfo Curve::titleInfo() const {
 
 
 QString Curve::propertyString() const {
-  return i18n("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());
+  return tr("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());
 }
 
 
@@ -1616,40 +1616,40 @@ void Curve::paintLegendSymbol(QPainter *p, const QSize &size) {
 }
 
 QString Curve::_automaticDescriptiveName() const {
-  return i18n("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
+  return tr("%1 vs %2").arg(yVector()->descriptiveName()).arg(xVector()->descriptiveName());
 }
 
 QString Curve::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Curve: %1\nX: %2\nY: %3").arg(Name()).arg(xVector()->descriptionTip()).arg(yVector()->descriptionTip());
+  tip = tr("Curve: %1\nX: %2\nY: %3").arg(Name()).arg(xVector()->descriptionTip()).arg(yVector()->descriptionTip());
 
   if (hasXError()) {
-    tip += i18n("\nX+ Error: %1").arg(xErrorVector()->Name());
+    tip += tr("\nX+ Error: %1").arg(xErrorVector()->Name());
   }
 
   if (hasXMinusError()) {
-    tip += i18n("\nX- Error: %1").arg(xMinusErrorVector()->Name());
+    tip += tr("\nX- Error: %1").arg(xMinusErrorVector()->Name());
   }
 
   if (hasYError()) {
-    tip += i18n("\nY+ Error: %1").arg(yErrorVector()->Name());
+    tip += tr("\nY+ Error: %1").arg(yErrorVector()->Name());
   }
 
   if (hasYMinusError()) {
-    tip += i18n("\nY- Error: %1").arg(yMinusErrorVector()->Name());
+    tip += tr("\nY- Error: %1").arg(yMinusErrorVector()->Name());
   }
 
   if (hasLines()) {
-    tip += i18n("\nLines: Width %1 and Style %2").arg(lineWidth()).arg(lineStyle());
+    tip += tr("\nLines: Width %1 and Style %2").arg(lineWidth()).arg(lineStyle());
   }
 
   if (hasPoints()) {
-    tip += i18n("\nPoints: Style %1").arg(pointType());
+    tip += tr("\nPoints: Style %1").arg(pointType());
   }
 
   if (hasBars()) {
-    tip += i18n("\nBars");
+    tip += tr("\nBars");
   }
 
   return tip;

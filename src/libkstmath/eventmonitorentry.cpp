@@ -23,7 +23,6 @@
 
 // application specific includes
 #include "enodes.h"
-#include "emailthread.h"
 #include "dialoglauncher.h"
 #include "datacollection.h"
 
@@ -42,8 +41,8 @@ extern struct yy_buffer_state *yy_scan_string(const char*);
 
 namespace Kst {
 
-const QString EventMonitorEntry::staticTypeString = I18N_NOOP("Event Monitor");
-const QString EventMonitorEntry::staticTypeTag = I18N_NOOP("eventmonitor");
+const QString EventMonitorEntry::staticTypeString = QT_TR_NOOP("Event Monitor");
+const QString EventMonitorEntry::staticTypeTag = QT_TR_NOOP("eventmonitor");
 
 namespace {
   const int EventMonitorEventType = int(QEvent::User) + 2931;
@@ -435,11 +434,11 @@ bool EventMonitorEntry::uses(ObjectPtr p) const {
 }
 
 QString EventMonitorEntry::_automaticDescriptiveName() const {
-  return i18n("event");
+  return tr("event");
 }
 
 QString EventMonitorEntry::descriptionTip() const {
-  return i18n("Event: %1").arg(Name());
+  return tr("Event: %1").arg(Name());
 }
 
 }

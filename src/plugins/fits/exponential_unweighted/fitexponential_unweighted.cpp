@@ -139,7 +139,7 @@ FitExponentialUnweightedSource::~FitExponentialUnweightedSource() {
 
 
 QString FitExponentialUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + i18n(" Unweighted Exponential");
+  return vectorY()->descriptiveName() + tr(" Unweighted Exponential");
 }
 
 
@@ -213,10 +213,10 @@ bool FitExponentialUnweightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = i18n("Exponential Fit to %1").arg(label_info.name);
+  label_info.name = tr("Exponential Fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
-  label_info.name = i18n("Exponential Fit Residuals");
+  label_info.name = tr("Exponential Fit Residuals");
   outputVectorYResiduals->setLabelInfo(label_info);
 
   bool bReturn = false;

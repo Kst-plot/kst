@@ -20,13 +20,10 @@
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
-
-
 namespace Kst {
 
-const QString String::staticTypeString = I18N_NOOP("String");
-const QString String::staticTypeTag = I18N_NOOP("string");
+const QString String::staticTypeString = QT_TR_NOOP("String");
+const QString String::staticTypeTag = QT_TR_NOOP("string");
 
 String::String(ObjectStore *store)
     : Primitive(store, 0L), _orphan(false), _editable(false) {
@@ -103,7 +100,7 @@ QString String::_automaticDescriptiveName() const {
 
 
 QString String::descriptionTip() const {
-  return i18n("String: %1").arg(Name());
+  return tr("String: %1").arg(Name());
 }
 
 

@@ -15,7 +15,7 @@
 #include <events.h>
 #include <logevents.h>
 
-#include "kst_i18n.h"
+
 
 #include <QDebug>
 
@@ -54,7 +54,7 @@ void LogWidget::logAdded(const Debug::LogMessage& msg) {
     return;
   }
 
-  append(i18n("%1<b>%2</b> %3").arg(sym).arg(msg.date.toString()).arg(msg.msg));
+  append(tr("%1<b>%2</b> %3").arg(sym).arg(msg.date.toString()).arg(msg.msg));
 }
 
 

@@ -151,26 +151,26 @@ void LogDialog::scriptStdOut() {
 
 
 void LogDialog::scriptStarted() {
-  _scriptRunning->setText(i18n("Script: Running"));
+  _scriptRunning->setText(tr("Script: Running"));
 }
 
 
 void LogDialog::scriptFinished(int code) {
   if (code == 0) {
-    _scriptRunning->setText(i18n("Script: Finished"));
+    _scriptRunning->setText(tr("Script: Finished"));
   } else {
-    _scriptRunning->setText(i18n("Script: return code %1").arg(code));
+    _scriptRunning->setText(tr("Script: return code %1").arg(code));
   }
 }
 
 
 void LogDialog::scriptError(QProcess::ProcessError p) {
   if (p==QProcess::FailedToStart) {
-    _scriptRunning->setText(i18n("Script error: Failed to start"));
+    _scriptRunning->setText(tr("Script error: Failed to start"));
   } else if (p==QProcess::Crashed) {
-    _scriptRunning->setText(i18n("Script error: Crashed"));
+    _scriptRunning->setText(tr("Script error: Crashed"));
   } else {
-    _scriptRunning->setText(i18n("Script error:"));
+    _scriptRunning->setText(tr("Script error:"));
   }
 }
 

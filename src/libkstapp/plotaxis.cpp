@@ -826,21 +826,21 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   if (range_jd > minimum_units*365.0) {
     // use years
     range_u = range_jd/365.25;
-    units = i18n(" [Years]");
+    units = tr(" [Years]");
     computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u);
     // round base to year;
     base_jd = floor((min_jd - (JD1900 + 0.5))/365.25) * 365.25 + (JD1900 + 0.5) + 1.0;
   } else if (range_jd > minimum_units) {
     // use days
     range_u = range_jd;
-    units = i18n(" [Days]");
+    units = tr(" [Days]");
     computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u);
     // round base to day
     base_jd = floor(min_jd)+1.0;
   } else if (range_jd > minimum_units/24.0) {
     // use hours
     range_u = range_jd*24.0;
-    units = i18n(" [Hours]");
+    units = tr(" [Hours]");
     computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Hour);
     // round base to hour
     double d_jd = min_jd - floor(min_jd);
@@ -848,14 +848,14 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   } else if (range_jd > minimum_units/(24.0*60.0)) {
     // use minutes
     range_u = range_jd*24.0*60.0;
-    units = i18n(" [Minutes]");
+    units = tr(" [Minutes]");
     computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Minute);
     double d_jd = min_jd - floor(min_jd);
     base_jd = floor(min_jd) + (floor(d_jd*24.0*60.0/tickspacing_u)+1.0)/(24.0*60.0/tickspacing_u);
   } else {
     // use seconds
     range_u = range_jd*24.0*3600.0;
-    units = i18n(" [Seconds]");
+    units = tr(" [Seconds]");
     double d_jd = min_jd - floor(min_jd);
     computeMajorTickSpacing(&tickspacing_u, &_automaticMinorTickCount, tickMode, range_u, Second);
     base_jd = floor(min_jd) + (floor(d_jd*24.0*3600.0/tickspacing_u)+1.0)/(24.0*3600.0/tickspacing_u);

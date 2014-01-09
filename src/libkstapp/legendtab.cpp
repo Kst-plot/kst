@@ -28,10 +28,10 @@ LegendTab::LegendTab(QWidget *parent)
   _down->setIcon(QPixmap(":kst_downarrow.png"));
   _add->setIcon(QPixmap(":kst_rightarrow.png"));
   _remove->setIcon(QPixmap(":kst_leftarrow.png"));
-  _up->setToolTip(i18n("Raise in list order: Alt+Up"));
-  _down->setToolTip(i18n("Lower in list order: Alt+Down"));
-  _add->setToolTip(i18n("Select: Alt+s"));
-  _remove->setToolTip(i18n("Remove: Alt+r"));
+  _up->setToolTip(tr("Raise in list order: Alt+Up"));
+  _down->setToolTip(tr("Lower in list order: Alt+Down"));
+  _add->setToolTip(tr("Select: Alt+s"));
+  _remove->setToolTip(tr("Remove: Alt+r"));
 
   _bold->setFixedWidth(32);
   _bold->setFixedHeight(32);

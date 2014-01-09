@@ -21,15 +21,15 @@
 #include <QTextDocument>
 #include <QXmlStreamWriter>
 
-#include "kst_i18n.h"
+
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
 
 namespace Kst {
 
-const QString VScalar::staticTypeString = I18N_NOOP("Vector Field Scalar");
-const QString VScalar::staticTypeTag = I18N_NOOP("vscalar");
+const QString VScalar::staticTypeString = QT_TR_NOOP("Vector Field Scalar");
+const QString VScalar::staticTypeTag = QT_TR_NOOP("vscalar");
 
 /** Create a VScalar: a scalar from a single sample of a vector field */
 VScalar::VScalar(ObjectStore *store)
@@ -69,7 +69,7 @@ void VScalar::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(i18n("Data file for scalar %1 was not opened.", Name()), Debug::Warning);
+    Debug::self()->log(tr("Data file for scalar %1 was not opened.").arg(Name()), Debug::Warning);
   }
 }
 
@@ -170,7 +170,7 @@ DataSourcePtr VScalar::dataSource() const {
 QString VScalar::descriptionTip() const {
   QString IDstring;
 
-  IDstring = i18n(
+  IDstring = tr(
       "Data Scalar: %1 = %4\n"
       "  %2\n"
       "  Field: %3\n"
@@ -204,7 +204,7 @@ bool VScalar::_checkValidity(const DataSourcePtr ds) const {
 
 
 QString VScalar::propertyString() const {
-  return i18n("%2 frame %3 of %1 = %4").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
+  return tr("%2 frame %3 of %1 = %4").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
 }
 
 }

@@ -24,7 +24,7 @@
 
 #include <QTextDocument>
 #include <QXmlStreamWriter>
-#include "kst_i18n.h"
+
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
@@ -32,8 +32,8 @@
 
 namespace Kst {
 
-const QString Histogram::staticTypeString = I18N_NOOP("Histogram");
-const QString Histogram::staticTypeTag = I18N_NOOP("histogram");
+const QString Histogram::staticTypeString = QT_TR_NOOP("Histogram");
+const QString Histogram::staticTypeTag = QT_TR_NOOP("histogram");
 
 static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
@@ -168,7 +168,7 @@ void Histogram::internalUpdate() {
   switch (_NormalizationMode) {
     case Number:
       _Normalization = 1.0;
-      label_info.quantity = i18n("Number");
+      label_info.quantity = tr("Number");
       break;
     case Percent:
       if (ns > 0) {
@@ -176,7 +176,7 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      label_info.quantity = i18n("Percent");
+      label_info.quantity = tr("Percent");
       break;
     case Fraction:
       if (ns > 0) {
@@ -184,7 +184,7 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      label_info.quantity = i18n("Fraction");
+      label_info.quantity = tr("Fraction");
       break;
     case MaximumOne:
       if (MaxY > 0) {
@@ -192,11 +192,11 @@ void Histogram::internalUpdate() {
       } else {
         _Normalization = 1.0;
       }
-      label_info.quantity = i18n("Normalized Frequency");
+      label_info.quantity = tr("Normalized Frequency");
       break;
     default:
       _Normalization = 1.0;
-      label_info.quantity = i18n("Number");
+      label_info.quantity = tr("Number");
       break;
   }
 
@@ -204,7 +204,7 @@ void Histogram::internalUpdate() {
 
   label_info.quantity.clear();
   label_info.units.clear();
-  label_info.name = i18n( "Histogram of %1").arg(_bVector->labelInfo().name);
+  label_info.name = tr( "Histogram of %1").arg(_bVector->labelInfo().name);
   label_info.file = _bVector->labelInfo().file;
 
   _hVector->setTitleInfo(label_info);
@@ -298,7 +298,7 @@ void Histogram::save(QXmlStreamWriter &xml) {
 
 
 QString Histogram::propertyString() const {
-  return i18n("Histogram: %1").arg(_inputVectors[RAWVECTOR]->Name());
+  return tr("Histogram: %1").arg(_inputVectors[RAWVECTOR]->Name());
 }
 
 
@@ -404,13 +404,13 @@ QString Histogram::_automaticDescriptiveName() const {
 QString Histogram::descriptionTip() const {
   QString tip;
 
-  tip = i18n("Histogram: %1").arg(Name());
+  tip = tr("Histogram: %1").arg(Name());
   if (realTimeAutoBin()) {
-    tip+= i18n("\n  Auto-bin");
+    tip+= tr("\n  Auto-bin");
   } else {
-    tip += i18n("\n  %1 bins from %2 to %3").arg(numberOfBins()).arg(xMin()).arg(xMax());
+    tip += tr("\n  %1 bins from %2 to %3").arg(numberOfBins()).arg(xMin()).arg(xMax());
   }
-  tip += i18n("\nInput: %1").arg(_inputVectors[RAWVECTOR]->descriptionTip());
+  tip += tr("\nInput: %1").arg(_inputVectors[RAWVECTOR]->descriptionTip());
 
   return tip;
 }
