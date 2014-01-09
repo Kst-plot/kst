@@ -56,8 +56,8 @@ ChangeFileDialog::ChangeFileDialog(QWidget *parent)
   connect(_removeAll, SIGNAL(clicked()), this, SLOT(removeAll()));
   connect(_addAll, SIGNAL(clicked()), this, SLOT(addAll()));
 
-  connect(_changeFilePrimitiveList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
-  connect(_selectedFilePrimitiveList, SIGNAL(itemDoubleClicked (QListWidgetItem*)), this, SLOT(selectedDoubleClicked(QListWidgetItem*)));
+  connect(_changeFilePrimitiveList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
+  connect(_selectedFilePrimitiveList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(selectedDoubleClicked(QListWidgetItem*)));
 
   connect(_allFromFile, SIGNAL(clicked()), this, SLOT(selectAllFromFile()));
 
@@ -157,7 +157,7 @@ void ChangeFileDialog::fileNameChanged(const QString &file) {
 
   _requestID += 1;
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
-  connect(validateDSThread, SIGNAL(dataSourceValid(QString, int)), this, SLOT(sourceValid(QString, int)));
+  connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
 }
 
