@@ -676,14 +676,14 @@ RelationPtr Curve::makeDuplicate() const {
 // and not just pulled out of the air by what looks ~good.
 // They are currently "about right" for printing to US Letter.
 double Curve::pointDim(QRectF w) const {
-  return qMax(1.01, PointSize * ((w.width() + w.height()) * (1.0 / 4000.0)));
+  return qMax(qreal(1.01), PointSize * ((w.width() + w.height()) * (1.0 / 4000.0)));
 }
 
 double Curve::lineDim(const QRectF &R, double linewidth) {
-  double lw = qMax(1.01, linewidth*(R.width()+R.height())*(1.0/2000.0));
+  double lw = qMax(qreal(1.01), linewidth*(R.width()+R.height())*(1.0/2000.0));
   // if you ask for a thicker line, make sure it is at least 2 px wide
   if (linewidth>1.9) {
-    lw = qMax(2.0,lw);
+    lw = qMax(qreal(2.0),lw);
   }
 
   return (int(lw+0.5));
