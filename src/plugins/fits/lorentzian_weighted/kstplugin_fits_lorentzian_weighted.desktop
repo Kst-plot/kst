@@ -14,6 +14,7 @@ Name[uk]=Наближення: градієнтно-лоренців додат�
 Name[x-test]=xxFits - Gradient Lorentzian Pluginxx
 Comment=Implements a Gradient Lorentzian Fits Plugin for Kst.
 Comment[ca]=Implementa un connector Fits de Lorentz en gradient pel Kst.
+Comment[de]=Implementiert ein Fits-Lorentz-Verlaufsmodul für Kst.
 Comment[fr]=Implémente un module de régression à gradient lorentzienne pour Kst.
 Comment[pt]=Implementa um 'plugin' de ajuste de Lorentz em gradiente para o Kst.
 Comment[pt_BR]=Implementa um plugin de ajuste de Lorentz em gradiente para o Kst.
