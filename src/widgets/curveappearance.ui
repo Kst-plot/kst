@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>173</height>
+    <width>498</width>
+    <height>171</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -265,22 +265,22 @@
         </property>
         <item>
          <property name="text">
-          <string>All</string>
+          <string comment="show every point">All</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>High</string>
+          <string comment="high density of points">High</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Medium</string>
+          <string comment="medium density of points">Medium</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Low</string>
+          <string comment="low density of points">Low</string>
          </property>
         </item>
        </widget>

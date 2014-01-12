@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>401</height>
+    <width>505</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -108,7 +108,7 @@
         <item>
          <widget class="QLabel" name="textLabel1">
           <property name="text">
-           <string>Available:</string>
+           <string comment="The items which are available">Available:</string>
           </property>
           <property name="wordWrap">
            <bool>false</bool>
@@ -128,7 +128,7 @@
         <item>
          <widget class="QLabel" name="textLabel2">
           <property name="text">
-           <string>Selected:</string>
+           <string comment="the items which have been selected">Selected:</string>
           </property>
           <property name="wordWrap">
            <bool>false</bool>
@@ -243,22 +243,22 @@
          <widget class="QComboBox" name="_pointDensity">
           <item>
            <property name="text">
-            <string>All</string>
+            <string comment="all of the points">All</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>High</string>
+            <string comment="high point density">High</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Medium</string>
+            <string comment="medium point density">Medium</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Low</string>
+            <string comment="low point density">Low</string>
            </property>
           </item>
          </widget>

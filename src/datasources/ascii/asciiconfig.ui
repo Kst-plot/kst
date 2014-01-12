@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
-    <height>519</height>
+    <width>831</width>
+    <height>517</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,10,1,1,1">
@@ -543,7 +543,7 @@ own constant width</string>
           <item>
            <widget class="QRadioButton" name="_nanNull">
             <property name="text">
-             <string>Null</string>
+             <string>Zero</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -852,24 +852,24 @@ own constant width</string>
                </property>
                <property name="dateTime">
                 <datetime>
-                 <hour>23</hour>
+                 <hour>4</hour>
                  <minute>0</minute>
                  <second>0</second>
-                 <year>1999</year>
-                 <month>12</month>
-                 <day>31</day>
+                 <year>2000</year>
+                 <month>1</month>
+                 <day>1</day>
                 </datetime>
                </property>
                <property name="date">
                 <date>
-                 <year>1999</year>
-                 <month>12</month>
-                 <day>31</day>
+                 <year>2000</year>
+                 <month>1</month>
+                 <day>1</day>
                 </date>
                </property>
                <property name="time">
                 <time>
-                 <hour>23</hour>
+                 <hour>4</hour>
                  <minute>0</minute>
                  <second>0</second>
                 </time>
@@ -902,7 +902,7 @@ own constant width</string>
              <item>
               <widget class="QRadioButton" name="_offsetRelative">
                <property name="text">
-                <string>Relative</string>
+                <string comment="relative offset">Relative</string>
                </property>
                <property name="checked">
                 <bool>false</bool>
@@ -975,13 +975,6 @@ own constant width</string>
     </widget>
    </item>
   </layout>
-  <zorder>_labelBeginning</zorder>
-  <zorder>_showBeginning</zorder>
-  <zorder>line</zorder>
-  <zorder>_interpret</zorder>
-  <zorder>_useOffset</zorder>
-  <zorder>_useOffset</zorder>
-  <zorder>groupBox</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

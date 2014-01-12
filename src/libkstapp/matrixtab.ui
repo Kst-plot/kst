@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
-    <height>623</height>
+    <width>514</width>
+    <height>621</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -673,7 +673,7 @@
    <item row="0" column="0">
     <widget class="QGroupBox" name="_sourceGroup">
      <property name="title">
-      <string>Source</string>
+      <string comment="the source of the item">Source</string>
      </property>
      <layout class="QGridLayout">
       <property name="topMargin">

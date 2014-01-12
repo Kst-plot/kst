@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
-    <height>407</height>
+    <width>268</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -70,7 +70,7 @@
        <item>
         <widget class="QPushButton" name="_selectNoneBut">
          <property name="text">
-          <string>Clear</string>
+          <string comment="clear the list">Clear</string>
          </property>
         </widget>
        </item>

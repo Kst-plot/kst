@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>433</height>
+    <width>650</width>
+    <height>431</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_5">
@@ -109,21 +109,21 @@
           <item>
            <widget class="QCheckBox" name="_scaleAutoBaseOffset">
             <property name="text">
-             <string>Auto</string>
+             <string comment="Automatically enable or disable an option">Auto</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="_scaleBaseOffset">
             <property name="text">
-             <string>On</string>
+             <string comment="Enable an option">On</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="_baseOffsetOff">
             <property name="text">
-             <string>Off</string>
+             <string comment="Disable an option">Off</string>
             </property>
            </widget>
           </item>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>101</height>
+    <width>420</width>
+    <height>99</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>X:</string>
+      <string comment="The X axis of a plot">X:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -55,7 +55,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Y:</string>
+      <string comment="The Y axis of a plot">Y:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -84,7 +84,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Weights:</string>
+      <string comment="statistical weights">Weights:</string>
      </property>
      <property name="wordWrap">
       <bool>false</bool>

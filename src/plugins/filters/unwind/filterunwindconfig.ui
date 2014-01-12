@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>91</height>
+    <height>89</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -55,7 +55,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Minimum:</string>
+      <string comment="the minimum value">Minimum:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -77,7 +77,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Maximum:</string>
+      <string comment="the maximum value">Maximum:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

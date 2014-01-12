@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>271</width>
-    <height>178</height>
+    <width>269</width>
+    <height>176</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -23,7 +23,7 @@
      <item row="2" column="2">
       <widget class="QRadioButton" name="_right">
        <property name="text">
-        <string>Right</string>
+        <string comment="the right side">Right</string>
        </property>
       </widget>
      </item>
@@ -36,7 +36,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Left</string>
+        <string comment="the left side">Left</string>
        </property>
       </widget>
      </item>

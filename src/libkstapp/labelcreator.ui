@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
-    <height>281</height>
+    <width>390</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="toolTip">
+   <string comment="italic font"/>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0" colspan="2">
@@ -36,7 +39,7 @@
      <item row="0" column="2">
       <widget class="QRadioButton" name="_right">
        <property name="text">
-        <string>Right</string>
+        <string comment="The right side">Right</string>
        </property>
       </widget>
      </item>
@@ -49,7 +52,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Left</string>
+        <string comment="The left side">Left</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -76,6 +79,67 @@
    </item>
    <item row="2" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="4">
+      <widget class="QPushButton" name="_bold">
+       <property name="toolTip">
+        <string comment="bold font">Bold</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="si" stdset="0">
+        <string>label bold</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string> points</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="_Label_12">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Font famil&amp;y:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>_family</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="7">
+      <widget class="QFontComboBox" name="_family"/>
+     </item>
+     <item row="0" column="7">
+      <widget class="Kst::ColorButton" name="_labelColor">
+       <property name="toolTip">
+        <string comment="The color of the object">Color</string>
+       </property>
+       <property name="si" stdset="0">
+        <string>label color</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="_Label_11">
        <property name="text">
@@ -102,54 +166,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="_Label_12">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Font famil&amp;y:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="buddy">
-        <cstring>_family</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1" colspan="6">
-      <widget class="QFontComboBox" name="_family"/>
-     </item>
-     <item row="0" column="6">
-      <widget class="Kst::ColorButton" name="_labelColor">
-       <property name="toolTip">
-        <string>Color</string>
-       </property>
-       <property name="si" stdset="0">
-        <string>label color</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QPushButton" name="_bold">
-       <property name="toolTip">
-        <string>Bold</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string>label bold</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="5">
       <widget class="QPushButton" name="_italic">
        <property name="toolTip">
@@ -163,19 +179,6 @@
        </property>
        <property name="si" stdset="0">
         <string>label italic</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string> points</string>
        </property>
       </widget>
      </item>
@@ -215,7 +218,6 @@
  <tabstops>
   <tabstop>_labelFontScale</tabstop>
   <tabstop>_bold</tabstop>
-  <tabstop>_italic</tabstop>
   <tabstop>_labelColor</tabstop>
   <tabstop>_family</tabstop>
   <tabstop>_saveAsDefault</tabstop>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>458</width>
-    <height>447</height>
+    <width>456</width>
+    <height>445</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -160,7 +160,7 @@
         </item>
         <item>
          <property name="text">
-          <string>STEP()</string>
+          <string comment="A mathematical function">STEP()</string>
          </property>
         </item>
         <item>
@@ -190,7 +190,7 @@
         </item>
         <item>
          <property name="text">
-          <string>TAN()</string>
+          <string comment="a mathematical function">TAN()</string>
          </property>
         </item>
         <item>

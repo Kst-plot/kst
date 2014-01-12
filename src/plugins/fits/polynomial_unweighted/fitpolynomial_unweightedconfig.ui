@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>421</width>
-    <height>165</height>
+    <width>419</width>
+    <height>163</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,7 +28,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>X:</string>
+        <string comment="The X (horizontal) axis of a plot">X:</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -58,7 +58,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Y:</string>
+        <string comment="The Y (vertical) axis of a plot">Y:</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -88,7 +88,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Order:</string>
+        <string comment="the order of a polynomial">Order:</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>

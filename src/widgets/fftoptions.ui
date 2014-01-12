@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
-    <height>200</height>
+    <width>741</width>
+    <height>198</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -38,7 +38,7 @@
          <widget class="QComboBox" name="_apodizeFunction">
           <item>
            <property name="text">
-            <string>Default</string>
+            <string comment="Use the application default option">Default</string>
            </property>
           </item>
           <item>

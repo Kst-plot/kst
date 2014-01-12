@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>269</height>
+    <width>423</width>
+    <height>282</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -266,7 +266,7 @@
       <item row="0" column="3">
        <widget class="QPushButton" name="_bold">
         <property name="toolTip">
-         <string>Bold</string>
+         <string comment="Bold Font">Bold</string>
         </property>
         <property name="text">
          <string/>
@@ -282,7 +282,7 @@
       <item row="0" column="4">
        <widget class="QPushButton" name="_italic">
         <property name="toolTip">
-         <string>Italic</string>
+         <string comment="Italic font">Italic</string>
         </property>
         <property name="text">
          <string/>

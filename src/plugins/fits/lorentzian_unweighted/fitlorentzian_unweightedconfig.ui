@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>115</height>
+    <width>431</width>
+    <height>113</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,7 +28,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>X:</string>
+        <string comment="The X axis of a plot">X:</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>
@@ -58,7 +58,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Y:</string>
+        <string comment="The Y axis of a plot">Y:</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>

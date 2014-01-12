@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>231</height>
+    <width>662</width>
+    <height>229</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -127,7 +127,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>to:</string>
+           <string comment="from: 333 to: 555">to:</string>
           </property>
           <property name="wordWrap">
            <bool>false</bool>

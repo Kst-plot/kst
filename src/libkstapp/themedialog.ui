@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>338</height>
+    <width>571</width>
+    <height>336</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -97,7 +97,7 @@
         <item row="0" column="5">
          <widget class="QPushButton" name="_italic">
           <property name="toolTip">
-           <string>Italic</string>
+           <string comment="italic font">Italic</string>
           </property>
           <property name="text">
            <string/>
@@ -120,7 +120,7 @@
         <item row="0" column="4">
          <widget class="QPushButton" name="_bold">
           <property name="toolTip">
-           <string>Bold</string>
+           <string comment="bold font">Bold</string>
           </property>
           <property name="text">
            <string/>
