@@ -65,7 +65,7 @@ int KstTimeZone::gmtOffset(time_t t) {
   _supportsDST = false;
   if (_tzName == "GMT") {
     _gmtOffset = 0;
-  } else if (_tzName.startsWith("GMT")) {
+  } else if (_tzName.startsWith(QLatin1String("GMT"))) {
     QString tmp = _tzName;
     bool ok;
     double hours = 0;

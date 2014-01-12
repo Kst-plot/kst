@@ -58,8 +58,8 @@ void CurveSelector::setSelectedCurve(CurvePtr selectedCurve) {
   //FIXME: findData doesn't work, but the loop here - which is supposed
   // to do exactly the same thing - does.  WHY???
   //int i = _curve->findData(qVariantFromValue(selectedVector.data()));
-  int i=-1,j;
-  for (j=0; j<_curve->count() ; j++) {
+  int i=-1;
+  for (int j=0; j<_curve->count() ; j++) {
     if (selectedCurve.data() == _curve->itemData(j).value<Curve*>()) {
       i=j;
       break;

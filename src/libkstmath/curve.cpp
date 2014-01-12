@@ -527,7 +527,7 @@ int Curve::getIndexNearXY(double x, double dx_per_pix, double y) const {
   dx = fabs(x - xi);
   dy = fabs(y - yi);
 
-  for (i = i0 + 1; i <= iN; i++) {
+  for (i = i0 + 1; i <= iN; ++i) {
     xi = xv->interpolate(i, NS);
     dxi = fabs(x - xi);
     if (dxi < dx_per_pix) {
@@ -1152,7 +1152,7 @@ qDebug() << "y not in bounds"
         if (xv->isRising()) {
           double oldX = 0.0;
 
-          for (i_pt = i0; i_pt <= iN; i_pt++) {
+          for (i_pt = i0; i_pt <= iN; ++i_pt) {
             rX = xv->interpolate(i_pt, NS);
             if (i_pt > i0) {
               if (rX - oldX < drX) {
@@ -1164,7 +1164,7 @@ qDebug() << "y not in bounds"
         }
       }
 
-      for (i_pt = i0; i_pt <= iN; i_pt++) {
+      for (i_pt = i0; i_pt <= iN; ++i_pt) {
         visible = true;
 
         if (exv) {
@@ -1294,7 +1294,7 @@ qDebug() << "y not in bounds"
         }
       }
 
-      for (i_pt = i0; i_pt <= iN; i_pt++) {
+      for (i_pt = i0; i_pt <= iN; ++i_pt) {
         do_low_flag = true;
         do_high_flag = true;
 
@@ -1384,7 +1384,7 @@ qDebug() << "y not in bounds"
         }
       }
 
-      for (i_pt = i0; i_pt <= iN; i_pt++) {
+      for (i_pt = i0; i_pt <= iN; ++i_pt) {
         do_low_flag = true;
         do_high_flag = true;
 
@@ -1509,7 +1509,7 @@ void Curve::yRange(double xFrom, double xTo, double* yMin, double* yMax) {
   // search for min/max
   bool first = true;
   double newYMax = 0, newYMin = 0;
-  for (int i_pt = i0; i_pt <= iN; i_pt++) {
+  for (int i_pt = i0; i_pt <= iN; ++i_pt) {
     double rX = xv->interpolate(i_pt, NS);
     double rY = yv->interpolate(i_pt, NS);
     // make sure this point is visible

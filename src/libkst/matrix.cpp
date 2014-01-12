@@ -205,7 +205,7 @@ void Matrix::calcNoSpikeRange(double per) {
   int i,j, k;
 
   // count number of points which aren't nans.
-  for (i=n_notnan=0; i<_NS; i++) {
+  for (i=n_notnan=0; i<_NS; ++i) {
     if (!KST_ISNAN(_z[i])) {
       n_notnan++;
     }
@@ -234,7 +234,7 @@ void Matrix::calcNoSpikeRange(double per) {
 
 
   // prefill the list
-  for (i=0; i<n_list; i++) {
+  for (i=0; i<n_list; ++i) {
     min_list[i] = 1E+300;
     max_list[i] = -1E+300;
   }
@@ -242,10 +242,10 @@ void Matrix::calcNoSpikeRange(double per) {
   max_of_min = 1E+300;
 
   i = n_list;
-  for (j=0; j<_NS; j=int(i*n_skip), i++) {
+  for (j=0; j<_NS; j=int(i*n_skip), ++i) {
     if (_z[j] < max_of_min) { // member for the min list
       // replace max of min with the new value
-      for (k=0; k<n_list; k++) {
+      for (k=0; k<n_list; ++k) {
         if (min_list[k]==max_of_min) {
           x = min_list[k] = _z[j];
           break;
@@ -253,7 +253,7 @@ void Matrix::calcNoSpikeRange(double per) {
       }
       max_of_min = x;
       // find the new max_of_min
-      for (k=0; k<n_list; k++) {
+      for (k=0; k<n_list; ++k) {
         if (min_list[k] > max_of_min) {
           max_of_min = min_list[k];
         }
@@ -262,7 +262,7 @@ void Matrix::calcNoSpikeRange(double per) {
     if (_z[j] > min_of_max) { // member for the max list
       //printf("******** z: %g  min_of_max: %g\n", _z[j], min_of_max);
       // replace min of max with the new value
-      for (k=0; k<n_list; k++) {
+      for (k=0; k<n_list; ++k) {
         if (max_list[k]==min_of_max) {
           x = max_list[k] = _z[j];
           break;
@@ -270,7 +270,7 @@ void Matrix::calcNoSpikeRange(double per) {
       }
       // find the new min_of_max
       min_of_max = x;
-      for (k=0; k<n_list; k++) {
+      for (k=0; k<n_list; ++k) {
         if (max_list[k] < min_of_max) {
           min_of_max = max_list[k];
         }
@@ -305,7 +305,7 @@ void Matrix::resetNumNew() {
 
 
 void Matrix::zero() {
-  for (int i = 0; i < _zSize; i++) {
+  for (int i = 0; i < _zSize; ++i) {
     _z[i] = 0.0;
   }
   updateScalars();
@@ -342,7 +342,7 @@ void Matrix::internalUpdate() {
 
     _NRealS = 0;
 
-    for (int i = 0; i < _zSize; i++) {
+    for (int i = 0; i < _zSize; ++i) {
       if (isfinite(_z[i]) && !KST_ISNAN(_z[i])) {
         if (!initialized) {
           min = _z[i];
@@ -489,7 +489,7 @@ bool Matrix::resizeZ(int sz, bool reinit) {
       memset(&_z[_zSize], 0, (sz - _zSize)*sizeof(double));
 
 #else
-      for (int i = _zSize; i < sz; i++) {
+      for (int i = _zSize; i < sz; ++i) {
         _z[i] = 0.0;
       }
 #endif
@@ -573,12 +573,12 @@ bool Matrix::resize(int xSize, int ySize, bool reinit) {
   if (reinit && _zSize < sz) {
     // initialize new memory after old values
     for (int row=0; row < qMin(xSize, _nX); ++row) {
-      for (int col = qMin(ySize,_nY); col<ySize; col++) {
+      for (int col = qMin(ySize,_nY); col<ySize; ++col) {
         _z[row*ySize+col] = 0;
       }
     }
-    for (int row = qMin(xSize, _nX); row < xSize; row++) {
-      for (int col = 0; col < ySize; col++) {
+    for (int row = qMin(xSize, _nX); row < xSize; ++row) {
+      for (int col = 0; col < ySize; ++col) {
         _z[row*ySize+col] = 0;
       }
     }
@@ -631,7 +631,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
   QDataStream qds(&data, QIODevice::ReadOnly);
   uint i;
   // fill in the raw array with the data
-  for (i = 0; i < nX*nY && !qds.atEnd(); i++) {
+  for (i = 0; i < nX*nY && !qds.atEnd(); ++i) {
     qds >> _z[i];  // stored in the same order as it was saved
   } 
   if (i < nX*nY) {
@@ -654,17 +654,17 @@ ObjectList<Primitive> Matrix::outputPrimitives() const {
   int n;
 
   n = _scalars.count();
-  for (int i = 0; i< n; i++) {
+  for (int i = 0; i< n; ++i) {
       primitive_list.append(kst_cast<Primitive>(_scalars.values().at(i)));
   }
 
   n = _strings.count();
-  for (int i = 0; i< n; i++) {
+  for (int i = 0; i< n; ++i) {
       primitive_list.append(kst_cast<Primitive>(_strings.values().at(i)));
   }
 
   n = _vectors.count();
-  for (int i = 0; i< n; i++) {
+  for (int i = 0; i< n; ++i) {
     VectorPtr V = _vectors.values().at(i);
     primitive_list.append(kst_cast<Primitive>(V));
     primitive_list.append(V->outputPrimitives());
@@ -697,7 +697,7 @@ QByteArray Matrix::getBinaryArray() const {
     uint i;
     uint n = _nX*_nY;
     // fill in the raw array with the data
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < n; ++i) {
       ds << _z[i];
     }
     unlock();

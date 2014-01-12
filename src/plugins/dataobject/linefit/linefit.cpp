@@ -184,7 +184,7 @@ bool LineFitSource::algorithm() {
 
   xScale = inputVectorX->length()/inputVectorY->length();
 
-  for (i = 0; i < inputVectorY->length(); i++) {
+  for (i = 0; i < inputVectorY->length(); ++i) {
     double z = xScale*i;
     long int idx = long(Kst::roundDouble(z));
     double skew = z - floor(z); /* [0..1] */
@@ -198,7 +198,7 @@ bool LineFitSource::algorithm() {
 
   sxoss = sx / inputVectorX->length();
 
-  for (i = 0; i < inputVectorX->length(); i++) {
+  for (i = 0; i < inputVectorX->length(); ++i) {
     double t = inputVectorX->value()[i] - sxoss;
     st2 += t * t;
     b += t * inputVectorY->value()[i];
@@ -214,7 +214,7 @@ bool LineFitSource::algorithm() {
   outputVectorY->value()[0] = a+b*outputVectorX->value()[0];
   outputVectorY->value()[1] = a+b*outputVectorX->value()[1];
 
-  for (i = 0; i < inputVectorX->length(); i++) {
+  for (i = 0; i < inputVectorX->length(); ++i) {
     double z = xScale*i;
     long int idx = long(Kst::roundDouble(z));
     double skew = z - floor(z); /* [0..1] */

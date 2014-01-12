@@ -199,7 +199,7 @@ bool FitGradientUnweightedSource::algorithm() {
   if( precursor( inputVectorX, inputVectorY, 0, &iLength, false, true, 2, pInputs, outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters, outputVectorYCovariance, outputVectorYLo, outputVectorYHi ) ) {
 
     if( !gsl_fit_mul( pInputs[XVALUES], 1, pInputs[YVALUES], 1, iLength, &c0, &cov00, &dSumSq ) ) {
-      for( i=0; i<iLength; i++ ) {
+      for( i=0; i<iLength; ++i ) {
         gsl_fit_mul_est( pInputs[XVALUES][i], c0, cov00, &y, &yErr );
 
         outputVectorYFitted->value()[i] = y;

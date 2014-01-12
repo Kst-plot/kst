@@ -114,29 +114,29 @@ int DataInterfaceQImageVector::read(const QString& field, DataVector::ReadInfo& 
   int n = p.numberOfFrames;
 
   if ( field=="INDEX" ) {
-    for ( i=0; i<n; i++ ) {
+    for ( i=0; i<n; ++i ) {
       p.data[i] = i + s;
     }
   } else if ( field=="GRAY" ) {
-    for ( i = s; i<s+n; i++ ) {
+    for ( i = s; i<s+n; ++i ) {
       int px = i%_image->width();
       int py = i/_image->width();
       p.data[i-s] = qGray( _image->pixel( px, py ) );
     }
   } else if ( field=="RED" ) {
-    for ( i=s; i<s+n; i++ ) {
+    for ( i=s; i<s+n; ++i ) {
       int px = i%_image->width();
       int py = i/_image->width();
       p.data[i-s] = qRed( _image->pixel( px, py ) );
     }
   } else if ( field=="GREEN" ) {
-    for ( i=s; i<s+n; i++ ) {
+    for ( i=s; i<s+n; ++i ) {
       int px = i%_image->width();
       int py = i/_image->width();
       p.data[i-s] = qGreen( _image->pixel( px, py ) );
     }
   } else if ( field=="BLUE" ) {
-    for ( i=s; i<s+n; i++ ) {
+    for ( i=s; i<s+n; ++i ) {
       int px = i%_image->width();
       int py = i/_image->width();
       p.data[i-s] = qBlue( _image->pixel( px, py ) );
@@ -240,31 +240,31 @@ int DataInterfaceQImageMatrix::read(const QString& field, DataMatrix::ReadInfo& 
   int i = 0;
 
   if ( field=="GRAY") {
-    for (int px = p.xStart; px<x1; px++ ) {
+    for (int px = p.xStart; px<x1; ++px ) {
       for (int py=y1-1; py>=p.yStart; py-- ) {
         z[i] = qGray( _image->pixel( px, py ) );
-        i++;
+        ++i;
       }
     }
   } else if ( field=="RED" ) {
-    for (int px = p.xStart; px<x1; px++ ) {
+    for (int px = p.xStart; px<x1; ++px ) {
       for (int py=y1-1; py>=p.yStart; py-- ) {
         z[i] = qRed( _image->pixel( px, py ) );
-        i++;
+        ++i;
       }
     }
   } else if ( field=="GREEN" ) {
-    for (int px = p.xStart; px<x1; px++ ) {
+    for (int px = p.xStart; px<x1; ++px ) {
       for (int py=y1-1; py>=p.yStart; py-- ) {
         z[i] = qGreen( _image->pixel( px, py ) );
-        i++;
+        ++i;
       }
     }
   } else if ( field=="BLUE" ) {
-    for (int px = p.xStart; px<x1; px++ ) {
+    for (int px = p.xStart; px<x1; ++px ) {
       for (int py=y1-1; py>=p.yStart; py-- ) {
         z[i] = qBlue( _image->pixel( px, py ) );
-        i++;
+        ++i;
       }
     }
   }

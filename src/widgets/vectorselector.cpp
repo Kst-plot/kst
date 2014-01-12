@@ -102,8 +102,8 @@ void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
   }
   // "findData can't work here" says the trolls... so we do it 'manually'.
   //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
-  int i=-1,j;
-  for (j=0; j<_vector->count() ; j++) {
+  int i=-1;
+  for (int j=0; j<_vector->count() ; ++j) {
     if (selectedVector.data() == _vector->itemData(j).value<Vector*>()) {
       i=j;
       break;

@@ -525,7 +525,7 @@ void DataVector::internalUpdate() {
           }
         }
         ave_nread = readField(AveReadBuf, _field, new_f0+i, Skip);
-        for (k = 1; k < ave_nread; k++) {
+        for (k = 1; k < ave_nread; ++k) {
           AveReadBuf[0] += AveReadBuf[k];
         }
         if (ave_nread > 0) {
@@ -589,7 +589,7 @@ void DataVector::internalUpdate() {
   _dirty = false;
   if (_numSamples != _size && !(_numSamples == 0 && _size == 1)) {
     _dirty = true;
-    for (i = _numSamples; i < _size; i++) {
+    for (i = _numSamples; i < _size; ++i) {
       _v[i] = _v[0];
     }
   }
@@ -691,7 +691,7 @@ void DataVector::_resetFieldStrings() {
   QStringList fieldStringKeys = _fieldStrings.keys();
   // remove field strings that no longer need to exist
   readLock();
-  for (int i=0; i<fieldStringKeys.count(); i++) {
+  for (int i=0; i<fieldStringKeys.count(); ++i) {
     QString key = fieldStringKeys.at(i);
     if (!meta_strings.contains(key)) {
       StringPtr sp = _fieldStrings[key];
@@ -727,7 +727,7 @@ void DataVector::_resetFieldScalars() {
   QStringList fieldScalarKeys = _fieldScalars.keys();
   // remove field scalars that no longer need to exist
   readLock();
-  for (int i=0; i<fieldScalarKeys.count(); i++) {
+  for (int i=0; i<fieldScalarKeys.count(); ++i) {
     QString key = fieldScalarKeys.at(i);
     if (!meta_scalars.contains(key)) {
       ScalarPtr sp = _fieldScalars[key];

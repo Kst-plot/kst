@@ -215,7 +215,7 @@ bool CrossSpectrumSource::algorithm() {
 
   /* Fill the frequency and zero the xps */
   df = SR/( 2.0*double( xps_len-1 ) );
-  for ( i=0; i<xps_len; i++ ) {
+  for ( i=0; i<xps_len; ++i ) {
     outputVectorFrequency->value()[i] = double( i ) * df;
     outputVectorReal->value()[i] = 0.0;
     outputVectorImaginary->value()[i] = 0.0;
@@ -229,7 +229,7 @@ bool CrossSpectrumSource::algorithm() {
   /* do the fft's */
   n_subsets = v_len/xps_len + 1;
 
-  for ( i_subset=0; i_subset<n_subsets; i_subset++ ) {
+  for ( i_subset=0; i_subset<n_subsets; ++i_subset ) {
         /* copy each chunk into a[] and find mean */
     if (i_subset*xps_len + ALen <= v_len) {
       copyLen = ALen;
@@ -237,7 +237,7 @@ bool CrossSpectrumSource::algorithm() {
       copyLen = v_len - i_subset*xps_len;
     }
     mean_b = mean_a = 0;
-    for (i_samp = 0; i_samp < copyLen; i_samp++) {
+    for (i_samp = 0; i_samp < copyLen; ++i_samp) {
       i = ( i_samp + i_subset*xps_len )/dv0;
       mean_a += (
         a[i_samp] = inputVectorOne->value()[i]
@@ -253,12 +253,12 @@ bool CrossSpectrumSource::algorithm() {
     }
 
     /* Remove Mean and apodize */
-    for (i_samp=0; i_samp<copyLen; i_samp++) {
+    for (i_samp=0; i_samp<copyLen; ++i_samp) {
       a[i_samp] -= mean_a;
       b[i_samp] -= mean_b;
     }
 
-    for (;i_samp < ALen; i_samp++) {
+    for (;i_samp < ALen; ++i_samp) {
       a[i_samp] = 0.0;
       b[i_samp] = 0.0;
     }
@@ -270,7 +270,7 @@ bool CrossSpectrumSource::algorithm() {
     /* sum each bin into psd[] */
     outputVectorReal->value()[0] += ( a[0]*b[0] );
     outputVectorReal->value()[xps_len-1] += ( a[1]*b[1] );
-    for (i_samp=1; i_samp<xps_len-1; i_samp++) {
+    for (i_samp=1; i_samp<xps_len-1; ++i_samp) {
       outputVectorReal->value()[i_samp]+= ( a[i_samp*2] * b[i_samp*2] -
                                    a[i_samp*2+1] * b[i_samp*2+1] );
       outputVectorImaginary->value()[i_samp]+= ( -a[i_samp*2] * b[i_samp*2+1] +
@@ -280,7 +280,7 @@ bool CrossSpectrumSource::algorithm() {
 
   /* renormalize */
   norm_factor = 1.0/((double(SR)*double(xps_len))*double(n_subsets));
-  for ( i=0; i<xps_len; i++ ) {
+  for ( i=0; i<xps_len; ++i ) {
     outputVectorReal->value()[i]*=norm_factor;
     outputVectorImaginary->value()[i]*=norm_factor;
   }

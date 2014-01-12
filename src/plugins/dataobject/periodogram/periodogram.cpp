@@ -375,7 +375,7 @@ void PeriodogramSource::spread(double y, double yy[], unsigned long n, double x,
     ihi     = ilo + m - 1;
     nden    = nfac[m];
     fac     = x - ilo;
-    for (j = ilo + 1;j <= ihi;j++) {
+    for (j = ilo + 1;j <= ihi;++j) {
       fac *= x - (double)j;
     }
     yy[ihi] += y*fac/(double)(nden*(x - ihi));
@@ -487,7 +487,7 @@ void PeriodogramSource::realft(double data[], unsigned long n, int isign) {
   wr      = 1.0 + wpr;
   wi      = wpi;
   np3     = n+3;
-  for (i = 2;i <= (n>>2);i++) {
+  for (i = 2;i <= (n>>2);++i) {
     i1          =  (2*i) - 1;
     i2          =  i1 + 1;
     i3          =  np3 - i2;
@@ -532,13 +532,13 @@ void PeriodogramSource::avevar(
   ep      = 0.0;
 
   if (n > 0) {
-    for (*ave = 0.0, j = 1;j <= n;j++) {
+    for (*ave = 0.0, j = 1;j <= n;++j) {
       *ave += data[j];
     }
     *ave   /= n;
 
     if (n > 1) {
-      for (j = 1;j <= n;j++) {
+      for (j = 1;j <= n;++j) {
         s       = data[j] - (*ave);
         ep     += s;
         *var   += s*s;
@@ -599,7 +599,7 @@ void PeriodogramSource::FastLombPeriodogram(
 
     xmax = x[1];
     xmin = x[1];
-    for (j = 2;j <= n;j++) {
+    for (j = 2;j <= n;++j) {
       if (x[j] < xmin) {
         xmin = x[j];
       }
@@ -608,7 +608,7 @@ void PeriodogramSource::FastLombPeriodogram(
       }
     }
     xdif = xmax - xmin;
-    for (j = 1;j <= ndim;j++) {
+    for (j = 1;j <= ndim;++j) {
       wk1[j] = 0.0;
       wk2[j] = 0.0;
     }
@@ -616,7 +616,7 @@ void PeriodogramSource::FastLombPeriodogram(
     fac     = ndim / (xdif * ofac);
     fndim   = ndim;
 
-    for (j = 1;j <= n;j++) {
+    for (j = 1;j <= n;++j) {
       ck  = (x[j] - xmin) * fac;
       ck  = fmod(ck, fndim);
       ckk = 2.0*(ck++);
@@ -734,7 +734,7 @@ void PeriodogramSource::SlowLombPeriodogram(
 
       xmax = x[1];
       xmin = x[1];
-      for (j=1;j<=n;j++) {
+      for (j=1;j<=n;++j) {
         if (x[j] > xmax) {
           xmax = x[j];
         }
@@ -746,19 +746,19 @@ void PeriodogramSource::SlowLombPeriodogram(
       xave      = 0.5*(xmax+xmin);
       pymax     = 0.0;
       pnow      = 1.0/(xdif*ofac);
-      for (j=1;j<=n;j++) {
+      for (j=1;j<=n;++j) {
         arg     = TWO_PI*((x[j]-xave)*pnow);
         wpr[j]  = -2.0*(sin(0.5*arg)*sin(0.5*arg));
         wpi[j]  = sin(arg);
         wr[j]   = cos(arg);
         wi[j]   = wpi[j];
       }
-      for (i=1;i<=(*nout);i++) {
+      for (i=1;i<=(*nout);++i) {
         sumsh = 0.0;
         sumc  = 0.0;
         px[i] = pnow;
 
-        for (j=1;j<=n;j++) {
+        for (j=1;j<=n;++j) {
           c   = wr[j];
           s   = wi[j];
           sumsh += s*c;
@@ -771,7 +771,7 @@ void PeriodogramSource::SlowLombPeriodogram(
         sumc    = 0.0;
         sumsy   = 0.0;
         sumcy   = 0.0;
-        for (j=1;j<=n;j++) {
+        for (j=1;j<=n;++j) {
           s       = wi[j];
           c       = wr[j];
           ss      = s*cwtau-c*swtau;

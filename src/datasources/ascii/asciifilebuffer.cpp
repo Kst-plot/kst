@@ -67,7 +67,7 @@ qint64 AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIn
 
   // is expensive  for large index with searchStart == 0
   const qint64 indexOfLastRow = rowIndex.size() - 2;
-  for (qint64 row = searchStart; row <= indexOfLastRow; row++) {
+  for (qint64 row = searchStart; row <= indexOfLastRow; ++row) {
     if (pos < rowIndex[row])
       return row - 1;
   }

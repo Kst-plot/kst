@@ -325,29 +325,29 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   int i = 0;
 
   if ((dx<0) && (dy>0)) {
-    for (px = p.xStart; px < x1; px++) {
-      for (py = y1-1; py >= p.yStart; py--) {
+    for (px = p.xStart; px < x1; ++px) {
+      for (py = y1-1; py >= p.yStart; --py) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }
     }
   } else if ((dx>0) && (dy>0)) {
-    for (px = x1-1; px >= p.xStart; px--) {
-      for (py = y1-1; py >= p.yStart; py--) {
+    for (px = x1-1; px >= p.xStart; --px) {
+      for (py = y1-1; py >= p.yStart; --py) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }
     }
   } else if ((dx>0) && (dy<0)) {
-    for (px = x1-1; px >= p.xStart; px--) {
-      for (py = p.yStart; py < y1; py++) {
+    for (px = x1-1; px >= p.xStart; --px) {
+      for (py = p.yStart; py < y1; ++py) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }
     }
   } else if ((dx<0) && (dy<0)) {
-    for (px = p.xStart; px < x1; px++) {
-      for (py = p.yStart; py < y1; py++) {
+    for (px = p.xStart; px < x1; ++px) {
+      for (py = p.yStart; py < y1; ++py) {
         z[ni - i] = buffer[px + py*n_axes[0]];
         i++;
       }

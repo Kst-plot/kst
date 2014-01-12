@@ -70,8 +70,8 @@ StringPtr StringSelector::selectedString() const {
 
 
 void StringSelector::setSelectedString(StringPtr selectedString) {
-  int i=-1,j;
-  for (j=0; j<_string->count() ; j++) {
+  int i=-1;
+  for (int j=0; j<_string->count() ; ++j) {
     if (selectedString.data() == _string->itemData(j).value<String*>()) {
       i=j;
       break;

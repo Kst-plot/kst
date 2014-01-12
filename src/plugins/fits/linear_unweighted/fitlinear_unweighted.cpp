@@ -201,7 +201,7 @@ bool FitLinearUnweightedSource::algorithm() {
   if( precursor( inputVectorX, inputVectorY, 0, &iLength, false, true, 2, pInputs, outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters, outputVectorYCovariance, outputVectorYLo, outputVectorYHi ) ) {
 
     if( !gsl_fit_linear( pInputs[XVALUES], 1, pInputs[YVALUES], 1, iLength, &c0, &c1, &cov00, &cov01, &cov11, &dSumSq ) ) {
-      for( i=0; i<iLength; i++ ) {
+      for( i=0; i<iLength; ++i ) {
         gsl_fit_linear_est( pInputs[XVALUES][i], c0, c1, cov00, cov01, cov11, &y, &yErr );
         outputVectorYFitted->value()[i] = y;
         outputVectorYResiduals->value()[i] = pInputs[YVALUES][i] - y;

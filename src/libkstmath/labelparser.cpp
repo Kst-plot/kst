@@ -208,11 +208,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'a':
       x = 0x20;
     case 'A':
-      if (txt.mid(from + 1).startsWith("lpha")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("lpha"))) {
         *skip = 5;
         setNormalChar(QChar(0x391+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("pprox")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("pprox"))) {
         *skip = 6;
         setNormalChar(QChar(0x2248), tail);
         return true;
@@ -223,11 +223,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'c':
       x = 0x20;
     case 'C':
-      if (txt.mid(from + 1).startsWith("hi")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("hi"))) {
         *skip = 3;
         setNormalChar(QChar(0x3a7+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("dot")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("dot"))) {
         *skip = 4;
         setNormalChar(QChar(0x2219), tail);
         return true;
@@ -237,15 +237,15 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'e':
       x = 0x20;
     case 'E':
-      if (txt.mid(from + 1).startsWith("psilon")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("psilon"))) {
         *skip = 7;
         setNormalChar(QChar(0x395+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("ta")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("ta"))) {
         *skip = 3;
         setNormalChar(QChar(0x397+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("ll")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("ll"))) {
         *skip = 3;
         setNormalChar(QChar(0x2113), tail);
         return true;
@@ -255,11 +255,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'g':
       x = 0x20;
     case 'G':
-      if (txt.mid(from + 1).startsWith("amma")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("amma"))) {
         *skip = 5;
         setNormalChar(QChar(0x393+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("eq")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("eq"))) {
         *skip = 3;
         setNormalChar(QChar(0x2265), tail);
         return true;
@@ -273,15 +273,15 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'i':
       x = 0x20;
     case 'I':
-      if (txt.mid(from + 1).startsWith("ota")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("ota"))) {
         *skip = 4;
         setNormalChar(QChar(0x399+x), tail);
         return true;
-      } else if (!upper && txt.mid(from + 1).startsWith("nf")) {
+      } else if (!upper && txt.mid(from + 1).startsWith(QLatin1String("nf"))) {
         *skip = 3;
         setNormalChar(QChar(0x221E), tail);
         return true;
-      } else if (!upper && txt.mid(from + 1).startsWith("nt")) {
+      } else if (!upper && txt.mid(from + 1).startsWith(QLatin1String("nt"))) {
         *skip = 3;
         setNormalChar(QChar(0x222B), tail);
         return true;
@@ -291,11 +291,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'l':
       x = 0x20;
     case 'L':
-      if (txt.mid(from + 1).startsWith("ambda")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("ambda"))) {
         *skip = 6;
         setNormalChar(QChar(0x39b+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("eq")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("eq"))) {
         *skip = 3;
         setNormalChar(QChar(0x2264), tail);
         return true;
@@ -335,7 +335,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'o':
       x = 0x20;
     case 'O':
-      if (txt.mid(from + 1).startsWith("verline{")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("verline{"))) {
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -347,15 +347,15 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for overline");
         return true;
-      } else if (txt.mid(from + 1).startsWith("micron")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("micron"))) {
         *skip = 7;
         setNormalChar(QChar(0x39F+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("mega")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("mega"))) {
         *skip = 5;
         setNormalChar(QChar(0x3A9+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("dot")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("dot"))) {
         *skip = 4;
         setNormalChar(QChar(0x2299), tail);
         return true;
@@ -369,19 +369,19 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = 2;
         setNormalChar(QChar(0x3a0+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("hi")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("hi"))) {
         *skip = 3;
         setNormalChar(QChar(0x3A6+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("si")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("si"))) {
         *skip = 3;
         setNormalChar(QChar(0x3A8+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("artial")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("artial"))) {
         *skip = 7;
         setNormalChar(QChar(0x2202), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("rod")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("rod"))) {
         *skip = 4;
         setNormalChar(QChar(0x220F), tail);
         return true;
@@ -395,7 +395,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 't':
       x = 0x20;
     case 'T':
-      if (txt.mid(from + 1).startsWith("extcolor{")) { // \textcolor{color}{text}
+      if (txt.mid(from + 1).startsWith(QLatin1String("extcolor{"))) { // \textcolor{color}{text}
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -412,7 +412,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for textcolor");
         return true;
-      } else if (txt.mid(from + 1).startsWith("extbf{")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("extbf{"))) {
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -424,7 +424,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for textbf");
         return true;
-      } else if (txt.mid(from + 1).startsWith("extit{")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("extit{"))) {
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -436,11 +436,11 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for textit");
         return true;
-      } else if (txt.mid(from + 1).startsWith("heta")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("heta"))) {
         *skip = 5;
         setNormalChar(QChar(0x398+x), tail);
         return true;
-      } else if (txt.mid(from + 1).startsWith("au")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("au"))) {
         *skip = 3;
         setNormalChar(QChar(0x3A4+x), tail);
         return true;
@@ -458,15 +458,15 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 's':
       x = 0x20;
     case 'S':
-      if (txt.mid(from + 1).startsWith("igma")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("igma"))) {
         *skip = 5;
         setNormalChar(QChar(0x3A3+x), tail);
         return true;
-      } else if (!upper && txt.mid(from + 1).startsWith("um")) {
+      } else if (!upper && txt.mid(from + 1).startsWith(QLatin1String("um"))) {
         *skip = 3;
         setNormalChar(QChar(0x2211), tail);
         return true;
-      } else if (!upper && txt.mid(from + 1).startsWith("qrt")) {
+      } else if (!upper && txt.mid(from + 1).startsWith(QLatin1String("qrt"))) {
         *skip = 4;
         setNormalChar(QChar(0x221A), tail);
         return true;
@@ -476,7 +476,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
     case 'u':
       x = 0x20;
     case 'U':
-      if (txt.mid(from + 1).startsWith("nderline{")) {
+      if (txt.mid(from + 1).startsWith(QLatin1String("nderline{"))) {
         if ((*tail)->group) {
           *tail = new Chunk(*tail, Chunk::None, false, true);
         }
@@ -488,7 +488,7 @@ inline bool parseOutChar(const QString& txt, uint from, int *skip, Chunk **tail,
         *skip = parseStart - from + 1;
         dumpattr(working, "end group for underline");
         return true;
-      } else if (txt.mid(from + 1).startsWith("psilon")) {
+      } else if (txt.mid(from + 1).startsWith(QLatin1String("psilon"))) {
         *skip = 7;
         setNormalChar(QChar(0x3A5+x), tail);
         return true;

@@ -274,7 +274,7 @@ bool FitKneeFrequencySource::algorithm() {
   double sumY, sumY2;
   sumY = sumY2 = 0;
 
-  for (i = minWhiteNoiseIndex; i < inArraysLength; i++) {
+  for (i = minWhiteNoiseIndex; i < inArraysLength; ++i) {
     yi = inputVectorY->value()[i];
     sumY    +=  yi;
     sumY2   +=  pow(yi,2);
@@ -289,7 +289,7 @@ bool FitKneeFrequencySource::algorithm() {
   double sumLnXLnY, sumLnX, sumLnY, sumLnX2;
   sumLnXLnY = sumLnX = sumLnY = sumLnX2 = 0;
 
-  for (i = 0; i < maxOneOverFIndex; i++) {
+  for (i = 0; i < maxOneOverFIndex; ++i) {
     xi = inputVectorX->value()[i];
     yi = inputVectorY->value()[i];
 
@@ -312,17 +312,17 @@ bool FitKneeFrequencySource::algorithm() {
   double knee_freq = pow(ybar*whiteNoiseC/b,1.0/a); // calculate knee frequency.
 
   // output fit data
-  for (i = 0; i < maxOneOverFIndex; i++) {
+  for (i = 0; i < maxOneOverFIndex; ++i) {
       outputVectorYFitted->value()[i] = b * pow(inputVectorX->value()[i],a) + ybar;
       outputVectorYResiduals->value()[i] = inputVectorY->value()[i] - outputVectorYFitted->value()[i];
   }
 
-  for (i = maxOneOverFIndex; i < minWhiteNoiseIndex; i++) { // zeros for unfitted region.
+  for (i = maxOneOverFIndex; i < minWhiteNoiseIndex; ++i) { // zeros for unfitted region.
       outputVectorYFitted->value()[i] = 0;
       outputVectorYResiduals->value()[i] = 0;
   }
 
-  for (i = minWhiteNoiseIndex; i < inArraysLength; i++) {
+  for (i = minWhiteNoiseIndex; i < inArraysLength; ++i) {
       outputVectorYFitted->value()[i] = ybar;
       outputVectorYResiduals->value()[i] = outputVectorYFitted->value()[i] - ybar;
   }

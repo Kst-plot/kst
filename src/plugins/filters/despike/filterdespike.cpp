@@ -195,7 +195,7 @@ bool FilterDespikeSource::algorithm() {
   }
 
   /* get mean deviation of 3 pt difference */
-  for (i=dx; i<N-dx; i++) {
+  for (i=dx; i<N-dx; ++i) {
     mdev += fabs(inputVector->value(i)-(inputVector->value(i-dx) + inputVector->value(i+dx))*0.5);
   }
   mdev /= double(N);
@@ -207,7 +207,7 @@ bool FilterDespikeSource::algorithm() {
 
   // for first dx points, do a 2 point difference
   last_good = inputVector->value(0);
-  for (i=0; i<dx; i++) {
+  for (i=0; i<dx; ++i) {
     if (fabs(inputVector->value(i) - inputVector->value(i+dx))>cut) {
       if (spike_start<0) { 
         spike_start = i-border;
@@ -230,7 +230,7 @@ bool FilterDespikeSource::algorithm() {
     }
   }
   // do a 3 point difference where it is possible
-  for (i=dx; i<N-dx; i++) {
+  for (i=dx; i<N-dx; ++i) {
     if (fabs(inputVector->value(i) - (inputVector->value(i-dx) + inputVector->value(i+dx))*0.5)>cut) {
       if (spike_start<0) { 
         spike_start = i-border;
@@ -254,7 +254,7 @@ bool FilterDespikeSource::algorithm() {
     }
   }
   // do a 2 point difference for last dx points
-  for (i=N-dx-1; i<N; i++) {
+  for (i=N-dx-1; i<N; ++i) {
     if (fabs(inputVector->value(i-dx) - inputVector->value(i))>cut) {
       if (spike_start<0) { 
         spike_start = i-border;

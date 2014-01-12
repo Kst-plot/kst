@@ -186,8 +186,10 @@ int PSDCalculator::calculatePowerSpectrum(
     updateWindowFxn(apodizeFxn, gaussianSigma);
   }
 
-  int currentCopyLen, nsamples = 0;
-  int i_samp, i_subset, ioffset;
+  int currentCopyLen;
+  int nsamples = 0;
+  int i_samp;
+  int ioffset;
 
   memset(output, 0, sizeof(double)*outputLen); // initialize output.
 
@@ -195,7 +197,7 @@ int PSDCalculator::calculatePowerSpectrum(
   //MeasureTime time_in_rfdt("rdft()");
 
   bool done = false;
-  for (i_subset = 0; !done; i_subset++) {
+  for (int i_subset = 0; !done; i_subset++) {
     ioffset = i_subset*outputLen; //overlapping average => i_subset*outputLen
 
     // only zero pad if we really have to.  It is better to adjust the last chunk's
@@ -215,7 +217,7 @@ int PSDCalculator::calculatePowerSpectrum(
     double mean = 0.0;
 
     if (removeMean) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         mean += input[i_samp + ioffset];
       }
       mean /= (double)currentCopyLen;
@@ -224,35 +226,35 @@ int PSDCalculator::calculatePowerSpectrum(
     // apply the PSD options (removeMean, apodize, etc.)
     // separate cases for speed- although this shouldn't really matter- the rdft should be the most time consuming step by far for any large data set.
     if (removeMean && apodize && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = (Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean)*_w[i_samp];
       }
     } else if (removeMean && apodize) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = (input[i_samp + ioffset] - mean)*_w[i_samp];
       }
     } else if (removeMean && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean;
       }
     } else if (apodize && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen)*_w[i_samp];
       }
     } else if (removeMean) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = input[i_samp + ioffset] - mean;
       }
     } else if (apodize) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = input[i_samp + ioffset]*_w[i_samp];
       }
     } else if (interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen);
       }
     } else {
-      for (i_samp = 0; i_samp < currentCopyLen; i_samp++) {
+      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = input[i_samp + ioffset];
       }
     }
@@ -267,7 +269,7 @@ int PSDCalculator::calculatePowerSpectrum(
 
     output[0] += _a[0] * _a[0];
     output[outputLen-1] += _a[1] * _a[1];
-    for (i_samp = 1; i_samp < outputLen - 1; i_samp++) {
+    for (i_samp = 1; i_samp < outputLen - 1; ++i_samp) {
       output[i_samp] += cabs2(_a[i_samp * 2], _a[i_samp * 2 + 1]);
     }
   }
@@ -292,26 +294,26 @@ int PSDCalculator::calculatePowerSpectrum(
   default:
     case PSDAmplitudeSpectralDensity: // amplitude spectral density (default) [V/Hz^1/2]
       norm /= frequencyStep;
-      for (i_samp = 0; i_samp < outputLen; i_samp++) {
+      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
         output[i_samp] = sqrt(output[i_samp]*norm);
       }
     break;
 
     case PSDPowerSpectralDensity: // power spectral density [V^2/Hz]
       norm /= frequencyStep;
-      for (i_samp = 0; i_samp < outputLen; i_samp++) {
+      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
         output[i_samp] *= norm;
       }
     break;
 
     case PSDAmplitudeSpectrum: // amplitude spectrum [V]
-      for (i_samp = 0; i_samp < outputLen; i_samp++) {
+      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
         output[i_samp] = sqrt(output[i_samp]*norm);
       }
     break;
 
     case PSDPowerSpectrum: // power spectrum [V^2]
-      for (i_samp = 0; i_samp < outputLen; i_samp++) {
+      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
         output[i_samp] *= norm;
       }
     break;

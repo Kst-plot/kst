@@ -181,8 +181,8 @@ void ScalarSelector::setSelectedScalar(QString Name) {
 
 
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
-  int i=-1,j;
-  for (j=0; j<_scalar->count() ; j++) {
+  int i=-1;
+  for (int j=0; j<_scalar->count() ; ++j) {
     if (selectedScalar.data() == _scalar->itemData(j).value<Scalar*>()) {
       i=j;
       break;

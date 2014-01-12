@@ -369,7 +369,7 @@ bool Vector::resize(int sz, bool init) {
        return false;
     }
     if (init && _size < sz) {
-      for (int i = _size; i < sz; i++) {
+      for (int i = _size; i < sz; ++i) {
         _v[i] = NOPOINT;
       }
     }
@@ -394,7 +394,7 @@ void Vector::internalUpdate() {
     _is_rising = true;
 
     // Look for a valid (finite) point...
-    for (i = 0; i < _size && !isfinite(_v[i]); i++) {
+    for (i = 0; i < _size && !isfinite(_v[i]); ++i) {
       // do nothing
     }
 
@@ -432,7 +432,7 @@ void Vector::internalUpdate() {
 
     last_v = _v[i0];
 
-    for (i = i0; i < _size; i++) {
+    for (i = i0; i < _size; ++i) {
       v = _v[i]; // get rid of redirections
 
       if (isfinite(v)) {
@@ -471,7 +471,7 @@ void Vector::internalUpdate() {
     last = _v[_size-1];
     first = _v[0];
 
-    for (i = i0; i < _size; i++) {
+    for (i = i0; i < _size; ++i) {
       v = _v[i]; // get rid of redirections
       if (isfinite(v)) {
         if (fabs(v - last_v) < no_spike_max_dv) {
@@ -517,7 +517,7 @@ void Vector::save(QXmlStreamWriter &s) {
     QByteArray qba(length()*sizeof(double), '\0');
     QDataStream qds(&qba, QIODevice::WriteOnly);
 
-    for (int i = 0; i < length(); i++) {
+    for (int i = 0; i < length(); ++i) {
       qds << _v[i];
     }
 
@@ -654,12 +654,12 @@ ObjectList<Primitive> Vector::outputPrimitives() const {
   PrimitiveList primitive_list;
 
   int n = _scalars.count();
-  for (int i = 0; i< n; i++) {
+  for (int i = 0; i< n; ++i) {
       primitive_list.append(kst_cast<Primitive>(_scalars.values().at(i)));
   }
 
   n = _strings.count();
-  for (int i = 0; i< n; i++) {
+  for (int i = 0; i< n; ++i) {
       primitive_list.append(kst_cast<Primitive>(_strings.values().at(i)));
   }
 
@@ -768,7 +768,7 @@ QByteArray Vector::getBinaryArray() const {
     QByteArray ret;
     QDataStream ds(&ret,QIODevice::WriteOnly);
     ds<<(qint64)_size;
-    for(int i=0;i<_size;i++) {
+    for(int i=0; i<_size; ++i) {
         ds<<(double)_v[i];
     }
     unlock();

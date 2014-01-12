@@ -221,7 +221,7 @@ bool FilterUnwindSource::algorithm() {
   last_x_in = inputVector->value(0);
   outputVector->value()[0] = last_x_in;
 
-  for (i=1; i<N; i++) {
+  for (i=1; i<N; ++i) {
     x = inputVector->value(i);
     if ((x>max) || (x<min)) { // invalid/spike... ignore.
       x = last_x_in;
