@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "asciifiledata.h"
+
 #ifndef QT5
 // needed to track memeory usage
 #include "qplatformdefs.h"
@@ -27,13 +29,11 @@ void fileBufferFree(void* ptr);
 #undef qFree
 #endif
 
-#include "asciifiledata.h"
 #include "debug.h"
 
 #include <QFile>
 #include <QDebug>
 #include <QByteArray>
-
 
 int MB = 1024*1024;
 

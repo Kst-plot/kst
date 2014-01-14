@@ -16,8 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KST_NETCDF_H
-#define KST_NETCDF_PLUGIN_H
+#ifndef NETCDFPLUGIN_H
+#define NETCDFPLUGIN_H
 
 #include "dataplugin.h"
 

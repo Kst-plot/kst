@@ -15,8 +15,8 @@
 #include <vector>
 #include <complex>
 
-#ifndef _IIRFILTER_H
-#define _IIRFILTER_H
+#ifndef IIRFILTER_H
+#define IIRFILTER_H
 
 using std::deque;
 using std::vector;

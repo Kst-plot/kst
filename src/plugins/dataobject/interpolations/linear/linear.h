@@ -12,8 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LINEARPLUGIN_H
-#define LINEARPLUGIN_H
+#ifndef LINEAR_H
+#define LINEAR_H
 
 #include <QFile>
 

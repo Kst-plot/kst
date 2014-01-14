@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef OVERRIDETAB_H
-#define OVERRIDETAB_H
+#ifndef OVERRIDELABELTAB_H
+#define OVERRIDELABELTAB_H
 
 #include "dialogtab.h"
 #include "ui_overridelabeltab.h"

@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ASCII_CONFIG_WINDGET_H
-#define ASCII_CONFIG_WINDGET_H
+#ifndef ASCIICONFIGWINDGET_H
+#define ASCIICONFIGWINDGET_H
 
 #include "asciisource.h"
 #include "dataplugin.h"

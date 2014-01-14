@@ -12,8 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FITKNEEFREQPLUGIN_H
-#define FITKNEEFREQPLUGIN_H
+#ifndef FITKNEEFREQUENCY_H
+#define FITKNEEFREQUENCY_H
 
 #include <QFile>
 

@@ -16,8 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KST_NETCDF_H
-#define KST_NETCDF_H
+#ifndef NETCDFSOURCE_H
+#define NETCDFSOURCE_H
 
 #include "datasource.h"
 #include "dataplugin.h"

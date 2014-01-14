@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KST_ASCII_DATA_INTERFACE_H
-#define KST_ASCII_DATA_INTERFACE_H
+#ifndef ASCIIDATAINTERFACES_H
+#define ASCIIDATAINTERFACES_H
 
 #include "datasource.h"
 #include "dataplugin.h"
