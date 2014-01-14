@@ -21,14 +21,27 @@ __declspec(dllexport)
 int main(int argc, char *argv[]) {
   Kst::Application app(argc, argv);
 
+  //--------
   QTranslator qtTranslator;
-  qtTranslator.load("qt_" + QLocale::system().name(),
+  qtTranslator.load(QLatin1String("qt_") + QLocale::system().name(),
                     QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   app.installTranslator(&qtTranslator);
 
-  QTranslator kstTranslator;
-  kstTranslator.load("kst_" + QLocale::system().name());
-  app.installTranslator(&kstTranslator);
+  QLatin1String localeSuffix("/locale");
+  QString localeName(QLatin1String("kst_common_") + QLocale::system().name());
+
+  // The "installed to system" localization:
+  // FIXME: see https://bugs.kde.org/show_bug.cgi?id=323197
+#ifdef PKGDATADIR
+  QTranslator appSystemTranslator;
+  appSystemTranslator.load(localeName, PKGDATADIR + localeSuffix);
+  app.installTranslator(&appSystemTranslator);
+#endif
+
+  // The "in the directory with the binary" localization
+  QTranslator kstDirectoryTranslator;
+  kstDirectoryTranslator.load(localeName, app.applicationDirPath() + localeSuffix);
+  app.installTranslator(&kstDirectoryTranslator);
 
   if (app.mainWindow()->initFromCommandLine()) {
     app.mainWindow()->show();
