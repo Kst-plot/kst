@@ -221,7 +221,7 @@
         <item row="0" column="2">
          <widget class="QCheckBox" name="_scaleReverse">
           <property name="whatsThis">
-           <string>Reverse the direction of the axis, so the numbers are decreasing, rather than increasing.f</string>
+           <string>Reverse the direction of the axis, so the numbers are decreasing, rather than increasing.</string>
           </property>
           <property name="text">
            <string>&amp;Reverse</string>

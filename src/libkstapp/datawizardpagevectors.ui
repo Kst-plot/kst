@@ -95,7 +95,7 @@
         </sizepolicy>
        </property>
        <property name="whatsThis">
-        <string>Remove (Alt-s): Move highlighted fields from the Selected data list to the Available data list so that they will not be plotted.</string>
+        <string>Remove (Alt-R): Move highlighted fields from the Selected data list to the Available data list so that they will not be plotted.</string>
        </property>
        <property name="text">
         <string/>
