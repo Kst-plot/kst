@@ -28,7 +28,7 @@
 
 namespace Kst {
 
-const QString Primitive::staticTypeString = QT_TR_NOOP("Primitive");
+const QString Primitive::staticTypeString = "Primitive";
 
 Primitive::Primitive(ObjectStore *store, Object *provider)
   : Object(), _provider(provider) {

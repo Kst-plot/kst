@@ -95,7 +95,6 @@ template <class T> class BesselLP4 : public IIRFilter<T> {
 #include <fstream>
 #include <numeric>
 #include <cmath>
-#include "iirfilter.h"
 
 using std::cerr;
 using std::endl;

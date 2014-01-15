@@ -35,8 +35,8 @@ extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
-const QString CSD::staticTypeString = QT_TR_NOOP("Cumulative Spectral Decay");
-const QString CSD::staticTypeTag = QT_TR_NOOP("csd");
+const QString CSD::staticTypeString = "Cumulative Spectral Decay";
+const QString CSD::staticTypeTag = "csd";
 
 static const QLatin1String CSD_INVECTOR = QLatin1String("I");
 static const QLatin1String& OUTMATRIX = QLatin1String("M");

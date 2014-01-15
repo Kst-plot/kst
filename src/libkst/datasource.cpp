@@ -71,9 +71,8 @@ struct NotSupportedImp : public DataSource::DataInterface<T>
 };
 
 
-const QString DataSource::staticTypeString = QT_TR_NOOP("Data Source");
-const QString DataSource::staticTypeTag = QT_TR_NOOP("source");
-
+const QString DataSource::staticTypeString = "Data Source";
+const QString DataSource::staticTypeTag = "source";
 
 Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
   if (_serial==newSerial) {

@@ -65,7 +65,7 @@ QStringList Kst::pluginSearchPaths()
   pluginPaths << path + QLatin1String("/Debug");
   pluginPaths << path + QLatin1String("/RelWithDebInfo");
 
-  Debug::self()->log(Debug::self()->tr("\nPlugin Search Paths:"));
+  Debug::self()->log(DataSource::tr("\nPlugin Search Paths:"));
   foreach(const QString& p, pluginPaths) {
     Debug::self()->log(QString("-> %1").arg(p));
   }
@@ -160,7 +160,7 @@ QString DataSourcePluginManager::obtainFile(const QString& source) {
 static void scanPlugins() {
   PluginList tmpList;
 
-  Debug::self()->log(Debug::self()->tr("Scanning for data-source plugins."));
+  Debug::self()->log(DataSource::tr("Scanning for data-source plugins."));
 
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     //try a cast
@@ -183,10 +183,10 @@ static void scanPlugins() {
           if (DataSourcePluginInterface *ds = qobject_cast<DataSourcePluginInterface*>(plugin)) {
 
             tmpList.append(FoundPlugin(ds, d.absoluteFilePath(fileName)));
-            Debug::self()->log(Debug::self()->tr("Plugin loaded: %1").arg(fileName));
+            Debug::self()->log(DataSource::tr("Plugin loaded: %1").arg(fileName));
           }
         } else {
-            Debug::self()->log(Debug::self()->tr("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
+            Debug::self()->log(DataSource::tr("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
         }
     }
   }
@@ -435,7 +435,7 @@ bool DataSourcePluginManager::sourceHasConfigWidget(const QString& filename, con
     return (*i).plugin->hasConfigWidget();
   }
 
-  Debug::self()->log(Debug::self()->tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
+  Debug::self()->log(DataSource::tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
   return false;
 }
 
@@ -457,7 +457,7 @@ DataSourceConfigWidget* DataSourcePluginManager::configWidgetForSource(const QSt
     return w;
   }
 
-  Debug::self()->log(Debug::self()->tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
+  Debug::self()->log(DataSource::tr("Could not find a datasource for '%1'(%2), but we found one just prior.  Something is wrong with Kst.").arg(filename).arg(type), Debug::Error);
   return 0L;
 }
 

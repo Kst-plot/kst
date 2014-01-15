@@ -25,8 +25,8 @@
 
 namespace Kst {
 
-const QString DataString::staticTypeString = QT_TR_NOOP("Data String");
-const QString DataString::staticTypeTag = QT_TR_NOOP("datastring");
+const QString DataString::staticTypeString = "Data String";
+const QString DataString::staticTypeTag = "datastring";
 
 /** Create a DataVector: raw data from a file */
 DataString::DataString(ObjectStore *store)

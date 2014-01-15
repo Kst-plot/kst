@@ -22,8 +22,8 @@
 #include "debug.h"
 namespace Kst {
 
-const QString EditableVector::staticTypeString = QT_TR_NOOP("Editable Vector");
-const QString EditableVector::staticTypeTag = QT_TR_NOOP("editablevector");
+const QString EditableVector::staticTypeString = "Editable Vector";
+const QString EditableVector::staticTypeTag = "editablevector";
 
 EditableVector::EditableVector(ObjectStore *store)
     : Vector(store), _sum(0.0) {

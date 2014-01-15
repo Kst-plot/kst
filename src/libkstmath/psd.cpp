@@ -39,8 +39,8 @@ extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
-const QString PSD::staticTypeString = QT_TR_NOOP("Power Spectrum");
-const QString PSD::staticTypeTag = QT_TR_NOOP("powerspectrum");
+const QString PSD::staticTypeString = "Power Spectrum";
+const QString PSD::staticTypeTag = "powerspectrum";
 
 static const QLatin1String& INVECTOR = QLatin1String("I");
 static const QLatin1String& SVECTOR = QLatin1String("S");

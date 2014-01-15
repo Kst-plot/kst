@@ -15,6 +15,7 @@
 
 #include "viewitem.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "graphicsfactory.h"
 
 namespace Kst {

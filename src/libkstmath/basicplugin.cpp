@@ -30,8 +30,8 @@
 
 namespace Kst {
 
-const QString BasicPlugin::staticTypeString = QT_TR_NOOP("Plugin");
-const QString BasicPlugin::staticTypeTag = QT_TR_NOOP("plugin");
+const QString BasicPlugin::staticTypeString = "Plugin";
+const QString BasicPlugin::staticTypeTag = "plugin";
 
 BasicPlugin::BasicPlugin(ObjectStore *store)
 : DataObject(store) {

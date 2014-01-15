@@ -70,7 +70,7 @@ void DataPrimitive::changeFile(DataSourcePtr in_file) {
   Q_ASSERT(d._primitive->myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (!in_file) {
-    Debug::self()->log(d._primitive->tr("Data file for vector %1 was not opened.").arg(d._primitive->Name()), Debug::Warning);
+    Debug::self()->log(Primitive::tr("Data file for vector %1 was not opened.").arg(d._primitive->Name()), Debug::Warning);
   }
   d._file = in_file;
   if (d._file) {

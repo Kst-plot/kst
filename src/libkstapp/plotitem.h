@@ -25,7 +25,7 @@
 #include "plotdefines.h"
 #include "plotmarkers.h"
 
-#include "plotaxis.h"
+//#include "plotaxis.h"
 #include "legenditem.h"
 #include "curveplacement.h"
 #include "labelrenderer.h"

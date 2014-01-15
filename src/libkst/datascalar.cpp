@@ -26,8 +26,8 @@
 
 namespace Kst {
 
-const QString DataScalar::staticTypeString = QT_TR_NOOP("Data Scalar");
-const QString DataScalar::staticTypeTag = QT_TR_NOOP("datascalar");
+const QString DataScalar::staticTypeString = "Data Scalar";
+const QString DataScalar::staticTypeTag = "datascalar";
 
 /** Create a DataVector: raw data from a file */
 DataScalar::DataScalar(ObjectStore *store)

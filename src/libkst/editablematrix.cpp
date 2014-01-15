@@ -22,8 +22,8 @@
 
 namespace Kst {
 
-const QString EditableMatrix::staticTypeString = QT_TR_NOOP("Editable Matrix");
-const QString EditableMatrix::staticTypeTag = QT_TR_NOOP("editablematrix");
+const QString EditableMatrix::staticTypeString = "Editable Matrix";
+const QString EditableMatrix::staticTypeTag = "editablematrix";
 
 EditableMatrix::EditableMatrix(ObjectStore *store)
 : Matrix(store) {

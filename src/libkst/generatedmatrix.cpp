@@ -21,8 +21,8 @@
 
 namespace Kst {
 
-const QString GeneratedMatrix::staticTypeString = QT_TR_NOOP("Generated Matrix");
-const QString GeneratedMatrix::staticTypeTag = QT_TR_NOOP("generatedmatrix");
+const QString GeneratedMatrix::staticTypeString = "Generated Matrix";
+const QString GeneratedMatrix::staticTypeTag = "generatedmatrix";
 
 GeneratedMatrix::GeneratedMatrix(ObjectStore *store) : Matrix(store) {
   _saveable = true;

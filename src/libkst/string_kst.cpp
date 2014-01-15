@@ -22,8 +22,8 @@
 
 namespace Kst {
 
-const QString String::staticTypeString = QT_TR_NOOP("String");
-const QString String::staticTypeTag = QT_TR_NOOP("string");
+const QString String::staticTypeString = "String";
+const QString String::staticTypeTag = "string";
 
 String::String(ObjectStore *store)
     : Primitive(store, 0L), _orphan(false), _editable(false) {

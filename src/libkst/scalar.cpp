@@ -24,8 +24,8 @@
 namespace Kst {
 
 
-const QString Scalar::staticTypeString = QT_TR_NOOP("Scalar");
-const QString Scalar::staticTypeTag = QT_TR_NOOP("scalar");
+const QString Scalar::staticTypeString = "Scalar";
+const QString Scalar::staticTypeTag = "scalar";
 
 
 /** Create the base scalar */

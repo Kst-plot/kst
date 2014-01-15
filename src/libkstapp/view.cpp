@@ -23,6 +23,7 @@
 #include "document.h"
 #include "plotitemmanager.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "dialogdefaults.h"
 #include "datacollection.h"
 

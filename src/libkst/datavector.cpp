@@ -44,9 +44,8 @@
 
 namespace Kst {
 
-const QString DataVector::staticTypeString = QT_TR_NOOP("Data Vector");
-const QString DataVector::staticTypeTag = QT_TR_NOOP("datavector");
-
+const QString DataVector::staticTypeString = "Data Vector";
+const QString DataVector::staticTypeTag = "datavector";
 
 DataVector::DataInfo::DataInfo() :
     frameCount(-1),

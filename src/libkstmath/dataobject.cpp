@@ -397,13 +397,13 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 }
 
 void DataObject::load(const QXmlStreamReader &e) {
-  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(tr(typeString().toLatin1())) << endl;
+  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(e)
 }
 
 
 void DataObject::save(QXmlStreamWriter& ts) {
-  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(tr(typeString().toLatin1())) << endl;
+  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << endl;
   Q_UNUSED(ts)
 }
 

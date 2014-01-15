@@ -13,6 +13,7 @@
 
 #include "plotscriptinterface.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 
 #include <QStringBuilder>
 

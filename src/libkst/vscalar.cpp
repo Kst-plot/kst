@@ -28,8 +28,8 @@
 
 namespace Kst {
 
-const QString VScalar::staticTypeString = QT_TR_NOOP("Vector Field Scalar");
-const QString VScalar::staticTypeTag = QT_TR_NOOP("vscalar");
+const QString VScalar::staticTypeString = "Vector Field Scalar";
+const QString VScalar::staticTypeTag = "vscalar";
 
 /** Create a VScalar: a scalar from a single sample of a vector field */
 VScalar::VScalar(ObjectStore *store)

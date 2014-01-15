@@ -22,8 +22,8 @@
 
 namespace Kst {
 
-const QString GeneratedVector::staticTypeString = QT_TR_NOOP("Generated Vector");
-const QString GeneratedVector::staticTypeTag = QT_TR_NOOP("generatedvector");
+const QString GeneratedVector::staticTypeString = "Generated Vector";
+const QString GeneratedVector::staticTypeTag = "generatedvector";
 
 GeneratedVector::GeneratedVector(ObjectStore *store)
     : Vector(store) {

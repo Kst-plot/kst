@@ -32,9 +32,8 @@
 
 namespace Kst {
 
-const QString DataMatrix::staticTypeString = QT_TR_NOOP("Data Matrix");
-const QString DataMatrix::staticTypeTag = QT_TR_NOOP("datamatrix");
-
+const QString DataMatrix::staticTypeString = "Data Matrix";
+const QString DataMatrix::staticTypeTag = "datamatrix";
 
 
 DataMatrix::DataInfo::DataInfo() :

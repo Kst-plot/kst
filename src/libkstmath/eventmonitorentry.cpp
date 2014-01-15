@@ -41,8 +41,8 @@ extern struct yy_buffer_state *yy_scan_string(const char*);
 
 namespace Kst {
 
-const QString EventMonitorEntry::staticTypeString = QT_TR_NOOP("Event Monitor");
-const QString EventMonitorEntry::staticTypeTag = QT_TR_NOOP("eventmonitor");
+const QString EventMonitorEntry::staticTypeString = "Event Monitor";
+const QString EventMonitorEntry::staticTypeTag = "eventmonitor";
 
 namespace {
   const int EventMonitorEventType = int(QEvent::User) + 2931;

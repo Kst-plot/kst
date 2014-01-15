@@ -833,24 +833,6 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
 
   setProjectionRect(newProjectionRec);
 
-#if 0
-  else {
-        setProjectionRect(QRectF(compute.x(),
-              projectionRect().y(),
-              compute.width(),
-              projectionRect().height()));
-      }
-    } else if (yAxis()->axisZoomMode() == PlotAxis::Auto) {
-      setProjectionRect(QRectF(projectionRect().x(),
-            compute.y(),
-            projectionRect().width(),
-            compute.height()));
-    } else {
-      update();
-    }
-  }
-#endif
-
   setLabelsDirty();
 
   return true;

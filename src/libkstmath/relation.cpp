@@ -27,7 +27,7 @@
 
 namespace Kst {
 
-const QString Relation::staticTypeString = QT_TR_NOOP("Relation");
+const QString Relation::staticTypeString = "Relation";
 
 Relation::Relation(ObjectStore *store) : Object() {
   Q_UNUSED(store);

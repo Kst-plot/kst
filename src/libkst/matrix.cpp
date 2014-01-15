@@ -35,7 +35,7 @@
 
 namespace Kst {
 
-const QString Matrix::staticTypeString = QT_TR_NOOP("Matrix");
+const QString Matrix::staticTypeString = "Matrix";
 
 Matrix::Matrix(ObjectStore *store)
     : Primitive(store, 0L), _NS(0), _NRealS(0), _nX(1), _nY(0), _minX(0), _minY(0), _stepX(1), _stepY(1),

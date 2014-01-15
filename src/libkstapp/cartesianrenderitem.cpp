@@ -17,6 +17,7 @@
 #include "math_kst.h"
 
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "applicationsettings.h"
 
 namespace Kst {

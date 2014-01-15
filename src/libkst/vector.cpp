@@ -38,8 +38,8 @@ namespace Kst {
 
 #define INITSIZE 1
 
-const QString Vector::staticTypeString = QT_TR_NOOP("Vector");
-const QString Vector::staticTypeTag = QT_TR_NOOP("vector");
+const QString Vector::staticTypeString = "Vector";
+const QString Vector::staticTypeTag = "vector";
 
 /** Create a vector */
 Vector::Vector(ObjectStore *store)

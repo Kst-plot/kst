@@ -20,6 +20,7 @@
 #include "sessionmodel.h"
 #include "datacollection.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "labelitem.h"
 
 #include "objectstore.h"

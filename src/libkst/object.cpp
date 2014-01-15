@@ -22,7 +22,7 @@
 
 namespace Kst {
 
-const QString Object::staticTypeString = QT_TR_NOOP("Object");
+const QString Object::staticTypeString = "Object";
 
 Object::Object() :
   Shared(), KstRWLock(), NamedObject(),

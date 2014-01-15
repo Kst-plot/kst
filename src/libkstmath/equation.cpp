@@ -44,8 +44,8 @@ int yylex_destroy (void );
 
 namespace Kst {
 
-const QString Equation::staticTypeString = QT_TR_NOOP("Equation");
-const QString Equation::staticTypeTag = QT_TR_NOOP("equation");
+const QString Equation::staticTypeString = "Equation";
+const QString Equation::staticTypeTag = "equation";
 
 static const QLatin1String& XINVECTOR = QLatin1String("X");
 static const QLatin1String& XOUTVECTOR = QLatin1String("XO"); // Output (slave) vector

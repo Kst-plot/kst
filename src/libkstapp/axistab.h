@@ -15,6 +15,7 @@
 
 #include "dialogtab.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "plotdefines.h"
 #include "ui_axistab.h"
 

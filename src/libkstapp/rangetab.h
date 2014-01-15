@@ -15,6 +15,7 @@
 
 #include "dialogtab.h"
 #include "plotitem.h"
+#include "plotaxis.h"
 #include "ui_rangetab.h"
 
 #include "kst_export.h"

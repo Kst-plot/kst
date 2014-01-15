@@ -32,8 +32,8 @@
 
 namespace Kst {
 
-const QString Image::staticTypeString = QT_TR_NOOP("Image");
-const QString Image::staticTypeTag = QT_TR_NOOP("image");
+const QString Image::staticTypeString = "Image";
+const QString Image::staticTypeTag = "image";
 
 static const QLatin1String& THEMATRIX = QLatin1String("THEMATRIX");
 

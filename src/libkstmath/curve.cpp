@@ -57,8 +57,8 @@
 
 namespace Kst {
 
-const QString Curve::staticTypeString = QT_TR_NOOP("Curve");
-const QString Curve::staticTypeTag = QT_TR_NOOP("curve");
+const QString Curve::staticTypeString = "Curve";
+const QString Curve::staticTypeTag = "curve";
 
 static const QLatin1String& XVECTOR = QLatin1String("X");
 static const QLatin1String& YVECTOR = QLatin1String("Y");

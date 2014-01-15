@@ -32,8 +32,8 @@
 
 namespace Kst {
 
-const QString Histogram::staticTypeString = QT_TR_NOOP("Histogram");
-const QString Histogram::staticTypeTag = QT_TR_NOOP("histogram");
+const QString Histogram::staticTypeString = "Histogram";
+const QString Histogram::staticTypeTag = "histogram";
 
 static const QLatin1String& RAWVECTOR  = QLatin1String("I");
 static const QLatin1String& BINS = QLatin1String("B");
