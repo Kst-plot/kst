@@ -65,7 +65,7 @@ QStringList Kst::pluginSearchPaths()
   pluginPaths << path + QLatin1String("/Debug");
   pluginPaths << path + QLatin1String("/RelWithDebInfo");
 
-  Debug::self()->log(Debug::self()->tr("\nPlugin Search Pathes:"));
+  Debug::self()->log(Debug::self()->tr("\nPlugin Search Paths:"));
   foreach(const QString& p, pluginPaths) {
     Debug::self()->log(QString("-> %1").arg(p));
   }

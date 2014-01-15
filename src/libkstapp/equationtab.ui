@@ -45,7 +45,7 @@
          </size>
         </property>
         <property name="whatsThis">
-         <string>Enter the equation to be evaluated here.  Use 'x' as the independent variable.  Vectors an operators are selected from the above lists.</string>
+         <string>Enter the equation to be evaluated here.  Use 'x' as the independent variable.  Vectors and operators are selected from the above lists.</string>
         </property>
        </widget>
       </item>

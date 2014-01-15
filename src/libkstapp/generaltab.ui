@@ -20,7 +20,7 @@
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string>Dynamic files update this fast,. or slower.</string>
+      <string>Dynamic files update this fast or slower.</string>
      </property>
      <property name="whatsThis">
       <string>Minimum time between updates when looking at dynamic files.  If there is a lot of processing, it might take longer.</string>
