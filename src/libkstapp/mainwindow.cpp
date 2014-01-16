@@ -380,7 +380,7 @@ void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QActio
 
   submenu->clear();
   QAction* check = new QAction(this);
-  check->setText("&Cleanup Non-Existent Files");
+  check->setText(tr("&Cleanup Non-Existent Files"));
   check->setData(key);
   check->setVisible(true);
   connect(check, SIGNAL(triggered()), this, SLOT(checkRecentFilesOnExistence()));
