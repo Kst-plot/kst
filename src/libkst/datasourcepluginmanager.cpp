@@ -174,7 +174,7 @@ static void scanPlugins() {
     QDir d(pluginPath);
     foreach (const QString &fileName, d.entryList(QDir::Files)) {
 #ifdef Q_OS_WIN
-        if (!fileName.endsWith(QLatin1String(".dll"))
+        if (!fileName.endsWith(QLatin1String(".dll")))
             continue;
 #endif
         QPluginLoader loader(d.absoluteFilePath(fileName));
