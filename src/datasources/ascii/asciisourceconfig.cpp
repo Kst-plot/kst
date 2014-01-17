@@ -13,6 +13,7 @@
 #include "asciisourceconfig.h"
 
 #include "asciisource.h"
+#include "datasource.h"
 
 //
 // AsciiSourceConfig
@@ -73,6 +74,8 @@ const char AsciiSourceConfig::Key_relativeOffset[] = "relative offset";
 const char AsciiSourceConfig::Tag_relativeOffset[] = "relativeOffset";
 const char AsciiSourceConfig::Key_nanValue[] = "NaN value";
 const char AsciiSourceConfig::Tag_nanValue[] = "nanValue";
+const char AsciiSourceConfig::Key_updateType[] = "updateType";
+const char AsciiSourceConfig::Tag_updateType[] = "updateType";
 
 AsciiSourceConfig::AsciiSourceConfig() :
   _delimiters(DEFAULT_COMMENT_DELIMITERS),
@@ -99,7 +102,8 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _offsetRelative(true),
   _dateTimeOffset(QDateTime::currentDateTime()),
   _relativeOffset(0),
-  _nanValue(0)
+  _nanValue(0),
+  _updateType(Kst::DataSource::File)
 {
 }
 
@@ -131,6 +135,7 @@ void AsciiSourceConfig::save(QSettings& cfg) const {
   _dateTimeOffset >> cfg;
   _relativeOffset >> cfg;
   _nanValue >> cfg;
+  _updateType >> cfg;
 }
 
 
@@ -178,10 +183,11 @@ void AsciiSourceConfig::read(QSettings& cfg) {
   _dateTimeOffset << cfg;
   _relativeOffset << cfg;
   _nanValue << cfg;
+  _updateType << cfg;
 }
 
 
-void AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
+const AsciiSourceConfig& AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
   cfg.beginGroup(AsciiSource::asciiTypeKey());
   read(cfg);
   if (!fileName.isEmpty()) {
@@ -191,6 +197,7 @@ void AsciiSourceConfig::readGroup(QSettings& cfg, const QString& fileName) {
   }
   _delimiters = QRegExp::escape(_delimiters).toLatin1();
   cfg.endGroup();
+  return *this;
 }
 
 
@@ -227,6 +234,7 @@ void AsciiSourceConfig::save(QXmlStreamWriter& s) {
   _dateTimeOffset >> s;
   _relativeOffset >> s;
   _nanValue >> s;
+  _updateType >> s;
   s.writeEndElement();
 }
 
@@ -257,6 +265,7 @@ void AsciiSourceConfig::parseProperties(QXmlStreamAttributes& attributes) {
   _dateTimeOffset << attributes;
   _relativeOffset << attributes;
   _nanValue << attributes;
+  _updateType << attributes;
 }
 
 
@@ -291,6 +300,7 @@ void AsciiSourceConfig::load(const QDomElement& e) {
         _dateTimeOffset << elem;
         _relativeOffset << elem;
         _nanValue << elem;
+        _updateType << elem;
       }
     }
     n = n.nextSibling();
@@ -324,7 +334,8 @@ bool AsciiSourceConfig::operator==(const AsciiSourceConfig& rhs) const
       _offsetRelative == rhs._offsetRelative &&
       _dateTimeOffset == rhs._dateTimeOffset &&
       _relativeOffset == rhs._relativeOffset &&
-      _nanValue == rhs._nanValue;
+      _nanValue == rhs._nanValue &&
+      _updateType == rhs._updateType;
 
 }
 

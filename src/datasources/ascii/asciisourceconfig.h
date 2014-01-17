@@ -72,6 +72,8 @@ class AsciiSourceConfig {
     static const char Tag_relativeOffset[];
     static const char Key_nanValue[];
     static const char Tag_nanValue[];
+    static const char Key_updateType[];
+    static const char Tag_updateType[];
 
   public:
     AsciiSourceConfig();
@@ -82,7 +84,7 @@ class AsciiSourceConfig {
 
     void saveDefault(QSettings& cfg) const;
     void saveGroup(QSettings& cfg, const QString& fileName) const;
-    void readGroup(QSettings& cfg, const QString& fileName = QString());
+    const AsciiSourceConfig& readGroup(QSettings& cfg, const QString& fileName = QString());
 
     void save(QXmlStreamWriter& s);
     void parseProperties(QXmlStreamAttributes &properties);
@@ -117,6 +119,7 @@ class AsciiSourceConfig {
     NamedParameter<QDateTime, Key_dateTimeOffset, Tag_dateTimeOffset> _dateTimeOffset;
     NamedParameter<double, Key_relativeOffset, Tag_relativeOffset> _relativeOffset;
     NamedParameter<int, Key_nanValue, Tag_nanValue> _nanValue;
+    NamedParameter<int, Key_updateType, Tag_updateType> _updateType;
 
   private:
     void save(QSettings& cfg) const;

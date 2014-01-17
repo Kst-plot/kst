@@ -104,7 +104,7 @@ class KSTCORE_EXPORT DataSource : public Object
     /************************************************************/
 
     enum UpdateCheckType { Timer, File, None };
-    void setUpdateType(UpdateCheckType updateType, const QString& file = QString());
+    virtual void setUpdateType(UpdateCheckType updateType, const QString& file = QString());
     UpdateCheckType updateType() const;
 
     virtual UpdateType objectUpdate(qint64 newSerial);

@@ -76,9 +76,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
   reset();
 
-  // TODO only works for local files
-  setUpdateType(File);
-
   _source = asciiTypeString;
   if (!type.isEmpty() && type != asciiTypeString) {
     return;
@@ -88,6 +85,9 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   if (!e.isNull()) {
     _config.load(e);
   }
+
+  // TODO only works for local files
+  setUpdateType((UpdateCheckType)_config._updateType.value());
 
   _valid = true;
   registerChange();
@@ -558,6 +558,17 @@ void AsciiSource::updateProgress(const QString& message)
 QString AsciiSource::fileType() const
 {
   return asciiTypeString;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiSource::setUpdateType(UpdateCheckType updateType, const QString& file)
+{
+    if (_config._updateType != updateType) {
+        Q_ASSERT(AsciiSourceConfig().readGroup(*_cfg, _filename) == _config);
+        _config._updateType = updateType;
+        _config.saveGroup(*_cfg, _filename);
+    }
+    DataSource::setUpdateType(updateType, file);
 }
 
 
