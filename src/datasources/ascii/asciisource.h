@@ -94,6 +94,7 @@ private:
     bool _haveWarned;
     double _fileCreationTime_t;
     bool _emitProgress;
+    bool _showProgress;
     double _progress;
     double _progressSteps;
     void updateProgress(const QString&);

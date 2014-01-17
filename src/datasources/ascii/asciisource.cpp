@@ -68,7 +68,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _read_count_max(-1),
   _read_count(0),
   is(new DataInterfaceAsciiString(*this)),
-  iv(new DataInterfaceAsciiVector(*this))
+  iv(new DataInterfaceAsciiVector(*this)),
+  _showProgress(false)
 {
   setInterface(is);
   setInterface(iv);
@@ -218,7 +219,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   // Emit status message if there is more than 100 MB to parse
   if (file.size() - _fileSize > 100 * 1024 * 1024 && read_completely) {
-    _emitProgress = true;
+    _emitProgress = true && _showProgress;
   } else {
     _emitProgress = false;
   }
@@ -293,10 +294,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   if (_emitProgress) {
     updateProgress(tr("reading field"));
   } else {
-    emit progress(0, tr("Reading field: ") + field);
+    emitProgress(0, tr("Reading field: ") + field);
   }
 
   int read = tryReadField(v, field, s, n);
+  _showProgress = false;
 
   if (isTime(field)) {
     if (_config._indexInterpretation == AsciiSourceConfig::FixedRate ) {
@@ -364,6 +366,7 @@ void AsciiSource::prepareRead(int count)
     _read_count = 0;
     _progress = 0;
     _progressSteps = 0;
+    _showProgress = true;
 }
 
 //-------------------------------------------------------------------------------------------
@@ -537,7 +540,7 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
 //-------------------------------------------------------------------------------------------
 void AsciiSource::emitProgress(int percent, const QString& message)
 {
-  if (_read_count_max != -1) {
+  if (_showProgress && _read_count_max != -1) {
     emit progress(percent, message);
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
   }
@@ -546,7 +549,7 @@ void AsciiSource::emitProgress(int percent, const QString& message)
 //-------------------------------------------------------------------------------------------
 void AsciiSource::updateProgress(const QString& message)
 {
-  if (_progressSteps != 0 && _read_count_max != -1) {
+  if (_showProgress && _progressSteps != 0 && _read_count_max != -1) {
     emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
   }
 }
