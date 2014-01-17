@@ -89,7 +89,7 @@
         <string>&amp;Reset Gradient</string>
        </property>
        <property name="si" stdset="0">
-        <string>fill reset gradient</string>
+        <string>reset fill gradient</string>
        </property>
       </widget>
      </item>

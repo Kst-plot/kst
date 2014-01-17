@@ -831,7 +831,7 @@ bool DataNode::collectObjects(Kst::VectorMap& v, Kst::ScalarMap& s, Kst::StringM
   } else if (_scalar && !s.contains(_tagName)) {
     s.insert(_tagName, _scalar);
   } else if (!_scalar && !_vector) {
-    Kst::Debug::self()->log(Kst::Debug::tr("Equations has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
+    Kst::Debug::self()->log(Kst::Debug::tr("Equation has unknown object [%1].").arg(_tagName), Kst::Debug::Error);
     return false;
   }
   return true;

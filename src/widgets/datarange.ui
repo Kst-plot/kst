@@ -134,7 +134,7 @@
          <bool>false</bool>
         </property>
         <property name="whatsThis">
-         <string>Number of frame to skip, if &quot;Skip Frames&quot; is selected.</string>
+         <string>Number of frames to skip, if &quot;Read 1 sample per&quot; is selected.</string>
         </property>
         <property name="suffix">
          <string> frame(s)</string>

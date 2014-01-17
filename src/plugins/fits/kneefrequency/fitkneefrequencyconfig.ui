@@ -111,7 +111,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Input Scalar -Min. White Noise Freq</string>
+        <string>Input Scalar - Min. White Noise Freq</string>
        </property>
        <property name="wordWrap">
         <bool>false</bool>

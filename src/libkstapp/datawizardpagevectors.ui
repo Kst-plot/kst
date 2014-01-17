@@ -79,7 +79,7 @@
         </sizepolicy>
        </property>
        <property name="whatsThis">
-        <string>Select (Alt-s): Move highlighted fields from the Available data list to the Selected data list for plotting.</string>
+        <string>Select (Alt-S): Move highlighted fields from the Available data list to the Selected data list for plotting.</string>
        </property>
        <property name="text">
         <string/>
@@ -131,7 +131,7 @@
         <string>Selected data: All fields in this list are plotted.</string>
        </property>
        <property name="whatsThis">
-        <string>Selected data: All fields in this list are plotted.  To remove fields from this list, drag them to the Available data list, double click on them, or select them and use the Remove button (right arrow icon or Alt-r).  The order in which fields appear in this list is the order in which they will be plotted.</string>
+        <string>Selected data: All fields in this list are plotted.  To remove fields from this list, drag them to the Available data list, double click on them, or select them and use the Remove button (right arrow icon or Alt-R).  The order in which fields appear in this list is the order in which they will be plotted.</string>
        </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -194,7 +194,7 @@
         <string>Field selection: Checked fields are plotted.</string>
        </property>
        <property name="whatsThis">
-        <string>Available data: This box lists all fields which have not been selected for plotting.  To select a field for plotting, move it to the Selected data list, by dragging it with the mouse, by double clicking, or by highlighting it, and clicking on the select button (Right Arrow - accelerator is Alt-s).</string>
+        <string>Available data: This box lists all fields which have not been selected for plotting.  To select a field for plotting, move it to the Selected data list, by dragging it with the mouse, by double clicking, or by highlighting it, and clicking on the select button (Right Arrow - accelerator is Alt-S).</string>
        </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::ExtendedSelection</enum>

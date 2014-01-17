@@ -51,7 +51,7 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
         configWidget = DataObject::pluginWidget(pluginName);
         if (configWidget) {
           if (!configWidget->configurePropertiesFromXml(store, attrs) ) {
-            Debug::self()->log(QObject::tr("Error unable to create data object from plugin"), Debug::Warning);
+            Debug::self()->log(QObject::tr("Error: unable to create data object from plugin"), Debug::Warning);
             return 0;
           } else {
             if (xml.isEndElement() && n == BasicPlugin::staticTypeTag) {
@@ -59,7 +59,7 @@ DataObjectPtr BasicPluginFactory::generateObject(ObjectStore *store, QXmlStreamR
             }
           }
         } else {
-          Debug::self()->log(QObject::tr("Error unable to find plugin for data object"), Debug::Warning);
+          Debug::self()->log(QObject::tr("Error: unable to find plugin for data object"), Debug::Warning);
           return 0;
         }
 

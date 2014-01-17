@@ -511,7 +511,7 @@
            <string>Density of major ticks</string>
           </property>
           <property name="whatsThis">
-           <string>Specify the density of major ticks.  The major tick interval will automatically be chosen as a power of 10 times 1,2, or 5.  This changes the target tick spacing within this constraint.</string>
+           <string>Specify the density of major ticks.  The major tick interval will automatically be chosen as a power of 10 times 1, 2, or 5.  This changes the target tick spacing within this constraint.</string>
           </property>
          </widget>
         </item>
