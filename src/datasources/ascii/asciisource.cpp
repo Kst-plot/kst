@@ -67,9 +67,9 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _busy(false),
   _read_count_max(-1),
   _read_count(0),
+  _showProgress(false),
   is(new DataInterfaceAsciiString(*this)),
-  iv(new DataInterfaceAsciiVector(*this)),
-  _showProgress(false)
+  iv(new DataInterfaceAsciiVector(*this))
 {
   setInterface(is);
   setInterface(iv);
