@@ -65,7 +65,6 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   _updateBox->addItem("Change Detection");
   _updateBox->addItem("No Update");
   updateUpdateBox();
-  connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateTypeActivated(int)));
 }
 
 
@@ -88,14 +87,18 @@ void DataWizardPageDataSource::updateUpdateBox()
   }
 }
 
+void DataWizardPageDataSource::setTypeActivated() {
+    updateTypeActivated(_updateBox->currentIndex());
+}
+
 void DataWizardPageDataSource::updateTypeActivated(int idx)
 {
   if (!_dataSource) {
     _updateBox->setEnabled(false);
     return;
   }
+  _updateBox->setEnabled(true);
   switch (idx) {
-    _updateBox->setEnabled(true);
     case 0: _dataSource->setUpdateType(DataSource::Timer); break;
     case 1: _dataSource->setUpdateType(DataSource::File);  break;
     case 2: _dataSource->setUpdateType(DataSource::None);  break;
@@ -1275,6 +1278,8 @@ void DataWizard::finished() {
   accept();
 
   UpdateServer::self()->requestUpdateSignal();
+
+  _pageDataSource->setTypeActivated();
 }
 
 }
