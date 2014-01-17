@@ -161,7 +161,7 @@ QString FilterUnwindSource::_automaticDescriptiveName() const {
 QString FilterUnwindSource::descriptionTip() const {
   QString tip;
 
-  tip = tr("Unwind Filter: %1\n  %2 - %3\n  Step: %4 %").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
+  tip = tr("Unwind Filter: %1\n  %2 - %3\n  Step: %4 %", "%2 - %3 specifies a numerical range").arg(Name()).arg(minimumScalar()->value()).arg(maximumScalar()->value()).arg(stepScalar()->value());
 
   tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;

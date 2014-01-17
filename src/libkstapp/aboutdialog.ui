@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
-    <height>285</height>
+    <width>386</width>
+    <height>283</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About Kst</string>
+   <string comment="kst is the name of the app.">About Kst</string>
   </property>
   <layout class="QGridLayout">
    <item row="0" column="0">
@@ -34,7 +34,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Kst</string>
+        <string comment="the name of the app, but no other meaning.">Kst</string>
        </property>
       </widget>
      </item>
@@ -77,7 +77,6 @@
  </widget>
  <resources>
   <include location="../images/icons.qrc"/>
-  <include location="../images/images.qrc"/>
  </resources>
  <connections>
   <connection>

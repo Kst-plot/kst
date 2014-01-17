@@ -72,7 +72,7 @@
         <cstring>_rotation</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>geo X</string>
+        <string notr="true">geo X</string>
        </property>
       </widget>
      </item>
@@ -110,7 +110,7 @@
         <cstring>_x</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>pos X</string>
+        <string notr="true">pos X</string>
        </property>
       </widget>
      </item>
@@ -129,7 +129,7 @@
         <cstring>_y</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>pos Y</string>
+        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>

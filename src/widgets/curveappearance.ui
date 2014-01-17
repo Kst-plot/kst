@@ -82,7 +82,7 @@
          <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
         </property>
         <property name="si" stdset="0">
-         <string>line style</string>
+         <string notr="true">line style</string>
         </property>
        </widget>
       </item>
@@ -206,7 +206,7 @@
          </sizepolicy>
         </property>
         <property name="si" stdset="0">
-         <string>curve bar fill</string>
+         <string notr="true">curve bar fill</string>
         </property>
        </widget>
       </item>
@@ -294,7 +294,7 @@
          </sizepolicy>
         </property>
         <property name="si" stdset="0">
-         <string>curve head color</string>
+         <string notr="true">curve head color</string>
         </property>
        </widget>
       </item>

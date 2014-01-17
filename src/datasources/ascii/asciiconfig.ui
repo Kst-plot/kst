@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>831</width>
-    <height>517</height>
+    <height>515</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,10,1,1,1">
@@ -233,7 +233,7 @@
           <item>
            <widget class="QRadioButton" name="_useDot">
             <property name="text">
-             <string>Dot</string>
+             <string comment="the . character">Dot</string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -243,7 +243,7 @@
           <item>
            <widget class="QRadioButton" name="_useComma">
             <property name="text">
-             <string>Comma</string>
+             <string comment="the , character">Comma</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -852,7 +852,7 @@ own constant width</string>
                </property>
                <property name="dateTime">
                 <datetime>
-                 <hour>4</hour>
+                 <hour>9</hour>
                  <minute>0</minute>
                  <second>0</second>
                  <year>2000</year>
@@ -869,7 +869,7 @@ own constant width</string>
                </property>
                <property name="time">
                 <time>
-                 <hour>4</hour>
+                 <hour>9</hour>
                  <minute>0</minute>
                  <second>0</second>
                 </time>

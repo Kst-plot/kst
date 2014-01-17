@@ -390,7 +390,7 @@ LabelInfo Curve::titleInfo() const {
 
 
 QString Curve::propertyString() const {
-  return tr("%1 vs %2").arg(yVector()->Name()).arg(xVector()->Name());
+  return tr("%1 vs %2", "a plot of arg1 vs arg2").arg(yVector()->Name()).arg(xVector()->Name());
 }
 
 

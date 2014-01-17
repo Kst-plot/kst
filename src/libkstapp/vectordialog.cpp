@@ -61,9 +61,9 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
   siHack->hide();
   siHack->setBuddy(_updateBox);
   siHack->setText("update type");
-  _updateBox->addItem("Time interval");
-  _updateBox->addItem("Change detection");
-  _updateBox->addItem("Don't update");
+  _updateBox->addItem(tr("Time Interval", "update periodically"));
+  _updateBox->addItem(tr("Change Detection", "update when a change is detected"));
+  _updateBox->addItem(tr("No Update", "do not update the file"));
   updateUpdateBox();
   connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateTypeActivated(int)));
   connect(_updateBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));

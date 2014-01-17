@@ -30,7 +30,7 @@ namespace Kst {
 LineItem::LineItem(View *parent)
   : ViewItem(parent), _lineEditDialog(0) {
   _created = false;
-  setTypeName("Line");
+  setTypeName(tr("Line", "a line in a picture"));
   setAllowedGrips(RightMidGrip | LeftMidGrip);
   setAllowedGripModes(Resize);
   setAllowsLayout(false);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
-    <height>229</height>
+    <width>660</width>
+    <height>227</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -114,7 +114,7 @@
            <string>The lower limit of the lowest bin.  Values below this limit will not be counted in any bin.</string>
           </property>
           <property name="text">
-           <string>-10.0</string>
+           <string notr="true">-10.0</string>
           </property>
          </widget>
         </item>
@@ -149,7 +149,7 @@
            <string>The upper limit of the highest bin.  Values above this limit will not be counted in any bin.</string>
           </property>
           <property name="text">
-           <string>10.0</string>
+           <string notr="true">10.0</string>
           </property>
          </widget>
         </item>

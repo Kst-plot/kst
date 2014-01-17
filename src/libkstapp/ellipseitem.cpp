@@ -22,7 +22,7 @@ namespace Kst {
 
 EllipseItem::EllipseItem(View *parent)
   : ViewItem(parent) {
-  setTypeName("Ellipse");
+  setTypeName(tr("Ellipse", "an ellipse in a picture"));
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();

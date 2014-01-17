@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
-    <height>445</height>
+    <width>454</width>
+    <height>443</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -110,12 +110,12 @@
         </item>
         <item>
          <property name="text">
-          <string>PI</string>
+          <string comment="Number: 3.14159265....">PI</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>e</string>
+          <string comment="Euler's number ">e</string>
          </property>
         </item>
         <item>

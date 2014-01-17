@@ -23,7 +23,7 @@ namespace Kst {
 
 CircleItem::CircleItem(View *parent)
   : ViewItem(parent), _circleEditDialog(0) {
-  setTypeName("Circle");
+  setTypeName(tr("Circle", "a circle in a picture"));
   setBrush(Qt::white);
   setLockAspectRatio(true);
   setLockAspectRatioFixed(true);

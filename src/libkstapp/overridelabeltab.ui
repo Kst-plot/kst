@@ -81,7 +81,7 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>override label italic</string>
+        <string notr="true">override label italic</string>
        </property>
       </widget>
      </item>
@@ -135,7 +135,7 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>override label bold</string>
+        <string notr="true">override label bold</string>
        </property>
       </widget>
      </item>
@@ -155,7 +155,7 @@
         <bool>false</bool>
        </property>
        <property name="si" stdset="0">
-        <string>override label color</string>
+        <string notr="true">override label color</string>
        </property>
       </widget>
      </item>

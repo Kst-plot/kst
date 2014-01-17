@@ -23,21 +23,21 @@ FillTab::FillTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Fill"));
 
-  _style->addItem("NoBrush", (int)Qt::NoBrush);
-  _style->addItem("SolidPattern", (int)Qt::SolidPattern);
-  _style->addItem("Dense1Pattern", (int)Qt::Dense1Pattern);
-  _style->addItem("Dense2Pattern", (int)Qt::Dense2Pattern);
-  _style->addItem("Dense3Pattern", (int)Qt::Dense3Pattern);
-  _style->addItem("Dense4Pattern", (int)Qt::Dense4Pattern);
-  _style->addItem("Dense5Pattern", (int)Qt::Dense5Pattern);
-  _style->addItem("Dense6Pattern", (int)Qt::Dense6Pattern);
-  _style->addItem("Dense7Pattern", (int)Qt::Dense7Pattern);
-  _style->addItem("HorPattern", (int)Qt::HorPattern);
-  _style->addItem("VerPattern", (int)Qt::VerPattern);
-  _style->addItem("CrossPattern", (int)Qt::CrossPattern);
-  _style->addItem("BDiagPattern", (int)Qt::BDiagPattern);
-  _style->addItem("FDiagPattern", (int)Qt::FDiagPattern);
-  _style->addItem("DiagCrossPattern", (int)Qt::DiagCrossPattern);
+  _style->addItem(tr("No Brush", "Brush type"), (int)Qt::NoBrush);
+  _style->addItem(tr("Solid Pattern", "Brush type"), (int)Qt::SolidPattern);
+  _style->addItem(tr("Dense Pattern 1", "Brush type"), (int)Qt::Dense1Pattern);
+  _style->addItem(tr("Dense Pattern 2", "Brush type"), (int)Qt::Dense2Pattern);
+  _style->addItem(tr("Dense Pattern 3", "Brush type"), (int)Qt::Dense3Pattern);
+  _style->addItem(tr("Dense Pattern 4", "Brush type"), (int)Qt::Dense4Pattern);
+  _style->addItem(tr("Dense Pattern 5", "Brush type"), (int)Qt::Dense5Pattern);
+  _style->addItem(tr("Dense Pattern 6", "Brush type"), (int)Qt::Dense6Pattern);
+  _style->addItem(tr("Dense Pattern 7", "Brush type"), (int)Qt::Dense7Pattern);
+  _style->addItem(tr("Horizontal Pattern", "Brush type"), (int)Qt::HorPattern);
+  _style->addItem(tr("Vertical Pattern", "Brush type"), (int)Qt::VerPattern);
+  _style->addItem(tr("Cross Pattern", "Brush type"), (int)Qt::CrossPattern);
+  _style->addItem(tr("Diagonal Pattern 1", "Brush type"), (int)Qt::BDiagPattern);
+  _style->addItem(tr("Diagonal Pattern 2", "Brush type"), (int)Qt::FDiagPattern);
+  _style->addItem(tr("Diagonal Cross Pattern", "Brush type"), (int)Qt::DiagCrossPattern);
 
   connect(_color, SIGNAL(changed(QColor)), this, SIGNAL(modified()));
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));

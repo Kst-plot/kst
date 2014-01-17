@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>741</width>
-    <height>198</height>
+    <width>739</width>
+    <height>196</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -263,7 +263,7 @@
            <string>The sample rate at which the measurements were acquired, for proper normalization.</string>
           </property>
           <property name="text">
-           <string>60.0</string>
+           <string notr="true">60.0</string>
           </property>
          </widget>
         </item>
@@ -298,7 +298,7 @@
            <string>The units of the Data Vector - for automatic labels.</string>
           </property>
           <property name="text">
-           <string>V</string>
+           <string comment="Abbreviation for Volts">V</string>
           </property>
          </widget>
         </item>
@@ -330,7 +330,7 @@
            <string>The units for the sample rate.  Used for automatic labels.</string>
           </property>
           <property name="text">
-           <string>Hz</string>
+           <string comment="Abbreviation for Hertz (unit)">Hz</string>
           </property>
          </widget>
         </item>

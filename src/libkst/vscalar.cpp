@@ -204,7 +204,7 @@ bool VScalar::_checkValidity(const DataSourcePtr ds) const {
 
 
 QString VScalar::propertyString() const {
-  return tr("%2 frame %3 of %1 = %4").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
+  return tr("%2 frame %3 of %1 = %4", "%2 is field name.  %3 is frame/index.  %1 is the file name.  %4 is the value").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
 }
 
 }

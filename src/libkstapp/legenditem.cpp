@@ -32,7 +32,7 @@ namespace Kst {
 
 LegendItem::LegendItem(PlotItem *parentPlot)
   : ViewItem(parentPlot->view()), _plotItem(parentPlot), _auto(true), _verticalDisplay(true) {
-  setTypeName("Legend");
+  setTypeName(tr("Legend", "a legend in a plot"));
 
   _initializeShortName();
 
@@ -127,17 +127,17 @@ void LegendItem::paint(QPainter *painter) {
         QString y_label = label_info.name;
         if (!sameYUnits) {
           if (!label_info.units.isEmpty()) {
-            y_label = tr("%1 \\[%2\\]").arg(y_label).arg(label_info.units);
+            y_label = tr("%1 \\[%2\\]", "axis labels.  %1 is quantity, %2 is units.  eg Time [s].  '[' must be escaped.").arg(y_label).arg(label_info.units);
           }
         }
         if (!y_label.isEmpty()) {
           LabelInfo xlabel_info = relation->xLabelInfo();
           if (!sameX) {
-            label = tr("%1 vs %2").arg(y_label).arg(xlabel_info.name);
+            label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
           } else if (xlabel_info.quantity.isEmpty()) {
             label = y_label;
           } else if (xlabel_info.quantity != xlabel_info.name) {
-            label = tr("%1 vs %2").arg(y_label).arg(xlabel_info.name);
+            label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
           } else {
             label = y_label;
           }

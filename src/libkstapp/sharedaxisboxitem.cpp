@@ -44,7 +44,7 @@ SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
       _xAxisZoomMode(PlotAxis::Auto),
       _yAxisZoomMode(PlotAxis::Auto),
       _sharedIsDirty(false) {
-  setTypeName("Shared Axis Box");
+  setTypeName(tr("Shared Axis Box", "plots inside a shared axis box share the same axis"));
   setBrush(Qt::transparent);
 
   _breakAction = new QAction(tr("Break Shared Axis Box"), this);

@@ -32,7 +32,7 @@ ArrowItem::ArrowItem(View *parent)
   _endArrowHead(true),
   _startArrowScale(12.0),
   _endArrowScale(12.0) {
-  setTypeName("Arrow");
+  setTypeName(tr("Arrow"));
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
   b.setColor(pen().color());

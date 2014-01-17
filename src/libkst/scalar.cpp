@@ -135,9 +135,9 @@ void Scalar::setEditable(bool editable) {
 
 QString Scalar::descriptionTip() const {
   if (_provider) {
-    return tr("Scalar: %1 = %2\n%3").arg(Name()).arg(value()).arg(_provider->descriptionTip());
+    return tr("Scalar: %1 = %2\n%3", "%1 is the variable name.  %2 is its value").arg(Name()).arg(value()).arg(_provider->descriptionTip());
   } else {
-    return tr("Scalar: %1 = %2").arg(Name()).arg(value());
+    return tr("Scalar: %1 = %2", "%1 is the variable name.  %2 is its value").arg(Name()).arg(value());
   }
 }
 

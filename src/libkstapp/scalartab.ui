@@ -90,7 +90,7 @@
          <cstring>_field</cstring>
         </property>
         <property name="si" stdset="0">
-         <string>Data Source Field</string>
+         <string notr="true">Data Source Field</string>
         </property>
        </widget>
       </item>
@@ -122,7 +122,7 @@
          <cstring>_fieldRV</cstring>
         </property>
         <property name="si" stdset="0">
-         <string>data vector field</string>
+         <string notr="true">data vector field</string>
         </property>
        </widget>
       </item>

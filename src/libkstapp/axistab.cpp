@@ -28,20 +28,20 @@ AxisTab::AxisTab(QWidget *parent)
   _axisMajorTickSpacing->addItem(tr("VeryFine"), 15);
   setAxisMajorTickSpacing(TicksNormal);
 
-  _axisMajorLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
-  _axisMajorLineStyle->addItem("DashLine", (int)Qt::DashLine);
-  _axisMajorLineStyle->addItem("DotLine", (int)Qt::DotLine);
-  _axisMajorLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
-  _axisMajorLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
-  _axisMajorLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
+  _axisMajorLineStyle->addItem(tr("Solid Line", "Pen type"), (int)Qt::SolidLine);
+  _axisMajorLineStyle->addItem(tr("Dash Line", "Pen type"), (int)Qt::DashLine);
+  _axisMajorLineStyle->addItem(tr("Dot Line", "Pen type"), (int)Qt::DotLine);
+  _axisMajorLineStyle->addItem(tr("Dash Dot Line", "Pen type"), (int)Qt::DashDotLine);
+  _axisMajorLineStyle->addItem(tr("Dash Dot Dot Line", "Pen type"), (int)Qt::DashDotDotLine);
+  _axisMajorLineStyle->addItem(tr("Custom Dash Line", "Pen type"), (int)Qt::CustomDashLine);
   setAxisMajorGridLineStyle(Qt::DashLine);
 
-  _axisMinorLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
-  _axisMinorLineStyle->addItem("DashLine", (int)Qt::DashLine);
-  _axisMinorLineStyle->addItem("DotLine", (int)Qt::DotLine);
-  _axisMinorLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
-  _axisMinorLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
-  _axisMinorLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
+  _axisMinorLineStyle->addItem(tr("Solid Line", "Pen type"), (int)Qt::SolidLine);
+  _axisMinorLineStyle->addItem(tr("Dash Line", "Pen type"), (int)Qt::DashLine);
+  _axisMinorLineStyle->addItem(tr("Dot Line", "Pen type"), (int)Qt::DotLine);
+  _axisMinorLineStyle->addItem(tr("Dash Dot Line", "Pen type"), (int)Qt::DashDotLine);
+  _axisMinorLineStyle->addItem(tr("Dash Dot Dot Line", "Pen type"), (int)Qt::DashDotDotLine);
+  _axisMinorLineStyle->addItem(tr("Custom Dash Line", "Pen type"), (int)Qt::CustomDashLine);
   setAxisMinorGridLineStyle(Qt::DashLine);
 
   setAxisMajorGridLineColor(Qt::gray);

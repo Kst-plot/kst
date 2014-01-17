@@ -29,7 +29,7 @@ PictureItem::PictureItem(View *parent, const QImage &image)
   if (!image.isNull()) {
     _image = QPixmap::fromImage(image);
   }
-  setTypeName("Picture");
+  setTypeName(tr("Picture", "a picture or an image"));
   setLockAspectRatio(true);
   //setLockAspectRatioFixed(true);
 }

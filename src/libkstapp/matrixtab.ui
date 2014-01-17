@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>514</width>
-    <height>621</height>
+    <width>512</width>
+    <height>619</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -87,7 +87,7 @@
            </size>
           </property>
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
          </widget>
         </item>
@@ -106,7 +106,7 @@
            </size>
           </property>
           <property name="text">
-           <string>1</string>
+           <string notr="true">1</string>
           </property>
          </widget>
         </item>
@@ -170,7 +170,7 @@
            </size>
           </property>
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
          </widget>
         </item>
@@ -189,7 +189,7 @@
            </size>
           </property>
           <property name="text">
-           <string>1</string>
+           <string notr="true">1</string>
           </property>
          </widget>
         </item>
@@ -286,7 +286,11 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="_gradientZAtMin"/>
+         <widget class="QLineEdit" name="_gradientZAtMin">
+          <property name="text">
+           <string notr="true"/>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="textLabel6_2">
@@ -343,7 +347,7 @@
         <item row="0" column="3">
          <widget class="QLineEdit" name="_gradientZAtMax">
           <property name="text">
-           <string>100</string>
+           <string notr="true">100</string>
           </property>
          </widget>
         </item>
@@ -487,7 +491,7 @@
            <string>C&amp;ount from end</string>
           </property>
           <property name="si" stdset="0">
-           <string>count X From End</string>
+           <string notr="true">count X From End</string>
           </property>
          </widget>
         </item>
@@ -506,7 +510,7 @@
            <bool>true</bool>
           </property>
           <property name="si" stdset="0">
-           <string>read x to end</string>
+           <string notr="true">read x to end</string>
           </property>
          </widget>
         </item>
@@ -563,7 +567,7 @@
            <bool>true</bool>
           </property>
           <property name="si" stdset="0">
-           <string>read Y To End</string>
+           <string notr="true">read Y To End</string>
           </property>
          </widget>
         </item>
@@ -579,7 +583,7 @@
            <string>Count from en&amp;d</string>
           </property>
           <property name="si" stdset="0">
-           <string>count Y From End</string>
+           <string notr="true">count Y From End</string>
           </property>
          </widget>
         </item>

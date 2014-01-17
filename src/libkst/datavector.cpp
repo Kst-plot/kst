@@ -809,7 +809,7 @@ QString DataVector::descriptionTip() const {
 }
 
 QString DataVector::propertyString() const {
-  return tr("%2 F0: %3 N: %4 of %1").arg(dataSource()->fileName()).arg(_field).arg(startFrame()).arg(numFrames());
+  return tr("%2 F0: %3 N: %4 of %1", "%2 is a variable name.  F0 is short for the first element.  N is the number of elements").arg(dataSource()->fileName()).arg(_field).arg(startFrame()).arg(numFrames());
 }
 
 

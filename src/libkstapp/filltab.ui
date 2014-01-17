@@ -41,7 +41,7 @@
      <item row="0" column="1" colspan="2">
       <widget class="Kst::ColorButton" name="_color">
        <property name="si" stdset="0">
-        <string>fill color</string>
+        <string notr="true">fill color</string>
        </property>
       </widget>
      </item>
@@ -63,7 +63,7 @@
         <cstring>_style</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>fill style</string>
+        <string notr="true">fill style</string>
        </property>
       </widget>
      </item>
@@ -76,7 +76,7 @@
         <string>Use &amp;linear gradient</string>
        </property>
        <property name="si" stdset="0">
-        <string>fill use linear gradient</string>
+        <string notr="true">fill use linear gradient</string>
        </property>
       </widget>
      </item>

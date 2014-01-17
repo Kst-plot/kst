@@ -91,7 +91,7 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>label bold</string>
+        <string notr="true">label bold</string>
        </property>
       </widget>
      </item>
@@ -136,7 +136,7 @@
         <string comment="The color of the object">Color</string>
        </property>
        <property name="si" stdset="0">
-        <string>label color</string>
+        <string notr="true">label color</string>
        </property>
       </widget>
      </item>
@@ -178,7 +178,7 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>label italic</string>
+        <string notr="true">label italic</string>
        </property>
       </widget>
      </item>

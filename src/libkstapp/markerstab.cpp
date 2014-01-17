@@ -24,12 +24,12 @@ MarkersTab::MarkersTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Markers"));
 
-  _markerLineStyle->addItem("SolidLine", (int)Qt::SolidLine);
-  _markerLineStyle->addItem("DashLine", (int)Qt::DashLine);
-  _markerLineStyle->addItem("DotLine", (int)Qt::DotLine);
-  _markerLineStyle->addItem("DashDotLine", (int)Qt::DashDotLine);
-  _markerLineStyle->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
-  _markerLineStyle->addItem("CustomDashLine", (int)Qt::CustomDashLine);
+  _markerLineStyle->addItem(tr("Solid Line", "Pen type"), (int)Qt::SolidLine);
+  _markerLineStyle->addItem(tr("Dash Line", "Pen type"), (int)Qt::DashLine);
+  _markerLineStyle->addItem(tr("Dot Line", "Pen type"), (int)Qt::DotLine);
+  _markerLineStyle->addItem(tr("Dash Dot Line", "Pen type"), (int)Qt::DashDotLine);
+  _markerLineStyle->addItem(tr("Dash Dot Dot Line", "Pen type"), (int)Qt::DashDotDotLine);
+  _markerLineStyle->addItem(tr("Custom Dash Line", "Pen type"), (int)Qt::CustomDashLine);
 
   connect(_curveMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));
   connect(_vectorMarkers, SIGNAL(stateChanged(int)), this, SLOT(update()));

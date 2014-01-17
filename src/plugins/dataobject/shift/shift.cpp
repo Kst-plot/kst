@@ -137,7 +137,7 @@ QString ShiftSource::_automaticDescriptiveName() const {
 QString ShiftSource::descriptionTip() const {
   QString tip;
 
-  tip = tr("Shift: %1\n  dX: %2\n").arg(Name()).arg(scalar()->value());
+  tip = tr("Shift: %1\n  dX: %2\n", "Phase shift.  dX is the amount of the shift").arg(Name()).arg(scalar()->value());
 
   tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;

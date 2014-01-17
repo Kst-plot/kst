@@ -34,7 +34,7 @@ namespace Kst {
 LabelItem::LabelItem(View *parent, const QString& txt)
   : ViewItem(parent), _labelRc(0), _dirty(true), _text(txt), _height(0), _resized(false),
     _dataRelativeDimValid(false), _fixleft(false), _serialOfLastChange(0) {
-  setTypeName("Label");
+  setTypeName(tr("Label", "a label in a plot"));
   setFixedSize(true);
   setLockAspectRatio(true);
   setAllowedGripModes(Move | Resize | Rotate /*| Scale*/);

@@ -54,7 +54,7 @@ void LogWidget::logAdded(const Debug::LogMessage& msg) {
     return;
   }
 
-  append(tr("%1<b>%2</b> %3").arg(sym).arg(msg.date.toString()).arg(msg.msg));
+  append(QString("%1<b>%2</b> %3").arg(sym).arg(msg.date.toString()).arg(msg.msg));
 }
 
 

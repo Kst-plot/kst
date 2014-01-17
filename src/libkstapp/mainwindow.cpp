@@ -330,7 +330,7 @@ void MainWindow::open() {
 QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, const QString& name, const char* openslot)
 {
   QAction* action = new QAction(this);
-  QString text = tr("&%1 %2").arg(idx).arg(name);
+  QString text = tr("&%1 %2", "Part of a list.  %1 is an index.  %2 is a file name").arg(idx).arg(name);
   action->setText(text);
   action->setData(filename);
   action->setStatusTip(filename);
@@ -961,13 +961,13 @@ void MainWindow::createActions() {
   // ***************************** File actions ******************************** //
   _openAct = new QAction(tr("&Open..."), this);
   _openAct->setStatusTip(tr("Open a new session"));
-  _openAct->setShortcut(tr("Ctrl+O"));
+  _openAct->setShortcut(tr("Ctrl+O", "Shortcut for Open"));
   _openAct->setIcon(QPixmap(":document-open.png"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
   _saveAct = new QAction(tr("&Save"), this);
   _saveAct->setStatusTip(tr("Save the current session"));
-  _saveAct->setShortcut(tr("Ctrl+S"));
+  _saveAct->setShortcut(tr("Ctrl+S", "Shortcut for Save"));
   _saveAct->setIcon(QPixmap(":document-save.png"));
   connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
@@ -1020,17 +1020,17 @@ void MainWindow::createActions() {
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
   _exitAct = new QAction(tr("E&xit"), this);
-  _exitAct->setShortcut(tr("Ctrl+Q"));
+  _exitAct->setShortcut(tr("Ctrl+Q", "Shortcut for Quit"));
   _exitAct->setStatusTip(tr("Exit the application"));
   _exitAct->setIcon(QPixmap(":application-exit.png"));
   connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
   // ************************** Edit Actions ******************************* //
   _undoAct = _undoGroup->createUndoAction(this);
-  _undoAct->setShortcut(tr("Ctrl+Z"));
+  _undoAct->setShortcut(tr("Ctrl+Z", "Shortcut for undo"));
   _undoAct->setIcon(QPixmap(":edit-undo.png"));
   _redoAct = _undoGroup->createRedoAction(this);
-  _redoAct->setShortcut(tr("Ctrl+Shift+Z"));
+  _redoAct->setShortcut(tr("Ctrl+Shift+Z", "Shortcut for redo"));
   _redoAct->setIcon(QPixmap(":edit-redo.png"));
 
   // ********************* View Actions ********************************** //

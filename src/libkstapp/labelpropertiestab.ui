@@ -73,14 +73,14 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>label italic</string>
+        <string notr="true">label italic</string>
        </property>
       </widget>
      </item>
      <item row="0" column="6">
       <widget class="Kst::ColorButton" name="_labelColor">
        <property name="si" stdset="0">
-        <string>label color</string>
+        <string notr="true">label color</string>
        </property>
       </widget>
      </item>
@@ -96,7 +96,7 @@
         <bool>true</bool>
        </property>
        <property name="si" stdset="0">
-        <string>label bold</string>
+        <string notr="true">label bold</string>
        </property>
       </widget>
      </item>

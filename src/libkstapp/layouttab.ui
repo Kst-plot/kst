@@ -25,7 +25,7 @@
         <cstring>_horMargin</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>layout horizontal margin</string>
+        <string notr="true">layout horizontal margin</string>
        </property>
       </widget>
      </item>
@@ -51,7 +51,7 @@
         <cstring>_verMargin</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>layout vertical margin</string>
+        <string notr="true">layout vertical margin</string>
        </property>
       </widget>
      </item>
@@ -77,7 +77,7 @@
         <cstring>_horSpacing</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>layout horizontal spacing</string>
+        <string notr="true">layout horizontal spacing</string>
        </property>
       </widget>
      </item>
@@ -103,7 +103,7 @@
         <cstring>_verSpacing</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>layout vertical spacing</string>
+        <string notr="true">layout vertical spacing</string>
        </property>
       </widget>
      </item>

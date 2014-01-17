@@ -223,7 +223,7 @@
       <item row="0" column="3">
        <widget class="QComboBox" name="_startUnits">
         <property name="si" stdset="0">
-         <string>start units</string>
+         <string notr="true">start units</string>
         </property>
        </widget>
       </item>
@@ -233,7 +233,7 @@
          <bool>false</bool>
         </property>
         <property name="si" stdset="0">
-         <string>range units</string>
+         <string notr="true">range units</string>
         </property>
        </widget>
       </item>

@@ -277,7 +277,7 @@
       <cstring>_scriptLineEdit1</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>insert object</string>
+      <string notr="true">insert object</string>
      </property>
     </widget>
    </item>
@@ -293,7 +293,7 @@
       <cstring>_scriptLineEdit2</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>remove object</string>
+      <string notr="true">remove object</string>
      </property>
     </widget>
    </item>

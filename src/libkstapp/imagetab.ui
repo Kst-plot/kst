@@ -329,7 +329,7 @@
            </color>
           </property>
           <property name="si" stdset="0">
-           <string>image contour color</string>
+           <string notr="true">image contour color</string>
           </property>
          </widget>
         </item>

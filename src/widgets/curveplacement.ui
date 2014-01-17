@@ -94,7 +94,7 @@
            <bool>false</bool>
           </property>
           <property name="si" stdset="0">
-           <string>place In Existing Plot</string>
+           <string notr="true">place In Existing Plot</string>
           </property>
          </widget>
         </item>

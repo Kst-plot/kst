@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>741</width>
-    <height>548</height>
+    <width>739</width>
+    <height>546</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -103,7 +103,7 @@
              <string>The minimum value of the independent variable.</string>
             </property>
             <property name="text">
-             <string>-10.0</string>
+             <string notr="true">-10.0</string>
             </property>
            </widget>
           </item>
@@ -132,7 +132,7 @@
              <string>The maximum value of the independent variable.</string>
             </property>
             <property name="text">
-             <string>10.0</string>
+             <string notr="true">10.0</string>
             </property>
            </widget>
           </item>
@@ -276,7 +276,7 @@
            </size>
           </property>
           <property name="si" stdset="0">
-           <string>updateInterval</string>
+           <string notr="true">updateInterval</string>
           </property>
          </widget>
         </item>
@@ -300,11 +300,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Kst::DataRange</class>
-   <extends>QWidget</extends>
-   <header>datarange.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
@@ -313,6 +308,11 @@
    <class>Kst::DataSourceSelector</class>
    <extends>QWidget</extends>
    <header>datasourceselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::DataRange</class>
+   <extends>QWidget</extends>
+   <header>datarange.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

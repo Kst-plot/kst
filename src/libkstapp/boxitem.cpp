@@ -21,7 +21,7 @@ namespace Kst {
 
 BoxItem::BoxItem(View *parent)
     : ViewItem(parent) {
-  setTypeName("Box");
+  setTypeName(tr("Box", "a box in a picture"));
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();

@@ -275,7 +275,7 @@
          <bool>true</bool>
         </property>
         <property name="si" stdset="0">
-         <string>legend bold</string>
+         <string notr="true">legend bold</string>
         </property>
        </widget>
       </item>
@@ -291,14 +291,14 @@
          <bool>true</bool>
         </property>
         <property name="si" stdset="0">
-         <string>legend italic</string>
+         <string notr="true">legend italic</string>
         </property>
        </widget>
       </item>
       <item row="0" column="5">
        <widget class="Kst::ColorButton" name="_labelColor">
         <property name="si" stdset="0">
-         <string>legend color</string>
+         <string notr="true">legend color</string>
         </property>
        </widget>
       </item>

@@ -22,7 +22,7 @@
 namespace Kst {
 
 ButtonItem::ButtonItem(View *parent) : ViewItem(parent), _pushButton(new QPushButton),_proxy(new QGraphicsProxyWidget(this)) {
-  setTypeName("Button");
+  setTypeName(tr("Button"));
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();

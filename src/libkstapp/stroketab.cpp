@@ -20,38 +20,38 @@ StrokeTab::StrokeTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("Stroke"));
 
-  _style->addItem("NoPen", (int)Qt::NoPen);
-  _style->addItem("SolidLine", (int)Qt::SolidLine);
-  _style->addItem("DashLine", (int)Qt::DashLine);
-  _style->addItem("DotLine", (int)Qt::DotLine);
-  _style->addItem("DashDotLine", (int)Qt::DashDotLine);
-  _style->addItem("DashDotDotLine", (int)Qt::DashDotDotLine);
-  _style->addItem("CustomDashLine", (int)Qt::CustomDashLine);
+  _style->addItem(tr("No Pen", "Pen type"), (int)Qt::NoPen);
+  _style->addItem(tr("Solid Line", "Pen type"), (int)Qt::SolidLine);
+  _style->addItem(tr("Dash Line", "Pen type"), (int)Qt::DashLine);
+  _style->addItem(tr("Dot Line", "Pen type"), (int)Qt::DotLine);
+  _style->addItem(tr("Dash Dot Line", "Pen type"), (int)Qt::DashDotLine);
+  _style->addItem(tr("Dash Dot Dot Line", "Pen type"), (int)Qt::DashDotDotLine);
+  _style->addItem(tr("Custom Dash Line", "Pen type"), (int)Qt::CustomDashLine);
 
-  _brushStyle->addItem("NoBrush", (int)Qt::NoBrush);
-  _brushStyle->addItem("SolidPattern", (int)Qt::SolidPattern);
-  _brushStyle->addItem("Dense1Pattern", (int)Qt::Dense1Pattern);
-  _brushStyle->addItem("Dense2Pattern", (int)Qt::Dense2Pattern);
-  _brushStyle->addItem("Dense3Pattern", (int)Qt::Dense3Pattern);
-  _brushStyle->addItem("Dense4Pattern", (int)Qt::Dense4Pattern);
-  _brushStyle->addItem("Dense5Pattern", (int)Qt::Dense5Pattern);
-  _brushStyle->addItem("Dense6Pattern", (int)Qt::Dense6Pattern);
-  _brushStyle->addItem("Dense7Pattern", (int)Qt::Dense7Pattern);
-  _brushStyle->addItem("HorPattern", (int)Qt::HorPattern);
-  _brushStyle->addItem("VerPattern", (int)Qt::VerPattern);
-  _brushStyle->addItem("CrossPattern", (int)Qt::CrossPattern);
-  _brushStyle->addItem("BDiagPattern", (int)Qt::BDiagPattern);
-  _brushStyle->addItem("FDiagPattern", (int)Qt::FDiagPattern);
-  _brushStyle->addItem("DiagCrossPattern", (int)Qt::DiagCrossPattern);
+  _brushStyle->addItem(tr("No Brush", "Brush type"), (int)Qt::NoBrush);
+  _brushStyle->addItem(tr("Solid Pattern", "Brush type"), (int)Qt::SolidPattern);
+  _brushStyle->addItem(tr("Dense Pattern 1", "Brush type"), (int)Qt::Dense1Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 2", "Brush type"), (int)Qt::Dense2Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 3", "Brush type"), (int)Qt::Dense3Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 4", "Brush type"), (int)Qt::Dense4Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 5", "Brush type"), (int)Qt::Dense5Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 6", "Brush type"), (int)Qt::Dense6Pattern);
+  _brushStyle->addItem(tr("Dense Pattern 7", "Brush type"), (int)Qt::Dense7Pattern);
+  _brushStyle->addItem(tr("Horizontal Pattern", "Brush type"), (int)Qt::HorPattern);
+  _brushStyle->addItem(tr("Vertical Pattern", "Brush type"), (int)Qt::VerPattern);
+  _brushStyle->addItem(tr("Cross Pattern", "Brush type"), (int)Qt::CrossPattern);
+  _brushStyle->addItem(tr("Diagonal Pattern 1", "Brush type"), (int)Qt::BDiagPattern);
+  _brushStyle->addItem(tr("Diagonal Pattern 2", "Brush type"), (int)Qt::FDiagPattern);
+  _brushStyle->addItem(tr("Diagonal Cross Pattern", "Brush type"), (int)Qt::DiagCrossPattern);
 
-  _joinStyle->addItem("MiterJoin", Qt::MiterJoin);
-  _joinStyle->addItem("BevelJoin", Qt::BevelJoin);
-  _joinStyle->addItem("RoundJoin", Qt::RoundJoin);
-  _joinStyle->addItem("SvgMiterJoin", Qt::SvgMiterJoin);
+  _joinStyle->addItem(tr("Miter Join", "line join style"), Qt::MiterJoin);
+  _joinStyle->addItem(tr("Bevel Join", "line join style"), Qt::BevelJoin);
+  _joinStyle->addItem(tr("Round Join", "line join style"), Qt::RoundJoin);
+  _joinStyle->addItem(tr("SVG Miter Join", "line join style based on SVG files"), Qt::SvgMiterJoin);
 
-  _capStyle->addItem("FlatCap", Qt::FlatCap);
-  _capStyle->addItem("SquareCap", Qt::SquareCap);
-  _capStyle->addItem("RoundCap", Qt::RoundCap);
+  _capStyle->addItem(tr("Flat Cap", "line cap style"), Qt::FlatCap);
+  _capStyle->addItem(tr("Square Cap", "line cap style"),  Qt::SquareCap);
+  _capStyle->addItem(tr("Round Cap", "line cap style"),  Qt::RoundCap);
 
   connect(_style, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
   connect(_width, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));

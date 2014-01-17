@@ -61,9 +61,9 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   }
   _url->setFocus();
 
-  _updateBox->addItem("Time Interval");
-  _updateBox->addItem("Change Detection");
-  _updateBox->addItem("No Update");
+  _updateBox->addItem(tr("Time Interval", "update periodically"));
+  _updateBox->addItem(tr("Change Detection", "update when a change is detected"));
+  _updateBox->addItem(tr("No Update", "do not update the file"));
   updateUpdateBox();
 }
 

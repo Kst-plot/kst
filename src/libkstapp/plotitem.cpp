@@ -100,7 +100,7 @@ PlotItem::PlotItem(View *parent)
   _plotPixmapDirty(true),
   _i_per(0)
 {
-  setTypeName("Plot");
+  setTypeName(tr("Plot", "a plot of data"));
   _initializeShortName();
 
   setBrush(Qt::white);

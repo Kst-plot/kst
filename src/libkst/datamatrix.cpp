@@ -677,7 +677,7 @@ QString DataMatrix::descriptionTip() const {
 }
 
 QString DataMatrix::propertyString() const {
-  return tr("%1 of %2").arg(field()).arg(dataSource()->fileName());
+  return tr("%1 of %2", "field %1 from file %2").arg(field()).arg(dataSource()->fileName());
 }
 
 

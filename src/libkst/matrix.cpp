@@ -642,7 +642,7 @@ void Matrix::change(QByteArray &data, uint nX, uint nY, double minX, double minY
 }
 
 QString Matrix::descriptionTip() const {
-  return tr("Matrix: %1\n %2 x %3").arg(Name()).arg(_nX).arg(_nY);
+  return tr("Matrix: %1\n %2 x %3", "%1 is the matrix name.  %2 and %3 are its dimensions.").arg(Name()).arg(_nX).arg(_nY);
 }
 
 QString Matrix::sizeString() const {

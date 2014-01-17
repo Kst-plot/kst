@@ -23,7 +23,7 @@
       <cstring>_style</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>stroke style</string>
+      <string notr="true">stroke style</string>
      </property>
     </widget>
    </item>
@@ -49,7 +49,7 @@
       <cstring>_width</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>stroke width</string>
+      <string notr="true">stroke width</string>
      </property>
     </widget>
    </item>
@@ -72,7 +72,7 @@
    <item row="2" column="1">
     <widget class="Kst::ColorButton" name="_brushColor">
      <property name="si" stdset="0">
-      <string>stroke brush color</string>
+      <string notr="true">stroke brush color</string>
      </property>
     </widget>
    </item>
@@ -88,7 +88,7 @@
       <cstring>_brushStyle</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>stroke brush style</string>
+      <string notr="true">stroke brush style</string>
      </property>
     </widget>
    </item>
@@ -107,7 +107,7 @@
       <cstring>_joinStyle</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>stroke join style</string>
+      <string notr="true">stroke join style</string>
      </property>
     </widget>
    </item>
@@ -126,7 +126,7 @@
       <cstring>_capStyle</cstring>
      </property>
      <property name="si" stdset="0">
-      <string>stroke cap style</string>
+      <string notr="true">stroke cap style</string>
      </property>
     </widget>
    </item>

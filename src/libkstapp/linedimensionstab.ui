@@ -31,7 +31,7 @@
         <cstring>_p1X</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>pos X</string>
+        <string notr="true">pos X</string>
        </property>
       </widget>
      </item>
@@ -60,7 +60,7 @@
         <cstring>_p2X</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>geo X</string>
+        <string notr="true">geo X</string>
        </property>
       </widget>
      </item>
@@ -112,7 +112,7 @@
         <cstring>_p2Y</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>geo Y</string>
+        <string notr="true">geo Y</string>
        </property>
       </widget>
      </item>
@@ -131,7 +131,7 @@
         <cstring>_p1Y</cstring>
        </property>
        <property name="si" stdset="0">
-        <string>pos Y</string>
+        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>

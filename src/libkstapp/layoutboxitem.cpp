@@ -27,7 +27,7 @@ LayoutBoxItem::LayoutBoxItem(View *parent)
     : ViewItem(parent) {
   setAllowsLayout(false);
 
-  setTypeName("Layout Box");
+  setTypeName(tr("Layout Box", "a box for laying out other items"));
   storePen(Qt::NoPen);
   setBrush(Qt::NoBrush);
   setAllowedGripModes(Move);

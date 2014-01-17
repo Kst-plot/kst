@@ -22,7 +22,7 @@
 namespace Kst {
 
 LineEditItem::LineEditItem(View *parent) : ViewItem(parent), _lineEdit(new QLineEdit),_proxy(new QGraphicsProxyWidget(this)) {
-  setTypeName("LineEdit");
+  setTypeName(tr("LineEdit", "scripting interface for editing lines"));
   setBrush(Qt::white);
   applyDialogDefaultsStroke();
   applyDialogDefaultsFill();
