@@ -193,7 +193,7 @@
          </sizepolicy>
         </property>
         <property name="si" stdset="0">
-         <string>curve color</string>
+         <string notr="true">curve color</string>
         </property>
        </widget>
       </item>
