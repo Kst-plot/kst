@@ -99,9 +99,9 @@ void DataWizardPageDataSource::updateTypeActivated(int idx)
   }
   _updateBox->setEnabled(true);
   switch (idx) {
-    case 0: _dataSource->setUpdateType(DataSource::Timer); break;
-    case 1: _dataSource->setUpdateType(DataSource::File);  break;
-    case 2: _dataSource->setUpdateType(DataSource::None);  break;
+    case 0: _dataSource->startUpdating(DataSource::Timer); break;
+    case 1: _dataSource->startUpdating(DataSource::File);  break;
+    case 2: _dataSource->startUpdating(DataSource::None);  break;
     default: break;
   };
 }

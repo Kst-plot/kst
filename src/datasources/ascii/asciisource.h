@@ -43,7 +43,7 @@ class AsciiSource : public Kst::DataSource
     int readField(double *v, const QString &field, int s, int n);
 
     QString fileType() const;
-    void setUpdateType(UpdateCheckType updateType, const QString& file = QString());
+    void setUpdateType(UpdateCheckType);
 
     void save(QXmlStreamWriter &s);
     void parseProperties(QXmlStreamAttributes &properties);

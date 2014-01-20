@@ -156,7 +156,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ')');
 
   // TODO What is the better default?
-  setUpdateType(File);
+  startUpdating(File);
 }
 
 DataSource::~DataSource() {
@@ -216,10 +216,14 @@ DataSource::UpdateCheckType DataSource::updateType() const
   return _updateCheckType;
 }
 
-
-void DataSource::setUpdateType(UpdateCheckType updateType, const QString& file)
+void DataSource::setUpdateType(UpdateCheckType updateType)
 {
-  _updateCheckType = updateType;
+    _updateCheckType = updateType;
+}
+
+void DataSource::startUpdating(UpdateCheckType updateType, const QString& file)
+{
+  setUpdateType(updateType);
   resetFileWatcher();
   if (_updateCheckType == Timer) {
     QTimer::singleShot(UpdateManager::self()->minimumUpdatePeriod()-1, this, SLOT(checkUpdate()));

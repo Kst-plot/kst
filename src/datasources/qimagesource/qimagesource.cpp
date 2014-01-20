@@ -300,7 +300,7 @@ QImageSource::QImageSource(Kst::ObjectStore *store, QSettings *cfg, const QStrin
   setInterface(iv);
   setInterface(im);
 
-  setUpdateType(None);
+  startUpdating(None);
 
   _valid = false;
   if (!type.isEmpty() && type != qimageTypeString) {

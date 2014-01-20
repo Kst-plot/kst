@@ -108,7 +108,7 @@ SourceListSource::SourceListSource(Kst::ObjectStore *store, QSettings *cfg, cons
   //setInterface(is);
   //setInterface(im);
 
-  setUpdateType(None);
+  startUpdating(None);
 
   _store = store;
 
@@ -189,7 +189,7 @@ bool SourceListSource::init() {
     }
   }
 
-  setUpdateType(Timer);
+  startUpdating(Timer);
 
   registerChange();
   return true; // false if something went wrong
