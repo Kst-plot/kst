@@ -298,7 +298,6 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
 
   int read = tryReadField(v, field, s, n);
-  _showProgress = false;
 
   if (isTime(field)) {
     if (_config._indexInterpretation == AsciiSourceConfig::FixedRate ) {
@@ -367,6 +366,12 @@ void AsciiSource::prepareRead(int count)
     _progress = 0;
     _progressSteps = 0;
     _showProgress = true;
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiSource::readingDone()
+{
+    _showProgress = false;
 }
 
 //-------------------------------------------------------------------------------------------

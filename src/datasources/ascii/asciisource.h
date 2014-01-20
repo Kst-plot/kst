@@ -40,6 +40,7 @@ class AsciiSource : public Kst::DataSource
     virtual UpdateType internalDataSourceUpdate();
 
     void prepareRead(int count);
+    void readingDone();
     int readField(double *v, const QString &field, int s, int n);
 
     QString fileType() const;

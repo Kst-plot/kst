@@ -36,6 +36,7 @@ public:
   explicit DataInterfaceAsciiVector(AsciiSource& a) : ascii(a) {}
 
   void prepareRead(int);
+  void readingDone();
   // read one element
   int read(const QString&, DataVector::ReadInfo&);
 
@@ -70,6 +71,12 @@ const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &fie
 void DataInterfaceAsciiVector::prepareRead(int number_of_read_calls)
 {
     ascii.prepareRead(number_of_read_calls);
+}
+
+//-------------------------------------------------------------------------------------------
+void DataInterfaceAsciiVector::readingDone()
+{
+    ascii.readingDone();
 }
 
 //-------------------------------------------------------------------------------------------

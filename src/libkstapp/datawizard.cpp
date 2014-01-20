@@ -1280,6 +1280,7 @@ void DataWizard::finished() {
   UpdateServer::self()->requestUpdateSignal();
 
   _pageDataSource->setTypeActivated();
+  ds->vector().readingDone();
 }
 
 }
