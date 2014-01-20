@@ -131,16 +131,16 @@ endif()
 
 
 kst_revision_project_name(Revision)
-add_definitions(-DKST_HAVE_SVN_REVISION_H)
+add_definitions(-DKST_HAVE_REVISION_H)
 if(kst_revision)
-    file(WRITE ${CMAKE_BINARY_DIR}/svnrevision.h.tmp "#define SVN_REVISION \"${kst_revision}\"\n")
-    configure_file(${CMAKE_BINARY_DIR}/svnrevision.h.tmp ${CMAKE_BINARY_DIR}/svnrevision.h COPYONLY)
+    file(WRITE ${CMAKE_BINARY_DIR}/kstrevision.h.tmp "#define KST_REVISION \"${kst_revision}\"\n")
+    configure_file(${CMAKE_BINARY_DIR}/kstrevision.h.tmp ${CMAKE_BINARY_DIR}/kstrevision.h COPYONLY)
 elseif(kst_svnversion)
-    include(SubversionHeader)
-    SubversionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/svnrevision.h _modified)
+    include(KstRevisionHeader)
+    KstRevisionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/kstrevision.h _modified)
 else()
-    file(WRITE ${CMAKE_BINARY_DIR}/svnrevision.h.tmp "#define SVN_REVISION \"unknown\"\n")
-    configure_file(${CMAKE_BINARY_DIR}/svnrevision.h.tmp ${CMAKE_BINARY_DIR}/svnrevision.h COPYONLY)
+    file(WRITE ${CMAKE_BINARY_DIR}/kstrevision.h.tmp "#define KST_REVISION \"unknown\"\n")
+    configure_file(${CMAKE_BINARY_DIR}/kstrevision.h.tmp ${CMAKE_BINARY_DIR}/kstrevision.h COPYONLY)
 endif()
 
 

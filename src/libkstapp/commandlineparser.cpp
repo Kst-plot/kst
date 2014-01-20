@@ -16,8 +16,8 @@
 #include "datasource.h"
 #include "objectstore.h"
 #include "colorsequence.h"
-#ifdef KST_HAVE_SVN_REVISION_H
-#include "svnrevision.h"
+#ifdef KST_HAVE_REVISION_H
+#include "kstrevision.h"
 #endif
 
 #include <iostream>
@@ -431,8 +431,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     } else if (arg == "--version" || arg == "-version") {
 
       printText(QString("Kst ") + KSTVERSION
-#ifdef SVN_REVISION
-+ " Revision " + SVN_REVISION
+#ifdef KST_REVISION
++ " Revision " + KST_REVISION
 #endif
 );
 

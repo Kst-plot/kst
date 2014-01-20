@@ -13,8 +13,8 @@
 #include <config.h>
 #include "aboutdialog.h"
 
-#ifdef KST_HAVE_SVN_REVISION_H
-#include "svnrevision.h"
+#ifdef KST_HAVE_REVISION_H
+#include "kstrevision.h"
 #include "authors.h"
 #endif
 
@@ -30,7 +30,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
-#ifdef KST_HAVE_SVN_REVISION_H
+#ifdef KST_HAVE_REVISION_H
    QStringList utf8Authors = QString::fromUtf8(kst_authors).trimmed().split(';');
    QStringList authors;
    foreach(const QString& a, utf8Authors) {
@@ -63,8 +63,8 @@ AboutDialog::AboutDialog(QWidget *parent)
 
   QStringList msg = QStringList()
   << tr("<qt><h2>Kst "KSTVERSION" - A data viewing program.</h2>")
-#ifdef SVN_REVISION
-  << tr("Revision "SVN_REVISION"<br><hr>")
+#ifdef KST_REVISION
+  << tr("Revision "KST_REVISION"<br><hr>")
 #endif
   << tr("Copyright &copy; 2000-2014 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst-plot.kde.org/\">http://kst-plot.kde.org/</a><br>")

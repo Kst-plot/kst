@@ -14,8 +14,8 @@
 
 #include <config.h>
 
-#ifdef KST_HAVE_SVN_REVISION_H
-#include "svnrevision.h"
+#ifdef KST_HAVE_REVISION_H
+#include "kstrevision.h"
 #endif
 
 #include "datasource.h"
@@ -54,8 +54,8 @@ Debug::Debug()
 : QObject() {
   _applyLimit = false;
   _limit = 10000;
-#ifdef SVN_REVISION
-  _kstRevision = QString::fromLatin1(SVN_REVISION);
+#ifdef KST_REVISION
+  _kstRevision = QString::fromLatin1(KST_REVISION);
 #else
   _kstRevision = -1;
 #endif
