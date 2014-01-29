@@ -41,6 +41,8 @@ message(STATUS)
 
 # like done with qmake
 #add_subdirectory(allinone)
-add_subdirectory(realloc)
+if(WIN32)
+    add_subdirectory(realloc)
+endif()
 add_subdirectory(datasource/ascii)
 
