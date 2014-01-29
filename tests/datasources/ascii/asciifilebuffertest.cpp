@@ -16,13 +16,14 @@
 
 #include <QtTest>
 
-
-template<>
-bool QTest::qCompare<qint64, qint32>(qint64 const &t1, qint32 const &t2, const char *actual, const char *expected, const char *file, int line)
+namespace QTest
 {
-    return qCompare<qint64>(t1, qint64(t2), actual, expected, file, line);
+    template<>
+    bool qCompare<qint64, qint32>(qint64 const &t1, qint32 const &t2, const char *actual, const char *expected, const char *file, int line)
+    {
+        return qCompare<qint64>(t1, qint64(t2), actual, expected, file, line);
+    }
 }
-
 
 
 class AsciiSourceTest: public QObject
