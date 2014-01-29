@@ -328,7 +328,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
   }
 
-  QString msg("%1 because not enough memory is available.\nTry setting a file buffer limit in the configuration options.");
+  QString msg("%1.\nTry without threads or use a different file buffer limit when using threads for reading.");
   if (read == n) {
     return read;
   } else if (read > 0) {
