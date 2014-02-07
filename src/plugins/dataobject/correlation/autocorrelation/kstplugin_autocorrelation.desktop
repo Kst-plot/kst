@@ -11,6 +11,7 @@ Name[fr]=Module DataObject de classement (Bin)
 Name[nl]=Plug-in voor object met binaire gegevens
 Name[pt]='Plugin' de Objecto de Dados Compartimentados
 Name[pt_BR]=Plugin de objeto de dados compartimentados
+Name[sv]=Intervalldataobjekt-insticksprogram
 Name[uk]=Додаток для роботи з об’єктами двійкових даних
 Name[x-test]=xxBin Data Object Pluginxx
 Comment=Implements a Auto Correlation Data Object Plugin for Kst.
