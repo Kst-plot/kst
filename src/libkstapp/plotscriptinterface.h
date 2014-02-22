@@ -39,6 +39,9 @@ public:
     bool isValid();
     QByteArray getHandle();
     void endEditUpdate() {if (_item) _item->update();}
+
+    static ScriptInterface* newPlot();
+
 protected:
    QString noSuchFn(QString&) {return ""; }
 

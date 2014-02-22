@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2011 Joshua Netterfield                               *
- *                   joshua.netterfield@gmail.com                          *
+ *   copyright : (C) 2014 Barth Netterfield                                *
+ *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,41 +10,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LABELSCRIPTINTERFACE_H
-#define LABELSCRIPTINTERFACE_H
+#ifndef ARROWSCRIPTINTERFACE_H
+#define ARROWSCRIPTINTERFACE_H
 
 #include <QByteArray>
 #include <QString>
 #include <QList>
 #include <QObject>
+
 #include "viewitemscriptinterface.h"
-#include "labelitem.h"
-typedef QList<QByteArray> QByteArrayList;
+#include "arrowitem.h"
 
 namespace Kst {
 
-struct LabelTabSI;
-class LabelItem;
+struct ArrowTabSI;
 
-class LabelSI : public ScriptInterface
+class ArrowSI : public ScriptInterface
 {
     Q_OBJECT
-public:
-    explicit LabelSI(LabelItem* it);
+  public:
+    explicit ArrowSI(ArrowItem* it);
     QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
     QByteArray getHandle();
-    void endEditUpdate() {if (dim->item) dim->item->update();}
-    static ScriptInterface* newLabel();
+    void endEditUpdate() {if (_dim->item) _dim->item->update();}
 
-private:
-    LayoutTabSI* layout;
-    DimensionTabSI* dim;
-    LabelTabSI*lab;
+    static ScriptInterface* newArrow();
+
+  private:
+    DimensionTabSI *_dim;
+    FillTabSI *_fill;
+    StrokeTabSI *_stroke;
+    ArrowTabSI *_arrow;
 };
 
 
 }
 
-#endif // LABELSCRIPTINTERFACE_H
+#endif // ARROWSCRIPTINTERFACE_H

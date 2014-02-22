@@ -51,9 +51,6 @@
 #include "sharedaxisboxitem.h"
 #include "svgitem.h"
 #include "viewitemdialog.h"
-#include "plotitemdialog.h"
-#include "arrowitemdialog.h"
-#include "labelitemdialog.h"
 #include "legenditemdialog.h"
 
 #include "curve.h"
@@ -71,7 +68,10 @@
 #include "viewitemscriptinterface.h"
 #include "labelscriptinterface.h"
 #include "plotscriptinterface.h"
+#include "arrowscriptinterface.h"
 #include "stringscriptinterface.h"
+
+#include "scriptserver.h"
 
 #include "datasourcepluginmanager.h"
 #include "pluginscriptinterface.h"
@@ -105,103 +105,11 @@ DialogLauncherSI::DialogLauncherSI() {
 DialogLauncherSI::~DialogLauncherSI() {
 }
 
-ScriptInterface* DialogLauncherSI::showViewItemDialog(ViewItem* x) {
-    ViewItemDialog* dialog=0;
-    if(qobject_cast<PlotItem*>(x)) {
-      return new PlotSI(qobject_cast<PlotItem*>(x));
-    } else if(qobject_cast<ArrowItem*>(x)) {
-      dialog=new ArrowItemDialog(qobject_cast<ArrowItem*>(x),kstApp->mainWindow());
-    } else if(qobject_cast<LabelItem*>(x)) {
-      return new LabelSI(qobject_cast<LabelItem*>(x));
-    } else if(qobject_cast<LegendItem*>(x)) {
-      dialog=new LegendItemDialog(qobject_cast<LegendItem*>(x),kstApp->mainWindow());
-    } else {
-      return new ViewItemSI(qobject_cast<ViewItem*>(x));
-    }
-    dialog->hide();
-    return new DialogSI(dialog,x);
-}
-
-ScriptInterface* DialogLauncherSI::newArrow() {
-    ArrowItem* bi=new ArrowItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return showViewItemDialog(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newBox() {
-    BoxItem* bi=new BoxItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newButton() {
-    ButtonItem* bi=new ButtonItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newLineEdit() {
-    LineEditItem* bi=new LineEditItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newCircle() {
-    CircleItem* bi=new CircleItem(kstApp->mainWindow()->tabWidget()->currentView());
-    bi->setViewRect(-0.1/2.0, -0.1/2.0, 0.1/2.0, 0.1/2.0);
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newEllipse() {
-    EllipseItem* bi=new EllipseItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newLabel() {
-    LabelItem* bi=new LabelItem(kstApp->mainWindow()->tabWidget()->currentView(),"");
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new LabelSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newLine() {
-    LineItem* bi=new LineItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newPicture(QByteArray picf) {
-    PictureItem* bi=new PictureItem(kstApp->mainWindow()->tabWidget()->currentView(),QImage(QString::fromLocal8Bit(picf)));
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    bi->setViewRect(0.9,0.9,1.0,1.0,true);
-    bi->setVisible(1);
-    bi->updateViewItemParent();
-    return new ViewItemSI(bi);
-}
-
-ScriptInterface* DialogLauncherSI::newPlot() {
-    PlotItem* bi=new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return new PlotSI(bi);
-}
-
 ScriptInterface* DialogLauncherSI::newSharedAxisBox() {
     SharedAxisBoxItem* bi=new SharedAxisBoxItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    return showViewItemDialog(bi);
+    return ScriptServer::getViewItemSI(bi);
 }
-
-#ifndef KST_NO_SVG
-ScriptInterface* DialogLauncherSI::newSvgItem(QByteArray path) {
-    SvgItem* bi=new SvgItem(kstApp->mainWindow()->tabWidget()->currentView(),path);
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
-    bi->setViewRect(0.9,0.9,1.0,1.0,true);
-    bi->setVisible(1);
-    bi->updateViewItemParent();
-    return new ViewItemSI(bi);
-}
-#endif
 
 DialogSI* DialogLauncherSI::showVectorDialog(QByteArray &vectorname, ObjectPtr objectPtr) {
     VectorDialog *dialog = new VectorDialog(objectPtr, kstApp->mainWindow());
@@ -944,7 +852,8 @@ QByteArray DialogSI::pressButton(QByteArray&y,QWidget*obj){
 
 QByteArray DialogSI::checkGroupBox(QByteArray&y,QWidget*obj){
     if(!obj->isEnabled()) return "Option disabled.";
-    qobject_cast<QGroupBox*>(obj)->setChecked(1);
+    qobject_cast<QGroupBox*>(obj)->setChecked(true);
+    qDebug() << "checked " << qobject_cast<QGroupBox*>(obj)->title() << qobject_cast<QGroupBox*>(obj)->isChecked();
     qApp->processEvents();
     return "Done";
 }

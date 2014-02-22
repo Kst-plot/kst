@@ -7,13 +7,15 @@ from time import sleep
 
 client=kst.Client("DataObjects2")
 
-P1=kst.Plot(client,0.25,0.25,0.5,0.5,"P1")
-P2=kst.Plot(client,0.75,0.25,0.5,0.5,"P2")
-P3=kst.Plot(client,0.25,0.75,0.5,0.5,"P3")
-P4=kst.Plot(client,0.75,0.75,0.5,0.5,"P4")
+P1=kst.Plot(client,0.25,0.25,0.5,0.5,0, "P1")
+P2=kst.Plot(client,0.75,0.25,0.5,0.5,0, "P2")
+P3=kst.Plot(client,0.25,0.75,0.5,0.5,0, "P3")
+P4=kst.Plot(client,0.75,0.75,0.5,0.5,0, "P4")
 
-dataVectorIndex=kst.DataVector(client,"/home/cbn/programs/KDE/portto4/kst/misc/tutorial/gyrodata.dat",field="INDEX",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=1000,skip=0)
-dataVectorGY1=kst.DataVector(client,"/home/cbn/programs/KDE/portto4/kst/misc/tutorial/gyrodata.dat",field="Column 1",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=1000,skip=0)
+C1 = kst.Circle(client, 0.7,0.7,0.1, strokeBrushColor="red")
+
+dataVectorIndex=kst.DataVector(client,"/home/cbn/programs/KDE/kst_tutorial/gyrodata.dat",field="INDEX",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=1000,skip=0)
+dataVectorGY1=kst.DataVector(client,"/home/cbn/programs/KDE/kst_tutorial/gyrodata.dat",field="Column 1",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=1000,skip=0)
 GYCurve=kst.NewCurve(client,dataVectorIndex, dataVectorGY1, curvecolor="blue", curveweight=1, placeinexistingplot=P1)
 
 GYEquation=kst.NewEquation(client, "x^2", dataVectorIndex)

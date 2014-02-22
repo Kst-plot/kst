@@ -49,6 +49,7 @@ public:
     ~ScriptServer();
     QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
     void setStore(ObjectStore *obj) { _store = obj; vi.clear();}
+    static ScriptInterface* getViewItemSI(ViewItem* x);
 public slots:
     void procConnection();
     void readSomething();
@@ -137,8 +138,8 @@ protected:
     QByteArray getPlotList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
     QByteArray newPlot(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
-    QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    //QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    //QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
 #ifndef KST_NO_SVG
     QByteArray getSvgItemList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);

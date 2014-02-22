@@ -68,22 +68,7 @@ class DialogLauncherSI {
     DialogSI* showCSDDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
     DialogSI* showEventMonitorDialog(ObjectPtr objectPtr = 0);
 
-    //view items
-    ScriptInterface* showViewItemDialog(ViewItem* x);
-    ScriptInterface* newArrow();
-    ScriptInterface* newBox();
-    ScriptInterface* newButton();
-    ScriptInterface* newLineEdit();
-    ScriptInterface* newCircle();
-    ScriptInterface* newEllipse();
-    ScriptInterface* newLabel();
-    ScriptInterface* newLine();
-    ScriptInterface* newPicture(QByteArray file);
-    ScriptInterface* newPlot();
     ScriptInterface* newSharedAxisBox();
-#ifndef KST_NO_SVG
-    ScriptInterface* newSvgItem(QByteArray path);
-#endif
 
 
     //plugins

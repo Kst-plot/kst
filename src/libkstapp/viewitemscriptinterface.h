@@ -16,6 +16,13 @@
 #include <QList>
 #include "scriptinterface.h"
 #include "viewitem.h"
+#include "boxitem.h"
+#include "circleitem.h"
+#include "lineitem.h"
+#include "ellipseitem.h"
+#include "labelitem.h"
+#include "pictureitem.h"
+#include "svgitem.h"
 
 #ifndef VIEWITEMSCRIPTINTERFACE_H
 #define VIEWITEMSCRIPTINTERFACE_H
@@ -60,6 +67,15 @@ public:
     bool isValid();
     QByteArray getHandle();
     void endEditUpdate() {if (dim->item) dim->item->update();}
+
+    static ScriptInterface* newBox();
+    static ScriptInterface* newButton();
+    static ScriptInterface* newLineEdit();
+    static ScriptInterface* newCircle();
+    static ScriptInterface* newEllipse();
+    static ScriptInterface* newLine();
+    static ScriptInterface* newPicture(QByteArray file);
+    static ScriptInterface* newSvgItem(QByteArray path);
   private:
     LayoutTabSI* layout;
     DimensionTabSI* dim;

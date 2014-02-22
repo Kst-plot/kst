@@ -57,6 +57,13 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
 
 }
 
+ScriptInterface* PlotSI::newPlot() {
+    PlotItem* bi=new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new PlotSI(bi);
+}
+
+
 QByteArrayList PlotSI::commands() {
     return _layout->commands()<<_dim->commands()<<_stroke->commands()<<_fill->commands();
 }

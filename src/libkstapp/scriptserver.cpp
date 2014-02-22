@@ -15,6 +15,8 @@
 #include "labelscriptinterface.h"
 #include "stringscriptinterface.h"
 #include "viewitemscriptinterface.h"
+#include "arrowscriptinterface.h"
+#include "plotscriptinterface.h"
 
 #include "sessionmodel.h"
 #include "updateserver.h"
@@ -29,17 +31,11 @@
 #include "ellipseitem.h"
 #include "labelitem.h"
 #include "layoutboxitem.h"
-#include "legenditem.h"
 #include "lineitem.h"
 #include "pictureitem.h"
 #include "plotitem.h"
-#include "sharedaxisboxitem.h"
 #include "svgitem.h"
 #include "viewitemdialog.h"
-#include "plotitemdialog.h"
-#include "arrowitemdialog.h"
-#include "labelitemdialog.h"
-#include "legenditemdialog.h"
 #include "document.h"
 
 #include "curve.h"
@@ -166,8 +162,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getPlotList()",&ScriptServer::getPlotList);
     _fnMap.insert("newPlot()",&ScriptServer::newPlot);
 
-    _fnMap.insert("getSharedAxisBoxList()",&ScriptServer::getSharedAxisBoxList);
-    _fnMap.insert("newSharedAxisBox()",&ScriptServer::newSharedAxisBox);
+    //_fnMap.insert("getSharedAxisBoxList()",&ScriptServer::getSharedAxisBoxList);
+    //_fnMap.insert("newSharedAxisBox()",&ScriptServer::newSharedAxisBox);
 
 #ifndef KST_NO_SVG
     _fnMap.insert("getSvgItemList()",&ScriptServer::getSvgItemList);
@@ -505,6 +501,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
         }
 
         if(_interface) {
+          _interface->commands();
             return handleResponse(_interface->doCommand(command).toLatin1(),s,ifMode,ifEqual,_if,var); //magic
         } else {
             return handleResponse("Unknown command!",s,ifMode,ifEqual,_if,var);
@@ -853,7 +850,7 @@ QByteArray ScriptServer::getArrowList(QByteArray&, QLocalSocket* s,ObjectStore*_
 QByteArray ScriptServer::newArrow(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newArrow(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ArrowSI::newArrow(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -866,7 +863,7 @@ QByteArray ScriptServer::getBoxList(QByteArray&, QLocalSocket* s,ObjectStore*_st
 QByteArray ScriptServer::newBox(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newBox(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newBox(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -879,7 +876,7 @@ QByteArray ScriptServer::getButtonList(QByteArray&, QLocalSocket* s,ObjectStore*
 QByteArray ScriptServer::newButton(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newButton(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newButton(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -892,7 +889,7 @@ QByteArray ScriptServer::getLineEditList(QByteArray&, QLocalSocket* s,ObjectStor
 QByteArray ScriptServer::newLineEdit(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newLineEdit(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newLineEdit(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -905,7 +902,7 @@ QByteArray ScriptServer::getCircleList(QByteArray&, QLocalSocket* s,ObjectStore*
 QByteArray ScriptServer::newCircle(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newCircle(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newCircle(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -918,7 +915,7 @@ QByteArray ScriptServer::getEllipseList(QByteArray&, QLocalSocket* s,ObjectStore
 QByteArray ScriptServer::newEllipse(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newEllipse(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newEllipse(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -931,7 +928,7 @@ QByteArray ScriptServer::getLabelList(QByteArray&, QLocalSocket* s,ObjectStore*_
 QByteArray ScriptServer::newLabel(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newLabel(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = LabelSI::newLabel(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -944,7 +941,7 @@ QByteArray ScriptServer::getLineList(QByteArray&, QLocalSocket* s,ObjectStore*_s
 QByteArray ScriptServer::newLine(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newLine(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newLine(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -960,7 +957,7 @@ QByteArray ScriptServer::newPicture(QByteArray&command, QLocalSocket* s,ObjectSt
     command.replace("newPicture(","");
     command.remove(command.lastIndexOf(")"),1);
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newPicture(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newPicture(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
@@ -976,13 +973,13 @@ QByteArray ScriptServer::getPlotList(QByteArray&, QLocalSocket* s,ObjectStore*_s
 QByteArray ScriptServer::newPlot(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newPlot(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = PlotSI::newPlot(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
 
 
 
 /***********************************/
-
+#if 0
 QByteArray ScriptServer::getSharedAxisBoxList(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
                                               const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     return outputViewItemList<SharedAxisBoxItem>(s,ifMode,ifEqual,_if,var);
@@ -992,7 +989,7 @@ QByteArray ScriptServer::newSharedAxisBox(QByteArray&, QLocalSocket* s,ObjectSto
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
     else { _interface = DialogLauncherSI::self->newSharedAxisBox(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 }
-
+#endif
 
 #ifndef KST_NO_SVG
 QByteArray ScriptServer::getSvgItemList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
@@ -1005,10 +1002,25 @@ QByteArray ScriptServer::newSvgItem(QByteArray&command, QLocalSocket* s,ObjectSt
     command.replace("newSvgItem(","");
     command.remove(command.lastIndexOf(")"),1);
     if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newSvgItem(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    else { _interface = ViewItemSI::newSvgItem(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
 
 }
 #endif
+
+
+ScriptInterface* ScriptServer::getViewItemSI(ViewItem* x) {
+
+  if(qobject_cast<PlotItem*>(x)) {
+    return new PlotSI(qobject_cast<PlotItem*>(x));
+  } else if(qobject_cast<ArrowItem*>(x)) {
+    return new ArrowSI(qobject_cast<ArrowItem*>(x));
+  } else if(qobject_cast<LabelItem*>(x)) {
+    return new LabelSI(qobject_cast<LabelItem*>(x));
+  } else {
+    return new ViewItemSI(qobject_cast<ViewItem*>(x));
+  }
+}
+
 
 QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
@@ -1024,7 +1036,7 @@ QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectSto
         for(int h=0;h<2;h++) {
             for(int i=0;i<vi.size();i++) {
                 if(command.endsWith('('+vi[i]->shortName().toLatin1()+')')) {
-                    _interface=DialogLauncherSI::self->showViewItemDialog(vi[i]);
+                    _interface=getViewItemSI(vi[i]);
                     return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
                 }
             }

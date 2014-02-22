@@ -1869,15 +1869,13 @@ class ViewItem:
     Not all view items support stroke cap styles. 0 is FlatCap, 1 is SquareCap, and 2 is RoundCap"""
     self.client.send_si(self.handle, b2str("setIndexOfStrokeCapStyle("+b2str(style)+")"))
 
-  def setFixedAspectRatioTrue(self):
+  def setFixedAspectRatio(self, fixed=True):
     """ This is equivalent to checking Dimensions>Fix aspect ratio within a view item dialog in kst.
     The behaviour of this is undefined in view items which always have fixed aspect ratios (e.g., circles)"""
-    self.client.send_si(self.handle, b2str("checkFixAspectRatio()"))
-
-  def setFixedAspectRatioFalse(self):
-    """ This is equivalent to unchecking Dimensions>Fix aspect ratio within a view item dialog in kst.
-    The behaviour of this is undefined in view items which always have fixed aspect ratios (e.g., circles)"""
-    self.client.send_si(self.handle, b2str("uncheckFixAspectRatio()"))
+    if fixed == True:
+      self.client.send_si(self.handle, b2str("checkFixAspectRatio()"))
+    else:
+      self.client.send_si(self.handle, b2str("uncheckFixAspectRatio()"))
 
   def setPosX(self,pos):
     """ This is equivalent to setting Dimensions>Position within a view item dialog in kst.
@@ -1901,7 +1899,7 @@ class ViewItem:
     #self.client.send(b2str("#setSizeY("+self.handle+","+b2str(size)+")"))
     self.client.send_si(self.handle, b2str("setGeoY("+b2str(size)+")"))
 
-  def setRot(self,rot):
+  def setRotation(self,rot):
     """ This is equivalent to setting Dimensions>Rotation within a view item dialog."""
     #self.client.send(b2str("#setRot("+self.handle+","+b2str(rot)+")"))
     self.client.send_si(self.handle, b2str("setRotation("+b2str(rot)+")"))
@@ -1925,11 +1923,24 @@ class Label(ViewItem) :
   a label and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'".
   
   See the kstOwl example."""
-  def __init__(self,client,text,fontSize=12,bold=False,italic=False,fontColor="black",fontFamily="Serif",posX=0.1,posY=0.1,rot=0,hmargin=3,vmargin=3,hspace=0,vspace=0):
+  def __init__(self,client,text,fontSize=12,bold=False,italic=False,fontColor="black",fontFamily="Serif",posX=0.1,posY=0.1,rot=0):
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newLabel("+b2str(text)+","+b2str(fontSize)+","+b2str(bold)+","+b2str(italic)+","+b2str(fontColor)+","+b2str(fontFamily)+","+b2str(posX)+","+b2str(posY)+","+b2str(rot)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newLabel()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setText(text)
+    self.setLabelFontSize(fontSize)
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setFixedAspectRatio(True)
+    self.setRotation(rot)
+    self.setFontColor(fontColor)
+    self.setFontFamily(fontFamily)
+
+    self.setFontBold(bold)
+    self.setFontItalic(italic)
+
   def setText(self,text):
     """ Set text. It may be faster to insert strings within labels (e.g.,"[String (X1)]") and simply modify strings. """
     self.client.send_si(self.handle, b2str("setLabel("+b2str(text)+")"))
@@ -1938,25 +1949,28 @@ class Label(ViewItem) :
     """ This does not actually represent point size but is relative to the size of the window. """
     self.client.send_si(self.handle, b2str("setFontSize("+b2str(size)+")"))
 
-  def setFontBoldTrue(self):
+  def setFontBold(self, bold = True):
     """ . . . """
-    self.client.send_si(self.handle, b2str("checkLabelBold()"))
+    if bold == True:
+      self.client.send_si(self.handle, b2str("checkLabelBold()"))
+    else:
+      self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
 
-  def setFontBoldFalse(self):
+  def setFontItalic(self, italic = True):
     """ . . . """
-    self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
-
-  def setFontItalicTrue(self):
-    """ . . . """
-    self.client.send_si(self.handle, b2str("checkLabelItalic()"))
-
-  def setFontItalicFalse(self):
-    """ . . . """
-    self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
+    if italic == True:
+      self.client.send_si(self.handle, b2str("checkLabelItalic()"))
+    else:
+      self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
 
   def setFontColor(self,color):
     """ Colors are given by a name such as 'red' or a hex number such as '#FF0000' """
     self.client.send_si(self.handle, b2str("setLabelColor("+b2str(color)+")"))
+
+  def setFontFamily(self,family):
+    """ . . . """
+    self.client.send_si(self.handle, b2str("setFontFamily("+b2str(family)+")"))
+
 
 class ExistingLabel(Label):
   def  __init__(self,client,handle):
@@ -1985,10 +1999,32 @@ class Box(ViewItem) :
   The parameters of this function mirror the parameters within the box edit dialog which can be acessed by right clicking on
   a box and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'".
   See the kstOwl example."""
-  def __init__(self,client,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="grey",fillStyle=1,strokeStyle=1,strokeWidth=4,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="white",fillStyle=1,strokeStyle=1,strokeWidth=1,strokeBrushColor="black",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newBox("+b2str(fixAspect)+","+b2str(posX)+","+b2str(posY)+","+b2str(sizeX)+","+b2str(sizeY)+","+b2str(rot)+","+b2str(fillColor)+","+b2str(fillStyle)+","+b2str(strokeStyle)+","+b2str(strokeWidth)+","+b2str(strokeBrushColor)+","+b2str(strokeBrushStyle)+","+b2str(strokeJoinStyle)+","+b2str(strokeCapStyle)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+
+    self.client.send("newBox()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(sizeX)
+    self.setSizeY(sizeY)
+    if fixAspect==True:
+        self.setFixedAspectRatio(True)
+    else:
+        self.setFixedAspectRatio(False)
+    self.setRotation(rot)
+
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setFillColor(fillColor)
+    self.setFillStyle(fillStyle)
+    self.setStrokeStyle(strokeStyle)
+    self.setStrokeWidth(strokeWidth)
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeBrushStyle(strokeBrushStyle)
+    self.setStrokeJoinStyle(strokeJoinStyle)
+    self.setStrokeCapStyle(strokeCapStyle)
 
   @classmethod
   def getList(cls,client):
@@ -2012,11 +2048,27 @@ class Circle(ViewItem) :
   The parameters of this function mirror the parameters within the circle edit dialog which can be acessed by right clicking on
   a circle and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'".
   See the bonjourMonde example"""
-  def __init__(self,client,posX=0.1,posY=0.1,size=0.1,rot=0,fillColor="grey",fillStyle=1,strokeStyle=1,strokeWidth=4,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,posX=0.1,posY=0.1,size=0.1,fillColor="white",fillStyle=1,strokeStyle=1,strokeWidth=1,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newCircle("+b2str(posX)+","+b2str(posY)+","+b2str(size)+","+b2str(rot)+","+b2str(fillColor)+","+b2str(fillStyle)+","+b2str(strokeStyle)+","+b2str(strokeWidth)+","+b2str(strokeBrushColor)+","+b2str(strokeBrushStyle)+","+b2str(strokeJoinStyle)+","+b2str(strokeCapStyle)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+
+    self.client.send("newCircle()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(size)
+
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setFillColor(fillColor)
+    self.setFillStyle(fillStyle)
+    self.setStrokeStyle(strokeStyle)
+    self.setStrokeWidth(strokeWidth)
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeBrushStyle(strokeBrushStyle)
+    self.setStrokeJoinStyle(strokeJoinStyle)
+    self.setStrokeCapStyle(strokeCapStyle)
+
   @classmethod
   def getList(cls,client):
     x=QtCore.QString(client.send("getCircleList()"))
@@ -2038,11 +2090,32 @@ class Ellipse(ViewItem) :
   
   The parameters of this function mirror the parameters within the ellipse edit dialog which can be acessed by right clicking on
   an ellipse and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'"."""
-  def __init__(self,client,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="grey",fillStyle=1,strokeStyle=1,strokeWidth=4,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="white",fillStyle=1,strokeStyle=1,strokeWidth=1,strokeBrushColor="black",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newEllipse("+b2str(fixAspect)+","+b2str(posX)+","+b2str(posY)+","+b2str(sizeX)+","+b2str(sizeY)+","+b2str(rot)+","+b2str(fillColor)+","+b2str(fillStyle)+","+b2str(strokeStyle)+","+b2str(strokeWidth)+","+b2str(strokeBrushColor)+","+b2str(strokeBrushStyle)+","+b2str(strokeJoinStyle)+","+b2str(strokeCapStyle)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newEllipse()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(sizeX)
+    self.setSizeY(sizeY)
+    if fixAspect==True:
+        self.setFixedAspectRatio(True)
+    else:
+        self.setFixedAspectRatio(False)
+    self.setRotation(rot)
+
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setFillColor(fillColor)
+    self.setFillStyle(fillStyle)
+    self.setStrokeStyle(strokeStyle)
+    self.setStrokeWidth(strokeWidth)
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeBrushStyle(strokeBrushStyle)
+    self.setStrokeJoinStyle(strokeJoinStyle)
+    self.setStrokeCapStyle(strokeCapStyle)
+
   @classmethod
   def getList(cls,client):
     x=QtCore.QString(client.send("getEllipseList()"))
@@ -2061,14 +2134,27 @@ class Ellipse(ViewItem) :
 
 class Line(ViewItem) :
   """ This class represents a line you would create via "Create>Annotations>Line" from the menubar inside kst.
-  
-  The parameters of this function mirror the parameters within the line edit dialog which can be acessed by right clicking on
-  a line and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'"."""
-  def __init__(self,client,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="grey",fillStyle=1,strokeStyle=1,strokeWidth=4,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+
+  Colors are given by a name such as 'red' or a hex number such as '#FF0000'"."""
+  def __init__(self,client,posX=0.1,posY=0.1,length=0.1,rot=0,strokeStyle=1,strokeWidth=1,strokeBrushColor="black",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newLine("+b2str(fixAspect)+","+b2str(posX)+","+b2str(posY)+","+b2str(sizeX)+","+b2str(sizeY)+","+b2str(rot)+","+b2str(fillColor)+","+b2str(fillStyle)+","+b2str(strokeStyle)+","+b2str(strokeWidth)+","+b2str(strokeBrushColor)+","+b2str(strokeBrushStyle)+","+b2str(strokeJoinStyle)+","+b2str(strokeCapStyle)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newLine()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(length)
+    self.setRotation(rot)
+
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeStyle(strokeStyle)
+    self.setStrokeWidth(strokeWidth)
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeBrushStyle(strokeBrushStyle)
+    self.setStrokeJoinStyle(strokeJoinStyle)
+    self.setStrokeCapStyle(strokeCapStyle)
+
   @classmethod
   def getList(cls,client):
     x=QtCore.QString(client.send("getCircleList()"))
@@ -2083,18 +2169,50 @@ class Line(ViewItem) :
 
 
 
-
-
 class Arrow(ViewItem) :
   """ This class represents an arrow you would create via "Create>Annotations>Arrow" from the menubar inside kst.
   
   The parameters of this function mirror the parameters within the arrow edit dialog which can be acessed by right clicking on
   a arrow and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'"."""
-  def __init__(self,client,arrowAtStart=True,startScale=3,arrowAtEnd=False,endScale=3,fixAspect=False,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0,fillColor="grey",fillStyle=1,strokeStyle=1,strokeWidth=4,strokeBrushColor="grey",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,posX=0.1,posY=0.1,length=0.1, rot=0,arrowAtStart = False, arrowAtEnd = True, arrowSize = 12.0, strokeStyle=1,strokeWidth=1,strokeBrushColor="black",strokeBrushStyle=1,strokeJoinStyle=1,strokeCapStyle=1) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newArrow("+b2str(arrowAtStart)+","+b2str(startScale)+","+b2str(arrowAtEnd)+","+b2str(endScale)+","+b2str(fixAspect)+","+b2str(posX)+","+b2str(posY)+","+b2str(sizeX)+","+b2str(sizeY)+","+b2str(rot)+","+b2str(fillColor)+","+b2str(fillStyle)+","+b2str(strokeStyle)+","+b2str(strokeWidth)+","+b2str(strokeBrushColor)+","+b2str(strokeBrushStyle)+","+b2str(strokeJoinStyle)+","+b2str(strokeCapStyle)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newArrow()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(length)
+    self.setRotation(rot)
+
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeStyle(strokeStyle)
+    self.setStrokeWidth(strokeWidth)
+    self.setStrokeBrushColor(strokeBrushColor)
+    self.setStrokeBrushStyle(strokeBrushStyle)
+    self.setStrokeJoinStyle(strokeJoinStyle)
+    self.setStrokeCapStyle(strokeCapStyle)
+    self.setArrowAtStart(arrowAtStart)
+    self.setArrowAtEnd(arrowAtEnd)
+    self.setArrowSize(arrowSize)
+
+  def setArrowAtStart(self, arrow=True) :
+    """ Set whether an arrow head is shown at the start of the line """
+    if arrow==True:
+      self.client.send_si(self.handle, b2str("arrowAtStart(true)"))
+    else:
+      self.client.send_si(self.handle, b2str("arrowAtStart(false)"))
+
+  def setArrowAtEnd(self, arrow=True) :
+    """ Set whether an arrow head is shown at the end of the line """
+    if arrow==True:
+      self.client.send_si(self.handle, b2str("arrowAtEnd(true)"))
+    else:
+      self.client.send_si(self.handle, b2str("arrowAtEnd(false)"))
+
+  def setArrowSize(self, arrowSize) :
+    self.client.send_si(self.handle, b2str("arrowHeadScale("+b2str(arrowSize)+")"))
+
   @classmethod
   def getList(cls,client):
     x=QtCore.QString(client.send("getArrowList()"))
@@ -2110,7 +2228,6 @@ class Arrow(ViewItem) :
     
     
     
-    
 class Picture(ViewItem) :
   """ This class represents a picture you would create via "Create>Annotations>Picture" from the menubar inside kst.
   
@@ -2118,14 +2235,23 @@ class Picture(ViewItem) :
   a picture and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'".
   
   See the kstOwl example."""
-  def __init__(self,client,filename,posX=0.1,posY=0.1,size=0.1,rot=0,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,filename,posX=0.1,posY=0.1,size=0.1,rot=0) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newPicture("+b2str(filename)+","+b2str(posX)+","+b2str(posY)+","+b2str(size)+","+b2str(rot)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newPicture("+b2str(filename)+")")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-  def setPic(self,pic):
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setFixedAspectRatio(True)
+    self.setSizeX(size)
+    #fixme: aspect ratio is wrong.
+    #self.setSizeY(size)
+    self.setRotation(rot)
+
+  def setPicture(self,pic):
     """ BUG: aspect ratio is not changed. There is no parellel for this function within the kst GUI. """
-    self.client.send(b2str("#setPicture("+self.handle+","+b2str(pic)+")"))
+    self.client.send_si(self.handle, b2str("setPicture("+b2str(pic)+")"))
 
 class ExistingPicture(Picture):
   def __init__(self,client,handle):
@@ -2153,11 +2279,20 @@ class SVG(ViewItem) :
   
   The parameters of this function mirror the parameters within the SVG edit dialog which can be acessed by right clicking on
   a SVG and selecting Edit. Colors are given by a name such as 'red' or a hex number such as '#FF0000'"."""
-  def __init__(self,client,filename,posX=0.1,posY=0.1,size=0.1,rot=0,hmargin=3,vmargin=3,hspace=0,vspace=0) :
+  def __init__(self,client,filename,posX=0.1,posY=0.1,size=0.1,rot=0) :
     ViewItem.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newSVG("+b2str(filename)+","+b2str(posX)+","+b2str(posY)+","+b2str(size)+","+b2str(rot)+","+b2str(hmargin)+","+b2str(vmargin)+","+b2str(hspace)+","+b2str(vspace)+")"))
+    self.client.send("newSvgItem("+b2str(filename)+")")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setPosX(posX)
+    self.setPosY(posY)
+    self.setSizeX(size)
+    self.setSizeY(size)
+    self.setFixedAspectRatio(True)
+    self.setRotation(rot)
+
+
 class ExistingSVG(SVG):
   def __init__(self,client,handle):
     ViewItem.__init__(self,client)
@@ -2242,12 +2377,12 @@ class Plot(ViewItem) :
     """ Set Y zoom range to fixed range, centered around the mean.  Similar to AC coupling on an oscilloscope. """
     self.client.send_si(self.handle,b2str("setYAC("+b2str(r)+")"))
 
-  def setGlobalFont(self, family="", bold="false", italic="false") :
+  def setGlobalFont(self, family="", bold=False, italic=False) :
     """ Set the global plot font.  By default, the axis labels all use this, unless they have been set to use their own.
         If the parameter 'family' is empty, the font family will be unchanged.
         The font will be bold if parameter 'bold' is set to 'bold' or 'true'.
         The font will be italic if parameter 'italic' is set to 'italic' or 'true'."""
-    self.client.send_si(self.handle,b2str("setGlobalFont("+family+","+bold+","+italic+")"))
+    self.client.send_si(self.handle,b2str("setGlobalFont("+family+","+b2str(bold)+","+b2str(italic)+")"))
 
   def setTopLabel(self, label="") :
     """ Set the plot top label """
@@ -2292,21 +2427,19 @@ class Plot(ViewItem) :
     """ Set X axis to log mode. """
     self.client.send_si(self.handle, b2str("setLogY()"))
 
-  def setXAxisReversed(self) :
-    """ set the X axis to decreasing from left to right. """
-    self.client.send_si(self.handle, b2str("setXAxisReversed()"))
-
-  def setYAxisReversed(self) :
+  def setYAxisReversed(self, reversed=True) :
     """ set the Y axis to decreasing from bottom to top. """
-    self.client.send_si(self.handle, b2str("setYAxisReversed()"))
+    if reversed == True:
+      self.client.send_si(self.handle, b2str("setYAxisReversed()"))
+    else:
+      self.client.send_si(self.handle, b2str("setYAxisNotReversed()"))
 
-  def setXAxisNotReversed(self) :
-    """ set the X axis to increasing from left to right. """
-    self.client.send_si(self.handle, b2str("setXAxisNotReversed()"))
-
-  def setYAxisNotReversed(self) :
-    """ set the Y axis to increasing from bottom to top. """
-    self.client.send_si(self.handle, b2str("setYAxisNotReversed()"))
+  def setXAxisReversed(self, reversed=True) :
+    """ set the X axis to decreasing from left to right. """
+    if reversed == True:
+      self.client.send_si(self.handle, b2str("setXAxisReversed()"))
+    else:
+      self.client.send_si(self.handle, b2str("setXAxisNotReversed()"))
 
 
 class ExistingPlot(Plot):

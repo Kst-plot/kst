@@ -44,6 +44,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
   Q_OBJECT
   public:
     friend class DialogLauncherSI;
+    friend class ViewItemSI;
     enum GripMode {
       Move    = 1,
       Resize  = 2,

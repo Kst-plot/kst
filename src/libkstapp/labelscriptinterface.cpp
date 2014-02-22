@@ -11,7 +11,6 @@
  ***************************************************************************/
 
 #include "labelscriptinterface.h"
-#include "labelitem.h"
 
 #include <QStringBuilder>
 
@@ -34,12 +33,12 @@ struct LabelTabSI {
             item->setLabelColor(QColor(x.remove("setLabelColor(").remove(')')));
         } else if(x.contains("Italic")) {
             QFont f=item->labelFont();
-            f.setItalic(x.contains("un"));
+            f.setItalic(!x.contains("un"));
             item->setLabelFont(f);
             return "Done";
         } else if(x.contains("Bold")) {
             QFont f=item->labelFont();
-            f.setBold(x.contains("un"));
+            f.setBold(!x.contains("un"));
             item->setLabelFont(f);
             return "Done";
         } else if(x.contains("setFont")) {
@@ -86,5 +85,12 @@ bool LabelSI::isValid() {
 QByteArray LabelSI::getHandle() {
     return ("Finished editing "%dim->item->Name()).toLatin1();
 }
+
+ScriptInterface* LabelSI::newLabel() {
+    LabelItem* bi=new LabelItem(kstApp->mainWindow()->tabWidget()->currentView(),"");
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new LabelSI(bi);
+}
+
 
 }

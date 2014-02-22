@@ -201,7 +201,14 @@ QString DimensionTabSI::doCommand(QString x) {
 
     qreal relativeWidth = (command == "setGeoX") ? parameter :item->relativeWidth();
     qreal relativeHeight = (command == "setGeoY") ? parameter :item->relativeHeight();
-    bool fixedAspect = (command == "uncheckFixAspectRatio") ? false :item->lockAspectRatio();
+
+    bool fixedAspect = item->lockAspectRatio();
+    if (command == "uncheckFixAspectRatio") {
+      fixedAspect = false;
+    } else if (command == "checkFixAspectRatio") {
+      fixedAspect = true;
+    }
+
 
     qreal width = relativeWidth * parentWidth;
     qreal height;
@@ -271,5 +278,64 @@ bool ViewItemSI::isValid() {
 QByteArray ViewItemSI::getHandle() {
     return ("Finished editing "%dim->item->Name()).toLatin1();
 }
+
+ScriptInterface* ViewItemSI::newBox() {
+    BoxItem* bi=new BoxItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newButton() {
+    ButtonItem* bi=new ButtonItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newLineEdit() {
+    LineEditItem* bi=new LineEditItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newCircle() {
+    CircleItem* bi=new CircleItem(kstApp->mainWindow()->tabWidget()->currentView());
+    bi->setViewRect(-0.1/2.0, -0.1/2.0, 0.1/2.0, 0.1/2.0);
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newEllipse() {
+    EllipseItem* bi=new EllipseItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newLine() {
+    LineItem* bi=new LineItem(kstApp->mainWindow()->tabWidget()->currentView());
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    return new ViewItemSI(bi);
+}
+
+ScriptInterface* ViewItemSI::newPicture(QByteArray picf) {
+    PictureItem* bi=new PictureItem(kstApp->mainWindow()->tabWidget()->currentView(),QImage(QString::fromLocal8Bit(picf)));
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    bi->setViewRect(0.9,0.9,1.0,1.0,true);
+    bi->setVisible(1);
+    bi->updateViewItemParent();
+    return new ViewItemSI(bi);
+}
+
+#ifndef KST_NO_SVG
+ScriptInterface* ViewItemSI::newSvgItem(QByteArray path) {
+    SvgItem* bi=new SvgItem(kstApp->mainWindow()->tabWidget()->currentView(),path);
+    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    bi->setViewRect(0.9,0.9,1.0,1.0,true);
+    bi->setVisible(1);
+    bi->updateViewItemParent();
+    return new ViewItemSI(bi);
+}
+#endif
+
+
 
 }
