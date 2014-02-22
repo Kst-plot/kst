@@ -175,6 +175,8 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     /** max number of frames */
     int ReqNF;
 
+    int _invalidCount;
+
     /** Requested Starting Frame */
     int ReqF0;
 
@@ -188,7 +190,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     int N_AveReadBuf;
     double *AveReadBuf;
 
-    void checkIntegrity(); // must be called with a lock
+    bool checkIntegrity(); // must be called with a lock
 
     //bool _dontUseSkipAccel;
 

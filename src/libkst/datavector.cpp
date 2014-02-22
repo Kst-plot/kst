@@ -47,6 +47,8 @@ namespace Kst {
 const QString DataVector::staticTypeString = "Data Vector";
 const QString DataVector::staticTypeTag = "datavector";
 
+const int INVALIDS_PER_RESET = 5;
+
 DataVector::DataInfo::DataInfo() :
     frameCount(-1),
     samplesPerFrame(-1)
@@ -79,6 +81,7 @@ DataVector::DataVector(ObjectStore *store)
   Skip = 1;
   DoSkip = false;
   DoAve = false;
+  _invalidCount = 0;
 }
 
 
@@ -353,7 +356,7 @@ void DataVector::reset() { // must be called with a lock
 }
 
 
-void DataVector::checkIntegrity() {
+bool DataVector::checkIntegrity() {
   if (DoSkip && Skip < 1) {
     Skip = 1;
   }
@@ -362,10 +365,19 @@ void DataVector::checkIntegrity() {
     reset();
   }
 
-  // if it looks like we have a new file, reset
+  // if the file seems to have shrunk/changed, return false.
+  // if it has happened several times in a row, assume the
+  // file has been over-written, and re-read it.
+  // this is a hack to handle glitchy file system situations.
+  // TODO: there has to be a better way.
   const DataInfo info = dataInfo(_field);
   if (dataSource() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
-    reset();
+    _invalidCount++;
+    if (_invalidCount>INVALIDS_PER_RESET) {
+      reset();
+      _invalidCount=0;
+    }
+    return false;
   }
 
   // check for illegal NF and F0 values
@@ -376,6 +388,9 @@ void DataVector::checkIntegrity() {
   if (ReqNF == 1) {
     ReqNF = 2;
   }
+
+  _invalidCount = 0;
+  return true;
 }
 
 // Some things to consider about the following routine...
@@ -413,7 +428,12 @@ void DataVector::internalUpdate() {
   }
 
   const DataInfo info = dataInfo(_field);
-  checkIntegrity();
+  if (!checkIntegrity()) {
+    if (dataSource()) {
+      dataSource()->unlock();
+    }
+    return;
+  }
 
   if (DoSkip && Skip < 2 && SPF == 1) {
     DoSkip = false;
