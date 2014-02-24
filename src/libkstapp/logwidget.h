@@ -40,6 +40,7 @@ class LogWidget : public QTextBrowser
 
   private:
     int _show;
+    void setShowLevel(Debug::LogLevel, bool show);
 };
 
 }

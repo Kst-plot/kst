@@ -21,6 +21,7 @@
 
 namespace Kst {
 
+
 LogWidget::LogWidget(QWidget *parent)
   : QTextBrowser(parent) {
   _show = Debug::Warning | Debug::Error | Debug::Notice | Debug::Trace;
@@ -58,38 +59,12 @@ void LogWidget::logAdded(const Debug::LogMessage& msg) {
 }
 
 
-void LogWidget::setShowTrace(bool show) {
-    int old = _show;
-    if (show) {
-        _show |= Debug::Trace;
-    } else {
-        _show &= ~Debug::Trace;
-    }
-    if (_show != old) {
-        regenerate();
-    }
-}
-
-
-void LogWidget::setShowNotice(bool show) {
-  int old = _show;
+void LogWidget::setShowLevel(Debug::LogLevel level, bool show) {
+  const int old = _show;
   if (show) {
-    _show |= Debug::Notice;
+    _show |= level;
   } else {
-    _show &= ~Debug::Notice;
-  }
-  if (_show != old) {
-    regenerate();
-  }
-}
-
-
-void LogWidget::setShowWarning(bool show) {
-  int old = _show;
-  if (show) {
-    _show |= Debug::Warning;
-  } else {
-    _show &= ~Debug::Warning;
+    _show &= ~level;
   }
   if (_show != old) {
     regenerate();
@@ -98,15 +73,22 @@ void LogWidget::setShowWarning(bool show) {
 
 
 void LogWidget::setShowError(bool show) {
-  int old = _show;
-  if (show) {
-    _show |= Debug::Error;
-  } else {
-    _show &= ~Debug::Error;
-  }
-  if (_show != old) {
-    regenerate();
-  }
+  setShowLevel(Debug::Error, show);
+}
+
+
+void LogWidget::setShowWarning(bool show) {
+  setShowLevel(Debug::Warning, show);
+}
+
+
+void LogWidget::setShowNotice(bool show) {
+  setShowLevel(Debug::Notice, show);
+}
+
+
+void LogWidget::setShowTrace(bool show) {
+  setShowLevel(Debug::Trace, show);
 }
 
 
