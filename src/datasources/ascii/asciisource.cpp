@@ -297,6 +297,11 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     emitProgress(0, tr("Reading field: ") + field);
   }
 
+  printf("%s: AsciiSource::readField()   %s, s=%s, n=%i\n",
+            qPrintable(QDateTime::currentDateTime().toString("hh.mm.ss.zzz")),
+            qPrintable(field.leftJustified(15)),
+            qPrintable(QString("%1").arg(s, 10)), n);
+
   int read = tryReadField(v, field, s, n);
 
   if (isTime(field)) {
