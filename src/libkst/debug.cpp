@@ -128,14 +128,14 @@ void Debug::clear() {
 
 QString Debug::label(LogLevel level) const {
   switch (level) {
-    case Notice:
-      return tr("Notice");
-    case Warning:
-      return tr("Warning");
     case Error:
       return tr("Error");
-    case DebugLog:
-      return tr("Debug");
+    case Warning:
+      return tr("Warning");
+    case Notice:
+      return tr("Notice");
+    case Trace:
+      return tr("Trace");
     default:
       return tr("Other");
   }    

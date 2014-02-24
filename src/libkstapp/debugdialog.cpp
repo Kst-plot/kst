@@ -32,10 +32,11 @@ DebugDialog::DebugDialog(QWidget *parent)
   _logTabLayout->addWidget(_log,0,0);
 
   connect(_clear, SIGNAL(clicked()), this, SLOT(clear()));
-  connect(_showDebug, SIGNAL(toggled(bool)), _log, SLOT(setShowDebug(bool)));
+
+  connect(_showError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
   connect(_showWarning, SIGNAL(toggled(bool)), _log, SLOT(setShowWarning(bool)));
   connect(_showNotice, SIGNAL(toggled(bool)), _log, SLOT(setShowNotice(bool)));
-  connect(_showError, SIGNAL(toggled(bool)), _log, SLOT(setShowError(bool)));
+  connect(_showTrace, SIGNAL(toggled(bool)), _log, SLOT(setShowTrace(bool)));
 
   if (!Debug::self()->kstRevision().isEmpty())
     _buildInfo->setText(tr("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));

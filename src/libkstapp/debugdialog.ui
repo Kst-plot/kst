@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="_tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="_buildInfoTab">
       <attribute name="title">
@@ -102,19 +102,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="_showDebug">
+          <widget class="QCheckBox" name="_showError">
            <property name="text">
-            <string>&amp;Debug</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="_showNotice">
-           <property name="text">
-            <string>&amp;Notice</string>
+            <string>&amp;Error</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -132,12 +122,25 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="_showError">
+          <widget class="QCheckBox" name="_showNotice">
            <property name="text">
-            <string>&amp;Error</string>
+            <string>&amp;Notice</string>
            </property>
            <property name="checked">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="_showTrace">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>&amp;Trace</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
            </property>
           </widget>
          </item>

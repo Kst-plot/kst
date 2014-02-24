@@ -30,7 +30,12 @@ namespace Kst {
 class KSTCORE_EXPORT Debug : public QObject {
   Q_OBJECT
   public:
-    enum LogLevel { Unknown = 0, Notice = 1, Warning = 2, Error = 4, DebugLog = 8, None = 16384 };
+    enum LogLevel {
+      Trace     = 1,
+      Notice    = 2,
+      Warning   = 4,
+      Error     = 8
+    };
     struct LogMessage {
       QDateTime date;
       QString msg;
@@ -42,6 +47,12 @@ class KSTCORE_EXPORT Debug : public QObject {
     void log(const QString& msg, LogLevel level = Notice);
     void setLimit(bool applyLimit, int limit);
     QString text();
+
+#define DEBUG_LOG_FUNC(X, T) static void X(const QString& msg) { self()->log(msg, T); }
+    DEBUG_LOG_FUNC(error, Error);
+    DEBUG_LOG_FUNC(warning, Warning);
+    DEBUG_LOG_FUNC(notice, Notice);
+    DEBUG_LOG_FUNC(trace, Trace);
 
     int logLength() const;
     QList<LogMessage> messages() const;

@@ -29,10 +29,11 @@ class LogWidget : public QTextBrowser
 
   public Q_SLOTS:
     void logAdded(const Debug::LogMessage&);
-    void setShowDebug(bool show);
-    void setShowNotice(bool show);
-    void setShowWarning(bool show);
+
     void setShowError(bool show);
+    void setShowWarning(bool show);
+    void setShowNotice(bool show);
+    void setShowTrace(bool show);
 
   private slots:
     void regenerate();

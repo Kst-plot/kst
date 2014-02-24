@@ -23,7 +23,7 @@ namespace Kst {
 
 LogWidget::LogWidget(QWidget *parent)
   : QTextBrowser(parent) {
-  _show = Debug::Warning | Debug::Error | Debug::Notice | Debug::DebugLog;
+  _show = Debug::Warning | Debug::Error | Debug::Notice | Debug::Trace;
 }
 
 
@@ -43,9 +43,9 @@ void LogWidget::logAdded(const Debug::LogMessage& msg) {
     case Debug::Notice:
       sym = "<img src=\"DebugNotice\"/> ";
       break;
-    case Debug::DebugLog:
-      sym = "<img src=\"DebugDebug\"/> ";
-      break;
+    case Debug::Trace:
+        sym = "<img src=\"DebugTrace\"/> ";
+        break;
     default:
       return;
   }
@@ -58,16 +58,16 @@ void LogWidget::logAdded(const Debug::LogMessage& msg) {
 }
 
 
-void LogWidget::setShowDebug(bool show) {
-  int old = _show;
-  if (show) {
-    _show |= Debug::DebugLog;
-  } else {
-    _show &= ~Debug::DebugLog;
-  }
-  if (_show != old) {
-    regenerate();
-  }
+void LogWidget::setShowTrace(bool show) {
+    int old = _show;
+    if (show) {
+        _show |= Debug::Trace;
+    } else {
+        _show &= ~Debug::Trace;
+    }
+    if (_show != old) {
+        regenerate();
+    }
 }
 
 
