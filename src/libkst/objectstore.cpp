@@ -110,6 +110,21 @@ ObjectPtr ObjectStore::retrieveObject(const QString& name) const {
   return NULL;
 }
 
+void ObjectStore::resetDataSourceDependents(QString filename) {
+  PrimitiveList allPrimitives = getObjects<Primitive>();
+
+  foreach (PrimitivePtr P, allPrimitives) {
+    DataPrimitive* dp = qobject_cast<DataPrimitive*>(P);
+    if (dp) {
+      if (filename == dp->filename()) {
+        P->writeLock();
+        P->reset();
+        P->unlock();
+      }
+    }
+  }
+}
+
 void ObjectStore::rebuildDataSourceList() {
   cleanUpDataSourceList();
   foreach (DataSourcePtr ds, _dataSourceList) {

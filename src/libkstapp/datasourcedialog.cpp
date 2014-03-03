@@ -31,7 +31,9 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
   connect(this, SIGNAL(cancel()), _configWidget, SLOT(cancel()));
 
   if (mode == DataDialog::Edit) {
-    connect(this, SIGNAL(ok()), this, SLOT(disableReuse()));
+    // Why would we want a source to not be reuseable?
+    // Note: this is the only place where reuse is ever disabled...
+    //connect(this, SIGNAL(ok()), this, SLOT(disableReuse()));
   }
 
   _dataSource->unlock();

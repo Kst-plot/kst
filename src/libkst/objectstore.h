@@ -63,6 +63,9 @@ class KSTCORE_EXPORT ObjectStore
     /** remove unused data sources from the list */
     void cleanUpDataSourceList();
 
+    /** reset dependents of a data source */
+    void resetDataSourceDependents(QString filename);
+
     /** get everything but the data sources */
     QList<ObjectPtr> objectList();
 

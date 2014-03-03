@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "asciiconfigwidget.h"
+#include "objectstore.h"
 
 #include "kst_atof.h"
 
@@ -384,6 +385,7 @@ void AsciiConfigWidget::save() {
       if (_ac->config().isUpdateNecessary(_oldConfig)) {
         src->reset();
         src->updateLists();
+        src->store()->resetDataSourceDependents(src->fileName());
       }
     }
   }
