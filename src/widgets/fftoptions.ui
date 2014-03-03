@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>739</width>
-    <height>196</height>
+    <width>737</width>
+    <height>194</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -171,7 +171,7 @@
          <number>0</number>
         </property>
         <item row="0" column="2">
-         <widget class="QLabel" name="TextLabel1_9">
+         <widget class="QLabel" name="_FFTLengthLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>

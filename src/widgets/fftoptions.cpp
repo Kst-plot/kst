@@ -42,7 +42,7 @@ FFTOptions::FFTOptions(QWidget *parent)
   _apodize->setProperty("si","Apodi&ze");
   textLabel2->setProperty("si","Fun&ction:");
   _removeMean->setProperty("si","Remo&ve mean");
-  TextLabel1_9->setProperty("si","FFT &length: 2^");
+  _FFTLengthLabel->setProperty("si","FFT &length: 2^");
   _interleavedAverage->setProperty("si","Interleave&d average");
   _interpolateOverHoles->setProperty("si","Interpolate over &holes");
   TextLabel1_9_2->setProperty("si","Sa&mple rate:");
@@ -257,6 +257,7 @@ void FFTOptions::changedApodizeFxn() {
 
 void FFTOptions::clickedInterleaved() {
   _FFTLength->setEnabled(_interleavedAverage->isChecked());
+  _FFTLengthLabel->setEnabled(_interleavedAverage->isChecked());
 }
 
 
