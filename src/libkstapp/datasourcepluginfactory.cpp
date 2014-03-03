@@ -80,6 +80,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
     if (dataSource) {
       QObject::connect(dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
+      dataSource->vector().prepareRead(0);
       dataSource->parseProperties(propertyAttributes);
       if (fileName != alternate_filename) {
         dataSource->setAlternateFilename(alternate_filename);

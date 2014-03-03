@@ -457,6 +457,7 @@ void MainWindow::openFile(const QString &file) {
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
   newDoc(true); // Does all the init stuff, but does not ask for override as it's supposed to be done elsewhere
   bool ok = _doc->open(file);
+  updateProgress(100, "");
   QApplication::restoreOverrideCursor();
 
   if (!ok) {
@@ -1554,7 +1555,15 @@ QProgressBar *MainWindow::progressBar() const {
 
 void MainWindow::updateProgress(int percent, const QString& message)
 {
+  if (percent == -1) {
+    _progressBar->setMaximum(0);
+    _progressBar->setMinimum(0);
+    _progressBar->show();
+    return;
+  }
+
   if (percent  > 0 && percent < 100) {
+    _progressBar->setMaximum(100);
     _progressBar->setValue(percent);
     _progressBar->show();
   } else {

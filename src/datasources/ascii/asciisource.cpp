@@ -557,8 +557,14 @@ void AsciiSource::emitProgress(int percent, const QString& message)
 //-------------------------------------------------------------------------------------------
 void AsciiSource::updateProgress(const QString& message)
 {
-  if (_showProgress && _progressSteps != 0 && _read_count_max != -1) {
-    emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
+  if (_showProgress) {
+      if (_read_count_max == 0) {
+          emitProgress(-1, ""); // indicate "busy"
+      } else {
+        if (_progressSteps != 0 && _read_count_max != -1) {
+          emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
+        }
+      }
   }
 }
 
