@@ -304,6 +304,7 @@ void ChangeFileDialog::apply() {
   }
   // Hook the new datasource to the status message area to receive progress status
   connect(_dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
+  _dataSource->vector().prepareRead(_selectedFilePrimitiveList->count());
 
   // we need a list which preservs the order things are added, and a map to associate the duplicated
   // primitive with its duplicate.

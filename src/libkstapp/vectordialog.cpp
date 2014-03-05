@@ -461,13 +461,15 @@ void VectorTab::clearIndexList() {
 
 
 ObjectPtr VectorDialog::createNewDataVector() {
-  const DataSourcePtr dataSource = _vectorTab->dataSource();
+  DataSourcePtr dataSource = _vectorTab->dataSource();
 
   //FIXME better validation than this please...
   if (!dataSource)
     return 0;
 
+  // Hook the progress signal when loading a new datasource to get feedback in case it takes long
   connect(dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
+  dataSource->vector().prepareRead(1);
 
   const QString field = _vectorTab->field();
   const DataRange *dataRange = _vectorTab->dataRange();

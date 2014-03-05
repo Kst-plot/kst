@@ -234,7 +234,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   bool new_data = false;
   if (_emitProgress) {
-    emitProgress(1, tr("Searching for rows ..."));
+      emitProgress(1, tr("Parsing %1 ...").arg(_filename));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
@@ -246,10 +246,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
           // TODO out of memory?
         }
         _busy = false;
-        emitProgress(50, tr("Searching for rows finished"));
+        emitProgress(50, tr("Finished parsing %1").arg(_filename));
       } else {
         ms::sleep(500);
-        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Searching for rows: %1").arg(QString::number(_reader.progressRows())));
+        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Parsing %1: %2 rows").arg(_filename).arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
@@ -293,7 +293,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   _actualField = field;
   if (_emitProgress) {
-    updateProgress(tr("reading field"));
+    updateProgress(tr("reading field ..."));
   } else {
     emitProgress(0, tr("Reading field: ") + field);
   }
@@ -491,7 +491,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  updateProgress(tr("column read"));
+  updateProgress(tr("finished reading"));
 
   _read_count++;
   if (_read_count_max == _read_count)
