@@ -123,6 +123,8 @@ void AsciiSource::reset()
   Object::reset();
 
   _strings = fileMetas();
+
+  prepareRead(0);
 }
 
 //-------------------------------------------------------------------------------------------
@@ -374,7 +376,10 @@ void AsciiSource::prepareRead(int count)
 //-------------------------------------------------------------------------------------------
 void AsciiSource::readingDone()
 {
-    _showProgress = false;
+    if (_showProgress) {
+        emitProgress(100, "");
+        _showProgress = false;
+    }
 }
 
 //-------------------------------------------------------------------------------------------

@@ -127,6 +127,12 @@ void UpdateManager::doUpdates(bool forceImmediate) {
     i_loop++;
   } while ((n_deferred + n_updated > 0) && (i_loop<=maxloop));
 
+  if (forceImmediate) {
+    foreach(DataSourcePtr ds, _store->dataSourceList()) {
+        ds->vector().readingDone();
+    }
+  }
+
   emit objectsUpdated(_serial);
 }
 }
