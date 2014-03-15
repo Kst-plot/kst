@@ -61,7 +61,7 @@ fi
 deploybinary=1
 
 # ---------------------------------------------------------
-# 
+#
 # helper function to check return code
 #
 checkExitCode() {
@@ -75,7 +75,7 @@ checkExitCode() {
 
 
 # ---------------------------------------------------------
-# 
+#
 # checkout kstbinary
 #
 if [ $deploybinary -eq 1 ]; then
@@ -84,7 +84,7 @@ if [ $deploybinary -eq 1 ]; then
         tar xf $startdir/cmake/kstdeploy.tar.gz
         checkExitCode
     fi
-    
+
     cd $startdir
     kstbinary=kst-build
     rm -rf $kstbinary
@@ -101,7 +101,7 @@ cd $startdir
 
 
 # ---------------------------------------------------------
-# 
+#
 # get sha1 when git is used
 #
 sha1=`git rev-parse master`
@@ -135,44 +135,44 @@ cd $builddir
 
 # ---------------------------------------------------------
 #
-# get actual cmake 
+# get actual cmake
 #
 cmakever=cmake-2.8.12.2-Linux-i386
 
 if [ "$iam" = "$travis" ]; then
-	if [ ! -d /opt/$cmakever ]; then
-		  cmakebin=x
-		  if [ ! -d /opt/$cmakever ]; then
-			  wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
-			  checkExitCode
-			  cd /opt
-			  sudo tar xf $builddir/$cmakever.tar.gz
-			  checkExitCode
-			  cd $builddir
-		  fi
-	fi
-	cmakebin=/opt/$cmakever/bin/cmake
+    if [ ! -d /opt/$cmakever ]; then
+          cmakebin=x
+          if [ ! -d /opt/$cmakever ]; then
+              wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
+              checkExitCode
+              cd /opt
+              sudo tar xf $builddir/$cmakever.tar.gz
+              checkExitCode
+              cd $builddir
+          fi
+    fi
+    cmakebin=/opt/$cmakever/bin/cmake
 else
-	cmakebin=cmake
+    cmakebin=cmake
 fi
 $cmakebin --version
 checkExitCode
 
 gccver=4.7.2
 if [ "$2" = "x64" ]; then
-	win=win64
-	mingw=x86_64-w64-mingw32
+    win=win64
+    mingw=x86_64-w64-mingw32
     exc=-seh
-	mingwdir=mingw64$exc
-	branch=Kst-64bit-no-3rdparty-plugins-Qt5
+    mingwdir=mingw64$exc
+    branch=Kst-64bit-no-3rdparty-plugins-Qt5
     extlib=
     useext=
 else
-	win=win32
-	mingw=i686-w64-mingw32
-	exc=-dw2
-	mingwdir=mingw32$exc
-	branch=Kst-32bit-3rdparty-plugins-Qt5
+    win=win32
+    mingw=i686-w64-mingw32
+    exc=-dw2
+    mingwdir=mingw32$exc
+    branch=Kst-32bit-3rdparty-plugins-Qt5
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
 fi
