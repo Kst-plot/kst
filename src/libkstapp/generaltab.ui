@@ -68,7 +68,7 @@
       <string>Rendering using OpenGL is faster on some architectures, but very buggy on others (depending on the video driver).  This might help, or might cause things to go horribly wrong.</string>
      </property>
      <property name="text">
-      <string>Use Open&amp;GL</string>
+      <string>Use Open&amp;GL (Kst restart needed)</string>
      </property>
     </widget>
    </item>

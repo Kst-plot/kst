@@ -27,7 +27,7 @@ kst_add_info_files(KstInfoFiles
 	${kst_dir}/NEWS
 	${kst_dir}/README)
 
-kst_include_directories(app)
+kst_include_directories(app core)
 
 kst_add_executable(${kst_win32} ${rc_file})
 

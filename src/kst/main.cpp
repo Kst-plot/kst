@@ -10,7 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <application.h>
+#include "application.h"
+#include "settings.h"
+
 #include <QLibraryInfo>
 #include <QTranslator>
 #include <QLocale>
@@ -19,6 +21,16 @@
 __declspec(dllexport)
 #endif
 int main(int argc, char *argv[]) {
+
+#if QT_VERSION < 0x050000 && QT_VERSION >= 0x040500
+  // The GraphicsSystem needs to be set before the instantiation of the QApplication.
+  // Therefore we need to parse the current setting in this unusual place :-/
+  QSettings& settings = Kst::createSettings("application");
+  if (settings.value("general/opengl", false).toBool()) {
+    QApplication::setGraphicsSystem("opengl");
+  }
+#endif
+
   Kst::Application app(argc, argv);
 
   //--------
