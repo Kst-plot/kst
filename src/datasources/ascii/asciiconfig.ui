@@ -6,15 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>515</height>
+    <width>739</width>
+    <height>524</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>1024</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,10,1,1,1">
    <property name="spacing">
     <number>4</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -852,7 +867,7 @@ own constant width</string>
                </property>
                <property name="dateTime">
                 <datetime>
-                 <hour>9</hour>
+                 <hour>8</hour>
                  <minute>0</minute>
                  <second>0</second>
                  <year>2000</year>
@@ -869,7 +884,7 @@ own constant width</string>
                </property>
                <property name="time">
                 <time>
-                 <hour>9</hour>
+                 <hour>8</hour>
                  <minute>0</minute>
                  <second>0</second>
                 </time>
