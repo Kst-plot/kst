@@ -58,7 +58,6 @@ if [ "$iam" = "$travis" ]; then
 else
     deploybinary=0
 fi
-deploybinary=1
 
 # ---------------------------------------------------------
 #
