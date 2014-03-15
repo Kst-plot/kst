@@ -47,6 +47,7 @@ kst_option(bool   ON  all opengl            "Use OpenGL")
 kst_option(bool   OFF all clang             "Use Clang compiler")
 kst_option(bool   OFF all sanitize          "Use Clang's sanitizers")
 kst_option(bool   OFF all dbgsym            "Build with debug symbols enabled")
+kst_option(bool   OFF win noinstaller       "Don't build installer")
 
 message(STATUS)
 
@@ -75,11 +76,13 @@ endif()
 set(kst_version_major 2)
 if(kst_version_string)
     set(kst_version ${kst_version_string})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${kst_version}")
 else()
     set(kst_version_minor 0)
     set(kst_version_patch x)
     set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
     set(kst_version_string ${kst_version})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 endif()
 
 if(MINGW)
@@ -364,12 +367,12 @@ endif()
 # http://cmake.org/cmake/help/cmake-2-8-docs.html#module:CPack
 
 if(WIN32)
-    if(kst_cross)
+    if(kst_noinstaller)
         set(CPACK_GENERATOR ZIP)
+        set(CPACK_BINARY_ZIP 1)
     else()
-        set(CPACK_GENERATOR ZIP NSIS)
+        set(CPACK_GENERATOR NSIS)
     endif()
-    set(CPACK_BINARY_ZIP 1)
 endif()
 
 #adapted from [trojita.git] / CMakeLists.txt
@@ -425,7 +428,6 @@ set(CPACK_PACKAGE_VERSION_PATCH ${kst_version_patch})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Kst 2")
 set(CPACK_PACKAGE_DESCRIPTION_FILE    ${kst_dir}/README)
 set(CPACK_PACKAGE_CONTACT "http://bugs.kde.org}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 set(CPACK_STRIP_FILES 1)
 
 
@@ -445,7 +447,9 @@ endif()
 
 
 # rpm
-set(CPACK_SET_DESTDIR "ON")
+if(UNIX)
+    set(CPACK_SET_DESTDIR "ON")
+endif()
 FILE(READ ${CPACK_RESOURCE_FILE_LICENSE} CPACK_RPM_PACKAGE_LICENSE)
 set(CPACK_RPM_PACKAGE_GROUP "Applications/Science")
 set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})

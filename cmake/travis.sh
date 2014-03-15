@@ -10,16 +10,22 @@ startdir=$PWD
 # set 'versionname' to overwrite generated one based on 'ver'
 #
 
-#versionname=Kst-2.0.8-Beta
+#versionname=Kst-2.0.8-rc1
 
 ver=2.0.x
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 if [ -z $versionname ]; then
+    buildinstaller=0
     versionname=Kst-$ver-$date
+else
+    buildinstaller=1
 fi
-if [ "$1" = "qt5" ]; then
-    versionname=$versionname-Qt5
-fi
+
+#if [ "$1" = "qt5" ]; then
+#    versionname=$versionname-Qt5
+#fi
+
+
 echo ---------------------------------------------------------
 echo ---------- Building $versionname
 echo ---------------------------------------------------------
@@ -47,7 +53,12 @@ fi
 echo ---------------------------------------------------------
 echo
 
-
+if [ "$iam" = "$travis" ]; then
+    deploybinary=1
+else
+    deploybinary=0
+fi
+deploybinary=1
 
 # ---------------------------------------------------------
 # 
@@ -67,25 +78,26 @@ checkExitCode() {
 # 
 # checkout kstbinary
 #
-if [ "$iam" = "$travis" ]; then
-    cd ~
-    tar xf $startdir/cmake/kstdeploy.tar.gz
-    checkExitCode
+if [ $deploybinary -eq 1 ]; then
+    if [ "$iam" = "$travis" ]; then
+        cd ~
+        tar xf $startdir/cmake/kstdeploy.tar.gz
+        checkExitCode
+    fi
     
     cd $startdir
-    git config --global push.default matching
-    git config --global user.name "travis"
-    git config --global user.email travis@noreply.org
     kstbinary=kst-build
-    git clone --quiet git@github.com:Kst-plot/$kstbinary.git
-    exitcode=$?
-    if [ $exitcode -ne 0 ]; then
-        rm -rf $kstbinary
-        git clone --quiet git@github.com:Kst-plot/$kstbinary.git
-    fi
+    rm -rf $kstbinary
+    mkdir $kstbinary
+    cd $kstbinary
+    git init --quiet
+    git config user.name "travis"
+    git config user.email travis@noreply.org
+    git remote add origin git@github.com:Kst-plot/$kstbinary.git
+    git fetch origin master --quiet
     checkExitCode
 fi
-
+cd $startdir
 
 
 # ---------------------------------------------------------
@@ -106,7 +118,11 @@ fi
 # make build directory
 #
 cd ..
-build=_b
+if [ "$2" = "x64" ]; then
+    build=_b_x64
+else
+    build=_b_x86
+fi
 if [ -d "$build" ]; then
     echo Removing old build directory $build
     rm -rf $build
@@ -121,7 +137,7 @@ cd $builddir
 #
 # get actual cmake 
 #
-cmakever=cmake-2.8.10.2-Linux-i386
+cmakever=cmake-2.8.12.2-Linux-i386
 
 if [ "$iam" = "$travis" ]; then
 	if [ ! -d /opt/$cmakever ]; then
@@ -245,20 +261,26 @@ else
     qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
 fi
 
+
+if [ $buildinstaller -eq 1 ]; then
+    console=-Dkst_console=0
+else
+    console=-Dkst_console=1
+    noinstaller=-Dkst_noinstaller=1
+fi
+
 $cmakebin ../kst/cmake/ \
-    -Dkst_console=1 \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
     -Dkst_cross=/opt/$mingwdir/bin/$mingw \
-    $rev $qtopt $useext
+    $rev $qtopt $useext $console $noinstaller
 
 checkExitCode
 
-processors=4 # /proc reports 32
+processors=6 # /proc reports 32
 make -j $processors
 checkExitCode
-
 
 
 # ---------------------------------------------------------
@@ -268,24 +290,34 @@ checkExitCode
 make package
 checkExitCode
 
-if [ ! -e $versionname-$win.zip ]; then
-    exit 1
-fi
 
-if [ "$iam" = "$travis" ]; then
+deploy() {
+    if [ ! -e $1 ]; then
+        exit 1
+    fi
     cd $startdir/$kstbinary
     git checkout master
-    git branch -D $branch
-    git checkout -b $branch
-    cp -f $builddir/$versionname-$win.zip .
-    git add $versionname-$win.zip
+    git branch -D $2
+    git checkout -b $2
+    cp -f $builddir/$1 .
     checkExitCode
-    
+    git add $1
+    checkExitCode
+
     git commit --quiet -m"Update $win binary to version $versionname"
     checkExitCode
 
-    git push --quiet -f
+    git push --quiet origin HEAD -f
     checkExitCode
+}
+
+
+if [ $deploybinary -eq 1 ]; then
+    if [ $buildinstaller -eq 1 ]; then
+        deploy $versionname-$win.exe Installer-$branch
+    else
+        deploy $versionname-$win.zip $branch
+    fi
 fi
 
 
