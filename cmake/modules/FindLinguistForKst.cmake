@@ -10,6 +10,8 @@
 # If users have lrelease from Qt3 (e.g., Debian, Ubuntu)
 #  then we will fail.
 
+# TODO
+if(RUN_DISABLED_CODE)
 # First remove these from cache
 set(QT_LUPDATE_EXECUTABLE NOTFOUND CACHE FILEPATH "" FORCE)
 set(QT_LRELEASE_EXECUTABLE NOTFOUND CACHE FILEPATH "" FORCE)
@@ -59,6 +61,10 @@ endif(QT_LCONVERT_EXECUTABLE)
 
 mark_as_advanced(QT_LUPDATE_EXECUTABLE QT_LRELEASE_EXECUTABLE QT_LCONVERT_EXECUTABLE)
 
+endif(RUN_DISABLED_CODE)
+
+find_program(QT_LCONVERT_EXECUTABLE NAMES lconvert-qt4 lconvert)
+
 if(QT_LUPDATE_EXECUTABLE AND QT_LRELEASE_EXECUTABLE AND QT_LCONVERT_EXECUTABLE)
   set(LinguistForKst_FOUND TRUE)
 
@@ -107,7 +113,7 @@ MACRO (QT4_WRAP_PO outfiles)
         else(ln)
           set(do_wrap OFF)
         endif(ln)
-      endif(NOT I18N_LANGUAGE)      
+      endif(NOT I18N_LANGUAGE)
       if(do_wrap)
         STRING(REPLACE "-" "_" filenameBase "${fileWithDash}")
         file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale)
@@ -131,7 +137,6 @@ MACRO (QT4_WRAP_PO outfiles)
                          ARGS -compress -removeidentical -silent ${tsfile} -qm ${qmfile}
                          DEPENDS ${it}
                          )
-
         SET(${outfiles} ${${outfiles}} ${qmfile})
       endif(do_wrap)
    ENDFOREACH (it)
