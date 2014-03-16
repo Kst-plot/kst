@@ -4,10 +4,10 @@ project(pyKst)
 
 
 if(kst_binary_name) #stand-alone?
-    set(kstpydir ${CMAKE_SOURCE_DIR}/..)
+    set(kstpydir ${CMAKE_SOURCE_DIR})
 else()
     find_package(Qt4 REQUIRED)
-    set(kstpydir ${CMAKE_SOURCE_DIR}/../..)
+    set(kstpydir ${CMAKE_SOURCE_DIR}/..)
 endif()
 
 find_package(PythonInterp REQUIRED)

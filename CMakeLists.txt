@@ -14,10 +14,10 @@ if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
 endif()
 
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 include(KstMacros)
 
-get_filename_component(kst_dir ${CMAKE_CURRENT_SOURCE_DIR}/.. ABSOLUTE)
+get_filename_component(kst_dir ${CMAKE_SOURCE_DIR} ABSOLUTE)
 get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 set(kst_binary_name kst2)
@@ -383,7 +383,7 @@ endif()
 
 #adapted from [trojita.git] / CMakeLists.txt
 if(LinguistForKst_FOUND OR Qt5LinguistForKst_FOUND)
-    file(GLOB_RECURSE lang_PO "${CMAKE_CURRENT_SOURCE_DIR}/po/kst_common_*.po")
+    file(GLOB_RECURSE lang_PO "${CMAKE_SOURCE_DIR}/po/kst_common_*.po")
     if(WITH_QT5)
         qt5_wrap_po(trojita_QM ${lang_PO})
     else()

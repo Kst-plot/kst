@@ -11,8 +11,8 @@ Kst works on the PlayBook! It's not in the App World yet (I'll send out a messag
 5a) Copy the needed Qt ARM libraries (usually from /usr/local/Trolltech/lib) to kst/qnk/kst/lib AND...
 5b) ** cp -rf /usr/local/Trolltech/plugins/platforms/ ./kst/lib/kst2/plugins/ **
 6) cd kst/build
-   ccmake -DCMAKE_BUILD_TYPE=Debug -Dkst_pch=0 -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake ../cmake # In ccmake, configure the project.
-   cmake -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake ../cmake
+   ccmake -DCMAKE_BUILD_TYPE=Debug -Dkst_pch=0 -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake .. # In ccmake, configure the project.
+   cmake -DCMAKE_TOOLCHAIN_FILE=../qnx/QNX.cmake ..
    make 
    cd ../qnx
    ./stage.sh

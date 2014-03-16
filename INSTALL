@@ -60,24 +60,24 @@ Using cmake
 	Here some examples, assuming the build folder is in the same folder as the source tree:
 
 	* Makefiles on Linux
-		cmake ../kst/cmake
+		cmake ../kst
 	
 	* Project files for QtCreator:
-		Open the kst/cmake/CMakeLists.txt file and select the build folder
+		Open the kst/CMakeLists.txt file and select the build folder
 		or create the files in the command line using the -G"CodeBlocks *" option, eg
-			cmake ../kst/cmake -G"CodeBlocks - Unix Makefiles"
+			cmake ../kst -G"CodeBlocks - Unix Makefiles"
 	
 	* Project files for Xcode
-		cmake ../kst/cmake -GXcode
+		cmake ../kst -GXcode
 		
 	* Project files for Visual Studio 10
-		cmake ..\kst\cmake -G"Visual Studio 10"
+		cmake ..\kst -G"Visual Studio 10"
 
 	* NMake files for Visual Studio
-		cmake ..\kst\cmake -G"NMake Makefiles"
+		cmake ..\kst -G"NMake Makefiles"
 
 	* Makefiles for MinGW
-		cmake ..\kst\cmake -G"MinGW Makefiles"
+		cmake ..\kst -G"MinGW Makefiles"
 
 
 	Daily work:
@@ -111,7 +111,7 @@ Options
     -- kst_merge_files          = OFF   : Merge files to speedup build about factor 5. Toggle with '-Dkst_merge_files=1'
     -- kst_merge_rebuild        = OFF   : Rebuild generated files from merged files build. Toggle with '-Dkst_merge_rebuild=1'
     -- kst_verbose              = OFF   : Make verbose CMake run and Makefiles. Toggle with '-Dkst_verbose=1'
-    -- kst_install_prefix       = /home/synth/sandbox/kst/kst/_b/INSTALLED   : Install path for Kst, using a default if not set. 
+    -- kst_install_prefix       = /home/user/kst/INSTALLED   : Install path for Kst, using a default if not set. 
     -- kst_install_libdir       = lib   : Install directory name for libraries. 
     -- kst_3rdparty             = ON    : Build plugins depending on 3rd party libraries. Toggle with '-Dkst_3rdparty=0'
     -- kst_dataobjects          = ON    : Build dataobject plugins. Toggle with '-Dkst_dataobjects=0'
@@ -128,7 +128,7 @@ Options
 
 
 	To enable a option pass the value ON or 1, eg
-		cmake ../kst/cmake -Dkst_merge_files=1
+		cmake ../kst -Dkst_merge_files=1
 
 
 Using the merged files build

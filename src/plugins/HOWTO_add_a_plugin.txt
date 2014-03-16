@@ -16,7 +16,7 @@ virtual DataObjectPluginInterface::PluginTypeID pluginType() const { return Gene
 
 STEPS TO FOLLOW:
 1. Create the directory and add to CMakeLists.txt
-- Create a directory under the relevant subdirectory and edit cmake/src/plugins/CMakeLists.txt to add it to the list. The easiest way to initialize the plugin is to copy one that is similar (inputs/outputs) and then rename the files
+- Create a directory under the relevant subdirectory and edit src/plugins/CMakeLists.txt to add it to the list. The easiest way to initialize the plugin is to copy one that is similar (inputs/outputs) and then rename the files
 - If the plugin has a dependency (on an external lib for instance) you may have to add a cmake test for it. In that case take a look at the gsl example, which is required by a lot of plugins
 
 2. Edit the .desktop file

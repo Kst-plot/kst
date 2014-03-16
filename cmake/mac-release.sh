@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $1 = path to kst/cmake
+# $1 = path to kst
 # $2 = version name, for instance 2.0.4-beta2
 
 kst_install_prefix=Kst-$2
@@ -18,3 +18,4 @@ make install/strip
 
 #TODO Why is /build/bin/kst2 added to the dmg?
 make package
+

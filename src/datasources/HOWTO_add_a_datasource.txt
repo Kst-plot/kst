@@ -55,7 +55,7 @@ subfolder!!!): "mkdir matlab; cp sampledatasource/* matlab/"
 matio)
 - Edit the contents of the .desktop file, especially the X-KDE-Library entry
 - Edit the .pro file (if you are using qmake, which is being deprecated) or the 
-[root]/cmake/src/datasources/CMakeList.txt file to activate the build.
+[root]/src/datasources/CMakeList.txt file to activate the build.
   If needed, look at other examples to see how to detect the presence of the 
 required librqries to make it conditional (check [root]/cmake/modules)
 - Once the output of cmake is as wished, the data source will be compiled: start 

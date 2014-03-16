@@ -31,6 +31,15 @@ echo ---------- Building $versionname
 echo ---------------------------------------------------------
 
 
+if [ -f "/usr/local/bin/ninja" ]; then
+    generator=-GNinja
+    buildcmd=ninja
+    buildcmd_parallel=ninja
+    export NINJA_STATUS="[%f/%t %o/s, %es] "
+else
+    buildcmd=make
+    buildcmd_parallel="make -j6"
+fi
 
 # ---------------------------------------------------------
 #
@@ -268,17 +277,17 @@ else
     noinstaller=-Dkst_noinstaller=1
 fi
 
-$cmakebin ../kst/cmake/ \
+$cmakebin ../kst \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
     -Dkst_cross=/opt/$mingwdir/bin/$mingw \
-    $rev $qtopt $useext $console $noinstaller
+    $rev $qtopt $useext $console $noinstaller $generator
 
 checkExitCode
 
-processors=6 # /proc reports 32
-make -j $processors
+
+$buildcmd_parallel
 checkExitCode
 
 
@@ -286,7 +295,7 @@ checkExitCode
 #
 # deploy
 #
-make package
+$buildcmd package
 checkExitCode
 
 

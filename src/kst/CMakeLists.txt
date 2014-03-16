@@ -80,7 +80,7 @@ if(UNIX AND kst_deploy)
 
 	set(kst_renamed kst${kst_version})
 	set(start_script ${CMAKE_BINARY_DIR}/kst2_start.sh)
-	configure_file(${kst_dir}/cmake/src/kst/kst2.sh.cmake ${start_script} @ONLY)
+	configure_file(${kst_dir}/src/kst/kst2.sh.cmake ${start_script} @ONLY)
 	file(WRITE ${CMAKE_BINARY_DIR}/delpoy.sh "#!/bin/bash
 	mv ${CMAKE_INSTALL_PREFIX}/bin/*.so* ${CMAKE_INSTALL_PREFIX}/lib
 	mv ${CMAKE_INSTALL_PREFIX}/bin/${kst_binary_name} ${CMAKE_INSTALL_PREFIX}/bin/${kst_renamed}
