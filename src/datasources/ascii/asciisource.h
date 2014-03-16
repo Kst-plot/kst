@@ -95,11 +95,11 @@ private:
     bool _fieldListComplete;
     bool _haveWarned;
     double _fileCreationTime_t;
-    bool _emitProgress;
-    bool _showProgress;
+    bool _showFieldProgress;
     double _progress;
     double _progressSteps;
-    void updateProgress(const QString&);
+    void updateFieldMessage(const QString&);
+    void updateFieldProgress(const QString&);
     void emitProgress(int precent, const QString&);
     QString _actualField;
 

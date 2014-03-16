@@ -68,7 +68,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _busy(false),
   _read_count_max(-1),
   _read_count(0),
-  _showProgress(false),
+  _showFieldProgress(false),
   is(new DataInterfaceAsciiString(*this)),
   iv(new DataInterfaceAsciiVector(*this))
 {
@@ -220,13 +220,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     force_update = false;
   }
 
-  // Emit status message if there is more than 100 MB to parse
-  if (file.size() - _fileSize > 100 * 1024 * 1024 && read_completely) {
-    _emitProgress = true && _showProgress;
-  } else {
-    _emitProgress = false;
-  }
-
+  const qint64 oldFileSite = _fileSize;
   if (read_completely) { // Update _fileSize only when we read the file completely
     _fileSize = file.size();
   }
@@ -235,8 +229,10 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   int col_count = _fieldList.size() - 1; // minus INDEX
 
   bool new_data = false;
-  if (_emitProgress) {
-      emitProgress(1, tr("Parsing %1 ...").arg(_filename));
+  // emit progress message if there are more than 100 MB to parse
+  if (file.size() - oldFileSite > 100 * 1024 * 1024 && read_completely) {
+    _showFieldProgress = true;
+    emitProgress(1, tr("Parsing '%1' ...").arg(_filename));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
     _busy = true;
@@ -248,14 +244,15 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
           // TODO out of memory?
         }
         _busy = false;
-        emitProgress(50, tr("Finished parsing %1").arg(_filename));
+        emitProgress(50, tr("Finished parsing '%1'").arg(_filename));
       } else {
         ms::sleep(500);
-        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Parsing %1: %2 rows").arg(_filename).arg(QString::number(_reader.progressRows())));
+        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Parsing '%1': %2 rows").arg(_filename).arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
   } else {
+    _showFieldProgress = false;
     new_data = _reader.findAllDataRows(read_completely, &file, _fileSize, col_count);
   }
   return (!new_data && !force_update ? NoChange : Updated);
@@ -294,11 +291,7 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   _actualField = field;
-  if (_emitProgress) {
-    updateProgress(tr("reading field ..."));
-  } else {
-    emitProgress(0, tr("Reading field: ") + field);
-  }
+  updateFieldMessage(tr("Reading field: "));
 
   Debug::trace(QString("AsciiSource::readField() %1  s=%2  n=%3").arg(field.leftJustified(15)).arg(QString("%1").arg(s, 10)).arg(n));
 
@@ -366,20 +359,17 @@ bool AsciiSource::useThreads() const
 //-------------------------------------------------------------------------------------------
 void AsciiSource::prepareRead(int count)
 {
-    _read_count_max = count;
-    _read_count = 0;
-    _progress = 0;
-    _progressSteps = 0;
-    _showProgress = true;
+  _read_count_max = count;
+  _read_count = 0;
+  _progress = 0;
+  _progressSteps = 0;
 }
 
 //-------------------------------------------------------------------------------------------
 void AsciiSource::readingDone()
 {
-    if (_showProgress) {
-        emitProgress(100, "");
-        _showProgress = false;
-    }
+  // clear
+  emitProgress(100, "");
 }
 
 //-------------------------------------------------------------------------------------------
@@ -393,9 +383,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     for (int i = 0; i < n; i++) {
       v[i] = double(s + i);
     }
-    if (_emitProgress) {
-      updateProgress(tr("INDEX created"));
-    }
+    updateFieldMessage(tr("INDEX created"));
     return n;
   }
 
@@ -496,7 +484,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  updateProgress(tr("finished reading"));
+  updateFieldMessage(tr("Finished reading: "));
 
   _read_count++;
   if (_read_count_max == _read_count)
@@ -525,16 +513,16 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
 //-------------------------------------------------------------------------------------------
 int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
 {
-  updateProgress(tr("reading ..."));
+  updateFieldProgress(tr("reading ..."));
   for (int i = 0; i < window.size(); i++) {
     if (!window[i].read()) {
       return 0;
     }
     _progress++;
-    updateProgress(tr("reading ..."));
+    updateFieldProgress(tr("reading ..."));
   }
 
-  updateProgress(tr("parsing ..."));
+  updateFieldProgress(tr("parsing ..."));
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
     QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
@@ -542,7 +530,7 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
   }
   readFutures.waitForFinished();
   _progress += window.size();
-  updateProgress(tr("parsing ..."));
+  updateFieldProgress(tr("parsing ..."));
   int sampleRead = 0;
   foreach (const QFuture<int> future, readFutures.futures()) {
     sampleRead += future.result();
@@ -553,23 +541,26 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
 //-------------------------------------------------------------------------------------------
 void AsciiSource::emitProgress(int percent, const QString& message)
 {
-  if (_showProgress && _read_count_max != -1) {
-    emit progress(percent, message);
-    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-  }
+  emit progress(percent, message);
+  QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
 //-------------------------------------------------------------------------------------------
-void AsciiSource::updateProgress(const QString& message)
+void AsciiSource::updateFieldMessage(const QString& message)
 {
-  if (_showProgress) {
-      if (_read_count_max == 0) {
-          emitProgress(-1, ""); // indicate "busy"
-      } else {
-        if (_progressSteps != 0 && _read_count_max != -1) {
-          emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
-        }
-      }
+   // hide progress bar
+   emitProgress(100, message + _actualField);
+}
+
+//-------------------------------------------------------------------------------------------
+void AsciiSource::updateFieldProgress(const QString& message)
+{
+  if (_read_count_max == 0) {
+    emitProgress(-1, ""); // indicate "busy"
+  } else {
+    if (_progressSteps != 0 && _read_count_max != -1) {
+      emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);
+    }
   }
 }
 
