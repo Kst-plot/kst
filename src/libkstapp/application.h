@@ -33,7 +33,8 @@ class Application : public QApplication
 
     MainWindow *mainWindow() const;
 
-  private:
+    void initMainWindow();
+private:
     QPointer<MainWindow> _mainWindow;
 };
 

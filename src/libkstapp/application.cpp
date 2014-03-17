@@ -48,8 +48,6 @@ Application::Application(int &argc, char **argv)
   Builtins::initRelations();  //libkstmath
   Builtins::initGraphics();   //libkstapp
 
-  _mainWindow = new MainWindow;
-
   //Replace the data singleton with one that actually works
   Data::replaceSelf(new DataGui);
 
@@ -64,6 +62,9 @@ Application::Application(int &argc, char **argv)
   //_mainWindow->hide();
 }
 
+void Application::initMainWindow() {
+  _mainWindow = new MainWindow;
+}
 
 Application::~Application() {
   // lets not clean up before we leave....

@@ -16,6 +16,7 @@
 #include <QLibraryInfo>
 #include <QTranslator>
 #include <QLocale>
+#include <QDebug>
 
 #ifdef Q_CC_MSVC
 __declspec(dllexport)
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
                     QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   app.installTranslator(&qtTranslator);
 
-  QLatin1String localeSuffix("/locale");
+  QLatin1String localeSuffix("/locale/");
   QString localeName(QLatin1String("kst_common_") + QLocale::system().name());
 
   // The "installed to system" localization:
@@ -52,9 +53,12 @@ int main(int argc, char *argv[]) {
 
   // The "in the directory with the binary" localization
   QTranslator kstDirectoryTranslator;
-  kstDirectoryTranslator.load(localeName, app.applicationDirPath() + localeSuffix);
+  bool ok = kstDirectoryTranslator.load(localeName, app.applicationDirPath() + "/../share/kst" + localeSuffix);
+  // qDebug() << "Translation file " + localeName + " loaded:" << ok;
+  // qDebug() << "Dir = " + app.applicationDirPath() + "/../share/kst" + localeSuffix;
   app.installTranslator(&kstDirectoryTranslator);
 
+  app.initMainWindow();
   if (app.mainWindow()->initFromCommandLine()) {
     app.mainWindow()->show();
     return app.exec();
