@@ -57,13 +57,13 @@ Application::Application(int &argc, char **argv)
   //Also give us dialog-script scripting functionality
   DialogLauncherSI::self = new DialogLauncherSI;
 
-  connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
   //_mainWindow->show();
   //_mainWindow->hide();
 }
 
 void Application::initMainWindow() {
   _mainWindow = new MainWindow;
+  connect(this, SIGNAL(aboutToQuit()), _mainWindow, SLOT(aboutToQuit()));
 }
 
 Application::~Application() {
