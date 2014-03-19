@@ -19,6 +19,9 @@
 #include "datasource.h"
 #include "dataplugin.h"
 
+#include <QTime>
+
+
 class QFile;
 class DataInterfaceAsciiString;
 class DataInterfaceAsciiVector;
@@ -125,6 +128,7 @@ private:
     int _progressValue;
     qint64 _progressRows;
     static void rowProgress(QObject*);
+    QTime _progressTimer;
 
     // TODO remove
     friend class DataInterfaceAsciiString;

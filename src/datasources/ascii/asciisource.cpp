@@ -93,6 +93,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _valid = true;
   registerChange();
   internalDataSourceUpdate(false);
+
+  _progressTimer.restart();
 }
 
 
@@ -541,7 +543,12 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
 //-------------------------------------------------------------------------------------------
 void AsciiSource::emitProgress(int percent, const QString& message)
 {
+  if (_progressTimer.elapsed() < 500) {
+    // don't flood the gui with progress messages
+    return;
+  }
   emit progress(percent, message);
+  _progressTimer.restart();
   QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
