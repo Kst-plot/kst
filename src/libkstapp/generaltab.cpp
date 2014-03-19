@@ -11,7 +11,9 @@
  ***************************************************************************/
 #include "generaltab.h"
 
-
+#if !defined(Q_OS_WIN) &&  QT_VERSION < 0x050000
+#define HAVE_SWITCHABLE_RASTER
+#endif
 
 namespace Kst {
 
@@ -21,7 +23,7 @@ GeneralTab::GeneralTab(QWidget *parent)
   setupUi(this);
   setTabTitle(tr("General"));
 
-  connect(_useOpenGL, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
+  connect(_useRaster, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_maxUpdate, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_transparentDrag, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_antialiasPlots, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
@@ -31,20 +33,21 @@ GeneralTab::GeneralTab(QWidget *parent)
 GeneralTab::~GeneralTab() {
 }
 
-bool GeneralTab::useOpenGL() const {
-#ifdef KST_NO_OPENGL
-    return false;
+bool GeneralTab::useRaster() const {
+#ifdef HAVE_SWITCHABLE_RASTER
+  return _useRaster->isChecked();
 #else
-  return _useOpenGL->isChecked();
+  return false;
 #endif
 }
 
 
-void GeneralTab::setUseOpenGL(const bool useOpenGL) {
-#ifdef KST_NO_OPENGL
-  _useOpenGL->setChecked(false);
+void GeneralTab::setUseRaster(bool useRaster) {
+#ifdef HAVE_SWITCHABLE_RASTER
+  _useRaster->setChecked(useRaster);
 #else
-  _useOpenGL->setChecked(useOpenGL);
+  _useRaster->setCheckState(Qt::Checked);
+  _useRaster->hide();
 #endif
 }
 

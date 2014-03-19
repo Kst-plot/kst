@@ -54,9 +54,6 @@ class View : public QGraphicsView
 
     virtual void save(QXmlStreamWriter &xml);
 
-    bool useOpenGL() const;
-    void setUseOpenGL(bool useOpenGL);
-
     QUndoStack *undoStack() const;
 
     ViewItem *selectedViewItem() const;
@@ -176,7 +173,6 @@ class View : public QGraphicsView
     QPolygonF _creationPolygonPress;
     QPolygonF _creationPolygonMove;
     QPolygonF _creationPolygonRelease;
-    bool _useOpenGL;
     QSizeF _gridSpacing;
     bool _showGrid;
     bool _snapToGridHorizontal;

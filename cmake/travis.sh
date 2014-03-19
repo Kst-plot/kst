@@ -264,9 +264,9 @@ fi
 #
 cd $builddir
 if [ "$1" = "qt5" ]; then
-    qtopt="-Dkst_qt5=1 -Dkst_opengl=0"
+    qtopt="-Dkst_qt5=1"
 else
-    qtopt="-Dkst_qt4=/opt/$qtver -Dkst_opengl=0"
+    qtopt="-Dkst_qt4=/opt/$qtver"
 fi
 
 

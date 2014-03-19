@@ -26,8 +26,8 @@ class GeneralTab : public DialogTab, Ui::GeneralTab {
     explicit GeneralTab(QWidget *parent = 0);
     virtual ~GeneralTab();
 
-    bool useOpenGL() const;
-    void setUseOpenGL(const bool useOpenGL);
+    bool useRaster() const;
+    void setUseRaster(bool useRaster);
 
     bool transparentDrag() const;
     void setTransparentDrag(const bool transparent_drag);

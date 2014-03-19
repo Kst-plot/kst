@@ -17,9 +17,6 @@
 #include "settings.h"
 
 #include <QCoreApplication>
-#ifndef KST_NO_OPENGL
-#include <QGLPixelBuffer>
-#endif
 
 #include <QDebug>
 #ifdef Q_WS_X11
@@ -50,7 +47,7 @@ ApplicationSettings::ApplicationSettings() :
   _settings(createSettings("application"))
 {
   _transparentDrag = _settings.value("general/transparentdrag", false).toBool();
-  _useOpenGL = _settings.value("general/opengl", false).toBool(); //QVariant(QGLPixelBuffer::hasOpenGLPbuffers())).toBool();
+  _useRaster = _settings.value("general/raster", false).toBool();
 
   _maxUpdate = _settings.value("general/minimumupdateperiod", QVariant(200)).toInt();
 
@@ -101,14 +98,14 @@ void ApplicationSettings::setTransparentDrag(bool transparent_drag) {
   emit modified();
 }
 
-bool ApplicationSettings::useOpenGL() const {
-  return _useOpenGL;
+bool ApplicationSettings::useRaster() const {
+  return _useRaster;
 }
 
 
-void ApplicationSettings::setUseOpenGL(bool useOpenGL) {
-  _useOpenGL = useOpenGL;
-  _settings.setValue("general/opengl", useOpenGL);
+void ApplicationSettings::setUseRaster(bool val) {
+  _useRaster = val;
+  _settings.setValue("general/raster", _useRaster);
   emit modified();
 }
 

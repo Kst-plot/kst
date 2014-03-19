@@ -32,8 +32,8 @@ class ApplicationSettings : public QObject
     bool transparentDrag() const;
     void setTransparentDrag(bool transparent_drag);
 
-    bool useOpenGL() const;
-    void setUseOpenGL(bool useOpenGL);
+    bool useRaster() const;
+    void setUseRaster(bool useRaster);
 
     int referenceViewWidth() const;
     int referenceViewHeight() const;
@@ -84,7 +84,7 @@ class ApplicationSettings : public QObject
   private:
     QSettings& _settings;
     bool _transparentDrag;
-    bool _useOpenGL;
+    bool _useRaster;
     qreal _refViewWidth;
     qreal _refViewHeight;
     qreal _minFontSize;

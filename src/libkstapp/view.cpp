@@ -35,11 +35,6 @@
 #include <QResizeEvent>
 #include <QMenu>
 #include <QWidgetAction>
-#ifdef KST_NO_OPENGL
-#define QGLWidget QWidget
-#else
-#include <QGLWidget>
-#endif
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -87,14 +82,8 @@ void View::init()
 
   setContextMenuPolicy(Qt::DefaultContextMenu);
 
-  _useOpenGL = ApplicationSettings::self()->useOpenGL();
-  if (_useOpenGL) {
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    setViewport(new QGLWidget);
-  } else {
-    setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-    setViewport(0);
-  }
+  setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+  setViewport(0);
 
   connect(ApplicationSettings::self(), SIGNAL(modified()), this, SLOT(updateSettings()));
   loadSettings();
@@ -124,31 +113,6 @@ View::~View() {
   delete _undoStack;
   delete _layoutBoxItem;
 }
-
-
-bool View::useOpenGL() const {
-  return _useOpenGL;
-}
-
-
-void View::setUseOpenGL(bool useOpenGL) {
-#ifndef KST_NO_OPENGL
-    useOpenGL = false;
-#endif
-  //This is an expensive operation...
-  if (_useOpenGL == useOpenGL)
-    return;
-
-  _useOpenGL = useOpenGL;
-  if (useOpenGL) {
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    setViewport(new QGLWidget);
-  } else {
-    setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
-    setViewport(0);
-  }
-}
-
 
 QUndoStack *View::undoStack() const {
   return _undoStack;
@@ -529,7 +493,6 @@ void View::drawBackground(QPainter *painter, const QRectF &rect) {
 
 
 void View::updateSettings() {
-  setUseOpenGL(ApplicationSettings::self()->useOpenGL());
   setShowGrid(ApplicationSettings::self()->showGrid());
 
   setSnapToGrid(ApplicationSettings::self()->snapToGrid());
@@ -544,8 +507,6 @@ void View::updateSettings() {
 
 
 void View::loadSettings() {
-  setUseOpenGL(ApplicationSettings::self()->useOpenGL());
-
   setShowGrid(ApplicationSettings::self()->showGrid());
 
   setSnapToGrid(ApplicationSettings::self()->snapToGrid());

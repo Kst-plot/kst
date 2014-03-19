@@ -60,15 +60,15 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QCheckBox" name="_useOpenGL">
+    <widget class="QCheckBox" name="_useRaster">
      <property name="toolTip">
-      <string>Render using openGL.  This is not always better.</string>
+      <string>Render using &quot;raster&quot;.  This is always better.</string>
      </property>
      <property name="whatsThis">
-      <string>Rendering using OpenGL is faster on some architectures, but very buggy on others (depending on the video driver).  This might help, or might cause things to go horribly wrong.</string>
+      <string>Rendering using &quot;raster&quot; is faster on some architectures, but very buggy on others (depending on the video driver).  This might help, or might cause things to go horribly wrong.</string>
      </property>
      <property name="text">
-      <string>Use Open&amp;GL (Kst restart needed)</string>
+      <string>Use &quot;raster&quot; engine on (Kst restart needed)</string>
      </property>
     </widget>
    </item>
@@ -95,7 +95,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>_useOpenGL</tabstop>
+  <tabstop>_useRaster</tabstop>
   <tabstop>_transparentDrag</tabstop>
   <tabstop>_maxUpdate</tabstop>
  </tabstops>

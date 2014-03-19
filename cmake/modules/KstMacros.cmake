@@ -241,12 +241,9 @@ macro(kst_link)
 	target_link_libraries(${kst_name} ${ARGV})
 	if(kst_qt5)
 		qt5_use_modules(${kst_name} Widgets Xml Network PrintSupport)
-		if(kst_opengl)
-			qt5_use_modules(${kst_name} OpenGL)
-		endif()
 	else()
 		target_link_libraries(${kst_name}
-		${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTSVG_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+		${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 	endif()
 endmacro()
 
