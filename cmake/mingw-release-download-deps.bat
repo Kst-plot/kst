@@ -32,12 +32,12 @@ if "%4" == "" (
 
 echo on
 
-cmake %kstdir%\cmake -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
+cmake %kstdir% -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
 
 %make%
 
-mingw32-make install/strip
-mingw32-make package
-mingw32-make package_source
+%make% install/strip
+%make% package
+%make% package_source
 
 cd ..
