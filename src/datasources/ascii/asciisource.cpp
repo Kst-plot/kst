@@ -371,7 +371,7 @@ void AsciiSource::prepareRead(int count)
 void AsciiSource::readingDone()
 {
   // clear
-  emitProgress(100, "");
+  emit progress(100, "");
 }
 
 //-------------------------------------------------------------------------------------------
