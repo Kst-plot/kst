@@ -581,7 +581,7 @@ QString AsciiSource::fileType() const
 void AsciiSource::setUpdateType(UpdateCheckType updateType)
 {
     if (_config._updateType != updateType) {
-        Q_ASSERT(AsciiSourceConfig().readGroup(*_cfg, _filename) == _config);
+        //Q_ASSERT(AsciiSourceConfig().readGroup(*_cfg, _filename) == _config);
         _config._updateType = updateType;
         _config.saveGroup(*_cfg, _filename);
     }
