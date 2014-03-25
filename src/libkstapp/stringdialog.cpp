@@ -325,17 +325,38 @@ ObjectPtr StringDialog::createNewDataString() {
 
 
 ObjectPtr StringDialog::editExistingDataObject() const {
-  if (StringPtr string = kst_cast<String>(dataObject())) {
-    QString value = _stringTab->value();
-    if (DataDialog::tagStringAuto()) {
-      string->setDescriptiveName(QString());
-    } else {
-      string->setDescriptiveName(DataDialog::tagString());
+  if (_stringTab->stringMode()==StringTab::GeneratedString) {
+    if (StringPtr string = kst_cast<String>(dataObject())) {
+      QString value = _stringTab->value();
+      if (DataDialog::tagStringAuto()) {
+        string->setDescriptiveName(QString());
+      } else {
+        string->setDescriptiveName(DataDialog::tagString());
+      }
+      string->writeLock();
+      string->setValue(value);
+      string->registerChange();
+      string->unlock();
     }
-    string->writeLock();
-    string->setValue(value);
-    string->registerChange();
-    string->unlock();
+  } else if (_stringTab->stringMode()==StringTab::DataString) {
+    if (DataStringPtr string = kst_cast<DataString>(dataObject())) {
+      const DataSourcePtr dataSource = _stringTab->dataSource();
+
+      if (!dataSource)
+        return 0;
+
+      const QString field = _stringTab->field();
+
+      string->writeLock();
+      if (DataDialog::tagStringAuto()) {
+        string->setDescriptiveName(QString());
+      } else {
+        string->setDescriptiveName(DataDialog::tagString());
+      }
+      string->change(dataSource, field);
+      string->registerChange();
+      string->unlock();
+    }
   }
   return dataObject();
 }
