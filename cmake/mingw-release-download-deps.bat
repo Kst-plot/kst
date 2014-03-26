@@ -8,8 +8,10 @@ if "%1" == "" (
 
 if "%2" == "" (
 	set make=mingw32-make
+    set gen="CodeBlocks - MinGW Makefiles"
 ) else (
 	set make=%2
+    set gen=Ninja
 )
 
 if "%3" == "" (
@@ -32,7 +34,7 @@ if "%4" == "" (
 
 echo on
 
-cmake %kstdir% -G"CodeBlocks - MinGW Makefiles" -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
+cmake %kstdir% -G%gen% -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
 
 %make%
 
