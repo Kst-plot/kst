@@ -295,7 +295,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   _actualField = field;
   updateFieldMessage(tr("Reading field: "));
 
-  Debug::trace(QString("AsciiSource::readField() %1  s=%2  n=%3").arg(field.leftJustified(15)).arg(QString("%1").arg(s, 10)).arg(n));
+//  Debug::trace(QString("AsciiSource::readField() %1  s=%2  n=%3").arg(field.leftJustified(15)).arg(QString("%1").arg(s, 10)).arg(n));
 
   int read = tryReadField(v, field, s, n);
 
