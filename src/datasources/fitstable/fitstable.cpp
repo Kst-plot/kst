@@ -304,7 +304,8 @@ int FitsTableSource::validField(int typecode){
    int tmp;
 
    switch(typecode){
-      case TLONG:
+      case TINT:
+      case TLONG: /* also covers TINT32BIT */
       case TFLOAT:
       case TDOUBLE:
       case TLOGICAL:
@@ -380,24 +381,53 @@ bool FitsTableSource::init() {
    _maxFrameCount = 0;
 
    /* get total number of HDUs */
-   if (fits_get_num_hdus(_fptr, &numHDU, &status))
+   if (fits_get_num_hdus(_fptr, &numHDU, &status)){
       fits_report_error(stderr,status);
+      _fptr = 0L;
+      _valid = false;
+      return false;
+   } /* can't read number of HDUs, so quit */
 
    nrow = 0;
    for (i=1; i<= numHDU; i++){ /* loop over all HDUs */
-      if (fits_movabs_hdu(_fptr, i, &hdutype, &status))
+      if (fits_movabs_hdu(_fptr, i, &hdutype, &status)){
          fits_report_error(stderr,status);
+         status = 0;
+         continue;
+      } /* failed moving to an HDU, so try to skip and go to next one */
       /* read header to assign string and scalar values.  For now only
          read USER_KEYs.  May want to add UNIT_KEYs eventually, to get the
          units for every vector */
-      if(fits_get_hdrspace(_fptr, &nkeys, NULL, &status)) /* total # of keys */
+      if(fits_get_hdrspace(_fptr, &nkeys, NULL, &status)){ /* total # of keys */
          fits_report_error(stderr,status);
+         status = 0;
+         continue;
+      }
       for (j=1; j<= nkeys; j++){ /* loop over keys */
-         if(fits_read_record(_fptr, j, fitsrecord, &status))
+         if(fits_read_record(_fptr, j, fitsrecord, &status)){
+            fprintf(stderr,"Failed to read record number %ld\n",j);
             fits_report_error(stderr,status);
-         fits_get_keyname(fitsrecord, keyname, &keylength, &status);
-         fits_parse_value(fitsrecord, keyvalue, keycomment, &status);
-         fits_get_keytype(keyvalue, &keytype, &status);
+            status = 0;
+            continue;
+         } /* failed to read a record, so skip and continue */
+         if (fits_get_keyname(fitsrecord, keyname, &keylength, &status)){
+            fprintf(stderr,"Failed to read keyword from record = %s\n",fitsrecord);
+            fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read keyword name, so skip and continue */
+         if (fits_parse_value(fitsrecord, keyvalue, keycomment, &status)){
+            fprintf(stderr,"Failed to read value and comment from key = %s\n",keyname);
+            fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read keyword value or comment, so skip and continue */
+         if (fits_get_keytype(keyvalue, &keytype, &status)){
+            fprintf(stderr,"Failed to read type (string, int, float) for key = %s, value = %s\n",keyname,keyvalue);
+            fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read keytype, so skip and continue */
          keyclass = fits_get_keyclass(fitsrecord);
          if (keyclass == TYP_USER_KEY){
             if (keytype == 'C' || keytype == 'L'){ /* string or logical */
@@ -410,19 +440,36 @@ bool FitsTableSource::init() {
 
       /* check if table HDU, and skip if not */
       if (hdutype == ASCII_TBL || hdutype == BINARY_TBL){
-         if(fits_get_num_cols(_fptr, &ncol, &status)) /* read # of columns */
+         if(fits_get_num_cols(_fptr, &ncol, &status)){ /* read # of columns */
+            fprintf(stderr,"Failed to read # of columns in HDU = %ld\n",i);
             fits_report_error(stderr,status);
-         if(fits_get_num_rows(_fptr, &nrow, &status)) /* read # of rows */
+            status = 0;
+            continue;
+         } /* failed to read number of columns, so skip and continue */
+         if(fits_get_num_rows(_fptr, &nrow, &status)){ /* read # of rows */
+            fprintf(stderr,"Failed to read # of rows in HDU = %ld\n",i);
             fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read number of rows, so skip and continue */
          tableRow << nrow;
          tableHDU << i;
       } else
          continue; /* skip non-table HDUs for reading table columns */
-
       for (j=1; j<= ncol; j++){
          sprintf(coltemplate,"%ld",j);
-         fits_get_colname(_fptr, CASEINSEN, coltemplate, colname, &colnum, &status);
-         fits_get_coltype(_fptr, colnum, &typecode,&repeat,&width, &status);
+         if(fits_get_colname(_fptr, CASEINSEN, coltemplate, colname, &colnum, &status)){
+            fprintf(stderr,"Failed to read column name for column = %ld\n",j);
+            fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read column name, so skip and continue */
+         if(fits_get_coltype(_fptr, colnum, &typecode,&repeat,&width, &status)){
+            fprintf(stderr,"Failed to read column type for column = %s\n",colname);
+            fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         } /* failed to read column type, so skip and continue */
          if (validField(typecode)){
             if (repeat == 1){ /* not an array of values */
                idx = _fieldList.indexOf(QString(colname));
@@ -440,11 +487,18 @@ bool FitsTableSource::init() {
                /* TODO: should these be matrices instead (or perhaps as well?)
                   I don't understand how matrices should work with KST */
                if(fits_read_tdim(_fptr,colnum,maxdim, &naxis, naxes, &status)){
+                  fprintf(stderr,"Failed to read dimensions of column = %s\n",colname);
                   fits_report_error(stderr,status);
+                  status = 0;
                   continue;
                }
                for (k=0; k < repeat; k++){
-                  tmp.sprintf("%s_%02ld_%02ld",colname,k/naxes[0]+1,k%naxes[0]+1);
+                  if (naxis == 1)
+                     tmp.sprintf("%s_%02ld",colname,k%naxes[0]+1);
+                  else if (naxis == 2)
+                     tmp.sprintf("%s_%02ld_%02ld",colname,k/naxes[0]+1,k%naxes[0]+1);
+                  else /* 3-D arrays not supported right now */
+                     break;
                   idx = _fieldList.indexOf(tmp);
                   if (idx == -1){ /* not present already */
                      _fieldList << tmp;
@@ -458,7 +512,8 @@ bool FitsTableSource::init() {
                      _maxFrameCount = _frameCounts[QString(colname)];
                }
             }
-         } /* end if(validField) */
+         } else /* end if(validField) */
+            fprintf(stderr,"Skipping unsupported type for column = %s\n",colname);
       } /* end loop over columns */
    } /* end loop over HDUs */
 
@@ -536,8 +591,10 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
 
    maxrow = 100000/repeat; /* cap on max rows to read at once */
    nelements = maxrow * repeat;
-   if (typecode == TLONG || typecode == TINT32BIT)
+   if (typecode == TINT)
       data = (int *) malloc(nelements*sizeof(int));
+   else if (typecode == TLONG || typecode == TINT32BIT)
+      data = (long *) malloc(nelements*sizeof(long));
    else if (typecode == TFLOAT)
       data = (float *) malloc(nelements*sizeof(float));
    else if (typecode == TDOUBLE)
@@ -547,8 +604,11 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
 
    totalidx = 0;
    for (i=0; i < tableHDU.size(); i++){
-      if (fits_movabs_hdu(_fptr, tableHDU[i], &hdutype, &status))
+      if (fits_movabs_hdu(_fptr, tableHDU[i], &hdutype, &status)){
          fits_report_error(stderr,status);
+         status = 0;
+         continue;
+      } /* failed moving to an HDU, so try to skip and go to next one */
       if(fits_get_colnum(_fptr, CASEINSEN, colname, &colnum, &status)){
          status = 0; /* column not found in this HDU, so skip. */
          continue;
@@ -564,30 +624,68 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
          if (j == (idx - 1)) /* last iteration */
             nelements = tableRow[i]*repeat - j*nelements;
          nrow = nelements/repeat;
-         if (typecode == TLONG || typecode == TINT32BIT){
+         if (typecode == TINT){
             if (fits_read_col(_fptr, typecode, colnum, currow +s, 1,
-               nelements, NULL, &(((int *)data)[0]), &anynul, &status))
+               nelements, NULL, &(((int *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
-            for (k=0; k < nrow; k++)
-               v[totalidx+k] = (double) ((int *)data)[k*repeat+offset];
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++){
+                  v[totalidx+k] = (double) ((int *)data)[k*repeat+offset];
+               }
+            }
+         } else if (typecode == TLONG || typecode == TINT32BIT){
+            if (fits_read_col(_fptr, typecode, colnum, currow +s, 1,
+               nelements, NULL, &(((long *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
+               fits_report_error(stderr,status);
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++){
+                  v[totalidx+k] = (double) ((long *)data)[k*repeat+offset];
+               }
+            }
          }else if (typecode == TFLOAT){
             if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((float *)data)[0]), &anynul, &status))
+               nelements, NULL, &(((float *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
-            for (k=0; k < nrow; k++)
-               v[totalidx+k] = (double) ((float *)data)[k*repeat+offset];
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = (double) ((float *)data)[k*repeat+offset];
+            }
          }else if (typecode == TDOUBLE){
             if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((double *)data)[0]), &anynul, &status))
+               nelements, NULL, &(((double *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
-            for (k=0; k < nrow; k++)
-               v[totalidx+k] = (double) ((double *)data)[k*repeat+offset];
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = (double) ((double *)data)[k*repeat+offset];
+            }
          }else if (typecode == TLOGICAL){
             if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((bool *)data)[0]), &anynul, &status))
+               nelements, NULL, &(((bool *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
-            for (k=0; k < nrow; k++)
-               v[totalidx+k] = (double) ((bool *)data)[k*repeat+offset];
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = (double) ((bool *)data)[k*repeat+offset];
+            }
          }
          totalidx += nrow;
          currow += nrow;
@@ -834,17 +932,24 @@ int FitsTableSourcePlugin::understands(QSettings *cfg, const QString& filename) 
       return 0;
    }
    for(i=1; i<= numHDU; i++){
-      if (fits_movabs_hdu(ff, i, &hdutype, &status))
+      if (fits_movabs_hdu(ff, i, &hdutype, &status)){
          fits_report_error(stderr,status);
+         status = 0;
+         continue;
+      }
       if (hdutype == ASCII_TBL || hdutype == BINARY_TBL){
-         if(fits_get_num_rows(ff, &nrow, &status))
+         if(fits_get_num_rows(ff, &nrow, &status)){
             fits_report_error(stderr,status);
+            status = 0;
+            continue;
+         }
          if (nrow > 0){
             ret_val = 80;
             break;
          }
       }
    }
+   status = 0;
    fits_close_file(ff,&status);
    return ret_val;
 }
