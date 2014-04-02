@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class VectorDataSI : public ScriptInterface
+class KSTCORE_EXPORT VectorDataSI : public ScriptInterface
 {
     Q_OBJECT
     DataVectorPtr vector;
@@ -34,7 +34,7 @@ public:
     static ScriptInterface* newVector(ObjectStore *store);
 };
 
-class VectorGenSI : public ScriptInterface
+class KSTCORE_EXPORT VectorGenSI : public ScriptInterface
 {
     Q_OBJECT
     GeneratedVectorPtr vector;

@@ -20,7 +20,7 @@
 
 namespace Kst {
 
-class MatrixDataSI : public ScriptInterface
+class KSTCORE_EXPORT MatrixDataSI : public ScriptInterface
 {
     Q_OBJECT
     DataMatrixPtr matrix;

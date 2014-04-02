@@ -20,7 +20,7 @@
 
 namespace Kst {
 
-class StringGenSI : public ScriptInterface
+class KSTCORE_EXPORT StringGenSI : public ScriptInterface
 {
     Q_OBJECT
     StringPtr str;
@@ -34,7 +34,7 @@ public:
 
 };
 
-class StringDataSI : public ScriptInterface
+class KSTCORE_EXPORT StringDataSI : public ScriptInterface
 {
     Q_OBJECT
     DataStringPtr str;

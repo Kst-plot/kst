@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-class ScalarGenSI : public ScriptInterface
+class KSTCORE_EXPORT ScalarGenSI : public ScriptInterface
 {
     Q_OBJECT
     ScalarPtr scalar;
@@ -36,7 +36,7 @@ public:
 };
 
 
-class ScalarDataSI : public ScriptInterface
+class KSTCORE_EXPORT ScalarDataSI : public ScriptInterface
 {
     Q_OBJECT
     DataScalarPtr scalar;
@@ -51,7 +51,7 @@ public:
 };
 
 
-class ScalarVectorSI : public ScriptInterface
+class KSTCORE_EXPORT ScalarVectorSI : public ScriptInterface
 {
     Q_OBJECT
     VScalarPtr scalar;

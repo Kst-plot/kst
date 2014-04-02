@@ -21,6 +21,9 @@
 #include <QString>
 #include <QList>
 #include <QObject>
+
+#include "kst_export.h"
+
 typedef QList<QByteArray> QByteArrayList;
 
 namespace Kst {
@@ -30,7 +33,7 @@ class NamedObject;
 /** A script interface represents an object exposed through the scripting interface.
   * (ex., dialog, primitive, etc.)
   */
-class ScriptInterface : public QObject
+class KSTCORE_EXPORT ScriptInterface : public QObject
 {
     Q_OBJECT
 public:
