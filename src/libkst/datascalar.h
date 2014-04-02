@@ -77,6 +77,8 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive
     virtual void reset();
     void reload();
 
+    virtual ScriptInterface* createScriptInterface();
+
   private:
     /** make a copy of the DataScalar */
     virtual PrimitivePtr makeDuplicate() const;

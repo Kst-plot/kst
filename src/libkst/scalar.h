@@ -66,6 +66,7 @@ class KSTCORE_EXPORT Scalar : public Primitive
 
     virtual ObjectList<Primitive> outputPrimitives() const { return ObjectList<Primitive>(); }
     virtual PrimitiveMap metas() const { return PrimitiveMap(); }
+    virtual ScriptInterface* createScriptInterface();
 
   public slots:
     double value() const;

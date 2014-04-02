@@ -22,6 +22,7 @@
 #include "formatgridhelper.h"
 #include "dialogdefaults.h"
 #include "cartesianrenderitem.h"
+#include "viewitemscriptinterface.h"
 
 #include "layoutboxitem.h"
 
@@ -82,7 +83,8 @@ ViewItem::ViewItem(View *parentView) :
     _allowedGrips(TopLeftGrip | TopRightGrip | BottomRightGrip | BottomLeftGrip |
                 TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _lockPosToData(false),
-    _editDialog(0)
+    _editDialog(0),
+    _interface(0)
 {
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
@@ -2361,6 +2363,17 @@ QString ViewItem::descriptionTip() const {
   return typeName();
 }
 
+ScriptInterface* ViewItem::createScriptInterface() {
+  return new ViewItemSI(this);
+}
+
+ScriptInterface* ViewItem::scriptInterface() {
+  if (!_interface) {
+    _interface = createScriptInterface();
+  }
+  return _interface;
+}
+
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug dbg, ViewItem *viewItem) {
     dbg.nospace() << viewItem->typeName();
@@ -2378,6 +2391,7 @@ ViewItemCommand::ViewItemCommand(ViewItem *item, const QString &text, bool addTo
 
 ViewItemCommand::~ViewItemCommand() {
 }
+
 
 
 CreateCommand::CreateCommand(const QString &text, QUndoCommand *parent)

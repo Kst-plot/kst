@@ -10,40 +10,60 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ARROWSCRIPTINTERFACE_H
-#define ARROWSCRIPTINTERFACE_H
+#ifndef SCALARSCRIPTINTERFACE_H
+#define SCALARSCRIPTINTERFACE_H
 
-#include <QByteArray>
 #include <QString>
-#include <QList>
-#include <QObject>
 
-#include "viewitemscriptinterface.h"
-#include "arrowitem.h"
+#include "scriptinterface.h"
+#include "datascalar.h"
+#include "vscalar.h"
 
 namespace Kst {
 
-struct ArrowTabSI;
-
-class ArrowSI : public ScriptInterface
+class ScalarGenSI : public ScriptInterface
 {
     Q_OBJECT
-  public:
-    explicit ArrowSI(ArrowItem* it);
+    ScalarPtr scalar;
+public:
+    explicit ScalarGenSI(ScalarPtr it);
     QString doCommand(QString);
     bool isValid();
-    QByteArray endEditUpdate() {if (_dim->item) _dim->item->update();return ("Finished editing "+_dim->item->Name()).toLatin1();}
+    QByteArray endEditUpdate();
 
-    static ScriptInterface* newArrow();
+    static ScriptInterface* newScalar(ObjectStore *store);
 
-  private:
-    DimensionTabSI *_dim;
-    FillTabSI *_fill;
-    StrokeTabSI *_stroke;
-    ArrowTabSI *_arrow;
 };
 
 
-}
+class ScalarDataSI : public ScriptInterface
+{
+    Q_OBJECT
+    DataScalarPtr scalar;
+public:
+    explicit ScalarDataSI(DataScalarPtr it);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
 
-#endif // ARROWSCRIPTINTERFACE_H
+    static ScriptInterface* newScalar(ObjectStore *store);
+
+};
+
+
+class ScalarVectorSI : public ScriptInterface
+{
+    Q_OBJECT
+    VScalarPtr scalar;
+public:
+    explicit ScalarVectorSI(VScalarPtr it);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newScalar(ObjectStore *store);
+
+};
+
+}
+#endif // SCALARSCRIPTINTERFACE_H

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "generatedvector.h"
+#include "vectorscriptinterface.h"
 
 #include <QDebug>
 #include <QXmlStreamWriter>
@@ -34,6 +35,11 @@ GeneratedVector::GeneratedVector(ObjectStore *store)
 
 const QString& GeneratedVector::typeString() const {
   return staticTypeString;
+}
+
+
+ScriptInterface* GeneratedVector::createScriptInterface() {
+  return new VectorGenSI(this);
 }
 
 

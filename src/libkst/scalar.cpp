@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "scalar.h"
+#include "scalarscriptinterface.h"
 
 #include <QDebug>
 #include <QTextDocument>
@@ -50,6 +51,10 @@ Scalar::~Scalar() {
 
 const QString& Scalar::typeString() const {
   return staticTypeString;
+}
+
+ScriptInterface* Scalar::createScriptInterface() {
+  return new ScalarGenSI(this);
 }
 
 

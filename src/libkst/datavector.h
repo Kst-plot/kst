@@ -139,6 +139,8 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     /** does the vector represent time? */
     virtual bool isTime() const;
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
     DataVector(ObjectStore *store);
     virtual ~DataVector();

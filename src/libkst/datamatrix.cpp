@@ -25,6 +25,7 @@
 #include "datacollection.h"
 #include "debug.h"
 #include "objectstore.h"
+#include "matrixscriptinterface.h"
 
 
 // xStart, yStart < 0             count from end
@@ -83,6 +84,10 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
 }
 
 DataMatrix::~DataMatrix() {
+}
+
+ScriptInterface* DataMatrix::createScriptInterface() {
+  return new MatrixDataSI(this);
 }
 
 
@@ -677,7 +682,11 @@ QString DataMatrix::descriptionTip() const {
 }
 
 QString DataMatrix::propertyString() const {
-  return tr("%1 of %2", "field %1 from file %2").arg(field()).arg(dataSource()->fileName());
+  if (dataSource().isPtrValid()) {
+    return tr("%1 of %2", "field %1 from file %2").arg(field()).arg(dataSource()->fileName());
+  } else {
+    return QString();
+  }
 }
 
 

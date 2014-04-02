@@ -34,11 +34,9 @@ class PlotSI : public ScriptInterface
     Q_OBJECT
 public:
     explicit PlotSI(PlotItem* it);
-    QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
-    QByteArray getHandle();
-    void endEditUpdate() {if (_item) _item->update();}
+    QByteArray endEditUpdate() {if (_item) _item->update();return ("Finished editing "+_item->Name()).toLatin1();}
 
     static ScriptInterface* newPlot();
 

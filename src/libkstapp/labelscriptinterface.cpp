@@ -63,27 +63,24 @@ LabelSI::LabelSI(LabelItem *it) : layout(new LayoutTabSI), dim(new DimensionTabS
     lab->item=it;
 }
 
-QByteArrayList LabelSI::commands() {
-    return layout->commands()<<dim->commands()<<lab->commands();
-}
-
 QString LabelSI::doCommand(QString x) {
-    QString v=layout->doCommand(x);
-    if(v.isEmpty()) {
-        v=dim->doCommand(x);
-    }
-    if(v.isEmpty()) {
-        v=lab->doCommand(x);
-    }
-    return v.isEmpty()?"No command":v;
+
+  QString v=doNamedObjectCommand(x, dim->item);
+
+  if (v.isEmpty()) {
+    v=layout->doCommand(x);
+  }
+  if (v.isEmpty()) {
+    v=dim->doCommand(x);
+  }
+  if (v.isEmpty()) {
+    v=lab->doCommand(x);
+  }
+  return v.isEmpty()?"No command":v;
 }
 
 bool LabelSI::isValid() {
     return dim->item;
-}
-
-QByteArray LabelSI::getHandle() {
-    return ("Finished editing "%dim->item->Name()).toLatin1();
 }
 
 ScriptInterface* LabelSI::newLabel() {

@@ -25,6 +25,8 @@
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "vscalar.h"
+#include "scalarscriptinterface.h"
 
 namespace Kst {
 
@@ -56,6 +58,9 @@ const QString& VScalar::typeString() const {
   return staticTypeString;
 }
 
+ScriptInterface* VScalar::createScriptInterface() {
+  return new ScalarVectorSI(this);
+}
 
 void VScalar::change(DataSourcePtr in_file, const QString &in_field, int in_f0) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);

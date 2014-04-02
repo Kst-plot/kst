@@ -18,6 +18,8 @@
 
 #include "math_kst.h"
 
+#include "arrowscriptinterface.h"
+
 #include <debug.h>
 
 #include <QDebug>
@@ -45,6 +47,10 @@ ArrowItem::ArrowItem(View *parent)
 
 
 ArrowItem::~ArrowItem() {
+}
+
+ScriptInterface* ArrowItem::createScriptInterface() {
+  return new ArrowSI(this);
 }
 
 

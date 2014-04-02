@@ -23,6 +23,7 @@
 
 #include "debug.h"
 #include "objectstore.h"
+#include "scalarscriptinterface.h"
 
 namespace Kst {
 
@@ -55,6 +56,10 @@ QString DataScalar::_automaticDescriptiveName() const {
 
 const QString& DataScalar::typeString() const {
   return staticTypeString;
+}
+
+ScriptInterface* DataScalar::createScriptInterface() {
+  return new ScalarDataSI(this);
 }
 
 

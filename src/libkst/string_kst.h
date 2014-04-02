@@ -24,6 +24,8 @@ class QXmlStreamWriter;
 
 namespace Kst {
 
+class ScriptInterface;
+
 class KSTCORE_EXPORT String : public Primitive
 {
   Q_OBJECT
@@ -37,6 +39,8 @@ class KSTCORE_EXPORT String : public Primitive
     virtual QString descriptionTip() const;
     virtual QString sizeString() const;
     virtual QString propertyString() const;
+
+    virtual ScriptInterface* createScriptInterface();
 
   protected:
     String(ObjectStore *store);

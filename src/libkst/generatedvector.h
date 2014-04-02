@@ -42,6 +42,8 @@ class KSTCORE_EXPORT GeneratedVector : public Vector {
     virtual QString descriptionTip() const;
     virtual QString propertyString() const;
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
     GeneratedVector(ObjectStore *store);
 

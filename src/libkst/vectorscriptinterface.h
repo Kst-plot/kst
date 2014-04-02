@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2012 C. Barth Netterfield                             *
+ *   copyright : (C) 2014 Barth Netterfield                                *
  *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -10,33 +10,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QByteArray>
+#ifndef VECTORSCRIPTINTERFACE_H
+#define VECTORSCRIPTINTERFACE_H
+
 #include <QString>
-#include <QSizeF>
-#include <QList>
 
 #include "scriptinterface.h"
-#include "basicplugin.h"
-#include "objectstore.h"
-
-#ifndef PLUGINSCRIPTINTERFACE_H
-#define PLUGINSCRIPTINTERFACE_H
+#include "datavector.h"
+#include "generatedvector.h"
 
 namespace Kst {
 
-class PluginSI : public ScriptInterface
-{    
+class VectorDataSI : public ScriptInterface
+{
     Q_OBJECT
+    DataVectorPtr vector;
 public:
-    PluginSI(BasicPluginPtr plugin, ObjectStore *store);
+    explicit VectorDataSI(DataVectorPtr it);
     QString doCommand(QString);
     bool isValid();
     QByteArray endEditUpdate();
-  private:
-    BasicPluginPtr _plugin;
-    ObjectStore *_store;
+
+    static ScriptInterface* newVector(ObjectStore *store);
 };
 
+class VectorGenSI : public ScriptInterface
+{
+    Q_OBJECT
+    GeneratedVectorPtr vector;
+public:
+    explicit VectorGenSI(GeneratedVectorPtr it);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newVector(ObjectStore *store);
+};
 
 }
-#endif // PLUGINSCRIPTINTERFACE_H
+#endif // VECTORSCRIPTINTERFACE_H

@@ -26,20 +26,11 @@ PluginSI::PluginSI(BasicPluginPtr plugin, ObjectStore *store) {
   }
 }
 
-QByteArrayList PluginSI::commands() {
-
-  QByteArrayList ba;
-  ba<< "setInputVector()" << "setInputScalar()" << "setInputMatrix()" <<
-      "inputVector()" << "inputScalar()" << "inputMatrix()";
-
-  return ba;
-}
-
 bool PluginSI::isValid() {
   return _plugin;
 }
 
-QByteArray PluginSI::getHandle() {
+QByteArray PluginSI::endEditUpdate() {
   if (_plugin) {
     return ("Finished editing "%_plugin->Name()).toLatin1();
   } else {

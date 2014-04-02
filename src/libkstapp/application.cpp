@@ -24,7 +24,7 @@
 #include "datasource.h"
 #include "dialogdefaults.h"
 #include "datasourcepluginmanager.h"
-#include "dialogscriptinterface.h"
+//#include "dialogscriptinterface.h"
 #include "settings.h"
 
 #include <QIcon>
@@ -55,7 +55,7 @@ Application::Application(int &argc, char **argv)
   DialogLauncher::replaceSelf(new DialogLauncherGui);
 
   //Also give us dialog-script scripting functionality
-  DialogLauncherSI::self = new DialogLauncherSI;
+  //DialogLauncherSI::self = new DialogLauncherSI;
 
   //_mainWindow->show();
   //_mainWindow->hide();

@@ -11,12 +11,15 @@
  ***************************************************************************/
 
 #include "scriptserver.h"
-#include "dialogscriptinterface.h"
 #include "labelscriptinterface.h"
-#include "stringscriptinterface.h"
 #include "viewitemscriptinterface.h"
 #include "arrowscriptinterface.h"
 #include "plotscriptinterface.h"
+
+#include "stringscriptinterface.h"
+#include "scalarscriptinterface.h"
+#include "vectorscriptinterface.h"
+#include "matrixscriptinterface.h"
 
 #include "sessionmodel.h"
 #include "updateserver.h"
@@ -40,7 +43,7 @@
 
 #include "curve.h"
 #include "equation.h"
-#include "vector.h"
+#include "editablevector.h"
 #include "matrix.h"
 #include "histogram.h"
 #include "psd.h"
@@ -60,8 +63,7 @@
 
 namespace Kst {
 
-ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), _store(obj),_interface(0), _if(0),
-    _curMac(0) {
+ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), _store(obj),_interface(0) {
 
     QString initial="kstScript";
     QStringList args= qApp->arguments();
@@ -87,50 +89,52 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     }
     connect(_server,SIGNAL(newConnection()),this,SLOT(procConnection()));
 
-    //setup _map={QByteArray->ScriptMemberFn}
     _fnMap.insert("getVectorList()",&ScriptServer::getVectorList);
-    _fnMap.insert("newVector()",&ScriptServer::newVector);
+    _fnMap.insert("newDataVector()",&ScriptServer::newDataVector);
+    _fnMap.insert("newGeneratedVector()",&ScriptServer::newGeneratedVector);
 
     _fnMap.insert("getEditableVectorList()",&ScriptServer::getEditableVectorList);
     _fnMap.insert("newEditableVectorAndGetHandle()",&ScriptServer::newEditableVectorAndGetHandle);
 
-    _fnMap.insert("getScalarList()",&ScriptServer::getScalarList);
-    _fnMap.insert("newScalar()",&ScriptServer::newScalar);
-
     _fnMap.insert("getMatrixList()",&ScriptServer::getMatrixList);
-    _fnMap.insert("newMatrix()",&ScriptServer::newMatrix);
+    _fnMap.insert("newDataMatrix()",&ScriptServer::newDataMatrix);
 
     _fnMap.insert("getEditableMatrixList()",&ScriptServer::getEditableMatrixList);
     _fnMap.insert("newEditableMatrixAndGetHandle()",&ScriptServer::newEditableMatrixAndGetHandle);
 
+    _fnMap.insert("getScalarList()",&ScriptServer::getScalarList);
+    _fnMap.insert("newGeneratedScalar()",&ScriptServer::newGeneratedScalar);
+    _fnMap.insert("newDataScalar()",&ScriptServer::newDataScalar);
+    _fnMap.insert("newVectorScalar()",&ScriptServer::newVScalar);
+
     _fnMap.insert("getStringList()",&ScriptServer::getStringList);
-    _fnMap.insert("newString()",&ScriptServer::newString);
-    _fnMap.insert("newStringGen()",&ScriptServer::newStringGen);
+    _fnMap.insert("newGeneratedString()",&ScriptServer::newGeneratedString);
+    _fnMap.insert("newDataString()",&ScriptServer::newDataString);
 
     _fnMap.insert("getCurveList()",&ScriptServer::getCurveList);
-    _fnMap.insert("newCurve()",&ScriptServer::newCurve);
+//    _fnMap.insert("newCurve()",&ScriptServer::newCurve);
 
     _fnMap.insert("getEquationList()",&ScriptServer::getEquationList);
-    _fnMap.insert("newEquation()",&ScriptServer::newEquation);
+//    _fnMap.insert("newEquation()",&ScriptServer::newEquation);
 
     _fnMap.insert("getHistogramList()",&ScriptServer::getHistogramList);
-    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
+//    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
 
     _fnMap.insert("getPSDList()",&ScriptServer::getPSDList);
-    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
+//    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
 
     _fnMap.insert("getPluginList()", &ScriptServer::getPluginList);
-    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
+//    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
 
     _fnMap.insert("getImageList()",&ScriptServer::getImageList);
-    _fnMap.insert("newImage()",&ScriptServer::newImage);
+//    _fnMap.insert("newImage()",&ScriptServer::newImage);
 
     _fnMap.insert("getCSDList()",&ScriptServer::getCSDList);
-    _fnMap.insert("newCSD()",&ScriptServer::newCSD);
+//    _fnMap.insert("newCSD()",&ScriptServer::newCSD);
 
     _fnMap.insert("getBasicPluginList()",&ScriptServer::getBasicPluginList);
     _fnMap.insert("getBasicPluginTypeList()",&ScriptServer::getBasicPluginTypeList);
-    _fnMap.insert("newBasicPlugin()",&ScriptServer::newBasicPlugin);
+//    _fnMap.insert("newBasicPlugin()",&ScriptServer::newBasicPlugin);
 
     _fnMap.insert("getArrowList()",&ScriptServer::getArrowList);
     _fnMap.insert("newArrow()",&ScriptServer::newArrow);
@@ -162,9 +166,6 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getPlotList()",&ScriptServer::getPlotList);
     _fnMap.insert("newPlot()",&ScriptServer::newPlot);
 
-    //_fnMap.insert("getSharedAxisBoxList()",&ScriptServer::getSharedAxisBoxList);
-    //_fnMap.insert("newSharedAxisBox()",&ScriptServer::newSharedAxisBox);
-
 #ifndef KST_NO_SVG
     _fnMap.insert("getSvgItemList()",&ScriptServer::getSvgItemList);
     _fnMap.insert("newSvgItem()",&ScriptServer::newSvgItem);
@@ -188,13 +189,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("setPaused()",&ScriptServer::setPaused);
     _fnMap.insert("unsetPaused()",&ScriptServer::unsetPaused);
 
-    _fnMap.insert("newMacro()",&ScriptServer::newMacro);
-    _fnMap.insert("newMacro_()",&ScriptServer::newMacro_);
-    _fnMap.insert("delMacro()",&ScriptServer::delMacro);
-    _fnMap.insert("endMacro()",&ScriptServer::endMacro);
 
-    _fnMap.insert("if()",&ScriptServer::kstScriptIf);
-    _fnMap.insert("fi()",&ScriptServer::kstScriptFi);
+#if 0
 
     _fnMap.insert("EditableVector::setBinaryArray()",&ScriptServer::editableVectorSetBinaryArray);
     _fnMap.insert("EditableMatrix::setBinaryArray()",&ScriptServer::editableMatrixSetBinaryArray);
@@ -205,73 +201,19 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("String::setValue()",&ScriptServer::stringSetValue);
     _fnMap.insert("Scalar::value()",&ScriptServer::scalarValue);
     _fnMap.insert("Scalar::setValue()",&ScriptServer::scalarSetValue);
+#endif
 
-    _fnMap.insert("commands()",&ScriptServer::commands);
-
-    QFile scriptMacros(":/script/kstScript.txt");
-    if(!scriptMacros.open(QFile::ReadOnly|QIODevice::Text)) {
-        qDebug()<<"Could not open script macros.";
-    }
-    QList<QByteArray> x = scriptMacros.read(3000000).split('\n');
-    for(int i=0;i<x.size();i++) {
-        if(!x[i].contains("command")) {
-            exec(x[i],0);
-        }
-    }
 }
 
 ScriptServer::~ScriptServer()
 {
     delete _server;
-    delete _if;
-    delete _curMac;
     delete _interface;
-
-    while(_macroMap.size()) {
-        delete _macroMap.take(_macroMap.keys().first());
-    }
-
-    while(_varMap.size()) {
-        delete _varMap.take(_varMap.keys().first());
-    }
 }
 
 /** Conv. function which takes a response, and executes if 'if' statement is unexistant or true. */
-QByteArray handleResponse(const QByteArray& response, QLocalSocket* s, const int& ifMode, const QByteArray& ifString,
-                          IfSI*& ifStat,VarSI* var)
+QByteArray handleResponse(const QByteArray& response, QLocalSocket* s)
 {
-    if(ifMode) {
-        bool isTrue=0;
-        switch(ifMode) {
-        case 1:
-            isTrue=response==ifString;
-            break;
-        case 2:
-            isTrue=response!=ifString;
-            break;
-        case 3:
-            isTrue=response.contains(ifString);
-            break;
-        case 4:
-            isTrue=!response.contains(ifString);
-            break;
-        case 5:
-            Q_ASSERT(var);
-            var->val=response;
-            break;
-        default:
-            qFatal("Shouldn't be able to get here.");
-        }
-
-        if(ifMode<5) {  //ifMode==5 is a hack (== check value of variable)
-            if(!ifStat||ifStat->on) {
-                ifStat=new IfSI(ifStat,isTrue);
-            } else if(!ifStat->on) {
-                ++ifStat->recurse;
-            }
-        }
-    }
-
     if(s) {
         if(response.isEmpty()) {
             s->write(" ");
@@ -284,54 +226,9 @@ QByteArray handleResponse(const QByteArray& response, QLocalSocket* s, const int
     return response.isEmpty()?" ":response;
 }
 
-/** Provides alternative syntax of ifStat. */
-QByteArray handleResponse(const QByteArray& response, QLocalSocket* s, const int& ifMode, const QByteArray& ifString,
-                          IfSI** ifStat,VarSI* var)
-{
-    return handleResponse(response,s,ifMode,ifString,*ifStat,var);
-}
-
-/** Runs a macro */
-QByteArray ScriptServer::procMacro(QByteArray&command,QLocalSocket*s)
-{
-    //macro
-    QByteArray strx=command;
-    strx.remove(0,1);   //'#'
-    strx.remove(strx.indexOf("("),99999);
-    MacroSI* msi=_macroMap.value(strx,0);
-    if(!msi) {
-        return handleResponse("No such macro.",s,0,"",_if,0);
-    }
-    command.remove(0,command.indexOf("(")+1);
-    command.remove(command.lastIndexOf(")"),9999999);
-    QByteArrayList vars=command.split(',');
-    while(command.isEmpty()&&vars.size()) {
-        vars.removeFirst();
-    }
-    if(vars.size()!=msi->args.size()) {
-        return handleResponse("Invalid arg count.",s,0,"",_if,0);
-    }
-    for(int i=0;i<msi->args.size();i++) {
-        VarSI*x=_varMap.value(msi->args[i],0);
-        if(!x) {
-            x=new VarSI(msi->args[i],"");
-            _varMap.insert(msi->args[i],x);
-        }
-        x->val=vars.at(i);
-    }
-    QByteArray ret;
-    for(int j=0;j<msi->commands.size();j++) {
-        if(msi->commands[j].startsWith("command")) {
-            continue;
-        }
-        ret=exec(msi->commands[j],0);
-    }
-    return handleResponse(ret,s,0,"",_if,0);
-}
-
 /** @sa outputViewItemList() */
 template<class T> QByteArray outputObjectList(
-    QLocalSocket* s,ObjectStore*_store,const int&ifMode,const QByteArray&ifString,IfSI*& ifStat,VarSI*var) {
+    QLocalSocket* s,ObjectStore*_store) {
 
     ObjectList<T> vl=_store->getObjects<T>();
     QByteArray a;
@@ -343,14 +240,14 @@ template<class T> QByteArray outputObjectList(
         v->unlock();
     }
     if(a.size()) {
-        return handleResponse(a,s,ifMode,ifString,ifStat,var);
+        return handleResponse(a,s);
     } else {
-        return handleResponse("NO_OBJECTS",s,ifMode,ifString,ifStat,var);
+        return handleResponse("NO_OBJECTS",s);
     }
 }
 
 /** @sa outputObjectList() */
-template<class T> QByteArray outputViewItemList(QLocalSocket* s,const int&ifMode,const QByteArray&ifString,IfSI*& ifStat,VarSI*var) {
+template<class T> QByteArray outputViewItemList(QLocalSocket* s) {
     QList<T *> vl=ViewItem::getItems<T>();
     QByteArray a;
     typename QList<T*>::iterator it = vl.begin();
@@ -359,9 +256,9 @@ template<class T> QByteArray outputViewItemList(QLocalSocket* s,const int&ifMode
         a+='['%v->Name()%']';
     }
     if(a.size()) {
-        return handleResponse(a,s,ifMode,ifString,ifStat,var);
+        return handleResponse(a,s);
     } else {
-        return handleResponse("NO_OBJECTS",s,ifMode,ifString,ifStat,var);
+        return handleResponse("NO_OBJECTS",s);
     }
 }
 
@@ -415,74 +312,11 @@ inline QByteArray join(const QByteArrayList&n,const char&r) {
 }
 
 /** The heart of the script server. This function is what performs all the actions. s may be null. */
-QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QByteArray ifEqual)
+QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s)
 {
-    if(command.isEmpty()) {
-        return handleResponse("",s,0,"",_if,0);
-    }
-
-    // MACROS
-    if(command.startsWith('#')) {
-        return procMacro(command,s);
-    }
-
-    if(_curMac&&!_curMacComEcho&&!command.startsWith("endMacro")) {
-        _curMac->commands.push_back(command);
-        return "recorded.";
-    }
-
-    // False ifs.
-    if(_if&&!_if->on)
-    {
-        if(!command.contains("if")&&!command.contains("fi")) {
-            return handleResponse("if is false, ignoring.",s,0,"",0,0);
-        }
-    }
-
-    // Variables
-    VarSI* var=0;
-    if(command.contains('$')&&!command.contains("if(")&&!command.contains("fi()")) {
-        QByteArray varx=command;
-        varx.remove(0,varx.indexOf("$")+1);
-        QByteArray endc=" )=";
-        int lasti=9999999;
-        int lastidx=0;
-        for(int i=0;i<endc.size();i++) {
-            if(varx.indexOf(endc[i])<lasti&&varx.indexOf(endc[i])!=-1) {
-                lasti=varx.indexOf(endc[i]);
-                lastidx=varx.indexOf(endc[i]);
-            }
-        }
-        if(lasti!=9999999) {
-            varx.remove(lastidx,9999);
-        }
-        var=_varMap.value(varx,0);
-        if(!var) {
-            var=new VarSI(varx,"");
-            _varMap.insert(varx,var);
-        }
-
-        QByteArray cx=command;
-        cx.replace("$"%varx,"");
-
-        if(command.contains("=\"")&&!ifMode) {
-            command.remove(0,command.indexOf("=\"")+2);
-            if(!command.contains("\"")) {
-                return handleResponse("Invalid assignment",s,0,"",_if,0);
-            }
-            command.remove(command.lastIndexOf("\""),9999);
-            var->val=command;
-            return handleResponse("Assigned",s,0,"",_if,0);
-        } else if(command.contains("=")&&!ifMode) {
-            command.remove(0,command.indexOf("=")+1);
-            ifMode=5;
-        } else {
-            command.replace("$"%varx,var->val);
-        }
-
-        if(cx.isEmpty()) {
-            return handleResponse(var->val,s,ifMode,ifEqual,_if,var);
-        }
+  //qDebug() << "ScripteServerExec" << command;
+  if(command.isEmpty()) {
+        return handleResponse("",s);
     }
 
     // Map
@@ -491,7 +325,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
     ycommand+="()";
     ScriptMemberFn fn=_fnMap.value(ycommand,&ScriptServer::noSuchFn);
     if(fn!=&ScriptServer::noSuchFn) {
-        return CALL_MEMBER_FN(*this,fn)(command, s,_store,ifMode,ifEqual,_if,var);
+        return CALL_MEMBER_FN(*this,fn)(command, s,_store);
     } else {
         if(command.contains("::")) {
             QByteArray ret=checkPrimatives(command,s);
@@ -499,14 +333,13 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s,int ifMode,QBy
                 return ret;
             }
         }
-
         if(_interface) {
-          _interface->commands();
-            return handleResponse(_interface->doCommand(command).toLatin1(),s,ifMode,ifEqual,_if,var); //magic
+            return handleResponse(_interface->doCommand(command).toLatin1(),s); //magic
         } else {
-            return handleResponse("Unknown command!",s,ifMode,ifEqual,_if,var);
+            return handleResponse("Unknown command!",s);
         }
     }
+
     return "?";
 }
 
@@ -523,15 +356,15 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
         m.push_back(command);
         m<<actc.split(',');
         if(m.size()<2) {
-            return handleResponse("Invalid call to vector",s,0,"",0,0);
+            return handleResponse("Invalid call to vector",s);
         } else {
             QByteArray b=m.takeAt(1);
             ObjectPtr o=_store->retrieveObject(b);
             DataVectorPtr v=kst_cast<DataVector>(o);
             if(v) {
-                return handleResponse(v->scriptInterface(m),s,0,"",0,0);
+                return handleResponse(v->scriptInterface(m),s);
             } else {
-                return handleResponse("No such object",s,0,"",0,0);
+                return handleResponse("No such object",s);
             }
         }
     } else if(command.startsWith("Vector::")) {
@@ -544,15 +377,15 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
         m.push_back(command);
         m<<actc.split(',');
         if(m.size()<2) {
-            return handleResponse("Invalid call to vector",s,0,"",0,0);
+            return handleResponse("Invalid call to vector",s);
         } else {
             QByteArray b=m.takeAt(1);
             ObjectPtr o=_store->retrieveObject(b);
             VectorPtr v=kst_cast<Vector>(o);
             if(v) {
-                return handleResponse(v->scriptInterface(m),s,0,"",0,0);
+                return handleResponse(v->scriptInterface(m),s);
             } else {
-                return handleResponse("No such object",s,0,"",0,0);
+                return handleResponse("No such object",s);
             }
         }
     } else if(command.startsWith("DataObject::")) {
@@ -565,15 +398,15 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
       m.push_back(command);
       m<<actc.split(',');
       if(m.size()<2) {
-          return handleResponse("Invalid call to dataobject",s,0,"",0,0);
+          return handleResponse("Invalid call to dataobject",s);
       } else {
           QByteArray b=m.takeAt(1);
           ObjectPtr o=_store->retrieveObject(b);
           DataObjectPtr x=kst_cast<DataObject>(o);
           if (x) {
-              return handleResponse(x->scriptInterface(m),s,0,"",0,0);
+              return handleResponse(x->scriptInterface(m),s);
           } else {
-              return handleResponse("No such object",s,0,"",0,0);
+              return handleResponse("No such object",s);
           }
       }
   }
@@ -583,238 +416,279 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-QByteArray ScriptServer::getVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Vector>(s,_store,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<Vector>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newVector(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
     else {
         QByteArray vn; _interface = DialogLauncherSI::self->showVectorDialog(vn);
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getEditableVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getEditableVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                               const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<EditableVector>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<EditableVector>(s,_store);
 }
 
-QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
+QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     EditableVectorPtr objectPtr=_store->createObject<EditableVector>();
     objectPtr->writeLock();
     objectPtr->setDescriptiveName("Script Vector");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
     UpdateServer::self()->requestUpdateSignal();
-    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
+    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s);
 }
 
 
-
-QByteArray ScriptServer::getScalarList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Scalar>(s,_store,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::newDataVector(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = VectorDataSI::newVector(_store); return handleResponse("Ok",s);
+    }
 }
 
-QByteArray ScriptServer::newScalar(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else {
-        QByteArray vn; _interface = DialogLauncherSI::self->showScalarDialog(vn);
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+
+QByteArray ScriptServer::newGeneratedVector(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = VectorGenSI::newVector(_store); return handleResponse("Ok",s);
     }
 }
 
 
 
-QByteArray ScriptServer::getMatrixList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Matrix>(s,_store,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getScalarList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<Scalar>(s,_store);
 }
 
-QByteArray ScriptServer::newMatrix(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else {
-        QByteArray vn; _interface = DialogLauncherSI::self->showMatrixDialog(vn);
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::newGeneratedScalar(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = ScalarGenSI::newScalar(_store); return handleResponse("Ok",s);
     }
 }
 
 
-
-QByteArray ScriptServer::getEditableMatrixList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                               const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<EditableMatrix>(s,_store,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::newDataScalar(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = ScalarDataSI::newScalar(_store); return handleResponse("Ok",s);
+    }
 }
 
-QByteArray ScriptServer::newEditableMatrixAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
+QByteArray ScriptServer::newVScalar(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = ScalarVectorSI::newScalar(_store); return handleResponse("Ok",s);
+    }
+}
+
+
+QByteArray ScriptServer::getMatrixList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<Matrix>(s,_store);
+}
+
+
+QByteArray ScriptServer::newDataMatrix(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = MatrixDataSI::newMatrix(_store); return handleResponse("Ok",s);
+    }
+}
+
+
+QByteArray ScriptServer::getEditableMatrixList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<EditableMatrix>(s,_store);
+}
+
+QByteArray ScriptServer::newEditableMatrixAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     EditableMatrixPtr objectPtr=_store->createObject<EditableMatrix>();
     objectPtr->writeLock();
     objectPtr->setDescriptiveName("Script Matrix");
     objectPtr->unlock();
     UpdateManager::self()->doUpdates(1);
     UpdateServer::self()->requestUpdateSignal();
-    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s,ifMode,ifEqual,_if,var);
+    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s);
 }
 
 
 
-QByteArray ScriptServer::getStringList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<String>(s,_store,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getStringList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<String>(s,_store);
 }
 
-QByteArray ScriptServer::newString(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else {
-        QByteArray vn; _interface = DialogLauncherSI::self->showStringDialog(vn);
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
-    }
-}
-
-QByteArray ScriptServer::newStringGen(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else {
-        QByteArray vn; _interface = DialogLauncherSI::self->showStringGenDialog(vn,0,_store);
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::newGeneratedString(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = StringGenSI::newString(_store); return handleResponse("Ok",s);
     }
 }
 
 
+QByteArray ScriptServer::newDataString(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-QByteArray ScriptServer::getCurveList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Curve>(s,_store,ifMode,ifEqual,_if,var);
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = StringDataSI::newString(_store); return handleResponse("Ok",s);
+    }
 }
 
+
+
+QByteArray ScriptServer::getCurveList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<Curve>(s,_store);
+}
+
+/*
 QByteArray ScriptServer::newCurve(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
     else {
         _interface = DialogLauncherSI::self->showCurveDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getEquationList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getEquationList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                         const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Equation>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<Equation>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newEquation(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
     else {
         _interface = DialogLauncherSI::self->showEquationDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getHistogramList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getHistogramList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                          const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Histogram>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<Histogram>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newHistogram(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
     else {
         _interface = DialogLauncherSI::self->showHistogramDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getPSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getPSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<PSD>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<PSD>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
     if(_interface) {
-      return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+      return handleResponse("To access this function, first call endEdit()",s);
     } else {
       _interface = DialogLauncherSI::self->showPowerSpectrumDialog();
-      return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+      return handleResponse("Ok",s);
     }
 }
+*/
 
+QByteArray ScriptServer::getPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<BasicPlugin>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<BasicPlugin>(s,_store);
 }
 
-
+/*
 QByteArray ScriptServer::newPlugin(QByteArray& plugin, QLocalSocket* s,ObjectStore* store,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
     if(_interface) {
-      return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+      return handleResponse("To access this function, first call endEdit()",s);
     } else {
       plugin.replace("newPlugin(","");
       plugin.remove(plugin.lastIndexOf(")"),1);
       _interface = DialogLauncherSI::self->newPlugin(store, plugin);
-      return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+      return handleResponse("Ok",s);
     }
 }
+*/
 
+QByteArray ScriptServer::getImageList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getImageList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<Image>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<Image>(s,_store);
 }
-
+/*
 QByteArray ScriptServer::newImage(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
     else {
         _interface = DialogLauncherSI::self->showImageDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getCSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getCSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<CSD>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<CSD>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newCSD(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);}
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s);}
     else {
         _interface = DialogLauncherSI::self->showCSDDialog();
-        return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+        return handleResponse("Ok",s);
     }
 }
+*/
 
 
+QByteArray ScriptServer::getBasicPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-QByteArray ScriptServer::getBasicPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                            const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputObjectList<BasicPlugin>(s,_store,ifMode,ifEqual,_if,var);
+    return outputObjectList<BasicPlugin>(s,_store);
 }
 
+/*
 QByteArray ScriptServer::newBasicPlugin(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                        const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
     command.replace("newBasicPlugin(","");
     if(command.contains(")")) { command.remove(command.indexOf(")"),99999999); }
 
@@ -825,139 +699,139 @@ QByteArray ScriptServer::newBasicPlugin(QByteArray&command, QLocalSocket* s,Obje
             break;
         }
     }
-    if(!ok) { return handleResponse("No such plugin",s,ifMode,ifEqual,_if,var); }
-    else if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->showBasicPluginDialog(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(!ok) { return handleResponse("No such plugin",s); }
+    else if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = DialogLauncherSI::self->showBasicPluginDialog(command); return handleResponse("Ok",s); }
 }
+*/
 
+QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     QString a;
     for(int i=0;i<DataObject::dataObjectPluginList().size();i++) {
         a.push_back(DataObject::dataObjectPluginList()[i].toLatin1()+'\n');
     }
-    return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);
+    return handleResponse(a.toLatin1(),s);
 }
 
 
 
-QByteArray ScriptServer::getArrowList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<ArrowItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getArrowList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<ArrowItem>(s);
 }
 
-QByteArray ScriptServer::newArrow(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ArrowSI::newArrow(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
-}
+QByteArray ScriptServer::newArrow(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-
-
-QByteArray ScriptServer::getBoxList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<BoxItem>(s,ifMode,ifEqual,_if,var);
-}
-
-QByteArray ScriptServer::newBox(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newBox(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ArrowSI::newArrow(); return handleResponse("Ok",s); }
 }
 
 
 
-QByteArray ScriptServer::getButtonList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<ButtonItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getBoxList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<BoxItem>(s);
 }
 
-QByteArray ScriptServer::newButton(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newButton(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
-}
+QByteArray ScriptServer::newBox(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-
-
-QByteArray ScriptServer::getLineEditList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                         const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<LineEditItem>(s,ifMode,ifEqual,_if,var);
-}
-
-QByteArray ScriptServer::newLineEdit(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newLineEdit(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newBox(); return handleResponse("Ok",s); }
 }
 
 
 
-QByteArray ScriptServer::getCircleList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<CircleItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getButtonList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<ButtonItem>(s);
 }
 
-QByteArray ScriptServer::newCircle(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newCircle(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
-}
+QByteArray ScriptServer::newButton(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-
-
-QByteArray ScriptServer::getEllipseList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                        const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<EllipseItem>(s,ifMode,ifEqual,_if,var);
-}
-
-QByteArray ScriptServer::newEllipse(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newEllipse(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newButton(); return handleResponse("Ok",s); }
 }
 
 
 
-QByteArray ScriptServer::getLabelList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<LabelItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getLineEditList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<LineEditItem>(s);
 }
 
-QByteArray ScriptServer::newLabel(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = LabelSI::newLabel(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
-}
+QByteArray ScriptServer::newLineEdit(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-
-
-QByteArray ScriptServer::getLineList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<LineItem>(s,ifMode,ifEqual,_if,var);
-}
-
-QByteArray ScriptServer::newLine(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newLine(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newLineEdit(); return handleResponse("Ok",s); }
 }
 
 
 
-QByteArray ScriptServer::getPictureList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                        const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::getCircleList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-    return outputViewItemList<PictureItem>(s,ifMode,ifEqual,_if,var);
+    return outputViewItemList<CircleItem>(s);
 }
 
-QByteArray ScriptServer::newPicture(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::newCircle(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newCircle(); return handleResponse("Ok",s); }
+}
+
+
+
+QByteArray ScriptServer::getEllipseList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<EllipseItem>(s);
+}
+
+QByteArray ScriptServer::newEllipse(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newEllipse(); return handleResponse("Ok",s); }
+}
+
+
+
+QByteArray ScriptServer::getLabelList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<LabelItem>(s);
+}
+
+QByteArray ScriptServer::newLabel(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = LabelSI::newLabel(); return handleResponse("Ok",s); }
+}
+
+
+
+QByteArray ScriptServer::getLineList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<LineItem>(s);
+}
+
+QByteArray ScriptServer::newLine(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newLine(); return handleResponse("Ok",s); }
+}
+
+
+
+QByteArray ScriptServer::getPictureList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+
+    return outputViewItemList<PictureItem>(s);
+}
+
+QByteArray ScriptServer::newPicture(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
     command.replace("newPicture(","");
     command.remove(command.lastIndexOf(")"),1);
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newPicture(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newPicture(command); return handleResponse("Ok",s); }
 }
 
 
@@ -965,98 +839,66 @@ QByteArray ScriptServer::newPicture(QByteArray&command, QLocalSocket* s,ObjectSt
 /* Plot related scripting commands */
 /***********************************/
 
-QByteArray ScriptServer::getPlotList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<PlotItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getPlotList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<PlotItem>(s);
 }
 
-QByteArray ScriptServer::newPlot(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = PlotSI::newPlot(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+QByteArray ScriptServer::newPlot(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = PlotSI::newPlot(); return handleResponse("Ok",s); }
 }
 
-
-
-/***********************************/
-#if 0
-QByteArray ScriptServer::getSharedAxisBoxList(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                              const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<SharedAxisBoxItem>(s,ifMode,ifEqual,_if,var);
-}
-QByteArray ScriptServer::newSharedAxisBox(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                          const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = DialogLauncherSI::self->newSharedAxisBox(); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
-}
-#endif
 
 #ifndef KST_NO_SVG
-QByteArray ScriptServer::getSvgItemList(QByteArray&, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                        const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return outputViewItemList<SvgItem>(s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::getSvgItemList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<SvgItem>(s);
 }
 
-QByteArray ScriptServer::newSvgItem(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::newSvgItem(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
     command.replace("newSvgItem(","");
     command.remove(command.lastIndexOf(")"),1);
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var); }
-    else { _interface = ViewItemSI::newSvgItem(command); return handleResponse("Ok",s,ifMode,ifEqual,_if,var); }
+    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
+    else { _interface = ViewItemSI::newSvgItem(command); return handleResponse("Ok",s); }
 
 }
 #endif
 
 
-ScriptInterface* ScriptServer::getViewItemSI(ViewItem* x) {
+QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectStore*_store) {
 
-  if(qobject_cast<PlotItem*>(x)) {
-    return new PlotSI(qobject_cast<PlotItem*>(x));
-  } else if(qobject_cast<ArrowItem*>(x)) {
-    return new ArrowSI(qobject_cast<ArrowItem*>(x));
-  } else if(qobject_cast<LabelItem*>(x)) {
-    return new LabelSI(qobject_cast<LabelItem*>(x));
-  } else {
-    return new ViewItemSI(qobject_cast<ViewItem*>(x));
-  }
-}
-
-
-QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
     if(_interface) {
-        return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+        return handleResponse("To access this function, first call endEdit()",s);
     }
     command.replace("beginEdit(","");
-    // check if object
-    command.remove(command.lastIndexOf(")"),999999);
-    ObjectPtr o=_store->retrieveObject(command);
-    if(!o) {
-        // check if view item
-        for(int h=0;h<2;h++) {
-            for(int i=0;i<vi.size();i++) {
-                if(command.endsWith('('+vi[i]->shortName().toLatin1()+')')) {
-                    _interface=getViewItemSI(vi[i]);
-                    return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
-                }
-            }
-            vi=ViewItem::getItems<ViewItem>();
-        }
 
-        return handleResponse("No such object",s,ifMode,ifEqual,_if,var);
+    command.remove(command.lastIndexOf(")"),999999);
+
+    ViewItem *view_item = ViewItem::retrieveItem<ViewItem>(command);
+    if (view_item) {
+      _interface = view_item->scriptInterface();
+      return handleResponse("Ok",s);
     } else {
-        if((_interface=DialogLauncherSI::self->showObjectDialog(o))) {
-            return handleResponse("Ok",s,ifMode,ifEqual,_if,var);
+      ObjectPtr o=_store->retrieveObject(command);
+      if (o) {
+        _interface = o->scriptInterface();
+        if (_interface) {
+          return handleResponse("Ok",s);
         } else {
-            return handleResponse("Unknown error",s,ifMode,ifEqual,_if,var);
+          return handleResponse("Not supported",s);
         }
+      }
+      return handleResponse("Unknown error",s);
     }
 }
 
-QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectStore*_store) {
+
     if(_interface) {
-        return handleResponse("To access this function, first call endEdit()",s,ifMode,ifEqual,_if,var);
+        return handleResponse("To access this function, first call endEdit()",s);
     }
     command.replace("beginEdit(","");
     // check if object
@@ -1068,13 +910,13 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
             for(int i=0;i<vi.size();i++) {
                 if(command.contains(vi[i]->shortName().toLatin1())) {
                     vi[i]->hide();  // goodbye, memory.
-                    return handleResponse("It died a peaceful death.",s,ifMode,ifEqual,_if,var);
+                    return handleResponse("It died a peaceful death.",s);
                 }
             }
             vi=ViewItem::getItems<ViewItem>();
         }
 
-        return handleResponse("No such object (or it's hiding somewhere in the dark corners of Kst)",s,ifMode,ifEqual,_if,var);
+        return handleResponse("No such object (or it's hiding somewhere in the dark corners of Kst)",s);
     } else {
         if (RelationPtr relation = kst_cast<Relation>(o)) {
             Data::self()->removeCurveFromPlots(relation);
@@ -1082,31 +924,28 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
         _store->removeObject(o);
         UpdateServer::self()->requestUpdateSignal();
 
-        return handleResponse("It died a peaceful death.",s,ifMode,ifEqual,_if,var);
+        return handleResponse("It died a peaceful death.",s);
     }
 }
 
-QByteArray ScriptServer::endEdit(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                 const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::endEdit(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     if(!_interface) {
-        return handleResponse("No dialog open.",s,ifMode,ifEqual,_if,var);
+        return handleResponse("No interface open.",s);
     }
 
     if(!_interface->isValid()) {
-        delete _interface;
         _interface=0;
-        return handleResponse("The interface isn't valid (i.e., no dialog open).",s,ifMode,ifEqual,_if,var);
+        return handleResponse("The interface isn't valid.",s);
     }
 
-    QByteArray x=_interface->getHandle();
-    _interface->endEditUpdate();
-    delete _interface;
+    QByteArray x=_interface->endEditUpdate();
     _interface=0;
-    return handleResponse(x,s,ifMode,ifEqual,_if,var);
+    return handleResponse(x,s);
 }
 
-QByteArray ScriptServer::done(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                              const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::done(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     if(!s) {
         return "Invalid... no socket...";
     }
@@ -1118,276 +957,75 @@ QByteArray ScriptServer::done(QByteArray&, QLocalSocket* s,ObjectStore*,const in
 }
 
 
-QByteArray ScriptServer::clear(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                              const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::clear(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
   kstApp->mainWindow()->newDoc(true);
-  return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+  return handleResponse("Done",s);
 }
 
 
-QByteArray ScriptServer::tabCount(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    return handleResponse(QByteArray::number(kstApp->mainWindow()->tabWidget()->count()),s,ifMode,ifEqual,_if,var);
+QByteArray ScriptServer::tabCount(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    return handleResponse(QByteArray::number(kstApp->mainWindow()->tabWidget()->count()),s);
 }
 
-QByteArray ScriptServer::newTab(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::newTab(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     kstApp->mainWindow()->tabWidget()->createView();
     kstApp->mainWindow()->tabWidget()->setCurrentIndex(kstApp->mainWindow()->tabWidget()->count()-1);
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
-QByteArray ScriptServer::setTab(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
+QByteArray ScriptServer::setTab(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
     kstApp->mainWindow()->tabWidget()->setCurrentIndex(command.replace("setTab(","").replace(")","").toInt());
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
 
-QByteArray ScriptServer::screenBack(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                    const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::screenBack(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     kstApp->mainWindow()->_backAct->trigger();
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
-QByteArray ScriptServer::screenForward(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                       const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
+QByteArray ScriptServer::screenForward(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     kstApp->mainWindow()->_forwardAct->trigger();
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
 
-QByteArray ScriptServer::countFromEnd(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                      const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::countFromEnd(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     kstApp->mainWindow()->_readFromEndAct->trigger();
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
-}
-QByteArray ScriptServer::readToEnd(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
-    kstApp->mainWindow()->_readToEndAct->trigger();
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
 
-QByteArray ScriptServer::setPaused(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                   const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+QByteArray ScriptServer::readToEnd(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    kstApp->mainWindow()->_readToEndAct->trigger();
+    return handleResponse("Done",s);
+}
+
+QByteArray ScriptServer::setPaused(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     if(!kstApp->mainWindow()->_pauseAct->isChecked()) {
         kstApp->mainWindow()->_pauseAct->trigger();
     }
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 }
-QByteArray ScriptServer::unsetPaused(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                     const QByteArray&ifEqual,IfSI*& _if,VarSI*var) {
+
+QByteArray ScriptServer::unsetPaused(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
     if(kstApp->mainWindow()->_pauseAct->isChecked()) {
         kstApp->mainWindow()->_pauseAct->trigger();
     }
-    return handleResponse("Done",s,ifMode,ifEqual,_if,var);
+    return handleResponse("Done",s);
 
 }
 
-QByteArray ScriptServer::newMacro(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                  const QByteArray&,IfSI*& _if,VarSI*) {
-    if(_curMac) {
-        return handleResponse("Call endMacro() first",s,0,"",_if,0);
-    }
-    command.replace("newMacro(","").replace(')',"");
-    if(!command.size()) {
-        return handleResponse("Invalid call to newMacro(...)",s,0,"",_if,0);
-    }
-    QByteArrayList x=command.split(',');
-    if(!x.size()) {
-        return handleResponse("Invalid call to newMacro(...)",s,0,"",_if,0);
-    }
-    QByteArray c=x[0];
-    x.removeFirst();
-    for(int i=0;i<x.size();i++) {
-        if(!x.at(i).size()) {
-            x.takeAt(i--);
-        }
-    }
-    QByteArrayList z;
-    for(int i=0;i<x.size();i++) {
-        z.push_back(x.at(i));
-        if(z.back().contains("=")) {
-            z.back().remove(z.back().indexOf("="),99999);
-            VarSI*varx=_varMap.value(z.back(),0);
-            if(!varx) {
-                _varMap.insert(z.back(),varx=new VarSI(z.back(),""));
-            }
-            varx->val=x[i].remove(0,z.back().size()+1);
-        }
 
-    }
-    _curMac=new MacroSI(0,c,z,QByteArrayList());
-    _curMacComEcho=1;
-    return handleResponse("Editing macro.",s,0,"",_if,0);
-}
+QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
 
-QByteArray ScriptServer::newMacro_(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                   const QByteArray&,IfSI*& _if,VarSI*) {
-    if(_curMac) {
-        return handleResponse("Call endMacro() first",s,0,"",_if,0);
-    }
-    command.replace("newMacro_(","").replace(')',"");
-    if(!command.size()) {
-        return handleResponse("Invalid call to newMacro_(...)",s,0,"",_if,0);
-    }
-    QByteArrayList x=command.split(',');
-    if(!x.size()) {
-        return handleResponse("Invalid call to newMacro_(...)",s,0,"",_if,0);
-    }
-    QByteArray c=x[0];
-    x.removeFirst();
-    for(int i=0;i<x.size();i++) {
-        if(!x.at(i).size()) {
-            x.takeAt(i--);
-        }
-    }
-    _curMac=new MacroSI(0,c,x,QByteArrayList());
-    _curMacComEcho=0;
-    return handleResponse("Editing macro.",s,0,"",_if,0);
-}
-
-QByteArray ScriptServer::delMacro(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                  const QByteArray&,IfSI*& _if,VarSI*) {
-    if(_curMac) {
-        return handleResponse("Call endMacro() first",s,0,"",_if,0);
-    }
-    command.replace("delMacro(","").replace(')',"");
-    for(int i=0;i<_macroMap.size();i++) {
-        if(_macroMap.values()[i]->handle==command) {
-            delete _macroMap.take(_macroMap.keys()[i]);
-            QByteArray str;
-            for(int i=0;i<_macroMap.size();i++) {
-                str+="newMacro_("+_macroMap.values()[i]->handle;
-
-                for(int j=0;j<_macroMap.values()[i]->args.size();j++) {
-                    str+=","%_macroMap.values()[i]->args.at(j);
-                }
-
-                str+=")\n";
-
-                for(int j=0;j<_macroMap.values()[i]->commands.size();j++) {
-                    str+=_macroMap.values()[i]->commands.at(j)%'\n';
-                }
-
-                str+="endMacro()\n";
-            }
-            return handleResponse("Removed!",s,0,"",_if,0);
-        }
-    }
-    return handleResponse("No such macro",s,0,"",_if,0);
-}
-QByteArray ScriptServer::endMacro(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                  const QByteArray&,IfSI*& _if,VarSI*) {
-    if(_curMac) {
-        _macroMap.insert(_curMac->handle,_curMac);
-
-        QByteArray str;
-        if(_curMacComEcho) {
-            std::cout<<"######### New Macro #########\n";
-            str+="newMacro_("+_macroMap.values().back()->handle;
-
-            for(int j=0;j<_macroMap.values().back()->args.size();j++) {
-                str+=","%_macroMap.values().back()->args[j];
-            }
-
-            str+=")\n";
-
-            for(int j=0;j<_macroMap.values().back()->commands.size();j++) {
-                str+=_macroMap.values().back()->commands[j]%'\n';
-            }
-
-            str+="endMacro()\n";
-            std::cout<<str.data();
-        }
-        _curMac=0;
-        return handleResponse("Ok",s,0,"",_if,0);
-    }
-    return "No return. (well... except for this)";
-}
-
-QByteArray ScriptServer::kstScriptIf(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                     const QByteArray&,IfSI*&,VarSI*) {
-    int ifMode=0;
-    QByteArray ifEqual="";
-    command=command.remove(0,3);
-    command.remove(command.lastIndexOf(")"),9999);
-    if(command.contains("==")) {
-        ifMode=1;
-        ifEqual=command;
-        command.remove(command.indexOf("=="),99999);
-        ifEqual.remove(0,ifEqual.indexOf("==")+2);
-    } else if(command.contains("!=")) {
-        ifMode=2;
-        ifEqual=command;
-        command.remove(command.indexOf("!="),99999);
-        ifEqual.remove(0,ifEqual.indexOf("!=")+2);
-    } else if(command.contains(" CONTAINS ")) {
-        ifMode=3;
-        ifEqual=command;
-        command.remove(command.indexOf(" CONTAINS "),99999);
-        ifEqual.remove(0,ifEqual.indexOf(" CONTAINS ")+10);
-    } else if(command.contains(" !CONTAINS ")) {
-        ifMode=4;
-        ifEqual=command;
-        command.remove(command.indexOf(" !CONTAINS "),99999);
-        ifEqual.remove(0,ifEqual.indexOf(" !CONTAINS ")+11);
-    } else {
-        ifMode=1;
-        ifEqual="true";
-    }
-    return exec(command,s,ifMode,ifEqual);
-}
-
-QByteArray ScriptServer::kstScriptFi(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                     const QByteArray&,IfSI*&,VarSI*) {
-    if(_if&&!_if->on) {
-        if(--_if->recurse<0) {
-            IfSI* ifx=_if->parent;
-            delete _if;
-            _if=ifx;
-            return handleResponse("Scope changed.",s,0,"",_if,0);
-        } else if(command.startsWith("if(")) {
-            ++_if->recurse;
-            return handleResponse("Scope changed.",s,0,"",_if,0);
-        } else if(command.contains("command")){
-            return handleResponse("fi()",s,0,"",_if,0);
-        }
-        return " ";
-    } else if(_if) {
-        if(--_if->recurse<0) {
-            IfSI* ifx=_if->parent;
-            delete _if;
-            _if=ifx;
-        }
-        return handleResponse("Scope changed.",s,0,"",_if,0);
-    } else {
-        return "?";
-    }
-}
-
-QByteArray ScriptServer::commands(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
-                                  const QByteArray&ifEqual,IfSI*&_if,VarSI*var) {
-    if(!_interface) {
-        QByteArrayList v;
-        for(int i=0;i<_macroMap.values().size();i++) {
-            v.push_back('#'+_macroMap.values()[i]->handle+((_macroMap.values()[i]->args.size())?QByteArray("("):QByteArray("()")));
-            for(int j=0;j<_macroMap.values()[i]->args.size();j++) {
-                if(j) v.back()+=',';
-                v.back()+=_macroMap.values()[i]->args[j];
-            }
-            v.back()+=")";
-        }
-
-        QByteArray builtIns;
-        for(int i=0;i<_fnMap.keys().size();i++) {
-            builtIns+='\n'+_fnMap.keys()[i];
-        }
-        return handleResponse((join(v,'\n')+builtIns+'\n'),s,ifMode,ifEqual,_if,var);
-    } else {
-        QString a="endEdit()\n"+join(_interface->commands(),'\n');
-        return handleResponse(a.toLatin1(),s,ifMode,ifEqual,_if,var);
-    }
-}
-
-QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                                      const QByteArray&,IfSI*&,VarSI*) {
     command.replace("EditableVector::setBinaryArray(","");
     command.chop(1);
     s->write("Handshake");
@@ -1426,7 +1064,7 @@ QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocal
     return "Done.";
 }
 
-QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLocalSocket *s, ObjectStore *_store, const int &, const QByteArray &, IfSI *&, VarSI *)
+QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLocalSocket *s, ObjectStore *_store)
 {
     command.replace("EditableMatrix::setBinaryArray(","");
     command.chop(1);
@@ -1471,8 +1109,8 @@ QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLoca
     return "Done.";
 }
 
-QByteArray ScriptServer::editableVectorSet(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                           const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::editableVectorSet(QByteArray&command, QLocalSocket* s, ObjectStore* _store) {
+
     command.remove(0,20);   //editableVectorSet(
     command.chop(1);
     QByteArrayList b=command.split(',');
@@ -1493,8 +1131,8 @@ QByteArray ScriptServer::editableVectorSet(QByteArray&command, QLocalSocket* s,O
     s->waitForBytesWritten(-1);
     return "Done.";
 }
-QByteArray ScriptServer::vectorGetBinaryArray(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                              const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::vectorGetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     Q_ASSERT(sizeof(double)==sizeof(qint64)&&4096%sizeof(double)==0);
 
     command.replace("Vector::getBinaryArray(","");
@@ -1525,8 +1163,8 @@ QByteArray ScriptServer::vectorGetBinaryArray(QByteArray&command, QLocalSocket* 
     return "Data sent via handleResponse(...)";
 }
 
-QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                              const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     Q_ASSERT(sizeof(double)==sizeof(qint64)&&4096%sizeof(double)==0);
 
     command.replace("Matrix::getBinaryArray(","");
@@ -1534,7 +1172,6 @@ QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* 
     ObjectPtr o=_store->retrieveObject(command);
     MatrixPtr m=kst_cast<Matrix>(o);
     if(!m) {
-        qDebug()<<"No such thing.";
         QByteArray ba;
         QDataStream ds(&ba,QIODevice::WriteOnly);
         ds<<(qint64)0;
@@ -1558,21 +1195,21 @@ QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* 
     return "Data sent via handleResponse(...)";
 }
 
-QByteArray ScriptServer::stringValue(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                     const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::stringValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     command.replace("String::value(","");
     command.remove(command.lastIndexOf(")"),999999);
     ObjectPtr o=_store->retrieveObject(command);
     StringPtr str=kst_cast<String>(o);
     if(str) {
-        return handleResponse(str->value().toLatin1(),s,0,"",0,0);
+        return handleResponse(str->value().toLatin1(),s);
     } else {
-        return handleResponse("No such object (variables not supported)",s,0,"",0,0);;
+        return handleResponse("No such object (variables not supported)",s);;
     }
 }
 
-QByteArray ScriptServer::stringSetValue(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                        const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::stringSetValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     command.replace("String::setValue(","");
     command.remove(command.lastIndexOf(")"),999999);
     QByteArrayList x;
@@ -1581,7 +1218,7 @@ QByteArray ScriptServer::stringSetValue(QByteArray&command, QLocalSocket* s,Obje
     x.push_back(command);
     x[1].remove(0,x.at(1).indexOf(",")+1);
     if(!x.at(0).size()) {
-        return handleResponse("Invalid call to setValueOfString(",s,0,"",0,0);
+        return handleResponse("Invalid call to setValueOfString(",s);
     }
     ObjectPtr o=_store->retrieveObject(x[0]);
     StringPtr str=kst_cast<String>(o);
@@ -1590,27 +1227,27 @@ QByteArray ScriptServer::stringSetValue(QByteArray&command, QLocalSocket* s,Obje
         str->setValue(x[1]);
         str->registerChange();
         str->unlock();
-        return handleResponse("Okay",s,0,"",0,0);
+        return handleResponse("Okay",s);
     } else {
-        return handleResponse("No such object (variables not supported)",s,0,"",0,0);;
+        return handleResponse("No such object (variables not supported)",s);;
     }
 }
 
-QByteArray ScriptServer::scalarValue(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                     const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::scalarValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     command.replace("Scalar::value(","");
     command.remove(command.lastIndexOf(")"),999999);
     ObjectPtr o=_store->retrieveObject(command);
     ScalarPtr sca=kst_cast<Scalar>(o);
     if(sca) {
-        return handleResponse(QByteArray::number(sca->value()),s,0,"",0,0);
+        return handleResponse(QByteArray::number(sca->value()),s);
     } else {
-        return handleResponse("No such object (variables not supported)",s,0,"",0,0);;
+        return handleResponse("No such object (variables not supported)",s);;
     }
 }
 
-QByteArray ScriptServer::scalarSetValue(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&,
-                                        const QByteArray&,IfSI*&,VarSI*) {
+QByteArray ScriptServer::scalarSetValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+
     command.replace("Scalar::setValue(","");
     command.remove(command.lastIndexOf(")"),999999);
     QByteArrayList x;
@@ -1619,7 +1256,7 @@ QByteArray ScriptServer::scalarSetValue(QByteArray&command, QLocalSocket* s,Obje
     x.push_back(command);
     x[1].remove(0,x.at(1).indexOf(",")+1);
     if(!x.at(0).size()) {
-        return handleResponse("Invalid call to setValueOfScalar(",s,0,"",0,0);
+        return handleResponse("Invalid call to setValueOfScalar(",s);
     }
     ObjectPtr o=_store->retrieveObject(x[0]);
     ScalarPtr sca=kst_cast<Scalar>(o);
@@ -1628,9 +1265,9 @@ QByteArray ScriptServer::scalarSetValue(QByteArray&command, QLocalSocket* s,Obje
         sca->setValue(x[1].toDouble());
         sca->registerChange();
         sca->unlock();
-        return handleResponse("Okay",s,0,"",0,0);
+        return handleResponse("Okay",s);
     } else {
-        return handleResponse("No such object (variables not supported)",s,0,"",0,0);;
+        return handleResponse("No such object (variables not supported)",s);;
     }
 }
 

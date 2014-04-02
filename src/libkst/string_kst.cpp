@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "string_kst.h"
+#include "stringscriptinterface.h"
 
 #include <QTextDocument>
 #include <QXmlStreamWriter>
@@ -33,6 +34,12 @@ String::String(ObjectStore *store)
   _initializeShortName();
 
 }
+
+
+ScriptInterface* String::createScriptInterface() {
+  return new StringGenSI(this);
+}
+
 
 void String::_initializeShortName() {
   _shortName = 'T'+QString::number(_tnum);

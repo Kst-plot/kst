@@ -50,12 +50,13 @@ ArrowSI::ArrowSI(ArrowItem *it) : _dim(new DimensionTabSI), _fill(new FillTabSI)
   _arrow->item=it;
 }
 
-QByteArrayList ArrowSI::commands() {
-  return _dim->commands()<<_fill->commands()<<_stroke->commands()<<_arrow->commands();
-}
-
 QString ArrowSI::doCommand(QString x) {
-  QString v =_dim->doCommand(x);
+
+  QString v=doNamedObjectCommand(x, _dim->item);
+
+  if(v.isEmpty()) {
+    v =_dim->doCommand(x);
+  }
   if(v.isEmpty()) {
     v=_fill->doCommand(x);
   }
@@ -70,10 +71,6 @@ QString ArrowSI::doCommand(QString x) {
 
 bool ArrowSI::isValid() {
   return _dim->item;
-}
-
-QByteArray ArrowSI::getHandle() {
-  return ("Finished editing "%_dim->item->Name()).toLatin1();
 }
 
 ScriptInterface* ArrowSI::newArrow() {

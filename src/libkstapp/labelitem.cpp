@@ -24,6 +24,8 @@
 #include "plotitem.h"
 #include "cartesianrenderitem.h"
 
+#include "labelscriptinterface.h"
+
 #include <QDebug>
 #include <QInputDialog>
 #include <QGraphicsItem>
@@ -41,6 +43,11 @@ LabelItem::LabelItem(View *parent, const QString& txt)
 
   applyDefaults();
 }
+
+ScriptInterface* LabelItem::createScriptInterface() {
+  return new LabelSI(this);
+}
+
 
 bool LabelItem::inputsChanged(qint64 serial) {
   bool no_change = true;

@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2011 Barth Netterfield                                *
+ *   copyright : (C) 2012 Barth Netterfield                                *
  *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -64,10 +64,6 @@ ScriptInterface* PlotSI::newPlot() {
 }
 
 
-QByteArrayList PlotSI::commands() {
-    return _layout->commands()<<_dim->commands()<<_stroke->commands()<<_fill->commands();
-}
-
 QString PlotSI::doCommand(QString x) {
   QString command = x.left(x.indexOf('('));
 
@@ -77,7 +73,10 @@ QString PlotSI::doCommand(QString x) {
     return CALL_MEMBER_FN(*this,fn)(x);
   }
 
-  QString v=_layout->doCommand(x);
+  QString v=doNamedObjectCommand(x, _dim->item);
+  if(v.isEmpty()) {
+    v = _layout->doCommand(x);
+  }
   if(v.isEmpty()) {
     v=_dim->doCommand(x);
   }
@@ -92,10 +91,6 @@ QString PlotSI::doCommand(QString x) {
 
 bool PlotSI::isValid() {
     return _dim->item;
-}
-
-QByteArray PlotSI::getHandle() {
-    return ("Finished editing " % _dim->item->Name()).toLatin1();
 }
 
 QStringList PlotSI::getArgs(const QString &command) {

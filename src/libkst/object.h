@@ -36,6 +36,7 @@ namespace Kst {
 
 class ObjectStore;
 class Object;
+class ScriptInterface;
 
 typedef SharedPtr<Object> ObjectPtr;
 
@@ -77,6 +78,9 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
 
     virtual bool uses(ObjectPtr p) const;
 
+    virtual ScriptInterface* createScriptInterface();
+    ScriptInterface *scriptInterface();
+
   protected:
     Object();
     virtual ~Object();
@@ -90,6 +94,9 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     qint64 _serial;
     qint64 _serialOfLastChange;
     bool _used;
+  private:
+    ScriptInterface *_interface;
+
   signals:
     void dirty();
   };

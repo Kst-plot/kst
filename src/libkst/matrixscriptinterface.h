@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2011 Joshua Netterfield                               *
- *                   joshua.netterfield@gmail.com                          *
+ *   copyright : (C) 2014 Barth Netterfield                                *
+ *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,39 +10,28 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LABELSCRIPTINTERFACE_H
-#define LABELSCRIPTINTERFACE_H
+#ifndef MATRIXSCRIPTINTERFACE_H
+#define MATRIXSCRIPTINTERFACE_H
 
-#include <QByteArray>
 #include <QString>
-#include <QList>
-#include <QObject>
-#include "viewitemscriptinterface.h"
-#include "labelitem.h"
-typedef QList<QByteArray> QByteArrayList;
+
+#include "scriptinterface.h"
+#include "datamatrix.h"
 
 namespace Kst {
 
-struct LabelTabSI;
-class LabelItem;
-
-class LabelSI : public ScriptInterface
+class MatrixDataSI : public ScriptInterface
 {
     Q_OBJECT
+    DataMatrixPtr matrix;
 public:
-    explicit LabelSI(LabelItem* it);
+    explicit MatrixDataSI(DataMatrixPtr it);
     QString doCommand(QString);
     bool isValid();
-    QByteArray endEditUpdate() {if (dim->item) dim->item->update();return ("Finished editing "+dim->item->Name()).toLatin1();}
-    static ScriptInterface* newLabel();
+    QByteArray endEditUpdate();
 
-private:
-    LayoutTabSI* layout;
-    DimensionTabSI* dim;
-    LabelTabSI*lab;
+    static ScriptInterface* newMatrix(ObjectStore *store);
 };
 
-
 }
-
-#endif // LABELSCRIPTINTERFACE_H
+#endif // MATRIXSCRIPTINTERFACE_H

@@ -288,6 +288,7 @@ bool DirFileSource::init() {
 Kst::Object::UpdateType DirFileSource::internalDataSourceUpdate() {
   int newNF = _dirfile->NFrames();
   bool isnew = newNF != _frameCount;
+
   _resetNeeded |= (_frameCount>newNF);
 
   _frameCount = newNF;

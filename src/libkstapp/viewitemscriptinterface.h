@@ -35,25 +35,21 @@ class ViewItem;
 
 struct LayoutTabSI {
     ViewItem* vi;
-    QByteArrayList commands();
     QString doCommand(QString x);
 };
 
 struct FillTabSI {
     ViewItem* item;
-    QByteArrayList commands();
     QString doCommand(QString x);
 };
 
 struct StrokeTabSI {
     ViewItem* item;
-    QByteArrayList commands();
     QString doCommand(QString x);
 };
 
 struct DimensionTabSI {
     ViewItem* item;
-    QByteArrayList commands();
     QString doCommand(QString x);
 };
 
@@ -62,11 +58,9 @@ class ViewItemSI : public ScriptInterface
     Q_OBJECT
 public:
     explicit ViewItemSI(ViewItem* it);
-    QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
-    QByteArray getHandle();
-    void endEditUpdate() {if (dim->item) dim->item->update();}
+    QByteArray endEditUpdate() {if (dim->item) dim->item->update();return ("Finished editing "+dim->item->Name()).toLatin1();}
 
     static ScriptInterface* newBox();
     static ScriptInterface* newButton();

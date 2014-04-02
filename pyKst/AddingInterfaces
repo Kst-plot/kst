@@ -1,0 +1,36 @@
+How to add an interface for a new NamedObject.
+
+-Create a class which inherits from ScriptInterface.
+  eg, ScalarGenSI in scalarsscriptinterface.cpp
+
+-Implement the 5 methods.
+  -doCommand actually parses the commands from pyKst.py
+  -you probably want to call doNamedObjectCommand as is done
+   in ScalarGenSI::doCommand()
+
+-Add virtual ScriptInterface* createScriptInterface() to the
+ class you are making an interface for.  eg, Scalar.
+
+    ScriptInterface* Scalar::createScriptInterface() {
+      return new ScalarGenSI(this);
+    }
+
+-Create a command in ScripServer.h
+  eg, QByteArray newGeneratedScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
+-Implement it in ScripServer.cpp
+
+  QByteArray ScriptServer::newGeneratedScalar(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = ScalarGenSI::newScalar(_store); return handleResponse("Ok",s);
+    }
+  }
+
+-register it in _fnMap
+   _fnMap.insert("newGeneratedScalar()",&ScriptServer::newGeneratedScalar);
+
+-Call the interface you just wrote in pyKst.py
+  search for GeneratedScalar as an example.
+
