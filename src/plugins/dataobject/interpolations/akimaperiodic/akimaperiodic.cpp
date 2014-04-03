@@ -132,7 +132,7 @@ AkimaPeriodicSource::~AkimaPeriodicSource() {
 
 
 QString AkimaPeriodicSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Akima Periodic Plugin Object");
+  return tr("Interpolation Akima Periodic Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void AkimaPeriodicSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString AkimaPeriodicPlugin::pluginName() const { return "Interpolation Akima Periodic Spline"; }
-QString AkimaPeriodicPlugin::pluginDescription() const { return "Generates a non-rounded periodic Akima interpolation for a set of data."; }
+QString AkimaPeriodicPlugin::pluginName() const { return tr("Interpolation Akima Periodic Spline"); }
+QString AkimaPeriodicPlugin::pluginDescription() const { return tr("Generates a non-rounded periodic Akima interpolation for a set of data."); }
 
 
 Kst::DataObject *AkimaPeriodicPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

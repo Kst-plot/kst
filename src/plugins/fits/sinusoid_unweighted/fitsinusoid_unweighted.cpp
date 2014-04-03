@@ -166,7 +166,7 @@ FitSinusoidUnweightedSource::~FitSinusoidUnweightedSource() {
 
 
 QString FitSinusoidUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Sinusoid");
+  return tr("%1 Sinusoid").arg(vectorY()->descriptiveName());;
 }
 
 
@@ -329,8 +329,8 @@ QString FitSinusoidUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitSinusoidUnweightedPlugin::pluginName() const { return "Sinusoid Fit"; }
-QString FitSinusoidUnweightedPlugin::pluginDescription() const { return "Generates a sinusoid fit for a set of data."; }
+QString FitSinusoidUnweightedPlugin::pluginName() const { return tr("Sinusoid Fit"); }
+QString FitSinusoidUnweightedPlugin::pluginDescription() const { return tr("Generates a sinusoid fit for a set of data."); }
 
 
 Kst::DataObject *FitSinusoidUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

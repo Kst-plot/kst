@@ -132,7 +132,7 @@ CubicSplinePeriodicSource::~CubicSplinePeriodicSource() {
 
 
 QString CubicSplinePeriodicSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Cubic Spline Periodic Plugin Object");
+  return tr("Interpolation Cubic Spline Periodic Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void CubicSplinePeriodicSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CubicSplinePeriodicPlugin::pluginName() const { return "Interpolation Cubic Spline Periodic Spline"; }
-QString CubicSplinePeriodicPlugin::pluginDescription() const { return "Generates a cubic spline interpolation for a set of data."; }
+QString CubicSplinePeriodicPlugin::pluginName() const { return tr("Interpolation Cubic Spline Periodic Spline"); }
+QString CubicSplinePeriodicPlugin::pluginDescription() const { return tr("Generates a cubic spline interpolation for a set of data."); }
 
 
 Kst::DataObject *CubicSplinePeriodicPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

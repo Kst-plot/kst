@@ -123,7 +123,7 @@ LineFitSource::~LineFitSource() {
 
 
 QString LineFitSource::_automaticDescriptiveName() const {
-  return QString("Line Fit Plugin Object");
+  return tr("Line Fit Plugin Object");
 }
 
 
@@ -289,8 +289,8 @@ void LineFitSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString LineFitPlugin::pluginName() const { return "Line Fit"; }
-QString LineFitPlugin::pluginDescription() const { return "Generates a line of best fit for a set of data."; }
+QString LineFitPlugin::pluginName() const { return tr("Line Fit"); }
+QString LineFitPlugin::pluginDescription() const { return tr("Generates a line of best fit for a set of data."); }
 
 
 Kst::DataObject *LineFitPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

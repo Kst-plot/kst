@@ -26,9 +26,8 @@
 // NetCdfPlugin
 //
 
-static const char* plugin_name = "netCDF Reader";
-QString NetCdfPlugin::pluginName() const        { return plugin_name; }
-QString NetCdfPlugin::pluginDescription() const { return plugin_name; }
+QString NetCdfPlugin::pluginName() const        { return tr("netCDF Reader"); }
+QString NetCdfPlugin::pluginDescription() const { return tr("netCDF Reader"); }
 
 
 Kst::DataSource *NetCdfPlugin::create(Kst::ObjectStore *store,

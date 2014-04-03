@@ -105,7 +105,7 @@ AutoCorrelationSource::~AutoCorrelationSource() {
 
 
 QString AutoCorrelationSource::_automaticDescriptiveName() const {
-  return QString("Auto Correlation Plugin Object");
+  return tr("Auto Correlation Plugin Object");
 }
 
 
@@ -275,8 +275,8 @@ void AutoCorrelationSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString AutoCorrelationPlugin::pluginName() const { return "Auto Correlation"; }
-QString AutoCorrelationPlugin::pluginDescription() const { return "Generates the auto-correlation of a vector."; }
+QString AutoCorrelationPlugin::pluginName() const { return tr("Auto Correlation"); }
+QString AutoCorrelationPlugin::pluginDescription() const { return tr("Generates the auto-correlation of a vector."); }
 
 
 Kst::DataObject *AutoCorrelationPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

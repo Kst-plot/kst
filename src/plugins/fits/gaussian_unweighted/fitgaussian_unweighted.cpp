@@ -139,7 +139,7 @@ FitGaussianUnweightedSource::~FitGaussianUnweightedSource() {
 
 
 QString FitGaussianUnweightedSource::_automaticDescriptiveName() const {
-    return vectorY()->descriptiveName() + tr(" Unweighted Gaussian");
+    return tr("%1 Unweighted Gaussian").arg(vectorY()->descriptiveName());
 }
 
 
@@ -348,8 +348,8 @@ QString FitGaussianUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitGaussianUnweightedPlugin::pluginName() const { return "Gaussian Fit"; }
-QString FitGaussianUnweightedPlugin::pluginDescription() const { return "Generates a gaussian fit for a set of data."; }
+QString FitGaussianUnweightedPlugin::pluginName() const { return tr("Gaussian Fit"); }
+QString FitGaussianUnweightedPlugin::pluginDescription() const { return tr("Generates a gaussian fit for a set of data."); }
 
 
 Kst::DataObject *FitGaussianUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -152,7 +152,7 @@ FitGradientWeightedSource::~FitGradientWeightedSource() {
 
 
 QString FitGradientWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Weighted Gradient");
+  return tr("%1 Weighted Gradient").arg(vectorY()->descriptiveName());
 }
 
 
@@ -314,8 +314,8 @@ QString FitGradientWeightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitGradientWeightedPlugin::pluginName() const { return "Gradient Weighted Fit"; }
-QString FitGradientWeightedPlugin::pluginDescription() const { return "Generates a gradient weighted fit for a set of data."; }
+QString FitGradientWeightedPlugin::pluginName() const { return tr("Gradient Weighted Fit"); }
+QString FitGradientWeightedPlugin::pluginDescription() const { return tr("Generates a gradient weighted fit for a set of data."); }
 
 
 Kst::DataObject *FitGradientWeightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

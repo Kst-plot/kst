@@ -438,8 +438,8 @@ int DirFileSource::readFieldStrings(QStringList &v, const QString& field, bool i
 }
 
 
-QString DirFilePlugin::pluginName() const { return "DirFile Reader"; }
-QString DirFilePlugin::pluginDescription() const { return "DirFile Reader"; }
+QString DirFilePlugin::pluginName() const { return tr("DirFile Reader"); }
+QString DirFilePlugin::pluginDescription() const { return tr("DirFile Reader"); }
 
 
 Kst::DataSource *DirFilePlugin::create(Kst::ObjectStore *store,

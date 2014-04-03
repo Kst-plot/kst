@@ -152,7 +152,7 @@ FitExponentialWeightedSource::~FitExponentialWeightedSource() {
 
 
 QString FitExponentialWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Weighted Exponential");
+  return tr("%1 Weighted Exponential").arg(vectorY()->descriptiveName());
 }
 
 
@@ -322,8 +322,8 @@ QString FitExponentialWeightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitExponentialWeightedPlugin::pluginName() const { return "Exponential Weighted Fit"; }
-QString FitExponentialWeightedPlugin::pluginDescription() const { return "Generates a exponential weighted fit for a set of data."; }
+QString FitExponentialWeightedPlugin::pluginName() const { return tr("Exponential Weighted Fit"); }
+QString FitExponentialWeightedPlugin::pluginDescription() const { return tr("Generates a exponential weighted fit for a set of data."); }
 
 
 Kst::DataObject *FitExponentialWeightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

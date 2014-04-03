@@ -139,7 +139,7 @@ FitExponentialUnweightedSource::~FitExponentialUnweightedSource() {
 
 
 QString FitExponentialUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Unweighted Exponential");
+  return tr("%1 Unweighted Exponential").arg(vectorY()->descriptiveName());
 }
 
 
@@ -300,8 +300,8 @@ QString FitExponentialUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitExponentialUnweightedPlugin::pluginName() const { return "Exponential Fit"; }
-QString FitExponentialUnweightedPlugin::pluginDescription() const { return "Generates a exponential fit for a set of data."; }
+QString FitExponentialUnweightedPlugin::pluginName() const { return tr("Exponential Fit"); }
+QString FitExponentialUnweightedPlugin::pluginDescription() const { return tr("Generates a exponential fit for a set of data."); }
 
 
 Kst::DataObject *FitExponentialUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

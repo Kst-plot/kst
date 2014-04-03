@@ -470,8 +470,8 @@ void FitsImageSource::save(QXmlStreamWriter &streamWriter) {
 }
 
 
-QString FitsImagePlugin::pluginName() const { return "FITS Image Source Reader"; }
-QString FitsImagePlugin::pluginDescription() const { return "FITS Image Source Reader"; }
+QString FitsImagePlugin::pluginName() const { return tr("FITS Image Source Reader"); }
+QString FitsImagePlugin::pluginDescription() const { return tr("FITS Image Source Reader"); }
 
 
 Kst::DataSource *FitsImagePlugin::create(Kst::ObjectStore *store,

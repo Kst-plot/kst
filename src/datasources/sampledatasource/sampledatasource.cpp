@@ -118,8 +118,8 @@ void SampleDatasourceSource::save(QXmlStreamWriter &streamWriter) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString SampleDatasourcePlugin::pluginName() const { return "Sample Datasource Reader"; }
-QString SampleDatasourcePlugin::pluginDescription() const { return "Sample Datasource Reader"; }
+QString SampleDatasourcePlugin::pluginName() const { return tr("Sample Datasource Reader"); }
+QString SampleDatasourcePlugin::pluginDescription() const { return tr("Sample Datasource Reader"); }
 
 /**********************
 SampleDatasourcePlugin - This class defines the plugin interface to the DataSource defined by the plugin.

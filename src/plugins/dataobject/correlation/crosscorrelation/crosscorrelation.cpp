@@ -120,7 +120,7 @@ CrossCorrelationSource::~CrossCorrelationSource() {
 
 
 QString CrossCorrelationSource::_automaticDescriptiveName() const {
-  return QString("Cross Correlation");
+  return tr("Cross Correlation");
 }
 
 
@@ -305,8 +305,8 @@ void CrossCorrelationSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CrossCorrelationPlugin::pluginName() const { return "Cross Correlation"; }
-QString CrossCorrelationPlugin::pluginDescription() const { return "Generates the correlation of one vector with another."; }
+QString CrossCorrelationPlugin::pluginName() const { return tr("Cross Correlation"); }
+QString CrossCorrelationPlugin::pluginDescription() const { return tr("Generates the correlation of one vector with another."); }
 
 
 Kst::DataObject *CrossCorrelationPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

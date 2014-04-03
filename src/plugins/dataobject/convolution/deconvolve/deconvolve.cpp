@@ -119,7 +119,7 @@ DeconvolveSource::~DeconvolveSource() {
 
 
 QString DeconvolveSource::_automaticDescriptiveName() const {
-  return QString("Deconvolve Plugin Object");
+  return tr("Deconvolve Plugin Object");
 }
 
 
@@ -314,8 +314,8 @@ void DeconvolveSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString DeconvolvePlugin::pluginName() const { return "Deconvolve"; }
-QString DeconvolvePlugin::pluginDescription() const { return "Generates the deconvolution of one vector with another."; }
+QString DeconvolvePlugin::pluginName() const { return tr("Deconvolve"); }
+QString DeconvolvePlugin::pluginDescription() const { return tr("Generates the deconvolution of one vector with another."); }
 
 
 Kst::DataObject *DeconvolvePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

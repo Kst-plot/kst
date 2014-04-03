@@ -126,9 +126,9 @@ CumulativeSumSource::~CumulativeSumSource() {
 
 QString CumulativeSumSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return QString(vector()->descriptiveName() + " Integral");
+    return tr("%1 Integral").arg(vector()->descriptiveName());
   } else {
-    return QString("Integral");
+    return tr("Integral");
   }
 }
 
@@ -226,8 +226,8 @@ void CumulativeSumSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CumulativeSumPlugin::pluginName() const { return "Cumulative Sum"; }
-QString CumulativeSumPlugin::pluginDescription() const { return "Computes the cumulative sum (integral) of the input vector."; }
+QString CumulativeSumPlugin::pluginName() const { return tr("Cumulative Sum"); }
+QString CumulativeSumPlugin::pluginDescription() const { return tr("Computes the cumulative sum (integral) of the input vector."); }
 
 
 Kst::DataObject *CumulativeSumPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

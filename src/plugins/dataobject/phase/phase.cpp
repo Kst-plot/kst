@@ -149,7 +149,7 @@ PhaseSource::~PhaseSource() {
 
 
 QString PhaseSource::_automaticDescriptiveName() const {
-  return QString("Phase Plugin Object");
+  return tr("Phase Plugin Object");
 }
 
 
@@ -335,8 +335,8 @@ void PhaseSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString PhasePlugin::pluginName() const { return "Phase"; }
-QString PhasePlugin::pluginDescription() const { return "Phases a given data set to the specified period and zero outputVectorPhase."; }
+QString PhasePlugin::pluginName() const { return tr("Phase"); }
+QString PhasePlugin::pluginDescription() const { return tr("Phases a given data set to the specified period and zero outputVectorPhase."); }
 
 
 Kst::DataObject *PhasePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

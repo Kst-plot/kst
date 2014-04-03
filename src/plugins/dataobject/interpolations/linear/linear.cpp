@@ -132,7 +132,7 @@ LinearSource::~LinearSource() {
 
 
 QString LinearSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Linear Plugin Object");
+  return tr("Interpolation Linear Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void LinearSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString LinearPlugin::pluginName() const { return "Interpolation Linear Spline"; }
-QString LinearPlugin::pluginDescription() const { return "Generates a linear interpolation for a set of data."; }
+QString LinearPlugin::pluginName() const { return tr("Interpolation Linear Spline"); }
+QString LinearPlugin::pluginDescription() const { return tr("Generates a linear interpolation for a set of data."); }
 
 
 Kst::DataObject *LinearPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

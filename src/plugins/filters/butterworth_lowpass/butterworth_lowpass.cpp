@@ -141,7 +141,7 @@ FilterButterworthLowPassSource::~FilterButterworthLowPassSource() {
 
 
 QString FilterButterworthLowPassSource::_automaticDescriptiveName() const {
-  return QString(vector()->descriptiveName() + " Low Pass");
+  return  tr("%1 Low Pass").arg(vector()->descriptiveName());
 }
 
 
@@ -246,8 +246,8 @@ void FilterButterworthLowPassSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString ButterworthLowPassPlugin::pluginName() const { return "Low Pass Filter"; }
-QString ButterworthLowPassPlugin::pluginDescription() const { return "Filters a vector with a zero phase low pass filter with a butterworth amplitude response."; }
+QString ButterworthLowPassPlugin::pluginName() const { return tr("Low Pass Filter"); }
+QString ButterworthLowPassPlugin::pluginDescription() const { return tr("Filters a vector with a zero phase low pass filter with a butterworth amplitude response."); }
 
 
 Kst::DataObject *ButterworthLowPassPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

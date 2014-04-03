@@ -404,8 +404,8 @@ int QImageSource::readString(QString &S, const QString& string) {
 // QImageSourcePlugin
 //
 
-QString QImageSourcePlugin::pluginName() const { return "QImage Source Reader"; }
-QString QImageSourcePlugin::pluginDescription() const { return "QImage Source Reader"; }
+QString QImageSourcePlugin::pluginName() const { return tr("QImage Source Reader"); }
+QString QImageSourcePlugin::pluginDescription() const { return tr("QImage Source Reader"); }
 
 
 Kst::DataSource *QImageSourcePlugin::create(Kst::ObjectStore *store,

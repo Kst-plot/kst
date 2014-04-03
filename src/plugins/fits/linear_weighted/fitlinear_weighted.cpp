@@ -152,7 +152,7 @@ FitLinearWeightedSource::~FitLinearWeightedSource() {
 
 
 QString FitLinearWeightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Weighted Linear");
+  return tr("%1 Weighted Linear").arg(vectorY()->descriptiveName());
 }
 
 
@@ -320,8 +320,8 @@ QString FitLinearWeightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitLinearWeightedPlugin::pluginName() const { return "Linear Weighted Fit"; }
-QString FitLinearWeightedPlugin::pluginDescription() const { return "Generates a linear weighted fit for a set of data."; }
+QString FitLinearWeightedPlugin::pluginName() const { return tr("Linear Weighted Fit"); }
+QString FitLinearWeightedPlugin::pluginDescription() const { return tr("Generates a linear weighted fit for a set of data."); }
 
 
 Kst::DataObject *FitLinearWeightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -151,9 +151,9 @@ FilterUnwindSource::~FilterUnwindSource() {
 
 QString FilterUnwindSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return QString(vector()->descriptiveName() + " Unwind");
+    return tr("%1 Unwind").arg(vector()->descriptiveName());
   } else {
-    return QString("Unwind");
+    return tr("Unwind");
   }
 }
 
@@ -303,8 +303,8 @@ void FilterUnwindSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FilterUnwindPlugin::pluginName() const { return "Unwind Filter"; }
-QString FilterUnwindPlugin::pluginDescription() const { return "Unwinds data that have wrapped."; }
+QString FilterUnwindPlugin::pluginName() const { return tr("Unwind Filter"); }
+QString FilterUnwindPlugin::pluginDescription() const { return tr("Unwinds data that have wrapped."); }
 
 
 Kst::DataObject *FilterUnwindPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

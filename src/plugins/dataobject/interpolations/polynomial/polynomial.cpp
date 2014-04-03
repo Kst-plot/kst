@@ -132,7 +132,7 @@ PolynomialSource::~PolynomialSource() {
 
 
 QString PolynomialSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Polynomial Plugin Object");
+  return tr("Interpolation Polynomial Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void PolynomialSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString PolynomialPlugin::pluginName() const { return "Interpolation Polynomial Spline"; }
-QString PolynomialPlugin::pluginDescription() const { return "Generates a polynomial interpolation for a set of data."; }
+QString PolynomialPlugin::pluginName() const { return tr("Interpolation Polynomial Spline"); }
+QString PolynomialPlugin::pluginDescription() const { return tr("Generates a polynomial interpolation for a set of data."); }
 
 
 Kst::DataObject *PolynomialPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

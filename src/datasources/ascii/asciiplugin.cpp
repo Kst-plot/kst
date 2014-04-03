@@ -20,8 +20,8 @@
 #include <QButtonGroup>
 #include <QPlainTextEdit>
 #include <QMessageBox>
-QString AsciiPlugin::pluginName() const { return "ASCII File Reader"; }
-QString AsciiPlugin::pluginDescription() const { return "ASCII File Reader"; }
+QString AsciiPlugin::pluginName() const { return tr("ASCII File Reader"); }
+QString AsciiPlugin::pluginDescription() const { return tr("ASCII File Reader"); }
 
 
 Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,

@@ -178,7 +178,7 @@ FitKneeFrequencySource::~FitKneeFrequencySource() {
 
 
 QString FitKneeFrequencySource::_automaticDescriptiveName() const {
-  return QString("Fit Knee Frequency Plugin");
+  return tr("Fit Knee Frequency Plugin");
 }
 
 
@@ -432,8 +432,8 @@ QString FitKneeFrequencySource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitKneeFrequencyPlugin::pluginName() const { return "Knee Frequency Fit"; }
-QString FitKneeFrequencyPlugin::pluginDescription() const { return "Generates a knee frequency fit for a set of data."; }
+QString FitKneeFrequencyPlugin::pluginName() const { return tr("Knee Frequency Fit"); }
+QString FitKneeFrequencyPlugin::pluginDescription() const { return tr("Generates a knee frequency fit for a set of data."); }
 
 
 Kst::DataObject *FitKneeFrequencyPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

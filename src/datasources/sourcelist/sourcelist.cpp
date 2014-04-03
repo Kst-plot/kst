@@ -324,8 +324,8 @@ int SourceListSource::readField(const QString& field, DataVector::ReadInfo& p) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString SourceListPlugin::pluginName() const { return "Source List Reader"; }
-QString SourceListPlugin::pluginDescription() const { return "Source List Reader"; }
+QString SourceListPlugin::pluginName() const { return tr("Source List Reader"); }
+QString SourceListPlugin::pluginDescription() const { return tr("Source List Reader"); }
 
 /**********************
 SourceListPlugin - This class defines the plugin interface to the DataSource defined by the plugin.
