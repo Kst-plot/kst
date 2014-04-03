@@ -56,7 +56,7 @@ void LabelBuilder::showHelp() {
   }
 
   _helpBox->show();
-  _helpBox->setText("<qt>"
+  _helpBox->setText(tr("<qt>"
                     "<P ALIGN=LEFT STYLE=\"margin-bottom: 0in\"><FONT SIZE=4><B>Scalars &amp; equations</B></FONT><br>"
                      "Scalars and scalar equations can be displayed live in labels.  When the scalar "
                      "is updated, the label is updated.  Scalar names are autocompleted.  The format is:</P>"
@@ -116,7 +116,7 @@ void LabelBuilder::showHelp() {
                    "<I>x</I><FONT FACE=\"Courier New, monospace\">_</FONT><I>y</I>, <FONT FACE=\"Courier New, monospace\">\\t</FONT>,"
                    "<FONT FACE=\"Courier New, monospace\">\\n</FONT>, <FONT FACE=\"Courier New, monospace\">\\[</FONT></P>"
 
-                    );
+                    ));
   _helpBox->setWidth(100);
 
 }
