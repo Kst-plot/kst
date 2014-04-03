@@ -52,9 +52,9 @@ BasicPluginDialog::BasicPluginDialog(QString& pluginName, ObjectPtr dataObject, 
 
   QString title;
   if (editMode() == Edit)
-    title = tr("Edit ") + pluginName + tr(" Plugin");
+    title = tr("Edit %1 Plugin", "arg1 is a plugin name").arg(pluginName);
   else
-    title = tr("New ") + pluginName + tr(" Plugin");
+    title = tr("New %1 Plugin", "arg1 is a plugin name").arg(pluginName);
   setWindowTitle(title);
 
   _basicPluginTab = new BasicPluginTab(pluginName, this);

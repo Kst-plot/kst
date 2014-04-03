@@ -1186,7 +1186,7 @@ void ViewItem::addTitle(QMenu *menu) const {
   QWidgetAction *action = new QWidgetAction(menu);
   action->setEnabled(false);
 
-  QLabel *label = new QLabel(typeName() + tr(" Menu"), menu);
+  QLabel *label = new QLabel(tr("%1 Menu", "title of menu for object type arg1").arg(typeName()), menu);
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet("QLabel {"
                        "border-bottom: 2px solid lightGray;"

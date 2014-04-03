@@ -31,7 +31,7 @@ BadDatasourceDialog::BadDatasourceDialog(QString *filename, ObjectStore *store, 
    connect(_skip, SIGNAL(clicked()), this, SLOT(skip()));
    connect(_change, SIGNAL(clicked()), this, SLOT(change()));
 
-   _label->setText(*filename + tr(": File not found.  "));
+   _label->setText(tr("%1: File not found.  ").arg(*filename));
    _url->setFile(*filename);
    filename->clear();
    QApplication::restoreOverrideCursor();
