@@ -151,9 +151,9 @@ ActivityLevelSource::~ActivityLevelSource() {
 
 QString ActivityLevelSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return QString(vector()->descriptiveName() + " Activity Level");
+    return tr("%1 Activity Level").arg(vector()->descriptiveName());
   } else {
-    return QString("Actvity Level");
+    return tr("Activity Level");
   }
 }
 
@@ -401,8 +401,8 @@ void ActivityLevelSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString ActivityLevelPlugin::pluginName() const { return "Activity Level"; }
-QString ActivityLevelPlugin::pluginDescription() const { return "Computes the activity level of a signal as the product of standard deviation and number of reversals over a sliding window."; }
+QString ActivityLevelPlugin::pluginName() const { return tr("Activity Level"); }
+QString ActivityLevelPlugin::pluginDescription() const { return tr("Computes the activity level of a signal as the product of standard deviation and number of reversals over a sliding window."); }
 
 
 Kst::DataObject *ActivityLevelPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

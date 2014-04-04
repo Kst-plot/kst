@@ -32,6 +32,7 @@
 #include "datavector.h"
 #include "ksttimers.h"
 #include "objectstore.h"
+#include "relationscriptinterface.h"
 
 #include <time.h>
 #include <iostream>
@@ -97,6 +98,10 @@ void Curve::_initializeShortName() {
 
 
 Curve::~Curve() {
+}
+
+ScriptInterface* Curve::createScriptInterface() {
+  return new CurveSI(this);
 }
 
 

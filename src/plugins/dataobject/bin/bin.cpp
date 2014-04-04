@@ -117,7 +117,7 @@ BinSource::~BinSource() {
 
 
 QString BinSource::_automaticDescriptiveName() const {
-  return QString("Bin Plugin Object");
+  return tr("Bin Plugin Object");
 }
 
 
@@ -215,8 +215,8 @@ void BinSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString BinPlugin::pluginName() const { return "Bin"; }
-QString BinPlugin::pluginDescription() const { return "Bins data into the given size bins.  Each bin contains the mean of the elements belonging to the bin."; }
+QString BinPlugin::pluginName() const { return tr("Bin"); }
+QString BinPlugin::pluginDescription() const { return tr("Bins data into the given size bins.  Each bin contains the mean of the elements belonging to the bin."); }
 
 
 Kst::DataObject *BinPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

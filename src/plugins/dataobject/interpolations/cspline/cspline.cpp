@@ -132,7 +132,7 @@ CubicSplineSource::~CubicSplineSource() {
 
 
 QString CubicSplineSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Cubic Spline Plugin Object");
+  return tr("Interpolation Cubic Spline Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void CubicSplineSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CubicSplinePlugin::pluginName() const { return "Interpolation Cubic Spline Spline"; }
-QString CubicSplinePlugin::pluginDescription() const { return "Generates a spline interpolation for a set of data."; }
+QString CubicSplinePlugin::pluginName() const { return tr("Interpolation Cubic Spline Spline"); }
+QString CubicSplinePlugin::pluginDescription() const { return tr("Generates a spline interpolation for a set of data."); }
 
 
 Kst::DataObject *CubicSplinePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

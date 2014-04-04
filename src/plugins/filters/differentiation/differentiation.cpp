@@ -127,9 +127,9 @@ DifferentiationSource::~DifferentiationSource() {
 
 QString DifferentiationSource::_automaticDescriptiveName() const {
     if (vector()) {
-      return QString(vector()->descriptiveName() + " Derivative");
+      return tr("%1 Derivative").arg(vector()->descriptiveName());
     } else {
-      return QString("Derivative");
+      return tr("Derivative");
     }
 }
 
@@ -226,8 +226,8 @@ void DifferentiationSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString DifferentiationPlugin::pluginName() const { return "Fixed Step Differentiation"; }
-QString DifferentiationPlugin::pluginDescription() const { return "Computes the discrete derivative of an input vector"; }
+QString DifferentiationPlugin::pluginName() const { return tr("Fixed Step Differentiation"); }
+QString DifferentiationPlugin::pluginDescription() const { return tr("Computes the discrete derivative of an input vector"); }
 
 
 Kst::DataObject *DifferentiationPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

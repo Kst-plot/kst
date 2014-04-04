@@ -31,6 +31,7 @@
 #include "math_kst.h"
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "vectorscriptinterface.h"
 
 // ReqNF <=0 means read from ReqF0 to end of File
 // ReqF0 < means start at EndOfFile-ReqNF.
@@ -99,6 +100,11 @@ bool DataVector::isValid() const {
     return rc;
   }
   return false;
+}
+
+
+ScriptInterface* DataVector::createScriptInterface() {
+  return new VectorDataSI(this);
 }
 
 

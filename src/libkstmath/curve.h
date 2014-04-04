@@ -166,6 +166,7 @@ class KSTMATH_EXPORT Curve: public Relation
     virtual LabelInfo yLabelInfo() const;
     virtual LabelInfo titleInfo() const;
 
+    virtual ScriptInterface* createScriptInterface();
 
   protected:
     Curve(ObjectStore *store);

@@ -17,6 +17,7 @@
 
 #include "object.h"
 
+class ScriptInterface;
 
 #include "objectstore.h"
 
@@ -26,7 +27,7 @@ const QString Object::staticTypeString = "Object";
 
 Object::Object() :
   Shared(), KstRWLock(), NamedObject(),
-  _store(0L), _serial(0), _serialOfLastChange(0)
+  _store(0L), _serial(0), _serialOfLastChange(0), _interface(0)
 {
 }
 
@@ -45,6 +46,17 @@ void Object::reset() {
 
 const QString& Object::typeString() const {
   return staticTypeString;
+}
+
+ScriptInterface* Object::createScriptInterface() {
+  return NULL;
+}
+
+ScriptInterface* Object::scriptInterface() {
+  if (!_interface) {
+    _interface = createScriptInterface();
+  }
+  return _interface;
 }
 
 

@@ -35,6 +35,7 @@ namespace Kst {
 class PlotItem;
 class PlotAxis;
 class SharedAxisBoxItem;
+class ScriptInterface;
 
 struct ZoomState {
   QPointer<PlotItem> item;
@@ -279,6 +280,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     static void saveDialogDefaultsFont(QFont F, QColor C);
 
     bool maskedByMaximization() {return (view()->childMaximized() && !_plotMaximized);}
+
+    virtual ScriptInterface *createScriptInterface();
 
   protected:
     virtual QString _automaticDescriptiveName() const;

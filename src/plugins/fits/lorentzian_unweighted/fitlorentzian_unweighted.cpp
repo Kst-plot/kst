@@ -139,7 +139,7 @@ FitLorentzianUnweightedSource::~FitLorentzianUnweightedSource() {
 
 
 QString FitLorentzianUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Lorentzian");
+  return tr("%1 Lorentzian").arg(vectorY()->descriptiveName());;
 }
 
 
@@ -349,8 +349,8 @@ QString FitLorentzianUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitLorentzianUnweightedPlugin::pluginName() const { return "Lorentzian Fit"; }
-QString FitLorentzianUnweightedPlugin::pluginDescription() const { return "Generates a lorentzian fit for a set of data."; }
+QString FitLorentzianUnweightedPlugin::pluginName() const { return tr("Lorentzian Fit"); }
+QString FitLorentzianUnweightedPlugin::pluginDescription() const { return tr("Generates a lorentzian fit for a set of data."); }
 
 
 Kst::DataObject *FitLorentzianUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

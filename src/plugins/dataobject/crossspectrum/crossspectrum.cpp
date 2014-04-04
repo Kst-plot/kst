@@ -147,7 +147,7 @@ CrossSpectrumSource::~CrossSpectrumSource() {
 
 
 QString CrossSpectrumSource::_automaticDescriptiveName() const {
-  return QString("Cross Spectrum Plugin Object");
+  return tr("Cross Spectrum Plugin Object");
 }
 
 
@@ -355,8 +355,8 @@ void CrossSpectrumSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CrossSpectrumPlugin::pluginName() const { return "Cross Spectrum DataObject Plugin"; }
-QString CrossSpectrumPlugin::pluginDescription() const { return "Generates the cross power spectrum of one vector with another."; }
+QString CrossSpectrumPlugin::pluginName() const { return tr("Cross Spectrum DataObject Plugin"); }
+QString CrossSpectrumPlugin::pluginDescription() const { return tr("Generates the cross power spectrum of one vector with another."); }
 
 
 Kst::DataObject *CrossSpectrumPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

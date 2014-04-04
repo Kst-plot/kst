@@ -156,9 +156,9 @@ FilterFitDialog::FilterFitDialog(QString& pluginName, ObjectPtr dataObject, QWid
 
   QString title;
   if (editMode() == Edit)
-    title = tr("Edit ") + pluginName + tr(" Plugin");
+    title = tr("Edit %1 Plugin", "Arg1 is a plugin").arg(pluginName);
   else
-    title = tr("New ") + pluginName + tr(" Plugin");
+    title = tr("New %1 Plugin", "Arg1 is a plugin").arg(pluginName);
   setWindowTitle(title);
 
   _filterFitTab = new FilterFitTab(pluginName, this);

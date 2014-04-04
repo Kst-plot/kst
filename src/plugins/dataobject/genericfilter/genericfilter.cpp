@@ -152,7 +152,7 @@ GenericFilterSource::~GenericFilterSource() {
 
 
 QString GenericFilterSource::_automaticDescriptiveName() const {
-  return QString("Generic Filter Plugin Object");
+  return tr("Generic Filter Plugin Object");
 }
 
 
@@ -289,8 +289,8 @@ void GenericFilterSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString GenericFilterPlugin::pluginName() const { return "Generic Filter"; }
-QString GenericFilterPlugin::pluginDescription() const { return "Generates a discrete filter from a continuous-time definition."; }
+QString GenericFilterPlugin::pluginName() const { return tr("Generic Filter"); }
+QString GenericFilterPlugin::pluginDescription() const { return tr("Generates a discrete filter from a continuous-time definition."); }
 
 
 Kst::DataObject *GenericFilterPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

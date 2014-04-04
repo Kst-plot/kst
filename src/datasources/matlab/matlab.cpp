@@ -742,8 +742,8 @@ int MatlabSource::samplesPerFrame(const QString& field) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString MatlabSourcePlugin::pluginName() const { return "Matlab Datasource Reader"; }
-QString MatlabSourcePlugin::pluginDescription() const { return "Matlab's .mat Datasource Reader"; }
+QString MatlabSourcePlugin::pluginName() const { return tr("Matlab Datasource Reader"); }
+QString MatlabSourcePlugin::pluginDescription() const { return tr("Matlab's .mat Datasource Reader"); }
 
 /**********************
 MatlabDatasourcePlugin - This class defines the plugin interface to the DataSource defined by the plugin.

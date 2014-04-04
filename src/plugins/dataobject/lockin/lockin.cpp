@@ -30,9 +30,7 @@ const int DELAY = 0;
 
 
 
-static const QString& SHORT_NAME = "Lock-In";
 static const QString& PLUGIN_NAME = "Lock-In DataObject Plugin";
-static const QString& PLUGIN_DESCRIPTION = "Lock-In amplifies Input using a Reference carrier wave";
 static const QString& IN_INPUT_VECTOR = "Input Vector";
 static const QString& IN_REF_VECTOR = "Reference Vector";
 static const QString& OUT_REF_VECTOR_NORM = "Normalized Reference Vector";
@@ -132,7 +130,7 @@ LockInSource::~LockInSource() {
 
 
 QString LockInSource::_automaticDescriptiveName() const {
-  return PLUGIN_NAME;
+  return tr("Lock-In DataObject Plugin");
 }
 
 
@@ -342,8 +340,8 @@ void LockInSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString LockInPlugin::pluginName() const { return SHORT_NAME; }
-QString LockInPlugin::pluginDescription() const { return PLUGIN_DESCRIPTION; }
+QString LockInPlugin::pluginName() const { return tr("Lock-In"); }
+QString LockInPlugin::pluginDescription() const { return tr("Lock-In amplifies Input using a Reference carrier wave"); }
 
 
 Kst::DataObject *LockInPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

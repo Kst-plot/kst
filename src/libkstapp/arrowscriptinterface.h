@@ -30,11 +30,9 @@ class ArrowSI : public ScriptInterface
     Q_OBJECT
   public:
     explicit ArrowSI(ArrowItem* it);
-    QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
-    QByteArray getHandle();
-    void endEditUpdate() {if (_dim->item) _dim->item->update();}
+    QByteArray endEditUpdate() {if (_dim->item) _dim->item->update();return ("Finished editing "+_dim->item->Name()).toLatin1();}
 
     static ScriptInterface* newArrow();
 

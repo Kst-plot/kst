@@ -31,11 +31,9 @@ class LabelSI : public ScriptInterface
     Q_OBJECT
 public:
     explicit LabelSI(LabelItem* it);
-    QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
-    QByteArray getHandle();
-    void endEditUpdate() {if (dim->item) dim->item->update();}
+    QByteArray endEditUpdate() {if (dim->item) dim->item->update();return ("Finished editing "+dim->item->Name()).toLatin1();}
     static ScriptInterface* newLabel();
 
 private:

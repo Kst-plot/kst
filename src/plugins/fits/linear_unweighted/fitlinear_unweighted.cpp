@@ -137,7 +137,7 @@ FitLinearUnweightedSource::~FitLinearUnweightedSource() {
 
 
 QString FitLinearUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Unweighted Linear");
+  return tr("%1 Unweighted Linear").arg(vectorY()->descriptiveName());
 }
 
 
@@ -297,8 +297,8 @@ QString FitLinearUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitLinearUnweightedPlugin::pluginName() const { return "Linear Fit"; }
-QString FitLinearUnweightedPlugin::pluginDescription() const { return "Generates a linear fit for a set of data."; }
+QString FitLinearUnweightedPlugin::pluginName() const { return tr("Linear Fit"); }
+QString FitLinearUnweightedPlugin::pluginDescription() const { return tr("Generates a linear fit for a set of data."); }
 
 
 Kst::DataObject *FitLinearUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -79,6 +79,8 @@ class KSTCORE_EXPORT VScalar : public Scalar {
 
     virtual QString propertyString() const;
 
+    virtual ScriptInterface* createScriptInterface();
+
   private:
     /** file to read for rvectors */
     DataSourcePtr _file;

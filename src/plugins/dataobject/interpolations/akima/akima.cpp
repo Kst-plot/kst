@@ -132,7 +132,7 @@ AkimaSource::~AkimaSource() {
 
 
 QString AkimaSource::_automaticDescriptiveName() const {
-  return QString("Interpolation Akima Plugin Object");
+  return tr("Interpolation Akima Plugin Object");
 }
 
 
@@ -214,8 +214,8 @@ void AkimaSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString AkimaPlugin::pluginName() const { return "Interpolation Akima Spline"; }
-QString AkimaPlugin::pluginDescription() const { return "Generates a non-rounded Akima interpolation for a set of data."; }
+QString AkimaPlugin::pluginName() const { return tr("Interpolation Akima Spline"); }
+QString AkimaPlugin::pluginDescription() const { return tr("Generates a non-rounded Akima interpolation for a set of data."); }
 
 
 Kst::DataObject *AkimaPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

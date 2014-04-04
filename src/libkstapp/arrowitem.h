@@ -18,6 +18,8 @@
 
 namespace Kst {
 
+class ScriptInterface;
+
 class ArrowItem : public LineItem
 {
   Q_OBJECT
@@ -51,6 +53,8 @@ class ArrowItem : public LineItem
 
     virtual bool customDimensionsTab() {return true;}
     void applyDialogDefaultsHeads();
+
+    virtual ScriptInterface *createScriptInterface();
 
   public Q_SLOTS:
     virtual void edit();

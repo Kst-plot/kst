@@ -119,7 +119,7 @@ ConvolveSource::~ConvolveSource() {
 
 
 QString ConvolveSource::_automaticDescriptiveName() const {
-  return QString("Convolve Plugin Object");
+  return tr("Convolve Plugin Object");
 }
 
 
@@ -308,8 +308,8 @@ void ConvolveSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString ConvolvePlugin::pluginName() const { return "Convolve"; }
-QString ConvolvePlugin::pluginDescription() const { return "Generates the convolution of one vector with another."; }
+QString ConvolvePlugin::pluginName() const { return tr("Convolve"); }
+QString ConvolvePlugin::pluginDescription() const { return tr("Generates the convolution of one vector with another."); }
 
 
 Kst::DataObject *ConvolvePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

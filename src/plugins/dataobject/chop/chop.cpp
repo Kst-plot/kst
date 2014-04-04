@@ -110,7 +110,7 @@ ChopSource::~ChopSource() {
 
 
 QString ChopSource::_automaticDescriptiveName() const {
-  return QString("Chop Plugin Object");
+  return tr("Chop Plugin Object");
 }
 
 
@@ -206,8 +206,8 @@ void ChopSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString ChopPlugin::pluginName() const { return "Chop"; }
-QString ChopPlugin::pluginDescription() const { return "Chops a given data set into odd, even, difference, and Index data sets."; }
+QString ChopPlugin::pluginName() const { return tr("Chop"); }
+QString ChopPlugin::pluginDescription() const { return tr("Chops a given data set into odd, even, difference, and Index data sets."); }
 
 
 Kst::DataObject *ChopPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

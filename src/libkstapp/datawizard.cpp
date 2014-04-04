@@ -218,7 +218,7 @@ void DataWizardPageVectors::updateVectors() {
   _vectorsToPlot->clear();
 
   _vectors->addItems(((DataWizard*)wizard())->dataSourceFieldList());
-  _availableLabel->setText(QString::number(_vectors->count()) + tr(" vector(s) available"));
+  _availableLabel->setText(tr("%1 vector(s) available").arg(_vectors->count()));
 }
 
 
@@ -243,7 +243,7 @@ void DataWizardPageVectors::remove() {
   }
   _vectors->clearSelection();
 
-  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + tr(" vector(s) selected"));
+  _selectedLabel->setText(tr("%1 vector(s) selected").arg(_vectorsToPlot->count()));
 
   emit completeChanged();
 }
@@ -259,7 +259,7 @@ void DataWizardPageVectors::add() {
   }
 
   _vectorsToPlot->setCurrentRow(_vectorsToPlot->count() - 1);
-  _selectedLabel->setText(QString::number(_vectorsToPlot->count()) + tr(" vector(s) selected"));
+  _selectedLabel->setText(tr("%1 vector(s) selected").arg(_vectorsToPlot->count()));
   emit completeChanged();
 }
 

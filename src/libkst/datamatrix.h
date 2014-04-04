@@ -123,6 +123,8 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     virtual LabelInfo yLabelInfo() const;
     virtual LabelInfo titleInfo() const;
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();

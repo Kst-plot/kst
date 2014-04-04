@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "datastring.h"
+#include "stringscriptinterface.h"
 
 #include <QDebug>
 #include <QTextDocument>
@@ -37,6 +38,10 @@ DataString::DataString(ObjectStore *store)
 
 
 DataString::~DataString() {
+}
+
+ScriptInterface* DataString::createScriptInterface() {
+  return new StringDataSI(this);
 }
 
 

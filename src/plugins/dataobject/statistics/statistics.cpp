@@ -109,7 +109,7 @@ StatisticsSource::~StatisticsSource() {
 
 
 QString StatisticsSource::_automaticDescriptiveName() const {
-  return _inputVectors[VECTOR_IN]->descriptiveName() + QString("Statistics");
+  return tr("%1 Statistics", "arg1 is a vector").arg(_inputVectors[VECTOR_IN]->descriptiveName());
 }
 
 
@@ -313,8 +313,8 @@ void StatisticsSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString StatisticsPlugin::pluginName() const { return "Statistics"; }
-QString StatisticsPlugin::pluginDescription() const { return "Determines statistics for a given inputVector set."; }
+QString StatisticsPlugin::pluginName() const { return tr("Statistics"); }
+QString StatisticsPlugin::pluginDescription() const { return tr("Determines statistics for a given inputVector set."); }
 
 
 Kst::DataObject *StatisticsPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

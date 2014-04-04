@@ -115,9 +115,9 @@ CumulativeAverageSource::~CumulativeAverageSource() {
 
 QString CumulativeAverageSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return QString(vector()->descriptiveName() + " Cumulative Average");
+    return tr("%1 Cumulative Average").arg(vector()->descriptiveName());
   } else {
-    return QString("Cumulative Average");
+    return tr("Cumulative Average");
   }
 }
 
@@ -209,8 +209,8 @@ void CumulativeAverageSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CumulativeAveragePlugin::pluginName() const { return "Cumulative Average"; }
-QString CumulativeAveragePlugin::pluginDescription() const { return "Computes the cumulative average of the input vector."; }
+QString CumulativeAveragePlugin::pluginName() const { return tr("Cumulative Average"); }
+QString CumulativeAveragePlugin::pluginDescription() const { return tr("Computes the cumulative average of the input vector."); }
 
 
 Kst::DataObject *CumulativeAveragePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

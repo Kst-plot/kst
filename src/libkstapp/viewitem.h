@@ -36,6 +36,7 @@ class DialogPage;
 class ViewGridLayout;
 class ViewItem;
 class ViewItemDialog;
+class ScriptInterface;
 
 typedef QList<ViewItem *> ViewItemList;
 
@@ -254,6 +255,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     void storePen(const QPen &pen) {_storedPen = pen; setPen(pen);}
     QPen storedPen() const { return _storedPen;}
 
+    virtual ScriptInterface *createScriptInterface();
+
+    ScriptInterface *scriptInterface();
   Q_SIGNALS:
     void geometryChanged();
     void creationComplete();
@@ -403,6 +407,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     ViewItemDialog *_editDialog;
     QPen _storedPen;
+    ScriptInterface *_interface;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)

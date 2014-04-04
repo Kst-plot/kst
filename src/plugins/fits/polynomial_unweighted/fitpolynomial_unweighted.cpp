@@ -151,7 +151,7 @@ FitPolynomialUnweightedSource::~FitPolynomialUnweightedSource() {
 
 
 QString FitPolynomialUnweightedSource::_automaticDescriptiveName() const {
-  return vectorY()->descriptiveName() + tr(" Polynomial");
+  return tr("%1 Polynomial").arg(vectorY()->descriptiveName());;
 }
 
 
@@ -312,8 +312,8 @@ QString FitPolynomialUnweightedSource::parameterName(int index) const {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FitPolynomialUnweightedPlugin::pluginName() const { return "Polynomial Fit"; }
-QString FitPolynomialUnweightedPlugin::pluginDescription() const { return "Generates a polynomial fit for a set of data."; }
+QString FitPolynomialUnweightedPlugin::pluginName() const { return tr("Polynomial Fit"); }
+QString FitPolynomialUnweightedPlugin::pluginDescription() const { return tr("Generates a polynomial fit for a set of data."); }
 
 
 Kst::DataObject *FitPolynomialUnweightedPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

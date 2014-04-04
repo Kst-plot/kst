@@ -28,8 +28,7 @@ class ViewItem;
 
 class ScriptServer;
 
-typedef QByteArray (ScriptServer::*ScriptMemberFn)(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode,
-                                            const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+typedef QByteArray (ScriptServer::*ScriptMemberFn)(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
 class ScriptServer : public QObject
 {
@@ -37,179 +36,160 @@ class ScriptServer : public QObject
     QLocalServer* _server;
     ObjectStore* _store;
     ScriptInterface* _interface;
-    IfSI* _if;
-    MacroSI* _curMac;
     bool _curMacComEcho;
     QList<ViewItem*> vi;    // cache
     QMap<QByteArray,ScriptMemberFn> _fnMap;
-    QMap<QByteArray,MacroSI*> _macroMap;
-    QMap<QByteArray,VarSI*> _varMap;
 public:
     explicit ScriptServer(ObjectStore*obj);
     ~ScriptServer();
     QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
     void setStore(ObjectStore *obj) { _store = obj; vi.clear();}
-    static ScriptInterface* getViewItemSI(ViewItem* x);
 public slots:
     void procConnection();
     void readSomething();
-    QByteArray procMacro(QByteArray&command,QLocalSocket*s);
-    QByteArray exec(QByteArray command,QLocalSocket* s,int ifMode=0, QByteArray ifEqual="");
+    QByteArray exec(QByteArray command,QLocalSocket* s);
 
 protected:
-    QByteArray noSuchFn(QByteArray& , QLocalSocket*,ObjectStore*,const int&, const QByteArray&,IfSI*& ,VarSI*) {return ""; }
-
-    //
-    // these commands are processed directly in ScriptServer and not by an interface.
-    //
+    QByteArray noSuchFn(QByteArray& , QLocalSocket*,ObjectStore*) {return ""; }
 
     // ObjectStore
-    QByteArray getVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newDataVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newGeneratedVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getEditableVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newEditableVectorAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getEditableVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEditableVectorAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getScalarList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newDataMatrix(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newMatrix(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getEditableMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEditableMatrixAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getEditableMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newEditableMatrixAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getScalarList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newGeneratedScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newDataScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newVScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getStringList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newString(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newStringGen(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getStringList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newGeneratedString(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newDataString(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getCurveList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newCurve(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getCurveList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newCurve(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getEquationList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getEquationList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getHistogramList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getHistogramList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getPSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getPSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getImageList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getImageList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getCSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newCSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getCSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newCSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getBasicPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray getBasicPluginTypeList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newBasicPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getBasicPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray getBasicPluginTypeList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newBasicPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getArrowList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newArrow(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getArrowList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newArrow(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getButtonList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newButton(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getButtonList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newButton(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getLineEditList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newLineEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getLineEditList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newLineEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getCircleList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newCircle(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getCircleList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newCircle(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getEllipseList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newEllipse(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getEllipseList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEllipse(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getLabelList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getLabelList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newLabel(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getLineList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newLine(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getLineList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newLine(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getPictureList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newPicture(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getPictureList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newPicture(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray getPlotList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newPlot(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getPlotList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newPlot(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    //QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    //QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    //QByteArray getSharedAxisBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray newSharedAxisBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
 #ifndef KST_NO_SVG
-    QByteArray getSvgItemList(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newSvgItem(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray getSvgItemList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newSvgItem(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 #endif
 
     // Access to interfaces
-    QByteArray beginEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray endEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray beginEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray endEdit(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     // Quit:
-    QByteArray done(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray done(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     // Clear:
-    QByteArray clear(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray clear(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     // Destruction is much easier than construction.
-    QByteArray eliminate(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray eliminate(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     // General
-    QByteArray tabCount(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray setTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray tabCount(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray setTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    QByteArray screenBack(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray screenForward(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray countFromEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray readToEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray setPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray unsetPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray screenBack(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray screenForward(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray countFromEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray readToEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray setPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray unsetPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
-    // Macros
-    QByteArray newMacro(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray newMacro_(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray delMacro(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray endMacro(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-
-    // If
-    QByteArray kstScriptIf(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-    QByteArray kstScriptFi(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
-
-    // Commands
-    QByteArray commands(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
 
     // Hacks
-    QByteArray editableVectorSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray editableVectorSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableVector::setBinaryArray(
 
-    QByteArray editableMatrixSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray editableMatrixSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableMatrix::setBinaryArray(
 
-    QByteArray editableVectorSet(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray editableVectorSet(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableVector::set(
 
-    QByteArray vectorGetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray vectorGetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //Vector::getBinaryArray(
 
-    QByteArray matrixGetBinaryArray(QByteArray& command, QLocalSocket*s,ObjectStore*_store,const int&ifMode,const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray matrixGetBinaryArray(QByteArray& command, QLocalSocket*s,ObjectStore*_store);
     //Matrix::getBinaryArray(
 
-    QByteArray stringValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray stringValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //String::value(
 
-    QByteArray stringSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray stringSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //String::setValue(
 
-    QByteArray scalarValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray scalarValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //Scalar::value(
 
-    QByteArray scalarSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store,const int&ifMode, const QByteArray&ifString,IfSI*& ifStat,VarSI*var);
+    QByteArray scalarSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //Scalar::setValue(
 
 };

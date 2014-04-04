@@ -131,7 +131,7 @@ ShiftSource::~ShiftSource() {
 
 
 QString ShiftSource::_automaticDescriptiveName() const {
-  return QString("Shift Plugin Object");
+  return tr("Shift Plugin Object");
 }
 
 QString ShiftSource::descriptionTip() const {
@@ -249,8 +249,8 @@ void ShiftSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString ShiftPlugin::pluginName() const { return "Shift"; }
-QString ShiftPlugin::pluginDescription() const { return "Shifts (and truncates) a vector."; }
+QString ShiftPlugin::pluginName() const { return tr("Shift"); }
+QString ShiftPlugin::pluginDescription() const { return tr("Shifts (and truncates) a vector."); }
 
 
 Kst::DataObject *ShiftPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

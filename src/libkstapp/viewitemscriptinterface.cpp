@@ -19,13 +19,6 @@
 
 namespace Kst {
 
-QByteArrayList LayoutTabSI::commands() {
-    QByteArrayList ba;
-    ba<<"setLayoutHorizontalMargin("<<"getLayoutHorizontalMargin()"<<"setLayoutVerticalMargin("<<
-        "getLayoutVerticalMargin()"<<"setLayoutHorizontalSpacing("<<"getLayoutHorizontalSpacing()"<<
-        "setLayoutVerticalSpacing("<<"getLayoutVerticalSpacing()";
-    return ba;
-}
 QString LayoutTabSI::doCommand(QString x) {
     if(x.startsWith("getLayout")) {
         x.remove(0,9);
@@ -74,11 +67,6 @@ QString LayoutTabSI::doCommand(QString x) {
     return "";
 }
 
-QByteArrayList FillTabSI::commands() {
-    QByteArrayList ba;
-    ba<<"setFillColor("<<"setIndexOfFillStyle(";
-    return ba;
-}
 QString FillTabSI::doCommand(QString x) {
     if(!x.startsWith("setFillColor")&&!x.startsWith("setIndexOfFillStyle(")) {
         return "";
@@ -99,12 +87,6 @@ QString FillTabSI::doCommand(QString x) {
     return "Done";
 }
 
-QByteArrayList StrokeTabSI::commands() {
-    QByteArrayList ba;
-    ba<<"setIndexOfStrokeStyle("<<"setIndexOfStrokeBrushStyle("<<"setIndexOfStrokeJoinStyle("<<"setIndexOfStrokeCapStyle("<<
-        "setStrokeWidth("<<"setStrokeBrushColor(";
-    return ba;
-}
 QString StrokeTabSI::doCommand(QString x) {
     if(!x.startsWith("setIndexOfStrokeStyle")&&!x.startsWith("setIndexOfStrokeBrushStyle(")&&!x.startsWith("setIndexOfStrokeJoinStyle")&&
             !x.startsWith("setIndexOfStrokeCapStyle")&&!x.startsWith("setStrokeWidth")&&!x.startsWith("setStrokeBrushColor")) {
@@ -163,14 +145,6 @@ QString StrokeTabSI::doCommand(QString x) {
 
     item->storePen(p);
     return "Done";
-}
-
-QByteArrayList DimensionTabSI::commands() {
-    QByteArrayList ba;
-    ba<<"setRotation("<<"getRotation()"<<"setGeoX("<<"getGeoX()"<<"setGeoY("<<"getGeoY()"<<
-        "setPosX("<<"getPosX()"<<"setPosY("<<"getPosY()"<<"checkFixAspectRatio()"<<
-        "uncheckFixAspectRatio()"<<"fixAspectRatioIsChecked()";
-    return ba;
 }
 
 QString DimensionTabSI::doCommand(QString x) {
@@ -244,39 +218,36 @@ ViewItemSI::ViewItemSI(ViewItem *it) : layout(new LayoutTabSI), dim(new Dimensio
     stroke->item=it;
 }
 
-QByteArrayList ViewItemSI::commands() {
-    return layout->commands()<<dim->commands()<<fill->commands()<<stroke->commands()<<(qobject_cast<LineEditItem*>(layout->vi)||qobject_cast<ButtonItem*>(layout->vi)?"setText(":"");
-}
-
 QString ViewItemSI::doCommand(QString x) {
-    QString v=layout->doCommand(x);
-    if(v.isEmpty()) {
-        v=dim->doCommand(x);
+
+  QString v=doNamedObjectCommand(x, dim->item);
+
+  if (v.isEmpty()) {
+    v=layout->doCommand(x);
+  }
+  if (v.isEmpty()) {
+    v=dim->doCommand(x);
+  }
+  if (v.isEmpty()) {
+    v=fill->doCommand(x);
+  }
+  if (v.isEmpty()) {
+    v=stroke->doCommand(x);
+  }
+  if (v.isEmpty()&&x.startsWith("setText(")) {
+    if(qobject_cast<ButtonItem*>(layout->vi)) {
+      qobject_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
+      v="Done";
+    } else if(qobject_cast<LineEditItem*>(layout->vi)) {
+      qobject_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
+      v="Done";
     }
-    if(v.isEmpty()) {
-        v=fill->doCommand(x);
-    }
-    if(v.isEmpty()) {
-        v=stroke->doCommand(x);
-    }
-    if(v.isEmpty()&&x.startsWith("setText(")) {
-        if(qobject_cast<ButtonItem*>(layout->vi)) {
-            qobject_cast<ButtonItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
-            v="Done";
-        } else if(qobject_cast<LineEditItem*>(layout->vi)) {
-            qobject_cast<LineEditItem*>(layout->vi)->setText(x.remove("setText(").remove(')'));
-            v="Done";
-        }
-    }
-    return v.isEmpty()?"No command":v;
+  }
+  return v.isEmpty()?"No command":v;
 }
 
 bool ViewItemSI::isValid() {
     return dim->item;
-}
-
-QByteArray ViewItemSI::getHandle() {
-    return ("Finished editing "%dim->item->Name()).toLatin1();
 }
 
 ScriptInterface* ViewItemSI::newBox() {

@@ -164,7 +164,7 @@ EffectiveBandwidthSource::~EffectiveBandwidthSource() {
 
 
 QString EffectiveBandwidthSource::_automaticDescriptiveName() const {
-  return QString("Effective Bandwidth Plugin Object");
+  return tr("Effective Bandwidth Plugin Object");
 }
 
 
@@ -336,8 +336,8 @@ void EffectiveBandwidthSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString EffectiveBandwidthPlugin::pluginName() const { return "Effective Bandwidth"; }
-QString EffectiveBandwidthPlugin::pluginDescription() const { return "Calculates effective bandwidth from an amplitude spectrum."; }
+QString EffectiveBandwidthPlugin::pluginName() const { return tr("Effective Bandwidth"); }
+QString EffectiveBandwidthPlugin::pluginDescription() const { return tr("Calculates effective bandwidth from an amplitude spectrum."); }
 
 
 Kst::DataObject *EffectiveBandwidthPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -139,9 +139,9 @@ FilterDespikeSource::~FilterDespikeSource() {
 
 QString FilterDespikeSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return QString(vector()->descriptiveName() + " Despike");
+    return tr("%1 Despiked", "arg 1 is the name of the vector which has been despiked").arg(vector()->descriptiveName());
   } else {
-    return QString("Despike");
+    return tr("Despike");
   }
 }
 
@@ -345,8 +345,8 @@ void FilterDespikeSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString FilterDespikePlugin::pluginName() const { return "Despike Filter"; }
-QString FilterDespikePlugin::pluginDescription() const { return "Finds and removes spikes using a 3 point difference."; }
+QString FilterDespikePlugin::pluginName() const { return tr("Despike Filter"); }
+QString FilterDespikePlugin::pluginDescription() const { return tr("Finds and removes spikes using a 3 point difference."); }
 
 
 Kst::DataObject *FilterDespikePlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

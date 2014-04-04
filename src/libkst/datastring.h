@@ -81,6 +81,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
 
     bool isValid() const;
 
+    virtual ScriptInterface* createScriptInterface();
   private:
     /** make a copy of the DataString */
     virtual PrimitivePtr makeDuplicate() const;

@@ -29,11 +29,9 @@ class PluginSI : public ScriptInterface
     Q_OBJECT
 public:
     PluginSI(BasicPluginPtr plugin, ObjectStore *store);
-    QByteArrayList commands();
     QString doCommand(QString);
     bool isValid();
-    QByteArray getHandle();
-    void endEditUpdate() {}
+    QByteArray endEditUpdate();
   private:
     BasicPluginPtr _plugin;
     ObjectStore *_store;

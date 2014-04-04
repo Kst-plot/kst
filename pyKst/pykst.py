@@ -11,7 +11,7 @@ from pykstpp import *
 
 def b2str(val):
   if isinstance(val, bool):
-    return "true" if val else "false"
+    return "True" if val else "False"
   else:
     return str(val)
 
@@ -50,20 +50,6 @@ class Client:
     self.send(b2str("endEdit()"))
     return x
 
-  def getArray(self,command):
-    """ Sends a request for a numPy.array. You should never use this directly, as there is no guarantee that the internal command list kst
-        uses won't change. Instead use the convenience classes included with pykst. """
-    ret=array([0.0])
-    get_arr(ret,self.serverName,command)
-    return ret
-
-  def getArray2D(self,command):
-    """ Sends a request for a numPy.array. You should never use this directly, as there is no guarantee that the internal command list kst
-        uses won't change. Instead use the convenience classes included with pykst. """
-    ret=array([0.0])
-    get_matrix(ret,self.serverName,command)
-    return ret
-
   def clear(self):
     """ Equivalent to file->close from the menubar inside kst.  Clears all objects from kst."""
     self.send("clear()")
@@ -94,1712 +80,462 @@ class Client:
   def setTab(self,tab):
     """ Set the index of the current tab. It must be greater or equal to 0 and less than tabCount(). """
     self.send("setTab("+b2str(tab)+")")
-  def plot(self,*args):
-    """ Create a new plot in the current tab in kst with arguments.
-    
-    Arguments may be 1D numPy arrays, 2D numPy arrays, pykst vectors or pykst matricies. In the case of the first two, they would be imported into kst.
 
-    Formating based loosly on matplotlib.pyplot.plot strings like "r+" is also provided.  
-    
-    Some examples::
-    
-      client.plot(x, y)         # plot x and y using default line style and color
-      client.plot(x, y, 'bo')   # plot x and y using blue circle markers
-      client.plot(y)            # plot y using x as index array 0..N-1
-      client.plot(y, 'r+')      # ditto, but with red plusses
-    
-
-    See http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.plot
-
-    A reference to the created plot is returned. """
-
-    s=-1
-    plot=0
-    makecurve=False
-    for arg in args:
-      if s==-1 and makecurve:
-        if isinstance(arg,str):
-          if '--' in arg:
-            curvelinetype=1
-            arg=arg.replace('--','',1)
-          elif '-..' in arg:
-            curvelinetype=4
-            arg=arg.replace('-..','',1)
-          elif '-.' in arg:
-            curvelinetype=3
-            arg=arg.replace('-.','',1)
-          elif ':' in arg:
-            curvelinetype=2
-            arg=arg.replace(':','',1)
-          elif '-' in arg:
-            curvelinetype=0
-            arg=arg.replace('-','',1)
-
-          if '.' in arg or ',' in arg or '<' in arg or '>' in arg or '3' in arg or '4' in arg or 'p' in arg or 'h' in arg or 'H' in arg or '|' in arg or '_' in arg:
-            print("Warning: you are trying to use a marker type which is present in matplotlib.pyplot but not in pykst")
-            usepoints=True
-            pointtype=12
-          elif 'o' in arg:
-            usepoints=True
-            pointtype=2
-          elif 'v' in arg or '1' in arg:
-            usepoints=True
-            pointtype=4
-          elif '^' in arg or '2' in arg:
-            usepoints=True
-            pointtype=5
-          elif 's' in arg:
-            usepoints=True
-            pointtype=1
-          elif '*' in arg:
-            usepoints=True
-            pointtype=8
-          elif '+' in arg:
-            usepoints=True
-            pointtype=7
-          elif 'x' in arg:
-            usepoints=True
-            pointtype=0
-          elif 'D' in arg or 'd' in arg:
-            usepoints=True
-            pointtype=12
-        
-          if 'b' in arg:
-            color="blue"
-          elif 'g' in arg:
-            color="green"
-          elif 'r' in arg:
-            color="red"
-          elif 'c' in arg:
-            color="cyan"
-          elif 'm' in arg:
-            color="magenta"
-          elif 'y' in arg:
-            color="yellow"
-          elif 'k' in arg:
-            color="black"
-          elif 'w' in arg:
-            color="white"
-          
-          s=-2
-        NewCurve(self,x,y,0,0,0,0,False,False,color,curvelinetype,curveweight,
-                 uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,
-                 ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)
-        plot=ExistingPlot.getList(self)[-1]   #i.e., last
-        makecurve=False
-        x=0
-        y=0
-        if s==-2:
-          s=-1
-          continue
-      s+=1
-      if s==0:
-        while True:
-          if isinstance(arg,Vector):
-            x=arg
-            break
-          elif isinstance(arg,Matrix):
-            ColorImage(self,arg,0,0,0,0,0,True,0,False,0 if not isinstance(plot,Plot) else plot,True if not isinstance(plot,Plot) else False)
-            plot=ExistingPlot(self,ExistingPlot.getList(self)[-1])   #i.e., last
-            s=-1
-            break
-          elif isinstance(arg,ndarray):
-            x=EditableVector(self) if arg.ndim==1 else EditableMatrix(self)
-            x.setFromList(arg)
-            arg=x
-          else:
-            print("Unknown arg. type...")
-            break
-      if s==1:
-        if isinstance(arg,Vector):
-          y=arg
-        elif isinstance(arg,ndarray):
-          y=EditableVector(self)
-          y.setFromList(arg)
-        else:
-          continue
-        color="black"
-        curvelinetype=0
-        curveweight=2
-        uselines=True
-        usepoints=False
-        pointtype=0
-        pointdensity=0
-        usehead=False
-        headtype=0
-        usebargraph=False
-        bargraphfill="black"
-        ignoreinauto=False
-        donotplaceinanyplot=False
-        placeinexistingplot=0 if not isinstance(plot,Plot) else plot
-        placeinnewplot=True if not isinstance(plot,Plot) else False
-        #no args after this
-        makecurve=True
-        s=-1
-    if makecurve:
-      NewCurve(self,x,y,0,0,0,0,False,False,color,curvelinetype,curveweight,uselines,usepoints,pointtype,pointdensity,usehead,headtype,color,usebargraph,bargraphfill,ignoreinauto,donotplaceinanyplot,placeinexistingplot,placeinnewplot)                                                                                                                                                                        
-      plot=ExistingPlot(self,ExistingPlot.getList(self)[-1])   #i.e., last
-    return plot
-    
 
 class NamedObject:
-  """ This is a class which some convenience classes within pykst use. You should not use it directly. """
-  def __init__(self,client):
-    self.client=client
-
-  def remove(self):
-    """ This removes the object from Kst. You should be careful when using this, because any handles you have to this object will
-        still exist and be invalid. """
-    self.client.send("eliminate("+self.handle.toAscii()+")")
-    
-  def getHandle(self):
-    return self.handle
-    
-  def setName(self,name):
-    """ Sets a descriptive name for this object. Descriptive names may be non-unique, and as such should not be used as handles. """
-    self.client.send("#setName("+self.handle.toAscii()+","+name+")")
-
-
-
-
-
-class Scalar(NamedObject):
-  """ This is a class which some convenience classes within pykst use. You should not use it directly. """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def value(self):
-    """ Returns the value of the scalar as a float. """
-    return QtCore.QString(self.client.send("Scalar::value("+self.handle+")")).toFloat()[0]
-    
-  def setValue(self,val):
-    """ This function should only be used with GeneratedScalars and ExistingScalars. """
-    self.client.send("Scalar::value("+self.handle+","+b2str(val)+")")
-    
-class DataSourceScalar(Scalar):
-  """ This class represents a scalar you would create via "Create>Scalar>Read from Data Source" from the menubar inside kst.
-  
-  TODO: implement the configure widget within this widget
-  
-  The parameters of this function mirror the parameters within "Create>Scalar>Read from Data Source". 
-  
-  To create a scalar from '/foo.bar' with field foobar and descriptive name "Bob" and print its value::
-    
-    import pykst as kst
-    client = kst.Client()
-    dataSrcScalar = kst.DataSourceScalar(client,"/foo.bar","foobar","Bob")
-    print(dataSrcScalar.value())"""
-      
-  def __init__(self,client,filename,field="INDEX",name=""):
-    Scalar.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newScalarFromDataSource("+b2str(filename)+","+b2str(field)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class DataVectorScalar(Scalar):
-  """ This class represents a scalar you would create via "Create>Scalar>Read from Data Vector" from the menubar inside kst.
-      
-  TODO: implement the configure widget within this widget, implement edit functions
-  
-  The parameters of this function mirror the parameters within "Create>Scalar>Read from Data Vector". """
-  def __init__(self,client,filename,field="INDEX",frame=-1,name=""):
-    Scalar.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newScalarFromDataVector("+b2str(filename)+","+b2str(field)+","+b2str(frame)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class GeneratedScalar(Scalar):
-  """ This class represents a scalar you would create via "Create>Scalar>Generate" from the menubar inside kst.
-  
-  TODO: implement edit functions
-  
-  The parameters of this function mirror the parameters within "Create>Scalar>Generate". """
-  def __init__(self,client,val,name=""):
-    Scalar.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newScalarGenerated("+b2str(val)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class ExistingScalar(Scalar):
-  """ This class allows access to a scalar created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a scalar created inside kst or through a script.
-  
-  To print out the name and value of all scalars::
-    
-    import pykst as kst
-    client = kst.Client()
-    scalars = kst.ExistingScalar.getList(client)
-    for s in sclars:
-      print(s.getHandle()+":"+s.value()) """
-  def __init__(self,client,handle):
-    Scalar.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    """ Returns a python list of all scalars. """
-    x=QtCore.QString(client.send("getScalarList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingScalar(client,y))
-    return ret
-
-
-
-
-
-class Vector(NamedObject):
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def length(self) :
-    """ Returns the count of elements inside the vector. """
-    return QtCore.QString(self.client.send("Vector::length("+self.handle+")")).toInt()[0]
-  def interpolate(self,in_i,ns_i):
-    """  Returns element i of this vector interpolated to have ns_i total samples. """
-    return QtCore.QString(self.client.send("Vector::interpolate("+self.handle+","+b2str(in_i)+","+b2str(ns_i)+")")).toDouble()[0]
-  def interpolateNoHoles(self,in_i,ns_i):
-    """  Returns element i of this vector interpolated to have ns_i total samples without any holes. """
-    return QtCore.QString(self.client.send("Vector::interpolateNoHoles("+self.handle+","+b2str(in_i)+","+b2str(ns_i)+")")).toDouble()[0]
-  def __getitem__(self,index):
-    """  Returns element i of this vector. """
-    return QtCore.QString(self.client.send("Vector::value("+self.handle+","+b2str(index)+")")).toDouble()[0]
-  def value(self,index):
-    """  Returns element i of this vector. """
-    return QtCore.QString(self.client.send("Vector::value("+self.handle+","+b2str(index)+")")).toDouble()[0]
-  def min_(self) :
-    """  Returns the value of the element with the minimum value. """
-    return QtCore.QString(self.client.send("Vector::min("+self.handle+")")).toDouble()[0]
-  def max_(self) :
-    """  Returns the value of the element with the maximum value. """
-    return QtCore.QString(self.client.send("Vector::max("+self.handle+")")).toDouble()[0]
-  def ns_max(self) :
-    """  Returns the value of the element with the maximum value while being insensitive to spikes. """
-    return QtCore.QString(self.client.send("Vector::ns_max("+self.handle+")")).toDouble()[0]
-  def ns_min(self) :
-    """  Returns the value of the element with the minimum value while being insensitive to spikes. """
-    return QtCore.QString(self.client.send("Vector::ns_min("+self.handle+")")).toDouble()[0]
-  def mean(self) :
-    """  Returns the mean of this vector. """
-    return QtCore.QString(self.client.send("Vector::mean("+self.handle+")")).toDouble()[0]
-  def minPos(self) :
-    """  Returns the value of the element with the minimum positive value. """
-    return QtCore.QString(self.client.send("Vector::minPos("+self.handle+")")).toDouble()[0]
-  def numNew(self) :
-    """  Returns the number of new samples in the vector since last newSync. See also newSync()"""
-    return QtCore.QString(self.client.send("Vector::numNew("+self.handle+")")).toInt()[0]
-  def numShift(self) :
-    """  Returns the number of samples shifted in the vector since last newSync. See also newSync()"""
-    return QtCore.QString(self.client.send("Vector::numShift("+self.handle+")")).toInt()[0]
-  def isRising(self) :
-    """  Returns true if a data vector is getting new data. """
-    return True if QtCore.QString(self.client.send("Vector::isRising("+self.handle+")"))==True else False
-  def newSync(self) :
-    """  See numNew() and numShift() """
-    QtCore.QString(self.client.send("Vector::newSync("+self.handle+")"))
-  def resize(self,sz,init) :
-    """ Sets the size of this vector to sz, and, if init is set to True, initializes new values to 0 """
-    QtCore.QString(self.client.send("Vector::resize("+self.handle+","+b2str(sz)+","+b2str(init)+")"))
-  def setNewAndShift(self,inNew,inShift) :
-    """  Sets the value which numNew() and numShift() will return. See also numNew() and numShift(). """
-    QtCore.QString(self.client.send("Vector::setNewAndShift("+self.handle+","+b2str(inNew)+","+b2str(inShift)+")"))
-  def zero(self) :
-    """ Sets all values in the vector to zero. """
-    QtCore.QString(self.client.send("Vector::zero("+self.handle+")"))
-  def blank(self) :
-    """ Sets all values in the vector to NOPOINT (NaN). """
-    QtCore.QString(self.client.send("Vector::blank("+self.handle+")")) 
-  def getNumPyArray(self) :
-    """ Returns a numPy array of the vector. """
-    return self.client.getArray(self.handle)
-  def changeFrames(self,f0,n,skip,in_doSkip,in_doAve) :
-    """ For DataVectors, sets the start and ending frame as well as skipping parameters.
-    
-    f0 is the starting frame, n is the number of frames, skip is the number of samples to read per frame, in_doSkip should be set to true if you want to actually skip samples. in_doAve represents whether the box filter should be applied."""
-    return self.client.send("DataVector::changeFrames("+self.handle+","+b2str(f0)+","+b2str(n)+","+b2str(skip)+","+b2str(in_doSkip)+","+b2str(in_doAve)+")")
-  def numFrames(self) :
-    """ For DataVectors, returns the frame count of the data source.
-    
-    .. note::
-       length() is the number of samples in this vector. numFrames() is the number of frames in the data source.
-    """
-    return self.client.send("DataVector::numFrames("+self.handle+","+")")
-  def startFrame(self) :
-    """ For DataVectors, returns the start frame from the data source.
-    
-    .. note::
-       This applies to the data source. The actual vector starts at frame 0.
-    """
-    return self.client.send("DataVector::startFrame("+self.handle+")")
-  def doSkip(self) :
-    """ For DataVectors, whether or not samples are skipped.
-    """
-    return True if self.client.send("DataVector::doSkip("+self.handle+")")=="true" else False
-  def doAve(self) :
-    """ For DataVectors, whether or not the box filter is applied. """
-    return True if self.client.send("DataVector::doAvg("+self.handle+")")=="true" else False
-  def skip(self) :
-    """ For DataVectors, if doSkip()==True, one sample is read every skip frames, else undefined. """
-    return int(self.client.send("DataVector::skip("+self.handle+")"))
-  def reload_(self) :
-    """ For DataVectors, reloads. """
-    self.client.send("DataVector::reload("+self.handle+")")
-  def samplesPerFrame(self) :
-    """ For DataVectors, number of samples contained per frame in the data source. (Not) to be confused with skip(), which is very different. """
-    return int(self.client.send("DataVector::samplesPerFrame("+self.handle+")"))
-  def fileLength(self) :
-    """ For DataVectors, . . . """
-    return int(self.client.send("DataVector::fileLength("+self.handle+")"))
-  def readToEOF(self) :
-    """ For DataVectors, returns True if read to end, else False. """
-    return True if self.client.send("DataVector::readToEOF("+self.handle+")") else False
-  def countFromEOF(self) :
-    """ For DataVectors, returns True if read from end, else False. """
-    return True if self.client.send("DataVector::readFromEOF("+self.handle+")") else False
-  def descriptionTip(self) : 
-    """ For DataVectors, returns lots of really awesome information. But only for DataVectors! """
-    return str(self.client.send("DataVector::descriptionTip("+self.handle+")"))
-  def isValid(self):
-    """ For DataVectors, returns true if valid, else false. """
-    return True if self.client.send("DataVector::isValid("+self.handle+")") else False
-  
-class DataVector(Vector):
-  """ This class represents a vector you would create via "Create>Vector>Read from Data Source" from the menubar inside kst.
-  
-  TODO: implement the configure widget and implement edit functions. 
-  
-  The parameters of this function mirror the parameters within "Create>Vector>Read from Data Source". 
-  
-  start is start, or if from end, -1. drange is range, or if to end, -1. start and drange cannot both be -1, obviously.
-  
-  skip is False for no skip or the number of samples to read per frame.
-  
-  To create a vector from '/foo.bar' with field 'foo' from index 3 to index 10 skipping every other sample without a boxcar filter::
-  
-    import pykst as kst
-    client = kst.Client()
-    v = kst.DataVector(client,"/foo.bar","foo",False,True,False,3,10,2,False) """
-  def __init__(self,client,filename,field="INDEX",changeDetection=False,timeInterval=True,dontUpdate=False,start=0,drange=-1,skip=False,boxcarFirst=False,name="") : 
-    Vector.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newVectorFromDataSource("+b2str(filename)+","+b2str(field)+","+b2str(changeDetection)+","+b2str(timeInterval)+","+b2str(dontUpdate)+","+b2str(start)+","+b2str(drange)+","+b2str(skip)+","+b2str(boxcarFirst)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class GeneratedVector(Vector) :
-  """ This class represents a vector you would create via "Create>Vector>Generate" from the menubar inside kst.
-  
-  The parameters of this function mirror the parameters within "Create>Vector>Generate".
-  
-  TODO: implement edit functions."""
-  def __init__(self,client,sfrom,to,samples,name="") :
-    Vector.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newVectorGenerate("+b2str(sfrom)+","+b2str(to)+","+b2str(samples)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-
-class EditableVector(Vector) :
-  """ Use this class to insert a vector into kst. Editable vectors can not be created by using the kst gui.
-        
-  TODO: implement names
-  
-  
-  To import a numPy array of the first 20 powers of 2 into kst::
-  
-    import pykst as kst
-    from numpy import *
-    a=array([])
-    a.resize(20)
-    
-    i=1
-    for x in a:
-      x = i
-      i*=2
-      
-    client=kst.Client()
-    v=kst.EditableVector(client)
-    v.setFromList(a)"""
-  def __init__(self,client) :
-    Vector.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("newEditableVectorAndGetHandle()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-  def setFromList(self,arr):
-    """ Imports a numPy array into kst."""
-    set_arr(arr,self.client.serverName,self.handle)
-    return
-
-class ExistingVector(Vector) :
-  """ This class allows access to a non-editable vector created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a vector created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Vector.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    """ Returns a python list of all vectors. """
-    x=QtCore.QString(client.send("getVectorList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingVector(client,y))
-    return ret
-
-
-
-
-
-class Matrix(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly. """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def getNumPyArray(self) :
-    """ Returns a numPy array of the matrix. """
-    return self.client.getArray2D(self.handle)
-
-  def setXMin(self,x0=0) :
-    """ set the left edge of the map defined by the matrix """
-    self.client.send_si(self.handle, b2str("setXMinimum("+b2str(x0)+")"))
-
-  def getXMin(self) :
-    """ get the left edge of the map defined by the matrix """
-    return self.client.send_si(self.handle, b2str("getXMinimum()"))
-
-  def setYMin(self,y0=0) :
-    """ set the bottom edge of the map defined by the matrix """
-    self.client.send_si(self.handle, b2str("setYMinimum("+b2str(y0)+")"))
-
-  def getYMin(self) :
-    """ get the bottom edge of the map defined by the matrix """
-    return self.client.send_si(self.handle, b2str("getYMinimum()"))
-
-  def setXStep(self,dx=0) :
-    """ set the x step size of the map defined by the matrix """
-    self.client.send_si(self.handle, b2str("setXStepSize("+b2str(dx)+")"))
-
-  def getXStep(self) :
-    """ get the x step size of the map defined by the matrix """
-    return self.client.send_si(self.handle, b2str("getXStepSize()"))
-
-  def setYStep(self,dy=0) :
-    """ set the y step size of the map defined by the matrix """
-    self.client.send_si(self.handle, b2str("setYStepSize("+b2str(dy)+")"))
-
-  def getYStep(self) :
-    """ get the y step size of the map defined by the matrix """
-    return self.client.send_si(self.handle, b2str("getYStepSize()"))
-
-class DataMatrix(Matrix) :
-  """ This class represents a matrix you would create via "Create>Matrix" from the menubar inside kst.
-  
-  TODO: edit functions, configure
-      
-  The parameters of this function mirror the parameters within "Create>Matrix". """
-  def __init__(self,client,filename,field,xstart,ystart,xnframe,ynframe,skip=False,boxcarFirst=False,xmin=0,ymin=0,xstep=1,ystep=1,name="") :
-    Matrix.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newMatrix("+b2str(filename)+","+b2str(field)+","+b2str(xstart)+","+b2str(ystart)+","+b2str(xnframe)+","+b2str(ynframe)+","+b2str(skip)+","+b2str(boxcarFirst)+","+b2str(xmin)+","+b2str(ymin)+","+b2str(xstep)+","+b2str(ystep)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-
-class ExistingMatrix(Matrix) :
-  """ This class allows access to a matrix created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a vector created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Matrix.__init__(self,client)
-    self.handle=handle
-  
-  @classmethod
-  def getList(cls,client):
-    """ Returns a python list of all matracies. """
-    x=QtCore.QString(client.send("getMatrixList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),99999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingMatrix(client,y))
-    return ret
-
-class EditableMatrix(Matrix) :
-  """ Use this class to insert a matrix into kst. Editable vectors can not be created by using the kst gui. """
-
-  def __init__(self,client) :
-    Matrix.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("newEditableMatrixAndGetHandle()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-  def setFromList(self,arr):
-    """ Imports a numpy 2d array into kst."""
-    set_matrix(arr,arr.shape[0],arr.shape[1],self.client.serverName,self.handle)
-    return
-
-
-
+    """ This is a class which some convenience classes within pykst use. You should not use it directly."""
+    def __init__(self,client):
+      self.client=client
+    def setName(self,name):
+      self.client.send_si(self.handle, b2str("setName("+b2str(name)+")"))
+    def name(self):
+      return self.client.send_si(self.handle, "name()")
 
 
 class String(NamedObject) :
   """ This is a class which some convenience classes within pykst use. You should not use it directly. """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
-    
+
   def value(self) :
     """ Returns the string. """
-    return b2str(QtCore.QString(self.client.send("String::value("+self.handle+")")))
-    
-  def setValue(self,val):
-    """ You should not use this function within DataSourceString! """
-    return QtCore.QString(self.client.send("String::setValue("+self.handle+","+b2str(val)+")"))
-    
+    return self.client.send_si(self.handle, "value()")
+
 class GeneratedString(String) :
   """ This class represents a string you would create via "Create>String>Generate" from the menubar inside kst.
-  
+
   The parameters of this function mirror the parameters within "Create>String>Generate".
-  
+
   To import the string Hello World into kst::
-  
+
     import pykst as kst
     client=kst.Client()
     s=kst.GeneratedString(client,"Hello World")"""
   def __init__(self,client,string,name="") :
     String.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newStringGenerated("+b2str(string)+","+b2str(name)+")"))
+
+    self.client.send("newGeneratedString()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
+
+    self.setValue(string)
+    self.setName(name)
+
+  def setValue(self,val):
+    self.client.send_si(self.handle, b2str("setValue("+b2str(val)+")"))
+
 class DataSourceString(String) :
-  """ This class represents a string you would create via "Create>String>Read from Data Source" from the menubar inside kst.
-  
-  The parameters of this function mirror the parameters within "Create>String>Read from Data Source".
-  
-  TODO: edit functions,configure"""
+  """ This class represents a string you would create via "Create>String>Read from Data Source" from the menubar inside kst."""
+
   def __init__(self,client,filename,field,name="") :
     String.__init__(self,client)
-    self.handle=QtCore.QString(self.client.send("#newStringFromDataSource("+b2str(filename)+","+b2str(field)+","+b2str(name)+")"))
+    self.client.send("newDataString()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class ExistingString(String) :
-  """ This class allows access to a string created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a string created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    String.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getStringList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingString(client,y))
-    return ret
-  
+
+    self.change(filename, field)
+
+  def change(self,filename,field):
+    self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+")"))
 
 
-
-
-class Curve(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
+class Scalar(NamedObject) :
+  """ This is a class which some convenience classes within pykst use. You should not use it directly. """
   def __init__(self,client) :
     NamedObject.__init__(self,client)
-    
 
-class NewCurve(Curve) :
+  def value(self) :
+    """ Returns the scalar. """
+    return self.client.send_si(self.handle, "value()")
+
+class GeneratedScalar(Scalar) :
+  """ This class represents a scalar you would create via "Create>Scalar>Generate" from the menubar inside kst.
+
+  The parameters of this function mirror the parameters within "Create>Scalar>Generate".
+
+  To import the scalar of value 42 into kst::
+
+    import pykst as kst
+    client=kst.Client()
+    s=kst.GeneratedScalar(client,42)"""
+  def __init__(self,client,value,name="") :
+    Scalar.__init__(self,client)
+
+    self.client.send("newGeneratedScalar()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.setValue(value)
+    self.setName(name)
+
+  def setValue(self,val):
+    self.client.send_si(self.handle, b2str("setValue("+b2str(val)+")"))
+
+
+class DataSourceScalar(Scalar) :
+  """ This class represents a scalar you would create via "Create>Scalar>Read from Data Source" from the menubar inside kst."""
+
+  def __init__(self,client,filename,field,name="") :
+    Scalar.__init__(self,client)
+    self.client.send("newDataScalar()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.change(filename, field)
+
+  def change(self,filename,field):
+    self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+")"))
+
+  def file(self) :
+    """ Returns the the data source file name. """
+    return self.client.send_si(self.handle, "file()")
+
+  def field(self) :
+    """ Returns the field. """
+    return self.client.send_si(self.handle, "field()")
+
+
+class VectorScalar(Scalar) :
+  """ This class represents a scalar you would create via "Create>Scalar>Read from vector" from the menubar inside kst.
+      frame = -1 to read from the end of the file."""
+
+  def __init__(self,client,filename,field,frame,name="") :
+    Scalar.__init__(self,client)
+    self.client.send("newVectorScalar()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.change(filename, field, frame)
+
+  def change(self,filename,field,frame):
+    self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+","+b2str(frame)+")"))
+
+  def file(self) :
+    """ Returns the the data source file name. """
+    return self.client.send_si(self.handle, "file()")
+
+  def field(self) :
+    """ Returns the field. """
+    return self.client.send_si(self.handle, "field()")
+
+  def frame(self) :
+    """ Returns the fame. """
+    return self.client.send_si(self.handle, "frame()")
+
+class Vector(NamedObject):
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def value(self,index):
+    """  Returns element i of this vector. """
+    return self.client.send_si(self.handle, "value("+b2str(index)+")")
+
+  def length(self):
+    """  Returns the number of samples in the vector. """
+    return self.client.send_si(self.handle, "length()")
+
+  def min(self):
+    """  Returns the minimum value in the vector. """
+    return self.client.send_si(self.handle, "min()")
+
+  def mean(self):
+    """  Returns the mean of the vector. """
+    return self.client.send_si(self.handle, "mean()")
+
+  def max(self):
+    """  Returns the maximum value in the vector. """
+    return self.client.send_si(self.handle, "max()")
+
+  def descriptionTip(self):
+    """  Returns a string describing the vector """
+    return self.client.send_si(self.handle, "descriptionTip()")
+
+class DataVector(Vector):
+  """ This class represents a vector you would create via "Create>Vector>Read from Data Source" from the menubar inside kst.
+
+  TODO: implement the configure widget and implement edit functions.
+
+  The parameters of this function mirror the parameters within "Create>Vector>Read from Data Source".
+
+  start is start, or if from end, -1. drange is range, or if to end, -1. start and drange cannot both be -1, obviously.
+
+  skip is 0 for no skip or the number of samples to read per frame.
+
+  To create a vector from '/foo.bar' with field 'foo' from index 3 to index 10 skipping every other sample without a boxcar filter::
+
+    import pykst as kst
+    client = kst.Client()
+    v = kst.DataVector(client,"/foo.bar","foo",False,True,False,3,10,2,False) """
+  def __init__(self,client,filename,field,start=0,NFrames=-1,skip=0,boxcarFirst=False,name="") :
+    Vector.__init__(self,client)
+    self.client.send("newDataVector()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.change(filename, field, start,NFrames,skip,boxcarFirst)
+
+  def change(self,filename,field,start,NFrames,skip,boxcarFirst):
+    self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+","+b2str(start)+","+b2str(NFrames)+","+b2str(skip)+","+b2str(boxcarFirst)+")"))
+
+  def field(self):
+    """  Returns the fieldname. """
+    return self.client.send_si(self.handle, "field()")
+
+  def filename(self):
+    """  Returns the filename. """
+    return self.client.send_si(self.handle, "filename()")
+
+  def start(self):
+    """  Returns the index of first frame in the vector.  -1 means count from end. """
+    return self.client.send_si(self.handle, "start()")
+
+  def NFrames(self):
+    """  Returns the number of frames to be read. -1 means read to end. """
+    return self.client.send_si(self.handle, "NFrames()")
+
+  def skip(self):
+    """  Returns number of frames to be skipped between samples read. """
+    return self.client.send_si(self.handle, "skip()")
+
+  def boxcarFirst(self):
+    """  True if boxcar filtering has been applied before skipping. """
+    return self.client.send_si(self.handle, "boxcarFirst()")
+
+class GeneratedVector(Vector):
+  """ This class represents a vector you would create via "Create>Vector>Generate" from the menubar inside kst.
+
+  X0 is the first value in the vector.  X1 is the last value.  N is the number of samples between
+  X0 and X1.
+
+  To create the vector {0, 0.2, 0.4, 0.6, 0.8, 1.0}::
+
+    import pykst as kst
+    client = kst.Client()
+    v = kst.GeneratedVector(client, 0, 1, 6) """
+  def __init__(self,client,X0,X1,N) :
+    Vector.__init__(self,client)
+    self.client.send("newGeneratedVector()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.change(X0, X1, N)
+
+  def change(self,X0, X1, N):
+    self.client.send_si(self.handle, b2str("change("+b2str(X0)+","+b2str(X1)+","+b2str(N)+")"))
+
+
+class Matrix(NamedObject):
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def value(self,i_x, i_y):
+    """  Returns element (i_x, i_y} of this matrix. """
+    return self.client.send_si(self.handle, "value("+b2str(i_x)+","+b2str(i_y)+")")
+
+  def length(self):
+    """  Returns the number of elements in the matrix. """
+    return self.client.send_si(self.handle, "length()")
+
+  def min(self):
+    """  Returns the minimum value in the matrix. """
+    return self.client.send_si(self.handle, "min()")
+
+  def mean(self):
+    """  Returns the mean of the matrix. """
+    return self.client.send_si(self.handle, "mean()")
+
+  def max(self):
+    """  Returns the maximum value in the matrix. """
+    return self.client.send_si(self.handle, "max()")
+
+  def width(self):
+    """  Returns the X dimension of the matrix. """
+    return self.client.send_si(self.handle, "width()")
+
+  def height(self):
+    """  Returns the Y dimension of the matrix. """
+    return self.client.send_si(self.handle, "height()")
+
+  def dX(self):
+    """  Returns the X spacing of the matrix, for when the matrix is used in an image. """
+    return self.client.send_si(self.handle, "dX()")
+
+  def dY(self):
+    """  Returns the Y spacing of the matrix, for when the matrix is used in an image. """
+    return self.client.send_si(self.handle, "dY()")
+
+  def minX(self):
+    """  Returns the minimum X location of the matrix, for when the matrix is used in an image. """
+    return self.client.send_si(self.handle, "minX()")
+
+  def minY(self):
+    """  Returns the minimum X location of the matrix, for when the matrix is used in an image. """
+    return self.client.send_si(self.handle, "minX()")
+
+  def descriptionTip(self):
+    """  Returns a string describing the vector """
+    return self.client.send_si(self.handle, "descriptionTip()")
+
+class DataMatrix(Matrix):
+  """ This class represents a matrix you would create via "Create>Vector>Read from Data Source" from the menubar inside kst.
+
+  TODO: implement the configure widget and implement edit functions.
+
+  The parameters of this function mirror the parameters within "Create>Matrix>Read from Data Source".
+
+  startX is start, or if count from end, -1. nX is the number of x steps, or if to end, -1.
+  startX and xSteps cannot both be -1, obviously.
+
+  minX, and stepX provide hints to images for setting the X and Y ranges.
+
+  To create a matrix from '/foo.png' with field '1'
+
+    import pykst as kst
+    client = kst.Client()
+    v = kst.DataMatrix(client,"/foo.png","1") """
+  def __init__(self,client,filename,field,startX=0,startY=0,nX=-1,nY=-1,minX=0, minY=0, dX=1, dY=1,name="") :
+    Matrix.__init__(self,client)
+    self.client.send("newDataMatrix()")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+    self.change(filename,field,startX,startY,nX,nY,minX,minY,dX,dY)
+
+  def change(self,filename,field,startX=0,startY=0,nX=-1,nY=-1,minX=0, minY=0, dX=1, dY=1):
+    self.client.send_si(self.handle, "change("+b2str(filename)+","+b2str(field)+","+b2str(startX)+","+b2str(startY)+","+
+    b2str(nX)+","+b2str(nY)+","+b2str(minX)+","+b2str(minY)+","+b2str(dX)+","+b2str(dY)+")")
+
+  def field(self):
+    """  Returns the fieldname. """
+    return self.client.send_si(self.handle, "field()")
+
+  def filename(self):
+    """  Returns the filename. """
+    return self.client.send_si(self.handle, "filename()")
+
+  def startX(self):
+    """  Returns the X index of the matrix in the file """
+    return self.client.send_si(self.handle, "startX()")
+
+  def startY(self):
+    """  Returns the Y index of the matrix in the file """
+    return self.client.send_si(self.handle, "startX()")
+
+class Relation(NamedObject):
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def maxX(self,index):
+    """  Returns the max X value of the curve or image. """
+    return self.client.send_si(self.handle, "maxX()")
+
+class Curve(Relation):
   """ This class represents a string you would create via "Create>Curve" from the menubar inside kst.
   The parameters of this function mirror the parameters within "Create>Curve".
-    
-  Colors are given by a name such as 'red' or a hex number such as '#FF0000'.
-    
+
   curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
-    
+
   pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
   4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
   9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
-    
+
   headtype is the index of a point style. See details for pointtype.
-    
-  To place in an existing plot, set placeinexistingplot = plot
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
+
   Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
   by the GUI)."""
-  def __init__(self,client,xaxis,yaxis,plusxerrorbar=0,plusyerrorbar=0,minusxerrorbar=0,minusyerrorbar=0,usexplusforminus=True,useyplusforminus=True,curvecolor="",curvelinetype="",curveweight="",uselines=True,usepoints=False,pointtype="",pointdensity="",usehead=False,headtype="",headcolor="",usebargraph=False,bargraphfill="",ignoreinauto="",donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
-    Curve.__init__(self,client)
-    if placeinexistingplot != 0:
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = placeinexistingplot.handle
+  def __init__(self,client, xVector, yVector) :
+    Relation.__init__(self,client)
+    self.client.send("newCurve()")
+    self.client.send("setXVector("+xVector.handle+")")
+    self.client.send("setYVector("+yVector.handle+")")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+  def setYError(self,vector, vectorminus=0):
+    """ Set the Y Error flags for the curve.  They are symetric if vectorminus is not set. """
+    self.client.send("beginEdit("+self.handle.toAscii()+")")
+
+    self.client.send("setYError("+vector.handle+")")
+    if vectorminus != 0:
+      self.client.send("setYMinusError("+vectorminus.handle+")")
     else:
-      existingplothandle = " "
-      
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = " "
+      self.client.send("setYMinusError("+vector.handle+")")
 
-    if plusxerrorbar==0:
-      plusxerrorbarhandle = ""
+    self.client.send("endEdit()")
+
+  def setXError(self,vector, vectorminus=0):
+    """ Set the X Error flags for the curve.  They are symetric if vectorminus is not set.  """
+    self.client.send("beginEdit("+self.handle.toAscii()+")")
+
+    self.client.send("setXError("+vector.handle+")")
+    if vectorminus != 0:
+      self.client.send("setXMinusError("+vectorminus.handle+")")
     else:
-      plusxerrorbarhandle = plusxerrorbar.handle
-    if minusxerrorbar==0:
-      minusxerrorbarhandle = ""
+      self.client.send("setXMinusError("+vector.handle+")")
+
+    self.client.send("endEdit()")
+
+  def setColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setColor("+color+")")
+
+  def setHeadColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setHeadColor("+color+")")
+
+  def setBarFillColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setBarFillColor("+color+")")
+
+  def setHasPoints(self,has=True):
+    """ Set whether individual points are drawn on the curve """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasPoints(True)")
     else:
-      minusxerrorbarhandle = minusxerrorbar.handle
-    if plusyerrorbar==0:
-      plusyerrorbarhandle = ""
+      self.client.send_si(self.handle, "setHasPoints(False)")
+
+  def setHasBars(self,has=True):
+    """ Set whether histogram bars are drawn. """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasBars(True)")
     else:
-      plusyerrorbarhandle = plusyerrorbar.handle
-    if minusyerrorbar==0:
-      minusyerrorbarhandle = ""
+      self.client.send_si(self.handle, "setHasBars(False)")
+
+  def setHasLines(self,has=True):
+    """ Set whether lines are drawn. """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasLines(True)")
     else:
-      minusyerrorbarhandle = minusyerrorbar.handle
+      self.client.send_si(self.handle, "setHasLines(False)")
 
-    self.handle=QtCore.QString(self.client.send("#newCurve("+b2str(xaxis.handle)+","+b2str(yaxis.handle)+","+b2str(plusxerrorbarhandle)+","+b2str(plusyerrorbarhandle)+","+b2str(minusxerrorbarhandle)+","+b2str(minusyerrorbarhandle)+","+b2str(usexplusforminus)+","+b2str(useyplusforminus)+")"))
-    self.client.send("#setCurveParameters("+b2str(curvecolor)+","+b2str(curvelinetype)+","+b2str(curveweight)+","+b2str(uselines)+","+b2str(usepoints)+","+b2str(pointtype)+","+b2str(pointdensity)+","+b2str(usehead)+","+b2str(headtype)+","+b2str(headcolor)+","+b2str(usebargraph)+","+b2str(bargraphfill)+","+b2str(ignoreinauto)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")")
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-
-
-class ExistingCurve(Curve) :
-  """ This class allows access to a curve created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a curve created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Curve.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getCurveList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingCurve(client,y))
-    return ret
-
-
-# EQUATIONS ###################################################################
-class Equation(NamedObject) :
-  """ This is the base class for Kst Equations.  To create a new equation use pykst.NewEquation() or
-  to access an existing equation use pykst.ExistingEquation()
-
-  For example, to plot f(x)=x^2 with x in range(-100,100) with 1000000 samples: ::
-  
-    import pykst as kst
-    client = kst.Client()
-    x=kst.GeneratedVector(client,-100,100,1000000)
-    GYEquation=kst.NewEquation(client, "x^2", x)
-    GYEqCurve = kst.NewCurve(client,GYEquation.X(), GYEquation.Y(), curvecolor="black", 
-                curveweight=1, placeinnewplot=True)
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def Y(self) :
-    """ Returns a vector containing the output of the equation (ie, f(x)) """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", O)"))
-    return ExistingVector(self.client, YHandle)
-
-  def X(self) :
-    """ Returns the vector which has been used as the independent variable of the equation """
-    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", XO)"))
-    return ExistingVector(self.client, XHandle)
-    
-class NewEquation(Equation) :
-  """ This class represents an equation you would create via "Create>Equation" from the menubar inside kst.
-  """
-        
-  
-  def __init__(self,client,equation,xvector,interploate=False,name="") :
-    Equation.__init__(self,client)
- 
-    self.handle=QtCore.QString(self.client.send("#newEquation("+b2str(equation)+","+b2str(xvector.handle)+","+b2str(interploate)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingEquation(Equation) :
-  """ This class allows access to an equation created inside kst or through a script given a descriptive or short name.
-  "handle" is a descriptive or short name of an equation created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Equation.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getEquationList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingEquation(client,y))
-    return ret
-
-
-# FIT ###################################################################
-class Fit(NamedObject) :
-  """ This is a class which provides some methods common to all fits """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Fit(self) :
-    """ a vector containing the fit  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Fit)"))
-    return ExistingVector(self.client, YHandle)
-
-  def Residuals(self) :
-    """ a vector containing the Residuals  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Residuals)"))
-    return ExistingVector(self.client, YHandle)
-
-  def Parameters(self) :
-    """ a vector containing the Parameters of the fit  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Parameters Vector)"))
-    return ExistingVector(self.client, YHandle)
-
-  def Covariance(self) :
-    """ a vector containing the Covariance of the fit parameters """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Covariance)"))
-    return ExistingVector(self.client, YHandle)
-
-  def ReducedChi2(self) :
-    """ a scalar containing the reduced chi2 of the fit """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputScalarHandle("+self.handle+", chi^2/nu)"))
-    return ExistingScalar(self.client, YHandle)
-
-
-# LINEAR FIT #################################################################
-class LinearFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def Low(self) :
-    """ a vector containing the 1 sigma lower limit of the fit  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Lo Vector)"))
-    return ExistingVector(self.client, YHandle)
-
-  def High(self) :
-    """ a vector containing the 1 sigma upper limit of the fit  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Hi Vector)"))
-    return ExistingVector(self.client, YHandle)
-    
-class NewLinearFit(LinearFit) :
-  """ This class represents a fit you would create via "Create>Plugin->Linear Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename]", and then selecting "Linear Fit" in the plugin combo.  If the weightvector is listed, then it will be a weighted fit.  
-  Otherwise it will be unweighted. 
-  
-  NewLinearFit() and ExistingLinearFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
-    LinearFit.__init__(self,client)
-    
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Linear Fit)"))
+  def setHasHead(self,has=True):
+    """ Set whether a point at the head of the line is drawn """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasHead(True)")
     else:
-      QtCore.QString(self.client.send("newPlugin(Linear Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-      
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingLinearFit(LinearFit) :
-  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Linear Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    LinearFit.__init__(self,client)
-    self.handle=handle
+      self.client.send_si(self.handle, "setHasHead(False)")
 
-# POLYNOMIAL FIT #################################################################
-class PolynomialFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
+  def setLineWidth(self,x):
+    """ Sets the width of the curve's line. """
+    self.client.send_si(self.handle, "setLineWidth("+b2str(x)+")")
 
-class NewPolynomialFit(PolynomialFit) :
-  """ This class represents a fit you would create via "Create>Plugin->Polynomial Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename]", and then selecting "Polynomial Fit" in the plugin combo. "order" can be either a Scalar or a number. 
-  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted. 
-  
-  NewPolynomialFit() and ExistingPolynomialFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,order_in,name="", weightvector=0) :
-    PolynomialFit.__init__(self,client)
-    
-    if isinstance(order_in, Scalar):
-      order = order_in
-    else :
-      order = GeneratedScalar(client, order_in);
+  def setPointSize(self,x):
+    """ Sets the size of points, if they are drawn. """
+    self.client.send_si(self.handle, "setPointSize("+b2str(x)+")")
 
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Polynomial Fit)"))
-    else:
-      QtCore.QString(self.client.send("newPlugin(Polynomial Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-      
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingPolynomialFit(PolynomialFit) :
-  """ This class allows access to an Polynomial Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Polynomial Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    PolynomialFit.__init__(self,client)
-    self.handle=handle
 
-# SINUSOID FIT #################################################################
-class SinusoidFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
 
-class NewSinusoidFit(SinusoidFit) :
-  """ This class represents a fit you would create via "Create>Plugin->Sinusoid Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename]", and then selecting "Sinusoid Fit" in the plugin combo. Period and Harmonics can be either a Scalar or a number. 
-  If the weightvector is listed, then it will be a weighted fit.  Otherwise it will be unweighted. 
-  
-  NewSinusoidFit() and ExistingSinusoidFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,period_in, harmonics_in, weightvector=0, name = "") :
-    SinusoidFit.__init__(self,client)
-    
-    if isinstance(period_in, Scalar):
-      period = period_in
-    else :
-      period = GeneratedScalar(client, period_in);
-
-    if isinstance(harmonics_in, Scalar):
-      harmonics = harmonics_in;
-    else :
-      harmonics = GeneratedScalar(client, harmonics_in);
-
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Sinusoid Fit)"))
-    else:
-      QtCore.QString(self.client.send("newPlugin(Sinusoid Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-      
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Period Scalar,"+period.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Harmonics Scalar,"+harmonics.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingSinusoidFit(SinusoidFit) :
-  """ This class allows access to an Sinusoid Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Sinusoid Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    SinusoidFit.__init__(self,client)
-    self.handle=handle
-
-# LORENTZIAN FIT #################################################################
-class LorentzianFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-class NewLorentzianFit(LorentzianFit) :
-  """ This class represents a linear fit you would create via "Create>Plugin->Lorentzian Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Lorentzian Fit" in the plugin combo.  
-  
-  NewLorentzianFit() and ExistingLorentzianFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
-    LorentzianFit.__init__(self,client)
-    
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Lorentzian Fit)"))
-    else:
-      QtCore.QString(self.client.send("newPlugin(Lorentzian Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingLorentzianFit(LorentzianFit) :
-  """ This class allows access to an Lorentzian Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Lorentzian Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    LorentzianFit.__init__(self,client)
-    self.handle=handle
-
-# GAUSSIAN FIT #################################################################
-class GaussianFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-class NewGaussianFit(GaussianFit) :
-  """ This class represents a fit you would create via "Create>Plugin->Gaussian Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Gaussian Fit" in the plugin combo.  
-  
-  NewGaussianFit() and ExistingGaussianFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
-    GaussianFit.__init__(self,client)
-    
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Gaussian Fit)"))
-    else:
-      QtCore.QString(self.client.send("newPlugin(Gaussian Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingGaussianFit(GaussianFit) :
-  """ This class allows access to an Gaussian Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Gaussian Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    GaussianFit.__init__(self,client)
-    self.handle=handle
-
-# EXPONENTIAL FIT #################################################################
-class ExponentialFit(Fit) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class NewExponentialFit(ExponentialFit) :
-  """ This class represents an exponential fit you would create via "Create>Plugin->Exponential Fit" from the menubar inside kst or by using
-  "rmb->fit->[curvename], and then selecting "Exponential Fit" in the plugin combo.  
-  
-  NewExponentialFit() and ExistingExponentialFit() have the same methods."""
-  
-  def __init__(self,client,xvector,yvector,weightvector=0,name="") :
-    ExponentialFit.__init__(self,client)
-    
-    if weightvector==0:
-      QtCore.QString(self.client.send("newPlugin(Exponential Fit)"))
-    else:
-      QtCore.QString(self.client.send("newPlugin(Exponential Weighted Fit)"))
-      QtCore.QString(self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")"))
-      
-    QtCore.QString(self.client.send("setInputVector(X Vector,"+xvector.handle+")"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingExponentialFit(ExponentialFit) :
-  """ This class allows access to an Exponential Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Exponential Fit created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    ExponentialFit.__init__(self,client)
-    self.handle=handle
-
-# FILTER ###################################################################
-class Filter(NamedObject) :
-  """ This is a class which provides some methods common to many filters """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Y(self) :
-    """ a vector containing the filtered output  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y Vector)"))
-    return ExistingVector(self.client, YHandle)
-
-
-# LOW PASS FILTER #################################################################
-class LowPassFilter(Filter) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class NewLowPassFilter(LowPassFilter) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Low Pass Filter" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Low Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog.
-
-  NewLowPassFilter() and ExistingLowPassFilter() have the same methods."""
-  
-  def __init__(self,client,yvector,order_in, cutoff_in,name="") :
-    LowPassFilter.__init__(self,client)
-
-    if isinstance(order_in, Scalar):
-      order = order_in
-    else :
-      order = GeneratedScalar(client, order_in);
-
-    if isinstance(cutoff_in, Scalar):
-      cutoff = cutoff_in
-    else :
-      cutoff = GeneratedScalar(client, cutoff_in);
-    
-    QtCore.QString(self.client.send("newPlugin(Low Pass Filter)"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Cutoff / Spacing Scalar,"+cutoff.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingLowPassFilter(LowPassFilter) :
-  """ This class allows access to an Linear Fit created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a LowPassFilter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    LowPassFilter.__init__(self,client)
-    self.handle=handle
-
-# HIGH PASS FILTER #################################################################
-class HighPassFilter(Filter) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class NewHighPassFilter(HighPassFilter) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->High Pass Filter" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "High Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog.
-
-  NewHighPassFilter() and ExistingHighPassFilter() have the same methods."""
-  
-  def __init__(self,client,yvector,order_in, cutoff_in,name="") :
-    HighPassFilter.__init__(self,client)
-
-    if isinstance(order_in, Scalar):
-      order = order_in
-    else :
-      order = GeneratedScalar(client, order_in);
-
-    if isinstance(cutoff_in, Scalar):
-      cutoff = cutoff_in
-    else :
-      cutoff = GeneratedScalar(client, cutoff_in);
-    
-    QtCore.QString(self.client.send("newPlugin(High Pass Filter)"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Cutoff / Spacing Scalar,"+cutoff.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingHighPassFilter(HighPassFilter) :
-  """ This class allows access to an HighPassFilter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a HighPassFilter created inside kst or through a script. """
-  
-  def __init__(self,client,handle) :
-    HighPassFilter.__init__(self,client)
-    self.handle=handle
-
-# BAND PASS FILTER #################################################################
-class BandPassFilter(Filter) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class NewBandPassFilter(BandPassFilter) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Band Pass Filter" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog.
-
-  NewBandPassFilter() and ExistingBandPassFilter() have the same methods."""
-  
-  def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
-    BandPassFilter.__init__(self,client)
-
-    if isinstance(order_in, Scalar):
-      order = order_in
-    else :
-      order = GeneratedScalar(client, order_in);
-
-    if isinstance(central_in, Scalar):
-      central = central_in
-    else :
-      central = GeneratedScalar(client, central_in);
-    
-    if isinstance(bandwidth_in, Scalar):
-      bandwidth = bandwidth_in
-    else :
-      bandwidth = GeneratedScalar(client, bandwidth_in);
-
-    QtCore.QString(self.client.send("newPlugin(Band Pass Filter)"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Central Frequency / Sample Rate Scalar,"+central.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Band width Scalar,"+bandwidth.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingBandPassFilter(BandPassFilter) :
-  """ This class allows access to a BandPassFilter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a BandPassFilter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    BandPassFilter.__init__(self,client)
-    self.handle=handle
-    
-# BAND STOP FILTER #################################################################
-class BandStopFilter(Filter) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class NewBandStopFilter(BandStopFilter) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Band Stop Filter" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Band Pas Filter" in the plugin combo. The parameters of this function mirror the parameters within
-  the latter dialog.
-
-  NewBandStopFilter() and ExistingBandStopFilter() have the same methods."""
-  
-  def __init__(self,client,yvector,order_in, central_in, bandwidth_in,name="") :
-    BandStopFilter.__init__(self,client)
-
-    if isinstance(order_in, Scalar):
-      order = order_in
-    else :
-      order = GeneratedScalar(client, order_in);
-
-    if isinstance(central_in, Scalar):
-      central = central_in
-    else :
-      central = GeneratedScalar(client, central_in);
-    
-    if isinstance(bandwidth_in, Scalar):
-      bandwidth = bandwidth_in
-    else :
-      bandwidth = GeneratedScalar(client, bandwidth_in);
-
-    QtCore.QString(self.client.send("newPlugin(Band Stop Filter)"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Order Scalar,"+order.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Central Frequency / Sample Rate Scalar,"+central.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Band width Scalar,"+bandwidth.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingBandStopFilter(BandStopFilter) :
-  """ This class allows access to an BandStopFilter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a BandPassFilter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    BandStopFilter.__init__(self,client)
-    self.handle=handle
-
-
-# CUMULATIVE SUM #################################################################
-class CumulativeSum(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Y(self) :
-    """ a vector containing the cumulative sum  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", sum(Y)dX)"))
-    return ExistingVector(self.client, YHandle)
-
-class NewCumulativeSum(CumulativeSum) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Cumulative Sum" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Cumulative Sum" in the plugin combo.  A cumulative sum is a a descrete integral.
-
-  NewCumulativeSum() and ExistingCumulativeSum() have the same methods."""
-  
-  def __init__(self,client,yvector,dx_in,name="") :
-    CumulativeSum.__init__(self,client)
-
-    if isinstance(dx_in, Scalar):
-      dx = dx_in
-    else :
-      dx = GeneratedScalar(client, dx_in);
-
-    QtCore.QString(self.client.send("newPlugin(Cumulative Sum)"))
-    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Scale Scalar,"+dx.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingCumulativeSum(CumulativeSum) :
-  """ This class allows access to a CumulativeSum created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a CumulativeSum created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    CumulativeSum.__init__(self,client)
-    self.handle=handle
-
-
-# Despike Filter #################################################################
-class DespikeFilter(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Y(self) :
-    """ a vector containing the despiked timestream  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y)"))
-    return ExistingVector(self.client, YHandle)
-
-class NewDespikeFilter(DespikeFilter) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Despike Filter" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Despike Filter" in the plugin combo.
-
-  NewDespikeFilter() and ExistingDespikeFilter() have the same methods."""
-  
-  def __init__(self,client,yvector,nsigma_in, spacing_in,name="") :
-    DespikeFilter.__init__(self,client)
-
-    if isinstance(nsigma_in, Scalar):
-      nsigma = nsigma_in
-    else :
-      nsigma = GeneratedScalar(client, nsigma_in);
-
-    if isinstance(spacing_in, Scalar):
-      spacing = spacing_in
-    else :
-      spacing = GeneratedScalar(client, spacing_in);
-
-    QtCore.QString(self.client.send("newPlugin(Despike Filter)"))
-    QtCore.QString(self.client.send("setInputVector(Y Vector,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(NSigma Scalar,"+nsigma.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Spacing Scalar,"+spacing.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingDespikeFilter(DespikeFilter) :
-  """ This class allows access to a DespikeFilter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a DespikeFilter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    DespikeFilter.__init__(self,client)
-    self.handle=handle
-
-
-
-# DIFFERENTIATION #################################################################
-class Differentiation(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Y(self) :
-    """ a vector containing the Derrivative  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Y')"))
-    return ExistingVector(self.client, YHandle)
-
-class NewDifferentiation(Differentiation) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Fixed Step Differentiation" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Fixed Step Differentiation" in the plugin combo.
-
-  NewDifferentiation() and ExistingDifferentiation() have the same methods."""
-  
-  def __init__(self,client,yvector,dx_in, name="") :
-    Differentiation.__init__(self,client)
-
-    if isinstance(dx_in, Scalar):
-      dx = dx_in
-    else :
-      dx = GeneratedScalar(client, dx_in);
-
-    QtCore.QString(self.client.send("newPlugin(Fixed Step Differentiation)"))
-    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(Scalar In,"+dx.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingDifferentiation(Differentiation) :
-  """ This class allows access to an Differentiation filter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Differentiation filter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Differentiation.__init__(self,client)
-    self.handle=handle
-
-# SHIFT #################################################################
-class Shift(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-  def Y(self) :
-    """ a vector containing the shifted vector  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Shifted Vector)"))
-    return ExistingVector(self.client, YHandle)
-
-class NewShift(Shift) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Shift" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "Shift" in the plugin combo.
-
-  NewShift() and ExistingShift() have the same methods."""
-  
-  def __init__(self,client,yvector,dx_in, name="") :
-    Shift.__init__(self,client)
-
-    if isinstance(dx_in, Scalar):
-      dx = dx_in
-    else :
-      dx = GeneratedScalar(client, dx_in);
-
-    QtCore.QString(self.client.send("newPlugin(Shift)"))
-    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
-    QtCore.QString(self.client.send("setInputScalar(dX,"+dx.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingShift(Shift) :
-  """ This class allows access to an Shift filter created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Shift filter created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Shift.__init__(self,client)
-    self.handle=handle
-
-
-# CUMULATIVE AVERAGE #################################################################
-class CumulativeAverage(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  TODO: edit functions..."""
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def Y(self) :
-    """ a vector containing the cumulative average  """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", Avg(Y)"))
-    return ExistingVector(self.client, YHandle)
-    
-class NewCumulativeAverage(CumulativeAverage) :
-  """ This class represents a filter you would create via "Create>Filter Plugin->Cumulative Average" from the menubar inside kst or by using
-  "rmb->filter->[curvename], and then selecting "CumulativeAverage" in the plugin combo.
-
-  NewCumulativeAverage() and ExistingCumulativeAverage() have the same methods."""
-  
-  def __init__(self,client,yvector,name="") :
-    CumulativeAverage.__init__(self,client)
-
-    QtCore.QString(self.client.send("newPlugin(Cumulative Average)"))
-    QtCore.QString(self.client.send("setInputVector(Vector In,"+yvector.handle+")"))
-    
-    self.handle=QtCore.QString(self.client.send("endEdit()"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-  
-class ExistingCumulativeAverage(CumulativeAverage) :
-  """ This class allows access to Cumulative Average created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of a Cumulative Average created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    CumulativeAverage.__init__(self,client)
-    self.handle=handle
-
-# IMAGE #################################################################
-
-class Image(NamedObject) :
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-      TODO: edit functions... """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-    
-class ColorImage(Image) :
-  """ This class represents an image you would create via "Create>Image>Color Map" from the menubar inside kst.
-  Not to be confused with Pictures, Images are representations of matrices and are placed within plots.
-  
-  The parameters of this function mirror the parameters within "Create>Image>Color Map".
-    
-  To place in an existing plot, specify placeinexistingplot = plot.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI)."""
-  
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
-    Image.__init__(self,client)
-    if placeinexistingplot != 0:
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = placeinexistingplot.handle
-    else:
-      existingplothandle = " "
-      
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = " "
-
-    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix.handle)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class ContourImage(Image) :
-  """ This class represents an image you would create via "Create>Image>Contour Map" from the menubar inside kst.
-  Not to be confused with Pictures, Images are representations of matrices and are placed within plots.
-  
-  The parameters of this function mirror the parameters within "Create>Image>Contour Map".
-    
-  To place in an existing plot, specify placeinexistingplot = plot.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI)."""
-  def __init__(self,client,matrix,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
-    Image.__init__(self,client)
-    if placeinexistingplot != 0:
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = placeinexistingplot.handle
-    else:
-      existingplothandle = " "
-      
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = " "
-
-    self.handle=QtCore.QString(self.client.send("#newImageFromContourMap("+b2str(matrix.handle)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class ColorContourImage(Image) :
-  """ This class represents an image you would create via "Create>Image>Color Map and Contour Map" from the menubar inside kst.
-  Not to be confused with Pictures, Images are representations of matrices and are placed within plots.
-  
-  The parameters of this function mirror the parameters within "Create>Image>Color Map and Contour Map".
-    
-  To place in an existing plot, specify placeinexistingplot = plot.
-  
-  To prevent a the curve from being placed in any plot, set donotplaceinanyplot=True.  The default is to place the curve in a new plot.
-    
-  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
-  by the GUI)."""
-  def __init__(self,client,matrix,palette,rtAutoThreshold,lower,upper,maxmin,smart,percentile,levels,color="black",weight="12",variable=False,donotplaceinanyplot=False,placeinexistingplot=0,placeinnewplot=True,placeinnewtab=False,scalefonts=True,autolayout=True,customgridcolumns=False,protectexistinglayout=False,name="") :
-    Image.__init__(self,client)
-    
-    if placeinexistingplot != 0:
-      donotplaceinanyplot=False
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = placeinexistingplot.handle
-    else:
-      existingplothandle = " "
-      
-    if donotplaceinanyplot == True:
-      placeinnewplot=False
-      placeinnewtab=False
-      existingplothandle = " "
-
-    self.handle=QtCore.QString(self.client.send("#newImageFromColor("+b2str(matrix)+","+b2str(palette)+","+b2str(rtAutoThreshold)+","+b2str(lower)+","+b2str(upper)+","+b2str(maxmin)+","+b2str(smart)+","+b2str(percentile)+","+b2str(levels)+","+b2str(color)+","+b2str(weight)+","+b2str(variable)+","+b2str(donotplaceinanyplot)+","+b2str(existingplothandle)+","+b2str(placeinnewplot)+","+b2str(placeinnewtab)+","+b2str(scalefonts)+","+b2str(autolayout)+","+b2str(customgridcolumns)+","+b2str(protectexistinglayout)+","+b2str(name)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    
-class ExistingImage(Image) :
-  """ This class allows access to an image created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of an image created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Image.__init__(self,client,handle)
-    self.handle=handle
-
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getImageList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingImage(client,y))
-    return ret
-
-
-
-
-class Spectrum(NamedObject):
-  """ This is the base class for Kst Spectra.  To create a new spectrum, use pykst.NewSpectrum() or
-  to access an existing equation use pykst.ExistingSpectrum()
-
-  For example, to plot the spectrum of a pykst.DataVector() "dataVectorGY1": ::
-  
-      GYSpectrum=kst.NewSpectrum(client, dataVectorGY1, length = 12, vectorUnits="^o/s", 
-                                 rateUnits="Hz", rate=100.16)
-      GYSpecCurve = kst.NewCurve(client,GYSpectrum.X(), GYSpectrum.Y(), curvecolor="green", 
-                                 curveweight=1, placeinnewplot=True)
-
-  """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def Y(self) :
-    """ Returns the Y vector of a spectrum """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", S)"))
-    return ExistingVector(self.client, YHandle)
-
-  def X(self) :
-    """ Returns the X vector of a spectrum (ie, the frequency) """
-    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", F)"))
-    return ExistingVector(self.client, XHandle)
-
-class NewSpectrum(Spectrum) :
-  """ This class represents an spectrum you would create via "Create>Spectrum" from the menubar inside kst.
-  The parameters of this function mirror the parameters within "Create>Spectrum".
-            
-  ToDo: examples """
-  
-  def __init__(self,client,vector,removeMean=True,apodize=True,function="",sigma=1.0,interleaved=True,length=10,interpolate=True,rate=1.0,vectorUnits="",rateUnits="",outputType="",name="") :
-    Spectrum.__init__(self,client)
-      
-    self.handle=QtCore.QString(self.client.send("#newSpectrum("+b2str(vector.handle)+","+b2str(removeMean)+","+b2str(apodize)+","+b2str(function)+","+b2str(sigma)+","+b2str(interleaved)+","+b2str(length)+","+b2str(interpolate)+","+b2str(rate)+","+b2str(vectorUnits)+","+b2str(rateUnits)+","+b2str(outputType)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-
-class ExistingSpectrum(Spectrum) :
-  """ This class allows access to an spectrum created inside kst or through a script given a descriptive or short name.
-  "handle" is a descriptive or short name of an spectrum created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Spectrum.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getPSDList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingSpectrum(client,y))
-    return ret
-
-
-class Histogram(NamedObject):
-  """ This is the base class for Kst Histograms.  To create a new histogram, use pykst.NewHistogram() or
-  to access an existing histogram use pykst.ExistingHistogram()
-
-  For example, to plot the histogram of a pykst.DataVector() "dataVectorGY1": ::
-  
-      GYHist=kst.NewHistogram(client, dataVectorGY1, rtAutoBin=True)
-      GYHistCurve = kst.NewCurve(client,GYHist.X(), GYHist.Y(), curvecolor="black", 
-                                 curveweight=1, uselines=False, usebargraph=True,
-                                 bargraphfill="green",placeinnewplot=True)
-
-  """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-  def Y(self) :
-    """ Returns the Y vector of a histogram """
-    YHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", H)"))
-    return ExistingVector(self.client, YHandle)
-
-  def X(self) :
-    """ Returns the X vector of a histogram """
-    XHandle = QtCore.QString(self.client.send("DataObject::outputVectorHandle("+self.handle+", B)"))
-    return ExistingVector(self.client, XHandle)
-    
-
-class NewHistogram(Histogram) :
-  """ This class represents an histogram you would create via "Create>Histogram" from the menubar inside kst.
-  The parameters of this function mirror the parameters within "Create>Histogram"."""
-  
-  def __init__(self,client,vector,rtAutoBin=True,binsFrom=0,binsTo=1,nbins=40,yaxisNormNumInBin=True,yaxisNormFracInBin=False,yaxisNormPercentInBin=False,yaxisNormPeakAt1=False,name="") :
-    Histogram.__init__(self,client)
-      
-    self.handle=QtCore.QString(self.client.send("#newHistogram("+b2str(vector.handle)+","+b2str(rtAutoBin)+","+b2str(binsFrom)+","+b2str(binsTo)+","+b2str(nbins)+","+b2str(yaxisNormNumInBin)+","+b2str(yaxisNormFracInBin)+","+b2str(yaxisNormPercentInBin)+","+b2str(yaxisNormPeakAt1)+")"))
-    self.handle.remove(0,self.handle.indexOf("ing ")+4)
-
-class ExistingHistogram(Histogram) :
-  """ This class allows access to an histogram created inside kst or through a script given a descriptive or short name.
-  
-  "handle" is a descriptive or short name of an histogram created inside kst or through a script. """
-  def __init__(self,client,handle) :
-    Histogram.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=QtCore.QString(client.send("getPSDList()"))
-    ret=[]
-    while x.contains('['):
-      y=QtCore.QString(x)
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingHistogram(client,y))
-    return ret
-
-class Spectrogram(NamedObject):
-  """ TODO... """
-  def __init__(self,client) :
-    NamedObject.__init__(self,client)
-
-
-
-
-
-class ViewItem:
-  """ This is a class which some convenience classes within pykst use. You should not use it directly.
-  
-  NOTE: Kst considers ViewItems to be NamedObjects, but except for plots, no mechanism for naming view items
-  exists or would be useful. As such, within scripting, ViewItems do not have names."""
+class ViewItem(NamedObject):
+  """ This is a class which some convenience classes within pykst use. You should not use it directly."""
   def __init__(self,client):
     self.client=client
     
@@ -2199,16 +935,16 @@ class Arrow(ViewItem) :
   def setArrowAtStart(self, arrow=True) :
     """ Set whether an arrow head is shown at the start of the line """
     if arrow==True:
-      self.client.send_si(self.handle, b2str("arrowAtStart(true)"))
+      self.client.send_si(self.handle, b2str("arrowAtStart(True)"))
     else:
-      self.client.send_si(self.handle, b2str("arrowAtStart(false)"))
+      self.client.send_si(self.handle, b2str("arrowAtStart(False)"))
 
   def setArrowAtEnd(self, arrow=True) :
     """ Set whether an arrow head is shown at the end of the line """
     if arrow==True:
-      self.client.send_si(self.handle, b2str("arrowAtEnd(true)"))
+      self.client.send_si(self.handle, b2str("arrowAtEnd(True)"))
     else:
-      self.client.send_si(self.handle, b2str("arrowAtEnd(false)"))
+      self.client.send_si(self.handle, b2str("arrowAtEnd(False)"))
 
   def setArrowSize(self, arrowSize) :
     self.client.send_si(self.handle, b2str("arrowHeadScale("+b2str(arrowSize)+")"))
@@ -2329,13 +1065,13 @@ class Plot(ViewItem) :
     self.client.send("setGeoX("+b2str(sizeX)+")")
     self.client.send("setGeoY("+b2str(sizeY)+")")
     self.client.send("setRotation("+b2str(rot)+")")
-    if name!="":
-      self.client.send("uncheckAuto()")
-      self.client.send("setName("+b2str(name)+")")
-    else:
-      self.client.send("checkAuto()")
+    self.client.send("setName("+b2str(name)+")")
     self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+  def addRelation(self, relation) :
+    """ Add a curve or an image to the plot. """
+    self.client.send_si(self.handle, "addRelation(" + relation.handle + ")")
 
   def setXRange(self,x0 = 0.0, x1 = 10.0) :
     """ Set X zoom range from x0 to x1 """
@@ -2380,8 +1116,8 @@ class Plot(ViewItem) :
   def setGlobalFont(self, family="", bold=False, italic=False) :
     """ Set the global plot font.  By default, the axis labels all use this, unless they have been set to use their own.
         If the parameter 'family' is empty, the font family will be unchanged.
-        The font will be bold if parameter 'bold' is set to 'bold' or 'true'.
-        The font will be italic if parameter 'italic' is set to 'italic' or 'true'."""
+        The font will be bold if parameter 'bold' is set to 'bold' or 'True'.
+        The font will be italic if parameter 'italic' is set to 'italic' or 'True'."""
     self.client.send_si(self.handle,b2str("setGlobalFont("+family+","+b2str(bold)+","+b2str(italic)+")"))
 
   def setTopLabel(self, label="") :

@@ -36,7 +36,7 @@
 
 #include "applicationsettings.h"
 #include "updatemanager.h"
-
+#include "plotscriptinterface.h"
 #include "math_kst.h"
 
 #include "dialogdefaults.h"
@@ -152,6 +152,11 @@ PlotItem::PlotItem(View *parent)
   applyDialogDefaultsFill();
   applyDialogDefaultsLockPosToData();
 }
+
+ScriptInterface* PlotItem::createScriptInterface() {
+  return new PlotSI(this);
+}
+
 
 void PlotItem::applyDefaults() {
   QFont font;

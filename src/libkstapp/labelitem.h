@@ -23,6 +23,8 @@ namespace Label {
 
 namespace Kst {
 
+class ScriptInterface;
+
 class LabelItem : public ViewItem {
   Q_OBJECT
   public:
@@ -71,6 +73,7 @@ class LabelItem : public ViewItem {
 
     bool inputsChanged(qint64 serial);
 
+    virtual ScriptInterface *createScriptInterface();
   public Q_SLOTS:
     virtual void edit();
     void setDirty() { _dirty = true; }

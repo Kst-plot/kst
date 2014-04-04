@@ -1,6 +1,6 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2011 Barth Netterfield                                *
+ *   copyright : (C) 2012 Barth Netterfield                                *
  *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -14,6 +14,8 @@
 #include "plotscriptinterface.h"
 #include "plotitem.h"
 #include "plotaxis.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include <QStringBuilder>
 
@@ -25,6 +27,8 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
   _fill->item=it;
   _stroke->item=it;
   _item = it;
+
+  _fnMap.insert("addRelation", &PlotSI::addRelation);
 
   _fnMap.insert("setXRange",&PlotSI::setXRange);
   _fnMap.insert("setYRange",&PlotSI::setYRange);
@@ -64,10 +68,6 @@ ScriptInterface* PlotSI::newPlot() {
 }
 
 
-QByteArrayList PlotSI::commands() {
-    return _layout->commands()<<_dim->commands()<<_stroke->commands()<<_fill->commands();
-}
-
 QString PlotSI::doCommand(QString x) {
   QString command = x.left(x.indexOf('('));
 
@@ -77,7 +77,10 @@ QString PlotSI::doCommand(QString x) {
     return CALL_MEMBER_FN(*this,fn)(x);
   }
 
-  QString v=_layout->doCommand(x);
+  QString v=doNamedObjectCommand(x, _dim->item);
+  if(v.isEmpty()) {
+    v = _layout->doCommand(x);
+  }
   if(v.isEmpty()) {
     v=_dim->doCommand(x);
   }
@@ -94,33 +97,20 @@ bool PlotSI::isValid() {
     return _dim->item;
 }
 
-QByteArray PlotSI::getHandle() {
-    return ("Finished editing " % _dim->item->Name()).toLatin1();
-}
-
-QStringList PlotSI::getArgs(const QString &command) {
-  int i0 = command.indexOf('(')+1;
-  int i1 = command.lastIndexOf(')');
-  int n = i1-i0;
-
-  QString x = command.mid(i0,n);
-  return x.split(',');
-
-}
-
-QString PlotSI::getArg(const QString &command) {
-  int i0 = command.indexOf('(')+1;
-  int i1 = command.lastIndexOf(')');
-  int n = i1-i0;
-
-  QString x = command.mid(i0,n);
-  return x;
-
-}
-
 /***************************/
 /* commands                */
 /***************************/
+QString PlotSI::addRelation(QString& command) {
+  QString rname = getArg(command);
+  RelationPtr relation = kst_cast<Relation>(
+                           kstApp->mainWindow()->document()->objectStore()->retrieveObject(rname));
+  if (relation) {
+    _item->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
+    return "Done";
+  } else {
+    return QString("Could not find curve/image %1").arg(rname);
+  }
+}
 
 QString PlotSI::setXRange(QString &command) {
 

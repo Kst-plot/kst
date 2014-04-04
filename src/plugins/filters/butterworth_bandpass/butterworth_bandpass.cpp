@@ -153,7 +153,7 @@ FilterButterworthBandPassSource::~FilterButterworthBandPassSource() {
 
 
 QString FilterButterworthBandPassSource::_automaticDescriptiveName() const {
-  return QString(vector()->descriptiveName() + " Band Pass");
+  return tr("%1 Band Pass", "arg1 is a vector").arg(vector()->descriptiveName());
 }
 
 
@@ -278,8 +278,8 @@ void FilterButterworthBandPassSource::saveProperties(QXmlStreamWriter &s) {
 
 
 // Name used to identify the plugin.  Used when loading the plugin.
-QString ButterworthBandPassPlugin::pluginName() const { return "Band Pass Filter"; }
-QString ButterworthBandPassPlugin::pluginDescription() const { return "Filters a vector with a zero phase band pass filter with a butterworth amplitude response."; }
+QString ButterworthBandPassPlugin::pluginName() const { return tr("Band Pass Filter"); }
+QString ButterworthBandPassPlugin::pluginDescription() const { return tr("Filters a vector with a zero phase band pass filter with a butterworth amplitude response."); }
 
 
 Kst::DataObject *ButterworthBandPassPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

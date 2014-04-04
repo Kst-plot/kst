@@ -153,7 +153,7 @@ PeriodogramSource::~PeriodogramSource() {
 
 
 QString PeriodogramSource::_automaticDescriptiveName() const {
-  return QString("Periodogram Plugin Object");
+  return tr("Periodogram Plugin Object");
 }
 
 
@@ -821,8 +821,8 @@ void PeriodogramSource::SlowLombPeriodogram(
 }
 
 
-QString PeriodogramPlugin::pluginName() const { return "Periodogram"; }
-QString PeriodogramPlugin::pluginDescription() const { return "Takes the outputVectorPeriodogram of a given inputVectorData set. The inputVectorData is not assumed to be sampled at equal inputVectorTime intervals."; }
+QString PeriodogramPlugin::pluginName() const { return tr("Periodogram"); }
+QString PeriodogramPlugin::pluginDescription() const { return tr("Takes the outputVectorPeriodogram of a given inputVectorData set. The inputVectorData is not assumed to be sampled at equal inputVectorTime intervals."); }
 
 
 Kst::DataObject *PeriodogramPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -172,7 +172,7 @@ SyncBinSource::~SyncBinSource() {
 
 
 QString SyncBinSource::_automaticDescriptiveName() const {
-  return QString("SyncBin Plugin Object");
+  return tr("SyncBin Plugin Object");
 }
 
 
@@ -383,8 +383,8 @@ void SyncBinSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString SyncBinPlugin::pluginName() const { return "SyncBin"; }
-QString SyncBinPlugin::pluginDescription() const { return "Synchronously coadd vector Y into inputScalarBins defined by vector X.  Like a 1D map."; }
+QString SyncBinPlugin::pluginName() const { return tr("SyncBin"); }
+QString SyncBinPlugin::pluginDescription() const { return tr("Synchronously coadd vector Y into inputScalarBins defined by vector X.  Like a 1D map."); }
 
 
 Kst::DataObject *SyncBinPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {

@@ -119,7 +119,7 @@ NoiseAdditionSource::~NoiseAdditionSource() {
 
 
 QString NoiseAdditionSource::_automaticDescriptiveName() const {
-  return QString("Noise Addition Plugin Object");
+  return tr("Noise Addition Plugin Object");
 }
 
 
@@ -219,8 +219,8 @@ void NoiseAdditionSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString NoiseAdditionPlugin::pluginName() const { return "Noise Addition"; }
-QString NoiseAdditionPlugin::pluginDescription() const { return "Adds Gaussian noise to a set of data, of a specified standard deviation."; }
+QString NoiseAdditionPlugin::pluginName() const { return tr("Noise Addition"); }
+QString NoiseAdditionPlugin::pluginDescription() const { return tr("Adds Gaussian noise to a set of data, of a specified standard deviation."); }
 
 
 Kst::DataObject *NoiseAdditionPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
