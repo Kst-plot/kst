@@ -14,6 +14,8 @@
 
 #include "namedobject.h"
 
+#include <QStringList>
+
 namespace Kst {
 
   QString ScriptInterface::doNamedObjectCommand(QString command, NamedObject *n) {
@@ -26,6 +28,26 @@ namespace Kst {
     }
 
     return QString();
+  }
+
+  // convenience functions... for parsing commands.
+  QStringList ScriptInterface::getArgs(const QString &command) {
+    int i0 = command.indexOf('(')+1;
+    int i1 = command.lastIndexOf(')');
+    int n = i1-i0;
+
+    QString x = command.mid(i0,n);
+    return x.split(',');
+  }
+
+  QString ScriptInterface::getArg(const QString &command) {
+    int i0 = command.indexOf('(')+1;
+    int i1 = command.lastIndexOf(')');
+    int n = i1-i0;
+
+    QString x = command.mid(i0,n);
+    return x;
+
   }
 
 }

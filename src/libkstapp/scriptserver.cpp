@@ -21,6 +21,8 @@
 #include "vectorscriptinterface.h"
 #include "matrixscriptinterface.h"
 
+#include "relationscriptinterface.h"
+
 #include "sessionmodel.h"
 #include "updateserver.h"
 #include "datagui.h"
@@ -112,7 +114,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("newDataString()",&ScriptServer::newDataString);
 
     _fnMap.insert("getCurveList()",&ScriptServer::getCurveList);
-//    _fnMap.insert("newCurve()",&ScriptServer::newCurve);
+    _fnMap.insert("newCurve()",&ScriptServer::newCurve);
 
     _fnMap.insert("getEquationList()",&ScriptServer::getEquationList);
 //    _fnMap.insert("newEquation()",&ScriptServer::newEquation);
@@ -566,16 +568,16 @@ QByteArray ScriptServer::getCurveList(QByteArray&, QLocalSocket* s,ObjectStore*_
     return outputObjectList<Curve>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newCurve(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else {
-        _interface = DialogLauncherSI::self->showCurveDialog();
-        return handleResponse("Ok",s);
+QByteArray ScriptServer::newCurve(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = CurveSI::newCurve(_store); return handleResponse("Ok",s);
     }
 }
-*/
+
 
 
 QByteArray ScriptServer::getEquationList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {

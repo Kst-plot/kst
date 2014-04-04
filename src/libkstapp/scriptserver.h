@@ -76,7 +76,7 @@ protected:
     QByteArray newDataString(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getCurveList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newCurve(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newCurve(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getEquationList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

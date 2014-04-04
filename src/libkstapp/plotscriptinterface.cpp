@@ -14,6 +14,8 @@
 #include "plotscriptinterface.h"
 #include "plotitem.h"
 #include "plotaxis.h"
+#include "document.h"
+#include "objectstore.h"
 
 #include <QStringBuilder>
 
@@ -25,6 +27,8 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
   _fill->item=it;
   _stroke->item=it;
   _item = it;
+
+  _fnMap.insert("addRelation", &PlotSI::addRelation);
 
   _fnMap.insert("setXRange",&PlotSI::setXRange);
   _fnMap.insert("setYRange",&PlotSI::setYRange);
@@ -93,29 +97,20 @@ bool PlotSI::isValid() {
     return _dim->item;
 }
 
-QStringList PlotSI::getArgs(const QString &command) {
-  int i0 = command.indexOf('(')+1;
-  int i1 = command.lastIndexOf(')');
-  int n = i1-i0;
-
-  QString x = command.mid(i0,n);
-  return x.split(',');
-
-}
-
-QString PlotSI::getArg(const QString &command) {
-  int i0 = command.indexOf('(')+1;
-  int i1 = command.lastIndexOf(')');
-  int n = i1-i0;
-
-  QString x = command.mid(i0,n);
-  return x;
-
-}
-
 /***************************/
 /* commands                */
 /***************************/
+QString PlotSI::addRelation(QString& command) {
+  QString rname = getArg(command);
+  RelationPtr relation = kst_cast<Relation>(
+                           kstApp->mainWindow()->document()->objectStore()->retrieveObject(rname));
+  if (relation) {
+    _item->renderItem(PlotRenderItem::Cartesian)->addRelation(relation);
+    return "Done";
+  } else {
+    return QString("Could not find curve/image %1").arg(rname);
+  }
+}
 
 QString PlotSI::setXRange(QString &command) {
 

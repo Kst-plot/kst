@@ -41,6 +41,11 @@ public:
     virtual bool isValid()=0;
     virtual QByteArray endEditUpdate()=0;
     static QString doNamedObjectCommand(QString command, NamedObject *n);
+
+
+    QStringList getArgs(const QString &command);
+    QString getArg(const QString &command);
+
 };
 
 }

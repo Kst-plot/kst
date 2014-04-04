@@ -427,6 +427,112 @@ class DataMatrix(Matrix):
     """  Returns the Y index of the matrix in the file """
     return self.client.send_si(self.handle, "startX()")
 
+class Relation(NamedObject):
+  """ This is a class which some convenience classes within pykst use. You should not use it directly.
+
+  "handle" is a descriptive or short name of a scalar created inside kst or through a script. """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def maxX(self,index):
+    """  Returns the max X value of the curve or image. """
+    return self.client.send_si(self.handle, "maxX()")
+
+class Curve(Relation):
+  """ This class represents a string you would create via "Create>Curve" from the menubar inside kst.
+  The parameters of this function mirror the parameters within "Create>Curve".
+
+  curvelinetype is the index of a pen style where 0 is SolidLine, 1 is DashLine, 2 is DotLine, 3 is DashDotLine, and 4 isDashDotDotLine,
+
+  pointtype is the index of a point style. 0 is an X, 1 is an open square, 2 is an open circle, 3 is a filled circle,
+  4 is a downward open triangle, 5 is an upward open triangle, 6 is a filled square, 7 is a plus, 8 is an asterisk,
+  9 is a downward filled triangle, 10 is an upward filled triangle, 11 is an open diamond, and 12 is a filled diamond.
+
+  headtype is the index of a point style. See details for pointtype.
+
+  Not specifying a parameter implies it's default value (i.e., the setting used on the previous curve whether through a script or
+  by the GUI)."""
+  def __init__(self,client, xVector, yVector) :
+    Relation.__init__(self,client)
+    self.client.send("newCurve()")
+    self.client.send("setXVector("+xVector.handle+")")
+    self.client.send("setYVector("+yVector.handle+")")
+    self.handle=QtCore.QString(self.client.send("endEdit()"))
+    self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+  def setYError(self,vector, vectorminus=0):
+    """ Set the Y Error flags for the curve.  They are symetric if vectorminus is not set. """
+    self.client.send("beginEdit("+self.handle.toAscii()+")")
+
+    self.client.send("setYError("+vector.handle+")")
+    if vectorminus != 0:
+      self.client.send("setYMinusError("+vectorminus.handle+")")
+    else:
+      self.client.send("setYMinusError("+vector.handle+")")
+
+    self.client.send("endEdit()")
+
+  def setXError(self,vector, vectorminus=0):
+    """ Set the X Error flags for the curve.  They are symetric if vectorminus is not set.  """
+    self.client.send("beginEdit("+self.handle.toAscii()+")")
+
+    self.client.send("setXError("+vector.handle+")")
+    if vectorminus != 0:
+      self.client.send("setXMinusError("+vectorminus.handle+")")
+    else:
+      self.client.send("setXMinusError("+vector.handle+")")
+
+    self.client.send("endEdit()")
+
+  def setColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setColor("+color+")")
+
+  def setHeadColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setHeadColor("+color+")")
+
+  def setBarFillColor(self,color):
+    """ Colors are given by a name such as 'red' or a hex number such as '#FF0000'. """
+    self.client.send_si(self.handle, "setBarFillColor("+color+")")
+
+  def setHasPoints(self,has=True):
+    """ Set whether individual points are drawn on the curve """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasPoints(True)")
+    else:
+      self.client.send_si(self.handle, "setHasPoints(False)")
+
+  def setHasBars(self,has=True):
+    """ Set whether histogram bars are drawn. """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasBars(True)")
+    else:
+      self.client.send_si(self.handle, "setHasBars(False)")
+
+  def setHasLines(self,has=True):
+    """ Set whether lines are drawn. """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasLines(True)")
+    else:
+      self.client.send_si(self.handle, "setHasLines(False)")
+
+  def setHasHead(self,has=True):
+    """ Set whether a point at the head of the line is drawn """
+    if (has == True):
+      self.client.send_si(self.handle, "setHasHead(True)")
+    else:
+      self.client.send_si(self.handle, "setHasHead(False)")
+
+  def setLineWidth(self,x):
+    """ Sets the width of the curve's line. """
+    self.client.send_si(self.handle, "setLineWidth("+b2str(x)+")")
+
+  def setPointSize(self,x):
+    """ Sets the size of points, if they are drawn. """
+    self.client.send_si(self.handle, "setPointSize("+b2str(x)+")")
+
+
 
 class ViewItem(NamedObject):
   """ This is a class which some convenience classes within pykst use. You should not use it directly."""
@@ -962,6 +1068,10 @@ class Plot(ViewItem) :
     self.client.send("setName("+b2str(name)+")")
     self.handle=QtCore.QString(self.client.send("endEdit()"))
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+  def addRelation(self, relation) :
+    """ Add a curve or an image to the plot. """
+    self.client.send_si(self.handle, "addRelation(" + relation.handle + ")")
 
   def setXRange(self,x0 = 0.0, x1 = 10.0) :
     """ Set X zoom range from x0 to x1 """
