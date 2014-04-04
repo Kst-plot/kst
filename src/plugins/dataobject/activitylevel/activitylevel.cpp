@@ -153,7 +153,7 @@ QString ActivityLevelSource::_automaticDescriptiveName() const {
   if (vector()) {
     return tr("%1 Activity Level").arg(vector()->descriptiveName());
   } else {
-    return tr("Actvity Level");
+    return tr("Activity Level");
   }
 }
 
