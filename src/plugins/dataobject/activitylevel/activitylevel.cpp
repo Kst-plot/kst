@@ -160,7 +160,7 @@ QString ActivityLevelSource::_automaticDescriptiveName() const {
 
 QString ActivityLevelSource::descriptionTip() const {
   QString tip;
-  tip = tr("Activity Level: %1\n  Sampling Time: %2 (ms)\n  Window width: %3 (s)\n  Noise Threshold: %4 \n").
+  tip = tr("Activity Level: %1\n  Sampling Time: %2 (s)\n  Window width: %3 (s)\n  Noise Threshold: %4 \n").
                               arg(Name()).arg(samplingTime()->value()).arg(windowWidth()->value()).arg(noiseThreshold()->value());
   tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
@@ -196,6 +196,11 @@ bool ActivityLevelSource::algorithm() {
   Kst::VectorPtr outputVectorDenoised = _outputVectors[VECTOR_OUT_DENOISED];
 
   int i, length;
+  // Check for consistent values
+  if (windowWidth->value() < samplingTime->value() || samplingTime->value() == 0.0) {
+    return false;
+  }
+
   int iSamplesForWindow = (int) (windowWidth->value() / samplingTime->value());
   double dStandardDeviation = 0.0, dTotal = 0.0, dVariance = 0.0, dSquaredTotal = 0.0;
   int iTrendPrevious = 0, iTrend = 0;
