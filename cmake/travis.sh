@@ -257,6 +257,13 @@ if [ ! -d /opt/$extlib ]; then
 fi
 
 
+# ---------------------------------------------------------
+#
+# checkout translations
+#
+cd $startdir
+./l10n-fetch-po-files.py
+cd $builddir
 
 # ---------------------------------------------------------
 #
