@@ -12,7 +12,7 @@
 
 find_program(KST_GIT git)
 if(KST_GIT)
-    execute_process(COMMAND ${KST_GIT} rev-parse -q HEAD
+    execute_process(COMMAND ${KST_GIT} rev-parse -q --short HEAD
                     WORKING_DIRECTORY "${kst_dir}"
                     OUTPUT_VARIABLE _revision
                     ERROR_VARIABLE _error
@@ -28,5 +28,5 @@ message(STATUS "Revision: ${_revision}")
 
 # copy the file to the final header only if the version changes reduces needless rebuilds
 execute_process(COMMAND ${CMAKE_COMMAND}
-		-E copy_if_different
-		${header_file}.tmp ${header_file})
+                -E copy_if_different
+                ${header_file}.tmp ${header_file})
