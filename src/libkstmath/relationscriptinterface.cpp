@@ -18,6 +18,7 @@
 #include "updateserver.h"
 #include "vector.h"
 #include "colorsequence.h"
+#include "linestyle.h"
 
 #include <QStringBuilder>
 
@@ -31,19 +32,37 @@ QString doRelationScriptCommand(QString command,Relation *relation) {
     return v;
   }
 
-  if (command.startsWith("maxX(")) {
-    return QString::number(relation->maxX());
-  } // FIXME the rest...
-
   return QString();
 }
 
+
+QString RelationSI::maxX(QString&) {
+  return QString::number(relation->maxX());
+}
+
+QString RelationSI::minX(QString&) {
+  return QString::number(relation->minX());
+}
+
+QString RelationSI::maxY(QString&) {
+  return QString::number(relation->maxY());
+}
+
+QString RelationSI::minY(QString&) {
+  return QString::number(relation->minY());
+}
+
+QString RelationSI::showEditDialog(QString&) {
+  relation->showEditDialog();
+  return "done";
+}
 
 /******************************************************/
 /* Curves                                             */
 /******************************************************/
 CurveSI::CurveSI(CurvePtr it) {
   curve=it;
+  relation = it;
 
   _fnMap.insert("setXVector",&CurveSI::setXVector);
   _fnMap.insert("setYVector",&CurveSI::setYVector);
@@ -60,8 +79,35 @@ CurveSI::CurveSI(CurvePtr it) {
   _fnMap.insert("setHasBars",&CurveSI::setHasBars);
   _fnMap.insert("setHasHead",&CurveSI::setHasHead);
 
+  _fnMap.insert("color",&CurveSI::color);
+  _fnMap.insert("headColor",&CurveSI::headColor);
+  _fnMap.insert("barFillColor",&CurveSI::barFillColor);
+  _fnMap.insert("hasPoints",&CurveSI::hasPoints);
+  _fnMap.insert("hasLines",&CurveSI::hasLines);
+  _fnMap.insert("hasBars",&CurveSI::hasBars);
+  _fnMap.insert("hasHead",&CurveSI::hasHead);
+
   _fnMap.insert("setLineWidth",&CurveSI::setLineWidth);
   _fnMap.insert("setPointSize",&CurveSI::setPointSize);
+
+  _fnMap.insert("setPointType",&CurveSI::setPointType);
+  _fnMap.insert("setHeadType",&CurveSI::setHeadType);
+  _fnMap.insert("setLineStyle",&CurveSI::setLineStyle);
+  _fnMap.insert("setPointDensity",&CurveSI::setPointDensity);
+
+  _fnMap.insert("lineWidth",&CurveSI::lineWidth);
+  _fnMap.insert("pointSize",&CurveSI::pointSize);
+  _fnMap.insert("pointType",&CurveSI::pointType);
+  _fnMap.insert("headType",&CurveSI::headType);
+  _fnMap.insert("lineStyle",&CurveSI::lineStyle);
+  _fnMap.insert("pointDensity",&CurveSI::pointDensity);
+
+  // functions from relationSI
+  _fnMap.insert("maxX",&CurveSI::maxX);
+  _fnMap.insert("minX",&CurveSI::minX);
+  _fnMap.insert("maxY",&CurveSI::maxY);
+  _fnMap.insert("minY",&CurveSI::minY);
+  _fnMap.insert("showEditDialog",&CurveSI::showEditDialog);
 
 }
 
@@ -261,6 +307,117 @@ QString CurveSI::setPointSize(QString& command) {
 
   curve->setPointSize(x);
   return "Done";
+}
+
+QString CurveSI::setPointType(QString& command) {
+  QString parameter = getArg(command);
+  int x = parameter.toInt();
+
+  if (x<0) x = 0;
+
+  curve->setPointType(x);
+  return "Done";
+
+}
+
+QString CurveSI::setHeadType(QString& command) {
+  QString parameter = getArg(command);
+  int x = parameter.toInt();
+
+  if (x<0) x = 0;
+
+  curve->setHeadType(x);
+  return "Done";
+
+}
+
+QString CurveSI::setLineStyle(QString& command) {
+  QString parameter = getArg(command);
+  int x = parameter.toInt();
+
+  if (x<0) x = 0;
+
+  curve->setLineStyle(x);
+  return "Done";
+}
+
+QString CurveSI::setPointDensity(QString& command) {
+  QString parameter = getArg(command);
+  int x = parameter.toInt();
+
+  if (x<0) x = 0;
+  if (x>POINTDENSITY_MAXTYPE) x = POINTDENSITY_MAXTYPE;
+
+  curve->setPointDensity(x);
+  return "Done";
+}
+
+QString CurveSI::color(QString&) {
+  return curve->color().name();
+}
+
+QString CurveSI::headColor(QString&) {
+  return curve->headColor().name();
+}
+
+QString CurveSI::barFillColor(QString&) {
+  return curve->barFillColor().name();
+}
+
+QString CurveSI::hasPoints(QString&) {
+  if (curve->hasPoints()) {
+    return "True";
+  } else {
+    return "False";
+  }
+}
+
+QString CurveSI::hasLines(QString&) {
+  if (curve->hasLines()) {
+    return "True";
+  } else {
+    return "False";
+  }
+}
+
+QString CurveSI::hasBars(QString&) {
+  if (curve->hasBars()) {
+    return "True";
+  } else {
+    return "False";
+  }
+}
+
+QString CurveSI::hasHead(QString&) {
+  if (curve->hasHead()) {
+    return "True";
+  } else {
+    return "False";
+  }
+}
+
+QString CurveSI::lineWidth(QString&) {
+  return QString::number(curve->lineWidth());
+}
+
+QString CurveSI::pointSize(QString&) {
+  return QString::number(curve->pointSize());
+}
+
+QString CurveSI::pointType(QString&) {
+  return QString::number(curve->pointType());
+}
+
+QString CurveSI::headType(QString&) {
+  return QString::number(curve->headType());
+}
+
+QString CurveSI::lineStyle(QString&) {
+  return QString::number(curve->lineStyle());
+}
+
+QString CurveSI::pointDensity(QString& command) {
+  return QString::number(curve->pointDensity());
 }
 
 

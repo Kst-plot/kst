@@ -666,7 +666,7 @@ RelationPtr Curve::makeDuplicate() const {
   curve->setHasHead(HasHead);
   curve->setLineWidth(LineWidth);
   curve->setLineStyle(LineStyle);
-  curve->setPointType(PointDensity);
+  curve->setPointType(PointType);
   curve->setPointSize(PointSize);
   curve->setPointDensity(PointDensity);
 

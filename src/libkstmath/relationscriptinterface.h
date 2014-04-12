@@ -23,7 +23,24 @@ namespace Kst {
 class CurveSI;
 typedef QString (CurveSI::*CurveInterfaceMemberFn)(QString& command);
 
-class KSTMATH_EXPORT CurveSI : public ScriptInterface
+class KSTMATH_EXPORT RelationSI : public ScriptInterface
+{
+    Q_OBJECT
+
+  public:
+    QString maxX(QString&);
+    QString minX(QString&);
+    QString maxY(QString&);
+    QString minY(QString&);
+    QString showEditDialog(QString&);
+
+  protected:
+    RelationPtr relation;
+
+};
+
+
+class KSTMATH_EXPORT CurveSI : public RelationSI
 {
     Q_OBJECT
   public:
@@ -57,8 +74,30 @@ class KSTMATH_EXPORT CurveSI : public ScriptInterface
     QString setHasBars(QString& command);
     QString setHasHead(QString& command);
 
+
     QString setLineWidth(QString& command);
     QString setPointSize(QString& command);
+
+    QString setPointType(QString& command);
+    QString setHeadType(QString& command);
+    QString setLineStyle(QString& command);
+    QString setPointDensity(QString& command);
+
+    QString color(QString&);
+    QString headColor(QString&);
+    QString barFillColor(QString&);
+    QString hasPoints(QString&);
+    QString hasLines(QString&);
+    QString hasBars(QString&);
+    QString hasHead(QString&);
+
+    QString lineWidth(QString&);
+    QString pointSize(QString&);
+
+    QString pointType(QString&);
+    QString headType(QString&);
+    QString lineStyle(QString&);
+    QString pointDensity(QString& command);
 
 };
 
