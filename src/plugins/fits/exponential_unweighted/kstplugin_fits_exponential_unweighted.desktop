@@ -18,6 +18,7 @@ Name[sv]=Anpassning - Exponentiellt insticksprogram
 Name[uk]=Додаток експоненційного наближення
 Name[x-test]=xxFits - Exponential Pluginxx
 Comment=Implements an Exponential Fits Plugin for Kst.
+Comment[ca]=Implementa un connector Fits exponencial pel Kst.
 Comment[de]=Implementiert ein Exponential-Anpassungs-Modul für Kst.
 Comment[nl]=Implementeert een plugin voor een gegevensobject in Kst voor exponentiële aanpassing.
 Comment[pl]=Implementuje wtyczkę obiektu danych dopasowania wykładniczego dla Kst.
