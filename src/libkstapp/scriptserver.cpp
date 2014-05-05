@@ -129,7 +129,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 //    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
 
     _fnMap.insert("getImageList()",&ScriptServer::getImageList);
-//    _fnMap.insert("newImage()",&ScriptServer::newImage);
+    _fnMap.insert("newImage()",&ScriptServer::newImage);
 
     _fnMap.insert("getCSDList()",&ScriptServer::getCSDList);
 //    _fnMap.insert("newCSD()",&ScriptServer::newCSD);
@@ -191,6 +191,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("setPaused()",&ScriptServer::setPaused);
     _fnMap.insert("unsetPaused()",&ScriptServer::unsetPaused);
 
+    _fnMap.insert("fileOpen()", &ScriptServer::fileOpen);
+    _fnMap.insert("fileSave()", &ScriptServer::fileSave);
 
 #if 0
 
@@ -654,16 +656,15 @@ QByteArray ScriptServer::getImageList(QByteArray&, QLocalSocket* s,ObjectStore*_
 
     return outputObjectList<Image>(s,_store);
 }
-/*
-QByteArray ScriptServer::newImage(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else {
-        _interface = DialogLauncherSI::self->showImageDialog();
-        return handleResponse("Ok",s);
+QByteArray ScriptServer::newImage(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = ImageSI::newImage(_store); return handleResponse("Ok",s);
     }
 }
-*/
 
 
 QByteArray ScriptServer::getCSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
@@ -1025,6 +1026,23 @@ QByteArray ScriptServer::unsetPaused(QByteArray&, QLocalSocket* s,ObjectStore*) 
 
 }
 
+QByteArray ScriptServer::fileOpen(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+  command.replace("fileOpen(", "");
+  command.chop(1);
+
+  kstApp->mainWindow()->openFile(command);
+
+  return handleResponse("Done",s);
+}
+
+QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+  command.replace("fileSave(", "");
+  command.chop(1);
+
+  kstApp->mainWindow()->document()->save(command);
+
+  return handleResponse("Done",s);
+}
 
 QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
 

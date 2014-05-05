@@ -17,11 +17,15 @@
 
 #include "scriptinterface.h"
 #include "curve.h"
+#include "image.h"
 
 namespace Kst {
 
 class CurveSI;
 typedef QString (CurveSI::*CurveInterfaceMemberFn)(QString& command);
+
+class ImageSI;
+typedef QString (ImageSI::*ImageInterfaceMemberFn)(QString& command);
 
 class KSTMATH_EXPORT RelationSI : public ScriptInterface
 {
@@ -98,6 +102,42 @@ class KSTMATH_EXPORT CurveSI : public RelationSI
     QString headType(QString&);
     QString lineStyle(QString&);
     QString pointDensity(QString& command);
+
+    QString xVector(QString &);
+    QString yVector(QString &);
+    QString xErrorVector(QString &);
+    QString yErrorVector(QString &);
+    QString xMinusErrorVector(QString &);
+    QString yMinusErrorVector(QString &);
+
+};
+
+class KSTMATH_EXPORT ImageSI : public RelationSI
+{
+    Q_OBJECT
+  public:
+    explicit ImageSI(ImagePtr it);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newImage(ObjectStore *store);
+
+  protected:
+    QString noSuchFn(QString&) {return ""; }
+
+  private:
+    ImagePtr image;
+
+    QMap<QString,ImageInterfaceMemberFn> _fnMap;
+
+    QString setMatrix(QString& command);
+    QString setPalette(QString& command);
+    QString setFixedColorRange(QString& command);
+    QString setAutoColorRange(QString& command);
+
+    QString lowerThreshold(QString&);
+    QString upperThreshold(QString&);
 
 };
 

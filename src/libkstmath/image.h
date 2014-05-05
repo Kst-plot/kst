@@ -55,7 +55,7 @@ class KSTMATH_EXPORT Image : public Relation {
 
     virtual bool getNearestZ(double x, double y, double& z, QPointF &matchedPoint);
     virtual QColor getMappedColor(double z);
-    virtual void setPalette(const Palette &pal);
+    virtual void setPalette(const QString &palname);
     virtual void setUpperThreshold(double z);
     virtual void setLowerThreshold(double z);
     virtual void setAutoThreshold(bool yes);
@@ -66,6 +66,7 @@ class KSTMATH_EXPORT Image : public Relation {
     virtual double lowerThreshold() const { return _zLower; }
     virtual bool autoThreshold() const { return _autoThreshold; }
 
+    virtual void setMatrix(MatrixPtr in_matrix);
     virtual MatrixPtr matrix() const;
     virtual QString paletteName() const;
     virtual const Palette &palette() const { return _pal; }

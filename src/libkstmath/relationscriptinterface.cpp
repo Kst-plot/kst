@@ -19,6 +19,7 @@
 #include "vector.h"
 #include "colorsequence.h"
 #include "linestyle.h"
+#include "palette.h"
 
 #include <QStringBuilder>
 
@@ -108,6 +109,13 @@ CurveSI::CurveSI(CurvePtr it) {
   _fnMap.insert("maxY",&CurveSI::maxY);
   _fnMap.insert("minY",&CurveSI::minY);
   _fnMap.insert("showEditDialog",&CurveSI::showEditDialog);
+
+  _fnMap.insert("xVector",&CurveSI::xVector);
+  _fnMap.insert("yVector",&CurveSI::yVector);
+  _fnMap.insert("xErrorVector",&CurveSI::xErrorVector);
+  _fnMap.insert("yErrorVector",&CurveSI::yErrorVector);
+  _fnMap.insert("xMinusErrorVector",&CurveSI::xMinusErrorVector);
+  _fnMap.insert("yMinusErrorVector",&CurveSI::yMinusErrorVector);
 
 }
 
@@ -420,5 +428,163 @@ QString CurveSI::pointDensity(QString& command) {
   return QString::number(curve->pointDensity());
 }
 
+QString CurveSI::xVector(QString &) {
+  return curve->xVector()->shortName();
+}
+
+QString CurveSI::yVector(QString &) {
+  return curve->yVector()->shortName();
+}
+
+QString CurveSI::xErrorVector(QString &) {
+  return curve->xErrorVector()->shortName();
+}
+
+QString CurveSI::yErrorVector(QString &) {
+  return curve->yErrorVector()->shortName();
+}
+
+QString CurveSI::xMinusErrorVector(QString &) {
+  return curve->xMinusErrorVector()->shortName();
+}
+
+QString CurveSI::yMinusErrorVector(QString &) {
+  return curve->yMinusErrorVector()->shortName();
+}
+
+
+/******************************************************/
+/* Images                                             */
+/******************************************************/
+ImageSI::ImageSI(ImagePtr it) {
+  image=it;
+  relation = it;
+
+  _fnMap.insert("setMatrix", &ImageSI::setMatrix);
+  _fnMap.insert("setPalette", &ImageSI::setPalette);
+  _fnMap.insert("setFixedColorRange", &ImageSI::setFixedColorRange);
+  _fnMap.insert("setAutoColorRange", &ImageSI::setAutoColorRange);
+
+  _fnMap.insert("lowerThreshold", &ImageSI::lowerThreshold);
+  _fnMap.insert("upperThreshold", &ImageSI::upperThreshold);
+
+  // functions from relationSI
+  _fnMap.insert("maxX",&ImageSI::maxX);
+  _fnMap.insert("minX",&ImageSI::minX);
+  _fnMap.insert("maxY",&ImageSI::maxY);
+  _fnMap.insert("minY",&ImageSI::minY);
+  _fnMap.insert("showEditDialog",&ImageSI::showEditDialog);
+
+}
+
+QString ImageSI::doCommand(QString command_in) {
+  QString command = command_in.left(command_in.indexOf('('));
+
+  ImageInterfaceMemberFn fn=_fnMap.value(command,&ImageSI::noSuchFn);
+
+  if(fn!=&ImageSI::noSuchFn) {
+    return CALL_MEMBER_FN(*this,fn)(command_in);
+  }
+
+
+  QString v=doRelationScriptCommand(command_in, image);
+  if (!v.isEmpty()) {
+    return v;
+  }
+
+  return "No such command";
+}
+
+bool ImageSI::isValid() {
+  return image.isPtrValid();
+}
+
+ScriptInterface* ImageSI::newImage(ObjectStore *store) {
+  ImagePtr image;
+  image = store->createObject<Image>();
+  image->setAutoThreshold(true);
+  image->setPalette(Palette::getPaletteList().at(0));
+
+  return new ImageSI(image);
+}
+
+QByteArray ImageSI::endEditUpdate() {
+  image->registerChange();
+  UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+  return ("Finished editing "+image->Name()).toLatin1();
+}
+
+/***************************/
+/* commands                */
+/***************************/
+
+QString ImageSI::setMatrix(QString& command) {
+  QString parameter = getArg(command);
+
+  MatrixPtr m = kst_cast<Matrix>(image->store()->retrieveObject(parameter));
+
+  if (m) {
+    image->setMatrix(m);
+    return "Done";
+  } else {
+    return QString("matrix %1 not found").arg(parameter);
+  }
+}
+
+QString ImageSI::setPalette(QString& command) {
+  QString parameter = getArg(command);
+  int x = parameter.toInt();
+
+  if (x<0) x = 0;
+
+  QStringList palette_list = Palette::getPaletteList();
+
+  if (x>=palette_list.length()) {
+    x = palette_list.length();
+  }
+  image->setPalette(palette_list.at(x));
+
+  return "Done";
+}
+
+QString ImageSI::setFixedColorRange(QString& command) {
+  QStringList vars = getArgs(command);
+
+  double zmin = vars[0].toDouble();
+  double zmax = vars[1].toDouble();
+
+  if (zmin==zmax) {
+    image->setAutoThreshold(true);
+  } else {
+    if (zmin>zmax) {
+      double z = zmax;
+      zmax = zmin;
+      zmin = z;
+    }
+    image->setAutoThreshold(false);
+    image->setLowerThreshold(zmin);
+    image->setUpperThreshold(zmax);
+  }
+  return "Done";
+}
+
+
+QString ImageSI::setAutoColorRange(QString& command) {
+  QString parameter = getArg(command);
+  double per = parameter.toDouble();
+
+  image->setThresholdToSpikeInsensitive(per);
+
+  return "Done";
+}
+
+QString ImageSI::lowerThreshold(QString&) {
+  return QString::number(image->lowerThreshold());
+}
+
+QString ImageSI::upperThreshold(QString&) {
+  return QString::number(image->upperThreshold());
+}
 
 }

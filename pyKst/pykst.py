@@ -1,10 +1,10 @@
-import sip
-sip.setapi('QString', 1)
+#import sip
+#sip.setapi('QString', 1)
 import sys
 import math
 import os
 import ctypes
-from time import sleep
+#from time import sleep
 #from PyQt4 import QtCore, QtNetwork
 from PySide import QtCore, QtNetwork
 from numpy import *
@@ -69,6 +69,14 @@ class Client:
     """
     self.send("clear()")
     
+  def open_kst_file(self, filename):
+    """ open a .kst file in kst. """
+    self.send("fileOpen("+b2str(filename)+")")
+
+  def save_kst_file(self, filename):
+    """ save a .kst file in kst. """
+    self.send("fileSave("+b2str(filename)+")")
+
   def screen_back(self):
     """ Equivalent to "Range>Back One Screen" from the menubar inside kst. """
     self.send("screenBack()")
@@ -108,77 +116,77 @@ class Client:
     """
     self.send("setTab("+b2str(tab)+")")
   
-  def NewGeneratedString(self, string, name=""):
+  def new_generated_string(self, string, name=""):
     """ Create a new generated string in kst.
     
     See :class:`GeneratedString`
     """
     return GeneratedString(self, string, name)
 
-  def GeneratedString(self, name):
+  def generated_string(self, name):
     """ Returns a generated string from kst given its name.
     
     See :class:`GeneratedString`
     """
     return GeneratedString(self, "", name, new=False)
   
-  def NewDataSourceString(self, filename, field, name=""):
+  def new_datasource_string(self, filename, field, name=""):
     """ Create a New Data Source String in kst.
     
     See :class:`DataSourceString`
     """
     return DataSourceString(self, filename, field, name)
 
-  def DataSourceString(self, name):
+  def datasource_string(self, name):
     """ Returns a datasource string from kst given its name.
     
     See :class:`DataSourceString`
     """
     return DataSourceString(self, "", "", name, new=False)
   
-  def NewGeneratedScalar(self, value, name=""):
+  def new_generated_scalar(self, value, name=""):
     """ Create a New Generated Scalar in kst.
     
     See :class:`GeneratedScalar`
     """
     return GeneratedScalar(self, value, name)
 
-  def GeneratedScalar(self, name):
+  def generated_scalar(self, name):
     """ Returns a Generated Scalar from kst given its name.
     
     See :class:`GeneratedScalar`
     """
     return GeneratedScalar(self, "", name, new=False)
 
-  def NewDataSourceScalar(self, filename, field, name=""):
+  def new_datasource_scalar(self, filename, field, name=""):
     """ Create a New DataSource Scalar in kst.
     
     See :class:`DataSourceScalar`
     """
     return DataSourceScalar(self, filename, field, name)
 
-  def DataSourceScalar(self, name):
+  def datasource_scalar(self, name):
     """ Returns a DataSource Scalar from kst given its name.
     
     See :class:`DataSourceScalar`
     """
     return DataSourceScalar(self, "", "", name, new=False)
 
-  def NewVectorScalar(self, filename, field, frame=-1, name=""):
+  def new_vector_scalar(self, filename, field, frame=-1, name=""):
     """ Create a New VectorScalar in kst.
     
     See :class:`VectorScalar`
     """
     return VectorScalar(self, filename, field, frame, name)
 
-  def VectorScalar(self, name):
+  def vector_scalar(self, name):
     """ Returns a VectorScalar from kst given its name.
     
     See :class:`VectorScalar`
     """
     return VectorScalar(self, "", "", 0, name, new=False)
 
-  def NewDataVector(self, filename, field, start=0, NFrames=-1,
+  def new_data_vector(self, filename, field, start=0, NFrames=-1,
                  skip=0, boxcarFirst=False, name="") :
     """ Create a New DataVector in kst.
     
@@ -187,28 +195,28 @@ class Client:
     return DataVector(self, filename, field, start, NFrames,
                       skip, boxcarFirst, name)
   
-  def DataVector(self, name):
+  def data_vector(self, name):
     """ Returns a DataVector from kst given its name.
     
     See :class:`DataVector`
     """
     return DataVector(self, "", "", name=name, new=False)
 
-  def NewGeneratedVector(self, X0, X1, N, name=""):
+  def new_generated_vector(self, X0, X1, N, name=""):
     """ Create a New GeneratedVector in kst.
     
     See :class:`GeneratedVector`
     """
     return GeneratedVector(self, X0, X1, N, name)
 
-  def GeneratedVector(self, name):
+  def generated_vector(self, name):
     """ Returns a GeneratedVector from kst given its name.
     
     See :class:`GeneratedVector`
     """
     return GeneratedVector(self, 0, 0, 0, name, new=False)
   
-  def NewDataMatrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
+  def new_data_matrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
                  minX=0, minY=0, dX=1, dY=1,name="") :
     """ Create a New DataMatrix in kst.
     
@@ -217,28 +225,42 @@ class Client:
     return DataMatrix(self, filename, field, startX, startY, nX, nY, 
                  minX, minY, dX, dY,name)
 
-  def DataMatrix(self, name):
+  def data_matrix(self, name):
     """ Returns a DataMatrix from kst given its name.
     
     See :class:`DataMatrix`
     """
     return DataMatrix(self, "", "", name=name, new=False)
 
-  def NewCurve(self, xVector, yVector, name=""):
+  def new_curve(self, xVector, yVector, name=""):
     """ Create a New Curve in kst.
     
     See :class:`Curve`
     """
     return Curve(self, xVector, yVector, name)
 
-  def Curve(self, name):
+  def curve(self, name):
     """ Returns a Curve from kst given its name.
     
     See :class:`Curve`
     """
     return Curve(self, "", "", name, new=False)
 
-  def NewLabel(self, text, pos=(0.5,0.5), rot=0, fontSize=12, 
+  def new_image(self, matrix, name=""):
+    """ Create a new Image in kst.
+    
+    See :class:`Image`
+    """
+    return Image(self, matrix, name)
+
+  def image(self, name):
+    """ Returns an Image from kst given its name.
+    
+    See :class:`Image`
+    """
+    return Image(self, "", "", name, new=False)
+
+  def new_label(self, text, pos=(0.5,0.5), rot=0, fontSize=12, 
             bold=False, italic=False, fontColor="black", 
             fontFamily="Serif", name="") :
     """ Create a New Label in kst.
@@ -248,14 +270,14 @@ class Client:
     return Label(self, text, pos, rot, fontSize, bold, italic, 
                  fontColor, fontFamily, name)
 
-  def Label(self, name):
+  def label(self, name):
     """ Returns a Label from kst given its name.
     
     See :class:`Label`
     """
     return Label(self, "", name=name, new=False)
   
-  def NewBox(self, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
+  def new_box(self, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
           fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
           strokeBrushColor="black", strokeBrushStyle=1, 
           strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False, name="") :
@@ -267,14 +289,14 @@ class Client:
                strokeWidth, strokeBrushColor, strokeBrushStyle, 
                strokeJoinStyle, strokeCapStyle, fixAspect, name)
 
-  def Box(self, name):
+  def box(self, name):
     """ Returns a Box from kst given its name.
     
     See :class:`Box`
     """
     return Box(self, name=name, new=False)
   
-  def NewCircle(self, pos=(0.1, 0.1), diameter=0.1,
+  def new_circle(self, pos=(0.1, 0.1), diameter=0.1,
              fillColor="white",fillStyle=1,strokeStyle=1,
              strokeWidth=1,strokeBrushColor="grey",strokeBrushStyle=1, name="") :
     """ Create a New Circle in kst.
@@ -284,14 +306,14 @@ class Client:
     return Circle(self, pos, diameter, fillColor, fillStyle, strokeStyle, 
                   strokeWidth, strokeBrushColor, strokeBrushStyle, name)
   
-  def Circle(self, name):
+  def circle(self, name):
     """ Returns a Circle from kst given its name.
     
     See :class:`Circle`
     """
     return Circle(self, name=name, new=False)
   
-  def NewEllipse(self,pos=(0.1,0.1), size=(0.1,0.1),
+  def new_ellipse(self,pos=(0.1,0.1), size=(0.1,0.1),
                rot=0, fillColor="white", fillStyle=1, strokeStyle=1,
                strokeWidth=1, strokeBrushColor="black", strokeBrushStyle=1,
                fixAspect=False, name="") :
@@ -303,14 +325,14 @@ class Client:
                    strokeWidth, strokeBrushColor, strokeBrushStyle, 
                    fixAspect, name)
 
-  def Ellipse(self, name):
+  def ellipse(self, name):
     """ Returns a  from kst given its name.
     
     See :class:`Ellipse`
     """
     return Ellipse(self, name=name, new=False)
   
-  def NewLine(self,pos=(0.1,0.1),length=0.1,rot=0,
+  def new_line(self,pos=(0.1,0.1),length=0.1,rot=0,
            strokeStyle=1,strokeWidth=1,strokeBrushColor="black",
            strokeBrushStyle=1,strokeCapStyle=1, name="") :
     """ Create a New Line in kst.
@@ -320,14 +342,14 @@ class Client:
     return Line(self,pos, length, rot, strokeStyle, strokeWidth, 
                 strokeBrushColor, strokeBrushStyle, strokeCapStyle, name)
   
-  def Line(self, name):
+  def line(self, name):
     """ Returns a Line from kst given its name.
     
     See :class:`Line`
     """
     return Line(self, name=name, new=False)
 
-  def NewArrow(self,pos=(0.1,0.1), length=0.1, rot=0, 
+  def new_arrow(self,pos=(0.1,0.1), length=0.1, rot=0, 
             arrowAtStart = False, arrowAtEnd = True, arrowSize = 12.0, 
             strokeStyle=1, strokeWidth=1, strokeBrushColor="black",
             strokeBrushStyle=1, strokeCapStyle=1, name="") :
@@ -339,28 +361,28 @@ class Client:
           strokeStyle, strokeWidth, strokeBrushColor, strokeBrushStyle, 
           strokeCapStyle, name)
     
-  def Arrow(self, name):
+  def arrow(self, name):
     """ Returns a Arrow from kst given its name.
     
     See :class:`Arrow`
     """
     return Arrow(self, name=name, new=False)
     
-  def NewPicture(self,filename,pos=(0.1,0.1), width=0.1,rot=0, name="") :
+  def new_picture(self,filename,pos=(0.1,0.1), width=0.1,rot=0, name="") :
     """ Create a New Picture in kst.
     
     See :class:`Picture`
     """
     return Picture(self,filename, pos, width, rot, name)
   
-  def Picture(self, name):
+  def picture(self, name):
     """ Returns a Picture from kst given its name.
     
     See :class:`Picture`
     """
     return Picture(self, "", name = name, new=False)
   
-  def NewSVG(self, filename, pos=(0.1,0.1), width=0.1, rot=0, name="") :
+  def new_SVG(self, filename, pos=(0.1,0.1), width=0.1, rot=0, name="") :
     """ Create a New SVG in kst.
     
     See :class:`SVG`
@@ -374,7 +396,7 @@ class Client:
     """
     return SVG(self, "", name = name, new=False)
 
-  def NewPlot(self,pos=(0.1,0.1),size=(0.1,0.1),rot=0,
+  def new_plot(self,pos=(0.1,0.1),size=(0.1,0.1),rot=0,
            fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
            strokeBrushColor="black", strokeBrushStyle=1, 
            strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False, name="") :
@@ -386,7 +408,7 @@ class Client:
                 strokeWidth, strokeBrushColor, strokeBrushStyle, 
                 strokeJoinStyle, strokeCapStyle, fixAspect, name)
   
-  def Plot(self, name):
+  def plot(self, name):
     """ Returns a Plot from kst given its name.
     
     See :class:`Plot`
@@ -428,8 +450,8 @@ class GeneratedString(String) :
   To import the string "Hello World" into kst::
 
     import pykst as kst
-    client=kst.Client()
-    s=client.GeneratedString("Hello World")
+    client = kst.Client()
+    s = client.new_generatedString("Hello World")
     
   """
   def __init__(self,client,string,name="", new=True) :
@@ -461,8 +483,8 @@ class DataSourceString(String) :
   To read "File path" from the data source "tmp.dat" into kst::
   
     import pykst as kst
-    client=kst.Client()
-    s=client.DataSourceString("tmp.dat", "File Path")
+    client = kst.Client()
+    s = client.new_datasource_string("tmp.dat", "File Path")
     
   """
   def __init__(self,client,filename,field,name="", new=True) :
@@ -507,8 +529,8 @@ class GeneratedScalar(Scalar) :
   To import the scalar of value 42 into kst::
 
     import pykst as kst
-    client=kst.Client()
-    s=client.GeneratedScalar(42)
+    client = kst.Client()
+    s = client.new_generated_scalar(42)
     
   """
   def __init__(self, client, value, name="", new=True) :
@@ -541,8 +563,8 @@ class DataSourceScalar(Scalar) :
   To read "CONST1" from the data source "tmp.dat" into kst::
   
     import pykst as kst
-    client=kst.Client()
-    x=client.DataSourceScalar("tmp.dat", "CONST1")
+    client = kst.Client()
+    x = client.new_datasource_scalar("tmp.dat", "CONST1")
     
   """
   def __init__(self,client,filename,field,name="", new=True) :
@@ -591,8 +613,8 @@ class VectorScalar(Scalar) :
   into kst::
 
     import pykst as kst
-    client=kst.Client()
-    x=client.VectorScalar("tmp.dat", "INDEX", -1)
+    client = kst.Client()
+    x = client.new_vector_scalar("tmp.dat", "INDEX", -1)
 
   """
   def __init__(self, client, filename, field, frame=-1, name="", new=True) :
@@ -631,7 +653,7 @@ class VectorScalar(Scalar) :
     """ Returns the fame. """
     return self.client.send_si(self.handle, "frame()")
 
-class Vector(NamedObject):
+class VectorBase(NamedObject):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
     NamedObject.__init__(self,client)
@@ -660,7 +682,7 @@ class Vector(NamedObject):
     """  Returns a string describing the vector """
     return self.client.send_si(self.handle, "descriptionTip()")
 
-class DataVector(Vector):
+class DataVector(VectorBase):
   """ A vector in kst, read from a data source.
   
   This class represents a vector you would create via 
@@ -685,12 +707,12 @@ class DataVector(Vector):
 
     import pykst as kst
     client = kst.Client()
-    v = client.DataVector("tmp.dat", "INDEX", 3, 10, 2, False) 
+    v = client.new_data_vector("tmp.dat", "INDEX", 3, 10, 2, False) 
     
   """
   def __init__(self, client, filename, field, start=0, NFrames=-1,
                skip=0, boxcarFirst=False, name="", new=True) :
-    Vector.__init__(self,client)
+    VectorBase.__init__(self,client)
 
     if (new == True):
       self.client.send("newDataVector()")
@@ -698,7 +720,7 @@ class DataVector(Vector):
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
       self.change(filename, field, start, NFrames, skip, boxcarFirst)
     else:
-      self.handle = name      
+      self.handle = name
 
   def change(self, filename, field, start, NFrames, skip, boxcarFirst):
     """ Change the parameters of a data vector.
@@ -743,7 +765,7 @@ class DataVector(Vector):
     """  True if boxcar filtering has been applied before skipping. """
     return self.client.send_si(self.handle, "boxcarFirst()")
 
-class GeneratedVector(Vector):
+class GeneratedVector(VectorBase):
   """ Create a generated vector in kst.
   
   This class represents a vector you would create via 
@@ -757,11 +779,11 @@ class GeneratedVector(Vector):
 
     import pykst as kst
     client = kst.Client()
-    v = client.GeneratedVector(0, 1, 6) 
+    v = client.new_generated_vector(0, 1, 6) 
     
   """
   def __init__(self, client, X0, X1, N, name="", new=True) :
-    Vector.__init__(self,client)
+    VectorBase.__init__(self,client)
 
     if (new == True):
       self.client.send("newGeneratedVector()")
@@ -860,7 +882,7 @@ class DataMatrix(Matrix):
   
     import pykst as kst
     client = kst.Client()
-    v = client.DataMatrix("foo.png", "1") 
+    v = client.new_data_matrix("foo.png", "1") 
     
   """
   def __init__(self,client,filename,field,startX=0,startY=0,nX=-1,nY=-1,
@@ -950,7 +972,7 @@ class Curve(Relation):
   Use the convenience function in client to create a curve in kst session 
   "client" of vectors v1 and v2::
   
-    c1 = client.Curve(v1, v2)
+    c1 = client.new_curve(v1, v2)
   
   """
   def __init__(self,client, xVector, yVector, name="", new=True) :
@@ -1146,7 +1168,107 @@ class Curve(Relation):
     """ Returns the density of points shown.  see set_point_density.  """
     return self.client.send_si(self.handle, "pointDensity()")
 
+  def x_vector(self):
+    """ Returns the x vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "xVector()")
+    return vec
 
+  def y_vector(self):
+    """ Returns the y vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "yVector()")
+    return vec
+
+  def x_error_vector(self):
+    """ Returns the +x error vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "xErrorVector()")
+    return vec
+
+  def y_error_vector(self):
+    """ Returns the +y error vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "yErrorVector()")
+    return vec
+
+  def x_minus_error_vector(self):
+    """ Returns the -x error vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "xMinusErrorVector()")
+    return vec
+
+  def y_minus_error_vector(self):
+    """ Returns the -y error vector of the curve.
+    
+    FIXME: should figure out what kind of vector this is and return that.
+    """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "yMinusErrorVector()")
+    return vec
+
+class Image(Relation):
+  """ An image inside kst.
+  
+  This class represents an image you would create via 
+  "Create>Image" from the menubar inside kst.  The parameters of this 
+  function mirror the parameters within "Create>Curve".
+
+  :param matrix: The matrix which defines the image.
+  
+  Use the convenience function in client to create an image in kst session 
+  "client" of Matrix m::
+  
+    i1 = client.new_image(m)
+  
+  """
+  def __init__(self,client, matrix, name="", new=True) :
+    Relation.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newImage()")
+      self.client.send("setMatrix("+matrix.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+
+    else:
+      self.handle = name      
+
+  def setMatrix(self, matrix):
+    """ change the matrix which is the source of the image. """
+    self.client.send_si(self.handle, "setMatrix("+matrix.handle+")")
+
+  def setPalette(self, pallet):
+    """ set the pallet, selected by index.
+    
+    0   Grey
+    1   Red 
+    2   Spectrum
+    3   EOS-A
+    4   EOS-B
+    5   8 colors
+    6   Cyclical Spectrum
+    
+    Note: this is not the same order as the dialog.
+    """
+    self.client.send_si(self.handle, "setPalette("+matrix.handle+")")
+    
 class ViewItem(NamedObject):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client):
@@ -1372,8 +1494,8 @@ class Label(ViewItem) :
   Use the convenience function in Client to create a label "Test Label" in kst::
   
     import pykst as kst
-    client=kst.Client()
-    L=client.Label("Test Label", (0.25, 0.25), fontSize=18)
+    client = kst.Client()
+    L = client.new_label("Test Label", (0.25, 0.25), fontSize=18)
 
   """
   def __init__(self,client, text, pos=(0.5,0.5), rot=0, fontSize=12, 
@@ -1507,9 +1629,9 @@ class Box(ViewItem) :
   Use the convenience function in Client to create a box in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    B=client.Box((0.25, 0.25), (0.2, 0.1), fillColor="blue")
+    B = client.new_box((0.25, 0.25), (0.2, 0.1), fillColor="blue")
   
   """
   def __init__(self,client, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
@@ -1581,9 +1703,9 @@ class Circle(ViewItem) :
   Use the convenience function in Client to create a circle in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    Cr=client.Cirvle((0.5, 0.5), 0.2, fillColor="red")
+    Cr = client.new_circle((0.5, 0.5), 0.2, fillColor="red")
   
   """
   def __init__(self,client,pos=(0.1, 0.1), diameter=0.1,
@@ -1654,9 +1776,9 @@ class Ellipse(ViewItem) :
   Use the convenience function in Client to create an Ellipse in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    E=client.Ellipse((0.25, 0.25), (0.2, 0.1), fillColor="green")
+    E = client.new_ellipse((0.25, 0.25), (0.2, 0.1), fillColor="green")
   
   """
   def __init__(self,client,pos=(0.1,0.1), size=(0.1,0.1),
@@ -1730,9 +1852,9 @@ class Line(ViewItem) :
   Use the convenience function in Client to create a line in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    Ln=client.Line((0.25, 0.25), 0.2, rot=15)
+    Ln = client.new_line((0.25, 0.25), 0.2, rot=15)
 
   """
   def __init__(self,client,pos=(0.1,0.1),length=0.1,rot=0,
@@ -1806,9 +1928,9 @@ class Arrow(ViewItem) :
   Use the convenience function in Client to create an arrow in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    Ln=client.Arrow((0.25, 0.25), 0.2, rot=15, arrowAtStart=True)
+    Ln = client.new_arrow((0.25, 0.25), 0.2, rot=15, arrowAtStart=True)
     
   """
   def __init__(self,client,pos=(0.1,0.1), length=0.1, rot=0, 
@@ -1894,9 +2016,9 @@ class Picture(ViewItem) :
   Use the convenience function in Client to create a picture in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    pic=client.Picture("image.jpg", (0.25, 0.25), 0.2)
+    pic = client.new_picture("image.jpg", (0.25, 0.25), 0.2)
 
   BUG: the aspect ratio of the picture is wrong.
   """
@@ -1963,11 +2085,10 @@ class SVG(ViewItem) :
   Use the convenience function in Client to create an SVG picture in kst::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    svg1=client.SVG("image.svg", (0.25, 0.25), 0.2)
+    svg1 = client.new_SVG("image.svg", (0.25, 0.25), 0.2)
 
-  
   """
   def __init__(self,client,filename, pos=(0.1,0.1), width=0.1, rot=0, 
                name="", new=True) :
@@ -2037,9 +2158,9 @@ class Plot(ViewItem) :
   To create an plot in kst and plot a curve ``curve1``::
   
     import pykst as kst
-    client=kst.Client()
+    client = kst.Client()
     ...
-    P1=client.Plot((0.25, 0.25), (0.5,0.5))
+    P1 = client.new_plot((0.25, 0.25), (0.5,0.5))
     P1.add(curve1)
 
   """

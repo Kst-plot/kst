@@ -277,7 +277,7 @@ void MainWindow::saveAs() {
   QString restorePath = QDir::currentPath();
   QString kstfiledir = fn.left(fn.lastIndexOf('/')) + '/';
   QDir::setCurrent(kstfiledir);
-  QString currentP = QDir::currentPath();
+  //QString currentP = QDir::currentPath();
   _doc->save(fn);
   QDir::setCurrent(restorePath);
   setWindowTitle("Kst - " + fn);

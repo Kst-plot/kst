@@ -43,7 +43,7 @@ Image::Image(ObjectStore *store) : Relation(store) {
   _initializeShortName();
 
   _hasContourMap = false;
-  _hasColorMap = false;
+  _hasColorMap = true;
   setColorDefaults();
   setContourDefaults();
 
@@ -158,8 +158,8 @@ QColor Image::getMappedColor(double z) {
 }
 
 
-void Image::setPalette(const Palette &pal) {
-  _pal.changePaletteName(pal.paletteName());
+void Image::setPalette(const QString &palname) {
+  _pal.changePaletteName(palname);
 }
 
 
@@ -192,6 +192,13 @@ void Image::setThresholdToSpikeInsensitive(double per) {
     setLowerThreshold(matrix()->minValueNoSpike());
     setUpperThreshold(matrix()->maxValueNoSpike());
     setAutoThreshold(false);
+  }
+}
+
+
+void Image::setMatrix(MatrixPtr in_matrix) {
+  if (in_matrix) {
+    _inputMatrices[THEMATRIX] = in_matrix;
   }
 }
 

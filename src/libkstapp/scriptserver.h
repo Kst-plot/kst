@@ -91,7 +91,7 @@ protected:
     //QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getImageList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getCSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //QByteArray newCSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
@@ -162,6 +162,9 @@ protected:
     QByteArray readToEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray setPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray unsetPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
+    QByteArray fileOpen(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray fileSave(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
 
     // Hacks
