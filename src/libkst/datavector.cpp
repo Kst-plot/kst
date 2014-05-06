@@ -380,6 +380,7 @@ bool DataVector::checkIntegrity() {
   if (dataSource() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
     _invalidCount++;
     if (_invalidCount>INVALIDS_PER_RESET) {
+
       reset();
       _invalidCount=0;
     }
@@ -490,7 +491,14 @@ void DataVector::internalUpdate() {
     } else {
       shift = SPF*(new_f0 - F0);
       NF -= (new_f0 - F0);
-      _numSamples = (NF-1)*SPF;
+      //_numSamples = (NF-1)*SPF;
+      if (shift > 0) {
+        if (SPF == 1) {
+          _numSamples = NF;
+        } else {
+          _numSamples = (NF-1)*SPF;
+        }
+      }
     }
 
     memmove(_v, _v+shift, _numSamples*sizeof(double));
@@ -575,20 +583,23 @@ void DataVector::internalUpdate() {
       }
     }
 
-    if (NF > 0) {
-      NF--; /* last frame read was only partially read... */
-    }
+    //if (NF > 0) {
+    //  NF--; /* last frame read was only partially read... */
+    //}
 
     // read the new data from file
     if (start_past_eof) {
       _v[0] = NOPOINT;
       n_read = 1;
     } else if (info.samplesPerFrame > 1) {
+      if (NF>0) {
+        NF--;  /* last frame read was only partially read... */
+      }
       int safe_nf = (new_nf>0 ? new_nf : 0);
 
       assert(new_f0 + NF >= 0);
       //assert(new_f0 + safe_nf - 1 >= 0);
-      if (new_f0 + safe_nf - 1 >= 0) {
+      if ((new_f0 + safe_nf - 1 >= 0) && (safe_nf - NF > 1)) {
         n_read = readField(_v+NF*SPF, _field, new_f0 + NF, safe_nf - NF - 1);
         n_read += readField(_v+(safe_nf-1)*SPF, _field, new_f0 + safe_nf - 1, -1);
       }
@@ -630,7 +641,9 @@ void DataVector::internalUpdate() {
     dataSource()->unlock();
   }
 
-  Vector::internalUpdate();
+  if (n_read>0) {
+    Vector::internalUpdate();
+  }
 }
 
 QByteArray DataVector::scriptInterface(QList<QByteArray> &c)

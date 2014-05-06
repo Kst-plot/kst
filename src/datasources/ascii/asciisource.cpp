@@ -41,6 +41,7 @@
 
 using namespace Kst;
 
+const int BIG_READ=100000;
 
 //-------------------------------------------------------------------------------------------
 struct ms : QThread
@@ -249,7 +250,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
         emitProgress(50, tr("Finished parsing '%1'").arg(_filename));
       } else {
         ms::sleep(500);
-        emitProgress(1 + 49.0 * _reader.progressValue() / 100.0, tr("Parsing '%1': %2 rows").arg(_filename).arg(QString::number(_reader.progressRows())));
+        emitProgress(1 + 99.0 * _reader.progressValue() / 100.0, tr("Parsing '%1': %2 rows").arg(_filename).arg(QString::number(_reader.progressRows())));
         QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
       }
     }
@@ -293,7 +294,9 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 int AsciiSource::readField(double *v, const QString& field, int s, int n)
 {
   _actualField = field;
-  updateFieldMessage(tr("Reading field: "));
+  if (n>BIG_READ) {
+    updateFieldMessage(tr("Reading field: "));
+  }
 
   // TODO multi threading problem: could trigger a dead-lock
   //Debug::trace(QString("AsciiSource::readField() %1  s=%2  n=%3").arg(field.leftJustified(15)).arg(QString("%1").arg(s, 10)).arg(n));
@@ -386,7 +389,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     for (int i = 0; i < n; i++) {
       v[i] = double(s + i);
     }
-    updateFieldMessage(tr("INDEX created"));
+    if (n>BIG_READ) {
+      updateFieldMessage(tr("INDEX created"));
+    }
     return n;
   }
 
@@ -487,7 +492,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  updateFieldMessage(tr("Finished reading: "));
+  if (n>BIG_READ) {
+    updateFieldMessage(tr("Finished reading: "));
+  }
 
   _read_count++;
   if (_read_count_max == _read_count)
@@ -564,7 +571,7 @@ void AsciiSource::updateFieldMessage(const QString& message)
 void AsciiSource::updateFieldProgress(const QString& message)
 {
   if (_read_count_max == 0) {
-    emitProgress(-1, ""); // indicate "busy"
+    //emitProgress(-1, ""); // indicate "busy"  FIXME: doesn't go away so don't start it.
   } else {
     if (_progressSteps != 0 && _read_count_max != -1) {
       emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);

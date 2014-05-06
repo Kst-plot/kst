@@ -65,13 +65,30 @@ qint64 AsciiFileBuffer::findRowOfPosition(const AsciiFileBuffer::RowIndex& rowIn
       searchStart > rowIndex.size()-1 || pos < rowIndex[searchStart]) //within the search region
     return -1;
 
-  // is expensive  for large index with searchStart == 0
+  // get close with a binary search...
   const qint64 indexOfLastRow = rowIndex.size() - 2;
-  for (qint64 row = searchStart; row <= indexOfLastRow; ++row) {
-    if (pos < rowIndex[row])
-      return row - 1;
+
+  qint64 i0 = searchStart;
+  qint64 i1 = indexOfLastRow;
+  qint64 im = (i0+i1)/2;
+
+  while (i1 -  i0 > 1L ) {
+    if (pos < rowIndex[im]) {
+      i1 = im;
+    } else {
+      i0 = im;
+    }
+    im = (i0+i1)/2;
   }
-  if (pos < rowIndex[indexOfLastRow + 1]) // length of file in the last element 
+
+  // now find the exact row... (FIXME - could be cleaner!)
+  im = qMax(im-4, searchStart);
+  for (qint64 row = im; row <= indexOfLastRow; ++row) {
+    if (pos < rowIndex[row]) {
+      return row - 1;
+    }
+  }
+  if (pos < rowIndex[indexOfLastRow + 1]) // length of file in the last element
     return indexOfLastRow;
   return -1;
 }
