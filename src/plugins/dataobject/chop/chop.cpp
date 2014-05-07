@@ -138,7 +138,7 @@ bool ChopSource::algorithm() {
 
   //Make sure there is at least 1 element in the input vector
   if (inputVector->length() < 1) {
-    _errorString = "Error:  Input Vector invalid size";
+    _errorString = tr("Error:  Input Vector invalid size");
     return false;
   }
 

@@ -195,7 +195,7 @@ bool PeriodogramSource::algorithm() {
 
   //Make sure the input sizes match
   if (inputVectorTime->length() != inputVectorData->length()) {
-    _errorString = "Error:  Input Vector lengths do not match";
+    _errorString = tr("Error:  Input Vector lengths do not match");
     return false;
   }
 

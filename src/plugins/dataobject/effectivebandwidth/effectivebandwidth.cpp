@@ -199,13 +199,13 @@ bool EffectiveBandwidthSource::algorithm() {
 
   //Make sure there is at least 1 element in the input vector
   if (inputVectorX->length() < 1) {
-    _errorString = "Error:  Input Vector X invalid size";
+    _errorString = tr("Error:  Input Vector X invalid size");
     return false;
   }
 
   // Make sure the input vectors match.
   if (inputVectorX->length() != inputVectorY->length()) {
-    _errorString = "Error:  Input Vector X and Input Vector Y are not the same length";
+    _errorString = tr("Error:  Input Vector X and Input Vector Y are not the same length");
     return false;
   }
 
@@ -234,7 +234,7 @@ bool EffectiveBandwidthSource::algorithm() {
 
   //verify calculated indices.
   if ( !(minWhiteNoiseIndex>0) || !(minWhiteNoiseIndex<(inputVectorX->length()-1)) ) {
-    _errorString = "Error:  Calculated Indices invalid";
+    _errorString = tr("Error:  Calculated Indices invalid");
     return false;
   }
 

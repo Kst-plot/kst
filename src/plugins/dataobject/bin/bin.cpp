@@ -141,12 +141,12 @@ bool BinSource::algorithm() {
 
   //Make sure there is at least 1 element in the input vector
   if (inputVector->length() < 1) {
-    _errorString = "Error:  Input Vector invalid size";
+    _errorString = tr("Error:  Input Vector invalid size");
     return false;
   }
   //Make sure the bin size is at least 1
   if (inputScalar->value() < 1) {
-    _errorString = "Error:  No Bins";
+    _errorString = tr("Error:  No Bins");
     return false;
   }
 

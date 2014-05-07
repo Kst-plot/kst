@@ -162,7 +162,7 @@ bool DifferentiationSource::algorithm() {
   Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
 
   if (inputScalar->value() == 0) {
-    _errorString = "Error:  Input Scalar Step must be not be 0.";
+    _errorString = tr("Error:  Input Scalar Step must be not be 0.");
     return false;
   }
 

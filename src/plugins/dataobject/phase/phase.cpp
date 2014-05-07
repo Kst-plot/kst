@@ -186,12 +186,12 @@ bool PhaseSource::algorithm() {
   bool bReturn = false;
 
   if (dPhasePeriod <= 0.0) {
-    _errorString = "Error:  Input Scalar Phase must be greater than zero.";
+    _errorString = tr("Error:  Input Scalar Phase must be greater than zero.");
     return false;
   }
 
   if (inputVectorTime->length() != inputVectorData->length()) {
-    _errorString = "Error:  Input Vector lengths do not match.";
+    _errorString = tr("Error:  Input Vector lengths do not match.");
     return false;
   }
 

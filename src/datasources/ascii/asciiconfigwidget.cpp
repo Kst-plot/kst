@@ -74,7 +74,7 @@ QString AsciiConfigWidgetInternal::readLine(QTextStream& in, int maxLength)
 void AsciiConfigWidgetInternal::showBeginning()
 {
   showBeginning(_showBeginning, 100);
-  _labelBeginning->setText(QString("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
+  _labelBeginning->setText(tr("First lines of file '%1'").arg(QFileInfo(_filename).fileName()));
 }
 
 
@@ -396,19 +396,19 @@ bool AsciiConfigWidget::isOkAcceptabe() const {
   QString msg;
   if (config._readFields) {
     if (config._fieldsLine == config._dataLine) {
-      msg = QString("Line %1 can not list field names AND values!").arg(config._fieldsLine + 1);
+      msg = tr("Line %1 can not list field names AND values!").arg(config._fieldsLine + 1);
     }
     if (config._readUnits) {
       if (config._unitsLine == config._dataLine) {
-        msg = QString("Line %1 can not list units AND values!").arg(config._unitsLine + 1);
+        msg = tr("Line %1 can not list units AND values!").arg(config._unitsLine + 1);
       }
       if (config._unitsLine == config._fieldsLine) {
-        msg = QString("Line %1 can not list field names AND units!").arg(config._unitsLine + 1);
+        msg = tr("Line %1 can not list field names AND units!").arg(config._unitsLine + 1);
       }
     }
   }
   if (!msg.isEmpty()) {
-    QMessageBox::critical(0, "Inconsistent parameters", msg);
+    QMessageBox::critical(0, tr("Inconsistent parameters"), msg);
     return false;
   }
   return true;

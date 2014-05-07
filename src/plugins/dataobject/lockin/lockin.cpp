@@ -243,7 +243,7 @@ bool LockInSource::algorithm() {
   Kst::VectorPtr lockinResult = _outputVectors[OUT_LOCKIN_RESULT];
 
   if (inputVector->length() <= 0 || refVector->length() <= 0 || inputVector->length() != refVector->length()) {
-    _errorString = "Error:  Input Vectors - invalid size";
+    _errorString = tr("Error:  Input Vectors - invalid size");
     return false;
   }
 

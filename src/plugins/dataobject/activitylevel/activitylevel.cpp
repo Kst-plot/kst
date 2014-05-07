@@ -208,11 +208,11 @@ bool ActivityLevelSource::algorithm() {
   length = inputVector->length();
   /* The metric is computed over a couple of seconds, let us compute the corresponding number of samples */
   if (iSamplesForWindow > length) {
-    _errorString = "Error: Input vector too short.";
+    _errorString = tr("Error: Input vector too short.");
     return false;
   }
   if (iSamplesForWindow < 2) {
-    _errorString = "Error: the window must be broader.";
+    _errorString = tr("Error: the window must be broader.");
     return false;
   }
 

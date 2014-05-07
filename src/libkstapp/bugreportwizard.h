@@ -32,6 +32,9 @@ class BugReportWizard : public QDialog, Ui::BugReportWizard
 
   private slots:
     void reportBug();
+
+  private:
+    QString os_en;
 };
 
 }

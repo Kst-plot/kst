@@ -212,11 +212,11 @@ bool FitKneeFrequencySource::algorithm() {
   Kst::VectorPtr outputVectorYParameters = _outputVectors[VECTOR_OUT_Y_PARAMETERS];
 
   if (inputVectorX->length() != inputVectorY->length())  {
-    _errorString = "Error:  Input Vector Sizes do not match";
+    _errorString = tr("Error:  Input Vector Sizes do not match");
     return false;
   }
   if (inputVectorX->length() < 1)  {
-    _errorString = "Error:  Input Vector X invalid";
+    _errorString = tr("Error:  Input Vector X invalid");
     return false;
   }
 
@@ -266,7 +266,7 @@ bool FitKneeFrequencySource::algorithm() {
 
   //verify calculated indices.
   if ( !(maxOneOverFIndex>0) || !(minWhiteNoiseIndex>=maxOneOverFIndex) || !(minWhiteNoiseIndex<(inArraysLength-1)) ) {
-    _errorString = "Error:  Input Frequencies are Invalid\n";
+    _errorString = tr("Error:  Input Frequencies are Invalid\n");
     return false;
   }
 
@@ -294,7 +294,7 @@ bool FitKneeFrequencySource::algorithm() {
     yi = inputVectorY->value()[i];
 
     if (!(xi>0) || !((yi-ybar)>0)) {
-      _errorString = "Error:  Input Data Invalid.\n";
+      _errorString = tr("Error:  Input Data Invalid.\n");
       return false;
     }
 

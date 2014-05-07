@@ -142,7 +142,7 @@ bool ConvolveSource::algorithm() {
   Kst::VectorPtr outputVector = _outputVectors[VECTOR_OUT];
 
   if (inputVectorOne->length() <= 0 && inputVectorTwo->length() <= 0) {
-    _errorString = "Error:  Input Vectors - invalid size";
+    _errorString = tr("Error:  Input Vectors - invalid size");
     return false;
   }
 
@@ -184,7 +184,7 @@ bool ConvolveSource::algorithm() {
   iLength = iLengthNew;
 
   if (iLength <= 0) {
-    _errorString = "Error:  Invalid Input length calculated";
+    _errorString = tr("Error:  Invalid Input length calculated");
     return false;
   }
 

@@ -26,19 +26,27 @@ BugReportWizard::BugReportWizard(QWidget *parent)
 
   setupUi(this);
 
+  QString mac_os9 = QT_TR_NOOP("Mac OS 9");
+  QString mac_osx = QT_TR_NOOP("Mac OS X");
+  QString win32 = QT_TR_NOOP("Windows 32-Bit");
+  QString win64 = QT_TR_NOOP("Windows 64-Bit");
+  QString lin = QT_TR_NOOP("Linux");
+
   _kstVersion->setText(KSTVERSION);
 
 #if defined(Q_OS_MAC9)
-  _OS->setText("Mac OS 9");
+  os_en = mac_os9;
 #elif defined(Q_WS_MACX)
-  _OS->setText("Mac OS X");
+  os_en = mac_osx;
 #elif defined(Q_OS_WIN32)
-  _OS->setText("Windows 32-Bit");
+  os_en = win32;
 #elif defined(Q_OS_WIN64)
-  _OS->setText("Windows 64-Bit");
+  os_en = win64;
 #else
-  _OS->setText("Linux");
+  os_en = lin;
 #endif
+
+  _OS->setText(tr(os_en.toLatin1()));
 
   connect(_reportBugButton, SIGNAL(clicked()), this, SLOT(reportBug()));
 }

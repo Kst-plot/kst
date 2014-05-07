@@ -180,13 +180,13 @@ bool GenericFilterSource::algorithm() {
 
   //Validate the Numerator.
   if (!inputStringNumerator || inputStringNumerator->value().isEmpty()) {
-    _errorString = "Error:  Input String Numerator is Empty";
+    _errorString = tr("Error:  Input String Numerator is Empty");
     return false;
   }
 
   //Validate the Denominator.
   if (!inputStringDenominator || inputStringDenominator->value().isEmpty()) {
-    _errorString = "Error:  Input String Denominator is Empty";
+    _errorString = tr("Error:  Input String Denominator is Empty");
     return false;
   }
 

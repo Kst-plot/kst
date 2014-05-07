@@ -159,12 +159,12 @@ bool LineFitSource::algorithm() {
   double xScale;
 
   if (inputVectorY->length() < 1) {
-    _errorString = "Error: Input Vector Y Length invalid";
+    _errorString = tr("Error: Input Vector Y Length invalid");
     return false;
   }
 
   if (inputVectorX->length() < 1) {
-    _errorString = "Error: Input Vector X Length invalid";
+    _errorString = tr("Error: Input Vector X Length invalid");
     return false;
   }
 

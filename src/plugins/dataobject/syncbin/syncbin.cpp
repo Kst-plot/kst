@@ -215,16 +215,16 @@ bool SyncBinSource::algorithm() {
 
   //Make sure there is at least 1 element in the input vector
   if (inputVectorX->length() < 1) {
-    _errorString = "Error:  Input Vector X invalid size";
+    _errorString = tr("Error:  Input Vector X invalid size");
     return false;
   }
   if (inputVectorX->length() != inputVectorY->length()) {
-    _errorString = "Error:  Input Vector lengths do not match";
+    _errorString = tr("Error:  Input Vector lengths do not match");
     return false;
   }
 
   if (nbins < 2) {
-    _errorString = "Error:  Bins must be at least 2";
+    _errorString = tr("Error:  Bins must be at least 2");
     return false;
   }
 
