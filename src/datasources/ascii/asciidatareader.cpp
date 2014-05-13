@@ -358,7 +358,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
       }
     }
 
-    v[i] = Kst::NOPOINT;
+    v[i] = lexc.nanValue();
     for (qint64 ch = chstart; ch < bufread; ++ch) {
       if (isLineBreak(buffer[ch])) {
         break;

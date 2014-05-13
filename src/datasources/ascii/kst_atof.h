@@ -17,6 +17,8 @@
 #include <QString>
 #include <stdlib.h>
 
+#include "math_kst.h"
+
 #ifdef Q_CC_MSVC
   #define KST_THREAD_LOCAL __declspec(thread)
 #else
@@ -55,6 +57,8 @@ public:
 
   void setTimeFormat(const QString& format);
   
+  double nanValue() const;
+
 private:
   LexicalCast();
   ~LexicalCast();
@@ -74,9 +78,19 @@ private:
   inline bool isDigit(const char c) const {
     return (c >= 48) && (c <= 57) ? true : false;
   }
-
-  double nanValue() const;
 };
+
+
+//-------------------------------------------------------------------------------------------
+inline double LexicalCast::nanValue() const
+{
+  switch (_nanMode) {
+  case NullValue:     return 0;
+  case NaNValue:      return Kst::NOPOINT;
+  case PreviousValue: return _previousValue;
+  default:            return 0;
+  }
+}
 
 
 #endif

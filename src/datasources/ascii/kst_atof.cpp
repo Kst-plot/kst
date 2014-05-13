@@ -29,17 +29,6 @@
 
 
 //-------------------------------------------------------------------------------------------
-inline double LexicalCast::nanValue() const
-{
-  switch (_nanMode) {
-  case NullValue:     return 0;
-  case NaNValue:      return Kst::NOPOINT;
-  case PreviousValue: return _previousValue;
-  default:            return 0;
-  }
-}
-
-//-------------------------------------------------------------------------------------------
 #ifdef KST_USE_KST_ATOF
 double LexicalCast::fromDouble(const char* signedp) const
 {
