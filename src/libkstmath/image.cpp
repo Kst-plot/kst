@@ -19,7 +19,7 @@
 #include "math_kst.h"
 #include "objectstore.h"
 #include "plottickcalculator.h"
-
+#include "relationscriptinterface.h"
 
 
 #include <QImage>
@@ -58,6 +58,10 @@ void Image::_initializeShortName() {
   if (_inum>max_inum)
     max_inum = _inum;
   _inum++;
+}
+
+ScriptInterface* Image::createScriptInterface() {
+  return new ImageSI(this);
 }
 
 void Image::save(QXmlStreamWriter &s) {

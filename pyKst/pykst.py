@@ -1254,8 +1254,8 @@ class Image(Relation):
     """ change the matrix which is the source of the image. """
     self.client.send_si(self.handle, "setMatrix("+matrix.handle+")")
 
-  def setPalette(self, pallet):
-    """ set the pallet, selected by index.
+  def setPalette(self, palette):
+    """ set the palette, selected by index.
     
     0   Grey
     1   Red 
@@ -1267,8 +1267,31 @@ class Image(Relation):
     
     Note: this is not the same order as the dialog.
     """
-    self.client.send_si(self.handle, "setPalette("+matrix.handle+")")
+    self.client.send_si(self.handle, "setPalette("+b2str(palette)+")")
     
+  def setRange(self, zmin, zmax):
+    """ sets the z range of the color map."""
+    self.client.send_si(self.handle, "setFixedColorRange("+
+                        b2str(zmin)+","+b2str(zmax)+")")
+  
+  def setAutoRange(self, saturated=0):
+    """ Automatically set the z range of the color map
+    
+    :param saturated: The colormap range is set so that this fraction
+                      of the points in the matrix are saturated.
+    
+    Equal numbers of points are saturated at both ends of the color map.
+    """
+    self.client.send_si(self.handle, "setAutoColorRange("+b2str(saturated) + ")")
+    
+  def max_z(self):
+    """  Returns the max Z value of the curve or image. """
+    return self.client.send_si(self.handle, "maxZ()")
+
+  def min_z(self):
+    """  Returns the max Z value of the curve or image. """
+    return self.client.send_si(self.handle, "minZ()")
+
 class ViewItem(NamedObject):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client):

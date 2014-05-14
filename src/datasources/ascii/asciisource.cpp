@@ -299,6 +299,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
 
   // TODO multi threading problem: could trigger a dead-lock
+  // FIXME: Debug::trace() here is a memory leak, which is serious for large quickly updating files.
   //Debug::trace(QString("AsciiSource::readField() %1  s=%2  n=%3").arg(field.leftJustified(15)).arg(QString("%1").arg(s, 10)).arg(n));
 
   int read = tryReadField(v, field, s, n);
@@ -571,7 +572,7 @@ void AsciiSource::updateFieldMessage(const QString& message)
 void AsciiSource::updateFieldProgress(const QString& message)
 {
   if (_read_count_max == 0) {
-    //emitProgress(-1, ""); // indicate "busy"  FIXME: doesn't go away so don't start it.
+    //emitProgress(-1, ""); // indicate "busy"  FIXME: commented out because it doesn't go away.
   } else {
     if (_progressSteps != 0 && _read_count_max != -1) {
       emitProgress(50 + 50 * _progress / _progressSteps, _actualField + ": " + message);

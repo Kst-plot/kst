@@ -28,13 +28,14 @@ class PluginSI : public ScriptInterface
 {    
     Q_OBJECT
 public:
-    PluginSI(BasicPluginPtr plugin, ObjectStore *store);
+    explicit PluginSI(BasicPluginPtr plugin);
     QString doCommand(QString);
     bool isValid();
     QByteArray endEditUpdate();
+
+    static ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName);
   private:
     BasicPluginPtr _plugin;
-    ObjectStore *_store;
 };
 
 

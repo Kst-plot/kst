@@ -465,8 +465,8 @@ ImageSI::ImageSI(ImagePtr it) {
   _fnMap.insert("setFixedColorRange", &ImageSI::setFixedColorRange);
   _fnMap.insert("setAutoColorRange", &ImageSI::setAutoColorRange);
 
-  _fnMap.insert("lowerThreshold", &ImageSI::lowerThreshold);
-  _fnMap.insert("upperThreshold", &ImageSI::upperThreshold);
+  _fnMap.insert("minZ", &ImageSI::lowerThreshold);
+  _fnMap.insert("maxZ", &ImageSI::upperThreshold);
 
   // functions from relationSI
   _fnMap.insert("maxX",&ImageSI::maxX);
@@ -534,6 +534,7 @@ QString ImageSI::setMatrix(QString& command) {
 
 QString ImageSI::setPalette(QString& command) {
   QString parameter = getArg(command);
+
   int x = parameter.toInt();
 
   if (x<0) x = 0;
@@ -574,6 +575,7 @@ QString ImageSI::setAutoColorRange(QString& command) {
   QString parameter = getArg(command);
   double per = parameter.toDouble();
 
+  image->setAutoThreshold(false);
   image->setThresholdToSpikeInsensitive(per);
 
   return "Done";

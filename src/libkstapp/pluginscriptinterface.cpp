@@ -16,13 +16,11 @@
 
 namespace Kst {
 
-PluginSI::PluginSI(BasicPluginPtr plugin, ObjectStore *store) {
-  if (plugin && store) {
+PluginSI::PluginSI(BasicPluginPtr plugin) {
+  if (plugin) {
     _plugin = plugin;
-    _store = store;
   } else {
     _plugin = 0;
-    _store = 0;
   }
 }
 
@@ -41,13 +39,19 @@ QByteArray PluginSI::endEditUpdate() {
 QString PluginSI::doCommand(QString x) {
 
   if (isValid()) {
+
+    QString v=doNamedObjectCommand(x, _plugin);
+    if (!v.isEmpty()) {
+      return v;
+    }
+
     QStringList params;
     if (x.startsWith("setInputVector(")) {
       x.remove("setInputVector(");
       x.remove(x.lastIndexOf(")"),1);
       params = x.split(',');
       if (params.size()==2) {
-        VectorPtr V = kst_cast<Vector>(_store->retrieveObject(params[1]));
+        VectorPtr V = kst_cast<Vector>(_plugin->store()->retrieveObject(params[1]));
         if (V) {
           _plugin->setInputVector(params[0], V);
         }
@@ -57,7 +61,7 @@ QString PluginSI::doCommand(QString x) {
       x.remove(x.lastIndexOf(")"),1);
       params = x.split(',');
       if (params.size()==2) {
-        ScalarPtr S = kst_cast<Scalar>(_store->retrieveObject(params[1]));
+        ScalarPtr S = kst_cast<Scalar>(_plugin->store()->retrieveObject(params[1]));
         if (S) {
           _plugin->setInputScalar(params[0], S);
         }
@@ -68,6 +72,11 @@ QString PluginSI::doCommand(QString x) {
   } else {
     return "Invalid";
   }
+
+}
+
+ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName) {
+  BasicPluginPtr plugin;
 
 }
 

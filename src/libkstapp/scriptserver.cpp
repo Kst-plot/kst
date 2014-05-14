@@ -318,7 +318,6 @@ inline QByteArray join(const QByteArrayList&n,const char&r) {
 /** The heart of the script server. This function is what performs all the actions. s may be null. */
 QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s)
 {
-  //qDebug() << "ScripteServerExec" << command;
   if(command.isEmpty()) {
         return handleResponse("",s);
     }

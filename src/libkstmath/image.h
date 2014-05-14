@@ -123,6 +123,9 @@ class KSTMATH_EXPORT Image : public Relation {
     virtual bool invertXHint() const;
     virtual bool invertYHint() const;
 
+    virtual ScriptInterface* createScriptInterface();
+
+
   protected:
     Image(ObjectStore *store);
     virtual ~Image();
