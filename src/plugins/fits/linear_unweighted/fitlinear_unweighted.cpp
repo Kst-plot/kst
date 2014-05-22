@@ -220,7 +220,7 @@ bool FitLinearUnweightedSource::algorithm() {
     }
   }
 
-//   postcursor( false, pInputs );
+   postcursor( false, pInputs );
 
   return bReturn;
 }
