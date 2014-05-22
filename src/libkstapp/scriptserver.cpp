@@ -23,6 +23,8 @@
 
 #include "relationscriptinterface.h"
 
+#include "dataobjectscriptinterface.h"
+
 #include "sessionmodel.h"
 #include "updateserver.h"
 #include "datagui.h"
@@ -126,7 +128,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 //    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
 
     _fnMap.insert("getPluginList()", &ScriptServer::getPluginList);
-//    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
+    _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
 
     _fnMap.insert("getImageList()",&ScriptServer::getImageList);
     _fnMap.insert("newImage()",&ScriptServer::newImage);
@@ -637,19 +639,19 @@ QByteArray ScriptServer::getPluginList(QByteArray&, QLocalSocket* s,ObjectStore*
     return outputObjectList<BasicPlugin>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newPlugin(QByteArray& plugin, QLocalSocket* s,ObjectStore* store,const int&ifMode,
 
-    if(_interface) {
-      return handleResponse("To access this function, first call endEdit()",s);
-    } else {
-      plugin.replace("newPlugin(","");
-      plugin.remove(plugin.lastIndexOf(")"),1);
-      _interface = DialogLauncherSI::self->newPlugin(store, plugin);
-      return handleResponse("Ok",s);
-    }
+QByteArray ScriptServer::newPlugin(QByteArray& plugin, QLocalSocket* s,ObjectStore* store) {
+
+  if(_interface) {
+    return handleResponse("To access this function, first call endEdit()",s);
+  } else {
+    plugin.replace("newPlugin(","");
+    plugin.remove(plugin.lastIndexOf(")"),1);
+    _interface = DataObjectSI::newPlugin(store, plugin);
+    return handleResponse("Ok",s);
+  }
 }
-*/
+
 
 QByteArray ScriptServer::getImageList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
@@ -883,7 +885,7 @@ QByteArray ScriptServer::beginEdit(QByteArray&command, QLocalSocket* s,ObjectSto
     if (view_item) {
       _interface = view_item->scriptInterface();
       return handleResponse("Ok",s);
-    } else {
+    } else {      
       ObjectPtr o=_store->retrieveObject(command);
       if (o) {
         _interface = o->scriptInterface();

@@ -176,6 +176,8 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** does the vector represent time? */
     virtual bool isTime() const {return false;}
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
     /** current number of samples */
     int _size;

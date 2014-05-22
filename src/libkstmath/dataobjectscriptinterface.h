@@ -18,24 +18,26 @@
 #include "scriptinterface.h"
 #include "basicplugin.h"
 #include "objectstore.h"
+#include "updatemanager.h"
+#include "updateserver.h"
 
 #ifndef PLUGINSCRIPTINTERFACE_H
 #define PLUGINSCRIPTINTERFACE_H
 
 namespace Kst {
 
-class PluginSI : public ScriptInterface
+class DataObjectSI : public ScriptInterface
 {    
     Q_OBJECT
 public:
-    explicit PluginSI(BasicPluginPtr plugin);
+    explicit DataObjectSI(DataObjectPtr plugin);
     QString doCommand(QString);
     bool isValid();
     QByteArray endEditUpdate();
 
     static ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName);
   private:
-    BasicPluginPtr _plugin;
+    DataObjectPtr _plugin;
 };
 
 

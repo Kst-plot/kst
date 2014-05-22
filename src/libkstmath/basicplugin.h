@@ -70,14 +70,6 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     ScalarPtr inputScalar(const QString& name) const;
     StringPtr inputString(const QString& name) const;
 
-    //Returns the respective output object for name
-    VectorPtr outputVector(const QString& name) const;
-    ScalarPtr outputScalar(const QString& name) const;
-    StringPtr outputString(const QString& name) const;
-
-    void setInputVector(const QString &type, VectorPtr ptr);
-    void setInputScalar(const QString &type, ScalarPtr ptr);
-    void setInputString(const QString &type, StringPtr ptr);
     void setOutputVector(const QString &type, const QString &name);
     void setOutputScalar(const QString &type, const QString &name);
     void setOutputString(const QString &type, const QString &name);
@@ -95,6 +87,8 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     virtual void internalUpdate();
     virtual bool hasParameterVector() const { return _outputVectors.contains("Parameters Vector");}
     virtual QString parameterVectorToString() const { return label(9);}
+
+    virtual ScriptInterface* createScriptInterface();
 
   protected:
     BasicPlugin(ObjectStore *store);

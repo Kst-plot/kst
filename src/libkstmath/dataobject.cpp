@@ -115,6 +115,60 @@ void DataObject::replaceInput(PrimitivePtr p, PrimitivePtr new_p) {
   }
 }
 
+
+VectorPtr DataObject::outputVector(const QString& vector) const {
+  VectorMap::ConstIterator i = _outputVectors.constFind(vector);
+  if (i != _outputVectors.constEnd())
+    return *i;
+  else
+    return 0;
+}
+
+
+ScalarPtr DataObject::outputScalar(const QString& scalar) const {
+  ScalarMap::ConstIterator i = _outputScalars.constFind(scalar);
+  if (i != _outputScalars.constEnd())
+    return *i;
+  else
+    return 0;
+}
+
+
+StringPtr DataObject::outputString(const QString& string) const {
+  StringMap::ConstIterator i = _outputStrings.constFind(string);
+  if (i != _outputStrings.constEnd())
+    return *i;
+  else
+    return 0;
+}
+
+
+void DataObject::setInputVector(const QString &type, VectorPtr ptr) {
+  if (ptr) {
+    _inputVectors[type] = ptr;
+  } else {
+    _inputVectors.remove(type);
+  }
+}
+
+
+void DataObject::setInputScalar(const QString &type, ScalarPtr ptr) {
+  if (ptr) {
+    _inputScalars[type] = ptr;
+  } else {
+    _inputScalars.remove(type);
+  }
+}
+
+
+void DataObject::setInputString(const QString &type, StringPtr ptr) {
+  if (ptr) {
+    _inputStrings[type] = ptr;
+  } else {
+    _inputStrings.remove(type);
+  }
+}
+
 PrimitiveList DataObject::inputPrimitives() const {
   PrimitiveList primitive_list;
 

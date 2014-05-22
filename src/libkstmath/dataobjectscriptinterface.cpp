@@ -10,13 +10,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "pluginscriptinterface.h"
+#include "dataobjectscriptinterface.h"
 
 #include <QStringBuilder>
 
 namespace Kst {
 
-PluginSI::PluginSI(BasicPluginPtr plugin) {
+DataObjectSI::DataObjectSI(DataObjectPtr plugin) {
   if (plugin) {
     _plugin = plugin;
   } else {
@@ -24,19 +24,23 @@ PluginSI::PluginSI(BasicPluginPtr plugin) {
   }
 }
 
-bool PluginSI::isValid() {
+bool DataObjectSI::isValid() {
   return _plugin;
 }
 
-QByteArray PluginSI::endEditUpdate() {
+QByteArray DataObjectSI::endEditUpdate() {
   if (_plugin) {
+    _plugin->registerChange();
+    UpdateManager::self()->doUpdates(true);
+    UpdateServer::self()->requestUpdateSignal();
+
     return ("Finished editing "%_plugin->Name()).toLatin1();
   } else {
     return ("Finished editing invalid plugin");
   }
 }
 
-QString PluginSI::doCommand(QString x) {
+QString DataObjectSI::doCommand(QString x) {
 
   if (isValid()) {
 
@@ -44,7 +48,6 @@ QString PluginSI::doCommand(QString x) {
     if (!v.isEmpty()) {
       return v;
     }
-
     QStringList params;
     if (x.startsWith("setInputVector(")) {
       x.remove("setInputVector(");
@@ -66,8 +69,25 @@ QString PluginSI::doCommand(QString x) {
           _plugin->setInputScalar(params[0], S);
         }
       }
+    } else if (x.startsWith("outputVector(")) {
+      x.remove("outputVector(");
+      x.remove(x.lastIndexOf(")"),1);
+      VectorPtr vout = _plugin->outputVector(x);
+      if (vout) {
+        return vout->shortName();
+      } else {
+        return "Invalid";
+      }
+    } else if (x.startsWith("outputScalar(")) {
+      x.remove("outputScalar(");
+      x.remove(x.lastIndexOf(")"),1);
+      ScalarPtr xout = _plugin->outputScalar(x);
+      if (xout) {
+        return xout->shortName();
+      } else {
+        return "Invalid";
+      }
     }
-
     return "Done";
   } else {
     return "Invalid";
@@ -75,9 +95,15 @@ QString PluginSI::doCommand(QString x) {
 
 }
 
-ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName) {
-  BasicPluginPtr plugin;
+ScriptInterface* DataObjectSI::newPlugin(ObjectStore *store, QByteArray pluginName) {
+  DataObjectConfigWidget* configWidget = DataObject::pluginWidget(pluginName);
 
+  if (configWidget) {
+      BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(pluginName, store, configWidget));
+      return new DataObjectSI(kst_cast<DataObject>(plugin));
+  }
+
+  return 0L;
 }
 
 

@@ -47,5 +47,19 @@ public:
     static ScriptInterface* newVector(ObjectStore *store);
 };
 
+
+class KSTCORE_EXPORT VectorSI : public ScriptInterface
+{
+    Q_OBJECT
+    VectorPtr vector;
+public:
+    explicit VectorSI(VectorPtr it);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newVector(ObjectStore *);
+};
+
 }
 #endif // VECTORSCRIPTINTERFACE_H

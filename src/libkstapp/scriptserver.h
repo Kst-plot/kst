@@ -88,7 +88,7 @@ protected:
     //QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getImageList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newImage(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

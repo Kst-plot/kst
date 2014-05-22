@@ -33,6 +33,7 @@
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
+#include "vectorscriptinterface.h"
 
 namespace Kst {
 
@@ -92,6 +93,11 @@ Vector::~Vector() {
     free(_v);
     _v = 0;
   }
+}
+
+
+ScriptInterface* Vector::createScriptInterface() {
+  return new VectorSI(this);
 }
 
 

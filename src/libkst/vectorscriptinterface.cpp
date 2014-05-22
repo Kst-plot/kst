@@ -161,5 +161,37 @@ QByteArray VectorGenSI::endEditUpdate() {
   return ("Finished editing "+vector->Name()).toLatin1();
 }
 
+/******************************************************/
+/* Plain (base) Vectors                               */
+/******************************************************/
+VectorSI::VectorSI(VectorPtr it) {
+    vector=it;
+}
+
+QString VectorSI::doCommand(QString command) {
+
+  QString v=doVectorScriptCommand(command, vector);
+  if (!v.isEmpty()) {
+    return v;
+  }
+
+  return "No such command";
+}
+
+bool VectorSI::isValid() {
+  return vector.isPtrValid();
+}
+
+ScriptInterface* VectorSI::newVector(ObjectStore *) {
+  return 0L;
+}
+
+QByteArray VectorSI::endEditUpdate() {
+  vector->registerChange();
+  UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+  return ("Finished editing "+vector->Name()).toLatin1();
+}
+
 
 }

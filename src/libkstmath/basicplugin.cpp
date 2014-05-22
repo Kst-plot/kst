@@ -27,6 +27,7 @@
 #include "datacollection.h"
 #include "objectstore.h"
 #include "dataobjectplugin.h"
+#include "dataobjectscriptinterface.h"
 
 namespace Kst {
 
@@ -51,6 +52,10 @@ void BasicPlugin::_initializeShortName() {
     max_pnum = _pnum;
   _pnum++;
 
+}
+
+ScriptInterface* BasicPlugin::createScriptInterface() {
+  return new DataObjectSI(this);
 }
 
 
@@ -132,60 +137,6 @@ StringPtr BasicPlugin::inputString(const QString& string) const {
     return *i;
   else
     return 0;
-}
-
-
-VectorPtr BasicPlugin::outputVector(const QString& vector) const {
-  VectorMap::ConstIterator i = _outputVectors.constFind(vector);
-  if (i != _outputVectors.constEnd())
-    return *i;
-  else
-    return 0;
-}
-
-
-ScalarPtr BasicPlugin::outputScalar(const QString& scalar) const {
-  ScalarMap::ConstIterator i = _outputScalars.constFind(scalar);
-  if (i != _outputScalars.constEnd())
-    return *i;
-  else
-    return 0;
-}
-
-
-StringPtr BasicPlugin::outputString(const QString& string) const {
-  StringMap::ConstIterator i = _outputStrings.constFind(string);
-  if (i != _outputStrings.constEnd())
-    return *i;
-  else
-    return 0;
-}
-
-
-void BasicPlugin::setInputVector(const QString &type, VectorPtr ptr) {
-  if (ptr) {
-    _inputVectors[type] = ptr;
-  } else {
-    _inputVectors.remove(type);
-  }
-}
-
-
-void BasicPlugin::setInputScalar(const QString &type, ScalarPtr ptr) {
-  if (ptr) {
-    _inputScalars[type] = ptr;
-  } else {
-    _inputScalars.remove(type);
-  }
-}
-
-
-void BasicPlugin::setInputString(const QString &type, StringPtr ptr) {
-  if (ptr) {
-    _inputStrings[type] = ptr;
-  } else {
-    _inputStrings.remove(type);
-  }
 }
 
 

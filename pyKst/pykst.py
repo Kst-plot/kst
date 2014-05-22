@@ -260,6 +260,36 @@ class Client:
     """
     return Image(self, "", "", name, new=False)
 
+  def new_linear_fit(self, xVector, yVector, weightvector = 0, name = ""):
+    """ Create a New Linear Fit in kst.
+    
+    See :class:`LinearFit`
+    """
+    return LinearFit(self, xVector, yVector, weightvector, name)
+
+  def linear_fit(self, name):
+    """ Returns a linear fit from kst given its name.
+    
+    See :class:`LinearFit`
+    """
+    return LinearFit(self, "", "", 0, name, new=False)
+
+
+  def new_polynomial_fit(self, order, xVector, yVector, weightvector = 0, name = ""):
+    """ Create a New Polynomial Fit in kst.
+    
+    See :class:`PolynomialFit`
+    """
+    return PolynomailFit(self, order, xVector, yVector, weightvector, name)
+
+  def polynomial_fit(self, name):
+    """ Returns a polynomial fit from kst given its name.
+    
+    See :class:`PolynomialFit`
+    """
+    return PolynomialFit(self, 0, "", "", 0, name, new=False)
+
+
   def new_label(self, text, pos=(0.5,0.5), rot=0, fontSize=12, 
             bold=False, italic=False, fontColor="black", 
             fontFamily="Serif", name="") :
@@ -326,7 +356,7 @@ class Client:
                    fixAspect, name)
 
   def ellipse(self, name):
-    """ Returns a  from kst given its name.
+    """ Returns an ellipse from kst given its name.
     
     See :class:`Ellipse`
     """
@@ -1292,6 +1322,107 @@ class Image(Relation):
     """  Returns the max Z value of the curve or image. """
     return self.client.send_si(self.handle, "minZ()")
 
+# FIT ###################################################################
+class Fit(NamedObject) :
+  """ This is a class which provides some methods common to all fits """
+  def __init__(self,client) :
+    NamedObject.__init__(self,client)
+
+  def parameters(self) :
+    """ a vector containing the Parameters of the fit  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Parameters Vector)")
+    return vec
+
+  def fit(self) :
+    """ a vector containing the fit  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Fit)")
+    return vec
+
+  def residuals(self) :
+    """ a vector containing the Parameters of the fit  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Residuals)")
+    return vec
+
+  def covariance(self) :
+    """ a vector containing the Covariance of the fit  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Covariance)")
+    return vec
+
+  def reduced_chi2(self) :
+    """ a scalar containing the Parameters of the fit  """
+    X = Scalar(self.client)
+    X.handle = self.client.send_si(self.handle, "outputScalar(chi^2/nu)")
+    return X
+
+
+# LINEAR FIT ############################################################
+class LinearFit(Fit) : 
+  """ A linear fit inside kst.
+   
+  If weightvector is 0, then the fit is unweighted.   
+  """
+  def __init__(self, client, xvector, yvector, weightvector=0, name="", new=True) :
+    Fit.__init__(self,client)
+    
+    if (new == True):      
+      if weightvector==0:
+        self.client.send("newPlugin(Linear Fit)")
+      else:
+        self.client.send("newPlugin(Linear Weighted Fit)")
+        self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")")
+          
+      self.client.send("setInputVector(X Vector,"+xvector.handle+")")
+      self.client.send("setInputVector(Y Vector,"+yvector.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+  def slope(self) :
+    """ The slope of the fit.  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Parameters Vector)")
+    return vec.value(1)
+
+  def intercept(self) :
+    """ The intercept of the fit.  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Parameters Vector)")
+    return vec.value(0)
+
+# POLYNOMIAL FIT ############################################################
+class PolynomailFit(Fit) : 
+  """ A Polynomial fit inside kst.
+
+     :param order: The order of the fit
+  """
+  def __init__(self, client, order, xvector, yvector, weightvector=0, name="", new=True) :
+    Fit.__init__(self,client)
+    
+    if (new == True):      
+      if weightvector==0:
+        self.client.send("newPlugin(Polynomial Fit)")
+      else:
+        self.client.send("newPlugin(Polynomial Weighted Fit)")
+        self.client.send("setInputVector(Weights Vector,"+weightvector.handle+")")
+          
+      self.client.send("setInputVector(X Vector,"+xvector.handle+")")
+      self.client.send("setInputVector(Y Vector,"+yvector.handle+")")
+      self.client.send("setInputScalar(Order Scalar,"+order.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+
+
+# View Items ################################################################
 class ViewItem(NamedObject):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client):
@@ -1469,6 +1600,7 @@ class ViewItem(NamedObject):
   def remove(self):
     """ This removes the object from Kst. """
     self.client.send("eliminate("+self.handle+")")
+
 
 # LABELS ######################################################################
 class Label(ViewItem) :

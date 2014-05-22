@@ -96,6 +96,14 @@ class KSTMATH_EXPORT DataObject : public Object
     MatrixMap& inputMatrices() { return _inputMatrices; }
     MatrixMap& outputMatrices() { return _outputMatrices; }
 
+    VectorPtr outputVector(const QString& name) const;
+    ScalarPtr outputScalar(const QString& name) const;
+    StringPtr outputString(const QString& name) const;
+
+    void setInputVector(const QString &type, VectorPtr ptr);
+    void setInputScalar(const QString &type, ScalarPtr ptr);
+    void setInputString(const QString &type, StringPtr ptr);
+
     virtual PrimitiveList inputPrimitives() const;
     PrimitiveList outputPrimitives(bool include_descendants = true) const;
 
