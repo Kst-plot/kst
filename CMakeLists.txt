@@ -103,7 +103,7 @@ endif()
 
 if(kst_3rdparty_build)
     set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
-    add_subdirectory(3rdparty)
+    add_subdirectory(cmake/3rdparty)
 elseif(kst_3rdparty_download)
     if(MINGW)
         if(GCC_VERSION VERSION_EQUAL 4.7.2 OR GCC_VERSION VERSION_GREATER 4.7.2)
