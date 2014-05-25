@@ -26,7 +26,7 @@
 
 namespace Kst {
 
-class DataObjectSI : public ScriptInterface
+class KSTMATH_EXPORT DataObjectSI : public ScriptInterface
 {    
     Q_OBJECT
 public:
