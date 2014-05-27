@@ -10,7 +10,7 @@ startdir=$PWD
 # set 'versionname' to overwrite generated one based on 'ver'
 #
 
-versionname=Kst-2.0.8-rc2
+#versionname=Kst-2.0.8-rc2
 
 ver=2.0.x
 date=`date --utc '+%Y.%m.%d-%H.%M'`
