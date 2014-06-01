@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Y Interpolated";
 class ConfigWidgetAkimaPeriodicPlugin : public Kst::DataObjectConfigWidget, public Ui_AkimaPeriodicConfig {
   public:
     ConfigWidgetAkimaPeriodicPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_AkimaPeriodicConfig() {
+      _store = 0;
       setupUi(this);
     }
 

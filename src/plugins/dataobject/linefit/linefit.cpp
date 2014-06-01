@@ -32,6 +32,7 @@ static const QString& SCALAR_OUT_CHI2 = "chi^2";
 class ConfigWidgetLineFitPlugin : public Kst::DataObjectConfigWidget, public Ui_LineFitConfig {
   public:
     ConfigWidgetLineFitPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_LineFitConfig() {
+      _store = 0;
       setupUi(this);
     }
 

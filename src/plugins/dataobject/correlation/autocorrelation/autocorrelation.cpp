@@ -27,6 +27,7 @@ static const QString& VECTOR_OUT_STEP = "Step Value";
 class ConfigAutoCorrelationPlugin : public Kst::DataObjectConfigWidget, public Ui_AutoCorrelationConfig {
   public:
     ConfigAutoCorrelationPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_AutoCorrelationConfig() {
+      _store = 0;
       setupUi(this);
     }
 

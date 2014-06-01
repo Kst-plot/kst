@@ -35,6 +35,7 @@ static const QString& SCALAR_OUT = "chi^2/nu";
 class ConfigWidgetFitExponentialWeightedPlugin : public Kst::DataObjectConfigWidget, public Ui_FitExponential_WeightedConfig {
   public:
     ConfigWidgetFitExponentialWeightedPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FitExponential_WeightedConfig() {
+      _store = 0;
       setupUi(this);
     }
 

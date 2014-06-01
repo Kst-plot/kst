@@ -39,6 +39,7 @@ static const QString& OUT_LOCKIN_RESULT = "Lock-In Result";
 class ConfigLockInPlugin : public Kst::DataObjectConfigWidget, public Ui_LockInConfig {
   public:
     ConfigLockInPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_LockInConfig() {
+      _store = 0;
       setupUi(this);
     }
 

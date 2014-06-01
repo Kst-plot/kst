@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Vector Out";
 class ConfigWidgetDeconvolvePlugin : public Kst::DataObjectConfigWidget, public Ui_DeconvolveConfig {
   public:
     ConfigWidgetDeconvolvePlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_DeconvolveConfig() {
+      _store = 0;
       setupUi(this);
     }
 

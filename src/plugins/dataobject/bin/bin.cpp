@@ -25,6 +25,7 @@ static const QString& VECTOR_OUT = "Bins";
 class ConfigWidgetBinPlugin : public Kst::DataObjectConfigWidget, public Ui_BinConfig {
   public:
     ConfigWidgetBinPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_BinConfig() {
+      _store = 0;
       setupUi(this);
     }
 

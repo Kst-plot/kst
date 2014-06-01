@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT_REAL = "Real";
 class ConfigCrossSpectrumPlugin : public Kst::DataObjectConfigWidget, public Ui_CrossSpectrumConfig {
   public:
     ConfigCrossSpectrumPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CrossSpectrumConfig() {
+      _store = 0;
       setupUi(this);
     }
 

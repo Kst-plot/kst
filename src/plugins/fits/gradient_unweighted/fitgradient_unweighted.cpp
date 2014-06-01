@@ -33,6 +33,7 @@ static const QString& SCALAR_OUT = "chi^2/nu";
 class ConfigWidgetFitGradientUnweightedPlugin : public Kst::DataObjectConfigWidget, public Ui_FitGradient_UnweightedConfig {
   public:
     ConfigWidgetFitGradientUnweightedPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FitGradient_UnweightedConfig() {
+      _store = 0;
       setupUi(this);
     }
 

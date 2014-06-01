@@ -34,6 +34,7 @@ static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
 class ConfigWidgetFitKneeFrequencyPlugin : public Kst::DataObjectConfigWidget, public Ui_FitKneeFrequencyConfig {
   public:
     ConfigWidgetFitKneeFrequencyPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FitKneeFrequencyConfig() {
+      _store = 0;
       setupUi(this);
     }
 

@@ -30,6 +30,7 @@ static const QString& VECTOR_OUT_DATA = "Data Out";
 class ConfigPhasePlugin : public Kst::DataObjectConfigWidget, public Ui_PhaseConfig {
   public:
     ConfigPhasePlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_PhaseConfig() {
+      _store = 0;
       setupUi(this);
     }
 

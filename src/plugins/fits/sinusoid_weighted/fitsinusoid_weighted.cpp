@@ -35,6 +35,7 @@ static const QString& SCALAR_OUT = "chi^2/nu";
 class ConfigWidgetFitSinusoidWeightedPlugin : public Kst::DataObjectConfigWidget, public Ui_FitSinusoid_WeightedConfig {
   public:
     ConfigWidgetFitSinusoidWeightedPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FitSinusoid_WeightedConfig() {
+      _store = 0;
       setupUi(this);
     }
 

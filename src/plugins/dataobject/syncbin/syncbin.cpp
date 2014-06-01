@@ -38,6 +38,7 @@ static const QString& VECTOR_OUT_N = "N";
 class ConfigSyncBinPlugin : public Kst::DataObjectConfigWidget, public Ui_SyncBinConfig {
   public:
     ConfigSyncBinPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_SyncBinConfig() {
+      _store = 0;
       setupUi(this);
     }
 

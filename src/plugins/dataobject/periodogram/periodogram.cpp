@@ -34,6 +34,7 @@ static const QString& VECTOR_OUT_PERIODOGRAM = "Periodogram";
 class ConfigPeriodogramPlugin : public Kst::DataObjectConfigWidget, public Ui_PeriodogramConfig {
   public:
     ConfigPeriodogramPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_PeriodogramConfig() {
+      _store = 0;
       setupUi(this);
     }
 

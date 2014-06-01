@@ -32,6 +32,7 @@ static const QString& VECTOR_OUT_INDEX = "Index Vector";
 class ConfigWidgetChopPlugin : public Kst::DataObjectConfigWidget, public Ui_ChopConfig {
   public:
     ConfigWidgetChopPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_ChopConfig() {
+      _store = 0;
       setupUi(this);
     }
 

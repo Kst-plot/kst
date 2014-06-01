@@ -30,6 +30,7 @@ static const QString& SCALAR_OUT_BANDWIDTH = "Effective Bandwidth";
 class ConfigEffectiveBandwidthPlugin : public Kst::DataObjectConfigWidget, public Ui_EffectiveBandwidthConfig {
   public:
     ConfigEffectiveBandwidthPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_EffectiveBandwidthConfig() {
+      _store = 0;
       setupUi(this);
     }
 

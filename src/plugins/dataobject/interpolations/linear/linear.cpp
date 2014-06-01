@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Y Interpolated";
 class ConfigWidgetLinearPlugin : public Kst::DataObjectConfigWidget, public Ui_LinearConfig {
   public:
     ConfigWidgetLinearPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_LinearConfig() {
+      _store = 0;
       setupUi(this);
     }
 

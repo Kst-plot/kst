@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Y Interpolated";
 class ConfigWidgetCubicSplinePeriodicPlugin : public Kst::DataObjectConfigWidget, public Ui_CubicSplinePeriodicConfig {
   public:
     ConfigWidgetCubicSplinePeriodicPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CubicSplinePeriodicConfig() {
+      _store = 0;
       setupUi(this);
     }
 

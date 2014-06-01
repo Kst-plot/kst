@@ -29,6 +29,7 @@ static const QString& VECTOR_OUT_CORRELATED = "C";
 class ConfigCrossCorrelationPlugin : public Kst::DataObjectConfigWidget, public Ui_CrossCorrelationConfig {
   public:
     ConfigCrossCorrelationPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_CrossCorrelationConfig() {
+      _store = 0;
       setupUi(this);
     }
 

@@ -27,6 +27,7 @@ static const QString& VECTOR_OUT = "Vector Out";
 class ConfigNoiseAdditionPlugin : public Kst::DataObjectConfigWidget, public Ui_NoiseAdditionConfig {
   public:
     ConfigNoiseAdditionPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_NoiseAdditionConfig() {
+      _store = 0;
       setupUi(this);
     }
 

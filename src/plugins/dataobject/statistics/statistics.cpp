@@ -31,6 +31,7 @@ static const QString& SCALAR_OUT_KURTOSIS = "Kurtosis";
 class ConfigWidgetStatisticsPlugin : public Kst::DataObjectConfigWidget, public Ui_StatisticsConfig {
   public:
     ConfigWidgetStatisticsPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_StatisticsConfig() {
+      _store = 0;
       setupUi(this);
     }
 

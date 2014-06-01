@@ -30,6 +30,7 @@ static const QString& VECTOR_OUT = "Filtered";
 class ConfigGenericFilterPlugin : public Kst::DataObjectConfigWidget, public Ui_GenericFilterConfig {
   public:
     ConfigGenericFilterPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_GenericFilterConfig() {
+      _store = 0;
       setupUi(this);
     }
 

@@ -28,6 +28,7 @@ static const QString& VECTOR_OUT = "Y Interpolated";
 class ConfigWidgetPolynomialPlugin : public Kst::DataObjectConfigWidget, public Ui_PolynomialConfig {
   public:
     ConfigWidgetPolynomialPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_PolynomialConfig() {
+      _store = 0;
       setupUi(this);
     }
 

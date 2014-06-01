@@ -27,6 +27,7 @@ static const QString& VECTOR_OUT = "Shifted Vector";
 class ConfigWidgetShiftPlugin : public Kst::DataObjectConfigWidget, public Ui_ShiftConfig {
   public:
     ConfigWidgetShiftPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_ShiftConfig() {
+      _store = 0;
       setupUi(this);
     }
 
