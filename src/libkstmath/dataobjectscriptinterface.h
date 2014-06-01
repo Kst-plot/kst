@@ -17,29 +17,85 @@
 
 #include "scriptinterface.h"
 #include "basicplugin.h"
+#include "equation.h"
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "updateserver.h"
 
-#ifndef PLUGINSCRIPTINTERFACE_H
-#define PLUGINSCRIPTINTERFACE_H
+#ifndef DATAOBJECTSCRIPTINTERFACE_H
+#define DATAOBJECTSCRIPTINTERFACE_H
 
 namespace Kst {
 
 class KSTMATH_EXPORT DataObjectSI : public ScriptInterface
+{
+    Q_OBJECT
+
+  public:
+    QString setInputVector(QString& command);
+    QString setInputScalar(QString& command);
+
+    QString outputVector(QString& command);
+    QString outputScalar(QString& command);
+
+  protected:
+    DataObjectPtr _dataObject;
+
+};
+
+
+class PluginSI;
+typedef QString (PluginSI::*PluginInterfaceMemberFn)(QString& command);
+
+class KSTMATH_EXPORT PluginSI : public DataObjectSI
 {    
     Q_OBJECT
 public:
-    explicit DataObjectSI(DataObjectPtr plugin);
+    explicit PluginSI(BasicPluginPtr plugin);
     QString doCommand(QString);
     bool isValid();
     QByteArray endEditUpdate();
 
     static ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName);
+
+  protected:
+    QString noSuchFn(QString&) {return ""; }
+
   private:
-    DataObjectPtr _plugin;
+    BasicPluginPtr _plugin;
+
+    QMap<QString,PluginInterfaceMemberFn> _fnMap;
+
+
+};
+
+
+class EquationSI;
+typedef QString (EquationSI::*EquationInterfaceMemberFn)(QString& command);
+
+class KSTMATH_EXPORT EquationSI : public DataObjectSI
+{
+    Q_OBJECT
+public:
+    explicit EquationSI(EquationPtr equation);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newEquation(ObjectStore *store);
+
+  protected:
+    QString noSuchFn(QString&) {return ""; }
+
+  private:
+    EquationPtr _equation;
+
+    QMap<QString,EquationInterfaceMemberFn> _fnMap;
+
+    QString equation(QString &);
+    QString setEquation(QString &eq);
 };
 
 
 }
-#endif // PLUGINSCRIPTINTERFACE_H
+#endif // DATAOBJECTSCRIPTINTERFACE_H

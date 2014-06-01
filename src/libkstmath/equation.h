@@ -80,6 +80,8 @@ class KSTMATH_EXPORT Equation : public DataObject {
     virtual PrimitiveList inputPrimitives() const;
     virtual void replaceInput(PrimitivePtr p, PrimitivePtr new_p);
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
     Equation(ObjectStore *store);
     ~Equation();

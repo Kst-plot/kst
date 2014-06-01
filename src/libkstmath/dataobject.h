@@ -144,6 +144,7 @@ class KSTMATH_EXPORT DataObject : public Object
     // this is reimplemented but must not be virtual.
     QByteArray scriptInterface(QList<QByteArray>&command);
 
+
   protected slots:
     virtual void showNewDialog() = 0;
     virtual void showEditDialog() = 0;

@@ -54,8 +54,9 @@ void BasicPlugin::_initializeShortName() {
 
 }
 
+
 ScriptInterface* BasicPlugin::createScriptInterface() {
-  return new DataObjectSI(this);
+  return new PluginSI(this);
 }
 
 

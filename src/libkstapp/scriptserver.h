@@ -42,7 +42,7 @@ class ScriptServer : public QObject
 public:
     explicit ScriptServer(ObjectStore*obj);
     ~ScriptServer();
-    QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
+    //QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
     void setStore(ObjectStore *obj) { _store = obj; vi.clear();}
 public slots:
     void procConnection();
@@ -79,7 +79,7 @@ protected:
     QByteArray newCurve(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getEquationList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getHistogramList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

@@ -260,6 +260,20 @@ class Client:
     """
     return Image(self, "", "", name, new=False)
 
+  def new_equation(self, x_vector, equation, name=""):
+    """ Create a new Equation in kst.
+    
+    See :class:`Equation`
+    """
+    return Equation(self, x_vector, equation, name)
+
+  def equation(self, name):
+    """ Returns an Equation from kst given its name.
+    
+    See :class:`Equation`
+    """
+    return Equation(self, "", "", name, new=False)
+
   def new_linear_fit(self, xVector, yVector, weightvector = 0, name = ""):
     """ Create a New Linear Fit in kst.
     
@@ -1321,6 +1335,29 @@ class Image(Relation):
   def min_z(self):
     """  Returns the max Z value of the curve or image. """
     return self.client.send_si(self.handle, "minZ()")
+
+# Equation ############################################################
+class Equation(NamedObject) : 
+  """ An equation inside kst.
+   
+    :param x_vector: the x vector of the equation
+    :param equation: the equation
+    
+    Vectors inside kst are refered to as [vectorname] or [scalarname].
+  """
+  def __init__(self, client, xvector, equation, name="", new=True) :
+    NamedObject.__init__(self,client)
+    
+    if (new == True):      
+      self.client.send("newEquation()")
+
+      self.client.send("setEquation(" + equation + ")")
+      self.client.send("setInputVector(X,"+xvector.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
 
 # FIT ###################################################################
 class Fit(NamedObject) :

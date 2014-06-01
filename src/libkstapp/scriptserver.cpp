@@ -119,7 +119,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("newCurve()",&ScriptServer::newCurve);
 
     _fnMap.insert("getEquationList()",&ScriptServer::getEquationList);
-//    _fnMap.insert("newEquation()",&ScriptServer::newEquation);
+    _fnMap.insert("newEquation()",&ScriptServer::newEquation);
 
     _fnMap.insert("getHistogramList()",&ScriptServer::getHistogramList);
 //    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
@@ -332,12 +332,6 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s)
     if(fn!=&ScriptServer::noSuchFn) {
         return CALL_MEMBER_FN(*this,fn)(command, s,_store);
     } else {
-        if(command.contains("::")) {
-            QByteArray ret=checkPrimatives(command,s);
-            if(!ret.isEmpty()) {
-                return ret;
-            }
-        }
         if(_interface) {
             return handleResponse(_interface->doCommand(command).toLatin1(),s); //magic
         } else {
@@ -348,6 +342,7 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s)
     return "?";
 }
 
+#if 0
 QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
 {
     ///
@@ -418,6 +413,7 @@ QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
 
     return "";
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -588,16 +584,14 @@ QByteArray ScriptServer::getEquationList(QByteArray&, QLocalSocket* s,ObjectStor
     return outputObjectList<Equation>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newEquation(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
+QByteArray ScriptServer::newEquation(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else {
-        _interface = DialogLauncherSI::self->showEquationDialog();
-        return handleResponse("Ok",s);
+    if(_interface) {
+      return handleResponse("To access this function, first call endEdit()",s);
+    } else {
+      _interface = EquationSI::newEquation(_store); return handleResponse("Ok",s);
     }
 }
-*/
 
 
 QByteArray ScriptServer::getHistogramList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
@@ -647,7 +641,7 @@ QByteArray ScriptServer::newPlugin(QByteArray& plugin, QLocalSocket* s,ObjectSto
   } else {
     plugin.replace("newPlugin(","");
     plugin.remove(plugin.lastIndexOf(")"),1);
-    _interface = DataObjectSI::newPlugin(store, plugin);
+    _interface = PluginSI::newPlugin(store, plugin);
     return handleResponse("Ok",s);
   }
 }
@@ -689,25 +683,6 @@ QByteArray ScriptServer::getBasicPluginList(QByteArray&, QLocalSocket* s,ObjectS
 
     return outputObjectList<BasicPlugin>(s,_store);
 }
-
-/*
-QByteArray ScriptServer::newBasicPlugin(QByteArray&command, QLocalSocket* s,ObjectStore*,const int&ifMode,
-
-    command.replace("newBasicPlugin(","");
-    if(command.contains(")")) { command.remove(command.indexOf(")"),99999999); }
-
-    bool ok=0;
-    for(int i=0;i<DataObject::dataObjectPluginList().size();i++) {
-        if(command==DataObject::dataObjectPluginList()[i]) {
-            ok=1;
-            break;
-        }
-    }
-    if(!ok) { return handleResponse("No such plugin",s); }
-    else if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else { _interface = DialogLauncherSI::self->showBasicPluginDialog(command); return handleResponse("Ok",s); }
-}
-*/
 
 QByteArray ScriptServer::getBasicPluginTypeList(QByteArray&, QLocalSocket* s,ObjectStore*) {
 

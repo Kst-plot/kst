@@ -37,6 +37,8 @@
 #include "generatedvector.h"
 #include "objectstore.h"
 
+#include "dataobjectscriptinterface.h"
+
 /*extern "C"*/ int yyparse(Kst::ObjectStore *store);
 extern void *ParsedEquation;
 /*extern "C"*/ struct yy_buffer_state *yy_scan_string(const char*);
@@ -93,6 +95,11 @@ void Equation::_initializeShortName() {
 }
 
 
+ScriptInterface* Equation::createScriptInterface() {
+  return new EquationSI(this);
+}
+
+
 void Equation::attach() {
 }
 
@@ -118,6 +125,7 @@ void Equation::internalUpdate() {
 
   writeLockInputsAndOutputs();
 
+  //_xInVector =
   Equations::Context ctx;
   ctx.sampleCount = _ns;
   ctx.xVector = _xInVector;

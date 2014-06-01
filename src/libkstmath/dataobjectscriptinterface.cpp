@@ -12,23 +12,97 @@
 
 #include "dataobjectscriptinterface.h"
 
+#include "objectstore.h"
+
 #include <QStringBuilder>
 
 namespace Kst {
 
-DataObjectSI::DataObjectSI(DataObjectPtr plugin) {
-  if (plugin) {
-    _plugin = plugin;
+
+/***************************/
+/* dataobject commands     */
+/***************************/
+QString DataObjectSI::setInputVector(QString& command) {
+  QStringList vars = getArgs(command);
+
+  QString key = vars.at(0);
+  QString vec_name = vars.at(1);
+
+  VectorPtr v = kst_cast<Vector>(_dataObject->store()->retrieveObject(vec_name));
+  if (v) {
+    _dataObject->setInputVector(key, v);
+    return "Done";
   } else {
-    _plugin = 0;
+    return QString("Vector %1 not found").arg(vec_name);
   }
 }
 
-bool DataObjectSI::isValid() {
+
+QString DataObjectSI::setInputScalar(QString& command) {
+  QStringList vars = getArgs(command);
+
+  QString key = vars.at(0);
+  QString x_name = vars.at(1);
+
+  ScalarPtr x = kst_cast<Scalar>(_dataObject->store()->retrieveObject(x_name));
+  if (x) {
+    _dataObject->setInputScalar(key, x);
+    return "Done";
+  } else {
+    return QString("Scalar %1 not found").arg(x_name);
+  }
+}
+
+
+QString DataObjectSI::outputVector(QString& command) {
+  QString key = getArg(command);
+
+  VectorPtr vout = _dataObject->outputVector(key);
+  if (vout) {
+    return vout->shortName();
+  } else {
+    return "Invalid";
+  }
+
+}
+
+
+QString DataObjectSI::outputScalar(QString& command) {
+  QString key = getArg(command);
+
+  ScalarPtr xout = _dataObject->outputScalar(key);
+  if (xout) {
+    return xout->shortName();
+  } else {
+    return "Invalid";
+  }
+
+}
+
+/***************************/
+/* PluginSI                */
+/***************************/
+PluginSI::PluginSI(BasicPluginPtr plugin) {
+  if (plugin) {
+    _plugin = plugin;
+    _dataObject = plugin;
+  } else {
+    _plugin = 0;
+    _dataObject = 0;
+  }
+
+  _fnMap.insert("setInputVector",&PluginSI::setInputVector);
+  _fnMap.insert("setInputScalar",&PluginSI::setInputScalar);
+  _fnMap.insert("outputVector",&PluginSI::outputVector);
+  _fnMap.insert("outputScalar",&PluginSI::outputScalar);
+
+}
+
+bool PluginSI::isValid() {
   return _plugin;
 }
 
-QByteArray DataObjectSI::endEditUpdate() {
+QByteArray PluginSI::endEditUpdate() {
   if (_plugin) {
     _plugin->registerChange();
     UpdateManager::self()->doUpdates(true);
@@ -36,75 +110,136 @@ QByteArray DataObjectSI::endEditUpdate() {
 
     return ("Finished editing "%_plugin->Name()).toLatin1();
   } else {
-    return ("Finished editing invalid plugin");
+    return ("Finished editing invalid data object");
   }
 }
 
-QString DataObjectSI::doCommand(QString x) {
+QString PluginSI::doCommand(QString command_in) {
 
   if (isValid()) {
 
-    QString v=doNamedObjectCommand(x, _plugin);
+    QString command = command_in.left(command_in.indexOf('('));
+
+    PluginInterfaceMemberFn fn=_fnMap.value(command,&PluginSI::noSuchFn);
+
+    if(fn!=&PluginSI::noSuchFn) {
+      return CALL_MEMBER_FN(*this,fn)(command_in);
+    }
+
+
+    QString v=doNamedObjectCommand(command_in, _plugin);
     if (!v.isEmpty()) {
       return v;
     }
-    QStringList params;
-    if (x.startsWith("setInputVector(")) {
-      x.remove("setInputVector(");
-      x.remove(x.lastIndexOf(")"),1);
-      params = x.split(',');
-      if (params.size()==2) {
-        VectorPtr V = kst_cast<Vector>(_plugin->store()->retrieveObject(params[1]));
-        if (V) {
-          _plugin->setInputVector(params[0], V);
-        }
-      }
-    } else if (x.startsWith("setInputScalar(")) {
-      x.remove("setInputScalar(");
-      x.remove(x.lastIndexOf(")"),1);
-      params = x.split(',');
-      if (params.size()==2) {
-        ScalarPtr S = kst_cast<Scalar>(_plugin->store()->retrieveObject(params[1]));
-        if (S) {
-          _plugin->setInputScalar(params[0], S);
-        }
-      }
-    } else if (x.startsWith("outputVector(")) {
-      x.remove("outputVector(");
-      x.remove(x.lastIndexOf(")"),1);
-      VectorPtr vout = _plugin->outputVector(x);
-      if (vout) {
-        return vout->shortName();
-      } else {
-        return "Invalid";
-      }
-    } else if (x.startsWith("outputScalar(")) {
-      x.remove("outputScalar(");
-      x.remove(x.lastIndexOf(")"),1);
-      ScalarPtr xout = _plugin->outputScalar(x);
-      if (xout) {
-        return xout->shortName();
-      } else {
-        return "Invalid";
-      }
-    }
-    return "Done";
+
+    return "No such command";
   } else {
     return "Invalid";
   }
 
 }
 
-ScriptInterface* DataObjectSI::newPlugin(ObjectStore *store, QByteArray pluginName) {
+ScriptInterface* PluginSI::newPlugin(ObjectStore *store, QByteArray pluginName) {
   DataObjectConfigWidget* configWidget = DataObject::pluginWidget(pluginName);
 
   if (configWidget) {
       BasicPluginPtr plugin = kst_cast<BasicPlugin>(DataObject::createPlugin(pluginName, store, configWidget));
-      return new DataObjectSI(kst_cast<DataObject>(plugin));
+      return new PluginSI(kst_cast<BasicPlugin>(plugin));
   }
 
   return 0L;
 }
+
+/***************************/
+/* EquationSI              */
+/***************************/
+EquationSI::EquationSI(EquationPtr equation) {
+  if (equation) {
+    _equation = equation;
+    _dataObject = equation;
+  } else {
+    _equation = 0;
+    _dataObject = 0;
+  }
+
+  _fnMap.insert("setEquation",&EquationSI::setEquation);
+  _fnMap.insert("equation",&EquationSI::equation);
+
+  _fnMap.insert("setInputVector",&EquationSI::setInputVector);
+  _fnMap.insert("setInputScalar",&EquationSI::setInputScalar);
+  _fnMap.insert("outputVector",&EquationSI::outputVector);
+  _fnMap.insert("outputScalar",&EquationSI::outputScalar);
+
+}
+
+bool EquationSI::isValid() {
+  return _equation;
+}
+
+QByteArray EquationSI::endEditUpdate() {
+  if (_equation) {
+    _equation->registerChange();
+    UpdateManager::self()->doUpdates(true);
+    UpdateServer::self()->requestUpdateSignal();
+
+    return ("Finished editing "%_equation->Name()).toLatin1();
+  } else {
+    return ("Finished editing invalid equation");
+  }
+}
+
+QString EquationSI::doCommand(QString command_in) {
+qDebug() << "equation do command" << command_in;
+  if (isValid()) {
+
+    QString command = command_in.left(command_in.indexOf('('));
+
+    EquationInterfaceMemberFn fn=_fnMap.value(command,&EquationSI::noSuchFn);
+
+    if(fn!=&EquationSI::noSuchFn) {
+      return CALL_MEMBER_FN(*this,fn)(command_in);
+    }
+
+
+    QString v=doNamedObjectCommand(command_in, _equation);
+    if (!v.isEmpty()) {
+      return v;
+    }
+
+    return "No such command";
+  } else {
+    return "Invalid";
+  }
+
+}
+
+ScriptInterface* EquationSI::newEquation(ObjectStore *store) {
+  EquationPtr equation = store->createObject<Equation>();
+
+  return new EquationSI(equation);
+}
+
+
+QString EquationSI::equation(QString&) {
+  if (_equation) {
+    return _equation->equation();
+  } else {
+    return "Invalid";
+  }
+}
+
+
+QString EquationSI::setEquation(QString& command) {
+  if (_equation) {
+    QString eq = getArg(command);
+
+    _equation->setEquation(eq);
+    return "done";
+  } else {
+    return "Invalid";
+  }
+}
+
 
 
 }

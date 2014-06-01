@@ -27,6 +27,8 @@
 #include "primitive.h"
 #include "settings.h"
 
+#include "dataobjectscriptinterface.h"
+
 #include <QApplication>
 #include <QDir>
 #include <qdebug.h>
@@ -145,6 +147,7 @@ StringPtr DataObject::outputString(const QString& string) const {
 
 void DataObject::setInputVector(const QString &type, VectorPtr ptr) {
   if (ptr) {
+    qDebug() << " data object set input vector" << type << "to" << ptr->Name();
     _inputVectors[type] = ptr;
   } else {
     _inputVectors.remove(type);
