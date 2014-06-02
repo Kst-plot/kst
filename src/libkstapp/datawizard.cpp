@@ -969,14 +969,14 @@ void DataWizard::finished() {
    }
   }
 
+  if (_pageDataPresentation->plotPSD() || _pageDataPresentation->plotData()) {
+    // create the necessary plots
+    QList<PlotItem*> plotList;
+    PlotItem *plotItem = 0;
+    bool relayout = true;
+    int plotsInPage = _document->currentView()->scene()->items().count();
 
-  // create the necessary plots
-  QList<PlotItem*> plotList;
-  PlotItem *plotItem = 0;
-  bool relayout = true;
-  int plotsInPage = _document->currentView()->scene()->items().count();
-
-  switch (_pagePlot->curvePlacement()) {
+    switch (_pagePlot->curvePlacement()) {
     case DataWizardPagePlot::ExistingPlot:
     {
       plotItem = static_cast<PlotItem*>(_pagePlot->existingPlot());
@@ -1052,121 +1052,36 @@ void DataWizard::finished() {
     }
     default:
       break;
-  }
-
-  // create the data curves
-  QList<QColor> colors;
-  QColor color;
-  int ptype = 0;
-  int i_plot = 0;
-  for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
-    if (_pageDataPresentation->plotData()) {
-      color = ColorSequence::self().next();
-      colors.append(color);
-
-      DataVectorPtr vector = kst_cast<DataVector>(*it);
-      Q_ASSERT(vector);
-
-      Q_ASSERT(_document && _document->objectStore());
-      CurvePtr curve = _document->objectStore()->createObject<Curve>();
-
-      curve->setXVector(xv);
-      curve->setYVector(vector);
-      curve->setXError(0);
-      curve->setYError(0);
-      curve->setXMinusError(0);
-      curve->setYMinusError(0);
-      curve->setColor(color);
-      curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
-      curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
-      curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
-      curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
-      curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
-
-      curve->writeLock();
-      curve->registerChange();
-      curve->unlock();
-
-      Q_ASSERT(plotList[i_plot]);
-
-      PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
-      renderItem->addRelation(kst_cast<Relation>(curve));
-
-      // increment i_plot, as appropriate;
-      if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
-        ++i_plot;
-        if (_pagePlot->curvePlacement()==DataWizardPagePlot::CyclePlotCount) {
-          if (i_plot == _pagePlot->plotCount()) {
-            i_plot = 0;
-          }
-        } else if (i_plot == plotList.count()) {
-          i_plot = 0;
-        }
-      }
     }
-  }
 
-  if (_pagePlot->curvePlacement() == DataWizardPagePlot::OnePlot) {
-    // if we are one plot, now we can move to the psd plot
-    if (++i_plot == plotList.count()) {
-      i_plot = 0;
-    }
-  } else if (_pageDataPresentation->plotDataPSD()) {
-    i_plot = plotList.count()/2;
-  }
-
-  // create the PSDs
-  if (_pageDataPresentation->plotPSD()) {
-    int indexColor = 0;
-    ptype = 0; 
-
-    PSDPtr powerspectrum;
-    int n_psd=0;
-
+    // create the data curves
+    QList<QColor> colors;
+    QColor color;
+    int ptype = 0;
+    int i_plot = 0;
     for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
-      if ((*it)->length() > 0) {
+      if (_pageDataPresentation->plotData()) {
+        color = ColorSequence::self().next();
+        colors.append(color);
+
+        DataVectorPtr vector = kst_cast<DataVector>(*it);
+        Q_ASSERT(vector);
 
         Q_ASSERT(_document && _document->objectStore());
-        powerspectrum = _document->objectStore()->createObject<PSD>();
-        n_psd++;
-        Q_ASSERT(powerspectrum);
-
-        powerspectrum->writeLock();
-
-        powerspectrum->change(*it,
-                              _pageDataPresentation->getFFTOptions()->sampleRate(), 
-                              _pageDataPresentation->getFFTOptions()->interleavedAverage(),
-                              _pageDataPresentation->getFFTOptions()->FFTLength(),
-                              _pageDataPresentation->getFFTOptions()->apodize(),
-                              _pageDataPresentation->getFFTOptions()->removeMean(),
-                              _pageDataPresentation->getFFTOptions()->vectorUnits(),
-                              _pageDataPresentation->getFFTOptions()->rateUnits(),
-                              _pageDataPresentation->getFFTOptions()->apodizeFunction(),
-                              _pageDataPresentation->getFFTOptions()->sigma(),
-                              _pageDataPresentation->getFFTOptions()->output(),
-                              _pageDataPresentation->getFFTOptions()->interpolateOverHoles());
-
-        powerspectrum->registerChange();
-        powerspectrum->unlock();
-
         CurvePtr curve = _document->objectStore()->createObject<Curve>();
-        Q_ASSERT(curve);
 
-        curve->setXVector(powerspectrum->vX());
-        curve->setYVector(powerspectrum->vY());
+        curve->setXVector(xv);
+        curve->setYVector(vector);
+        curve->setXError(0);
+        curve->setYError(0);
+        curve->setXMinusError(0);
+        curve->setYMinusError(0);
+        curve->setColor(color);
         curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
         curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
         curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
         curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
         curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
-
-        if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {
-          color = ColorSequence::self().next();
-        } else {
-          color = colors[indexColor];
-          indexColor++;
-        }
-        curve->setColor(color);
 
         curve->writeLock();
         curve->registerChange();
@@ -1175,100 +1090,186 @@ void DataWizard::finished() {
         Q_ASSERT(plotList[i_plot]);
 
         PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
-        plotList[i_plot]->xAxis()->setAxisLog(_pagePlot->PSDLogX());
-        plotList[i_plot]->yAxis()->setAxisLog(_pagePlot->PSDLogY());
         renderItem->addRelation(kst_cast<Relation>(curve));
 
-        if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) { 
-        // change plots if we are not onePlot
-          if (++i_plot == plotList.count()) {
-            if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
-              i_plot = plotList.count()/2;
-            } else {
-              i_plot = 0;;
+        // increment i_plot, as appropriate;
+        if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) {
+          ++i_plot;
+          if (_pagePlot->curvePlacement()==DataWizardPagePlot::CyclePlotCount) {
+            if (i_plot == _pagePlot->plotCount()) {
+              i_plot = 0;
+            }
+          } else if (i_plot == plotList.count()) {
+            i_plot = 0;
+          }
+        }
+      }
+    }
+
+    if (_pagePlot->curvePlacement() == DataWizardPagePlot::OnePlot) {
+      // if we are one plot, now we can move to the psd plot
+      if (++i_plot == plotList.count()) {
+        i_plot = 0;
+      }
+    } else if (_pageDataPresentation->plotDataPSD()) {
+      i_plot = plotList.count()/2;
+    }
+
+    // create the PSDs
+    if (_pageDataPresentation->plotPSD()) {
+      int indexColor = 0;
+      ptype = 0;
+
+      PSDPtr powerspectrum;
+      int n_psd=0;
+
+      for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
+        if ((*it)->length() > 0) {
+
+          Q_ASSERT(_document && _document->objectStore());
+          powerspectrum = _document->objectStore()->createObject<PSD>();
+          n_psd++;
+          Q_ASSERT(powerspectrum);
+
+          powerspectrum->writeLock();
+
+          powerspectrum->change(*it,
+                                _pageDataPresentation->getFFTOptions()->sampleRate(),
+                                _pageDataPresentation->getFFTOptions()->interleavedAverage(),
+                                _pageDataPresentation->getFFTOptions()->FFTLength(),
+                                _pageDataPresentation->getFFTOptions()->apodize(),
+                                _pageDataPresentation->getFFTOptions()->removeMean(),
+                                _pageDataPresentation->getFFTOptions()->vectorUnits(),
+                                _pageDataPresentation->getFFTOptions()->rateUnits(),
+                                _pageDataPresentation->getFFTOptions()->apodizeFunction(),
+                                _pageDataPresentation->getFFTOptions()->sigma(),
+                                _pageDataPresentation->getFFTOptions()->output(),
+                                _pageDataPresentation->getFFTOptions()->interpolateOverHoles());
+
+          powerspectrum->registerChange();
+          powerspectrum->unlock();
+
+          CurvePtr curve = _document->objectStore()->createObject<Curve>();
+          Q_ASSERT(curve);
+
+          curve->setXVector(powerspectrum->vX());
+          curve->setYVector(powerspectrum->vY());
+          curve->setHasPoints(_pagePlot->drawLinesAndPoints() || _pagePlot->drawPoints());
+          curve->setHasLines(_pagePlot->drawLinesAndPoints() || _pagePlot->drawLines());
+          curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
+          curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
+          curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
+
+          if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {
+            color = ColorSequence::self().next();
+          } else {
+            color = colors[indexColor];
+            indexColor++;
+          }
+          curve->setColor(color);
+
+          curve->writeLock();
+          curve->registerChange();
+          curve->unlock();
+
+          Q_ASSERT(plotList[i_plot]);
+
+          PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
+          plotList[i_plot]->xAxis()->setAxisLog(_pagePlot->PSDLogX());
+          plotList[i_plot]->yAxis()->setAxisLog(_pagePlot->PSDLogY());
+          renderItem->addRelation(kst_cast<Relation>(curve));
+
+          if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) {
+            // change plots if we are not onePlot
+            if (++i_plot == plotList.count()) {
+              if (_pageDataPresentation->plotDataPSD()) { // if xy and psd
+                i_plot = plotList.count()/2;
+              } else {
+                i_plot = 0;;
+              }
             }
           }
         }
       }
-    }
 
-    if (n_psd>0) {
-      _pageDataPresentation->getFFTOptions()->setWidgetDefaults();
-    }
-  }
-
-  if (relayout && !plotList.isEmpty()) {
-    if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
-      int np = plotList.count();
-      int n_add = np;
-      bool two_pages = (plotList.at(np-1)->view() != plotList.at(0)->view());
-      if (two_pages) {
-        n_add/=2;
+      if (n_psd>0) {
+        _pageDataPresentation->getFFTOptions()->setWidgetDefaults();
       }
-      if (np > 0) { // don't crash if there are no plots
-        plotList.at(0)->view()->resetPlotFontSizes(plotList.mid(0, n_add)); // set font sizes on first page.
-        if (two_pages) { // and second, if there is one.
-          plotList.at(np-1)->view()->resetPlotFontSizes(plotList.mid(n_add, n_add));
+    }
+
+    if (relayout && !plotList.isEmpty()) {
+      if (plotsInPage==0 || _pagePlot->rescaleFonts()) {
+        int np = plotList.count();
+        int n_add = np;
+        bool two_pages = (plotList.at(np-1)->view() != plotList.at(0)->view());
+        if (two_pages) {
+          n_add/=2;
         }
-      }
-    }
-    foreach (PlotItem* plot, plotList) {
-      plot->view()->configurePlotFontDefaults(plot); // copy plots already in window
-    }
-
-    CurvePlacement::Layout layout_type = _pagePlot->layout();
-    int num_columns = _pagePlot->gridColumns();
-    if (plotsInPage == 0) { // no format to protext
-      if (layout_type != CurvePlacement::Custom) {
-        layout_type = CurvePlacement::Custom;
-        if (separate_tabs) {
-//        if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
-          num_columns = sqrt((double)plotList.size()/2);
-        } else {
-          num_columns = sqrt((double)plotList.size());
-        }
-      }
-    }
-    foreach (PlotItem* plot, plotList) {
-      if (xAxisIsTime) {
-        plot->xAxis()->setAxisInterpret(true);
-        // For ASCII, we can get the time/date format string from the datasource config
-        DataSourcePtr ds = _pageDataSource->dataSource();
-        if (ds->typeString() == "ASCII file") {
-          if (!ds->timeFormat().isEmpty()) { // Only set it when we use a specific ASCII format
-            plot->xAxis()->setAxisDisplayFormatString(ds->timeFormat());
-            plot->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTDATETIME_FORMAT);
+        if (np > 0) { // don't crash if there are no plots
+          plotList.at(0)->view()->resetPlotFontSizes(plotList.mid(0, n_add)); // set font sizes on first page.
+          if (two_pages) { // and second, if there is one.
+            plotList.at(np-1)->view()->resetPlotFontSizes(plotList.mid(n_add, n_add));
           }
         }
       }
-      plot->update();
-      plot->view()->appendToLayout(layout_type, plot, num_columns);
-    }
-    if (!plotList.isEmpty() && layout_type == CurvePlacement::Custom) {
-      plotList.at(0)->createCustomLayout(num_columns);
-      if (_pageDataPresentation->plotDataPSD()) {
-        plotList.at(plotList.count()/2)->createCustomLayout(num_columns);
+      foreach (PlotItem* plot, plotList) {
+        plot->view()->configurePlotFontDefaults(plot); // copy plots already in window
       }
-    }
 
-  }
-  foreach (PlotItem* plot, plotList) {
-    if (_pagePlot->legendsOn()) {
-      plot->setShowLegend(true, true);
-      plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
-    } else if (_pagePlot->legendsAuto()) {
-      if (plot->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
+      CurvePlacement::Layout layout_type = _pagePlot->layout();
+      int num_columns = _pagePlot->gridColumns();
+      if (plotsInPage == 0) { // no format to protext
+        if (layout_type != CurvePlacement::Custom) {
+          layout_type = CurvePlacement::Custom;
+          if (separate_tabs) {
+            //        if (_pagePlot->plotTabPlacement() == DataWizardPagePlot::SeparateTabs) {
+            num_columns = sqrt((double)plotList.size()/2);
+          } else {
+            num_columns = sqrt((double)plotList.size());
+          }
+        }
+      }
+      foreach (PlotItem* plot, plotList) {
+        if (xAxisIsTime) {
+          plot->xAxis()->setAxisInterpret(true);
+          // For ASCII, we can get the time/date format string from the datasource config
+          DataSourcePtr ds = _pageDataSource->dataSource();
+          if (ds->typeString() == "ASCII file") {
+            if (!ds->timeFormat().isEmpty()) { // Only set it when we use a specific ASCII format
+              plot->xAxis()->setAxisDisplayFormatString(ds->timeFormat());
+              plot->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTDATETIME_FORMAT);
+            }
+          }
+        }
+        plot->update();
+        plot->view()->appendToLayout(layout_type, plot, num_columns);
+      }
+      if (!plotList.isEmpty() && layout_type == CurvePlacement::Custom) {
+        plotList.at(0)->createCustomLayout(num_columns);
+        if (_pageDataPresentation->plotDataPSD()) {
+          plotList.at(plotList.count()/2)->createCustomLayout(num_columns);
+        }
+      }
+
+    }
+    foreach (PlotItem* plot, plotList) {
+      if (_pagePlot->legendsOn()) {
         plot->setShowLegend(true, true);
         plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
+      } else if (_pagePlot->legendsAuto()) {
+        if (plot->renderItem(PlotRenderItem::Cartesian)->relationList().count() > 1) {
+          plot->setShowLegend(true, true);
+          plot->legend()->setVerticalDisplay(_pagePlot->legendsVertical());
+        }
+      } else {
+        plot->setShowLegend(false,false);
       }
-    } else {
-      plot->setShowLegend(false,false);
     }
-  }
 
-  if (_pagePlot->shareAxis()) {
-    //FIXME: apply shared axis
-    // also delete the line _shareAxis->hide();
+    if (_pagePlot->shareAxis()) {
+      //FIXME: apply shared axis
+      // also delete the line _shareAxis->hide();
+    }
   }
 
   UpdateManager::self()->doUpdates(true);
