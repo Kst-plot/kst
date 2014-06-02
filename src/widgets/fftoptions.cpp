@@ -38,6 +38,8 @@ FFTOptions::FFTOptions(QWidget *parent)
   connect(_FFTLength, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
 
+  _FFTLength->setEnabled(false);
+
   _sigmaLabel->setProperty("si","S&igma:");
   _apodize->setProperty("si","Apodi&ze");
   textLabel2->setProperty("si","Fun&ction:");
@@ -101,6 +103,7 @@ bool FFTOptions::interleavedAverageDirty() const {
 
 void FFTOptions::setInterleavedAverage(const bool interleavedAverage) {
   _interleavedAverage->setChecked(interleavedAverage);
+  _FFTLength->setEnabled(interleavedAverage);
 }
 
 
@@ -116,6 +119,7 @@ bool FFTOptions::apodizeDirty() const {
 
 void FFTOptions::setApodize(const bool apodize) {
   _apodize->setChecked(apodize);
+  _apodizeFunction->setEnabled(apodize);
 }
 
 
