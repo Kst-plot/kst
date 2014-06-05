@@ -647,6 +647,12 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
     if (!stringList) {
       //MeasureTime t("AsciiDataReader::countColumns()");
       int columns = AsciiDataReader::splitColumns(line, AsciiCharacterTraits::IsWhiteSpace());
+
+      // The following assert crashes (sometimes?) when kst is pointed at an
+      // executable.  So... rather than crashing, lets just bail.
+      if (columns != QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts).size()) {
+        return 0;
+      }
       Q_ASSERT(columns == QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts).size());
       return columns;
     } else {
