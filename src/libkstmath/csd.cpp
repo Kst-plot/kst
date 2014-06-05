@@ -127,7 +127,7 @@ void CSD::internalUpdate() {
         _outMatrix->setValueRaw(xSize, j, tempOutput[j]);
       }
     } else {
-      Debug::self()->log(tr("Could not allocate sufficient memory for CSD."), Debug::Error);
+      Debug::self()->log(tr("Could not allocate sufficient memory for Spectrogram."), Debug::Error);
       break;
     }
 
@@ -192,7 +192,7 @@ bool CSD::slaveVectorsUsed() const {
 
 
 QString CSD::propertyString() const {
-  return tr("CSD: %1").arg(_inputVectors[CSD_INVECTOR]->Name());
+  return tr("Spectrogram: %1").arg(_inputVectors[CSD_INVECTOR]->Name());
 }
 
 

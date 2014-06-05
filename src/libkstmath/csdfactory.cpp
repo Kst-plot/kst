@@ -68,7 +68,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
       if (n == CSD::staticTypeTag) {
         break;
       } else {
-        Debug::self()->log(QObject::tr("Error creating CSD from Kst file."), Debug::Warning);
+        Debug::self()->log(QObject::tr("Error creating Spectrogram from Kst file."), Debug::Warning);
         return 0;
       }
     }
@@ -85,7 +85,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   }
 
   if (!vector) {
-    Debug::self()->log(QObject::tr("Error creating CSD from Kst file.  Could not find Vector."), Debug::Warning);
+    Debug::self()->log(QObject::tr("Error creating Spectrogram from Kst file.  Could not find Vector."), Debug::Warning);
     return 0;
   }
 
