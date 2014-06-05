@@ -40,7 +40,7 @@ CSDTab::CSDTab(QWidget *parent)
   : DataTab(parent) {
 
   setupUi(this);
-  setTabTitle(tr("Cumulative Spectral Decay"));
+  setTabTitle(tr("Spectrogram"));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SLOT(selectionChanged()));
   connect(_FFTOptions, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
@@ -129,9 +129,9 @@ CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
   : DataDialog(dataObject, parent) {
 
   if (editMode() == Edit)
-    setWindowTitle(tr("Edit Cumulative Spectral Decay"));
+    setWindowTitle(tr("Edit Spectrogram"));
   else
-    setWindowTitle(tr("New Cumulative Spectral Decay"));
+    setWindowTitle(tr("New Spectrogram"));
 
   _CSDTab = new CSDTab(this);
   addDataTab(_CSDTab);

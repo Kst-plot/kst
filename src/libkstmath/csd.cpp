@@ -12,7 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 
-/** A class for handling cumulative spectral decays for kst
+/** A class for handling spectrograms for kst
  */
 
 #include "csd.h"
@@ -35,7 +35,7 @@ extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
 
-const QString CSD::staticTypeString = "Cumulative Spectral Decay";
+const QString CSD::staticTypeString = "Spectrogram";
 const QString CSD::staticTypeTag = "csd";
 
 static const QLatin1String CSD_INVECTOR = QLatin1String("I");
@@ -45,7 +45,7 @@ static const QLatin1String& OUTMATRIX = QLatin1String("M");
 CSD::CSD(ObjectStore *store)
   : DataObject(store) {
   _typeString = staticTypeString;
-  _type = "Cumulative Spectral Decay";
+  _type = "Spectrogram";
 
   _initializeShortName();
 
