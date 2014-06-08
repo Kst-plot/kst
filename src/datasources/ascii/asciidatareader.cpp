@@ -101,23 +101,23 @@ void AsciiDataReader::toDouble(const LexicalCast& lexc, const char* buffer, qint
          || buffer[ch] == '.'
          || buffer[ch] == '+'
          || isWhiteSpace(buffer[ch])) {
-    *v = lexc.toDouble(&buffer[0] + ch);
+    *v = lexc.toDouble(&buffer[ch]);
   } else if ( ch + 2 < bufread
               && tolower(buffer[ch]) == 'i'
               && tolower(buffer[ch + 1]) == 'n'
               && tolower(buffer[ch + 2]) == 'f') {
     *v = INF;
-  }
-
-#if 0
-  // TODO enable by option: "Add unparsable lines as strings"
-  else {
+  } else if ((*v = lexc.fromTime(&buffer[ch])) != lexc.nanValue()) {
+    // string is a date starting with a character (Jun 2 17:52:44 2014)
+  } else {
+    /*
+    TODO enable by option: "Add unparsable lines as strings"
     if (_rowIndex.size() > row + 1) {
       QString unparsable = QString::fromAscii(&buffer[_rowIndex[row]], _rowIndex[row + 1] - _rowIndex[row]);
       _strings[QString("Unparsable %1").arg(row)] = unparsable.trimmed();
     }
+    */
   }
-#endif
 }
 
 //-------------------------------------------------------------------------------------------
