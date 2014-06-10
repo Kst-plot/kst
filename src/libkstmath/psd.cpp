@@ -35,6 +35,8 @@
 #include "psdcalculator.h"
 #include "objectstore.h"
 
+#include "dataobjectscriptinterface.h"
+
 extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {
@@ -75,6 +77,12 @@ void PSD::_initializeShortName() {
     max_psdnum = _psdnum;
   _psdnum++;
 }
+
+
+ScriptInterface* PSD::createScriptInterface() {
+  return new SpectrumSI(this);
+}
+
 
 void PSD::change(VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize,

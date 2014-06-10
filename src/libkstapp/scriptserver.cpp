@@ -125,7 +125,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 //    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
 
     _fnMap.insert("getPSDList()",&ScriptServer::getPSDList);
-//    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
+    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
 
     _fnMap.insert("getPluginList()", &ScriptServer::getPluginList);
     _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
@@ -616,17 +616,16 @@ QByteArray ScriptServer::getPSDList(QByteArray&, QLocalSocket* s,ObjectStore*_st
     return outputObjectList<PSD>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
 
-    if(_interface) {
-      return handleResponse("To access this function, first call endEdit()",s);
-    } else {
-      _interface = DialogLauncherSI::self->showPowerSpectrumDialog();
-      return handleResponse("Ok",s);
-    }
+QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*) {
+
+  if(_interface) {
+    return handleResponse("To access this function, first call endEdit()",s);
+  } else {
+    _interface = SpectrumSI::newSpectrum(_store); return handleResponse("Ok",s);
+  }
 }
-*/
+
 
 QByteArray ScriptServer::getPluginList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 

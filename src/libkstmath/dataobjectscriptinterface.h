@@ -18,6 +18,7 @@
 #include "scriptinterface.h"
 #include "basicplugin.h"
 #include "equation.h"
+#include "psd.h"
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "updateserver.h"
@@ -94,6 +95,34 @@ public:
 
     QString equation(QString &);
     QString setEquation(QString &eq);
+};
+
+
+class SpectrumSI;
+typedef QString (SpectrumSI::*SpectrumInterfaceMemberFn)(QString& command);
+
+class KSTMATH_EXPORT SpectrumSI : public DataObjectSI
+{
+    Q_OBJECT
+public:
+    explicit SpectrumSI(PSDPtr psd);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newSpectrum(ObjectStore *store);
+
+  protected:
+    QString noSuchFn(QString&) {return ""; }
+
+  private:
+    PSDPtr _psd;
+
+    QMap<QString,SpectrumInterfaceMemberFn> _fnMap;
+
+    QString change(QString &command);
+    //QString equation(QString &);
+    //QString setEquation(QString &eq);
 };
 
 

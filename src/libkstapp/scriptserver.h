@@ -85,7 +85,7 @@ protected:
     //QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getPSDList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newPSD(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getPluginList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newPlugin(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

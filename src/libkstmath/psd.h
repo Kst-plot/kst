@@ -99,6 +99,8 @@ class KSTMATH_EXPORT PSD : public DataObject {
 
     void setChanged() { _changed=true;}
 
+    virtual ScriptInterface* createScriptInterface();
+
   protected:
 
     PSD(ObjectStore *store);

@@ -1359,6 +1359,21 @@ class Equation(NamedObject) :
     else:
       self.handle = name
 
+  def Y(self) :
+    """ a vector containing the equation  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(O)")
+    return vec
+
+  def X(self) :
+    """ a vector containing the x vector  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(XO)")
+    return vec
+
+  def set_x(self, xvector): 
+    self.client.send_si(self.handle, "setInputVector(X,"+xvector.handle+")")
+
 # FIT ###################################################################
 class Fit(NamedObject) :
   """ This is a class which provides some methods common to all fits """

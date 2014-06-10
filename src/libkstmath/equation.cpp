@@ -125,7 +125,7 @@ void Equation::internalUpdate() {
 
   writeLockInputsAndOutputs();
 
-  //_xInVector =
+  _xInVector = _inputVectors[XINVECTOR];
   Equations::Context ctx;
   ctx.sampleCount = _ns;
   ctx.xVector = _xInVector;
