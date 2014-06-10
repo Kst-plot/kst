@@ -29,6 +29,11 @@ int main(int argc, char *argv[]) {
   QSettings& settings = Kst::createSettings("application");
   if (settings.value("general/raster", false).toBool()) {
     QApplication::setGraphicsSystem("raster");
+  } else {
+    // this must be actually set, since raster is now the
+    // default under linux.  Native is strongly prefered
+    // for remote X, and raster mildly prefered otherwise.
+    QApplication::setGraphicsSystem("native");
   }
 #endif
 
