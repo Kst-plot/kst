@@ -171,6 +171,16 @@ void FilterButterworthBandPassSource::setupOutputs() {
   setOutputVector(VECTOR_OUT, "");
 }
 
+int min_pad(Kst::ScalarList scalars) {
+  double hp = scalars.at(1)->value() - 0.5*scalars.at(2)->value();
+
+  if (hp >0) {
+    return int (1.0/hp);
+  } else {
+    return 0.0;
+  }
+}
+
 
 double filter_calculate( double dFreqValue, Kst::ScalarList scalars ) {
   double dValue;

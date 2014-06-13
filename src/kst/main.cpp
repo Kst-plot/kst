@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
     // this must be actually set, since raster is now the
     // default under linux.  Native is strongly prefered
     // for remote X, and raster mildly prefered otherwise.
+    // Note: for QT5, "native" is gone.  Which is bad for
+    // remote X users.  Sigh...
     QApplication::setGraphicsSystem("native");
   }
 #endif

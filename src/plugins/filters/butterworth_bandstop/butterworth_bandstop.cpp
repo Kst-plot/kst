@@ -170,10 +170,12 @@ void FilterButterworthBandStopSource::setupOutputs() {
   setOutputVector(VECTOR_OUT, "");
 }
 
+int min_pad(Kst::ScalarList) {
+  return 0.0;
+}
 
 double filter_calculate( double dFreqValue, Kst::ScalarList scalars ) {
   double dValue;
-
   int order2 = int(2.0 * scalars.at(0)->value());
   double lowpass  = scalars.at(1)->value() + 0.5*scalars.at(2)->value();
   double highpass = scalars.at(1)->value() - 0.5*scalars.at(2)->value();
