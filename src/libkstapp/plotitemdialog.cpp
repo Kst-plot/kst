@@ -35,6 +35,7 @@
 #include "stroketab.h"
 
 #include "math_kst.h"
+#include "updateserver.h"
 
 namespace Kst {
 
@@ -79,6 +80,8 @@ PlotItemDialog::PlotItemDialog(PlotItem *item, QWidget *parent)
   connect(_leftLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useLeftDefaultChanged(bool)));
   connect(_rightLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useRightDefaultChanged(bool)));
   connect(_axisLabelTab, SIGNAL(useDefaultChanged(bool)), this, SLOT(useAxisDefaultChanged(bool)));
+
+  connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(setupContent()));
 
   _rangeTab = new RangeTab(_plotItem, this);
   DialogPage *rangePage = new DialogPage(this);

@@ -60,9 +60,9 @@ class PlotItemDialog : public ViewItemDialog
     void editMultiple();
     void editSingle();
     void slotApply();
+    void setupContent();
 
   private:
-    void setupContent();
     void setupAxis();
     void setupRange();
     void setupLabels();
