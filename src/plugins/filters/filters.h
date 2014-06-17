@@ -87,7 +87,7 @@ bool kst_pass_filter(
       iLengthDataPadded = (int)pow( 2.0, ceil( log10( (double)iLengthData ) / log10( 2.0 ) ) );
       // make sure the padding is long enough - this depends on the type of filter.
       if (iLengthDataPadded - iLengthData < min_pad(scalars)) {
-        qDebug() << "doubled length" << min_pad(scalars) << iLengthDataPadded - iLengthData << iLengthDataPadded;
+        //qDebug() << "doubled length" << min_pad(scalars) << iLengthDataPadded - iLengthData << iLengthDataPadded;
         iLengthDataPadded *= 2.0;
       }
       pPadded = (double*)malloc( iLengthDataPadded * sizeof( double ) );
