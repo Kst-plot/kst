@@ -558,16 +558,22 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
    long repeat;    /* used to determine if matrix or vector */
    void *data;     /* empty pointer for reading data */
    long nelements; /* size of data to read */
-   int offset;     /* offset for data when repeat > 1 */
+   long offset;     /* offset for data when repeat > 1 */
    long idx;       /* used when reading from Pixel Readout and tracking which
                       section of data array is being read by fits_read_col */
    long totalidx;  /* to keep track of our location in the v array */
-   int i,j,k;      /* loop variables */
+   long i,j,k;      /* loop variables */
    long nrow;      /* number of rows read for each data chunk */
-   long maxrow;    /* maximum number of rows to read at once */
+   long maxrow;    /* maximum number of rows to read at once.  Later re-used
+                      to signify the number of rows to read for the current
+                      HDU, which may not be tableRow[i], due to the fact
+                      that the offset, s, may not be zero. */
    long currow;    /* current row index (when looping over data chunks */
    int hdutype;    /* FITS HDU type */
    char *colname;  /* Name for column */
+   int firstHDU;   /* Flag to control whether we are reading the first HDU 
+                      containing data for a field.  Necessary to keep track of
+                      s, the offset from the beginning of data */
    QByteArray ba;  /* needed to convert a QString to char array */
 
    DBG qDebug() << "Entering FitsTableSource::readField() with params: " << field << ", from " << s << " for " << n << " frames" << endl;
@@ -591,8 +597,9 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
    colname   = ba.data();
    offset    = _colOffset[idx]; /* data offset */
 
+   firstHDU = 1;
    maxrow = 100000/repeat; /* cap on max rows to read at once */
-   nelements = maxrow * repeat;
+   nelements = maxrow * repeat; /* so we read an integer number of 'repeat' at a time */
    if (typecode == TINT)
       data = (int *) malloc(nelements*sizeof(int));
    else if (typecode == TLONG || typecode == TINT32BIT)
@@ -605,7 +612,9 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
       data = (bool *) malloc(nelements*sizeof(bool));
 
    totalidx = 0;
-   for (i=0; i < tableHDU.size(); i++){
+   for (i=0; i < tableHDU.size(); i++){ /* loop over table HDUs */
+      if (totalidx >= n) /* quit when we have read all data requested */
+         break;
       if (fits_movabs_hdu(_fptr, tableHDU[i], &hdutype, &status)){
          fits_report_error(stderr,status);
          status = 0;
@@ -615,20 +624,34 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
          status = 0; /* column not found in this HDU, so skip. */
          continue;
       }
+      if (firstHDU == 1){
+         maxrow = tableRow[i] - s;
+         firstHDU = 0;
+         currow = s + 1; /* FITS starts counting from row 1 */
+      } else{
+         maxrow = tableRow[i];
+         currow = 1; /* FITS starts counting from row 1 */
+      }
+      
       /* figure out how many chunks we need to read the rows in this HDU */
-      idx = (tableRow[i]*repeat)%nelements;
+      idx = (maxrow*repeat)%nelements;
       if (idx == 0) /* divides evenly */
-         idx = (tableRow[i]*repeat)/nelements;
+         idx = (maxrow*repeat)/nelements;
       else
-         idx = (tableRow[i]*repeat)/nelements + 1;
-      currow = 1; /* FITS starts counting from row 1 */
+         idx = (maxrow*repeat)/nelements + 1;
       for (j=0; j < idx; j++){ /* loop over row chunks */
+         if (totalidx >= n) /* quit when we have read all data requested */
+            break;
          if (j == (idx - 1)) /* last iteration */
-            nelements = tableRow[i]*repeat - j*nelements;
-         nrow = nelements/repeat;
+            nrow = (maxrow*repeat - j*nelements)/repeat;
+         else
+            nrow = nelements/repeat;
+         /* check to make sure we don't read more data than requested */
+         if (totalidx + nrow > n)
+            nrow = n - totalidx;
          if (typecode == TINT){
-            if (fits_read_col(_fptr, typecode, colnum, currow +s, 1,
-               nelements, NULL, &(((int *)data)[0]), &anynul, &status)){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((int *)data)[0]), &anynul, &status)){
                fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
                status = 0;
@@ -640,8 +663,8 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                }
             }
          } else if (typecode == TLONG || typecode == TINT32BIT){
-            if (fits_read_col(_fptr, typecode, colnum, currow +s, 1,
-               nelements, NULL, &(((long *)data)[0]), &anynul, &status)){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((long *)data)[0]), &anynul, &status)){
                fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
                status = 0;
@@ -653,8 +676,8 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                }
             }
          }else if (typecode == TFLOAT){
-            if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((float *)data)[0]), &anynul, &status)){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((float *)data)[0]), &anynul, &status)){
                fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
                status = 0;
@@ -665,8 +688,8 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                   v[totalidx+k] = (double) ((float *)data)[k*repeat+offset];
             }
          }else if (typecode == TDOUBLE){
-            if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((double *)data)[0]), &anynul, &status)){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((double *)data)[0]), &anynul, &status)){
                fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
                status = 0;
@@ -677,8 +700,8 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                   v[totalidx+k] = (double) ((double *)data)[k*repeat+offset];
             }
          }else if (typecode == TLOGICAL){
-            if (fits_read_col(_fptr, typecode, colnum, currow+s, 1,
-               nelements, NULL, &(((bool *)data)[0]), &anynul, &status)){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((bool *)data)[0]), &anynul, &status)){
                fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
                fits_report_error(stderr,status);
                status = 0;
@@ -694,7 +717,7 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
       } /* end loop over row chunks */
    } /* end loop over HDUs */
 
-   for (i=totalidx; i< _maxFrameCount; i++) /* fill remainder with NaNs */
+   for (i=totalidx; i< n; i++) /* fill remainder with NaNs */
       v[i] = sqrt(-1);
    free(data);
    return n;

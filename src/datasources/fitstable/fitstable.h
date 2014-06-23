@@ -59,8 +59,8 @@ class FitsTableSource : public Kst::DataSource {
 
 
   private:
-    QMap<QString, int> _frameCounts;
-    int _maxFrameCount;
+    QMap<QString, long> _frameCounts;
+    long _maxFrameCount;
 
     // FITS file object
     fitsfile *_fptr;
