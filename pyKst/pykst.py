@@ -267,12 +267,53 @@ class Client:
     """
     return Equation(self, x_vector, equation, name)
 
+
   def equation(self, name):
     """ Returns an Equation from kst given its name.
     
     See :class:`Equation`
     """
     return Equation(self, "", "", name, new=False)
+
+  def new_spectrum(self, 
+                   vector, 
+                   sample_rate = 1.0, 
+                   interleaved_average = False,
+                   fft_length = 10,
+                   apodize = True, 
+                   remove_mean = True, 
+                   vector_units = "",
+                   rate_units = "Hz",
+                   apodize_function = 0,
+                   sigma = 1.0,
+                   output_type = 0,
+                   interpolate_over_holes = True,
+                   name=""):
+    """ Create a new Spectrum in kst.
+    
+    See :class:`Spectrum`
+    """
+    return Spectrum(self, 
+                    vector, 
+                    sample_rate, 
+                    interleaved_average,
+                    fft_length,
+                    apodize,
+                    remove_mean,
+                    vector_units,
+                    rate_units,
+                    apodize_function,
+                    sigma,
+                    output_type,
+                    interpolate_over_holes,
+                    name)
+
+  def spectrum(self, name):
+    """ Returns a spectrum from kst given its name.
+    
+    See :class:`Spectrum`
+    """
+    return Spectrum(self, "", name=name, new=False)
 
   def new_linear_fit(self, xVector, yVector, weightvector = 0, name = ""):
     """ Create a New Linear Fit in kst.
@@ -1340,7 +1381,7 @@ class Image(Relation):
 class Equation(NamedObject) : 
   """ An equation inside kst.
    
-    :param x_vector: the x vector of the equation
+    :param xvector: the x vector of the equation
     :param equation: the equation
     
     Vectors inside kst are refered to as [vectorname] or [scalarname].
@@ -1373,6 +1414,153 @@ class Equation(NamedObject) :
 
   def set_x(self, xvector): 
     self.client.send_si(self.handle, "setInputVector(X,"+xvector.handle+")")
+
+# Spectrum ############################################################
+class Spectrum(NamedObject) : 
+  """ An spectrum inside kst.
+   
+    :param vector: the vector to take the spectrum of
+    :param sample_rate: the sample rate of the vector
+    :param interleaved_average: average spectra of length fft_length
+    :param fft_length: the fft is 2^fft_length long if interleaved_average is true.
+    :param apodize: if true, apodize the vector first
+    :param remove_mean: if true, remove mean first
+    :param vector_unints: units of the input vector - for labels.
+    :param rate_units: the units of the sample rate - for labels.
+    :param apodize_function: index of the apodization function - see apodize_function()
+    :param sigma: only used if gausian apodization is selected.
+    :param output_type: index for the output type - see output_type()
+    :param interpolate_over_holes: interpolate over NaNs, if true.
+    
+  """
+  def __init__(self, client, 
+               vector, 
+               sample_rate = 1.0, 
+               interleaved_average = False,
+               fft_length = 10,
+               apodize = True, 
+               remove_mean = True, 
+               vector_units = "",
+               rate_units = "Hz",
+               apodize_function = 0,
+               sigma = 1.0,
+               output_type = 0,
+               interpolate_over_holes = True,
+               name="", new=True) :
+    
+    NamedObject.__init__(self,client)
+    
+    if (new == True):      
+      self.client.send("newSpectrum()")
+
+      self.client.send("change(" + vector.handle + "," +
+                       b2str(sample_rate) + "," +
+                       b2str(interleaved_average) + "," +
+                       b2str(fft_length) + "," +
+                       b2str(apodize) + "," +
+                       b2str(remove_mean) + "," +
+                       vector_units + "," +
+                       rate_units + "," +
+                       b2str(apodize_function) + "," +
+                       b2str(sigma) + "," +
+                       b2str(output_type) + "," +
+                       b2str(interpolate_over_holes) + ")")
+
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+  def Y(self) :
+    """ a vector containing the spectrum  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(S)")
+    return vec
+
+  def X(self) :
+    """ a vector containing the frequency bins  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(F)")
+    return vec
+
+  def set_vector(self, xvector): 
+    """ set the input vector """
+    self.client.send_si(self.handle, "setInputVector(I,"+xvector.handle+")")
+
+  def interleaved_average(self):
+    """ average spectra of length fft_length() """
+    retval = self.client.send_si(self.handle, "interleavedAverage()")
+    return retval
+
+  def sample_rate(self):
+    """ the sample rate assumed for the spectra. """
+    retval = self.client.send_si(self.handle, "sampleRate()")
+    return retval
+
+  def fft_length(self):
+    """ ffts are 2^fft_length() long if interleaved_average is set """
+    retval = self.client.send_si(self.handle, "fftLength()")
+    return retval
+
+  def apodize(self):
+    """ apodize before taking spectra, if set """
+    retval = self.client.send_si(self.handle, "apodize()")
+    return retval
+
+  def remove_mean(self):
+    """ remove mean before taking spectra, if set """
+    retval = self.client.send_si(self.handle, "removeMean()")
+    return retval
+
+  def vector_units(self):
+    """ the units of the input vector.  For labels """
+    retval = self.client.send_si(self.handle, "vectorUnits()")
+    return retval
+
+  def rate_units(self):
+    """ the units of the sample rate.  For labels """
+    retval = self.client.send_si(self.handle, "rateUnits()")
+    return retval
+
+  def apodize_function(self):
+    """ the index of the apodize function.
+    
+    The apodize funcition is::
+    
+     0: default          1: Bartlett
+     2: Window           3: Connes
+     4: Cosine           5: Gaussian
+     6: Hamming          7: Hann
+     8: Welch            9: Uniform
+    
+    """
+    retval = self.client.send_si(self.handle, "apodizeFunctionIndex()")
+    return retval
+
+  def gaussian_sigma(self):
+    """ the width, if apodize_funcion_index() is 5 (gaussian). """
+    retval = self.client.send_si(self.handle, "gaussianSigma()")
+    return retval
+
+  def output_type(self):
+    """ the index of the spectrum output type.
+    
+    The output type is::
+    
+     0: Amplitude Spectral Density  1: Power Spectral Density = 1,
+     2: AmplitudeSpectrum           3: Power Spectrum
+    
+    """
+
+    retval = self.client.send_si(self.handle, "outputTypeIndex()")
+    return retval
+
+  def interpolate_over_holes(self):
+    """ replace NaNs with an interpolation, if true. """
+    retval = self.client.send_si(self.handle, "interpolateOverHoles()")
+    return retval
+
 
 # FIT ###################################################################
 class Fit(NamedObject) :

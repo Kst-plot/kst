@@ -121,8 +121,17 @@ public:
     QMap<QString,SpectrumInterfaceMemberFn> _fnMap;
 
     QString change(QString &command);
-    //QString equation(QString &);
-    //QString setEquation(QString &eq);
+    QString sampleRate(QString &);
+    QString interleavedAverage(QString &);
+    QString fftLength(QString &);
+    QString apodize(QString &);
+    QString removeMean(QString &);
+    QString vectorUnints(QString &);
+    QString rateUnits(QString &);
+    QString apodizeFunctionIndex(QString &);
+    QString gaussianSigma(QString &);
+    QString outputTypeIndex(QString &);
+    QString interpolateOverHoles(QString &);
 };
 
 

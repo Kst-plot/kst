@@ -64,6 +64,35 @@ Strings
    :members:
    :inherited-members:
 
+Data Objects
+************
+Data Objects are objects which transform primitives into other
+primitives.
+
+Equations
+---------
+.. autoclass:: Equation
+   :members:
+   :inherited-members:
+
+Spectra
+-------
+.. autoclass:: Spectrum
+   :members:
+   :inherited-members:
+
+Linear Fit
+----------
+.. autoclass:: LinearFit
+   :members:
+   :inherited-members:
+
+Polynomial Fit
+--------------
+.. autoclass:: PolynomailFit
+   :members:
+   :inherited-members:
+
 Relations
 *********
 Relations are objects which can be added to a plot.
@@ -74,6 +103,11 @@ Curves
    :members:
    :inherited-members:
 
+Images
+------
+.. autoclass:: Image 
+   :members:
+   :inherited-members:
 
 Annotations
 ***********

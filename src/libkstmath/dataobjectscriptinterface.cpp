@@ -252,6 +252,20 @@ SpectrumSI::SpectrumSI(PSDPtr psd) {
     _dataObject = 0;
   }
 
+  _fnMap.insert("change",&SpectrumSI::change);
+  _fnMap.insert("sampleRate",&SpectrumSI::sampleRate);
+
+  _fnMap.insert("interleavedAverage",&SpectrumSI::interleavedAverage);
+  _fnMap.insert("fftLength",&SpectrumSI::fftLength);
+  _fnMap.insert("apodize",&SpectrumSI::apodize);
+  _fnMap.insert("removeMean",&SpectrumSI::removeMean);
+  _fnMap.insert("vectorUnits",&SpectrumSI::vectorUnints);
+  _fnMap.insert("rateUnits",&SpectrumSI::rateUnits);
+  _fnMap.insert("apodizeFunctionIndex",&SpectrumSI::apodizeFunctionIndex);
+  _fnMap.insert("gaussianSigma",&SpectrumSI::gaussianSigma);
+  _fnMap.insert("outputTypeIndex",&SpectrumSI::outputTypeIndex);
+  _fnMap.insert("interpolateOverHoles",&SpectrumSI::interpolateOverHoles);
+
   _fnMap.insert("setInputVector",&SpectrumSI::setInputVector);
   _fnMap.insert("setInputScalar",&SpectrumSI::setInputScalar);
   _fnMap.insert("outputVector",&SpectrumSI::outputVector);
@@ -306,29 +320,137 @@ ScriptInterface* SpectrumSI::newSpectrum(ObjectStore *store) {
 
 
 QString SpectrumSI::change(QString& command) {
-  /*
   if (_psd) {
     QStringList vars = getArgs(command);
-    
+
+    QString vec_name = vars.at(0);
+    VectorPtr vector = kst_cast<Vector>(_dataObject->store()->retrieveObject(vec_name));
+
+
     _psd->change(vector,
-                 sampleRate, 
-                 interleavedAverage,
-                 FFTLength,
-                 apodize,
-                 removeMean,
-                 vectorUnits,
-                 rateUnits,
-                 apodizeFunction,
-                 sigma,
-                 output,
-                 interpolateOverHoles);
+                 vars.at(1).toDouble(),            // sample_rate
+                 (vars.at(2).toLower() == "true"), // interleaved_average,
+                 vars.at(3).toInt(),               // fft_length,
+                 (vars.at(4).toLower() == "true"), // apodize,
+                 (vars.at(5).toLower() == "true"), // remove_mean,
+                 vars.at(6),                       // vector unints
+                 vars.at(7),                       // rate units
+                 ApodizeFunction(vars.at(8).toInt()), // apodizeFunction,
+                 vars.at(9).toDouble(),            // sigma,
+                 PSDType(vars.at(10).toInt()),     // output type
+                 (vars.at(11).toLower() == "true") // interpolateOverHoles
+                 );
     
     
     return "done";
   } else {
     return "Invalid";
   }
-  */
+}
+
+QString SpectrumSI::sampleRate(QString&) {
+  if (_psd) {
+    return QString::number(_psd->frequency());
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::interleavedAverage(QString &) {
+  if (_psd) {
+    if (_psd->interpolateHoles()) {
+      return "True";
+    } else {
+      return "False";
+    }
+  } else {
+    return "Invalid";
+  }
+}
+
+
+QString SpectrumSI::fftLength(QString &) {
+  if (_psd) {
+    return QString::number(_psd->frequency());
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::apodize(QString &) {
+  if (_psd) {
+    if (_psd->apodize()) {
+      return "True";
+    } else {
+      return "False";
+    }
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::removeMean(QString &) {
+  if (_psd) {
+    if (_psd->removeMean()) {
+      return "True";
+    } else {
+      return "False";
+    }
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::vectorUnints(QString &) {
+  if (_psd) {
+    return _psd->vectorUnits();
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::rateUnits(QString &) {
+  if (_psd) {
+    return _psd->rateUnits();
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::apodizeFunctionIndex(QString &) {
+  if (_psd) {
+    return QString::number(int(_psd->apodizeFxn()));
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::gaussianSigma(QString &) {
+  if (_psd) {
+    return QString::number(_psd->gaussianSigma());
+  } else {
+    return "Invalid";
+  }
+}
+
+QString SpectrumSI::outputTypeIndex(QString &) {
+ if (_psd) {
+       return QString::number(int(_psd->output()));
+ } else {
+   return "Invalid";
+ }
+}
+
+QString SpectrumSI::interpolateOverHoles(QString &) {
+  if (_psd) {
+    if (_psd->interpolateHoles()) {
+      return "True";
+    } else {
+      return "False";
+    }
+  } else {
+    return "Invalid";
+  }
 }
 
 

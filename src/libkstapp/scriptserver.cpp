@@ -124,8 +124,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getHistogramList()",&ScriptServer::getHistogramList);
 //    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
 
-    _fnMap.insert("getPSDList()",&ScriptServer::getPSDList);
-    _fnMap.insert("newPSD()",&ScriptServer::newPSD);
+    _fnMap.insert("getSpectrumList()",&ScriptServer::getSpectrumList);
+    _fnMap.insert("newSpectrum()",&ScriptServer::newSpectrum);
 
     _fnMap.insert("getPluginList()", &ScriptServer::getPluginList);
     _fnMap.insert("newPlugin()",&ScriptServer::newPlugin);
@@ -611,13 +611,13 @@ QByteArray ScriptServer::newHistogram(QByteArray&, QLocalSocket* s,ObjectStore*,
 */
 
 
-QByteArray ScriptServer::getPSDList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+QByteArray ScriptServer::getSpectrumList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
     return outputObjectList<PSD>(s,_store);
 }
 
 
-QByteArray ScriptServer::newPSD(QByteArray&, QLocalSocket* s,ObjectStore*) {
+QByteArray ScriptServer::newSpectrum(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
   if(_interface) {
     return handleResponse("To access this function, first call endEdit()",s);
