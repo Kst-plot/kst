@@ -329,6 +329,7 @@ QString SpectrumSI::change(QString& command) {
     return "Invalid";
   }
   */
+  return "Invalid";
 }
 
 
