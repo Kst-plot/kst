@@ -1,3 +1,8 @@
 .svn
 CMakeLists.txt.user
-
+*.dm
+dm
+dm.lnk
+*.swp
+_build
+*.pyc
