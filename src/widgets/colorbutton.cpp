@@ -76,7 +76,6 @@ void ColorButton::paintEvent(QPaintEvent *event)
 
 void ColorButton::chooseColor() {
 
-  bool ok;
   if (_color == Qt::transparent) {
     _color = Qt::black;
   }
