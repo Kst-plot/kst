@@ -35,9 +35,16 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
 
   int lineStyle=0, lineWidth=0, pointType=0, pointDensity=0, pointSize = 0, headType=0;
   QString xVectorName, yVectorName, legend, errorXVectorName, errorYVectorName, errorXMinusVectorName;
-  QString errorYMinusVectorName, color, headColor;
-  QString barFillColor;
+  QString errorYMinusVectorName;
+  QString colorName;
+  QString headColorName;
+  QString barFillColorName;
   QString descriptiveName;
+  int alpha = 255;
+  int barFillAlpha = 255;
+  int headAlpha = 255;
+  QString alphaStr;
+
   bool hasLines=true, hasPoints=false, hasBars=false, ignoreAutoScale=false, hasHead=false;
 
   while (!xml.atEnd()) {
@@ -48,9 +55,23 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
         xVectorName = attrs.value("xvector").toString();
         yVectorName = attrs.value("yvector").toString();
         legend = attrs.value("legend").toString();
-        color = attrs.value("color").toString();
-        headColor = attrs.value("headcolor").toString();
-        barFillColor = attrs.value("barfillcolor").toString();
+        colorName = attrs.value("color").toString();
+        headColorName = attrs.value("headcolor").toString();
+        barFillColorName = attrs.value("barfillcolor").toString();
+
+        alphaStr = attrs.value("alpha").toString();
+        if (!alphaStr.isEmpty()) {
+          alpha = alphaStr.toInt();
+        }
+        alphaStr = attrs.value("headalpha").toString();
+        if (!alphaStr.isEmpty()) {
+          headAlpha = alphaStr.toInt();
+        }
+        alphaStr = attrs.value("barfillalpha").toString();
+        if (!alphaStr.isEmpty()) {
+          barFillAlpha = alphaStr.toInt();
+        }
+
 
         errorXVectorName = attrs.value("errorxvector").toString();
         errorYVectorName = attrs.value("erroryvector").toString();
@@ -147,13 +168,23 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   curve->setYError(errorYVector);
   curve->setXMinusError(errorXMinusVector);
   curve->setYMinusError(errorYMinusVector);
-  curve->setColor(QColor(color));
+
+  QColor color(colorName);
+  color.setAlpha(alpha);
+  curve->setColor(color);
+
+  QColor headColor(colorName);
+  headColor.setAlpha(headAlpha);
   curve->setHeadColor(QColor(headColor));
-  if (barFillColor.isEmpty()) {
+
+  if (barFillColorName.isEmpty()) {
     curve->setBarFillColor(curve->color());
   } else {
-    curve->setBarFillColor(QColor(barFillColor));
+    QColor barFillColor(barFillColorName);
+    barFillColor.setAlpha(barFillAlpha);
+    curve->setBarFillColor(barFillColor);
   }
+
   curve->setHasPoints(hasPoints);
   curve->setHasLines(hasLines);
   curve->setHasBars(hasBars);
