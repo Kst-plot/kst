@@ -300,8 +300,11 @@ void Curve::save(QXmlStreamWriter &s) {
     s.writeAttribute("erroryminusvector", _inputVectors[EYMINUSVECTOR]->Name());
   }
   s.writeAttribute("color", Color.name());
+  s.writeAttribute("alpha", QString::number(Color.alpha()));
   s.writeAttribute("headcolor", HeadColor.name());
+  s.writeAttribute("headalpha", QString::number(HeadColor.alpha()));
   s.writeAttribute("barfillcolor", BarFillColor.name());
+  s.writeAttribute("barfillalpha", QString::number(BarFillColor.alpha()));
 
   s.writeAttribute("haslines", QVariant(HasLines).toString());
   s.writeAttribute("linewidth", QString::number(LineWidth));
