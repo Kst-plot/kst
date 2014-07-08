@@ -20,4 +20,5 @@ script:
 branches:
  only:
    - master
+   - kst2.0.8
    
