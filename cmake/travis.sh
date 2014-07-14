@@ -263,7 +263,6 @@ fi
 #
 cd $startdir
 ./l10n-fetch-po-files.py
-cd $builddir
 
 # only ship listed tranlations
 mkdir po_all
@@ -274,6 +273,8 @@ do
     echo "using translation $tr"
     cp po_all/$file po
 done
+
+cd $builddir
 
 
 # ---------------------------------------------------------
