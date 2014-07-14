@@ -265,6 +265,17 @@ cd $startdir
 ./l10n-fetch-po-files.py
 cd $builddir
 
+# only ship listed tranlations
+mkdir po_all
+mv po/* po_all
+for tr in ca ca@valencia de en_GB fr nl pl pt pt_BR sv uk
+do
+    file=kst_common_$tr.po
+    echo "using translation $tr"
+    cp po_all/$file po
+done
+
+
 # ---------------------------------------------------------
 #
 # build Kst
