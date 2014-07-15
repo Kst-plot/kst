@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include <QPointer>
+#include <QFile>
 
 #include "primitive.h"
 #include "scalar.h"
@@ -112,6 +113,9 @@ class KSTCORE_EXPORT Vector : public Primitive
     void newSync();
 
     virtual bool resize(int sz, bool init = true);
+
+    /** dump the vector values to a raw binary file */
+    bool saveToTmpFile(QFile &fp);
 
     virtual void setNewAndShift(int inNew, int inShift);
 

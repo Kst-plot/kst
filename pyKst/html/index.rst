@@ -18,7 +18,10 @@ To interact with a kst session, you must create a client. To open an interface w
 
 Primitives
 **********
-Scalars, Vectors, Matrices, and Strings (Primitives) can be used in your scripts to share data with kst. All methods are pass-by-value: for example, if you get a value of a scalar and change it, the data inside kst is not changed. You need to explicitly call setValue(). You can get an instance of an existing primitive through the ExistingScalar, ExistingVector, ExistingMatrix, and ExistingString classes. These classes also provide a class method getList() which returns a list of all instances of that type.
+Scalars, Vectors, Matrices, and Strings (Primitives) can be used in 
+your scripts to share data with kst. All methods are pass-by-value: 
+for example, if you get a value of a scalar and change it, the data 
+inside kst is not changed. You need to explicitly call setValue(). 
 
 Scalars
 -------
@@ -81,6 +84,12 @@ Spectra
    :members:
    :inherited-members:
 
+Histograms
+-------
+.. autoclass:: Histogram
+   :members:
+   :inherited-members:
+
 Linear Fit
 ----------
 .. autoclass:: LinearFit
@@ -89,7 +98,7 @@ Linear Fit
 
 Polynomial Fit
 --------------
-.. autoclass:: PolynomailFit
+.. autoclass:: PolynomialFit
    :members:
    :inherited-members:
 

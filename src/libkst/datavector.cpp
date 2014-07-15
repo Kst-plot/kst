@@ -104,7 +104,7 @@ bool DataVector::isValid() const {
 
 
 ScriptInterface* DataVector::createScriptInterface() {
-  return new VectorDataSI(this);
+  return new DataVectorSI(this);
 }
 
 

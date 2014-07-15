@@ -98,7 +98,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("newGeneratedVector()",&ScriptServer::newGeneratedVector);
 
     _fnMap.insert("getEditableVectorList()",&ScriptServer::getEditableVectorList);
-    _fnMap.insert("newEditableVectorAndGetHandle()",&ScriptServer::newEditableVectorAndGetHandle);
+    _fnMap.insert("newEditableVector()",&ScriptServer::newEditableVector);
 
     _fnMap.insert("getMatrixList()",&ScriptServer::getMatrixList);
     _fnMap.insert("newDataMatrix()",&ScriptServer::newDataMatrix);
@@ -122,7 +122,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("newEquation()",&ScriptServer::newEquation);
 
     _fnMap.insert("getHistogramList()",&ScriptServer::getHistogramList);
-//    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
+    _fnMap.insert("newHistogram()",&ScriptServer::newHistogram);
 
     _fnMap.insert("getSpectrumList()",&ScriptServer::getSpectrumList);
     _fnMap.insert("newSpectrum()",&ScriptServer::newSpectrum);
@@ -239,10 +239,15 @@ template<class T> QByteArray outputObjectList(
     ObjectList<T> vl=_store->getObjects<T>();
     QByteArray a;
     typename ObjectList<T>::ConstIterator it = vl.constBegin();
+    bool first = true;
     for(; it != vl.constEnd(); ++it) {
         SharedPtr<T> v = (*it);
         v->readLock();
-        a+='['%v->Name()%']';
+        if (!first) {
+          a += '|';
+        }
+        first = false;
+        a+=v->Name();
         v->unlock();
     }
     if(a.size()) {
@@ -439,7 +444,16 @@ QByteArray ScriptServer::getEditableVectorList(QByteArray&, QLocalSocket* s,Obje
     return outputObjectList<EditableVector>(s,_store);
 }
 
+QByteArray ScriptServer::newEditableVector(QByteArray&, QLocalSocket* s,ObjectStore*) {
+  if(_interface) {
+    return handleResponse("To access this function, first call endEdit()",s);
+  } else {
+    _interface = EditableVectorSI::newVector(_store); return handleResponse("Ok",s);
+  }
+}
 
+
+/*
 QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*) {
 
     EditableVectorPtr objectPtr=_store->createObject<EditableVector>();
@@ -450,13 +464,13 @@ QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket
     UpdateServer::self()->requestUpdateSignal();
     return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s);
 }
-
+*/
 
 QByteArray ScriptServer::newDataVector(QByteArray&, QLocalSocket* s,ObjectStore*) {
     if(_interface) {
       return handleResponse("To access this function, first call endEdit()",s);
     } else {
-      _interface = VectorDataSI::newVector(_store); return handleResponse("Ok",s);
+      _interface = DataVectorSI::newVector(_store); return handleResponse("Ok",s);
     }
 }
 
@@ -465,7 +479,7 @@ QByteArray ScriptServer::newGeneratedVector(QByteArray&, QLocalSocket* s,ObjectS
     if(_interface) {
       return handleResponse("To access this function, first call endEdit()",s);
     } else {
-      _interface = VectorGenSI::newVector(_store); return handleResponse("Ok",s);
+      _interface = GeneratedVectorSI::newVector(_store); return handleResponse("Ok",s);
     }
 }
 
@@ -599,16 +613,14 @@ QByteArray ScriptServer::getHistogramList(QByteArray&, QLocalSocket* s,ObjectSto
     return outputObjectList<Histogram>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newHistogram(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else {
-        _interface = DialogLauncherSI::self->showHistogramDialog();
-        return handleResponse("Ok",s);
-    }
+QByteArray ScriptServer::newHistogram(QByteArray&, QLocalSocket* s,ObjectStore*) {
+  if (_interface) {
+    return handleResponse("To access this function, first call endEdit()",s);
+  } else {
+    _interface = HistogramSI::newHistogram(_store); return handleResponse("Ok",s);
+  }
 }
-*/
 
 
 QByteArray ScriptServer::getSpectrumList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
@@ -888,13 +900,13 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
             for(int i=0;i<vi.size();i++) {
                 if(command.contains(vi[i]->shortName().toLatin1())) {
                     vi[i]->hide();  // goodbye, memory.
-                    return handleResponse("It died a peaceful death.",s);
+                    return handleResponse("Done",s);
                 }
             }
             vi=ViewItem::getItems<ViewItem>();
         }
 
-        return handleResponse("No such object (or it's hiding somewhere in the dark corners of Kst)",s);
+        return handleResponse("No such object",s);
     } else {
         if (RelationPtr relation = kst_cast<Relation>(o)) {
             Data::self()->removeCurveFromPlots(relation);
@@ -902,7 +914,7 @@ QByteArray ScriptServer::eliminate(QByteArray&command, QLocalSocket* s,ObjectSto
         _store->removeObject(o);
         UpdateServer::self()->requestUpdateSignal();
 
-        return handleResponse("It died a peaceful death.",s);
+        return handleResponse("Done",s);
     }
 }
 
@@ -1019,6 +1031,7 @@ QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectSto
   return handleResponse("Done",s);
 }
 
+/*
 QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
 
     command.replace("EditableVector::setBinaryArray(","");
@@ -1058,6 +1071,7 @@ QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocal
     s->waitForBytesWritten(-1);
     return "Done.";
 }
+*/
 
 QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLocalSocket *s, ObjectStore *_store)
 {
@@ -1104,6 +1118,7 @@ QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLoca
     return "Done.";
 }
 
+/*
 QByteArray ScriptServer::editableVectorSet(QByteArray&command, QLocalSocket* s, ObjectStore* _store) {
 
     command.remove(0,20);   //editableVectorSet(
@@ -1157,6 +1172,7 @@ QByteArray ScriptServer::vectorGetBinaryArray(QByteArray&command, QLocalSocket* 
     }
     return "Data sent via handleResponse(...)";
 }
+*/
 
 QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
 

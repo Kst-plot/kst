@@ -22,155 +22,85 @@
 
 namespace Kst {
 
-QString doVectorScriptCommand(QString command,Vector *vector) {
+/***************************/
+/* common vector commands  */
+/***************************/
 
-  QString v=ScriptInterface::doNamedObjectCommand(command, vector);
-  if (!v.isEmpty()) {
-    return v;
-  }
-
-  if (command.startsWith("value(")) {
-    command.remove("value(").chop(1);
-    return QString::number(vector->value(command.toInt()));
-  } else if (command.startsWith("length(")) {
-    return QString::number(vector->length());
-  } else if (command.startsWith("min(")) {
-    return QString::number(vector->min());
-  } else if (command.startsWith("max(")) {
-    return QString::number(vector->max());
-  } else if (command.startsWith("mean(")) {
-    return QString::number(vector->mean());
-  } else if (command.startsWith("descriptionTip(")) {
-    return vector->descriptionTip();
-  }
-
-  return QString();
+QString VectorCommonSI::value(QString & command) {
+  QString arg = getArg(command);
+  return QString::number(_vector->value(arg.toInt()));
 }
 
-
-/******************************************************/
-/* Data Vectors                                       */
-/******************************************************/
-VectorDataSI::VectorDataSI(DataVectorPtr it) {
-    vector=it;
+QString VectorCommonSI::length(QString &) {
+  return QString::number(_vector->length());
 }
 
-QString VectorDataSI::doCommand(QString command) {
+QString VectorCommonSI::min(QString &) {
+  return QString::number(_vector->min());
+}
 
-  QString v=doVectorScriptCommand(command, vector);
-  if (!v.isEmpty()) {
-    return v;
-  }
+QString VectorCommonSI::max(QString &) {
+  return QString::number(_vector->max());
+}
 
-  if (command.startsWith(QLatin1String("change("))) {
-    command.remove("change(").remove(')');
-    QStringList p = command.split(',');
-    DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
-                         vector->store(), p.at(0));
-    vector->writeLock();
-    vector->change(ds,
-                   p.at(1),         // field
-                   p.at(2).toInt(), // f0
-                   p.at(3).toInt(), // n
-                   p.at(4).toInt(), // skip
-                   p.at(4).toInt() > 0, // do skip
-                   p.at(5) == "True" // do average
-                   );
-    vector->unlock();
+QString VectorCommonSI::mean(QString &) {
+  return QString::number(_vector->mean());
+}
+
+QString VectorCommonSI::descriptionTip(QString &) {
+  return _vector->descriptionTip();
+}
+
+QString VectorCommonSI::store(QString & command) {
+  QString arg = getArg(command);
+  QFile tmpfile(arg);
+
+  bool ok = tmpfile.open(QIODevice::WriteOnly);
+  ok |= _vector->saveToTmpFile(tmpfile);
+  tmpfile.close();
+
+  if (ok) {
     return "Done";
-  } else if (command.startsWith("field(")) {
-    return vector->field();
-  } else if (command.startsWith("filename(")) {
-    return vector->filename();
-  } else if (command.startsWith("start(")) {
-    return QString::number(vector->startFrame());
-  } else if (command.startsWith("NFrames(")) {
-    return QString::number(vector->numFrames());
-  } else if (command.startsWith("skip(")) {
-    return QString::number(vector->skip());
-  } else if (command.startsWith("boxcarFirst(")) {
-    return vector->doAve()?"True":"False";
+  } else {
+    return "Error writing tmp file";
   }
-
-  return "No such command";
 }
 
-bool VectorDataSI::isValid() {
-  return vector.isPtrValid();
-}
-
-ScriptInterface* VectorDataSI::newVector(ObjectStore *store) {
-  DataVectorPtr vector;
-  vector = store->createObject<DataVector>();
-  return new VectorDataSI(vector);
-}
-
-QByteArray VectorDataSI::endEditUpdate() {
-  vector->registerChange();
-  UpdateManager::self()->doUpdates(true);
-  UpdateServer::self()->requestUpdateSignal();
-  return ("Finished editing "+vector->Name()).toLatin1();
-}
-
-/******************************************************/
-/* Generated  Vectors                                 */
-/******************************************************/
-VectorGenSI::VectorGenSI(GeneratedVectorPtr it) {
-    vector=it;
-}
-
-QString VectorGenSI::doCommand(QString command) {
-
-  QString v=doVectorScriptCommand(command, vector);
-  if (!v.isEmpty()) {
-    return v;
-  }
-
-  if (command.startsWith(QLatin1String("change("))) {
-    command.remove("change(").remove(')');
-    QStringList p = command.split(',');
-
-    vector->writeLock();
-
-    vector->changeRange(
-                   p.at(0).toDouble(), // start
-                   p.at(1).toDouble(), // end
-                   p.at(2).toInt() // number of points
-                   );
-    vector->unlock();
-    return "Done";
-  }
-
-  return "No such command";
-}
-
-bool VectorGenSI::isValid() {
-  return vector.isPtrValid();
-}
-
-ScriptInterface* VectorGenSI::newVector(ObjectStore *store) {
-  GeneratedVectorPtr vector;
-  vector = store->createObject<GeneratedVector>();
-  return new VectorGenSI(vector);
-}
-
-QByteArray VectorGenSI::endEditUpdate() {
-  vector->registerChange();
-  UpdateManager::self()->doUpdates(true);
-  UpdateServer::self()->requestUpdateSignal();
-  return ("Finished editing "+vector->Name()).toLatin1();
-}
 
 /******************************************************/
 /* Plain (base) Vectors                               */
 /******************************************************/
 VectorSI::VectorSI(VectorPtr it) {
-    vector=it;
+  if (it) {
+    _vector = it;
+  } else {
+    _vector = 0;
+  }
+
+  _fnMap.insert("value",&VectorSI::value);
+  _fnMap.insert("length",&VectorSI::length);
+  _fnMap.insert("min",&VectorSI::min);
+  _fnMap.insert("max",&VectorSI::max);
+  _fnMap.insert("mean",&VectorSI::mean);
+  _fnMap.insert("descriptionTip",&VectorSI::descriptionTip);
+  _fnMap.insert("store",&VectorSI::store);
 }
 
-QString VectorSI::doCommand(QString command) {
+QString VectorSI::doCommand(QString command_in) {
 
-  QString v=doVectorScriptCommand(command, vector);
+  if (!_vector) {
+    return "invalid";
+  }
+
+  QString command = command_in.left(command_in.indexOf('('));
+
+  VectorInterfaceMemberFn fn=_fnMap.value(command,&VectorSI::noSuchFn);
+
+  if(fn!=&VectorSI::noSuchFn) {
+    return CALL_MEMBER_FN(*this,fn)(command_in);
+  }
+
+  QString v=doNamedObjectCommand(command_in, _vector);
   if (!v.isEmpty()) {
     return v;
   }
@@ -179,7 +109,7 @@ QString VectorSI::doCommand(QString command) {
 }
 
 bool VectorSI::isValid() {
-  return vector.isPtrValid();
+  return _vector.isPtrValid();
 }
 
 ScriptInterface* VectorSI::newVector(ObjectStore *) {
@@ -187,11 +117,315 @@ ScriptInterface* VectorSI::newVector(ObjectStore *) {
 }
 
 QByteArray VectorSI::endEditUpdate() {
-  vector->registerChange();
+  _vector->registerChange();
   UpdateManager::self()->doUpdates(true);
   UpdateServer::self()->requestUpdateSignal();
-  return ("Finished editing "+vector->Name()).toLatin1();
+  return ("Finished editing "+_vector->Name()).toLatin1();
 }
 
+
+/******************************************************/
+/* Data Vectors                                       */
+/******************************************************/
+DataVectorSI::DataVectorSI(DataVectorPtr it) {
+  if (it) {
+    _datavector = it;
+    _vector = it;
+  } else {
+    _datavector = 0;
+    _vector = 0;
+  }
+
+  _fnMap.insert("change",&DataVectorSI::change);
+  _fnMap.insert("field",&DataVectorSI::field);
+  _fnMap.insert("filename",&DataVectorSI::filename);
+  _fnMap.insert("start",&DataVectorSI::start);
+  _fnMap.insert("NFrames",&DataVectorSI::NFrames);
+  _fnMap.insert("skip",&DataVectorSI::skip);
+  _fnMap.insert("boxcarFirst",&DataVectorSI::boxcarFirst);
+
+  _fnMap.insert("value",&DataVectorSI::value);
+  _fnMap.insert("length",&DataVectorSI::length);
+  _fnMap.insert("min",&DataVectorSI::min);
+  _fnMap.insert("max",&DataVectorSI::max);
+  _fnMap.insert("mean",&DataVectorSI::mean);
+  _fnMap.insert("descriptionTip",&DataVectorSI::descriptionTip);
+  _fnMap.insert("store",&DataVectorSI::store);
+
+}
+
+QString DataVectorSI::doCommand(QString command_in) {
+
+  if (!_vector) {
+    return "invalid";
+  }
+
+  QString command = command_in.left(command_in.indexOf('('));
+
+  DataVectorInterfaceMemberFn fn=_fnMap.value(command,&DataVectorSI::noSuchFn);
+
+  if(fn!=&DataVectorSI::noSuchFn) {
+    return CALL_MEMBER_FN(*this,fn)(command_in);
+  }
+
+  QString v=doNamedObjectCommand(command_in, _vector);
+  if (!v.isEmpty()) {
+    return v;
+  }
+
+  return "No such command";
+}
+
+bool DataVectorSI::isValid() {
+  return _datavector.isPtrValid();
+}
+
+ScriptInterface* DataVectorSI::newVector(ObjectStore *store) {
+  DataVectorPtr vector;
+  vector = store->createObject<DataVector>();
+  return new DataVectorSI(vector);
+}
+
+QByteArray DataVectorSI::endEditUpdate() {
+  _datavector->registerChange();
+  UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+  return ("Finished editing "+_datavector->Name()).toLatin1();
+}
+
+/***************************/
+/*   data vector commands  */
+/***************************/
+
+QString DataVectorSI::change(QString& command) {
+  QStringList vars = getArgs(command);
+
+  DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
+                       _datavector->store(), vars.at(0));
+  _datavector->writeLock();
+  _datavector->change(ds,
+                      vars.at(1),         // field
+                      vars.at(2).toInt(), // f0
+                      vars.at(3).toInt(), // n
+                      vars.at(4).toInt(), // skip
+                      vars.at(4).toInt() > 0, // do skip
+                      vars.at(5) == "True" // do average
+                      );
+  _datavector->unlock();
+  return "Done";
+}
+
+QString DataVectorSI::field(QString& command) {
+  QString arg = getArg(command);
+  return _datavector->field();
+}
+
+QString DataVectorSI::filename(QString& command) {
+  QString arg = getArg(command);
+  return _datavector->filename();
+}
+
+QString DataVectorSI::start(QString& command) {
+  QString arg = getArg(command);
+  return QString::number(_datavector->startFrame());
+}
+
+QString DataVectorSI::NFrames(QString& command) {
+  QString arg = getArg(command);
+  return QString::number(_datavector->numFrames());
+}
+
+QString DataVectorSI::skip(QString& command) {
+  QString arg = getArg(command);
+  return QString::number(_datavector->skip());
+}
+
+QString DataVectorSI::boxcarFirst(QString& command) {
+  QString arg = getArg(command);
+  return _datavector->doAve()?"True":"False";
+}
+
+/******************************************************/
+/* Generated  Vectors                                 */
+/******************************************************/
+GeneratedVectorSI::GeneratedVectorSI(GeneratedVectorPtr it) {
+    if (it) {
+      _generatedvector = it;
+      _vector = it;
+    } else {
+      _generatedvector = 0;
+      _vector = 0;
+    }
+
+    _fnMap.insert("change",&GeneratedVectorSI::change);
+
+    _fnMap.insert("value",&GeneratedVectorSI::value);
+    _fnMap.insert("length",&GeneratedVectorSI::length);
+    _fnMap.insert("min",&GeneratedVectorSI::min);
+    _fnMap.insert("max",&GeneratedVectorSI::max);
+    _fnMap.insert("mean",&GeneratedVectorSI::mean);
+    _fnMap.insert("descriptionTip",&GeneratedVectorSI::descriptionTip);
+    _fnMap.insert("store",&GeneratedVectorSI::store);
+}
+
+QString GeneratedVectorSI::doCommand(QString command_in) {
+
+  if (!_vector) {
+    return "invalid";
+  }
+
+  QString command = command_in.left(command_in.indexOf('('));
+
+  GeneratedVectorInterfaceMemberFn fn=_fnMap.value(command,&GeneratedVectorSI::noSuchFn);
+
+  if(fn!=&GeneratedVectorSI::noSuchFn) {
+    return CALL_MEMBER_FN(*this,fn)(command_in);
+  }
+
+  QString v=doNamedObjectCommand(command_in, _vector);
+  if (!v.isEmpty()) {
+    return v;
+  }
+
+  return "No such command";
+}
+
+bool GeneratedVectorSI::isValid() {
+  return _generatedvector.isPtrValid();
+}
+
+ScriptInterface* GeneratedVectorSI::newVector(ObjectStore *store) {
+  GeneratedVectorPtr vector;
+  vector = store->createObject<GeneratedVector>();
+  return new GeneratedVectorSI(vector);
+}
+
+QByteArray GeneratedVectorSI::endEditUpdate() {
+  _generatedvector->registerChange();
+  UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+  return ("Finished editing "+_generatedvector->Name()).toLatin1();
+}
+
+/*****************************/
+/* generated vector commands */
+/*****************************/
+
+QString GeneratedVectorSI::change(QString& command) {
+  QStringList vars = getArgs(command);
+
+  _generatedvector->writeLock();
+
+  _generatedvector->changeRange(
+                 vars.at(0).toDouble(), // start
+                 vars.at(1).toDouble(), // end
+                 vars.at(2).toInt() // number of points
+                 );
+  _generatedvector->unlock();
+
+  return "Done";
+}
+
+
+/******************************************************/
+/* Editable Vectors                                   */
+/******************************************************/
+EditableVectorSI::EditableVectorSI(EditableVectorPtr it) {
+  if (it) {
+    _editablevector = it;
+    _vector = it;
+  } else {
+    _editablevector = 0;
+    _vector = 0;
+  }
+
+
+  _fnMap.insert("load",&EditableVectorSI::load);
+  _fnMap.insert("store",&EditableVectorSI::store);
+  _fnMap.insert("setValue",&EditableVectorSI::setValue);
+  _fnMap.insert("resize",&EditableVectorSI::resize);
+  _fnMap.insert("zero",&EditableVectorSI::zero);
+
+  _fnMap.insert("value",&EditableVectorSI::value);
+  _fnMap.insert("length",&EditableVectorSI::length);
+  _fnMap.insert("min",&EditableVectorSI::min);
+  _fnMap.insert("max",&EditableVectorSI::max);
+  _fnMap.insert("mean",&EditableVectorSI::mean);
+  _fnMap.insert("descriptionTip",&EditableVectorSI::descriptionTip);
+
+}
+
+QString EditableVectorSI::doCommand(QString command_in) {
+
+  if (!_vector) {
+    return "invalid";
+  }
+
+  QString command = command_in.left(command_in.indexOf('('));
+
+  EditableVectorInterfaceMemberFn fn=_fnMap.value(command,&EditableVectorSI::noSuchFn);
+
+  if(fn!=&EditableVectorSI::noSuchFn) {
+    return CALL_MEMBER_FN(*this,fn)(command_in);
+  }
+
+  QString v=doNamedObjectCommand(command_in, _vector);
+  if (!v.isEmpty()) {
+    return v;
+  }
+
+  return "No such command";
+}
+
+bool EditableVectorSI::isValid() {
+  return _editablevector.isPtrValid();
+}
+
+ScriptInterface* EditableVectorSI::newVector(ObjectStore *store) {
+  EditableVectorPtr vector;
+  vector = store->createObject<EditableVector>();
+  return new EditableVectorSI(vector);
+}
+
+QByteArray EditableVectorSI::endEditUpdate() {
+  _editablevector->registerChange();
+  UpdateManager::self()->doUpdates(true);
+  UpdateServer::self()->requestUpdateSignal();
+  return ("Finished editing "+_editablevector->Name()).toLatin1();
+}
+
+QString EditableVectorSI::load(QString & command) {
+  QString arg = getArg(command);
+
+  QFile tmpfile(arg);
+  tmpfile.open(QIODevice::ReadOnly);
+  _editablevector->loadFromTmpFile(tmpfile);
+  tmpfile.close();
+
+  return "Done";
+}
+
+QString EditableVectorSI::setValue(QString & command) {
+  QStringList vars = getArgs(command);
+
+  _editablevector->setValue(vars.at(0).toInt(),
+                            vars.at(1).toDouble());
+
+  return "Done";
+}
+
+QString EditableVectorSI::resize(QString & command) {
+  QStringList vars = getArgs(command);
+
+  _editablevector->resize(vars.at(0).toInt(), false);
+
+  return "Done";
+}
+
+QString EditableVectorSI::zero(QString &) {
+  _editablevector->zero();
+
+  return "Done";
+}
 
 }

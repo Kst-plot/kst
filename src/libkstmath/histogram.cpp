@@ -29,6 +29,7 @@
 #include "dialoglauncher.h"
 #include "datacollection.h"
 #include "objectstore.h"
+#include "dataobjectscriptinterface.h"
 
 namespace Kst {
 
@@ -119,6 +120,10 @@ Histogram::~Histogram() {
   _Bins = 0L;
 }
 
+
+ScriptInterface* Histogram::createScriptInterface() {
+  return new HistogramSI(this);
+}
 
 void Histogram::internalUpdate() {
 

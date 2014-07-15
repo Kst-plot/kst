@@ -14,10 +14,13 @@
 
 #include "editablevector.h"
 
+#include "vectorscriptinterface.h"
+
 // use KCodecs::base64Encode() in kmdcodecs.h
 // Create QDataStream into a QByteArray
 // qCompress the bytearray
 #include <QXmlStreamWriter>
+#include <QFile>
 
 #include "debug.h"
 namespace Kst {
@@ -37,6 +40,10 @@ const QString& EditableVector::typeString() const {
   return staticTypeString;
 }
 
+
+ScriptInterface* EditableVector::createScriptInterface() {
+  return new EditableVectorSI(this);
+}
 
 void EditableVector::setSaveData(bool save) {
   Q_UNUSED(save)
@@ -77,6 +84,23 @@ void EditableVector::save(QXmlStreamWriter &s) {
   }
   s.writeEndElement();
 }
+
+/**  used for scripting IPC.
+     accepts an open readable file.
+     fails silently */
+void EditableVector::loadFromTmpFile(QFile &fp) {
+  qint64 n_read;
+
+  resize(fp.size()/sizeof(double));
+
+  n_read = fp.read((char *)_v, fp.size());
+
+  if (n_read != fp.size()) {
+    resize(n_read/sizeof(double));
+  }
+  internalUpdate(); // not sure if we need this here.
+}
+
 
 QString EditableVector::_automaticDescriptiveName() const {
   QString name("(");

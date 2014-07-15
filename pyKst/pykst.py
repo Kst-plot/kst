@@ -8,6 +8,8 @@ import ctypes
 #from PyQt4 import QtCore, QtNetwork
 from PySide import QtCore, QtNetwork
 from numpy import *
+import tempfile
+
 #from pykstpp import * 
 
 def b2str(val):
@@ -116,6 +118,14 @@ class Client:
     """
     self.send("setTab("+b2str(tab)+")")
   
+  def get_scalar_list(self):
+    """ returns the scalar names from kst """
+    
+    x = str(self.send("getScalarList()"))
+  
+    ret=x.split('|')
+    return ret
+
   def new_generated_string(self, string, name=""):
     """ Create a new generated string in kst.
     
@@ -216,6 +226,20 @@ class Client:
     """
     return GeneratedVector(self, 0, 0, 0, name, new=False)
   
+  def new_editable_vector(self, np_array = None, name=""):
+    """ Create a New Editable Vector in kst.
+    
+    See :class:`EditableVector`
+    """
+    return EditableVector(self, np_array, name)
+
+  def editable_vector(self, name):
+    """ Returns an Editable Vector from kst given its name.
+    
+    See :class:`EditableVector`
+    """
+    return Editable(self, None, name, new=False)
+  
   def new_data_matrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
                  minX=0, minY=0, dX=1, dY=1,name="") :
     """ Create a New DataMatrix in kst.
@@ -274,6 +298,23 @@ class Client:
     See :class:`Equation`
     """
     return Equation(self, "", "", name, new=False)
+
+  def new_histogram(self, vector, bin_min=0, bin_max=1, n_bins=60, 
+                    normalization = 0, auto_bin = True,  name=""):
+    """ Create a new histogram in kst.
+    
+    See :class:`Histogram`
+    """
+    return Histogram(self, vector, bin_min, bin_max, n_bins, 
+                     normalization, auto_bin, name)
+
+
+  def histogram(self, name):
+    """ Returns a histogram from kst given its name.
+    
+    See :class:`Histogram`
+    """
+    return Histogram(self, "", 0,0,0, name=name, new=False)
 
   def new_spectrum(self, 
                    vector, 
@@ -335,7 +376,7 @@ class Client:
     
     See :class:`PolynomialFit`
     """
-    return PolynomailFit(self, order, xVector, yVector, weightvector, name)
+    return PolynomialFit(self, order, xVector, yVector, weightvector, name)
 
   def polynomial_fit(self, name):
     """ Returns a polynomial fit from kst given its name.
@@ -766,6 +807,15 @@ class VectorBase(NamedObject):
   def description_tip(self):
     """  Returns a string describing the vector """
     return self.client.send_si(self.handle, "descriptionTip()")
+ 
+  def get_numpy_array(self) :
+    """ get a numpy array which contains the kst vector values """
+    with tempfile.NamedTemporaryFile() as f:
+      self.client.send_si(self.handle, "store(" + f.name + ")")
+      array = fromfile(f.name, dtype = float64)
+      
+    return array
+
 
 class DataVector(VectorBase):
   """ A vector in kst, read from a data source.
@@ -889,6 +939,40 @@ class GeneratedVector(VectorBase):
     """
     self.client.send_si(self.handle, "change("+b2str(X0)+","+b2str(X1)+
                         ","+b2str(N)+")")
+
+class EditableVector(VectorBase):
+  """ A vector in kst, which is editable from python.
+  
+  This vector in kst can be created from a numpy array,
+  (with ''load()'') or edited point by point (with ''setValue()'').
+  "Create>Vector>Generate" from the menubar inside kst.
+
+  :param np_array: initialize the vector in kst to this (optional) 1D numpy array.
+  To create a from the num py array np::
+
+    import pykst as kst
+    client = kst.Client()
+    v = client.new_editable_vector(np)
+    
+  """
+  def __init__(self, client, np_array = None, name="", new=True) :
+    VectorBase.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newEditableVector()")
+      if (np_array != None) :
+        assert(np_array.dtype == float64)
+        
+        with tempfile.NamedTemporaryFile() as f:
+          np_array.tofile(f.name)
+          self.client.send("load(" + f.name + ")")        
+
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+      self.set_name(name)
+    else:
+      self.handle = name      
 
 
 class Matrix(NamedObject):
@@ -1178,12 +1262,15 @@ class Curve(Relation):
   def set_point_type(self,pointType):
     """ Sets the point type.  
     
-    0 is an X, 1 is an open square, 2 is an open circle, 
-    3 is a filled circle, 4 is a downward open triangle, 
-    5 is an upward open triangle, 6 is a filled square, 
-    7 is a plus, 8 is a asterix,
-    9 is a downward filled triangle, 10 is an upward filled triangle, 
-    11 is an open diamond, and 12 is a filled diamond.
+    The available point types are:: 
+    
+     0:  X                       1: open square 
+     2:  open circle,            3: filled circle
+     4:  downward open triangle  5: upward open triangle
+     6:  filled square           7: + 
+     8:  *                       9: downward filled triangle
+     10: upward filled triangle 11: open diamond
+     12: filled diamond
     
     """
     self.client.send_si(self.handle, "setPointType("+b2str(pointType)+")")
@@ -1342,13 +1429,15 @@ class Image(Relation):
   def setPalette(self, palette):
     """ set the palette, selected by index.
     
-    0   Grey
-    1   Red 
-    2   Spectrum
-    3   EOS-A
-    4   EOS-B
-    5   8 colors
-    6   Cyclical Spectrum
+    The available palettes are::
+    
+    0: Grey
+    1:  Red 
+    2:  Spectrum
+    3:  EOS-A
+    4:  EOS-B
+    5:  8 colors
+    6:  Cyclical Spectrum
     
     Note: this is not the same order as the dialog.
     """
@@ -1415,6 +1504,105 @@ class Equation(NamedObject) :
   def set_x(self, xvector): 
     self.client.send_si(self.handle, "setInputVector(X,"+xvector.handle+")")
 
+# Histogram ############################################################
+class Histogram(NamedObject) : 
+  """ A Histogram inside kst.
+                          
+    :param vector: the vector to take the histogram of
+    :param bin_min: the low end of the lowest bin
+    :param bin_max: the high end of the highest bin
+    :param n_bins: the number of bins
+    :param normalization: see below
+    :param auto_bin: if True, set xmin and xmax based on the vector
+    
+    The normalization types are::
+    
+     0: Number in the bin     1: Percent in the bin
+     2: Fraction in the bin   3: Peak is normalized to 1.0
+    
+  """
+  def __init__(self, client, vector, bin_min, bin_max, n_bins, 
+               normalization = 0, auto_bin = False, 
+               name="", new=True) :
+    NamedObject.__init__(self,client)
+    
+    if (new == True):      
+      self.client.send("newHistogram()")
+
+      self.client.send("change(" + vector.handle + "," +
+                       b2str(bin_min) + "," +
+                       b2str(bin_max) + "," +
+                       b2str(n_bins) + "," +
+                       b2str(normalization) + "," +
+                       b2str(auto_bin) + ")")
+
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+  def Y(self) :
+    """ a vector containing the histogram values  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(H)")
+    return vec
+
+  def X(self) :
+    """ a vector containing the bin centers  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(B)")
+    return vec
+
+  def change(self, vector, bin_min, bin_max, n_bins, 
+             normalization = 0, auto_bin = False):
+    """ Change Histogram parameters.
+    
+    :param vector: the vector to take the histogram of
+    :param bin_min: the low end of the lowest bin
+    :param bin_max: the high end of the highest bin
+    :param n_bins: the number of bins
+    :param normalization: See :class:`Histogram`
+    :param auto_bin: if True, set xmin and xmax based on the vector
+
+    """
+    self.client.send_si(self.handle, "change(" +
+                        vector.handle + "," +
+                        b2str(bin_min) + "," +
+                        b2str(bin_max) + "," +
+                        b2str(n_bins) + "," +
+                        b2str(normalization) + "," +
+                        b2str(auto_bin) + ")")
+
+  def bin_min(self):
+    """ the low end of the lowest bin """
+    retval = self.client.send_si(self.handle, "xMin()")
+    return retval
+
+  def bin_max(self):
+    """ the high end of the lowest bin """
+    retval = self.client.send_si(self.handle, "xMax()")
+    return retval
+
+  def n_bins(self):
+    """ the number of bins """
+    retval = self.client.send_si(self.handle, "nBins()")
+    return retval
+
+  def normalization(self):
+    """ how the bins are normalized 
+    
+    See :class:`Histogram`
+    
+    """
+    retval = self.client.send_si(self.handle, "normalizationType()")
+    return retval
+
+  def auto_bin(self):
+    """ if True, xmin and xmax are set based on the vector """
+    retval = self.client.send_si(self.handle, "autoBin()")
+    return retval
+
 # Spectrum ############################################################
 class Spectrum(NamedObject) : 
   """ An spectrum inside kst.
@@ -1431,6 +1619,20 @@ class Spectrum(NamedObject) :
     :param sigma: only used if gausian apodization is selected.
     :param output_type: index for the output type - see output_type()
     :param interpolate_over_holes: interpolate over NaNs, if true.
+
+    The apodize funcition is::
+    
+     0: default          1: Bartlett
+     2: Window           3: Connes
+     4: Cosine           5: Gaussian
+     6: Hamming          7: Hann
+     8: Welch            9: Uniform
+    
+    The output type is::
+    
+     0: Amplitude Spectral Density  1: Power Spectral Density
+     2: AmplitudeSpectrum           3: Power Spectrum
+    
     
   """
   def __init__(self, client, 
@@ -1548,7 +1750,7 @@ class Spectrum(NamedObject) :
     
     The output type is::
     
-     0: Amplitude Spectral Density  1: Power Spectral Density = 1,
+     0: Amplitude Spectral Density  1: Power Spectral Density
      2: AmplitudeSpectrum           3: Power Spectrum
     
     """
@@ -1636,7 +1838,7 @@ class LinearFit(Fit) :
     return vec.value(0)
 
 # POLYNOMIAL FIT ############################################################
-class PolynomailFit(Fit) : 
+class PolynomialFit(Fit) : 
   """ A Polynomial fit inside kst.
 
      :param order: The order of the fit
@@ -1923,6 +2125,7 @@ class Label(ViewItem) :
     Scalars and scalar equations can be displayed live in labels. 
     When the scalar is updated, the label is updated.
     The format is::
+    
     Scalar:         [scalarname]         eg [GYRO1:Mean(X4)]
     Vector Element: [vectorName[index]]  eg [GYRO1 (V2)[4]]
     Equation:       [=equation]          eg [=[GYRO1:Mean(X4)]/[GYRO1:Sigma (X4)]]

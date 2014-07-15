@@ -33,7 +33,7 @@ class KSTMATH_EXPORT Histogram : public DataObject {
   Q_OBJECT
 
 public:
-  enum NormalizationType { Number, Percent, Fraction, MaximumOne};
+  enum NormalizationType { Number=0, Percent, Fraction, MaximumOne};
 
   public:
     static const QString staticTypeString;
@@ -93,6 +93,8 @@ public:
         int in_n_bins,
         NormalizationType new_norm_in,
         bool realTimeAutoBin = false);
+
+    ScriptInterface* createScriptInterface();
 
   protected:
     Histogram(ObjectStore *store);

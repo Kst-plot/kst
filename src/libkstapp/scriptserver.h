@@ -58,7 +58,7 @@ protected:
     QByteArray newGeneratedVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getEditableVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    QByteArray newEditableVectorAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEditableVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newDataMatrix(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
@@ -82,7 +82,7 @@ protected:
     QByteArray newEquation(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getHistogramList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newHistogram(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getSpectrumList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newSpectrum(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
@@ -168,16 +168,16 @@ protected:
 
 
     // Hacks
-    QByteArray editableVectorSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray editableVectorSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableVector::setBinaryArray(
 
     QByteArray editableMatrixSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableMatrix::setBinaryArray(
 
-    QByteArray editableVectorSet(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray editableVectorSet(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //EditableVector::set(
 
-    QByteArray vectorGetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    //QByteArray vectorGetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     //Vector::getBinaryArray(
 
     QByteArray matrixGetBinaryArray(QByteArray& command, QLocalSocket*s,ObjectStore*_store);

@@ -386,6 +386,23 @@ bool Vector::resize(int sz, bool init) {
 }
 
 
+/* used for scripting IPC
+    accepts an open writable file.
+    returns false on failure */
+bool Vector::saveToTmpFile(QFile &fp) {
+  qint64 n_written;
+  qint64 n_write;
+
+  n_write = length()*sizeof(double);
+
+  n_written = fp.write((char *)_v, n_write);
+
+  fp.flush();
+
+  return (n_write == n_written);
+}
+
+
 void Vector::internalUpdate() {
   int i, i0;
   double sum, sum2, last, first, v;

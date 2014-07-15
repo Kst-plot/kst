@@ -19,6 +19,7 @@
 #include "basicplugin.h"
 #include "equation.h"
 #include "psd.h"
+#include "histogram.h"
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "updateserver.h"
@@ -132,6 +133,37 @@ public:
     QString gaussianSigma(QString &);
     QString outputTypeIndex(QString &);
     QString interpolateOverHoles(QString &);
+};
+
+
+class HistogramSI;
+typedef QString (HistogramSI::*HistogramInterfaceMemberFn)(QString& command);
+
+class KSTMATH_EXPORT HistogramSI : public DataObjectSI
+{
+    Q_OBJECT
+public:
+    explicit HistogramSI(HistogramPtr histogram);
+    QString doCommand(QString);
+    bool isValid();
+    QByteArray endEditUpdate();
+
+    static ScriptInterface* newHistogram(ObjectStore *store);
+
+  protected:
+    QString noSuchFn(QString&) {return ""; }
+
+  private:
+    HistogramPtr _histogram;
+
+    QMap<QString,HistogramInterfaceMemberFn> _fnMap;
+
+    QString change(QString &command);
+    QString xMin(QString &);
+    QString xMax(QString &);
+    QString nBins(QString &);
+    QString normalizationType(QString &);
+    QString autoBin(QString &);
 };
 
 

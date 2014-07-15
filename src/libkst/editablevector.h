@@ -17,6 +17,8 @@
 #include "vector.h"
 #include "kst_export.h"
 
+#include <QFile>
+
 /**A vector  with n editable pts
  *@author cbn
  */
@@ -41,6 +43,10 @@ class KSTCORE_EXPORT EditableVector : public Vector {
     void setValue(const int& i,const double&val);
 
     virtual QString descriptionTip() const;
+
+    void loadFromTmpFile(QFile &fp);
+
+    ScriptInterface* createScriptInterface();
 
   protected:
     long double _sum;

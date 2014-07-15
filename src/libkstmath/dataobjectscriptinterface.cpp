@@ -267,9 +267,7 @@ SpectrumSI::SpectrumSI(PSDPtr psd) {
   _fnMap.insert("interpolateOverHoles",&SpectrumSI::interpolateOverHoles);
 
   _fnMap.insert("setInputVector",&SpectrumSI::setInputVector);
-  _fnMap.insert("setInputScalar",&SpectrumSI::setInputScalar);
   _fnMap.insert("outputVector",&SpectrumSI::outputVector);
-  _fnMap.insert("outputScalar",&SpectrumSI::outputScalar);
 
 }
 
@@ -435,7 +433,7 @@ QString SpectrumSI::gaussianSigma(QString &) {
 
 QString SpectrumSI::outputTypeIndex(QString &) {
  if (_psd) {
-       return QString::number(int(_psd->output()));
+   return QString::number(int(_psd->output()));
  } else {
    return "Invalid";
  }
@@ -453,5 +451,139 @@ QString SpectrumSI::interpolateOverHoles(QString &) {
   }
 }
 
+
+/***************************/
+/* HistogramSI             */
+/***************************/
+HistogramSI::HistogramSI(HistogramPtr histogram) {
+  if (histogram) {
+    _histogram = histogram;
+    _dataObject = histogram;
+  } else {
+    _histogram = 0;
+    _dataObject = 0;
+  }
+
+  _fnMap.insert("change",&HistogramSI::change);
+
+  _fnMap.insert("xMin",&HistogramSI::xMin);
+  _fnMap.insert("xMax",&HistogramSI::xMax);
+  _fnMap.insert("nBins",&HistogramSI::nBins);
+  _fnMap.insert("normalizationType",&HistogramSI::normalizationType);
+  _fnMap.insert("autoBin",&HistogramSI::autoBin);
+
+  _fnMap.insert("setInputVector",&SpectrumSI::setInputVector);
+  _fnMap.insert("outputVector",&SpectrumSI::outputVector);
+}
+
+bool HistogramSI::isValid() {
+  return _histogram;
+}
+
+QByteArray HistogramSI::endEditUpdate() {
+  if (_histogram) {
+    _histogram->registerChange();
+    UpdateManager::self()->doUpdates(true);
+    UpdateServer::self()->requestUpdateSignal();
+
+    return ("Finished editing "%_histogram->Name()).toLatin1();
+  } else {
+    return ("Finished editing invalid histogram");
+  }
+}
+
+QString HistogramSI::doCommand(QString command_in) {
+  if (isValid()) {
+
+    QString command = command_in.left(command_in.indexOf('('));
+
+    HistogramInterfaceMemberFn fn=_fnMap.value(command,&HistogramSI::noSuchFn);
+
+    if(fn!=&HistogramSI::noSuchFn) {
+      return CALL_MEMBER_FN(*this,fn)(command_in);
+    }
+
+    QString v=doNamedObjectCommand(command_in, _histogram);
+    if (!v.isEmpty()) {
+      return v;
+    }
+
+    return "No such command";
+  } else {
+    return "Invalid";
+  }
+}
+
+ScriptInterface* HistogramSI::newHistogram(ObjectStore *store) {
+  HistogramPtr histogram = store->createObject<Histogram>();
+
+  return new HistogramSI(histogram);
+}
+
+QString HistogramSI::change(QString& command) {
+  if (_histogram) {
+    QStringList vars = getArgs(command);
+
+    QString vec_name = vars.at(0);
+    VectorPtr vector = kst_cast<Vector>(_dataObject->store()->retrieveObject(vec_name));
+
+
+    _histogram->change(vector,
+                       vars.at(1).toDouble(),            // xmin
+                       vars.at(2).toDouble(),            // xmax
+                       vars.at(3).toInt(),               // nbins
+                       Histogram::NormalizationType(vars.at(4).toInt()), // normalization type
+                       (vars.at(5).toLower() == "true") // real time autobin
+                       );
+
+    return "done";
+  } else {
+    return "Invalid";
+  }
+}
+
+QString HistogramSI::xMin(QString &) {
+  if (_histogram) {
+    return QString::number(double(_histogram->xMin()));
+  } else {
+    return "Invalid";
+  }
+}
+
+QString HistogramSI::xMax(QString &) {
+  if (_histogram) {
+    return QString::number(double(_histogram->xMax()));
+  } else {
+    return "Invalid";
+  }
+}
+
+QString HistogramSI::nBins(QString &) {
+  if (_histogram) {
+    return QString::number(int(_histogram->numberOfBins()));
+  } else {
+    return "Invalid";
+  }
+}
+
+QString HistogramSI::normalizationType(QString &) {
+  if (_histogram) {
+    return QString::number(int(_histogram->normalizationType()));
+  } else {
+    return "Invalid";
+  }
+}
+
+QString HistogramSI::autoBin(QString &) {
+  if (_histogram) {
+    if (_histogram->realTimeAutoBin()) {
+      return "True";
+    } else {
+      return "False";
+    }
+  } else {
+    return "Invalid";
+  }
+}
 
 }

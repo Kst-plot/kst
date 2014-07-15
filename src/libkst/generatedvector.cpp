@@ -39,7 +39,7 @@ const QString& GeneratedVector::typeString() const {
 
 
 ScriptInterface* GeneratedVector::createScriptInterface() {
-  return new VectorGenSI(this);
+  return new GeneratedVectorSI(this);
 }
 
 
