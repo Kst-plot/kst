@@ -57,10 +57,6 @@ VectorTab::VectorTab(ObjectStore *store, QWidget *parent)
 
   _connect->setVisible(false);
 
-  QLabel* siHack=new QLabel(this);
-  siHack->hide();
-  siHack->setBuddy(_updateBox);
-  siHack->setText("update type");
   _updateBox->addItem(tr("Time Interval", "update periodically"));
   _updateBox->addItem(tr("Change Detection", "update when a change is detected"));
   _updateBox->addItem(tr("No Update", "do not update the file"));

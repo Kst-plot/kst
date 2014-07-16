@@ -40,6 +40,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
 
   QString fileType, fileName;
   QXmlStreamAttributes propertyAttributes;
+  DataSource::UpdateCheckType updateCheckType = DataSource::Timer;
 
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
@@ -48,6 +49,9 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
         QXmlStreamAttributes attrs = xml.attributes();
         fileType = attrs.value("reader").toString();
         fileName = DataPrimitive::readFilename(attrs);
+        if (attrs.hasAttribute("updateType")) {
+          updateCheckType = DataSource::UpdateCheckType(attrs.value("updateType").toString().toInt());
+        }
       } else if (n == "properties") {
         propertyAttributes = xml.attributes();
         xml.readElementText();
@@ -85,6 +89,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
       if (fileName != alternate_filename) {
         dataSource->setAlternateFilename(alternate_filename);
       }
+      dataSource->setUpdateType(updateCheckType);
       return dataSource;
     } else {
       alternate_filename = fileName;

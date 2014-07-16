@@ -84,7 +84,6 @@ Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
   if (!UpdateManager::self()->paused()) {
     // update the datasource
     updated = internalDataSourceUpdate();
-
     if (updated == Updated) {
       _serialOfLastChange = newSerial; // tell data objects it is new
     }
@@ -155,8 +154,8 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
   setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ')');
 
-  // TODO What is the better default?
-  startUpdating(File);
+  // Timer needs to be the default: File sometimes fails.
+  startUpdating(Timer);
 }
 
 DataSource::~DataSource() {
@@ -303,6 +302,7 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   }
   s.writeStartElement("source");
   s.writeAttribute("reader", fileType());
+  s.writeAttribute("updateType", QString::number(int(_updateCheckType)));
   DataPrimitive::saveFilename(name, s);
   save(s);
   s.writeEndElement();

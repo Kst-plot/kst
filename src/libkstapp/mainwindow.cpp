@@ -1632,11 +1632,11 @@ void MainWindow::readToEnd() {
 void MainWindow::pause(bool pause) {
   UpdateManager::self()->setPaused(pause);
 
-  if (!pause) {
-     foreach (DataSourcePtr s, document()->objectStore()->dataSourceList()) {
-       s->checkUpdate();
-     }
-  }
+  //if (!pause) {
+     //foreach (DataSourcePtr s, document()->objectStore()->dataSourceList()) {
+       //s->checkUpdate();
+     //}
+  //}
 }
 
 void MainWindow::forward() {
