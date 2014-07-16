@@ -103,7 +103,7 @@ AsciiSourceConfig::AsciiSourceConfig() :
   _dateTimeOffset(QDateTime::currentDateTime()),
   _relativeOffset(0),
   _nanValue(0),
-  _updateType(Kst::DataSource::File)
+  _updateType(Kst::DataSource::Timer)
 {
 }
 
