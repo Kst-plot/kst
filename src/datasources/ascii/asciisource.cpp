@@ -342,8 +342,10 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
     _haveWarned = true;
     return read;
   } else if (read == 0) {
-    if (!_haveWarned)
-      QMessageBox::warning(0, "Error while reading ASCII file", msg.arg("The file could not be read"));
+    if (!_haveWarned) {
+      // TODO Why is nothing read? Only log once because of the danger of a dead-lock
+      Debug::warning("AsciiSource: 0 bytes read from file");
+    }
     _haveWarned = true;
   } else if (read == -3) {
     if (!_haveWarned)
