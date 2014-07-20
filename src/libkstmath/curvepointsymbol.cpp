@@ -154,7 +154,7 @@ void draw(int Type, QPainter *p, double x, double y, double pointSize) {
       }
       break;
     case 12: // filled diamond
-      {    
+      {
         QPolygonF pts;
 
         pts << QPointF(x+s, y)
@@ -167,8 +167,15 @@ void draw(int Type, QPainter *p, double x, double y, double pointSize) {
         p->drawPolygon(pts);
       }
       break;
-  }
-
+    case 13: // single point
+      {
+        p->setBrush(Qt::SolidPattern);
+        p->setBrush(p->pen().color());
+        p->drawPoint(QPointF(x, y));
+      }
+      break;
+    }
+  
   p->setBrush(Qt::NoBrush);
   p->restore();
 }

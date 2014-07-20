@@ -21,7 +21,7 @@
 #include "kstmath_export.h"
 #include <qpainter.h>
 
-#define KSTPOINT_MAXTYPE 13
+#define KSTPOINT_MAXTYPE 14
 
 namespace Kst {
 
