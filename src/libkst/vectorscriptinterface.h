@@ -33,7 +33,6 @@ class KSTCORE_EXPORT VectorCommonSI : public ScriptInterface
     QString min(QString&);
     QString max(QString&);
     QString mean(QString&);
-    QString descriptionTip(QString&);
     QString store(QString &command);
 
   protected:

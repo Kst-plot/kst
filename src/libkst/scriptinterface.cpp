@@ -13,6 +13,7 @@
 #include "scriptinterface.h"
 
 #include "namedobject.h"
+#include "object.h"
 
 #include <QStringList>
 
@@ -25,6 +26,22 @@ namespace Kst {
       return QString("Done");
     } else if (command.startsWith("name(")) {
       return n->Name();
+    } else if (command.startsWith("descriptionTip(")) {
+      return n->descriptionTip();
+    }
+
+    return QString();
+  }
+
+  QString ScriptInterface::doObjectCommand(QString command, ObjectPtr ob) {
+
+    QString v=doNamedObjectCommand(command, ob);
+    if (!v.isEmpty()) {
+      return v;
+    }
+
+    if (command.startsWith("type(")) {
+      return ob->typeString();
     }
 
     return QString();

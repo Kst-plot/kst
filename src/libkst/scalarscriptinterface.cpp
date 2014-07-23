@@ -31,7 +31,7 @@ ScalarGenSI::ScalarGenSI(ScalarPtr it) {
 
 QString ScalarGenSI::doCommand(QString x) {
 
-  QString v=doNamedObjectCommand(x, scalar);
+  QString v=doObjectCommand(x, scalar);
   if (!v.isEmpty()) {
     return v;
   }
@@ -74,7 +74,7 @@ ScalarDataSI::ScalarDataSI(DataScalarPtr it) {
 
 QString ScalarDataSI::doCommand(QString x) {
 
-  QString v=doNamedObjectCommand(x, scalar);
+  QString v=doObjectCommand(x, scalar);
   if (!v.isEmpty()) {
     return v;
   }
@@ -124,7 +124,7 @@ ScalarVectorSI::ScalarVectorSI(VScalarPtr it) {
 
 QString ScalarVectorSI::doCommand(QString x) {
 
-  QString v=doNamedObjectCommand(x, scalar);
+  QString v=doObjectCommand(x, scalar);
   if (!v.isEmpty()) {
     return v;
   }

@@ -28,7 +28,7 @@ namespace Kst {
 
 QString doRelationScriptCommand(QString command,Relation *relation) {
 
-  QString v=ScriptInterface::doNamedObjectCommand(command, relation);
+  QString v=ScriptInterface::doObjectCommand(command, relation);
   if (!v.isEmpty()) {
     return v;
   }

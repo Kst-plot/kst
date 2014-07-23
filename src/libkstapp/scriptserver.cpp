@@ -104,7 +104,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("newDataMatrix()",&ScriptServer::newDataMatrix);
 
     _fnMap.insert("getEditableMatrixList()",&ScriptServer::getEditableMatrixList);
-    _fnMap.insert("newEditableMatrixAndGetHandle()",&ScriptServer::newEditableMatrixAndGetHandle);
+    _fnMap.insert("newEditableMatrix()",&ScriptServer::newEditableMatrix);
 
     _fnMap.insert("getScalarList()",&ScriptServer::getScalarList);
     _fnMap.insert("newGeneratedScalar()",&ScriptServer::newGeneratedScalar);
@@ -528,7 +528,7 @@ QByteArray ScriptServer::newDataMatrix(QByteArray&, QLocalSocket* s,ObjectStore*
     if(_interface) {
       return handleResponse("To access this function, first call endEdit()",s);
     } else {
-      _interface = MatrixDataSI::newMatrix(_store); return handleResponse("Ok",s);
+      _interface = DataMatrixSI::newMatrix(_store); return handleResponse("Ok",s);
     }
 }
 
@@ -538,15 +538,12 @@ QByteArray ScriptServer::getEditableMatrixList(QByteArray&, QLocalSocket* s,Obje
     return outputObjectList<EditableMatrix>(s,_store);
 }
 
-QByteArray ScriptServer::newEditableMatrixAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*) {
-
-    EditableMatrixPtr objectPtr=_store->createObject<EditableMatrix>();
-    objectPtr->writeLock();
-    objectPtr->setDescriptiveName("Script Matrix");
-    objectPtr->unlock();
-    UpdateManager::self()->doUpdates(1);
-    UpdateServer::self()->requestUpdateSignal();
-    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s);
+QByteArray ScriptServer::newEditableMatrix(QByteArray&, QLocalSocket* s,ObjectStore*) {
+  if(_interface) {
+    return handleResponse("To access this function, first call endEdit()",s);
+  } else {
+    _interface = EditableMatrixSI::newMatrix(_store); return handleResponse("Ok",s);
+  }
 }
 
 
@@ -1031,255 +1028,5 @@ QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectSto
   return handleResponse("Done",s);
 }
 
-/*
-QByteArray ScriptServer::editableVectorSetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    command.replace("EditableVector::setBinaryArray(","");
-    command.chop(1);
-    s->write("Handshake");
-    ObjectPtr o=_store->retrieveObject(command);
-    EditableVectorPtr v=kst_cast<EditableVector>(o);
-    if(!v) {
-        s->write("No such object.");
-        s->flush();
-        return "No such object.";
-    }
-    s->flush();
-
-    QDataStream ds(s);
-    s->waitForReadyRead(200000);
-    QByteArray copy;
-    QDataStream out(&copy,QIODevice::WriteOnly);
-    qint64 count;
-    ds>>count;
-    out<<count;
-    double x;
-    int bl=0;
-    for(int i=0;i<count;i++) {
-        while(!bl--) {
-            s->waitForReadyRead(-1);
-            bl=s->bytesAvailable()/sizeof(double);
-        }
-        ds>>x;
-        out<<x;
-    }
-
-    v->writeLock();
-    v->change(copy);
-    v->unlock();
-    s->write("Done.");
-    s->waitForBytesWritten(-1);
-    return "Done.";
-}
-*/
-
-QByteArray ScriptServer::editableMatrixSetBinaryArray(QByteArray &command, QLocalSocket *s, ObjectStore *_store)
-{
-    command.replace("EditableMatrix::setBinaryArray(","");
-    command.chop(1);
-    QByteArrayList params=command.split(',');
-    if(params.count()!=7) {
-        s->write("Invalid param count. Need 7.");
-        s->waitForBytesWritten(-1);
-        return "Invalid param count. Need 7.";
-    }
-    ObjectPtr o=_store->retrieveObject(params[0]);
-    EditableMatrixPtr v=kst_cast<EditableMatrix>(o);
-    if(!v) {
-        s->write("No such object.");
-        s->waitForBytesWritten(-1);
-        return "No such object.";
-    }
-    s->write("Handshake");
-    s->waitForBytesWritten(-1);
-
-    QDataStream ds(s);
-    s->waitForReadyRead(300);
-    QByteArray copy;
-    QDataStream out(&copy,QIODevice::WriteOnly);
-    qint64 _nX=params.at(1).toInt();
-    qint64 _nY=params.at(2).toInt();
-    double x;
-    int bl=0;
-    for(int i=0;i<_nX*_nY;i++) {
-        while(!bl--) {
-            s->waitForReadyRead(-1);
-            bl=s->bytesAvailable()/sizeof(double);
-        }
-        ds>>x;
-        out<<x;
-    }
-
-    v->writeLock();
-    v->change(copy,_nX,_nY,params[3].toDouble(),params[4].toDouble(),params[5].toDouble(),params[6].toDouble());
-    v->unlock();
-    s->write("Done.");
-    s->waitForBytesWritten(-1);
-    return "Done.";
-}
-
-/*
-QByteArray ScriptServer::editableVectorSet(QByteArray&command, QLocalSocket* s, ObjectStore* _store) {
-
-    command.remove(0,20);   //editableVectorSet(
-    command.chop(1);
-    QByteArrayList b=command.split(',');
-    if(b.size()<3) {
-        s->write("Invalid parameter count.");
-        s->waitForBytesWritten(-1);
-        return "Invalid parameter count.";
-    }
-    ObjectPtr o=_store->retrieveObject(b[0]);
-    EditableVectorPtr v=kst_cast<EditableVector>(o);
-    if(!v) {
-        s->write("No such object.");
-        s->waitForBytesWritten(-1);
-        return "No such object.";
-    }
-    v->setValue(b[1].toInt(),b[2].toDouble());
-    s->write("Done.");
-    s->waitForBytesWritten(-1);
-    return "Done.";
-}
-QByteArray ScriptServer::vectorGetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    Q_ASSERT(sizeof(double)==sizeof(qint64)&&4096%sizeof(double)==0);
-
-    command.replace("Vector::getBinaryArray(","");
-    command.remove(command.indexOf(")"),99999);
-    ObjectPtr o=_store->retrieveObject(command);
-    VectorPtr v=kst_cast<Vector>(o);
-    if(!v) {
-        QByteArray ba;
-        QDataStream ds(&ba,QIODevice::WriteOnly);
-        ds<<(qint64)0;
-        s->write(ba,ba.size());
-        s->waitForReadyRead(30000);
-        s->read(3000000);
-        s->waitForBytesWritten(-1);
-        return "No object";
-    }
-    QByteArray x=v->getBinaryArray();
-    const char* d=x.data();
-    int pos=-8;
-    while(pos<x.size()) {
-        int thisProc=s->write(d,qMin(40960,x.size()-pos))/sizeof(double);
-        while(s->bytesToWrite()) {
-            s->waitForBytesWritten(-1);
-        }
-        d=&d[thisProc*8];
-        pos+=thisProc*8;
-    }
-    return "Data sent via handleResponse(...)";
-}
-*/
-
-QByteArray ScriptServer::matrixGetBinaryArray(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    Q_ASSERT(sizeof(double)==sizeof(qint64)&&4096%sizeof(double)==0);
-
-    command.replace("Matrix::getBinaryArray(","");
-    command.remove(command.indexOf(")"),99999);
-    ObjectPtr o=_store->retrieveObject(command);
-    MatrixPtr m=kst_cast<Matrix>(o);
-    if(!m) {
-        QByteArray ba;
-        QDataStream ds(&ba,QIODevice::WriteOnly);
-        ds<<(qint64)0;
-        s->write(ba,ba.size());
-        s->waitForReadyRead(30000);
-        s->read(3000000);
-        s->waitForBytesWritten(-1);
-        return "No object";
-    }
-    QByteArray x=m->getBinaryArray();
-    const char* d=x.data();
-    int pos=-8;
-    while(pos<x.size()) {
-        int thisProc=s->write(d,qMin(40960,x.size()-pos))/sizeof(double);
-        while(s->bytesToWrite()) {
-            s->waitForBytesWritten(-1);
-        }
-        d=&d[thisProc*8];
-        pos+=thisProc*8;
-    }
-    return "Data sent via handleResponse(...)";
-}
-
-QByteArray ScriptServer::stringValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    command.replace("String::value(","");
-    command.remove(command.lastIndexOf(")"),999999);
-    ObjectPtr o=_store->retrieveObject(command);
-    StringPtr str=kst_cast<String>(o);
-    if(str) {
-        return handleResponse(str->value().toLatin1(),s);
-    } else {
-        return handleResponse("No such object (variables not supported)",s);;
-    }
-}
-
-QByteArray ScriptServer::stringSetValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    command.replace("String::setValue(","");
-    command.remove(command.lastIndexOf(")"),999999);
-    QByteArrayList x;
-    x.push_back(command);
-    x[0].remove(x.at(0).indexOf(","),99999);
-    x.push_back(command);
-    x[1].remove(0,x.at(1).indexOf(",")+1);
-    if(!x.at(0).size()) {
-        return handleResponse("Invalid call to setValueOfString(",s);
-    }
-    ObjectPtr o=_store->retrieveObject(x[0]);
-    StringPtr str=kst_cast<String>(o);
-    if(str) {
-        str->writeLock();
-        str->setValue(x[1]);
-        str->registerChange();
-        str->unlock();
-        return handleResponse("Okay",s);
-    } else {
-        return handleResponse("No such object (variables not supported)",s);;
-    }
-}
-
-QByteArray ScriptServer::scalarValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    command.replace("Scalar::value(","");
-    command.remove(command.lastIndexOf(")"),999999);
-    ObjectPtr o=_store->retrieveObject(command);
-    ScalarPtr sca=kst_cast<Scalar>(o);
-    if(sca) {
-        return handleResponse(QByteArray::number(sca->value()),s);
-    } else {
-        return handleResponse("No such object (variables not supported)",s);;
-    }
-}
-
-QByteArray ScriptServer::scalarSetValue(QByteArray&command, QLocalSocket* s, ObjectStore*) {
-
-    command.replace("Scalar::setValue(","");
-    command.remove(command.lastIndexOf(")"),999999);
-    QByteArrayList x;
-    x.push_back(command);
-    x[0].remove(x.at(0).indexOf(","),99999);
-    x.push_back(command);
-    x[1].remove(0,x.at(1).indexOf(",")+1);
-    if(!x.at(0).size()) {
-        return handleResponse("Invalid call to setValueOfScalar(",s);
-    }
-    ObjectPtr o=_store->retrieveObject(x[0]);
-    ScalarPtr sca=kst_cast<Scalar>(o);
-    if(sca) {
-        sca->writeLock();
-        sca->setValue(x[1].toDouble());
-        sca->registerChange();
-        sca->unlock();
-        return handleResponse("Okay",s);
-    } else {
-        return handleResponse("No such object (variables not supported)",s);;
-    }
-}
 
 }

@@ -127,7 +127,7 @@ QString PluginSI::doCommand(QString command_in) {
     }
 
 
-    QString v=doNamedObjectCommand(command_in, _plugin);
+    QString v=doObjectCommand(command_in, _plugin);
     if (!v.isEmpty()) {
       return v;
     }
@@ -200,7 +200,7 @@ QString EquationSI::doCommand(QString command_in) {
     }
 
 
-    QString v=doNamedObjectCommand(command_in, _equation);
+    QString v=doObjectCommand(command_in, _equation);
     if (!v.isEmpty()) {
       return v;
     }
@@ -299,7 +299,7 @@ QString SpectrumSI::doCommand(QString command_in) {
     }
 
 
-    QString v=doNamedObjectCommand(command_in, _psd);
+    QString v=doObjectCommand(command_in, _psd);
     if (!v.isEmpty()) {
       return v;
     }
@@ -503,7 +503,7 @@ QString HistogramSI::doCommand(QString command_in) {
       return CALL_MEMBER_FN(*this,fn)(command_in);
     }
 
-    QString v=doNamedObjectCommand(command_in, _histogram);
+    QString v=doObjectCommand(command_in, _histogram);
     if (!v.isEmpty()) {
       return v;
     }

@@ -5,10 +5,13 @@ import math
 import os
 import ctypes
 #from time import sleep
-#from PyQt4 import QtCore, QtNetwork
-from PySide import QtCore, QtNetwork
+from PyQt4 import QtCore, QtNetwork
+#from PySide import QtCore, QtNetwork
 from numpy import *
 import tempfile
+import time
+import subprocess
+
 
 #from pykstpp import * 
 
@@ -38,7 +41,10 @@ class Client:
     self.ls.waitForConnected(300)
     self.serverName=serverName
     if self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
-      os.system("kst2 --serverName="+str(serverName)+"&")
+      #os.system("kst2 --serverName="+str(serverName)+"&")
+      subprocess.Popen(["kst2", "--serverName="+str(serverName)])
+      #time.sleep(1)
+
       while self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
         self.ls.connectToServer(serverName)
         self.ls.waitForConnected(300)
@@ -238,7 +244,7 @@ class Client:
     
     See :class:`EditableVector`
     """
-    return Editable(self, None, name, new=False)
+    return EditableVector(self, None, name, new=False)
   
   def new_data_matrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
                  minX=0, minY=0, dX=1, dY=1,name="") :
@@ -256,6 +262,20 @@ class Client:
     """
     return DataMatrix(self, "", "", name=name, new=False)
 
+  def new_editable_matrix(self, np_array = None, name=""):
+    """ Create a New Editable Matrix in kst.
+    
+    See :class:`EditableMatrix`
+    """
+    return EditableMatrix(self, np_array, name)
+
+  def editable_matrix(self, name):
+    """ Returns an Editable Matrix from kst given its name.
+    
+    See :class:`EditableMatrix`
+    """
+    return EditableMatrix(self, None, name, new=False)
+  
   def new_curve(self, xVector, yVector, name=""):
     """ Create a New Curve in kst.
     
@@ -488,7 +508,7 @@ class Client:
           strokeCapStyle, name)
     
   def arrow(self, name):
-    """ Returns a Arrow from kst given its name.
+    """ Returns an Arrow from kst given its name.
     
     See :class:`Arrow`
     """
@@ -555,11 +575,25 @@ class NamedObject:
       """ Returns the name of the object from inside kst. """
       return self.client.send_si(self.handle, "name()")
 
+    def description_tip(self):
+      """  Returns a string describing the vector """
+      return self.client.send_si(self.handle, "descriptionTip()")
 
-class String(NamedObject) :
+ 
+class Object(NamedObject) :
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
     NamedObject.__init__(self,client)
+
+  def type_str(self):
+    """ Returns the type of the object from inside kst. """
+    return self.client.send_si(self.handle, "type()")
+
+
+class String(Object) :
+  """ Convenience class. You should not use it directly."""
+  def __init__(self,client) :
+    Object.__init__(self,client)
 
   def value(self) :
     """ Returns the string. """
@@ -635,10 +669,10 @@ class DataSourceString(String) :
     self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+")"))
 
 
-class Scalar(NamedObject) :
+class Scalar(Object) :
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
 
   def value(self) :
     """ Returns the scalar. """
@@ -779,10 +813,10 @@ class VectorScalar(Scalar) :
     """ Returns the fame. """
     return self.client.send_si(self.handle, "frame()")
 
-class VectorBase(NamedObject):
+class VectorBase(Object):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
 
   def value(self,index):
     """  Returns element i of this vector. """
@@ -804,10 +838,6 @@ class VectorBase(NamedObject):
     """  Returns the maximum value in the vector. """
     return self.client.send_si(self.handle, "max()")
 
-  def description_tip(self):
-    """  Returns a string describing the vector """
-    return self.client.send_si(self.handle, "descriptionTip()")
- 
   def get_numpy_array(self) :
     """ get a numpy array which contains the kst vector values """
     with tempfile.NamedTemporaryFile() as f:
@@ -974,11 +1004,22 @@ class EditableVector(VectorBase):
     else:
       self.handle = name      
 
+  def load(self, np_array):
+    """  sets the value of the vector to that of the float64
+    1D np array """
+    
+    assert(np_array.dtype == float64)
+    
+    with tempfile.NamedTemporaryFile() as f:
+      np_array.tofile(f.name)
+      retval = self.client.send_si(self.handle, "load(" + f.name + ")")        
+      
+    return retval
 
-class Matrix(NamedObject):
+class Matrix(Object):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
 
   def value(self,i_x, i_y):
     """  Returns element (i_x, i_y} of this matrix. """
@@ -1024,10 +1065,17 @@ class Matrix(NamedObject):
   def min_y(self):
     """  Returns the minimum X location of the matrix, for when the matrix is used in an image. """
     return self.client.send_si(self.handle, "minX()")
+    
+  def get_numpy_array(self) :
+    """ get a numpy array which contains the kst matrix values """
+    with tempfile.NamedTemporaryFile() as f:
+      args = str(self.client.send_si(self.handle, "store(" + f.name + ")"))
+      dims = tuple(map(int, args.split()))
+      array = fromfile(f.name, dtype = float64)
+      array = array.reshape((dims))
+      
+    return array
 
-  def description_tip(self):
-    """  Returns a string describing the vector """
-    return self.client.send_si(self.handle, "descriptionTip()")
 
 class DataMatrix(Matrix):
   """  Create a Data Matrix which reads from a data source inside kst.
@@ -1103,10 +1151,61 @@ class DataMatrix(Matrix):
     """  Returns the Y index of the matrix in the file """
     return self.client.send_si(self.handle, "startX()")
 
-class Relation(NamedObject):
+class EditableMatrix(Matrix):
+  """ A matrix in kst, which is editable from python.
+  
+  This matrix in kst can be created from 2D float64 numpy array,
+  (with ''load()'') or edited point by point (with ''setValue()'').
+
+  :param np_array: initialize the matrix in kst to this 2D numpy array.
+  
+  To create an editable matrix from the num py array np::
+
+    import pykst as kst
+    client = kst.Client()
+    m = client.new_editable_matrix(np)
+    
+  """
+  def __init__(self, client, np_array = None, name="", new=True) :
+    Matrix.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newEditableMatrix()")
+      if (np_array != None) :
+        assert(np_array.dtype == float64)
+        nx = np_array.shape[0]
+        ny = np_array.shape[1]
+
+        with tempfile.NamedTemporaryFile() as f:
+          np_array.tofile(f.name)
+          self.client.send("load(" + f.name + ","+b2str(nx)+","+b2str(ny)+")")
+
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+
+      self.set_name(name)
+    else:
+      self.handle = name      
+
+  def load(self, np_array):
+    """  sets the values of the matrix in kst to that of the float64
+    2D np array """
+    
+    assert(np_array.dtype == float64)
+    nx = np_array.shape[0]
+    ny = np_array.shape[1]
+    
+    with tempfile.NamedTemporaryFile() as f:
+      np_array.tofile(f.name)
+      retval = self.client.send_si(self.handle, "load(" + f.name + ","+b2str(nx)+","+b2str(ny)+")")        
+      
+    return retval
+
+
+class Relation(Object):
   """ Convenience class. You should not use it directly."""
   def __init__(self,client) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
 
   def max_x(self):
     """  Returns the max X value of the curve or image. """
@@ -1422,33 +1521,33 @@ class Image(Relation):
     else:
       self.handle = name      
 
-  def setMatrix(self, matrix):
+  def set_matrix(self, matrix):
     """ change the matrix which is the source of the image. """
     self.client.send_si(self.handle, "setMatrix("+matrix.handle+")")
 
-  def setPalette(self, palette):
+  def set_palette(self, palette):
     """ set the palette, selected by index.
     
     The available palettes are::
     
-    0: Grey
-    1:  Red 
-    2:  Spectrum
-    3:  EOS-A
-    4:  EOS-B
-    5:  8 colors
-    6:  Cyclical Spectrum
+      0: Grey
+      1:  Red 
+      2:  Spectrum
+      3:  EOS-A
+      4:  EOS-B
+      5:  8 colors
+      6:  Cyclical Spectrum
     
     Note: this is not the same order as the dialog.
     """
     self.client.send_si(self.handle, "setPalette("+b2str(palette)+")")
     
-  def setRange(self, zmin, zmax):
+  def set_range(self, zmin, zmax):
     """ sets the z range of the color map."""
     self.client.send_si(self.handle, "setFixedColorRange("+
                         b2str(zmin)+","+b2str(zmax)+")")
   
-  def setAutoRange(self, saturated=0):
+  def set_auto_range(self, saturated=0):
     """ Automatically set the z range of the color map
     
     :param saturated: The colormap range is set so that this fraction
@@ -1467,7 +1566,7 @@ class Image(Relation):
     return self.client.send_si(self.handle, "minZ()")
 
 # Equation ############################################################
-class Equation(NamedObject) : 
+class Equation(Object) : 
   """ An equation inside kst.
    
     :param xvector: the x vector of the equation
@@ -1476,7 +1575,7 @@ class Equation(NamedObject) :
     Vectors inside kst are refered to as [vectorname] or [scalarname].
   """
   def __init__(self, client, xvector, equation, name="", new=True) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
     
     if (new == True):      
       self.client.send("newEquation()")
@@ -1505,7 +1604,7 @@ class Equation(NamedObject) :
     self.client.send_si(self.handle, "setInputVector(X,"+xvector.handle+")")
 
 # Histogram ############################################################
-class Histogram(NamedObject) : 
+class Histogram(Object) : 
   """ A Histogram inside kst.
                           
     :param vector: the vector to take the histogram of
@@ -1524,7 +1623,7 @@ class Histogram(NamedObject) :
   def __init__(self, client, vector, bin_min, bin_max, n_bins, 
                normalization = 0, auto_bin = False, 
                name="", new=True) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
     
     if (new == True):      
       self.client.send("newHistogram()")
@@ -1604,7 +1703,7 @@ class Histogram(NamedObject) :
     return retval
 
 # Spectrum ############################################################
-class Spectrum(NamedObject) : 
+class Spectrum(Object) : 
   """ An spectrum inside kst.
    
     :param vector: the vector to take the spectrum of
@@ -1650,7 +1749,7 @@ class Spectrum(NamedObject) :
                interpolate_over_holes = True,
                name="", new=True) :
     
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
     
     if (new == True):      
       self.client.send("newSpectrum()")
@@ -1765,10 +1864,10 @@ class Spectrum(NamedObject) :
 
 
 # FIT ###################################################################
-class Fit(NamedObject) :
+class Fit(Object) :
   """ This is a class which provides some methods common to all fits """
   def __init__(self,client) :
-    NamedObject.__init__(self,client)
+    Object.__init__(self,client)
 
   def parameters(self) :
     """ a vector containing the Parameters of the fit  """
@@ -2126,9 +2225,9 @@ class Label(ViewItem) :
     When the scalar is updated, the label is updated.
     The format is::
     
-    Scalar:         [scalarname]         eg [GYRO1:Mean(X4)]
-    Vector Element: [vectorName[index]]  eg [GYRO1 (V2)[4]]
-    Equation:       [=equation]          eg [=[GYRO1:Mean(X4)]/[GYRO1:Sigma (X4)]]
+      Scalar:         [scalarname]         eg [GYRO1:Mean(X4)]
+      Vector Element: [vectorName[index]]  eg [GYRO1 (V2)[4]]
+      Equation:       [=equation]          eg [=[GYRO1:Mean(X4)]/[GYRO1:Sigma (X4)]]
     
     Labels in kst support a derrivitive subset of LaTeX. For example, 
     to display the equation for the area of a circle, you could set the 

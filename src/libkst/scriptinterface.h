@@ -23,6 +23,7 @@
 #include <QObject>
 
 #include "kst_export.h"
+#include "object.h"
 
 typedef QList<QByteArray> QByteArrayList;
 
@@ -41,7 +42,7 @@ public:
     virtual bool isValid()=0;
     virtual QByteArray endEditUpdate()=0;
     static QString doNamedObjectCommand(QString command, NamedObject *n);
-
+    static QString doObjectCommand(QString command, ObjectPtr ob);
 
     QStringList getArgs(const QString &command);
     QString getArg(const QString &command);

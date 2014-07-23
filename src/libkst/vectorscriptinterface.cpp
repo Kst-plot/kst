@@ -47,10 +47,6 @@ QString VectorCommonSI::mean(QString &) {
   return QString::number(_vector->mean());
 }
 
-QString VectorCommonSI::descriptionTip(QString &) {
-  return _vector->descriptionTip();
-}
-
 QString VectorCommonSI::store(QString & command) {
   QString arg = getArg(command);
   QFile tmpfile(arg);
@@ -82,7 +78,6 @@ VectorSI::VectorSI(VectorPtr it) {
   _fnMap.insert("min",&VectorSI::min);
   _fnMap.insert("max",&VectorSI::max);
   _fnMap.insert("mean",&VectorSI::mean);
-  _fnMap.insert("descriptionTip",&VectorSI::descriptionTip);
   _fnMap.insert("store",&VectorSI::store);
 }
 
@@ -100,7 +95,7 @@ QString VectorSI::doCommand(QString command_in) {
     return CALL_MEMBER_FN(*this,fn)(command_in);
   }
 
-  QString v=doNamedObjectCommand(command_in, _vector);
+  QString v=doObjectCommand(command_in, _vector);
   if (!v.isEmpty()) {
     return v;
   }
@@ -149,7 +144,6 @@ DataVectorSI::DataVectorSI(DataVectorPtr it) {
   _fnMap.insert("min",&DataVectorSI::min);
   _fnMap.insert("max",&DataVectorSI::max);
   _fnMap.insert("mean",&DataVectorSI::mean);
-  _fnMap.insert("descriptionTip",&DataVectorSI::descriptionTip);
   _fnMap.insert("store",&DataVectorSI::store);
 
 }
@@ -168,7 +162,7 @@ QString DataVectorSI::doCommand(QString command_in) {
     return CALL_MEMBER_FN(*this,fn)(command_in);
   }
 
-  QString v=doNamedObjectCommand(command_in, _vector);
+  QString v=doObjectCommand(command_in, _vector);
   if (!v.isEmpty()) {
     return v;
   }
@@ -264,7 +258,6 @@ GeneratedVectorSI::GeneratedVectorSI(GeneratedVectorPtr it) {
     _fnMap.insert("min",&GeneratedVectorSI::min);
     _fnMap.insert("max",&GeneratedVectorSI::max);
     _fnMap.insert("mean",&GeneratedVectorSI::mean);
-    _fnMap.insert("descriptionTip",&GeneratedVectorSI::descriptionTip);
     _fnMap.insert("store",&GeneratedVectorSI::store);
 }
 
@@ -282,7 +275,7 @@ QString GeneratedVectorSI::doCommand(QString command_in) {
     return CALL_MEMBER_FN(*this,fn)(command_in);
   }
 
-  QString v=doNamedObjectCommand(command_in, _vector);
+  QString v=doObjectCommand(command_in, _vector);
   if (!v.isEmpty()) {
     return v;
   }
@@ -351,7 +344,6 @@ EditableVectorSI::EditableVectorSI(EditableVectorPtr it) {
   _fnMap.insert("min",&EditableVectorSI::min);
   _fnMap.insert("max",&EditableVectorSI::max);
   _fnMap.insert("mean",&EditableVectorSI::mean);
-  _fnMap.insert("descriptionTip",&EditableVectorSI::descriptionTip);
 
 }
 
@@ -369,7 +361,7 @@ QString EditableVectorSI::doCommand(QString command_in) {
     return CALL_MEMBER_FN(*this,fn)(command_in);
   }
 
-  QString v=doNamedObjectCommand(command_in, _vector);
+  QString v=doObjectCommand(command_in, _vector);
   if (!v.isEmpty()) {
     return v;
   }

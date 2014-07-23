@@ -153,6 +153,9 @@ class KSTCORE_EXPORT Matrix : public Primitive
 
     QByteArray getBinaryArray() const;
 
+    /** dump the matrix values to a raw binary file */
+    bool saveToTmpFile(QFile &fp);
+
   protected:
     int _NS;
     int _NRealS; // number of samples with real values

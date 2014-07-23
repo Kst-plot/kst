@@ -704,5 +704,22 @@ QByteArray Matrix::getBinaryArray() const {
     return ret;
 }
 
+/* used for scripting IPC
+    accepts an open writable file.
+    returns false on failure */
+bool Matrix::saveToTmpFile(QFile &fp) {
+  qint64 n_written;
+  qint64 n_write;
+
+  n_write = _nX*_nY*sizeof(double);
+
+  n_written = fp.write((char *)_z, n_write);
+
+  fp.flush();
+
+  return (n_write == n_written);
+}
+
+
 }
 // vim: ts=2 sw=2 et

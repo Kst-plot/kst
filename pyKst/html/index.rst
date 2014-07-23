@@ -85,7 +85,7 @@ Spectra
    :inherited-members:
 
 Histograms
--------
+----------
 .. autoclass:: Histogram
    :members:
    :inherited-members:

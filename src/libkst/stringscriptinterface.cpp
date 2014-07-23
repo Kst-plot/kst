@@ -27,7 +27,7 @@ StringGenSI::StringGenSI(StringPtr it) {
 
 QString StringGenSI::doCommand(QString x) {
 
-  QString v=doNamedObjectCommand(x, str);
+  QString v=doObjectCommand(x, str);
   if (!v.isEmpty()) {
     return v;
   }
@@ -69,7 +69,7 @@ StringDataSI::StringDataSI(DataStringPtr it) {
 
 QString StringDataSI::doCommand(QString x) {
 
-  QString v=doNamedObjectCommand(x, str);
+  QString v=doObjectCommand(x, str);
   if (!v.isEmpty()) {
     return v;
   }

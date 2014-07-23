@@ -16,6 +16,8 @@
 // qCompress the bytearray
 
 #include "editablematrix.h"
+#include "matrixscriptinterface.h"
+
 #include "debug.h"
 #include <qbytearray.h>
 #include <QXmlStreamWriter>
@@ -57,6 +59,34 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("ystep", QString::number(yStepSize()));
   xml.writeTextElement("data", qCompress(qba).toBase64());
   xml.writeEndElement();
+}
+
+
+QString EditableMatrix::descriptionTip() const {
+    return tr("%1:\n"
+      "  %2 x %3").arg(Name()).arg(xNumSteps()).arg(yNumSteps());
+}
+
+QString EditableMatrix::_automaticDescriptiveName() const {
+  return tr("Editable Matrix");
+}
+
+/**  used for scripting IPC.
+     accepts an open readable file.
+     fails silently */
+void EditableMatrix::loadFromTmpFile(QFile &fp, int nx, int ny ) {
+  int size = nx*ny*sizeof(double);
+
+  resize(nx, ny);
+
+  fp.read((char *)_z, size);
+
+  internalUpdate(); // not sure if we need this here.
+}
+
+
+ScriptInterface* EditableMatrix::createScriptInterface() {
+  return new EditableMatrixSI(this);
 }
 
 

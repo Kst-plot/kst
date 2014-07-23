@@ -29,10 +29,18 @@ class KSTCORE_EXPORT EditableMatrix : public Matrix {
 
     virtual void save(QXmlStreamWriter &xml);
 
+    virtual QString descriptionTip() const;
+
+    void loadFromTmpFile(QFile &fp, int nx, int ny);
+
   protected:
     EditableMatrix(ObjectStore *store);
 
     friend class ObjectStore;
+
+    virtual QString _automaticDescriptiveName() const;
+
+    ScriptInterface* createScriptInterface();
 };
 
 typedef SharedPtr<EditableMatrix> EditableMatrixPtr;

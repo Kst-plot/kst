@@ -87,7 +87,7 @@ DataMatrix::~DataMatrix() {
 }
 
 ScriptInterface* DataMatrix::createScriptInterface() {
-  return new MatrixDataSI(this);
+  return new DataMatrixSI(this);
 }
 
 

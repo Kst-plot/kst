@@ -7,10 +7,14 @@ import tempfile
 
 client=kst.Client("TestVectorIO")
 
+t0 = time.clock()
+
+x = linspace( 0, 50, 500000)
+y = sin(x)
+
 t1 = time.clock()
 
-x = linspace( 0, 50, 5000000)
-y = sin(x)
+print t1 - t0
 
 V1 = client.new_editable_vector(x)
 V2 = client.new_editable_vector(y)
@@ -41,3 +45,5 @@ p1.add(c2)
 t4 = time.clock()
 
 print t4-t3
+
+V2.load(A)

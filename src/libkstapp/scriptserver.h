@@ -64,7 +64,7 @@ protected:
     QByteArray newDataMatrix(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getEditableMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    QByteArray newEditableMatrixAndGetHandle(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newEditableMatrix(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getScalarList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newGeneratedScalar(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
@@ -165,35 +165,6 @@ protected:
 
     QByteArray fileOpen(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray fileSave(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-
-
-    // Hacks
-    //QByteArray editableVectorSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //EditableVector::setBinaryArray(
-
-    QByteArray editableMatrixSetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //EditableMatrix::setBinaryArray(
-
-    //QByteArray editableVectorSet(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //EditableVector::set(
-
-    //QByteArray vectorGetBinaryArray(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //Vector::getBinaryArray(
-
-    QByteArray matrixGetBinaryArray(QByteArray& command, QLocalSocket*s,ObjectStore*_store);
-    //Matrix::getBinaryArray(
-
-    QByteArray stringValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //String::value(
-
-    QByteArray stringSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //String::setValue(
-
-    QByteArray scalarValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //Scalar::value(
-
-    QByteArray scalarSetValue(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-    //Scalar::setValue(
 
 };
 

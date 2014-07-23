@@ -17,7 +17,7 @@
 #include "vector.h"
 #include "kst_export.h"
 
-#include <QFile>
+//#include <QFile>
 
 /**A vector  with n editable pts
  *@author cbn
