@@ -90,12 +90,7 @@ else()
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 endif()
 
-if(MINGW)
-    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-    message(STATUS "Using GCC version ${GCC_VERSION}")
-endif()
-
-if(MINGW)
+if(CMAKE_COMPILER_IS_GNUCC)
     execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
     message(STATUS "Using GCC version ${GCC_VERSION}")
 endif()

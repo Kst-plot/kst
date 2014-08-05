@@ -55,6 +55,10 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
   QObject::connect(_formattedString, SIGNAL(toggled(bool)), this, SLOT(interpretationChanged(bool)));
   QObject::connect(_previewButton, SIGNAL(clicked()), this, SLOT(showPreviewWindow()));
   //QObject::connect(_timeAsciiFormatString, SIGNAL(textEdited(QString)), this, SLOT(testAsciiFormatString(QString)));
+
+#ifdef KST_NO_THREAD_LOCAL
+  _nanPrevious->hide();
+#endif
 }
 
 void AsciiConfigWidgetInternal::testAsciiFormatString(QString format) {

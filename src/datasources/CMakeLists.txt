@@ -6,6 +6,11 @@ if(MSVC OR MINGW)
 	add_definitions(-DKST_USE_KST_ATOF)
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCC AND NOT GCC_VERSION VERSION_GREATER 4.2)
+    add_definitions(-DKST_NO_THREAD_LOCAL)
+endif()
+
+
 if(UNIX)
   # speedup on Linux x2.7
   add_definitions(-DKST_USE_KST_ATOF)

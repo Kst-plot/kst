@@ -451,7 +451,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   switch (_config._nanValue.value()) {
   case 0: nanMode = LexicalCast::NullValue; break;
   case 1: nanMode = LexicalCast::NaNValue; break;
+#ifndef KST_NO_THREAD_LOCAL
   case 2: nanMode = LexicalCast::PreviousValue; break;
+#endif
   default:nanMode = LexicalCast::NullValue; break;
   }
   LexicalCast::AutoReset useDot(_config._useDot, nanMode);

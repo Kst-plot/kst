@@ -22,7 +22,11 @@
 #ifdef Q_CC_MSVC
   #define KST_THREAD_LOCAL __declspec(thread)
 #else
- #define KST_THREAD_LOCAL __thread
+ #ifndef KST_NO_THREAD_LOCAL
+   #define KST_THREAD_LOCAL __thread
+  #else
+   #define KST_THREAD_LOCAL
+  #endif
 #endif
 
 class LexicalCast
