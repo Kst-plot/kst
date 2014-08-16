@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
   // The "in the directory with the binary" localization
   QTranslator kstDirectoryTranslator;
-  bool ok = kstDirectoryTranslator.load(localeName, app.applicationDirPath() + "/../share/kst" + localeSuffix);
+  //bool ok = kstDirectoryTranslator.load(localeName, app.applicationDirPath() + "/../share/kst" + localeSuffix);
   // qDebug() << "Translation file " + localeName + " loaded:" << ok;
   // qDebug() << "Dir = " + app.applicationDirPath() + "/../share/kst" + localeSuffix;
   app.installTranslator(&kstDirectoryTranslator);
