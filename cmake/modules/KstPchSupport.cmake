@@ -41,7 +41,7 @@ macro(kst_add_pch_rule  _header _sources _lib_type)
 		# first we have to find all compiler arguments
 		get_directory_property(_definitions COMPILE_DEFINITIONS)
 		foreach (_it ${_definitions})
-			list(APPEND _args "-D${_it}")
+			list(APPEND _args "$<$<BOOL:${_it}>:-D${_it}>")
 		endforeach()
 		
 		list(APPEND _args ${CMAKE_CXX_FLAGS})
