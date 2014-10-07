@@ -31,7 +31,7 @@ set build=1
 
 echo on
 
-cmake %kstdir% -G%gen% -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
+cmake %kstdir% -G%gen% -Dkst_qt5=1 -Dkst_release=1 -Dkst_merge_files=0 -Dkst_3rdparty_download=%download% -Dkst_3rdparty_build=%build%  -Dkst_install_prefix=Kst-%ver% -Dkst_version_string=%ver% -Dkst_make_program=%make%
 
 %make% netcdf
 
