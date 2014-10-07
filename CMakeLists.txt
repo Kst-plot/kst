@@ -5,6 +5,10 @@ if(kst_clang)
     set(CMAKE_CXX_COMPILER "clang++" CACHE PATH "Clang C++ compiler")
 endif()
 
+cmake_policy(SET CMP0020 OLD)
+if(${CMAKE_MAJOR_VERSION} EQUAL 3)
+    cmake_policy(SET CMP0043 OLD)
+endif()
 
 # figure out if we use MinGW with Ninja: call with -DCC=gcc
 if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
@@ -166,7 +170,6 @@ message(STATUS)
 # Find 3rd party libraries
 if (kst_qt5)
     # http://doc-snapshot.qt-project.org/5.0/cmake-manual.html
-    cmake_minimum_required(VERSION 2.8.9)
     macro(use_qt5lib qt5lib)
         find_package(${qt5lib} REQUIRED)
         include_directories(${${qt5lib}_INCLUDE_DIRS})
