@@ -22,6 +22,7 @@ Comment=Implements an Exponential Fits Plugin for Kst.
 Comment[ca]=Implementa un connector Fits exponencial pel Kst.
 Comment[de]=Implementiert ein Exponential-Anpassungs-Modul für Kst.
 Comment[en_GB]=Implements an Exponential Fits Plugin for Kst.
+Comment[it]=Implementa un'estensione FITS esponenziale per Kst.
 Comment[nl]=Implementeert een plugin voor een gegevensobject in Kst voor exponentiële aanpassing.
 Comment[pl]=Implementuje wtyczkę obiektu danych dopasowania wykładniczego dla Kst.
 Comment[pt]=Implementa um 'plugin' de ajuste exponencial para o Kst.
