@@ -143,15 +143,42 @@ kst_external_static_lib(matio_build matio libmatio.a)
 set(MATIO_LIBRARIES matio_build zlib_build PARENT_SCOPE)
 
 
+# HDF5 used by netcdf
+set(ext_src ${build_dir}/hdf5/src/hdf5)
+if(WIN32)
+	set(ext_url http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.13.tar.gz)
+	set(ext_configure cmake ${ext_src} ${generator} ${rc_compiler} ${install_prefix} ${build_type} 
+        -DHDF5_ALLOW_EXTERNAL_SUPPORT=TGZ -DTGZPATH=http://www.hdfgroup.org/ftp/lib-external/CMake
+        -DHDF5_ENABLE_Z_LIB_SUPPORT=1 -DZLIB_USE_EXTERNAL=1 -DZLIB_TGZ_NAME=ZLib.tar.gz
+        -DHDF5_ENABLE_SZIP_SUPPORT=1  -DSZIP_USE_EXTERNAL=1 -DSZIP_TGZ_NAME=SZip.tar.gz
+        -DHDF5_BUILD_HL_LIB=1)
+	set(ext_install ${install_target})
+	set(ext_insource OFF )
+		set(hdf5_library libhdf5.a)
+	set(ext_make ${kst_make_program})
+else()
+endif()
+ExternalProject_Add(hdf5
+					PREFIX ${build_dir}/hdf5
+					URL ${ext_url}
+					SOURCE_DIR ${ext_src}
+					CONFIGURE_COMMAND ${ext_configure}
+					BUILD_IN_SOURCE ${ext_insource}
+					BUILD_COMMAND ${ext_make}
+					INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} ${ext_install})
+
+kst_external_static_lib(hdf5_build hdf5 ${hdf5_library})
+
+
 # NETCDF
 set(ext_src ${build_dir}/netcdf/src/netcdf)
 if(WIN32)
-	set(ext_url ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.1.1.tar.gz)
-	set(ext_configure cmake ${CMAKE_CURRENT_SOURCE_DIR}/netcdf
-											-Dnetcdf_sources=${build_dir}/netcdf/src/netcdf
-											${generator} ${rc_compiler}
-											${install_prefix}
-											${build_type})
+	set(ext_url https://github.com/syntheticpp/netcdf-c/archive/kst-mingw.zip)
+	set(ext_configure cmake ${ext_src} ${generator} ${rc_compiler} ${install_prefix} ${build_type}
+        -DUSE_HDF5=1 -DHDF5_DIR=${install_dir}/cmake/hdf5
+        -DZLIB_INCLUDE_DIR=${install_dir}/include -DZLIB_LIBRARY=${zlib_library}
+        -DENABLE_DAP=0 -DENABLE_DAP_REMOTE_TESTS=0 -DBUILD_SHARED_LIBS=0 -DBUILD_UTILITIES=0 -DENABLE_TESTS=0
+        )
 	set(ext_install ${install_target})
 	set(ext_insource OFF)
 	set(ext_make ${kst_make_program})
