@@ -1,10 +1,7 @@
-#import sip
-#sip.setapi('QString', 1)
 import sys
 import math
 import os
 import ctypes
-#from time import sleep
 from PyQt4 import QtCore, QtNetwork
 #from PySide import QtCore, QtNetwork
 from numpy import *
@@ -12,8 +9,6 @@ import tempfile
 import time
 import subprocess
 
-
-#from pykstpp import * 
 
 def b2str(val):
   if isinstance(val, bool):
@@ -542,7 +537,7 @@ class Client:
     """
     return SVG(self, "", name = name, new=False)
 
-  def new_plot(self,pos=(0.1,0.1),size=(0.1,0.1),rot=0,
+  def new_plot(self,pos=(0.1,0.1),size=(0,0),rot=0,columns=0,
            fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
            strokeBrushColor="black", strokeBrushStyle=1, 
            strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False, name="") :
@@ -550,7 +545,7 @@ class Client:
     
     See :class:`Plot`
     """
-    return Plot(self, pos, size, rot, fillColor, fillStyle, strokeStyle, 
+    return Plot(self, pos, size, rot, columns, fillColor, fillStyle, strokeStyle,
                 strokeWidth, strokeBrushColor, strokeBrushStyle, 
                 strokeJoinStyle, strokeCapStyle, fixAspect, name)
   
@@ -2835,7 +2830,9 @@ class Plot(ViewItem) :
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param size: a 2 element tuple ``(w,h)`` specifying the size.
               ``(1,1)`` is the size of the window.
+              ``(0,0)``, the default, specifies auto placement.
   :param rotation: rotation of the label in degrees.
+  :param columns: auto-place the plot, reformatting into this many columns.
   :param fillColor: the background color.
   :param fillStyle: the background fill style.  See set_fill_style.
   :param strokeStyle: see set_stroke_style
@@ -2861,7 +2858,8 @@ class Plot(ViewItem) :
     P1.add(curve1)
 
   """
-  def __init__(self,client,pos=(0.1,0.1),size=(0.1,0.1),rot=0,
+  def __init__(self,client,pos=(0,0),size=(0,0),rot=0,
+               columns = 0,
                fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
                strokeBrushColor="black", strokeBrushStyle=1, 
                strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False,
@@ -2869,12 +2867,20 @@ class Plot(ViewItem) :
     ViewItem.__init__(self,client)
 
     if (new == True):
-      self.client.send("newPlot()")    
+      self.client.send("newPlot()")
+      if (columns>0):
+        self.client.send("addToCurrentView(Columns,"+b2str(columns)+")")
+      elif (size == (0,0)):
+        self.client.send("addToCurrentView(Auto,2)")
+      else:
+        self.client.send("addToCurrentView(Protect,2)")
+          
       self.handle=self.client.send("endEdit()")
 
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
-      self.set_pos(pos)
-      self.set_size(size)
+      if (size != (0,0)):
+        self.set_pos(pos)
+        self.set_size(size)
 
       self.set_fixed_aspect_ratio(fixAspect)
       self.set_rotation(rot)

@@ -51,6 +51,8 @@ private:
     PlotItem *_item;
     QMap<QString,InterfaceMemberFn> _fnMap;
 
+    QString addToCurrentView(QString& command);
+
     QString addRelation(QString& command);
 
     QString setXRange(QString& command);

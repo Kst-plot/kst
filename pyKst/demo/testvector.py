@@ -12,7 +12,7 @@ V2=client.new_data_vector("/home/cbn/programs/KDE/kst_tutorial/gyrodata.dat",
 
 c1 = client.new_curve(V1, V2)
 
-p1 = client.new_plot((0.5, 0.5), (1.0, 1.0))
+p1 = client.new_plot(columns=2)
 p1.add(c1)
 
 print V2.length()

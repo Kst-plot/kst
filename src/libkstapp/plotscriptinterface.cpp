@@ -28,6 +28,8 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
   _stroke->item=it;
   _item = it;
 
+  _fnMap.insert("addToCurrentView", &PlotSI::addToCurrentView);
+
   _fnMap.insert("addRelation", &PlotSI::addRelation);
 
   _fnMap.insert("setXRange",&PlotSI::setXRange);
@@ -63,7 +65,7 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
 
 ScriptInterface* PlotSI::newPlot() {
     PlotItem* bi=new PlotItem(kstApp->mainWindow()->tabWidget()->currentView());
-    kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
+    //kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     return new PlotSI(bi);
 }
 
@@ -100,6 +102,20 @@ bool PlotSI::isValid() {
 /***************************/
 /* commands                */
 /***************************/
+QString PlotSI::addToCurrentView(QString& command) {
+  QStringList vars = getArgs(command);
+
+  if (vars.at(0) == "Auto") {
+    kstApp->mainWindow()->tabWidget()->currentView()->appendToLayout(CurvePlacement::Auto, _item, vars.at(1).toInt());
+  } else if (vars.at(0) == "Columns") {
+    kstApp->mainWindow()->tabWidget()->currentView()->appendToLayout(CurvePlacement::Custom, _item, vars.at(1).toInt());
+    _item->createCustomLayout(vars.at(1).toInt());
+  } else {
+    kstApp->mainWindow()->tabWidget()->currentView()->appendToLayout(CurvePlacement::Protect, _item, vars.at(1).toInt());
+  }
+  return "Done";
+}
+
 QString PlotSI::addRelation(QString& command) {
   QString rname = getArg(command);
   RelationPtr relation = kst_cast<Relation>(
