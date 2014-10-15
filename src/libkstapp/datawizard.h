@@ -47,6 +47,7 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     DataSourcePtr dataSource() const;
 
     void setTypeActivated();
+    int updateType();
 
   public Q_SLOTS:
     void sourceChanged(const QString&);

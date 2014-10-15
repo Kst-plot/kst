@@ -93,6 +93,7 @@ namespace Kst {
 //  matrix/yNumSteps             matrixdialog.cpp
 //  matrix/yReadToEnd            matrixdialog.cpp
 
+// wizard/updateType    int      datawizard.cpp
 // wizard/doPSD         bool     datawizard.cpp
 // wizard/doXY          bool     datawizard.cpp
 // wizard/curvePlacement enum    datawizard.cpp

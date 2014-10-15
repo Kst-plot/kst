@@ -80,7 +80,7 @@ void DataWizardPageDataSource::updateUpdateBox()
       case DataSource::Timer: _updateBox->setCurrentIndex(0); break;
       case DataSource::File:  _updateBox->setCurrentIndex(1); break;
       case DataSource::None:  _updateBox->setCurrentIndex(2); break;
-      default: break;
+      default:                _updateBox->setCurrentIndex(dialogDefaults().value("wizard/updateType", 0).toInt()); break;
     };
   } else {
     _updateBox->setEnabled(false);
@@ -88,7 +88,12 @@ void DataWizardPageDataSource::updateUpdateBox()
 }
 
 void DataWizardPageDataSource::setTypeActivated() {
-    updateTypeActivated(_updateBox->currentIndex());
+  updateTypeActivated(_updateBox->currentIndex());
+}
+
+int DataWizardPageDataSource::updateType()
+{
+  return _updateBox->currentIndex();
 }
 
 void DataWizardPageDataSource::updateTypeActivated(int idx)
@@ -776,6 +781,7 @@ void DataWizard::finished() {
   uint n_curves = 0;
   uint n_steps = 0;
 
+  dialogDefaults().setValue("wizard/updateType", _pageDataSource->updateType());
   dialogDefaults().setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
   dialogDefaults().setValue("wizard/doXY", _pageDataPresentation->plotData());
   dialogDefaults().setValue("wizard/curvePlacement", _pagePlot->curvePlacement());
