@@ -143,20 +143,18 @@ bool AsciiSource::initRowIndex()
     }
     qint64 header_row = 0;
     qint64 left = _config._dataLine;
-    qint64 didRead = 0;
     while (left > 0) {
       QByteArray line = file.readLine();
       if (line.isEmpty() || file.atEnd()) {
         return false;
       }
-      didRead += line.size();
       --left;
       if (header_row != _config._fieldsLine && header_row != _config._unitsLine) {
         _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
       }
       header_row++;
     }
-    _reader.setRow0Begin(didRead);
+    _reader.setRow0Begin(file.pos());
   }
 
   return true;
