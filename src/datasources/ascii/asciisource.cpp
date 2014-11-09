@@ -94,7 +94,6 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
   _valid = true;
   registerChange();
-  //internalDataSourceUpdate(false);
   internalDataSourceUpdate();
   _progressTimer.restart();
 }
