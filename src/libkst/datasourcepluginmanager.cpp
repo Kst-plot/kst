@@ -347,13 +347,16 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
 }
 
 
-DataSourcePtr DataSourcePluginManager::findOrLoadSource(ObjectStore *store, const QString& filename) {
+DataSourcePtr DataSourcePluginManager::findOrLoadSource(ObjectStore *store, const QString& filename, bool updatesDisabled) {
   Q_ASSERT(store);
 
   DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(filename);
 
   if (!dataSource) {
     dataSource = DataSourcePluginManager::loadSource(store, filename);
+    if (!updatesDisabled) {
+      dataSource->enableUpdates();
+    }
   }
 
   return dataSource;

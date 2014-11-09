@@ -80,6 +80,8 @@ class AsciiSource : public Kst::DataSource
 
     void triggerRowProgress() { emit signalRowProgress(); }
 
+    virtual void enableUpdates() {_updatesDisabled = false;}
+
 signals:
     void signalRowProgress();
 
@@ -94,6 +96,8 @@ private:
     mutable AsciiSourceConfig _config;
 
     qint64 _fileSize;
+    qint64 _lastFileSize;
+
     bool _haveHeader;
     bool _fieldListComplete;
     bool _haveWarned;
@@ -133,6 +137,8 @@ private:
     // TODO remove
     friend class DataInterfaceAsciiString;
     friend class DataInterfaceAsciiVector;
+
+    bool _updatesDisabled;
 };
 
 
