@@ -240,6 +240,16 @@ class Client:
     See :class:`EditableVector`
     """
     return EditableVector(self, None, name, new=False)
+
+
+  def get_vector_list(self):
+    """ returns the vector names from kst """
+    
+    x = str(self.send("getVectorList()"))
+  
+    ret=x.split('|')
+    return ret
+
   
   def new_data_matrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
                  minX=0, minY=0, dX=1, dY=1,name="") :

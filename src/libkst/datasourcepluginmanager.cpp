@@ -355,7 +355,9 @@ DataSourcePtr DataSourcePluginManager::findOrLoadSource(ObjectStore *store, cons
   if (!dataSource) {
     dataSource = DataSourcePluginManager::loadSource(store, filename);
     if (!updatesDisabled) {
-      dataSource->enableUpdates();
+      if (dataSource) {
+        dataSource->enableUpdates();
+      }
     }
   }
 

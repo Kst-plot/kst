@@ -39,6 +39,7 @@ Document::Document(MainWindow *window)
   _session = new SessionModel(objectStore());
 
   _fileName.clear();
+
   UpdateManager::self()->setStore(objectStore());
 }
 

@@ -70,6 +70,10 @@ namespace Kst {
 ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), _store(obj),_interface(0) {
 
     QString initial="kstScript";
+
+
+    // The command line hasn't been parsed yet, so
+    // we can't rely on that to get the server name.
     QStringList args= qApp->arguments();
     for(int i=0;i<args.size();i++) {
         if(args.at(i).startsWith("--serverName=")) {
@@ -347,79 +351,6 @@ QByteArray ScriptServer::exec(QByteArray command, QLocalSocket *s)
     return "?";
 }
 
-#if 0
-QByteArray ScriptServer::checkPrimatives(QByteArray &command, QLocalSocket *s)
-{
-    ///
-    if(command.startsWith("DataVector::")) {
-        command.replace("DataVector::","");
-        QByteArray actc=command;
-        command.remove(command.indexOf("("),999999);
-        actc.remove(0,actc.indexOf("("));
-        actc.remove(actc.lastIndexOf(")"),909099);
-        QByteArrayList m;
-        m.push_back(command);
-        m<<actc.split(',');
-        if(m.size()<2) {
-            return handleResponse("Invalid call to vector",s);
-        } else {
-            QByteArray b=m.takeAt(1);
-            ObjectPtr o=_store->retrieveObject(b);
-            DataVectorPtr v=kst_cast<DataVector>(o);
-            if(v) {
-                return handleResponse(v->scriptInterface(m),s);
-            } else {
-                return handleResponse("No such object",s);
-            }
-        }
-    } else if(command.startsWith("Vector::")) {
-        command.replace("Vector::","");
-        QByteArray actc=command;
-        command.remove(command.indexOf("("),999999);
-        actc.remove(0,actc.indexOf("("));
-        actc.remove(actc.lastIndexOf(")"),909099);
-        QByteArrayList m;
-        m.push_back(command);
-        m<<actc.split(',');
-        if(m.size()<2) {
-            return handleResponse("Invalid call to vector",s);
-        } else {
-            QByteArray b=m.takeAt(1);
-            ObjectPtr o=_store->retrieveObject(b);
-            VectorPtr v=kst_cast<Vector>(o);
-            if(v) {
-                return handleResponse(v->scriptInterface(m),s);
-            } else {
-                return handleResponse("No such object",s);
-            }
-        }
-    } else if(command.startsWith("DataObject::")) {
-      command.replace("DataObject::","");
-      QByteArray actc=command;
-      command.remove(command.indexOf("("),999999);
-      actc.remove(0,actc.indexOf("("));
-      actc.remove(actc.lastIndexOf(")"),909099);
-      QByteArrayList m;
-      m.push_back(command);
-      m<<actc.split(',');
-      if(m.size()<2) {
-          return handleResponse("Invalid call to dataobject",s);
-      } else {
-          QByteArray b=m.takeAt(1);
-          ObjectPtr o=_store->retrieveObject(b);
-          DataObjectPtr x=kst_cast<DataObject>(o);
-          if (x) {
-              return handleResponse(x->scriptInterface(m),s);
-          } else {
-              return handleResponse("No such object",s);
-          }
-      }
-  }
-
-    return "";
-}
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 QByteArray ScriptServer::getVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
@@ -452,19 +383,6 @@ QByteArray ScriptServer::newEditableVector(QByteArray&, QLocalSocket* s,ObjectSt
   }
 }
 
-
-/*
-QByteArray ScriptServer::newEditableVectorAndGetHandle(QByteArray&, QLocalSocket* s,ObjectStore*) {
-
-    EditableVectorPtr objectPtr=_store->createObject<EditableVector>();
-    objectPtr->writeLock();
-    objectPtr->setDescriptiveName("Script Vector");
-    objectPtr->unlock();
-    UpdateManager::self()->doUpdates(1);
-    UpdateServer::self()->requestUpdateSignal();
-    return handleResponse("Finished editing "+objectPtr->Name().toLatin1(),s);
-}
-*/
 
 QByteArray ScriptServer::newDataVector(QByteArray&, QLocalSocket* s,ObjectStore*) {
     if(_interface) {
