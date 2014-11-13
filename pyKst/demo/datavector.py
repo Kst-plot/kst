@@ -4,17 +4,12 @@ import pykst as kst
 client=kst.Client("TestVectors")
 V1=client.new_data_vector("/home/cbn/programs/KDE/kst_tutorial/gyrodata.dat",
                           field="INDEX",
-                          start=0,NFrames=1000)
+                          start=0,num_frames=1000)
 
 V2=client.new_data_vector("/home/cbn/programs/KDE/kst_tutorial/gyrodata.dat",
                           field="Column 2",
-                          start=0,NFrames=1000)
+                          start=0,num_frames=1000)
 
 c1 = client.new_curve(V1, V2)
-
-p1 = client.new_plot(columns=2)
+p1 = client.new_plot(font_size = 12)
 p1.add(c1)
-
-print V2.length()
-
-print client.get_scalar_list()

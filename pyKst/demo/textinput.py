@@ -1,4 +1,8 @@
 #!/usr/bin/python
+
+# demonstrate buttons and line inputs:
+# plot an equation the user inputs
+
 import sip
 sip.setapi('QString', 1)
 import pykst as kst
@@ -16,12 +20,13 @@ class KsNspire:
     self.s2.readyRead.connect(self.changeValue)
     self.l=kst.LineEdit(client,"",self.s2,0.47,0.975,0.93,0.025)
     self.b=kst.Button(client,"Go!",self.s,0.97,0.975,0.05,0.025)
-    self.plot=kst.Plot(client,0.5,0.4885,0.9,0.8,0,"KsNspirePLOT")
-    self.genVec=kst.GeneratedVector(self.client,-100,100,1000)
+    self.plot=client.new_plot((0.5,0.4885),(0.9,0.8))
+    self.genVec=client.new_generated_vector(-100,100,1000)
     
   def create(self):
-    eq = kst.NewEquation(self.client,self.text,self.genVec)
-    kst.NewCurve(client,eq.X(), eq.Y(), curvecolor="black", curveweight=1, placeinexistingplot=self.plot)
+    eq = client.new_equation(self.genVec, self.text)
+    c = client.new_curve(eq.x(), eq.y())
+    self.plot.add(c)
 
   def changeValue(self):
     strx=QtCore.QString(self.s2.read(8000))

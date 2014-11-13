@@ -112,7 +112,8 @@ class KSTCORE_EXPORT DataSource : public Object
 
     virtual UpdateType objectUpdate(qint64 newSerial);
 
-    void internalUpdate() {return;}
+    void internalUpdate() {return;} // unused - just here for linkage.
+    
     qint64 minInputSerial() const {return 0;}
     qint64 maxInputSerialOfLastChange() const {return 0;}
 
@@ -121,7 +122,11 @@ class KSTCORE_EXPORT DataSource : public Object
       It must be implemented by the datasource. */
     virtual UpdateType internalDataSourceUpdate() = 0;
 
-
+    /** some constructors create their datasource with their updates disabled
+        because it may be expensive to parse the whole file.
+        Call this function before actually using the data source (eg,
+        in 'apply'. **/
+    virtual void enableUpdates() {return;}
     /************************************************************/
     /* Methods for handling time in vectors.                    */
     /* not currently used - may be reworked (remove this note   */
@@ -239,8 +244,6 @@ class KSTCORE_EXPORT DataSource : public Object
     bool _reusable;
 
     bool _writable;
-
-
 
     /** The filename.  Populated by the base class constructor.  */
     QString _filename;

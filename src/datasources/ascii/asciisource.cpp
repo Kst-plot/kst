@@ -71,7 +71,8 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   _read_count(0),
   _showFieldProgress(false),
   is(new DataInterfaceAsciiString(*this)),
-  iv(new DataInterfaceAsciiVector(*this))
+  iv(new DataInterfaceAsciiVector(*this)),
+  _updatesDisabled(true)
 {
   setInterface(is);
   setInterface(iv);
@@ -93,8 +94,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
 
   _valid = true;
   registerChange();
-  internalDataSourceUpdate(false);
-
+  internalDataSourceUpdate();
   _progressTimer.restart();
 }
 
@@ -115,6 +115,7 @@ void AsciiSource::reset()
 
   _valid = false;
   _fileSize = 0;
+  _lastFileSize = 0;
   _haveHeader = false;
   _fieldListComplete = false;
 
@@ -143,20 +144,18 @@ bool AsciiSource::initRowIndex()
     }
     qint64 header_row = 0;
     qint64 left = _config._dataLine;
-    qint64 didRead = 0;
     while (left > 0) {
       QByteArray line = file.readLine();
       if (line.isEmpty() || file.atEnd()) {
         return false;
       }
-      didRead += line.size();
       --left;
       if (header_row != _config._fieldsLine && header_row != _config._unitsLine) {
         _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
       }
       header_row++;
     }
-    _reader.setRow0Begin(didRead);
+    _reader.setRow0Begin(file.pos());
   }
 
   return true;
@@ -197,7 +196,6 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
   //MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
-
   if (_busy)
     return NoChange;
 
@@ -218,22 +216,24 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     return NoChange;
   }
 
+  if (_updatesDisabled) {
+    _fileSize = 0;
+  } else {
+    _fileSize = file.size();
+  }
+
   bool force_update = true;
   if (_fileSize == file.size()) {
     force_update = false;
   }
 
-  const qint64 oldFileSite = _fileSize;
-  if (read_completely) { // Update _fileSize only when we read the file completely
-    _fileSize = file.size();
-  }
   _fileCreationTime_t = QFileInfo(file).created().toTime_t();
 
   int col_count = _fieldList.size() - 1; // minus INDEX
 
   bool new_data = false;
   // emit progress message if there are more than 100 MB to parse
-  if (file.size() - oldFileSite > 100 * 1024 * 1024 && read_completely) {
+  if (_fileSize - _lastFileSize > 100 * 1024 * 1024 && read_completely) {
     _showFieldProgress = true;
     emitProgress(1, tr("Parsing '%1' ...").arg(_filename));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -258,6 +258,9 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     _showFieldProgress = false;
     new_data = _reader.findAllDataRows(read_completely, &file, _fileSize, col_count);
   }
+
+  _lastFileSize = _fileSize;
+
   return (!new_data && !force_update ? NoChange : Updated);
 }
 

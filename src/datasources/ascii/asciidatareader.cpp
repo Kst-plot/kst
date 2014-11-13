@@ -184,15 +184,17 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
   bool row_has_data = false;
   bool is_comment = false;
   const qint64 row_offset = bufstart + isLineBreak.size;
-  qint64 row_start = 0;
   const qint64 old_numFrames = _numFrames;
-
-  // _rowIndex[_numFrames] already set, find next row
+  
+  // _rowIndex[_numFrames] already set, find following rows
+  // buffer points to next row
+  qint64 row_start = _rowIndex[_numFrames];
   for (qint64 i = 0; i < bufread; ++i) {
     if (comment_del(buffer[i])) {
       is_comment = true;
     } else if (isLineBreak(buffer[i])) {
       if (row_has_data) {
+        _rowIndex[_numFrames] = row_start;
         ++_numFrames;
         if (_numFrames + 1 >= _rowIndex.size()) {
           if (_rowIndex.capacity() < _numFrames + 1) {
@@ -202,10 +204,9 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
           _rowIndex.resize(_numFrames + 1);
         }
         row_start = row_offset + i;
-        _rowIndex[_numFrames] = row_start;
         new_data = true;
       } else if (is_comment) {
-        row_start = row_offset+i;
+        row_start = row_offset + i;
       }
       row_has_data = false;
       is_comment = false;

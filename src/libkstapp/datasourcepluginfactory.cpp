@@ -90,6 +90,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
         dataSource->setAlternateFilename(alternate_filename);
       }
       dataSource->setUpdateType(updateCheckType);
+      dataSource->enableUpdates();
       return dataSource;
     } else {
       alternate_filename = fileName;

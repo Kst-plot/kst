@@ -1,17 +1,26 @@
 .. toctree::
    :maxdepth: 2
 
-Welcome to pykst's documentation!
+PyKst documentation
 =================================
 PyKst is a python interface to kst. With PyKst, scripts can control and share data with a kst session.
 
+The following minimal example plots sin(x) from -10 to 10::
+
+      import pykst as kst
+
+      client=kst.Client("TestSinX")
+
+      v1 = client.new_generated_vector(-10, 10, 1000)
+      e1 = client.new_equation(v1, "sin(x)")
+      c1 = client.new_curve(e1.x(), e1.y())
+      p1 = client.new_plot()
+      p1.add(c1)
+
+
+
 Clients
 *******************
-To interact with a kst session, you must create a client. To open an interface with the last kst session started, or if none open, a new one, try::
-
-	import pykst as kst
-	client = kst.Client()
-
 .. automodule:: pykst
    :members: Client
    :exclude-members: getArray, getList, send

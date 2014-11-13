@@ -277,19 +277,28 @@ QString PlotSI::normalizeXtoY(QString &) {
 }
 
 
-QString PlotSI::setLogX(QString &) {
+QString PlotSI::setLogX(QString &command) {
 
   if (_item) {
-    _item->zoomLogX();
+    QString arg = getArg(command);
+    if (arg.toLower()=="true") {
+      _item->zoomLogX(false, false, true);
+    } else {
+      _item->zoomLogX(false, false, false);
+    }
   }
   return "Done.";
 }
 
 
-QString PlotSI::setLogY(QString &) {
-
+QString PlotSI::setLogY(QString &command) {
   if (_item) {
-    _item->zoomLogY();
+    QString arg = getArg(command);
+    if (arg.toLower()=="true") {
+      _item->zoomLogY(false, false, true);
+    } else {
+      _item->zoomLogY(false, false, false);
+    }
   }
   return "Done.";
 }
@@ -333,15 +342,22 @@ QString PlotSI::setGlobalFont(QString &command) {
   if (_item) {
     QFont font = _item->globalFont();
     QString family = vars.at(0);
-    bool bold = ((vars.at(1)=="bold") || (vars.at(1)=="true"));
-    bool italic = ((vars.at(2)=="italic") || (vars.at(2)=="true"));
+    qreal size = vars.at(1).toDouble();
+    bool bold = ((vars.at(2)=="bold") || (vars.at(2)=="true"));
+    bool italic = ((vars.at(3)=="italic") || (vars.at(3)=="true"));
     if (!family.isEmpty()) {
       font.setFamily(family);
     }
+
+
     font.setItalic(italic);
     font.setBold(bold);
 
     _item->setGlobalFont(font);
+    if (size>1.0) {
+      _item->setGlobalFontScale(size);
+    }
+
   }
   return "Done.";
 }

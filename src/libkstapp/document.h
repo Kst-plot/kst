@@ -55,6 +55,7 @@ class Document : public CoreDocument {
 
     void updateRecentDataFiles(const QStringList &datafiles);
 
+
   private:
     QPointer<MainWindow> _win;
     SessionModel *_session;

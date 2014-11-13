@@ -220,6 +220,7 @@ class KSTCORE_EXPORT Vector : public Primitive
     bool _saveData : 1;
 
     double _min, _max, _mean, _minPos;
+    int _imax, _imin;
 
     /** Scalar Maintenance methods */
     void CreateScalars(ObjectStore *store);

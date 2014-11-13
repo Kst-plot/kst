@@ -262,6 +262,7 @@ double Vector::value(int i) const {
 void Vector::CreateScalars(ObjectStore *store) {
   if (!_isScalarList) {
     _min = _max = _mean = _minPos = 0.0;
+    _imin = _imax = 0;
 
     Q_ASSERT(store);
     ScalarPtr sp;
@@ -308,6 +309,14 @@ void Vector::CreateScalars(ObjectStore *store) {
     _scalars.insert("minpos", sp = store->createObject<Scalar>());
     sp->setProvider(this);
     sp->setSlaveName("MinPos");
+
+    _scalars.insert("imax", sp = store->createObject<Scalar>());
+    sp->setProvider(this);
+    sp->setSlaveName("iMax");
+
+    _scalars.insert("imin", sp = store->createObject<Scalar>());
+    sp->setProvider(this);
+    sp->setSlaveName("iMin");
 
   }
 }
@@ -411,6 +420,7 @@ void Vector::internalUpdate() {
   const double epsilon=1e-300;
 
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
+  _imax = _imin = 0;
   _nsum = 0;
 
   if (_size > 0) {
@@ -426,7 +436,9 @@ void Vector::internalUpdate() {
         _scalars["sum"]->setValue(sum);
         _scalars["sumsquared"]->setValue(sum2);
         _scalars["max"]->setValue(_max);
+        _scalars["imax"]->setValue(_imax);
         _scalars["min"]->setValue(_min);
+        _scalars["imin"]->setValue(_imin);
         _scalars["minpos"]->setValue(_minPos);
         _scalars["last"]->setValue(last);
         _scalars["first"]->setValue(first);
@@ -445,6 +457,7 @@ void Vector::internalUpdate() {
     }
 
     _max = _min = _v[i0];
+    _imax = _imin = i0;
     sum = sum2 = 0.0;
 
     if (_v[i0] > epsilon) {
@@ -476,8 +489,10 @@ void Vector::internalUpdate() {
 
         if (v > _max) {
           _max = v;
+          _imax = i;
         } else if (v < _min) {
           _min = v;
+          _imin = i;
         }
         if (v < _minPos && v > epsilon) {
           _minPos = v;
@@ -516,11 +531,14 @@ void Vector::internalUpdate() {
 
     if (_isScalarList) {
       _max = _min = _minPos = 0.0;
+      _imax =_imin = 0;
     } else {
       _scalars["sum"]->setValue(sum);
       _scalars["sumsquared"]->setValue(sum2);
       _scalars["max"]->setValue(_max);
       _scalars["min"]->setValue(_min);
+      _scalars["imax"]->setValue(_imax);
+      _scalars["imin"]->setValue(_imin);
       _scalars["minpos"]->setValue(_minPos);
       _scalars["last"]->setValue(last);
       _scalars["first"]->setValue(first);
@@ -612,6 +630,7 @@ void Vector::oldChange(QByteArray &data) {
       qds >> _v[i];
       if(!i) {
           _min=_max=_minPos=sum=_v[i];
+          _imin = _imax = i;
           _minPos=qMax(_minPos,qreal(0.0));
       } else {
           _min=qMin(_v[i],_min);

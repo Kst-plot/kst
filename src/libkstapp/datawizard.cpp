@@ -142,8 +142,7 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
     return;
   }
   _pageValid = true;
-
-  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
+  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename, true);
   connect(_dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
   _fileType->setText(_dataSource->fileType());  
 
@@ -157,7 +156,6 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   }
 
   updateUpdateBox();
-
   emit completeChanged();
   emit dataSourceChanged();
 }
@@ -807,6 +805,8 @@ void DataWizard::finished() {
   if (!ds.isPtrValid()) {
     return;
   }
+
+  ds->enableUpdates();
 
   emit dataSourceLoaded(ds->fileName());
 

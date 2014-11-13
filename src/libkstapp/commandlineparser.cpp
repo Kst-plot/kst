@@ -667,6 +667,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     } else if (arg == "--letter") {
       _paperSize = QPrinter::Letter;
 #endif
+    } else if (arg.startsWith("--serverName=")) {
+      /* scriptServer has already handled this.  Skip it. */
     } else { // arg is not an option... must be a file
       if (new_fileList) { // if the file list has been used, clear it.
         if (dataPlotted) {

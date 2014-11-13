@@ -19,31 +19,42 @@ def b2str(val):
 class Client:
   """ An interface to a running kst session. 
 
-  Every class inside pykst accepts an instance of Client which it 
-  uses to interact with a kst session. Alternatively, the classes are 
-  accessable from the Client.  In addition, it holds functions which 
-  effect the entire kst session.
-      
-  If serverName is specified, creates a connection to either a running 
-  kst session with serverName, or if none exists, a new one.
-  If serverName is not specified, creates a connection to either the 
-  kst session with the name ``kstScript``, or if none exists, a new one. 
+  A client provides a connection to a running kst session.
+  The constructor creates a connection to either a running
+  kst session with name <server_name>, or if none exists, a new one.
+  If server_name is not specified, it creates a connection to either the
+  kst session with the name ``kstScript``, or if none exists, a new one.
+
+  The Client provides functions which effect the entire kst session,
+  provides convenience functions to create objects within kst (eg,
+  ``client.new_generated_vector(0, 1, 6)``), and provides
+  convenience functions to access objects already within kst (eg,
+  ``client.vector("V2")``.  This is the suggested method.
+
+  Alternatively, the constructor for every class inside pykst accepts
+  an instance of Client which it uses to interact with a kst session.
+
+  To connect to a kst session named ``kstSession`` (starting kst if necessary)::
+
+      import pykst as kst
+      client = kst.Client("kstSession")
+
   """
   
-  def __init__(self,serverName="kstScript"):
+  def __init__(self,server_name="kstScript"):
     self.ls=QtNetwork.QLocalSocket()
-    self.ls.connectToServer(serverName)
+    self.ls.connectToServer(server_name)
     self.ls.waitForConnected(300)
-    self.serverName=serverName
+    self.server_name=server_name
     if self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
-      #os.system("kst2 --serverName="+str(serverName)+"&")
-      subprocess.Popen(["kst2", "--serverName="+str(serverName)])
+      #os.system("kst2 --server_name="+str(server_name)+"&")
+      subprocess.Popen(["kst2", "--serverName="+str(server_name)])
       #time.sleep(1)
 
       while self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
-        self.ls.connectToServer(serverName)
+        self.ls.connectToServer(server_name)
         self.ls.waitForConnected(300)
-        self.serverName=serverName
+        self.server_name=server_name
     
   def send(self,command):
     """ Sends a command to kst and returns a response. 
@@ -118,6 +129,14 @@ class Client:
     tab must be greater or equal to 0 and less than tabCount(). 
     """
     self.send("setTab("+b2str(tab)+")")
+
+  def cleanup_layout(self, columns="Auto"):
+    """ Cleanup layout in the current tab.
+    
+     If columns is not set, use auto-layout.
+     
+    """
+    self.send("cleanupLayout("+b2str(columns)+")")
   
   def get_scalar_list(self):
     """ returns the scalar names from kst """
@@ -197,13 +216,13 @@ class Client:
     """
     return VectorScalar(self, "", "", 0, name, new=False)
 
-  def new_data_vector(self, filename, field, start=0, NFrames=-1,
+  def new_data_vector(self, filename, field, start=0, num_frames=-1,
                  skip=0, boxcarFirst=False, name="") :
     """ Create a New DataVector in kst.
     
     See :class:`DataVector`
     """
-    return DataVector(self, filename, field, start, NFrames,
+    return DataVector(self, filename, field, start, num_frames,
                       skip, boxcarFirst, name)
   
   def data_vector(self, name):
@@ -213,12 +232,12 @@ class Client:
     """
     return DataVector(self, "", "", name=name, new=False)
 
-  def new_generated_vector(self, X0, X1, N, name=""):
+  def new_generated_vector(self, x0, x1, n, name=""):
     """ Create a New GeneratedVector in kst.
     
     See :class:`GeneratedVector`
     """
-    return GeneratedVector(self, X0, X1, N, name)
+    return GeneratedVector(self, x0, x1, n, name)
 
   def generated_vector(self, name):
     """ Returns a GeneratedVector from kst given its name.
@@ -240,15 +259,25 @@ class Client:
     See :class:`EditableVector`
     """
     return EditableVector(self, None, name, new=False)
+
+
+  def get_vector_list(self):
+    """ returns the vector names from kst """
+    
+    x = str(self.send("getVectorList()"))
   
-  def new_data_matrix(self, filename, field, startX=0, startY=0, nX=-1, nY=-1, 
-                 minX=0, minY=0, dX=1, dY=1,name="") :
+    ret=x.split('|')
+    return ret
+
+  
+  def new_data_matrix(self, filename, field, start_x=0, start_y=0, num_x=-1, num_y=-1, 
+                 min_x=0, min_y=0, dx=1, dy=1,name="") :
     """ Create a New DataMatrix in kst.
     
     See :class:`DataMatrix`
     """
-    return DataMatrix(self, filename, field, startX, startY, nX, nY, 
-                 minX, minY, dX, dY,name)
+    return DataMatrix(self, filename, field, start_x, start_y, num_x, num_y, 
+                 min_x, min_y, dx, dy,name)
 
   def data_matrix(self, name):
     """ Returns a DataMatrix from kst given its name.
@@ -271,12 +300,12 @@ class Client:
     """
     return EditableMatrix(self, None, name, new=False)
   
-  def new_curve(self, xVector, yVector, name=""):
+  def new_curve(self, x_vector, y_vector, name=""):
     """ Create a New Curve in kst.
     
     See :class:`Curve`
     """
-    return Curve(self, xVector, yVector, name)
+    return Curve(self, x_vector, y_vector, name)
 
   def curve(self, name):
     """ Returns a Curve from kst given its name.
@@ -314,13 +343,13 @@ class Client:
     """
     return Equation(self, "", "", name, new=False)
 
-  def new_histogram(self, vector, bin_min=0, bin_max=1, n_bins=60, 
+  def new_histogram(self, vector, bin_min=0, bin_max=1, num_bins=60, 
                     normalization = 0, auto_bin = True,  name=""):
     """ Create a new histogram in kst.
     
     See :class:`Histogram`
     """
-    return Histogram(self, vector, bin_min, bin_max, n_bins, 
+    return Histogram(self, vector, bin_min, bin_max, num_bins, 
                      normalization, auto_bin, name)
 
 
@@ -371,12 +400,12 @@ class Client:
     """
     return Spectrum(self, "", name=name, new=False)
 
-  def new_linear_fit(self, xVector, yVector, weightvector = 0, name = ""):
+  def new_linear_fit(self, x_vector, y_vector, weightvector = 0, name = ""):
     """ Create a New Linear Fit in kst.
     
     See :class:`LinearFit`
     """
-    return LinearFit(self, xVector, yVector, weightvector, name)
+    return LinearFit(self, x_vector, y_vector, weightvector, name)
 
   def linear_fit(self, name):
     """ Returns a linear fit from kst given its name.
@@ -386,12 +415,12 @@ class Client:
     return LinearFit(self, "", "", 0, name, new=False)
 
 
-  def new_polynomial_fit(self, order, xVector, yVector, weightvector = 0, name = ""):
+  def new_polynomial_fit(self, order, x_vector, y_vector, weightvector = 0, name = ""):
     """ Create a New Polynomial Fit in kst.
     
     See :class:`PolynomialFit`
     """
-    return PolynomialFit(self, order, xVector, yVector, weightvector, name)
+    return PolynomialFit(self, order, x_vector, y_vector, weightvector, name)
 
   def polynomial_fit(self, name):
     """ Returns a polynomial fit from kst given its name.
@@ -401,15 +430,15 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
-  def new_label(self, text, pos=(0.5,0.5), rot=0, fontSize=12, 
-            bold=False, italic=False, fontColor="black", 
-            fontFamily="Serif", name="") :
+  def new_label(self, text, pos=(0.5,0.5), rot=0, font_size=12, 
+            bold=False, italic=False, font_color="black", 
+            font_family="Serif", name="") :
     """ Create a New Label in kst.
     
     See :class:`Label`
     """
-    return Label(self, text, pos, rot, fontSize, bold, italic, 
-                 fontColor, fontFamily, name)
+    return Label(self, text, pos, rot, font_size, bold, italic, 
+                 font_color, font_family, name)
 
   def label(self, name):
     """ Returns a Label from kst given its name.
@@ -419,16 +448,16 @@ class Client:
     return Label(self, "", name=name, new=False)
   
   def new_box(self, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
-          fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
-          strokeBrushColor="black", strokeBrushStyle=1, 
-          strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False, name="") :
+          fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
+          stroke_brush_color="black", stroke_brush_style=1, 
+          strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False, name="") :
     """ Create a New Box in kst.
     
     See :class:`Box`
     """
-    return Box(self, pos, size, rot, fillColor, fillStyle, strokeStyle, 
-               strokeWidth, strokeBrushColor, strokeBrushStyle, 
-               strokeJoinStyle, strokeCapStyle, fixAspect, name)
+    return Box(self, pos, size, rot, fill_color, fill_style, stroke_style, 
+               stroke_width, stroke_brush_color, stroke_brush_style, 
+               strokeJoinStyle, stroke_cap_style, fix_aspect, name)
 
   def box(self, name):
     """ Returns a Box from kst given its name.
@@ -438,14 +467,14 @@ class Client:
     return Box(self, name=name, new=False)
   
   def new_circle(self, pos=(0.1, 0.1), diameter=0.1,
-             fillColor="white",fillStyle=1,strokeStyle=1,
-             strokeWidth=1,strokeBrushColor="grey",strokeBrushStyle=1, name="") :
+             fill_color="white",fill_style=1,stroke_style=1,
+             stroke_width=1,stroke_brush_color="grey",stroke_brush_style=1, name="") :
     """ Create a New Circle in kst.
     
     See :class:`Circle`
     """
-    return Circle(self, pos, diameter, fillColor, fillStyle, strokeStyle, 
-                  strokeWidth, strokeBrushColor, strokeBrushStyle, name)
+    return Circle(self, pos, diameter, fill_color, fill_style, stroke_style, 
+                  stroke_width, stroke_brush_color, stroke_brush_style, name)
   
   def circle(self, name):
     """ Returns a Circle from kst given its name.
@@ -455,16 +484,16 @@ class Client:
     return Circle(self, name=name, new=False)
   
   def new_ellipse(self,pos=(0.1,0.1), size=(0.1,0.1),
-               rot=0, fillColor="white", fillStyle=1, strokeStyle=1,
-               strokeWidth=1, strokeBrushColor="black", strokeBrushStyle=1,
-               fixAspect=False, name="") :
+               rot=0, fill_color="white", fill_style=1, stroke_style=1,
+               stroke_width=1, stroke_brush_color="black", stroke_brush_style=1,
+               fix_aspect=False, name="") :
     """ Create a New Ellipse in kst.
     
     See :class:`Ellipse`
     """
-    return Ellipse(self,pos, size, rot, fillColor, fillStyle, strokeStyle, 
-                   strokeWidth, strokeBrushColor, strokeBrushStyle, 
-                   fixAspect, name)
+    return Ellipse(self,pos, size, rot, fill_color, fill_style, stroke_style, 
+                   stroke_width, stroke_brush_color, stroke_brush_style, 
+                   fix_aspect, name)
 
   def ellipse(self, name):
     """ Returns an ellipse from kst given its name.
@@ -474,14 +503,14 @@ class Client:
     return Ellipse(self, name=name, new=False)
   
   def new_line(self,pos=(0.1,0.1),length=0.1,rot=0,
-           strokeStyle=1,strokeWidth=1,strokeBrushColor="black",
-           strokeBrushStyle=1,strokeCapStyle=1, name="") :
+           stroke_style=1,stroke_width=1,stroke_brush_color="black",
+           stroke_brush_style=1,stroke_cap_style=1, name="") :
     """ Create a New Line in kst.
     
     See :class:`Line`
     """
-    return Line(self,pos, length, rot, strokeStyle, strokeWidth, 
-                strokeBrushColor, strokeBrushStyle, strokeCapStyle, name)
+    return Line(self,pos, length, rot, stroke_style, stroke_width, 
+                stroke_brush_color, stroke_brush_style, stroke_cap_style, name)
   
   def line(self, name):
     """ Returns a Line from kst given its name.
@@ -491,16 +520,16 @@ class Client:
     return Line(self, name=name, new=False)
 
   def new_arrow(self,pos=(0.1,0.1), length=0.1, rot=0, 
-            arrowAtStart = False, arrowAtEnd = True, arrowSize = 12.0, 
-            strokeStyle=1, strokeWidth=1, strokeBrushColor="black",
-            strokeBrushStyle=1, strokeCapStyle=1, name="") :
+            arror_at_start = False, arrow_at_end = True, arrow_size = 12.0, 
+            stroke_style=1, stroke_width=1, stroke_brush_color="black",
+            stroke_brush_style=1, stroke_cap_style=1, name="") :
     """ Create a New Arrow in kst.
     
     See :class:`Arrow`
     """
-    return Arrow(self,pos, length, rot, arrowAtStart, arrowAtEnd, arrowSize, 
-          strokeStyle, strokeWidth, strokeBrushColor, strokeBrushStyle, 
-          strokeCapStyle, name)
+    return Arrow(self,pos, length, rot, arror_at_start, arrow_at_end, arrow_size, 
+          stroke_style, stroke_width, stroke_brush_color, stroke_brush_style, 
+          stroke_cap_style, name)
     
   def arrow(self, name):
     """ Returns an Arrow from kst given its name.
@@ -537,17 +566,17 @@ class Client:
     """
     return SVG(self, "", name = name, new=False)
 
-  def new_plot(self,pos=(0.1,0.1),size=(0,0),rot=0,columns=0,
-           fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
-           strokeBrushColor="black", strokeBrushStyle=1, 
-           strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False, name="") :
+  def new_plot(self,pos=(0.1,0.1),size=(0,0),rot=0,font_size = 0, columns=0,
+           fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
+           stroke_brush_color="black", stroke_brush_style=1, 
+           strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False, name="") :
     """ Create a New Plot in kst.
     
     See :class:`Plot`
     """
-    return Plot(self, pos, size, rot, columns, fillColor, fillStyle, strokeStyle,
-                strokeWidth, strokeBrushColor, strokeBrushStyle, 
-                strokeJoinStyle, strokeCapStyle, fixAspect, name)
+    return Plot(self, pos, size, rot, font_size, columns, fill_color, fill_style, stroke_style,
+                stroke_width, stroke_brush_color, stroke_brush_style, 
+                strokeJoinStyle, stroke_cap_style, fix_aspect, name)
   
   def plot(self, name):
     """ Returns a Plot from kst given its name.
@@ -855,8 +884,8 @@ class DataVector(VectorBase):
   :param field: the name of the vector in the data source.  
   :param start: The starting index of the vector.  
                 start = -1 for count from end.
-  :param NFrames: The number of frames to read.  
-                  NFrames = -1 for read to end.
+  :param num_frames: The number of frames to read.  
+                  num_frames = -1 for read to end.
   :param skip: The number of frames per sample read.  
                skip = 0 to read every sample.
   :param boxcarFirst: apply a boxcar filter before skiping.
@@ -870,7 +899,7 @@ class DataVector(VectorBase):
     v = client.new_data_vector("tmp.dat", "INDEX", 3, 10, 2, False) 
     
   """
-  def __init__(self, client, filename, field, start=0, NFrames=-1,
+  def __init__(self, client, filename, field, start=0, num_frames=-1,
                skip=0, boxcarFirst=False, name="", new=True) :
     VectorBase.__init__(self,client)
 
@@ -878,26 +907,26 @@ class DataVector(VectorBase):
       self.client.send("newDataVector()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
-      self.change(filename, field, start, NFrames, skip, boxcarFirst)
+      self.change(filename, field, start, num_frames, skip, boxcarFirst)
     else:
       self.handle = name
 
-  def change(self, filename, field, start, NFrames, skip, boxcarFirst):
+  def change(self, filename, field, start, num_frames, skip, boxcarFirst):
     """ Change the parameters of a data vector.
     
     :param filename: The name of the file/data source to read the scalar from.
     :param field: the name of the vector in the data source.  
     :param start: The starting index of the vector.  
                   start = -1 for count from end.
-    :param NFrames: The number of frames to read.  
-                    NFrames = -1 for read to end.
+    :param num_frames: The number of frames to read.  
+                    num_frames = -1 for read to end.
     :param skip: The number of frames per sample read.  
                 skip = 0 to read every sample.
     :param boxcarFirst: apply a boxcar filter before skiping.
     
     """
     self.client.send_si(self.handle, "change("+filename+","+field+","
-                        +b2str(start)+","+b2str(NFrames)+","+b2str(skip)
+                        +b2str(start)+","+b2str(num_frames)+","+b2str(skip)
                         +","+b2str(boxcarFirst)+")")
 
   def field(self):
@@ -931,9 +960,9 @@ class GeneratedVector(VectorBase):
   This class represents a vector you would create via 
   "Create>Vector>Generate" from the menubar inside kst.
 
-  :param X0: The first value in the vector.
-  :param X1: The last value in the vector.
-  :param N: The number of evenly spaced values in the vector.
+  :param x0: The first value in the vector.
+  :param x1: The last value in the vector.
+  :param n: The number of evenly spaced values in the vector.
 
   To create the vector {0, 0.2, 0.4, 0.6, 0.8, 1.0}::
 
@@ -942,7 +971,7 @@ class GeneratedVector(VectorBase):
     v = client.new_generated_vector(0, 1, 6) 
     
   """
-  def __init__(self, client, X0, X1, N, name="", new=True) :
+  def __init__(self, client, x0, x1, n, name="", new=True) :
     VectorBase.__init__(self,client)
 
     if (new == True):
@@ -950,20 +979,20 @@ class GeneratedVector(VectorBase):
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
-      self.change(X0, X1, N)
+      self.change(x0, x1, n)
       self.set_name(name)
     else:
       self.handle = name      
 
-  def change(self,X0, X1, N):
+  def change(self,x0, x1, n):
     """ Change the parameters of a Generated Vector inside kst.
     
-    :param X0: The first value in the vector.
-    :param X1: The last value in the vector.
-    :param N: The number of evenly spaced values in the vector.
+    :param x0: The first value in the vector.
+    :param x1: The last value in the vector.
+    :param n: The number of evenly spaced values in the vector.
     """
-    self.client.send_si(self.handle, "change("+b2str(X0)+","+b2str(X1)+
-                        ","+b2str(N)+")")
+    self.client.send_si(self.handle, "change("+b2str(x0)+","+b2str(x1)+
+                        ","+b2str(n)+")")
 
 class EditableVector(VectorBase):
   """ A vector in kst, which is editable from python.
@@ -1059,7 +1088,7 @@ class Matrix(Object):
 
   def min_y(self):
     """  Returns the minimum X location of the matrix, for when the matrix is used in an image. """
-    return self.client.send_si(self.handle, "minX()")
+    return self.client.send_si(self.handle, "minY()")
     
   def get_numpy_array(self) :
     """ get a numpy array which contains the kst matrix values """
@@ -1082,13 +1111,13 @@ class DataMatrix(Matrix):
 
   :param filename: The name of the file/data source to read the scalar from.
   :param field: the name of the vector in the data source.  
-  :param startX/Y: the x/y index to start reading from. startX/Y = -1 
+  :param start_x/start_y: the x/y index to start reading from. start_x/Y = -1 
                    to count from the right/bottom.
-  :param nX/Y: the number of columns/rows to read.  nX/Y = -1 to read
+  :param num_x/num_y: the number of columns/rows to read.  num_x/Y = -1 to read
                to the end.
-  :param minX/Y: Hint to Images of the coordinates corresponding to the
+  :param min_x/min_y: Hint to Images of the coordinates corresponding to the
                  the left/bottom of the Matrix
-  :param stepX/Y: Hint to Images of the spacing between points.
+  :param dx/dy: Hint to Images of the spacing between points.
 
   To create a matrix from 'foo.png' with field '1'::
   
@@ -1097,8 +1126,8 @@ class DataMatrix(Matrix):
     v = client.new_data_matrix("foo.png", "1") 
     
   """
-  def __init__(self,client,filename,field,startX=0,startY=0,nX=-1,nY=-1,
-               minX=0, minY=0, dX=1, dY=1,name="", new=True) :
+  def __init__(self,client,filename,field,start_x=0,start_y=0,num_x=-1,num_y=-1,
+               min_x=0, min_y=0, dx=1, dy=1,name="", new=True) :
     Matrix.__init__(self,client)
 
     if (new == True):
@@ -1106,29 +1135,29 @@ class DataMatrix(Matrix):
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
-      self.change(filename,field,startX,startY,nX,nY,minX,minY,dX,dY)
+      self.change(filename,field,start_x,start_y,num_x,num_y,min_x,min_y,dx,dy)
     else:
       self.handle = name      
 
-  def change(self,filename,field,startX=0,startY=0,nX=-1,nY=-1,
-             minX=0, minY=0, dX=1, dY=1):
+  def change(self,filename,field,start_x=0,start_y=0,num_x=-1,num_y=-1,
+             min_x=0, min_y=0, dx=1, dy=1):
     """ Change the parameters if a Data Matrix inside kst.
     
     :param filename: The name of the file/data source to read the scalar from.
     :param field: the name of the vector in the data source.  
-    :param startX/Y: the x/y index to start reading from. startX/Y = -1 
+    :param start_x/start_y: the x/y index to start reading from. start_x/y = -1 
                     to count from the right/bottom.
-    :param nX/Y: the number of columns/rows to read.  nX/Y = -1 to read
+    :param num_x/num_y: the number of columns/rows to read.  num_x/Y = -1 to read
                 to the end.
-    :param minX/Y: Hint to Images of the coordinates corresponding to the
+    :param min_x/min_y: Hint to Images of the coordinates corresponding to the
                   the left/bottom of the Matrix
-    :param stepX/Y: Hint to Images of the spacing between points.
+    :param dx/dy: Hint to Images of the spacing between points.
     """    
     self.client.send_si(self.handle, "change("+b2str(filename)+","+
-                        b2str(field)+","+b2str(startX)+","+
-                        b2str(startY)+","+b2str(nX)+","+b2str(nY)+","+
-                        b2str(minX)+","+b2str(minY)+","+b2str(dX)+","+
-                        b2str(dY)+")")
+                        b2str(field)+","+b2str(start_x)+","+
+                        b2str(start_y)+","+b2str(num_x)+","+b2str(num_y)+","+
+                        b2str(min_x)+","+b2str(min_y)+","+b2str(dx)+","+
+                        b2str(dy)+")")
 
   def field(self):
     """  Returns the fieldname. """
@@ -1144,7 +1173,7 @@ class DataMatrix(Matrix):
 
   def start_y(self):
     """  Returns the Y index of the matrix in the file """
-    return self.client.send_si(self.handle, "startX()")
+    return self.client.send_si(self.handle, "startY()")
 
 class EditableMatrix(Matrix):
   """ A matrix in kst, which is editable from python.
@@ -1229,8 +1258,8 @@ class Curve(Relation):
   "Create>Curve" from the menubar inside kst.  The parameters of this 
   function mirror the parameters within "Create>Curve".
 
-  :param xVector: The vector which specifies the X coordinates of each point.
-  :param xVector: The vector which specifies the Y coordinates of each point.
+  :param x_vector: The vector which specifies the X coordinates of each point.
+  :param x_vector: The vector which specifies the Y coordinates of each point.
   
   Use the convenience function in client to create a curve in kst session 
   "client" of vectors v1 and v2::
@@ -1238,13 +1267,13 @@ class Curve(Relation):
     c1 = client.new_curve(v1, v2)
   
   """
-  def __init__(self,client, xVector, yVector, name="", new=True) :
+  def __init__(self,client, x_vector, y_vector, name="", new=True) :
     Relation.__init__(self,client)
 
     if (new == True):
       self.client.send("newCurve()")
-      self.client.send("setXVector("+xVector.handle+")")
-      self.client.send("setYVector("+yVector.handle+")")
+      self.client.send("setXVector("+x_vector.handle+")")
+      self.client.send("setYVector("+y_vector.handle+")")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
       self.set_name(name)
@@ -1353,7 +1382,7 @@ class Curve(Relation):
     """
     self.client.send_si(self.handle, "setPointDensity("+b2str(density)+")")
 
-  def set_point_type(self,pointType):
+  def set_point_type(self,point_type):
     """ Sets the point type.  
     
     The available point types are:: 
@@ -1367,7 +1396,7 @@ class Curve(Relation):
      12: filled diamond
     
     """
-    self.client.send_si(self.handle, "setPointType("+b2str(pointType)+")")
+    self.client.send_si(self.handle, "setPointType("+b2str(point_type)+")")
 
   def set_head_type(self,x):
     """ Sets the head point type.  See set_point_type for details."""
@@ -1583,13 +1612,13 @@ class Equation(Object) :
     else:
       self.handle = name
 
-  def Y(self) :
+  def y(self) :
     """ a vector containing the equation  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(O)")
     return vec
 
-  def X(self) :
+  def x(self) :
     """ a vector containing the x vector  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(XO)")
@@ -1605,7 +1634,7 @@ class Histogram(Object) :
     :param vector: the vector to take the histogram of
     :param bin_min: the low end of the lowest bin
     :param bin_max: the high end of the highest bin
-    :param n_bins: the number of bins
+    :param num_bins: the number of bins
     :param normalization: see below
     :param auto_bin: if True, set xmin and xmax based on the vector
     
@@ -1615,7 +1644,7 @@ class Histogram(Object) :
      2: Fraction in the bin   3: Peak is normalized to 1.0
     
   """
-  def __init__(self, client, vector, bin_min, bin_max, n_bins, 
+  def __init__(self, client, vector, bin_min, bin_max, num_bins, 
                normalization = 0, auto_bin = False, 
                name="", new=True) :
     Object.__init__(self,client)
@@ -1626,7 +1655,7 @@ class Histogram(Object) :
       self.client.send("change(" + vector.handle + "," +
                        b2str(bin_min) + "," +
                        b2str(bin_max) + "," +
-                       b2str(n_bins) + "," +
+                       b2str(num_bins) + "," +
                        b2str(normalization) + "," +
                        b2str(auto_bin) + ")")
 
@@ -1636,26 +1665,26 @@ class Histogram(Object) :
     else:
       self.handle = name
 
-  def Y(self) :
+  def y(self) :
     """ a vector containing the histogram values  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(H)")
     return vec
 
-  def X(self) :
+  def x(self) :
     """ a vector containing the bin centers  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(B)")
     return vec
 
-  def change(self, vector, bin_min, bin_max, n_bins, 
+  def change(self, vector, bin_min, bin_max, num_bins, 
              normalization = 0, auto_bin = False):
     """ Change Histogram parameters.
     
     :param vector: the vector to take the histogram of
     :param bin_min: the low end of the lowest bin
     :param bin_max: the high end of the highest bin
-    :param n_bins: the number of bins
+    :param num_bins: the number of bins
     :param normalization: See :class:`Histogram`
     :param auto_bin: if True, set xmin and xmax based on the vector
 
@@ -1664,7 +1693,7 @@ class Histogram(Object) :
                         vector.handle + "," +
                         b2str(bin_min) + "," +
                         b2str(bin_max) + "," +
-                        b2str(n_bins) + "," +
+                        b2str(num_bins) + "," +
                         b2str(normalization) + "," +
                         b2str(auto_bin) + ")")
 
@@ -1678,7 +1707,7 @@ class Histogram(Object) :
     retval = self.client.send_si(self.handle, "xMax()")
     return retval
 
-  def n_bins(self):
+  def num_bins(self):
     """ the number of bins """
     retval = self.client.send_si(self.handle, "nBins()")
     return retval
@@ -1768,13 +1797,13 @@ class Spectrum(Object) :
     else:
       self.handle = name
 
-  def Y(self) :
+  def y(self) :
     """ a vector containing the spectrum  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(S)")
     return vec
 
-  def X(self) :
+  def x(self) :
     """ a vector containing the frequency bins  """
     vec = VectorBase(self.client)
     vec.handle = self.client.send_si(self.handle, "outputVector(F)")
@@ -2127,9 +2156,6 @@ class ViewItem(NamedObject):
     
     This is equivalent to setting Dimensions>Rotation within a view item dialog.
     
-    Scalars can be included by wrapping their names in ``[ ]``. eg ``[(X1)]``
-    
-    Labels support a subset of latex.
     """
     self.client.send_si(self.handle, b2str("setRotation("+b2str(rot)+")"))
 
@@ -2147,11 +2173,11 @@ class Label(ViewItem) :
   :param pos: a 2 element tuple ``(x,y)`` specifying the position. 
               (0,0) is top left.  (1,1) is bottom right.
   :param rot: rotation of the label in degrees.
-  :param fontSize: size of the label in points, when the printed at the
+  :param font_size: size of the label in points, when the printed at the
                    reference size.
-  :param fontColor: Colors are given by a name such as ``red`` or a 
+  :param font_color: Colors are given by a name such as ``red`` or a 
                     hex number such as ``#FF0000``. 
-  :param fontFamily: The font family.  eg, TimeNewRoman.
+  :param font_family: The font family.  eg, TimeNewRoman.
   
   Scalars and scalar equations can be displayed live in labels. 
   When the scalar is updated, the label is updated.
@@ -2186,12 +2212,12 @@ class Label(ViewItem) :
   
     import pykst as kst
     client = kst.Client()
-    L = client.new_label("Test Label", (0.25, 0.25), fontSize=18)
+    L = client.new_label("Test Label", (0.25, 0.25), font_size=18)
 
   """
-  def __init__(self,client, text, pos=(0.5,0.5), rot=0, fontSize=12, 
-               bold=False, italic=False, fontColor="black", 
-               fontFamily="Serif", name="", new=True) :
+  def __init__(self,client, text, pos=(0.5,0.5), rot=0, font_size=12, 
+               bold=False, italic=False, font_color="black", 
+               font_family="Serif", name="", new=True) :
     ViewItem.__init__(self,client)
 
     if (new == True):
@@ -2200,12 +2226,12 @@ class Label(ViewItem) :
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
       self.set_text(text)
-      self.set_label_font_size(fontSize)
+      self.set_label_font_size(font_size)
       self.set_pos(pos)
       self.set_fixed_aspect_ratio(True)
       self.set_rotation(rot)
-      self.set_font_color(fontColor)
-      self.set_font_family(fontFamily)
+      self.set_font_color(font_color)
+      self.set_font_family(font_family)
 
       self.set_font_bold(bold)
       self.set_font_italic(italic)
@@ -2302,15 +2328,15 @@ class Box(ViewItem) :
   :param size: a 2 element tuple ``(w,h)`` specifying the size.
               ``(1,1)`` is the size of the window.
   :param rotation: rotation of the label in degrees.
-  :param fillColor: the background color.
-  :param fillStyle: the background fill style.  See set_fill_style.
-  :param strokeStyle: see set_stroke_style
-  :param strokeWidth: the pen width for the box outline.
-  :param strokeBrushColor: the box outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
+  :param fill_color: the background color.
+  :param fill_style: the background fill style.  See set_fill_style.
+  :param stroke_style: see set_stroke_style
+  :param stroke_width: the pen width for the box outline.
+  :param stroke_brush_color: the box outline color
+  :param stroke_brush_style: see set_stroke_brush_style
   :param strokeJoinStyle: see set_stroke_join_style
-  :param strokeCapStyle: see set_stroke_cap_style
-  :param fixAspect: if true, the box will have a fixed aspect ratio.
+  :param stroke_cap_style: see set_stroke_cap_style
+  :param fix_aspect: if true, the box will have a fixed aspect ratio.
 
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2323,13 +2349,13 @@ class Box(ViewItem) :
     import pykst as kst
     client = kst.Client()
     ...
-    B = client.new_box((0.25, 0.25), (0.2, 0.1), fillColor="blue")
+    B = client.new_box((0.25, 0.25), (0.2, 0.1), fill_color="blue")
   
   """
   def __init__(self,client, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
-               fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
-               strokeBrushColor="black", strokeBrushStyle=1, 
-               strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False,
+               fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
+               stroke_brush_color="black", stroke_brush_style=1, 
+               strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False,
                name="", new=True) :
     ViewItem.__init__(self,client)
 
@@ -2341,18 +2367,18 @@ class Box(ViewItem) :
       self.set_pos(pos)
       self.set_size(size)
 
-      self.set_fixed_aspect_ratio(fixAspect)
+      self.set_fixed_aspect_ratio(fix_aspect)
       self.set_rotation(rot)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_fill_color(fillColor)
-      self.set_fill_style(fillStyle)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_fill_color(fill_color)
+      self.set_fill_style(fill_style)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
       self.set_stroke_join_style(strokeJoinStyle)
-      self.set_stroke_cap_style(strokeCapStyle)
+      self.set_stroke_cap_style(stroke_cap_style)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2379,12 +2405,12 @@ class Circle(ViewItem) :
   :param pos: a 2 element tuple ``(x,y)`` specifying the position. 
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param diameter: the diameter of the circle.  1 is the width of the window.
-  :param fillColor: the background color.
-  :param fillStyle: the background fill style.  See set_fill_style.
-  :param strokeStyle: see set_stroke_style
-  :param strokeWidth: the pen width for the circle outline.
-  :param strokeBrushColor: the circle outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
+  :param fill_color: the background color.
+  :param fill_style: the background fill style.  See set_fill_style.
+  :param stroke_style: see set_stroke_style
+  :param stroke_width: the pen width for the circle outline.
+  :param stroke_brush_color: the circle outline color
+  :param stroke_brush_style: see set_stroke_brush_style
   
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2397,12 +2423,12 @@ class Circle(ViewItem) :
     import pykst as kst
     client = kst.Client()
     ...
-    Cr = client.new_circle((0.5, 0.5), 0.2, fillColor="red")
+    Cr = client.new_circle((0.5, 0.5), 0.2, fill_color="red")
   
   """
   def __init__(self,client,pos=(0.1, 0.1), diameter=0.1,
-               fillColor="white",fillStyle=1,strokeStyle=1,
-               strokeWidth=1,strokeBrushColor="grey",strokeBrushStyle=1, 
+               fill_color="white",fill_style=1,stroke_style=1,
+               stroke_width=1,stroke_brush_color="grey",stroke_brush_style=1, 
                name="", new=True) :
     ViewItem.__init__(self,client)
 
@@ -2414,13 +2440,13 @@ class Circle(ViewItem) :
       self.set_pos(pos)
       self.set_diameter(diameter)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_fill_color(fillColor)
-      self.set_fill_style(fillStyle)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_fill_color(fill_color)
+      self.set_fill_style(fill_style)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2452,12 +2478,12 @@ class Ellipse(ViewItem) :
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param size: a 2 element tuple ``(w,h)`` specifying the size.
               ``(1,1)`` is the size of the window.
-  :param fillColor: the background color.
-  :param fillStyle: the background fill style.  See set_fill_style.
-  :param strokeStyle: see set_stroke_style
-  :param strokeWidth: the pen width for the ellipse outline.
-  :param strokeBrushColor: the ellipse outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
+  :param fill_color: the background color.
+  :param fill_style: the background fill style.  See set_fill_style.
+  :param stroke_style: see set_stroke_style
+  :param stroke_width: the pen width for the ellipse outline.
+  :param stroke_brush_color: the ellipse outline color
+  :param stroke_brush_style: see set_stroke_brush_style
   
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2470,13 +2496,13 @@ class Ellipse(ViewItem) :
     import pykst as kst
     client = kst.Client()
     ...
-    E = client.new_ellipse((0.25, 0.25), (0.2, 0.1), fillColor="green")
+    E = client.new_ellipse((0.25, 0.25), (0.2, 0.1), fill_color="green")
   
   """
   def __init__(self,client,pos=(0.1,0.1), size=(0.1,0.1),
-               rot=0, fillColor="white", fillStyle=1, strokeStyle=1,
-               strokeWidth=1, strokeBrushColor="black", strokeBrushStyle=1,
-               fixAspect=False, name="", new=True) :
+               rot=0, fill_color="white", fill_style=1, stroke_style=1,
+               stroke_width=1, stroke_brush_color="black", stroke_brush_style=1,
+               fix_aspect=False, name="", new=True) :
     ViewItem.__init__(self,client)
 
     if (new == True):
@@ -2486,20 +2512,20 @@ class Ellipse(ViewItem) :
 
       self.set_pos(pos)
       self.set_size(size)
-      if fixAspect==True:
+      if fix_aspect==True:
           self.set_fixed_aspect_ratio(True)
       else:
           self.set_fixed_aspect_ratio(False)
 
       self.set_rotation(rot)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_fill_color(fillColor)
-      self.set_fill_style(fillStyle)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_fill_color(fill_color)
+      self.set_fill_style(fill_style)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2528,11 +2554,11 @@ class Line(ViewItem) :
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param length: The length of the line.  1 is the width of the window.
   :param rot: rotation of the line in degrees.
-  :param strokeStyle: see set_stroke_style
-  :param strokeWidth: the pen width for the ellipse outline.
-  :param strokeBrushColor: the ellipse outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
-  :param strokeCapStyle: see set_stroke_cap_style
+  :param stroke_style: see set_stroke_style
+  :param stroke_width: the pen width for the ellipse outline.
+  :param stroke_brush_color: the ellipse outline color
+  :param stroke_brush_style: see set_stroke_brush_style
+  :param stroke_cap_style: see set_stroke_cap_style
 
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2550,8 +2576,8 @@ class Line(ViewItem) :
 
   """
   def __init__(self,client,pos=(0.1,0.1),length=0.1,rot=0,
-               strokeStyle=1,strokeWidth=1,strokeBrushColor="black",
-               strokeBrushStyle=1,strokeCapStyle=1, name="", new=True) :
+               stroke_style=1,stroke_width=1,stroke_brush_color="black",
+               stroke_brush_style=1,stroke_cap_style=1, name="", new=True) :
     ViewItem.__init__(self,client)
 
     if (new == True):
@@ -2564,12 +2590,12 @@ class Line(ViewItem) :
       self.set_length(length)
       self.set_rotation(rot)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
-      self.set_stroke_cap_style(strokeCapStyle)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
+      self.set_stroke_cap_style(stroke_cap_style)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2602,14 +2628,14 @@ class Arrow(ViewItem) :
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param length: The length of the line.  1 is the width of the window.
   :param rot: rotation of the line in degrees.
-  :param arrowAtStart: if True, draw an arrow at the start of the line.
-  :param arrowAtEnd: if True, draw an arrow at the end of the line.
-  :param arrowSize: the size of the arrow.
-  :param strokeStyle: see set_stroke_style.
-  :param strokeWidth: the pen width for the ellipse outline.
-  :param strokeBrushColor: the ellipse outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
-  :param strokeCapStyle: see set_stroke_cap_style
+  :param arror_at_start: if True, draw an arrow at the start of the line.
+  :param arrow_at_end: if True, draw an arrow at the end of the line.
+  :param arrow_size: the size of the arrow.
+  :param stroke_style: see set_stroke_style.
+  :param stroke_width: the pen width for the ellipse outline.
+  :param stroke_brush_color: the ellipse outline color
+  :param stroke_brush_style: see set_stroke_brush_style
+  :param stroke_cap_style: see set_stroke_cap_style
 
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2622,13 +2648,13 @@ class Arrow(ViewItem) :
     import pykst as kst
     client = kst.Client()
     ...
-    Ln = client.new_arrow((0.25, 0.25), 0.2, rot=15, arrowAtStart=True)
+    Ln = client.new_arrow((0.25, 0.25), 0.2, rot=15, arror_at_start=True)
     
   """
   def __init__(self,client,pos=(0.1,0.1), length=0.1, rot=0, 
-               arrowAtStart = False, arrowAtEnd = True, arrowSize = 12.0, 
-               strokeStyle=1, strokeWidth=1, strokeBrushColor="black",
-               strokeBrushStyle=1, strokeCapStyle=1, name="", new=True) :
+               arror_at_start = False, arrow_at_end = True, arrow_size = 12.0, 
+               stroke_style=1, stroke_width=1, stroke_brush_color="black",
+               stroke_brush_style=1, stroke_cap_style=1, name="", new=True) :
     ViewItem.__init__(self,client)
 
     if (new == True):
@@ -2640,15 +2666,15 @@ class Arrow(ViewItem) :
       self.set_length(length)
       self.set_rotation(rot)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
-      self.set_stroke_cap_style(strokeCapStyle)
-      self.set_arrow_at_start(arrowAtStart)
-      self.set_arrow_at_end(arrowAtEnd)
-      self.set_arrow_size(arrowSize)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
+      self.set_stroke_cap_style(stroke_cap_style)
+      self.set_arrow_at_start(arror_at_start)
+      self.set_arrow_at_end(arrow_at_end)
+      self.set_arrow_size(arrow_size)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2667,8 +2693,8 @@ class Arrow(ViewItem) :
     else:
       self.client.send_si(self.handle, b2str("arrowAtEnd(False)"))
 
-  def set_arrow_size(self, arrowSize) :
-    self.client.send_si(self.handle, b2str("arrowHeadScale("+b2str(arrowSize)+")"))
+  def set_arrow_size(self, arrow_size) :
+    self.client.send_si(self.handle, b2str("arrowHeadScale("+b2str(arrow_size)+")"))
 
   def set_length(self, length):
     """ set the length of the line.
@@ -2740,7 +2766,7 @@ class Picture(ViewItem) :
     self.client.send_si(self.handle,"setGeoX("+b2str(width)+")")
   
 
-  def setPicture(self,pic):
+  def set_picture(self,pic):
     """ BUG: aspect ratio is not changed. There is no parellel for this 
     function within the kst GUI. """
     self.client.send_si(self.handle, b2str("setPicture("+b2str(pic)+")"))
@@ -2831,17 +2857,18 @@ class Plot(ViewItem) :
   :param size: a 2 element tuple ``(w,h)`` specifying the size.
               ``(1,1)`` is the size of the window.
               ``(0,0)``, the default, specifies auto placement.
+  :param font_size: font size for labels in the plot.  kst default if 0.
   :param rotation: rotation of the label in degrees.
   :param columns: auto-place the plot, reformatting into this many columns.
-  :param fillColor: the background color.
-  :param fillStyle: the background fill style.  See set_fill_style.
-  :param strokeStyle: see set_stroke_style
-  :param strokeWidth: the pen width for the plot outline.
-  :param strokeBrushColor: the plot outline color
-  :param strokeBrushStyle: see set_stroke_brush_style
+  :param fill_color: the background color.
+  :param fill_style: the background fill style.  See set_fill_style.
+  :param stroke_style: see set_stroke_style
+  :param stroke_width: the pen width for the plot outline.
+  :param stroke_brush_color: the plot outline color
+  :param stroke_brush_style: see set_stroke_brush_style
   :param strokeJoinStyle: see set_stroke_join_style
-  :param strokeCapStyle: see set_stroke_cap_style
-  :param fixAspect: if true, the plot will have a fixed aspect ratio.
+  :param stroke_cap_style: see set_stroke_cap_style
+  :param fix_aspect: if true, the plot will have a fixed aspect ratio.
 
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -2859,10 +2886,11 @@ class Plot(ViewItem) :
 
   """
   def __init__(self,client,pos=(0,0),size=(0,0),rot=0,
+               font_size = 0,
                columns = 0,
-               fillColor="white", fillStyle=1, strokeStyle=1, strokeWidth=1,
-               strokeBrushColor="black", strokeBrushStyle=1, 
-               strokeJoinStyle=1, strokeCapStyle=1, fixAspect=False,
+               fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
+               stroke_brush_color="black", stroke_brush_style=1, 
+               strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False,
                name="", new=True) :
     ViewItem.__init__(self,client)
 
@@ -2882,18 +2910,19 @@ class Plot(ViewItem) :
         self.set_pos(pos)
         self.set_size(size)
 
-      self.set_fixed_aspect_ratio(fixAspect)
+      self.set_global_font(font_size = font_size)
+      self.set_fixed_aspect_ratio(fix_aspect)
       self.set_rotation(rot)
 
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_fill_color(fillColor)
-      self.set_fill_style(fillStyle)
-      self.set_stroke_style(strokeStyle)
-      self.set_stroke_width(strokeWidth)
-      self.set_stroke_brush_color(strokeBrushColor)
-      self.set_stroke_brush_style(strokeBrushStyle)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_fill_color(fill_color)
+      self.set_fill_style(fill_style)
+      self.set_stroke_style(stroke_style)
+      self.set_stroke_width(stroke_width)
+      self.set_stroke_brush_color(stroke_brush_color)
+      self.set_stroke_brush_style(stroke_brush_style)
       self.set_stroke_join_style(strokeJoinStyle)
-      self.set_stroke_cap_style(strokeCapStyle)
+      self.set_stroke_cap_style(stroke_cap_style)
       self.set_name(name)
     else:
       self.handle = name      
@@ -2903,11 +2932,11 @@ class Plot(ViewItem) :
     """ Add a curve or an image to the plot. """
     self.client.send_si(self.handle, "addRelation(" + relation.handle + ")")
 
-  def set_x_range(self,x0 = 0.0, x1 = 10.0) :
+  def set_x_range(self,x0, x1) :
     """ Set X zoom range from x0 to x1 """
     self.client.send_si(self.handle, "setXRange("+b2str(x0)+","+b2str(x1)+")")
 
-  def set_y_range(self, y0 = 0.0, y1 = 10.0) :
+  def set_y_range(self, y0, y1) :
     """ Set Y zoom range from y0 to y1 """
     self.client.send_si(self.handle, "setYRange("+b2str(y0)+","+b2str(y1)+")")
 
@@ -2935,33 +2964,34 @@ class Plot(ViewItem) :
     """ Set Y zoom range to spike insensitive autoscale """
     self.client.send_si(self.handle, "setYNoSpike()")
 
-  def set_x_ac(self, r=0.2) :
+  def set_x_ac(self, r) :
     """ Set X zoom range to fixed range, centered around the mean.  
     
     Similar to AC coupling on an oscilloscope. 
     """
     self.client.send_si(self.handle, "setXAC("+b2str(r)+")")
 
-  def set_y_ac(self, r=0.2) :
+  def set_y_ac(self, r) :
     """ Set Y zoom range to fixed range, centered around the mean.  
     
     Similar to AC coupling on an oscilloscope. 
     """
     self.client.send_si(self.handle, "setYAC("+b2str(r)+")")
 
-  def set_global_font(self, family="", bold=False, italic=False) :
+  def set_global_font(self, family="", font_size = 0, bold=False, italic=False) :
     """ Set the global plot font.  
     
     By default, the axis labels all use this, unless they have been set 
     to use their own.
     
     If the parameter 'family' is empty, the font family will be unchanged.
+    If the parameter 'font_size' is 0, the font size will be unchanged.
     The font will be bold if parameter 'bold' is set to 'bold' or 'True'.
     The font will be italic if parameter 'italic' is set to 'italic' 
     or 'True'.
     """
     self.client.send_si(self.handle, "setGlobalFont("+family+","+
-                        b2str(bold)+","+b2str(italic)+")")
+                        b2str(font_size)+","+b2str(bold)+","+b2str(italic)+")")
 
   def set_top_label(self, label="") :
     """ Set the plot top label """
@@ -3000,13 +3030,13 @@ class Plot(ViewItem) :
     per unit (square pixels) """
     self.client.send_si(self.handle,  "normalizeXtoY()")
 
-  def set_log_x(self) :
+  def set_log_x(self, log_mode = True) :
     """ Set X axis to log mode. """
-    self.client.send_si(self.handle,  "setLogX()")
+    self.client.send_si(self.handle,  "setLogX("+b2str(log_mode) + ")")
 
-  def set_log_y(self) :
-    """ Set X axis to log mode. """
-    self.client.send_si(self.handle,  "setLogY()")
+  def set_log_y(self, log_mode = True) :
+    """ Set Y axis to log mode. """
+    self.client.send_si(self.handle,  "setLogY("+b2str(log_mode) + ")")
 
   def set_y_axis_reversed(self, reversed=True) :
     """ set the Y axis to decreasing from bottom to top. """
@@ -3061,7 +3091,7 @@ class Button(ViewItem) :
     self.handle=self.client.send("endEdit()")
 
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    socket.connectToServer(client.serverName)
+    socket.connectToServer(client.server_name)
     socket.waitForConnected(300)
     socket.write(b2str("attachTo("+self.handle+")"))
     
@@ -3092,7 +3122,7 @@ class LineEdit(ViewItem) :
     self.handle=self.client.send("endEdit()")
 
     self.handle.remove(0,self.handle.indexOf("ing ")+4)
-    socket.connectToServer(b2str(client.serverName))
+    socket.connectToServer(b2str(client.server_name))
     socket.waitForConnected(300)
     socket.write(b2str("attachTo("+self.handle+")"))
     
