@@ -292,7 +292,6 @@ QString PlotSI::setLogX(QString &command) {
 
 
 QString PlotSI::setLogY(QString &command) {
-
   if (_item) {
     QString arg = getArg(command);
     if (arg.toLower()=="true") {

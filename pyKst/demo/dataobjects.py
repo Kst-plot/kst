@@ -3,10 +3,6 @@
 # Demonstrate curves, data vectors, equations, spectra, and histograms
 
 import pykst as kst
-from datetime import datetime
-from numpy import *
-from PyQt4 import QtCore, QtNetwork, QtGui
-from time import sleep
 
 client=kst.Client("DataObjects")
 

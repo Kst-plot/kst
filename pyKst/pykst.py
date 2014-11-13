@@ -3034,8 +3034,8 @@ class Plot(ViewItem) :
     """ Set X axis to log mode. """
     self.client.send_si(self.handle,  "setLogX("+b2str(log_mode) + ")")
 
-  def set_log_y(self) :
-    """ Set X axis to log mode. """
+  def set_log_y(self, log_mode = True) :
+    """ Set Y axis to log mode. """
     self.client.send_si(self.handle,  "setLogY("+b2str(log_mode) + ")")
 
   def set_y_axis_reversed(self, reversed=True) :
