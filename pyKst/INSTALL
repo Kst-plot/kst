@@ -1,21 +1,17 @@
 To manually install pyKst:
+i) install requirements
+     -the latest kst2
+     -python2 (not python3), because of the following requirement
+     -numpy >= 1.6 (1.6.1 is known to work) 
+     -scipy >= 0.9 (0.9.0 is known to work)
+     -pyside or PyQT4
 
-i) edit pykstpp_h.py to match your local invironment
-You probably only have to edit INCLUDES
+ii) copy pykstpp.py to your system's python script directory
+eg (ubuntu), 
+  [host]$ sudo cp pykstpp.py /usr/lib/python2.7
 
-ii) install requirements
--python2 (not python3), because of the following requirement
--numpy >= 1.6 (1.6.1 is known to work) 
--scipy >= 0.9 (0.9.0 is known to work)
-   These packages have requirements.
--QtPy
-
-iii) copy pykstpp.py, pykstpp_h.py, and pykst.py to your system's python script directory
-eg, 
-  [host]$ sudo cp pykstpp.py pykstpp_h.py pykst.py /usr/lib/python2.7
-
-iv) To test it, go into the demo directory, and try one.
-  [host]$ python2 vectors.py
+iii) To test it, go into the demo directory, and try one.
+  [host demo]$ python2 ./dataobjects.py
 
 I have no idea if this works on anything other than linux.
 
@@ -25,28 +21,14 @@ Example for ubuntu:
 0) make sure you have the absolute latest kst2 from steve.  See kst.kde.org
 
 1) install dependencies for numpy and scipy
-sudo apt-get install python python-dev python-qt4 libatlas-base-dev gcc gfortran g++
+sudo apt-get install python-numpy python-scipy python python-dev python-qt4 libatlas-base-dev gcc gfortran g++
 
-2) Install numpy 1.6.1 (ubuntu's default is not new enough)
-[host]$ tar xvfz numpy-1.6.1.tar.gz
-[host]$ cd numpy-1.6.1/
-[host]$ python setup.py build --fcompiler=gnu95
-[host]$ sudo python setup.py install
-
-3) Install scipy-0.9.0 (ubuntu's default is not new enough)
-[host]$ tar xvfz scipy-0.9.0.tar.gz
-[host]$ cd scipy-0.9.0
-[host]$ sudo python setup.py install
-
-4) edit pykstpp_h.py
-Change INCLUDES as suggested by comments in pykstpp_h.py
-
-5) copy files
-  [host]$ sudo cp pykstpp.py pykstpp_h.py pykst.py /usr/lib/python2.7
+2) copy files
+  [host]$ sudo cp pykstpp.py /usr/lib/python2.7
 
 6) test it
 [host]$ cd demo
-[host]$ python2.7 vectors.py
+[host]$ python2.7 dataobjects.py
 
 
 ========

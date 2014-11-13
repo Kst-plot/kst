@@ -24,7 +24,7 @@ else()
     message(STATUS "Installing python support into ${pydist_dir}. Overwrite using -Dkst_python_prefix=")
 endif()
 
-if(NOT kst_python_build)
+if(NOT kst_python_depend)
     macro(checkversion _name _required)
         string(TOUPPER ${_name} _n)
         if(${${_n}_VERSION} VERSION_LESS ${_required})
@@ -39,7 +39,7 @@ if(NOT kst_python_build)
 endif()
 
 
-if(kst_python_build)
+if(kst_python_depend)
     if(WIN32)
         # Python 2.6(7?)    : http://www.python.org/getit/windows
         # NumPy/Scipy (bin) : http://www.lfd.uci.edu/~gohlke/pythonlibs
@@ -81,11 +81,4 @@ if(kst_python_build)
     message(STATUS)
 endif()
 
-
-set(pykstpp_header ${CMAKE_CURRENT_BINARY_DIR}/pykstpp_h.py)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pykstpp_h.py.cmake ${pykstpp_header})
-
-install(FILES ${kstpydir}/pyKst/pykst.py ${kstpydir}/pyKst/pykstpp.py ${pykstpp_header} 
-        DESTINATION ${pydist_dir})
-
-
+install(FILES ${kstpydir}/pyKst/pykst.py DESTINATION ${pydist_dir})
