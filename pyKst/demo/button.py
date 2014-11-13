@@ -1,4 +1,7 @@
 #!/usr/bin/python
+
+# pressing a button makes random circles appear.
+
 import sip
 sip.setapi('QString', 1)
 import pykst as kst
@@ -12,13 +15,14 @@ class Magic:
   def test(self):
     self.client=client
     random.seed()
-    kst.Circle(self.client,random.random(),random.random(),random.random()/10.0,random.random()*180,"#"+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9)),1,1,4,"#"+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9)))
-
-client=kst.Client()
+    client.new_circle((random.random(),random.random()), random.random()/10.0,
+                      "#"+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9)))
+                      
+client=kst.Client("testbutton")
 app=QtGui.QApplication(sys.argv)
 m=Magic(client)
 
 s=QtNetwork.QLocalSocket()
 s.readyRead.connect(m.test)
-b=kst.Button(client,"Hello World!",s,0.5,0.5,0.2,0.1)
+b=kst.Button(client,"Click Here",s,0.5,0.5,0.2,0.1)
 app.exec_()

@@ -200,6 +200,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("fileOpen()", &ScriptServer::fileOpen);
     _fnMap.insert("fileSave()", &ScriptServer::fileSave);
 
+    _fnMap.insert("cleanupLayout()", &ScriptServer::cleanupLayout);
+
 #if 0
 
     _fnMap.insert("EditableVector::setBinaryArray()",&ScriptServer::editableVectorSetBinaryArray);
@@ -944,6 +946,24 @@ QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectSto
   kstApp->mainWindow()->document()->save(command);
 
   return handleResponse("Done",s);
+}
+
+QByteArray ScriptServer::cleanupLayout(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
+    QString param = command.replace("cleanupLayout(","").replace(")","");
+    bool isNum = true;
+    int n_cols = param.toInt(&isNum);
+
+    if (isNum) { // columns
+      kstApp->mainWindow()->tabWidget()->currentView()->createLayout(false, n_cols);
+    } else if (param.toLower() == "protect") {
+      kstApp->mainWindow()->tabWidget()->currentView()->createLayout();
+    } else {
+      kstApp->mainWindow()->tabWidget()->currentView()->createUnprotectedLayout();
+    }
+
+    kstApp->mainWindow()->tabWidget()->setCurrentIndex(command.replace("setTab(","").replace(")","").toInt());
+    return handleResponse("Done",s);
 }
 
 
