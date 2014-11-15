@@ -5,18 +5,57 @@ PyKst documentation
 =================================
 PyKst is a python interface to kst. With PyKst, scripts can control and share data with a kst session.
 
-The following minimal example plots sin(x) from -10 to 10::
+Installation
+************
+You will want the version of pykst.py that goes with your version of kst2.
+Until packaging (and the API) are settled, this may mean compiling kst2 from source.
+
+pykst.py can use either PySide or PyQT4.  Make sure one is installed, and edit the begining of pykst.py
+accordingly (make sure the one you want to use is enabled, and the other is commented out.)
+Then copy pykst.py into your systems python dir
+
+PyKst depends on python2.7 or greater, and modern versions of NumPy and SciPy.
+
+Examples
+********
+PyKst can be used control kst, as one would with the GUI.  The following (minimal) example tells kst to
+plot sin(x) from -10 to 10. The results are identical to having used create->equation from within kst.::
 
       import pykst as kst
 
+      # start a kst session with the arbitrary name "TestSinX"
       client=kst.Client("TestSinX")
 
+      # inside kst, create the x vector and the equation
       v1 = client.new_generated_vector(-10, 10, 1000)
       e1 = client.new_equation(v1, "sin(x)")
+
+      # inside kst, create a curve, a plot, and add the curve to the plot
       c1 = client.new_curve(e1.x(), e1.y())
       p1 = client.new_plot()
       p1.add(c1)
 
+Alternatively, kst can be used to plot numpy arrays, as in this example::
+
+      #!/usr/bin/python2.7
+      import pykst as kst
+      from numpy  import *
+
+      # create a pair of numpy arrays
+      x = linspace( -10, 10, 1000)
+      y = sin(x)
+
+      # start a kst session with the arbitrary name "NumpyVector"
+      client=kst.Client("NumpyVector")
+
+      # copy the numpy arrays into kst
+      V1 = client.new_editable_vector(x, name="X") # the name is for the label
+      V2 = client.new_editable_vector(y, name="sin(X)") # the name is for the label
+
+      # inside kst, create a curve, a plot, and add the curve to the plot
+      c1 = client.new_curve(V1, V2)
+      p1 = client.new_plot()
+      p1.add(c1)
 
 
 Clients
