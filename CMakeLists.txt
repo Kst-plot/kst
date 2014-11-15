@@ -5,7 +5,10 @@ if(kst_clang)
     set(CMAKE_CXX_COMPILER "clang++" CACHE PATH "Clang C++ compiler")
 endif()
 
-cmake_policy(SET CMP0020 OLD)
+if(POLICY CMP0020)
+    cmake_policy(SET CMP0020 OLD)
+endif()
+
 if(${CMAKE_MAJOR_VERSION} EQUAL 3)
     cmake_policy(SET CMP0043 OLD)
 endif()
