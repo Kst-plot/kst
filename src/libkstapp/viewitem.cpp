@@ -2576,7 +2576,7 @@ void AppendLayoutCommand::appendLayout(CurvePlacement::Layout layout, ViewItem* 
       }
     }
     if (row<0) { // no empty slots
-      if (grid.n_rows>grid.n_cols+2) { // add a column
+      if (grid.n_rows>grid.n_cols) { // add a column
         row = 0;
         col = grid.n_cols;
       } else { // add a row

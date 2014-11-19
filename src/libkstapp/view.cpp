@@ -588,12 +588,15 @@ double View::resetPlotFontSizes(QList<PlotItem*> new_plots) {
   plots.append(PlotItemManager::self()->plotsForView(this));
   qreal pointSize = dialogDefaults().value("plot/globalFontScale",16.0).toDouble();
 
-  // the 6 in the line below is a magic number that impedes scaling until you
+  // the 4 in the line below is a magic number that impedes scaling until you
   // have more than a couple of rows/columns.  A 1 would make it scale more
-  // aggressively.  The behavior looks pretty good to me with 6.
-  qreal count = qMax(plots.count()-6, 1);
+  // aggressively.  The behavior looks pretty good to me with 4.
+  qreal count = qMax(plots.count()-1, 1);
 
-  qreal newPointSize = qMax(pointSize/qSqrt(count) , ApplicationSettings::self()->minimumFontSize());
+  //qreal newPointSize = qMax(pointSize/qSqrt(count) , ApplicationSettings::self()->minimumFontSize());
+
+  qreal newPointSize = (pointSize - ApplicationSettings::self()->minimumFontSize())/qSqrt(count) + ApplicationSettings::self()->minimumFontSize();
+
   if (newPointSize<pointSize) {
     pointSize = newPointSize;
   }

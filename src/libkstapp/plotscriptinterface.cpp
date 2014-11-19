@@ -106,8 +106,10 @@ QString PlotSI::addToCurrentView(QString& command) {
   QStringList vars = getArgs(command);
 
   if (vars.at(0) == "Auto") {
+    kstApp->mainWindow()->tabWidget()->currentView()->resetPlotFontSizes(_item);
     kstApp->mainWindow()->tabWidget()->currentView()->appendToLayout(CurvePlacement::Auto, _item, vars.at(1).toInt());
   } else if (vars.at(0) == "Columns") {
+    kstApp->mainWindow()->tabWidget()->currentView()->resetPlotFontSizes(_item);
     kstApp->mainWindow()->tabWidget()->currentView()->appendToLayout(CurvePlacement::Custom, _item, vars.at(1).toInt());
     _item->createCustomLayout(vars.at(1).toInt());
   } else {
