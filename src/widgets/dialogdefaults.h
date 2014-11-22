@@ -97,6 +97,7 @@ namespace Kst {
 // wizard/doPSD         bool     datawizard.cpp
 // wizard/doXY          bool     datawizard.cpp
 // wizard/curvePlacement enum    datawizard.cpp
+// wizard/plotPlacement  enum    datawizard.cpp
 // wizard/plotCount     int      datawizard.cpp
 
 // changedatafile/newFileName  QString  changefiledialog.cpp

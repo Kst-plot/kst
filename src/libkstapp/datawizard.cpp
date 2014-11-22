@@ -566,6 +566,19 @@ void DataWizardPagePlot::updatePlotBox() {
     break;
   }
 
+  PlotTabPlacement tabPlacement = static_cast<DataWizardPagePlot::PlotTabPlacement>(dialogDefaults().value("wizard/plotPlacement", SeparateTabs).toInt());
+  switch (tabPlacement) {
+  case CurrentTab:
+    _currentTab->setChecked(true);
+    break;
+  case NewTab:
+    _newTab->setChecked(true);
+    break;
+  case SeparateTabs:
+    _separateTabs->setChecked(true);
+    break;
+  }
+
   _gridColumns->setValue(dialogDefaults().value("wizard/gridColumns", CurvePlacement::Auto).toInt());
 }
 
@@ -783,6 +796,7 @@ void DataWizard::finished() {
   dialogDefaults().setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
   dialogDefaults().setValue("wizard/doXY", _pageDataPresentation->plotData());
   dialogDefaults().setValue("wizard/curvePlacement", _pagePlot->curvePlacement());
+  dialogDefaults().setValue("wizard/plotPlacement", _pagePlot->plotTabPlacement());
   dialogDefaults().setValue("wizard/plotCount", _pagePlot->plotCount());
 
   dialogDefaults().setValue("wizard/legendsOn", _pagePlot->legendsOn());
