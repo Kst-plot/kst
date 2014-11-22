@@ -36,10 +36,10 @@ bool KstTimeZone::setTZ(QString name) {
 
 void KstTimeZone::initTZList() {
   _tzlist.append("GMT");
-  for (double offset = 0.5; offset <= 12; offset+=0.5) {
+  for (double offset = 0.5; offset <= 13; offset+=0.5) {
     _tzlist.append(QString("GMT+%1").arg(offset));
   }
-  for (double offset = -0.5; offset >=- 12; offset-=0.5) {
+  for (double offset = -0.5; offset >=- 13; offset-=0.5) {
     _tzlist.append(QString("GMT%1").arg(offset));
   }
 }
