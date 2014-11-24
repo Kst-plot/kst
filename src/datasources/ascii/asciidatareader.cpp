@@ -192,6 +192,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
   for (qint64 i = 0; i < bufread; ++i) {
     if (comment_del(buffer[i])) {
       is_comment = true;
+      row_has_data = false;
     } else if (isLineBreak(buffer[i])) {
       if (row_has_data) {
         _rowIndex[_numFrames] = row_start;
