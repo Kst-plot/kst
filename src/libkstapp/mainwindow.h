@@ -27,6 +27,7 @@ class QProgressBar;
 class QUndoGroup;
 class QPrinter;
 class QSettings;
+class QSignalMapper;
 
 namespace Kst {
 
@@ -125,6 +126,7 @@ class MainWindow : public QMainWindow
     void allPlotsTiedZoom();
 
     void updateRecentDataFiles(const QString& newfilename = QString());
+    void videoTutorial(int);
 
   private Q_SLOTS:
     void aboutToQuit();
@@ -215,7 +217,7 @@ class MainWindow : public QMainWindow
     ThemeDialog *_themeDialog;
     AboutDialog* _aboutDialog;
     ViewVectorDialog* _viewVectorDialog;
-
+    QSignalMapper* _videoMapper;
     QPointer<QProgressBar> _progressBar;
     QLabel *_messageLabel;
 
@@ -233,6 +235,7 @@ class MainWindow : public QMainWindow
     QMenu *_toolsMenu;
     QMenu *_settingsMenu;
     QMenu *_helpMenu;
+    QMenu* _videoTutorialsMenu;
 
     QToolBar *_fileToolBar;
     QToolBar *_editToolBar;
@@ -262,6 +265,13 @@ class MainWindow : public QMainWindow
     QAction *_aboutAct;
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
+    QAction *_video1Act;
+    QAction *_video2Act;
+    QAction *_video3Act;
+    QAction *_video4Act;
+    QAction *_video5Act;
+    QAction *_video6Act;
+    QAction *_video7Act;
     QAction *_exitAct;
     QAction *_exportGraphicsAct;
     QAction *_exportVectorsAct;

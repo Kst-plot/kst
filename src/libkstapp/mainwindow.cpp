@@ -76,6 +76,8 @@
 #include <QImageWriter>
 #include <QToolBar>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QSignalMapper>
 
 namespace Kst {
 
@@ -102,6 +104,7 @@ MainWindow::MainWindow() :
 {
   _doc = new Document(this);
   _scriptServer = new ScriptServer(_doc->objectStore());
+  _videoMapper = new QSignalMapper(this);
 
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
@@ -1303,6 +1306,36 @@ void MainWindow::createActions() {
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   _aboutAct->setIcon(QPixmap(":dialog-information.png"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+  _video1Act = new QAction(tr("#&1: Quick Start"), this);
+  _video1Act->setStatusTip(tr("Kst presentation #1: The shortest tutorial to the fastest plotting tool"));
+  connect(_video1Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video1Act, 1);
+  _video2Act = new QAction(tr("#&2: General UI Presentation"), this);
+  _video2Act->setStatusTip(tr("Kst presentation #2: General presentation of the user interface and most important concepts"));
+  connect(_video2Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video2Act, 2);
+  _video3Act = new QAction(tr("#&3: Live Data / Range Tools"), this);
+  _video3Act->setStatusTip(tr("Kst presentation #3: Range tools and live plots with streaming data"));
+  connect(_video3Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video3Act, 3);
+  _video4Act = new QAction(tr("#&4: FFT, Equations, Fits, Filters"), this);
+  _video4Act->setStatusTip(tr("Kst presentation #4: FFTs, equations, filters, fits, plugins"));
+  connect(_video4Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video4Act, 4);
+  _video5Act = new QAction(tr("#&5: Productivity Features"), this);
+  _video5Act->setStatusTip(tr("Kst presentation #5: Unique productivity features like edit multiple mode and change data file tool"));
+  connect(_video5Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video5Act, 5);
+  _video6Act = new QAction(tr("#&6: Advanced Layout / Export"), this);
+  _video6Act->setStatusTip(tr("Kst presentation #6: Advanced layout and export options"));
+  connect(_video6Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video6Act, 6);
+  _video7Act = new QAction(tr("#&7: Matrices / Images / Metadata"), this);
+  _video7Act->setStatusTip(tr("Kst presentation #7: Matrices, images and metadata"));
+  connect(_video7Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
+  _videoMapper->setMapping(_video7Act, 7);
+  connect(_videoMapper, SIGNAL(mapped(int)), this, SLOT(videoTutorial(int)));
 }
 
 
@@ -1444,6 +1477,15 @@ void MainWindow::createMenus() {
   menuBar()->addSeparator();
 
   _helpMenu = menuBar()->addMenu(tr("&Help"));
+  QMenu* _videoTutorialsMenu = _helpMenu->addMenu(tr("&Video tutorials"));
+  _videoTutorialsMenu->addAction(_video1Act);
+  _videoTutorialsMenu->addAction(_video2Act);
+  _videoTutorialsMenu->addAction(_video3Act);
+  _videoTutorialsMenu->addAction(_video4Act);
+  _videoTutorialsMenu->addAction(_video5Act);
+  _videoTutorialsMenu->addAction(_video6Act);
+  _videoTutorialsMenu->addAction(_video7Act);
+  _helpMenu->addSeparator();
   _helpMenu->addAction(_debugDialogAct);
   _helpMenu->addAction(_bugReportWizardAct);
   _helpMenu->addSeparator();
@@ -1538,6 +1580,27 @@ void MainWindow::setStatusMessage(QString message, int timeout, bool delayed) {
   _statusBarTimeout = timeout;
   if (!delayed) {
     statusBar()->showMessage(message, timeout);
+  }
+}
+
+void MainWindow::videoTutorial(int i) {
+  switch (i) {
+  case 1:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=d1uz5g_cWh4")); break;
+  case 2:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=6z2bGNrgwL0")); break;
+  case 3:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=dstOQpmfY1U")); break;
+  case 4:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=YJ54X0nKnmk")); break;
+  case 5:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=3YZVC-GiS_4")); break;
+  case 6:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=rI7nYHlz6rs")); break;
+  case 7:
+    QDesktopServices::openUrl(QUrl("http://www.youtube.com/watch?v=mgP24MryyKw")); break;
+  default:
+    break;
   }
 }
 
