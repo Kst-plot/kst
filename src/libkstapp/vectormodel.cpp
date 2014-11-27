@@ -126,13 +126,13 @@ QVariant VectorModel::headerData(int section, Qt::Orientation orientation, int r
 
 Qt::ItemFlags VectorModel::flags(const QModelIndex& index) const {
   Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!_vectorList.isEmpty() || !index.isValid()) {
+  if (_vectorList.isEmpty() || !index.isValid()) {
     return f;
   }
 
-//  if (_vector->editable() && index.row() >= 0 && index.row() < _vector->length()) {
-//    f |= Qt::ItemIsEditable;
-//  }
+  if (_vectorList.at(index.column())->editable() && index.row() >= 0 && index.row() < _vectorList.at(index.column())->length()) {
+    f |= Qt::ItemIsEditable;
+  }
 
   return f;
 }
@@ -143,7 +143,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
   }
 
-  if (!_vectorList.isEmpty() || !index.isValid() || !_vectorList.at(index.column())->editable() || index.row() < 0 || index.row() >= rowCount()) {
+  if (_vectorList.isEmpty() || !index.isValid() || !_vectorList.at(index.column())->editable() || index.row() < 0 || index.row() >= rowCount()) {
     return false;
   }
 
