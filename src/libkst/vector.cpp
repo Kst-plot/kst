@@ -376,6 +376,12 @@ void Vector::blank() {
   updateScalars();
 }
 
+void Vector::setValue(int index, double value)
+{
+  _v[index] = value;
+  internalUpdate();
+}
+
 
 bool Vector::resize(int sz, bool init) {
   if (sz > 0) {
@@ -593,6 +599,11 @@ int Vector::getUsage() const {
 
 bool Vector::saveable() const {
   return _saveable;
+}
+
+void Vector::setSaveable(bool saveable)
+{
+  _saveable = saveable;
 }
 
 

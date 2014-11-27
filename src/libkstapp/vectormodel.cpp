@@ -153,9 +153,10 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return false;
   }
 
-  qDebug() << "UGLY!! Add setData API to KstVector!";
-  double *d = const_cast<double*>(_vectorList.at(index.column())->value());
-  d[index.row()] = v;
+  // qDebug() << "UGLY!! Add setData API to KstVector!";
+  // double *d = const_cast<double*>(_vectorList.at(index.column())->value());
+  // d[index.row()] = v;
+  vectorAtIndex(index.column())->setValue(index.row(), v);
   return true;
 }
 
@@ -167,7 +168,12 @@ void VectorModel::resetIfChanged() {
 }
 
 void VectorModel::setDigitNumber(int column, int nbDigits) {
-  _digitNbList[column] = nbDigits;
+    _digitNbList[column] = nbDigits;
+}
+
+VectorPtr VectorModel::vectorAtIndex(int index)
+{
+  return _vectorList.at(index);
 }
 
 }

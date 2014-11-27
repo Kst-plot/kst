@@ -107,6 +107,7 @@ void ViewVectorDialog::contextMenu(const QPoint& position) {
   QMenu menu;
   QPoint cursor = QCursor::pos();
   QAction* removeAction = menu.addAction(tr("Remove"));
+  QAction* makeEditableAction = menu.addAction(tr("Make editable"));
   // Add submenu to select nb of digits
   QMenu* submenu = new QMenu(tr("Significant digits"));
   QAction* digitNb0Action = submenu->addAction(tr("Show as int"));
@@ -120,6 +121,9 @@ void ViewVectorDialog::contextMenu(const QPoint& position) {
   if (selectedItem == removeAction) {
     removeSelected();
     return;
+  } else if (selectedItem == makeEditableAction) {
+      makeEditable();
+      return;
   } else if (selectedItem == digitNb0Action) {
       digits = 0;
   } else if (selectedItem == digitNb3Action) {
@@ -211,6 +215,14 @@ QList<int> ViewVectorDialog::selectedColumns() {
   return columns;
 }
 
+void ViewVectorDialog::makeEditable() {
+    int column;
+    foreach (column, selectedColumns()) {
+//      VectorPtr vector = kst_cast<Vector>(_doc->objectStore()->retrieveObject(objectName));
+        _model->vectorAtIndex(column)->setEditable(true);
+        _model->vectorAtIndex(column)->setSaveData(true);
+    }
+}
 
 }
 
