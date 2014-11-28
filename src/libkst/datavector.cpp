@@ -824,26 +824,30 @@ QString DataVector::descriptionTip() const {
   QString IDstring;
   //QString range_string;
 
-  IDstring = tr(
-      "Data Vector: %1\n"
-      "  %2\n"
-      "  Field: %3"
-      ).arg(Name()).arg(dataSource()->fileName()).arg(_field);
-
-  if (countFromEOF()) {
-    IDstring += tr("\n  Last %1 frames.").arg(numFrames());
-  } else if (readToEOF()) {
-    IDstring += tr("\n  Frame %1 to end.").arg(startFrame());
-  } else {
-    IDstring += tr("\n  %1 Frames starting at %2.").arg(numFrames()).arg(startFrame());
-  }
-  if (skip()) {
-    if (!doAve()) {
-      IDstring+=tr("\n  Read 1 sample per %1 frames.").arg(skip());
+  if (dataSource()) {
+    IDstring = tr(
+                 "Data Vector: %1\n"
+                 "  %2\n"
+                 "  Field: %3"
+                 ).arg(Name()).arg(dataSource()->fileName()).arg(_field);
+    if (countFromEOF()) {
+      IDstring += tr("\n  Last %1 frames.").arg(numFrames());
+    } else if (readToEOF()) {
+      IDstring += tr("\n  Frame %1 to end.").arg(startFrame());
     } else {
-      IDstring+=tr("\n  Average each %1 frames.").arg(skip());
+      IDstring += tr("\n  %1 Frames starting at %2.").arg(numFrames()).arg(startFrame());
     }
+    if (skip()) {
+      if (!doAve()) {
+        IDstring+=tr("\n  Read 1 sample per %1 frames.").arg(skip());
+      } else {
+        IDstring+=tr("\n  Average each %1 frames.").arg(skip());
+      }
+    }
+  } else{
+    IDstring.clear();
   }
+
   return IDstring;
 }
 
