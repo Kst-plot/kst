@@ -285,10 +285,7 @@ int DataVector::reqStartFrame() const {
 
 /** Save vector information */
 void DataVector::save(QXmlStreamWriter &s) {
-  if (saveData()) { // The vector has been modified manually => use basic saving
-    Kst::Vector::save(s);
-  }
-  else if (dataSource()) {
+  if (dataSource()) {
     s.writeStartElement("datavector");
     saveFilename(s);
     s.writeAttribute("field", _field);

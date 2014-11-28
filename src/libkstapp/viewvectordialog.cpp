@@ -221,7 +221,6 @@ void ViewVectorDialog::makeEditable() {
 //      VectorPtr vector = kst_cast<Vector>(_doc->objectStore()->retrieveObject(objectName));
         _model->vectorAtIndex(column)->setEditable(true);
         _model->vectorAtIndex(column)->setSaveData(true);
-        _model->vectorAtIndex(column)->setSaveable(true);
     }
 }
 
