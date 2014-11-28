@@ -125,9 +125,6 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** Make the vector truly empty.  All values set to NOPOINT (NaN). */
     void blank();
 
-    /** Set the value at a give index. */
-    void setValue(int index, double value);
-
     /* Generally you don't need to call this */
     void updateScalars();
 
@@ -149,7 +146,6 @@ class KSTCORE_EXPORT Vector : public Primitive
     bool isScalarList() const { return _isScalarList; }
 
     bool saveable() const;
-    void setSaveable(bool saveable);
 
     bool editable() const;
     void setEditable(bool editable);

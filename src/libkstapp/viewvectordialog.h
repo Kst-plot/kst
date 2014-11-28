@@ -44,7 +44,6 @@ private Q_SLOTS:
   void reset();
   void showVectorList();
   void hideVectorList();
-  void makeEditable();
 
 private:
   QList<int> selectedColumns();

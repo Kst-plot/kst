@@ -36,8 +36,6 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
   void resetIfChanged();
   void setDigitNumber(int column, int nbDigits);
-  VectorPtr vectorAtIndex(int index);
-
 private:
   VectorList _vectorList;
   QList<int> _digitNbList;
