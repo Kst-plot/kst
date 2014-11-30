@@ -167,8 +167,8 @@ void function_initial_estimate( const double X[], const double Y[], int npts, do
   double min_x = 1E300;
   double max_x = -1E300;
   double mean_y = 0.0;
-  double x_at_min_y;
-  double x_at_max_y;
+  double x_at_min_y=0;
+  double x_at_max_y=0;
 
   double A, C, D;
 
