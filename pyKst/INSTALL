@@ -7,24 +7,21 @@ i) install requirements
      -pyside or PyQT4
 
 ii) copy pykstpp.py to your system's python script directory
-eg (ubuntu), 
-  [host]$ sudo cp pykstpp.py /usr/lib/python2.7
+  [host]$ sudo python2.7 setup.py install
 
 iii) To test it, go into the demo directory, and try one.
   [host demo]$ python2 ./dataobjects.py
 
-I have no idea if this works on anything other than linux.
-
 ======
 Example for ubuntu:
 
-0) make sure you have the absolute latest kst2 from steve.  See kst.kde.org
+0) make sure you have the absolute latest kst2 from the kst-plot ppa.  See kst.kde.org
 
 1) install dependencies for numpy and scipy
 sudo apt-get install python-numpy python-scipy python python-dev python-qt4 libatlas-base-dev gcc gfortran g++
 
 2) copy files
-  [host]$ sudo cp pykstpp.py /usr/lib/python2.7
+  [host]$ sudo python2.7 setup.py install
 
 6) test it
 [host]$ cd demo
