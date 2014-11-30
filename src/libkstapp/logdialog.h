@@ -38,6 +38,8 @@ class LogDialog : public QDialog, Ui::LogDialog
     void changed();
     void enableApply();
     void apply();
+    void ok();
+    void doIt();
     void enableWidthHeight();
     void runScript();
     void scriptStdErr();
@@ -58,6 +60,7 @@ class LogDialog : public QDialog, Ui::LogDialog
     QString _imagename;
     QString _msgfilename;
     QString _username;
+    bool _closeIfFinished;
 
 };
 

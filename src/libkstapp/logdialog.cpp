@@ -21,7 +21,7 @@
 namespace Kst {
 
 LogDialog::LogDialog(MainWindow *parent)
-  : QDialog(parent), _logtime(0), _format(QString()), _logdir(QString()), _parent(parent) {
+  : QDialog(parent), _logtime(0), _format(QString()), _logdir(QString()), _parent(parent), _closeIfFinished(false) {
 
   setupUi(this);
 
@@ -61,6 +61,7 @@ LogDialog::LogDialog(MainWindow *parent)
 
   connect(_close, SIGNAL(clicked()), this, SLOT(close()));
   connect(_apply, SIGNAL(clicked()), this, SLOT(apply()));
+  connect(_ok, SIGNAL(clicked()), this, SLOT(ok()));
 
   _proc = new QProcess(this);
   connect(_proc, SIGNAL(readyReadStandardError()), this, SLOT(scriptStdErr()));
@@ -97,7 +98,7 @@ void LogDialog::enableApply() {
 }
 
 
-void LogDialog::apply() {
+void LogDialog::doIt() {
   _logdir = _saveLocation->file();
   _format = _formats->currentText();
   _username = _user->text();
@@ -131,6 +132,15 @@ void LogDialog::apply() {
   _rerunScript->setEnabled(true);
 }
 
+void LogDialog::apply() {
+  _closeIfFinished = false;
+  doIt();
+}
+
+void LogDialog::ok() {
+  _closeIfFinished = true;
+  doIt();
+}
 
 void LogDialog::runScript() {
   QString script = _script->text().simplified().replace("$imagefile",_imagename).
@@ -158,6 +168,9 @@ void LogDialog::scriptStarted() {
 void LogDialog::scriptFinished(int code) {
   if (code == 0) {
     _scriptRunning->setText(tr("Script: Finished"));
+    if (_closeIfFinished) {
+      close();
+    }
   } else {
     _scriptRunning->setText(tr("Script: return code %1").arg(code));
   }
