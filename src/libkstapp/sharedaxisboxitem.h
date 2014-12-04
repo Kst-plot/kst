@@ -87,7 +87,7 @@ class SharedAxisBoxItem : public ViewItem
     void zoomNormalizeXtoY(PlotItem* originPlotItem);
     void zoomLogX(PlotItem* originPlotItem, bool autoEnable = true, bool enable = true);
 
-    void zoomYMeanCentered(PlotItem* originPlotItem);
+    void zoomYMeanCentered(qreal dY, PlotItem* originPlotItem);
     void zoomYLocalMaximum(PlotItem* originPlotItem);
     void zoomYMaximum(PlotItem* originPlotItem);
     void zoomYNoSpike(PlotItem* originPlotItem);

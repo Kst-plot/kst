@@ -594,12 +594,13 @@ void SharedAxisBoxItem::zoomMeanCentered(PlotItem* originPlotItem) {
   applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
 }
 
-void SharedAxisBoxItem::zoomYMeanCentered(PlotItem* originPlotItem) {
-  _yAxisZoomMode = PlotAxis::MeanCentered;
-  if (originPlotItem) {
-    originPlotItem->zoomYMeanCentered(true);
+void SharedAxisBoxItem::zoomYMeanCentered(qreal dY, PlotItem* originPlotItem) {
+  if (!_shareY) {
+    _yAxisZoomMode = PlotAxis::MeanCentered;
+    if (originPlotItem) {
+      originPlotItem->zoomYMeanCentered(dY, true);
+    }
   }
-  applyZoom(computeRect(PlotAxis::Auto, PlotAxis::MeanCentered), originPlotItem, false, true);
 }
 
 void SharedAxisBoxItem::zoomXMeanCentered(PlotItem* originPlotItem) {

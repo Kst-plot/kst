@@ -3075,7 +3075,7 @@ void PlotItem::zoomMeanCentered(bool force) {
 
 void PlotItem::zoomYMeanCentered(qreal dY, bool force) {
   if (isInSharedAxisBox() && !force) {
-    sharedAxisBox()->zoomYMeanCentered(this);
+    sharedAxisBox()->zoomYMeanCentered(dY, this);
   } else {
     ZoomCommand *cmd = new ZoomYMeanCenteredCommand(this, dY, force);
     _undoStack->push(cmd);
@@ -4099,7 +4099,7 @@ void ZoomYMeanCenteredCommand::applyZoomTo(ViewItem *item, bool applyX, bool app
   SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
   if (shareBox) {
     if (applyY) {
-      shareBox->zoomYMeanCentered(0);
+      shareBox->zoomYMeanCentered(_dY, 0);
     }
   }
 }
