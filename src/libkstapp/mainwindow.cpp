@@ -170,17 +170,19 @@ void MainWindow::cleanup() {
 
 
 void MainWindow::setLayoutMode(bool layoutMode) {
-  View *v = tabWidget()->currentView();
-  Q_ASSERT(v);
+  foreach (View *v, tabWidget()->views() ) {
 
-  if (layoutMode) {
-    v->setViewMode(View::Layout);
-    _highlightPointAct->setEnabled(false);
-    _tiedZoomAct->setEnabled(false);
-  } else {
-    v->setViewMode(View::Data);
-    _highlightPointAct->setEnabled(true);
-    _tiedZoomAct->setEnabled(true);
+    Q_ASSERT(v);
+
+    if (layoutMode) {
+      v->setViewMode(View::Layout);
+      _highlightPointAct->setEnabled(false);
+      _tiedZoomAct->setEnabled(false);
+    } else {
+      v->setViewMode(View::Data);
+      _highlightPointAct->setEnabled(true);
+      _tiedZoomAct->setEnabled(true);
+    }
   }
 }
 
@@ -194,7 +196,10 @@ void MainWindow::changeZoomOnlyMode(QAction* act) {
   } else {
     setLayoutMode(false);
   }
-  tabWidget()->currentView()->setZoomOnly((View::ZoomOnlyMode)act->data().toInt());
+  foreach (View *view, tabWidget()->views() ) {
+    view->setZoomOnly((View::ZoomOnlyMode)act->data().toInt());
+  }
+
 }
 
 void MainWindow::toggleTiedZoom() {
