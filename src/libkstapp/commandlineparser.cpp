@@ -722,6 +722,14 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   }
   if (dataPlotted) {
     _document->updateRecentDataFiles(_fileNames);
+
+    dialogDefaults().setValue("vector/range", _numFrames);
+    dialogDefaults().setValue("vector/start", _startFrame);
+    dialogDefaults().setValue("vector/countFromEnd", (_startFrame<0));
+    dialogDefaults().setValue("vector/readToEnd", (_numFrames<0));
+    dialogDefaults().setValue("vector/skip", _skip);
+    dialogDefaults().setValue("vector/doSkip", (_skip>0));
+    dialogDefaults().setValue("vector/doAve", _doAve);
   }
 
 #ifndef KST_NO_PRINTER

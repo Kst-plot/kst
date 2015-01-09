@@ -70,6 +70,7 @@ ChangeDataSampleDialog::~ChangeDataSampleDialog() {
 
 void ChangeDataSampleDialog::show() {
   updateCurveListDialog();
+  initializeEntries();
   updateButtons();
   QDialog::show();
 }
