@@ -229,11 +229,13 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("joinStyle", QVariant(pen().joinStyle()).toString());
   xml.writeStartElement("brush");
   xml.writeAttribute("color", pen().brush().color().name());
+  xml.writeAttribute("alpha", QString::number(pen().brush().color().alphaF()));
   xml.writeAttribute("style", QVariant((int)pen().brush().style()).toString());
   xml.writeEndElement();
   xml.writeEndElement();
   xml.writeStartElement("brush");
   xml.writeAttribute("color", brush().color().name());
+  xml.writeAttribute("alpha", QString::number(brush().color().alphaF()));
   xml.writeAttribute("style", QVariant((int)brush().style()).toString());
   if (brush().gradient()) {
     QString stopList;
@@ -385,11 +387,18 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       } else {
         av = attrs.value("color");
         if (!av.isNull()) {
-            brush.setColor(QColor(av.toString()));
+          brush.setColor(QColor(av.toString()));
         }
         av = attrs.value("style");
         if (!av.isNull()) {
           brush.setStyle((Qt::BrushStyle)av.toString().toInt());
+        }
+        av = attrs.value("alpha");
+        if (!av.isNull()) {
+          qreal alpha = av.toString().toDouble();
+          QColor c = brush.color();
+          c.setAlphaF(alpha);
+          brush.setColor(c);
         }
       }
       setBrush(brush);
@@ -425,6 +434,14 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
         if (!av.isNull()) {
             penBrush.setColor(QColor(av.toString()));
         }
+        av = attrs.value("alpha");
+        if (!av.isNull()) {
+          qreal alpha = av.toString().toDouble();
+          QColor c = penBrush.color();
+          c.setAlphaF(alpha);
+          penBrush.setColor(c);
+        }
+
         av = attrs.value("style");
         if (!av.isNull()) {
           penBrush.setStyle((Qt::BrushStyle)av.toString().toInt());

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>498</width>
-    <height>171</height>
+    <height>204</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,7 +17,16 @@
    </sizepolicy>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="0" column="0">
@@ -210,19 +219,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="6">
-       <widget class="QSpinBox" name="_spinBoxLineWidth">
-        <property name="toolTip">
-         <string>Line Width</string>
-        </property>
-        <property name="whatsThis">
-         <string>If &quot;Show Lines&quot; is checked, the selected line width.</string>
-        </property>
-        <property name="maximum">
-         <number>50</number>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="5">
        <widget class="QLabel" name="_textLabelPointSize">
         <property name="text">
@@ -251,6 +247,9 @@
          <cstring>_comboPointDensity</cstring>
         </property>
        </widget>
+      </item>
+      <item row="4" column="6">
+       <widget class="QDoubleSpinBox" name="_spinBoxPointSize"/>
       </item>
       <item row="1" column="6">
        <widget class="QComboBox" name="_comboPointDensity">
@@ -298,8 +297,18 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="6">
-       <widget class="QDoubleSpinBox" name="_spinBoxPointSize"/>
+      <item row="2" column="6">
+       <widget class="QSpinBox" name="_spinBoxLineWidth">
+        <property name="toolTip">
+         <string>Line Width</string>
+        </property>
+        <property name="whatsThis">
+         <string>If &quot;Show Lines&quot; is checked, the selected line width.</string>
+        </property>
+        <property name="maximum">
+         <number>50</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
