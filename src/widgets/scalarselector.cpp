@@ -166,12 +166,13 @@ QString ScalarSelector::selectedScalarString(bool *editable) {
 
 void ScalarSelector::setSelectedScalar(QString Name) {
   bool ok;
-  double value = Name.toDouble(&ok);
+  QString trimmed_name = Name.split('(').at(0).trimmed();
+  double value = trimmed_name.toDouble(&ok);
 
   if (ok) {
     setDefaultValue(value);
   } else {
-    Kst::Object* object = _store->retrieveObject(Name);
+    Kst::Object* object = _store->retrieveObject(trimmed_name);
     Kst::Scalar* scalar = static_cast<Kst::Scalar*>(object);
     if (scalar) {
       setSelectedScalar(scalar);
