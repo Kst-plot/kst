@@ -323,7 +323,7 @@ bool ActivityLevelSource::algorithm() {
       incomingValueNext = outputVectorDenoised->value()[i+1];
     }
     if ( (outgoingValue-outgoingValuePrev)*(outgoingValueNext-outgoingValue) < 0) {
-      dNbReversals = qMax(dNbReversals - 1.0, qreal(0.0)); // Avoid getting negative values, which can happen
+      dNbReversals = qMax(dNbReversals - 1.0, double(0.0)); // Avoid getting negative values, which can happen
     }
     if ( (incomingValue-incomingValuePrev)*(incomingValueNext-incomingValue) < 0) {
       dNbReversals += 1.0;

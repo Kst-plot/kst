@@ -631,11 +631,11 @@ void Vector::oldChange(QByteArray &data) {
       if(!i) {
           _min=_max=_minPos=sum=_v[i];
           _imin = _imax = i;
-          _minPos=qMax(_minPos,qreal(0.0));
+          _minPos=qMax(_minPos,double(0.0));
       } else {
           _min=qMin(_v[i],_min);
           _max=qMax(_v[i],_max);
-          _minPos=qMin(qMax(_v[i],qreal(0.0)),_minPos);
+          _minPos=qMin(qMax(_v[i],double(0.0)),_minPos);
           sum+=_v[i];
       }
     }
@@ -662,11 +662,11 @@ void Vector::change(QByteArray &data) {
       qds >> _v[i];
       if(!i) {
           _min=_max=_minPos=sum=_v[i];
-          _minPos=qMax(_minPos,qreal(0.0));
+          _minPos=qMax(_minPos,double(0.0));
       } else {
           _min=qMin(_v[i],_min);
           _max=qMax(_v[i],_max);
-          _minPos=qMin(qMax(_v[i],qreal(0.0)),_minPos);
+          _minPos=qMin(qMax(_v[i],double(0.0)),_minPos);
           sum+=_v[i];
       }
     }
