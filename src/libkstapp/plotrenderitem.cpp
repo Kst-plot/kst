@@ -823,12 +823,12 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p, bool delayed) {
     if (bFoundImage) {
       message = QString("%1 (%2, %3, %4)").arg(imageName).
                 arg(plotItem()->xAxis()->statusBarString(point.x())).
-                arg(QString::number(point.y())).
+                arg(plotItem()->yAxis()->statusBarString(point.y())).
                 arg(QString::number(imageZ));
     } else {
       message = QString("(%1, %2)").
                         arg(plotItem()->xAxis()->statusBarString(point.x())).
-                        arg(QString::number(point.y()));
+                        arg(plotItem()->yAxis()->statusBarString(point.y()));
     }
     if (_referencePointMode) {
       message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
