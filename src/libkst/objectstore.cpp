@@ -76,7 +76,7 @@ bool ObjectStore::removeObject(Object *o) {
   return true;
 }
 
-ObjectPtr ObjectStore::retrieveObject(const QString& name) const {
+ObjectPtr ObjectStore::retrieveObject(const QString& name, bool enforceUnique) const {
 
   int match = -1;
 
@@ -98,8 +98,9 @@ ObjectPtr ObjectStore::retrieveObject(const QString& name) const {
   // 3) search for descriptive names: must be unique
   for (int i = 0; i < size; ++i) {
     if (_list.at(i)->descriptiveName() == name) {
-      if (match != -1) 
+      if (enforceUnique && (match != -1)) {
         return NULL; // not unique, so... no match
+      }
       match = i;
     }
   }

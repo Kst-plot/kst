@@ -45,7 +45,7 @@ class KSTCORE_EXPORT ObjectStore
     template<class T> bool addObject(T *o);
     bool removeObject(Object *o);
 
-    ObjectPtr retrieveObject(const QString& name) const;
+    ObjectPtr retrieveObject(const QString& name, bool enforceUnique = true) const;
 
     bool isEmpty() const;
     void clear();

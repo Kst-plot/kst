@@ -15,6 +15,7 @@
 
 #include "datadialog.h"
 #include "datatab.h"
+#include "equation.h"
 
 #include "kst_export.h"
 
@@ -49,7 +50,7 @@ class EquationTab : public DataTab, Ui::EquationTab {
     void hideCurveOptions();
     void clearTabValues();
 
-    void setToLastX() {_xVectors->setToLastX();}
+    void setToLastX(Document *document, QString lastXVName);
 
   public Q_SLOTS:
     void updateVectorCombos();

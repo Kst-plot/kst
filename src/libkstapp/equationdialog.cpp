@@ -24,10 +24,14 @@
 #include "objectstore.h"
 #include "updatemanager.h"
 #include "updateserver.h"
+#include "dialogdefaults.h"
+#include "vector.h"
 
 #include <QPushButton>
 
 namespace Kst {
+
+QString _lastXVectorName;
 
 EquationTab::EquationTab(QWidget *parent)
   : DataTab(parent) {
@@ -177,6 +181,18 @@ bool EquationTab::equationDirty() const {
 }
 
 
+void EquationTab::setToLastX(Document *document, QString lastXVName) {
+  QString x_name = lastXVName;
+  VectorPtr xv = kst_cast<Vector>(document->objectStore()->retrieveObject(x_name, false));
+
+  if (xv) {
+    setXVector(xv);
+  } else{
+    _xVectors->setToLastX();
+  }
+}
+
+
 void EquationTab::setEquation(const QString &equation) {
   _equation->setText(equation);
 }
@@ -289,11 +305,10 @@ bool EquationDialog::dialogValid() const {
   return (valid);
 }
 
-
 void EquationDialog::configureTab(ObjectPtr object) {
   if (!object) {
     _equationTab->curveAppearance()->loadWidgetDefaults();
-    _equationTab->setToLastX();
+    _equationTab->setToLastX(_document, _lastXVectorName);
   } else if (EquationPtr equation = kst_cast<Equation>(object)) {
     _equationTab->setXVector(equation->vXIn());
     _equationTab->setEquation(equation->equation());
@@ -352,6 +367,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->unlock();
 
   _equationTab->curveAppearance()->setWidgetDefaults();
+  _lastXVectorName =  equation->vXIn()->Name();
 
   if(editMode()==New) {
       PlotItem *plotItem = 0;
@@ -419,6 +435,9 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
           equation->unlock();
         }
       }
+      if (_equationTab->xVectorDirty()) {
+        _lastXVectorName = _equationTab->xVector()->Name();
+      }
     } else {
       equation->writeLock();
       equation->setEquation(_equationTab->equation());
@@ -430,6 +449,7 @@ ObjectPtr EquationDialog::editExistingDataObject() const {
       }
       equation->registerChange();
       equation->unlock();
+      _lastXVectorName = equation->vXIn()->Name();
     }
   }
 
