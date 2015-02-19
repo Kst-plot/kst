@@ -31,7 +31,7 @@
 
 namespace Kst {
 
-QString _lastXVectorName;
+QString EquationDialog::_lastXVectorName;
 
 EquationTab::EquationTab(QWidget *parent)
   : DataTab(parent) {

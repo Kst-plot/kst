@@ -74,6 +74,7 @@ class EquationDialog : public DataDialog {
     virtual ~EquationDialog();
     virtual bool dialogValid() const;
 
+    static QString _lastXVectorName;
   protected:
 //     virtual QString tagString() const;
     virtual ObjectPtr createNewDataObject();

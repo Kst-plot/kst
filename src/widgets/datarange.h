@@ -30,7 +30,7 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
 
     qreal start() const;
     bool startDirty() const;
-    void setStart(qreal start);
+    void setStart(qreal start, bool callUpdateFields = true);
 
     QString startUnits() const;
     int startUnitsIndex() const;
@@ -38,7 +38,11 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
 
     qreal range() const;
     bool rangeDirty() const;
-    void setRange(qreal range);
+    void setRange(qreal range, bool callUpdateFields = true);
+
+    qreal last() const;
+    bool lastDirty() const;
+    void setLast(qreal last, bool callUpdateFields = true);
 
     void updateIndexList(const QStringList &indexFields);
     void clearIndexList();
@@ -72,7 +76,11 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
 
     void setWidgetDefaults();
     void loadWidgetDefaults();
+    
 
+    enum ControlField {Start, Last, Range, None};
+
+    void updateFields(ControlField cf);
   Q_SIGNALS:
     void modified();
 
@@ -80,11 +88,16 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
     void countFromEndChanged();
     void readToEndChanged();
     void doSkipChanged();
+    void startChanged();
+    void lastChanged();
+    void rangeChanged();
+    void unitsChanged();
 
   private:
     QString _requestedRangeUnits;
     QString _requestedStartUnits;
-
+    ControlField _controlField0;
+    ControlField _controlField1;
 };
 
 }

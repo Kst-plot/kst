@@ -23,18 +23,24 @@ DataRange::DataRange(QWidget *parent)
   connect(_readToEnd, SIGNAL(toggled(bool)), this, SLOT(readToEndChanged()));
   connect(_doSkip, SIGNAL(toggled(bool)), this, SLOT(doSkipChanged()));
 
-  connect(_start, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
-  connect(_range, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_start, SIGNAL(textEdited(QString)), this, SLOT(startChanged()));
+  connect(_range, SIGNAL(textEdited(QString)), this, SLOT(rangeChanged()));
+  connect(_last, SIGNAL(textEdited(QString)), this, SLOT(lastChanged()));
   connect(_skip, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_doFilter, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_countFromEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_readToEnd, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_doSkip, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_startUnits, SIGNAL(currentIndexChanged(int)), this, SLOT(unitsChanged()));
+  connect(_rangeUnits, SIGNAL(currentIndexChanged(int)), this, SLOT(unitsChanged()));
 
-  QLabel* siHack=new QLabel(this);
-  siHack->hide();
-  siHack->setProperty("si","read 1 sample per");
-  siHack->setBuddy(_skip);
+  //QLabel* siHack=new QLabel(this);
+  //siHack->hide();
+  //siHack->setProperty("si","read 1 sample per");
+  //siHack->setBuddy(_skip);
+
+  _controlField0 = Range;
+  _controlField1 = Start;
 }
 
 
@@ -62,8 +68,28 @@ bool DataRange::startDirty() const {
 }
 
 
-void DataRange::setStart(qreal start) {
+void DataRange::setStart(qreal start, bool callUpdateFields) {
   _start->setText(QString::number(start, 'g', 12));
+  if (callUpdateFields) {
+    updateFields(None);
+  }
+}
+
+qreal DataRange::last() const {
+  return _last->text().toDouble();
+}
+
+
+bool DataRange::lastDirty() const {
+  return !_last->text().isEmpty();
+}
+
+
+void DataRange::setLast(qreal last, bool callUpdateFields) {
+  _last->setText(QString::number(last, 'g', 12));
+  if (callUpdateFields) {
+    updateFields(None);
+  }
 }
 
 void DataRange::clearIndexList() {
@@ -100,7 +126,6 @@ void DataRange::setStartUnits(const QString &startUnits) {
   }
 }
 
-
 qreal DataRange::range() const {
   return _range->text().toDouble();
 }
@@ -116,8 +141,11 @@ bool DataRange::rangeDirty() const {
 }
 
 
-void DataRange::setRange(qreal range) {
+void DataRange::setRange(qreal range, bool callUpdateFields) {
   _range->setText(QString::number(range));
+  if (callUpdateFields) {
+    updateFields(None);
+  }
 }
 
 
@@ -159,6 +187,7 @@ bool DataRange::countFromEnd() const {
 
 void DataRange::setCountFromEnd(bool countFromEnd) {
   _countFromEnd->setChecked(countFromEnd);
+  updateFields(None);
 }
 
 
@@ -179,6 +208,7 @@ bool DataRange::readToEndDirty() const {
 
 void DataRange::setReadToEnd(bool readToEnd) {
   _readToEnd->setChecked(readToEnd);
+  updateFields(None);
 }
 
 
@@ -217,8 +247,8 @@ void DataRange::countFromEndChanged() {
     setReadToEnd(false);
   }
 
-  _start->setEnabled(!countFromEnd());
-  _startUnits->setEnabled(!countFromEnd());
+  updateFields(None);
+
 }
 
 
@@ -227,14 +257,85 @@ void DataRange::readToEndChanged() {
     setCountFromEnd(false);
   }
 
-  _range->setEnabled(!readToEnd());
-  _rangeUnits->setEnabled(!readToEnd());
+  updateFields(None);
+
+}
+
+
+void DataRange::unitsChanged() {
+  updateFields(None);
 }
 
 
 void DataRange::doSkipChanged() {
   _skip->setEnabled(doSkip());
   _doFilter->setEnabled(doSkip());
+}
+
+// control field logic:
+// the last one changed, other than this one, should be the control field
+// do we need a history?
+// F0 R -> L
+// F0 L -> R
+// R L -> F0
+// R F0 -> L
+
+void DataRange::startChanged() {
+  updateFields(Start);
+  emit modified();
+}
+
+
+void DataRange::lastChanged() {
+  updateFields(Last);
+  emit modified();
+}
+
+
+void DataRange::rangeChanged() {
+  updateFields(Range);
+  emit modified();
+}
+
+
+void DataRange::updateFields(ControlField cf) {
+
+  bool enable_last = (_rangeUnits->currentIndex() == _startUnits->currentIndex());
+  enable_last &= !readToEnd();
+  enable_last &= !countFromEnd();
+
+
+  _last->setEnabled(enable_last);
+  _lastLabel->setEnabled(enable_last);
+
+  _start->setEnabled(!countFromEnd());
+  _startLabel->setEnabled(!countFromEnd());
+  _startUnits->setEnabled(!countFromEnd());
+  _range->setEnabled(!readToEnd());
+  _rangeLabel->setEnabled(!readToEnd());
+  _rangeUnits->setEnabled(!readToEnd());
+
+  if ((cf!=None) && (cf != _controlField1)) {
+    _controlField0 = _controlField1;
+    _controlField1 = cf;
+  }
+
+  // don't do anything if it wouldn't make sense to.
+  if (readToEnd() || countFromEnd()) {
+    return;
+  } 
+
+  if (startUnits() != (rangeUnits())) {
+    return;
+  }
+  
+  if ((_controlField0 != Start) && (_controlField1 != Start)) {
+    _start->setText(QString::number(last() - range(), 'g', 12));
+  } else if ((_controlField0 != Last) && (_controlField1 != Last)) {
+    _last->setText(QString::number(start() + range(), 'g', 12));
+  } else if ((_controlField0 != Range) && (_controlField1 != Range)) {
+    _range->setText(QString::number(last() - start(), 'g', 12));
+  }
 }
 
 
