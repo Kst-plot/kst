@@ -316,7 +316,12 @@ int SourceListSource::readField(const QString& field, DataVector::ReadInfo& p) {
       ri = p;
       ri.startingFrame = f0;
       ri.numberOfFrames = nf;
-      samp_read += _sources[i_file]->vector().read(field, ri);
+      if (field == "INDEX") {
+        ri.data[0] = f0 + f_offset;
+        samp_read++;
+      } else {
+        samp_read += _sources[i_file]->vector().read(field, ri);
+      }
     }
   }
   return samp_read;
