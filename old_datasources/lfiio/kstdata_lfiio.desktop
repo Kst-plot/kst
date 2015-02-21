@@ -24,6 +24,7 @@ Name[sv]=LFIIO-läsare
 Name[uk]=Засіб читання LFIIO
 Name[x-test]=xxLFIIO Readerxx
 Comment=Implements support for reading FITS files into Kst.
+Comment[bs]=Implementira podršku za čitanje FITS datoteka u Kst.
 Comment[ca]=Implementació que permet llegir fitxers FITS en el Kst.
 Comment[ca@valencia]=Implementació que permet llegir fitxers FITS en el Kst.
 Comment[de]=Unterstützung für das Einlesen von FITS-Dateien in Kst

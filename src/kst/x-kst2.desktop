@@ -23,6 +23,7 @@ Icon=kst
 DefaultApp=kst2
 Patterns=*.kst;*.KST;
 Comment=Kst Session File
+Comment[bs]=Kst sesijska datoteka
 Comment[ca]=Fitxer de sessió del Kst
 Comment[ca@valencia]=Fitxer de sessió del Kst
 Comment[cs]=Soubor sezení Kst
