@@ -170,6 +170,7 @@ bool Document::save(const QString& to) {
   xml.writeEndElement();
 
   xml.writeStartElement("graphics");
+  xml.writeAttribute("currentTab", QString::number(_win->tabWidget()->currentIndex()));
   for (int i = 0; i < _win->tabWidget()->count(); ++i) {
     View *v = qobject_cast<View*>(_win->tabWidget()->widget(i));
     xml.writeStartElement("view");
@@ -253,6 +254,7 @@ bool Document::open(const QString& file) {
 
   enum State { Unknown=0, Data, Variables, Objects, Relations, Graphics, View };
   State state = Unknown;
+  int currentTab = 0;
 
   while (!xml.atEnd()) {
     if (xml.isStartElement()) {
@@ -283,6 +285,8 @@ bool Document::open(const QString& file) {
           malformed();
         }
         state = Graphics;
+        QXmlStreamAttributes attrs = xml.attributes();
+        currentTab = attrs.value("currentTab").toString().toInt();
       } else {
         switch (state) {
           case Objects:
@@ -414,6 +418,10 @@ bool Document::open(const QString& file) {
   _tnum = max_tnum+1;
   _mnum = max_mnum+1;
 
+
+  if (_win->tabWidget()->count() > currentTab) {
+    _win->tabWidget()->setCurrentIndex(currentTab);
+  }
 
   UpdateManager::self()->doUpdates(true);
   setChanged(false);
