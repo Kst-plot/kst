@@ -92,6 +92,8 @@ class KSTCORE_EXPORT ObjectStore
       int doAve;
     } override;
 
+    unsigned sessionVersion; // keep track of older .kst file sessions.
+    QString sessionVersionString;
   private:
     Q_DISABLE_COPY(ObjectStore)
 

@@ -35,6 +35,7 @@ ObjectStore::ObjectStore()
 {
   override.fileName.clear();
   override.f0 = override.N = override.skip = override.doAve = -5;
+  sessionVersion = 9999999;
 }
 
 

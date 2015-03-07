@@ -310,14 +310,17 @@ void Vector::CreateScalars(ObjectStore *store) {
     sp->setProvider(this);
     sp->setSlaveName("MinPos");
 
-    _scalars.insert("imax", sp = store->createObject<Scalar>());
-    sp->setProvider(this);
-    sp->setSlaveName("iMax");
+    if (store->sessionVersion>20000) {
+      _scalars.insert("imax", sp = store->createObject<Scalar>());
+      sp->setProvider(this);
+      sp->setSlaveName("iMax");
 
-    _scalars.insert("imin", sp = store->createObject<Scalar>());
-    sp->setProvider(this);
-    sp->setSlaveName("iMin");
-
+      _scalars.insert("imin", sp = store->createObject<Scalar>());
+      sp->setProvider(this);
+      sp->setSlaveName("iMin");
+    } else {
+      //qDebug() << "old session version does not support iMin and iMax";
+    }
   }
 }
 
@@ -436,12 +439,14 @@ void Vector::internalUpdate() {
         _scalars["sum"]->setValue(sum);
         _scalars["sumsquared"]->setValue(sum2);
         _scalars["max"]->setValue(_max);
-        _scalars["imax"]->setValue(_imax);
         _scalars["min"]->setValue(_min);
-        _scalars["imin"]->setValue(_imin);
         _scalars["minpos"]->setValue(_minPos);
         _scalars["last"]->setValue(last);
         _scalars["first"]->setValue(first);
+        if (store()->sessionVersion>20000) {
+          _scalars["imax"]->setValue(_imax);
+          _scalars["imin"]->setValue(_imin);
+        }
       }
       _ns_max = _ns_min = 0;
 
@@ -537,11 +542,13 @@ void Vector::internalUpdate() {
       _scalars["sumsquared"]->setValue(sum2);
       _scalars["max"]->setValue(_max);
       _scalars["min"]->setValue(_min);
-      _scalars["imax"]->setValue(_imax);
-      _scalars["imin"]->setValue(_imin);
       _scalars["minpos"]->setValue(_minPos);
       _scalars["last"]->setValue(last);
       _scalars["first"]->setValue(first);
+      if (store()->sessionVersion>20000) {
+        _scalars["imax"]->setValue(_imax);
+        _scalars["imin"]->setValue(_imin);
+      }
     }
 
     updateScalars();

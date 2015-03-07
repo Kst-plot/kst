@@ -131,7 +131,11 @@ bool Document::save(const QString& to) {
   xml.setAutoFormatting(true);
   xml.writeStartDocument();
   xml.writeStartElement("kst");
-  xml.writeAttribute("version", "2.0");
+  if (objectStore()->sessionVersion >=9999999) {
+    xml.writeAttribute("version", "2.0.9");
+  } else {
+    xml.writeAttribute("version", objectStore()->sessionVersionString);
+  }
 
   xml.writeStartElement("data");
   foreach (DataSourcePtr s, objectStore()->dataSourceList()) {
@@ -260,6 +264,14 @@ bool Document::open(const QString& file) {
     if (xml.isStartElement()) {
       QString n = xml.name().toString();
       if (n == "kst") {
+        QXmlStreamAttributes attrs = xml.attributes();
+        objectStore()->sessionVersionString = attrs.value("version").toString();
+        QStringList version = objectStore()->sessionVersionString.split('.');
+        objectStore()->sessionVersion = version[0].toInt() * 10000 + version[1].toInt();
+        if (version.size()>2) {
+          objectStore()->sessionVersion += version[2].toInt();
+        }
+        //qDebug() << "version" << version << objectStore()->sessionVersion;
       } else if (n == "data") {
         if (state != Unknown) {
           malformed();
