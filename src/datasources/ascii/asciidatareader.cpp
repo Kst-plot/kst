@@ -368,7 +368,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
         if ((!incol) && is_custom) {
           ++i_col;
           if (i_col == col) {
-            v[i] = NAN;
+            v[i] = lexc.nanValue();  //NAN;
           }
         }
         incol = false;
