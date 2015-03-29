@@ -208,11 +208,7 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
 
   R = attrs.value("initialXNum");
   if (!R.isEmpty()) {
-    if (_xnum > R.toString().toInt()) {
-      qDebug() << "Warning: inonsistent kst file: references to scalars will be broken." << _xnum << R.toString().toInt();
-    } else {
       _xnum = R.toString().toInt();
-    }
   }
 
   R = attrs.value("initialPNum");
