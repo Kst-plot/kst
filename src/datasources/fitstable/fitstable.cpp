@@ -140,8 +140,6 @@ const DataVector::DataInfo DataInterfaceFitsTableVector::dataInfo(const QString 
    return DataVector::DataInfo(source.frameCount(field), source.samplesPerFrame(field));
 }
 
-
-
 int DataInterfaceFitsTableVector::read(const QString& field, DataVector::ReadInfo& p){
 
    DBG qDebug() << "Entering DataInterfaceFitsTableVector::read() with field: " << field << endl;
@@ -308,6 +306,7 @@ int FitsTableSource::validField(int typecode){
    switch(typecode){
       case TINT:
       case TLONG: /* also covers TINT32BIT */
+      case TLONGLONG:
       case TFLOAT:
       case TDOUBLE:
       case TLOGICAL:
@@ -418,6 +417,8 @@ bool FitsTableSource::init() {
             status = 0;
             continue;
          } /* failed to read keyword name, so skip and continue */
+         if (strcmp(keyname,"HISTORY") == 0) /* skip HISTORY keywords */
+            continue;
          if (fits_parse_value(fitsrecord, keyvalue, keycomment, &status)){
             fprintf(stderr,"Failed to read value and comment from key = %s\n",keyname);
             fits_report_error(stderr,status);
@@ -558,11 +559,11 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
    long repeat;    /* used to determine if matrix or vector */
    void *data;     /* empty pointer for reading data */
    long nelements; /* size of data to read */
-   long offset;     /* offset for data when repeat > 1 */
+   long offset;    /* offset for data when repeat > 1 */
    long idx;       /* used when reading from Pixel Readout and tracking which
                       section of data array is being read by fits_read_col */
    long totalidx;  /* to keep track of our location in the v array */
-   long i,j,k;      /* loop variables */
+   long i,j,k;     /* loop variables */
    long nrow;      /* number of rows read for each data chunk */
    long maxrow;    /* maximum number of rows to read at once.  Later re-used
                       to signify the number of rows to read for the current
@@ -571,7 +572,7 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
    long currow;    /* current row index (when looping over data chunks */
    int hdutype;    /* FITS HDU type */
    char *colname;  /* Name for column */
-   int firstHDU;   /* Flag to control whether we are reading the first HDU 
+   int firstHDU;   /* Flag to control whether we are reading the first HDU
                       containing data for a field.  Necessary to keep track of
                       s, the offset from the beginning of data */
    QByteArray ba;  /* needed to convert a QString to char array */
@@ -604,6 +605,8 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
       data = (int *) malloc(nelements*sizeof(int));
    else if (typecode == TLONG || typecode == TINT32BIT)
       data = (long *) malloc(nelements*sizeof(long));
+   else if (typecode == TLONGLONG)
+      data = (long long *) malloc(nelements*sizeof(long long));
    else if (typecode == TFLOAT)
       data = (float *) malloc(nelements*sizeof(float));
    else if (typecode == TDOUBLE)
@@ -632,7 +635,7 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
          maxrow = tableRow[i];
          currow = 1; /* FITS starts counting from row 1 */
       }
-      
+
       /* figure out how many chunks we need to read the rows in this HDU */
       idx = (maxrow*repeat)%nelements;
       if (idx == 0) /* divides evenly */
@@ -673,6 +676,19 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
             } else {
                for (k=0; k < nrow; k++){
                   v[totalidx+k] = (double) ((long *)data)[k*repeat+offset];
+               }
+            }
+         } else if (typecode == TLONGLONG){
+            if (fits_read_col(_fptr, typecode, colnum, currow, 1,
+               nrow*repeat, NULL, &(((long long *)data)[0]), &anynul, &status)){
+               fprintf(stderr,"Failed to read column = %s, filling with NaNs\n",colname);
+               fits_report_error(stderr,status);
+               status = 0;
+               for (k=0; k < nrow; k++)
+                  v[totalidx+k] = sqrt(-1);
+            } else {
+               for (k=0; k < nrow; k++){
+                  v[totalidx+k] = (double) ((long long *)data)[k*repeat+offset];
                }
             }
          }else if (typecode == TFLOAT){
@@ -747,6 +763,8 @@ int FitsTableSource::readMatrix(double *v, const QString& field){
    n = repeat*nrow;
    if (typecode == TLONG || typecode == TINT32BIT)
       data = (int *) malloc(n*sizeof(int));
+   else if (typecode == TLONGLONG)
+      data = (long long *) malloc(n*sizeof(long long));
    else if (typecode == TFLOAT)
       data = (float *) malloc(n*sizeof(float));
    else if (typecode == TDOUBLE)
@@ -759,6 +777,8 @@ int FitsTableSource::readMatrix(double *v, const QString& field){
    for (int i=0; i < n; i++){
       if (typecode == TLONG || typecode == TINT32BIT)
          v[i] = (double) ((int *)data)[i];
+      else if (typecode == TLONGLONG)
+         v[i] = (double) ((long long *)data)[i];
       else if (typecode == TFLOAT)
          v[i] = (double) ((float *)data)[i];
       else if (typecode == TDOUBLE)
