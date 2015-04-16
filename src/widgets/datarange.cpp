@@ -330,11 +330,11 @@ void DataRange::updateFields(ControlField cf) {
   }
   
   if ((_controlField0 != Start) && (_controlField1 != Start)) {
-    _start->setText(QString::number(last() - range(), 'g', 12));
+    _start->setText(QString::number(last() - range() + 1, 'g', 12));
   } else if ((_controlField0 != Last) && (_controlField1 != Last)) {
-    _last->setText(QString::number(start() + range(), 'g', 12));
+    _last->setText(QString::number(start() + range() - 1, 'g', 12));
   } else if ((_controlField0 != Range) && (_controlField1 != Range)) {
-    _range->setText(QString::number(last() - start(), 'g', 12));
+    _range->setText(QString::number(last() - start() + 1, 'g', 12));
   }
 }
 
