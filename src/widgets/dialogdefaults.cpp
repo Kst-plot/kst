@@ -52,6 +52,8 @@ void setDataMatrixDefaults(DataMatrixPtr M) {
   dialogDefaults().setValue("matrix/yNumSteps",M->yNumSteps());
   dialogDefaults().setValue("matrix/reqXStart",M->reqXStart());
   dialogDefaults().setValue("matrix/reqYStart",M->reqYStart());
+
+  dialogDefaults().setValue("matrix/frame",M->frame());
 }
 
 void setHistogramDefaults(HistogramPtr H) {

@@ -62,7 +62,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&) const;
+  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -97,8 +97,9 @@ void DataInterfaceQImageVector::init()
 }
 
 
-const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &field) const
+const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &field, int frame) const
 {
+  Q_UNUSED(frame)
   if (!_vectorList.contains(field))
     return DataVector::DataInfo();
 
@@ -179,7 +180,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -210,14 +211,14 @@ void DataInterfaceQImageMatrix::init()
 
 
 
-const DataMatrix::DataInfo DataInterfaceQImageMatrix::dataInfo(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceQImageMatrix::dataInfo(const QString& matrix, int frame) const
 {
+  Q_UNUSED(frame)
   if ( !_image || _image->isNull() || !_matrixList.contains( matrix ) ) {
     return DataMatrix::DataInfo();
   }
 
   DataMatrix::DataInfo info;
-  info.samplesPerFrame = 1;
   info.xSize = _image->width();
   info.ySize = _image->height();
 

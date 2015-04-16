@@ -62,7 +62,7 @@ struct NotSupportedImp : public DataSource::DataInterface<T>
   bool isValid(const QString&) const { return false; }
 
   // T specific
-  const typename T::DataInfo dataInfo(const QString&) const { return typename T::DataInfo(); }
+  const typename T::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return typename T::DataInfo(); }
   void setDataInfo(const QString&, const typename T::DataInfo&) {}
 
   // meta data

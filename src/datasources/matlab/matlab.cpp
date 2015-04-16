@@ -272,7 +272,6 @@ const DataMatrix::DataInfo DataInterfaceMatlabMatrix::dataInfo(const QString& ma
   }
 
   DataMatrix::DataInfo info;
-  info.samplesPerFrame = 1;
   info.xSize = matvar->dims[0];
   info.ySize = matvar->dims[1];
 

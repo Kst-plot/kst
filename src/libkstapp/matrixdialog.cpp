@@ -78,35 +78,6 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientX, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  _connect->setVisible(false);
-
-  QLabel* siHack=new QLabel(this);
-  siHack->hide();
-  siHack->setProperty("si","Read 1 sample per");
-  siHack->setObjectName("siHack");
-  siHack->setBuddy(_skip);
-
-  textLabel7->setProperty("si","X step si&ze:");
-  textLabel5_2_2->setProperty("si","&X minimum:");
-  textLabel6->setProperty("si","&Y minimum:");
-  textLabel7_2->setProperty("si","Y ste&p size:");
-  _gradientX->setProperty("si","X-axis");
-  _gradientY->setProperty("si","Y-axis");
-  textLabel6_2->setProperty("si","Z at minimum:");
-  textLabel8->setProperty("si","X steps:");
-  textLabel8_2->setProperty("si","Y steps:");
-  textLabel7_3->setProperty("si","Z at maximum:");
-  textLabel3->setProperty("si","Y s&tarting frame:");
-  textLabel2_2->setProperty("si","X n&umber of frames:");
-  textLabel3_2->setProperty("si","Y nu&mber of frames:");
-  textLabel2->setProperty("si","X &starting frame:");
-  _doAverage->setProperty("si","Boxcar &filter first");
-  _doSkip->setProperty("si","Read &1 sample per");
-  _readFromSource->setProperty("si","Read from data source");
-  _generateGradient->setProperty("si","Generate gradient");
-  TextLabel6->setProperty("si","F&ield or column:");
-  _connect->setProperty("si","&Connect");
-  _configure->setProperty("si","Co&nfigure...");
 }
 
 
@@ -144,10 +115,10 @@ void MatrixTab::yNumStepsReadToEndClicked() {
 
 void MatrixTab::updateEnables() {
   _dataSourceGroup->setEnabled(_readFromSource->isChecked());
-  _dataRangeGroup->setEnabled(_readFromSource->isChecked());
+  _partialMatrixGroup->setEnabled(_readFromSource->isChecked());
   _gradientGroup->setEnabled(_generateGradient->isChecked());
 
-  if (_dataRangeGroup->isEnabled()) {
+  if (_partialMatrixGroup->isEnabled()) {
     _skip->setEnabled(_doSkip->isChecked());
     _doAverage->setEnabled(_doSkip->isChecked());
     xStartCountFromEndClicked();
@@ -167,9 +138,13 @@ void MatrixTab::hideGeneratedOptions() {
 void MatrixTab::hideDataOptions() {
   _sourceGroup->setVisible(false);
   _dataSourceGroup->setVisible(false);
-  _dataRangeGroup->setVisible(false);
+  _partialMatrixGroup->setVisible(false);
 }
 
+void MatrixTab::hideUnused() {
+  _partialMatrixGroup->setVisible(false);
+  _scalingGroup->setVisible(false);
+}
 
 DataSourcePtr MatrixTab::dataSource() const {
   return _dataSource;
@@ -373,6 +348,30 @@ void MatrixTab::setSkip(int skip) {
 }
 
 
+int MatrixTab::frame() const {
+  if (_lastFrame->isChecked()) {
+    return (-1);
+  } else {
+    return _frame->value();
+  }
+}
+
+
+bool MatrixTab::frameDirty() const {
+  return (!_frame->text().isEmpty());
+}
+
+
+void MatrixTab::setFrame(int frame) {
+  if (frame<0) {
+    _lastFrame->setChecked(true);
+  } else {
+    _lastFrame->setChecked(false);
+    _frame ->setValue(frame);
+  }
+}
+
+
 double MatrixTab::gradientZAtMin() const {
   return _gradientZAtMin->text().toDouble();
 }
@@ -517,7 +516,7 @@ void MatrixTab::readFromSourceChanged() {
     setMatrixMode(GeneratedMatrix);
 
   _dataSourceGroup->setEnabled(_readFromSource->isChecked());
-  _dataRangeGroup->setEnabled(_readFromSource->isChecked());
+  _partialMatrixGroup->setEnabled(_readFromSource->isChecked());
   _gradientGroup->setEnabled(!_readFromSource->isChecked());
   emit sourceChanged();
 }
@@ -546,6 +545,11 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
   }
   _field->setEditable(!_dataSource->matrix().isListComplete() && !_dataSource->matrix().list().empty());
   _configure->setEnabled(_dataSource->hasConfigWidget());
+
+  bool hasImageStream = _dataSource->hasImageStream();
+  _frame->setVisible(hasImageStream);
+  _frameLabel->setVisible(hasImageStream);
+  _lastFrame->setVisible(hasImageStream);
 
   _dataSource->unlock();
 
@@ -644,6 +648,9 @@ MatrixDialog::~MatrixDialog() {
 
 
 void MatrixDialog::configureTab(ObjectPtr matrix) {
+
+  _matrixTab->hideUnused();
+
   if (!matrix) {
     _matrixTab->setMatrixMode(MatrixTab::DataMatrix);
     _matrixTab->setFile(dialogDefaults().value("matrix/datasource",_matrixTab->file()).toString());
@@ -657,6 +664,8 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYNumSteps(dialogDefaults().value("matrix/yNumSteps",1000).toInt());
     _matrixTab->setXStart(dialogDefaults().value("matrix/reqXStart",0).toInt());
     _matrixTab->setYStart(dialogDefaults().value("matrix/reqYStart",0).toInt());
+
+    _matrixTab->setFrame(dialogDefaults().value("matrix/frame",-1).toInt());
 
 #ifdef NO_GENERATED_OPTIONS
     _matrixTab->hideGeneratedOptions();
@@ -683,6 +692,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setSkip(dataMatrix->skip());
     _matrixTab->setDoSkip(dataMatrix->doSkip());
     _matrixTab->setDoAverage(dataMatrix->doAverage());
+    _matrixTab->setFrame(dataMatrix->frame());
     _matrixTab->hideGeneratedOptions();
     if (_editMultipleWidget) {
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
@@ -787,6 +797,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   const double minY = _matrixTab->minY();
   const double stepX = _matrixTab->stepX();
   const double stepY = _matrixTab->stepY();
+  const int frame = _matrixTab->frame();
 
 //   qDebug() << "Creating new data matrix ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
@@ -808,7 +819,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   matrix->change(dataSource, field,
       xStart, yStart,
       xNumSteps, yNumSteps, doAverage,
-      doSkip, skip, minX, minY, stepX, stepY);
+      doSkip, skip, frame, minX, minY, stepX, stepY);
 
   if (DataDialog::tagStringAuto()) {
      matrix->setDescriptiveName(QString());
@@ -903,8 +914,10 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           bool doSkip = _matrixTab->doSkipDirty() ?  _matrixTab->doSkip() : matrix->doSkip();
           bool doAve = _matrixTab->doAverageDirty() ?  _matrixTab->doAverage() : matrix->doAverage();
 
+          int frame = _matrixTab->frame();
+
           matrix->writeLock();
-          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
+          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
           matrix->registerChange();
           matrix->unlock();
         }
@@ -928,9 +941,11 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       const double minY = _matrixTab->minY();
       const double stepX = _matrixTab->stepX();
       const double stepY = _matrixTab->stepY();
+      const int frame = _matrixTab->frame();
+
 
       dataMatrix->writeLock();
-      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, minX, minY, stepX, stepY);
+      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, frame, minX, minY, stepX, stepY);
       dataMatrix->registerChange();
       dataMatrix->unlock();
       setDataMatrixDefaults(dataMatrix);

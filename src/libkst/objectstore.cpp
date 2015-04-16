@@ -25,6 +25,7 @@
 #include "datastring.h"
 #include "datascalar.h"
 #include "datamatrix.h"
+#include "vscalar.h"
 
 // NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
 #define NAMEDEBUG 0
@@ -208,6 +209,29 @@ bool ObjectStore::deleteUnsetUsedFlags() {
   }
   return some_deleted;
 }
+
+const PrimitiveList ObjectStore::getFramePrimitives() const {
+  PrimitiveList primitives;
+  DataVectorList data_vectors = getObjects<DataVector>();
+  VScalarList vscalars = getObjects<VScalar>();
+  DataMatrixList data_matrixes = getObjects<DataMatrix>();
+
+
+  foreach (DataVectorPtr dv, data_vectors) {
+    primitives.append(dv);
+  }
+  foreach (VScalarPtr vs, vscalars) {
+    primitives.append(vs);
+  }
+  foreach (DataMatrixPtr dm, data_matrixes) {
+    if (dm->hasStream()) {
+      primitives.append(dm);
+    }
+  }
+
+  return primitives;
+}
+
 
 }
 // vim: ts=2 sw=2 et

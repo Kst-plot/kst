@@ -37,10 +37,10 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
   public:
 
    /** Read the specified sub-range of the matrix, flat-packed in z in row-major order
-        xStart - starting x *frame*
-        yStart - starting y *frame*
-        xNumSteps - number of *frames* to read in x direction; -1 to read 1 *sample* from xStart
-        yNumSteps - number of *frames* to read in y direction; -1 to read 1 *sample* from yStart
+        xStart - starting x column
+        yStart - starting y row
+        xNumSteps - number of columns to read in x direction;
+        yNumSteps - number of rows to read in y direction;
         Will skip according to the parameter, but it may not be implemented.  If return value is -9999,
         use the non-skip version instead.
         The suggested scaling and translation is returned in xMin, yMin, xStepSize, and yStepSize
@@ -53,6 +53,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
       int xNumSteps;
       int yNumSteps;
       int skip;
+      int frame; // only used for image streams
     };
 
 
@@ -60,11 +61,11 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     {
       DataInfo();
 
-      int samplesPerFrame;
       int xSize;
       int ySize;
       bool invertXHint;
       bool invertYHint;
+      int frameCount; // only used for image streams
     };
 
 
@@ -79,11 +80,11 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     void change(DataSourcePtr file, const QString &field,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip,
+                bool doAve, bool doSkip, int skip, int frame,
                 double minX, double minY, double stepX, double stepY);
     void changeFrames(int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip,
+                bool doAve, bool doSkip, int skip, int frame,
                 double minX, double minY, double stepX, double stepY);
 
     // return properties of DataMatrix
@@ -100,6 +101,11 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     bool doSkip() const;
     bool doAverage() const;
     int skip() const;
+
+    // for image streams
+    int frame() const {return _frame;}
+    void setFrame(int f) {_frame = f;}
+    bool hasStream();
 
     // labels for this matrix
     virtual QString label() const;
@@ -142,11 +148,11 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY,
-                           bool doAve, bool doSkip, int skip,
+                           bool doAve, bool doSkip, int skip, int frame,
                            double minX, double minY, double stepX, double stepY);
 
-    void doUpdateSkip(int realXStart, int realYStart);
-    void doUpdateNoSkip(int realXStart, int realYStart);
+    void doUpdateSkip(int realXStart, int realYStart, int frame);
+    void doUpdateNoSkip(int realXStart, int realYStart, int frame);
 
     virtual void _resetFieldScalars();
     virtual void _resetFieldStrings();
@@ -169,9 +175,9 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     bool _doAve : 1;
     bool _doSkip : 1;
     int _skip;
-    int _samplesPerFrameCache; // cache the samples per frame of the field in datasource
+    int _frame;
 
-    int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip);
+    int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, int frame);
 
     QHash<QString, ScalarPtr> _fieldScalars;
     QHash<QString, StringPtr> _fieldStrings;

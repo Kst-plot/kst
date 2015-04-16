@@ -18,8 +18,9 @@ endif()
 
 kst_add_plugin(. ascii)
 kst_add_plugin(. qimagesource)
-kst_add_plugin(. sampledatasource)
+#kst_add_plugin(. sampledatasource)
 kst_add_plugin(. sourcelist)
+kst_add_plugin(. bis)
 
 if(getdata)
 	include_directories(${GETDATA_INCLUDE_DIR})

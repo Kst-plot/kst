@@ -63,7 +63,7 @@ public:
   bool isValid(const QString& field) const { return dir._scalarList.contains( field ); }
 
   // T specific: not used for scalars
-  const DataScalar::DataInfo dataInfo(const QString&) const { return DataScalar::DataInfo(); }
+  const DataScalar::DataInfo dataInfo(const QString&, int frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
   void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
@@ -96,7 +96,7 @@ public:
   bool isValid(const QString& field) const { return dir._stringList.contains( field ); }
 
   // T specific: not used for Strings
-  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -131,7 +131,7 @@ public:
   bool isValid(const QString& field) const { return dir._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&) const;
+  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -144,8 +144,9 @@ public:
 
 
 
-const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &field) const
+const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &field, int frame) const
 {
+  Q_UNUSED(frame)
   if (!dir._fieldList.contains(field))
     return DataVector::DataInfo();
 

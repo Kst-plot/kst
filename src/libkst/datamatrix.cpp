@@ -38,11 +38,11 @@ const QString DataMatrix::staticTypeTag = "datamatrix";
 
 
 DataMatrix::DataInfo::DataInfo() :
-    samplesPerFrame(-1),
     xSize(-1),
     ySize(-1),
     invertXHint(false),
-    invertYHint(false)
+    invertYHint(false),
+    frameCount(-1)
 {
 }
 
@@ -73,6 +73,7 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("doave", QVariant(_doAve).toString());
     xml.writeAttribute("doskip", QVariant(_doSkip).toString());
     xml.writeAttribute("skip", QString::number(_skip));
+    xml.writeAttribute("frame", QString::number(_frame));
     xml.writeAttribute("xmin", QString::number(minX()));
     xml.writeAttribute("ymin", QString::number(minY()));
     xml.writeAttribute("xstep", QString::number(xStepSize()));
@@ -94,21 +95,23 @@ ScriptInterface* DataMatrix::createScriptInterface() {
 void DataMatrix::change(DataSourcePtr file, const QString &field,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip, double minX, double minY,
+                        bool doAve, bool doSkip, int skip, int frame,
+                        double minX, double minY,
                         double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
+  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
 }
 
 
 void DataMatrix::changeFrames(int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip, double minX, double minY,
+                        bool doAve, bool doSkip, int skip, int frame,
+                        double minX, double minY,
                         double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(dataSource(), _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, minX, minY, stepX, stepY);
+  commonConstructor(dataSource(), _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
 }
 
 
@@ -208,7 +211,7 @@ bool DataMatrix::checkValidity(const DataSourcePtr& ds) const {
 }
 
 
-void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
+void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
 
   // since we are skipping, we don't need all the pixels
   // also, samples per frame is always 1 with skipping
@@ -233,7 +236,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     // try to use the datasource's read with skip function - it will automatically
     // enlarge each pixel to correct for the skipping
     matData.z=_z;
-    _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, _skip);
+    _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, _skip, frame);
 
     // -9999 means the skipping function is not supported by datasource
     if (_NS != -9999) {
@@ -248,8 +251,8 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
   // the skipping function is not supported by datasource; we need to manually skip
   if (_doAve) {
     // boxcar filtering is not supported by datasources currently; need to manually average
-    if (_aveReadBufferSize < _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip) {
-      _aveReadBufferSize = _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip;
+    if (_aveReadBufferSize < _skip*_skip) {
+      _aveReadBufferSize = _skip*_skip;
       if (!kstrealloc(_aveReadBuffer, _aveReadBufferSize*sizeof(double))) {
         qCritical() << "Matrix resize failed";
       }
@@ -260,11 +263,10 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     double* zPos = _z;
     for (int i = 0; i < _nX; i++) {
       for (int j = 0; j < _nY; j++) {
-        // read one buffer size in
-        readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, _skip, _skip, -1);
+        readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, _skip, _skip, -1, frame);
         // take average of the buffer
         double bufferAverage = 0;
-        for (int k = 0; k < _samplesPerFrameCache*_skip*_samplesPerFrameCache*_skip; k++) {
+        for (int k = 0; k < _skip*_skip; k++) {
           bufferAverage += _aveReadBuffer[k];
         }
         bufferAverage = bufferAverage / _aveReadBufferSize;
@@ -275,8 +277,8 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
         if (first) {
           _minX = matData.xMin;
           _minY = matData.yMin;
-          _stepX = matData.xStepSize * _skip * _samplesPerFrameCache;
-          _stepY = matData.yStepSize * _skip * _samplesPerFrameCache;
+          _stepX = matData.xStepSize * _skip;
+          _stepY = matData.yStepSize * _skip;
           first = false;
         }
       }
@@ -288,14 +290,14 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
     for (int i = 0; i < _nX; i++) {
       for (int j = 0; j < _nY; j++) {
         // read one sample
-        int samples = readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, -1, -1, -1);
+        int samples = readMatrix(&matData, _field, realXStart + _skip*i, realYStart + _skip*j, -1, -1, -1, frame);
         matData.z += samples;
         _NS += samples;
         if (first) {
           _minX = matData.xMin;
           _minY = matData.yMin;
-          _stepX = matData.xStepSize * _skip * _samplesPerFrameCache;
-          _stepY = matData.yStepSize * _skip * _samplesPerFrameCache;
+          _stepX = matData.xStepSize * _skip;
+          _stepY = matData.yStepSize * _skip;
           first = false;
         }
       }
@@ -304,10 +306,10 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart) {
 }
 
 
-void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart) {
+void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, int frame) {
 
   // resize _z if necessary
-  int requiredSize = _nX*_nY*_samplesPerFrameCache*_samplesPerFrameCache;
+  int requiredSize = _nX*_nY;
   if (requiredSize != _zSize) {
     bool resizeOK = resizeZ(requiredSize);
     if (!resizeOK) {
@@ -320,7 +322,7 @@ void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart) {
   MatrixData matData;
   matData.z=_z;
 
-  _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, -1);
+  _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, -1, frame);
 
   // set the recommended translate and scaling
   _minX = matData.xMin;
@@ -451,7 +453,7 @@ void DataMatrix::internalUpdate() {
   }
 
   // see if we can turn off skipping (only check if skipping enabled)
-  if (_doSkip && _samplesPerFrameCache == 1 && _skip < 2) {
+  if (_doSkip && _skip < 2) {
     _doSkip = false;
   }
 
@@ -459,9 +461,17 @@ void DataMatrix::internalUpdate() {
   int realXStart;
   int realYStart;
 
-  const DataInfo info = dataSource()->matrix().dataInfo(_field);
+  const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
   int xSize = info.xSize;
   int ySize = info.ySize;
+  int fc = info.frameCount;
+  int frame;
+
+  if (_frame<0) {
+    frame = fc;
+  } else {
+    frame = _frame;
+  }
 
   _invertXHint = info.invertXHint;
   _invertYHint = info.invertYHint;
@@ -519,9 +529,9 @@ void DataMatrix::internalUpdate() {
 
   // do the reading; skip or non-skip version
   if (_doSkip) {
-    doUpdateSkip(realXStart, realYStart);
+    doUpdateSkip(realXStart, realYStart, frame);
   } else {
-    doUpdateNoSkip(realXStart, realYStart);
+    doUpdateNoSkip(realXStart, realYStart, frame);
   }
 
   // remember these as the last updated range
@@ -556,7 +566,7 @@ PrimitivePtr DataMatrix::makeDuplicate() const {
   DataMatrixPtr matrix = store()->createObject<DataMatrix>();
 
   matrix->writeLock();
-  matrix->change(dataSource(), _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _minX, _minY, _stepX, _stepY);
+  matrix->change(dataSource(), _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _frame, _minX, _minY, _stepX, _stepY);
   if (descriptiveNameIsManual()) {
     matrix->setDescriptiveName(descriptiveName());
   }
@@ -569,7 +579,7 @@ PrimitivePtr DataMatrix::makeDuplicate() const {
 
 void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
-                                   bool doAve, bool doSkip, int skip, double minX, double minY,
+                                   bool doAve, bool doSkip, int skip, int frame, double minX, double minY,
                                    double stepX, double stepY) {
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
@@ -580,6 +590,7 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _doAve = doAve;
   _doSkip = doSkip;
   _skip = skip;
+  _frame = frame;
   _minX = minX;
   _minY = minY;
   _stepX = stepX;
@@ -593,8 +604,7 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   if (!dataSource()) {
     Debug::self()->log(tr("Data file for matrix %1 was not opened.").arg(Name()), Debug::Warning);
   } else {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field);
-    _samplesPerFrameCache = info.samplesPerFrame;
+    const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
     _invertXHint = info.invertXHint;
     _invertYHint = info.invertYHint;
   }
@@ -618,8 +628,7 @@ void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (dataSource()) {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field);
-    _samplesPerFrameCache = info.samplesPerFrame;
+    const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
     _invertXHint = info.invertXHint;
     _invertYHint = info.invertYHint;
   }
@@ -643,6 +652,11 @@ bool DataMatrix::doAverage() const {
 
 int DataMatrix::skip() const {
   return _skip;
+}
+
+
+bool DataMatrix::hasStream() {
+  return dataSource()->hasImageStream();
 }
 
 
@@ -690,9 +704,9 @@ QString DataMatrix::propertyString() const {
 }
 
 
-int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip)
+int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, int frame)
 {
-  ReadInfo p = { data, xStart, yStart, xNumSteps, yNumSteps, skip};
+  ReadInfo p = { data, xStart, yStart, xNumSteps, yNumSteps, skip, frame};
   return dataSource()->matrix().read(matrix, p);
 }
 

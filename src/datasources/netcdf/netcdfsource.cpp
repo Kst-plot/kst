@@ -54,7 +54,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataScalar::DataInfo dataInfo(const QString&) const { return DataScalar::DataInfo(); }
+  const DataScalar::DataInfo dataInfo(const QString&, int frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
   void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
@@ -97,7 +97,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -149,7 +149,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&) const;
+  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -162,8 +162,9 @@ private:
 };
 
 
-const DataVector::DataInfo DataInterfaceNetCdfVector::dataInfo(const QString &field) const
+const DataVector::DataInfo DataInterfaceNetCdfVector::dataInfo(const QString &field, int frame) const
 {
+  Q_UNUSED(frame)
   if (!netcdf._fieldList.contains(field))
     return DataVector::DataInfo();
 
@@ -249,7 +250,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo	(const QString&) const;
+  const DataMatrix::DataInfo dataInfo	(const QString&, int frame) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -262,8 +263,9 @@ private:
 };
 
 
-const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& matrix, int frame) const
 {
+  Q_UNUSED(frame)
   if (!netcdf._matrixList.contains( matrix ) ) {
     return DataMatrix::DataInfo();
   }
@@ -279,7 +281,6 @@ const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& ma
   }
 
   DataMatrix::DataInfo info;
-  info.samplesPerFrame = 1;
   // TODO is this right?
   info.xSize = var->get_dim(0)->size();
   info.ySize = var->get_dim(1)->size();

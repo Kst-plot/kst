@@ -64,7 +64,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -117,7 +117,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -168,8 +168,9 @@ void DataInterfaceFitsImageMatrix::init()
   }
 }
 
-const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix) const
+const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix, int frame) const
 {
+  Q_UNUSED(frame)
   long n_axes[3];
   int status = 0;
   int type;
@@ -187,7 +188,6 @@ const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString&
   }
 
   DataMatrix::DataInfo info;
-  info.samplesPerFrame = 1;
   info.xSize = n_axes[0];
   info.ySize = n_axes[1];
 
@@ -456,7 +456,7 @@ Kst::Object::UpdateType FitsImageSource::internalDataSourceUpdate() {
 
 
 bool FitsImageSource::isEmpty() const {
-  return im->dataInfo(DefaultMatrixName).xSize < 1;
+  return im->dataInfo(DefaultMatrixName,0).xSize < 1;
 }
 
 

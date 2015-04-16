@@ -56,6 +56,7 @@ class KSTCORE_EXPORT VScalar : public Scalar {
     /** change the properties of a VScalar */
     void change(DataSourcePtr file, const QString &field, int f0);
     void changeFile(DataSourcePtr file);
+    void changeFrame(int in_f0) {_f0 = in_f0;}
 
     /** return the name of the file */
     QString filename() const;

@@ -44,7 +44,7 @@ public:
   bool isValid(const QString& field) const { return sourcelist._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&) const;
+  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -58,8 +58,9 @@ public:
 };
 
 
-const DataVector::DataInfo DataInterfaceSourceListVector::dataInfo(const QString &field) const
+const DataVector::DataInfo DataInterfaceSourceListVector::dataInfo(const QString &field, int frame) const
 {
+  Q_UNUSED(frame)
   if (!sourcelist._fieldList.contains(field))
     return DataVector::DataInfo();
 

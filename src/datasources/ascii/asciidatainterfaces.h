@@ -46,7 +46,7 @@ public:
   bool isValid(const QString& field) const { return ascii._fieldLookup.contains( field ); }
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&) const;
+  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -59,8 +59,9 @@ public:
 
 
 //-------------------------------------------------------------------------------------------
-const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &field) const
+const DataVector::DataInfo DataInterfaceAsciiVector::dataInfo(const QString &field, int frame) const
 {
+  Q_UNUSED(frame)
   if (!ascii._fieldLookup.contains(field))
     return DataVector::DataInfo();
 
@@ -124,7 +125,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&) const { return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data

@@ -54,6 +54,8 @@ class KSTCORE_EXPORT ObjectStore
      ** T must inherit from Kst::Object */
     template<class T> const ObjectList<T> getObjects() const;
 
+    const PrimitiveList getFramePrimitives() const;
+
     /**  get just the data sources */
     DataSourceList dataSourceList() const;
 

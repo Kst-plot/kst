@@ -71,7 +71,7 @@ class KSTCORE_EXPORT DataSource : public Object
       virtual bool isValid(const QString& name) const = 0;
 
       // T specific
-      virtual const typename T::DataInfo dataInfo(const QString& name) const = 0;
+      virtual const typename T::DataInfo dataInfo(const QString& name, int frame=0) const = 0;
       virtual void setDataInfo(const QString& name, const typename T::DataInfo&) = 0;
 
       // meta data
@@ -187,8 +187,6 @@ class KSTCORE_EXPORT DataSource : public Object
     /************************************************************/
     /* File/data specific                                      */
     /************************************************************/
-
-
     virtual bool isValid() const; // generally you don't need to change this
 
     virtual QString fileName() const;
@@ -196,6 +194,10 @@ class KSTCORE_EXPORT DataSource : public Object
     void setAlternateFilename(const QString &file);
 
     QMap<QString, QString> fileMetas() const;
+
+    /** return true if the data source contains an indexable list of
+     * matrices */
+    virtual bool hasImageStream() { return false;}
 
     /** Returns the file type or an error message in a static string
       The string is stored in a separate static variable, so changes

@@ -96,12 +96,6 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     bool doAve() const;
     int skip() const;
 
-    /** Return field used for generalized lookup */
-    QString startUnits() {return _startUnits;}
-    void setStartUnits(const QString &field) {_startUnits = field;}
-    QString rangeUnits() {return _rangeUnits;}
-    void setRangeUnits(const QString &field) {_rangeUnits = field;}
-
     /** Reload the contents of the vector */
     void reload();                                              //si
 
@@ -181,10 +175,6 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
     /** Requested Starting Frame */
     int ReqF0;
-
-    /** generalized index field - empty if we are using frames. */
-    QString _startUnits;
-    QString _rangeUnits;
 
     /** Number of Samples allocated to the vector */
     int _numSamples;

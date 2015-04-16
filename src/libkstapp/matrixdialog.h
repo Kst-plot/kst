@@ -115,6 +115,10 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     bool skipDirty() const;
     void setSkip(int skip);
 
+    int frame() const;
+    bool frameDirty() const;
+    void setFrame(int frame);
+
     bool xStartCountFromEnd() const;
     bool xStartCountFromEndDirty() const;
     void setXStartCountFromEnd(bool xStartCountFromEnd);
@@ -132,7 +136,9 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     void setYReadToEnd(bool yReadToEnd);
 
     void hideGeneratedOptions();
-    void hideDataOptions();
+    void hideDataOptions();    
+    void hideUnused();
+
     void enableSingleEditOptions(bool enabled);
     void clearTabValues();
 

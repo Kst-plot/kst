@@ -641,7 +641,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
 
           dm->writeLock();
-          dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, 0.0, 0.0, 1.0, 1.0);
+          dm->change(ds, field, 0, 0, -1, -1, _doAve, _skip>0, _skip, _startFrame, 0.0, 0.0, 1.0, 1.0);
 
           dm->registerChange();
           dm->unlock();

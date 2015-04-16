@@ -71,6 +71,13 @@ public:
 
     virtual bool checkValidity(const DataSourcePtr& ds) const = 0;
 
+    /** Return field used for generalized lookup */
+    QString startUnits() {return _startUnits;}
+    void setStartUnits(const QString &field) {_startUnits = field;}
+    QString rangeUnits() {return _rangeUnits;}
+    void setRangeUnits(const QString &field) {_rangeUnits = field;}
+
+
   protected:
     DataPrimitive(Primitive* primitive);
 
@@ -78,6 +85,12 @@ public:
     DataPrimitive();
     struct Private;
     Private& d;
+
+    /** generalized index field - empty if we are using frames. */
+    QString _startUnits;
+    QString _rangeUnits;
+
+
 };
 
 }

@@ -14,6 +14,8 @@
 
 #include "datacollection.h"
 #include "datavector.h"
+#include "datamatrix.h"
+#include "vscalar.h"
 #include "objectstore.h"
 #include "document.h"
 #include "mainwindow.h"
@@ -173,7 +175,7 @@ void ChangeDataSampleDialog::modified() {
 
 void ChangeDataSampleDialog::updateCurveListDialog() {
 
-  DataVectorList dataVectors = _store->getObjects<DataVector>();
+  PrimitiveList dataVectors = _store->getFramePrimitives();
   _vectorList->blockSignals(true);
 
   _vectorList->clearSelection();
@@ -341,20 +343,39 @@ void ChangeDataSampleDialog::apply() {
   range_units = _dataRange->_rangeUnits->currentText();
 
   for (int i = 0; i < selectedItems.size(); ++i) {
+    QString filename;
+    DataSourcePtr datasource;
+    bool valid = false;
+    bool use_custom_start_index = false;
+    bool use_custom_range_index = false;
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
-      QString filename = vector->filename();
+      filename = vector->filename();
+      datasource = vector->dataSource();
+      valid = true;
+      use_custom_range_index = custom_range_index;
+      use_custom_start_index = custom_start_index;
+    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      filename = matrix->filename();
+      datasource = matrix->dataSource();
+      valid = true;
+    } else if (VScalarPtr vscalar = kst_cast<VScalar>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      filename = vscalar->filename();
+      datasource = vscalar->dataSource();
+      valid = true;
+    }
+    if (valid) {
       if (!f0_map.contains(filename)) {
         int f0;
         int r;
-        if (custom_start_index) {
-          f0 = vector->dataSource()->indexToFrame(_dataRange->start(), start_units);
+        if (use_custom_start_index) {
+          f0 = datasource->indexToFrame(_dataRange->start(), start_units);
         } else if (_dataRange->countFromEnd()) {
           f0 = -1;
         } else {
           f0 = _dataRange->start();
         }
-        if (custom_range_index) {
-          r = _dataRange->range()*vector->dataSource()->framePerIndex(range_units);
+        if (use_custom_range_index) {
+          r = _dataRange->range()*datasource->framePerIndex(range_units);
         } else if (_dataRange->readToEnd()) {
           r = -1;
         } else {
@@ -380,6 +401,24 @@ void ChangeDataSampleDialog::apply() {
       vector->setRangeUnits(start_units);
       vector->registerChange();
       vector->unlock();
+    } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      matrix->writeLock();
+      int from = f0_map.value(matrix->filename());
+      int range = r_map.value(matrix->filename());
+      matrix->setFrame(from+range-1);
+      matrix->setStartUnits(start_units);
+      matrix->setRangeUnits(start_units);
+      matrix->registerChange();
+      matrix->unlock();
+    } else if (VScalarPtr vscalar = kst_cast<VScalar>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+      vscalar->writeLock();
+      int from = f0_map.value(vscalar->filename());
+      int range = r_map.value(vscalar->filename());
+      vscalar->changeFrame(from+range-1);
+      //vscalar->setStartUnits(start_units);
+      //vscalar->setRangeUnits(start_units);
+      vscalar->registerChange();
+      vscalar->unlock();
     }
   }
 
