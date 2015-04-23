@@ -131,6 +131,8 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     virtual ScriptInterface* createScriptInterface();
 
+    int fileLength() const;
+
   protected:
     DataMatrix(ObjectStore *store);
     virtual ~DataMatrix();

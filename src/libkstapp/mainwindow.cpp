@@ -1670,6 +1670,15 @@ void MainWindow::readFromEnd() {
     v->registerChange();
     v->unlock();
   }
+
+  DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
+  foreach (DataMatrixPtr m, dataMatrices) {
+    m->readLock();
+    m->setFrame(-1);
+    m->registerChange();
+    m->unlock();
+  }
+
   UpdateManager::self()->doUpdates(true);
   dialogDefaults().setValue("vector/range", nf);
   dialogDefaults().setValue("vector/countFromEnd", true);
@@ -1697,6 +1706,15 @@ void MainWindow::readToEnd() {
     v->registerChange();
     v->unlock();
   }
+
+  DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
+  foreach (DataMatrixPtr m, dataMatrices) {
+    m->readLock();
+    m->setFrame(-1);
+    m->registerChange();
+    m->unlock();
+  }
+
   dialogDefaults().setValue("vector/start", f0);
   dialogDefaults().setValue("vector/countFromEnd", false);
   dialogDefaults().setValue("vector/readToEnd", true);
@@ -1716,6 +1734,7 @@ void MainWindow::pause(bool pause) {
 void MainWindow::forward() {
   int f0 = 0;
   int nf = 0;
+  int lastF = -1;
   int skip;
   int filelength;
   bool count_from_end;
@@ -1724,6 +1743,9 @@ void MainWindow::forward() {
   bool do_filter;
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+  DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
+
+  QHash<int,int> lastframehash;
 
   foreach (DataVectorPtr v, dataVectors) {
     v->readLock();
@@ -1743,6 +1765,8 @@ void MainWindow::forward() {
       if (f0+nf>=filelength) {
         f0 = filelength - nf;
       }
+      lastF = f0 + nf - 1;
+      ++lastframehash[lastF];
 
       v->writeLock();
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
@@ -1750,6 +1774,41 @@ void MainWindow::forward() {
       v->unlock();
     }
   }
+
+  int most_popular_lastF = -1;
+  int n_most_popular_lastF = -1;
+  foreach (int key, lastframehash.keys()) {
+    int n = lastframehash[key] ;
+    if (n > n_most_popular_lastF) {
+      n_most_popular_lastF = n;
+      most_popular_lastF = key;
+    }
+  }
+
+  foreach (DataMatrixPtr m, dataMatrices) {
+    if (m->hasStream()) {
+      int  new_frame;
+      int filelength = m->fileLength();
+      if (most_popular_lastF>=0) {
+        if (most_popular_lastF < filelength) {
+          new_frame = most_popular_lastF;
+        } else {
+          new_frame = filelength-1;
+        }
+      } else {
+        if (m->frame()+1 < filelength) {
+          new_frame = m->frame()+1;
+        } else {
+          new_frame = filelength-1;
+        }
+      }
+      m->writeLock();
+      m->setFrame(new_frame);
+      m->registerChange();
+      m->unlock();
+    }
+  }
+
   dialogDefaults().setValue("vector/range", nf);
   dialogDefaults().setValue("vector/start", f0);
   dialogDefaults().setValue("vector/countFromEnd", false);
@@ -1767,8 +1826,13 @@ void MainWindow::back() {
   bool read_to_end;
   bool do_skip;
   bool do_filter;
+  int lastF = -1;
+
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
+  DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
+
+  QHash<int,int> lastframehash;
 
   foreach (DataVectorPtr v, dataVectors) {
     v->readLock();
@@ -1795,12 +1859,50 @@ void MainWindow::back() {
       if (f0<0) {
         f0 = 0;
       }
+      lastF = f0 + nf - 1;
+      ++lastframehash[lastF];
+
       v->writeLock();
       v->changeFrames(f0, nf, skip, do_skip, do_filter);
       v->registerChange();
       v->unlock();
     }
   }
+
+  int most_popular_lastF = -1;
+  int n_most_popular_lastF = -1;
+  foreach (int key, lastframehash.keys()) {
+    int n = lastframehash[key] ;
+    if (n > n_most_popular_lastF) {
+      n_most_popular_lastF = n;
+      most_popular_lastF = key;
+    }
+  }
+
+  foreach (DataMatrixPtr m, dataMatrices) {
+    if (m->hasStream()) {
+      int  new_frame;
+      int filelength = m->fileLength();
+      if (most_popular_lastF>=0) {
+        if (most_popular_lastF < filelength) {
+          new_frame = most_popular_lastF;
+        } else {
+          new_frame = filelength-1;
+        }
+      } else {
+        if (m->frame()-1 >= 0) {
+          new_frame = m->frame()-1;
+        } else {
+          new_frame = 0;
+        }
+      }
+      m->writeLock();
+      m->setFrame(new_frame);
+      m->registerChange();
+      m->unlock();
+    }
+  }
+
   dialogDefaults().setValue("vector/range", nf);
   dialogDefaults().setValue("vector/start", f0);
   dialogDefaults().setValue("vector/countFromEnd", false);

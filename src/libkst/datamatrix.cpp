@@ -445,6 +445,19 @@ LabelInfo DataMatrix::titleInfo() const {
 }
 
 
+int DataMatrix::fileLength() const {
+
+  if (dataSource()) {
+    const DataInfo info = dataSource()->matrix().dataInfo(_field);
+
+    return info.frameCount;
+  }
+
+  return 0;
+}
+
+
+
 void DataMatrix::internalUpdate() {
   if (dataSource()) {
     dataSource()->writeLock();
@@ -468,7 +481,7 @@ void DataMatrix::internalUpdate() {
   int frame;
 
   if (_frame<0) {
-    frame = fc;
+    frame = fc-1;
   } else {
     frame = _frame;
   }
