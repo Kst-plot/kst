@@ -20,6 +20,7 @@
 #include "bis.h"
 
 class DataInterfaceBISMatrix;
+class DataInterfaceBISVector;
 
 class BISSource : public Kst::DataSource {
   Q_OBJECT
@@ -30,6 +31,7 @@ class BISSource : public Kst::DataSource {
     ~BISSource();
 
     friend class DataInterfaceBISMatrix;
+    friend class DataInterfaceBISVector;
 
     bool init();
     virtual void reset();
@@ -49,8 +51,10 @@ class BISSource : public Kst::DataSource {
     mutable Config *_config;
 
     DataInterfaceBISMatrix* im;
+    DataInterfaceBISVector* iv;
 
     QHash<QString, int> _matrixHash;
+    QStringList _vectorList;
 
     BISfile *_bisfile;
     

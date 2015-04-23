@@ -169,18 +169,111 @@ bool DataInterfaceBISMatrix::isValid(const QString& field) const {
 }
 
 
+//
+// Vector interface
+//
+
+class DataInterfaceBISVector : public DataSource::DataInterface<DataVector>
+{
+public:
+
+  DataInterfaceBISVector(BISSource& bis) : _bis(bis) {}
+
+  // read one element
+  int read(const QString&, DataVector::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return _bis._vectorList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
+  QMap<QString, QString> metaStrings(const QString&) { return QMap<QString, QString>(); }
+
+
+  BISSource& _bis;
+
+  void init();
+  void clear();
+};
+
+void DataInterfaceBISVector::clear()
+{
+}
+
+void DataInterfaceBISVector::init()
+{
+}
+
+
+
+const DataVector::DataInfo DataInterfaceBISVector::dataInfo(const QString& vector, int) const
+{
+  if (_bis._bisfile->status != BIS_OK) {
+    return DataVector::DataInfo();
+  }
+
+  if (!_bis._vectorList.contains(vector)) {
+    return DataVector::DataInfo();
+  }
+
+  return DataVector::DataInfo(_bis._nframes, 1);
+}
+
+
+int DataInterfaceBISVector::read(const QString& field, DataVector::ReadInfo& p)
+{
+
+  int f0 = p.startingFrame;
+  int nr = p.numberOfFrames;
+  int nf = _bis._nframes;
+
+  if (f0>nf) {
+    return 0;
+  }
+
+  if (f0 + nr > nf) {
+    nr = nf - f0;
+  }
+
+  if (!_bis._vectorList.contains(field)) {
+    return 0;
+  }
+
+  if ( field=="INDEX" ) {
+    for (int i=0; i<nr; ++i ) {
+      p.data[i] = i + f0;
+    }
+    return nr;
+  }
+
+  return 0;
+}
+
+
+bool DataInterfaceBISVector::isValid(const QString& field) const {
+  return  _bis._vectorList.contains( field );
+}
+
+
 /**********************
 BISSource - the reader for streams of images developed for the BIT telescope.
 
 ***********************/
 BISSource::BISSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type), _config(0L),
- im(new DataInterfaceBISMatrix(*this)), _bisfile(0), _nframes(0)
+ im(new DataInterfaceBISMatrix(*this)), iv(new DataInterfaceBISVector(*this)),_bisfile(0), _nframes(0)
 {
 
   BISInitImage(&_bisImage);
 
   setInterface(im);
+  setInterface(iv);
 
   startUpdating(None);
 
@@ -239,6 +332,9 @@ bool BISSource::init() {
   _matrixHash["IMG3"] = 2;
   _matrixHash["IMG4"] = 3;
   _matrixHash["IMG5"] = 4;
+
+  _vectorList.clear();
+  _vectorList.append("INDEX");
 
   _nframes = BISnframes(_bisfile);
 
@@ -382,7 +478,7 @@ QStringList BISSourcePlugin::stringList(QSettings *cfg,
     *typeSuggestion = BISTypeString;
   }
 
-  stringList.append("FILENAME");
+  //stringList.append("FILENAME");
   return stringList;
 
 }
@@ -395,10 +491,17 @@ QStringList BISSourcePlugin::fieldList(QSettings *cfg,
                                             const QString& filename,
                                             const QString& type,
                                             QString *typeSuggestion,
-                                            bool *complete) const {
-  Q_UNUSED(cfg)
-  Q_UNUSED(filename)
-  Q_UNUSED(type)
+                                            bool *complete) const {  
+  if (typeSuggestion) {
+    *typeSuggestion = BISTypeString;
+  }
+  if ((!type.isEmpty() && !provides().contains(type)) ||
+      0 == understands(cfg, filename)) {
+    if (complete) {
+      *complete = false;
+    }
+    return QStringList();
+  }
 
   if (complete) {
     *complete = true;
@@ -409,6 +512,8 @@ QStringList BISSourcePlugin::fieldList(QSettings *cfg,
   }
 
   QStringList fieldList;
+
+  fieldList.append("INDEX");
   return fieldList;
 }
 
