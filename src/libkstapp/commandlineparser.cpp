@@ -73,6 +73,7 @@ namespace Kst {
 "Position:\n"
 "      -P <plot name>:          Place curves in one plot.\n"
 "      -A                       Place future curves in individual plots.\n"
+"      -m <columns>             Layout plots in columns\n"
 "      -T <tab name>            Place future curves a new tab.\n"
 "Appearance\n"
 "      -d:                      use points for the next curve\n"
@@ -150,7 +151,7 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
-      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0) {
+      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0), _num_cols(0) {
 
   Q_ASSERT(QCoreApplication::instance());
   _arguments = QCoreApplication::instance()->arguments();
@@ -461,10 +462,15 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _doConsecutivePlots = true;
       *ok = _setStringArg(tab_name,tr("Usage: -T <tab name>\n"));
       if (dataPlotted) {
+        if (_num_cols > 0) {
+          _mainWindow->tabWidget()->currentView()->createLayout(false, _num_cols);
+        }
         createOrFindTab(tab_name);
       } else {
         _mainWindow->tabWidget()->setCurrentViewName(tab_name);
       }
+    } else if (arg == "-m") {
+      *ok = _setIntArg(&_num_cols, tr("Usage: -m <columns>\n"), true);
     } else if (arg == "-d") {
       _useBargraph=false;
       _useLines = false;
@@ -721,6 +727,10 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     }
   }
   if (dataPlotted) {
+    if (_num_cols > 0) {
+      _mainWindow->tabWidget()->currentView()->createLayout(false, _num_cols);
+      _mainWindow->tabWidget()->currentView()->createLayout(false);
+    }
     _document->updateRecentDataFiles(_fileNames);
 
     dialogDefaults().setValue("vector/range", _numFrames);

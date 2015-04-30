@@ -69,13 +69,15 @@ private:
   PlotItem *_plotItem;
   QString _xlabel;
   QString _ylabel;
-  
+    
   // lists of command line named plot items (and their names).
   QList<PlotItem*> _plotItems;
 
   DataVectorList _vectors;
 
   Document *_document;
+
+  int _num_cols;
 
   bool _setIntArg(int *arg, QString Message, bool accept_end=false);
   bool _setDoubleArg(double *arg, QString Message);
