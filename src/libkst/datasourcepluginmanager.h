@@ -57,10 +57,10 @@ class KSTCORE_EXPORT DataSourcePluginManager
     //static QStringList matrixListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList scalarListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
     static QStringList stringListForSource(const QString& filename, const QString& type = QString(), QString *outType = 0L, bool *complete = 0L);
+    static QSettings& settingsObject();
 
 
   private:
-    static QSettings& settingsObject();
     static QMap<QString,QString> url_map;
     static QString obtainFile(const QString& source);
 

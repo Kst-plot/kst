@@ -13,7 +13,8 @@
 #include <config.h>
 
 #include "commandlineparser.h"
-#include "datasource.h"
+//#include "datasource.h"
+#include "datasourcepluginmanager.h"
 #include "objectstore.h"
 #include "colorsequence.h"
 #ifdef KST_HAVE_REVISION_H
@@ -69,7 +70,18 @@ namespace Kst {
 "      -n <numframes>           default: 'end' reads to end of file\n"
 "      -s <frames per sample>   default: 0 (read every sample)\n"
 "      -a                       apply averaging filter: requires -s\n\n"
-
+"Ascii File Options - for ascii files only: these are all stick\n"
+"      --asciiDataStart <Line>  Data starts here. Files start at line 1.\n"
+"      --asciiFieldNames <Line> Field names are in this row.\n"
+"      --asciiNoFieldNames      Fields are named for their data column\n"
+"      --asciiReadUnits <Line>  Read units from line <Line>\n"
+"      --asciiNoUnits       Do not read units\n"
+"      --asciiSpaceDelim        Columns are Space/tab delimited\n"
+"      --asciiDelim <char>      Columns are dlimited with <char>\n"
+"      --asciiFixedWidth <w>    Columns have width <w>\n"
+"      --asciiNoFixedWidth      Columns are delimited, not fixed width\n"
+"      --asciiDecimalDot        Use a . as a decimal separator (ie, 10.1)\n"
+"      --asciiDecimalComma      Use a , as a decimal separator (ie, 10,1)\n"
 "Position:\n"
 "      -P <plot name>:          Place curves in one plot.\n"
 "      -A                       Place future curves in individual plots.\n"
@@ -151,7 +163,12 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
-      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0), _num_cols(0) {
+      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0),
+      _num_cols(0), _asciiFirstLine(-1), _asciiFieldLine(-1), _asciiNoFieldNames(false),
+      _asciiUnitsLine(-1), _asciiNoUnits(false), _asciiSpaceDelim(false),
+      _asciiDelim('\0'), _asciiFixedWidth(-1), _asciiNoFixedWidth(false),
+      _asciiDecimalDot(false), _asciiDecimalComma(false)
+{
 
   Q_ASSERT(QCoreApplication::instance());
   _arguments = QCoreApplication::instance()->arguments();
@@ -514,6 +531,15 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
+        /*
+        DataSourcePluginManager::settingsObject().beginGroup("ASCII file");
+        DataSourcePluginManager::settingsObject().beginGroup(file);
+        qDebug()  << "ds settings: " << file << DataSourcePluginManager::settingsObject().allKeys();
+        qDebug()  << "Use Dot: " << file << DataSourcePluginManager::settingsObject().value("Use Dot");
+        DataSourcePluginManager::settingsObject().endGroup();
+        DataSourcePluginManager::settingsObject().endGroup();
+        */
+
         DataVectorPtr ev;
         if (!_errorField.isEmpty()) {
           ev = createOrFindDataVector(_errorField, ds);
@@ -659,6 +685,30 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       }
     } else if (arg == "-F") {
       *ok = _setStringArg(_document->objectStore()->override.fileName, tr("Usage: -F <datafile>\n"));
+    } else if (arg == "--asciiDataStart") {
+      *ok = _setIntArg(&_asciiFirstLine, tr("Usage: --asciiDataStart <Line Number>\n"));
+    } else if (arg == "--asciiFieldNames") {
+      *ok = _setIntArg(&_asciiFieldLine, tr("Usage: --asciiFieldNames <Line Number>\n"));
+    } else if  (arg == "--asciiNoFieldNames") {
+      _asciiNoFieldNames = true;
+    } else if (arg == "--asciiReadUnits") {
+      *ok = _setIntArg(&_asciiUnitsLine, tr("Usage: --asciiReadUnits <Line Number>\n"));
+    } else if  (arg == "--asciiNoUnits") {
+      _asciiNoUnits = true;
+    } else if (arg == "--asciiSpaceDelim") {
+      _asciiSpaceDelim = true;
+    } else if (arg == "--asciiDelim") {
+      QString arg;
+      *ok = _setStringArg(arg, tr("Usage: --asciiDelim <delimiter>\n"));
+      _asciiDelim = arg.at(0).toAscii();
+    } else if (arg == "--asciiFixedWidth") {
+      *ok = _setIntArg(&_asciiFixedWidth, tr("Usage: --asciiFixedWidth <width>\n"));
+    } else if (arg == "--asciiNoFixedWidth") {
+      _asciiNoFixedWidth = true;
+    } else if (arg == "--asciiDecimalDot") {
+      _asciiDecimalDot = true;
+    } else if (arg == "--asciiDecimalComma") {
+      _asciiDecimalComma = true;
     } else if (arg == "--png") {
       *ok = _setStringArg(_pngFile, tr("Usage: --png <filename>\n"));
 #ifndef KST_NO_PRINTER
@@ -684,6 +734,52 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         new_fileList = false;
       }
       _fileNames.append(arg);
+      if (!arg.endsWith(".kst")) {
+        DataSourcePluginManager::settingsObject().beginGroup("ASCII file");
+        DataSourcePluginManager::settingsObject().beginGroup(arg);
+
+        if (_asciiFirstLine>0) {
+          DataSourcePluginManager::settingsObject().setValue("Data Start", _asciiFirstLine-1);
+        }
+        if (_asciiFieldLine>0) {
+          DataSourcePluginManager::settingsObject().setValue("Fields Line", _asciiFieldLine-1);
+          DataSourcePluginManager::settingsObject().setValue("Read Fields", true);
+        }
+        if (_asciiNoFieldNames) {
+          DataSourcePluginManager::settingsObject().setValue("Read Fields", false);
+        }
+        if (_asciiUnitsLine>0) {
+          DataSourcePluginManager::settingsObject().setValue("Units Line", _asciiUnitsLine-1);
+          DataSourcePluginManager::settingsObject().setValue("Read Units", true);
+        }
+        if (_asciiNoUnits) {
+          DataSourcePluginManager::settingsObject().setValue("Read Units", false);
+        }
+        if (_asciiDelim != '\0') {
+          DataSourcePluginManager::settingsObject().setValue("Column Delimiter", QString(_asciiDelim));
+          DataSourcePluginManager::settingsObject().setValue("Column Type", 2); //FIXME: AsciiSourceConfig::ColumnType::Custom
+        }
+        if (_asciiSpaceDelim) {
+          DataSourcePluginManager::settingsObject().setValue("Column Type", 0); //FIXME: AsciiSourceConfig::ColumnType::Whitespace
+        }
+        if (_asciiFixedWidth>0) {
+          DataSourcePluginManager::settingsObject().setValue("Column Type", 1); //FIXME: AsciiSourceConfig::ColumnType::Fixed
+          DataSourcePluginManager::settingsObject().setValue("Column Width", _asciiFixedWidth);
+          DataSourcePluginManager::settingsObject().setValue("Column Width is const", true);
+        }
+        if (_asciiNoFixedWidth) {
+          DataSourcePluginManager::settingsObject().setValue("Column Width is const", false);
+        }
+        if (_asciiDecimalDot) {
+          DataSourcePluginManager::settingsObject().setValue("Use Dot", true);
+        }
+        if (_asciiDecimalComma) {
+          DataSourcePluginManager::settingsObject().setValue("Use Dot", false);
+        }
+
+        DataSourcePluginManager::settingsObject().endGroup();
+        DataSourcePluginManager::settingsObject().endGroup();
+      }
 
       if (!arg.endsWith(".kst") && _arguments.count() == 0) {
         // try loading data without user interaction

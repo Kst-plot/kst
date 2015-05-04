@@ -79,6 +79,18 @@ private:
 
   int _num_cols;
 
+  int _asciiFirstLine;
+  int _asciiFieldLine;
+  bool _asciiNoFieldNames;
+  int _asciiUnitsLine;
+  bool _asciiNoUnits;
+  bool _asciiSpaceDelim;
+  char _asciiDelim;
+  int _asciiFixedWidth;
+  bool _asciiNoFixedWidth;
+  bool _asciiDecimalDot;
+  bool _asciiDecimalComma;
+
   bool _setIntArg(int *arg, QString Message, bool accept_end=false);
   bool _setDoubleArg(double *arg, QString Message);
   bool _setStringArg(QString &arg, QString Message);
