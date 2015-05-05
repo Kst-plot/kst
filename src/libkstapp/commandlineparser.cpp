@@ -531,14 +531,12 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         DataVectorPtr xv = createOrFindDataVector(_xField, ds);
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
-        /*
         DataSourcePluginManager::settingsObject().beginGroup("ASCII file");
         DataSourcePluginManager::settingsObject().beginGroup(file);
         qDebug()  << "ds settings: " << file << DataSourcePluginManager::settingsObject().allKeys();
         qDebug()  << "Use Dot: " << file << DataSourcePluginManager::settingsObject().value("Use Dot");
         DataSourcePluginManager::settingsObject().endGroup();
         DataSourcePluginManager::settingsObject().endGroup();
-        */
 
         DataVectorPtr ev;
         if (!_errorField.isEmpty()) {

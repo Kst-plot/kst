@@ -58,6 +58,8 @@
 #include "dialog.h"
 #include "editablematrix.h"
 
+#include "datasourcepluginmanager.h"
+
 #include <updatemanager.h>
 
 #include <QLocalSocket>
@@ -200,6 +202,10 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 
     _fnMap.insert("fileOpen()", &ScriptServer::fileOpen);
     _fnMap.insert("fileSave()", &ScriptServer::fileSave);
+
+    _fnMap.insert("setDatasourceBoolConfig()", &ScriptServer::setDatasourceBoolConfig);
+    _fnMap.insert("setDatasourceIntConfig()", &ScriptServer::setDatasourceIntConfig);
+    _fnMap.insert("setDatasourceStringConfig()", &ScriptServer::setDatasourceStringConfig);
 
     _fnMap.insert("cleanupLayout()", &ScriptServer::cleanupLayout);
 
@@ -975,5 +981,59 @@ QByteArray ScriptServer::cleanupLayout(QByteArray&command, QLocalSocket* s,Objec
     return handleResponse("Done",s);
 }
 
+/*** Interface for changing datasource configuration settings ***/
+QByteArray ScriptServer::setDatasourceBoolConfig(QByteArray& command, QLocalSocket* s, ObjectStore*) {
+  QStringList args = ScriptInterface::getArgs(command);
+  if (args.length()==4) {
+    QString ds_type = args[0]; // eg "Ascii File"
+    QString filename = args[1];
+    QString setting = args[2];
+    bool value = (args[3].trimmed().toLower() == "true");
+
+    DataSourcePluginManager::settingsObject().beginGroup(ds_type);
+    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    DataSourcePluginManager::settingsObject().setValue(setting, value);
+    DataSourcePluginManager::settingsObject().endGroup();
+    DataSourcePluginManager::settingsObject().endGroup();
+  }
+  return handleResponse("Done",s);
+
+}
+
+QByteArray ScriptServer::setDatasourceIntConfig(QByteArray& command, QLocalSocket* s, ObjectStore*) {
+  QStringList args = ScriptInterface::getArgs(command);
+  if (args.length()==4) {
+    QString ds_type = args[0]; // eg "Ascii File"
+    QString filename = args[1];
+    QString setting = args[2];
+    int value = args[3].toInt();
+
+    DataSourcePluginManager::settingsObject().beginGroup(ds_type);
+    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    DataSourcePluginManager::settingsObject().setValue(setting, value);
+    DataSourcePluginManager::settingsObject().endGroup();
+    DataSourcePluginManager::settingsObject().endGroup();
+  }
+  return handleResponse("Done",s);
+
+}
+
+QByteArray ScriptServer::setDatasourceStringConfig(QByteArray& command, QLocalSocket* s, ObjectStore*) {
+  QStringList args = ScriptInterface::getArgs(command);
+  if (args.length()==4) {
+    QString ds_type = args[0]; // eg "Ascii File"
+    QString filename = args[1];
+    QString setting = args[2];
+    QString value = args[3].replace('`', ','); // , is replaced with `.  switch back.
+
+    DataSourcePluginManager::settingsObject().beginGroup(ds_type);
+    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    DataSourcePluginManager::settingsObject().setValue(setting, value);
+    DataSourcePluginManager::settingsObject().endGroup();
+    DataSourcePluginManager::settingsObject().endGroup();
+  }
+  return handleResponse("Done",s);
+
+}
 
 }

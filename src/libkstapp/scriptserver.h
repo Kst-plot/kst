@@ -169,6 +169,9 @@ protected:
 
     QByteArray cleanupLayout(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
+    QByteArray setDatasourceBoolConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray setDatasourceIntConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray setDatasourceStringConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 };
 
 
