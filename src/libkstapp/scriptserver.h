@@ -155,6 +155,7 @@ protected:
     QByteArray tabCount(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray setTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray renameTab(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray screenBack(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray screenForward(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

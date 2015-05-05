@@ -44,8 +44,8 @@ public:
     static QString doNamedObjectCommand(QString command, NamedObject *n);
     static QString doObjectCommand(QString command, ObjectPtr ob);
 
-    QStringList getArgs(const QString &command);
-    QString getArg(const QString &command);
+    static QStringList getArgs(const QString &command);
+    static QString getArg(const QString &command);
 
 };
 

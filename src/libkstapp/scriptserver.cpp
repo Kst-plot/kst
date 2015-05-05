@@ -190,6 +190,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("tabCount()",&ScriptServer::tabCount);
     _fnMap.insert("newTab()",&ScriptServer::newTab);
     _fnMap.insert("setTab()",&ScriptServer::setTab);
+    _fnMap.insert("renameTab()",&ScriptServer::renameTab);
     _fnMap.insert("screenBack()",&ScriptServer::screenBack);
     _fnMap.insert("screenForward()",&ScriptServer::screenForward);
     _fnMap.insert("countFromEnd()",&ScriptServer::countFromEnd);
@@ -886,6 +887,14 @@ QByteArray ScriptServer::newTab(QByteArray&, QLocalSocket* s,ObjectStore*) {
 QByteArray ScriptServer::setTab(QByteArray&command, QLocalSocket* s,ObjectStore*) {
 
     kstApp->mainWindow()->tabWidget()->setCurrentIndex(command.replace("setTab(","").replace(")","").toInt());
+    return handleResponse("Done",s);
+}
+
+QByteArray ScriptServer::renameTab(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
+    int index = kstApp->mainWindow()->tabWidget()->currentIndex();
+    QString new_name = ScriptInterface::getArg(command);
+    kstApp->mainWindow()->tabWidget()->setTabText(index, new_name);
     return handleResponse("Done",s);
 }
 

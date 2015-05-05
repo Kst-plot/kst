@@ -130,6 +130,12 @@ class Client:
     """
     self.send("setTab("+b2str(tab)+")")
 
+  def set_tab_text(self,new_name):
+    """ Set the text of the current tab.
+
+    """
+    self.send("renameTab("+new_name+")")
+
   def cleanup_layout(self, columns="Auto"):
     """ Cleanup layout in the current tab.
     
