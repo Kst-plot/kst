@@ -91,7 +91,6 @@ void LogWidget::setShowTrace(bool show) {
   setShowLevel(Debug::Trace, show);
 }
 
-
 void LogWidget::regenerate() {
   clear();
   const QList<Debug::LogMessage> messages = Debug::self()->messages();

@@ -40,6 +40,7 @@ class DebugDialog : public QDialog, Ui::DebugDialog
   public Q_SLOTS:
     void clear();
     void show();
+    void clearDSSettings();
 
   protected:
     bool event(QEvent *e);

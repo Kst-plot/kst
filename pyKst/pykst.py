@@ -594,14 +594,15 @@ class Client:
   def set_datasource_option(self, option, value, filename, data_source="Ascii File"):
     """ Sets the value of a data source configuration option.
 
-    :param filename: the name of the file for which the options are being set.
     :param option: the name of the option - eg ""Data Start"
     :param value: True or False
+    :param filename: the name of the file or 0 to set global default
     :param data_source: the type of data source
 
     Examples:
 
     Tell kst that trial1.csv is a file with the field names in row 1 and units in row 2::
+
         import pykst as kst
         client = kst.Client()
         client.set_datasource_option("Column Delimiter", ",", "trial1.csv")
@@ -613,6 +614,7 @@ class Client:
         client.set_datasource_option("Read Units", True, "trial1.csv")
 
     Configuration options supported by the ASCII data source (default) are::
+
         "ASCII Time format"
         "Column Delimiter"
         "Column Type"
@@ -642,6 +644,10 @@ class Client:
 
 
     """
+
+    if (filename == 0):
+      filename = "$DEFAULT"
+
     if isinstance(value, bool):
       self.send("setDatasourceBoolConfig("+data_source+","+filename+","+option+","+b2str(value)+")")
     elif isinstance(value, int):

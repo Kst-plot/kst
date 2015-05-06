@@ -38,6 +38,8 @@ DebugDialog::DebugDialog(QWidget *parent)
   connect(_showNotice, SIGNAL(toggled(bool)), _log, SLOT(setShowNotice(bool)));
   connect(_showTrace, SIGNAL(toggled(bool)), _log, SLOT(setShowTrace(bool)));
 
+  connect(_clearDSSettings, SIGNAL(clicked()), this, SLOT(clearDSSettings()));
+
   if (!Debug::self()->kstRevision().isEmpty())
     _buildInfo->setText(tr("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
   else
@@ -92,6 +94,11 @@ void DebugDialog::show() {
   _dataSources->header()->resizeSections(QHeaderView::ResizeToContents);
   QDialog::show();
 }
+
+void DebugDialog::clearDSSettings() {
+  DataSourcePluginManager::settingsObject().clear();
+}
+
 
 }
 

@@ -17,14 +17,23 @@
    <item>
     <widget class="QTabWidget" name="_tabs">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="_buildInfoTab">
       <attribute name="title">
        <string>Build Information</string>
       </attribute>
       <layout class="QGridLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -173,7 +182,16 @@
        <string>Data Sources</string>
       </attribute>
       <layout class="QGridLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -202,6 +220,13 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="_clearDSSettings">
+       <property name="text">
+        <string>Clear Datasource Settings</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer>
        <property name="orientation">
@@ -243,8 +268,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
+     <x>591</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>

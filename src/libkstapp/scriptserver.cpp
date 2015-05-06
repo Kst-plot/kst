@@ -989,11 +989,16 @@ QByteArray ScriptServer::setDatasourceBoolConfig(QByteArray& command, QLocalSock
     QString filename = args[1];
     QString setting = args[2];
     bool value = (args[3].trimmed().toLower() == "true");
+    bool set_default = (filename == "$DEFAULT");
 
     DataSourcePluginManager::settingsObject().beginGroup(ds_type);
-    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().beginGroup(filename);
+    }
     DataSourcePluginManager::settingsObject().setValue(setting, value);
-    DataSourcePluginManager::settingsObject().endGroup();
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().endGroup();
+    }
     DataSourcePluginManager::settingsObject().endGroup();
   }
   return handleResponse("Done",s);
@@ -1007,11 +1012,16 @@ QByteArray ScriptServer::setDatasourceIntConfig(QByteArray& command, QLocalSocke
     QString filename = args[1];
     QString setting = args[2];
     int value = args[3].toInt();
+    bool set_default = (filename == "$DEFAULT");
 
     DataSourcePluginManager::settingsObject().beginGroup(ds_type);
-    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().beginGroup(filename);
+    }
     DataSourcePluginManager::settingsObject().setValue(setting, value);
-    DataSourcePluginManager::settingsObject().endGroup();
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().endGroup();
+    }
     DataSourcePluginManager::settingsObject().endGroup();
   }
   return handleResponse("Done",s);
@@ -1025,11 +1035,16 @@ QByteArray ScriptServer::setDatasourceStringConfig(QByteArray& command, QLocalSo
     QString filename = args[1];
     QString setting = args[2];
     QString value = args[3].replace('`', ','); // , is replaced with `.  switch back.
+    bool set_default = (filename == "$DEFAULT");
 
     DataSourcePluginManager::settingsObject().beginGroup(ds_type);
-    DataSourcePluginManager::settingsObject().beginGroup(filename);
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().beginGroup(filename);
+    }
     DataSourcePluginManager::settingsObject().setValue(setting, value);
-    DataSourcePluginManager::settingsObject().endGroup();
+    if (!set_default) {
+      DataSourcePluginManager::settingsObject().endGroup();
+    }
     DataSourcePluginManager::settingsObject().endGroup();
   }
   return handleResponse("Done",s);
