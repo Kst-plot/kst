@@ -1893,7 +1893,7 @@ void MainWindow::back() {
         if (m->frame()-1 >= 0) {
           new_frame = m->frame()-1;
         } else {
-          new_frame = 0;
+          new_frame = filelength-2;
         }
       }
       m->writeLock();
