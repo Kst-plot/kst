@@ -657,13 +657,22 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
 
     _matrixTab->setXStartCountFromEnd(dialogDefaults().value("matrix/xCountFromEnd",false).toBool());
     _matrixTab->setYStartCountFromEnd(dialogDefaults().value("matrix/yCountFromEnd",false).toBool());
-    _matrixTab->setXReadToEnd(dialogDefaults().value("matrix/xReadToEnd",false).toBool());
-    _matrixTab->setYReadToEnd(dialogDefaults().value("matrix/yReadToEnd",false).toBool());
+    _matrixTab->setXReadToEnd(dialogDefaults().value("matrix/xReadToEnd",true).toBool());
+    _matrixTab->setYReadToEnd(dialogDefaults().value("matrix/yReadToEnd",true).toBool());
 
     _matrixTab->setXNumSteps(dialogDefaults().value("matrix/xNumSteps",1000).toInt());
     _matrixTab->setYNumSteps(dialogDefaults().value("matrix/yNumSteps",1000).toInt());
     _matrixTab->setXStart(dialogDefaults().value("matrix/reqXStart",0).toInt());
     _matrixTab->setYStart(dialogDefaults().value("matrix/reqYStart",0).toInt());
+
+
+    //FIXME Temporary: we are overriding these dialog defaults until the
+    // options are brought back into the GUI
+    _matrixTab->setXStart(0);
+    _matrixTab->setYStart(0);
+    _matrixTab->setXReadToEnd(true);
+    _matrixTab->setYReadToEnd(true);
+    // END FIXME
 
     _matrixTab->setFrame(dialogDefaults().value("matrix/frame",-1).toInt());
 

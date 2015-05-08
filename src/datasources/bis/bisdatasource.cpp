@@ -355,6 +355,8 @@ Kst::Object::UpdateType BISSource::internalDataSourceUpdate() {
       reset();
     }
 
+    _nframes = newNF;
+
     return (isnew ? Updated : NoChange);
   }
 
