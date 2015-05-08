@@ -270,6 +270,8 @@ BISSource::BISSource(Kst::ObjectStore *store, QSettings *cfg, const QString& fil
  im(new DataInterfaceBISMatrix(*this)), iv(new DataInterfaceBISVector(*this)),_bisfile(0), _nframes(0)
 {
 
+  _updateCheckType = None;
+
   BISInitImage(&_bisImage);
 
   setInterface(im);
@@ -287,7 +289,6 @@ BISSource::BISSource(Kst::ObjectStore *store, QSettings *cfg, const QString& fil
   if (!e.isNull()) {
     _config->load(e);
   }
-
 
   if (init()) {
     _valid = true;
@@ -337,6 +338,8 @@ bool BISSource::init() {
   _vectorList.append("INDEX");
 
   _nframes = BISnframes(_bisfile);
+
+  _updateCheckType = Timer;
 
   registerChange();
   return true; // false if something went wrong
