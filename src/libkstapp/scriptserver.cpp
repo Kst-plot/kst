@@ -202,6 +202,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 
     _fnMap.insert("fileOpen()", &ScriptServer::fileOpen);
     _fnMap.insert("fileSave()", &ScriptServer::fileSave);
+    _fnMap.insert("exportGraphics()", &ScriptServer::exportGraphics);
 
     _fnMap.insert("setDatasourceBoolConfig()", &ScriptServer::setDatasourceBoolConfig);
     _fnMap.insert("setDatasourceIntConfig()", &ScriptServer::setDatasourceIntConfig);
@@ -960,6 +961,21 @@ QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectSto
 
   kstApp->mainWindow()->document()->save(command);
 
+  return handleResponse("Done",s);
+}
+
+QByteArray ScriptServer::exportGraphics(QByteArray&command, QLocalSocket* s, ObjectStore*) {
+  QStringList args = ScriptInterface::getArgs(command);
+
+  if (args.length() == 5) {
+    QString filename = args[0];
+    QString format = args[1];
+    int width = args[2].toInt();
+    int height = args[3].toInt();
+    int display = args[4].toInt();
+
+    kstApp->mainWindow()->exportGraphicsFile(filename, format, width, height, display);
+  }
   return handleResponse("Done",s);
 }
 

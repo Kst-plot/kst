@@ -12,14 +12,17 @@ Until packaging (and the API) are settled, this may mean compiling kst2 from sou
 
 pykst.py can use either PySide or PyQT4.  Make sure one is installed, and edit the begining of pykst.py
 accordingly (make sure the one you want to use is enabled, and the other is commented out.)
-Then copy pykst.py into your systems python dir
+
+Then run setup.py to install things properly.  In linux this is::
+
+      sudo python2.7 setup.py install
 
 PyKst depends on python2.7 or greater, and modern versions of NumPy and SciPy.
 
 Examples
 ********
 PyKst can be used control kst, as one would with the GUI.  The following (minimal) example tells kst to
-plot sin(x) from -10 to 10. The results are identical to having used create->equation from within kst.::
+plot sin(x) from -10 to 10. The results are identical to having used create->equation from within kst::
 
       import pykst as kst
 
@@ -35,7 +38,7 @@ plot sin(x) from -10 to 10. The results are identical to having used create->equ
       p1 = client.new_plot()
       p1.add(c1)
 
-Alternatively, kst can be used to plot numpy arrays, as in this example::
+kst can be also be used to plot numpy arrays, as in this example::
 
       #!/usr/bin/python2.7
       import pykst as kst
@@ -57,6 +60,39 @@ Alternatively, kst can be used to plot numpy arrays, as in this example::
       p1 = client.new_plot()
       p1.add(c1)
 
+Alternativly, one can use a (tiny) subset of matplotlib.pyplot called pykstplot.
+This interface is conceptually incompatible with the native interface, and is described
+at the end of this document.  As an example::
+
+      #!/usr/bin/python2.7
+      import pykstplot as plt
+      #import matplotlib.pyplot as plt
+      from numpy  import *
+
+      x = linspace( -10, 10, 100)
+      y = sin(x)
+      z = cos(x)
+
+      plt.subplot(221)
+      plt.plot(x,y*y, linewidth=2, color = "green", linestyle="-.", label="greenline")
+      plt.subplot(122)
+      plt.plot(x,y,"k.")
+      plt.subplot(223)
+      plt.plot(x,z,"m*", markersize=6, color="blue")
+      plt.subplot(221, axisbg="lightblue")
+      plt.plot(x,z)
+      plt.xlabel("X axis")
+      plt.ylabel("Y axis")
+      plt.title("Title")
+
+      plt.figure()
+      plt.plot([1,3,7,15])
+
+      plt.show()
+
+      #plt.savefig("pltdemo.eps")
+
+"
 
 Clients
 *******************
@@ -223,3 +259,8 @@ Interactive items are controls which are part of a kst view and use QtNetwork.QL
 .. autoclass:: LineEdit
    :members:
    :inherited-members:
+
+Pykstplot
+*******************
+.. automodule:: pykstplot
+   :members:

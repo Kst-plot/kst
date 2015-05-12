@@ -166,6 +166,7 @@ protected:
 
     QByteArray fileOpen(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray fileSave(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray exportGraphics(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray cleanupLayout(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
