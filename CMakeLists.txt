@@ -242,7 +242,7 @@ else()
 endif()
 
 if(NOT kst_install_libdir)
-    set(kst_install_libdir lib)
+  set(kst_install_libdir lib${LIB_SUFFIX})
 endif()
 
 if(NOT kst_install_plugins)
