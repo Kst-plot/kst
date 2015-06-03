@@ -233,11 +233,6 @@ Kst::ScalarPtr FilterWindowSource::minimumScalar() const {
 }
 
 
-Kst::ScalarPtr FilterWindowSource::stepScalar() const {
-  return _inputScalars[SCALAR_STEP_IN];
-}
-
-
 QStringList FilterWindowSource::inputVectorList() const {
   return QStringList( VECTOR_IN );
 }
@@ -246,7 +241,6 @@ QStringList FilterWindowSource::inputVectorList() const {
 QStringList FilterWindowSource::inputScalarList() const {
   QStringList inputScalars( SCALAR_MAXIMUM_IN );
   inputScalars += SCALAR_MINIMUM_IN;
-  inputScalars += SCALAR_STEP_IN;
   return inputScalars;
 }
 
