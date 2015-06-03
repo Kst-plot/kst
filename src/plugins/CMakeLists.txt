@@ -21,6 +21,7 @@ kst_add_plugin(filters cumulativesum)
 kst_add_plugin(filters cumulativeaverage)
 kst_add_plugin(filters despike)
 kst_add_plugin(filters unwind)
+kst_add_plugin(filters window)
 kst_add_plugin(filters differentiation)
 
 if(gsl)

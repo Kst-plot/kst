@@ -8,6 +8,7 @@ SUBDIRS += \
     cumulativesum \
     differentiation \
     cumulativeaverage \
+    unwind \
     window
 
 LibExists(gsl) {
