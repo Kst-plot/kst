@@ -12,8 +12,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FILTERUNWINDPLUGIN_H
-#define FILTERUNWINDPLUGIN_H
+#ifndef FILTERWINDOWPLUGIN_H
+#define FILTERWINDOWPLUGIN_H
 
 #include <QFile>
 
