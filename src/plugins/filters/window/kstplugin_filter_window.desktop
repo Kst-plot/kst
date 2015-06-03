@@ -5,4 +5,4 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=filterwindow
 X-Kst-Plugin-Author=C. Barth Netterfield
 Name=Filter - Window Plugin
-Comment=It's a filter.
+Comment=Implements a Windowing Filter Plugin for Kst.

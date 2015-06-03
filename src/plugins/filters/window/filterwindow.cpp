@@ -86,12 +86,6 @@ class ConfigWidgetFilterWindowPlugin : public Kst::DataObjectConfigWidget, publi
 
       bool validTag = true;
 
-//       QStringRef av;
-//       av = attrs.value("value");
-//       if (!av.isNull()) {
-//         _configValue = QVariant(av.toString()).toBool();
-//       }
-
       return validTag;
     }
 
@@ -194,7 +188,7 @@ bool FilterWindowSource::algorithm() {
     qSwap(max, min);
   }
 
-  if ( (N < 1) || (max==min) ) {
+  if ( (N < 1) ) {
     return false;
   }
 
@@ -203,7 +197,7 @@ bool FilterWindowSource::algorithm() {
 
   for (i=0; i<N; ++i) {
     x = inputVector->value(i);
-    if ((x>max) || (x<min)) { // out of range: Nanify
+    if ((x>max) || (x<min)) { // out of range: Nannify
       outputVector->value()[i] = NAN;
     } else {
       outputVector->value()[i] = x;
@@ -273,7 +267,7 @@ void FilterWindowSource::saveProperties(QXmlStreamWriter &s) {
 
 // Name used to identify the plugin.  Used when loading the plugin.
 QString FilterWindowPlugin::pluginName() const { return tr("Window Filter"); }
-QString FilterWindowPlugin::pluginDescription() const { return tr("Windows data that have wrapped."); }
+QString FilterWindowPlugin::pluginDescription() const { return tr("Suppresses data outside of a given range."); }
 
 
 Kst::DataObject *FilterWindowPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
