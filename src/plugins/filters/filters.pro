@@ -7,7 +7,8 @@ SUBDIRS += \
     despike \
     cumulativesum \
     differentiation \
-    cumulativeaverage
+    cumulativeaverage \
+    window
 
 LibExists(gsl) {
      SUBDIRS += butterworth_bandpass \
