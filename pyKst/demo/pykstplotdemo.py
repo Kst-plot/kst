@@ -1,11 +1,11 @@
 #!/usr/bin/python2.7
 import pykstplot as plt
 #import matplotlib.pyplot as plt
-from numpy  import *
+import numpy as np
 
-x = linspace( -10, 10, 100)
-y = sin(x)
-z = cos(x)
+x = np.linspace( -10, 10, 100)
+y = np.sin(x)
+z = np.cos(x)
 
 plt.subplot(221)
 plt.plot(x,y*y, linewidth=2, color = "green", linestyle="-.", label="greenline")

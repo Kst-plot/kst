@@ -42,11 +42,11 @@ kst can be also be used to plot numpy arrays, as in this example::
 
       #!/usr/bin/python2.7
       import pykst as kst
-      from numpy  import *
+      import numpy as np
 
       # create a pair of numpy arrays
-      x = linspace( -10, 10, 1000)
-      y = sin(x)
+      x = np.linspace( -10, 10, 1000)
+      y = np.sin(x)
 
       # start a kst session with the arbitrary name "NumpyVector"
       client=kst.Client("NumpyVector")
@@ -67,11 +67,11 @@ at the end of this document.  As an example::
       #!/usr/bin/python2.7
       import pykstplot as plt
       #import matplotlib.pyplot as plt
-      from numpy  import *
+      import numpy as np
 
-      x = linspace( -10, 10, 100)
-      y = sin(x)
-      z = cos(x)
+      x = np.linspace( -10, 10, 100)
+      y = np.sin(x)
+      z = np.cos(x)
 
       plt.subplot(221)
       plt.plot(x,y*y, linewidth=2, color = "green", linestyle="-.", label="greenline")
@@ -261,6 +261,9 @@ Interactive items are controls which are part of a kst view and use QtNetwork.QL
    :inherited-members:
 
 Pykstplot
-*******************
+*********
+pykstplot re-implements a tiny subset of matplotlib.pyplot.  It is included by importing pykstplot, 
+and is conceptually incompatible with pykst.
+
 .. automodule:: pykstplot
    :members:

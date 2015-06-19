@@ -297,7 +297,7 @@ def plot(*args, **kwargs):
 
     if (C.y is None) & (isinstance(C.x, _np.ndarray)):
         C.y = C.x
-        C.x = _np.asanyarray([0,1,2], dtype=_np.float64)
+        C.x = _np.asanyarray([0,C.y.size-1, 3], dtype=_np.float64)
     if (isinstance(C.x, _np.ndarray)):
         _add_curve_to_plot(_current_plot, C)
 

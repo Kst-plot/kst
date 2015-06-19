@@ -1,12 +1,12 @@
 #!/usr/bin/python2.7
 import pykst as kst
-from numpy  import *
+import numpy as np
 
 client=kst.Client("NumpyVector")
 
 # create a pair of numpy arrays
-x = linspace( -10, 10, 1000)
-y = sin(x)
+x = np.linspace( -10, 10, 1000)
+y = np.sin(x)
 
 # copy the numpy arrays into kst and plot them
 V1 = client.new_editable_vector(x, name="X")
