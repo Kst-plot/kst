@@ -824,14 +824,16 @@ void PlotRenderItem::processHoverMoveEvent(const QPointF &p, bool delayed) {
       message = QString("%1 (%2, %3, %4)").arg(imageName).
                 arg(plotItem()->xAxis()->statusBarString(point.x())).
                 arg(plotItem()->yAxis()->statusBarString(point.y())).
-                arg(QString::number(imageZ));
+                arg(QString::number(imageZ, 'G', 16));
     } else {
       message = QString("(%1, %2)").
                         arg(plotItem()->xAxis()->statusBarString(point.x())).
                         arg(plotItem()->yAxis()->statusBarString(point.y()));
     }
     if (_referencePointMode) {
-      message += QString(" [Offset: %1, %2]").arg(QString::number(point.x() - _referencePoint.x(), 'G')).arg(QString::number(point.y() - _referencePoint.y()));
+      message += QString(" [Offset: %1, %2]").
+        arg(QString::number(point.x() - _referencePoint.x(), 'G', 16)).
+        arg(QString::number(point.y() - _referencePoint.y(), 'G', 16));
     }
     kstApp->mainWindow()->setStatusMessage(message,0,delayed);
   }
@@ -881,12 +883,15 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position, bool del
     }
     if (!curveName.isEmpty()) {
       QString message = curveName + QString(" (%1, %2)").
-                        arg(plotItem()->xAxis()->statusBarString(matchedPoint.x())).
-                        arg(QString::number(matchedPoint.y()));
+                        arg(plotItem()->xAxis()->
+                            statusBarString(matchedPoint.x())).
+                        arg(QString::number(matchedPoint.y(), 'G', 16));
       if (_referencePointMode) {
         message += QString(" [Offset: %1, %2]").
-                   arg(QString::number(matchedPoint.x() - _referencePoint.x(), 'G')).
-                   arg(QString::number(matchedPoint.y() - _referencePoint.y()));
+                   arg(QString::number(matchedPoint.x() - _referencePoint.x(),
+                         'G', 16)).
+                   arg(QString::number(matchedPoint.y() - _referencePoint.y(),
+                         'G', 16));
       }
       kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
       _highlightPointActive = true;
@@ -894,14 +899,16 @@ void PlotRenderItem::highlightNearestDataPoint(const QPointF& position, bool del
     } else if (!imageName.isEmpty()) {
       statusMessagePoint = position;
       QString message = imageName + QString(" (%1, %2, %3)").
-                        arg(plotItem()->xAxis()->statusBarString(matchedPoint.x())).
-                        arg(QString::number(matchedPoint.y())).
-                        arg(QString::number(imageZ, 'G'));
+                        arg(plotItem()->xAxis()->
+                            statusBarString(matchedPoint.x())).
+                        arg(QString::number(matchedPoint.y(), 'G', 16)).
+                        arg(QString::number(imageZ, 'G', 16));
       kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
       _highlightPointActive = true;
       _highlightPoint = QPointF(matchedPoint.x(), matchedPoint.y());
     } else {
-      QString message = QString("(%1 %2)").arg(QString::number(position.x())).arg(QString::number(position.y()));
+      QString message = QString("(%1 %2)").arg(QString::number(position.x(),
+            'G', 16)).arg(QString::number(position.y(), 'G', 16));
       kstApp->mainWindow()->setStatusMessage(message, 0, delayed);
     }
   }
@@ -936,7 +943,7 @@ void PlotRenderItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
   statusMessagePoint = p;
   QString message = QString("(%1, %2)").
                     arg(plotItem()->xAxis()->statusBarString(p.x())).
-                    arg(QString::number(p.y()));
+                    arg(plotItem()->yAxis()->statusBarString(p.y()));
   kstApp->mainWindow()->setStatusMessage(message);
 }
 
