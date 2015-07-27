@@ -154,6 +154,9 @@ def figure():
     global _current_plot
     global _subplots
 
+    if _client is None:
+        _client=kst.Client()
+
     _client.new_tab()
     _current_plot = None
     _subplots = {}
@@ -282,7 +285,7 @@ def plot(*args, **kwargs):
             C.f = arg
             if (C.y is None) & (isinstance(C.x, _np.ndarray)):
                 C.y = C.x
-                C.x = linspace(0, C.y.size-1, C.y.size)
+                C.x = _np.linspace(0, C.y.size-1, C.y.size)
             if (isinstance(C.x, _np.ndarray)):
                 _add_curve_to_plot(_current_plot, C)
             C.reset()
@@ -297,7 +300,7 @@ def plot(*args, **kwargs):
 
     if (C.y is None) & (isinstance(C.x, _np.ndarray)):
         C.y = C.x
-        C.x = _np.asanyarray([0,C.y.size-1, 3], dtype=_np.float64)
+        C.x = _np.asanyarray([0.0, C.y.size-1.0], dtype=_np.float64)
     if (isinstance(C.x, _np.ndarray)):
         _add_curve_to_plot(_current_plot, C)
 
