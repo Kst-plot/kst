@@ -38,7 +38,7 @@ if [ -f "/usr/local/bin/ninja" ]; then
     export NINJA_STATUS="[%f/%t %o/s, %es] "
 else
     buildcmd=make
-    buildcmd_parallel="make -j6"
+    buildcmd_parallel="make -j1"
 fi
 
 # ---------------------------------------------------------
