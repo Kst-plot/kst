@@ -101,15 +101,15 @@ int isBISfile(char *filename) {
 }
 
 int BISnframes(BISfile *bis) {
-  int bytes;
+  off_t bytes;
   
   bytes = lseek(bis->fp,0,SEEK_END);
   
-  if (bytes<0) bytes = 0;
+  if (bytes<0) bytes = 0L;
   
-  if (bis->frameSize >0) {
+  if (bis->frameSize >0L) {
     //return (bytes);
-    return ((bytes-4)/bis->frameSize);
+    return ((bytes-4L)/bis->frameSize);
   } else {
     return 0;
   }
@@ -137,7 +137,9 @@ int BISreadimage(BISfile *bis, int frame, int i_img, BISimage *I) {
   }
   
   // read the image offsets
-  lseek(bis->fp, frame*bis->frameSize+4, SEEK_SET);
+  off_t offset = (off_t)frame * (off_t)bis->frameSize + 4L;
+  //lseek(bis->fp, frame*bis->frameSize+4, SEEK_SET);
+  lseek(bis->fp, offset, SEEK_SET);
   nr = read(bis->fp, &us_in, 10); // read offsets
   if ((nr!=10) || (us_in[i_img] <1)) {
     I->w = I->h = I->x = I->y = 0;
@@ -145,7 +147,8 @@ int BISreadimage(BISfile *bis, int frame, int i_img, BISimage *I) {
   }
   
   // Read the image size and position data
-  lseek(bis->fp, frame*bis->frameSize+4+us_in[i_img], SEEK_SET);
+  //lseek(bis->fp, frame*bis->frameSize+4+us_in[i_img], SEEK_SET);
+  lseek(bis->fp, offset+(off_t)us_in[i_img], SEEK_SET);
   nr = read(bis->fp, &us_in, 8); // read offsets
   if (nr!=8) {
     I->w = I->h = I->x = I->y = 0;
