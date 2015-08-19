@@ -172,7 +172,13 @@ message(STATUS)
 
 # Find 3rd party libraries
 if (kst_qt5)
-    # http://doc-snapshot.qt-project.org/5.0/cmake-manual.html
+    # http://doc-snapshot.qt-project.org/5.0/cmake-manual.htm
+    if(kst_cross)
+        # Cross-compiled Qt, branch 4.8.4 from https://gitorious.org/~syntheticpp/qt/qt4
+        set(QT_MINGW_DIR ${kst_qt5} CACHE PATH "Qt for Mingw" FORCE)
+        set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+    endif()
     macro(use_qt5lib qt5lib)
         find_package(${qt5lib} REQUIRED)
         include_directories(${${qt5lib}_INCLUDE_DIRS})

@@ -31,7 +31,7 @@ echo ---------- Building $versionname
 echo ---------------------------------------------------------
 
 
-if [ -f "/usr/local/bin/ninja" ]; then
+if [ -f "/usr/bin/ninja" ] || [ -f "/usr/local/bin/ninja" ]; then
     generator=-GNinja
     buildcmd=ninja
     buildcmd_parallel=ninja
@@ -186,7 +186,7 @@ else
 fi
 
 if [ "$1" = "qt5" ]; then
-    qtver=5.0.1
+    qtver=5.5.0
     tarver=
 else
     qtver=4.8.4

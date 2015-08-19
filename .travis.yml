@@ -13,8 +13,8 @@ install:
  - sudo apt-get install libc6:i386 libgcc1:i386 gcc-4.6-base:i386 libstdc++5:i386 libstdc++6:i386 # cmake is 32bit
 
 script:
- - ./cmake/travis.sh qt4
-# - ./cmake/travis.sh qt5
+ #- ./cmake/travis.sh qt4
+ - ./cmake/travis.sh qt5
  - ./cmake/travis.sh qt5 x64
 
 branches:
