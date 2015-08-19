@@ -33,6 +33,8 @@
 // used for resizing; set to 1 for loop zeroing, 2 to use memset
 #define ZERO_MEMORY 2
 
+using namespace std;
+
 namespace Kst {
 
 const QString Matrix::staticTypeString = "Matrix";

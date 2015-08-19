@@ -35,6 +35,8 @@
 #include "updatemanager.h"
 #include "vectorscriptinterface.h"
 
+using namespace std;
+
 namespace Kst {
 
 #define INITSIZE 1

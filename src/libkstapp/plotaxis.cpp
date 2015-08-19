@@ -19,6 +19,8 @@
 
 #define MAJOR_TICK_DEBUG 0
 
+using namespace std;
+
 static int FULL_PRECISION = 15;
 static qreal JD1900 = 2415020.5;
 static qreal JD1899_12_30 = 2415018.5;

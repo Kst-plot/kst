@@ -31,6 +31,8 @@
 #include "dialogdefaults.h"
 #include "updatemanager.h"
 
+using namespace std;
+
 namespace Kst {
 
 HistogramTab::HistogramTab(QWidget *parent)

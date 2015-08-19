@@ -56,6 +56,8 @@
 // for painting
 #define MAX_NUM_POLYLINES       3
 
+using namespace std;
+
 namespace Kst {
 
 const QString Curve::staticTypeString = "Curve";

@@ -30,6 +30,8 @@
 
 //#define BENCHMARK
 
+using namespace std;
+
 namespace Kst {
 
 const QString Image::staticTypeString = "Image";

@@ -57,6 +57,10 @@ static double nan__()
 #define NAN (Kst::nan__())
 #endif
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 /*
 ** Both Solaris and FreeBSD-current do weird things with the
 ** isnan() defined in math.h - in particular on FreeBSD it

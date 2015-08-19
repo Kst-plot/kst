@@ -37,6 +37,8 @@
 
 #include "dataobjectscriptinterface.h"
 
+using namespace std;
+
 extern "C" void rdft(int n, int isgn, double *a);
 
 namespace Kst {

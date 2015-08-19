@@ -19,7 +19,7 @@
 #include "enodes.h"
 
 using namespace Equations;
-
+using namespace std;
 
 //extern "C" {
 

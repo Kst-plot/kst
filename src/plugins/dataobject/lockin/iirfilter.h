@@ -15,6 +15,8 @@
 #include <vector>
 #include <complex>
 
+#include "math_kst.h"
+
 #ifndef IIRFILTER_H
 #define IIRFILTER_H
 
