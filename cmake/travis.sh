@@ -25,6 +25,9 @@ fi
 #    versionname=$versionname-Qt5
 #fi
 
+dep=$HOME/dep
+mkdir -p $dep
+
 
 echo ---------------------------------------------------------
 echo ---------- Building $versionname
@@ -38,7 +41,7 @@ if [ -f "/usr/bin/ninja" ] || [ -f "/usr/local/bin/ninja" ]; then
     export NINJA_STATUS="[%f/%t %o/s, %es] "
 else
     buildcmd=make
-    buildcmd_parallel="make -j1"
+    buildcmd_parallel="make -j2"
 fi
 
 # ---------------------------------------------------------
@@ -55,10 +58,6 @@ echo number of processors: $processors
 dpkg --get-selections | grep mingw
 iam=`whoami`
 travis=travis
-if [ "$iam" = "$travis" ]; then
-    sudo rm -rf /usr/lib/jvm
-    df -h
-fi
 echo ---------------------------------------------------------
 echo
 
@@ -145,21 +144,21 @@ cd $builddir
 #
 # get actual cmake
 #
-cmakever=cmake-2.8.12.2-Linux-i386
+cmakever=cmake-3.3.1-Linux-x86_64
 
 if [ "$iam" = "$travis" ]; then
-    if [ ! -d /opt/$cmakever ]; then
+    if [ ! -d $dep/$cmakever ]; then
           cmakebin=x
-          if [ ! -d /opt/$cmakever ]; then
-              wget http://www.cmake.org/files/v2.8/$cmakever.tar.gz
+          if [ ! -d $dep/$cmakever ]; then
+              wget http://www.cmake.org/files/v3.3/$cmakever.tar.gz
               checkExitCode
-              cd /opt
-              sudo tar xf $builddir/$cmakever.tar.gz
+              cd $dep
+              tar xf $builddir/$cmakever.tar.gz
               checkExitCode
               cd $builddir
           fi
     fi
-    cmakebin=/opt/$cmakever/bin/cmake
+    cmakebin=$dep/$cmakever/bin/cmake
 else
     cmakebin=cmake
 fi
@@ -182,7 +181,7 @@ else
     mingwdir=mingw32$exc
     branch=Kst-32bit-3rdparty-plugins-Qt5
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
-    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=/opt/"$extlib
+    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
 fi
 
 if [ "$1" = "qt5" ]; then
@@ -203,20 +202,20 @@ server=http://sourceforge.net/projects/kst/files/3rdparty
 #
 # download and install mingw
 #
-if [ ! -d /opt/$mingwdir ]; then
+if [ ! -d $dep/$mingwdir ]; then
     mingwtar=$mingwver-Ubuntu64-12.04.tar
     wget $server/$mingwtar.xz
     checkExitCode
     xz -d $mingwtar.xz
-    cd /opt
-    sudo tar xf $builddir/$mingwtar
+    cd $dep
+    tar xf $builddir/$mingwtar
     checkExitCode
     cd $builddir
 fi
 # when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
-#export PATH=/opt/mingw32/bin:$PATH
+#export PATH=$dep/mingw32/bin:$PATH
 echo Checking mingw installation ...
-/opt/$mingwdir/bin/$mingw-gcc -dumpversion
+$dep/$mingwdir/bin/$mingw-gcc -dumpversion
 checkExitCode
 
 
@@ -225,17 +224,18 @@ checkExitCode
 #
 # download and install Qt
 #
-if [ ! -d /opt/$qtver ]; then
+if [ ! -d $dep/$qtver ]; then
     qttar=$qtver-Ubuntu64-12.04$tarver.tar
     wget $server/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
-    cd /opt
-    sudo tar xf $builddir/$qttar
+    cd $dep
+    tar xf $builddir/$qttar
     checkExitCode
+    echo -e "[Paths]\nPrefix = $dep/$qtver" > $dep/$qtver/bin/qt.conf
     cd $builddir
 fi
-export PATH=/opt/$qtver/bin:$PATH
+export PATH=$dep/$qtver/bin:$PATH
 echo Checking Qt installation ...
 which qmake
 checkExitCode
@@ -246,14 +246,14 @@ checkExitCode
 #
 # download 3rdparty
 #
-if [ ! -d /opt/$extlib ]; then
+if [ ! -d $dep/$extlib ]; then
     wget $server/$extlib.zip
     checkExitCode
-    cd /opt
-    sudo unzip -q $builddir/$extlib.zip
+    cd $dep
+    unzip -q $builddir/$extlib.zip
     checkExitCode
     cd $builddir
-    sudo cp /opt/$extlib/include/matio_pubConf.h /opt/$extlib/include/matio_pubconf.h
+    cp $dep/$extlib/include/matio_pubConf.h $dep/$extlib/include/matio_pubconf.h
 fi
 
 
@@ -274,7 +274,7 @@ cd $builddir
 if [ "$1" = "qt5" ]; then
     qtopt="-Dkst_qt5=1"
 else
-    qtopt="-Dkst_qt4=/opt/$qtver"
+    qtopt="-Dkst_qt4=$dep/$qtver"
 fi
 
 
@@ -289,7 +289,7 @@ $cmakebin ../kst \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
-    -Dkst_cross=/opt/$mingwdir/bin/$mingw \
+    -Dkst_cross=$dep/$mingwdir/bin/$mingw \
     $rev $qtopt $useext $console $noinstaller $generator
 
 checkExitCode
