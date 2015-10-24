@@ -1,20 +1,34 @@
 import sys
 import math
-import os
 import ctypes
-from PyQt4 import QtCore, QtNetwork
-#from PySide import QtCore, QtNetwork
+import atexit
+import os
+
+try:
+  from PySide import QtCore, QtNetwork, QtGui
+except ImportError as err1:
+  try:
+    from PyQt4 import QtCore, QtNetwork, QtGui
+  except ImportError as err2:
+    print("ImportError: {} and {}. One of the two is required.".format(err1, err2))
+    sys.exit()
+
+QtGui.QApplication([""])
+
 from numpy import *
 import tempfile
 import time
 import subprocess
 
+def cleanTmpFile(file):
+	os.remove(file.name)
 
 def b2str(val):
   if isinstance(val, bool):
     return "True" if val else "False"
   else:
     return str(val)
+
 
 class Client:
   """ An interface to a running kst session. 
@@ -46,15 +60,14 @@ class Client:
     self.ls.connectToServer(server_name)
     self.ls.waitForConnected(300)
     self.server_name=server_name
-    if self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
-      #os.system("kst2 --server_name="+str(server_name)+"&")
-      subprocess.Popen(["kst2", "--serverName="+str(server_name)])
-      #time.sleep(1)
+
+    if self.ls.state() == QtNetwork.QLocalSocket.UnconnectedState:
+      subprocess.Popen(["kst2","--serverName="+str(server_name)])
+      time.sleep(.5)
 
       while self.ls.state()==QtNetwork.QLocalSocket.UnconnectedState:
         self.ls.connectToServer(server_name)
         self.ls.waitForConnected(300)
-        self.server_name=server_name
     
   def send(self,command):
     """ Sends a command to kst and returns a response. 
@@ -1118,7 +1131,9 @@ class EditableVector(VectorBase):
       if (np_array != None) :
         assert(np_array.dtype == float64)
         
-        with tempfile.NamedTemporaryFile() as f:
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+          f.close()
+          atexit.register(cleanTmpFile, f)
           np_array.tofile(f.name)
           self.client.send("load(" + f.name + ")")        
 
@@ -1134,8 +1149,9 @@ class EditableVector(VectorBase):
     1D np array """
     
     assert(np_array.dtype == float64)
-    
-    with tempfile.NamedTemporaryFile() as f:
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+      f.close()
+      atexit.register(cleanTmpFile, f)
       np_array.tofile(f.name)
       retval = self.client.send_si(self.handle, "load(" + f.name + ")")        
       
@@ -1301,7 +1317,9 @@ class EditableMatrix(Matrix):
         nx = np_array.shape[0]
         ny = np_array.shape[1]
 
-        with tempfile.NamedTemporaryFile() as f:
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+          f.close()
+          atexit.register(cleanTmpFile, f)
           np_array.tofile(f.name)
           self.client.send("load(" + f.name + ","+b2str(nx)+","+b2str(ny)+")")
 
@@ -1320,7 +1338,9 @@ class EditableMatrix(Matrix):
     nx = np_array.shape[0]
     ny = np_array.shape[1]
     
-    with tempfile.NamedTemporaryFile() as f:
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+      f.close()
+      atexit.register(cleanTmpFile, f)
       np_array.tofile(f.name)
       retval = self.client.send_si(self.handle, "load(" + f.name + ","+b2str(nx)+","+b2str(ny)+")")        
       
@@ -3003,7 +3023,6 @@ class Plot(ViewItem) :
         self.client.send("addToCurrentView(Auto,2)")
       else:
         self.client.send("addToCurrentView(Protect,2)")
-          
       self.handle=self.client.send("endEdit()")
 
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
