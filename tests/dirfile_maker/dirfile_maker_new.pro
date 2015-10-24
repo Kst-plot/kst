@@ -2,7 +2,7 @@ TOPOUT_REL=../..
 include($$PWD/$$TOPOUT_REL/kst.pri)
 
 TEMPLATE = app 
-TARGET = $$kstlib(dirfile_maker)
+TARGET = $$kstlib(dirfile_maker_new)
 DESTDIR = $$OUTPUT_DIR/bin
 CONFIG -= precompile_header windows
 CONFIG += console
@@ -18,6 +18,6 @@ INCLUDEPATH +=
 
 LIBS += 
 
-SOURCES += dirfile_maker.c
+SOURCES += dirfile_maker_new.c
 
 

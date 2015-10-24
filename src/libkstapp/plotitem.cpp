@@ -2837,6 +2837,8 @@ QPainterPath PlotItem::tiedZoomCheck() const {
       grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() + sizeOfGrip().width() * .25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * -.25), sizeOfGrip());
     } else if (sharedAxisBox()->isYAxisShared()) {
       grip = QRectF(QPointF(_calculatedPlotRect.topRight().x() - sizeOfGrip().width() * 1.25, _calculatedPlotRect.topRight().y() - sizeOfGrip().height() * 1.25), sizeOfGrip());
+    } else {
+      qDebug() << "warning: no grip set in PlotItem::tiedZoomCheck  (bug?)";
     }
     QPainterPath path;
     if (isXTiedZoom() && isYTiedZoom()) {
