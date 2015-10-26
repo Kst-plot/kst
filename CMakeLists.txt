@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.7)
 
 if(kst_clang)
     set(CMAKE_C_COMPILER   "clang"   CACHE PATH "Clang C compiler")
