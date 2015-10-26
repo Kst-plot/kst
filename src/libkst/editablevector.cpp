@@ -103,16 +103,17 @@ void EditableVector::loadFromTmpFile(QFile &fp) {
 
 
 QString EditableVector::_automaticDescriptiveName() const {
+
   QString name("(");
   if (length()>=1) {
     name += QString::number(_v[0]);
   }
   if (length()>=2) {
-    name += ", " + QString::number(_v[1]);
+    name += " " + QString::number(_v[1]);
   }
 
   if (length()>=3) {
-    name += ", ...";
+    name += " ...";
   }
 
   name += ')';
