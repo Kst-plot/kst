@@ -240,7 +240,7 @@ void Matrix::calcNoSpikeRange(double per) {
   pixels.clear();
 
   while (n_checked < n_check) {
-    j = size_t(double(random())*double(_NS-1)/(double(RAND_MAX)));
+    j = size_t(double(rand())*double(_NS-1)/(double(RAND_MAX)));
     x = _z[j];
     if (!KST_ISNAN(x)) {
       pixels.append(x);
