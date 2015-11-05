@@ -520,7 +520,7 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
       if (image->hasColorMap()) {
         int hXlXDiff = d2i(img_Hx_pix - img_Lx_pix);
         int hYlYDiff = d2i(img_Hy_pix - img_Ly_pix - 1);
-        _image = QImage(hXlXDiff, hYlYDiff, QImage::Format_RGB32);
+        _image = QImage(hXlXDiff, hYlYDiff, QImage::Format_ARGB32);
         //_image.fill(0);
         int ih = _image.height();
         int iw = _image.width();
