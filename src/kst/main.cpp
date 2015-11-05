@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
+  srandom(time(NULL));
   Kst::Application app(argc, argv);
 
   //--------

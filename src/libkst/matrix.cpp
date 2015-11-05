@@ -23,6 +23,7 @@
 #include <math.h>
 #include <QDebug>
 #include <QXmlStreamWriter>
+#include <QList>
 
 #include "debug.h"
 #include "math_kst.h"
@@ -197,19 +198,26 @@ double Matrix::maxValueNoSpike() const {
 }
 
 void Matrix::calcNoSpikeRange(double per) {
-  double *min_list, *max_list, min_of_max, max_of_min;
-  int n_list;
-  int max_n = 50000; // the most samples we will look at...
-  double n_skip;
+  int n_check; // the number of (randomly selected) samples to check.
+  int n_checked;
   double x=0;
   int n_notnan;
+  QList<double> pixels;
+  double max = -1E300;
+  double min = 1E300;
 
-  int i,j, k;
+  int i;
+  unsigned long j;
+
+  if (per>0.5) per = 0.49;
 
   // count number of points which aren't nans.
   for (i=n_notnan=0; i<_NS; ++i) {
     if (!KST_ISNAN(_z[i])) {
       n_notnan++;
+    } else {
+      max = qMax(max, _z[i]);
+      min = qMin(min, _z[i]);
     }
   }
 
@@ -218,74 +226,33 @@ void Matrix::calcNoSpikeRange(double per) {
     _maxNoSpike = 0;
 
     return;
+  } else if (per<=0) {
+    _minNoSpike = min;
+    _maxNoSpike = max;
+    return;
+
   }
 
-  if (per < 0) {
-    per = 0;
-  }
-  per *= (double)n_notnan/(double)_NS;
-  max_n *= int((double)_NS/(double)n_notnan);
+  n_check = 100000;
 
-  n_skip = (double)_NS/max_n;
-  if (n_skip<1.0) n_skip = 1.0;
+  n_checked = 0;
 
-  n_list = int(double(_NS)*per/n_skip);
+  pixels.clear();
 
-  min_list = (double *)malloc(n_list * sizeof(double));
-  max_list = (double *)malloc(n_list * sizeof(double));
-
-
-  // prefill the list
-  for (i=0; i<n_list; ++i) {
-    min_list[i] = 1E+300;
-    max_list[i] = -1E+300;
-  }
-  min_of_max = -1E+300;
-  max_of_min = 1E+300;
-
-  i = n_list;
-  for (j=0; j<_NS; j=int(i*n_skip), ++i) {
-    if (_z[j] < max_of_min) { // member for the min list
-      // replace max of min with the new value
-      for (k=0; k<n_list; ++k) {
-        if (min_list[k]==max_of_min) {
-          x = min_list[k] = _z[j];
-          break;
-        }
-      }
-      max_of_min = x;
-      // find the new max_of_min
-      for (k=0; k<n_list; ++k) {
-        if (min_list[k] > max_of_min) {
-          max_of_min = min_list[k];
-        }
-      }
-    }
-    if (_z[j] > min_of_max) { // member for the max list
-      //printf("******** z: %g  min_of_max: %g\n", _z[j], min_of_max);
-      // replace min of max with the new value
-      for (k=0; k<n_list; ++k) {
-        if (max_list[k]==min_of_max) {
-          x = max_list[k] = _z[j];
-          break;
-        }
-      }
-      // find the new min_of_max
-      min_of_max = x;
-      for (k=0; k<n_list; ++k) {
-        if (max_list[k] < min_of_max) {
-          min_of_max = max_list[k];
-        }
-      }
+  while (n_checked < n_check) {
+    j = size_t(double(random())*double(_NS-1)/(double(RAND_MAX)));
+    x = _z[j];
+    if (!KST_ISNAN(x)) {
+      pixels.append(x);
+      n_checked++;
     }
   }
+  qSort(pixels);
 
   // FIXME: this needs a z spike insensitive algorithm...
-  _minNoSpike = max_of_min;
-  _maxNoSpike = min_of_max;
+  _minNoSpike = pixels[size_t(n_check*per)];
+  _maxNoSpike = pixels[size_t(n_check*(1.0-per)-1)];
 
-  free(min_list);
-  free(max_list);
 }
 
 double Matrix::meanValue() const {

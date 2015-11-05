@@ -3007,7 +3007,7 @@ void PlotItem::zoomMaximum(bool force) {
 }
 
 void PlotItem::adjustImageColorScale() {
-  const double per[] = {0.0, 0.0001, 0.001, 0.005, 0.02};
+  const double per[] = {0.0, 0.0001, 0.001, 0.005, 0.02, 0.1};
   const int length = sizeof(per) / sizeof(double);
 
   if (++_i_per >= length) {
