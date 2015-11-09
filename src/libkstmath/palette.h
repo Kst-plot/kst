@@ -65,11 +65,11 @@ class KSTMATH_EXPORT Palette
      */
     QRgb rgb(const int colorId) const{
       if (colorId<0) {
-        return _rgb[0];
+        return _rgb[0] | 0xff000000;
       } else if (colorId>=_count) {
-        return _rgb[_count-1];
+        return _rgb[_count-1] | 0xff000000;
       } else {
-        return _rgb[colorId];
+        return _rgb[colorId] | 0xff000000;
       }
     }
 

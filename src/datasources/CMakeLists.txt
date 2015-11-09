@@ -65,3 +65,10 @@ if(matio)
 	kst_add_plugin(. matlab) # Directory named after the file format, not the lib
 	kst_link(${MATIO_LIBRARIES})
 endif()
+
+if(tiff)
+        include_directories(${TIFF_INCLUDEDIR})
+        kst_add_plugin(. tiff16source) # Directory named after the file format, not the lib
+        kst_link(${TIFF_LIBRARIES})
+endif()
+
