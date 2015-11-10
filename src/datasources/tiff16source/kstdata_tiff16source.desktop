@@ -5,6 +5,4 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=tiff16source
 X-Kst-Plugin-Author=C. Barth Netterfield
 Name=tiff16source
-Name[x-test]=xxtiff16sourcexx
 Comment=Plugin to read a 16 bit grayscale tiff image.
-Comment[x-test]=xxPlugin to read a 16 bit grayscale tiff image.xx
