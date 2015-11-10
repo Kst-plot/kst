@@ -507,22 +507,21 @@ int Tiff16SourcePlugin::understands(QSettings *cfg, const QString& filename) con
 
   quint16 spp, bpp, is_tiled;
 
-  TIFF *tif=TIFFOpen(filename.toAscii(), "r");
+  if (filename.toLower().endsWith(".tiff") ||
+      filename.toLower().endsWith(".tif")) {
 
-  if (tif) {
-    TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bpp);
-    TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &spp);
-    is_tiled = TIFFIsTiled(tif);
+    TIFF *tif=TIFFOpen(filename.toAscii(), "r");
 
-    TIFFClose(tif);
+    if (tif) {
+      TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bpp);
+      TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &spp);
+      is_tiled = TIFFIsTiled(tif);
+
+      TIFFClose(tif);
 
 
-    if ((bpp == 16) && (spp = 1) && (is_tiled == 0)) {
-      if (filename.toLower().endsWith(".tiff") ||
-          filename.toLower().endsWith(".tif")) {
-        return 91;
-      } else {
-        return 50;
+      if ((bpp == 16) && (spp = 1) && (is_tiled == 0)) {
+          return 91;
       }
     }
   }
