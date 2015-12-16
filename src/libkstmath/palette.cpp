@@ -30,6 +30,7 @@ QStringList Palette::getPaletteList() {
   paletteList.append(EosBName);
   paletteList.append(KstColorsName);
   paletteList.append(CycleName);
+  paletteList.append(HotColdName);
 
   //TODO: support loading palettes from disk.
 
@@ -77,6 +78,12 @@ void Palette::changePaletteName(const QString &paletteName) {
       _rgb[i] = _colors[i].rgb();
     }
     _count = RedTempCount;
+  } else if (_paletteName == HotColdName) {
+    for (int i = 0; i < HotColdCount; i++) {
+      _colors[i] = QColor(HotCold[i][0], HotCold[i][1], HotCold[i][2]);
+      _rgb[i] = _colors[i].rgb();
+    }
+    _count = HotColdCount;
   } else if (_paletteName == SpectrumName) {
     for (int i = 0; i < SpectrumCount; i++) {
       _colors[i] = QColor(Spectrum[i][0], Spectrum[i][1], Spectrum[i][2]);
