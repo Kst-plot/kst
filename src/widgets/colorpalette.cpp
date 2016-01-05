@@ -48,25 +48,23 @@ void ColorPalette::updatePalette(const QString &palette) {
   int height = _palette->height()?_palette->height():1;
   int width = 7 * height;
   int size = 1;
-  int step = 1;
 
   if (numberOfColors > 0) {
     size = width / numberOfColors;
     if (size == 0) {
       size = 1;
-      step = numberOfColors / width;
     }
   }
 
-  int pos = 0;
   QPixmap pix(width, height);
   QPainter p(&pix);
 
   p.fillRect(p.window(), QColor("white"));
-  for (int i=0; i<numberOfColors; i+=step) {
-    p.fillRect(pos*size, 0, size, _palette->height(), QBrush(newPalette->color(i)));
-    ++pos;
+  for (int i=0; i<width; i++) {
+    int j = i*numberOfColors/width;
+    p.fillRect(i, 0, 1, height, QBrush(newPalette->color(j)));
   }
+
   _paletteDisplay->setPixmap(pix);
 
   delete newPalette;
