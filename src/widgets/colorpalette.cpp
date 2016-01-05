@@ -47,14 +47,6 @@ void ColorPalette::updatePalette(const QString &palette) {
   int numberOfColors = newPalette->colorCount();
   int height = _palette->height()?_palette->height():1;
   int width = 7 * height;
-  int size = 1;
-
-  if (numberOfColors > 0) {
-    size = width / numberOfColors;
-    if (size == 0) {
-      size = 1;
-    }
-  }
 
   QPixmap pix(width, height);
   QPainter p(&pix);
