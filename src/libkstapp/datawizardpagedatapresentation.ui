@@ -11,9 +11,21 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
     <number>0</number>
    </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item row="2" column="0" colspan="2">
+    <widget class="Kst::FFTOptions" name="_FFTOptions" native="true"/>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="Kst::DataRange" name="_DataRange" native="true"/>
    </item>
@@ -26,19 +38,16 @@
       <bool>true</bool>
      </property>
      <layout class="QGridLayout">
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="_xAxisCreateFromField">
+      <item row="0" column="1">
+       <widget class="Kst::ComboBox" name="_xVector">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text">
-         <string>Create fr&amp;om field:</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+        <property name="whatsThis">
+         <string>The field to be used as the X-axis in XY curves.</string>
         </property>
        </widget>
       </item>
@@ -55,41 +64,69 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="Kst::ComboBox" name="_xVector">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="_xAxisCreateFromField">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>1</horstretch>
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="whatsThis">
-         <string>The field to be used as the X-axis in XY curves.</string>
+        <property name="text">
+         <string>Create fr&amp;om field:</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="Kst::VectorSelector" name="_xVectorExisting" native="true"/>
       </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="_xAxisWarningLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="_XAxisWarningLabel2">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Selecting 'Create from field' will create a new matching X vector.</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="Kst::FFTOptions" name="_FFTOptions" native="true"/>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Kst::DataRange</class>
-   <extends>QWidget</extends>
-   <header>datarange.h</header>
-  </customwidget>
-  <customwidget>
    <class>Kst::ComboBox</class>
    <extends>QComboBox</extends>
    <header>combobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::DataRange</class>
+   <extends>QWidget</extends>
+   <header>datarange.h</header>
   </customwidget>
   <customwidget>
    <class>Kst::VectorSelector</class>

@@ -588,8 +588,8 @@ void DataWizardPagePlot::updatePlotBox() {
 // DataWizardPageDataPresentation
 //
 
-DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *store, QWidget *parent)
-  : QWizardPage(parent), _pageValid(false) {
+DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *store, DataWizard *parent)
+  : QWizardPage(parent), _pageValid(false), _dw(parent) {
    setupUi(this);
 
   _xVectorExisting->setObjectStore(store);
@@ -602,11 +602,18 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   connect(_xVector, SIGNAL(currentIndexChanged(int)), this, SLOT(optionsUpdated()));
   connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(optionsUpdated()));
 
+  connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(checkWarningLabel()));
+  connect(_xAxisCreateFromField, SIGNAL(toggled(bool)), this, SLOT(checkWarningLabel()));
+  connect(_DataRange, SIGNAL(modified()), this, SLOT(checkWarningLabel()));
+  connect(_xAxisGroup, SIGNAL(toggled(bool)), this, SLOT(checkWarningLabel()));
+
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
   _FFTOptions->GroupBoxFFTOptions->setTitle(tr("Create S&pectra Plots. Set FFT options below:"));
 
   _FFTOptions->GroupBoxFFTOptions->setChecked(dialogDefaults().value("wizard/doPSD",false).toBool());
   _xAxisGroup->setChecked(dialogDefaults().value("wizard/doXY",true).toBool());
+
+  checkWarningLabel();
 }
 
 
@@ -658,6 +665,54 @@ bool DataWizardPageDataPresentation::plotDataPSD() const {
 void DataWizardPageDataPresentation::optionsUpdated() {
   _pageValid = validOptions();
   emit completeChanged();
+}
+
+void DataWizardPageDataPresentation::checkWarningLabel()
+{
+  bool warn = false;
+  if (_xAxisGroup->isChecked() &&
+      _xAxisUseExisting->isChecked()) {
+    DataVectorPtr xv = kst_cast<DataVector>(_xVectorExisting->selectedVector());
+    if (xv) {
+      // do the number of requested frames match?
+      if (xv->readToEOF()) {
+        if (!_DataRange->readToEnd()) {
+          warn = true;
+        }
+      } else {
+        if (xv->reqNumFrames() != _DataRange->range() ||
+            _DataRange->readToEnd()) {
+          warn = true;
+        }
+      }
+      // does the starting frame match?
+      if (xv->countFromEOF()) {
+        if (!_DataRange->countFromEnd()) {
+          warn = true;
+        }
+      } else {
+        if (xv->reqStartFrame() != _DataRange->start() ||
+            (_DataRange->countFromEnd())) {
+          warn = true;
+        }
+      }
+      if (warn) {
+        _xAxisWarningLabel->setText(tr("Warning: the data range of the existing X vector does not match the Y vectors."));
+      } else {
+        if (_dw->_pageDataSource->dataSource()) {
+          if (_dw->_pageDataSource->dataSource()->fileName() != xv->filename()) {
+            warn = true;
+            _xAxisWarningLabel->setText(tr("Warning: the file name of the existing X vector does not match the Y vectors."));
+          }
+        }
+      }
+    } else if (_xVectorExisting->selectedVector()) {
+      _xAxisWarningLabel->setText(tr("Warning: the selected X vector may not match the data range of the Y vectors."));
+      warn = true;
+    }
+  }
+  _xAxisWarningLabel->setVisible(warn);
+  _XAxisWarningLabel2->setVisible(warn);
 }
 
 
@@ -759,6 +814,7 @@ DataWizard::DataWizard(QWidget *parent, const QString& fileToOpen)
 
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageVectors, SLOT(updateVectors()));
   connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageDataPresentation, SLOT(updateVectors()));
+  connect(_pageDataSource, SIGNAL(dataSourceChanged()), _pageDataPresentation, SLOT(checkWarningLabel()));
   connect(_pageDataSource, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
   disconnect(button(QWizard::FinishButton), SIGNAL(clicked()), (QDialog*)this, SLOT(accept()));
   connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finished()));

@@ -33,6 +33,7 @@ class Document;
 class ObjectStore;
 class PlotItemInterface;
 class ValidateDataSourceThread;
+class DataWizard;
 
 class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSource
 {
@@ -144,7 +145,7 @@ class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDat
 {
   Q_OBJECT
   public:
-    DataWizardPageDataPresentation(ObjectStore *store, QWidget *parent);
+    DataWizardPageDataPresentation(ObjectStore *store, DataWizard *parent);
     virtual ~DataWizardPageDataPresentation();
 
     int nextId() const;
@@ -166,6 +167,7 @@ class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDat
     void applyFilter(bool);
     void updateVectors();
     void optionsUpdated();
+    void checkWarningLabel();
 
   Q_SIGNALS:
     void filterApplied(bool);
@@ -173,6 +175,7 @@ class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDat
   private:
     bool _pageValid;
     bool validOptions();
+    DataWizard *_dw;
 };
 
 class DataWizard : public QWizard
@@ -187,8 +190,8 @@ class DataWizard : public QWizard
     QStringList dataSourceFieldList() const;
     QStringList dataSourceIndexList() const;
 
-  private:
     DataWizardPageDataSource *_pageDataSource;
+  private:
     DataWizardPageVectors *_pageVectors;
     DataWizardPageFilters *_pageFilters;
     DataWizardPagePlot *_pagePlot;
