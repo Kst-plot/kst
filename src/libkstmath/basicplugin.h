@@ -102,7 +102,7 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     virtual void _initializeShortName();
   private:
     bool inputsExist() const;
-    void updateOutput() const;
+    //void updateOutput() const;
 
     QString _pluginName;
 };

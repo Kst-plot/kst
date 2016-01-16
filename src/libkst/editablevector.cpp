@@ -58,9 +58,10 @@ void EditableVector::setValue(const int &i, const double &val) { //sa Vector::ch
     _scalars["sum"]->setValue(_sum+val-_v[i]);
     _scalars["sumsquared"]->setValue(_sum*_sum);
     _scalars["max"]->setValue(qMax(_max,val));
-    _scalars["min"]->setValue(qMin(_min,_min));
-    double b=qMax(double(0.0),_minPos);
-    _scalars["minpos"]->setValue(qMin(_min,b));
+    _scalars["min"]->setValue(qMin(_min,val));
+    if (val>=0.0) {
+      _scalars["minpos"]->setValue(qMin(_minPos,val));
+    }
     _scalars["last"]->setValue(_v[_size-1]);
     _scalars["first"]->setValue(_v[0]);
     _v[i]=val;

@@ -189,7 +189,10 @@ void BasicPlugin::internalUpdate() {
   }
 
   //Perform update on the outputs
-  updateOutput();
+  // this seems to have done nothing
+  // but if troubles crop up, consider
+  // looking here.
+  //updateOutput();
 
   createScalars();
 
@@ -325,6 +328,10 @@ bool BasicPlugin::inputsExist() const {
 }
 
 
+#if 0
+// The code below appeared to have done nothing
+// So: removing it.  But if problems with plugin
+// updates crop up, consider looking here.
 void BasicPlugin::updateOutput() const {
   //output vectors...
   //FIXME: _outputVectors should be used, not this string list!
@@ -338,6 +345,7 @@ void BasicPlugin::updateOutput() const {
     }
   }
 }
+#endif
 
 QString BasicPlugin::descriptionTip() const {
   return tr("Plugin: %1").arg(Name());

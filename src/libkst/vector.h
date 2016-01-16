@@ -77,11 +77,14 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** Return V[i], interpolated/decimated to have ns_i total samples */
     double interpolate(int i, int ns_i) const;
 
-    /** Return V[i], interpolated/decimated to have ns_i total samples, without any holes */
+    /** Return V[i], interpolated/decimated to have ns_i total samples, without any NaNs */
     double interpolateNoHoles(int i, int ns_i) const;
 
     /** Return V[i] uninterpolated */
     double value(int i) const;
+
+    /** Return a pointer to the raw vector */
+    double *value() const;
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }
@@ -138,9 +141,6 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** Save vector information */
     virtual void save(QXmlStreamWriter &s);
-
-    /** Return a pointer to the raw vector */
-    double *value() const;
 
     /** access functions for _isScalarList */
     bool isScalarList() const { return _isScalarList; }
@@ -205,6 +205,9 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** is the vector monotonically rising */
     bool _is_rising : 1;
 
+    /** the vector has at least one NaN */
+    bool _has_nan : 1;
+
     /** if true then we have a scalar list and do not want to be able to
     use it in a curve, display statistics for it, etc. */
     bool _isScalarList : 1;
@@ -232,7 +235,7 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     friend class DataObject;
     friend class Matrix;
-    virtual double* realloced(double *memptr, int newSize);
+    //virtual double* realloced(double *memptr, int newSize);
     virtual void setV(double *memptr, int newSize);
 
     ObjectMap<Scalar> _scalars;

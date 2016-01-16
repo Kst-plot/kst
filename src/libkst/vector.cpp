@@ -72,6 +72,7 @@ Vector::Vector(ObjectStore *store)
     _size = size;
   }
   _is_rising = false;
+  _has_nan = false;
 
   _scalars.clear();
   _strings.clear();
@@ -156,7 +157,7 @@ double Vector::interpolate(int in_i, int ns_i) const {
   GENERATE_INTERPOLATION
 }
 
-
+/** same as above, but as a function for use in plugins, etc */
 double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
   GENERATE_INTERPOLATION
 }
@@ -345,6 +346,8 @@ void Vector::updateScalars() {
   }
 }
 
+
+#if 0
 double* Vector::realloced(double *memptr, int newSize) {
   double *old = _v;
   _v = memptr;
@@ -357,7 +360,7 @@ double* Vector::realloced(double *memptr, int newSize) {
   updateScalars();
   return old;
 }
-
+#endif
 
 void Vector::setV(double *memptr, int newSize) {
   _v = memptr;
@@ -428,12 +431,18 @@ void Vector::internalUpdate() {
   _imax = _imin = 0;
   _nsum = 0;
 
+  _has_nan = false;
+
   if (_size > 0) {
     _is_rising = true;
 
     // Look for a valid (finite) point...
     for (i = 0; i < _size && !isfinite(_v[i]); ++i) {
       // do nothing
+    }
+
+    if (i>0) {
+      _has_nan = true;
     }
 
     if (i == _size) { // there were no finite points:
@@ -506,6 +515,7 @@ void Vector::internalUpdate() {
         }
       } else {
         _is_rising = false;
+        _has_nan = true;
       }
     }
 

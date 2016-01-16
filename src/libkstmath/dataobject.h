@@ -153,7 +153,7 @@ class KSTMATH_EXPORT DataObject : public Object
     DataObject(ObjectStore *store);
     virtual ~DataObject();
 
-    double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;
+//    double *vectorRealloced(VectorPtr v, double *memptr, int newSize) const;
 
     //The plugin infrastructure will read the desktop file and set these
     //Other objects that inherit can set the ones that apply if desired...

@@ -440,6 +440,7 @@ DataObjectPtr DataObject::createPlugin(const QString& name, ObjectStore *store, 
 }
 
 
+#if 0
 double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) const {
   if (!v) {
     return 0L;
@@ -451,6 +452,7 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
   // better lock it!
   return v->realloced(memptr, newSize);
 }
+#endif
 
 void DataObject::load(const QXmlStreamReader &e) {
   qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
