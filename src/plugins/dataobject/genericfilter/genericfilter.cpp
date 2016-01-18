@@ -222,10 +222,13 @@ bool GenericFilterSource::algorithm() {
   double in = 0.0;
   theFilter.ConnectTo(in); // the filter keeps a pointer to "in"
   theFilter.Reset();
+
+  double *v_in = inputVector->noNanValue();
+  double *v_out = outputVector->value();
   for (int i=0; i<length; i++) {
-    in = inputVector->value()[i];
+    in = v_in[i];
     theFilter.NextTimeStep();
-    outputVector->value()[i] = theFilter.out;
+    v_out[i] = theFilter.out;
   }
 
   return true;

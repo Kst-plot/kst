@@ -172,12 +172,17 @@ bool LineFitSource::algorithm() {
   outputVectorX->resize( 2, false );
   outputVectorY->resize( 2, false );
 
+  double* vX_in = inputVectorX->noNanValue();
+  double* vY_in = inputVectorY->noNanValue();
+  double* vX_out = outputVectorX->value();
+  double* vY_out = outputVectorY->value();
+
   if (inputVectorY->length() == 1) {
-    outputVectorX->value()[0] = inputVectorX->value()[0];
-    outputVectorX->value()[1] = inputVectorX->value()[inputVectorX->length() - 1];
-    outputVectorY->value()[0] = inputVectorY->value()[0];
-    outputVectorY->value()[1] = inputVectorY->value()[0];
-    outputScalarA->setValue( inputVectorY->value()[0] );
+    vX_out[0] = vX_in[0];
+    vX_out[1] = vX_in[inputVectorX->length() - 1];
+    vY_out[0] = vY_in[0];
+    vY_out[1] = vY_in[0];
+    outputScalarA->setValue( vY_in[0] );
     outputScalarB->setValue( 0 );
     outputScalarChi->setValue( chi2 );
     return true;
@@ -190,19 +195,19 @@ bool LineFitSource::algorithm() {
     long int idx = long(Kst::roundDouble(z));
     double skew = z - floor(z); /* [0..1] */
     long int idx2 = idx + 1;
-    sy += inputVectorY->value()[i];
+    sy += vY_in[i];
     while (idx2 >= inputVectorY->length()) {
       idx2--;
     }
-    sx += inputVectorX->value()[idx] + (inputVectorX->value()[idx2] - inputVectorX->value()[idx])*skew;
+    sx += vX_in[idx] + (vX_in[idx2] - vX_in[idx])*skew;
   }
 
   sxoss = sx / inputVectorX->length();
 
   for (i = 0; i < inputVectorX->length(); ++i) {
-    double t = inputVectorX->value()[i] - sxoss;
+    double t = vX_in[i] - sxoss;
     st2 += t * t;
-    b += t * inputVectorY->value()[i];
+    b += t * vY_in[i];
   }
 
   b /= st2;
@@ -210,10 +215,10 @@ bool LineFitSource::algorithm() {
 
   /* could put goodness of fit, etc, in here */
 
-  outputVectorX->value()[0] = inputVectorX->value()[0];
-  outputVectorX->value()[1] = inputVectorX->value()[inputVectorX->length()-1];
-  outputVectorY->value()[0] = a+b*outputVectorX->value()[0];
-  outputVectorY->value()[1] = a+b*outputVectorX->value()[1];
+  vX_out[0] = vX_in[0];
+  vX_out[1] = vX_in[inputVectorX->length()-1];
+  vY_out[0] = a+b*vX_out[0];
+  vY_out[1] = a+b*vX_out[1];
 
   for (i = 0; i < inputVectorX->length(); ++i) {
     double z = xScale*i;
@@ -225,8 +230,8 @@ bool LineFitSource::algorithm() {
     while (idx2 >= inputVectorX->length()) {
       idx2--;
     }
-    newX = inputVectorX->value()[idx] + (inputVectorX->value()[idx2] - inputVectorX->value()[idx])*skew;
-    ci = inputVectorY->value()[i] - a - b*newX;
+    newX = vX_in[idx] + (vX_in[idx2] - vX_in[idx])*skew;
+    ci = vY_in[i] - a - b*newX;
     chi2 += ci*ci;
   }
 

@@ -159,7 +159,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
 int PSDCalculator::calculatePowerSpectrum(
   double *input, int inputLen, 
   double *output, int outputLen, 
-  bool removeMean, bool interpolateHoles,
+  bool removeMean,
   bool average, int averageLen, 
   bool apodize, ApodizeFunction apodizeFxn, double gaussianSigma,
   PSDType outputType, double inputSamplingFreq) {
@@ -225,21 +225,9 @@ int PSDCalculator::calculatePowerSpectrum(
 
     // apply the PSD options (removeMean, apodize, etc.)
     // separate cases for speed- although this shouldn't really matter- the rdft should be the most time consuming step by far for any large data set.
-    if (removeMean && apodize && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
-        _a[i_samp] = (Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean)*_w[i_samp];
-      }
-    } else if (removeMean && apodize) {
+    if (removeMean && apodize) {
       for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = (input[i_samp + ioffset] - mean)*_w[i_samp];
-      }
-    } else if (removeMean && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
-        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen) - mean;
-      }
-    } else if (apodize && interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
-        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen)*_w[i_samp];
       }
     } else if (removeMean) {
       for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
@@ -248,10 +236,6 @@ int PSDCalculator::calculatePowerSpectrum(
     } else if (apodize) {
       for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         _a[i_samp] = input[i_samp + ioffset]*_w[i_samp];
-      }
-    } else if (interpolateHoles) {
-      for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
-        _a[i_samp] = Kst::kstInterpolateNoHoles(input, inputLen, i_samp + ioffset, inputLen);
       }
     } else {
       for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {

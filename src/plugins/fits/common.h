@@ -78,24 +78,28 @@ bool precursor( Kst::VectorPtr xVector, Kst::VectorPtr yVector, Kst::VectorPtr w
     // do any necessary interpolations...
     //
         pInputs[XVALUES] = (double*)malloc(*piLength * sizeof( double ));
+
+        double *v_x = xVector->noNanValue();
+        double *v_y = yVector->noNanValue();
+
         if (xVector->length() == *piLength) {
           for( i=0; i<*piLength; i++) {
-            pInputs[XVALUES][i] = xVector->value()[i];
+            pInputs[XVALUES][i] = v_x[i];
           }
         } else {
           for( i=0; i<*piLength; i++) {
-            pInputs[XVALUES][i] = interpolate( i, *piLength, xVector->value(), xVector->length() );
+            pInputs[XVALUES][i] = interpolate( i, *piLength, v_x, xVector->length() );
           }
         }
 
         pInputs[YVALUES] = (double*)malloc(*piLength * sizeof( double ));
         if (yVector->length() == *piLength) {
           for( i=0; i<*piLength; i++) {
-            pInputs[YVALUES][i] = yVector->value()[i];
+            pInputs[YVALUES][i] = v_y[i];
           }
         } else {
           for( i=0; i<*piLength; i++) {
-            pInputs[YVALUES][i] = interpolate( i, *piLength, yVector->value(), yVector->length() );
+            pInputs[YVALUES][i] = interpolate( i, *piLength, v_y, yVector->length() );
           }
         }
 

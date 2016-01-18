@@ -174,7 +174,7 @@ bool AutoCorrelationSource::algorithm() {
     // zero-pad the two arrays...
     //
     memset( pdArrayOne, 0, iLength * sizeof( double ) );
-    memcpy( pdArrayOne, inputVector->value(), inputVector->length() * sizeof( double ) );
+    memcpy( pdArrayOne, inputVector->noNanValue(), inputVector->length() * sizeof( double ) );
 
     //
     // calculate the FFTs of the two functions...

@@ -74,9 +74,6 @@ class KSTMATH_EXPORT PSD : public DataObject {
     PSDType output() const;
     void setOutput(PSDType in_output);
 
-    bool interpolateHoles() const;
-    void setInterpolateHoles(bool interpolate);
-
     virtual bool slaveVectorsUsed() const;
 
     virtual void showNewDialog();
@@ -94,7 +91,7 @@ class KSTMATH_EXPORT PSD : public DataObject {
     void change(VectorPtr in_V,
         double freq, bool average, int average_len, bool apodize, bool removeMean,
         const QString& VUnits, const QString& RUnits, ApodizeFunction in_apodizeFxn = WindowOriginal, 
-        double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity, bool interpolateHoles = false);
+        double in_gaussianSigma = 3.0, PSDType in_output = PSDAmplitudeSpectralDensity);
     virtual void internalUpdate();
 
     void setChanged() { _changed=true;}
@@ -120,7 +117,6 @@ class KSTMATH_EXPORT PSD : public DataObject {
     bool _Apodize;
     bool _RemoveMean;
     bool _Average;
-    bool _interpolateHoles;
     PSDType _Output;
     PSDType _prevOutput;
     int _last_n_subsets;

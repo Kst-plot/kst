@@ -76,10 +76,10 @@ bool kstfit_linear_weighted(
                   // fill in the matrices and vectors...
                   //
                   for( i=0; i<iLength; i++ ) {
-                    gsl_vector_set( pVectorY, i, interpolate(i, iLength, yVector->value(), yVector->length()));
-                    gsl_vector_set( pVectorWeights, i, interpolate(i, iLength, weightsVector->value(), weightsVector->length()));
+                    gsl_vector_set( pVectorY, i, interpolate(i, iLength, yVector->noNanValue(), yVector->length()));
+                    gsl_vector_set( pVectorWeights, i, interpolate(i, iLength, weightsVector->noNanValue(), weightsVector->length()));
                     for( j=0; j<iNumParams; j++ ) {
-                      dX = calculate_matrix_entry( interpolate(i, iLength, xVector->value(), xVector->length()), j );
+                      dX = calculate_matrix_entry( interpolate(i, iLength, xVector->noNanValue(), xVector->length()), j );
                       gsl_matrix_set( pMatrixX, i, j, dX );
                     }
                   }
@@ -102,7 +102,7 @@ bool kstfit_linear_weighted(
                               gsl_vector_get( pVectorParameters, j );
                       }
                       vectorOutYFitted->value()[i] = dY;
-                      vectorOutYResiduals->value()[i] = interpolate(i, iLength, yVector->value(), yVector->length()) - dY;
+                      vectorOutYResiduals->value()[i] = interpolate(i, iLength, yVector->noNanValue(), yVector->length()) - dY;
                     }
 
                     for( i=0; i<iNumParams; i++ ) {

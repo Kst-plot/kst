@@ -73,6 +73,8 @@ Vector::Vector(ObjectStore *store)
   }
   _is_rising = false;
   _has_nan = false;
+  _v_no_nans_dirty = true;
+  _v_no_nans_size = 0;
 
   _scalars.clear();
   _strings.clear();
@@ -194,7 +196,6 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
       }                                     \
     }
 
-
 #define GENERATE_INTERPOLATION              \
   assert(_size > 0);                        \
   /** Limits checks - optional? **/         \
@@ -245,9 +246,12 @@ double Vector::interpolateNoHoles(int in_i, int ns_i) const {
 }
 
 
+#if 0
 double kstInterpolateNoHoles(double *_v, int _size, int in_i, int ns_i) {
   GENERATE_INTERPOLATION
 }
+#endif
+
 
 #undef FIND_LEFT
 #undef FIND_RIGHT
@@ -258,6 +262,19 @@ double kstInterpolateNoHoles(double *_v, int _size, int in_i, int ns_i) {
 double Vector::value(int i) const {
   if (i < 0 || i >= _size) { // can't look before beginning or past end
     return 0.0;
+  }
+  return _v[i];
+}
+
+double Vector::noNanValue(int i) {
+  if (i < 0 || i >= _size) { // can't look before beginning or past end
+    return 0.0;
+  }
+  if (_has_nan) {
+    if (_v_no_nans_dirty) {
+      updateVNoNans();
+    }
+    return _v_no_nans[i];
   }
   return _v[i];
 }
@@ -368,6 +385,49 @@ void Vector::setV(double *memptr, int newSize) {
   _size = newSize;
 }
 
+#define FIND_LEFT(val, idx)                 \
+    for (; idx >= 0; --idx) {               \
+      if (_v[idx] == _v[idx]) {             \
+        val = _v[idx]; break;               \
+      }                                     \
+    }
+
+#define FIND_RIGHT(val, idx)                \
+    for (; idx < _size; ++idx) {            \
+      if (_v[idx] == _v[idx]) {             \
+        val = _v[idx]; break;               \
+      }                                     \
+    }
+
+void Vector::updateVNoNans()  {
+
+  if (_size != _v_no_nans_size) {
+    kstrealloc(_v_no_nans, _size*sizeof(double));
+    _v_no_nans_size = _size;
+  }
+
+  for (int in_i = 0; in_i < _size; in_i++) {
+    if (_v[in_i] == _v[in_i]) {
+      _v_no_nans[in_i] = _v[in_i];
+    } else {
+      double left = 0., right = 0.;
+      int leftIndex = in_i, rightIndex = in_i;
+      FIND_LEFT(left, leftIndex);
+      FIND_RIGHT(right, rightIndex);
+      if (leftIndex == -1) {
+        _v_no_nans[in_i] = right;
+      } else if (rightIndex == _size) {
+        _v_no_nans[in_i] = left;
+      } else {
+        _v_no_nans[in_i] = left + (right - left) * double(in_i - leftIndex) / double(rightIndex - leftIndex);
+      }
+    }
+  }
+  _v_no_nans_dirty = false;
+}
+#undef FIND_LEFT
+#undef FIND_RIGHT
+
 
 void Vector::zero() {
   _ns_min = _ns_max = 0.0;
@@ -432,6 +492,7 @@ void Vector::internalUpdate() {
   _nsum = 0;
 
   _has_nan = false;
+  _v_no_nans_dirty = true;
 
   if (_size > 0) {
     _is_rising = true;
@@ -593,6 +654,16 @@ void Vector::setNewAndShift(int inNew, int inShift) {
 }
 
 double *Vector::value() const {
+  return _v;
+}
+
+double *Vector::noNanValue() {
+  if (_has_nan) {
+    if (_v_no_nans_dirty) {
+      updateVNoNans();
+    }
+    return _v_no_nans;
+  }
   return _v;
 }
 

@@ -58,9 +58,11 @@ bool interpolate(Kst::VectorPtr xVector,
           if (pAccel != NULL) {
             pSpline = gsl_spline_alloc( pType, iLengthData );
             if (pSpline != NULL) {
-              if (!gsl_spline_init( pSpline, xVector->value(), yVector->value(), iLengthData )) {
+              if (!gsl_spline_init( pSpline, xVector->noNanValue(), yVector->noNanValue(), iLengthData )) {
+                double *xV1 = x1Vector->noNanValue();
+                double *yVout = yOutVector->value();
                 for( int i=0; i<iLengthInterp; i++) {
-                  yOutVector->value()[i] = gsl_spline_eval( pSpline, x1Vector->value()[i], pAccel );
+                  yVout[i] = gsl_spline_eval( pSpline, xV1[i], pAccel );
                 }
 
                 bReturn = true;

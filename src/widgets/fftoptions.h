@@ -70,11 +70,6 @@ class KSTWIDGETS_EXPORT FFTOptions : public QWidget, public Ui::FFTOptions
     bool outputDirty() const;
     void setOutput(const PSDType output);
 
-    bool interpolateOverHoles() const;
-    bool interpolateOverHolesDirty() const;
-    void setInterpolateOverHoles(const bool interpolateOverHoles);
-
-    void disableInterpolateOverHoles();
     void clearValues();
 
     void setWidgetDefaults();

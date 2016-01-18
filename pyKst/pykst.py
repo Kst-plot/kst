@@ -419,7 +419,6 @@ class Client:
                    apodize_function = 0,
                    sigma = 1.0,
                    output_type = 0,
-                   interpolate_over_holes = True,
                    name=""):
     """ Create a new Spectrum in kst.
     
@@ -437,7 +436,6 @@ class Client:
                     apodize_function,
                     sigma,
                     output_type,
-                    interpolate_over_holes,
                     name)
 
   def spectrum(self, name):
@@ -1862,7 +1860,6 @@ class Spectrum(Object) :
     :param apodize_function: index of the apodization function - see apodize_function()
     :param sigma: only used if gausian apodization is selected.
     :param output_type: index for the output type - see output_type()
-    :param interpolate_over_holes: interpolate over NaNs, if true.
 
     The apodize funcition is::
     
@@ -1891,7 +1888,6 @@ class Spectrum(Object) :
                apodize_function = 0,
                sigma = 1.0,
                output_type = 0,
-               interpolate_over_holes = True,
                name="", new=True) :
     
     Object.__init__(self,client)
@@ -1909,8 +1905,7 @@ class Spectrum(Object) :
                        rate_units + "," +
                        b2str(apodize_function) + "," +
                        b2str(sigma) + "," +
-                       b2str(output_type) + "," +
-                       b2str(interpolate_over_holes) + ")")
+                       b2str(output_type) + "," + ")")
 
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -2001,12 +1996,6 @@ class Spectrum(Object) :
 
     retval = self.client.send_si(self.handle, "outputTypeIndex()")
     return retval
-
-  def interpolate_over_holes(self):
-    """ replace NaNs with an interpolation, if true. """
-    retval = self.client.send_si(self.handle, "interpolateOverHoles()")
-    return retval
-
 
 # FIT ###################################################################
 class Fit(Object) :

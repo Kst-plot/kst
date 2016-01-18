@@ -176,7 +176,6 @@ void PowerSpectrumDialog::configureTab(ObjectPtr object) {
     _powerSpectrumTab->FFTOptionsWidget()->setApodizeFunction(psd->apodizeFxn());
     _powerSpectrumTab->FFTOptionsWidget()->setSigma(psd->gaussianSigma());
     _powerSpectrumTab->FFTOptionsWidget()->setOutput(psd->output());
-    _powerSpectrumTab->FFTOptionsWidget()->setInterpolateOverHoles(psd->interpolateHoles());
     _powerSpectrumTab->hideCurveOptions();
     if (_editMultipleWidget) {
       PSDList objects = _document->objectStore()->getObjects<PSD>();
@@ -215,8 +214,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
                         _powerSpectrumTab->FFTOptionsWidget()->rateUnits(),
                         _powerSpectrumTab->FFTOptionsWidget()->apodizeFunction(),
                         _powerSpectrumTab->FFTOptionsWidget()->sigma(),
-                        _powerSpectrumTab->FFTOptionsWidget()->output(),
-                        _powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
+                        _powerSpectrumTab->FFTOptionsWidget()->output());
 
   if (DataDialog::tagStringAuto()) {
      powerspectrum->setDescriptiveName(QString());
@@ -315,7 +313,6 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
 
           const bool apodize = options->apodizeDirty() ? options->apodize() : powerspectrum->apodize();
           const bool removeMean = options->removeMeanDirty() ? options->removeMean() : powerspectrum->removeMean();
-          const bool interpolateOverHoles = options->interpolateOverHolesDirty() ? options->interpolateOverHoles() : powerspectrum->interpolateHoles();
           const bool interleavedAverage = options->interleavedAverageDirty() ? options->interleavedAverage() : powerspectrum->average();
           const int FFTLength = options->FFTLengthDirty() ? options->FFTLength() : powerspectrum->length();
           const ApodizeFunction apodizeFunction = options->apodizeFunctionDirty() ? options->apodizeFunction() : powerspectrum->apodizeFxn();
@@ -335,7 +332,6 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
           powerspectrum->setApodizeFxn(apodizeFunction);
           powerspectrum->setGaussianSigma(sigma);
           powerspectrum->setOutput(output);
-          powerspectrum->setInterpolateHoles(interpolateOverHoles);
 
           powerspectrum->registerChange();
           powerspectrum->unlock();
@@ -354,7 +350,6 @@ ObjectPtr PowerSpectrumDialog::editExistingDataObject() const {
       powerspectrum->setApodizeFxn(_powerSpectrumTab->FFTOptionsWidget()->apodizeFunction());
       powerspectrum->setGaussianSigma(_powerSpectrumTab->FFTOptionsWidget()->sigma());
       powerspectrum->setOutput(_powerSpectrumTab->FFTOptionsWidget()->output());
-      powerspectrum->setInterpolateHoles(_powerSpectrumTab->FFTOptionsWidget()->interpolateOverHoles());
       if (DataDialog::tagStringAuto()) {
         powerspectrum->setDescriptiveName(QString());
       } else {

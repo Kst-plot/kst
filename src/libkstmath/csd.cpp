@@ -107,7 +107,7 @@ void CSD::internalUpdate() {
   _length = tempOutputLen;
   tempOutput = new double[tempOutputLen];
 
-  input = inVector->value();
+  input = inVector->noNanValue();
 
   int xSize = 0;
   for (int i=0; i < inVector->length(); i+= _windowSize) {
@@ -116,7 +116,7 @@ void CSD::internalUpdate() {
         break; //If there isn't enough left for a complete window.
     }
 
-    _psdCalculator.calculatePowerSpectrum(input + i, _windowSize, tempOutput, tempOutputLen, _removeMean,  false, _average, _averageLength, _apodize, _apodizeFxn, _gaussianSigma, _outputType, _frequency);
+    _psdCalculator.calculatePowerSpectrum(input + i, _windowSize, tempOutput, tempOutputLen, _removeMean,  _average, _averageLength, _apodize, _apodizeFxn, _gaussianSigma, _outputType, _frequency);
 
     // resize output matrix
     _outMatrix->resize(xSize+1, tempOutputLen);

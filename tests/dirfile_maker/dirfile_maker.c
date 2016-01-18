@@ -15,14 +15,15 @@ struct DFEntryType {
   char type;
 };
 
-#define NDF 15
+#define NDF 16
 #define SCOUNT 0
 #define FCOUNT 1
 #define SINE 2
 #define SSINE 3
 #define COS 4
 #define TIME 5
-#define EXTRA 6
+#define HASNANS 6
+#define EXTRA 7
 
 struct DFEntryType df[NDF] = {
   {"scount", 1, -1, 'f'},
@@ -31,6 +32,7 @@ struct DFEntryType df[NDF] = {
   {"ssine", 1, -1, 'f'},
   {"cos", 20, -1, 'f'},
   {"time", 20, -1, 'd'},
+  {"hasnans", 20, -1, 'f'},
   {"E0", 20, -1, 'f'},
   {"E1", 20, -1, 'f'},
   {"E2", 20, -1, 'f'},
@@ -146,7 +148,20 @@ int main() {
       }
 
     }
-    
+
+    /* write 'hasnans' */
+    for (i=0; i<df[HASNANS].spf; i++) {
+      dx = count*df[HASNANS].spf+i;
+      x = (double)rand()/(double)RAND_MAX;
+      if (x<0.01) {
+        x = NAN;
+      }
+      nw = write(df[HASNANS].fp, &x, sizeof(float));
+      if (nw<0) {
+        fprintf(stderr, "error writing cos\n");
+      }
+    }
+
     /* write extras */
     for (j=6; j<NDF; j++) {
       for (i=0; i<df[j].spf; i++) {

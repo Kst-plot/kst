@@ -121,24 +121,28 @@ bool kstfit_nonlinear_weighted(
 
     // do any necessary interpolation...
     pInputs[XVALUES] = (double*)malloc(iLength * sizeof( double ));
+
+    double *v_x = xVector->noNanValue();
+    double *v_y = yVector->noNanValue();
+
     if (xVector->length() == iLength) {
       for( i=0; i<iLength; i++) {
-        pInputs[XVALUES][i] = xVector->value()[i];
+        pInputs[XVALUES][i] = v_x[i];
       }
     } else {
       for( i=0; i<iLength; i++) {
-        pInputs[XVALUES][i] = interpolate( i, iLength, xVector->value(), xVector->length() );
+        pInputs[XVALUES][i] = interpolate( i, iLength, v_x, xVector->length() );
       }
     }
 
     pInputs[YVALUES] = (double*)malloc(iLength * sizeof( double ));
     if (yVector->length() == iLength) {
       for( i=0; i<iLength; i++) {
-        pInputs[YVALUES][i] = yVector->value()[i];
+        pInputs[YVALUES][i] = v_y[i];
       }
     } else {
       for( i=0; i<iLength; i++) {
-        pInputs[YVALUES][i] = interpolate( i, iLength, yVector->value(), yVector->length() );
+        pInputs[YVALUES][i] = interpolate( i, iLength, v_y, yVector->length() );
       }
     }
 

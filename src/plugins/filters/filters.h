@@ -99,7 +99,7 @@ bool kst_pass_filter(
         if( real != NULL ) {
           work = gsl_fft_real_workspace_alloc( iLengthDataPadded );
           if( work != NULL ) {
-            memcpy( pPadded, vector->value(), iLengthData * sizeof( double ) );
+            memcpy( pPadded, vector->noNanValue(), iLengthData * sizeof( double ) );
 
             // We are going to do a cubic spline extrapolation on the data
             // to improve behavior for high pass filters.

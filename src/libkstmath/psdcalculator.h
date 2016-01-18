@@ -51,7 +51,7 @@ class PSDCalculator {
     PSDCalculator();
     ~PSDCalculator();
 
-    int calculatePowerSpectrum(double *input, int inputLen, double *output, int outputLen, bool removeMean,  bool interpolateHoles, bool average, int averageLen, bool apodize, ApodizeFunction apodizeFxn, double gaussianSigma, PSDType outputType, double inputSamplingFreq);
+    int calculatePowerSpectrum(double *input, int inputLen, double *output, int outputLen, bool removeMean, bool average, int averageLen, bool apodize, ApodizeFunction apodizeFxn, double gaussianSigma, PSDType outputType, double inputSamplingFreq);
 
     static int calculateOutputVectorLength(int inputLen, bool average, int averageLen);
 

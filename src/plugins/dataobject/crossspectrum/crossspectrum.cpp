@@ -241,11 +241,11 @@ bool CrossSpectrumSource::algorithm() {
     for (i_samp = 0; i_samp < copyLen; ++i_samp) {
       i = ( i_samp + i_subset*xps_len )/dv0;
       mean_a += (
-        a[i_samp] = inputVectorOne->value()[i]
+        a[i_samp] = inputVectorOne->noNanValue()[i]
         );
       i = ( i_samp + i_subset*xps_len )/dv1;
       mean_b += (
-        b[i_samp] = inputVectorTwo->value()[i]
+        b[i_samp] = inputVectorTwo->noNanValue()[i]
         );
     }
     if (copyLen>1) {

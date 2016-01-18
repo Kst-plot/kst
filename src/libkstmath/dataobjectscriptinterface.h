@@ -132,7 +132,6 @@ public:
     QString apodizeFunctionIndex(QString &);
     QString gaussianSigma(QString &);
     QString outputTypeIndex(QString &);
-    QString interpolateOverHoles(QString &);
 };
 
 

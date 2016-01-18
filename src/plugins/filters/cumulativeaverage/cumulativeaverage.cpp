@@ -158,10 +158,12 @@ bool CumulativeAverageSource::algorithm() {
   /* Memory allocation */
   outputVector->resize(inputVector->length(), true);
 
-  outputVector->value()[0] = inputVector->value()[0]; // i = 1
+  double *v_in = inputVector->noNanValue();
+  double *v_out = outputVector->value();
+  v_out[0] = v_in[0]; // i = 1
 
   for (int i = 1; i < inputVector->length(); ++i) {
-    outputVector->value()[i] = (inputVector->value()[i] + (i * outputVector->value()[i-1])) / (i+1);
+    v_out[i] = (v_in[i] + (i * v_out[i-1])) / (i+1);
   }
 
   return true;

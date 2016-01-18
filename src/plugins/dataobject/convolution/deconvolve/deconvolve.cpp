@@ -199,15 +199,15 @@ bool DeconvolveSource::algorithm() {
     memset( pdResponse, 0, iLength * sizeof( double ) );
 
     for ( int i=0; i < iResponseMidpoint; i++) {
-      pdResponse[i]                           = response->value()[iResponseMidpoint+i];
-      pdResponse[iLength-iResponseMidpoint+i] = response->value()[i];
+      pdResponse[i]                           = response->noNanValue()[iResponseMidpoint+i];
+      pdResponse[iLength-iResponseMidpoint+i] = response->noNanValue()[i];
     }
 
     //
     // handle the case where the response function has an odd number of points...
     //
     if (iResponseMidpoint % 2 == 1) {
-      pdResponse[iResponseMidpoint]           = response->value()[response->length()];
+      pdResponse[iResponseMidpoint]           = response->noNanValue()[response->length()];
 
     }
 
@@ -215,7 +215,7 @@ bool DeconvolveSource::algorithm() {
     // zero-pad the convolve array...
     //
     memset( pdConvolve, 0, iLength * sizeof( double ) );
-    memcpy( pdConvolve, deconvolve->value(), deconvolve->length() * sizeof( double ) );
+    memcpy( pdConvolve, deconvolve->noNanValue(), deconvolve->length() * sizeof( double ) );
 
     //
     // calculate the FFTs of the two functions...

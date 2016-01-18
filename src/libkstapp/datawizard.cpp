@@ -1219,8 +1219,7 @@ void DataWizard::finished() {
                                 _pageDataPresentation->getFFTOptions()->rateUnits(),
                                 _pageDataPresentation->getFFTOptions()->apodizeFunction(),
                                 _pageDataPresentation->getFFTOptions()->sigma(),
-                                _pageDataPresentation->getFFTOptions()->output(),
-                                _pageDataPresentation->getFFTOptions()->interpolateOverHoles());
+                                _pageDataPresentation->getFFTOptions()->output());
 
           powerspectrum->registerChange();
           powerspectrum->unlock();

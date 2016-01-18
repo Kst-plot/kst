@@ -30,7 +30,6 @@ FFTOptions::FFTOptions(QWidget *parent)
   connect(_apodize, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_removeMean, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_interleavedAverage, SIGNAL(clicked()), this, SIGNAL(modified()));
-  connect(_interpolateOverHoles, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_sampleRate, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_vectorUnits, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_rateUnits, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
@@ -46,7 +45,6 @@ FFTOptions::FFTOptions(QWidget *parent)
   _removeMean->setProperty("si","Remo&ve mean");
   _FFTLengthLabel->setProperty("si","FFT &length: 2^");
   _interleavedAverage->setProperty("si","Interleave&d average");
-  _interpolateOverHoles->setProperty("si","Interpolate over &holes");
   TextLabel1_9_2->setProperty("si","Sa&mple rate:");
   TextLabel1_9_3->setProperty("si","Vector units:");
   TextLabel1_9_2_2->setProperty("si","Rate units:");
@@ -138,21 +136,6 @@ void FFTOptions::setRemoveMean(const bool removeMean) {
 }
 
 
-bool FFTOptions::interpolateOverHoles() const {
-  return _interpolateOverHoles->isChecked();
-}
-
-
-bool FFTOptions::interpolateOverHolesDirty() const {
-  return _interpolateOverHoles->checkState() == Qt::PartiallyChecked;
-}
-
-
-void FFTOptions::setInterpolateOverHoles(const bool interpolateOverHoles) {
-  _interpolateOverHoles->setChecked(interpolateOverHoles);
-}
-
-
 int FFTOptions::FFTLength() const {
   return _FFTLength->value();
 }
@@ -237,15 +220,8 @@ void FFTOptions::clearValues() {
   _apodize->setCheckState(Qt::PartiallyChecked);
   _interleavedAverage->setCheckState(Qt::PartiallyChecked);
   _removeMean->setCheckState(Qt::PartiallyChecked);
-  _interpolateOverHoles->setCheckState(Qt::PartiallyChecked);
   _apodizeFunction->setCurrentIndex(-1);
   _output->setCurrentIndex(-1);
-}
-
-
-void FFTOptions::disableInterpolateOverHoles() {
-  _interpolateOverHoles->setChecked(false);
-  _interpolateOverHoles->setEnabled(false);
 }
 
 
@@ -305,7 +281,6 @@ void FFTOptions::setWidgetDefaults() {
   dialogDefaults().setValue("spectrum/apodizeFxn", apodizeFunction());
   dialogDefaults().setValue("spectrum/gaussianSigma", sigma());
   dialogDefaults().setValue("spectrum/output", output());
-  dialogDefaults().setValue("spectrum/interpolateHoles", interpolateOverHoles());
 }
 
 // set the widget to the stored default values
@@ -320,7 +295,6 @@ void FFTOptions::loadWidgetDefaults() {
   setApodizeFunction(ApodizeFunction(dialogDefaults().value("spectrum/apodizeFxn",WindowOriginal).toInt()));
   setSigma(dialogDefaults().value("spectrum/gaussianSigma",1.0).toDouble());
   setOutput(PSDType(dialogDefaults().value("spectrum/output",PSDPowerSpectralDensity).toInt()));
-  setInterpolateOverHoles(dialogDefaults().value("spectrum/interpolateHoles",true).toInt());
 }
 
 }

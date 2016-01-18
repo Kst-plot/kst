@@ -35,7 +35,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   double frequency=1.0, gaussianSigma=1.0;
   int length=8, apodizeFunction=0, outputType=0;
   QString vectorName, vectorUnits, rateUnits, descriptiveName;
-  bool average=false, removeMean=false, apodize=false, interpolateHoles=false;
+  bool average=false, removeMean=false, apodize=false;
 
   while (!xml.atEnd()) {
       const QString n = xml.name().toString();
@@ -54,7 +54,6 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
         outputType = attrs.value("outputtype").toString().toInt();
 
         average = attrs.value("average").toString() == "true" ? true : false;
-        interpolateHoles = attrs.value("interpolateholes").toString() == "true" ? true : false;
         removeMean = attrs.value("removemean").toString() == "true" ? true : false;
         apodize = attrs.value("apodize").toString() == "true" ? true : false;
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
@@ -97,7 +96,7 @@ DataObjectPtr PSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   powerspectrum->change(vector, frequency,
         average, length, apodize, removeMean,
         vectorUnits, rateUnits, (ApodizeFunction)apodizeFunction, 
-        gaussianSigma, (PSDType)outputType, interpolateHoles);
+        gaussianSigma, (PSDType)outputType);
 
   powerspectrum->setDescriptiveName(descriptiveName);
 

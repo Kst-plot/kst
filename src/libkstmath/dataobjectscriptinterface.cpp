@@ -264,7 +264,6 @@ SpectrumSI::SpectrumSI(PSDPtr psd) {
   _fnMap.insert("apodizeFunctionIndex",&SpectrumSI::apodizeFunctionIndex);
   _fnMap.insert("gaussianSigma",&SpectrumSI::gaussianSigma);
   _fnMap.insert("outputTypeIndex",&SpectrumSI::outputTypeIndex);
-  _fnMap.insert("interpolateOverHoles",&SpectrumSI::interpolateOverHoles);
 
   _fnMap.insert("setInputVector",&SpectrumSI::setInputVector);
   _fnMap.insert("outputVector",&SpectrumSI::outputVector);
@@ -335,8 +334,7 @@ QString SpectrumSI::change(QString& command) {
                  vars.at(7),                       // rate units
                  ApodizeFunction(vars.at(8).toInt()), // apodizeFunction,
                  vars.at(9).toDouble(),            // sigma,
-                 PSDType(vars.at(10).toInt()),     // output type
-                 (vars.at(11).toLower() == "true") // interpolateOverHoles
+                 PSDType(vars.at(10).toInt())     // output type
                  );
     
     
@@ -356,7 +354,7 @@ QString SpectrumSI::sampleRate(QString&) {
 
 QString SpectrumSI::interleavedAverage(QString &) {
   if (_psd) {
-    if (_psd->interpolateHoles()) {
+    if (_psd->average()) {
       return "True";
     } else {
       return "False";
@@ -438,19 +436,6 @@ QString SpectrumSI::outputTypeIndex(QString &) {
    return "Invalid";
  }
 }
-
-QString SpectrumSI::interpolateOverHoles(QString &) {
-  if (_psd) {
-    if (_psd->interpolateHoles()) {
-      return "True";
-    } else {
-      return "False";
-    }
-  } else {
-    return "Invalid";
-  }
-}
-
 
 /***************************/
 /* HistogramSI             */

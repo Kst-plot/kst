@@ -89,8 +89,7 @@ ScriptInterface* PSD::createScriptInterface() {
 void PSD::change(VectorPtr in_V,
                                double in_freq, bool in_average, int in_averageLen, bool in_apodize,
                                bool in_removeMean, const QString& in_VUnits, const QString& in_RUnits,
-                               ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output,
-                               bool interpolateHoles) {
+                               ApodizeFunction in_apodizeFxn, double in_gaussianSigma, PSDType in_output) {
 
   if (in_V) {
     _inputVectors[INVECTOR] = in_V;
@@ -105,7 +104,6 @@ void PSD::change(VectorPtr in_V,
   _vectorUnits = in_VUnits;
   _rateUnits = in_RUnits;
   _Output = in_output;
-  _interpolateHoles = interpolateHoles;
   _averageLength = in_averageLen;
 
   _last_n_subsets = 0;
@@ -174,7 +172,7 @@ void PSD::internalUpdate() {
   }
   //f[0] = -1E-280; // really 0 (this shouldn't be needed...)
 
-  _psdCalculator.calculatePowerSpectrum(iv->value(), v_len, psd, _PSDLength, _RemoveMean,  _interpolateHoles, _Average, _averageLength, _Apodize, _apodizeFxn, _gaussianSigma, _Output, _Frequency);
+  _psdCalculator.calculatePowerSpectrum(iv->noNanValue(), v_len, psd, _PSDLength, _RemoveMean, _Average, _averageLength, _Apodize, _apodizeFxn, _gaussianSigma, _Output, _Frequency);
 
   _last_n_subsets = n_subsets;
   _last_n_new = 0;
@@ -221,7 +219,6 @@ void PSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("removemean", QVariant(_RemoveMean).toString());
   s.writeAttribute("apodize", QVariant(_Apodize).toString());
   s.writeAttribute("apodizefunction", QString::number(_apodizeFxn));
-  s.writeAttribute("interpolateholes", QVariant(_interpolateHoles).toString());
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_Output));
@@ -411,7 +408,6 @@ DataObjectPtr PSD::makeDuplicate() const {
   powerspectrum->setApodizeFxn(_apodizeFxn);
   powerspectrum->setGaussianSigma(_gaussianSigma);
   powerspectrum->setOutput(_Output);
-  powerspectrum->setInterpolateHoles(_interpolateHoles);
   if (descriptiveNameIsManual()) {
     powerspectrum->setDescriptiveName(descriptiveName());
   }
@@ -421,18 +417,6 @@ DataObjectPtr PSD::makeDuplicate() const {
   return DataObjectPtr(powerspectrum);
 }
 
-
-bool PSD::interpolateHoles() const {
-  return _interpolateHoles;
-}
-
-
-void PSD::setInterpolateHoles(bool interpolate) {
-  if (interpolate != _interpolateHoles) {
-    _interpolateHoles = interpolate;
-  }
-  _changed = true;
-}
 
 void PSD::updateVectorLabels() {
   LabelInfo label_info;

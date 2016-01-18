@@ -121,7 +121,6 @@ void CSDTab::clearTabValues() {
   _vector->clearSelection();
   _windowSize->clear();
   _FFTOptions->clearValues();
-  _FFTOptions->disableInterpolateOverHoles();
 }
 
 
@@ -139,8 +138,6 @@ CSDDialog::CSDDialog(ObjectPtr dataObject, QWidget *parent)
   if (editMode() == Edit) {
     configureTab(dataObject);
   }
-
-  _CSDTab->FFTOptionsWidget()->disableInterpolateOverHoles();
 
   connect(_CSDTab, SIGNAL(optionsChanged()), this, SLOT(updateButtons()));  
   connect(this, SIGNAL(editMultipleMode()), this, SLOT(editMultipleMode()));

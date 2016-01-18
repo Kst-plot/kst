@@ -41,7 +41,7 @@ class KstDataObject;
 
 // KST::interpolate is still too polluting
 KSTCORE_EXPORT double kstInterpolate(double *v, int _size, int in_i, int ns_i);
-KSTCORE_EXPORT double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i);
+//KSTCORE_EXPORT double kstInterpolateNoHoles(double *v, int _size, int in_i, int ns_i);
 
 class Vector;
 typedef SharedPtr<Vector> VectorPtr;
@@ -82,9 +82,11 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** Return V[i] uninterpolated */
     double value(int i) const;
+    double noNanValue(int i);
 
     /** Return a pointer to the raw vector */
     double *value() const;
+    double *noNanValue();
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }
@@ -196,6 +198,11 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** Where the vector is held */
     double *_v;
 
+    /** _v with nans removed **/
+    double *_v_no_nans;
+    bool _v_no_nans_dirty : 1;
+    int _v_no_nans_size;
+
     /** number of samples shifted since last newSync */
     int NumShifted;
 
@@ -241,7 +248,8 @@ class KSTCORE_EXPORT Vector : public Primitive
     ObjectMap<Scalar> _scalars;
     ObjectMap<String> _strings;
 
-
+private:
+    void updateVNoNans();
 };
 
 

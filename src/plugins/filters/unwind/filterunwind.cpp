@@ -218,11 +218,11 @@ bool FilterUnwindSource::algorithm() {
   step *= (max-min)/100.0;
 
 
-  last_x_in = inputVector->value(0);
+  last_x_in = inputVector->noNanValue(0);
   outputVector->value()[0] = last_x_in;
 
   for (i=1; i<N; ++i) {
-    x = inputVector->value(i);
+    x = inputVector->noNanValue(i);
     if ((x>max) || (x<min)) { // invalid/spike... ignore.
       x = last_x_in;
     }

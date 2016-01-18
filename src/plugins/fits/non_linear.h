@@ -119,24 +119,28 @@ bool kstfit_nonlinear(
     }
 
     pInputX = (double*)malloc(iLength * sizeof( double ));
+
+    double *v_x = xVector->noNanValue();
+    double *v_y = yVector->noNanValue();
+
     if (xVector->length() == iLength) {
       for( i=0; i<iLength; i++) {
-        pInputX[i] = xVector->value()[i];
+        pInputX[i] = v_x[i];
       }
     } else {
       for( i=0; i<iLength; i++) {
-        pInputX[i] = interpolate( i, iLength, xVector->value(), xVector->length() );
+        pInputX[i] = interpolate( i, iLength, v_x, xVector->length() );
       }
     }
 
     pInputY = (double*)malloc(iLength * sizeof( double ));
     if (yVector->length() == iLength) {
       for( i=0; i<iLength; i++) {
-        pInputY[i] = yVector->value()[i];
+        pInputY[i] = v_y[i];
       }
     } else {
       for( i=0; i<iLength; i++) {
-        pInputY[i] = interpolate( i, iLength, yVector->value(), yVector->length() );
+        pInputY[i] = interpolate( i, iLength, v_y, yVector->length() );
       }
     }
 
