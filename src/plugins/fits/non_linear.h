@@ -120,8 +120,8 @@ bool kstfit_nonlinear(
 
     pInputX = (double*)malloc(iLength * sizeof( double ));
 
-    double *v_x = xVector->noNanValue();
-    double *v_y = yVector->noNanValue();
+    double const *v_x = xVector->noNanValue();
+    double const *v_y = yVector->noNanValue();
 
     if (xVector->length() == iLength) {
       for( i=0; i<iLength; i++) {

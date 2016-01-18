@@ -86,7 +86,7 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** Return a pointer to the raw vector */
     double *value() const;
-    double *noNanValue();
+    double const *noNanValue();
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }

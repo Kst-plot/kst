@@ -184,8 +184,6 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
     bool checkIntegrity(); // must be called with a lock
 
-    //bool _dontUseSkipAccel;
-
     // wrappers around DataSource interface functions
     int readField(double *v, const QString& field, int s, int n, int skip = -1);
     const DataInfo dataInfo(const QString& field) const;

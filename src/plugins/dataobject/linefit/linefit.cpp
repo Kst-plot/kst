@@ -172,8 +172,8 @@ bool LineFitSource::algorithm() {
   outputVectorX->resize( 2, false );
   outputVectorY->resize( 2, false );
 
-  double* vX_in = inputVectorX->noNanValue();
-  double* vY_in = inputVectorY->noNanValue();
+  double const * vX_in = inputVectorX->noNanValue();
+  double const * vY_in = inputVectorY->noNanValue();
   double* vX_out = outputVectorX->value();
   double* vY_out = outputVectorY->value();
 

@@ -223,7 +223,7 @@ bool GenericFilterSource::algorithm() {
   theFilter.ConnectTo(in); // the filter keeps a pointer to "in"
   theFilter.Reset();
 
-  double *v_in = inputVector->noNanValue();
+  double const *v_in = inputVector->noNanValue();
   double *v_out = outputVector->value();
   for (int i=0; i<length; i++) {
     in = v_in[i];

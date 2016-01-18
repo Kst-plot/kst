@@ -79,8 +79,8 @@ bool precursor( Kst::VectorPtr xVector, Kst::VectorPtr yVector, Kst::VectorPtr w
     //
         pInputs[XVALUES] = (double*)malloc(*piLength * sizeof( double ));
 
-        double *v_x = xVector->noNanValue();
-        double *v_y = yVector->noNanValue();
+        double const *v_x = xVector->noNanValue();
+        double const *v_y = yVector->noNanValue();
 
         if (xVector->length() == *piLength) {
           for( i=0; i<*piLength; i++) {

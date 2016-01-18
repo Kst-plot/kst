@@ -102,12 +102,12 @@ void CSD::internalUpdate() {
 
   writeLockInputsAndOutputs();
 
-  double *tempOutput, *input;
+  double *tempOutput;//, *input;
   int tempOutputLen = PSDCalculator::calculateOutputVectorLength(_windowSize, _average, _averageLength);
   _length = tempOutputLen;
   tempOutput = new double[tempOutputLen];
 
-  input = inVector->noNanValue();
+  double const *input = inVector->noNanValue();
 
   int xSize = 0;
   for (int i=0; i < inVector->length(); i+= _windowSize) {

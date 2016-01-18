@@ -157,7 +157,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
 
 
 int PSDCalculator::calculatePowerSpectrum(
-  double *input, int inputLen, 
+  double const *input, int inputLen,
   double *output, int outputLen, 
   bool removeMean,
   bool average, int averageLen, 

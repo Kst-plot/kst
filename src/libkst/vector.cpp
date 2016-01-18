@@ -657,7 +657,7 @@ double *Vector::value() const {
   return _v;
 }
 
-double *Vector::noNanValue() {
+double const *Vector::noNanValue() {
   if (_has_nan) {
     if (_v_no_nans_dirty) {
       updateVNoNans();

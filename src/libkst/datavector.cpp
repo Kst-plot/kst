@@ -3,7 +3,7 @@
                           a datasource.
                              -------------------
     begin                : Fri Sep 22 2000
-    copyright            : (C) 2000-2010 by C. Barth Netterfield
+    copyright            : (C) 2000-2015 by C. Barth Netterfield
     email                : netterfield@astro.utoronto.ca
  ***************************************************************************/
 
@@ -68,7 +68,6 @@ DataVector::DataVector(ObjectStore *store)
 : Vector(store), DataPrimitive(this) {
 
   _saveable = true;
-  //_dontUseSkipAccel = false;
   _numSamples = 0;
   _scalars["sum"]->setValue(0.0);
   _scalars["sumsquared"]->setValue(0.0);
@@ -131,7 +130,6 @@ void DataVector::change(DataSourcePtr in_file, const QString &in_field,
     Skip = 1;
   }
 
-  //_dontUseSkipAccel = false;
   setDataSource(in_file);
   ReqF0 = in_f0;
   ReqNF = in_n;
@@ -348,7 +346,6 @@ LabelInfo DataVector::labelInfo() const {
 void DataVector::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  //_dontUseSkipAccel = false;
   if (dataSource()) {
     SPF = dataInfo(_field).samplesPerFrame;
   }
@@ -513,34 +510,6 @@ void DataVector::internalUpdate() {
         return;
       }
     }
-    // FIXME maybe.
-    //   -skip acceleration is not supported by any current data sources.
-    //   -there is no API implemented to report if a data source implements skip accel
-    // so: for now, just say it isn't supported here.  Fix if we ever implement a data source
-    //     where skip accel is important (eg, planck HFI...)
-#if 0
-    _dontUseSkipAccel = true;
-    if (!_dontUseSkipAccel) { // ie, use skip accel.  Not used.
-      int rc;
-      int lastRead = -1;
-      if (DoAve) {
-        // We don't support boxcar inside data sources yet.
-        _dontUseSkipAccel = true;
-      } else {
-        rc = readField(_v + _numSamples, _field, new_f0, (new_nf - NF)/Skip, Skip, &lastRead);
-        if (rc != -9999) {
-          if (rc >= 0) {
-            n_read = rc;
-          } else {
-            n_read = 0;
-          }
-        } else {
-          _dontUseSkipAccel = true;
-        }
-      }
-    }
-#endif
-//  if (_dontUseSkipAccel) {
     n_read = 0;
     /** read each sample from the File */
     double *t = _v + _numSamples;
@@ -572,7 +541,6 @@ void DataVector::internalUpdate() {
         n_read += readField(t++, _field, new_f0 + i, -1);
       }
     }
-//  } // end if _dontUseSkipAccel
   } else {
     // reallocate V if necessary
     if ((new_nf - 1)*SPF + 1 != _size) {
@@ -582,10 +550,6 @@ void DataVector::internalUpdate() {
         return;
       }
     }
-
-    //if (NF > 0) {
-    //  NF--; /* last frame read was only partially read... */
-    //}
 
     // read the new data from file
     if (start_past_eof) {
@@ -648,42 +612,41 @@ void DataVector::internalUpdate() {
 
 QByteArray DataVector::scriptInterface(QList<QByteArray> &c)
 {
-    Q_ASSERT(c.size());
-    if(c[0]=="changeFrames") {
-//        int f0, int n, int skip, bool in_doSkip, bool in_doAve;
-        if(c.size()!=6) {
-            return QByteArray("Bad parameter count (!=5).");
-        }
-        changeFrames(c[1].toInt(),c[2].toInt(),c[3].toInt(),(c[4]=="true")?1:0,(c[5]=="true")?1:0);
-        return QByteArray("Done.");
-    } else if(c[0]=="numFrames") {
-        return QByteArray::number(numFrames());
-    } else if(c[0]=="startFrame") {
-        return QByteArray::number(startFrame());
-    } else if(c[0]=="doSkip") {
-        return QByteArray(doSkip()?"true":"false");
-    } else if(c[0]=="doAve") {
-        return QByteArray(doAve()?"true":"false");
-    } else if(c[0]=="skip") {
-        return QByteArray::number(skip());
-    } else if(c[0]=="reload") {
-        reload();
-        return QByteArray("Done");
-    } else if(c[0]=="samplesPerFrame") {
-        return QByteArray::number(samplesPerFrame());
-    } else if(c[0]=="fileLength") {
-        return QByteArray::number(fileLength());
-    } else if(c[0]=="readToEOF") {
-        return QByteArray(readToEOF()?"true":"false");
-    } else if(c[0]=="countFromEOF") {
-        return QByteArray(countFromEOF()?"true":"false");
-    } else if(c[0]=="descriptionTip") {
-        return QByteArray(descriptionTip().toLatin1());
-    } else if(c[0]=="isValid") {
-        return isValid()?"true":"false";
+  Q_ASSERT(c.size());
+  if(c[0]=="changeFrames") {
+    if(c.size()!=6) {
+      return QByteArray("Bad parameter count (!=5).");
     }
+    changeFrames(c[1].toInt(),c[2].toInt(),c[3].toInt(),(c[4]=="true")?1:0,(c[5]=="true")?1:0);
+    return QByteArray("Done.");
+  } else if(c[0]=="numFrames") {
+    return QByteArray::number(numFrames());
+  } else if(c[0]=="startFrame") {
+    return QByteArray::number(startFrame());
+  } else if(c[0]=="doSkip") {
+    return QByteArray(doSkip()?"true":"false");
+  } else if(c[0]=="doAve") {
+    return QByteArray(doAve()?"true":"false");
+  } else if(c[0]=="skip") {
+    return QByteArray::number(skip());
+  } else if(c[0]=="reload") {
+    reload();
+    return QByteArray("Done");
+  } else if(c[0]=="samplesPerFrame") {
+    return QByteArray::number(samplesPerFrame());
+  } else if(c[0]=="fileLength") {
+    return QByteArray::number(fileLength());
+  } else if(c[0]=="readToEOF") {
+    return QByteArray(readToEOF()?"true":"false");
+  } else if(c[0]=="countFromEOF") {
+    return QByteArray(countFromEOF()?"true":"false");
+  } else if(c[0]=="descriptionTip") {
+    return QByteArray(descriptionTip().toLatin1());
+  } else if(c[0]=="isValid") {
+    return isValid()?"true":"false";
+  }
 
-    return "No such command...";
+  return "No such command...";
 }
 
 
