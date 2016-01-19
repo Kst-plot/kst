@@ -220,14 +220,14 @@ bool FitGradientWeightedSource::algorithm() {
       for( i=0; i<iLength; ++i ) {
         gsl_fit_mul_est( pInputs[XVALUES][i], c0, cov00, &y, &yErr );
 
-        outputVectorYFitted->value()[i] = y;
-        outputVectorYResiduals->value()[i] = pInputs[YVALUES][i] - y;
-        outputVectorYLo->value()[i] = y - yErr;
-        outputVectorYHi->value()[i] = y + yErr;
+        outputVectorYFitted->raw_V_ptr()[i] = y;
+        outputVectorYResiduals->raw_V_ptr()[i] = pInputs[YVALUES][i] - y;
+        outputVectorYLo->raw_V_ptr()[i] = y - yErr;
+        outputVectorYHi->raw_V_ptr()[i] = y + yErr;
       }
 
-      outputVectorYParameters->value()[0] = c0;
-      outputVectorYCovariance->value()[0] = cov00;
+      outputVectorYParameters->raw_V_ptr()[0] = c0;
+      outputVectorYCovariance->raw_V_ptr()[0] = cov00;
 
       outputScalar->setValue(dSumSq / ( (double)iLength - 2.0 ));
 

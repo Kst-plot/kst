@@ -225,13 +225,13 @@ bool ActivityLevelSource::algorithm() {
 //  /* Requantize to avoid noise creating many unwanted sign changes */
 //  if (noiseThreshold->value() > 0.0) {
 //    for (i = 0; i < length; ++i) {
-//      outputVectorDenoised->value()[i] = (double) rint( inputVector->value()[i] / noiseThreshold->value() ) * noiseThreshold->value();
+//      outputVectorDenoised->raw_V_ptr()[i] = (double) rint( inputVector->value()[i] / noiseThreshold->value() ) * noiseThreshold->value();
 //    }
 //  }
   /* Recompute input data, taking direction changes only when they exceed a given threshold */
   if (noiseThreshold->value() > 0.0) {
     iTrendPrevious = (inputVector->value()[1]-inputVector->value()[0] > 0) ? 1 : -1;
-    outputVectorDenoised->value()[0] = inputVector->value()[0];
+    outputVectorDenoised->raw_V_ptr()[0] = inputVector->value()[0];
     bool bFreeze = false;
     for (i = 1; i < length; ++i) {
       // Update current trend
@@ -242,15 +242,15 @@ bool ActivityLevelSource::algorithm() {
       }
       // Check what to do with the value
       if ( iTrendPrevious * iTrend >= 0 && !bFreeze) {
-        outputVectorDenoised->value()[i] = inputVector->value()[i];
+        outputVectorDenoised->raw_V_ptr()[i] = inputVector->value()[i];
         iTrendPrevious = iTrend;
       } else { // Change of direction: check whether the delta is significant, otherwise freeze the value
-        if ( qAbs(inputVector->value()[i] - outputVectorDenoised->value()[i-1]) >= noiseThreshold->value() ) { // Delta is significant: keep value
-          outputVectorDenoised->value()[i] = inputVector->value()[i];
+        if ( qAbs(inputVector->value()[i] - outputVectorDenoised->raw_V_ptr()[i-1]) >= noiseThreshold->value() ) { // Delta is significant: keep value
+          outputVectorDenoised->raw_V_ptr()[i] = inputVector->value()[i];
           bFreeze = false;
           iTrendPrevious = iTrend;
         } else {
-          outputVectorDenoised->value()[i] = outputVectorDenoised->value()[i-1];
+          outputVectorDenoised->raw_V_ptr()[i] = outputVectorDenoised->raw_V_ptr()[i-1];
           bFreeze = true;
         }
       }
@@ -258,19 +258,19 @@ bool ActivityLevelSource::algorithm() {
   }
 
   /* Compute initial values for first windowWidth seconds */
-  dTotal = outputVectorDenoised->value()[0] + outputVectorDenoised->value()[1];
-  dSquaredTotal += outputVectorDenoised->value()[0] * outputVectorDenoised->value()[0] + outputVectorDenoised->value()[1] * outputVectorDenoised->value()[1];
-  outputVectorReversals->value()[1] = outputVectorReversals->value()[0] = 0.0;
-  outputVectorStdDeviation->value()[1] = outputVectorStdDeviation->value()[0] = 0.0;
-  outputVectorActivity->value()[1] = outputVectorActivity->value()[0] = 0.0;
+  dTotal = outputVectorDenoised->raw_V_ptr()[0] + outputVectorDenoised->raw_V_ptr()[1];
+  dSquaredTotal += outputVectorDenoised->raw_V_ptr()[0] * outputVectorDenoised->raw_V_ptr()[0] + outputVectorDenoised->raw_V_ptr()[1] * outputVectorDenoised->raw_V_ptr()[1];
+  outputVectorReversals->raw_V_ptr()[1] = outputVectorReversals->raw_V_ptr()[0] = 0.0;
+  outputVectorStdDeviation->raw_V_ptr()[1] = outputVectorStdDeviation->raw_V_ptr()[0] = 0.0;
+  outputVectorActivity->raw_V_ptr()[1] = outputVectorActivity->raw_V_ptr()[0] = 0.0;
   for (i = 2; i < iSamplesForWindow; ++i) {
     /* Update previous sign if needed */
-    if (outputVectorDenoised->value()[i-1] != outputVectorDenoised->value()[i-2]) {
-      iTrendPrevious = ( (outputVectorDenoised->value()[i-1] - outputVectorDenoised->value()[i-2]) > 0 ) ? 1 : -1;
+    if (outputVectorDenoised->raw_V_ptr()[i-1] != outputVectorDenoised->raw_V_ptr()[i-2]) {
+      iTrendPrevious = ( (outputVectorDenoised->raw_V_ptr()[i-1] - outputVectorDenoised->raw_V_ptr()[i-2]) > 0 ) ? 1 : -1;
     }
     /* Compute current sign */
-    if (outputVectorDenoised->value()[i] != outputVectorDenoised->value()[i-1]) {
-      iTrend = ( (outputVectorDenoised->value()[i] - outputVectorDenoised->value()[i-1]) > 0 ) ? 1 : -1;
+    if (outputVectorDenoised->raw_V_ptr()[i] != outputVectorDenoised->raw_V_ptr()[i-1]) {
+      iTrend = ( (outputVectorDenoised->raw_V_ptr()[i] - outputVectorDenoised->raw_V_ptr()[i-1]) > 0 ) ? 1 : -1;
     } else {
       iTrend = 0;
     }
@@ -278,12 +278,12 @@ bool ActivityLevelSource::algorithm() {
     if ( iTrend * iTrendPrevious < 0 ) {
       dNbReversals += 1.0;
     }
-    dTotal += outputVectorDenoised->value()[i];
-    dSquaredTotal += outputVectorDenoised->value()[i] * outputVectorDenoised->value()[i];
+    dTotal += outputVectorDenoised->raw_V_ptr()[i];
+    dSquaredTotal += outputVectorDenoised->raw_V_ptr()[i] * outputVectorDenoised->raw_V_ptr()[i];
     /* Store zeros as long as we do not have enough values */
-    outputVectorReversals->value()[i] = 0.0;
-    outputVectorStdDeviation->value()[i] = 0.0;
-    outputVectorActivity->value()[i] = 0.0;
+    outputVectorReversals->raw_V_ptr()[i] = 0.0;
+    outputVectorStdDeviation->raw_V_ptr()[i] = 0.0;
+    outputVectorActivity->raw_V_ptr()[i] = 0.0;
   }
   dVariance  = 1.0 / ( (double)iSamplesForWindow - 1.0 );
   dVariance *= dSquaredTotal - ( dTotal * dTotal / (double)iSamplesForWindow );
@@ -294,15 +294,15 @@ bool ActivityLevelSource::algorithm() {
     dStandardDeviation = 0.0;
   }
   /* Now, we can actually store the first useful value (exactly the right number of samples processed) */
-  outputVectorReversals->value()[i] = dNbReversals;
-  outputVectorStdDeviation->value()[i] = dStandardDeviation;
-  outputVectorActivity->value()[i] = dNbReversals * dStandardDeviation;
+  outputVectorReversals->raw_V_ptr()[i] = dNbReversals;
+  outputVectorStdDeviation->raw_V_ptr()[i] = dStandardDeviation;
+  outputVectorActivity->raw_V_ptr()[i] = dNbReversals * dStandardDeviation;
 
   /* Finally, update continuously for each new value for the rest of values */
   double outgoingValue, outgoingValuePrev, outgoingValueNext, incomingValue, incomingValuePrev, incomingValueNext;
   for (i = iSamplesForWindow; i < length; ++i) {
-    dTotal += outputVectorDenoised->value()[i] - outputVectorDenoised->value()[i-iSamplesForWindow];
-    dSquaredTotal += outputVectorDenoised->value()[i] * outputVectorDenoised->value()[i] - outputVectorDenoised->value()[i-iSamplesForWindow] * outputVectorDenoised->value()[i-iSamplesForWindow];
+    dTotal += outputVectorDenoised->raw_V_ptr()[i] - outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow];
+    dSquaredTotal += outputVectorDenoised->raw_V_ptr()[i] * outputVectorDenoised->raw_V_ptr()[i] - outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow] * outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow];
     dVariance  = 1.0 / ( (double)iSamplesForWindow - 1.0 );
     dVariance *= dSquaredTotal - ( dTotal * dTotal / (double)iSamplesForWindow );
     if( dVariance > 0.0 ) {
@@ -312,15 +312,15 @@ bool ActivityLevelSource::algorithm() {
       dStandardDeviation = 0.0;
     }
     /* Update the number of reversals, by removing 1 if the outgoing data point was a reversal and adding 1 if the incoming point is one */
-    outgoingValue = outputVectorDenoised->value()[i-iSamplesForWindow];
-    outgoingValuePrev = outputVectorDenoised->value()[i-iSamplesForWindow-1];
-    outgoingValueNext = outputVectorDenoised->value()[i-iSamplesForWindow+1];
-    incomingValue = outputVectorDenoised->value()[i];
-    incomingValuePrev = outputVectorDenoised->value()[i-1];
+    outgoingValue = outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow];
+    outgoingValuePrev = outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow-1];
+    outgoingValueNext = outputVectorDenoised->raw_V_ptr()[i-iSamplesForWindow+1];
+    incomingValue = outputVectorDenoised->raw_V_ptr()[i];
+    incomingValuePrev = outputVectorDenoised->raw_V_ptr()[i-1];
     if (i == length-1) { // Protect against accessing past the boundary of the vector
-      incomingValueNext = outputVectorDenoised->value()[i];
+      incomingValueNext = outputVectorDenoised->raw_V_ptr()[i];
     } else {
-      incomingValueNext = outputVectorDenoised->value()[i+1];
+      incomingValueNext = outputVectorDenoised->raw_V_ptr()[i+1];
     }
     if ( (outgoingValue-outgoingValuePrev)*(outgoingValueNext-outgoingValue) < 0) {
       dNbReversals = qMax(dNbReversals - 1.0, double(0.0)); // Avoid getting negative values, which can happen
@@ -330,9 +330,9 @@ bool ActivityLevelSource::algorithm() {
     }
 
     /* Store values */
-    outputVectorReversals->value()[i] = dNbReversals;
-    outputVectorStdDeviation->value()[i] = dStandardDeviation;
-    outputVectorActivity->value()[i] = dNbReversals * dStandardDeviation;
+    outputVectorReversals->raw_V_ptr()[i] = dNbReversals;
+    outputVectorStdDeviation->raw_V_ptr()[i] = dStandardDeviation;
+    outputVectorActivity->raw_V_ptr()[i] = dNbReversals * dStandardDeviation;
   }
   return true;
 }

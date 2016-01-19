@@ -149,8 +149,8 @@ bool kst_pass_filter(
                 //
                 iStatus = gsl_fft_halfcomplex_inverse( pPadded, 1, iLengthDataPadded, hc, work );
                 if( !iStatus ) {
-                  memcpy( outVector->value(), pPadded, iLengthData * sizeof( double ) );
-                  //memcpy( outVector->value(), pPadded, iLengthDataPadded * sizeof( double ) ); // DEBUG **********************
+                  memcpy( outVector->raw_V_ptr(), pPadded, iLengthData * sizeof( double ) );
+                  //memcpy( outVector->raw_V_ptr(), pPadded, iLengthDataPadded * sizeof( double ) ); // DEBUG **********************
                   bReturn = true;
                 }
                 gsl_fft_halfcomplex_wavetable_free( hc );

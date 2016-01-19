@@ -239,11 +239,11 @@ bool ConvolveSource::algorithm() {
         // do the inverse FFT...
         //
         if (gsl_fft_halfcomplex_radix2_inverse( pdResponse, 1, iLength) == 0) {
-          pdResult = outputVector->value();
+          pdResult = outputVector->raw_V_ptr();
 
           if (pdResult != NULL) {
             for (int i = 0; i < convolve->length(); ++i) {
-              outputVector->value()[i] = pdResult[i];
+              outputVector->raw_V_ptr()[i] = pdResult[i];
             }
 
             memcpy( pdResult, pdResponse, convolve->length() * sizeof( double ) );

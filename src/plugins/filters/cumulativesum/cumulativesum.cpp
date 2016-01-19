@@ -171,7 +171,7 @@ bool CumulativeSumSource::algorithm() {
   outputVector->resize(inputVector->length(), true);
 
   double const *v_in = inputVector->noNanValue();
-  double *v_out = outputVector->value();
+  double *v_out = outputVector->raw_V_ptr();
   double s_in = inputScalar->value();
   int len = inputVector->length();
 

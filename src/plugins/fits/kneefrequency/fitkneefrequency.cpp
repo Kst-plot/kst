@@ -314,25 +314,25 @@ bool FitKneeFrequencySource::algorithm() {
 
   // output fit data
   for (i = 0; i < maxOneOverFIndex; ++i) {
-      outputVectorYFitted->value()[i] = b * pow(inputVectorX->value()[i],a) + ybar;
-      outputVectorYResiduals->value()[i] = inputVectorY->value()[i] - outputVectorYFitted->value()[i];
+      outputVectorYFitted->raw_V_ptr()[i] = b * pow(inputVectorX->value()[i],a) + ybar;
+      outputVectorYResiduals->raw_V_ptr()[i] = inputVectorY->value()[i] - outputVectorYFitted->raw_V_ptr()[i];
   }
 
   for (i = maxOneOverFIndex; i < minWhiteNoiseIndex; ++i) { // zeros for unfitted region.
-      outputVectorYFitted->value()[i] = 0;
-      outputVectorYResiduals->value()[i] = 0;
+      outputVectorYFitted->raw_V_ptr()[i] = 0;
+      outputVectorYResiduals->raw_V_ptr()[i] = 0;
   }
 
   for (i = minWhiteNoiseIndex; i < inArraysLength; ++i) {
-      outputVectorYFitted->value()[i] = ybar;
-      outputVectorYResiduals->value()[i] = outputVectorYFitted->value()[i] - ybar;
+      outputVectorYFitted->raw_V_ptr()[i] = ybar;
+      outputVectorYResiduals->raw_V_ptr()[i] = outputVectorYFitted->raw_V_ptr()[i] - ybar;
   }
 
-  outputVectorYParameters->value()[0] = ybar;
-  outputVectorYParameters->value()[1] = ysigma;
-  outputVectorYParameters->value()[2] = b;
-  outputVectorYParameters->value()[3] = -a;
-  outputVectorYParameters->value()[4] = knee_freq;
+  outputVectorYParameters->raw_V_ptr()[0] = ybar;
+  outputVectorYParameters->raw_V_ptr()[1] = ysigma;
+  outputVectorYParameters->raw_V_ptr()[2] = b;
+  outputVectorYParameters->raw_V_ptr()[3] = -a;
+  outputVectorYParameters->raw_V_ptr()[4] = knee_freq;
 
   return true;
 }

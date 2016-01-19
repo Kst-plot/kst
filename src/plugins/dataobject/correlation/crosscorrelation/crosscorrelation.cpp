@@ -220,26 +220,26 @@ bool CrossCorrelationSource::algorithm() {
         // do the inverse FFT...
         //
         if (gsl_fft_halfcomplex_radix2_inverse( pdArrayOne, 1, iLength ) == 0) {
-          pdResult[0] = outputVectorStep->value();
-          pdResult[1] = outputVectorCorrelated->value();
+          pdResult[0] = outputVectorStep->raw_V_ptr();
+          pdResult[1] = outputVectorCorrelated->raw_V_ptr();
 
           if (pdResult[0] != NULL && pdResult[1] != NULL) {
             for (int i = 0; i < inputVectorOne->length(); ++i) {
-              outputVectorStep->value()[i] = pdResult[0][i];
+              outputVectorStep->raw_V_ptr()[i] = pdResult[0][i];
             }
             for (int i = 0; i < inputVectorTwo->length(); ++i) {
-              outputVectorCorrelated->value()[i] = pdResult[1][i];
+              outputVectorCorrelated->raw_V_ptr()[i] = pdResult[1][i];
             }
 
             for (int i = 0; i < inputVectorOne->length(); i++) {
-                outputVectorStep->value()[i] = (double)( i - ( inputVectorOne->length() / 2 ) );
+                outputVectorStep->raw_V_ptr()[i] = (double)( i - ( inputVectorOne->length() / 2 ) );
             }
 
-            memcpy( &(outputVectorCorrelated->value()[inputVectorOne->length() / 2]),
+            memcpy( &(outputVectorCorrelated->raw_V_ptr()[inputVectorOne->length() / 2]),
                     &(pdArrayOne[0]),
                     ( ( inputVectorOne->length() + 1 ) / 2 ) * sizeof( double ) );
 
-            memcpy( &(outputVectorCorrelated->value()[0]),
+            memcpy( &(outputVectorCorrelated->raw_V_ptr()[0]),
                     &(pdArrayOne[iLength - (inputVectorOne->length() / 2)]),
                     ( inputVectorOne->length() / 2 ) * sizeof( double ) );
 

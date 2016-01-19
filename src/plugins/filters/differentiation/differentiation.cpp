@@ -171,11 +171,11 @@ bool DifferentiationSource::algorithm() {
 
   int i = 0;
   for (; i < inputVector->length()-1; i++) {
-      outputVector->value()[i] = (inputVector->value()[i+1] - inputVector->value()[i]) / inputScalar->value();
+      outputVector->raw_V_ptr()[i] = (inputVector->value()[i+1] - inputVector->value()[i]) / inputScalar->value();
   }
 
   // Repeat the last point to keep the vector length, even though it does not bring much additional info
-  outputVector->value()[i] = (inputVector->value()[i] - inputVector->value()[i-1]) / inputScalar->value();
+  outputVector->raw_V_ptr()[i] = (inputVector->value()[i] - inputVector->value()[i-1]) / inputScalar->value();
   return true;
 }
 

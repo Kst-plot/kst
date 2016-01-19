@@ -224,7 +224,7 @@ bool GenericFilterSource::algorithm() {
   theFilter.Reset();
 
   double const *v_in = inputVector->noNanValue();
-  double *v_out = outputVector->value();
+  double *v_out = outputVector->raw_V_ptr();
   for (int i=0; i<length; i++) {
     in = v_in[i];
     theFilter.NextTimeStep();

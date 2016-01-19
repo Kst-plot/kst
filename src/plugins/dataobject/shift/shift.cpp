@@ -180,11 +180,11 @@ bool ShiftSource::algorithm() {
   if (delay >= 0) {
     /* Pad beginning with zeros */
     for (int i = 0; i < delay; i++) {
-      outputVector->value()[i] = NAN;
+      outputVector->raw_V_ptr()[i] = NAN;
     }
     /* Then, copy values with the right offset */
     for (int i = delay; i < inputVector->length(); i++) {
-      outputVector->value()[i] = inputVector->value()[i-delay];
+      outputVector->raw_V_ptr()[i] = inputVector->raw_V_ptr()[i-delay];
     }
   }
 
@@ -193,11 +193,11 @@ bool ShiftSource::algorithm() {
     delay = -delay; /* Easier to visualize :-) */
     /* Copy values with the right offset */
     for (int i = 0; i < inputVector->length()-delay; i++) {
-      outputVector->value()[i] = inputVector->value()[i+delay];
+      outputVector->raw_V_ptr()[i] = inputVector->raw_V_ptr()[i+delay];
     }
     /* Pad end with zeros */
     for (int i = inputVector->length()-delay; i < inputVector->length(); i++) {
-      outputVector->value()[i] = NAN;
+      outputVector->raw_V_ptr()[i] = NAN;
     }
   }
   return true;

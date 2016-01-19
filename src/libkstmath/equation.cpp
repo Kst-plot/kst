@@ -449,8 +449,8 @@ bool Equation::FillY(bool force) {
       VectorPtr xv = _xOutVector;
       VectorPtr yv = _yOutVector;
       for (int i = v_shift; i < _ns; i++) {
-        yv->value()[i - v_shift] = yv->value()[i];
-        xv->value()[i - v_shift] = xv->value()[i];
+        yv->raw_V_ptr()[i - v_shift] = yv->value()[i];
+        xv->raw_V_ptr()[i - v_shift] = xv->value()[i];
       }
       i0 = _ns - v_shift;
     }
@@ -469,8 +469,8 @@ bool Equation::FillY(bool force) {
   _xOutVector->setNewAndShift(_numNew, _numShifted);
   _yOutVector->setNewAndShift(_numNew, _numShifted);
 
-  double *rawxv = _xOutVector->value();
-  double *rawyv = _yOutVector->value();
+  double *rawxv = _xOutVector->raw_V_ptr();
+  double *rawyv = _yOutVector->raw_V_ptr();
   VectorPtr iv = _xInVector;
 
   Equations::Context ctx;

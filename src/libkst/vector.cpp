@@ -653,7 +653,11 @@ void Vector::setNewAndShift(int inNew, int inShift) {
   NumShifted = inShift;
 }
 
-double *Vector::value() const {
+double const *Vector::value() const {
+  return _v;
+}
+
+double *Vector::raw_V_ptr() {
   return _v;
 }
 

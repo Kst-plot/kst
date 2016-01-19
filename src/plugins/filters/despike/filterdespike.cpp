@@ -222,11 +222,11 @@ bool FilterDespikeSource::algorithm() {
           i=N-1;
         }
         for (int j=spike_start; j<=i; j++) {
-          outputVector->value()[j] = last_good;
+          outputVector->raw_V_ptr()[j] = last_good;
         }
         spike_start = -1;
       }
-      last_good = outputVector->value()[i] = inputVector->value(i);
+      last_good = outputVector->raw_V_ptr()[i] = inputVector->value(i);
     }
   }
   // do a 3 point difference where it is possible
@@ -245,11 +245,11 @@ bool FilterDespikeSource::algorithm() {
           i=N-1;
         }
         for (int j=spike_start; j<=i; j++) {
-          outputVector->value()[j] = last_good;
+          outputVector->raw_V_ptr()[j] = last_good;
         }
         spike_start = -1;
       } else {
-        last_good = outputVector->value()[i] = inputVector->value(i);
+        last_good = outputVector->raw_V_ptr()[i] = inputVector->value(i);
       }
     }
   }
@@ -269,17 +269,17 @@ bool FilterDespikeSource::algorithm() {
           i=N-1;
         }
         for (int j=spike_start; j<=i; j++) {
-          outputVector->value()[j] = last_good;
+          outputVector->raw_V_ptr()[j] = last_good;
         }
         spike_start = -1;
       } else {
-        last_good = outputVector->value()[i] = inputVector->value(i);
+        last_good = outputVector->raw_V_ptr()[i] = inputVector->value(i);
       }
     }
   }
   if (spike_start>=0) {
     for (int j=spike_start; j<N; j++) {
-      outputVector->value()[j] = last_good;
+      outputVector->raw_V_ptr()[j] = last_good;
     }
   }
 

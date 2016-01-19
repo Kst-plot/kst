@@ -214,8 +214,8 @@ void Histogram::internalUpdate() {
 
   _hVector->setTitleInfo(label_info);
 
-  double *bins = _bVector->value();
-  double *hist = _hVector->value();
+  double *bins = _bVector->raw_V_ptr();
+  double *hist = _hVector->raw_V_ptr();
 
   for ( i_bin = 0; i_bin<_NumberOfBins; ++i_bin ) {
     bins[i_bin] = ( double( i_bin ) + 0.5 )*_W + _MinX;

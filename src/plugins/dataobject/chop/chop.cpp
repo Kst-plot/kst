@@ -152,10 +152,10 @@ bool ChopSource::algorithm() {
   outputVectorIndex->resize(iLengthNew, false);
 
   for (int i = 0; i < iLength; i+=2) {
-    outputVectorOdd->value()[i/2] = inputVector->value()[i];
-    outputVectorEven->value()[i/2] = inputVector->value()[i+1];
-    outputVectorDifference->value()[i/2] = inputVector->value()[i] - inputVector->value()[i+1];
-    outputVectorIndex->value()[i/2] = i/2;
+    outputVectorOdd->raw_V_ptr()[i/2] = inputVector->raw_V_ptr()[i];
+    outputVectorEven->raw_V_ptr()[i/2] = inputVector->raw_V_ptr()[i+1];
+    outputVectorDifference->raw_V_ptr()[i/2] = inputVector->raw_V_ptr()[i] - inputVector->raw_V_ptr()[i+1];
+    outputVectorIndex->raw_V_ptr()[i/2] = i/2;
   }
 
   return true;

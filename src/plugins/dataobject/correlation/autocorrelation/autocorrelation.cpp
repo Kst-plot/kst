@@ -199,26 +199,26 @@ bool AutoCorrelationSource::algorithm() {
       // do the inverse FFT...
       //
       if (gsl_fft_halfcomplex_radix2_inverse( pdArrayOne, 1, iLength ) == 0) {
-        pdResult = outputVectorStep->value();
-        pdCorrelate = outputVectorAuto->value();
+        pdResult = outputVectorStep->raw_V_ptr();
+        pdCorrelate = outputVectorAuto->raw_V_ptr();
 
         if (pdResult != NULL && pdCorrelate != NULL) {
           for (int i = 0; i < inputVector->length(); ++i) {
-            outputVectorStep->value()[i] = pdResult[i];
+            outputVectorStep->raw_V_ptr()[i] = pdResult[i];
           }
           for (int i = 0; i < inputVector->length(); ++i) {
-            outputVectorAuto->value()[i] = pdCorrelate[i];
+            outputVectorAuto->raw_V_ptr()[i] = pdCorrelate[i];
           }
 
           for (int i = 0; i < inputVector->length(); i++) {
-              outputVectorStep->value()[i] = (double)( i - ( inputVector->length() / 2 ) );
+              outputVectorStep->raw_V_ptr()[i] = (double)( i - ( inputVector->length() / 2 ) );
           }
 
-          memcpy( &(outputVectorAuto->value()[inputVector->length() / 2]),
+          memcpy( &(outputVectorAuto->raw_V_ptr()[inputVector->length() / 2]),
                   &(pdArrayOne[0]),
                   ( ( inputVector->length() + 1 ) / 2 ) * sizeof( double ) );
 
-          memcpy( &(outputVectorAuto->value()[0]),
+          memcpy( &(outputVectorAuto->raw_V_ptr()[0]),
                   &(pdArrayOne[iLength - (inputVector->length() / 2)]),
                   ( inputVector->length() / 2 ) * sizeof( double ) );
 

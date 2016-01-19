@@ -198,9 +198,9 @@ bool FilterWindowSource::algorithm() {
   for (i=0; i<N; ++i) {
     x = inputVector->value(i);
     if ((x>max) || (x<min)) { // out of range: Nannify
-      outputVector->value()[i] = NAN;
+      outputVector->raw_V_ptr()[i] = NAN;
     } else {
-      outputVector->value()[i] = x;
+      outputVector->raw_V_ptr()[i] = x;
     }
   }
 

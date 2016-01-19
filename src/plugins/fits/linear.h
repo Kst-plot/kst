@@ -98,14 +98,14 @@ bool kstfit_linear_unweighted(
                       dY += gsl_matrix_get( pMatrixX, i, j ) *
                             gsl_vector_get( pVectorParameters, j );
                     }
-                    vectorOutYFitted->value()[i] = dY;
-                    vectorOutYResiduals->value()[i] = interpolate(i, iLength, yVector->noNanValue(), yVector->length()) - dY;
+                    vectorOutYFitted->raw_V_ptr()[i] = dY;
+                    vectorOutYResiduals->raw_V_ptr()[i] = interpolate(i, iLength, yVector->noNanValue(), yVector->length()) - dY;
                   }
 
                   for( i=0; i<iNumParams; i++ ) {
-                    vectorOutYParameters->value()[i] = gsl_vector_get( pVectorParameters, i );
+                    vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pVectorParameters, i );
                     for( j=0; j<iNumParams; j++ ) {
-                      vectorOutYCovariance->value()[(i*iNumParams)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+                      vectorOutYCovariance->raw_V_ptr()[(i*iNumParams)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
                     }
                   }
 

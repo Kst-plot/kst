@@ -253,10 +253,10 @@ bool LockInSource::algorithm() {
   normRefVector->resize(iLength, false);
   lockinResult->resize(iLength, false);
 
-  double* pdInput = inputVector->value();
-  double* pdRef = refVector->value();
-  double* pdNormRef = normRefVector->value();
-  double* pdResult = lockinResult->value();
+  double const * pdInput = inputVector->value();
+  double const * pdRef = refVector->value();
+  double * pdNormRef = normRefVector->raw_V_ptr();
+  double * pdResult = lockinResult->raw_V_ptr();
 
   /* to remove initial settling, evaluate the result separately in forward and backward direction */
   BesselHP1<double> f_filt_d(0.15/f_samp);

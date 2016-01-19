@@ -155,14 +155,14 @@ bool NoiseAdditionSource::algorithm() {
   int iLength = inputVector->length();
 
   outputVector->resize(iLength, false);
-  pResult[0] = outputVector->value();
+  pResult[0] = outputVector->raw_V_ptr();
 
   pGeneratorType = gsl_rng_default;
   pRandomNumberGenerator = gsl_rng_alloc( pGeneratorType );
   if (pRandomNumberGenerator != NULL) {
     if (pResult[0] != NULL) {
       for (int i=0; i<iLength; i++) {
-        outputVector->value()[i] = inputVector->value()[i] + gsl_ran_gaussian( pRandomNumberGenerator, inputScalar->value() );
+        outputVector->raw_V_ptr()[i] = inputVector->value()[i] + gsl_ran_gaussian( pRandomNumberGenerator, inputScalar->value() );
       }
 
       iRetVal = true;

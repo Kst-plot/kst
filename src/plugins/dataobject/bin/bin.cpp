@@ -157,14 +157,14 @@ bool BinSource::algorithm() {
   //now bin the data
   for (int i = 0; i < outputVector->length(); i++)
   {
-      outputVector->value()[i] = 0;
+      outputVector->raw_V_ptr()[i] = 0;
       //add up the elements for this bin
       for (int j = 0; j < inputScalar->value(); j++)
       {
-          outputVector->value()[i] += inputVector->value()[int(i*inputScalar->value()+j)];
+          outputVector->raw_V_ptr()[i] += inputVector->raw_V_ptr()[int(i*inputScalar->value()+j)];
       }
       //find the mean
-      outputVector->value()[i] /= inputScalar->value();
+      outputVector->raw_V_ptr()[i] /= inputScalar->value();
   }
   return true;
 }

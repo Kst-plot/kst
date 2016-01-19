@@ -199,33 +199,33 @@ bool PhaseSource::algorithm() {
   iLength = inputVectorTime->length();
 
   outputVectorPhase->resize(iLength, true);
-  pResult[0] = outputVectorPhase->value();
+  pResult[0] = outputVectorPhase->raw_V_ptr();
 
   outputVectorDataOut->resize(iLength, true);
-  pResult[1] = outputVectorDataOut->value();
+  pResult[1] = outputVectorDataOut->raw_V_ptr();
 
   if (pResult[0] != NULL && pResult[1] != NULL) {
     for (int i = 0; i < outputVectorPhase->length(); ++i) {
-      outputVectorPhase->value()[i] = pResult[0][i];
+      outputVectorPhase->raw_V_ptr()[i] = pResult[0][i];
     }
     for (int i = 0; i < outputVectorDataOut->length(); ++i) {
-      outputVectorDataOut->value()[i] = pResult[1][i];
+      outputVectorDataOut->raw_V_ptr()[i] = pResult[1][i];
     }
 
     /*
     determine the outputVectorPhase...
     */
     for (int i=0; i<iLength; i++) {
-      outputVectorPhase->value()[i] = fmod( ( inputVectorTime->value()[i] - dPhaseZero ) / dPhasePeriod, 1.0 );
+      outputVectorPhase->raw_V_ptr()[i] = fmod( ( inputVectorTime->raw_V_ptr()[i] - dPhaseZero ) / dPhasePeriod, 1.0 );
     }
 
     /*
     sort by outputVectorPhase...
     */
-    memcpy( outputVectorDataOut->value(), inputVectorData->value(), iLength * sizeof( double ) );
+    memcpy( outputVectorDataOut->raw_V_ptr(), inputVectorData->value(), iLength * sizeof( double ) );
     double* sort[2];
-    sort[0] = outputVectorPhase->value();
-    sort[1] = outputVectorDataOut->value();
+    sort[0] = outputVectorPhase->raw_V_ptr();
+    sort[1] = outputVectorDataOut->raw_V_ptr();
     quicksort( sort, 0, iLength-1 );
 
     bReturn = true;

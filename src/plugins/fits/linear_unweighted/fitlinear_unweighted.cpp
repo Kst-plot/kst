@@ -204,17 +204,17 @@ bool FitLinearUnweightedSource::algorithm() {
     if( !gsl_fit_linear( pInputs[XVALUES], 1, pInputs[YVALUES], 1, iLength, &c0, &c1, &cov00, &cov01, &cov11, &dSumSq ) ) {
       for( i=0; i<iLength; ++i ) {
         gsl_fit_linear_est( pInputs[XVALUES][i], c0, c1, cov00, cov01, cov11, &y, &yErr );
-        outputVectorYFitted->value()[i] = y;
-        outputVectorYResiduals->value()[i] = pInputs[YVALUES][i] - y;
-        outputVectorYLo->value()[i] = y - yErr;
-        outputVectorYHi->value()[i] = y + yErr;
+        outputVectorYFitted->raw_V_ptr()[i] = y;
+        outputVectorYResiduals->raw_V_ptr()[i] = pInputs[YVALUES][i] - y;
+        outputVectorYLo->raw_V_ptr()[i] = y - yErr;
+        outputVectorYHi->raw_V_ptr()[i] = y + yErr;
       }
 
-      outputVectorYParameters->value()[0] = c0;
-      outputVectorYParameters->value()[1] = c1;
-      outputVectorYCovariance->value()[0] = cov00;
-      outputVectorYCovariance->value()[1] = cov01;
-      outputVectorYCovariance->value()[2] = cov11;
+      outputVectorYParameters->raw_V_ptr()[0] = c0;
+      outputVectorYParameters->raw_V_ptr()[1] = c1;
+      outputVectorYCovariance->raw_V_ptr()[0] = cov00;
+      outputVectorYCovariance->raw_V_ptr()[1] = cov01;
+      outputVectorYCovariance->raw_V_ptr()[2] = cov11;
 
       outputScalar->setValue(dSumSq / ( (double)iLength - 2.0 ));
       bReturn = true;

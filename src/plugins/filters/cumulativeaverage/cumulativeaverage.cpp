@@ -159,7 +159,7 @@ bool CumulativeAverageSource::algorithm() {
   outputVector->resize(inputVector->length(), true);
 
   double const *v_in = inputVector->noNanValue();
-  double *v_out = outputVector->value();
+  double *v_out = outputVector->raw_V_ptr();
   v_out[0] = v_in[0]; // i = 1
 
   for (int i = 1; i < inputVector->length(); ++i) {

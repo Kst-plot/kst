@@ -219,7 +219,7 @@ bool FilterUnwindSource::algorithm() {
 
 
   last_x_in = inputVector->noNanValue(0);
-  outputVector->value()[0] = last_x_in;
+  outputVector->raw_V_ptr()[0] = last_x_in;
 
   for (i=1; i<N; ++i) {
     x = inputVector->noNanValue(i);
@@ -231,7 +231,7 @@ bool FilterUnwindSource::algorithm() {
     } else if (last_x_in - x > step) {
       wind += range;
     }
-    outputVector->value()[i] = x + wind;
+    outputVector->raw_V_ptr()[i] = x + wind;
     last_x_in = x;
   }
 

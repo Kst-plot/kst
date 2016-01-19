@@ -163,8 +163,8 @@ void PSD::internalUpdate() {
 
   _adjustLengths();
 
-  double *psd = _sVector->value();
-  double *f = _fVector->value();
+  double *psd = _sVector->raw_V_ptr();
+  double *f = _fVector->raw_V_ptr();
 
   int i_samp;
   for (i_samp = 0; i_samp < _PSDLength; ++i_samp) {

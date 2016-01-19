@@ -239,10 +239,10 @@ bool SyncBinSource::algorithm() {
   n_in = int( inputVectorX->length() );
   const double *Xin = inputVectorX->value();
   const double *Yin = inputVectorY->value();
-  Xout = outputVectorX->value();
-  Yout = outputVectorY->value();
-  Yerr = outputVectorYError->value();
-  N    = outputVectorN->value();
+  Xout = outputVectorX->raw_V_ptr();
+  Yout = outputVectorY->raw_V_ptr();
+  Yerr = outputVectorYError->raw_V_ptr();
+  N    = outputVectorN->raw_V_ptr();
 
   // set/check XMax and XMin
   if ( XMax <= XMin ) { // autobin

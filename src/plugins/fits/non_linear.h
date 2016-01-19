@@ -191,17 +191,17 @@ bool kstfit_nonlinear(
           }
 
           for( i=0; i<iLength; i++ ) {
-            vectorOutYFitted->value()[i] = function_calculate( pInputX[i], dXInitial );
-            vectorOutYResiduals->value()[i] = pInputY[i] - vectorOutYFitted->value()[i];
+            vectorOutYFitted->raw_V_ptr()[i] = function_calculate( pInputX[i], dXInitial );
+            vectorOutYResiduals->raw_V_ptr()[i] = pInputY[i] - vectorOutYFitted->raw_V_ptr()[i];
           }
 
           //
           // fill in the parameter values and covariance matrix...
           //
           for( i=0; i<NUM_PARAMS; i++ ) {
-            vectorOutYParameters->value()[i] = gsl_vector_get( pSolver->x, i );
+            vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pSolver->x, i );
             for( j=0; j<NUM_PARAMS; j++ ) {
-              vectorOutYCovariance->value()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+              vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
             }
           }
 

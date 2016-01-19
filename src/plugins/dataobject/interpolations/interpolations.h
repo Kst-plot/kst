@@ -37,15 +37,15 @@ bool interpolate(Kst::VectorPtr xVector,
   if (iLengthInterp > 0) {
     if (yOutVector->length() != iLengthInterp) {
       yOutVector->resize(iLengthInterp, true);
-      pResult[0] = (double*)realloc( yOutVector->value(), iLengthInterp * sizeof( double ) );
+      pResult[0] = (double*)realloc( yOutVector->raw_V_ptr(), iLengthInterp * sizeof( double ) );
     } else {
-      pResult[0] = yOutVector->value();
+      pResult[0] = yOutVector->raw_V_ptr();
     }
 
     if (pResult[0] != NULL) {
 
       for (int i = 0; i < iLengthInterp; ++i) {
-        yOutVector->value()[i] = pResult[0][i];
+        yOutVector->raw_V_ptr()[i] = pResult[0][i];
       }
 
       pInterp = gsl_interp_alloc( pType, iLengthData );
@@ -60,7 +60,7 @@ bool interpolate(Kst::VectorPtr xVector,
             if (pSpline != NULL) {
               if (!gsl_spline_init( pSpline, xVector->noNanValue(), yVector->noNanValue(), iLengthData )) {
                 double const *xV1 = x1Vector->noNanValue();
-                double *yVout = yOutVector->value();
+                double *yVout = yOutVector->raw_V_ptr();
                 for( int i=0; i<iLengthInterp; i++) {
                   yVout[i] = gsl_spline_eval( pSpline, xV1[i], pAccel );
                 }

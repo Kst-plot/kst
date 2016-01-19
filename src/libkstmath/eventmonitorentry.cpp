@@ -161,11 +161,11 @@ void EventMonitorEntry::internalUpdate() {
   double *rawValuesY = 0L;
   if (xv && yv) {
     if (xv->resize(ns)) {
-      rawValuesX = xv->value();
+      rawValuesX = xv->raw_V_ptr();
     }
 
     if (yv->resize(ns)) {
-      rawValuesY = yv->value();
+      rawValuesY = yv->raw_V_ptr();
     }
   }
 

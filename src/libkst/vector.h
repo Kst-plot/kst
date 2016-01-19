@@ -84,9 +84,16 @@ class KSTCORE_EXPORT Vector : public Primitive
     double value(int i) const;
     double noNanValue(int i);
 
-    /** Return a pointer to the raw vector */
-    double *value() const;
+    /** Return a pointer to data to be read */
+    /** these might be modified for output */
+    double const *value() const;
     double const *noNanValue();
+
+    /** raw pointer for writing */
+    /** reading it will not provide */
+    /** mask filtering and is probably */
+    /** not what you want. */
+    double *raw_V_ptr();
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }

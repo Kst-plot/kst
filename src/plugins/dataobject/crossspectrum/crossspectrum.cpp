@@ -217,9 +217,9 @@ bool CrossSpectrumSource::algorithm() {
   /* Fill the frequency and zero the xps */
   df = SR/( 2.0*double( xps_len-1 ) );
   for ( i=0; i<xps_len; ++i ) {
-    outputVectorFrequency->value()[i] = double( i ) * df;
-    outputVectorReal->value()[i] = 0.0;
-    outputVectorImaginary->value()[i] = 0.0;
+    outputVectorFrequency->raw_V_ptr()[i] = double( i ) * df;
+    outputVectorReal->raw_V_ptr()[i] = 0.0;
+    outputVectorImaginary->raw_V_ptr()[i] = 0.0;
   }
 
   /* allocate input arrays */
@@ -269,12 +269,12 @@ bool CrossSpectrumSource::algorithm() {
     rdft(ALen, 1, b);
 
     /* sum each bin into psd[] */
-    outputVectorReal->value()[0] += ( a[0]*b[0] );
-    outputVectorReal->value()[xps_len-1] += ( a[1]*b[1] );
+    outputVectorReal->raw_V_ptr()[0] += ( a[0]*b[0] );
+    outputVectorReal->raw_V_ptr()[xps_len-1] += ( a[1]*b[1] );
     for (i_samp=1; i_samp<xps_len-1; ++i_samp) {
-      outputVectorReal->value()[i_samp]+= ( a[i_samp*2] * b[i_samp*2] -
+      outputVectorReal->raw_V_ptr()[i_samp]+= ( a[i_samp*2] * b[i_samp*2] -
                                    a[i_samp*2+1] * b[i_samp*2+1] );
-      outputVectorImaginary->value()[i_samp]+= ( -a[i_samp*2] * b[i_samp*2+1] +
+      outputVectorImaginary->raw_V_ptr()[i_samp]+= ( -a[i_samp*2] * b[i_samp*2+1] +
                                    a[i_samp*2+1] * b[i_samp*2] );
     }// (a+ci)(b+di)* = ab+cd +i(-ad + cb)
   }
@@ -282,8 +282,8 @@ bool CrossSpectrumSource::algorithm() {
   /* renormalize */
   norm_factor = 1.0/((double(SR)*double(xps_len))*double(n_subsets));
   for ( i=0; i<xps_len; ++i ) {
-    outputVectorReal->value()[i]*=norm_factor;
-    outputVectorImaginary->value()[i]*=norm_factor;
+    outputVectorReal->raw_V_ptr()[i]*=norm_factor;
+    outputVectorImaginary->raw_V_ptr()[i]*=norm_factor;
   }
 
   delete[] b;

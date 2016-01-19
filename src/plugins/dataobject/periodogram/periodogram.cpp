@@ -210,18 +210,18 @@ bool PeriodogramSource::algorithm() {
     lSizeWork   = lFreq * 2;
 
     outputVectorFrequency->resize(lSizeWork, true);
-    pResult[0] = outputVectorFrequency->value();
+    pResult[0] = outputVectorFrequency->raw_V_ptr();
 
     outputVectorPeriodogram->resize(lSizeWork, true);
-    pResult[1] = outputVectorPeriodogram->value();
+    pResult[1] = outputVectorPeriodogram->raw_V_ptr();
 
     if (pResult[0] != NULL && pResult[1] != NULL) {
 
       for (int i = 0; i < outputVectorFrequency->length(); ++i) {
-        outputVectorFrequency->value()[i] = pResult[0][i];
+        outputVectorFrequency->raw_V_ptr()[i] = pResult[0][i];
       }
       for (int i = 0; i < outputVectorPeriodogram->length(); ++i) {
-        outputVectorPeriodogram->value()[i] = pResult[1][i];
+        outputVectorPeriodogram->raw_V_ptr()[i] = pResult[1][i];
       }
 
       if (lSizeIn > 100) {
@@ -231,8 +231,8 @@ bool PeriodogramSource::algorithm() {
           inputVectorTime->length(),
           inputScalarOversampling->value(),
           inputScalarANFF->value(),
-          (double*)&(outputVectorFrequency->value()[-1]),
-          (double*)&(outputVectorPeriodogram->value()[-1]),
+          (double*)&(outputVectorFrequency->raw_V_ptr()[-1]),
+          (double*)&(outputVectorPeriodogram->raw_V_ptr()[-1]),
           lSizeWork,
           &lSizeOut,
           &lMax,
@@ -246,8 +246,8 @@ bool PeriodogramSource::algorithm() {
           inputVectorTime->length(),
           inputScalarOversampling->value(),
           inputScalarANFF->value(),
-          (double*)&(outputVectorFrequency->value()[-1]),
-          (double*)&(outputVectorPeriodogram->value()[-1]),
+          (double*)&(outputVectorFrequency->raw_V_ptr()[-1]),
+          (double*)&(outputVectorPeriodogram->raw_V_ptr()[-1]),
           lSizeWork,
           &lSizeOut,
           &lMax,

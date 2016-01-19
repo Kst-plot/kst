@@ -45,7 +45,7 @@ double interpolate(int iIndex, int iLengthDesired, const double* pArray, int iLe
 
 void assign( Kst::VectorPtr targetVector, double* pResult[], int iIndex, int iLength ) {
   for (int i = 0; i < iLength; i++) {
-    targetVector->value()[i] = pResult[iIndex][i];
+    targetVector->raw_V_ptr()[i] = pResult[iIndex][i];
   }
 }
 
