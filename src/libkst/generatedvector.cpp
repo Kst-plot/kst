@@ -71,7 +71,7 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
   }
 
   for (int i = 0; i < n; i++) {
-    _v[i] = x0 + double(i) * (x1 - x0) / double(n - 1);
+    _v_raw[i] = x0 + double(i) * (x1 - x0) / double(n - 1);
   }
 
   _min = x0;
@@ -88,16 +88,16 @@ void GeneratedVector::setSaveData(bool save) {
 }
 
 QString GeneratedVector::_automaticDescriptiveName() const {
-  return QString::number(_v[0])+".."+QString::number(_v[length()-1]);
+  return QString::number(_v_raw[0])+".."+QString::number(_v_raw[length()-1]);
 }
 
 QString GeneratedVector::descriptionTip() const {
   return tr("Generated Vector: %1\n"
-      "  %2 values from %3 to %4").arg(Name()).arg(length()).arg(_v[0]).arg(_v[length()-1]);
+      "  %2 values from %3 to %4").arg(Name()).arg(length()).arg(_v_raw[0]).arg(_v_raw[length()-1]);
 }
 
 QString GeneratedVector::propertyString() const {
-  return tr("%3 points from %1 to %2").arg(_v[0]).arg(_v[length()-1]).arg(length());
+  return tr("%3 points from %1 to %2").arg(_v_raw[0]).arg(_v_raw[length()-1]).arg(length());
 }
 
 }

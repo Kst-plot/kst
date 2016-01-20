@@ -86,14 +86,15 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** Return a pointer to data to be read */
     /** these might be modified for output */
-    double const *value() const;
+    /** eg - by masking */
+    double const *value() const { return _v_out;}
     double const *noNanValue();
 
     /** raw pointer for writing */
     /** reading it will not provide */
     /** mask filtering and is probably */
     /** not what you want. */
-    double *raw_V_ptr();
+    double *raw_V_ptr() { return _v_raw;}
 
     /** Return Minimum value in Vector */
     inline double min() const { return _min; }
@@ -202,10 +203,16 @@ class KSTCORE_EXPORT Vector : public Primitive
     double _ns_max;
     double _ns_min;
 
-    /** Where the vector is held */
-    double *_v;
+    /** Where raw input data is held */
+    double *_v_raw;
 
-    /** _v with nans removed **/
+    /** _v_raw with flagged data replaced with NaNs */
+    double *_v_flagged;
+
+    /** points to either _v_raw or _v_flagged */
+    double *_v_out;
+
+    /** _v_out with nans removed **/
     double *_v_no_nans;
     bool _v_no_nans_dirty : 1;
     int _v_no_nans_size;

@@ -498,7 +498,7 @@ void DataVector::internalUpdate() {
       }
     }
 
-    memmove(_v, _v+shift, _numSamples*sizeof(double));
+    memmove(_v_raw, _v_raw+shift, _numSamples*sizeof(double));
   }
 
   if (DoSkip) {
@@ -512,7 +512,7 @@ void DataVector::internalUpdate() {
     }
     n_read = 0;
     /** read each sample from the File */
-    double *t = _v + _numSamples;
+    double *t = _v_raw + _numSamples;
     int new_nf_Skip = new_nf - Skip;
     if (DoAve) {
       for (i = NF; new_nf_Skip >= i; i += Skip) {
@@ -553,7 +553,7 @@ void DataVector::internalUpdate() {
 
     // read the new data from file
     if (start_past_eof) {
-      _v[0] = NOPOINT;
+      _v_raw[0] = NOPOINT;
       n_read = 1;
     } else if (info.samplesPerFrame > 1) {
       if (NF>0) {
@@ -564,13 +564,13 @@ void DataVector::internalUpdate() {
       assert(new_f0 + NF >= 0);
       //assert(new_f0 + safe_nf - 1 >= 0);
       if ((new_f0 + safe_nf - 1 >= 0) && (safe_nf - NF > 1)) {
-        n_read = readField(_v+NF*SPF, _field, new_f0 + NF, safe_nf - NF - 1);
-        n_read += readField(_v+(safe_nf-1)*SPF, _field, new_f0 + safe_nf - 1, -1);
+        n_read = readField(_v_raw+NF*SPF, _field, new_f0 + NF, safe_nf - NF - 1);
+        n_read += readField(_v_raw+(safe_nf-1)*SPF, _field, new_f0 + safe_nf - 1, -1);
       }
     } else {
       assert(new_f0 + NF >= 0);
       if (new_nf - NF > 0 || new_nf - NF == -1) {
-        n_read = readField(_v+NF*SPF, _field, new_f0 + NF, new_nf - NF);
+        n_read = readField(_v_raw+NF*SPF, _field, new_f0 + NF, new_nf - NF);
       }
     }
   }
@@ -590,7 +590,7 @@ void DataVector::internalUpdate() {
   if (_numSamples != _size && !(_numSamples == 0 && _size == 1)) {
     _dirty = true;
     for (i = _numSamples; i < _size; ++i) {
-      _v[i] = _v[0];
+      _v_raw[i] = _v_raw[0];
     }
   }
 

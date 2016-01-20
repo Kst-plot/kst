@@ -64,13 +64,15 @@ Vector::Vector(ObjectStore *store)
 
   int size = INITSIZE;
 
-  _v = static_cast<double*>(malloc(size * sizeof(double)));
-  if (!_v) { // Malloc failed
-    _v = static_cast<double*>(malloc(sizeof(double)));
+  _v_raw = static_cast<double*>(malloc(size * sizeof(double)));
+
+  if (!_v_raw) { // Malloc failed
+    _v_raw = static_cast<double*>(malloc(sizeof(double)));
     _size = 1;
   } else {
     _size = size;
   }
+  _v_out = _v_raw;
   _is_rising = false;
   _has_nan = false;
   _v_no_nans_dirty = true;
@@ -94,9 +96,9 @@ void Vector::_initializeShortName() {
 }
 
 Vector::~Vector() {
-  if (_v) {
-    free(_v);
-    _v = 0;
+  if (_v_raw) {
+    free(_v_raw);
+    _v_raw = 0;
   }
 }
 
@@ -127,16 +129,16 @@ const QString& Vector::typeString() const {
   assert(_size > 0);                        \
   /** Limits checks - optional? **/         \
   if (in_i < 0 || _size == 1) {             \
-    return _v[0];                           \
+    return _v_out[0];                           \
   }                                         \
                                             \
   if (in_i >= ns_i - 1) {                   \
-    return _v[_size - 1];                   \
+    return _v_out[_size - 1];                   \
   }                                         \
                                             \
   /** speedup check **/                     \
   if (ns_i == _size) { /* no extrapolating or decimating needed */  \
-    return _v[in_i];                        \
+    return _v_out[in_i];                        \
   }                                         \
                                             \
   double fj = in_i * double(_size - 1) / double(ns_i-1); /* scaled index */ \
@@ -144,13 +146,13 @@ const QString& Vector::typeString() const {
   int j = int(fj); /* index of sample one lower */ \
   /*assert(j==int(floor(fj)));*/ \
   assert(j+1 < _size && j >= 0);            \
-  if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) { \
+  if (_v_out[j + 1] != _v_out[j + 1] || _v_out[j] != _v_out[j]) { \
     return NOPOINT;                    \
   }                                         \
                                             \
-  double fdj = fj - float(j); /* fdj is fraction between _v[j] and _v[j+1] */ \
+  double fdj = fj - float(j); /* fdj is fraction between _v_out[j] and _v_out[j+1] */ \
                                             \
-  return _v[j + 1] * fdj + _v[j] * (1.0 - fdj);
+  return _v_out[j + 1] * fdj + _v_out[j] * (1.0 - fdj);
 
 
 /** Return v[i], i is sample number, interpolated to have ns_i total
@@ -160,7 +162,7 @@ double Vector::interpolate(int in_i, int ns_i) const {
 }
 
 /** same as above, but as a function for use in plugins, etc */
-double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
+double kstInterpolate(double *_v_out, int _size, int in_i, int ns_i) {
   GENERATE_INTERPOLATION
 }
 
@@ -168,31 +170,31 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
 
 #define RETURN_FIRST_NON_HOLE               \
     for (int i = 0; i < _size; ++i) {       \
-      if (_v[i] == _v[i]) {                 \
-        return _v[i];                       \
+      if (_v_out[i] == _v_out[i]) {                 \
+        return _v_out[i];                       \
       }                                     \
     }                                       \
     return 0.;
 
 #define RETURN_LAST_NON_HOLE                \
     for (int i = _size - 1; i >= 0; --i) {  \
-      if (_v[i] == _v[i]) {                 \
-        return _v[i];                       \
+      if (_v_out[i] == _v_out[i]) {                 \
+        return _v_out[i];                       \
       }                                     \
     }                                       \
     return 0.;
 
 #define FIND_LEFT(val, idx)                 \
     for (; idx >= 0; --idx) {               \
-      if (_v[idx] == _v[idx]) {             \
-        val = _v[idx]; break;               \
+      if (_v_out[idx] == _v_out[idx]) {             \
+        val = _v_out[idx]; break;               \
       }                                     \
     }
 
 #define FIND_RIGHT(val, idx)                \
     for (; idx < _size; ++idx) {            \
-      if (_v[idx] == _v[idx]) {             \
-        val = _v[idx]; break;               \
+      if (_v_out[idx] == _v_out[idx]) {             \
+        val = _v_out[idx]; break;               \
       }                                     \
     }
 
@@ -209,8 +211,8 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
                                             \
   /** speedup check **/                     \
   if (ns_i == _size) {                      \
-    if (_v[in_i] == _v[in_i]) {             \
-      return _v[in_i];                      \
+    if (_v_out[in_i] == _v_out[in_i]) {             \
+      return _v_out[in_i];                      \
     }                                       \
     double left = 0., right = 0.;           \
     int leftIndex = in_i, rightIndex = in_i;\
@@ -230,13 +232,13 @@ double kstInterpolate(double *_v, int _size, int in_i, int ns_i) {
                                             \
   int j = int(floor(fj)); /* index of sample one lower */ \
   assert(j+1 < _size && j >= 0);            \
-  if (_v[j + 1] != _v[j + 1] || _v[j] != _v[j]) { \
+  if (_v_out[j + 1] != _v_out[j + 1] || _v_out[j] != _v_out[j]) { \
     return NOPOINT;                    \
   }                                         \
                                             \
-  double fdj = fj - float(j); /* fdj is fraction between _v[j] and _v[j+1] */ \
+  double fdj = fj - float(j); /* fdj is fraction between _v_out[j] and _v_out[j+1] */ \
                                             \
-  return _v[j + 1] * fdj + _v[j] * (1.0 - fdj);
+  return _v_out[j + 1] * fdj + _v_out[j] * (1.0 - fdj);
 
 
 // FIXME: optimize me - possible that floor() (especially) and isnan() are
@@ -263,7 +265,7 @@ double Vector::value(int i) const {
   if (i < 0 || i >= _size) { // can't look before beginning or past end
     return 0.0;
   }
-  return _v[i];
+  return _v_out[i];
 }
 
 double Vector::noNanValue(int i) {
@@ -276,7 +278,7 @@ double Vector::noNanValue(int i) {
     }
     return _v_no_nans[i];
   }
-  return _v[i];
+  return _v_out[i];
 }
 
 void Vector::CreateScalars(ObjectStore *store) {
@@ -364,38 +366,25 @@ void Vector::updateScalars() {
 }
 
 
-#if 0
-double* Vector::realloced(double *memptr, int newSize) {
-  double *old = _v;
-  _v = memptr;
-  if (newSize < _size) {
-    NumNew = newSize; // all new if we shrunk the vector
-  } else {
-    NumNew = newSize - _size;
-  }
-  _size = newSize;
-  updateScalars();
-  return old;
-}
-#endif
-
 void Vector::setV(double *memptr, int newSize) {
-  _v = memptr;
+  _v_raw = memptr;
+  _v_out = _v_raw;
+
   NumNew = newSize;
   _size = newSize;
 }
 
 #define FIND_LEFT(val, idx)                 \
     for (; idx >= 0; --idx) {               \
-      if (_v[idx] == _v[idx]) {             \
-        val = _v[idx]; break;               \
+      if (_v_out[idx] == _v_out[idx]) {             \
+        val = _v_out[idx]; break;               \
       }                                     \
     }
 
 #define FIND_RIGHT(val, idx)                \
     for (; idx < _size; ++idx) {            \
-      if (_v[idx] == _v[idx]) {             \
-        val = _v[idx]; break;               \
+      if (_v_out[idx] == _v_out[idx]) {             \
+        val = _v_out[idx]; break;               \
       }                                     \
     }
 
@@ -407,8 +396,8 @@ void Vector::updateVNoNans()  {
   }
 
   for (int in_i = 0; in_i < _size; in_i++) {
-    if (_v[in_i] == _v[in_i]) {
-      _v_no_nans[in_i] = _v[in_i];
+    if (_v_out[in_i] == _v_out[in_i]) {
+      _v_no_nans[in_i] = _v_out[in_i];
     } else {
       double left = 0., right = 0.;
       int leftIndex = in_i, rightIndex = in_i;
@@ -431,7 +420,7 @@ void Vector::updateVNoNans()  {
 
 void Vector::zero() {
   _ns_min = _ns_max = 0.0;
-  memset(_v, 0, sizeof(double)*_size);
+  memset(_v_raw, 0, sizeof(double)*_size);
   updateScalars();
 }
 
@@ -439,7 +428,7 @@ void Vector::zero() {
 void Vector::blank() {
   _ns_min = _ns_max = 0.0;
   for (int i = 0; i < _size; ++i) {
-    _v[i] = NOPOINT;
+    _v_raw[i] = NOPOINT;
   }
   updateScalars();
 }
@@ -447,13 +436,13 @@ void Vector::blank() {
 
 bool Vector::resize(int sz, bool init) {
   if (sz > 0) {
-    if (!kstrealloc(_v, sz*sizeof(double))){
+    if (!kstrealloc(_v_raw, sz*sizeof(double))){
        qCritical() << "Vector resize failed";
        return false;
     }
     if (init && _size < sz) {
       for (int i = _size; i < sz; ++i) {
-        _v[i] = NOPOINT;
+        _v_raw[i] = NOPOINT;
       }
     }
     _size = sz;
@@ -472,7 +461,7 @@ bool Vector::saveToTmpFile(QFile &fp) {
 
   n_write = length()*sizeof(double);
 
-  n_written = fp.write((char *)_v, n_write);
+  n_written = fp.write((char *)_v_raw, n_write);
 
   fp.flush();
 
@@ -497,8 +486,11 @@ void Vector::internalUpdate() {
   if (_size > 0) {
     _is_rising = true;
 
+    // FIXME: update V_out here
+    _v_out = _v_raw;
+
     // Look for a valid (finite) point...
-    for (i = 0; i < _size && !isfinite(_v[i]); ++i) {
+    for (i = 0; i < _size && !isfinite(_v_out[i]); ++i) {
       // do nothing
     }
 
@@ -533,20 +525,20 @@ void Vector::internalUpdate() {
       _is_rising = false;
     }
 
-    _max = _min = _v[i0];
+    _max = _min = _v_out[i0];
     _imax = _imin = i0;
     sum = sum2 = 0.0;
 
-    if (_v[i0] > epsilon) {
-      _minPos = _v[i0];
+    if (_v_out[i0] > epsilon) {
+      _minPos = _v_out[i0];
     } else {
       _minPos = 1.0E300;
     }
 
-    last_v = _v[i0];
+    last_v = _v_out[i0];
 
     for (i = i0; i < _size; ++i) {
-      v = _v[i]; // get rid of redirections
+      v = _v_out[i]; // get rid of redirections
 
       if (isfinite(v)) {
         dv = v - last_v;
@@ -582,13 +574,13 @@ void Vector::internalUpdate() {
 
     no_spike_max_dv = 7.0*sqrt(dv2/double(_nsum));
 
-    _ns_max = _ns_min = last_v = _v[i0];
+    _ns_max = _ns_min = last_v = _v_out[i0];
 
-    last = _v[_size-1];
-    first = _v[0];
+    last = _v_out[_size-1];
+    first = _v_out[0];
 
     for (i = i0; i < _size; ++i) {
-      v = _v[i]; // get rid of redirections
+      v = _v_out[i]; // get rid of redirections
       if (isfinite(v)) {
         if (fabs(v - last_v) < no_spike_max_dv) {
           if (v > _ns_max) {
@@ -600,7 +592,7 @@ void Vector::internalUpdate() {
         } else {
           i += 20;
           if (i < _size) {
-            last_v = _v[i];
+            last_v = v;
           }
           i++;
         }
@@ -639,7 +631,7 @@ void Vector::save(QXmlStreamWriter &s) {
     QDataStream qds(&qba, QIODevice::WriteOnly);
 
     for (int i = 0; i < length(); ++i) {
-      qds << _v[i];
+      qds << _v_raw[i];
     }
 
     s.writeTextElement("data_v2", qCompress(qba).toBase64());
@@ -653,14 +645,6 @@ void Vector::setNewAndShift(int inNew, int inShift) {
   NumShifted = inShift;
 }
 
-double const *Vector::value() const {
-  return _v;
-}
-
-double *Vector::raw_V_ptr() {
-  return _v;
-}
-
 double const *Vector::noNanValue() {
   if (_has_nan) {
     if (_v_no_nans_dirty) {
@@ -668,7 +652,7 @@ double const *Vector::noNanValue() {
     }
     return _v_no_nans;
   }
-  return _v;
+  return _v_out;
 }
 
 
@@ -721,16 +705,16 @@ void Vector::oldChange(QByteArray &data) {
 
     double sum=0.0;
     for (int i = 0; i<sz; ++i) {
-      qds >> _v[i];
+      qds >> _v_raw[i];
       if(!i) {
-          _min=_max=_minPos=sum=_v[i];
+          _min=_max=_minPos=sum=_v_raw[i];
           _imin = _imax = i;
           _minPos=qMax(_minPos,double(0.0));
       } else {
-          _min=qMin(_v[i],_min);
-          _max=qMax(_v[i],_max);
-          _minPos=qMin(qMax(_v[i],double(0.0)),_minPos);
-          sum+=_v[i];
+          _min=qMin(_v_raw[i],_min);
+          _max=qMax(_v_raw[i],_max);
+          _minPos=qMin(qMax(_v_raw[i],double(0.0)),_minPos);
+          sum+=_v_raw[i];
       }
     }
     _mean=sum/double(_size);
@@ -753,15 +737,15 @@ void Vector::change(QByteArray &data) {
 
     double sum=0.0;
     for (int i = 0; i<count; ++i) {
-      qds >> _v[i];
+      qds >> _v_raw[i];
       if(!i) {
-          _min=_max=_minPos=sum=_v[i];
+          _min=_max=_minPos=sum=_v_raw[i];
           _minPos=qMax(_minPos,double(0.0));
       } else {
-          _min=qMin(_v[i],_min);
-          _max=qMax(_v[i],_max);
-          _minPos=qMin(qMax(_v[i],double(0.0)),_minPos);
-          sum+=_v[i];
+          _min=qMin(_v_raw[i],_min);
+          _max=qMax(_v_raw[i],_max);
+          _minPos=qMin(qMax(_v_raw[i],double(0.0)),_minPos);
+          sum+=_v_raw[i];
       }
     }
     _mean=sum/double(count);
@@ -905,7 +889,7 @@ QByteArray Vector::getBinaryArray() const {
     QDataStream ds(&ret,QIODevice::WriteOnly);
     ds<<(qint64)_size;
     for(int i=0; i<_size; ++i) {
-        ds<<(double)_v[i];
+        ds<<(double)_v_raw[i];
     }
     unlock();
     return ret;

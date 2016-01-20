@@ -55,16 +55,16 @@ void EditableVector::setValue(const int &i, const double &val) { //sa Vector::ch
     if(i>_size) {
         resize(i,1);
     }
-    _scalars["sum"]->setValue(_sum+val-_v[i]);
+    _scalars["sum"]->setValue(_sum+val-_v_out[i]);
     _scalars["sumsquared"]->setValue(_sum*_sum);
     _scalars["max"]->setValue(qMax(_max,val));
     _scalars["min"]->setValue(qMin(_min,val));
     if (val>=0.0) {
       _scalars["minpos"]->setValue(qMin(_minPos,val));
     }
-    _scalars["last"]->setValue(_v[_size-1]);
-    _scalars["first"]->setValue(_v[0]);
-    _v[i]=val;
+    _scalars["last"]->setValue(_v_out[_size-1]);
+    _scalars["first"]->setValue(_v_out[0]);
+    _v_raw[i]=val;
     unlock();
 }
 
@@ -78,7 +78,7 @@ void EditableVector::save(QXmlStreamWriter &s) {
     QDataStream qds(&qba, QIODevice::WriteOnly);
 
     for (int i = 0; i < length(); i++) {
-      qds << _v[i];
+      qds << _v_raw[i];
     }
 
     s.writeTextElement("data", qCompress(qba).toBase64());
@@ -94,7 +94,7 @@ void EditableVector::loadFromTmpFile(QFile &fp) {
 
   resize(fp.size()/sizeof(double));
 
-  n_read = fp.read((char *)_v, fp.size());
+  n_read = fp.read((char *)_v_raw, fp.size());
 
   if (n_read != fp.size()) {
     resize(n_read/sizeof(double));
@@ -107,10 +107,10 @@ QString EditableVector::_automaticDescriptiveName() const {
 
   QString name("(");
   if (length()>=1) {
-    name += QString::number(_v[0]);
+    name += QString::number(_v_out[0]);
   }
   if (length()>=2) {
-    name += " " + QString::number(_v[1]);
+    name += " " + QString::number(_v_out[1]);
   }
 
   if (length()>=3) {
