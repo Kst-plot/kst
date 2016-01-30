@@ -35,10 +35,6 @@ namespace Kst {
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv) {
 
-#ifdef QT5
-  QApplication::setStyle("Fusion");
-#endif
-
   QCoreApplication::setApplicationName("Kst");
   setWindowIcon(QPixmap(":kst.png"));
 

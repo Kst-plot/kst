@@ -15,6 +15,7 @@
 #include <QPainter>
 #include <QColorDialog>
 #include <QDebug>
+#include <qdrawutil.h>
 
 namespace Kst {
 
@@ -67,10 +68,10 @@ void ColorButton::paintEvent(QPaintEvent *event)
   QPainter painter(this);
   QBrush brush(_color);
   int m = (rect().height())/6;
-#ifndef QT5 // TODO 
+
   qDrawShadePanel(&painter, rect().x() + m, rect().y() + m, rect().width() - 2*m, rect().height() - 2*m,
                   palette(), /*sunken*/ isDown(), /*lineWidth*/ 1, /*fill*/ &brush);
-#endif
+
 }
 
 
