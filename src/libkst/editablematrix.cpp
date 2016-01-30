@@ -20,7 +20,9 @@
 
 #include "debug.h"
 #include <qbytearray.h>
+
 #include <QXmlStreamWriter>
+
 
 namespace Kst {
 
@@ -59,6 +61,7 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("ystep", QString::number(yStepSize()));
   xml.writeTextElement("data", qCompress(qba).toBase64());
   xml.writeEndElement();
+
 }
 
 

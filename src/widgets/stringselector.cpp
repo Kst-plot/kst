@@ -14,6 +14,7 @@
 
 #include "dialoglauncher.h"
 #include "objectstore.h"
+#include "geticon.h"
 
 namespace Kst {
 
@@ -24,8 +25,8 @@ StringSelector::StringSelector(QWidget *parent, ObjectStore *store)
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
-  _newString->setIcon(QPixmap(":kst_stringnew.png"));
-  _editString->setIcon(QPixmap(":kst_stringedit.png"));
+  _newString->setIcon(KstGetIcon("kst_stringnew"));
+  _editString->setIcon(KstGetIcon("kst_stringedit"));
 
   _newString->setFixedSize(size + 8, size + 8);
   _editString->setFixedSize(size + 8, size + 8);

@@ -18,6 +18,7 @@
 #include "updateserver.h"
 
 #include "enodes.h"
+#include "geticon.h"
 
 namespace Kst {
 
@@ -29,8 +30,8 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
-  _newScalar->setIcon(QPixmap(":kst_scalarnew.png"));
-  _editScalar->setIcon(QPixmap(":kst_scalaredit.png"));
+  _newScalar->setIcon(KstGetIcon("kst_scalarnew"));
+  _editScalar->setIcon(KstGetIcon("kst_scalaredit"));
 
   _newScalar->setFixedSize(size + 8, size + 8);
   _editScalar->setFixedSize(size + 8, size + 8);

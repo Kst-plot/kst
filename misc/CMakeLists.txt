@@ -9,7 +9,8 @@ if(WIN32)
 			${QT_BINARY_DIR}/Qt5Xml.dll
 			${QT_BINARY_DIR}/Qt5Network.dll				
 			${QT_BINARY_DIR}/Qt5PrintSupport.dll
-			DESTINATION bin
+                        ${QT_BINARY_DIR}/Qt5Svg.dll
+                        DESTINATION bin
 			CONFIGURATIONS Release)
 		install(FILES
 			${QT_BINARY_DIR}/../plugins/platforms/qminimal.dll
@@ -23,7 +24,8 @@ if(WIN32)
 		install(FILES
 			${QT_BINARY_DIR}/../plugins/imageformats/qgif.dll
 			${QT_BINARY_DIR}/../plugins/imageformats/qjpeg.dll				
-			DESTINATION bin/imageformats
+                        ${QT_BINARY_DIR}/../plugins/imageformats/qsvg.dll
+                        DESTINATION bin/imageformats
 			CONFIGURATIONS Release)
 	else()
 		install(FILES

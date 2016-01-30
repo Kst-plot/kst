@@ -13,10 +13,11 @@
 #ifndef SVGITEM_H
 #define SVGITEM_H
 
+
 #include "viewitem.h"
 #include "graphicsfactory.h"
 
-class QSvgRenderer;
+#include <QSvgRenderer>
 
 namespace Kst {
 
@@ -54,7 +55,6 @@ class CreateSvgCommand : public CreateCommand
     ~CreateSvgCommand() {}
     void createItem();
 };
-
 
 class SvgItemFactory : public GraphicsFactory {
   public:

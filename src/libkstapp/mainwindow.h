@@ -72,6 +72,7 @@ class MainWindow : public QMainWindow
     static void setWidgetFlags(QWidget*);
     void updateRecentKstFiles(const QString& newfilename = QString());
 
+
   public Q_SLOTS:
     void showDataManager();
     void showDebugDialog();

@@ -66,6 +66,11 @@ int main(int argc, char *argv[]) {
   // qDebug() << "Dir = " + app.applicationDirPath() + "/../share/kst" + localeSuffix;
   app.installTranslator(&kstDirectoryTranslator);
 
+#ifdef QT5
+  app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+#endif
+
+
   app.initMainWindow();
   if (app.mainWindow()->initFromCommandLine()) {
     app.mainWindow()->show();

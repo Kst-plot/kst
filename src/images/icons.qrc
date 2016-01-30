@@ -1,60 +1,26 @@
 <RCC>
     <qresource prefix="/">
-        <file>kstplot.png</file>
-        <file>plainplot.png</file>
         <file>kst.png</file>
-        <file>kst_blank.png</file>
         <file>kst_changefile.png</file>
         <file>kst_changenpts.png</file>
-        <file>kst_choosecolor.png</file>
-        <file>kst_csdnew.png</file>
-        <file>kst_curvenew.png</file>
-        <file>kst_datamanager.png</file>
         <file>kst_datamode.png</file>
-        <file>kst_datawizard.png</file>
         <file>kst_differentiatecurves.png</file>
-        <file>kst_editplots.png</file>
-        <file>kst_equationedit.png</file>
-        <file>kst_equationnew.png</file>
         <file>kst_error_1.png</file>
         <file>kst_error_2.png</file>
-        <file>kst_eventnew.png</file>
         <file>kst_gfx_label.png</file>
         <file>kst_gfx_arrow.png</file>
         <file>kst_gfx_ellipse.png</file>
         <file>kst_gfx_line.png</file>
-        <file>kst_gfx_picture.png</file>
-        <file>kst_gfx_polygon.png</file>
-        <file>kst_gfx_polyline.png</file>
         <file>kst_gfx_rectangle.png</file>
-        <file>kst_gfx_rounded_rectangle.png</file>
-        <file>kst_gfx_layout.png</file>
         <file>kst_gfx_sharedaxisbox.png</file>
-        <file>kst_gfx_breaklayout.png</file>
-        <file>kst_graphics.png</file>
-        <file>kst_histogramnew.png</file>
-        <file>kst_imagenew.png</file>
-        <file>kst_layoutmode.png</file>
         <file>kst_matrixedit.png</file>
         <file>kst_matrixnew.png</file>
-        <file>kst_newplot.png</file>
-        <file>kst_pluginnew.png</file>
-        <file>kst_psdnew.png</file>
-        <file>kst_quickcurves.png</file>
-        <file>kst_quickpsd.png</file>
         <file>kst_scalaredit.png</file>
         <file>kst_scalarnew.png</file>
         <file>kst_stringedit.png</file>
         <file>kst_stringnew.png</file>
         <file>kst_vectoredit.png</file>
         <file>kst_vectornew.png</file>
-        <file>kst_viewmanager.png</file>
-        <file>kst_zoomtie.png</file>
-        <file>kst_zoomx.png</file>
-        <file>kst_zoomxy.png</file>
-        <file>kst_zoomy.png</file>
-        <file>no.png</file>
-        <file>yes.png</file>
         <file>kst_rightarrow.png</file>
         <file>kst_leftarrow.png</file>
         <file>kst_uparrow.png</file>
@@ -76,14 +42,10 @@
         <file>tools-wizard.png</file>
         <file>transform-move.png</file>
         <file>configure.png</file>
-        <file>office-chart-area-stacked.png</file>
         <file>code-class.png</file>
-        <file>resource-group.png</file>
-        <file>draw-eraser.png</file>
         <file>image-x-generic.png</file>
         <file>dialog-information.png</file>
         <file>text-x-log.png</file>
-        <file>document-export.png</file>
         <file>tied-zoom.png</file>
         <file>change-data-file.png</file>
         <file>data-manager.png</file>
@@ -100,6 +62,66 @@
         <file>new-log-event.png</file>
         <file>save-vectors.png</file>
         <file>themes.png</file>
-        <file>magnifying_glass.png</file>
+        <file>svg_icons/page-previous.svgz</file>
+        <file>svg_icons/kst_changefile.svgz</file>
+        <file>svg_icons/kst_changenpts.svgz</file>
+        <file>svg_icons/kst_datamode.svgz</file>
+        <file>svg_icons/kst_gfx_label.svgz</file>
+        <file>svg_icons/kst_matrixedit.svgz</file>
+        <file>svg_icons/count-from-end.svgz</file>
+        <file>svg_icons/pause.svgz</file>
+        <file>svg_icons/page-next.svgz</file>
+        <file>svg_icons/data-manager.svgz</file>
+        <file>svg_icons/tools-wizard.svgz</file>
+        <file>svg_icons/themes.svgz</file>
+        <file>svg_icons/tied-zoom.svgz</file>
+        <file>svg_icons/save-vectors.svgz</file>
+        <file>svg_icons/kst_scalaredit.svgz</file>
+        <file>svg_icons/kst_scalarnew.svgz</file>
+        <file>svg_icons/kst_stringedit.svgz</file>
+        <file>svg_icons/kst_stringnew.svgz</file>
+        <file>svg_icons/kst_vectoredit.svgz</file>
+        <file>svg_icons/kst_vectornew.svgz</file>
+        <file>svg_icons/kst_matrixnew.svgz</file>
+        <file>svg_icons/change-data-file.svgz</file>
+        <file>svg_icons/kst_gfx_ellipse.svgz</file>
+        <file>svg_icons/kst_gfx_circle.svgz</file>
+        <file>svg_icons/read-to-end.svgz</file>
+        <file>svg_icons/x-zoom.svgz</file>
+        <file>svg_icons/xy-zoom.svgz</file>
+        <file>svg_icons/y-zoom.svgz</file>
+        <file>kst_newplot.png</file>
+        <file>svg_icons/kst_newplot.svgz</file>
+        <file>svg_icons/document-save.svgz</file>
+        <file>svg_icons/document-print.svgz</file>
+        <file>svg_icons/configure.svgz</file>
+        <file>svg_icons/application-exit.svgz</file>
+        <file>svg_icons/document-close.svgz</file>
+        <file>svg_icons/edit-undo.svgz</file>
+        <file>svg_icons/edit-redo.svgz</file>
+        <file>svg_icons/document-save-as.svgz</file>
+        <file>svg_icons/tab-close.svgz</file>
+        <file>svg_icons/tab-new.svgz</file>
+        <file>svg_icons/transform-move.svgz</file>
+        <file>svg_icons/kbugbuster.svgz</file>
+        <file>svg_icons/kst_reload.svgz</file>
+        <file>insert-image.png</file>
+        <file>svg_icons/insert-image.svgz</file>
+        <file>svg_icons/document-open.svgz</file>
+        <file>svg_icons/new-log-event.svgz</file>
+        <file>svg_icons/code-class.svgz</file>
+        <file>svg_icons/text-x-log.svgz</file>
+        <file>svg_icons/dialog-information.svgz</file>
+        <file>svg_icons/kst_gfx_rectangle.svgz</file>
+        <file>svg_icons/kst_gfx_line.svgz</file>
+        <file>svg_icons/kst_gfx_arrow.svgz</file>
+        <file>svg_icons/kst_gfx_sharedaxisbox.svgz</file>
+        <file>svg_icons/kst_differentiatecurves.svgz</file>
+        <file>svg_icons/kst_leftarrow.svgz</file>
+        <file>svg_icons/kst_uparrow.svgz</file>
+        <file>svg_icons/kst_rightarrow.svgz</file>
+        <file>svg_icons/kst_downarrow.svgz</file>
+        <file>svg_icons/kst_bold.svgz</file>
+        <file>svg_icons/kst_italic.svgz</file>
     </qresource>
 </RCC>

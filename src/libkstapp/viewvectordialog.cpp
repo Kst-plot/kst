@@ -16,6 +16,7 @@
 #include "vectormodel.h"
 #include "editmultiplewidget.h"
 #include "updateserver.h"
+#include "geticon.h"
 
 #include <datacollection.h>
 #include <objectstore.h>
@@ -62,12 +63,12 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   }
   // Add/remove buttons
   _addButton = new QPushButton();
-  _addButton->setIcon(QPixmap(":kst_rightarrow.png"));
+  _addButton->setIcon(KstGetIcon("kst_rightarrow"));
   _addButton->setShortcut(tr("Alt+S"));
   _addButton->setToolTip(tr("View selected vector(s)"));
   _addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   _removeButton = new QPushButton();
-  _removeButton->setIcon(QPixmap(":kst_leftarrow.png"));
+  _removeButton->setIcon(KstGetIcon("kst_leftarrow"));
   _removeButton->setShortcut(tr("Alt+R"));
   _removeButton->setToolTip(tr("Remove selected vector(s) from view"));
   _removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

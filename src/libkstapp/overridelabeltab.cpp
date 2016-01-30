@@ -16,6 +16,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "geticon.h"
 
 namespace Kst {
 
@@ -23,9 +24,9 @@ OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
   : DialogTab(parent), _fontDirty(false) {
 
   setupUi(this);
-  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _bold->setIcon(KstGetIcon("kst_bold"));
   _bold->setFixedWidth(32);
-  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _italic->setIcon(KstGetIcon("kst_italic"));
   _italic->setFixedWidth(32);
   _labelColor->setFixedWidth(32);
   _labelColor->setFixedHeight(32);

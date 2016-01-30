@@ -18,6 +18,7 @@
 #include "dialogdefaults.h"
 #include "curve.h"
 #include "updateserver.h"
+#include "geticon.h"
 
 namespace Kst {
 
@@ -28,8 +29,8 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
-  _newVector->setIcon(QPixmap(":kst_vectornew.png"));
-  _editVector->setIcon(QPixmap(":kst_vectoredit.png"));
+  _newVector->setIcon(KstGetIcon("kst_vectornew"));
+  _editVector->setIcon(KstGetIcon("kst_vectoredit"));
 
   _newVector->setFixedSize(size + 8, size + 8);
   _editVector->setFixedSize(size + 8, size + 8);

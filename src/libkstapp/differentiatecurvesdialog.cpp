@@ -14,6 +14,7 @@
 #include "linestyle.h"
 #include "curve.h"
 #include "colorsequence.h"
+#include "geticon.h"
 
 #include "objectstore.h"
 #include "mainwindow.h"
@@ -48,10 +49,10 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   connect(_selectedListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
 
   // Use the standard icons
-  _up->setIcon(QPixmap(":kst_uparrow.png"));
-  _down->setIcon(QPixmap(":kst_downarrow.png"));
-  _add->setIcon(QPixmap(":kst_rightarrow.png"));
-  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setIcon(KstGetIcon("kst_uparrow"));
+  _down->setIcon(KstGetIcon("kst_downarrow"));
+  _add->setIcon(KstGetIcon("kst_rightarrow"));
+  _remove->setIcon(KstGetIcon("kst_leftarrow"));
   _up->setToolTip(tr("Move the selected property up the priority list"));
   _down->setToolTip(tr("Move the selected property down the priority list"));
   _add->setToolTip(tr("Add the selected property to the list of properties to cycle through"));

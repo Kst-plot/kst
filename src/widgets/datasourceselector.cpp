@@ -13,6 +13,7 @@
 #include "datasourceselector.h"
 
 #include "datasourceselectordialog.h"
+#include "geticon.h"
 
 #include <QStyle>
 #include <QLineEdit>
@@ -55,7 +56,7 @@ void DataSourceSelector::setup() {
   setLayout(layout);
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
-  _fileButton->setIcon(QPixmap(":kst_changefile.png"));
+  _fileButton->setIcon(KstGetIcon("kst_changefile"));
   _fileButton->setFixedSize(size + 8, size + 8);
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

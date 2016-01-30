@@ -15,6 +15,7 @@
 #include "objectstore.h"
 #include "relation.h"
 #include "dialoglauncher.h"
+#include "geticon.h"
 
 #include <qdebug.h>
 
@@ -25,10 +26,10 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
 
   setupUi(this);
 
-  _up->setIcon(QPixmap(":kst_uparrow.png"));
-  _down->setIcon(QPixmap(":kst_downarrow.png"));
-  _add->setIcon(QPixmap(":kst_rightarrow.png"));
-  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setIcon(KstGetIcon("kst_uparrow"));
+  _down->setIcon(KstGetIcon("kst_downarrow"));
+  _add->setIcon(KstGetIcon("kst_rightarrow"));
+  _remove->setIcon(KstGetIcon("kst_leftarrow"));
   _up->setToolTip(tr("Raise in plot order: Alt+Up"));
   _down->setToolTip(tr("Lower in plot order: Alt+Down"));
   _add->setToolTip(tr("Select: Alt+s"));

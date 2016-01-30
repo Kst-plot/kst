@@ -21,6 +21,7 @@
 // qCompress the bytearray
 #include <QXmlStreamWriter>
 #include <QFile>
+//#include <QDataStream>
 
 #include "debug.h"
 namespace Kst {

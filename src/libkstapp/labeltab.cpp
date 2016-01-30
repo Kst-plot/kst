@@ -16,6 +16,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "geticon.h"
 
 #include "applicationsettings.h"
 
@@ -26,9 +27,9 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
 
   setupUi(this);
 
-  _globalLabelBold->setIcon(QPixmap(":kst_bold.png"));
+  _globalLabelBold->setIcon(KstGetIcon("kst_bold"));
   _globalLabelBold->setFixedWidth(32);
-  _globalLabelItalic->setIcon(QPixmap(":kst_italic.png"));
+  _globalLabelItalic->setIcon(KstGetIcon("kst_italic"));
   _globalLabelItalic->setFixedWidth(32);
   _globalLabelColor->setFixedWidth(32);
   _globalLabelColor->setFixedHeight(32);

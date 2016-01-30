@@ -61,6 +61,8 @@
 #include "dialoglauncher.h"
 #include "scriptserver.h"
 
+#include "geticon.h"
+
 #ifndef KST_NO_SVG
 #include <QSvgGenerator>
 #endif
@@ -971,35 +973,35 @@ void MainWindow::createActions() {
   _openAct = new QAction(tr("&Open..."), this);
   _openAct->setStatusTip(tr("Open a new session"));
   _openAct->setShortcuts(QKeySequence::Open);
-  _openAct->setIcon(QPixmap(":document-open.png"));
+  _openAct->setIcon(KstGetIcon("document-open"));
   connect(_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
   _saveAct = new QAction(tr("&Save"), this);
   _saveAct->setStatusTip(tr("Save the current session"));
   _saveAct->setShortcuts(QKeySequence::Save);
-  _saveAct->setIcon(QPixmap(":document-save.png"));
+  _saveAct->setIcon(KstGetIcon("document-save"));
   connect(_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
   _saveAsAct = new QAction(tr("Save &as..."), this);
   _saveAsAct->setStatusTip(tr("Save the current session"));
-  _saveAsAct->setIcon(QPixmap(":document-save-as.png"));
+  _saveAsAct->setIcon(KstGetIcon("document-save-as"));
   _saveAsAct->setShortcuts(QKeySequence::SaveAs);
   connect(_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
   _closeAct = new QAction(tr("Ne&w Session"), this);
   _closeAct->setStatusTip(tr("Close current session and start a new, empty one"));
-  _closeAct->setIcon(QPixmap(":document-close.png"));
+  _closeAct->setIcon(KstGetIcon("document-close"));
   _closeAct->setShortcuts(QKeySequence::Close);
   connect(_closeAct, SIGNAL(triggered()), this, SLOT(newDoc()));
 
   _reloadAct = new QAction(tr("Reload All &Data Sources"), this);
   _reloadAct->setStatusTip(tr("Reload all data sources"));
-  _reloadAct->setIcon(QPixmap(":kst_reload.png"));
+  _reloadAct->setIcon(KstGetIcon("kst_reload"));
   connect(_reloadAct, SIGNAL(triggered()), this, SLOT(reload()));
 
   _printAct = new QAction(tr("&Print..."), this);
   _printAct->setStatusTip(tr("Print the current view"));
-  _printAct->setIcon(QPixmap(":document-print.png"));
+  _printAct->setIcon(KstGetIcon("document-print"));
   _printAct->setShortcuts(QKeySequence::Print);
   connect(_printAct, SIGNAL(triggered()), this, SLOT(print()));
 #ifdef KST_NO_PRINTER
@@ -1008,45 +1010,45 @@ void MainWindow::createActions() {
 
   _exportGraphicsAct = new QAction(tr("&Export as Image(s)..."), this);
   _exportGraphicsAct->setStatusTip(tr("Export graphics to disk"));
-  _exportGraphicsAct->setIcon(QPixmap(":image-x-generic.png"));
+  _exportGraphicsAct->setIcon(KstGetIcon("insert-image"));
   connect(_exportGraphicsAct, SIGNAL(triggered()), this, SLOT(showExportGraphicsDialog()));
 
   _exportVectorsAct = new QAction(tr("Save &Vectors to Disk..."), this);
   _exportVectorsAct->setStatusTip(tr("Export vectors to ascii file"));
-  _exportVectorsAct->setIcon(QPixmap(":save-vectors.png"));
+  _exportVectorsAct->setIcon(KstGetIcon("save-vectors"));
   connect(_exportVectorsAct, SIGNAL(triggered()), this, SLOT(showExportVectorsDialog()));
 
   _logAct = new QAction(tr("&Log Entry..."), this);
   _logAct->setStatusTip(tr("Commit a log entry"));
-  _logAct->setIcon(QPixmap(":new-log-event.png"));
+  _logAct->setIcon(KstGetIcon("new-log-event"));
   connect(_logAct, SIGNAL(triggered()), this, SLOT(showLogDialog()));
 
   _newTabAct = new QAction(tr("&New Tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
-  _newTabAct->setIcon(QPixmap(":tab-new.png"));
+  _newTabAct->setIcon(KstGetIcon("tab-new"));
   _newTabAct->setShortcuts(QKeySequence::AddTab);
 
   connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
 
   _closeTabAct = new QAction(tr("&Close Tab"), this);
   _closeTabAct->setStatusTip(tr("Close the current tab"));
-  _closeTabAct->setIcon(QPixmap(":tab-close.png"));
+  _closeTabAct->setIcon(KstGetIcon("tab-close"));
   connect(_closeTabAct, SIGNAL(triggered()), tabWidget(), SLOT(closeCurrentView()));
 
   _exitAct = new QAction(tr("E&xit"), this);
   _exitAct->setShortcuts(QKeySequence::Quit);
   _exitAct->setStatusTip(tr("Exit the application"));
-  _exitAct->setIcon(QPixmap(":application-exit.png"));
+  _exitAct->setIcon(KstGetIcon("application-exit"));
   connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
   // ************************** Edit Actions ******************************* //
   _undoAct = _undoGroup->createUndoAction(this);
   _undoAct->setShortcuts(QKeySequence::Undo);
-  _undoAct->setIcon(QPixmap(":edit-undo.png"));
+  _undoAct->setIcon(KstGetIcon("edit-undo"));
 
   _redoAct = _undoGroup->createRedoAction(this);
   _redoAct->setShortcuts(QKeySequence::Redo);
-  _redoAct->setIcon(QPixmap(":edit-redo.png"));
+  _redoAct->setIcon(KstGetIcon("edit-redo"));
 
   // ********************* View Actions ********************************** //
   _vectorEditorAct = new QAction(tr("&Vectors"), this);
@@ -1068,26 +1070,26 @@ void MainWindow::createActions() {
   // ************************ Data Range 1 click Actions ************************** //
   _backAct = new QAction(tr("&Back One Screen"), this);
   _backAct->setStatusTip(tr("Back one screen"));
-  _backAct->setIcon(QPixmap(":page-previous.png"));
+  _backAct->setIcon(KstGetIcon("page-previous"));
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
   _forwardAct = new QAction(tr("&Forward One Screen"), this);
   _forwardAct->setStatusTip(tr("Forward one screen"));
-  _forwardAct->setIcon(QPixmap(":page-next.png"));
+  _forwardAct->setIcon(KstGetIcon("page-next"));
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
   _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
-  _readFromEndAct->setIcon(QPixmap(":count-from-end.png"));
+  _readFromEndAct->setIcon(KstGetIcon("count-from-end"));
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
   _readToEndAct = new QAction(tr("&Read to End"), this);
   _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
-  _readToEndAct->setIcon(QPixmap(":read-to-end.png"));
+  _readToEndAct->setIcon(KstGetIcon("read-to-end"));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("&Pause"), this);
-  _pauseAct->setIcon(QPixmap(":pause.png"));
+  _pauseAct->setIcon(KstGetIcon("pause"));
   _pauseAct->setCheckable(true);
   _pauseAct->setShortcut(tr("p", "shortcut for pause"));
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources (%1)").arg(_pauseAct->shortcut().toString()));
@@ -1095,12 +1097,12 @@ void MainWindow::createActions() {
 
   _changeDataSampleDialogAct = new QAction(tr("Change Data &Sample Range..."), this);
   _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
-  _changeDataSampleDialogAct->setIcon(QPixmap(":kst_changenpts.png"));
+  _changeDataSampleDialogAct->setIcon(KstGetIcon("kst_changenpts"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
   // ************************ Create Actions ************************** //
   _createPlotAct = new QAction(tr("&Plot"), this);
-  _createPlotAct->setIcon(QPixmap(":office-chart-area-stacked.png"));
+  _createPlotAct->setIcon(KstGetIcon("kst_newplot"));
   _createPlotAct->setShortcut(QString("F11"));
   _createPlotAct->setStatusTip(tr("Create a plot for the current view (%1)").arg(_createPlotAct->shortcut().toString()));
   _createPlotAct->setCheckable(true);
@@ -1141,49 +1143,49 @@ void MainWindow::createActions() {
 
   // Advanced layout
   _createLabelAct = new QAction(tr("&Label"), this);
-  _createLabelAct->setIcon(QPixmap(":kst_gfx_label.png"));
+  _createLabelAct->setIcon(KstGetIcon("kst_gfx_label"));
   _createLabelAct->setShortcut(QString("F3"));
   _createLabelAct->setStatusTip(tr("Create a label for the current view (%1)").arg(_createLabelAct->shortcut().toString()));
   _createLabelAct->setCheckable(true);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
   _createBoxAct = new QAction(tr("&Box"), this);
-  _createBoxAct->setIcon(QPixmap(":kst_gfx_rectangle.png"));
+  _createBoxAct->setIcon(KstGetIcon("kst_gfx_rectangle"));
   _createBoxAct->setShortcut(QString("F4"));
   _createBoxAct->setStatusTip(tr("Create a box for the current view (%1)").arg(_createBoxAct->shortcut().toString()));
   _createBoxAct->setCheckable(true);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
   _createCircleAct = new QAction(tr("&Circle"), this);
-  _createCircleAct->setIcon(QPixmap(":kst_gfx_circle.png"));
+  _createCircleAct->setIcon(KstGetIcon("kst_gfx_circle"));
   _createCircleAct->setShortcut(QString("F5"));
   _createCircleAct->setStatusTip(tr("Create a circle for the current view (%1)").arg(_createCircleAct->shortcut().toString()));
   _createCircleAct->setCheckable(true);
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
   _createEllipseAct = new QAction(tr("&Ellipse"), this);
-  _createEllipseAct->setIcon(QPixmap(":kst_gfx_ellipse.png"));
+  _createEllipseAct->setIcon(KstGetIcon("kst_gfx_ellipse"));
   _createEllipseAct->setShortcut(QString("F6"));
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view (%1)").arg(_createEllipseAct->shortcut().toString()));
   _createEllipseAct->setCheckable(true);
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
   _createLineAct = new QAction(tr("&Line"), this);
-  _createLineAct->setIcon(QPixmap(":kst_gfx_line.png"));
+  _createLineAct->setIcon(KstGetIcon("kst_gfx_line"));
   _createLineAct->setShortcut(QString("F7"));
   _createLineAct->setStatusTip(tr("Create a line for the current view (%1)").arg(_createLineAct->shortcut().toString()));
   _createLineAct->setCheckable(true);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
   _createArrowAct = new QAction(tr("&Arrow"), this);
-  _createArrowAct->setIcon(QPixmap(":kst_gfx_arrow.png"));
+  _createArrowAct->setIcon(KstGetIcon("kst_gfx_arrow"));
   _createArrowAct->setShortcut(QString("F8"));
   _createArrowAct->setStatusTip(tr("Create a arrow for the current view (%1)").arg(_createArrowAct->shortcut().toString()));
   _createArrowAct->setCheckable(true);
   connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
   _createPictureAct = new QAction(tr("&Picture"), this);
-  _createPictureAct->setIcon(QPixmap(":image-x-generic.png"));
+  _createPictureAct->setIcon(KstGetIcon("insert-image"));
   _createPictureAct->setShortcut(QString("F9"));
   _createPictureAct->setStatusTip(tr("Create a picture for the current view (%1)").arg(_createPictureAct->shortcut().toString()));
   _createPictureAct->setCheckable(true);
@@ -1191,7 +1193,7 @@ void MainWindow::createActions() {
 
 #ifndef KST_NO_SVG
   _createSvgAct = new QAction(tr("&Svg"), this);
-  _createSvgAct->setIcon(QPixmap(":draw-bezier-curves.png"));
+  _createSvgAct->setIcon(KstGetIcon("draw-bezier-curves"));
   _createSvgAct->setShortcut(QString("F10"));
   _createSvgAct->setStatusTip(tr("Create a svg for the current view (%1)").arg(_createSvgAct->shortcut().toString()));
   _createSvgAct->setCheckable(true);
@@ -1200,7 +1202,7 @@ void MainWindow::createActions() {
 
   _createSharedAxisBoxAct = new QAction(tr("Shared Axis &Box"), this);
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
-  _createSharedAxisBoxAct->setIcon(QPixmap(":kst_gfx_sharedaxisbox.png"));
+  _createSharedAxisBoxAct->setIcon(KstGetIcon("kst_gfx_sharedaxisbox"));
   _createSharedAxisBoxAct->setCheckable(true);
   //_createSharedAxisBoxAct->setEnabled(false);
   connect(_createSharedAxisBoxAct, SIGNAL(triggered()), this, SLOT(createSharedAxisBox()));
@@ -1208,7 +1210,7 @@ void MainWindow::createActions() {
   // ************************** Mode Actions ******************************* //
   // First, general options
   _tiedZoomAct = new QAction(tr("&Toggle Tied Zoom"), this);
-  _tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
+  _tiedZoomAct->setIcon(KstGetIcon("tied-zoom"));
   _tiedZoomAct->setCheckable(false);
   _tiedZoomAct->setShortcut(QString("t"));
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom (%1)").arg(_tiedZoomAct->shortcut().toString()));
@@ -1216,14 +1218,14 @@ void MainWindow::createActions() {
 
   _tabTiedAct = new QAction(tr("Tie &Across All Tabs"), this);
   _tabTiedAct->setStatusTip(tr("Tied zoom applies between tabs"));
-  //_tiedZoomAct->setIcon(QPixmap(":tied-zoom.png"));
+  //_tiedZoomAct->setIcon(KstGetIcon("tied-zoom"));
   _tabTiedAct->setCheckable(true);
   //connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
 
   _highlightPointAct = new QAction(tr("&Highlight Data Points"), this);
   _highlightPointAct->setStatusTip(tr("Highlight closest data point"));
-  _highlightPointAct->setIcon(QPixmap(":kst_datamode.png"));
+  _highlightPointAct->setIcon(KstGetIcon("kst_datamode"));
   _highlightPointAct->setCheckable(true);
   connect(_highlightPointAct, SIGNAL(toggled(bool)), this, SLOT(setHighlightPoint(bool)));
 
@@ -1236,24 +1238,24 @@ void MainWindow::createActions() {
   //TODO _standardZoomAct->setShortcut(QString("a"));
   _standardZoomAct->setCheckable(true);
   _standardZoomAct->setData(View::ZoomOnlyDisabled);
-  _standardZoomAct->setIcon(QPixmap(":xy-zoom.png"));
+  _standardZoomAct->setIcon(KstGetIcon("xy-zoom"));
 
   _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
   _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
   //TODO _xOnlyZoomAct->setShortcut(QString("x"));
   _xOnlyZoomAct->setCheckable(true);
   _xOnlyZoomAct->setData(View::ZoomOnlyX);
-  _xOnlyZoomAct->setIcon(QPixmap(":x-zoom.png"));
+  _xOnlyZoomAct->setIcon(KstGetIcon("x-zoom"));
 
   _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
   _yOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
   //TODO _yOnlyZoomAct->setShortcut(QString("y"));
   _yOnlyZoomAct->setData(View::ZoomOnlyY);
   _yOnlyZoomAct->setCheckable(true);
-  _yOnlyZoomAct->setIcon(QPixmap(":y-zoom.png"));
+  _yOnlyZoomAct->setIcon(KstGetIcon("y-zoom"));
 
   _layoutModeAct = _interactionModeGroup->addAction(tr("&Layout Mode"));
-  _layoutModeAct->setIcon(QPixmap(":transform-move.png"));
+  _layoutModeAct->setIcon(KstGetIcon("transform-move"));
   _layoutModeAct->setCheckable(true);
   _layoutModeAct->setShortcut(QString("F2"));
   _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode (%1)").arg(_layoutModeAct->shortcut().toString()));
@@ -1264,58 +1266,58 @@ void MainWindow::createActions() {
 
   // *********************** Tools actions ************************************** //
   _dataManagerAct = new QAction(tr("Data &Manager"), this);
-  _dataManagerAct->setIcon(QPixmap(":data-manager.png"));
+  _dataManagerAct->setIcon(KstGetIcon("data-manager"));
   _dataManagerAct->setShortcut(QString("d"));
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window (%1)").arg(_dataManagerAct->shortcut().toString()));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
-  _dataWizardAct->setIcon(QPixmap(":tools-wizard.png"));
+  _dataWizardAct->setIcon(KstGetIcon("tools-wizard"));
   _dataWizardAct->setShortcut(QString("w"));
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard (%1)").arg(_dataWizardAct->shortcut().toString()));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
-  _changeFileDialogAct->setIcon(QPixmap(":change-data-file.png"));
+  _changeFileDialogAct->setIcon(KstGetIcon("change-data-file"));
   _changeFileDialogAct->setShortcut(QString("f"));
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog (%1)").arg(_changeFileDialogAct->shortcut().toString()));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
   _chooseColorDialogAct = new QAction(tr("Assign Curve &Color per File"), this);
   _chooseColorDialogAct->setStatusTip(tr("Show Kst's Choose Color Dialog"));
-  _chooseColorDialogAct->setIcon(QPixmap(":code-class.png"));
+  _chooseColorDialogAct->setIcon(KstGetIcon("code-class"));
   connect(_chooseColorDialogAct, SIGNAL(triggered()), this, SLOT(showChooseColorDialog()));
 
   _differentiateCurvesDialogAct = new QAction(tr("D&ifferentiate Curves"), this);
   _differentiateCurvesDialogAct->setStatusTip(tr("Show Kst's Differentiate Curves Dialog"));
-  _differentiateCurvesDialogAct->setIcon(QPixmap(":kst_differentiatecurves.png"));
+  _differentiateCurvesDialogAct->setIcon(KstGetIcon("kst_differentiatecurves"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
 
   // *********************** Settings actions ************************************** //
   _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
   _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
-  _settingsDialogAct->setIcon(QPixmap(":configure.png"));
+  _settingsDialogAct->setIcon(KstGetIcon("configure"));
   connect(_settingsDialogAct, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
 
   _themeDialogAct = new QAction(tr("&Theme"), this);
   _themeDialogAct->setStatusTip(tr("Show Kst's Theme Dialog"));
-  _themeDialogAct->setIcon(QPixmap(":themes.png"));
+  _themeDialogAct->setIcon(KstGetIcon("themes"));
   connect(_themeDialogAct, SIGNAL(triggered()), this, SLOT(showThemeDialog()));
 
   // *********************** Help actions ************************************** //
   _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
-  _debugDialogAct->setIcon(QPixmap(":text-x-log.png"));
+  _debugDialogAct->setIcon(KstGetIcon("text-x-log"));
   connect(_debugDialogAct, SIGNAL(triggered()), this, SLOT(showDebugDialog()));
 
   _bugReportWizardAct = new QAction(tr("&Bug Report Wizard"), this);
   _bugReportWizardAct->setStatusTip(tr("Show Kst's Bug Report Wizard"));
-  _bugReportWizardAct->setIcon(QPixmap(":kbugbuster.png"));
+  _bugReportWizardAct->setIcon(KstGetIcon("kbugbuster"));
   connect(_bugReportWizardAct, SIGNAL(triggered()), this, SLOT(showBugReportWizard()));
 
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
-  _aboutAct->setIcon(QPixmap(":dialog-information.png"));
+  _aboutAct->setIcon(KstGetIcon("dialog-information"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
   _video1Act = new QAction(tr("#&1: Quick Start"), this);

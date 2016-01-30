@@ -12,6 +12,7 @@
 
 #include "legendtab.h"
 #include "objectstore.h"
+#include "geticon.h"
 
 #include <qdebug.h>
 
@@ -24,10 +25,10 @@ LegendTab::LegendTab(QWidget *parent)
 
   _single = true;
 
-  _up->setIcon(QPixmap(":kst_uparrow.png"));
-  _down->setIcon(QPixmap(":kst_downarrow.png"));
-  _add->setIcon(QPixmap(":kst_rightarrow.png"));
-  _remove->setIcon(QPixmap(":kst_leftarrow.png"));
+  _up->setIcon(KstGetIcon("kst_uparrow"));
+  _down->setIcon(KstGetIcon("kst_downarrow"));
+  _add->setIcon(KstGetIcon("kst_rightarrow"));
+  _remove->setIcon(KstGetIcon("kst_leftarrow"));
   _up->setToolTip(tr("Raise in list order: Alt+Up"));
   _down->setToolTip(tr("Lower in list order: Alt+Down"));
   _add->setToolTip(tr("Select: Alt+s"));
@@ -35,10 +36,10 @@ LegendTab::LegendTab(QWidget *parent)
 
   _bold->setFixedWidth(32);
   _bold->setFixedHeight(32);
-  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _bold->setIcon(KstGetIcon("kst_bold"));
   _italic->setFixedWidth(32);
   _italic->setFixedHeight(32);
-  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _italic->setIcon(KstGetIcon("kst_italic"));
   _labelColor->setFixedWidth(32);
   _labelColor->setFixedHeight(32);
 

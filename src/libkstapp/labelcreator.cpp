@@ -16,6 +16,7 @@
 #include "objectstore.h"
 #include "mainwindow.h"
 #include "document.h"
+#include "geticon.h"
 
 #include "applicationsettings.h"
 #include "dialogdefaults.h"
@@ -30,10 +31,10 @@ LabelCreator::LabelCreator(QWidget *parent)
   setWindowTitle(tr("Create Label Dialog"));
   _bold->setFixedWidth(32);
   _bold->setFixedHeight(32);
-  _bold->setIcon(QPixmap(":kst_bold.png"));
+  _bold->setIcon(KstGetIcon("kst_bold"));
   _italic->setFixedWidth(32);
   _italic->setFixedHeight(32);
-  _italic->setIcon(QPixmap(":kst_italic.png"));
+  _italic->setIcon(KstGetIcon("kst_italic"));
   _labelColor->setFixedWidth(32);
   _labelColor->setFixedHeight(32);
 

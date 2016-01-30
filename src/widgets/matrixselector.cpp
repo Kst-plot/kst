@@ -16,6 +16,7 @@
 
 #include "dialoglauncher.h"
 #include "datacollection.h"
+#include "geticon.h"
 
 namespace Kst {
 
@@ -26,8 +27,8 @@ MatrixSelector::MatrixSelector(QWidget *parent, ObjectStore *store)
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
-  _newMatrix->setIcon(QPixmap(":kst_matrixnew.png"));
-  _editMatrix->setIcon(QPixmap(":kst_matrixedit.png"));
+  _newMatrix->setIcon(KstGetIcon("kst_matrixnew"));
+  _editMatrix->setIcon(KstGetIcon("kst_matrixedit"));
 
   _newMatrix->setFixedSize(size + 8, size + 8);
   _editMatrix->setFixedSize(size + 8, size + 8);
