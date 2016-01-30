@@ -47,17 +47,23 @@ void DataSourceSelector::setup() {
 
   _fileEdit = new QLineEdit(this);
   _fileButton = new QToolButton(this);
-  _fileButton->setProperty("si","file browse button");
+
+  int h = fontMetrics().lineSpacing()*4/3;
+
+  _fileEdit->setFixedHeight(h);
 
   QHBoxLayout * layout = new QHBoxLayout(this);
   layout->setMargin(0);
   layout->addWidget(_fileEdit);
   layout->addWidget(_fileButton);
+
+  _fileButton->setFixedSize(h,h);
   setLayout(layout);
 
-  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+  //int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+  _fileButton->setFixedSize(h,h);
   _fileButton->setIcon(KstGetIcon("kst_changefile"));
-  _fileButton->setFixedSize(size + 8, size + 8);
+  //qDebug() << "file button small icon size" << size;
 
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   //connect (_fileEdit, SIGNAL(textChanged(const QString &)), this, SIGNAL(changed(const QString &)));
@@ -72,6 +78,7 @@ void DataSourceSelector::setup() {
   completer->setModel(dirModel); 
 
   _fileEdit->setCompleter(completer);
+  setFixedHeight(h);
 }
 
 
