@@ -88,37 +88,23 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
   if (symbolColor == Qt::transparent) {
     symbolColor = Qt::black;
   }
-  QStyleOptionComboBox option;
-  option.initFrom(combo);
-  option.currentIcon = combo->itemIcon(combo->currentIndex());
-  option.currentText = combo->itemText(combo->currentIndex());
-  option.editable = combo->isEditable();
-  option.frame = combo->hasFrame();
-  option.iconSize = combo->iconSize();
+  int h = fontMetrics().lineSpacing();
 
-  QRect rect = combo->style()->subControlRect(
-                 QStyle::CC_ComboBox,
-                 &option,
-                 QStyle::SC_ComboBoxEditField,
-                 combo );
-  rect.setLeft( rect.left() + 2 );
-  rect.setRight( rect.right() - 2 );
-  rect.setTop( rect.top() + 2 );
-  rect.setBottom( rect.bottom() - 2 );
-
-  combo->setIconSize(QSize(rect.width(), rect.height()));
+  combo->setIconSize(QSize(4*h, h));
 
   // fill the point type dialog with point types
-  QPixmap ppix( rect.width(), rect.height() );
+  QPixmap ppix( 4*h, h );
   QPainter pp( &ppix );
 
   int currentItem = combo->currentIndex();
   combo->clear();
-  pp.setPen(symbolColor);
+  QPen pen(symbolColor);
+  pen.setWidthF(h/12.0);
+  pp.setPen(pen);
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
-    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, 3);
+    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, h/4);
     combo->addItem(QIcon(ppix), QString());
   }
 
@@ -420,35 +406,22 @@ void CurveAppearance::clearValues() {
 
 
 void CurveAppearance::populateLineStyleCombo() {
+  int h = fontMetrics().lineSpacing();
 
-  QStyleOptionComboBox option;
-  option.initFrom(_comboLineStyle);
-  option.currentIcon = _comboLineStyle->itemIcon(_comboLineStyle->currentIndex());
-  option.currentText = _comboLineStyle->itemText(_comboLineStyle->currentIndex());
-  option.editable = _comboLineStyle->isEditable();
-  option.frame = _comboLineStyle->hasFrame();
-  option.iconSize = _comboLineStyle->iconSize();
-
-  QRect rect = _comboLineStyle->style()->subControlRect(
-                 QStyle::CC_ComboBox,
-                 &option,
-                 QStyle::SC_ComboBoxEditField,
-                 _comboLineStyle );
-  rect.setLeft(rect.left() + 2);
-  rect.setRight(rect.right() - 2);
-  rect.setTop(rect.top() + 2);
-  rect.setBottom(rect.bottom() - 2);
-
-  _comboLineStyle->setIconSize(QSize(rect.width(), rect.height()));
+  _comboLineStyle->setIconSize(QSize(4*h, h));
 
   // fill the point type dialog with point types
-  QPixmap ppix(rect.width(), rect.height());
+  QPixmap ppix(4*h, h);
   QPainter pp(&ppix);
+
   QColor lineColor(color());
   if (lineColor == Qt::transparent) {
     lineColor = Qt::black;
   }
+
+
   QPen pen(lineColor, 1);
+  pen.setWidthF(h/12.0);
 
   int currentItem = _comboLineStyle->currentIndex();
   _comboLineStyle->clear();

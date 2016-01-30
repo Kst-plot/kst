@@ -142,6 +142,7 @@ MainWindow::MainWindow() :
   qApp->installEventFilter(this);
   qnxToggleToolbarVisibility();
 #endif
+
 }
 
 
