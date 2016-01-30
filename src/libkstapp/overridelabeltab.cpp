@@ -24,12 +24,15 @@ OverrideLabelTab::OverrideLabelTab(QString title, QWidget *parent)
   : DialogTab(parent), _fontDirty(false) {
 
   setupUi(this);
+  int h = fontMetrics().lineSpacing();
   _bold->setIcon(KstGetIcon("kst_bold"));
-  _bold->setFixedWidth(32);
+  _bold->setFixedWidth(h);
+  _bold->setFixedHeight(h);
   _italic->setIcon(KstGetIcon("kst_italic"));
-  _italic->setFixedWidth(32);
-  _labelColor->setFixedWidth(32);
-  _labelColor->setFixedHeight(32);
+  _italic->setFixedWidth(h);
+  _italic->setFixedHeight(h);
+  _labelColor->setFixedWidth(h);
+  _labelColor->setFixedHeight(h);
 
   setTabTitle(title);
 

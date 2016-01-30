@@ -27,12 +27,20 @@ LabelTab::LabelTab(PlotItem* plotItem, QWidget *parent)
 
   setupUi(this);
 
+  int h = fontMetrics().lineSpacing();
   _globalLabelBold->setIcon(KstGetIcon("kst_bold"));
-  _globalLabelBold->setFixedWidth(32);
+  _globalLabelBold->setFixedHeight(h);
+  _globalLabelBold->setFixedWidth(h);
   _globalLabelItalic->setIcon(KstGetIcon("kst_italic"));
-  _globalLabelItalic->setFixedWidth(32);
-  _globalLabelColor->setFixedWidth(32);
-  _globalLabelColor->setFixedHeight(32);
+  _globalLabelItalic->setFixedHeight(h);
+  _globalLabelItalic->setFixedWidth(h);
+  _globalLabelColor->setFixedHeight(h);
+  _globalLabelColor->setFixedWidth(h);
+
+  _topLabelText->setFixedHeight(h*4/3);
+  _bottomLabelText->setFixedHeight(h*4/3);
+  _leftLabelText->setFixedHeight(h*4/3);
+  _rightLabelText->setFixedHeight(h*4/3);
 
   setTabTitle(tr("Labels"));
 

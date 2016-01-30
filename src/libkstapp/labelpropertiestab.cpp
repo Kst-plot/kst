@@ -40,14 +40,15 @@ LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
                                 "Scalar: <i>[V1/Mean]</i>.  Vector Element: <i>[V1[4]]</i>.  "
                                 "Equation: <i>[=[V1/Mean]^2]</i>.  A [ character can be inserted as <i>\\[</i>."));
 
-  _bold->setFixedWidth(32);
-  _bold->setFixedHeight(32);
+  int h = fontMetrics().lineSpacing();
+  _bold->setFixedWidth(h);
+  _bold->setFixedHeight(h);
   _bold->setIcon(KstGetIcon("kst_bold"));
-  _italic->setFixedWidth(32);
-  _italic->setFixedHeight(32);
+  _italic->setFixedWidth(h);
+  _italic->setFixedHeight(h);
   _italic->setIcon(KstGetIcon("kst_italic"));
-  _labelColor->setFixedWidth(32);
-  _labelColor->setFixedHeight(32);
+  _labelColor->setFixedWidth(h);
+  _labelColor->setFixedHeight(h);
 
   connect(_labelText, SIGNAL(labelChanged()), this, SIGNAL(modified()));
   connect(_labelFontScale, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));

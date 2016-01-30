@@ -28,16 +28,17 @@ LabelCreator::LabelCreator(QWidget *parent)
   : QDialog(parent) {
 
   setupUi(this);
-  setWindowTitle(tr("Create Label Dialog"));
-  _bold->setFixedWidth(32);
-  _bold->setFixedHeight(32);
-  _bold->setIcon(KstGetIcon("kst_bold"));
-  _italic->setFixedWidth(32);
-  _italic->setFixedHeight(32);
-  _italic->setIcon(KstGetIcon("kst_italic"));
-  _labelColor->setFixedWidth(32);
-  _labelColor->setFixedHeight(32);
 
+  setWindowTitle(tr("Create Label Dialog"));
+  int h = fontMetrics().lineSpacing();
+  _bold->setFixedWidth(h);
+  _bold->setFixedHeight(h);
+  _bold->setIcon(KstGetIcon("kst_bold"));
+  _italic->setFixedWidth(h);
+  _italic->setFixedHeight(h);
+  _italic->setIcon(KstGetIcon("kst_italic"));
+  _labelColor->setFixedWidth(h);
+  _labelColor->setFixedHeight(h);
   _labelText->setObjectStore(kstApp->mainWindow()->document()->objectStore());
 
   QFont font;
