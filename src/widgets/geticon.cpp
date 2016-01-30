@@ -14,11 +14,11 @@
 #include <QDebug>
 
 QIcon KstGetIcon(QString icon_name) {
-  static bool has_svg = true;
+  //static bool has_svg = true;
 
   QString svg_name = ":svg_icons/"+icon_name+".svgz";
   if (QFile::exists(svg_name)) {
-    qDebug() << svg_name;
+    //qDebug() << svg_name;
     return QIcon(svg_name);
   } else {
     QString png_name = ":"+icon_name+".png";
