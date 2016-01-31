@@ -421,7 +421,7 @@ void CurveAppearance::populateLineStyleCombo() {
 
 
   QPen pen(lineColor, 1);
-  pen.setWidthF(h/12.0);
+  pen.setWidthF(h/18.0);
 
   int currentItem = _comboLineStyle->currentIndex();
   _comboLineStyle->clear();
