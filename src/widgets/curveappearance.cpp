@@ -99,7 +99,7 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
   int currentItem = combo->currentIndex();
   combo->clear();
   QPen pen(symbolColor);
-  pen.setWidthF(h/12.0);
+  pen.setWidthF(h/18.0);
   pp.setPen(pen);
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
@@ -441,22 +441,40 @@ void CurveAppearance::populateLineStyleCombo() {
 
 
 void CurveAppearance::drawSampleLine() {
-  //_label->resize(_label->height()*7, _label->height());
-  QPixmap pix(_label->contentsRect().width(), _label->contentsRect().height());
+  // In some OSs, HiDPI is handled by setting the device pixel ratio so that
+  // logical pixels are not physical pixels.  However, not all Qt functions
+  // seem to play well in this universe, requiring some... entertainment.
+
+  int pixel_ratio = _label->devicePixelRatio();
+  int h = fontMetrics().lineSpacing()*3/2;
+  _label->resize(h*5, h);
+  QPixmap pix(_label->contentsRect().width()*pixel_ratio,
+              _label->contentsRect().height()*pixel_ratio);
+
+  pix.setDevicePixelRatio(_label->devicePixelRatio());
+
+  int pix_w = pix.width()/pixel_ratio;
+  int pix_h = pix.height()/pixel_ratio;
+
+
   QPainter p(&pix);
-  QPen pen(color(),lineWidth(),LineStyle[lineStyle()]);
+
+  int line_width = lineWidth()*fontMetrics().lineSpacing()/18;
+
+  QPen pen(color(),line_width,LineStyle[lineStyle()]);
 
   p.fillRect(p.window(), QColor("white"));
 
+
   if (showBars()) {
-    QRect rectBar((pix.width()-pix.height())/2,
-                  pix.height()/2,
-                  pix.height(),
-                  (pix.height()/2)+1);
+    QRect rectBar((pix_w-pix_h)/2,
+                  pix_h/2,
+                  pix_h,
+                  (pix_h/2)+1);
 
 
     p.fillRect(rectBar,QBrush(QColor(barFillColor())));
-    p.setPen(QPen(QColor(color()),lineWidth(), LineStyle[lineStyle()]));
+    p.setPen(QPen(QColor(color()),line_width, LineStyle[lineStyle()]));
     p.drawRect(rectBar);
   }
 
@@ -473,23 +491,25 @@ void CurveAppearance::drawSampleLine() {
   p.setPen(pen);
   if (showLines()) {
     if (showHead()) {
-      p.drawLine(1, pix.height()/2, pix.width()-10, pix.height()/2);
+      p.drawLine(1, pix_h/2, pix_w-10, pix_h/2);
     } else {
-      p.drawLine(1, pix.height()/2, pix.width()-1, pix.height()/2);
+      p.drawLine(1, pix_h/2, pix_w-1, pix_h/2);
     }
   }
+
+  h = fontMetrics().lineSpacing() * pointSize()*12/font().pointSizeF()/56;
 
   if (showPoints()) {
     pen.setStyle(Qt::SolidLine);
     p.setPen(pen);
-    CurvePointSymbol::draw(pointType(), &p, pix.width()/2, pix.height()/2, 1.0/2.7*pointSize());
+    CurvePointSymbol::draw(pointType(), &p, pix_w/2, pix_h/2, h);
   }
 
   if (showHead()) {
     pen.setStyle(Qt::SolidLine);
     pen.setColor(headColor());
     p.setPen(pen);
-    CurvePointSymbol::draw(headType(), &p, pix.width()-10, pix.height()/2, 1.0/2.7*pointSize());
+    CurvePointSymbol::draw(headType(), &p, pix_w-10, pix_h/2, h);
   }
   _label->setPixmap(pix);
 }

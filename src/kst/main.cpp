@@ -67,6 +67,8 @@ int main(int argc, char *argv[]) {
   app.installTranslator(&kstDirectoryTranslator);
 
 #ifdef QT5
+  // use high res pixmaps if pixel-doubling is in effect.
+  // But there is are still odd bugs, so don;t get too excited.
   app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 #endif
 
