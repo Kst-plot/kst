@@ -144,13 +144,13 @@ cd $builddir
 #
 # get actual cmake
 #
-cmakever=cmake-3.3.1-Linux-x86_64
+cmakever=cmake-3.4.1-Linux-x86_64
 
 if [ "$iam" = "$travis" ]; then
     if [ ! -d $dep/$cmakever ]; then
           cmakebin=x
           if [ ! -d $dep/$cmakever ]; then
-              wget --no-check-certificate http://www.cmake.org/files/v3.3/$cmakever.tar.gz
+              wget --no-check-certificate http://www.cmake.org/files/v3.4/$cmakever.tar.gz
               checkExitCode
               cd $dep
               tar xf $builddir/$cmakever.tar.gz
@@ -165,59 +165,64 @@ fi
 $cmakebin --version
 checkExitCode
 
-gccver=4.7.2
+server=http://sourceforge.net/projects/kst/files/3rdparty
+
+#gccver=4.7.2
 if [ "$2" = "x64" ]; then
     win=win64
     mingw=x86_64-w64-mingw32
-    exc=-seh
-    mingwdir=mingw64$exc
     branch=Kst-64bit-no-3rdparty-plugins-Qt5
     extlib=
     useext=
 else
     win=win32
     mingw=i686-w64-mingw32
-    exc=-dw2
-    mingwdir=mingw32$exc
     branch=Kst-32bit-3rdparty-plugins-Qt5
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
 fi
 
-if [ "$1" = "qt5" ]; then
+if [ $downloadgcc ]; then
+
+    gccver=4.7.2
+    if [ "$2" = "x64" ]; then
+        exc=-seh
+        mingwdir=mingw64$exc
+    else
+        exc=-dw2
+        mingwdir=mingw32$exc
+    fi
+
     qtver=5.5.0
-    tarver=
+    qtver=Qt-$qtver-$win-g++-$mingw$exc-$gccver
+    mingwver=$mingw-gcc$exc-$gccver
+    
+    # ---------------------------------------------------------
+    #
+    # download and install mingw
+    #
+
+    if [ ! -d $dep/$mingwdir ]; then
+        mingwtar=$mingwver-Ubuntu64-12.04.tar
+        wget $server/$mingwtar.xz
+        checkExitCode
+        xz -d $mingwtar.xz
+        cd $dep
+        tar xf $builddir/$mingwtar
+        checkExitCode
+        cd $builddir
+    fi
+    compiler=$dep/$mingwdir/bin/$mingw-gcc
+    LTS=12.04
 else
-    qtver=4.8.4
-    tarver=
-    branch=Kst-32bit-3rdparty-plugins-Qt4
+    qtver=5.5.1
+    qtver=Qt-$qtver-$mingw
+    compiler=$mingw
+    LTS=14.04
 fi
-
-qtver=Qt-$qtver-$win-g++-$mingw$exc-$gccver
-mingwver=$mingw-gcc$exc-$gccver
-
-
-server=http://sourceforge.net/projects/kst/files/3rdparty
-# ---------------------------------------------------------
-#
-# download and install mingw
-#
-if [ ! -d $dep/$mingwdir ]; then
-    mingwtar=$mingwver-Ubuntu64-12.04.tar
-    wget $server/$mingwtar.xz
-    checkExitCode
-    xz -d $mingwtar.xz
-    cd $dep
-    tar xf $builddir/$mingwtar
-    checkExitCode
-    cd $builddir
-fi
-# when cross-compiler is in path cmake assumes it is a native compiler and passes "-rdynamic" which mingw doesn't support
-#export PATH=$dep/mingw32/bin:$PATH
 echo Checking mingw installation ...
-$dep/$mingwdir/bin/$mingw-gcc -dumpversion
+$compiler-gcc -dumpversion
 checkExitCode
-
 
 
 # ---------------------------------------------------------
@@ -225,7 +230,7 @@ checkExitCode
 # download and install Qt
 #
 if [ ! -d $dep/$qtver ]; then
-    qttar=$qtver-Ubuntu64-12.04$tarver.tar
+    qttar=$qtver-Ubuntu64-$LTS$tarver.tar
     wget $server/$qttar.xz
     checkExitCode
     xz -d $qttar.xz
@@ -270,12 +275,7 @@ cd $builddir
 #
 # build Kst
 #
-cd $builddir
-if [ "$1" = "qt5" ]; then
-    qtopt="-Dkst_qt5=1"
-else
-    qtopt="-Dkst_qt4=$dep/$qtver"
-fi
+qtopt="-Dkst_qt5=1"
 
 
 if [ $buildinstaller -eq 1 ]; then
