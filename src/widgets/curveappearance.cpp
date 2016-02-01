@@ -85,6 +85,8 @@ void CurveAppearance::populateSymbolCombos() {
 
 
 void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) {
+  int pixel_ratio = combo->devicePixelRatio();
+
   if (symbolColor == Qt::transparent) {
     symbolColor = Qt::black;
   }
@@ -93,7 +95,13 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
   combo->setIconSize(QSize(4*h, h));
 
   // fill the point type dialog with point types
-  QPixmap ppix( 4*h, h );
+  QPixmap ppix( 4*h*pixel_ratio, h*pixel_ratio );
+  ppix.setDevicePixelRatio(pixel_ratio);
+
+  int pix_w = ppix.width()/pixel_ratio;
+  int pix_h = ppix.height()/pixel_ratio;
+
+
   QPainter pp( &ppix );
 
   int currentItem = combo->currentIndex();
@@ -104,7 +112,7 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
 
   for (int ptype = 0; ptype < KSTPOINT_MAXTYPE; ptype++) {
     pp.fillRect(pp.window(), QColor("white"));
-    CurvePointSymbol::draw(ptype, &pp, ppix.width()/2, ppix.height()/2, h/4);
+    CurvePointSymbol::draw(ptype, &pp, pix_w/2, pix_h/2, h/4);
     combo->addItem(QIcon(ppix), QString());
   }
 
@@ -451,7 +459,7 @@ void CurveAppearance::drawSampleLine() {
   QPixmap pix(_label->contentsRect().width()*pixel_ratio,
               _label->contentsRect().height()*pixel_ratio);
 
-  pix.setDevicePixelRatio(_label->devicePixelRatio());
+  pix.setDevicePixelRatio(pixel_ratio);
 
   int pix_w = pix.width()/pixel_ratio;
   int pix_h = pix.height()/pixel_ratio;
