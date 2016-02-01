@@ -178,6 +178,8 @@ else
     win=win32
     mingw=i686-w64-mingw32
     branch=Kst-32bit-3rdparty-plugins-Qt5
+    exc=-dw2
+    mingwdir=mingw32$exc
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
 fi
