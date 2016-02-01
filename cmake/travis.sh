@@ -150,7 +150,7 @@ if [ "$iam" = "$travis" ]; then
     if [ ! -d $dep/$cmakever ]; then
           cmakebin=x
           if [ ! -d $dep/$cmakever ]; then
-              wget http://www.cmake.org/files/v3.3/$cmakever.tar.gz
+              wget --no-check-certificate http://www.cmake.org/files/v3.3/$cmakever.tar.gz
               checkExitCode
               cd $dep
               tar xf $builddir/$cmakever.tar.gz
