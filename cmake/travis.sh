@@ -287,13 +287,20 @@ else
     noinstaller=-Dkst_noinstaller=1
 fi
 
+#$cmakebin ../kst \
+#    -Dkst_release=1  \
+#    -Dkst_version_string=$versionname \
+#    -Dkst_install_prefix=./$versionname \
+#    -Dkst_cross=$dep/$mingwdir/bin/$mingw \
+#    $rev $qtopt $useext $console $noinstaller $generator
+
 $cmakebin ../kst \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
-    -Dkst_cross=$dep/$mingwdir/bin/$mingw \
+    -Dkst_cross=/usr/bin/$mingw \
     $rev $qtopt $useext $console $noinstaller $generator
-
+    
 checkExitCode
 
 
