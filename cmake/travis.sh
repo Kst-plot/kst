@@ -181,7 +181,8 @@ else
     exc=-dw2
     mingwdir=mingw32$exc
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
-    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
+    useext=
+#    useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
 fi
 
 if [ $downloadgcc ]; then
