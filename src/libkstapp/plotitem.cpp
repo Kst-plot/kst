@@ -897,8 +897,10 @@ void PlotItem::updatePlotPixmap() {
   if (maskedByMaximization()) {
     return;
   }
+  int device_pixel_ratio = view()->devicePixelRatio();
+  QPixmap pixmap(device_pixel_ratio*(rect().width()+1), device_pixel_ratio*(rect().height()+1));
+  pixmap.setDevicePixelRatio(device_pixel_ratio);
 
-  QPixmap pixmap(rect().width()+1, rect().height()+1);
   pixmap.fill(Qt::transparent);
   QPainter pixmapPainter(&pixmap);
 

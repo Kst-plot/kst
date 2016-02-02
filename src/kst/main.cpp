@@ -17,6 +17,7 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QDebug>
+#include <time.h>
 
 #ifdef Q_CC_MSVC
 __declspec(dllexport)
