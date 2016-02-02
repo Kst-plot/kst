@@ -9,6 +9,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "geticon.h"
+
 #include <QIcon>
 #include <QFile>
 #include <QDebug>
