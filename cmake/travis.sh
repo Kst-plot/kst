@@ -298,7 +298,7 @@ $cmakebin ../kst \
     -Dkst_release=1  \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
-    -Dkst_cross=/usr/bin/$mingw \
+    -Dkst_cross=$compiler \
     $rev $qtopt $useext $console $noinstaller $generator
     
 checkExitCode
