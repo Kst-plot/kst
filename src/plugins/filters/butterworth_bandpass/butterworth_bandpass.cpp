@@ -29,7 +29,10 @@ class ConfigFilterButterworthBandPassPlugin : public Kst::DataObjectConfigWidget
   public:
     ConfigFilterButterworthBandPassPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthBandPassConfig() {
       _store = 0;
+
       setupUi(this);
+
+
     }
 
     ~ConfigFilterButterworthBandPassPlugin() {}
@@ -319,7 +322,9 @@ Kst::DataObject *ButterworthBandPassPlugin::create(Kst::ObjectStore *store, Kst:
 
 
 Kst::DataObjectConfigWidget *ButterworthBandPassPlugin::configWidget(QSettings *settingsObject) const {
+
   ConfigFilterButterworthBandPassPlugin *widget = new ConfigFilterButterworthBandPassPlugin(settingsObject);
+
   return widget;
 }
 

@@ -38,6 +38,7 @@ class ExportGraphicsDialog;
 class ExportVectorsDialog;
 class LogDialog;
 class DifferentiateCurvesDialog;
+class FilterMultipleDialog;
 class ChooseColorDialog;
 class ChangeDataSampleDialog;
 class ChangeFileDialog;
@@ -86,6 +87,7 @@ class MainWindow : public QMainWindow
     void showSettingsDialog();
     void showThemeDialog();
     void showDifferentiateCurvesDialog();
+    void filterMultipleDialog();
     void showChooseColorDialog();
     void showChangeDataSampleDialog();
     void showChangeFileDialog();
@@ -210,6 +212,7 @@ class MainWindow : public QMainWindow
     ExportVectorsDialog *_exportVectors;
     LogDialog *_logDialog;
     DifferentiateCurvesDialog *_differentiateCurvesDialog;
+    FilterMultipleDialog *_filterMultipleDialog;
     ChooseColorDialog *_chooseColorDialog;
     ChangeDataSampleDialog *_changeDataSampleDialog;
     ChangeFileDialog *_changeFileDialog;
@@ -301,6 +304,7 @@ class MainWindow : public QMainWindow
     QAction *_themeDialogAct;
 
     QAction *_differentiateCurvesDialogAct;
+    QAction *_filterMultipleDialogAct;
     QAction *_chooseColorDialogAct;
     QAction *_changeDataSampleDialogAct;
     QAction *_changeFileDialogAct;

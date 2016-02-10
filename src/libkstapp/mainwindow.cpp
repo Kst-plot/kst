@@ -47,6 +47,7 @@
 #include "applicationsettingsdialog.h"
 #include "themedialog.h"
 #include "differentiatecurvesdialog.h"
+#include "filtermultipledialog.h"
 #include "choosecolordialog.h"
 #include "changedatasampledialog.h"
 #include "changefiledialog.h"
@@ -90,6 +91,7 @@ MainWindow::MainWindow() :
     _exportVectors(0),
     _logDialog(0),
     _differentiateCurvesDialog(0),
+    _filterMultipleDialog(0),
     _chooseColorDialog(0),
     _changeDataSampleDialog(0),
     _changeFileDialog(0),
@@ -1294,6 +1296,11 @@ void MainWindow::createActions() {
   _differentiateCurvesDialogAct->setIcon(KstGetIcon("kst_differentiatecurves"));
   connect(_differentiateCurvesDialogAct, SIGNAL(triggered()), this, SLOT(showDifferentiateCurvesDialog()));
 
+  _filterMultipleDialogAct = new QAction(tr("&Filter Vectors"), this);
+  _filterMultipleDialogAct->setStatusTip(tr("Filter multiple vectors"));
+  _filterMultipleDialogAct->setIcon(KstGetIcon("kst_filter_vectors"));
+  connect(_filterMultipleDialogAct, SIGNAL(triggered()), this, SLOT(filterMultipleDialog()));
+
   // *********************** Settings actions ************************************** //
   _settingsDialogAct = new QAction(tr("&Configure Kst"), this);
   _settingsDialogAct->setStatusTip(tr("Show Kst's Configuration Dialog"));
@@ -1481,6 +1488,7 @@ void MainWindow::createMenus() {
   _toolsMenu->addAction(_changeFileDialogAct);
   _toolsMenu->addAction(_chooseColorDialogAct);
   _toolsMenu->addAction(_differentiateCurvesDialogAct);
+  _toolsMenu->addAction(_filterMultipleDialogAct);
   _toolsMenu->addSeparator();
   updateRecentDataFiles();
 
@@ -2077,6 +2085,19 @@ void MainWindow::showDifferentiateCurvesDialog() {
   }
   _differentiateCurvesDialog->show();
 }
+
+
+void MainWindow::filterMultipleDialog() {
+  if (!_filterMultipleDialog) {
+    _filterMultipleDialog = new FilterMultipleDialog(this);
+  }
+  if (_filterMultipleDialog->isVisible()) {
+    _filterMultipleDialog->raise();
+    _filterMultipleDialog->activateWindow();
+  }
+  _filterMultipleDialog->show();
+}
+
 
 
 void MainWindow::showChooseColorDialog() {

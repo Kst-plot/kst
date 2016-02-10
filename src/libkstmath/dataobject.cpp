@@ -379,6 +379,7 @@ DataObjectConfigWidget* DataObject::pluginWidget(const QString& name) {
   for (DataObjectPluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
     if ((*it)->pluginName() == name) {
       if ((*it)->hasConfigWidget()) {
+
         return (*it)->configWidget(&settingsObject());
       }
       break;

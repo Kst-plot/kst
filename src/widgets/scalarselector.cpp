@@ -30,7 +30,8 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
   int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
-  _newScalar->setIcon(KstGetIcon("kst_scalarnew"));
+  QIcon icon = KstGetIcon("kst_scalarnew");
+  _newScalar->setIcon(icon);
   _editScalar->setIcon(KstGetIcon("kst_scalaredit"));
 
   _newScalar->setFixedSize(size + 8, size + 8);
