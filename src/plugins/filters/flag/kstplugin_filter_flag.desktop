@@ -5,6 +5,4 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=filterflag
 X-Kst-Plugin-Author=The University of Toronto
 Name=Filter - Flag Plugin
-Name[x-test]=xxFilter - Flag Pluginxx
 Comment=Implements a Flag Filter Plugin for Kst.
-Comment[x-test]=xxImplements a Flag Filter Plugin for Kst.xx
