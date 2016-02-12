@@ -475,20 +475,19 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
-def new_flag_filter(self, order, y_vector, flag, name = ""):
-  """ Create a flag filter inside kst.
+  def new_flag_filter(self, order, y_vector, flag, name = ""):
+    """ Create a flag filter inside kst.
 
-  See :class:`FlagFilter`
-  """
-  return FlagFilter(self, y_vector, flag, name)
+    See :class:`FlagFilter`
+    """
+    return FlagFilter(self, y_vector, flag, name)
 
-def flag_filter(self, name):
-  """ Returns a flag_filter from kst given its name.
+  def flag_filter(self, name):
+    """ Returns a flag_filter from kst given its name.
 
-  See :class:`FlagFilter`
-  """
-  return FlagFilter(self, "", "", name, new=False)
-
+    See :class:`FlagFilter`
+    """
+    return FlagFilter(self, "", "", name, new=False)
 
 
   def new_label(self, text, pos=(0.5,0.5), rot=0, font_size=12, 
