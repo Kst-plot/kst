@@ -475,7 +475,7 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
-  def new_flag_filter(self, order, y_vector, flag, name = ""):
+  def new_flag_filter(self, y_vector, flag, name = ""):
     """ Create a flag filter inside kst.
 
     See :class:`FlagFilter`
