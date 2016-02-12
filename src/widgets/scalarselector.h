@@ -44,6 +44,9 @@ class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelect
 
     void setDefaultValue(double value);
 
+    virtual QSize	minimumSizeHint () const;
+
+    int iconWidth() const;
 
   Q_SIGNALS:
     void selectionChanged(const QString&);

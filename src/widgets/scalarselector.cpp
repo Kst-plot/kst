@@ -28,19 +28,17 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   _defaultsSet = false;
   setupUi(this);
 
-  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
-
   QIcon icon = KstGetIcon("kst_scalarnew");
   _newScalar->setIcon(icon);
   _editScalar->setIcon(KstGetIcon("kst_scalaredit"));
 
-  _newScalar->setFixedSize(size + 8, size + 8);
-  _editScalar->setFixedSize(size + 8, size + 8);
-  _selectScalar->setFixedSize(size + 8, size + 8);
+  _newScalar->setFixedSize(iconWidth(), iconWidth());
+  _editScalar->setFixedSize(iconWidth(), iconWidth());
+  _selectScalar->setFixedSize(iconWidth(), iconWidth());
 
   _scalarListSelector = new ScalarListSelector(this);
 
-  _scalar->resize(10,5);
+  //_scalar->resize(10,5);
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
   connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
@@ -52,6 +50,14 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
 
 ScalarSelector::~ScalarSelector() {
+}
+
+int ScalarSelector::iconWidth() const {
+  return fontMetrics().lineSpacing()*4/3;
+}
+
+QSize ScalarSelector::minimumSizeHint() const {
+  return QSize(15*fontMetrics().width("m")+ 3 * iconWidth(), iconWidth());
 }
 
 
