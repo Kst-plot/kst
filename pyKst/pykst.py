@@ -475,6 +475,22 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
+def new_flag_filter(self, order, y_vector, flag, name = ""):
+  """ Create a flag filter inside kst.
+
+  See :class:`FlagFilter`
+  """
+  return FlagFilter(self, y_vector, flag, name)
+
+def flag_filter(self, name):
+  """ Returns a flag_filter from kst given its name.
+
+  See :class:`FlagFilter`
+  """
+  return FlagFilter(self, "", "", name, new=False)
+
+
+
   def new_label(self, text, pos=(0.5,0.5), rot=0, font_size=12, 
             bold=False, italic=False, font_color="black", 
             font_family="Serif", name="") :
@@ -1996,6 +2012,40 @@ class Spectrum(Object) :
 
     retval = self.client.send_si(self.handle, "outputTypeIndex()")
     return retval
+
+
+# FILTER ################################################################
+class Filter(Object) :
+  """ This is a class which provides some methods common to all filters """
+  def __init__(self,client) :
+    Object.__init__(self,client)
+
+  def output(self) :
+    """ a vector containing the output of the filter  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Y)")
+    return vec
+
+# FLAG FILTER ############################################################
+class FlagFilter(Filter) :
+  """ a flagged vector inside kst
+
+  The output is the input when flag == 0, or NaN if flag is non-0.
+  """
+  def __init__(self, client, yvector, flag, name="", new=True) :
+    Fit.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newPlugin(Flag Filter)")
+
+      self.client.send("setInputVector(Y Vector,"+yvector.handle+")")
+      self.client.send("setInputVector(Flag Vector,"+flag.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
 
 # FIT ###################################################################
 class Fit(Object) :
