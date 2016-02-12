@@ -47,6 +47,11 @@ class KSTWIDGETS_EXPORT VectorSelector : public QWidget, public Ui::VectorSelect
     void setIsX(bool is_x) {_isX = is_x;}
     int count() {return _vector->count();}
 
+    virtual QSize	minimumSizeHint () const;
+
+    int iconWidth() const;
+
+
   public Q_SLOTS:
     void fillVectors();
 

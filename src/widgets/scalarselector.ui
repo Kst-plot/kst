@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>ScalarSelector</class>
  <widget class="QWidget" name="ScalarSelector">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>120</width>
+    <height>26</height>
+   </rect>
+  </property>
   <property name="whatsThis">
    <string>Select a scalar to utilize.  If you wish to create a new scalar, select the icon to the right.</string>
   </property>
@@ -16,6 +24,9 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
     <number>0</number>
    </property>
    <item row="0" column="0">

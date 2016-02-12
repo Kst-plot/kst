@@ -32,10 +32,9 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
   _newVector->setIcon(KstGetIcon("kst_vectornew"));
   _editVector->setIcon(KstGetIcon("kst_vectoredit"));
 
-  _newVector->setFixedSize(size + 8, size + 8);
-  _editVector->setFixedSize(size + 8, size + 8);
+  _newVector->setFixedSize(iconWidth(), iconWidth());
+  _editVector->setFixedSize(iconWidth(), iconWidth());
 
-  _vector->resize(10,5);
   fillVectors();
   connect(_newVector, SIGNAL(pressed()), this, SLOT(newVector()));
   connect(_editVector, SIGNAL(pressed()), this, SLOT(editVector()));
@@ -46,6 +45,15 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
 
 VectorSelector::~VectorSelector() {
+}
+
+
+int VectorSelector::iconWidth() const {
+  return fontMetrics().lineSpacing()*4/3;
+}
+
+QSize VectorSelector::minimumSizeHint() const {
+  return QSize(15*fontMetrics().width("m")+ 2 * iconWidth(), iconWidth());
 }
 
 
