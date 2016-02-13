@@ -2032,7 +2032,7 @@ class FlagFilter(Filter) :
   The output is the input when flag == 0, or NaN if flag is non-0.
   """
   def __init__(self, client, yvector, flag, name="", new=True) :
-    Fit.__init__(self,client)
+    Filter.__init__(self,client)
 
     if (new == True):
       self.client.send("newPlugin(Flag Filter)")
