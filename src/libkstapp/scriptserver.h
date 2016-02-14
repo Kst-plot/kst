@@ -106,6 +106,9 @@ protected:
     QByteArray getBoxList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newBox(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
+    QByteArray getLegendList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray newLegend(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
     QByteArray getButtonList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newButton(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
@@ -173,6 +176,9 @@ protected:
     QByteArray setDatasourceBoolConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray setDatasourceIntConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray setDatasourceStringConfig(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
+    QByteArray testCommand(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
 };
 
 

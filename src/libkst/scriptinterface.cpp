@@ -20,6 +20,8 @@
 namespace Kst {
 
   QString ScriptInterface::doNamedObjectCommand(QString command, NamedObject *n) {
+    static int iTest=0;
+
     if (command.startsWith("setName(")) {
       command.remove("setName(").chop(1);
       n->setDescriptiveName(command);
@@ -28,6 +30,9 @@ namespace Kst {
       return n->Name();
     } else if (command.startsWith("descriptionTip(")) {
       return n->descriptionTip();
+    } else if (command.startsWith("testCommand(")) {
+      qDebug() << "Named object test command" << iTest++;
+      return QString("Done");
     }
 
     return QString();

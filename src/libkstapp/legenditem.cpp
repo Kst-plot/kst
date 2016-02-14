@@ -19,6 +19,7 @@
 #include "legenditemdialog.h"
 #include "objectstore.h"
 #include "dialogdefaults.h"
+#include "legendscriptinterface.h"
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -537,6 +538,11 @@ QString LegendItem::descriptionTip() const {
 
   return tr("Plot: %1 \nContents:\n %2").arg(Name()).arg(contents);
 }
+
+ScriptInterface* LegendItem::createScriptInterface() {
+  return new LegendSI(this);
+}
+
 
 }
 

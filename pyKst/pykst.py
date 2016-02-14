@@ -89,6 +89,9 @@ class Client:
     self.send(b2str("endEdit()"))
     return x
 
+  def testCommand(self):
+    self.send("testCommand()")
+
   def clear(self):
     """ Clears all objects from kst.
     
@@ -526,6 +529,20 @@ class Client:
     """
     return Box(self, name=name, new=False)
   
+  def new_legend(self, plot, name = "") :
+    """ Create a new Legend in a plot in kst.
+
+    See :class:'Legend'
+    """
+    return Legend(self, plot, name)
+
+  def legend(self, name):
+    """ Returns a Legend from kst given its name.
+
+    See :class:`Legend`
+    """
+    return Legend(self, name=name, new=False)
+
   def new_circle(self, pos=(0.1, 0.1), diameter=0.1,
              fill_color="white",fill_style=1,stroke_style=1,
              stroke_width=1,stroke_brush_color="grey",stroke_brush_style=1, name="") :
@@ -727,8 +744,11 @@ class NamedObject:
       return self.client.send_si(self.handle, "name()")
 
     def description_tip(self):
-      """  Returns a string describing the vector """
+      """  Returns a string describing the object """
       return self.client.send_si(self.handle, "descriptionTip()")
+
+    def test_command(self):
+      return self.client.send_si(self.handle, "testCommand()")
 
  
 class Object(NamedObject) :
@@ -2476,7 +2496,55 @@ class ExistingLabel(Label):
     return ret
   
 
+class Legend(ViewItem) :
+  """ A legend in a plot in kst.
 
+  : param plot: a plot in kst.
+  Use the convenience function in Client to create a legend in kst::
+
+    import pykst as kst
+    client = kst.Client()
+   ...
+    P1 = client.new_plot()
+    L1 = client.new_legend(P1)
+
+  """
+  def __init__(self,client, plot, name="", new=True) :
+    ViewItem.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newLegend("+plot.name()+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+    else:
+      self.handle = name
+
+  def set_font_size(self,size):
+    """ size of the label in points, when the printed at the reference size."""
+    self.client.send_si(self.handle, b2str("setFontSize("+b2str(size)+")"))
+
+  def set_font_bold(self, bold = True):
+    """ . . . """
+    if bold == True:
+      self.client.send_si(self.handle, b2str("checkLabelBold()"))
+    else:
+      self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
+
+  def set_font_italic(self, italic = True):
+    """ . . . """
+    if italic == True:
+      self.client.send_si(self.handle, b2str("checkLabelItalic()"))
+    else:
+      self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
+
+  def set_font_color(self,color):
+    """ Colors are given by a name such as ``red`` or a hex number such
+    as ``#FF0000`` """
+    self.client.send_si(self.handle, b2str("setLegendColor("+b2str(color)+")"))
+
+  def set_font_family(self,family):
+    """ set the font family.  eg, TimeNewRoman. """
+    self.client.send_si(self.handle, b2str("setFontFamily("+b2str(family)+")"))
 
 
 class Box(ViewItem) :

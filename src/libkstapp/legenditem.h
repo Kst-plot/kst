@@ -77,6 +77,9 @@ class LegendItem : public ViewItem {
     static void saveDialogDefaultsFont(const QFont &F, const QColor &C);
 
     void applyDefaults();
+
+    virtual ScriptInterface *createScriptInterface();
+
   public Q_SLOTS:
     virtual void edit();
     virtual void remove();

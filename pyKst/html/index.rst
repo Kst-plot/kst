@@ -210,6 +210,10 @@ Annotations along with interactive items (see the next section) can be used to t
    :members:
    :inherited-members:
    :exclude-members: set_fill_color, set_fill_style, set_stroke_style, set_stroke_width, set_stroke_brush_color, set_stroke_brush_style, set_stroke_join_style, set_stroke_cap_style, set_fixed_aspect_ratio, set_size
+.. autoclass:: Legend
+   :members:
+   :inherited-members:
+   :exclude-members: set_fixed_aspect_ratio, set_size
 .. autoclass:: Box
    :members:
    :inherited-members:

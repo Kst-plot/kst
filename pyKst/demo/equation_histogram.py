@@ -21,6 +21,11 @@ c1.set_color("blue")
 p1 = client.new_plot((0.5,0.25), (1,0.5))
 p1.add(c1)
 
+e2 = client.new_equation(v1, "x^2.1")
+e2.set_x(v4)
+c12 = client.new_curve(e2.x(), e2.y())
+p1.add(c12)
+
 psd1 = client.new_spectrum(e1.x())
 c2 = client.new_curve(psd1.x(), psd1.y())
 c2.set_color("green")
@@ -37,6 +42,12 @@ c3.set_bar_fill_color("red")
 p2.add(c3)
 
 h1.change(v2, 0, 400, 10)
+
+L1 = client.new_legend(p1)
+L2 = client.new_legend(p2)
+
+L1.set_font_size(18)
+L2.set_font_color("red")
 
 print "histogram 1 range: ", h1.bin_min(), h1.bin_max()
 print "histogram 1 num bins: ", h1.num_bins()

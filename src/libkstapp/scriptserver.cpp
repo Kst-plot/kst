@@ -15,6 +15,7 @@
 #include "viewitemscriptinterface.h"
 #include "arrowscriptinterface.h"
 #include "plotscriptinterface.h"
+#include "legendscriptinterface.h"
 
 #include "stringscriptinterface.h"
 #include "scalarscriptinterface.h"
@@ -152,6 +153,9 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("getBoxList()",&ScriptServer::getBoxList);
     _fnMap.insert("newBox()",&ScriptServer::newBox);
 
+    _fnMap.insert("getLegendList()",&ScriptServer::getLegendList);
+    _fnMap.insert("newLegend()",&ScriptServer::newLegend);
+
     _fnMap.insert("getButtonList()",&ScriptServer::getButtonList);
     _fnMap.insert("newButton()",&ScriptServer::newButton);
 
@@ -209,6 +213,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("setDatasourceStringConfig()", &ScriptServer::setDatasourceStringConfig);
 
     _fnMap.insert("cleanupLayout()", &ScriptServer::cleanupLayout);
+
+    _fnMap.insert("testCommand()", &ScriptServer::testCommand);
 
 #if 0
 
@@ -655,6 +661,20 @@ QByteArray ScriptServer::newBox(QByteArray&, QLocalSocket* s,ObjectStore*) {
     else { _interface = ViewItemSI::newBox(); return handleResponse("Ok",s); }
 }
 
+QByteArray ScriptServer::getLegendList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputViewItemList<LegendItem>(s);
+}
+
+QByteArray ScriptServer::newLegend(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+
+  if(_interface) {
+    return handleResponse("To access this function, first call endEdit()",s); }
+  else {
+    _interface = LegendSI::newLegend(command.replace("newLegend(","").replace(")",""));
+    return handleResponse("Ok",s);
+  }
+}
 
 
 QByteArray ScriptServer::getButtonList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
@@ -978,6 +998,14 @@ QByteArray ScriptServer::exportGraphics(QByteArray&command, QLocalSocket* s, Obj
   }
   return handleResponse("Done",s);
 }
+
+QByteArray ScriptServer::testCommand(QByteArray&command, QLocalSocket* s,ObjectStore*) {
+  static int i=0;
+
+  qDebug() << "testCommand: " << i++;
+  return handleResponse("Done",s);
+}
+
 
 QByteArray ScriptServer::cleanupLayout(QByteArray&command, QLocalSocket* s,ObjectStore*) {
 

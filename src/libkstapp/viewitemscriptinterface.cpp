@@ -256,6 +256,7 @@ ScriptInterface* ViewItemSI::newBox() {
     return new ViewItemSI(bi);
 }
 
+
 ScriptInterface* ViewItemSI::newButton() {
     ButtonItem* bi=new ButtonItem(kstApp->mainWindow()->tabWidget()->currentView());
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);

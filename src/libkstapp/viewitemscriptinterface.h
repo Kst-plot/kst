@@ -23,6 +23,8 @@
 #include "labelitem.h"
 #include "pictureitem.h"
 #include "svgitem.h"
+#include "legenditem.h"
+#include "plotitem.h"
 
 #ifndef VIEWITEMSCRIPTINTERFACE_H
 #define VIEWITEMSCRIPTINTERFACE_H
