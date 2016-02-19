@@ -325,6 +325,9 @@ void CommandLineParser::addCurve(CurvePtr curve)
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
+    if (renderItem->relationList().size()>1) {
+      _plotItem->setShowLegend(true,true);
+    }
     _plotItem->update();
 }
 
