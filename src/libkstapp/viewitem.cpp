@@ -223,7 +223,7 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   xml.writeEndElement();
   xml.writeStartElement("pen");
   xml.writeAttribute("style", QVariant((int)pen().style()).toString());
-  xml.writeAttribute("width", QVariant(pen().widthF()).toString());
+  xml.writeAttribute("width", QVariant(storedPen().widthF()).toString());
   xml.writeAttribute("miterlimit", QVariant(pen().miterLimit()).toString());
   xml.writeAttribute("cap", QVariant(pen().capStyle()).toString());
   xml.writeAttribute("joinStyle", QVariant(pen().joinStyle()).toString());
