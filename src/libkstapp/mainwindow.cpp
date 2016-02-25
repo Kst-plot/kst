@@ -1072,23 +1072,27 @@ void MainWindow::createActions() {
 
   // ************************ Data Range 1 click Actions ************************** //
   _backAct = new QAction(tr("&Back One Screen"), this);
-  _backAct->setStatusTip(tr("Back one screen"));
+  _backAct->setStatusTip(tr("Back one screen (Page Up)"));
   _backAct->setIcon(KstGetIcon("page-previous"));
+  _backAct->setShortcut(Qt::Key_PageUp);
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
   _forwardAct = new QAction(tr("&Forward One Screen"), this);
-  _forwardAct->setStatusTip(tr("Forward one screen"));
+  _forwardAct->setStatusTip(tr("Forward one screen (Page Down)"));
   _forwardAct->setIcon(KstGetIcon("page-next"));
+  _forwardAct->setShortcut(Qt::Key_PageDown);
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
-  _readFromEndAct->setStatusTip(tr("Set all data vectors to count from end mode"));
+  _readFromEndAct->setStatusTip(tr("Count from end mode (End)"));
   _readFromEndAct->setIcon(KstGetIcon("count-from-end"));
+  _readFromEndAct->setShortcut(Qt::Key_End);
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
   _readToEndAct = new QAction(tr("&Read to End"), this);
-  _readToEndAct->setStatusTip(tr("Set all data vectors to read to end mode"));
+  _readToEndAct->setStatusTip(tr("Read to end mode"));
   _readToEndAct->setIcon(KstGetIcon("read-to-end"));
+  _readToEndAct->setShortcut(Qt::ShiftModifier+Qt::Key_End);
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("&Pause"), this);
