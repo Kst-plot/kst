@@ -55,7 +55,12 @@ ScriptInterface* ArrowItem::createScriptInterface() {
 
 
 void ArrowItem::paint(QPainter *painter) {
-  painter->drawLine(line());
+  QLineF thisline = line();
+  QPen currentPen = painter->pen();
+  QPen newPen = painter->pen();
+  newPen.setWidthF(1.0);
+
+  painter->setPen(newPen);
 
   QBrush b = brush();
   b.setStyle(Qt::SolidPattern);
@@ -82,6 +87,9 @@ void ArrowItem::paint(QPainter *painter) {
     pts.append(line().p1() + QPointF(x1, y1));
     pts.append(line().p1() + QPointF(x2, y2));
     painter->drawPolygon(pts);
+
+    thisline.setP1(QPoint(thisline.x1()+deltax,0));
+
     start = pts;
   }
 
@@ -103,8 +111,15 @@ void ArrowItem::paint(QPainter *painter) {
     pts.append(line().p2() + QPointF(x1, y1));
     pts.append(line().p2() + QPointF(x2, y2));
     painter->drawPolygon(pts);
+
+    thisline.setP2(QPoint(thisline.x2()-deltax,0));
+
     end = pts;
   }
+
+  painter->setPen(currentPen);
+  painter->drawLine(thisline);
+
 }
 
 
