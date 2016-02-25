@@ -961,6 +961,9 @@ Qt::ItemFlags CCTableModel::flags(const QModelIndex &) const
 QVariant CCTableModel::headerData ( int section, Qt::Orientation orientation, int role ) const
 {
     Q_UNUSED(orientation);
+
+    if (_visibleData.size()<1)  return QVariant();
+
     if(role!=Qt::DisplayRole) return QVariant();
     else return _visibleData[section][0];
 }
