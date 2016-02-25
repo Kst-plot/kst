@@ -421,6 +421,10 @@ bool LegendItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   if (!av.isNull()) {
     setFontScale(QVariant(av.toString()).toDouble());
   }
+  av = attrs.value("color");
+  if (!av.isNull()) {
+    setLegendColor(QColor(av.toString()));
+  }
   av = attrs.value("verticaldisplay");
   if (!av.isNull()) {
     setVerticalDisplay(QVariant(av.toString()).toBool());
