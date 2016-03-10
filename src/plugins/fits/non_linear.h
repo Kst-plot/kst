@@ -18,6 +18,7 @@
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_multifit_nlin.h>
 #include <gsl/gsl_statistics.h>
+#include <gsl/gsl_version.h>
 #include "common.h"
 
 struct data {
@@ -100,6 +101,7 @@ bool kstfit_nonlinear(
   gsl_multifit_function_fdf	function;
   gsl_vector_view vectorViewInitial;
   gsl_matrix* pMatrixCovariance;
+  gsl_matrix *pMatrixJacobian;
   struct data d;  
   double dXInitial[NUM_PARAMS];
   double* pInputX;
@@ -181,37 +183,50 @@ bool kstfit_nonlinear(
             }
             iIterations++;
           } while( iStatus == GSL_CONTINUE && iIterations < MAX_NUM_ITERATIONS );
-          gsl_multifit_covar( pSolver->J, 0.0, pMatrixCovariance );
+#if GSL_MAJOR_VERSION >= 2
+          pMatrixJacobian = gsl_matrix_alloc( iLength, NUM_PARAMS );
+#else
+          pMatrixJacobian = pSolver->J;
+#endif
+          if ( pMatrixJacobian != NULL) {
+#if GSL_MAJOR_VERSION >= 2
+            gsl_multifit_fdfsolver_jac( pSolver, pMatrixJacobian );
+#endif
+            gsl_multifit_covar( pMatrixJacobian, 0.0, pMatrixCovariance );
 
-          //
-          // determine the fitted values...
-          //
-          for( i=0; i<NUM_PARAMS; i++ ) {
-            dXInitial[i] = gsl_vector_get( pSolver->x, i );
-          }
-
-          for( i=0; i<iLength; i++ ) {
-            vectorOutYFitted->raw_V_ptr()[i] = function_calculate( pInputX[i], dXInitial );
-            vectorOutYResiduals->raw_V_ptr()[i] = pInputY[i] - vectorOutYFitted->raw_V_ptr()[i];
-          }
-
-          //
-          // fill in the parameter values and covariance matrix...
-          //
-          for( i=0; i<NUM_PARAMS; i++ ) {
-            vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pSolver->x, i );
-            for( j=0; j<NUM_PARAMS; j++ ) {
-              vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+            //
+            // determine the fitted values...
+            //
+            for( i=0; i<NUM_PARAMS; i++ ) {
+              dXInitial[i] = gsl_vector_get( pSolver->x, i );
             }
+
+            for( i=0; i<iLength; i++ ) {
+              vectorOutYFitted->raw_V_ptr()[i] = function_calculate( pInputX[i], dXInitial );
+              vectorOutYResiduals->raw_V_ptr()[i] = pInputY[i] - vectorOutYFitted->raw_V_ptr()[i];
+            }
+
+            //
+            // fill in the parameter values and covariance matrix...
+            //
+            for( i=0; i<NUM_PARAMS; i++ ) {
+              vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pSolver->x, i );
+              for( j=0; j<NUM_PARAMS; j++ ) {
+                vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+              }
+            }
+
+            //
+            // determine the value of chi^2/nu
+            //
+            scalarOutChi->setValue(gsl_blas_dnrm2( pSolver->f ));
+
+            bReturn = true;
+            
+#if GSL_MAJOR_VERSION >= 2
+            gsl_matrix_free( pMatrixJacobian );
+#endif
           }
-
-          //
-          // determine the value of chi^2/nu
-          //
-          scalarOutChi->setValue(gsl_blas_dnrm2( pSolver->f ));
-
-          bReturn = true;
-
           gsl_matrix_free( pMatrixCovariance );
         }
         gsl_multifit_fdfsolver_free( pSolver );
