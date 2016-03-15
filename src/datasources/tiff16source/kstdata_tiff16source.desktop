@@ -20,6 +20,7 @@ Name[x-test]=xxtiff16sourcexx
 Comment=Plugin to read a 16 bit grayscale tiff image.
 Comment[ca]=Connector per llegir una imatge Tiff de 16 bits en escala de grisos.
 Comment[ca@valencia]=Connector per llegir una imatge Tiff de 16 bits en escala de grisos.
+Comment[de]=Modul zum Lesen von TIFF-Bildern mit 16-Bit-Graustufen
 Comment[en_GB]=Plugin to read a 16 bit greyscale tiff image.
 Comment[es]=Complemento para leer una imagen TIFF en escala de grises de 16 bits.
 Comment[gl]=Complemento para ler imaxes TIFF de 16 bits en escala de grises.
