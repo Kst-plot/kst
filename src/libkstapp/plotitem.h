@@ -338,6 +338,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomNormalizeYtoX(bool force = false);
     void zoomLogY(bool force = false, bool autoLog = true, bool enableLog = false);
 
+    void zoomOut(bool force = false);
+    void zoomIn(bool force = false);
+
+
     void copyStatus();
     void copyXCoord();
     void copyYCoord();
@@ -521,6 +525,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QAction *_zoomXTied;
     QAction *_zoomYTied;
     QAction *_zoomMeanCentered;
+    QAction *_zoomOut;
+    QAction *_zoomIn;
     QAction *_zoomXMaximum;
     QAction *_zoomXAutoBorder;
     QAction *_zoomXNoSpike;

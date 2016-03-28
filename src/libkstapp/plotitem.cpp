@@ -393,6 +393,16 @@ void PlotItem::createActions() {
   registerShortcut(_zoomTied);
   connect(_zoomTied, SIGNAL(triggered()), this, SLOT(zoomTied()));
 
+  _zoomOut = new QAction(tr("Zoom Out"), this);
+  _zoomOut->setShortcut(Qt::Key_Minus);
+  registerShortcut(_zoomOut);
+  connect(_zoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
+
+  _zoomIn = new QAction(tr("Zoom In"), this);
+  _zoomIn->setShortcut(Qt::Key_Plus);
+  registerShortcut(_zoomIn);
+  connect(_zoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
+
   _zoomXTied = new QAction(tr("Zoom X Tied"), this);
   _zoomXTied->setShortcut(Qt::CTRL+Qt::Key_T);
   _zoomXTied->setCheckable(true);
@@ -3331,6 +3341,16 @@ void PlotItem::zoomLogY(bool force, bool autoLog, bool enableLog) {
     _undoStack->push(cmd);
     // cmd->redo();
   }
+}
+
+void PlotItem::zoomOut(bool force) {
+  zoomYOut(force);
+  zoomXOut(force);
+}
+
+void PlotItem::zoomIn(bool force) {
+  zoomYIn(force);
+  zoomXIn(force);
 }
 
 void PlotItem::copyStatus() {
