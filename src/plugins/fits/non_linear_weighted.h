@@ -202,7 +202,7 @@ bool kstfit_nonlinear_weighted(
 #if GSL_MAJOR_VERSION >= 2
           pMatrixJacobian = gsl_matrix_alloc( iLength, NUM_PARAMS );
 #else
-          pMatrixJacobian = pSolver-J;
+          pMatrixJacobian = pSolver->J;
 #endif
 
           if ( pMatrixJacobian != NULL) {
