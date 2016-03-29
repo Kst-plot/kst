@@ -130,7 +130,12 @@ void PlotRenderItem::addRelation(RelationPtr relation) {
   if (relation) {
     _relationList.append(relation);
     if (_relationList.count() == 1) {
-      plotItem()->zoomMaximum();
+      if (plotItem()->xAxis()->axisZoomMode() != PlotAxis::FixedExpression) {
+        plotItem()->zoomXMaximum();
+      }
+      if (plotItem()->yAxis()->axisZoomMode() != PlotAxis::FixedExpression) {
+        plotItem()->zoomYMaximum();
+      }
       plotItem()->xAxis()->setAxisReversed(relation->invertXHint());
       plotItem()->yAxis()->setAxisReversed(relation->invertYHint());
     }
