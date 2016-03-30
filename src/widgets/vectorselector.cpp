@@ -27,7 +27,7 @@ VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
 
   setupUi(this);
 
-  int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
+  //int size = style()->pixelMetric(QStyle::PM_SmallIconSize);
 
   _newVector->setIcon(KstGetIcon("kst_vectornew"));
   _editVector->setIcon(KstGetIcon("kst_vectoredit"));

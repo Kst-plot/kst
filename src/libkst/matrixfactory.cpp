@@ -179,7 +179,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   bool doAve=false, doSkip=false;
   int requestedXStart=0, requestedYStart=0, requestedXCount=-1, requestedYCount=-1, skip=0;
   double minX=0, minY=0, stepX=1, stepY=1;
-  int frame;
+  int frame=0;
   QString provider, file, field;
 
   while (!xml.atEnd()) {

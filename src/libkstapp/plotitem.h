@@ -317,8 +317,10 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomXMaximum(bool force = false);
     void zoomXNoSpike(bool force = false);
     void zoomXAutoBorder(bool force = false);
-    void zoomXRight(bool force = false);
-    void zoomXLeft(bool force = false);
+    void zoomXRight(bool force = false, bool far = false);
+    void zoomXFarRight(bool force = false);
+    void zoomXLeft(bool force = false, bool far = false);
+    void zoomXFarLeft(bool force = false);
     void zoomXOut(bool force = false);
     void zoomXIn(bool force = false);
     void zoomNormalizeXtoY(bool force = false);
@@ -531,7 +533,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     QAction *_zoomXAutoBorder;
     QAction *_zoomXNoSpike;
     QAction *_zoomXRight;
+    QAction *_zoomXFarRight;
     QAction *_zoomXLeft;
+    QAction *_zoomXFarLeft;
     QAction *_zoomXOut;
     QAction *_zoomXIn;
     QAction *_zoomNormalizeXtoY;
@@ -804,12 +808,34 @@ class ZoomXRightCommand : public ZoomCommand
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
 };
 
+class ZoomXFarRightCommand : public ZoomCommand
+{
+  public:
+    explicit ZoomXFarRightCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Scroll X Right by one screen"), forced) {}
+    virtual ~ZoomXFarRightCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
 class ZoomXLeftCommand : public ZoomCommand
 {
   public:
     explicit ZoomXLeftCommand(PlotItem *item, bool forced = false)
         : ZoomCommand(item, QObject::tr("Scroll X Left"), forced) {}
     virtual ~ZoomXLeftCommand() {}
+
+    virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
+    virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);
+};
+
+class ZoomXFarLeftCommand : public ZoomCommand
+{
+  public:
+    explicit ZoomXFarLeftCommand(PlotItem *item, bool forced = false)
+        : ZoomCommand(item, QObject::tr("Scroll X Left"), forced) {}
+    virtual ~ZoomXFarLeftCommand() {}
 
     virtual void applyZoomTo(PlotItem *item, bool applyX = true, bool applyY = true);
     virtual void applyZoomTo(ViewItem *item, bool applyX = true, bool applyY = true);

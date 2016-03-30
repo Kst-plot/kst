@@ -440,10 +440,20 @@ void PlotItem::createActions() {
   registerShortcut(_zoomXRight);
   connect(_zoomXRight, SIGNAL(triggered()), this, SLOT(zoomXRight()));
 
+  _zoomXFarRight = new QAction(tr("X-Zoom Right by one screen"), this);
+  _zoomXFarRight->setShortcut(Qt::CTRL+Qt::Key_Right);
+  registerShortcut(_zoomXFarRight);
+  connect(_zoomXFarRight, SIGNAL(triggered()), this, SLOT(zoomXFarRight()));
+
   _zoomXLeft= new QAction(tr("X-Zoom Left"), this);
   _zoomXLeft->setShortcut(Qt::Key_Left);
   registerShortcut(_zoomXLeft);
   connect(_zoomXLeft, SIGNAL(triggered()), this, SLOT(zoomXLeft()));
+
+  _zoomXFarLeft= new QAction(tr("X-Zoom Left by one screen"), this);
+  _zoomXFarLeft->setShortcut(Qt::CTRL+Qt::Key_Left);
+  registerShortcut(_zoomXFarLeft);
+  connect(_zoomXFarLeft, SIGNAL(triggered()), this, SLOT(zoomXFarLeft()));
 
   _zoomXOut = new QAction(tr("X-Zoom Out"), this);
   _zoomXOut->setShortcut(Qt::SHIFT+Qt::Key_Right);
@@ -3150,27 +3160,45 @@ void PlotItem::zoomXAutoBorder(bool force) {
 }
 
 
-void PlotItem::zoomXRight(bool force) {
+void PlotItem::zoomXRight(bool force, bool far) {
   if (isInSharedAxisBox() && !force) {
-    sharedAxisBox()->zoomXRight(this);
+    sharedAxisBox()->zoomXRight(this, far);
   } else {
-    ZoomCommand *cmd = new ZoomXRightCommand(this, force);
+    ZoomCommand *cmd;
+    if (far) {
+      cmd = new ZoomXFarRightCommand(this, force);
+    } else {
+      cmd = new ZoomXRightCommand(this, force);
+    }
     _undoStack->push(cmd);
     //cmd->redo();
   }
 }
 
 
-void PlotItem::zoomXLeft(bool force) {
+void PlotItem::zoomXLeft(bool force, bool far) {
   if (isInSharedAxisBox() && !force) {
-    sharedAxisBox()->zoomXLeft(this);
+    sharedAxisBox()->zoomXLeft(this, far);
   } else {
-    ZoomCommand *cmd = new ZoomXLeftCommand(this, force);
+    ZoomCommand *cmd;
+    if (far) {
+      cmd = new ZoomXFarLeftCommand(this, force);
+    } else {
+      cmd = new ZoomXLeftCommand(this, force);
+    }
     _undoStack->push(cmd);
     //cmd->redo();
   }
 }
 
+
+void PlotItem::zoomXFarRight(bool force) {
+  zoomXRight(force, true);
+}
+
+void PlotItem::zoomXFarLeft(bool force) {
+  zoomXLeft(force, true);
+}
 
 void PlotItem::zoomXOut(bool force) {
   resetSelectionRect();
@@ -4281,6 +4309,45 @@ void ZoomXRightCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
 }
 
 /*
+ * X axis zoom changed to fixed and shifted to right:
+ *       new_xmin = xmin + (xmax - xmin);
+ *       new_xmax = xmax + (xmax – xmin);
+ */
+void ZoomXFarRightCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+
+    QRectF compute = item->projectionRect();
+
+    qreal dx = (item->xMax() - item->xMin());
+    if (item->xAxis()->axisReversed()) {
+      dx *=-1;
+    }
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() + dx));
+      compute.setRight(pow(10, item->xMax() + dx));
+    } else {
+      compute.setLeft(compute.left() + dx);
+      compute.setRight(compute.right() + dx);
+    }
+
+    item->setProjectionRect(compute);
+  }
+}
+
+
+void ZoomXFarRightCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXRight(0, true);
+    }
+  }
+}
+
+/*
  * X axis zoom changed to fixed and shifted to :
  *       new_xmin = xmin - (xmax - xmin)*0.10;
  *       new_xmax = xmax - (xmax – xmin)*0.10;
@@ -4315,6 +4382,45 @@ void ZoomXLeftCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
   if (shareBox) {
     if (applyX) {
       shareBox->zoomXLeft(0);
+    }
+  }
+}
+
+/*
+ * X axis zoom changed to fixed and shifted to :
+ *       new_xmin = xmin - (xmax - xmin);
+ *       new_xmax = xmax - (xmax – xmin);
+ */
+void ZoomXFarLeftCommand::applyZoomTo(PlotItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  if (applyX) {
+    item->xAxis()->setAxisZoomMode(PlotAxis::FixedExpression);
+
+    QRectF compute = item->projectionRect();
+
+    qreal dx = (item->xMax() - item->xMin());
+    if (item->xAxis()->axisReversed()) {
+      dx *=-1;
+    }
+    if (item->xAxis()->axisLog()) {
+      compute.setLeft(pow(10, item->xMin() - dx));
+      compute.setRight(pow(10, item->xMax() - dx));
+    } else {
+      compute.setLeft(compute.left() - dx);
+      compute.setRight(compute.right() - dx);
+    }
+
+    item->setProjectionRect(compute);
+  }
+}
+
+
+void ZoomXFarLeftCommand::applyZoomTo(ViewItem *item, bool applyX, bool applyY) {
+  Q_UNUSED(applyY);
+  SharedAxisBoxItem *shareBox = qobject_cast<SharedAxisBoxItem*>(item);
+  if (shareBox) {
+    if (applyX) {
+      shareBox->zoomXLeft(0, true);
     }
   }
 }

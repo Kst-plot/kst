@@ -80,8 +80,8 @@ class SharedAxisBoxItem : public ViewItem
     void zoomXMaximum(PlotItem* originPlotItem);
     void zoomXNoSpike(PlotItem* originPlotItem);
     void zoomXAutoBorder(PlotItem* originPlotItem);
-    void zoomXRight(PlotItem* originPlotItem);
-    void zoomXLeft(PlotItem* originPlotItem);
+    void zoomXRight(PlotItem* originPlotItem, bool far = false);
+    void zoomXLeft(PlotItem* originPlotItem, bool far = false);
     void zoomXOut(PlotItem* originPlotItem);
     void zoomXIn(PlotItem* originPlotItem);
     void zoomNormalizeXtoY(PlotItem* originPlotItem);
