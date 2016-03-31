@@ -317,9 +317,9 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void zoomXMaximum(bool force = false);
     void zoomXNoSpike(bool force = false);
     void zoomXAutoBorder(bool force = false);
-    void zoomXRight(bool force = false, bool far = false);
+    void zoomXRight(bool force = false, bool scroll_far = false);
     void zoomXFarRight(bool force = false);
-    void zoomXLeft(bool force = false, bool far = false);
+    void zoomXLeft(bool force = false, bool scroll_far = false);
     void zoomXFarLeft(bool force = false);
     void zoomXOut(bool force = false);
     void zoomXIn(bool force = false);

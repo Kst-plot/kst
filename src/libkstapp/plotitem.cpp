@@ -3160,12 +3160,12 @@ void PlotItem::zoomXAutoBorder(bool force) {
 }
 
 
-void PlotItem::zoomXRight(bool force, bool far) {
+void PlotItem::zoomXRight(bool force, bool scroll_far) {
   if (isInSharedAxisBox() && !force) {
-    sharedAxisBox()->zoomXRight(this, far);
+    sharedAxisBox()->zoomXRight(this, scroll_far);
   } else {
     ZoomCommand *cmd;
-    if (far) {
+    if (scroll_far) {
       cmd = new ZoomXFarRightCommand(this, force);
     } else {
       cmd = new ZoomXRightCommand(this, force);
@@ -3176,12 +3176,12 @@ void PlotItem::zoomXRight(bool force, bool far) {
 }
 
 
-void PlotItem::zoomXLeft(bool force, bool far) {
+void PlotItem::zoomXLeft(bool force, bool scroll_far) {
   if (isInSharedAxisBox() && !force) {
-    sharedAxisBox()->zoomXLeft(this, far);
+    sharedAxisBox()->zoomXLeft(this, scroll_far);
   } else {
     ZoomCommand *cmd;
-    if (far) {
+    if (scroll_far) {
       cmd = new ZoomXFarLeftCommand(this, force);
     } else {
       cmd = new ZoomXLeftCommand(this, force);

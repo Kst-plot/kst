@@ -638,7 +638,7 @@ void SharedAxisBoxItem::zoomXAutoBorder(PlotItem* originPlotItem) {
 }
 
 
-void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem, bool far) {
+void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem, bool scroll_far) {
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -658,7 +658,7 @@ void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem, bool far) {
   } else {
     _xAxisZoomMode = PlotAxis::FixedExpression;
     foreach(PlotItem* plotItem, allPlots) {
-      plotItem->zoomXRight(true, far);
+      plotItem->zoomXRight(true, scroll_far);
     }
   }
 
@@ -667,14 +667,14 @@ void SharedAxisBoxItem::zoomXRight(PlotItem* originPlotItem, bool far) {
 
     foreach(PlotItem* plotItem, plotTied) {
       if (!allPlots.contains(plotItem)) {
-        plotItem->zoomXRight(true, far);
+        plotItem->zoomXRight(true, scroll_far);
       }
     }
   }
 }
 
 
-void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem, bool far) {
+void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem, bool scroll_far) {
   QList<PlotItem*> allPlots;
   if (_shareX) {
     allPlots = getSharedPlots();
@@ -689,12 +689,12 @@ void SharedAxisBoxItem::zoomXLeft(PlotItem* originPlotItem, bool far) {
 
   if (!(_shareX || origin_tied)) {
     if (originPlotItem) {
-      originPlotItem->zoomXLeft(true, far);
+      originPlotItem->zoomXLeft(true, scroll_far);
     }
   } else {
     _xAxisZoomMode = PlotAxis::FixedExpression;
     foreach(PlotItem* plotItem, allPlots) {
-      plotItem->zoomXLeft(true, far);
+      plotItem->zoomXLeft(true, scroll_far);
     }
   }
   if (originPlotItem && originPlotItem->isTiedZoom() && originPlotItem->isInSharedAxisBox() && (originPlotItem->sharedAxisBox() == this)) {
