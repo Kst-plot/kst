@@ -446,6 +446,7 @@ bool Vector::resize(int sz, bool init) {
       }
     }
     _size = sz;
+    _v_out = _v_raw;
     updateScalars();
   }
   return true;
