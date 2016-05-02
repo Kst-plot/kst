@@ -49,19 +49,13 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
           this, SLOT(updateGeometry()));
   connect(parentItem->view(), SIGNAL(viewModeChanged(View::ViewMode)),
           this, SLOT(updateViewMode()));
+  connect(parentItem->referenceModeDisabled, SIGNAL(triggered()),
+          this, SLOT(referenceModeDisabled()));
+  connect(parentItem->referenceMode, SIGNAL(triggered()),
+          this, SLOT(referenceMode()));
 
   updateGeometry(); //the initial rect
   updateViewMode(); //the initial view
-
-  _referenceMode = new QAction(tr("Reference Mode"), this);
-  _referenceMode->setShortcut(Qt::Key_C);
-  registerShortcut(_referenceMode);
-  connect(_referenceMode, SIGNAL(triggered()), this, SLOT(referenceMode()));
-
-  _referenceModeDisabled = new QAction(tr("Reference Mode"), this);
-  _referenceModeDisabled->setShortcut(Qt::SHIFT + Qt::Key_C);
-  registerShortcut(_referenceModeDisabled);
-  connect(_referenceModeDisabled, SIGNAL(triggered()), this, SLOT(referenceModeDisabled()));
 
   disconnect(this, SIGNAL(geometryChanged()), view(), SLOT(viewChanged()));
 }

@@ -136,8 +136,6 @@ class PlotRenderItem : public ViewItem
     bool _highlightPointActive;
     bool _invertHighlight;
     QPointF _highlightPoint;
-    QAction *_referenceMode;
-    QAction *_referenceModeDisabled;
 
     RelationList _relationList;
     SelectionRect _selectionRect;

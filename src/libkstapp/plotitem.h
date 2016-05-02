@@ -607,6 +607,13 @@ class PlotItem : public ViewItem, public PlotItemInterface
     friend class ZoomYLocalMaximumCommand;
     friend class ZoomYMaximumCommand;
     friend class ViewGridLayout;
+
+protected:
+    QAction *referenceMode;
+    QAction *referenceModeDisabled;
+
+    friend class PlotRenderItem;
+
 };
 
 class CreatePlotCommand : public CreateCommand

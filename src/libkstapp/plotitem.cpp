@@ -574,6 +574,15 @@ void PlotItem::createActions() {
   connect(_copyYCoord, SIGNAL(triggered()), this, SLOT(copyYCoord()));
 
   createCopyMenu();
+
+  referenceMode = new QAction(tr("Place Reference Marker"), this);
+  referenceMode->setShortcut(Qt::Key_C);
+  registerShortcut(referenceMode);
+
+  referenceModeDisabled = new QAction(tr("Remove Reference Marker"), this);
+  referenceModeDisabled->setShortcut(Qt::SHIFT + Qt::Key_C);
+  registerShortcut(referenceModeDisabled);
+
 }
 
 void PlotItem::createCopyMenu() {
@@ -740,6 +749,8 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     _plotMaximize->setChecked(_plotMaximized);
     menu.addSeparator();
     menu.addAction(_plotMaximize);
+    menu.addAction(referenceMode);
+    menu.addAction(referenceModeDisabled);
   }
 
   _zoomLogX->setChecked(xAxis()->axisLog());
