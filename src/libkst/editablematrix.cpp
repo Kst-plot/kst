@@ -21,6 +21,7 @@
 #include "debug.h"
 #include <qbytearray.h>
 
+#include <QDataStream>
 #include <QXmlStreamWriter>
 
 
