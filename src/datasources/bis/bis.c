@@ -169,7 +169,11 @@ int BISreadimage(BISfile *bis, int frame, int i_img, BISimage *I) {
   I->h = image_dim[1];
   I->x = image_dim[2];
   I->y = image_dim[3];
-  
+
+  if ((I->w < 1) || (I->h < 1)) {
+    I->w = I->h = I->x = I->y = 0;
+    return 0;
+  }
 
   // read the image
   img_size = I->w * I->h;
