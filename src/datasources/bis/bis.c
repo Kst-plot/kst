@@ -117,7 +117,9 @@ int BISnframes(BISfile *bis) {
 
 int BISreadimage(BISfile *bis, int frame, int i_img, BISimage *I) {
   int nframes;
-  unsigned short us_in[5];
+  //unsigned short us_in[5];
+  unsigned short image_offsets[5];
+  unsigned short image_dim[4];
   int nr;
   int img_size;
   
@@ -140,28 +142,47 @@ int BISreadimage(BISfile *bis, int frame, int i_img, BISimage *I) {
   off_t offset = (off_t)frame * (off_t)bis->frameSize + 4L;
   //lseek(bis->fp, frame*bis->frameSize+4, SEEK_SET);
   lseek(bis->fp, offset, SEEK_SET);
-  nr = read(bis->fp, &us_in, 10); // read offsets
-  if ((nr!=10) || (us_in[i_img] <1)) {
+  nr = read(bis->fp, &image_offsets, 10); // read offsets
+  if ((nr!=10) || (image_offsets[i_img] <1)) {
     I->w = I->h = I->x = I->y = 0;
     return 0;
   }
   
+  // Sanity check: offset points to the beginning of the frame
+  // image_offsets[i_img] + offset points to the start of the image.
+  // so image_offsets[i_img] had better be smaller than frameSize - 8 for
+  // a 0 size image.  FIXME: tighter constraint?
+  if (image_offsets[i_img] > bis->frameSize- 8) {
+    I->w = I->h = I->x = I->y = 0;
+    return 0;
+  }
+
   // Read the image size and position data
   //lseek(bis->fp, frame*bis->frameSize+4+us_in[i_img], SEEK_SET);
-  lseek(bis->fp, offset+(off_t)us_in[i_img], SEEK_SET);
-  nr = read(bis->fp, &us_in, 8); // read offsets
+  lseek(bis->fp, offset+(off_t)image_offsets[i_img], SEEK_SET);
+  nr = read(bis->fp, &image_dim, 8); // read image dimensions
   if (nr!=8) {
     I->w = I->h = I->x = I->y = 0;
     return 0;
   }
-  I->w = us_in[0];
-  I->h = us_in[1];
-  I->x = us_in[2];
-  I->y = us_in[3];
+  I->w = image_dim[0];
+  I->h = image_dim[1];
+  I->x = image_dim[2];
+  I->y = image_dim[3];
   
+
   // read the image
   img_size = I->w * I->h;
-  if (img_size > I->allocated) { 
+
+  // Sanity Check:
+  // image_size + image_offsets[i_image] + 8 had better be smaller than
+  // frameSize in order to fit in the frame.
+  if (image_offsets[i_img] + img_size > bis->frameSize- 8) {
+    I->w = I->h = I->x = I->y = 0;
+    return 0;
+  }
+
+  if (img_size > I->allocated) {
     I->img = realloc(I->img, img_size+1);
     I->allocated = img_size;
   }
