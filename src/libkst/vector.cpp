@@ -391,6 +391,9 @@ void Vector::setV(double *memptr, int newSize) {
 void Vector::updateVNoNans()  {
 
   if (_size != _v_no_nans_size) {
+    if (_v_no_nans_size < 1) {
+      _v_no_nans = NULL;
+    }
     kstrealloc(_v_no_nans, _size*sizeof(double));
     _v_no_nans_size = _size;
   }
