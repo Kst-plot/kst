@@ -26,6 +26,8 @@
 #include "datasourcepluginmanager.h"
 //#include "dialogscriptinterface.h"
 #include "settings.h"
+#include "geticon.h"
+
 
 #include <QIcon>
 
@@ -36,7 +38,7 @@ Application::Application(int &argc, char **argv)
     : QApplication(argc, argv) {
 
   QCoreApplication::setApplicationName("Kst");
-  setWindowIcon(QPixmap(":kst.png"));
+  setWindowIcon(KstGetIcon("kst"));
 
   Builtins::initPrimitives(); //libkst
   Builtins::initDataSources(); //libkstapp

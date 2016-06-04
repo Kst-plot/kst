@@ -16,6 +16,7 @@
 #include "viewitem.h"
 #include "curveplacement.h"
 #include "plotitem.h"
+#include "plotitemmanager.h"
 #include "plotrenderitem.h"
 
 #include <QInputDialog>
@@ -134,6 +135,7 @@ QList<View*> TabWidget::views() const {
 
 void TabWidget::deleteView(View* view) {
   MainWindow *parent = qobject_cast<MainWindow*>(this->parent());
+  PlotItemManager::self()->clearAllTiedZoom(view);
   if (parent) {
     parent->undoGroup()->removeStack(view->undoStack());
   }

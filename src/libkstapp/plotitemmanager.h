@@ -44,6 +44,7 @@ public:
     static QList<ViewItem*> tiedZoomViewItems(PlotItem* plotItem);    
 
     void toggleAllTiedZoom(View *view);
+    void clearAllTiedZoom(View *view);
 
 Q_SIGNALS:
     void tiedZoomRemoved();

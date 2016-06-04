@@ -108,6 +108,26 @@ void PlotItemManager::toggleAllTiedZoom(View *view) {
 }
 
 
+void PlotItemManager::clearAllTiedZoom(View *view) {
+
+  bool tiedZoom;
+
+  QList<ViewItem *> tieable_items;
+  if (view) {
+    tieable_items = tieableItemsForView(view);
+  } else {
+    tieable_items = tieableItems();
+  }
+  tiedZoom = false;
+
+  foreach(ViewItem* viewItem, tieable_items) {
+    if (viewItem->supportsTiedZoom()) {
+      viewItem->setTiedZoom(tiedZoom, tiedZoom, false);
+    }
+  }
+}
+
+
 void PlotItemManager::addTiedZoomViewItem(ViewItem *viewItem, bool checkAll) {
   if (!_tiedZoomViewItemLists.contains(viewItem->view())) {
     _tiedZoomViewItemLists.insert(viewItem->view(), QList<ViewItem*>() << viewItem);
