@@ -122,5 +122,6 @@
         <file>svg_icons/kst_downarrow.svgz</file>
         <file>svg_icons/kst_bold.svgz</file>
         <file>svg_icons/kst_italic.svgz</file>
+        <file>svg_icons/kst.svgz</file>
     </qresource>
 </RCC>
