@@ -22,7 +22,19 @@
 #ifdef Q_CC_MSVC
 __declspec(dllexport)
 #endif
+
+void nullMessageOutput(QtMsgType type, const char *msg)
+{
+  Q_UNUSED(type)
+  Q_UNUSED(msg)
+}
+
 int main(int argc, char *argv[]) {
+
+#ifdef QT_NO_WARNING_OUTPUT
+  qInstallMsgHandler(nullMessageOutput);
+#endif
+
 
 #if !defined(Q_OS_WIN) && QT_VERSION < 0x050000 && QT_VERSION >= 0x040500
   // The GraphicsSystem needs to be set before the instantiation of the QApplication.
