@@ -825,7 +825,16 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   double minimum_units = tickMode;
 
   // find base_jd, range_u, units
-  if (range_jd > minimum_units*365.0) {
+  double valid = true;
+  if (range_jd > minimum_units*365.0*1.0e150) {
+    _ticksUpdated = true;
+    _axisLabels.clear();
+    _axisMinorTicks.clear();
+    _axisMajorTicks.clear();
+    _baseLabel.clear();
+    return;
+
+  } else if (range_jd > minimum_units*365.0) {
     // use years
     range_u = range_jd/365.25;
     units = tr(" [Years]");
