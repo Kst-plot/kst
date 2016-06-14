@@ -132,6 +132,10 @@ Vectors
    :members:
    :inherited-members:
 
+.. autoclass:: EditableVector
+   :members:
+   :inherited-members:
+
 
 Matrices
 ---------

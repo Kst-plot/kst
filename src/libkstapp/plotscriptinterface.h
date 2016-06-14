@@ -86,6 +86,14 @@ private:
     QString setLeftLabelAuto(QString& command);
     QString setRightLabelAuto(QString& command);
 
+    QString setXAxisInterpretation(QString &command);
+    QString clearXAxisInterpretation(QString &command);
+    QString setXAxisDisplay(QString &command);
+
+    //QString setYAxisInterpretation(QString &command);
+    //QString clearYAxisInterpretation(QString &command);
+    //QString setYAxisDisplay(QString &command);
+
 
 };
 

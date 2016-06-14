@@ -60,7 +60,9 @@ PlotSI::PlotSI(PlotItem *it) : _layout(new LayoutTabSI), _dim(new DimensionTabSI
   _fnMap.insert("setXAxisNotReversed",&PlotSI::setXAxisNotReversed);
   _fnMap.insert("setYAxisNotReversed",&PlotSI::setYAxisNotReversed);
 
-
+  _fnMap.insert("setXAxisInterpretation",&PlotSI::setXAxisInterpretation);
+  _fnMap.insert("clearXAxisInterpretation",&PlotSI::clearXAxisInterpretation);
+  _fnMap.insert("setXAxisDisplay",&PlotSI::setXAxisDisplay);
 }
 
 ScriptInterface* PlotSI::newPlot() {
@@ -442,6 +444,65 @@ QString PlotSI::setRightLabelAuto(QString &) {
 
   if (_item) {
     _item->rightLabelDetails()->setIsAuto(true);
+  }
+
+  return "Done.";
+}
+
+QString PlotSI::clearXAxisInterpretation(QString &) {
+
+  if (_item) {
+    _item->xAxis()->setAxisInterpret(false);
+  }
+
+  return "Done.";
+}
+
+QString PlotSI::setXAxisInterpretation(QString &command) {
+
+  if (_item) {
+    _item->xAxis()->setAxisInterpret(true);
+    QString arg = getArg(command);
+    if (arg == "ctime") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_CTIME);
+    } else if (arg == "year") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_YEAR);
+    } else if (arg == "jd") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_JD);
+    } else if (arg == "mjd") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_MJD);
+    } else if (arg == "rjd") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_RJD);
+    } else if (arg == "ait") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_AIT);
+    } else if (arg == "excel") {
+      _item->xAxis()->setAxisInterpretation(AXIS_INTERP_EXCEL);
+    }
+  }
+
+  return "Done.";
+}
+
+QString PlotSI::setXAxisDisplay(QString &command) {
+
+  if (_item) {
+    QString arg = getArg(command);
+    if (arg == "year") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_YEAR);
+    } else if (arg == "qttextdatehhmmss") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS);
+    } else if (arg == "qtlocaldatehhmmss") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS);
+    } else if (arg == "jd") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_JD);
+    } else if (arg == "mjd") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_MJD);
+    } else if (arg == "rjd") {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_RJD);
+    } else {
+      _item->xAxis()->setAxisDisplay(AXIS_DISPLAY_QTDATETIME_FORMAT);
+      _item->xAxis()->setAxisDisplayFormatString(arg);
+    }
   }
 
   return "Done.";

@@ -1149,6 +1149,7 @@ class EditableVector(VectorBase):
   "Create>Vector>Generate" from the menubar inside kst.
 
   :param np_array: initialize the vector in kst to this (optional) 1D numpy array.
+  
   To create a from the num py array np::
 
     import pykst as kst
@@ -1166,9 +1167,10 @@ class EditableVector(VectorBase):
         
         with tempfile.NamedTemporaryFile(delete=False) as f:
           f.close()
-          atexit.register(cleanTmpFile, f)
+          #atexit.register(cleanTmpFile, f)
           np_array.tofile(f.name)
           self.client.send("load(" + f.name + ")")        
+          os.unlink(f.name)
 
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1184,10 +1186,11 @@ class EditableVector(VectorBase):
     assert(np_array.dtype == float64)
     with tempfile.NamedTemporaryFile(delete=False) as f:
       f.close()
-      atexit.register(cleanTmpFile, f)
+      #atexit.register(cleanTmpFile, f)
       np_array.tofile(f.name)
-      retval = self.client.send_si(self.handle, "load(" + f.name + ")")        
-      
+      retval = self.client.send_si(self.handle, "load(" + f.name + ")")
+      os.unlink(f.name)
+
     return retval
 
 class Matrix(Object):
@@ -1896,7 +1899,7 @@ class Spectrum(Object) :
     :param sigma: only used if gausian apodization is selected.
     :param output_type: index for the output type - see output_type()
 
-    The apodize funcition is::
+    The apodize function is::
     
      0: default          1: Bartlett
      2: Window           3: Connes
@@ -3278,6 +3281,67 @@ class Plot(ViewItem) :
     else:
       self.client.send_si(self.handle,  "setXAxisNotReversed()")
 
+  def set_x_axis_interpretation(self, interp = "ctime") :
+    """ Interpret the x axis as time
+
+    :param interp: interpret the time as follows
+
+    interp can be::
+
+      ctime: Standard unix C time
+      year:  Decimal year
+      jd:    Julian Date
+      mjd:   Modified Julian Date
+      excel: Time as used by MS Excel
+
+    """
+    self.client.send_si(self.handle,  "setXAxisInterpretation("+interp+")")
+
+  def clear_x_axis_interpretation(self) :
+    """ do not intepret the x axis as time """
+    self.client.send_si(self.handle,  "clearXAxisInterpretation()")
+
+  def set_x_axis_display(self, display = "yyyy/MM/dd h:mm:ss ap") :
+    """ if the x axis has been interpreted as time, set the display.
+
+    Display Types::
+
+      year:              display the decimal year
+      qttextdtehhmmss:   <Qt Text Date> HH:MM:SS.SS
+      qtlocaldatehhmmss: <Qt Local Date> HH:MM:SS.SS
+      jd:                Julian Date
+      mjd:               Modified Julian Date
+      All others:        custom format
+
+    The custom format is defined as::
+
+      d         the day as number without a leading zero (1 to 31)
+      dd	the day as number with a leading zero (01 to 31)
+      ddd	the abbreviated localized day name (e.g. 'Mon' to 'Sun'). Uses the system locale to localize the name, i.e. QLocale::system().
+      dddd	the long localized day name (e.g. 'Monday' to 'Qt::Sunday'). Uses the system locale to localize the name, i.e. QLocale::system().
+      M         the month as number without a leading zero (1-12)
+      MM	the month as number with a leading zero (01-12)
+      MMM	the abbreviated localized month name (e.g. 'Jan' to 'Dec'). Uses the system locale to localize the name, i.e. QLocale::system().
+      MMMM	the long localized month name (e.g. 'January' to 'December'). Uses the system locale to localize the name, i.e. QLocale::system().
+      yy	the year as two digit number (00-99)
+      yyyy	the year as four digit number
+      h         the hour without a leading zero (0 to 23 or 1 to 12 if AM/PM display)
+      hh	the hour with a leading zero (00 to 23 or 01 to 12 if AM/PM display)
+      H         the hour without a leading zero (0 to 23, even with AM/PM display)
+      HH	the hour with a leading zero (00 to 23, even with AM/PM display)
+      m         the minute without a leading zero (0 to 59)
+      mm	the minute with a leading zero (00 to 59)
+      s         the second without a leading zero (0 to 59)
+      ss	the second with a leading zero (00 to 59)
+      z         the milliseconds without leading zeroes (0 to 999)
+      zzz	the milliseconds with leading zeroes (000 to 999)
+      AP or A	use AM/PM display. A/AP will be replaced by either "AM" or "PM".
+      ap or a	use am/pm display. a/ap will be replaced by either "am" or "pm".
+      t         the timezone (for example "CEST")
+
+       """
+
+    self.client.send_si(self.handle,  "setXAxisDisplay("+display+")")
 
 class ExistingPlot(Plot):
   def __init__(self,client,handle):
