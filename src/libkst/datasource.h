@@ -230,6 +230,8 @@ class KSTCORE_EXPORT DataSource : public Object
     PrimitiveList slavePrimitives;
 
 
+    static QString cleanPath(QString abs_path);
+
   public Q_SLOTS:
     virtual void checkUpdate();
 

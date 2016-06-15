@@ -132,7 +132,7 @@ QString VectorTab::file() const {
 
 
 void VectorTab::setFile(const QString &file) {
-  _fileName->setFile(file);
+  _fileName->setFile(DataSource::cleanPath(file));
 }
 
 

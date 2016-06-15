@@ -371,9 +371,9 @@ void MainWindow::updateRecentDataFiles(const QString& filename)
 void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable
-  QString absoluteFilePath = newfilename;
+  QString absoluteFilePath = DataSource::cleanPath(newfilename);
   if (!newfilename.isEmpty() && !QDir::isAbsolutePath(newfilename)) { // If it's not empty and not absolute either, add the dir
-    absoluteFilePath = QDir::currentPath() + '/' + newfilename;
+    absoluteFilePath = DataSource::cleanPath(QDir::currentPath() + '/' + newfilename);
   }
   foreach(QAction* it, actions) {
     menu->removeAction(it);

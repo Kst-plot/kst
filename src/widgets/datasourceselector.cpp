@@ -83,7 +83,7 @@ void DataSourceSelector::setup() {
 
 
 QString DataSourceSelector::file() const {
-  return _file;
+  return QDir::cleanPath(_file);
 }
 
 

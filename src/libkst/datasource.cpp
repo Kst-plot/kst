@@ -166,6 +166,16 @@ DataSource::~DataSource() {
   delete interf_matrix;
 }
 
+QString DataSource::cleanPath(QString abs_path) {
+  QString name = QDir::cleanPath(abs_path);
+
+  // qdir::cleanpath doesn't seem to remove leading /.. from paths (!)
+  while (name.startsWith("/..")) {
+    name.remove(QRegExp("^/.."));
+  }
+
+  return name;
+}
 
 QMap<QString, QString> DataSource::fileMetas() const
 {
@@ -270,11 +280,12 @@ QString DataSource::fileName() const {
       return i.key();
     }
   }
-  return _filename;
+
+  return DataSource::cleanPath(_filename);
 }
 
 QString DataSource::alternateFilename() const {
-  return _alternateFilename;
+  return DataSource::cleanPath(_alternateFilename);
 }
 
 void DataSource::setAlternateFilename(const QString &file) {
