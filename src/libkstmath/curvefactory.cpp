@@ -173,7 +173,7 @@ RelationPtr CurveFactory::generateRelation(ObjectStore *store, QXmlStreamReader&
   color.setAlpha(alpha);
   curve->setColor(color);
 
-  QColor headColor(colorName);
+  QColor headColor(headColorName);
   headColor.setAlpha(headAlpha);
   curve->setHeadColor(QColor(headColor));
 
