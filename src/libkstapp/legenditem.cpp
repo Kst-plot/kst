@@ -268,7 +268,7 @@ void LegendItem::paint(QPainter *painter) {
       y += sizes.at(i).height();
     }
   }
-
+  delete parsed;
 }
 
 

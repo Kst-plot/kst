@@ -825,7 +825,7 @@ void PlotAxis::updateInterpretTicks(MajorTickMode tickMode) {
   double minimum_units = tickMode;
 
   // find base_jd, range_u, units
-  double valid = true;
+  //double valid = true;
   if (range_jd > minimum_units*365.0*1.0e150) {
     _ticksUpdated = true;
     _axisLabels.clear();

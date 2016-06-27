@@ -46,9 +46,11 @@ ObjectStore::~ObjectStore()
 
 
 bool ObjectStore::removeObject(Object *o) {
-  if (!this) {
-    return false;
-  }
+  // clang says, 'this' pointer cannot be null in well-defiened C++ code;
+  // pointer may be assumed to always convert to true.
+  //if (!this) {
+  //  return false;
+  //}
 
   if (!o) {
     return false;

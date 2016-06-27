@@ -26,7 +26,6 @@ typedef std::complex<double> complex;
 //TODO allow reference waveforms other than square wave
 //TODO these parameters, and filter cutoffs, and the guess period should be made commandable
 const double f_samp = 4.0E6/384.0/104.0;    //sample frequency
-const int DELAY = 0;
 
 
 

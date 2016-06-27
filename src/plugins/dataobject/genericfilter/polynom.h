@@ -84,7 +84,7 @@ template<class S> polynom<S>& polynom<S>::operator=(const polynom& P)
     delete[] C;
     n = P.n;
     C = new S[n+1];
-    this->n = n;
+    //this->n = n;
   }
   for (int i=0; i<=n; i++) C[i]=P.C[i];
   return *this;

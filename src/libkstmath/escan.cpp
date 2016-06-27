@@ -577,11 +577,13 @@ static int yy_flex_strlen (yyconst char * );
 
 #ifndef YY_NO_INPUT
 
+#if 0
 #ifdef __cplusplus
 static int yyinput (void );
 #else
 static int input (void );
 #endif
+#endif // if 0
 
 #endif
 
@@ -1352,6 +1354,9 @@ static int yy_get_next_buffer (void)
 	(yy_c_buf_p) = yy_cp;
 }
 #endif
+
+// get rid of clang compiler warning: the following function is never used.
+#if 0
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
     static int yyinput (void)
@@ -1425,6 +1430,7 @@ static int yy_get_next_buffer (void)
 	return c;
 }
 #endif	/* ifndef YY_NO_INPUT */
+#endif /* ifdef 0 */
 
 /** Immediately switch to a different input stream.
  * @param input_file A readable stream.

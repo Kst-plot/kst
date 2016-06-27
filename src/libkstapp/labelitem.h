@@ -105,7 +105,8 @@ class CreateLabelCommand : public CreateCommand {
     CreateLabelCommand() : CreateCommand(QObject::tr("Create Label")) {}
     CreateLabelCommand(View *view): CreateCommand(view, QObject::tr("Create Label")) {}
     virtual ~CreateLabelCommand() {}
-    virtual void createItem(QString *inText = 0);
+    virtual void createTextItem(QString *inText = 0);
+    virtual void createItem();
 };
 
 class LabelItemFactory : public GraphicsFactory {

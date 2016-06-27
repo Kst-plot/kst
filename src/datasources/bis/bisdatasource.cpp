@@ -301,6 +301,10 @@ BISSource::BISSource(Kst::ObjectStore *store, QSettings *cfg, const QString& fil
 
 BISSource::~BISSource() {
   BISFreeImage(&_bisImage);
+  BISclose(_bisfile);
+  if (_config) {
+    delete _config;
+  }
 }
 
 

@@ -288,6 +288,14 @@ PlotItem::~PlotItem() {
   delete _filterMenu;
   delete _fitMenu;
   delete _editMenu;
+
+  if (_sharedAxisBoxMenu) {
+    delete _sharedAxisBoxMenu;
+  }
+  if (_copyMenu) {
+    delete _copyMenu;
+  }
+
 }
 
 void PlotItem::_initializeShortName() {

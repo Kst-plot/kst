@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8.7)
 
 if(kst_clang)
-    set(CMAKE_C_COMPILER   "clang"   CACHE PATH "Clang C compiler")
-    set(CMAKE_CXX_COMPILER "clang++" CACHE PATH "Clang C++ compiler")
+    set(CMAKE_C_COMPILER    "clang")
+    SET (CMAKE_CXX_COMPILER "clang++")
+    message(STATUS "Using clang  ${CMAKE_CXX_COMPILER}")
 endif()
 
 if(POLICY CMP0020)

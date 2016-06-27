@@ -497,7 +497,7 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
 
   x = data[n/2]; // FIXME: we might be off by a couple samples if there were spikes.
 
-  delete data;
+  delete[] data;
 
   return(x);
 }

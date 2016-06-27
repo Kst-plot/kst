@@ -285,7 +285,11 @@ void LabelItem::setFont(const QFont &f, const QColor &c) {
   setLabelScale(f.pointSize());
 }
 
-void CreateLabelCommand::createItem(QString *inText) {
+void CreateLabelCommand::createItem() {
+  createTextItem(0);
+}
+
+void CreateLabelCommand::createTextItem(QString *inText) {
   if (inText) {
     _item = new LabelItem(_view, *inText);
   } else {

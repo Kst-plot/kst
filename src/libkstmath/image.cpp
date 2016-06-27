@@ -532,7 +532,12 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
         int x_index;
         int y_index;
         int palCountMinus1 = _pal.colorCount() - 1;
-        double palCountMin1_OverDZ = double(palCountMinus1) / (_zUpper - _zLower);
+        double palCountMin1_OverDZ;
+        if (_zUpper != _zLower) {
+          palCountMin1_OverDZ= double(palCountMinus1) / (_zUpper - _zLower);
+        } else {
+          palCountMin1_OverDZ= double(palCountMinus1);
+        }
 
         for (int y = 0; y < ih; ++y) {
           bool okY = true;

@@ -4,8 +4,8 @@ list(APPEND clflg -fno-omit-frame-pointer)
 list(APPEND clflg -fno-optimize-sibling-calls)
 
 list(APPEND clflg -fsanitize=address)
-list(APPEND clflg -fsanitize=init-order)
-list(APPEND clflg -fsanitize=address-full)
+#list(APPEND clflg -fsanitize=init-order)
+#list(APPEND clflg -fsanitize=address-full)
 list(APPEND clflg -fsanitize=integer)
 
 #list(APPEND clflg -fsanitize=thread)
@@ -28,8 +28,8 @@ list(APPEND clflg -fsanitize=unreachable)
 list(APPEND clflg -fsanitize=unsigned-integer-overflow)
 list(APPEND clflg -fsanitize=vla-bound)
 #list(APPEND clflg -fsanitize=vptr)
-list(APPEND clflg -fsanitize=use-after-return)
-list(APPEND clflg -fsanitize=use-after-scope)
+#list(APPEND clflg -fsanitize=use-after-return)
+#list(APPEND clflg -fsanitize=use-after-scope)
 
 
 message(STATUS "Used sanitize flags:")

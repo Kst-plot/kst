@@ -64,6 +64,7 @@ void BISclose(BISfile *bis) {
   if ((bis->fp>0) && (bis->status!=BIS_NOOPEN)) {
     close(bis->fp);
   }
+  free(bis->fileName);
   free(bis);
 }
 

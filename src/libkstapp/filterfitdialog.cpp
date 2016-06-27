@@ -293,7 +293,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
               CreateLabelCommand *cmd = new CreateLabelCommand;
               QString *tmpstring = new QString(dataObject->parameterVectorToString());
 
-              cmd->createItem(tmpstring);
+              cmd->createTextItem(tmpstring);
           }
           plotItem->update();
 

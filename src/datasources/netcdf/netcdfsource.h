@@ -61,7 +61,7 @@ class NetcdfSource : public Kst::DataSource {
 
     QString fileType() const;
 
-    void save(QTextStream &ts, const QString& indent = QString());
+    //void save(QTextStream &ts, const QString& indent = QString());
 
     bool isEmpty() const;
 
