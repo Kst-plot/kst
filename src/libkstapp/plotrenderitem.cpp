@@ -30,6 +30,8 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QKeyEvent>
 #include <math.h>
+#include <limits>
+
 
 // #define CURVE_DRAWING_TIME
 

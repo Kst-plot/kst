@@ -16,6 +16,7 @@
 #include "dialogdefaults.h"
 
 #include <QDate>
+#include <limits>
 
 #define MAJOR_TICK_DEBUG 0
 
