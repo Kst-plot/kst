@@ -29,6 +29,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QKeyEvent>
+#include <math.h>
 
 // #define CURVE_DRAWING_TIME
 
@@ -1039,6 +1040,43 @@ void PlotRenderItem::updateCursor(const QPointF &pos) {
   }
 }
 
+void PlotRenderItem::sanitizeMaxMin(double *min_in, double *max_in) {
+  double min = *min_in;
+  double max = *max_in;
+
+  if (fabs(min) < std::numeric_limits<qreal>::min()*10.0) {
+    min = 0.0;
+  }
+  if (fabs(max) < std::numeric_limits<qreal>::min()*10.0) {
+    max = 0.0;
+  }
+
+  bool min_ok = (min == min) && (min<std::numeric_limits<qreal>::max()/10.0) &&
+      (min > -(std::numeric_limits<qreal>::max()/10.0));
+  bool max_ok = (max == max) && (max<std::numeric_limits<qreal>::max()/10.0) &&
+      (max > -(std::numeric_limits<qreal>::max()/10.0));
+
+  min_ok |= (min==0);
+  max_ok |= (max==0);
+
+  if (!min_ok) {
+    min = -1E150;
+  }
+  if (!max_ok) {
+    max = 1E150;
+  }
+
+  if (min > max) {
+    qSwap(min, max);
+  } else if ((min == max) || (fabs(max-min) < std::numeric_limits<qreal>::min()*10.0)) {
+    min = min - min/1000.0 - 0.1;
+    max = max + max/1000.0 + 0.1;
+  }
+
+  *min_in = min;
+  *max_in = max;
+}
+
 
 QRectF PlotRenderItem::computedProjectionRect() const {
   qreal minX, minY, maxX, maxY;
@@ -1084,6 +1122,8 @@ void PlotRenderItem::computeXAxisRange(double *min, double *max) const {
 
   *min = minimum;
   *max = maximum;
+
+  sanitizeMaxMin(min,max);
 }
 
 
@@ -1112,6 +1152,8 @@ void PlotRenderItem::computeYAxisRange(double *min, double *max) const {
 
   *min = minimum;
   *max = maximum;
+
+  sanitizeMaxMin(min,max);
 }
 
 

@@ -99,6 +99,13 @@ double PlotAxis::convertJDtoDisplayTime(double T) {
 double PlotAxis::convertJDtoCTime(double jdIn) {
   jdIn -= (JD1970);
   jdIn *= 24.0*3600.0;
+
+  if (jdIn > double(std::numeric_limits<time_t>::max())-1.0) {
+    jdIn = std::numeric_limits<time_t>::max()-1;
+  }
+  if (jdIn<0) {
+    jdIn = 0.0;
+  }
   return (jdIn);
 }
 
@@ -211,12 +218,17 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   double j4 = floor(j3 * 365.25);
   double j5 = floor((j2 - j4)/30.6001);
 
-  int day = int(j2 - j4 - floor(j5*30.6001));
-  int month = int(j5 - 1.0);
+  double day_d = floor(j2 - j4 - floor(j5*30.6001));
+  int day = int(qBound(-double(std::numeric_limits<int>::max()-1), day_d, double(std::numeric_limits<int>::max())));
+
+  double month_d = floor(j5-1.0);
+  int month = int(qBound(-double(std::numeric_limits<int>::max()-1), month_d, double(std::numeric_limits<int>::max())));
   if (month > 12) {
     month -= 12;
   }
-  int year = int(j3 - 4715.0);
+
+  double year_d = floor(j3 - 4715.0);
+  int year = int(qBound(-double(std::numeric_limits<int>::max()-1), year_d, double(std::numeric_limits<int>::max())));
   if (month > 2) {
     --year;
   }

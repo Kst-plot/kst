@@ -69,6 +69,8 @@ class PlotRenderItem : public ViewItem
     void computeBorder(Qt::Orientation orientation, double *min, double *max) const;
     void resetSelectionRect();
 
+    static void sanitizeMaxMin(double *min, double *max);
+
     virtual bool tryShortcut(const QString &keySequence);
 
     QList<PlotItem*> sharedOrTiedPlots(bool sharedX, bool sharedY);
