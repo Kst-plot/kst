@@ -103,10 +103,10 @@ class KSTMATH_EXPORT Relation : public Object {
     virtual double maxY() const { return MaxY; }
     virtual double minY() const { return MinY; }
     virtual double minPosY() const { return MinPosY; }
-    virtual double ns_maxX()    const { return _ns_maxx; }
-    virtual double ns_minX()    const { return _ns_minx; }
-    virtual double ns_maxY()    const { return _ns_maxy; }
-    virtual double ns_minY()    const { return _ns_miny; }
+    virtual double ns_maxX(int)    const = 0;
+    virtual double ns_minX(int)    const = 0;
+    virtual double ns_maxY(int)    const = 0;
+    virtual double ns_minY(int)    const = 0;
     virtual double minPosX() const { return MinPosX; }
     virtual double midX() const { return (MaxX+MinX)*0.5; }
     virtual double midY() const { return (MaxY+MinY)*0.5; }
@@ -186,10 +186,6 @@ class KSTMATH_EXPORT Relation : public Object {
     MatrixMap _inputMatrices;
     MatrixMap _outputMatrices;
 
-    double _ns_maxx;
-    double _ns_minx;
-    double _ns_maxy;
-    double _ns_miny;
     double MaxX;
     double MinX;
     double MinPosX;

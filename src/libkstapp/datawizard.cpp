@@ -69,6 +69,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
 
   int h = fontMetrics().lineSpacing();
   _url->setFixedHeight(h*4/3);
+
 }
 
 

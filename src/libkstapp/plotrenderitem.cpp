@@ -1274,8 +1274,8 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, double *min, do
   //The previous values are of no consequence as this algorithm does not depend
   //on the previous values.  So start over so that first active relation initializes.
   bool unInitialized = true;
-
   bool axisLog = orientation == Qt::Horizontal ? plotItem()->xAxis()->axisLog() : plotItem()->yAxis()->axisLog();
+  int ns_zoom_level = orientation == Qt::Horizontal ? plotItem()->xAxis()->nsZoomLevel() : plotItem()->yAxis()->nsZoomLevel();
   double minimum = axisLog ? 0.0 : -0.1;
   double maximum = 0.2;
 
@@ -1284,8 +1284,8 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, double *min, do
         continue;
 
       double minPos_ = orientation == Qt::Horizontal ? relation->minPosX() : relation->minPosY();
-      double min_ = orientation == Qt::Horizontal ? relation->ns_minX() : relation->ns_minY();
-      double max_ = orientation == Qt::Horizontal ? relation->ns_maxX() : relation->ns_maxY();
+      double min_ = orientation == Qt::Horizontal ? relation->ns_minX(ns_zoom_level) : relation->ns_minY(ns_zoom_level);
+      double max_ = orientation == Qt::Horizontal ? relation->ns_maxX(ns_zoom_level) : relation->ns_maxY(ns_zoom_level);
 
       //If the axis is in log mode, the lower extent will be the
       //minimum value larger than zero.
@@ -1295,6 +1295,13 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, double *min, do
         minimum = unInitialized ? min_ : qMin(min_, minimum);
 
       maximum = unInitialized ? max_ : qMax(max_, maximum);
+
+      double delta = maximum - minimum;
+      maximum += delta/10;
+
+      if (!axisLog) {
+        minimum -= delta/10;
+      }
 
       unInitialized = false;
   }
@@ -1310,6 +1317,12 @@ void PlotRenderItem::computeNoSpike(Qt::Orientation orientation, double *min, do
 
   *min = minimum;
   *max = maximum;
+
+  maximum += (maximum-minimum)*0.2;
+  if (!axisLog) {
+    minimum -= (maximum-minimum)*0.2;
+  }
+
 }
 
 

@@ -36,7 +36,7 @@ Relation::Relation(ObjectStore *store) : Object() {
 
 
 void Relation::commonConstructor() {
-  _ns_maxx = _ns_minx = _ns_maxy = _ns_miny = MaxX = MinX = MinPosX = MeanX = MaxY = MinY = MinPosY = 0.0;
+  MaxX = MinX = MinPosX = MeanX = MaxY = MinY = MinPosY = 0.0;
   NS = 0;
 
   _redrawRequired = true;

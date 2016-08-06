@@ -76,9 +76,15 @@ class KSTMATH_EXPORT Curve: public Relation
 
     virtual double maxX() const;
     virtual double minX() const;
+
     virtual double meanX() const { return MeanX; }
     virtual double meanY() const { return MeanY; }
     virtual void yRange(double xFrom, double xTo, double* yMin, double* yMax);
+
+    virtual double ns_maxX(int) const;
+    virtual double ns_minX(int) const;
+    virtual double ns_maxY(int) const;
+    virtual double ns_minY(int) const;
 
     virtual int samplesPerFrame() const;
 

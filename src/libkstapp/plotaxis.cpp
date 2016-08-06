@@ -37,6 +37,7 @@ PlotAxis::PlotAxis(PlotItem *plotItem, Qt::Orientation orientation) :
   _dirty(true),
   _axisZoomMode(Auto),
   _isAxisVisible(true),
+  _ns_zoom_level(0),
   _ticksUpdated(true),
   _axisLog(false),
   _axisReversed(false),
@@ -297,7 +298,10 @@ PlotAxis::ZoomMode PlotAxis::axisZoomMode() const {
 void PlotAxis::setAxisZoomMode(ZoomMode mode) {
   if (_axisZoomMode != mode) {
     _axisZoomMode = mode;
+    _ns_zoom_level = 0;
     _dirty = true;
+  } else if (mode == PlotAxis::SpikeInsensitive) {
+    _ns_zoom_level = (_ns_zoom_level+1)%5;
   }
 }
 

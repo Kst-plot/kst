@@ -46,6 +46,8 @@ KSTCORE_EXPORT double kstInterpolate(double *v, int _size, int in_i, int ns_i);
 class Vector;
 typedef SharedPtr<Vector> VectorPtr;
 
+#define MAX_N_DESPIKE_STAT 10000
+
 /**A class for handling data vectors for kst.
  *@author cbn
  */
@@ -103,10 +105,10 @@ class KSTCORE_EXPORT Vector : public Primitive
     inline double max() const { return _max; }
 
     /** Return SpikeInsensitive max value in vector **/
-    inline double ns_max() const { return _ns_max; }
+    double ns_max(int ns_zoom_level);
 
     /** Return SpikeInsensitive min value in vector **/
-    inline double ns_min() const { return _ns_min; }
+    double ns_min(int ns_zoom_level);
 
     /** Return Mean value in Vector */
     inline double mean() const { return _mean; }
@@ -200,8 +202,10 @@ class KSTCORE_EXPORT Vector : public Primitive
     int _nsum;
 
     /** variables for SpikeInsensitiveAutoscale **/
-    double _ns_max;
-    double _ns_min;
+    double _v_ns_stats[MAX_N_DESPIKE_STAT];
+    int _n_ns_stats;
+    bool _ns_stats_sorted;
+
 
     /** Where raw input data is held */
     double *_v_raw;

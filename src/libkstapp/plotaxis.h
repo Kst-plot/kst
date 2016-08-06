@@ -138,6 +138,8 @@ class PlotAxis : public QObject
 
     QString statusBarString(double X);
 
+    int nsZoomLevel() { return _ns_zoom_level;}
+
   public Q_SLOTS:
     void updateTicks(bool useOverrideTicks = false);
     void setTicksUpdated() { _ticksUpdated = true; }
@@ -163,6 +165,7 @@ class PlotAxis : public QObject
 
     ZoomMode _axisZoomMode;
     bool _isAxisVisible;
+    int _ns_zoom_level;
 
     bool _ticksUpdated;
 

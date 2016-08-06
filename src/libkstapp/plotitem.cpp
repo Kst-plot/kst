@@ -863,6 +863,8 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
         (xAxis()->axisZoomMode() == PlotAxis::AutoBorder) ||
         (xAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive)) {
 
+    newProjectionRec.setWidth(0.1);
+    newProjectionRec.setLeft(0.0);
     newProjectionRec.setLeft(compute.x());
     newProjectionRec.setWidth(compute.width());
   }
@@ -871,6 +873,8 @@ bool PlotItem::handleChangedInputs(qint64 serial) {
       (yAxis()->axisZoomMode() == PlotAxis::Auto) ||
       (yAxis()->axisZoomMode() == PlotAxis::SpikeInsensitive) ||
       (yAxis()->axisZoomMode() == PlotAxis::MeanCentered)) {
+    newProjectionRec.setHeight(0.1);
+    newProjectionRec.setTop(0.0);
     newProjectionRec.setTop(compute.y());
     newProjectionRec.setHeight(compute.height());
   }

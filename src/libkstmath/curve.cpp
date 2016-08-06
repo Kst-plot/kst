@@ -122,8 +122,6 @@ void Curve::internalUpdate() {
   MinX = cxV->min();
   MeanX = cxV->mean();
   MinPosX = cxV->minPos();
-  _ns_maxx = cxV->ns_max();
-  _ns_minx = cxV->ns_min();
 
   if (MinPosX > MaxX) {
     MinPosX = 0;
@@ -132,8 +130,6 @@ void Curve::internalUpdate() {
   MinY = cyV->min();
   MeanY = cyV->mean();
   MinPosY = cyV->minPos();
-  _ns_maxy = cyV->ns_max();
-  _ns_miny = cyV->ns_min();
 
   if (MinPosY > MaxY) {
     MinPosY = 0;
@@ -1664,6 +1660,24 @@ QString Curve::descriptionTip() const {
 
   return tip;
 }
+
+
+double Curve::ns_maxX(int zoom_level) const {
+  return xVector()->ns_max(zoom_level);
+}
+
+double Curve::ns_minX(int zoom_level) const {
+  return xVector()->ns_min(zoom_level);
+}
+
+double Curve::ns_maxY(int zoom_level) const {
+  return yVector()->ns_max(zoom_level);
+}
+
+double Curve::ns_minY(int zoom_level) const {
+  return yVector()->ns_min(zoom_level);
+}
+
 
 }
 // vim: ts=2 sw=2 et

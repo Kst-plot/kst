@@ -125,6 +125,10 @@ class KSTMATH_EXPORT Image : public Relation {
 
     virtual ScriptInterface* createScriptInterface();
 
+    virtual double ns_maxX(int)    const { return _ns_maxx; }
+    virtual double ns_minX(int)    const { return _ns_minx; }
+    virtual double ns_maxY(int)    const { return _ns_maxy; }
+    virtual double ns_minY(int)    const { return _ns_miny; }
 
   protected:
     Image(ObjectStore *store);
@@ -156,6 +160,12 @@ class KSTMATH_EXPORT Image : public Relation {
     QVector<CoutourLineDetails> _lines;
     QImage _image;
     QPoint _imageLocation;
+
+    double _ns_maxx;
+    double _ns_minx;
+    double _ns_maxy;
+    double _ns_miny;
+
 };
 
 

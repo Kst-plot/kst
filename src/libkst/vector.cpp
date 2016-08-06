@@ -422,14 +422,18 @@ void Vector::updateVNoNans()  {
 
 
 void Vector::zero() {
-  _ns_min = _ns_max = 0.0;
+  _n_ns_stats = 0;
+  _ns_stats_sorted = false;
+
   memset(_v_raw, 0, sizeof(double)*_size);
   updateScalars();
 }
 
 
 void Vector::blank() {
-  _ns_min = _ns_max = 0.0;
+  _n_ns_stats = 0;
+  _ns_stats_sorted = false;
+
   for (int i = 0; i < _size; ++i) {
     _v_raw[i] = NOPOINT;
   }
@@ -472,6 +476,63 @@ bool Vector::saveToTmpFile(QFile &fp) {
   return (n_write == n_written);
 }
 
+
+double Vector::ns_max(int ns_zoom_level) {
+  if (!_ns_stats_sorted) {
+    if (_n_ns_stats>4) {
+      qSort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
+      _ns_stats_sorted = true;
+    }
+  }
+  if (_n_ns_stats <= 4 ) {
+    return max();
+  }
+
+  switch (ns_zoom_level) {
+  case 0:
+    return (_v_ns_stats[_n_ns_stats - 1]);
+    break;
+  case 1:
+    return (_v_ns_stats[_n_ns_stats - _n_ns_stats/333 - 1]);
+    break;
+  case 2:
+    return (_v_ns_stats[_n_ns_stats - _n_ns_stats/100 - 1]);
+    break;
+  case 3:
+    return (_v_ns_stats[_n_ns_stats - _n_ns_stats/33 - 1]);
+    break;
+  default:
+    return (_v_ns_stats[_n_ns_stats - _n_ns_stats/10 - 1]);
+    break;
+  }
+}
+
+double Vector::ns_min(int ns_zoom_level) {
+  if (_n_ns_stats>2) {
+    qSort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
+    _ns_stats_sorted = true;
+  }
+  if (_n_ns_stats <= 4 ) {
+    return min();
+  }
+  switch (ns_zoom_level) {
+  case 0:
+    return (_v_ns_stats[1]);
+    break;
+  case 1:
+    return (_v_ns_stats[_n_ns_stats/333 + 1]);
+    break;
+  case 2:
+    return (_v_ns_stats[_n_ns_stats/100 + 1]);
+    break;
+  case 3:
+    return (_v_ns_stats[_n_ns_stats/33 + 1]);
+    break;
+  default:
+    return (_v_ns_stats[_n_ns_stats/10 + 1]);
+    break;
+  }
+}
 
 void Vector::internalUpdate() {
   int i, i0;
@@ -516,10 +577,10 @@ void Vector::internalUpdate() {
           _scalars["imin"]->setValue(_imin);
         }
       }
-      _ns_max = _ns_min = 0;
+      _n_ns_stats = 0;
+      _ns_stats_sorted = false;
 
       updateScalars();
-
       return;
     }
 
@@ -578,28 +639,20 @@ void Vector::internalUpdate() {
 
     no_spike_max_dv = 7.0*sqrt(dv2/double(_nsum));
 
-    _ns_max = _ns_min = last_v = _v_out[i0];
+    last_v = _v_out[i0];
 
     last = _v_out[_size-1];
     first = _v_out[0];
 
-    for (i = i0; i < _size; ++i) {
-      v = _v_out[i]; // get rid of redirections
-      if (isfinite(v)) {
-        if (fabs(v - last_v) < no_spike_max_dv) {
-          if (v > _ns_max) {
-            _ns_max = v;
-          } else if (v < _ns_min) {
-            _ns_min = v;
-          }
-          last_v = v;
-        } else {
-          i += 20;
-          if (i < _size) {
-            last_v = v;
-          }
-          i++;
-        }
+    /* make vector for spike insensitive autoscale */
+    _n_ns_stats = 0;
+    _ns_stats_sorted = false;
+    double step = qMax(double(_size)/double(MAX_N_DESPIKE_STAT), 1.0);
+    for (int k = 0; (k < _size) && (k < MAX_N_DESPIKE_STAT); k++) {
+      int m = int(double(k) * step); // FIXME: add random([0, step]) to m
+      if (isfinite(_v_out[m])) {
+        _v_ns_stats[_n_ns_stats] = _v_out[m];
+        _n_ns_stats++;
       }
     }
 
@@ -849,9 +902,9 @@ QByteArray Vector::scriptInterface(QList<QByteArray> &c) {
     } else if(c[0]=="max") {
         return QByteArray::number(max());
     } else if(c[0]=="ns_max") {
-        return QByteArray::number(ns_max());
+        return QByteArray::number(ns_max(2));
     } else if(c[0]=="ns_min") {
-        return QByteArray::number(ns_min());
+        return QByteArray::number(ns_min(2));
     } else if(c[0]=="mean") {
         return QByteArray::number(mean());
     } else if(c[0]=="minPos") {
