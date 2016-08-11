@@ -54,6 +54,10 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
 
   connect(_url, SIGNAL(changed(QString)), this, SLOT(sourceChanged(QString)));
   connect(_configureSource, SIGNAL(clicked()), this, SLOT(configureSource()));
+  //connect(_recentFiles, SIGNAL(currentTextChanged(QString)), _url, SLOT(setFile(QString)));
+  connect(_recentFiles, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(recentFileClicked(QListWidgetItem*)));
+  connect(_url, SIGNAL(changed(QString)), _recentFiles, SLOT(clearSelection()));
+  connect(_cleanupRecentFiles, SIGNAL(clicked(bool)), this, SLOT(cleanupRecentDataFilesClicked()));
 
   if (default_source.isEmpty()) {
     _url->setFile(dialogDefaults().value("vector/datasource", ".").toString());
@@ -66,6 +70,10 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   _updateBox->addItem(tr("Change Detection", "update when a change is detected"));
   _updateBox->addItem(tr("No Update", "do not update the file"));
   updateUpdateBox();
+
+  QStringList recentFiles = kstApp->mainWindow()->recentDataFiles();
+
+  _recentFiles->addItems(recentFiles);
 
   int h = fontMetrics().lineSpacing();
   _url->setFixedHeight(h*4/3);
@@ -114,6 +122,20 @@ void DataWizardPageDataSource::updateTypeActivated(int idx)
     case 2: _dataSource->startUpdating(DataSource::None);  break;
     default: break;
   };
+}
+
+void DataWizardPageDataSource::recentFileClicked(QListWidgetItem *item)
+{
+  _url->setFile(item->text());
+}
+
+void DataWizardPageDataSource::cleanupRecentDataFilesClicked()
+{
+  kstApp->mainWindow()->cleanupRecentDataFilesList();
+  QStringList recentFiles = kstApp->mainWindow()->recentDataFiles();
+
+  _recentFiles->clear();
+  _recentFiles->addItems(recentFiles);
 }
 
 

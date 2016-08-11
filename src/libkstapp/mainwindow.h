@@ -131,6 +131,10 @@ class MainWindow : public QMainWindow
     void updateRecentDataFiles(const QString& newfilename = QString());
     void videoTutorial(int);
 
+    QStringList recentDataFiles();
+
+    void cleanupRecentDataFilesList();
+
   private Q_SLOTS:
     void aboutToQuit();
     void about();

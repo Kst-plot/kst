@@ -368,6 +368,28 @@ void MainWindow::updateRecentDataFiles(const QString& filename)
 }
 
 
+QStringList MainWindow::recentDataFiles() {
+  QStringList recentFiles = _settings.value("recentDataFileList").toStringList();
+  if (recentFiles.removeDuplicates() > 0) {
+    _settings.setValue("recentDataFileList", recentFiles);
+  }
+  return recentFiles;
+}
+
+void MainWindow::cleanupRecentDataFilesList() {
+  QStringList recentFiles = _settings.value("recentDataFileList").toStringList();
+  recentFiles.removeDuplicates();
+  foreach(const QString& it, recentFiles) {
+    if (!QFileInfo(it).exists()) {
+      recentFiles.removeOne(it);
+    }
+  }
+  _settings.setValue("recentDataFileList", recentFiles);
+  updateRecentKstFiles();
+  updateRecentDataFiles();
+}
+
+
 void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QAction*>& actions, QMenu* submenu, const QString& newfilename, const char* openslot)
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable

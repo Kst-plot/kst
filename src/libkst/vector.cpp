@@ -538,7 +538,6 @@ void Vector::internalUpdate() {
   int i, i0;
   double sum, sum2, last, first, v;
   double last_v;
-  double dv2 = 0.0, dv, no_spike_max_dv;
   const double epsilon=1e-300;
 
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
@@ -606,9 +605,6 @@ void Vector::internalUpdate() {
       v = _v_out[i]; // get rid of redirections
 
       if (isfinite(v)) {
-        dv = v - last_v;
-        dv2 += dv*dv;
-
         if (v <= last_v) {
           if (i != i0) {
             _is_rising = false;
@@ -637,7 +633,7 @@ void Vector::internalUpdate() {
       }
     }
 
-    no_spike_max_dv = 7.0*sqrt(dv2/double(_nsum));
+    //no_spike_max_dv = 7.0*sqrt(dv2/double(_nsum));
 
     last_v = _v_out[i0];
 

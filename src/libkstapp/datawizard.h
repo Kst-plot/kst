@@ -55,6 +55,8 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     void configureSource();
     void sourceValid(QString filename, int requestID);
     void updateTypeActivated(int);
+    void recentFileClicked(QListWidgetItem*);
+    void cleanupRecentDataFilesClicked();
 
   Q_SIGNALS:
     void dataSourceChanged();
