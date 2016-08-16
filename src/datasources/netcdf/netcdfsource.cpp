@@ -17,7 +17,6 @@
  ***************************************************************************/
 
 // TODO move
-//#define KST_DEBUG_SHARED
 #include "sharedptr.h"
 
 #include "netcdfsource.h"
@@ -29,6 +28,13 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+
+//#define NETCDF_DEBUG_SHARED
+#ifdef NETCDF_DEBUG_SHARED
+#define NETCDF_DBG if (true)
+#else
+#define NETCDF_DBG if (false)
+#endif
 
 
 using namespace Kst;
@@ -186,9 +192,12 @@ bool DataInterfaceNetCdfVector::isValid(const QString& field) const
 
 QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& field)
 {
-  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  NcVar *var = 0;
+  if (field != "INDEX") {
+    var = netcdf._ncfile->get_var((NcToken) field.toLatin1().constData());
+  }
   if (!var) {
-    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return QMap<QString, double>();
   }
   QMap<QString, double> fieldScalars;
@@ -212,9 +221,12 @@ QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& fiel
 
 QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& field)
 {
-  NcVar *var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  NcVar *var = 0;
+  if (field != "INDEX") {
+    var = netcdf._ncfile->get_var(field.toLatin1().constData());
+  }
   if (!var) {
-    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return QMap<QString, QString>();
   }
   QMap<QString, QString> fieldStrings;
@@ -361,12 +373,12 @@ bool NetcdfSource::initFile() {
       return false;
     }
 
-  KST_DBG qDebug() << _filename << ": building field list" << endl;
+  NETCDF_DBG qDebug() << _filename << ": building field list" << endl;
   _fieldList.clear();
   _fieldList += "INDEX";
 
   int nb_vars = _ncfile->num_vars();
-  KST_DBG qDebug() << nb_vars << " vars found in total" << endl;
+  NETCDF_DBG qDebug() << nb_vars << " vars found in total" << endl;
 
   _maxFrameCount = 0;
 
@@ -403,7 +415,7 @@ bool NetcdfSource::initFile() {
     }
     delete att;
   }
-
+  NETCDF_DBG qDebug() << "netcdf file initialized";
   // TODO update(); // necessary?  slows down initial loading
   return true;
 }
@@ -467,7 +479,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   /* Values for one record */
   NcValues *record = 0;// = new NcValues(dataType,numFrameVals);
 
-  KST_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+  NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
 
   /* For INDEX field */
   if (field.toLower() == "index") {
@@ -485,7 +497,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
   if (!var) {
-    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
@@ -541,7 +553,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
         } else {
           for (int i = 0; i < n; i++) {
             record = var->get_rec(i+s);
-            KST_DBG qDebug() << "Read record " << i+s << endl;
+            NETCDF_DBG qDebug() << "Read record " << i+s << endl;
             for (int j = 0; j < recSize; j++) {
               v[i*recSize + j] = record->as_int(j);
             }
@@ -588,13 +600,13 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
       break;
 
     default:
-      KST_DBG qDebug() << field << ": wrong datatype for kst, no values read" << endl;
+      NETCDF_DBG qDebug() << field << ": wrong datatype for kst, no values read" << endl;
       return -1;
       break;
 
   }
 
-  KST_DBG qDebug() << "Finished reading " << field << endl;
+  NETCDF_DBG qDebug() << "Finished reading " << field << endl;
 
   return oneSample ? 1 : n * recSize;
 }
@@ -609,7 +621,7 @@ int NetcdfSource::readMatrix(double *v, const QString& field)
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
   if (!var) {
-    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
@@ -636,7 +648,7 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
   QByteArray bytes = field.toLatin1();
   NcVar *var = _ncfile->get_var(bytes.constData());
   if (!var) {
-    KST_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return 0;
   }
   return var->rec_size();
