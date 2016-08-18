@@ -510,7 +510,16 @@ void MainWindow::openFile(const QString &file) {
 void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
-  for (int i_view = 0; i_view<n_views; i_view++) {
+  int i_startview, i_endview;
+
+  if (_exportGraphics->exportAll()) {
+    i_startview = 0;
+    i_endview = n_views-1;
+  } else {
+    i_startview = i_endview = _tabWidget->currentIndex();
+  }
+
+  for (int i_view = i_startview; i_view<=i_endview; i_view++) {
     View *view = _tabWidget->views().at(i_view);
     QSize size;
     if (display == 0) { // Width set by user, maintain aspect ratio
@@ -531,7 +540,7 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
 
 
     QString file = filename;
-    if (n_views != 1) {
+    if (i_startview - i_endview != 0) {
       QFileInfo QFI(filename);
       file = QFI.dir().path() + '/' + QFI.completeBaseName() +
              '_' +

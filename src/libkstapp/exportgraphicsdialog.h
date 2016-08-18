@@ -29,6 +29,7 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
   public:
     explicit ExportGraphicsDialog(MainWindow *win);
     virtual ~ExportGraphicsDialog();
+    bool exportAll() { return _exportAll->isChecked();}
 
   public slots:
     void createFile();
@@ -38,6 +39,7 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
     void applyAutosave();
     void updateButtons();
     void updateFormats();
+    void updateFilenameLabel();
 
   Q_SIGNALS:
     void exportGraphics(const QString &filename, const QString &format, int w, int h, int display);

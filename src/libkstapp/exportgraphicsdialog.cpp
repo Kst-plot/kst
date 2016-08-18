@@ -54,6 +54,12 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
   connect(_buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
   connect(_listVectorFormats, SIGNAL(clicked()), this, SLOT(updateFormats()));
   connect(_listBitmapFormats, SIGNAL(clicked()), this, SLOT(updateFormats()));
+  connect(_comboBoxFormats, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFilenameLabel()));
+  connect(_saveLocation, SIGNAL(changed(QString)), this, SLOT(updateFilenameLabel()));
+  connect(_autoExtension, SIGNAL(toggled(bool)), this, SLOT(updateFilenameLabel()));
+  connect(_exportAll, SIGNAL(clicked(bool)), this, SLOT(updateFilenameLabel()));
+
+  updateFilenameLabel();
 }
 
 
@@ -91,6 +97,27 @@ void ExportGraphicsDialog::updateFormats() {
   }
   _comboBoxFormats->setCurrentIndex(index);
 
+}
+
+void ExportGraphicsDialog::updateFilenameLabel() {
+  QString filename;
+  QString format = _comboBoxFormats->currentText();
+  filename = _saveLocation->file();
+
+  if (_autoExtension->isChecked()) {
+    if (QFileInfo(filename).suffix().toLower() != format.toLower()) {
+      filename += '.' + format;
+    }
+  }
+
+  if (_exportAll->isChecked()) {
+    QFileInfo QFI(filename);
+    filename = QFI.dir().path() + '/' + QFI.completeBaseName() +
+           tr("_<tabname>") +'.' +
+           QFI.suffix();
+  }
+
+  _filenameLabel->setText(tr("Exporting to ") + filename);
 }
 
 void ExportGraphicsDialog::enableWidthHeight() {
