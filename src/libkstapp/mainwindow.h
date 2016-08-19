@@ -119,7 +119,7 @@ class MainWindow : public QMainWindow
     void printToPrinter(QPrinter *printer);
     void printFromCommandLine(const QString &printFileName);
 #endif
-    void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display);
+    void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display, bool command_line = false);
     void exportLog(const QString &imagename, QString &msgfilename, const QString &_format, int x_size, int y_size,
                    int size_option_index, const QString &message);
 

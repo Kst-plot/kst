@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include <config.h>
+#include <stdio.h>
 
 #include "commandlineparser.h"
 //#include "datasource.h"
@@ -146,7 +147,9 @@ static void printText(const QString& text, const QString& detailText = QString()
   box.exec();
 #else
   QString displayText = QString(text) + QString(detailText) + t;
-  qWarning("%s", qPrintable(displayText));
+
+  fprintf(stderr,"%s\n", qPrintable(displayText));
+  //qWarning("%s", qPrintable(displayText));
 #endif
 }
 

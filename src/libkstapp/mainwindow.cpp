@@ -472,7 +472,7 @@ bool MainWindow::initFromCommandLine() {
 
   bool ok = _doc->initFromCommandLine(&P);
   if (!P.pngFile().isEmpty()) {
-    exportGraphicsFile(P.pngFile(), "png", 1280, 1024,0);
+    exportGraphicsFile(P.pngFile(), "png", 1280, 1024, 0, true);
     ok = false;
   }
   if (!P.printFile().isEmpty()) {
@@ -507,12 +507,13 @@ void MainWindow::openFile(const QString &file) {
 }
 
 
-void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display) {
+void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display, bool command_line) {
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
   int i_startview, i_endview;
 
-  if (_exportGraphics->exportAll()) {
+
+  if (command_line || _exportGraphics->exportAll()) {
     i_startview = 0;
     i_endview = n_views-1;
   } else {
