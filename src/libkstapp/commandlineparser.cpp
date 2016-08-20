@@ -66,6 +66,8 @@ namespace Kst {
 "      --Letter                 Print to Letter sized paper.\n"
 "      --A4                     Print to A4 sized paper.\n"
 "      --png <filename>         Render to a png image, and exit.\n"
+"      --pngHeight <height>     Height of png image (pixels)\n"
+"      --pngWidth <width>       Width of png image (pixels)\n"
 "File Options:\n"
 "      -f <startframe>          default: 'end' counts from end.\n"
 "      -n <numframes>           default: 'end' reads to end of file\n"
@@ -166,7 +168,7 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
       _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
-      _pngFile(QString()), _printFile(QString()), _landscape(false), _plotItem(0),
+      _pngFile(QString()), _pngWidth(-1), _pngHeight(-1), _printFile(QString()), _landscape(false), _plotItem(0),
       _num_cols(0), _asciiFirstLine(-1), _asciiFieldLine(-1), _asciiNoFieldNames(false),
       _asciiUnitsLine(-1), _asciiNoUnits(false), _asciiSpaceDelim(false),
       _asciiDelim('\0'), _asciiFixedWidth(-1), _asciiNoFixedWidth(false),
@@ -717,6 +719,10 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _asciiDecimalComma = true;
     } else if (arg == "--png") {
       *ok = _setStringArg(_pngFile, tr("Usage: --png <filename>\n"));
+    } else if (arg == "--pngWidth") {
+      *ok = _setIntArg(&_pngWidth, tr("Usage: --pngWidth <width>\n"));
+    } else if (arg == "--pngHeight") {
+      *ok = _setIntArg(&_pngHeight, tr("Usage: --pngHeight <height>\n"));
 #ifndef KST_NO_PRINTER
     } else if (arg == "--print") {
       *ok = _setStringArg(_printFile, tr("Usage: --print <filename>\n"));

@@ -472,7 +472,16 @@ bool MainWindow::initFromCommandLine() {
 
   bool ok = _doc->initFromCommandLine(&P);
   if (!P.pngFile().isEmpty()) {
-    exportGraphicsFile(P.pngFile(), "png", 1280, 1024, 0, true);
+    int w = 1280;
+    int h = 1024;
+
+    if (P.pngWidth()>1) {
+      w = P.pngWidth();
+    }
+    if (P.pngHeight()>1) {
+      h = P.pngHeight();
+    }
+    exportGraphicsFile(P.pngFile(), "png", w, h, 2, true);
     ok = false;
   }
   if (!P.printFile().isEmpty()) {

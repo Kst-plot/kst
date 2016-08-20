@@ -37,6 +37,8 @@ public:
   bool processCommandLine(bool *ok);
   QString kstFileName();
   QString pngFile() const {return _pngFile;}
+  int pngWidth() const {return _pngWidth;}
+  int pngHeight() const {return _pngHeight;}
   QString printFile() const {return _printFile;}
   //bool landscape() const {return _landscape;}
 
@@ -58,6 +60,8 @@ private:
   QString _fileName;
   QString _xField;
   QString _pngFile;
+  int _pngWidth;
+  int _pngHeight;
   QString _printFile;
   bool _landscape;
 #ifndef KST_NO_PRINTER
