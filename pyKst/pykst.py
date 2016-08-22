@@ -159,6 +159,16 @@ class Client:
     """ Equivalent to unchecking "Range>Pause" from the menubar inside kst."""
     self.send("unsetPaused()")
 
+  def hide_window(self):
+    """
+    Hide the kst window.
+
+    pyKst operations which effect the display are far faster when the window is hidden.
+
+    Restore with show_window() or maximize_window()."""
+
+    self.send("hide()")
+
   def minimize_window(self):
     """ Minimize the kst window. """
     self.send("minimize()")
@@ -168,7 +178,7 @@ class Client:
     self.send("maximize()")
 
   def show_window(self):
-    """ unminimize the kst window. """
+    """ unminimize and show the kst window. """
     self.send("show()")
 
   def tab_count(self):

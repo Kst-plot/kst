@@ -166,6 +166,7 @@ protected:
     QByteArray readToEnd(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray setPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray unsetPaused(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray hide(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray minimize(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray maximize(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray show_window(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

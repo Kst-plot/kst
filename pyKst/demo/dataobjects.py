@@ -6,7 +6,7 @@ import pykst as kst
 
 client=kst.Client("DataObjects")
 
-client.minimize_window()
+client.hide_window()
 
 # create a 2x2 grid of plots
 P1=client.new_plot(font_size = 12);

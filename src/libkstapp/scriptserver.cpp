@@ -203,6 +203,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("readToEnd()",&ScriptServer::readToEnd);
     _fnMap.insert("setPaused()",&ScriptServer::setPaused);
     _fnMap.insert("unsetPaused()",&ScriptServer::unsetPaused);
+    _fnMap.insert("hide()", &ScriptServer::hide);
     _fnMap.insert("minimize()", &ScriptServer::minimize);
     _fnMap.insert("show()", &ScriptServer::show_window);
     _fnMap.insert("maximize()", &ScriptServer::maximize);
@@ -967,6 +968,12 @@ QByteArray ScriptServer::unsetPaused(QByteArray&, QLocalSocket* s,ObjectStore*) 
     }
     return handleResponse("Done",s);
 
+}
+
+QByteArray ScriptServer::hide(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    kstApp->mainWindow()->hide();
+
+    return handleResponse("Done",s);
 }
 
 QByteArray ScriptServer::minimize(QByteArray&, QLocalSocket* s,ObjectStore*) {
