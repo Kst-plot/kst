@@ -158,7 +158,19 @@ class Client:
   def unset_paused(self):
     """ Equivalent to unchecking "Range>Pause" from the menubar inside kst."""
     self.send("unsetPaused()")
-    
+
+  def minimize_window(self):
+    """ Minimize the kst window. """
+    self.send("minimize()")
+
+  def maximize_window(self):
+    """ Maximize the kst window. """
+    self.send("maximize()")
+
+  def show_window(self):
+    """ unminimize the kst window. """
+    self.send("show()")
+
   def tab_count(self):
     """ Get the number of tabs open in the current document. """
     return self.send("tabCount()")

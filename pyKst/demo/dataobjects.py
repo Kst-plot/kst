@@ -6,6 +6,8 @@ import pykst as kst
 
 client=kst.Client("DataObjects")
 
+client.minimize_window()
+
 # create a 2x2 grid of plots
 P1=client.new_plot(font_size = 12);
 P2=client.new_plot(font_size = 12);
@@ -43,8 +45,8 @@ c3 = client.new_curve(s1.x(), s1.y())
 c3.set_color("blue")
 c3.set_line_width(2)
 P3.add(c3)
-P3.set_log_x();
-P3.set_log_y();
+P3.set_log_x()
+P3.set_log_y()
 
 #plot a histogram of dv1
 h1 = client.new_histogram(dv2)
@@ -57,3 +59,4 @@ c4.set_has_bars()
 c4.set_has_lines(False)
 P4.add(c4)
 
+client.show_window()
