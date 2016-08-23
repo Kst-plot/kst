@@ -520,9 +520,13 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
   int i_startview, i_endview;
+  bool exportAll = command_line;
 
+  if (_exportGraphics) {
+    exportAll |= _exportGraphics->exportAll();
+  }
 
-  if (command_line || _exportGraphics->exportAll()) {
+  if (exportAll) {
     i_startview = 0;
     i_endview = n_views-1;
   } else {
@@ -547,7 +551,6 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
       size.setWidth(width);
       size.setHeight(width);
     }
-
 
     QString file = filename;
     if (i_startview - i_endview != 0) {
@@ -632,6 +635,7 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
     }
     viewCount++;
   }
+
 }
 
 void MainWindow::exportLog(const QString &imagename, QString &msgfilename, const QString &format, int x_size, int y_size,

@@ -9,4 +9,11 @@ c1 = client.new_curve(e1.x(), e1.y())
 p1 = client.new_plot()
 p1.add(c1)
 
-client.export_graphics_file("tmp.png")
+client.new_tab()
+e1 = client.new_equation(v1, "cos(x)")
+c1 = client.new_curve(e1.x(), e1.y())
+p1 = client.new_plot()
+p1.add(c1)
+
+
+client.export_graphics_file("tmp.png", all_tabs = True)
