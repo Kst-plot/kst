@@ -168,6 +168,14 @@ class Client:
 
     self.send("hide()")
 
+  def quit(self):
+      """
+      Tell the kst window to terminate
+
+      After this, client will no longer be valid."""
+
+      self.send("quit()")
+
   def minimize_window(self):
     """ Minimize the kst window. """
     self.send("minimize()")

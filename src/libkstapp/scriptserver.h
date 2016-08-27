@@ -170,6 +170,7 @@ protected:
     QByteArray minimize(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray maximize(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray show_window(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray quit_kst(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray fileOpen(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray fileSave(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

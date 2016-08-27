@@ -207,6 +207,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     _fnMap.insert("minimize()", &ScriptServer::minimize);
     _fnMap.insert("show()", &ScriptServer::show_window);
     _fnMap.insert("maximize()", &ScriptServer::maximize);
+    _fnMap.insert("quit()", &ScriptServer::quit_kst);
 
     _fnMap.insert("fileOpen()", &ScriptServer::fileOpen);
     _fnMap.insert("fileSave()", &ScriptServer::fileSave);
@@ -993,6 +994,14 @@ QByteArray ScriptServer::show_window(QByteArray&, QLocalSocket* s,ObjectStore*) 
 
     return handleResponse("Done",s);
 }
+
+
+QByteArray ScriptServer::quit_kst(QByteArray&, QLocalSocket* s,ObjectStore*) {
+    kstApp->quit();
+
+    return handleResponse("Done",s);
+}
+
 
 QByteArray ScriptServer::fileOpen(QByteArray&command, QLocalSocket* s, ObjectStore*) {
   command.replace("fileOpen(", "");
