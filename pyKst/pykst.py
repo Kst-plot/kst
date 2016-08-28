@@ -675,14 +675,14 @@ class Client:
   def new_plot(self,pos=(0.1,0.1),size=(0,0),rot=0,font_size = 0, columns=0,
            fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
            stroke_brush_color="black", stroke_brush_style=1, 
-           strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False, name="") :
+           strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False, auto_position = True, name="") :
     """ Create a New Plot in kst.
     
     See :class:`Plot`
     """
     return Plot(self, pos, size, rot, font_size, columns, fill_color, fill_style, stroke_style,
                 stroke_width, stroke_brush_color, stroke_brush_style, 
-                strokeJoinStyle, stroke_cap_style, fix_aspect, name)
+                strokeJoinStyle, stroke_cap_style, fix_aspect, auto_position, name)
   
   def plot(self, name):
     """ Returns a Plot from kst given its name.
@@ -2362,6 +2362,62 @@ class ViewItem(NamedObject):
     self.client.send("setGeoY("+b2str(h)+")")
     self.client.send("endEdit()")
 
+
+
+  def subplot(self, *args):
+    """
+    Set the item position according to the given grid definition.
+
+    Typical call signature::
+
+      subplot(nrows, ncols, plot_number)
+
+    Where *nrows* and *ncols* are used to notionally split the figure
+    into ``nrows * ncols`` sub-axes, and *plot_number* is used to identify
+    the particular subplot that this function is to create within the notional
+    grid. *plot_number* starts at 1, increments across rows first and has a
+    maximum of ``nrows * ncols``.
+
+    In the case when *nrows*, *ncols* and *plot_number* are all less than 10,
+    a convenience exists, such that the a 3 digit number can be given instead,
+    where the hundreds represent *nrows*, the tens represent *ncols* and the
+    units represent *plot_number*. For instance::
+
+      subplot(211)
+
+    place the plot in the the top grid location (i.e. the
+    first) in a 2 row by 1 column notional grid (no grid actually exists,
+    but conceptually this is how the returned subplot has been positioned).
+
+
+    """
+
+    w = 0
+    h = 0
+    x = 0
+    y = 0
+    n = 0
+
+    if (len(args) == 1):
+        h = args[0]/100
+        w = (args[0]%100)/10
+        n = args[0]%10
+    elif (len(args) == 3):
+        h = args[0]
+        w = args[1]
+        n = args[2]
+    else:
+        w = h = n = 1
+
+    x = (n-1)%w
+    y = (n-1)/w
+
+    size = (1.0/w, 1.0/h)
+    pos = (x/float(w)+0.5/w,y/float(h)+0.5/h)
+
+    self.set_pos(pos)
+    self.set_size(size)
+
   def set_rotation(self,rot):
     """ Set the rotation of the item.
     
@@ -3115,7 +3171,6 @@ class Plot(ViewItem) :
               ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
   :param size: a 2 element tuple ``(w,h)`` specifying the size.
               ``(1,1)`` is the size of the window.
-              ``(0,0)``, the default, specifies auto placement.
   :param font_size: font size for labels in the plot.  kst default if 0.
   :param rotation: rotation of the label in degrees.
   :param columns: auto-place the plot, reformatting into this many columns.
@@ -3128,6 +3183,7 @@ class Plot(ViewItem) :
   :param strokeJoinStyle: see set_stroke_join_style
   :param stroke_cap_style: see set_stroke_cap_style
   :param fix_aspect: if true, the plot will have a fixed aspect ratio.
+  :param auto_postion: if True (the default) the plot will be auto-placed.  Ignored if pos is set.
 
   Colors are given by a name such as ``red`` or a hex number such 
   as ``#FF0000``. 
@@ -3150,14 +3206,18 @@ class Plot(ViewItem) :
                fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
                stroke_brush_color="black", stroke_brush_style=1, 
                strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False,
+               auto_position = True,
                name="", new=True) :
     ViewItem.__init__(self,client)
+
+    if (size != (0,0)):
+        auto_position = False
 
     if (new == True):
       self.client.send("newPlot()")
       if (columns>0):
         self.client.send("addToCurrentView(Columns,"+b2str(columns)+")")
-      elif (size == (0,0)):
+      elif (auto_position == True):
         self.client.send("addToCurrentView(Auto,2)")
       else:
         self.client.send("addToCurrentView(Protect,2)")
