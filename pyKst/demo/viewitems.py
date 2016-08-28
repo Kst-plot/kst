@@ -24,4 +24,7 @@ L1.set_stroke_style(2)
 Label = client.new_label("Label Here", (0.7,0.7), 0, 16, font_family="courier")
 Label.set_font_italic(True)
 
+Label2 = client.new_label("Sub Label Here", (0.25,0.25), 0, 16, font_family="courier")
+Label2.set_font_bold(True)
+Label2.update_parent()
 

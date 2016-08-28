@@ -81,6 +81,9 @@ class PlotRenderItem : public ViewItem
     void dragYZoomMouseCursor(qreal y);
     void dragXZoomMouseCursor(qreal x);
     QPointF statusMessagePoint;
+
+    virtual bool updateViewItemParent();
+
   public Q_SLOTS:
     virtual void edit();
     virtual void raise();
@@ -108,7 +111,6 @@ class PlotRenderItem : public ViewItem
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     virtual QPainterPath shape() const;
-    virtual bool updateViewItemParent();
 
   private Q_SLOTS:
     void updateGeometry();

@@ -5,6 +5,8 @@ import time
 
 client=kst.Client("PlotLayoutDemo")
 
+client.hide_window()
+
 #autolayout in tab 1
 p1 = client.new_plot()
 
@@ -38,3 +40,6 @@ client.set_tab_text("Third")
 for i in xrange(1,10):
   p = client.new_plot(font_size = 8, auto_position = False)
   p.subplot(3,3,i)
+
+client.show_window()
+

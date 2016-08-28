@@ -152,6 +152,11 @@ QString DimensionTabSI::doCommand(QString x) {
     QString command = x.left(x.indexOf('('));
     double parameter = x.remove(command).remove('(').remove(')').toDouble();
 
+    if (command == "updateParent") {
+      item->updateViewItemParent();
+      return "done";
+    }
+
     if(command=="fixAspectRatioIsChecked") {
         return item->lockAspectRatio()?"true":"false";
     }

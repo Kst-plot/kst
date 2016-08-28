@@ -2362,7 +2362,8 @@ class ViewItem(NamedObject):
     self.client.send("setGeoY("+b2str(h)+")")
     self.client.send("endEdit()")
 
-
+  def update_parent(self):
+    self.client.send_si(self.handle, "updateParent()")
 
   def subplot(self, *args):
     """
