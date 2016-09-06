@@ -4,6 +4,8 @@ import ctypes
 import atexit
 import os
 
+from ast import literal_eval
+
 try:
   from PySide import QtCore, QtNetwork, QtGui
 except ImportError as err1:
@@ -2328,6 +2330,20 @@ class ViewItem(NamedObject):
     else:
       self.client.send_si(self.handle, b2str("uncheckFixAspectRatio()"))
 
+  def position(self):
+    x = str(self.client.send_si(self.handle, "position()"))
+
+    ret=literal_eval(x)
+
+    return ret
+
+  def dimensions(self):
+    x = str(self.client.send_si(self.handle, "dimensions()"))
+
+    ret=literal_eval(x)
+
+    return ret
+
   def set_pos(self,pos):
     """ Set the center position of the item.
     
@@ -2362,8 +2378,26 @@ class ViewItem(NamedObject):
     self.client.send("setGeoY("+b2str(h)+")")
     self.client.send("endEdit()")
 
-  def update_parent(self):
+  def set_parent_auto(self):
+    """
+    Set the parent of the viewitem to an existing view item which fully contains it.
+    Once reparented, moving/resizing the parent will also move/resize the child.
+
+    By default view items created by pyKst are parented by the toplevel view unless
+    this method is called, or if the item is moved/resized in the GUI.
+    """
+
     self.client.send_si(self.handle, "updateParent()")
+
+  def set_parent_toplevel(self):
+    """
+    Set the parent of the viewitem to the toplevel view.
+
+    By default view items created by pyKst are parented by the toplevel view unless
+    set_parent_auto() is called, or if the item is moved/resized in the GUI.
+    """
+
+    self.client.send_si(self.handle, "parentTopLevel()")
 
   def subplot(self, *args):
     """

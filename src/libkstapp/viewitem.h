@@ -259,7 +259,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     ScriptInterface *scriptInterface();
 
-    virtual bool updateViewItemParent();
+    virtual bool updateViewItemParent(bool force_toplevel = false);
 
   Q_SIGNALS:
     void geometryChanged();

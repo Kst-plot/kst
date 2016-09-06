@@ -26,5 +26,10 @@ Label.set_font_italic(True)
 
 Label2 = client.new_label("Sub Label Here", (0.25,0.25), 0, 16, font_family="courier")
 Label2.set_font_bold(True)
-Label2.update_parent()
+Label2.set_parent_auto()
 
+P1.set_pos((0.5,0.5))
+
+print Label2.position(), Label2.dimensions()
+
+Label2.set_parent_toplevel()

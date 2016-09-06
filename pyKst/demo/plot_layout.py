@@ -37,9 +37,9 @@ for x in [.125, 0.375, 0.625, 0.875]:
 client.new_tab()
 client.set_tab_text("Third")
 
-for i in xrange(1,10):
+for i in xrange(1,26):
   p = client.new_plot(font_size = 8, auto_position = False)
-  p.subplot(3,3,i)
+  p.subplot(5,5,i)
 
 client.show_window()
 

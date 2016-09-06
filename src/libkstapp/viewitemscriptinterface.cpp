@@ -157,8 +157,33 @@ QString DimensionTabSI::doCommand(QString x) {
       return "done";
     }
 
+    if (command == "parentTopLevel") {
+      item->updateViewItemParent(true);
+      return "done";
+    }
+
     if(command=="fixAspectRatioIsChecked") {
         return item->lockAspectRatio()?"true":"false";
+    }
+
+    if (command == "position") {
+      QString retval;
+      if(item->dataPosLockable() && item->lockPosToData()) {
+        retval = QString("(%1, %2)").arg(item->dataRelativeRect().center().x()).arg(item->dataRelativeRect().center().y());
+      } else {
+        retval = QString("(%1, %2)").arg(item->relativeCenter().x()).arg(item->relativeCenter().y());
+      }
+      return retval;
+    }
+
+    if (command == "dimensions") {
+      QString retval;
+      if(item->dataPosLockable() && item->lockPosToData()) {
+        retval = QString("(%1, %2)").arg(item->dataRelativeRect().width()).arg(item->dataRelativeRect().height());
+      } else {
+        retval = QString("(%1, %2)").arg(item->relativeWidth()).arg(item->relativeHeight());
+      }
+      return retval;
     }
 
     if(!command.startsWith("setGeo")&&!command.startsWith("setPos")&&
@@ -298,7 +323,7 @@ ScriptInterface* ViewItemSI::newPicture(QByteArray picf) {
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     bi->setViewRect(0.9,0.9,1.0,1.0,true);
     bi->setVisible(1);
-    bi->updateViewItemParent();
+    //bi->updateViewItemParent();
     return new ViewItemSI(bi);
 }
 
@@ -308,7 +333,7 @@ ScriptInterface* ViewItemSI::newSvgItem(QByteArray path) {
     kstApp->mainWindow()->tabWidget()->currentView()->scene()->addItem(bi);
     bi->setViewRect(0.9,0.9,1.0,1.0,true);
     bi->setVisible(1);
-    bi->updateViewItemParent();
+    //bi->updateViewItemParent();
     return new ViewItemSI(bi);
 }
 #endif

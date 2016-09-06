@@ -1822,7 +1822,7 @@ QPointF ViewItem::lockOffset(const QPointF &offset, qreal ratio, bool oddCorner)
 }
 
 
-bool ViewItem::updateViewItemParent() {
+bool ViewItem::updateViewItemParent(bool force_toplevel) {
   if (lockParent() || skipNextParentCheck()) {
     setSkipNextParentCheck(false);
     return false;
@@ -1870,56 +1870,57 @@ bool ViewItem::updateViewItemParent() {
     return true;
   }
 
-  //Look for collisions that completely contain us
-  foreach (QGraphicsItem *item, collisions) {
-    ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
+  if (!force_toplevel) {
+    //Look for collisions that completely contain us
+    foreach (QGraphicsItem *item, collisions) {
+      ViewItem *viewItem = dynamic_cast<ViewItem*>(item);
 
-    if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect)) {
+      if (!viewItem || !viewItem->acceptsChildItems() || isAncestorOf(viewItem) || !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect)) {
 #if DEBUG_REPARENT
-     qDebug() << "rejecting collision" << viewItem << !viewItem->acceptsChildItems() <<
-                 isAncestorOf(viewItem) << !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect);
+        qDebug() << "rejecting collision" << viewItem << !viewItem->acceptsChildItems() <<
+                    isAncestorOf(viewItem) << !collidesWithItem(viewItem, Qt::ContainsItemBoundingRect);
 #endif
-      continue;
+        continue;
+      }
+
+      if (parentItem() == viewItem) { /*already done*/
+#if DEBUG_REPARENT
+        qDebug() << "already in containing parent";
+#endif
+        return false;
+      }
+
+#if DEBUG_REPARENT
+      qDebug() << "reparent to" << viewItem;
+
+      qDebug() << "before transform"
+               << "origin:" << mapToScene(QPointF(0,0));
+#endif
+
+      if (!topLevel) { /*bring the old parent's transform with us*/
+        setTransform(parentItem()->transform(), true);
+      }
+
+      /*cancel out the new parent's initial transform*/
+      setTransform(viewItem->transform().inverted(), true);
+
+#if DEBUG_REPARENT
+      qDebug() << "after transform"
+               << "origin:" << mapToScene(QPointF(0,0));
+#endif
+
+      setParentViewItem(viewItem);
+      setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
+      updateRelativeSize(true);
+
+#if DEBUG_REPARENT
+      qDebug() << "after new parent"
+               << "origin:" << mapToScene(QPointF(0,0));
+#endif
+
+      return true;
     }
-
-    if (parentItem() == viewItem) { /*already done*/
-#if DEBUG_REPARENT
-      qDebug() << "already in containing parent";
-#endif
-      return false;
-    }
-
-#if DEBUG_REPARENT
-    qDebug() << "reparent to" << viewItem;
-
-    qDebug() << "before transform"
-             << "origin:" << mapToScene(QPointF(0,0));
-#endif
-
-    if (!topLevel) { /*bring the old parent's transform with us*/
-      setTransform(parentItem()->transform(), true);
-    }
-
-    /*cancel out the new parent's initial transform*/
-    setTransform(viewItem->transform().inverted(), true);
-
-#if DEBUG_REPARENT
-    qDebug() << "after transform"
-             << "origin:" << mapToScene(QPointF(0,0));
-#endif
-
-    setParentViewItem(viewItem);
-    setPos(mapToParent(mapFromScene(origin)) + pos() - mapToParent(QPointF(0,0)));
-    updateRelativeSize(true);
-
-#if DEBUG_REPARENT
-    qDebug() << "after new parent"
-             << "origin:" << mapToScene(QPointF(0,0));
-#endif
-
-    return true;
   }
-
   //No suitable collisions then reparent to top-level
   if (!topLevel) {
 #if DEBUG_REPARENT

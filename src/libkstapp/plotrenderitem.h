@@ -82,7 +82,7 @@ class PlotRenderItem : public ViewItem
     void dragXZoomMouseCursor(qreal x);
     QPointF statusMessagePoint;
 
-    virtual bool updateViewItemParent();
+    virtual bool updateViewItemParent(bool force_toplevel = false);
 
   public Q_SLOTS:
     virtual void edit();

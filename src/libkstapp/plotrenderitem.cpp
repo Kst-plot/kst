@@ -979,7 +979,8 @@ QPainterPath PlotRenderItem::shape() const {
 }
 
 
-bool PlotRenderItem::updateViewItemParent() {
+bool PlotRenderItem::updateViewItemParent(bool force_toplevel) {
+  Q_UNUSED(force_toplevel)
   return false; //never reparent a plot renderer
 }
 
