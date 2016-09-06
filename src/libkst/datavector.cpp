@@ -185,6 +185,7 @@ void DataVector::changeFile(DataSourcePtr in_file) {
 void DataVector::changeFrames(int in_f0, int in_n,
                               int in_skip, bool in_DoSkip,
                               bool in_DoAve) {
+
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (dataSource()) {

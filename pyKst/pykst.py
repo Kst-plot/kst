@@ -1107,6 +1107,22 @@ class DataVector(VectorBase):
                         +b2str(start)+","+b2str(num_frames)+","+b2str(skip)
                         +","+b2str(boxcarFirst)+")")
 
+  def change_frames(self, start, num_frames, skip, boxcarFirst):
+    """ Change the parameters of a data vector.
+
+    :param start: The starting index of the vector.
+                  start = -1 for count from end.
+    :param num_frames: The number of frames to read.
+                    num_frames = -1 for read to end.
+    :param skip: The number of frames per sample read.
+                skip = 0 to read every sample.
+    :param boxcarFirst: apply a boxcar filter before skiping.
+
+    """
+    self.client.send_si(self.handle, "changeFrames("
+                        +b2str(start)+","+b2str(num_frames)+","+b2str(skip)
+                        +","+b2str(boxcarFirst)+")")
+
   def field(self):
     """  Returns the fieldname. """
     return self.client.send_si(self.handle, "field()")

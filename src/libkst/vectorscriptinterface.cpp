@@ -132,6 +132,7 @@ DataVectorSI::DataVectorSI(DataVectorPtr it) {
   }
 
   _fnMap.insert("change",&DataVectorSI::change);
+  _fnMap.insert("changeFrames",&DataVectorSI::changeFrames);
   _fnMap.insert("field",&DataVectorSI::field);
   _fnMap.insert("filename",&DataVectorSI::filename);
   _fnMap.insert("start",&DataVectorSI::start);
@@ -190,6 +191,22 @@ QByteArray DataVectorSI::endEditUpdate() {
 /***************************/
 /*   data vector commands  */
 /***************************/
+
+QString DataVectorSI::changeFrames(QString &command) {
+  QStringList vars = getArgs(command);
+
+  _datavector->writeLock();
+  _datavector->changeFrames(
+        vars.at(0).toInt(), // f0
+        vars.at(1).toInt(), // n
+        vars.at(2).toInt(), // skip
+        vars.at(2).toInt() > 0, // do skip
+        vars.at(3) == "True" // do average
+        );
+  _datavector->unlock();
+  return "Done";
+}
+
 
 QString DataVectorSI::change(QString& command) {
   QStringList vars = getArgs(command);

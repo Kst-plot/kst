@@ -78,6 +78,7 @@ public:
     static ScriptInterface* newVector(ObjectStore *store);
 
     QString change(QString &command);
+    QString changeFrames(QString &command);
     QString field(QString &command);
     QString filename(QString &command);
     QString start(QString &command);
