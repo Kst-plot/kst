@@ -2250,6 +2250,65 @@ void ViewItem::moveTo(const QPointF& pos)
   updateRelativeSize(true);
 }
 
+void ViewItem::setItemPos(qreal x, qreal y)
+{
+  if (_lockPosToData) {
+    QRectF dr = dataRelativeRect();
+    dr.moveCenter(QPointF(x,y));
+    setDataRelativeRect(dr);
+    applyDataLockedDimensions();
+  } else {
+    QRectF parent_rect = parentRect();
+    qreal parentWidth = parent_rect.width();
+    qreal parentHeight = parent_rect.height();
+    qreal parentX = parent_rect.x();
+    qreal parentY = parent_rect.y();
+
+    x = x*parentWidth + parentX;
+    y = y*parentHeight + parentY;
+
+    setPos(x,y);
+  }
+}
+
+void ViewItem::setItemSize(qreal w, qreal h)
+{
+  if (_lockPosToData) {
+    QRectF dr = dataRelativeRect();
+    QPointF center = dr.center();
+    dr.setWidth(w);
+    if (h>0) {
+      dr.setHeight(h);
+    }
+    dr.moveCenter(center);
+    setDataRelativeRect(dr);
+    applyDataLockedDimensions();
+  } else {
+    QRectF parent_rect = parentRect();
+    qreal parentWidth = parent_rect.width();
+    qreal parentHeight = parent_rect.height();
+
+    qreal width = w * parentWidth;
+    qreal height;
+
+    if (lockAspectRatio()) {
+      qreal aspectRatio;
+      if (rect().width() > 0) {
+        aspectRatio = qreal(rect().height()) / qreal(rect().width());
+      } else {
+        aspectRatio = 10000.0;
+      }
+      height = width * aspectRatio;
+    } else  if (h < 0.0) {
+      height = rect().height();
+    } else {
+      height = h * parentHeight;
+    }
+
+    setViewRect(-width/2, -height/2, width, height);
+  }
+}
+
 void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
   if (view()->mouseMode() == View::Move) {
     _originalPosition = pos();

@@ -147,10 +147,21 @@ QString StrokeTabSI::doCommand(QString x) {
     return "Done";
 }
 
+/* Note: this is not the cleanest way to parse commands, and shouldn't be coppied. *
+ * Look at vectorscriptinterface instead.  Its the way all the cool kids do it.    */
 QString DimensionTabSI::doCommand(QString x) {
 
     QString command = x.left(x.indexOf('('));
-    double parameter = x.remove(command).remove('(').remove(')').toDouble();
+    double parameter_d = x.remove(command).remove('(').remove(')').toDouble();
+    QString parameter_s = x.remove(command).remove('(').remove(')');
+
+    if (command == "setLockPosToData") {
+      if (parameter_s.toLower() == "true") {
+        item->setLockPosToData(true);
+      } else {
+        item->setLockPosToData(false);
+      }
+    }
 
     if (command == "updateParent") {
       item->updateViewItemParent();
@@ -186,6 +197,36 @@ QString DimensionTabSI::doCommand(QString x) {
       return retval;
     }
 
+    if (command == "setPos") {
+      QStringList args = ScriptInterface::getArgs(x);
+
+      item->setItemPos(args.at(0).toDouble(), args.at(1).toDouble());
+
+      QTransform transform;
+
+      item->setTransform(transform);
+      item->updateRelativeSize();
+
+      return "Done";
+    }
+
+    if (command == "setSize") {
+      QStringList args = ScriptInterface::getArgs(x);
+
+      if (args.size() == 1) {
+        item->setItemSize(args.at(0).toDouble());
+      } else {
+        item->setItemSize(args.at(0).toDouble(), args.at(1).toDouble());
+      }
+
+      QTransform transform;
+
+      item->setTransform(transform);
+      item->updateRelativeSize();
+
+      return "Done";
+    }
+
     if(!command.startsWith("setGeo")&&!command.startsWith("setPos")&&
        !command.contains("checkFixAspect")&&!command.contains("setRotation")) {
         return "";
@@ -203,8 +244,8 @@ QString DimensionTabSI::doCommand(QString x) {
       aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
     }
 
-    qreal relativeWidth = (command == "setGeoX") ? parameter :item->relativeWidth();
-    qreal relativeHeight = (command == "setGeoY") ? parameter :item->relativeHeight();
+    qreal relativeWidth = (command == "setGeoX") ? parameter_d :item->relativeWidth();
+    qreal relativeHeight = (command == "setGeoY") ? parameter_d :item->relativeHeight();
 
     bool fixedAspect = item->lockAspectRatio();
     if (command == "uncheckFixAspectRatio") {
@@ -224,14 +265,14 @@ QString DimensionTabSI::doCommand(QString x) {
         item->setLockAspectRatio(false);
     }
 
-    double x0 = parentX + ((command == "setPosX")? parameter : item->relativeCenter().x())*parentWidth;
-    double y0 = parentY + ((command == "setPosY")? parameter : item->relativeCenter().y())*parentHeight;
+    double x0 = parentX + ((command == "setPosX")? parameter_d : item->relativeCenter().x())*parentWidth;
+    double y0 = parentY + ((command == "setPosY")? parameter_d : item->relativeCenter().y())*parentHeight;
 
     item->setPos(x0,y0);
 
     item->setViewRect(-width/2, -height/2, width, height);
 
-    qreal rotation = (command == "setRotation") ? parameter :item->rotationAngle();
+    qreal rotation = (command == "setRotation") ? parameter_d :item->rotationAngle();
 
     QTransform transform;
     transform.rotate(rotation);

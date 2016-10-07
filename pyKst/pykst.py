@@ -2363,17 +2363,17 @@ class ViewItem(NamedObject):
   def set_pos(self,pos):
     """ Set the center position of the item.
     
-    :param pos: a 2 element tuple ``(x,y)`` specifying the position.  The Top Left is (0,0).
-                The Bottom Right is (1,1)
+    :param pos: a 2 element tuple ``(x,y)`` specifying the position.
+                The Top Left of the parent is (0,0).
+                The Bottom Right of the parent is (1,1)
 
-    This is equivalent to setting Dimensions>Position within a view 
-    item dialog in kst.    
     """
     x,y = pos
     
     self.client.send("beginEdit("+self.handle+")")
-    self.client.send("setPosX("+b2str(x)+")")
-    self.client.send("setPosY("+b2str(y)+")")
+    self.client.send("setPos("+b2str(x)+","+b2str(y)+")")
+    #self.client.send("setPosX("+b2str(x)+")")
+    #self.client.send("setPosY("+b2str(y)+")")
     self.client.send("endEdit()")
 
   def set_size(self,size):
@@ -2390,9 +2390,24 @@ class ViewItem(NamedObject):
     """
     w,h = size
     self.client.send("beginEdit("+self.handle+")")
-    self.client.send("setGeoX("+b2str(w)+")")
-    self.client.send("setGeoY("+b2str(h)+")")
+    self.client.send("setSize("+b2str(w)+","+b2str(h)+")")
     self.client.send("endEdit()")
+
+  def set_lock_pos_to_data(self, lock=True):
+    """
+    if lock is True, and the item is in a plot, then the position of the item
+    will be locked to the data coordinates in the plot.  The item will move with
+    zooming and scrolling.
+
+    If lock is False, or the item is not in a plot, then the item will be fixed
+    to the geometry of the window, and zooming/scrolling will not change its
+    position.
+
+    """
+    if lock==True:
+      self.client.send_si(self.handle, "setLockPosToData(True)")
+    else:
+      self.client.send_si(self.handle, "setLockPosToData(False)")
 
   def set_parent_auto(self):
     """
@@ -2834,8 +2849,7 @@ class Circle(ViewItem) :
     
     The width of the window is 1.0.
     """
-    self.client.send_si(self.handle,"setGeoX("+b2str(diameter)+")")
-
+    self.client.send_si(self.handle,"setSize("+b2str(diameter)+","+b2str(diameter)+")")
 
 class Ellipse(ViewItem) :
   """ A floating ellipse inside kst.
@@ -2983,7 +2997,7 @@ class Line(ViewItem) :
     
     The width of the window is 1.0.
     """
-    self.client.send_si(self.handle,"setGeoX("+b2str(length)+")")
+    self.client.send_si(self.handle,"setSize("+b2str(length)+","+b2str(length)+")")
 
 
 class Arrow(ViewItem) :
@@ -3067,7 +3081,7 @@ class Arrow(ViewItem) :
     
     The width of the window is 1.0.
     """
-    self.client.send_si(self.handle,"setGeoX("+b2str(length)+")")
+    self.client.send_si(self.handle,"setSize("+b2str(length)+","+b2str(length)+")")
 
   @classmethod
   def getList(cls,client):
@@ -3129,7 +3143,7 @@ class Picture(ViewItem) :
     
     The width of the window is 1.0.
     """
-    self.client.send_si(self.handle,"setGeoX("+b2str(width)+")")
+    self.client.send_si(self.handle,"setSize("+b2str(width)+")")
   
 
   def set_picture(self,pic):
@@ -3197,7 +3211,7 @@ class SVG(ViewItem) :
     
     The width of the window is 1.0.
     """
-    self.client.send_si(self.handle,"setGeoX("+b2str(width)+")")
+    self.client.send_si(self.handle,"setSize("+b2str(width)+")")
 
   @classmethod
   def getList(cls,client):
@@ -3276,8 +3290,8 @@ class Plot(ViewItem) :
 
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
       if (size != (0,0)):
-        self.set_pos(pos)
         self.set_size(size)
+        self.set_pos(pos)
 
       self.set_global_font(font_size = font_size)
       self.set_fixed_aspect_ratio(fix_aspect)
@@ -3512,10 +3526,8 @@ class Button(ViewItem) :
   def __init__(self,client,text,socket,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0) :
     ViewItem.__init__(self,client)
     self.client.send("newButton()")
-    self.client.send("setPosX("+b2str(posX)+")")
-    self.client.send("setPosY("+b2str(posY)+")")
-    self.client.send("setGeoX("+b2str(sizeX)+")")
-    self.client.send("setGeoY("+b2str(sizeY)+")")
+    self.client.send("setPos("+b2str(posX)+","+b2str(posY)+")")
+    self.client.send("setSize("+b2str(sizeX)+","+b2str(sizeY)+")")
     self.client.send("setText("+b2str(text)+")")
     self.client.send("setRotation("+b2str(rot)+")")
     self.handle=self.client.send("endEdit()")
@@ -3543,10 +3555,8 @@ class LineEdit(ViewItem) :
   def __init__(self,client,text,socket,posX=0.1,posY=0.1,sizeX=0.1,sizeY=0.1,rot=0) :
     ViewItem.__init__(self,client)
     self.client.send("newLineEdit()")
-    self.client.send("setPosX("+b2str(posX)+")")
-    self.client.send("setPosY("+b2str(posY)+")")
-    self.client.send("setGeoX("+b2str(sizeX)+")")
-    self.client.send("setGeoY("+b2str(sizeY)+")")
+    self.client.send("setPos("+b2str(posX)+","+b2str(posY)+")")
+    self.client.send("setSize("+b2str(sizeX)+","+b2str(sizeY)+")")
     self.client.send("setText("+b2str(text)+")")
     self.client.send("setRotation("+b2str(rot)+")")
     self.handle=self.client.send("endEdit()")

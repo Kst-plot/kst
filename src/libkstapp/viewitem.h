@@ -121,6 +121,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QRectF dataRelativeRect() const { return _dataRelativeRect;}
     void setDataRelativeRect(QRectF r) { _dataRelativeRect = r;}
     
+    void setItemPos(qreal x, qreal y);
+    void setItemSize(qreal w, qreal h = -10.0);
+
     qreal rotationAngle() const;
     qreal rotationAngleRadians() const;
 

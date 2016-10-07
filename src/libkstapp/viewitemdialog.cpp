@@ -344,9 +344,9 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     dr.moveCenter(QPointF(_dimensionsTab->x(), _dimensionsTab->y()));
 
     item->setDataRelativeRect(dr);
-
     item->setLockPosToData(true);
     item->applyDataLockedDimensions();
+
   } else {
     QRectF parentRect = item->parentRect();
     qreal parentWidth = parentRect.width();
@@ -379,13 +379,7 @@ void ViewItemDialog::saveDimensions(ViewItem *item) {
     double y = _dimensionsTab->y();
 
     item->setLockPosToData(false);
-
-    if (_mode == Multiple) {
-      item->setPos(parentX + item->relativeCenter().x()*parentWidth,
-                   parentY + item->relativeCenter().y()*parentHeight);
-    } else {
-      item->setPos(parentX + x*parentWidth, parentY + y*parentHeight);
-    }
+    item->setPos(parentX + x*parentWidth, parentY + y*parentHeight);
     item->setViewRect(-width/2, -height/2, width, height);
   }
 

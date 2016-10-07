@@ -50,6 +50,10 @@ void CircleItemDialog::setupDimensions() {
 void CircleItemDialog::saveDimensions(ViewItem *item) {
   Q_ASSERT(item);
 
+  if (editMode() == Multiple) { // saving dimensions not supported for edit multiple mode
+    return;
+  }
+
   if (_circleDimensionsTab->lockPosToData() && item->dataPosLockable()) {
     QRectF dr;
     dr.setWidth(2*_circleDimensionsTab->radius());
@@ -75,12 +79,7 @@ void CircleItemDialog::saveDimensions(ViewItem *item) {
     qreal radius = relativeRadius * parentWidth;
     item->setLockPosToData(lockPosToData);
 
-    if (editMode() == Multiple) {
-      item->setPos(parentX + item->relativeCenter().x()*parentWidth,
-                   parentY + item->relativeCenter().y()*parentHeight);
-    } else {
-      item->setPos(parentX + _circleDimensionsTab->x()*parentWidth, parentY + _circleDimensionsTab->y()*parentHeight);
-    }
+    item->setPos(parentX + _circleDimensionsTab->x()*parentWidth, parentY + _circleDimensionsTab->y()*parentHeight);
     item->setViewRect(-radius, -radius, radius*2.0, radius*2.0);
 
     QTransform transform;
