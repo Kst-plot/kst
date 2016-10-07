@@ -2342,9 +2342,9 @@ class ViewItem(NamedObject):
     view item dialog in kst.
     """
     if fixed == True:
-      self.client.send_si(self.handle, b2str("checkFixAspectRatio()"))
+      self.client.send_si(self.handle, b2str("lockAspectRatio(True)"))
     else:
-      self.client.send_si(self.handle, b2str("uncheckFixAspectRatio()"))
+      self.client.send_si(self.handle, b2str("lockAspectRatio(False)"))
 
   def position(self):
     x = str(self.client.send_si(self.handle, "position()"))

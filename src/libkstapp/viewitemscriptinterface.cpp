@@ -227,8 +227,27 @@ QString DimensionTabSI::doCommand(QString x) {
       return "Done";
     }
 
-    if(!command.startsWith("setGeo")&&!command.startsWith("setPos")&&
-       !command.contains("checkFixAspect")&&!command.contains("setRotation")) {
+    if (command == "lockAspectRatio") {
+      if (parameter_s.toLower() == "true") {
+        item->setLockAspectRatio(true);
+      } else {
+        item->setLockAspectRatio(false);
+      }
+      return "Done";
+    }
+
+    if (command == "setRotation") {
+
+      QTransform transform;
+      transform.rotate(parameter_d);
+
+      item->setTransform(transform);
+      item->updateRelativeSize();
+      return "Done.";
+
+    }
+
+    if(!command.contains("setRotation")) {
         return "";
     }
     QRectF parentRect = item->parentRect();
@@ -253,7 +272,6 @@ QString DimensionTabSI::doCommand(QString x) {
     } else if (command == "checkFixAspectRatio") {
       fixedAspect = true;
     }
-
 
     qreal width = relativeWidth * parentWidth;
     qreal height;

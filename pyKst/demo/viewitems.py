@@ -33,6 +33,7 @@ Label2.set_font_bold(True)
 Label2.set_parent_auto()
 
 P1.set_pos((0.5,0.5))
+P1.set_fixed_aspect_ratio(True)
 
 print Label2.position(), Label2.dimensions()
 
