@@ -50,6 +50,8 @@ class LineItem : public ViewItem
 
     virtual bool customDimensionsTab() {return true;}
 
+    void setEndpoints(double x1, double y1, double x2, double y2);
+
   protected Q_SLOTS:
     virtual void creationPolygonChanged(View::CreationEvent event);
 

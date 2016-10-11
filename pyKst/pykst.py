@@ -2995,10 +2995,20 @@ class Line(ViewItem) :
   def set_length(self, length):
     """ set the length of the line.
     
-    The width of the window is 1.0.
+    The length, between 0 and 1,  is as a fraction of the width of the parent item.
     """
     self.client.send_si(self.handle,"setSize("+b2str(length)+","+b2str(length)+")")
 
+  def set_endpoints(self, start = (0,0), end = (1,1)) :
+    """ set the endpoints of the line.
+
+    If lock_pos_to_data has been set True, and the item parent is a plot, then the coordinates are
+    in terms the data's coordinates.  Otherwise, the coordinates, between 0 and 1, are relative to
+    the dimensions of the parent object.
+    """
+    x1,y1 = start
+    x2,y2 = end
+    self.client.send_si(self.handle, "setLineEndpoints("+b2str(x1)+","+b2str(y1)+","+b2str(x2)+","+b2str(y2)+")")
 
 class Arrow(ViewItem) :
   """ A floating arrow inside kst.
@@ -3082,6 +3092,17 @@ class Arrow(ViewItem) :
     The width of the window is 1.0.
     """
     self.client.send_si(self.handle,"setSize("+b2str(length)+","+b2str(length)+")")
+
+  def set_endpoints(self, start = (0,0), end = (1,1)) :
+    """ set the endpoints of the arrow.
+
+    If lock_pos_to_data has been set True, and the item parent is a plot, then the coordinates are
+    in terms the data's coordinates.  Otherwise, the coordinates, between 0 and 1, are relative to
+    the dimensions of the parent object.
+    """
+    x1,y1 = start
+    x2,y2 = end
+    self.client.send_si(self.handle, "setLineEndpoints("+b2str(x1)+","+b2str(y1)+","+b2str(x2)+","+b2str(y2)+")")
 
   @classmethod
   def getList(cls,client):

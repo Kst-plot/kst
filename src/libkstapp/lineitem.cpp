@@ -282,6 +282,47 @@ void LineItem::applyDataLockedDimensions() {
   }
 }
 
+void LineItem::setEndpoints(double x1, double y1, double x2, double y2)
+{
+  if (lockPosToData()){
+    QRectF dr;
+    dr.setTopLeft(QPointF(x1,y1));
+    dr.setBottomRight(QPointF(x2,y2));
+
+    setDataRelativeRect(dr);
+
+    applyDataLockedDimensions();
+
+  } else {
+    //QRectF parentRect = parentRect();
+    qreal parentWidth = parentRect().width();
+    qreal parentHeight = parentRect().height();
+    qreal parentX = parentRect().x();
+    qreal parentY = parentRect().y();
+
+    x1 = x1*parentWidth + parentX;
+    x2 = x2*parentWidth + parentX;
+    y1 = y1*parentHeight + parentY;
+    y2 = y2*parentHeight + parentY;
+    qreal dx = x2-x1;
+    qreal dy = y2-y1;
+
+    qreal w = sqrt(dx*dx + dy*dy);
+    qreal h = height();
+
+    setPos(x1,y1);
+    setViewRect(0,-h/2,w,h);
+
+    qreal rotation = atan2(dy,dx);
+
+    QTransform transform;
+    transform.rotateRadians(rotation);
+
+    setTransform(transform);
+    updateRelativeSize();
+  }
+}
+
 void LineItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   ViewItem::mousePressEvent(event);
 }

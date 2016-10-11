@@ -147,30 +147,30 @@ QString StrokeTabSI::doCommand(QString x) {
     return "Done";
 }
 
-/* Note: this is not the cleanest way to parse commands, and shouldn't be coppied. *
+/* Note: this is a brute force command handler, and probably shouldn't be coppied. *
  * Look at vectorscriptinterface instead.  Its the way all the cool kids do it.    */
 QString DimensionTabSI::doCommand(QString x) {
 
     QString command = x.left(x.indexOf('('));
-    double parameter_d = x.remove(command).remove('(').remove(')').toDouble();
-    QString parameter_s = x.remove(command).remove('(').remove(')');
+    QStringList args = ScriptInterface::getArgs(x);
 
     if (command == "setLockPosToData") {
-      if (parameter_s.toLower() == "true") {
+      if (args.at(0).toLower() == "true") {
         item->setLockPosToData(true);
       } else {
         item->setLockPosToData(false);
       }
+      return "Done";
     }
 
     if (command == "updateParent") {
       item->updateViewItemParent();
-      return "done";
+      return "Done";
     }
 
     if (command == "parentTopLevel") {
       item->updateViewItemParent(true);
-      return "done";
+      return "Done";
     }
 
     if(command=="fixAspectRatioIsChecked") {
@@ -198,8 +198,6 @@ QString DimensionTabSI::doCommand(QString x) {
     }
 
     if (command == "setPos") {
-      QStringList args = ScriptInterface::getArgs(x);
-
       item->setItemPos(args.at(0).toDouble(), args.at(1).toDouble());
 
       QTransform transform;
@@ -211,8 +209,6 @@ QString DimensionTabSI::doCommand(QString x) {
     }
 
     if (command == "setSize") {
-      QStringList args = ScriptInterface::getArgs(x);
-
       if (args.size() == 1) {
         item->setItemSize(args.at(0).toDouble());
       } else {
@@ -228,7 +224,7 @@ QString DimensionTabSI::doCommand(QString x) {
     }
 
     if (command == "lockAspectRatio") {
-      if (parameter_s.toLower() == "true") {
+      if (args.at(0).toLower() == "true") {
         item->setLockAspectRatio(true);
       } else {
         item->setLockAspectRatio(false);
@@ -239,7 +235,7 @@ QString DimensionTabSI::doCommand(QString x) {
     if (command == "setRotation") {
 
       QTransform transform;
-      transform.rotate(parameter_d);
+      transform.rotate(args.at(0).toDouble());
 
       item->setTransform(transform);
       item->updateRelativeSize();
@@ -247,57 +243,21 @@ QString DimensionTabSI::doCommand(QString x) {
 
     }
 
-    if(!command.contains("setRotation")) {
-        return "";
-    }
-    QRectF parentRect = item->parentRect();
-    qreal parentWidth = parentRect.width();
-    qreal parentHeight = parentRect.height();
-    qreal parentX = parentRect.x();
-    qreal parentY = parentRect.y();
+    if (command == "setLineEndpoints") {
+      if (args.size() == 4) {
+        LineItem *lineItem = qobject_cast<LineItem*>(item);
+        if (lineItem) {
+          double x1 = args.at(0).toDouble();
+          double y1 = args.at(1).toDouble();
+          double x2 = args.at(2).toDouble();
+          double y2 = args.at(3).toDouble();
 
-    qreal aspectRatio;
-    if (item->rect().width()==0) {
-      aspectRatio = 1.0;
-    } else {
-      aspectRatio = qreal(item->rect().height()) / qreal(item->rect().width());
+          lineItem->setEndpoints(x1, y1, x2, y2);
+        }
+      }
     }
 
-    qreal relativeWidth = (command == "setGeoX") ? parameter_d :item->relativeWidth();
-    qreal relativeHeight = (command == "setGeoY") ? parameter_d :item->relativeHeight();
-
-    bool fixedAspect = item->lockAspectRatio();
-    if (command == "uncheckFixAspectRatio") {
-      fixedAspect = false;
-    } else if (command == "checkFixAspectRatio") {
-      fixedAspect = true;
-    }
-
-    qreal width = relativeWidth * parentWidth;
-    qreal height;
-    if (fixedAspect) {
-        height = width * aspectRatio;
-        item->setLockAspectRatio(true);
-    } else {
-        height = relativeHeight * parentHeight;
-        item->setLockAspectRatio(false);
-    }
-
-    double x0 = parentX + ((command == "setPosX")? parameter_d : item->relativeCenter().x())*parentWidth;
-    double y0 = parentY + ((command == "setPosY")? parameter_d : item->relativeCenter().y())*parentHeight;
-
-    item->setPos(x0,y0);
-
-    item->setViewRect(-width/2, -height/2, width, height);
-
-    qreal rotation = (command == "setRotation") ? parameter_d :item->rotationAngle();
-
-    QTransform transform;
-    transform.rotate(rotation);
-
-    item->setTransform(transform);
-    item->updateRelativeSize();
-    return "Done.";
+    return QString(); // command not recognized, so return empty string.
 }
 
 ViewItemSI::ViewItemSI(ViewItem *it) : layout(new LayoutTabSI), dim(new DimensionTabSI), fill(new FillTabSI), stroke(new StrokeTabSI) {
