@@ -29,8 +29,6 @@ ColorPalette::ColorPalette(QWidget *parent)
 
   refresh(DefaultPalette);
   updatePalette(DefaultPalette);
-
-  _label->setProperty("si","C&olor palette:");
 }
 
 

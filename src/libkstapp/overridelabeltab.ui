@@ -40,18 +40,12 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
-       <property name="si" stdset="0">
-        <string/>
-       </property>
       </widget>
      </item>
      <item row="1" column="5">
       <widget class="Kst::ColorButton" name="_labelColor">
        <property name="enabled">
         <bool>false</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string/>
        </property>
       </widget>
      </item>
@@ -128,9 +122,6 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string/>
        </property>
       </widget>
      </item>

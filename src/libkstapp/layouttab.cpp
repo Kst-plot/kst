@@ -25,11 +25,6 @@ LayoutTab::LayoutTab(QWidget *parent)
   connect(_horSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_verSpacing, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
 
-  label_4->setProperty("si","layout vertical margin");
-  label_6->setProperty("si","layout vertical spacing");
-  label_4->setProperty("si","stroke brush style");
-  label_6->setProperty("si","stroke cap style");
-
 }
 
 

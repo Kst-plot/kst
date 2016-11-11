@@ -40,8 +40,6 @@ Dialog::Dialog(QWidget *parent)
 
   resize(minimumSizeHint());
 
-  _saveAsDefault->setProperty("si","Save as default");
-  _applyToExisting->setProperty("si","Apply to existing objects");
 #if defined(__QNX__) || defined(__ANDROID__)
   // Mobile environments don't have window managers, and so dialogs
   // are not a native concept. We may consider adding a "Back"

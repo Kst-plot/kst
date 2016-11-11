@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>390</width>
+    <width>401</width>
     <height>279</height>
    </rect>
   </property>
@@ -88,7 +88,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Font famil&amp;y:</string>
+        <string>Fo&amp;nt family:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -105,9 +105,6 @@
       <widget class="Kst::ColorButton" name="_labelColor">
        <property name="toolTip">
         <string comment="The color of the object">Color</string>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">label color</string>
        </property>
       </widget>
      </item>
@@ -141,9 +138,6 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">label italic</string>
-       </property>
       </widget>
      </item>
      <item row="0" column="5">
@@ -162,9 +156,6 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">label bold</string>
        </property>
       </widget>
      </item>

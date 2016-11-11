@@ -64,13 +64,6 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_spinBoxPointSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
-
-  _showLines->setProperty("si","&Lines");
-  _showPoints->setProperty("si","Po&ints");
-  _showHead->setProperty("si","&Head");
-  _textLabelPointDensity->setProperty("si","&Density:");
-  _showBars->setProperty("si","&Bargraph");
-  _textLabelWeight->setProperty("si","&Weight:");
 }
 
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>269</width>
+    <width>276</width>
     <height>176</height>
    </rect>
   </property>
@@ -27,19 +27,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QRadioButton" name="_left">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string comment="the left side">Left</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_4">
        <property name="sizePolicy">
@@ -56,6 +43,19 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QRadioButton" name="_left">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string comment="the left side">Left</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -63,16 +63,13 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Rotation</string>
+        <string>Rotatio&amp;n</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_rotation</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo X</string>
        </property>
       </widget>
      </item>
@@ -109,9 +106,6 @@
        <property name="buddy">
         <cstring>_x</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos X</string>
-       </property>
       </widget>
      </item>
      <item row="1" column="2">
@@ -127,9 +121,6 @@
        </property>
        <property name="buddy">
         <cstring>_y</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>

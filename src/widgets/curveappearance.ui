@@ -56,7 +56,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Weight:</string>
+         <string>Wei&amp;ght:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -89,9 +89,6 @@
         </property>
         <property name="whatsThis">
          <string>If &quot;Show Lines&quot; is checked, the selected line style.</string>
-        </property>
-        <property name="si" stdset="0">
-         <string notr="true">line style</string>
         </property>
        </widget>
       </item>
@@ -201,9 +198,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="si" stdset="0">
-         <string notr="true">curve color</string>
-        </property>
        </widget>
       </item>
       <item row="8" column="2">
@@ -214,15 +208,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="si" stdset="0">
-         <string notr="true">curve bar fill</string>
-        </property>
        </widget>
       </item>
       <item row="4" column="5">
        <widget class="QLabel" name="_textLabelPointSize">
         <property name="text">
-         <string>&amp;Size:</string>
+         <string>Si&amp;ze:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -235,7 +226,7 @@
       <item row="1" column="3" colspan="3">
        <widget class="QLabel" name="_textLabelPointDensity">
         <property name="text">
-         <string>Point &amp;Density:</string>
+         <string>Poi&amp;nt Density:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -291,9 +282,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="si" stdset="0">
-         <string notr="true">curve head color</string>
         </property>
        </widget>
       </item>

@@ -73,16 +73,6 @@ HistogramTab::HistogramTab(QWidget *parent)
   _curveAppearance->setPointDensity(0);
   _curveAppearance->setColor(dialogDefaults().value("plot/strokeBrushColor",QColor(Qt::black)).value<QColor>());
 
-  _vectorLabel->setProperty("si","Data vecto&r:");
-  TextLabel1_4_2_2->setProperty("si","Bins from&:");
-  TextLabel4_5_2->setProperty("si","to:");
-  TextLabel5_2->setProperty("si","Num bin&s:");
-  AutoBin->setProperty("si","A&uto Bin");
-  _realTimeAutoBin->setProperty("si","Real&-time auto bin");
-  _normalizationIsPercent->setProperty("si","Percent& in bin");
-  _normalizationIsFraction->setProperty("si","&Fraction in bin");
-  _normalizationIsNumber->setProperty("si","Nu&mber in bin");
-  _normalizationMaximumOne->setProperty("si","Peak bin = &1.0");
 }
 
 

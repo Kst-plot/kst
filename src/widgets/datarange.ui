@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>597</width>
-    <height>129</height>
+    <height>138</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -133,11 +133,7 @@
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QComboBox" name="_startUnits">
-        <property name="si" stdset="0">
-         <string notr="true">start units</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="_startUnits"/>
       </item>
       <item row="3" column="0" colspan="4">
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -212,7 +208,7 @@
          <string>Select this to average the skipped frames together.  Provides simple low pass filtering.</string>
         </property>
         <property name="text">
-         <string>&amp;Range:</string>
+         <string>Ra&amp;nge:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -229,9 +225,6 @@
        <widget class="QComboBox" name="_rangeUnits">
         <property name="enabled">
          <bool>false</bool>
-        </property>
-        <property name="si" stdset="0">
-         <string notr="true">range units</string>
         </property>
        </widget>
       </item>

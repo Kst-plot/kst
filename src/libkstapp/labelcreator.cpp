@@ -57,8 +57,6 @@ LabelCreator::LabelCreator(QWidget *parent)
   _lockPosToData->setChecked(dialogDefaultsLockPosToData("label"));
   _saveAsDefault->show();
 
-  _Label_11->setProperty("si","Font &size:");
-  _Label_12->setProperty("si","Font famil&y:");
 }
 
 

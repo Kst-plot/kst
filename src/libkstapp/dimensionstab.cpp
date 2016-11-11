@@ -21,14 +21,6 @@ DimensionsTab::DimensionsTab(ViewItem* viewItem, QWidget *parent)
 
   connect(_fixAspectRatio, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
   connect(_lockPosToData, SIGNAL(clicked(bool)), this, SLOT(fillDimensions(bool)));
-
-  label_5->setProperty("si","&Rotation:");
-  label_3->setProperty("si","geo X");
-  _dimXlabel->setProperty("si","geo Y");
-  label->setProperty("si","pos X");
-  label_2->setProperty("si","pos Y");
-  _fixAspectRatio->setProperty("si","&Fix aspect ratio");
-  _lockPosToData->setProperty("si", "Lock Position To Data");
 }
 
 

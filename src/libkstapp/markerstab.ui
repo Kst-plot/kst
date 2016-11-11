@@ -39,7 +39,7 @@
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>&amp;New marker point: </string>
+               <string>New mar&amp;ker point: </string>
               </property>
               <property name="buddy">
                <cstring>_newMarker</cstring>
@@ -159,7 +159,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="_Label_3">
         <property name="text">
-         <string>Line st&amp;yle:</string>
+         <string>Li&amp;ne style:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -182,7 +182,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_10">
         <property name="text">
-         <string>Line co&amp;lor:</string>
+         <string>Line &amp;color:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -193,11 +193,7 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="Kst::ColorButton" name="_markerLineColor">
-        <property name="si" stdset="0">
-         <string notr="true">marker color</string>
-        </property>
-       </widget>
+       <widget class="Kst::ColorButton" name="_markerLineColor"/>
       </item>
       <item row="0" column="4">
        <widget class="QLabel" name="label_11">
@@ -243,7 +239,7 @@
          </size>
         </property>
         <property name="text">
-         <string notr="true">SHOULD NOT BE VISIBLE</string>
+         <string notr="true">SHOULD NOT BE &amp;VISIBLE</string>
         </property>
        </widget>
       </item>

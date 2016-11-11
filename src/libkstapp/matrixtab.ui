@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>512</width>
-    <height>619</height>
+    <height>644</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -511,9 +511,6 @@
           <property name="text">
            <string>C&amp;ount from end</string>
           </property>
-          <property name="si" stdset="0">
-           <string notr="true">count X From End</string>
-          </property>
          </widget>
         </item>
         <item row="2" column="3">
@@ -529,9 +526,6 @@
           </property>
           <property name="checked">
            <bool>true</bool>
-          </property>
-          <property name="si" stdset="0">
-           <string notr="true">read x to end</string>
           </property>
          </widget>
         </item>
@@ -587,9 +581,6 @@
           <property name="checked">
            <bool>true</bool>
           </property>
-          <property name="si" stdset="0">
-           <string notr="true">read Y To End</string>
-          </property>
          </widget>
         </item>
         <item row="1" column="3">
@@ -602,9 +593,6 @@
           </property>
           <property name="text">
            <string>Count from en&amp;d</string>
-          </property>
-          <property name="si" stdset="0">
-           <string notr="true">count Y From End</string>
           </property>
          </widget>
         </item>
@@ -767,7 +755,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>File name:</string>
+         <string>File &amp;name:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -792,7 +780,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>F&amp;ield or column:</string>
+         <string>Field or &amp;column:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

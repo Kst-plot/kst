@@ -39,16 +39,6 @@ FFTOptions::FFTOptions(QWidget *parent)
 
   _FFTLength->setEnabled(false);
 
-  _sigmaLabel->setProperty("si","S&igma:");
-  _apodize->setProperty("si","Apodi&ze");
-  textLabel2->setProperty("si","Fun&ction:");
-  _removeMean->setProperty("si","Remo&ve mean");
-  _FFTLengthLabel->setProperty("si","FFT &length: 2^");
-  _interleavedAverage->setProperty("si","Interleave&d average");
-  TextLabel1_9_2->setProperty("si","Sa&mple rate:");
-  TextLabel1_9_3->setProperty("si","Vector units:");
-  TextLabel1_9_2_2->setProperty("si","Rate units:");
-  textLabel1_2->setProperty("si","Ou&tput:");
 }
 
 

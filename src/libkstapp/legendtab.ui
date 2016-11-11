@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>423</width>
-    <height>282</height>
+    <height>363</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -60,7 +60,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Available objects:</string>
+         <string>A&amp;vailable objects:</string>
         </property>
         <property name="wordWrap">
          <bool>false</bool>
@@ -95,7 +95,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&amp;Displayed objects:</string>
+         <string>Displayed obje&amp;cts:</string>
         </property>
         <property name="wordWrap">
          <bool>false</bool>
@@ -274,9 +274,6 @@
         <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="si" stdset="0">
-         <string notr="true">legend bold</string>
-        </property>
        </widget>
       </item>
       <item row="0" column="4">
@@ -290,22 +287,15 @@
         <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="si" stdset="0">
-         <string notr="true">legend italic</string>
-        </property>
        </widget>
       </item>
       <item row="0" column="5">
-       <widget class="Kst::ColorButton" name="_labelColor">
-        <property name="si" stdset="0">
-         <string notr="true">legend color</string>
-        </property>
-       </widget>
+       <widget class="Kst::ColorButton" name="_labelColor"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="_Label_12">
         <property name="text">
-         <string>&amp;Font family</string>
+         <string>Fo&amp;nt family</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

@@ -47,8 +47,6 @@ CSDTab::CSDTab(QWidget *parent)
   connect(_windowSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
 
-  textLabel1->setProperty("si","Window size:");
-  _vector->setProperty("si","data vector");
 }
 
 

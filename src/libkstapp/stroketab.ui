@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>264</width>
-    <height>176</height>
+    <height>208</height>
    </rect>
   </property>
   <layout class="QGridLayout">
@@ -21,9 +21,6 @@
      </property>
      <property name="buddy">
       <cstring>_style</cstring>
-     </property>
-     <property name="si" stdset="0">
-      <string notr="true">stroke style</string>
      </property>
     </widget>
    </item>
@@ -48,9 +45,6 @@
      <property name="buddy">
       <cstring>_width</cstring>
      </property>
-     <property name="si" stdset="0">
-      <string notr="true">stroke width</string>
-     </property>
     </widget>
    </item>
    <item row="1" column="1">
@@ -70,11 +64,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="Kst::ColorButton" name="_brushColor">
-     <property name="si" stdset="0">
-      <string notr="true">stroke brush color</string>
-     </property>
-    </widget>
+    <widget class="Kst::ColorButton" name="_brushColor"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_4">
@@ -86,9 +76,6 @@
      </property>
      <property name="buddy">
       <cstring>_brushStyle</cstring>
-     </property>
-     <property name="si" stdset="0">
-      <string notr="true">stroke brush style</string>
      </property>
     </widget>
    </item>
@@ -106,9 +93,6 @@
      <property name="buddy">
       <cstring>_joinStyle</cstring>
      </property>
-     <property name="si" stdset="0">
-      <string notr="true">stroke join style</string>
-     </property>
     </widget>
    </item>
    <item row="4" column="1">
@@ -124,9 +108,6 @@
      </property>
      <property name="buddy">
       <cstring>_capStyle</cstring>
-     </property>
-     <property name="si" stdset="0">
-      <string notr="true">stroke cap style</string>
      </property>
     </widget>
    </item>

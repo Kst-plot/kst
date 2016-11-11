@@ -130,11 +130,6 @@ void DataDialog::createGui(bool edit_multiple) {
 
   box->setLayout(layout);
 
-  _nameLabel->setProperty("si","&Name:");
-  if(_editMultipleWidget&&_editMultipleButton) {
-      _editMultipleButton->setProperty("si","Edit Multiple >>");
-  }
-  _tagStringAuto->setProperty("si","&Auto");
 }
 
 

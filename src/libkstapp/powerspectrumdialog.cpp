@@ -47,7 +47,6 @@ PowerSpectrumTab::PowerSpectrumTab(QWidget *parent)
 
   _vectorLabel->setBuddy(_vector->_vector);
 
-  _vectorLabel->setProperty("si","Data vecto&r:");
 }
 
 

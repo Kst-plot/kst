@@ -47,18 +47,6 @@ RangeTab::RangeTab(PlotItem* plotItem, QWidget *parent)
 
   connect(this, SIGNAL(modified()), this, SLOT(updateButtons()));
 
-  _xAuto->setProperty("si","A&uto");
-  _xBorder->setProperty("si","Auto with bor&der");
-  _xSpike->setProperty("si","S&pike insensitive auto");
-  _xMean->setProperty("si","Mean c&entered, ");
-  _xFixed->setProperty("si","F&ixed, ");
-  _xHidden->setProperty("si","SHOULD BE HIDDEN");
-  _yAuto->setProperty("si","&Auto");
-  _yBorder->setProperty("si","Auto with &border");
-  _ySpike->setProperty("si","&Spike insensitive auto");
-  _yMean->setProperty("si","Mean &centered, ");
-  _yFixed->setProperty("si","&Fixed, ");
-  _yHidden->setProperty("si","SHOULD BE HIDDEN");
 }
 
 

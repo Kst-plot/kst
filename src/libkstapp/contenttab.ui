@@ -15,7 +15,16 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <layout class="QVBoxLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -27,7 +36,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>&amp;Available objects:</string>
+          <string>A&amp;vailable objects:</string>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -91,7 +100,16 @@
        </item>
        <item>
         <layout class="QGridLayout">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item row="1" column="1">
@@ -207,7 +225,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>&amp;Displayed objects:</string>
+          <string>Displayed obje&amp;cts:</string>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
@@ -232,7 +250,7 @@
             <string>Deselect  All</string>
            </property>
            <attribute name="buttonGroup">
-            <string>buttonGroup</string>
+            <string notr="true">buttonGroup</string>
            </attribute>
           </widget>
          </item>
@@ -242,7 +260,7 @@
             <string>Select All</string>
            </property>
            <attribute name="buttonGroup">
-            <string>buttonGroup</string>
+            <string notr="true">buttonGroup</string>
            </attribute>
           </widget>
          </item>
@@ -252,7 +270,7 @@
             <string>Edit</string>
            </property>
            <attribute name="buttonGroup">
-            <string>buttonGroup</string>
+            <string notr="true">buttonGroup</string>
            </attribute>
           </widget>
          </item>
@@ -261,44 +279,6 @@
       </layout>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QLabel" name="_scriptLabel1">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>THIS, AND EVERYTHING BELOW IS FOR SCRIPTING AND SHOULD BE HIDDEN!</string>
-     </property>
-     <property name="buddy">
-      <cstring>_scriptLineEdit1</cstring>
-     </property>
-     <property name="si" stdset="0">
-      <string notr="true">insert object</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="_scriptLineEdit1"/>
-   </item>
-   <item>
-    <widget class="QLabel" name="_scriptLabel2">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="buddy">
-      <cstring>_scriptLineEdit2</cstring>
-     </property>
-     <property name="si" stdset="0">
-      <string notr="true">remove object</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="_scriptLineEdit2"/>
    </item>
    <item>
     <widget class="Line" name="line">
@@ -322,8 +302,6 @@
   <tabstop>_deselectAllDisplayed</tabstop>
   <tabstop>_selectAllDisplayed</tabstop>
   <tabstop>_editSelectedDisplayed</tabstop>
-  <tabstop>_scriptLineEdit1</tabstop>
-  <tabstop>_scriptLineEdit2</tabstop>
  </tabstops>
  <resources/>
  <connections>

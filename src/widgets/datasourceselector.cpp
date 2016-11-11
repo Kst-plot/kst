@@ -32,10 +32,6 @@ namespace Kst {
 DataSourceSelector::DataSourceSelector(QWidget *parent)
   : QWidget(parent), _mode(QFileDialog::ExistingFile) {
   setup();
-  QLabel* l=new QLabel(this);
-  l->hide();
-  l->setProperty("si","data source");
-  l->setBuddy(_fileEdit);
 }
 
 
@@ -51,6 +47,7 @@ void DataSourceSelector::setup() {
   int h = fontMetrics().lineSpacing()*4/3;
 
   _fileEdit->setFixedHeight(h);
+
 
   QHBoxLayout * layout = new QHBoxLayout(this);
   layout->setMargin(0);

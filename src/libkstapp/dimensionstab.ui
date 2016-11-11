@@ -42,16 +42,13 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>&amp;Size:</string>
+        <string>Si&amp;ze:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_width</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo X</string>
        </property>
       </widget>
      </item>
@@ -82,9 +79,6 @@
        <property name="buddy">
         <cstring>_height</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo Y</string>
-       </property>
       </widget>
      </item>
      <item row="2" column="2">
@@ -100,9 +94,6 @@
        </property>
        <property name="buddy">
         <cstring>_y</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>
@@ -129,9 +120,6 @@
        </property>
        <property name="buddy">
         <cstring>_x</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos X</string>
        </property>
       </widget>
      </item>

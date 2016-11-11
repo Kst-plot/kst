@@ -24,9 +24,6 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">label italic</string>
-       </property>
       </widget>
      </item>
      <item row="0" column="2">
@@ -56,11 +53,7 @@
       </widget>
      </item>
      <item row="0" column="5">
-      <widget class="Kst::ColorButton" name="_globalLabelColor">
-       <property name="si" stdset="0">
-        <string notr="true">label color</string>
-       </property>
-      </widget>
+      <widget class="Kst::ColorButton" name="_globalLabelColor"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_3">
@@ -82,9 +75,6 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">label bold</string>
        </property>
       </widget>
      </item>

@@ -34,11 +34,6 @@ DataRange::DataRange(QWidget *parent)
   connect(_startUnits, SIGNAL(currentIndexChanged(int)), this, SLOT(unitsChanged()));
   connect(_rangeUnits, SIGNAL(currentIndexChanged(int)), this, SLOT(unitsChanged()));
 
-  //QLabel* siHack=new QLabel(this);
-  //siHack->hide();
-  //siHack->setProperty("si","read 1 sample per");
-  //siHack->setBuddy(_skip);
-
   _controlField0 = Range;
   _controlField1 = Start;
 }

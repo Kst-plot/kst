@@ -16,16 +16,13 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>&amp;Horizontal margin:</string>
+        <string>Horizontal &amp;margin:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_horMargin</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">layout horizontal margin</string>
        </property>
       </widget>
      </item>
@@ -50,9 +47,6 @@
        <property name="buddy">
         <cstring>_verMargin</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">layout vertical margin</string>
-       </property>
       </widget>
      </item>
      <item row="1" column="1">
@@ -76,9 +70,6 @@
        <property name="buddy">
         <cstring>_horSpacing</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">layout horizontal spacing</string>
-       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -94,16 +85,13 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Ver&amp;tical spacing:</string>
+        <string>Verti&amp;cal spacing:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_verSpacing</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">layout vertical spacing</string>
        </property>
       </widget>
      </item>

@@ -35,12 +35,6 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
   _add->setToolTip(tr("Select: Alt+s"));
   _remove->setToolTip(tr("Remove: Alt+r"));
 
-  _scriptLineEdit1->hide();
-  _scriptLineEdit2->hide();
-  _scriptLabel1->hide();
-  _scriptLabel2->hide();
-  connect(_scriptLineEdit1,SIGNAL(textChanged(QString)),this,SLOT(addObject(QString)));
-  connect(_scriptLineEdit2,SIGNAL(textChanged(QString)),this,SLOT(removeObject(QString)));
 
   connect(_add, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
   connect(_remove, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
@@ -61,12 +55,6 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
   connect(_editSelectedAvailable, SIGNAL(clicked()), this, SLOT(editSelectedAvailable()));
   connect(_editSelectedDisplayed, SIGNAL(clicked()), this, SLOT(editSelectedDisplayed()));
 
-  _deselectAllAvailable->setProperty("si","Deselect  All");
-  _selectAllAvailable->setProperty("si","Select All");
-  _editSelectedAvailable->setProperty("si","Edit");
-  _deselectAllDisplayed->setProperty("si","Deselect  All");
-  _selectAllDisplayed->setProperty("si","Select All");
-  _editSelectedDisplayed->setProperty("si","Edit");
 }
 
 

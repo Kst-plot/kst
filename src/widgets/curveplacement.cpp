@@ -27,16 +27,6 @@ CurvePlacement::CurvePlacement(QWidget *parent)
   connect(_newPlot, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
   connect(_customGrid, SIGNAL(toggled(bool)), this, SLOT(updateButtons()));
 
-  _noPlot->setProperty("si","Do not pl&ace in any plot");
-  _existingPlot->setProperty("si","Place in &existing plot:");
-  _newPlot->setProperty("si","Place in &new plot");
-  _newTab->setProperty("si","In ne&w tab");
-  _scaleFonts->setProperty("si","Scale fonts");
-  _autoLayout->setProperty("si","Automati&c layout");
-  _customGrid->setProperty("si","Custom &grid:");
-  _gridColumnsLabel->setProperty("si","Colu&mns");
-  _protectLayout->setProperty("si","&Protect existing layout");
-  _plotList->setProperty("si","place In Existing Plot");
 }
 
 

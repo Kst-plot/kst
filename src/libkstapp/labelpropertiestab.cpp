@@ -57,8 +57,6 @@ LabelPropertiesTab::LabelPropertiesTab(QWidget *parent)
   connect(_italic, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_family, SIGNAL(currentIndexChanged(int)), this, SIGNAL(modified()));
 
-  _Label_11->setProperty("si","Font &size:");
-  _Label_12->setProperty("si","Font famil&y:");
 }
 
 

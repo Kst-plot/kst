@@ -22,7 +22,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="_Label_11">
        <property name="text">
-        <string>Font &amp;size:</string>
+        <string>Font si&amp;ze:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -48,7 +48,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="_Label_12">
        <property name="text">
-        <string>Font famil&amp;y:</string>
+        <string>Fo&amp;nt family:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -72,17 +72,10 @@
        <property name="checkable">
         <bool>true</bool>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">label italic</string>
-       </property>
       </widget>
      </item>
      <item row="0" column="6">
-      <widget class="Kst::ColorButton" name="_labelColor">
-       <property name="si" stdset="0">
-        <string notr="true">label color</string>
-       </property>
-      </widget>
+      <widget class="Kst::ColorButton" name="_labelColor"/>
      </item>
      <item row="0" column="4">
       <widget class="QPushButton" name="_bold">
@@ -94,9 +87,6 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">label bold</string>
        </property>
       </widget>
      </item>

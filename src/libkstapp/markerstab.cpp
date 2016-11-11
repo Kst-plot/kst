@@ -55,30 +55,6 @@ MarkersTab::MarkersTab(QWidget *parent)
 
   update();
 
-  label->setProperty("si","&New marker point: ");
-  _addMarker->setProperty("si","&Add");
-  _clearMarkers->setProperty("si","&Clear");
-  _removeMarker->setProperty("si","&Remove");
-  _Label_3->setProperty("si","Line st&yle:");
-  label_11->setProperty("si","Line &width:");
-  _curveMarkers->setProperty("si","Use curve as marker &source:");
-  _hidden->setProperty("si","SHOULD NOT BE VISIBLE");
-  _risingEdge->setProperty("si","R&ising edge");
-  _fallingEdge->setProperty("si","&Falling edge");
-  _both->setProperty("si","&Both");
-  _vectorMarkers->setProperty("si","Use &vector as marker source:");
-  label->setProperty("si","&New marker point: ");
-  _addMarker->setProperty("si","&Add");
-  _clearMarkers->setProperty("si","&Clear");
-  _removeMarker->setProperty("si","&Remove");
-  _Label_3->setProperty("si","Line st&yle:");
-  label_11->setProperty("si","Line &width:");
-  _curveMarkers->setProperty("si","Use curve as marker &source:");
-  _hidden->setProperty("si","SHOULD NOT BE VISIBLE");
-  _risingEdge->setProperty("si","R&ising edge");
-  _fallingEdge->setProperty("si","&Falling edge");
-  _both->setProperty("si","&Both");
-  _vectorMarkers->setProperty("si","Use &vector as marker source:");
 }
 
 

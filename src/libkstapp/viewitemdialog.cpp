@@ -135,9 +135,6 @@ ViewItemDialog::ViewItemDialog(ViewItem *item, QWidget *parent)
   connect(_saveAsDefault, SIGNAL(clicked()), this, SLOT(modified()));
 
   _saveAsDefault->show();
-
-  _tagStringLabel->setProperty("si","&Name:");
-  _editMultipleButton->setProperty("si","Edit Multiple >>");
 }
 
 

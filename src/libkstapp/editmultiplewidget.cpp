@@ -26,9 +26,6 @@ EditMultipleWidget::EditMultipleWidget(QWidget *parent)
   connect(_selectNoneBut, SIGNAL(clicked()), _objectList, SLOT(clearSelection()));
 
   connect(_filterEdit, SIGNAL(textChanged(QString)), this, SLOT(applyFilter(QString)));
-  textLabel1->setProperty("si","Filter:");
-  _selectNoneBut->setProperty("si","Clear");
-  _selectAllBut->setProperty("si","Select &All");
   connect(_objectList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SIGNAL(itemDoubleClicked()));
 }
 

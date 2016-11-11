@@ -59,9 +59,6 @@ EquationTab::EquationTab(QWidget *parent)
   connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this->_equation, SLOT(fillKstObjects()));
 
-  TextLabel1_11->setProperty("si","Eq&uation:");
-  _xVectorLabel->setProperty("si","&X vector:");
-  _doInterpolation->setProperty("si","Inte&rpolate to highest resolution vector");
 }
 
 

@@ -70,19 +70,6 @@ ImageTab::ImageTab(QWidget *parent)
 
   _matrixLabel->setBuddy(_matrix->_matrix);
 
-  _matrixLabel->setProperty("si","&Matrix:");
-  _colorOnly->setProperty("si","Color m&ap");
-  _contourOnly->setProperty("si","Con&tour map");
-  _colorAndContour->setProperty("si","&Color map and contour map");
-  textLabel2->setProperty("si","&Upper:");
-  textLabel2_4->setProperty("si","Threshold - &Lower:");
-  _smartThreshold->setProperty("si","&Smart");
-  textLabel1_4->setProperty("si","Percent&ile:");
-  _autoThreshold->setProperty("si","Max&/Min");
-  _realTimeAutoThreshold->setProperty("si","&Real-time auto threshold");
-  textLabel1_3->setProperty("si","Num&ber of contour levels:");
-  textLabel1->setProperty("si","&Weight:");
-  _useVariableWeight->setProperty("si","Use &variable line weight");
 }
 
 

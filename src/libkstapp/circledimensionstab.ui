@@ -24,9 +24,6 @@
        <property name="buddy">
         <cstring>_radius</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo X</string>
-       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -59,9 +56,6 @@
        <property name="buddy">
         <cstring>_x</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos X</string>
-       </property>
       </widget>
      </item>
      <item row="1" column="2">
@@ -77,9 +71,6 @@
        </property>
        <property name="buddy">
         <cstring>_y</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>

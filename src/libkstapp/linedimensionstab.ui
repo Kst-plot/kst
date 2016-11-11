@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>213</width>
-    <height>103</height>
+    <height>116</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -22,16 +22,13 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>P1</string>
+        <string>P&amp;1</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_p1X</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos X</string>
        </property>
       </widget>
      </item>
@@ -51,16 +48,13 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>P2</string>
+        <string>P&amp;2</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
         <cstring>_p2X</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo X</string>
        </property>
       </widget>
      </item>
@@ -111,9 +105,6 @@
        <property name="buddy">
         <cstring>_p2Y</cstring>
        </property>
-       <property name="si" stdset="0">
-        <string notr="true">geo Y</string>
-       </property>
       </widget>
      </item>
      <item row="1" column="2">
@@ -129,9 +120,6 @@
        </property>
        <property name="buddy">
         <cstring>_p1Y</cstring>
-       </property>
-       <property name="si" stdset="0">
-        <string notr="true">pos Y</string>
        </property>
       </widget>
      </item>

@@ -84,15 +84,6 @@ CurveTab::CurveTab(QWidget *parent)
   connect(_xMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_yMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
 
-  _ignoreAutoScale->setProperty("si","I&gnore in automatic axes range calculations");
-  _xVectorLabel->setProperty("si","&X-axis vector:");
-  _yVectorLabel->setProperty("si","&Y-axis vector:");
-  _xErrorLabel->setProperty("si","+X e&rror bar:");
-  _yErrorLabel->setProperty("si","&+Y error bar:");
-  _xMinusErrorLabel->setProperty("si","-X error bar:");
-  _yMinusErrorLabel->setProperty("si","&-Y error bar:");
-  _xMinusSameAsPlus->setProperty("si","&Use +X error bar for -X");
-  _yMinusSameAsPlus->setProperty("si","U&se +Y error bar for -Y");
 }
 
 

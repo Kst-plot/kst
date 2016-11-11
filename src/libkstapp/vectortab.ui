@@ -195,7 +195,16 @@
       </item>
       <item>
        <layout class="QHBoxLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -274,9 +283,6 @@
             <width>0</width>
             <height>0</height>
            </size>
-          </property>
-          <property name="si" stdset="0">
-           <string notr="true">updateInterval</string>
           </property>
          </widget>
         </item>
