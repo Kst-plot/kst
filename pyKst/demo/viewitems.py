@@ -17,11 +17,11 @@ B1 = client.new_box((0.9,0.9), (0.1,0.1), fill_color="pink")
 
 E1 = client.new_ellipse((0.1, 0.7), (0.1, 0.1), 45, fill_color="blue")
 
-A1 = client.new_arrow((0.1, 0.5), 0.1, 45, False, True, 18)
+A1 = client.new_arrow((0.1, 0.5), (0.2, 0.8), False, True, 18)
 A1.set_stroke_style(3)
-A1.set_endpoints((0.2, 0.7), (0.05, 0.8))
+#A1.set_endpoints((0.2, 0.7), (0.05, 0.8))
 
-L1 = client.new_line((0.25, 0.25), 0.1, 15, stroke_width=4, stroke_brush_color="green")
+L1 = client.new_line((0.20, 0.20), (0.30, 0.30), stroke_width=4, stroke_brush_color="green")
 L1.set_stroke_style(2)
 L1.set_parent_auto()
 L1.set_lock_pos_to_data(True)

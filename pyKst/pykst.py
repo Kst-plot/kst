@@ -610,14 +610,14 @@ class Client:
     """
     return Ellipse(self, name=name, new=False)
   
-  def new_line(self,pos=(0.1,0.1),length=0.1,rot=0,
+  def new_line(self,start=(0,0),end = (1,1),
            stroke_style=1,stroke_width=1,stroke_brush_color="black",
            stroke_brush_style=1,stroke_cap_style=1, name="") :
     """ Create a New Line in kst.
     
     See :class:`Line`
     """
-    return Line(self,pos, length, rot, stroke_style, stroke_width, 
+    return Line(self,start,end, stroke_style, stroke_width,
                 stroke_brush_color, stroke_brush_style, stroke_cap_style, name)
   
   def line(self, name):
@@ -627,7 +627,7 @@ class Client:
     """
     return Line(self, name=name, new=False)
 
-  def new_arrow(self,pos=(0.1,0.1), length=0.1, rot=0, 
+  def new_arrow(self,start=(0,0),end = (1,1),
             arror_at_start = False, arrow_at_end = True, arrow_size = 12.0, 
             stroke_style=1, stroke_width=1, stroke_brush_color="black",
             stroke_brush_style=1, stroke_cap_style=1, name="") :
@@ -635,7 +635,7 @@ class Client:
     
     See :class:`Arrow`
     """
-    return Arrow(self,pos, length, rot, arror_at_start, arrow_at_end, arrow_size, 
+    return Arrow(self,start,end, arror_at_start, arrow_at_end, arrow_size,
           stroke_style, stroke_width, stroke_brush_color, stroke_brush_style, 
           stroke_cap_style, name)
     
@@ -2929,9 +2929,12 @@ class Ellipse(ViewItem) :
 class Line(ViewItem) :
   """ A floating line inside kst.
 
-  :param pos: a 2 element tuple ``(x,y)`` specifying the position of the
-              center of the line. 
-              ``(0,0)`` is top left.  ``(1,1)`` is bottom right.
+  :param start: a 2 element tuple ``(x,y)`` specifying the position of the
+                start of the line.
+                ``(0,0)`` is top left of the window,  and ``(1,1)`` is bottom right.
+  :param end: a 2 element tuple ``(x,y)`` specifying the position of the
+              end of the line.
+              ``(0,0)`` is top left of the window,  and ``(1,1)`` is bottom right.
   :param length: The length of the line.  1 is the width of the window.
   :param rot: rotation of the line in degrees.
   :param stroke_style: see set_stroke_style
@@ -2952,10 +2955,10 @@ class Line(ViewItem) :
     import pykst as kst
     client = kst.Client()
     ...
-    Ln = client.new_line((0.25, 0.25), 0.2, rot=15)
+    Ln = client.new_line((0.25, 0.25), (0.5, 0.5))
 
   """
-  def __init__(self,client,pos=(0.1,0.1),length=0.1,rot=0,
+  def __init__(self,client,start=(0,0),end=(1,1),
                stroke_style=1,stroke_width=1,stroke_brush_color="black",
                stroke_brush_style=1,stroke_cap_style=1, name="", new=True) :
     ViewItem.__init__(self,client)
@@ -2966,9 +2969,7 @@ class Line(ViewItem) :
 
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
-      self.set_pos(pos)
-      self.set_length(length)
-      self.set_rotation(rot)
+      self.set_endpoints(start, end)
 
       self.set_stroke_brush_color(stroke_brush_color)
       self.set_stroke_style(stroke_style)
@@ -3041,7 +3042,7 @@ class Arrow(ViewItem) :
     Ln = client.new_arrow((0.25, 0.25), 0.2, rot=15, arror_at_start=True)
     
   """
-  def __init__(self,client,pos=(0.1,0.1), length=0.1, rot=0, 
+  def __init__(self,client,start=(0,0),end = (1,1),
                arror_at_start = False, arrow_at_end = True, arrow_size = 12.0, 
                stroke_style=1, stroke_width=1, stroke_brush_color="black",
                stroke_brush_style=1, stroke_cap_style=1, name="", new=True) :
@@ -3052,9 +3053,10 @@ class Arrow(ViewItem) :
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
 
-      self.set_pos(pos)
-      self.set_length(length)
-      self.set_rotation(rot)
+      self.set_endpoints(start,end)
+      #self.set_pos(pos)
+      #self.set_length(length)
+      #self.set_rotation(rot)
 
       self.set_stroke_brush_color(stroke_brush_color)
       self.set_stroke_style(stroke_style)
