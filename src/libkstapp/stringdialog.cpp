@@ -322,6 +322,8 @@ ObjectPtr StringDialog::createNewDataString() {
 
   //UpdateServer::self()->requestUpdateSignal();
 
+  dialogDefaults().setValue("String/datasource", _stringTab->file());
+
   return string;
 }
 
@@ -358,6 +360,7 @@ ObjectPtr StringDialog::editExistingDataObject() const {
       string->change(dataSource, field);
       string->registerChange();
       string->unlock();
+      dialogDefaults().setValue("String/datasource", _stringTab->file());
     }
   }
   return dataObject();
