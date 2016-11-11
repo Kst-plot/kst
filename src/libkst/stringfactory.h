@@ -24,6 +24,14 @@ class StringFactory : public PrimitiveFactory {
     PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
 };
 
+class DataStringFactory : public PrimitiveFactory {
+  public:
+    DataStringFactory();
+    ~DataStringFactory();
+    PrimitivePtr generatePrimitive(ObjectStore *store, QXmlStreamReader& stream);
+};
+
+
 }
 
 #endif

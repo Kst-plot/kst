@@ -27,6 +27,7 @@ namespace Kst {
       new DataScalarFactory();
       new VScalarFactory();
       new StringFactory();
+      new DataStringFactory();
       new GeneratedMatrixFactory();
       new EditableMatrixFactory();
       new DataMatrixFactory();

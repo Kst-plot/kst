@@ -90,6 +90,8 @@ void DataString::change(DataSourcePtr in_file, const QString &in_field) {
 
   _field = in_field;
   setDataSource(in_file);
+
+  registerChange();
 }
 
 void DataString::changeFile(DataSourcePtr in_file) {
@@ -99,6 +101,8 @@ void DataString::changeFile(DataSourcePtr in_file) {
     Debug::self()->log(tr("Data file for string %1 was not opened.").arg(Name()), Debug::Warning);
   }
   setDataSource(in_file);
+
+  registerChange();
 }
 
 
@@ -109,7 +113,7 @@ void DataString::save(QXmlStreamWriter &s) {
     saveFilename(s);
     s.writeAttribute("field", _field);
 
-    saveNameInfo(s, XNUM);
+    saveNameInfo(s, TNUM);
     s.writeEndElement();
   }
 }

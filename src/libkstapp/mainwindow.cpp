@@ -2013,7 +2013,7 @@ void MainWindow::updateViewItems(qint64 serial) {
     kstApp->mainWindow()->updateStatusMessage();
   }
 
-  QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished()));
+  QTimer::singleShot(20, UpdateManager::self(), SLOT(viewItemUpdateFinished())); // why 20ms ???
 }
 
 void MainWindow::showVectorEditor() {

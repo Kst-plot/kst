@@ -72,7 +72,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
     void change(DataSourcePtr file, const QString &field);
     void changeFile(DataSourcePtr file);
 
-    /** Save scalar information */
+    /** Save data string to kst session file */
     virtual void save(QXmlStreamWriter &s);
 
     virtual QString descriptionTip() const;

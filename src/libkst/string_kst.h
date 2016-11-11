@@ -55,7 +55,7 @@ class KSTCORE_EXPORT String : public Primitive
 
     virtual ~String();
     /** Save information */
-    void save(QXmlStreamWriter &s);
+    virtual void save(QXmlStreamWriter &s);
 
     String& operator=(const QString& v);
     String& operator=(const char *v);

@@ -14,7 +14,10 @@
 
 #include "debug.h"
 #include "string_kst.h"
+#include "datastring.h"
 #include "objectstore.h"
+#include "datasourcepluginmanager.h"
+
 
 namespace Kst {
 
@@ -73,7 +76,75 @@ PrimitivePtr StringFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   string->setEditable(editable);
   string->setDescriptiveName(descriptiveName);
 
+  string->registerChange();
+
   return string;
+}
+
+DataStringFactory::DataStringFactory()
+: PrimitiveFactory() {
+  registerFactory(DataString::staticTypeTag, this);
+}
+
+
+DataStringFactory::~DataStringFactory() {
+}
+
+
+PrimitivePtr DataStringFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
+  QString descriptiveName;
+  Q_ASSERT(store);
+
+  QString file, field;
+
+  while (!xml.atEnd()) {
+    const QString n = xml.name().toString();
+    if (xml.isStartElement()) {
+      if (n == DataString::staticTypeTag) {
+        QXmlStreamAttributes attrs = xml.attributes();
+
+        file = DataPrimitive::readFilename(attrs);
+        field = attrs.value("field").toString();
+
+        if (attrs.value("descriptiveNameIsManual").toString() == "true") {
+          descriptiveName = attrs.value("descriptiveName").toString();
+        }
+        Object::processShortNameIndexAttributes(attrs);
+      } else {
+        return 0;
+      }
+    } else if (xml.isEndElement()) {
+      if (n == DataString::staticTypeTag) {
+        break;
+      } else {
+        Debug::self()->log(QObject::tr("Error creating DataString from Kst file."), Debug::Warning);
+        return 0;
+      }
+    }
+    xml.readNext();
+  }
+
+  if (xml.hasError()) {
+    return 0;
+  }
+
+  DataSourcePtr dataSource = DataSourcePluginManager::findOrLoadSource(store, file);
+
+  if (!dataSource) {
+    return 0; //Couldn't find a suitable datasource
+  }
+
+  DataStringPtr dataString = store->createObject<DataString>();
+
+  dataString->writeLock();
+  dataString->change(dataSource, field);
+
+  dataString->setDescriptiveName(descriptiveName);
+  dataString->registerChange();
+  dataString->unlock();
+
+
+  return dataString;
 }
 
 
