@@ -242,8 +242,10 @@ void StringDialog::configureTab(ObjectPtr object) {
 }
 
 void StringDialog::updateButtons() {
-  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!_stringTab->value().isEmpty()
-                                                      || !_stringTab->field().isEmpty());
+  bool enable = !_stringTab->value().isEmpty()
+      || !_stringTab->field().isEmpty();
+  _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(enable);
+  _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(enable);
 }
 
 
