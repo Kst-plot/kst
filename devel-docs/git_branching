@@ -1,0 +1,16 @@
+http://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging
+
+Make a branch:
+git branch <newbranch>
+
+Switch to the branch
+git checkout <newbranch>
+
+Switch back to master
+git checkout master
+
+http://git-scm.com/book/en/v2/Git-Branching-Remote-Branches
+From newbranch, push the branch to origin
+git push origin <newbranch>
+
+

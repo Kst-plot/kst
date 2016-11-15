@@ -1,0 +1,7 @@
+without  QT_DEVICE_PIXEL_RATIO
+  -default dialog sizes too small
+
+with QT_DEVICE_PIXEL_RATIO
+  -keyboard shortcuts are dead (!!)
+	
+

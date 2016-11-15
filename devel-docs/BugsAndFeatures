@@ -1,0 +1,36 @@
+BUGS
+B4. View object stroke widths don't save/restore correctly.
+
+B5. "/home/spider/Documents/../../../data/etc/packets.lnk"
+
+
+FEATURES
+F1. A way of printing nicely C times in text labels (being able to specify,
+     say, a strftime format string would be great)
+
+F2. A way of formatting scalars in text labels (%.2f or something)
+
+F3. Text labels have no background fill properties.
+
+F4. Nicer date tick marks.
+
+F5. Vector-choosing boxes should autocomplete.  i.e., if I have only one vector
+    derived from AZ_MAG (called, say, "AZ_MAG (V21)"), then I want to be able to
+    select that by typing "AZ_MAG" in the vector box, and not all of "AZ_MAG
+    (V21)".  (This is because users don't have any clue what the vector number
+    of the vector they want is.)
+
+F6. Non-integer curve stroke width.
+
+F7. Edit and Delete buttons in the Data Manager that do what the context menu
+    versions do.
+
+F9. Forward and back in smaller steps than whole screen.
+
+F11. Listfile subset
+
+F12. For fits, provide an (optional?) vector to evaluate over.
+
+F13. Set sample range defaults from scripting
+
+F14. Verify that meta scalars work in dirfiles.

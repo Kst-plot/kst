@@ -6,3 +6,5 @@ dm.lnk
 *.swp
 _build
 *.pyc
+build
+tmp*
