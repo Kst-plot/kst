@@ -316,6 +316,8 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   s.writeAttribute("updateType", QString::number(int(_updateCheckType)));
   DataPrimitive::saveFilename(name, s);
   save(s);
+
+  saveNameInfo(s, DATASOURCENUM);
   s.writeEndElement();
 }
 

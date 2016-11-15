@@ -52,6 +52,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
         if (attrs.hasAttribute("updateType")) {
           updateCheckType = DataSource::UpdateCheckType(attrs.value("updateType").toString().toInt());
         }
+        Object::processShortNameIndexAttributes(attrs);
       } else if (n == "properties") {
         propertyAttributes = xml.attributes();
         xml.readElementText();

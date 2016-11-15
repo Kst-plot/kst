@@ -42,7 +42,7 @@ PrimitivePtr ScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRead
   double value=0.0;
 
   while (!xml.atEnd()) {
-      const QString n = xml.name().toString();
+    const QString n = xml.name().toString();
     if (xml.isStartElement()) {
       if (n == Scalar::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
