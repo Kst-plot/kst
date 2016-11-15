@@ -305,7 +305,7 @@ void DataVector::save(QXmlStreamWriter &s) {
     s.writeAttribute("startUnits", startUnits());
     s.writeAttribute("rangeUnits", rangeUnits());
 
-    saveNameInfo(s, VNUM|XNUM);
+    saveNameInfo(s, VECTORNUM|SCALARNUM);
     s.writeEndElement();
   }
 }

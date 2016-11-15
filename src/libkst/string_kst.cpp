@@ -42,10 +42,10 @@ ScriptInterface* String::createScriptInterface() {
 
 
 void String::_initializeShortName() {
-  _shortName = 'T'+QString::number(_tnum);
-  if (_tnum>max_tnum)
-    max_tnum = _tnum;
-  _tnum++;
+  _shortName = 'T'+QString::number(_stringnum);
+  if (_stringnum>max_stringnum)
+    max_stringnum = _stringnum;
+  _stringnum++;
 }
 
 
@@ -70,7 +70,7 @@ void String::save(QXmlStreamWriter &s) {
     s.writeAttribute("editable", "true");
   }
   s.writeAttribute("value", value());
-  saveNameInfo(s, TNUM);
+  saveNameInfo(s, STRINGNUM);
   s.writeEndElement();
 }
 

@@ -142,10 +142,10 @@ ViewItem::~ViewItem() {
 }
 
 void ViewItem::_initializeShortName() {
-  _shortName = 'D'+QString::number(_dnum);
-  if (_dnum>max_dnum)
-    max_dnum = _dnum;
-  _dnum++;
+  _shortName = 'D'+QString::number(_viewitemnum);
+  if (_viewitemnum>max_viewitemnum)
+    max_viewitemnum = _viewitemnum;
+  _viewitemnum++;
 
 }
 

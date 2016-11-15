@@ -28,37 +28,37 @@
 namespace Kst {
 
 // short name index variables
-KSTCORE_EXPORT extern int _vnum; // vectors
-KSTCORE_EXPORT extern int _pnum; // plugins
+KSTCORE_EXPORT extern int _vectornum; // vectors
+KSTCORE_EXPORT extern int _pluginnum; // plugins
 KSTCORE_EXPORT extern int _csdnum; // csd
-KSTCORE_EXPORT extern int _cnum; // curves
-KSTCORE_EXPORT extern int _enum; // equations
-KSTCORE_EXPORT extern int _hnum; // histograms
-KSTCORE_EXPORT extern int _inum; // images
+KSTCORE_EXPORT extern int _curvecnum; // curves
+KSTCORE_EXPORT extern int _equationnum; // equations
+KSTCORE_EXPORT extern int _histogramnum; // histograms
+KSTCORE_EXPORT extern int _imagenum; // images
 KSTCORE_EXPORT extern int _psdnum; // psd
-KSTCORE_EXPORT extern int _xnum; // scalars
-KSTCORE_EXPORT extern int _tnum; // text string
-KSTCORE_EXPORT extern int _mnum; // matrix
+KSTCORE_EXPORT extern int _scalarnum; // scalars
+KSTCORE_EXPORT extern int _stringnum; // text string
+KSTCORE_EXPORT extern int _matrixnum; // matrix
 KSTCORE_EXPORT extern int _plotnum; // plot item
-KSTCORE_EXPORT extern int _lnum; // legend
-KSTCORE_EXPORT extern int _dnum; // view item (drawable)
-KSTCORE_EXPORT extern int _dsnum; // datasource
+KSTCORE_EXPORT extern int _legendnum; // legend
+KSTCORE_EXPORT extern int _viewitemnum; // view item (drawable)
+KSTCORE_EXPORT extern int _datasourcenum; // datasource
 
-KSTCORE_EXPORT extern int max_vnum; // vectors
-KSTCORE_EXPORT extern int max_pnum; // plugins
+KSTCORE_EXPORT extern int max_vectornum; // vectors
+KSTCORE_EXPORT extern int max_pluginnum; // plugins
 KSTCORE_EXPORT extern int max_csdnum; // csd
-KSTCORE_EXPORT extern int max_cnum; // curves
-KSTCORE_EXPORT extern int max_enum; // equations
-KSTCORE_EXPORT extern int max_hnum; // histograms
-KSTCORE_EXPORT extern int max_inum; // images
+KSTCORE_EXPORT extern int max_curvenum; // curves
+KSTCORE_EXPORT extern int max_equationnum; // equations
+KSTCORE_EXPORT extern int max_histogramnum; // histograms
+KSTCORE_EXPORT extern int max_imagenum; // images
 KSTCORE_EXPORT extern int max_psdnum; // psd
-KSTCORE_EXPORT extern int max_xnum; // scalars
-KSTCORE_EXPORT extern int max_tnum; // string
-KSTCORE_EXPORT extern int max_mnum; // matrix
+KSTCORE_EXPORT extern int max_scalarnum; // scalars
+KSTCORE_EXPORT extern int max_stringnum; // string
+KSTCORE_EXPORT extern int max_matrixnum; // matrix
 KSTCORE_EXPORT extern int max_plotnum; // plot item
-KSTCORE_EXPORT extern int max_lnum; // legend
-KSTCORE_EXPORT extern int max_dnum; // view item
-KSTCORE_EXPORT extern int max_dsnum; // datasource
+KSTCORE_EXPORT extern int max_legendnum; // legend
+KSTCORE_EXPORT extern int max_viewitemnum; // view item
+KSTCORE_EXPORT extern int max_datasourcenum; // datasource
 
 struct SizeCache {
     int nameWidthPixels;
@@ -75,21 +75,21 @@ public:
      virtual ~NamedObject();
 
      enum ShortNameIndex {
-      VNUM   = 0x0001,
-      PNUM   = 0x0002,
-      CSDNUM = 0x0004,
-      CNUM   = 0x0008,
-      ENUM   = 0x0010,
-      HNUM   = 0x0020,
-      INUM   = 0x0040,
-      PSDNUM = 0x0080,
-      XNUM   = 0x0100,
-      TNUM   = 0x0200,
-      MNUM   = 0x0400,
-      PLOTNUM= 0x0800,
-      LNUM   = 0x1000,
-      DNUM   = 0x2000,
-      DSNUM  = 0x4000
+      VECTORNUM    = 0x0001,
+      PLUGINNUM    = 0x0002,
+      CSDNUM       = 0x0004,
+      CURVENUM     = 0x0008,
+      EQUATIONNUM  = 0x0010,
+      HISTOGRAMNUM = 0x0020,
+      IMAGENUM     = 0x0040,
+      PSDNUM       = 0x0080,
+      SCALARNUM    = 0x0100,
+      STRINGNUM    = 0x0200,
+      MATRIXNUM    = 0x0400,
+      PLOTNUM      = 0x0800,
+      LEGENDNUM    = 0x1000,
+      VIEWITEMNUM  = 0x2000,
+      DATASOURCENUM= 0x4000
     };
 
     // name system: see object names devel doc
@@ -116,22 +116,22 @@ public:
     virtual void saveNameInfo(QXmlStreamWriter &s, unsigned I = 0xffff);
 
     // object indices used for saving/resorting shortnames
-    int _initial_vnum; // vectors
-    int _initial_pnum; // plugins
+    int _initial_vectornum; // vectors
+    int _initial_pluginnum; // plugins
     int _initial_csdnum; // csd
-    int _initial_cnum; // curves
-    int _initial_enum; // equations
-    int _initial_hnum; // histograms
-    int _initial_inum; // images
+    int _initial_curvenum; // curves
+    int _initial_equationnum; // equations
+    int _initial_histogramnum; // histograms
+    int _initial_imagenum; // images
     int _initial_psdnum; // psd
-    int _initial_xnum; // scalars
-    int _initial_tnum; // text string
-    int _initial_mnum; // matrix
+    int _initial_scalarnum; // scalars
+    int _initial_stringnum; // text string
+    int _initial_matrixnum; // matrix
 
     int _initial_plotnum; // plot item
-    int _initial_lnum; // legend
-    int _initial_dnum; // view item
-    int _initial_dsnum; // datasource
+    int _initial_legendnum; // legend
+    int _initial_viewitemnum; // view item
+    int _initial_datasourcenum; // datasource
   private:
     SizeCache *_sizeCache;
 };

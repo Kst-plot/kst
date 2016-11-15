@@ -418,17 +418,17 @@ bool Document::open(const QString& file) {
     return false;
   }
 
-  _vnum = max_vnum+1;
-  _xnum = max_xnum+1;
-  _pnum = max_pnum+1;
+  _vectornum = max_vectornum+1;
+  _scalarnum = max_scalarnum+1;
+  _pluginnum = max_pluginnum+1;
   _csdnum = max_csdnum+1;
-  _cnum = max_cnum+1;
-  _enum = max_enum+1;
-  _hnum = max_hnum+1;
-  _inum = max_inum+1;
+  _curvecnum = max_curvenum+1;
+  _equationnum = max_equationnum+1;
+  _histogramnum = max_histogramnum+1;
+  _imagenum = max_imagenum+1;
   _psdnum = max_psdnum+1;
-  _tnum = max_tnum+1;
-  _mnum = max_mnum+1;
+  _stringnum = max_stringnum+1;
+  _matrixnum = max_matrixnum+1;
 
 
   if (_win->tabWidget()->count() > currentTab) {

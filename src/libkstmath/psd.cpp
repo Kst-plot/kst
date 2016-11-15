@@ -222,7 +222,7 @@ void PSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_Output));
-  saveNameInfo(s, VNUM|PSDNUM|XNUM);
+  saveNameInfo(s, VECTORNUM|PSDNUM|SCALARNUM);
 
   s.writeEndElement();
 }

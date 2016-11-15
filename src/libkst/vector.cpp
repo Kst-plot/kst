@@ -89,10 +89,10 @@ Vector::Vector(ObjectStore *store)
 }
 
 void Vector::_initializeShortName() {
-  _shortName = 'V'+QString::number(_vnum);
-  if (_vnum>max_vnum)
-    max_vnum = _vnum;
-  _vnum++;
+  _shortName = 'V'+QString::number(_vectornum);
+  if (_vectornum>max_vectornum)
+    max_vectornum = _vectornum;
+  _vectornum++;
 }
 
 Vector::~Vector() {
@@ -689,7 +689,7 @@ void Vector::save(QXmlStreamWriter &s) {
 
     s.writeTextElement("data_v2", qCompress(qba).toBase64());
   }
-  saveNameInfo(s, VNUM|XNUM);
+  saveNameInfo(s, VECTORNUM|SCALARNUM);
   s.writeEndElement();
 }
 

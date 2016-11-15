@@ -47,10 +47,10 @@ BasicPlugin::~BasicPlugin() {
 }
 
 void BasicPlugin::_initializeShortName() {
-  _shortName = 'P'+QString::number(_pnum);
-  if (_pnum>max_pnum)
-    max_pnum = _pnum;
-  _pnum++;
+  _shortName = 'P'+QString::number(_pluginnum);
+  if (_pluginnum>max_pluginnum)
+    max_pluginnum = _pluginnum;
+  _pluginnum++;
 
 }
 
@@ -281,7 +281,7 @@ static void writeVectors(T& vectors, const QString& element, QXmlStreamWriter& s
 void BasicPlugin::save(QXmlStreamWriter &stream) {
   stream.writeStartElement(staticTypeTag);
   stream.writeAttribute("type", _pluginName);
-  saveNameInfo(stream, VNUM|PNUM|XNUM);
+  saveNameInfo(stream, VECTORNUM|PLUGINNUM|SCALARNUM);
 
   writeVectors(_inputVectors, "inputvector", stream, &NamedObject::Name);
   writeVectors(_inputScalars, "inputscalar", stream, &NamedObject::Name);

@@ -72,7 +72,7 @@ void EditableVector::setValue(const int &i, const double &val) { //sa Vector::ch
 /** Save vector information */
 void EditableVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("editablevector");
-  saveNameInfo(s, VNUM|XNUM);
+  saveNameInfo(s, VECTORNUM|SCALARNUM);
 
   if (_saveData) {
     QByteArray qba(length()*sizeof(double), '\0');

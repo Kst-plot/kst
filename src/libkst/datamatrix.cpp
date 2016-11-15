@@ -78,7 +78,7 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("ymin", QString::number(minY()));
     xml.writeAttribute("xstep", QString::number(xStepSize()));
     xml.writeAttribute("ystep", QString::number(yStepSize()));
-    saveNameInfo(xml, VNUM|MNUM|XNUM);
+    saveNameInfo(xml, VECTORNUM|MATRIXNUM|SCALARNUM);
 
     xml.writeEndElement();
   }

@@ -113,7 +113,7 @@ void DataString::save(QXmlStreamWriter &s) {
     saveFilename(s);
     s.writeAttribute("field", _field);
 
-    saveNameInfo(s, TNUM);
+    saveNameInfo(s, STRINGNUM);
     s.writeEndElement();
   }
 }

@@ -38,10 +38,10 @@ Scalar::Scalar(ObjectStore *store)
 }
 
 void Scalar::_initializeShortName() {
-  _shortName = 'X'+QString::number(_xnum);
-  if (_xnum>max_xnum)
-    max_xnum = _xnum;
-  _xnum++;
+  _shortName = 'X'+QString::number(_scalarnum);
+  if (_scalarnum>max_scalarnum)
+    max_scalarnum = _scalarnum;
+  _scalarnum++;
 }
 
 Scalar::~Scalar() {
@@ -78,7 +78,7 @@ void Scalar::save(QXmlStreamWriter &s) {
     s.writeAttribute("hidden", "true");
   }
   s.writeAttribute("value", QString::number(value()));
-  saveNameInfo(s, XNUM);
+  saveNameInfo(s, SCALARNUM);
   s.writeEndElement();
 }
 

@@ -96,10 +96,10 @@ Object::UpdateType DataSource::objectUpdate(qint64 newSerial) {
 
 
 void DataSource::_initializeShortName() {
-  _shortName = QString("DS%1").arg(_dsnum);
-  if (_dsnum>max_dsnum)
-    max_dsnum = _dsnum;
-  _dsnum++;
+  _shortName = QString("DS%1").arg(_datasourcenum);
+  if (_datasourcenum>max_datasourcenum)
+    max_datasourcenum = _datasourcenum;
+  _datasourcenum++;
 }
 
 bool DataSource::isValid() const {

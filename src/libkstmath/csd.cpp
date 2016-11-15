@@ -160,7 +160,7 @@ void CSD::save(QXmlStreamWriter &s) {
   s.writeAttribute("vectorunits", _vectorUnits);
   s.writeAttribute("rateunits", _rateUnits);
   s.writeAttribute("outputtype", QString::number(_outputType));
-  saveNameInfo(s,VNUM|XNUM|MNUM|CSDNUM);
+  saveNameInfo(s,VECTORNUM|SCALARNUM|MATRIXNUM|CSDNUM);
 
   s.writeEndElement();
 }

@@ -114,7 +114,7 @@ void VScalar::save(QXmlStreamWriter &s) {
     s.writeAttribute("field", _field);
     s.writeAttribute("f0", QString::number(_f0));
 
-    saveNameInfo(s, XNUM);
+    saveNameInfo(s, SCALARNUM);
     s.writeEndElement();
   }
 }

@@ -53,7 +53,7 @@ void EditableMatrix::save(QXmlStreamWriter &xml) {
   }
 
   xml.writeStartElement(staticTypeTag);
-  saveNameInfo(xml, VNUM|MNUM|XNUM);
+  saveNameInfo(xml, VECTORNUM|MATRIXNUM|SCALARNUM);
   xml.writeAttribute("xmin", QString::number(minX()));
   xml.writeAttribute("ymin", QString::number(minY()));
   xml.writeAttribute("nx", QString::number(xNumSteps()));

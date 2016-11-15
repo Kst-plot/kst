@@ -54,10 +54,10 @@ LegendItem::LegendItem(PlotItem *parentPlot)
 }
 
 void LegendItem::_initializeShortName() {
-  _shortName = 'L'+QString::number(_lnum);
-  if (_lnum>max_lnum)
-    max_lnum = _lnum;
-  _lnum++;
+  _shortName = 'L'+QString::number(_legendnum);
+  if (_legendnum>max_legendnum)
+    max_legendnum = _legendnum;
+  _legendnum++;
 }
 
 

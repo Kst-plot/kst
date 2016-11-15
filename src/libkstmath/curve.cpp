@@ -92,10 +92,10 @@ Curve::Curve(ObjectStore *store)
 }
 
 void Curve::_initializeShortName() {
-  _shortName = 'C'+QString::number(_cnum);
-  if (_cnum>max_cnum)
-    max_cnum = _cnum;
-  _cnum++;
+  _shortName = 'C'+QString::number(_curvecnum);
+  if (_curvecnum>max_curvenum)
+    max_curvenum = _curvecnum;
+  _curvecnum++;
 }
 
 
@@ -319,7 +319,7 @@ void Curve::save(QXmlStreamWriter &s) {
   s.writeAttribute("hashead", QVariant(HasHead).toString());
   s.writeAttribute("headtype", QString::number(HeadType));
 
-  saveNameInfo(s, CNUM);
+  saveNameInfo(s, CURVENUM);
 
   s.writeEndElement();
 }

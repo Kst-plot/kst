@@ -108,7 +108,7 @@ void DataScalar::save(QXmlStreamWriter &s) {
     saveFilename(s);
     s.writeAttribute("field", _field);
 
-    saveNameInfo(s, XNUM);
+    saveNameInfo(s, SCALARNUM);
     s.writeEndElement();
   }
 }

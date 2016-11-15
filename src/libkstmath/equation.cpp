@@ -88,10 +88,10 @@ Equation::~Equation() {
 }
 
 void Equation::_initializeShortName() {
-  _shortName = 'E'+QString::number(_enum);
-  if (_enum>max_enum)
-    max_enum = _enum;
-  _enum++;
+  _shortName = 'E'+QString::number(_equationnum);
+  if (_equationnum>max_equationnum)
+    max_equationnum = _equationnum;
+  _equationnum++;
 }
 
 
@@ -219,7 +219,7 @@ void Equation::save(QXmlStreamWriter &s) {
   if (_doInterp) {
     s.writeAttribute("interpolate", "true");
   }
-  saveNameInfo(s, VNUM|ENUM|XNUM);
+  saveNameInfo(s, VECTORNUM|EQUATIONNUM|SCALARNUM);
   s.writeEndElement();
 }
 

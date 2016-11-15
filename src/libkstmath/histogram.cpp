@@ -66,10 +66,10 @@ Histogram::Histogram(ObjectStore *store)
 }
 
 void Histogram::_initializeShortName() {
-  _shortName = 'H'+QString::number(_hnum);
-  if (_hnum>max_hnum)
-    max_hnum = _hnum;
-  _hnum++;
+  _shortName = 'H'+QString::number(_histogramnum);
+  if (_histogramnum>max_histogramnum)
+    max_histogramnum = _histogramnum;
+  _histogramnum++;
 }
 
 
@@ -296,7 +296,7 @@ void Histogram::save(QXmlStreamWriter &xml) {
   xml.writeAttribute("min", QString::number(_MinX));
   xml.writeAttribute("max", QString::number(_MaxX));
   xml.writeAttribute("normalizationmode", QString::number(_NormalizationMode));
-  saveNameInfo(xml, VNUM|HNUM|XNUM);
+  saveNameInfo(xml, VECTORNUM|HISTOGRAMNUM|SCALARNUM);
 
   xml.writeEndElement();
 }

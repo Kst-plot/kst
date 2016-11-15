@@ -66,10 +66,10 @@ Matrix::~Matrix() {
 }
 
 void Matrix::_initializeShortName() {
-  _shortName = 'M'+QString::number(_mnum);
-  if (_mnum>max_mnum)
-    max_mnum = _mnum;
-  _mnum++;
+  _shortName = 'M'+QString::number(_matrixnum);
+  if (_matrixnum>max_matrixnum)
+    max_matrixnum = _matrixnum;
+  _matrixnum++;
 }
 
 

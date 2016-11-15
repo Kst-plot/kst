@@ -56,10 +56,10 @@ Image::~Image() {
 }
 
 void Image::_initializeShortName() {
-  _shortName = 'I'+QString::number(_inum);
-  if (_inum>max_inum)
-    max_inum = _inum;
-  _inum++;
+  _shortName = 'I'+QString::number(_imagenum);
+  if (_imagenum>max_imagenum)
+    max_imagenum = _imagenum;
+  _imagenum++;
 }
 
 ScriptInterface* Image::createScriptInterface() {
@@ -86,7 +86,7 @@ void Image::save(QXmlStreamWriter &s) {
   s.writeAttribute("contourcolor", _contourColor.name());
 
   s.writeAttribute("autothreshold", QVariant(_autoThreshold).toString());
-  saveNameInfo(s, INUM);
+  saveNameInfo(s, IMAGENUM);
   s.writeEndElement();
 }
 

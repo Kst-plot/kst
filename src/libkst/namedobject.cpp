@@ -25,21 +25,21 @@ namespace Kst {
 NamedObject::NamedObject() : _manualDescriptiveName(QString()), _shortName(QString("FIXME - set _shortName"))
 {
 
-  _initial_vnum = _vnum; // vectors
-  _initial_pnum = _pnum; // plugins
+  _initial_vectornum = _vectornum; // vectors
+  _initial_pluginnum = _pluginnum; // plugins
   _initial_csdnum = _csdnum; // csd
-  _initial_cnum = _cnum; // curves
-  _initial_enum = _enum; // equations
-  _initial_hnum = _hnum; // histograms
-  _initial_inum = _inum; // images
+  _initial_curvenum = _curvecnum; // curves
+  _initial_equationnum = _equationnum; // equations
+  _initial_histogramnum = _histogramnum; // histograms
+  _initial_imagenum = _imagenum; // images
   _initial_psdnum = _psdnum; // psd
-  _initial_xnum = _xnum; // scalars
-  _initial_tnum = _tnum; // text string
-  _initial_mnum = _mnum; // text string
+  _initial_scalarnum = _scalarnum; // scalars
+  _initial_stringnum = _stringnum; // text string
+  _initial_matrixnum = _matrixnum; // text string
   _initial_plotnum = _plotnum; // plots
-  _initial_lnum = _lnum; // legend
-  _initial_dnum = _dnum; // view image
-  _initial_dsnum = _dsnum; // datasource
+  _initial_legendnum = _legendnum; // legend
+  _initial_viewitemnum = _viewitemnum; // view image
+  _initial_datasourcenum = _datasourcenum; // datasource
 
   _sizeCache = new SizeCache;
   _sizeCache->fontSize = 0;
@@ -167,36 +167,36 @@ void NamedObject::saveNameInfo(QXmlStreamWriter &s, unsigned I) {
     s.writeAttribute("descriptiveNameIsManual", "true");
     s.writeAttribute("descriptiveName", descriptiveName());
   }
-  if (I & VNUM)
-    s.writeAttribute("initialVNum", QString::number(_initial_vnum));
-  if (I & XNUM)
-    s.writeAttribute("initialXNum", QString::number(_initial_xnum));
-  if (I & PNUM)
-    s.writeAttribute("initialPNum", QString::number(_initial_pnum));
+  if (I & VECTORNUM)
+    s.writeAttribute("initialVNum", QString::number(_initial_vectornum));
+  if (I & SCALARNUM)
+    s.writeAttribute("initialXNum", QString::number(_initial_scalarnum));
+  if (I & PLUGINNUM)
+    s.writeAttribute("initialPNum", QString::number(_initial_pluginnum));
   if (I & CSDNUM)
     s.writeAttribute("initialCSDNum", QString::number(_initial_csdnum));
-  if (I & CNUM)
-    s.writeAttribute("initialCNum", QString::number(_initial_cnum));
-  if (I & ENUM)
-    s.writeAttribute("initialENum", QString::number(_initial_enum));
-  if (I & HNUM)
-    s.writeAttribute("initialHNum", QString::number(_initial_hnum));
-  if (I & INUM)
-    s.writeAttribute("initialINum", QString::number(_initial_inum));
+  if (I & CURVENUM)
+    s.writeAttribute("initialCNum", QString::number(_initial_curvenum));
+  if (I & EQUATIONNUM)
+    s.writeAttribute("initialENum", QString::number(_initial_equationnum));
+  if (I & HISTOGRAMNUM)
+    s.writeAttribute("initialHNum", QString::number(_initial_histogramnum));
+  if (I & IMAGENUM)
+    s.writeAttribute("initialINum", QString::number(_initial_imagenum));
   if (I & PSDNUM)
     s.writeAttribute("initialPSDNum", QString::number(_initial_psdnum));
-  if (I & TNUM)
-    s.writeAttribute("initialTNum", QString::number(_initial_tnum));
-  if (I & MNUM)
-    s.writeAttribute("initialMNum", QString::number(_initial_mnum));
+  if (I & STRINGNUM)
+    s.writeAttribute("initialTNum", QString::number(_initial_stringnum));
+  if (I & MATRIXNUM)
+    s.writeAttribute("initialMNum", QString::number(_initial_matrixnum));
   if (I & PLOTNUM)
     s.writeAttribute("initialPlotNum", QString::number(_initial_plotnum));
-  if (I & LNUM)
-    s.writeAttribute("initialLNum", QString::number(_initial_lnum));
-  if (I & DNUM)
-    s.writeAttribute("initialDNum", QString::number(_initial_dnum));
-  if (I & DSNUM)
-    s.writeAttribute("initialDSNum", QString::number(_initial_dsnum));
+  if (I & LEGENDNUM)
+    s.writeAttribute("initialLNum", QString::number(_initial_legendnum));
+  if (I & VIEWITEMNUM)
+    s.writeAttribute("initialDNum", QString::number(_initial_viewitemnum));
+  if (I & DATASOURCENUM)
+    s.writeAttribute("initialDSNum", QString::number(_initial_datasourcenum));
 }
 
 void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
@@ -204,16 +204,16 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
 
   R = attrs.value("initialVNum");
   if (!R.isEmpty()) 
-    _vnum = R.toString().toInt();
+    _vectornum = R.toString().toInt();
 
   R = attrs.value("initialXNum");
   if (!R.isEmpty()) {
-      _xnum = R.toString().toInt();
+      _scalarnum = R.toString().toInt();
   }
 
   R = attrs.value("initialPNum");
   if (!R.isEmpty()) 
-    _pnum = R.toString().toInt();
+    _pluginnum = R.toString().toInt();
 
   R = attrs.value("initialCSDNum");
   if (!R.isEmpty()) 
@@ -221,19 +221,19 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
 
   R = attrs.value("initialCNum");
   if (!R.isEmpty()) 
-    _cnum = R.toString().toInt();
+    _curvecnum = R.toString().toInt();
 
   R = attrs.value("initialENum");
   if (!R.isEmpty()) 
-    _enum = R.toString().toInt();
+    _equationnum = R.toString().toInt();
 
   R = attrs.value("initialHNum");
   if (!R.isEmpty()) 
-    _hnum = R.toString().toInt();
+    _histogramnum = R.toString().toInt();
 
   R = attrs.value("initialINum");
   if (!R.isEmpty()) 
-    _inum = R.toString().toInt();
+    _imagenum = R.toString().toInt();
 
   R = attrs.value("initialPSDNum");
   if (!R.isEmpty()) 
@@ -241,11 +241,11 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
 
   R = attrs.value("initialTNum");
   if (!R.isEmpty()) 
-    _tnum = R.toString().toInt();
+    _stringnum = R.toString().toInt();
 
   R = attrs.value("initialMNum");
   if (!R.isEmpty()) 
-    _mnum = R.toString().toInt();
+    _matrixnum = R.toString().toInt();
 
   R = attrs.value("initialPlotNum");
   if (!R.isEmpty())
@@ -253,51 +253,51 @@ void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
 
   R = attrs.value("initialLNum");
   if (!R.isEmpty())
-    _lnum = R.toString().toInt();
+    _legendnum = R.toString().toInt();
 
   R = attrs.value("initialDNum");
   if (!R.isEmpty())
-    _dnum = R.toString().toInt();
+    _viewitemnum = R.toString().toInt();
 
   R = attrs.value("initialDSNum");
   if (!R.isEmpty())
-    _dsnum = R.toString().toInt();
+    _datasourcenum = R.toString().toInt();
 }
 
 
 // Reset all name indexes.  Should only be used by ObjectStore when clearing the store entirely.
 void NamedObject::resetNameIndex() {
-  _vnum = 1; // vectors
-  _pnum = 1; // plugins
+  _vectornum = 1; // vectors
+  _pluginnum = 1; // plugins
   _csdnum = 1; // csd
-  _cnum = 1; // curves
-  _enum = 1; // equations
-  _hnum = 1; // histograms
-  _inum = 1; // images
+  _curvecnum = 1; // curves
+  _equationnum = 1; // equations
+  _histogramnum = 1; // histograms
+  _imagenum = 1; // images
   _psdnum = 1; // psd
-  _xnum = 1; // scalars
-  _tnum = 1; // text string
-  _mnum = 1; // matrix
+  _scalarnum = 1; // scalars
+  _stringnum = 1; // text string
+  _matrixnum = 1; // matrix
   _plotnum = 1; // plots
-  _lnum = 1; // legends
-  _dnum = 1; // other view objects
-  _dsnum = 1; // datasource
+  _legendnum = 1; // legends
+  _viewitemnum = 1; // other view objects
+  _datasourcenum = 1; // datasource
 
-  max_vnum = 0; // vectors
-  max_pnum = 0; // plugins
+  max_vectornum = 0; // vectors
+  max_pluginnum = 0; // plugins
   max_csdnum = 0; // csd
-  max_cnum = 0; // curves
-  max_enum = 0; // equations
-  max_hnum = 0; // histograms
-  max_inum = 0; // images
+  max_curvenum = 0; // curves
+  max_equationnum = 0; // equations
+  max_histogramnum = 0; // histograms
+  max_imagenum = 0; // images
   max_psdnum = 0; // psd
-  max_xnum = 0; // scalars
-  max_tnum = 0; // text string
-  max_mnum = 0; // matrix
+  max_scalarnum = 0; // scalars
+  max_stringnum = 0; // text string
+  max_matrixnum = 0; // matrix
   max_plotnum = 0;
-  max_lnum = 0;
-  max_dnum = 0;
-  max_dsnum = 0;
+  max_legendnum = 0;
+  max_viewitemnum = 0;
+  max_datasourcenum = 0;
 }
 
 // for sorting a list in order of creation (ie, short name number)
@@ -311,37 +311,37 @@ bool shortNameLessThan(NamedObject *o1, NamedObject *o2) {
 }
 
 void resetNameIndexes() {
-   _vnum = 1; // vectors
-   _pnum = 1; // plugins
+   _vectornum = 1; // vectors
+   _pluginnum = 1; // plugins
    _csdnum = 1; // csd
-   _cnum = 1; // curves
-   _enum = 1; // equations
-   _hnum = 1; // histograms
-   _inum = 1; // images
+   _curvecnum = 1; // curves
+   _equationnum = 1; // equations
+   _histogramnum = 1; // histograms
+   _imagenum = 1; // images
    _psdnum = 1; // psd
-   _xnum = 1; // scalars
-   _tnum = 1; // text string
-   _mnum = 1; // matrix
+   _scalarnum = 1; // scalars
+   _stringnum = 1; // text string
+   _matrixnum = 1; // matrix
    _plotnum = 1; // plots
-   _lnum = 1; // legend
-   _dnum = 1; // view item
-   _dsnum = 1; // datasource
+   _legendnum = 1; // legend
+   _viewitemnum = 1; // view item
+   _datasourcenum = 1; // datasource
 
-   max_vnum = 0; // vectors
-   max_pnum = 0; // plugins
+   max_vectornum = 0; // vectors
+   max_pluginnum = 0; // plugins
    max_csdnum = 0; // csd
-   max_cnum = 0; // curves
-   max_enum = 0; // equations
-   max_hnum = 0; // histograms
-   max_inum = 0; // images
+   max_curvenum = 0; // curves
+   max_equationnum = 0; // equations
+   max_histogramnum = 0; // histograms
+   max_imagenum = 0; // images
    max_psdnum = 0; // psd
-   max_xnum = 0; // scalars
-   max_tnum = 0; // text string
-   max_mnum = 0; // matrix
+   max_scalarnum = 0; // scalars
+   max_stringnum = 0; // text string
+   max_matrixnum = 0; // matrix
    max_plotnum = 0; // plots
-   max_lnum = 0; // legends
-   max_dnum = 0; // view item
-   max_dsnum = 0; // datasource
+   max_legendnum = 0; // legends
+   max_viewitemnum = 0; // view item
+   max_datasourcenum = 0; // datasource
 
 }
 
