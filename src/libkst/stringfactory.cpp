@@ -106,6 +106,10 @@ PrimitivePtr DataStringFactory::generatePrimitive(ObjectStore *store, QXmlStream
         file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
 
+        if (!store->override.fileName.isEmpty()) {
+          file = store->override.fileName;
+        }
+
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
         }
