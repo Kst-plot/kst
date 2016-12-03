@@ -35,9 +35,8 @@ const QString VScalar::staticTypeTag = "vscalar";
 
 /** Create a VScalar: a scalar from a single sample of a vector field */
 VScalar::VScalar(ObjectStore *store)
-: Scalar(store) {
+: Scalar(store), DataPrimitive(this) {
 
-  _file = 0L;
   _field.clear();
 
   setOrphan(true);
@@ -45,7 +44,6 @@ VScalar::VScalar(ObjectStore *store)
 
 
 VScalar::~VScalar() {
-  _file = 0;
 }
 
 
@@ -62,30 +60,31 @@ ScriptInterface* VScalar::createScriptInterface() {
   return new ScalarVectorSI(this);
 }
 
-void VScalar::change(DataSourcePtr in_file, const QString &in_field, int in_f0) {
+void VScalar::change(DataSourcePtr in_datasource, const QString &in_field, int in_f0) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _field = in_field;
-  _file = in_file;
+  setDataSource(in_datasource);
   _f0 = in_f0;
 }
 
-void VScalar::changeFile(DataSourcePtr in_file) {
+void VScalar::changeFile(DataSourcePtr in_datasource) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  if (!in_file) {
+  if (!in_datasource) {
     Debug::self()->log(tr("Data file for scalar %1 was not opened.").arg(Name()), Debug::Warning);
   }
+  setDataSource(in_datasource);
 }
 
 
 /** return the name of the file */
 QString VScalar::filename() const {
   QString rc;
-  if (_file) {
-    _file->readLock();
-    rc = _file->fileName();
-    _file->unlock();
+  if (dataSource()) {
+    dataSource()->readLock();
+    rc = dataSource()->fileName();
+    dataSource()->unlock();
   }
   return rc;
 }
@@ -103,13 +102,9 @@ int VScalar::F0() const {
 
 /** Save data scalar information */
 void VScalar::save(QXmlStreamWriter &s) {
-  if (_file) {
+  if (dataSource()) {
     s.writeStartElement("vscalar");
-
-    _file->readLock();
-    s.writeAttribute("provider", _file->Name());
-    DataPrimitive::saveFilename(_file->fileName(), s);
-    _file->unlock();
+    saveFilename(s);
 
     s.writeAttribute("field", _field);
     s.writeAttribute("f0", QString::number(_f0));
@@ -122,40 +117,40 @@ void VScalar::save(QXmlStreamWriter &s) {
 
 /** Update a data Scalar */
 void VScalar::internalUpdate() {
-  if (_file) {
+  if (dataSource()) {
     int f0;
     if (_f0<0) { 
-      f0 = _file->vector().dataInfo(_field).frameCount-1;
+      f0 = dataSource()->vector().dataInfo(_field).frameCount-1;
     } else {
       f0 = _f0;
     }
-    _file->writeLock();
+    dataSource()->writeLock();
     DataVector::ReadInfo p = {&_value, f0, -1, -1};
-    _file->vector().read(_field, p);
-    _file->unlock();
+    dataSource()->vector().read(_field, p);
+    dataSource()->unlock();
   }
 }
 
 qint64 VScalar::minInputSerial() const {
-  if (_file) {
-    return (_file->serial());
+  if (dataSource()) {
+    return (dataSource()->serial());
   }
   return LLONG_MAX;
 }
 
 qint64 VScalar::maxInputSerialOfLastChange() const {
-  if (_file) {
-    return (_file->serialOfLastChange());
+  if (dataSource()) {
+    return (dataSource()->serialOfLastChange());
   }
   return NoInputs;
 }
 
-PrimitivePtr VScalar::_makeDuplicate() const {
+PrimitivePtr VScalar::makeDuplicate() const {
   Q_ASSERT(store());
   VScalarPtr scalar = store()->createObject<VScalar>();
 
   scalar->writeLock();
-  scalar->change(_file, _field, _f0);
+  scalar->change(dataSource(), _field, _f0);
   if (descriptiveNameIsManual()) {
     scalar->setDescriptiveName(descriptiveName());
   }
@@ -164,11 +159,6 @@ PrimitivePtr VScalar::_makeDuplicate() const {
   scalar->unlock();
 
   return kst_cast<Primitive>(scalar);
-}
-
-
-DataSourcePtr VScalar::dataSource() const {
-  return _file;
 }
 
 
@@ -187,17 +177,17 @@ QString VScalar::descriptionTip() const {
 
 /** return true if it has a valid file and field, or false otherwise */
 bool VScalar::isValid() const {
-  if (_file) {
-    _file->readLock();
-    bool rc = _file->vector().isValid(_field);
-    _file->unlock();
+  if (dataSource()) {
+    dataSource()->readLock();
+    bool rc = dataSource()->vector().isValid(_field);
+    dataSource()->unlock();
     return rc;
   }
   return false;
 }
 
 
-bool VScalar::_checkValidity(const DataSourcePtr ds) const {
+bool VScalar::checkValidity(const DataSourcePtr& ds) const {
   if (ds) {
     ds->readLock();
     bool rc = ds->vector().isValid(_field);
@@ -209,7 +199,8 @@ bool VScalar::_checkValidity(const DataSourcePtr ds) const {
 
 
 QString VScalar::propertyString() const {
-  return tr("%2 frame %3 of %1 = %4", "%2 is field name.  %3 is frame/index.  %1 is the file name.  %4 is the value").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
+  return tr("%2 frame %3 of %1 = %4",
+            "%2 is field name.  %3 is frame/index.  %1 is the file name.  %4 is the value").arg(dataSource()->fileName()).arg(field()).arg(F0()).arg(value());
 }
 
 }

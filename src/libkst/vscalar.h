@@ -31,7 +31,7 @@ namespace Kst {
  */
 
 /** A scalar which gets its value from a vector field in a data file. */
-class KSTCORE_EXPORT VScalar : public Scalar {
+class KSTCORE_EXPORT VScalar : public Scalar, public DataPrimitive {
   Q_OBJECT
 
   protected:
@@ -70,9 +70,6 @@ class KSTCORE_EXPORT VScalar : public Scalar {
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 
-    /** the data source */
-    DataSourcePtr dataSource() const;
-
     virtual QString descriptionTip() const;
 
     /** return true if it has a valid file and field, or false otherwise */
@@ -82,18 +79,15 @@ class KSTCORE_EXPORT VScalar : public Scalar {
 
     virtual ScriptInterface* createScriptInterface();
 
+    /** make a copy of the VScalar */
+    virtual PrimitivePtr makeDuplicate() const;
+    virtual bool checkValidity(const DataSourcePtr& ds) const;
   private:
-    /** file to read for rvectors */
-    DataSourcePtr _file;
-
     /** For the scalar field in the data source */
-    QString _field;
+    //QString _field;
 
     int _f0;
 
-    /** make a copy of the VScalar */
-    virtual PrimitivePtr _makeDuplicate() const;
-    virtual bool _checkValidity(const DataSourcePtr ds) const;
 
 };
 

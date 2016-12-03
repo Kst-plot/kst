@@ -180,6 +180,11 @@ PrimitivePtr VScalarFactory::generatePrimitive(ObjectStore *store, QXmlStreamRea
         QXmlStreamAttributes attrs = xml.attributes();
         provider = attrs.value("provider").toString();
         file = DataPrimitive::readFilename(attrs);
+
+        if (!store->override.fileName.isEmpty()) {
+          file = store->override.fileName;
+        }
+
         field = attrs.value("field").toString();
         f0 = attrs.value("f0").toString().toInt();
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {

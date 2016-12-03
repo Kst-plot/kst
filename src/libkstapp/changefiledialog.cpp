@@ -174,7 +174,13 @@ void ChangeFileDialog::updatePrimitiveList() {
     if (dp) {
       primitives.append(P);
       fileNameList.append(dp->filename());
-    }
+    } /*else {
+      VScalar *vs = qobject_cast<VScalar*>(P);
+      if (vs) {
+        primitives.append(P);
+        fileNameList.append(vs->filename());
+      }
+    } */
   }
 
   // make sure all items in _changeFilePrimitiveList exist in the store; remove if they don't.
