@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>341</height>
+    <width>629</width>
+    <height>339</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -209,7 +209,7 @@
            </sizepolicy>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="maximum">
            <number>1000000000</number>
@@ -285,7 +285,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>V&amp;alue: </string>
+           <string>Va&amp;lue: </string>
           </property>
           <property name="wordWrap">
            <bool>false</bool>

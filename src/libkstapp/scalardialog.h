@@ -76,6 +76,8 @@ class ScalarTab : public DataTab, Ui::ScalarTab {
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;
+    QString _current_field;
+    QString _current_rvfield;
 };
 
 class ScalarDialog : public DataDialog {

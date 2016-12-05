@@ -156,6 +156,7 @@ QString ScalarTab::field() const {
 
 
 void ScalarTab::setField(const QString &field) {
+  _current_field = field;
   _field->setCurrentIndex(_field->findText(field));
 }
 
@@ -166,6 +167,7 @@ QString ScalarTab::fieldRV() const {
 
 
 void ScalarTab::setFieldRV(const QString &field) {
+  _current_rvfield = field;
   _fieldRV->setCurrentIndex(_fieldRV->findText(field));
 }
 
@@ -198,8 +200,10 @@ void ScalarTab::sourceValid(QString filename, int requestID) {
   _dataSource->readLock();
 
   _field->addItems(_dataSource->scalar().list());
+  setField(_current_field);
   _field->setEditable(!_dataSource->scalar().isListComplete());
   _fieldRV->addItems(_dataSource->vector().list());
+  setFieldRV(_current_rvfield);
   _fieldRV->setEditable(!_dataSource->vector().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
@@ -417,7 +421,8 @@ ObjectPtr ScalarDialog::createNewVScalar() {
 
   _dataObjectName = scalar->Name();
 
-  //UpdateServer::self()->requestUpdateSignal();
+  kstApp->mainWindow()->updateRecentDataFiles(dataSource->fileName());
+  //dialogDefaults().setValue("vector/datasource", dataSource->fileName());
 
   return scalar;
 }

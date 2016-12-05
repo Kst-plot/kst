@@ -317,7 +317,7 @@ void DataSource::saveSource(QXmlStreamWriter &s) {
   DataPrimitive::saveFilename(name, s);
   save(s);
 
-  saveNameInfo(s, DATASOURCENUM);
+  saveNameInfo(s, DATASOURCENUM | SCALARNUM | STRINGNUM);
   s.writeEndElement();
 }
 
