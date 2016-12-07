@@ -38,6 +38,7 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
   connect(_stringValue, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
   connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
+  connect(_field, SIGNAL(currentIndexChanged(int)), this, SLOT(textChanged()));
 }
 
 
@@ -135,6 +136,7 @@ QString StringTab::field() const {
 
 
 void StringTab::setField(const QString &field) {
+  _current_field = field;
   _field->setCurrentIndex(_field->findText(field));
 }
 
@@ -161,9 +163,9 @@ void StringTab::sourceValid(QString filename, int requestID) {
   _dataSource->readLock();
 
   _field->addItems(_dataSource->string().list());
+  setField(_current_field);
   _field->setEditable(!_dataSource->string().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
-
   _dataSource->unlock();
 
   _store->cleanUpDataSourceList();
@@ -244,6 +246,7 @@ void StringDialog::configureTab(ObjectPtr object) {
 void StringDialog::updateButtons() {
   bool enable = !_stringTab->value().isEmpty()
       || !_stringTab->field().isEmpty();
+
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(enable);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(enable);
 }

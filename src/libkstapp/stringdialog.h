@@ -71,6 +71,7 @@ class StringTab : public DataTab, Ui::StringTab {
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;
+    QString _current_field;
 };
 
 class StringDialog : public DataDialog {
