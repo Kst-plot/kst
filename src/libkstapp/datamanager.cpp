@@ -89,6 +89,8 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _contextMenu = new QMenu(this);
 
   connect(_purge, SIGNAL(clicked()), this, SLOT(purge()));
+  connect(_delete, SIGNAL(clicked()), this, SLOT(deleteObject()));
+  connect(_edit, SIGNAL(clicked()), this, SLOT(showEditDialog()));
 }
 
 DataManager::~DataManager() {
@@ -254,16 +256,39 @@ void DataManager::showContextMenu(const QPoint &position) {
 
 void DataManager::showEditDialog(QModelIndex qml) {
   if (!qml.parent().isValid()) { // don't edit slave objects
-    SessionModel *model = static_cast<SessionModel*>(_doc->session());
+    //SessionModel *model = static_cast<SessionModel*>(_doc->session());
 
-    _currentObject = model->objectList()->at(_proxyModel->mapToSource(qml).row());
+    //_currentObject = model->objectList()->at(_proxyModel->mapToSource(qml).row());
 
-    showEditDialog();
+    showEditDialog(_proxyModel->mapToSource(qml).row());
   }
 }
 
+
 void DataManager::showEditDialog() {
-  DialogLauncher::self()->showObjectDialog(_currentObject);
+
+  if (_session->selectionModel()->selectedIndexes().size()<1) {
+    return;
+  }
+
+  QModelIndex qml = _session->selectionModel()->selectedIndexes()[0];
+
+  if (qml.parent().isValid()) { // don't edit slave objects.
+    return;
+  }
+
+  int row = _proxyModel->mapToSource(qml).row(); // Single selection mode => only one selected index
+
+  showEditDialog(row);
+}
+
+
+void DataManager::showEditDialog(int row) {
+  SessionModel *model = static_cast<SessionModel*>(_doc->session());
+  if ((row < 0) || (row >=model->objectList()->size())) {
+    return;
+  }
+  DialogLauncher::self()->showObjectDialog(model->objectList()->at(row));
 }
 
 
@@ -369,6 +394,11 @@ void DataManager::showFitDialog() {
 
 void DataManager::deleteObject() {
   SessionModel *model = static_cast<SessionModel*>(_doc->session());
+
+  if (_session->selectionModel()->selectedIndexes().size()<1) {
+    return;
+  }
+
   int row = _proxyModel->mapToSource(_session->selectionModel()->selectedIndexes()[0]).row(); // Single selection mode => only one selected index
   _currentObject = model->objectList()->at(row);
   if (RelationPtr relation = kst_cast<Relation>(_currentObject)) {

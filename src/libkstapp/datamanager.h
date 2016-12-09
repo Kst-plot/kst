@@ -39,6 +39,7 @@ class DataManager : public QDialog, Ui::DataManager
     void showContextMenu(const QPoint &);
     void showEditDialog(QModelIndex qml);
     void showEditDialog();
+    void showEditDialog(int row);
     void deleteObject();
 
     void showVectorDialog();
