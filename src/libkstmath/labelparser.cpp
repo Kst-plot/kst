@@ -682,7 +682,6 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
             ctail->formated = true;
             ctail->format = txt.mid(formatIndexStart+1, formatIndexEnd - formatIndexStart-1);
 
-            qDebug() << ctail->format;
           } else {
             i = uint(pos);
           }
