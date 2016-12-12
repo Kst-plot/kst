@@ -27,6 +27,7 @@
 #include "applicationsettings.h"
 
 #include <QDebug>
+#include <cstdio>
 
 const double subscript_scale = 0.60;
 const double subscript_drop = 0.16;
@@ -111,13 +112,29 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
         bool ok = false;
         const QString s = fi->text.mid(1);
         const double eqResult(Equations::interpret(store, s.toLatin1(), &ok, s.length()));
-        txt = QString::number(eqResult, 'g', rc.precision);
+        if (fi->formated) {
+          const int strlen = 100;
+          char cstring[strlen];
+          QByteArray format = fi->format.toLatin1();
+          snprintf(cstring, strlen, format.data(), eqResult); // not using QString::asprintf() because it isn't in qt4.
+          txt = QString(cstring);
+        } else {
+          txt = QString::number(eqResult, 'g', rc.precision);
+        }
       } else {
         Kst::ObjectPtr op = store->retrieveObject(fi->text);
         Kst::ScalarPtr scp = Kst::kst_cast<Kst::Scalar>(op);
         if (scp) {
           KstReadLocker l(scp);
-          txt = QString::number(scp->value(), 'g', rc.precision);
+          if (fi->formated) {
+            const int strlen = 100;
+            char cstring[strlen];
+            QByteArray format = fi->format.toLatin1();
+            snprintf(cstring, strlen, format.data(), scp->value()); // not using QString::asprintf() because it isn't in qt4.
+            txt = QString(cstring);
+          } else {
+            txt = QString::number(scp->value(), 'g', rc.precision);
+          }
           if (cache) {
             rc.addObject(scp);
           }
@@ -154,7 +171,16 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
           if (ok) {
             KstReadLocker l(vp);
             const double vVal(vp->value()[int(idx)]);
-            txt = QString::number(vVal, 'g', rc.precision);
+            if (fi->formated) {
+              const int strlen = 100;
+              char cstring[strlen];
+              QByteArray format = fi->format.toLatin1();
+              snprintf(cstring, strlen, format.data(), vVal); // not using QString::asprintf() because it isn't in qt4.
+              txt = QString(cstring);
+            } else {
+              txt = QString::number(vVal, 'g', rc.precision);
+            }
+
             if (cache) {
               rc.addObject(vp);
             }

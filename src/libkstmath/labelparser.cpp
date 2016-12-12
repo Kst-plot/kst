@@ -35,7 +35,7 @@ using namespace Label;
 #endif
 
 Chunk::Chunk(Chunk *parent, VOffset dir, bool isGroup, bool inherit)
-: next(0L), prev(0L), up(0L), down(0L), group(0L), scalar(false), linebreak(false), tab(false), vector(false), vOffset(dir) {
+: next(0L), prev(0L), up(0L), down(0L), group(0L), scalar(false), linebreak(false), tab(false), vector(false), formated(false), vOffset(dir) {
   assert(parent || vOffset == None);
   if (parent) {  // attach and inherit
     switch (vOffset) {
@@ -622,6 +622,10 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
           int vectorIndexEnd = -1;
           int bracketStack = 1;
           int pos = -1;
+          bool format = false;
+          int formatIndexStart = 0;
+          int formatIndexEnd = 0;
+
           bool equation = txt[i + 1] == '=';
           for (uint searchPt = i + 1; bracketStack != 0 && searchPt < cnt; ++searchPt) {
             if (txt[searchPt] == ']') {
@@ -644,6 +648,19 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
             return 0L;
           }
 
+          if (pos+3 < cnt) { // ]{%f} is min size.
+            if ((txt[pos+1]=='{') && (txt[pos+2] == '%')) {
+              formatIndexStart = pos+1;
+              for (uint searchPt = pos + 2; searchPt < cnt; ++searchPt) {
+                if (txt[searchPt] == '}') {
+                  formatIndexEnd = searchPt;
+                  format = true;
+                  break;
+                }
+              }
+            }
+          }
+
           if (ctail->locked() || !ctail->text.isEmpty()) {
             if (ctail->vOffset != Chunk::None) {
               ctail = new Chunk(ctail->prev, Chunk::None, false, true);
@@ -660,7 +677,15 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
             ctail->text = txt.mid(i + 1, pos - i - 1).trimmed();
             ctail->scalar = true;
           }
-          i = uint(pos);
+          if (format) {
+            i = uint(formatIndexEnd);
+            ctail->formated = true;
+            ctail->format = txt.mid(formatIndexStart+1, formatIndexEnd - formatIndexStart-1);
+
+            qDebug() << ctail->format;
+          } else {
+            i = uint(pos);
+          }
         }
         break;
       default:

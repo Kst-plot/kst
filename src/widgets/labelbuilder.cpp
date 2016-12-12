@@ -72,6 +72,9 @@ void LabelBuilder::showHelp() {
                     "e.g. <FONT FACE=\"Courier New, monospace\">[=[GYRO1:Mean"
                     "(X4)]/[GYRO1:Sigma (X4)]]</FONT></P>"
 
+                    "<P STYLE=\"margin-bottom: 0in\"><B>Formatting:</B> Numbers can be formatted using C printf formats. e.g., "
+                    "<FONT FACE=\"Courier New, monospace\">[GYRO1:Mean (X4)]{%4.2f}</FONT>"
+
                     "<P ALIGN=LEFT STYLE=\"margin-bottom: 0in\"><FONT SIZE=4><B>Supported LaTeX Subset</B></FONT><br>"
                     "Labels in <i>kst</i> "
                     "support a derivative subset of LaTeX. For example, to display the equation for the area of a "

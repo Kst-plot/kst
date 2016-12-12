@@ -63,6 +63,7 @@ namespace Label {
     bool linebreak : 1;
     bool tab : 1;
     bool vector : 1;
+    bool formated : 1;
     VOffset vOffset
 #ifndef Q_OS_WIN32
     : 2
@@ -71,6 +72,7 @@ namespace Label {
     ChunkAttributes attributes;
     QString text;
     QString expression;
+    QString format;
   };
 
 

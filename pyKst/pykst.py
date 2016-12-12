@@ -2514,12 +2514,20 @@ class Label(ViewItem) :
   
   Scalars and scalar equations can be displayed live in labels. 
   When the scalar is updated, the label is updated.
-  
+
+
   The format is::
-    Scalar:         [scalarname]         eg [GYRO1:Mean(X4)]
-    Vector Element: [vectorName[index]]  eg [GYRO1 (V2)[4]]
-    Equation:       [=equation]          eg [=[GYRO1:Mean(X4)]/[GYRO1:Sigma (X4)]]
+
+      Scalar:         [scalarname]         eg [GYRO1:Mean(X4)]
+      Vector Element: [vectorName[index]]  eg [GYRO1 (V2)[4]]
+      Equation:       [=equation]          eg [=[GYRO1:Mean(X4)]/[GYRO1:Sigma (X4)]]
     
+
+  These numerical fields can be formatted by appending a C printf format embedded
+  in { } immediately after the field. For example::
+
+      [GYRO1:Mean(X4)]{%4.2f}
+
   Labels in kst support a derrivitive subset of LaTeX. For example, to display 
   the equation for the area of a circle, you could set the label to ``A=2\pir^2``. 
   Unlike LaTeX, it is not necessary to enter math mode using ``$``. Also, 
