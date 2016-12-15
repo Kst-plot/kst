@@ -1,14 +1,8 @@
 BUGS
-B4. View object stroke widths don't save/restore correctly.
-
-B5. "/home/spider/Documents/../../../data/etc/packets.lnk"
-
 
 FEATURES
 F1. A way of printing nicely C times in text labels (being able to specify,
      say, a strftime format string would be great)
-
-F2. A way of formatting scalars in text labels (%.2f or something)
 
 F3. Text labels have no background fill properties.
 
@@ -21,9 +15,6 @@ F5. Vector-choosing boxes should autocomplete.  i.e., if I have only one vector
     of the vector they want is.)
 
 F6. Non-integer curve stroke width.
-
-F7. Edit and Delete buttons in the Data Manager that do what the context menu
-    versions do.
 
 F9. Forward and back in smaller steps than whole screen.
 

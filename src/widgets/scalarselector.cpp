@@ -28,8 +28,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   _defaultsSet = false;
   setupUi(this);
 
-  QIcon icon = KstGetIcon("kst_scalarnew");
-  _newScalar->setIcon(icon);
+  _newScalar->setIcon(KstGetIcon("kst_scalarnew"));
   _editScalar->setIcon(KstGetIcon("kst_scalaredit"));
 
   _newScalar->setFixedSize(iconWidth(), iconWidth());
@@ -38,6 +37,7 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
 
   _scalarListSelector = new ScalarListSelector(this);
 
+
   //_scalar->resize(10,5);
   connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
   connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
@@ -45,7 +45,6 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updateScalarList()));
-
 }
 
 
