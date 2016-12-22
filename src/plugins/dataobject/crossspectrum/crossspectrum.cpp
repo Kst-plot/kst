@@ -148,7 +148,7 @@ CrossSpectrumSource::~CrossSpectrumSource() {
 
 
 QString CrossSpectrumSource::_automaticDescriptiveName() const {
-  return tr("Cross Spectrum Plugin Object");
+  return tr("Cross Spectrum");
 }
 
 
@@ -172,122 +172,73 @@ void CrossSpectrumSource::setupOutputs() {
 extern "C" void rdft(int n, int isgn, double *a); //fast fourier transform...
 
 bool CrossSpectrumSource::algorithm() {
-  Kst::VectorPtr inputVectorOne = _inputVectors[VECTOR_IN_ONE];
-  Kst::VectorPtr inputVectorTwo = _inputVectors[VECTOR_IN_TWO];
-  Kst::ScalarPtr inputScalarFFT = _inputScalars[SCALAR_IN_FFT];
-  Kst::ScalarPtr inputScalarRate = _inputScalars[SCALAR_IN_RATE];
-  Kst::VectorPtr outputVectorFrequency = _outputVectors[VECTOR_OUT_FREQ];
-  Kst::VectorPtr outputVectorImaginary = _outputVectors[VECTOR_OUT_IMAG];
-  Kst::VectorPtr outputVectorReal = _outputVectors[VECTOR_OUT_REAL];
+  Kst::VectorPtr iv1 = _inputVectors[VECTOR_IN_ONE];
+  Kst::VectorPtr iv2 = _inputVectors[VECTOR_IN_TWO];
 
-  double SR = inputScalarRate->value(); // sample rate
+  double fft_len_exponent = _inputScalars[SCALAR_IN_FFT]->value();
+  double SR = _inputScalars[SCALAR_IN_RATE]->value();
+
+  int xps_len;
+  
   double df;
-  int i,  xps_len;
-  double *a,  *b;
-  double mean_a,  mean_b;
-  int dv0,  dv1,  v_len;
-  int i_subset,  n_subsets;
-  int i_samp,  copyLen;
-  double norm_factor;
+  int i;
+  int v_len;
 
   /* parse fft length */
-  xps_len = int( inputScalarRate->value() - 0.99);
-  if ( xps_len > KSTPSDMAXLEN ) {
-    xps_len = KSTPSDMAXLEN;
+  if ( fft_len_exponent > KSTPSDMAXLEN ) {
+    fft_len_exponent = KSTPSDMAXLEN;
   }
-  if ( xps_len<2 )  {
-    xps_len = 2;
+  if ( fft_len_exponent < 2.0 )  {
+    fft_len_exponent = 2.0;
   }
-  xps_len = int ( pow( 2.0,  xps_len ) );
+  xps_len = int (pow(2.0,  fft_len_exponent-1) + 0.1);
 
-  /* input vector lengths */
-  v_len = ( ( inputVectorOne->length() < inputVectorTwo->length() ) ? inputVectorOne->length() : inputVectorTwo->length() );
-  dv0 = v_len/inputVectorOne->length();
-  dv1 = v_len/inputVectorTwo->length();
+  /* input vector lengths - use the shorter one. */
+  v_len = ( ( iv1->length() < iv2->length() ) ? iv1->length() : iv2->length() );
 
   while ( xps_len > v_len ) {
     xps_len/=2;
   }
 
   // allocate the lengths
-  outputVectorReal->resize( xps_len, false );
-  outputVectorImaginary->resize( xps_len, false );
-  outputVectorFrequency->resize( xps_len, false );
+  _outputVectors[VECTOR_OUT_REAL]->resize( xps_len, false );
+  _outputVectors[VECTOR_OUT_IMAG]->resize( xps_len, false );
+  _outputVectors[VECTOR_OUT_FREQ]->resize( xps_len, false );
+
+  double *xspec_real = _outputVectors[VECTOR_OUT_REAL]->raw_V_ptr();
+  double *xspec_imag = _outputVectors[VECTOR_OUT_IMAG]->raw_V_ptr();
+  double *f = _outputVectors[VECTOR_OUT_FREQ]->raw_V_ptr();
+
 
   /* Fill the frequency and zero the xps */
   df = SR/( 2.0*double( xps_len-1 ) );
   for ( i=0; i<xps_len; ++i ) {
-    outputVectorFrequency->raw_V_ptr()[i] = double( i ) * df;
-    outputVectorReal->raw_V_ptr()[i] = 0.0;
-    outputVectorImaginary->raw_V_ptr()[i] = 0.0;
+    f[i] = double( i ) * df;
+    xspec_real[i] = 0.0;
+    xspec_imag[i] = 0.0;
   }
 
-  /* allocate input arrays */
-  int ALen = xps_len * 2;
-  a = new double[ALen];
-  b = new double[ALen];
+  _psdCalculator.calculatePowerSpectrum(iv1->noNanValue(), v_len,
+                                        xspec_real, xps_len,
+                                        true,
+                                        true, fft_len_exponent,
+                                        true, WindowOriginal, 0,
+                                        PSDPowerSpectrum, SR,
+                                        iv2->noNanValue(), v_len, xspec_imag);
 
-  /* do the fft's */
-  n_subsets = v_len/xps_len + 1;
 
-  for ( i_subset=0; i_subset<n_subsets; ++i_subset ) {
-        /* copy each chunk into a[] and find mean */
-    if (i_subset*xps_len + ALen <= v_len) {
-      copyLen = ALen;
-    } else {
-      copyLen = v_len - i_subset*xps_len;
-    }
-    mean_b = mean_a = 0;
-    for (i_samp = 0; i_samp < copyLen; ++i_samp) {
-      i = ( i_samp + i_subset*xps_len )/dv0;
-      mean_a += (
-        a[i_samp] = inputVectorOne->noNanValue()[i]
-        );
-      i = ( i_samp + i_subset*xps_len )/dv1;
-      mean_b += (
-        b[i_samp] = inputVectorTwo->noNanValue()[i]
-        );
-    }
-    if (copyLen>1) {
-      mean_a/=(double)copyLen;
-      mean_b/=(double)copyLen;
-    }
+  Kst::LabelInfo label_info;
 
-    /* Remove Mean and apodize */
-    for (i_samp=0; i_samp<copyLen; ++i_samp) {
-      a[i_samp] -= mean_a;
-      b[i_samp] -= mean_b;
-    }
+  label_info.quantity = tr("Cross Spectrum (real)");
+  label_info.units.clear();
+  label_info.name.clear();
+  _outputVectors[VECTOR_OUT_REAL]->setLabelInfo(label_info);
 
-    for (;i_samp < ALen; ++i_samp) {
-      a[i_samp] = 0.0;
-      b[i_samp] = 0.0;
-    }
+  label_info.quantity = tr("Cross Spectrum (imaginary)");
+  _outputVectors[VECTOR_OUT_IMAG]->setLabelInfo(label_info);
 
-    /* fft */
-    rdft(ALen, 1, a);
-    rdft(ALen, 1, b);
-
-    /* sum each bin into psd[] */
-    outputVectorReal->raw_V_ptr()[0] += ( a[0]*b[0] );
-    outputVectorReal->raw_V_ptr()[xps_len-1] += ( a[1]*b[1] );
-    for (i_samp=1; i_samp<xps_len-1; ++i_samp) {
-      outputVectorReal->raw_V_ptr()[i_samp]+= ( a[i_samp*2] * b[i_samp*2] -
-                                   a[i_samp*2+1] * b[i_samp*2+1] );
-      outputVectorImaginary->raw_V_ptr()[i_samp]+= ( -a[i_samp*2] * b[i_samp*2+1] +
-                                   a[i_samp*2+1] * b[i_samp*2] );
-    }// (a+ci)(b+di)* = ab+cd +i(-ad + cb)
-  }
-
-  /* renormalize */
-  norm_factor = 1.0/((double(SR)*double(xps_len))*double(n_subsets));
-  for ( i=0; i<xps_len; ++i ) {
-    outputVectorReal->raw_V_ptr()[i]*=norm_factor;
-    outputVectorImaginary->raw_V_ptr()[i]*=norm_factor;
-  }
-
-  delete[] b;
-  delete[] a;
+  label_info.quantity = tr("Frequency");
+  _outputVectors[VECTOR_OUT_FREQ]->setLabelInfo(label_info);
 
   return true;
 }
@@ -356,7 +307,7 @@ void CrossSpectrumSource::saveProperties(QXmlStreamWriter &s) {
 }
 
 
-QString CrossSpectrumPlugin::pluginName() const { return tr("Cross Spectrum DataObject Plugin"); }
+QString CrossSpectrumPlugin::pluginName() const { return tr("Cross Spectrum"); }
 QString CrossSpectrumPlugin::pluginDescription() const { return tr("Generates the cross power spectrum of one vector with another."); }
 
 

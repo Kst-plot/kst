@@ -648,7 +648,7 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
             return 0L;
           }
 
-          if (pos+3 < cnt) { // ]{%f} is min size.
+          if (pos+3 < (int)cnt) { // ]{%f} is min size.
             if ((txt[pos+1]=='{') && (txt[pos+2] == '%')) {
               formatIndexStart = pos+1;
               for (uint searchPt = pos + 2; searchPt < cnt; ++searchPt) {

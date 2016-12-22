@@ -51,9 +51,13 @@ class PSDCalculator {
     PSDCalculator();
     ~PSDCalculator();
 
-    int calculatePowerSpectrum(double const *input, int inputLen, double *output, int outputLen, bool removeMean, bool average, int averageLen, bool apodize, ApodizeFunction apodizeFxn, double gaussianSigma, PSDType outputType, double inputSamplingFreq);
+    int calculatePowerSpectrum(double const *input, int input_len, double *output, int output_len,
+                               bool remove_mean, bool average, int average_len,
+                               bool apodize, ApodizeFunction apodize_function, double gaussian_sigma,
+                               PSDType output_type, double sampling_freq,
+                               double const *input2 = 0L, int input2_len = 0, double *output2 = 0L);
 
-    static int calculateOutputVectorLength(int inputLen, bool average, int averageLen);
+    static int calculateOutputVectorLength(int input_len, bool average, int average_len);
 
   private:
     void updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianSigma);
@@ -61,15 +65,17 @@ class PSDCalculator {
     double cabs2(double r, double i);
 
     double *_a;
+    double *_b;
     double *_w;
 
-    int _awLen; //length of a and w.
+    int _fft_len; //length of a and w.
 
     // keep track of prevs to avoid redundant regenerations
-    ApodizeFunction _prevApodizeFxn;
-    double _prevGaussianSigma;
+    ApodizeFunction _prev_apodize_function;
+    double _prev_gaussian_sigma;
 
-    int _prevOutputLen;
+    int _prev_output_len;
+    bool _prev_cross_spec;
 };
 
 #endif

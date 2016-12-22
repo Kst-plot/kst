@@ -19,6 +19,7 @@
 
 #include <basicplugin.h>
 #include <dataobjectplugin.h>
+#include "psdcalculator.h"
 
 class CrossSpectrumSource : public Kst::BasicPlugin {
   Q_OBJECT
@@ -48,6 +49,9 @@ class CrossSpectrumSource : public Kst::BasicPlugin {
   protected:
     CrossSpectrumSource(Kst::ObjectStore *store);
     ~CrossSpectrumSource();
+
+    PSDCalculator _psdCalculator;
+
 
   friend class Kst::ObjectStore;
 

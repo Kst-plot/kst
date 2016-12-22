@@ -43,13 +43,15 @@ inline double PSDCalculator::cabs2(double r, double i) {
 PSDCalculator::PSDCalculator()
 {
   _a = 0L;
+  _b = 0L;
   _w = 0L;
 
-  _awLen = 0;
+  _fft_len = 0;
 
-  _prevApodizeFxn = WindowUndefined;
-  _prevGaussianSigma = 1.0;
-  _prevOutputLen = 0;
+  _prev_apodize_function = WindowUndefined;
+  _prev_gaussian_sigma = 1.0;
+  _prev_output_len = 0;
+  _prev_cross_spec = false;
 }
 
 
@@ -58,23 +60,25 @@ PSDCalculator::~PSDCalculator() {
   _w = 0L;
   delete[] _a;
   _a = 0L;
+  delete[] _b;
+  _b = 0L;
 }
 
 void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianSigma) {
-  const double a = double(_awLen) / 2.0;
+  const double a = double(_fft_len) / 2.0;
   double x;
   double sW = 0.0;
 
   switch (apodizeFxn) {
     case WindowOriginal: 
-      for (int i = 0; i < _awLen; ++i) {
-        _w[i] = 1.0 - cos(2.0 * M_PI * double(i) / double(_awLen));
+      for (int i = 0; i < _fft_len; ++i) {
+        _w[i] = 1.0 - cos(2.0 * M_PI * double(i) / double(_fft_len));
         sW += _w[i] * _w[i];
       }
       break;
 
     case WindowBartlett:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = 1.0 - fabs(x) / a;
         sW += _w[i] * _w[i];
@@ -82,7 +86,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
  
     case WindowBlackman:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = 0.42 + 0.5 * cos(M_PI * x / a) + 0.08 * cos(2 * M_PI * x/a);
         sW += _w[i] * _w[i];
@@ -90,7 +94,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
 
     case WindowConnes: 
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = pow(static_cast<double>(1.0 - (x * x) / (a * a)), 2);
         sW += _w[i] * _w[i];
@@ -98,7 +102,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
 
     case WindowCosine:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = cos(M_PI * x / (2.0 * a));
         sW += _w[i] * _w[i];
@@ -106,14 +110,14 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
 
     case WindowGaussian:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = exp(-1.0 * x * x/(2.0 * gaussianSigma * gaussianSigma));
       }
       break;
 
     case WindowHamming:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = 0.53836 + 0.46164 * cos(M_PI * x / a);
         sW += _w[i] * _w[i];
@@ -121,7 +125,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
 
     case WindowHann:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = pow(static_cast<double>(cos(M_PI * x/(2.0 * a))), 2);
         sW += _w[i] * _w[i];
@@ -129,7 +133,7 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
       break;
 
     case WindowWelch:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         x = i - a;
         _w[i] = 1.0 - x * x / (a * a);
         sW += _w[i] * _w[i];
@@ -138,52 +142,65 @@ void PSDCalculator::updateWindowFxn(ApodizeFunction apodizeFxn, double gaussianS
 
     case WindowUniform:
     default:
-      for (int i = 0; i < _awLen; ++i) {
+      for (int i = 0; i < _fft_len; ++i) {
         _w[i] = 1.0;
       }
-      sW = _awLen;
+      sW = _fft_len;
       break;
   }
 
-  double norm = sqrt((double)_awLen/sW); // normalization constant s.t. sum over (w^2) is _awLen
+  double norm = sqrt((double)_fft_len/sW); // normalization constant s.t. sum over (w^2) is _awLen
 
-  for (int i = 0; i < _awLen; ++i) {
+  for (int i = 0; i < _fft_len; ++i) {
     _w[i] *= norm;
   }
 
-  _prevApodizeFxn = apodizeFxn;
-  _prevGaussianSigma = gaussianSigma;
+  _prev_apodize_function = apodizeFxn;
+  _prev_gaussian_sigma = gaussianSigma;
 }
 
 
 int PSDCalculator::calculatePowerSpectrum(
-  double const *input, int inputLen,
-  double *output, int outputLen, 
+  double const *input, int input_len,
+  double *output, int output_len,
   bool removeMean,
-  bool average, int averageLen, 
-  bool apodize, ApodizeFunction apodizeFxn, double gaussianSigma,
-  PSDType outputType, double inputSamplingFreq) {
+  bool average, int average_len,
+  bool apodize, ApodizeFunction apodize_function, double gaussian_sigma,
+  PSDType output_type, double sampling_freq,
+  double const *input2, int input2_len, double *output2) {
 
-  if (outputLen != calculateOutputVectorLength(inputLen, average, averageLen)) {
+  bool cross_spectra = false;
+
+  if ((input2_len == input_len) && input2) {
+    cross_spectra = true;
+  }
+
+  if ((input2) && (input2_len == input_len)) {
+    cross_spectra = true;
+  }
+
+  if (output_len != calculateOutputVectorLength(input_len, average, average_len)) {
     Kst::Debug::self()->log(Kst::Debug::tr("in PSDCalculator::calculatePowerSpectrum: received output array with wrong length."), Kst::Debug::Error);
     return -1;
   }
 
-  if (outputLen != _prevOutputLen) {
+  if (output_len != _prev_output_len) {
     delete[] _a;
     delete[] _w;
+    delete[] _b;
 
-    _awLen = outputLen*2;
-    _prevOutputLen = outputLen;
+    _fft_len = output_len*2;
+    _prev_output_len = output_len;
 
-    _a = new double[_awLen];
-    _w = new double[_awLen];
+    _a = new double[_fft_len];
+    _b = new double[_fft_len];
+    _w = new double[_fft_len];
 
-    updateWindowFxn(apodizeFxn, gaussianSigma);
+    updateWindowFxn(apodize_function, gaussian_sigma);
   }
 
-  if ( (_prevApodizeFxn != apodizeFxn) || (_prevGaussianSigma != gaussianSigma) ) {
-    updateWindowFxn(apodizeFxn, gaussianSigma);
+  if ( (_prev_apodize_function != apodize_function) || (_prev_gaussian_sigma != gaussian_sigma) ) {
+    updateWindowFxn(apodize_function, gaussian_sigma);
   }
 
   int currentCopyLen;
@@ -191,36 +208,49 @@ int PSDCalculator::calculatePowerSpectrum(
   int i_samp;
   int ioffset;
 
-  memset(output, 0, sizeof(double)*outputLen); // initialize output.
+  memset(output, 0, sizeof(double)*output_len); // initialize output.
+  if (cross_spectra) {
+    memset(output2, 0, sizeof(double)*output_len); // initialize complex output for xspectra.
+  }
 
   // Mingw build could be 10 times slower (Gaussian apod, mostly 0 then?)
   //MeasureTime time_in_rfdt("rdft()");
 
   bool done = false;
   for (int i_subset = 0; !done; i_subset++) {
-    ioffset = i_subset*outputLen; //overlapping average => i_subset*outputLen
+    ioffset = i_subset*output_len; //overlapping average => i_subset*outputLen
 
     // only zero pad if we really have to.  It is better to adjust the last chunk's
     // overlap.
-    if (ioffset + _awLen*5/4 < inputLen) {
-      currentCopyLen = _awLen; //will copy a complete window.
-    } else if (_awLen<inputLen) {  // count the last one from the end.
-      ioffset = inputLen-_awLen - 1;
-      currentCopyLen = _awLen; //will copy a complete window.
+    if (ioffset + _fft_len*5/4 < input_len) {
+      currentCopyLen = _fft_len; //will copy a complete window.
+    } else if (_fft_len<input_len) {  // count the last one from the end.
+      ioffset = input_len-_fft_len - 1;
+      currentCopyLen = _fft_len; //will copy a complete window.
       done = true;
     } else {
-      currentCopyLen = inputLen - ioffset; //will copy a partial window.
-      memset(&_a[currentCopyLen], 0, sizeof(double)*(_awLen - currentCopyLen)); //zero the leftovers.
+      currentCopyLen = input_len - ioffset; //will copy a partial window.
+      memset(&_a[currentCopyLen], 0, sizeof(double)*(_fft_len - currentCopyLen)); //zero the leftovers.
+      if (cross_spectra) {
+        memset(&_b[currentCopyLen], 0, sizeof(double)*(_fft_len - currentCopyLen)); //zero the leftovers.
+      }
       done = true;
     }
 
     double mean = 0.0;
+    double mean2 = 0.0;
 
     if (removeMean) {
       for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
         mean += input[i_samp + ioffset];
       }
       mean /= (double)currentCopyLen;
+      if (cross_spectra) {
+        for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
+          mean2 += input2[i_samp + ioffset];
+        }
+        mean2 /= (double)currentCopyLen;
+      }
     }
 
     // apply the PSD options (removeMean, apodize, etc.)
@@ -243,18 +273,54 @@ int PSDCalculator::calculatePowerSpectrum(
       }
     }
 
+    if (cross_spectra) {
+      if (removeMean && apodize) {
+        for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
+          _b[i_samp] = (input2[i_samp + ioffset] - mean2)*_w[i_samp];
+        }
+      } else if (removeMean) {
+        for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
+          _b[i_samp] = input2[i_samp + ioffset] - mean2;
+        }
+      } else if (apodize) {
+        for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
+          _b[i_samp] = input2[i_samp + ioffset]*_w[i_samp];
+        }
+      } else {
+        for (i_samp = 0; i_samp < currentCopyLen; ++i_samp) {
+          _b[i_samp] = input2[i_samp + ioffset];
+        }
+      }
+    }
+
     nsamples += currentCopyLen;
 
 #if !defined(__QNX__)
-    rdft(_awLen, 1, _a); //real discrete fourier transorm on _a.
+    rdft(_fft_len, 1, _a); //real discrete fourier transorm on _a.
+    if (cross_spectra) {
+      rdft(_fft_len, 1, _b); //real discrete fourier transorm on _b.
+    }
 #else
     Q_ASSERT(0); // there is a linking problem when not compling with pch. . .
 #endif
 
-    output[0] += _a[0] * _a[0];
-    output[outputLen-1] += _a[1] * _a[1];
-    for (i_samp = 1; i_samp < outputLen - 1; ++i_samp) {
-      output[i_samp] += cabs2(_a[i_samp * 2], _a[i_samp * 2 + 1]);
+    if (cross_spectra) {
+      output[0] += _a[0] * _b[0];
+      output2[0] = 0;
+      output[output_len-1] += _a[1] * _b[1];
+      output2[output_len-1] = 0;
+      for (i_samp = 1; i_samp < output_len - 1; ++i_samp) {
+        output[i_samp] += _a[i_samp*2] * _b[i_samp*2] +
+            _a[i_samp*2+1] * _b[i_samp*2+1];
+        output2[i_samp] = -_a[i_samp*2] * _b[i_samp*2+1] +
+            _a[i_samp*2+1] * _b[i_samp*2];
+      }
+    } else {
+      output[0] += _a[0] * _a[0];
+      output[output_len-1] += _a[1] * _a[1];
+      for (i_samp = 1; i_samp < output_len - 1; ++i_samp) {
+        output[i_samp] += cabs2(_a[i_samp * 2], _a[i_samp * 2 + 1]);
+      }
     }
   }
 
@@ -271,34 +337,44 @@ int PSDCalculator::calculatePowerSpectrum(
   */
 
   // original normalization
-  double frequencyStep = 2.0*(double)inputSamplingFreq/(double)nsamples; //OLD value for frequencyStep.
+  double frequencyStep = 2.0*(double)sampling_freq/(double)nsamples; //OLD value for frequencyStep.
   double norm = 2.0/(double)nsamples*2.0/(double)nsamples; //OLD value for norm.
 
-  switch (outputType) {
+  switch (output_type) {
   default:
     case PSDAmplitudeSpectralDensity: // amplitude spectral density (default) [V/Hz^1/2]
       norm /= frequencyStep;
-      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
+      for (i_samp = 0; i_samp < output_len; ++i_samp) {
         output[i_samp] = sqrt(output[i_samp]*norm);
       }
     break;
 
     case PSDPowerSpectralDensity: // power spectral density [V^2/Hz]
       norm /= frequencyStep;
-      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
+      for (i_samp = 0; i_samp < output_len; ++i_samp) {
         output[i_samp] *= norm;
+      }
+      if (cross_spectra) {
+        for (i_samp = 0; i_samp < output_len; ++i_samp) {
+          output2[i_samp] *= norm;
+        }
       }
     break;
 
     case PSDAmplitudeSpectrum: // amplitude spectrum [V]
-      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
+      for (i_samp = 0; i_samp < output_len; ++i_samp) {
         output[i_samp] = sqrt(output[i_samp]*norm);
       }
     break;
 
     case PSDPowerSpectrum: // power spectrum [V^2]
-      for (i_samp = 0; i_samp < outputLen; ++i_samp) {
+      for (i_samp = 0; i_samp < output_len; ++i_samp) {
         output[i_samp] *= norm;
+      }
+      if (cross_spectra) {
+        for (i_samp = 0; i_samp < output_len; ++i_samp) {
+          output2[i_samp] *= norm;
+        }
       }
     break;
   }
