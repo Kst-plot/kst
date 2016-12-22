@@ -22,6 +22,9 @@ dv1=client.new_data_vector("./demodata.dat",
 dv2=client.new_data_vector("./demodata.dat",
                           field="Column 2",
                           start=0,num_frames=2000)
+dv3=client.new_data_vector("./demodata.dat",
+                          field="Column 3",
+                          start=0,num_frames=2000)
 c1 = client.new_curve(dv1, dv2)
 c1.set_color("red")
 c1.set_line_width(2)
@@ -40,13 +43,14 @@ P2.add(c2)
 s1 = client.new_spectrum(dv2, 
                          sample_rate = 60.0,
                          interleaved_average = True,
-                         fft_length = 9)
+                         fft_length = 9,
+                         output_type = 3)
 c3 = client.new_curve(s1.x(), s1.y())
 c3.set_color("blue")
 c3.set_line_width(2)
 P3.add(c3)
-P3.set_log_x()
-P3.set_log_y()
+#P3.set_log_x()
+#P3.set_log_y()
 
 #plot a histogram of dv1
 h1 = client.new_histogram(dv2)
@@ -61,3 +65,12 @@ P4.add(c4)
 
 client.show_window()
 
+# plot the cross spectrum of dv2 vs dv3
+s1 = client.new_generated_scalar(10)
+s2 = client.new_generated_scalar(60)
+xs1 = client.new_cross_spectrum(dv2, dv3, s1, s2)
+
+c5 = client.new_curve(xs1.x(), xs1.y())
+c5.set_color("green")
+c5.set_line_width(1)
+P3.add(c5)

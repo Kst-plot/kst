@@ -47,7 +47,7 @@ BasicPlugin::~BasicPlugin() {
 }
 
 void BasicPlugin::_initializeShortName() {
-  _shortName = 'P'+QString::number(_pluginnum);
+  _shortName = 'U'+QString::number(_pluginnum);
   if (_pluginnum>max_pluginnum)
     max_pluginnum = _pluginnum;
   _pluginnum++;

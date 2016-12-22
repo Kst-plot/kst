@@ -441,6 +441,18 @@ class Client:
     """
     return Histogram(self, "", 0,0,0, name=name, new=False)
 
+  def new_cross_spectrum(self,
+                         V1, V2,
+                         fft_size=10,
+                         sample_rate = 1.0,
+                         name = ""):
+    """ Create a cross spectrum object in kst.
+
+    See :class:`CrossSpectrum`
+    """
+    return CrossSpectrum(self, V1,V2, fft_size, sample_rate, name)
+
+
   def new_spectrum(self, 
                    vector, 
                    sample_rate = 1.0, 
@@ -2082,6 +2094,64 @@ class Spectrum(Object) :
     retval = self.client.send_si(self.handle, "outputTypeIndex()")
     return retval
 
+
+# Cross Spectrum ########################################################
+class CrossSpectrum(Object) :
+  """ a cross spectrum plugin inside kst.
+
+  Takes two equal sized vectors and calculates their cross spectrum.
+
+    :param V1: First kst vector
+    :param V2: Second kst vector.  Must be the same size as V1
+    :param fft_size: the fft will be on subvectors of length 2^fft_size
+    :param sample_rate: the sample rate of the vectors
+
+  """
+  def __init__(self, client, V1, V2, fft_size, sample_rate, name="", new=True) :
+    Object.__init__(self,client)
+
+    if (new == True):
+      self.client.send("newPlugin(Cross Spectrum)")
+
+      self.client.send("setInputVector(Vector In One,"+V1.handle+")")
+      self.client.send("setInputVector(Vector In Two,"+V2.handle+")")
+
+      if isinstance(fft_size, Scalar):
+        self.client.send("setInputScalar(Scalar In FFT,"+fft_size.handle+")")
+      else:
+        tmpscalar = self.client.new_generated_scalar(fft_size)
+        self.client.send("setInputScalar(Scalar In FFT,"+tmpscalar.handle+")")
+
+      if isinstance(sample_rate, Scalar):
+        self.client.send("setInputScalar(Scalar In Sample Rate,"+sample_rate.handle+")")
+      else:
+        tmpscalar2 = self.client.new_generated_scalar(sample_rate)
+        self.client.send("setInputScalar(Scalar In Sample Rate,"+tmpscalar2.handle+")")
+
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+  def x(self) :
+    """ a vector containing the frequency bins of the fft  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Frequency)")
+    return vec
+
+
+  def y(self) :
+    """ a vector containing the real part if the cross spectrum  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Real)")
+    return vec
+
+  def yi(self) :
+    """ a vector containing the imaginary part if the cross spectrum  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(Imaginary)")
+    return vec
 
 # FILTER ################################################################
 class Filter(Object) :

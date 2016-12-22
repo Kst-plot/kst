@@ -457,8 +457,8 @@ HistogramSI::HistogramSI(HistogramPtr histogram) {
   _fnMap.insert("normalizationType",&HistogramSI::normalizationType);
   _fnMap.insert("autoBin",&HistogramSI::autoBin);
 
-  _fnMap.insert("setInputVector",&SpectrumSI::setInputVector);
-  _fnMap.insert("outputVector",&SpectrumSI::outputVector);
+  _fnMap.insert("setInputVector",&HistogramSI::setInputVector);
+  _fnMap.insert("outputVector",&HistogramSI::outputVector);
 }
 
 bool HistogramSI::isValid() {
