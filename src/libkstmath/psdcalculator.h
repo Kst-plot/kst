@@ -21,6 +21,8 @@
 #ifndef PSDCALCULATOR_H
 #define PSDCALCULATOR_H
 
+#include "kstmath_export.h"
+
 // the following should reflect the PSD type order in fftoptionswidget.ui
 enum PSDType {
   PSDUndefined = -1,
@@ -46,7 +48,7 @@ enum ApodizeFunction {
 };
 
 
-class PSDCalculator {
+class KSTMATH_EXPORT PSDCalculator {
   public:
     PSDCalculator();
     ~PSDCalculator();
