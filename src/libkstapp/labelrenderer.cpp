@@ -36,6 +36,23 @@ const double superscript_raise = 0.44;
 
 namespace Label {
 
+static QString FormattedNumber(double val, QString format_in) {
+  const int strlen = 100;
+  char cstring[strlen];
+
+  QByteArray format = format_in.toLatin1();
+
+  if (format_in.startsWith('T')) {
+    time_t time = val;
+    struct tm timestruct;
+    gmtime_r(&time, &timestruct);
+    strftime(cstring, strlen, format.data()+1, &timestruct);
+  } else {
+    snprintf(cstring, strlen, format.data(), val); // not using QString::asprintf() because it isn't in qt4.
+  }
+  return QString(cstring);
+}
+
 void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
   // FIXME: RTL support
   int oldSize = rc.size = rc.fontSize();
@@ -113,11 +130,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
         const QString s = fi->text.mid(1);
         const double eqResult(Equations::interpret(store, s.toLatin1(), &ok, s.length()));
         if (fi->formated) {
-          const int strlen = 100;
-          char cstring[strlen];
-          QByteArray format = fi->format.toLatin1();
-          snprintf(cstring, strlen, format.data(), eqResult); // not using QString::asprintf() because it isn't in qt4.
-          txt = QString(cstring);
+          txt = FormattedNumber(eqResult, fi->format);
         } else {
           txt = QString::number(eqResult, 'g', rc.precision);
         }
@@ -127,11 +140,8 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
         if (scp) {
           KstReadLocker l(scp);
           if (fi->formated) {
-            const int strlen = 100;
-            char cstring[strlen];
-            QByteArray format = fi->format.toLatin1();
-            snprintf(cstring, strlen, format.data(), scp->value()); // not using QString::asprintf() because it isn't in qt4.
-            txt = QString(cstring);
+            txt = FormattedNumber(scp->value(), fi->format);
+
           } else {
             txt = QString::number(scp->value(), 'g', rc.precision);
           }
@@ -172,11 +182,7 @@ void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
             KstReadLocker l(vp);
             const double vVal(vp->value()[int(idx)]);
             if (fi->formated) {
-              const int strlen = 100;
-              char cstring[strlen];
-              QByteArray format = fi->format.toLatin1();
-              snprintf(cstring, strlen, format.data(), vVal); // not using QString::asprintf() because it isn't in qt4.
-              txt = QString(cstring);
+              txt = FormattedNumber(vVal, fi->format);
             } else {
               txt = QString::number(vVal, 'g', rc.precision);
             }

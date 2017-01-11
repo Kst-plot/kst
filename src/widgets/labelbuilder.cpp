@@ -63,17 +63,20 @@ void LabelBuilder::showHelp() {
 
                     "<P STYLE=\"margin-bottom: 0in\"><B>Scalar:</B> <FONT FACE=\"Courier New, monospace\">[</FONT><I>scalar"
                     "name</I><FONT FACE=\"Courier New, monospace\">]</FONT>, e.g. <FONT FACE=\"Courier New, monospace\">[GYRO1:Mean"
-                    "(X4)]</FONT></P>"
-                    "<P STYLE=\"margin-bottom: 0in\"><B>Vector Element:</B>"
+                    "(X4)]</FONT><br>"
+                    "<B>Vector Element:</B>"
                     "<FONT FACE=\"Courier New, monospace\">[</FONT><I>vectorName</I><FONT FACE=\"Courier New, monospace\">[</FONT><I>index</I><FONT FACE=\"Courier New, monospace\">]]</FONT><FONT FACE=\"Times New Roman, serif\">, "
                     "e.g., </FONT><FONT FACE=\"Courier New, monospace\">[GYRO1 (V2)[4]]</FONT>"
-                    "</P>"
-                    "<P STYLE=\"margin-bottom: 0in\"><B>Equation:</B> <FONT FACE=\"Courier New, monospace\">[=</FONT><I>equation</I><FONT FACE=\"Courier New, monospace\">]</FONT>, "
+                    "<br>"
+                    "<B>Equation:</B> <FONT FACE=\"Courier New, monospace\">[=</FONT><I>equation</I><FONT FACE=\"Courier New, monospace\">]</FONT>, "
                     "e.g. <FONT FACE=\"Courier New, monospace\">[=[GYRO1:Mean"
                     "(X4)]/[GYRO1:Sigma (X4)]]</FONT></P>"
 
-                    "<P STYLE=\"margin-bottom: 0in\"><B>Formatting:</B> Numbers can be formatted using C printf formats. e.g., "
-                    "<FONT FACE=\"Courier New, monospace\">[GYRO1:Mean (X4)]{%4.2f}</FONT>"
+                    "<P STYLE=\"margin-bottom: 0in\"><B>Formatting:</B><br> Numbers can be formatted using C printf formats. "
+                    "(eg, <FONT FACE=\"Courier New, monospace\">[GYRO1:Mean (X4)]{%4.2f}</FONT> )<br>"
+
+                    "or as time using C strftime formats.  (eg, "
+                    "<FONT FACE=\"Courier New, monospace\">[Time:Min (X4)]{T%a, %d %b %Y %T}</FONT>. )<br>For time, Note the {T...}."
 
                     "<P ALIGN=LEFT STYLE=\"margin-bottom: 0in\"><FONT SIZE=4><B>Supported LaTeX Subset</B></FONT><br>"
                     "Labels in <i>kst</i> "

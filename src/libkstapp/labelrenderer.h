@@ -134,7 +134,6 @@ class RenderContext : public QObject {
     }
   }
 
-
   int x, y; // Coordinates we're rendering at
   int xMax, xStart;
   QString fontName;
