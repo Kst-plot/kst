@@ -99,9 +99,9 @@ void LabelItem::generateLabel(QPainter *p) {
     delete _labelRc;
   }
 
-  Label::Parsed *parsed = Label::parse(_text);
+  Label::Parsed *parsed = Label::parse(_text, _color);
   if (parsed) {
-    parsed->chunk->attributes.color = _color;
+    //parsed->chunk->attributes.color = _color; // FIXME: this should be set in label::parse!
     _dirty = false;
     QFont font(_font);
 

@@ -84,7 +84,7 @@ namespace Label {
   };
 
 
-  extern KSTMATH_EXPORT Parsed *parse(const QString&, bool interpret = true, bool interpretNewLine = true);
+  extern KSTMATH_EXPORT Parsed *parse(const QString&, const QColor &color, bool interpret = true, bool interpretNewLine = true);
 }
 
 #endif

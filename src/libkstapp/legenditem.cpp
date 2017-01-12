@@ -164,7 +164,7 @@ void LegendItem::paint(QPainter *painter) {
 
   QSize legendSize(0, 0);
   QSize titleSize(0,0);
-  Label::Parsed *parsed = Label::parse(_title);
+  Label::Parsed *parsed = Label::parse(_title, _color);
   int pad = painter->fontMetrics().ascent()/4;
   Label::RenderContext rc(painter->font(), painter);
   Label::renderLabel(rc, parsed->chunk, false, false);
@@ -273,8 +273,7 @@ void LegendItem::paint(QPainter *painter) {
 
 
 QSize LegendItem::paintRelation(QString name, RelationPtr relation, QPainter *painter, bool draw) {
-  Label::Parsed *parsed = Label::parse(name);
-  parsed->chunk->attributes.color = _color;
+  Label::Parsed *parsed = Label::parse(name, _color);
 
   int fontHeight = painter->fontMetrics().height();
   int fontAscent = painter->fontMetrics().ascent();

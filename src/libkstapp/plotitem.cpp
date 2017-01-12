@@ -2257,9 +2257,8 @@ void PlotItem::generateLeftLabel(QPainter *p) {
   }
   _leftLabel.valid = false;
   _leftLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(leftLabel());
+  Label::Parsed *parsed = Label::parse(leftLabel(), _leftLabelDetails->fontColor());
   if (parsed) {
-    parsed->chunk->attributes.color = _leftLabelDetails->fontColor();
 
     if (_leftLabel.rc) {
       delete _leftLabel.rc;
@@ -2331,9 +2330,8 @@ void PlotItem::generateBottomLabel(QPainter *p) {
 
   _bottomLabel.valid = false;
   _bottomLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(bottomLabel());
+  Label::Parsed *parsed = Label::parse(bottomLabel(),_bottomLabelDetails->fontColor());
   if (parsed) {
-    parsed->chunk->attributes.color = _bottomLabelDetails->fontColor();
 
     if (_bottomLabel.rc) {
       delete _bottomLabel.rc;
@@ -2401,9 +2399,8 @@ void PlotItem::generateRightLabel(QPainter *p) {
   }
   _rightLabel.valid = false;
   _rightLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(rightLabel());
+  Label::Parsed *parsed = Label::parse(rightLabel(), _rightLabelDetails->fontColor());
   if (parsed && rightLabelRect().isValid()) {
-    parsed->chunk->attributes.color = _rightLabelDetails->fontColor();
 
     if (_rightLabel.parsed) {
       delete _rightLabel.parsed;
@@ -2476,9 +2473,8 @@ void PlotItem::generateTopLabel(QPainter *p) {
   }
   _topLabel.valid = false;
   _topLabel.dirty = false;
-  Label::Parsed *parsed = Label::parse(topLabel());
+  Label::Parsed *parsed = Label::parse(topLabel(), _topLabelDetails->fontColor());
   if (parsed && topLabelRect().isValid()) {
-    parsed->chunk->attributes.color = _topLabelDetails->fontColor();
 
     if (_topLabel.rc) {
       delete _topLabel.rc;

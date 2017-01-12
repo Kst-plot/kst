@@ -54,7 +54,6 @@ static QString FormattedNumber(double val, QString format_in) {
 }
 
 void renderLabel(RenderContext& rc, Label::Chunk *fi, bool cache, bool draw) {
-  // FIXME: RTL support
   int oldSize = rc.size = rc.fontSize();
   int oldY = rc.y;
   int oldX = rc.x;

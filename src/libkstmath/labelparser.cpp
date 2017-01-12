@@ -707,10 +707,10 @@ static Chunk *parseInternal(Chunk *ctail, const QString& txt, uint& start, uint 
   return chead;
 }
 
-
-Parsed *Label::parse(const QString& txt, bool interpret, bool interpretNewLine) {
+Parsed *Label::parse(const QString& txt, const QColor &color, bool interpret, bool interpretNewLine) {
   Parsed *parsed = new Parsed;
   Chunk *ctail = parsed->chunk = new Chunk(0L);
+  ctail->attributes.color = color;
   if (!interpret) {
     ctail->text = txt;
     return parsed;
