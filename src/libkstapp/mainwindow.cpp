@@ -1361,6 +1361,16 @@ void MainWindow::createActions() {
   _themeDialogAct->setIcon(KstGetIcon("themes"));
   connect(_themeDialogAct, SIGNAL(triggered()), this, SLOT(showThemeDialog()));
 
+  _clearUISettings =  new QAction(tr("Clear defaults"), this);
+  _clearUISettings->setStatusTip(tr("Clear sticky defaults in all dialogs"));
+  //_clearUISettings->setIcon(KstGetIcon("configure"));  // FIXME: pick an icon (broom?)
+  connect(_clearUISettings, SIGNAL(triggered()), this, SLOT(clearDefaults()));
+
+  _clearDataSourceSettings =  new QAction(tr("Clear datasource settings"), this);
+  _clearDataSourceSettings->setStatusTip(tr("Clear datasource settings"));
+  //_clearDataSourceSettings->setIcon(KstGetIcon("configure"));   // FIXME: pick an icon (broom?)
+  connect(_clearDataSourceSettings, SIGNAL(triggered()), this, SLOT(clearDataSourceSettings()));
+
   // *********************** Help actions ************************************** //
   _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
@@ -1544,6 +1554,8 @@ void MainWindow::createMenus() {
   _settingsMenu = menuBar()->addMenu(tr("&Settings"));
   _settingsMenu->addAction(_settingsDialogAct);
   _settingsMenu->addAction(_themeDialogAct);
+  _settingsMenu->addAction(_clearUISettings);
+  _settingsMenu->addAction(_clearDataSourceSettings);
 
   menuBar()->addSeparator();
 
@@ -2121,6 +2133,49 @@ void MainWindow::showThemeDialog() {
 
   _themeDialog->reset();
   _themeDialog->show();
+}
+
+
+void MainWindow::clearDefaults() {
+
+  QMessageBox confirmationBox;
+  confirmationBox.setText(tr("Clear all defaults?"));
+  confirmationBox.setInformativeText(tr("You are about to clear all\ndefaults in all dialogs in kst."));
+  confirmationBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+  confirmationBox.setDefaultButton(QMessageBox::Ok);
+  int confirmed = confirmationBox.exec();
+
+  switch (confirmed) {
+  case QMessageBox::Ok:
+    dialogDefaults().clear();
+    ApplicationSettings::self()->clear();
+    break;
+  case QMessageBox::Cancel:
+  default:
+    // cancel: do nothing at all.
+    break;
+  }
+}
+
+void MainWindow::clearDataSourceSettings() {
+
+  QMessageBox confirmationBox;
+  confirmationBox.setText(tr("Clear datasource settings?"));
+  confirmationBox.setInformativeText(tr("You are about to clear all\nconfiguration settings for\nall datasources/file types."));
+  confirmationBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+  confirmationBox.setDefaultButton(QMessageBox::Ok);
+  int confirmed = confirmationBox.exec();
+
+  switch (confirmed) {
+  case QMessageBox::Ok:
+    DataSourcePluginManager::settingsObject().clear();
+    break;
+  case QMessageBox::Cancel:
+  default:
+    // cancel: do nothing at all.
+    break;
+  }
+
 }
 
 

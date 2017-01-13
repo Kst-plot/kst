@@ -42,6 +42,10 @@ ApplicationSettings *ApplicationSettings::self() {
   return settings_self;
 }
 
+void ApplicationSettings::clear() {
+  self()->_settings.clear();
+}
+
 
 ApplicationSettings::ApplicationSettings() :
   _settings(createSettings("application"))

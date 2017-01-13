@@ -29,6 +29,8 @@ class ApplicationSettings : public QObject
   public:
     static ApplicationSettings *self();
 
+    void clear();
+
     bool transparentDrag() const;
     void setTransparentDrag(bool transparent_drag);
 

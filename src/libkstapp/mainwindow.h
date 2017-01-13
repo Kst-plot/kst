@@ -86,6 +86,8 @@ class MainWindow : public QMainWindow
     void showStringEditor();
     void showSettingsDialog();
     void showThemeDialog();
+    void clearDefaults();
+    void clearDataSourceSettings();
     void showDifferentiateCurvesDialog();
     void filterMultipleDialog();
     void showChooseColorDialog();
@@ -306,6 +308,9 @@ class MainWindow : public QMainWindow
 
     QAction *_settingsDialogAct;
     QAction *_themeDialogAct;
+
+    QAction *_clearUISettings;
+    QAction *_clearDataSourceSettings;
 
     QAction *_differentiateCurvesDialogAct;
     QAction *_filterMultipleDialogAct;
