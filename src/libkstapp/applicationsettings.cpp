@@ -43,13 +43,23 @@ ApplicationSettings *ApplicationSettings::self() {
 }
 
 void ApplicationSettings::clear() {
-  self()->_settings.clear();
+  _settings.clear();
+  _readFromQSettings();
+  emit modified();
 }
 
 
 ApplicationSettings::ApplicationSettings() :
   _settings(createSettings("application"))
 {
+  _readFromQSettings();
+}
+
+
+ApplicationSettings::~ApplicationSettings() {
+}
+
+void ApplicationSettings::_readFromQSettings() {
   _transparentDrag = _settings.value("general/transparentdrag", false).toBool();
   _useRaster = _settings.value("general/raster", false).toBool();
 
@@ -86,10 +96,6 @@ ApplicationSettings::ApplicationSettings() :
   _layoutMargins.setWidth(_settings.value("layout/marginwidth", QVariant(3.0)).toDouble());
   _layoutSpacing.setHeight(_settings.value("layout/spacingheight", QVariant(0.0)).toDouble());
   _layoutSpacing.setWidth(_settings.value("layout/spacingwidth", QVariant(0.0)).toDouble());
-}
-
-
-ApplicationSettings::~ApplicationSettings() {
 }
 
 bool ApplicationSettings::transparentDrag() const {

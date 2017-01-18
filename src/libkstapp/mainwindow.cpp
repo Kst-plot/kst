@@ -2148,7 +2148,6 @@ void MainWindow::clearDefaults() {
   switch (confirmed) {
   case QMessageBox::Ok:
     dialogDefaults().clear();
-    ApplicationSettings::self()->clear();
     break;
   case QMessageBox::Cancel:
   default:

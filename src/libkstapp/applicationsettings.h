@@ -81,6 +81,7 @@ class ApplicationSettings : public QObject
   private:
     ApplicationSettings();
     ~ApplicationSettings();
+    void _readFromQSettings();
     static void cleanup();
 
   private:
