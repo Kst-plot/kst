@@ -1361,8 +1361,8 @@ void MainWindow::createActions() {
   _themeDialogAct->setIcon(KstGetIcon("themes"));
   connect(_themeDialogAct, SIGNAL(triggered()), this, SLOT(showThemeDialog()));
 
-  _clearUISettings =  new QAction(tr("Clear defaults"), this);
-  _clearUISettings->setStatusTip(tr("Clear sticky defaults in all dialogs"));
+  _clearUISettings =  new QAction(tr("Clear settings and defaults"), this);
+  _clearUISettings->setStatusTip(tr("Clear sticky defaults and all settings in all dialogs."));
   //_clearUISettings->setIcon(KstGetIcon("configure"));  // FIXME: pick an icon (broom?)
   connect(_clearUISettings, SIGNAL(triggered()), this, SLOT(clearDefaults()));
 
@@ -2139,8 +2139,8 @@ void MainWindow::showThemeDialog() {
 void MainWindow::clearDefaults() {
 
   QMessageBox confirmationBox;
-  confirmationBox.setText(tr("Clear all defaults?"));
-  confirmationBox.setInformativeText(tr("You are about to clear all\ndefaults in all dialogs in kst."));
+  confirmationBox.setText(tr("Clear all settings and defaults?"));
+  confirmationBox.setInformativeText(tr("You are about to clear all settings defaults in all dialogs in kst.\nThis can not be undone."));
   confirmationBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
   confirmationBox.setDefaultButton(QMessageBox::Ok);
   int confirmed = confirmationBox.exec();
@@ -2148,6 +2148,8 @@ void MainWindow::clearDefaults() {
   switch (confirmed) {
   case QMessageBox::Ok:
     dialogDefaults().clear();
+    ApplicationSettings::self()->clear();
+    DataSourcePluginManager::settingsObject().clear();
     break;
   case QMessageBox::Cancel:
   default:

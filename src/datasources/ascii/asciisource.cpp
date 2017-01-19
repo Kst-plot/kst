@@ -878,6 +878,7 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
 bool AsciiSource::isTime(const QString &field) const
 {
   return (_config._indexInterpretation.value() != AsciiSourceConfig::NoInterpretation) &&
+      (_config._indexInterpretation.value() != AsciiSourceConfig::Unknown) &&
       (field == _config._indexVector);
 }
 
