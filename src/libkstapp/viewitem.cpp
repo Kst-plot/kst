@@ -84,7 +84,8 @@ ViewItem::ViewItem(View *parentView) :
                 TopMidGrip | RightMidGrip | BottomMidGrip | LeftMidGrip),
     _lockPosToData(false),
     _editDialog(0),
-    _interface(0)
+    _interface(0),
+    _dpi(71.0)
 {
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
@@ -719,7 +720,8 @@ QSizeF ViewItem::sizeOfGrip() const {
   if (!view())
     return QSizeF();
 
-  int base = 9;
+  int base = _dpi*10.0/96.0 ;
+
   return view()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
 }
 
@@ -930,6 +932,8 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   if ((!isMaximized()) && view()->childMaximized()) {
     return;
   }
+
+  _dpi = painter->device()->logicalDpiX();
 
   QPen rescaled_pen(_storedPen);
   rescaled_pen.setWidth(Curve::lineDim(painter->window(),rescaled_pen.widthF()));

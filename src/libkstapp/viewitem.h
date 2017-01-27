@@ -370,7 +370,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QPointF _parentRelativeLeft;
     QPointF _parentRelativeRight;
     qreal _parentRelativeHeight, _parentRelativeWidth;
-
+    const double dpi() { return _dpi;}
 
   private:
     GripMode _gripMode;
@@ -413,6 +413,7 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     ViewItemDialog *_editDialog;
     QPen _storedPen;
     ScriptInterface *_interface;
+    double _dpi;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ViewItem::GripModes)
