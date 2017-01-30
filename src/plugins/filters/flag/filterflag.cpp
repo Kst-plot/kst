@@ -1,5 +1,7 @@
 /***************************************************************************
  *                                                                         *
+ *   copyright : (C) 2016 C. Barth Netterfield
+ *                   netterfield@astro.utoronto.ca                         *
  *   copyright : (C) 2007 The University of Toronto                        *
  *                   netterfield@astro.utoronto.ca                         *
  *   copyright : (C) 2005  University of British Columbia                  *
@@ -36,12 +38,16 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
       _store = store;
       _vector->setObjectStore(store);
       _flag->setObjectStore(store);
+      _mask->setText("0xffff");
+      _validIsZero->setChecked(true);
     }
 
     void setupSlots(QWidget* dialog) {
       if (dialog) {
         connect(_vector, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_flag, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+        connect(_mask, SIGNAL(textChanged(QString)), dialog, SIGNAL(modified()));
+        connect(_validIsZero, SIGNAL(clicked(bool)), dialog, SIGNAL(modified()));
       }
     }
 
@@ -63,10 +69,18 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
     Kst::VectorPtr selectedFlag() { return _flag->selectedVector(); };
     void setSelectedFlag(Kst::VectorPtr vector) { return _flag->setSelectedVector(vector); };
 
+    unsigned long mask() {bool ok; return _mask->text().toInt(&ok, 0);}
+    void setMask(unsigned long mask_in) {_mask->setText("0x" + QString::number( mask_in, 16 ));}
+
+    bool validIsZero() {return _validIsZero->isChecked();}
+    void setValidIsZero(bool valid_is_zero) { _validIsZero->setChecked(valid_is_zero);}
+
     virtual void setupFromObject(Kst::Object* dataObject) {
       if (FilterFlagSource* source = static_cast<FilterFlagSource*>(dataObject)) {
         setSelectedVector(source->vector());
         setSelectedFlag(source->flagVector());
+        setMask(source->mask());
+        setValidIsZero(source->validIsZero());
       }
     }
 
@@ -91,6 +105,8 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
         _cfg->beginGroup("Filter Flag Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Flag Vector", _flag->selectedVector()->Name());
+        _cfg->setValue("Mask", QString::number( mask(), 16 ));
+        _cfg->setValue("ValidIsZero", validIsZero());
         _cfg->endGroup();
       }
     }
@@ -111,6 +127,12 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
         if (vector) {
           _flag->setSelectedVector(vector);
         }
+
+        bool ok;
+        setMask(_cfg->value("Mask", "0xffff").toString().toInt(&ok, 0));
+
+        setValidIsZero(_cfg->value("ValidIsZero", true).toBool());
+
         _cfg->endGroup();
       }
     }
@@ -152,6 +174,8 @@ void FilterFlagSource::change(Kst::DataObjectConfigWidget *configWidget) {
   if (ConfigWidgetFilterFlagPlugin* config = static_cast<ConfigWidgetFilterFlagPlugin*>(configWidget)) {
     setInputVector(VECTOR_IN, config->selectedVector());
     setInputVector(VECTOR_FLAG_IN, config->selectedFlag());
+    _mask = config->mask();
+    _validIsZero = config->validIsZero();
   }
 }
 
@@ -181,13 +205,24 @@ bool FilterFlagSource::algorithm() {
   // resize the output array
   outputVector->resize(inputVector->length(), false);
 
-  for (i=0; i<N; ++i) {
-    if (flagVector->value(i)) {
-      outputVector->raw_V_ptr()[i] = Kst::NOPOINT;
-    } else {
-      outputVector->raw_V_ptr()[i] = inputVector->value(i);
+  if (_validIsZero) {
+    for (i=0; i<N; ++i) {
+      if ((unsigned long)flagVector->value(i) & _mask) { // invalid if flag & mask != 0
+        outputVector->raw_V_ptr()[i] = Kst::NOPOINT;
+      } else {
+        outputVector->raw_V_ptr()[i] = inputVector->value(i);
+      }
+    }
+  } else { // valid is nonzero
+    for (i=0; i<N; ++i) {
+      if ((unsigned long)flagVector->value(i) & _mask) { // valid if flag & mask != 0
+        outputVector->raw_V_ptr()[i] = inputVector->value(i);
+      } else {
+        outputVector->raw_V_ptr()[i] = Kst::NOPOINT;
+      }
     }
   }
+
 
   Kst::LabelInfo label_info = inputVector->labelInfo();
   label_info.name = tr("Flaged %1").arg(label_info.name);
@@ -261,6 +296,8 @@ Kst::DataObject *FilterFlagPlugin::create(Kst::ObjectStore *store, Kst::DataObje
       object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputVector(VECTOR_FLAG_IN, config->selectedFlag());
+      object->setMask(config->mask());
+      object->setValidIsZero(config->validIsZero());
     }
 
     object->setPluginName(pluginName());
