@@ -69,8 +69,8 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
     Kst::VectorPtr selectedFlag() { return _flag->selectedVector(); };
     void setSelectedFlag(Kst::VectorPtr vector) { return _flag->setSelectedVector(vector); };
 
-    unsigned long mask() {bool ok; return _mask->text().toInt(&ok, 0);}
-    void setMask(unsigned long mask_in) {_mask->setText("0x" + QString::number( mask_in, 16 ));}
+    unsigned long long mask() {bool ok; return _mask->text().toULongLong(&ok, 0);}
+    void setMask(unsigned long long mask_in) {_mask->setText("0x" + QString::number( mask_in, 16 ));}
 
     bool validIsZero() {return _validIsZero->isChecked();}
     void setValidIsZero(bool valid_is_zero) { _validIsZero->setChecked(valid_is_zero);}
@@ -129,7 +129,7 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
         }
 
         bool ok;
-        setMask(_cfg->value("Mask", "0xffff").toString().toInt(&ok, 0));
+        setMask(_cfg->value("Mask", "0xffff").toString().toULongLong(&ok, 0));
 
         setValidIsZero(_cfg->value("ValidIsZero", true).toBool());
 

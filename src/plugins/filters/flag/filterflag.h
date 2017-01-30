@@ -43,8 +43,8 @@ class FilterFlagSource : public Kst::BasicPlugin {
 
     virtual void saveProperties(QXmlStreamWriter &s);
 
-    unsigned long mask() {return _mask;}
-    void setMask(unsigned long mask) {_mask = mask;}
+    unsigned long long mask() {return _mask;}
+    void setMask(unsigned long long mask) {_mask = mask;}
 
     bool validIsZero() {return _validIsZero;}
     void setValidIsZero(bool valid_is_zero) {_validIsZero = valid_is_zero;}
@@ -52,7 +52,7 @@ class FilterFlagSource : public Kst::BasicPlugin {
   protected:
     FilterFlagSource(Kst::ObjectStore *store);
     ~FilterFlagSource();
-    unsigned long _mask;
+    unsigned long long _mask;
     bool _validIsZero;
 
   friend class Kst::ObjectStore;
