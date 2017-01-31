@@ -720,7 +720,7 @@ QSizeF ViewItem::sizeOfGrip() const {
   if (!view())
     return QSizeF();
 
-  int base = _dpi*10.0/96.0 ;
+  int base = _dpi*11.0/96.0 ;
 
   return view()->mapToScene(QRect(0, 0, base, base)).boundingRect().size();
 }
@@ -978,7 +978,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       painter->fillPath(checkBox(), Qt::white);
       if (isHovering()) {
         QRectF check = checkBox().controlPointRect();
-        check.setSize(QSizeF(check.width() / 1.8, check.height() / 1.8));
+        check.setSize(QSizeF(check.width() / 3.5, check.height() / 3.5));
         check.moveCenter(checkBox().controlPointRect().center());
         QPainterPath p;
         p.addEllipse(check);
@@ -987,7 +987,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
       if (isTiedZoom()) {
         painter->save();
         QColor c = Qt::black;
-        c.setAlphaF(c.alphaF() * 0.5);
+        c.setAlphaF(c.alphaF() * 0.6);
         painter->fillPath(tiedZoomCheck(), c);
         painter->restore();
       }
