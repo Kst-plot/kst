@@ -23,6 +23,10 @@
 <holder>The University of British Columbia</holder>
 </copyright>
 
+<copyright>
+<year>2004 - 2017</year>
+<holder>C. Barth Netterfield</holder>
+</copyright>
 
 
 </chapterinfo>
@@ -82,15 +86,12 @@ useful results.
 </para>
 
 <para>
-This tutorial uses a demo package of data files which are installed
-with &kst; in <filename
-class="directory">$<envar>KDEDIR</envar>/share/apps/kst/tutorial</filename>,
-where <filename class="directory">$<envar>KDEDIR</envar></filename> is
-the location in which &kde; is installed on your system (you can find
-this using the command <command>kde-config --prefix</command>).</para>
+The following instructions assume linux or osX.
+</para>
 
-<note><para>If you have a version of &kst; older than 1.1.0, you can
-find the tutorial data online at <ulink
+<para>
+  
+This tutorial uses a demo package of data files which are available online at <ulink
 url="http://omega.astro.utoronto.ca/kst/tutorial/kst_tutorialdata.tgz">http://omega.astro.utoronto.ca/kst/tutorial/kst_tutorialdata.tgz</ulink>.
 Download and untar the package, and change to the resulting directory:
 
@@ -98,67 +99,118 @@ Download and untar the package, and change to the resulting directory:
 <command>cd kst_tutorialdata</command></userinput></screen>
 
 </para>
-</note>
+
 
 <para>
 To obtain an overview of all available &kst; command-line options, type:
-<screen><userinput><command>kst --help</command></userinput></screen>
+<screen><userinput><command>kst2 --help</command></userinput></screen>
 </para>
 <para>
 A syntax description and list of commands similar to the following will be displayed:
 <screen>
-Usage: kst [Qt-options] [KDE-options] [options] [Files]
+KST Command Line Usage
+************************
+*** Load a kst file: ***
+kst [OPTIONS] kstfile
 
-Kst: a data viewing program.
+[OPTIONS] will override the datasource parameters for all data sources in the kst file:
+      -F  &lt;datasource&gt;
+      -f  &lt;startframe&gt;
+      -n  &lt;numframes&gt;
+      -s  &lt;frames per sample&gt;
+      -a                       (apply averaging filter: requires -s)
 
-Generic options:
-  --help                    Show help about options
-  --help-qt                 Show Qt specific options
-  --help-kde                Show KDE specific options
-  --help-all                Show all options
-  --author                  Show author information
-  -v, --version             Show version information
-  --license                 Show license information
-  --                        End of options
+************************
+*** Read a data file ***
+kst datasource OPTIONS [datasource OPTIONS []]
 
-Options:
-  -F &lt;dataFile&gt;             Specify data file: used to override a kst file default [|]
-  -y &lt;Y&gt;                    Field for Y axis (multiple allowed)
-  --ye &lt;equation&gt;           Equation for Y axis (multiple allowed)
-  -e &lt;E&gt;                    Field for Y errors (multiple allowed)
-  -x &lt;X&gt;                    Field or range for X axis [INDEX]
-  --xe &lt;X&gt;                  X vector for equations x0:x1:n [INDEX]
-  -p &lt;Y&gt;                    Field for power spectrum (multiple allowed)
-  -h &lt;Y&gt;                    Field for histogram (multiple allowed)
-  -r &lt;f&gt;                    Sample rate for power spectrum [60.0]
-  --ru &lt;U&gt;                  Units for psd sample rate [Hz]
-  --yu &lt;U&gt;                  Units for y vectors [V]
-  -l &lt;P&gt;                    Length of FFTs is 2^P [10]
-  -f &lt;F0&gt;                   First frame to read [-2]
-  -n &lt;NS&gt;                   Number of frames to read [-2]
-  -s &lt;NS&gt;                   Number of frames to skip each read [-1]
-  -a                        Apply boxcar filter before skipping frames
-  -m &lt;NC&gt;                   Separate plots arranged in &lt;NC&gt; columns
-  -d                        Display as points rather than curves
-  -g                        Provide a legend box
-  --print &lt;file&gt;            Print to file and exit [&lt;none&gt;]
-  --png &lt;file&gt;              Save as a png file and exit [&lt;none&gt;]
+OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.
+Output Options:
+      --print &lt;filename&gt;       Print to file and exit.
+      --landscape              Print in landscape mode.
+      --portrait               Print in portrait mode.
+      --Letter                 Print to Letter sized paper.
+      --A4                     Print to A4 sized paper.
+      --png &lt;filename&gt;         Render to a png image, and exit.
+      --pngHeight &lt;height&gt;     Height of png image (pixels)
+      --pngWidth &lt;width&gt;       Width of png image (pixels)
+File Options:
+      -f &lt;startframe&gt;          default: 'end' counts from end.
+      -n &lt;numframes&gt;           default: 'end' reads to end of file
+      -s &lt;frames per sample&gt;   default: 0 (read every sample)
+      -a                       apply averaging filter: requires -s
 
-Arguments:
-  Files                     Data files (if -y given) or *.kst file
+Ascii File Options - for ascii files only: these are all sticky
+      --asciiDataStart &lt;Line&gt;  Data starts here. Files start at line 1.
+      --asciiFieldNames &lt;Line&gt; Field names are in this row.
+      --asciiNoFieldNames      Fields are named for their data column
+      --asciiReadUnits &lt;Line&gt;  Read units from line &lt;Line&gt;
+      --asciiNoUnits           Do not read units
+      --asciiSpaceDelim        Columns are Space/tab delimited
+      --asciiDelim &lt;char&gt;      Columns are dlimited with &lt;char&gt;
+      --asciiFixedWidth &lt;w&gt;    Columns have width &lt;w&gt;
+      --asciiNoFixedWidth      Columns are delimited, not fixed width
+      --asciiDecimalDot        Use a . as a decimal separator (ie, 10.1)
+      --asciiDecimalComma      Use a , as a decimal separator (ie, 10,1)
+Position:
+      -P &lt;plot name&gt;:          Place curves in one plot.
+      -A                       Place future curves in individual plots.
+      -m &lt;columns&gt;             Layout plots in columns
+      -T &lt;tab name&gt;            Place future curves a new tab.
+Appearance
+      -d:                      use points for the next curve
+      -l:                      use lines for the next curve
+      -b:                      use bargraph for the next curve
+      --xlabel &lt;X Label&gt;       Set X label of all future plots.
+      --ylabel &lt;Y Label&gt;       Set Y label of all future plots.
+      --xlabelauto             AutoSet X label of all future plots.
+      --ylabelauto             AutoSet Y label of all future plots.
+Data Object Modifiers
+      -x &lt;field&gt;:              Create vector and use as X vector for curves.
+      -e &lt;field&gt;:              Create vector and use as Y-error vector for next -y.
+      -r &lt;rate&gt;:               sample rate (spectra and spectograms).
+Data Objects:
+      -y &lt;field&gt;               plot an XY curve of field.
+      -p &lt;field&gt;               plot the spectrum of field.
+      -h &lt;field&gt;               plot a histogram of field.
+      -z &lt;field&gt;               plot an image of matrix field.
+
+****************
+*** Examples ***
+
+Data sources and fields:
+Plot all data in column 2 from data.dat.
+       kst data.dat -y 2
+
+Same as above, except only read 20 lines, starting at line 10.
+       kst data.dat -f 10 -n 20 -y 2
+
+... also read col 1. One plot per curve.
+       kst data.dat -f 10 -n 20 -y 1 -y 2
+
+Read col 1 from data2.dat and col 1 from data.dat
+       kst data.dat -f 10 -n 20 -y 2 data2.dat -y 1
+
+Same as above, except read 40 lines starting at 30 in data2.dat
+       kst data.dat -f 10 -n 20 -y 2 data2.dat -f 30 -n 40 -y 1
+
+Specify the X vector and error bars:
+Plot x = col 1 and Y = col 2 and error flags = col 3 from data.dat
+       kst data.dat -x 1 -e 3 -y 2
+
+Get the X vector from data1.dat, and the Y vector from data2.dat.
+       kst data1.dat -x 1 data2.dat -y 1
+
+Placement:
+Plot column 2 and column 3 in plot P1 and column 4 in plot P2
+       kst data.dat -P P1 -y 2 -y 3 -P P2 -y 4
+
+
 </screen>
 </para>
 
 <para>
-&kst; specific options are listed under the
-<literal>Options:</literal> section.  Where appropriate, default
-values are indicated with square brackets at the end of the option
-descriptions&mdash;these values will be used for any unspecified
-options.
-</para>
-
-<para>
-We will first take a look at the ASCII file
+We will first take a look at reading the ASCII file
 <filename>gyrodata.dat</filename>, included in the demo package.
 ASCII files are one of the many file types &kst; is capable of
 reading.  In ASCII files, data is arranged in columns, with each
@@ -167,7 +219,7 @@ with 1 from left to right) corresponding to field names.  This
 particular ASCII file contains 3 columns, and thus has field names 1,
 2, and 3.  To produce a plot of the first column, simply type:
 
-<screen><userinput><command>kst -y 1 gyrodata.dat</command></userinput></screen>
+<screen><userinput><command>kst2 gyrodata.dat -y 1</command></userinput></screen>
 
 </para>
 <para>
@@ -182,9 +234,9 @@ All the data in the first column will be plotted:
 </screenshot>
 <para>
 Note that no field was specified for the X axis of the plot, so &kst;
-used the default INDEX vector, as expected.  The INDEX vector is a
+used the default INDEX vector.  The INDEX vector is a
 special vector in &kst; that contains integers from 0 to N-1, where N
-is the number of data values in the corresponding Y axis vector.
+is the number of frames read in the corresponding Y axis vector.
 Close &kst; by selecting <guimenuitem>Quit</guimenuitem> from the
 <guimenu>File</guimenu> menu, or by typing <keycombo
 action="simul"><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>.
@@ -195,7 +247,7 @@ action="simul"><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>.
 wish to only look at a portion of the data.  To only plot 10000 frames
 starting from frame 7000, type:
 
-<screen><userinput><command>kst -y 1 -f 7000 -n 10000 gyrodata.dat</command></userinput></screen>
+<screen><userinput><command>kst2 gyrodata.dat -f 7000 -n 10000 -y 1</command></userinput></screen>
 
 </para>
 
@@ -204,49 +256,49 @@ One of &kst;'s strengths is its ability to plot real-time data.
 Imagine that new data was being continually added to the end of
 <filename>gyrodata.dat</filename>.  In such a scenario, it would be
 useful to only plot the most recent portion of the data.  To plot only
-the last 10000 frames of <filename>gyrodata.dat</filename>, enter the
+the last 1000 frames of <filename>gyrodata.dat</filename>, enter the
 following:
 
-<screen><userinput><command>kst -y 1 -n 10000 gyrodata.dat</command></userinput></screen>
+<screen><userinput><command>kst2 gyrodata.dat -n 1000 -y 1</command></userinput></screen>
 </para>
 <para>
 If <filename>gyrodata.dat</filename> was being updated, the plot would
-continuously scroll to display only the last 10000 frames.
-</para>
-
-<para>
-Instead of directly reading an input file, &kst; can use ASCII data
-from stdin as a data source. To specify stdin as an input, simply
-enter <filename>stdin</filename> as one of the filenames.  There are
-many uses of this capability, such as using &kst; as part of a
-sequence of pipes:
-
-<screen><userinput><command>cat gyrodata.dat | awk '{print $1 + 2}' | kst -y 1 stdin</command></userinput></screen>
-</para>
-<para>
-The above command uses <command>awk</command> to add 2 to column one
-of <filename>gyrodata.dat</filename> before piping the result to
-&kst;.
+continuously scroll to display only the last 1000 frames.
 </para>
 
 <para>
 Note that the description of the <option>y</option> option states that
-multiple instances of the option are allowed. This allows quick
-plotting of more than one curve, or even more than one plot.  To plot
+Multiple instances of the <option>y</option> option are allowed. This allows quick
+plotting of more than one curve.  To plot
 all three fields in <filename>gyrodata.dat</filename> in separate
-plots, enter the following:
+plots, arranged in one column, enter the following:
 
-<screen><userinput><command>kst -y 1 -y 2 -y 3 -m 1 gyrodata.dat</command></userinput></screen>
+<screen><userinput><command>kst2 gyrodata.dat -m 1 -y 1 -y 2 -y 3 </command></userinput></screen>
 
 </para>
 <para>
-The <option>m</option> option specifies that separate plots should be
-used instead of one single plot, as shown below:
+The <option>m</option> option specifies that the plots should be in a single column.
 </para>
+
 <screenshot>
 <mediaobject>
 <imageobject>
 <imagedata fileref="Screenshot-kst-tutorial-gyro-multiple.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</screenshot>
+
+<para>
+To plot column 1 in one plot, and columns 2 and three in a second plot, displayed side by side enter:
+
+<screen><userinput><command>kst2 gyrodata.dat -m 2 -P 1 -y 1 -P 2 -y 2 -y 3 </command></userinput></screen>
+
+</para>
+
+<screenshot>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tutorial-gyro-multiple2.png" format="PNG"/>
 </imageobject>
 </mediaobject>
 </screenshot>
@@ -256,16 +308,9 @@ used instead of one single plot, as shown below:
 <sect1 id="datawizard-tour">
 <title>A Quick Tour of the Data Wizard</title>
 <para>
-While using &kst; from the command-line is fast and convenient, there
-may be situations in which it is easier to import data from the
-graphical user interface&mdash;for example, if you already have &kst;
-open with other data loaded.  Or, you may simply prefer using the
-graphical user interface.  Becoming familiar with both methods of
-importing data will allow you to make more efficient use of &kst;.
-</para>
-
-<para>
-The Data Wizard provides a quick and easy way of creating vectors,
+&kst; can also be completely controlled through the graphical user interface,
+whithout ever using the command line.  In this section, we will look at
+the Data Wizard, which a quick and easy way of creating vectors,
 curves, and plots in &kst; from data files.  To launch the wizard,
 select <guimenuitem>Data Wizard...</guimenuitem> from the
 <guimenu>Data</guimenu> menu or click the
@@ -276,10 +321,37 @@ select <guimenuitem>Data Wizard...</guimenuitem> from the
 </imageobject>
 </inlinemediaobject>
 
-button on the toolbar.  You will be prompted to select a data source.
-Browse to the <filename>gyrodata.dat</filename> file used in the
-command-line examples and click <guibutton>Next</guibutton>.  The
-following window will be displayed:
+button on the toolbar.  You will be prompted to select a data source by the 
+following dialog:
+
+<screenshot>
+<screeninfo>Data Wizard Screen 1</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard1.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 2</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+Select the <filename>gyrodata.dat</filename> file used in the
+command-line examples.  If you have completed the command-line exercises
+in in the previous sections, then the the file should be listed in the recent
+files list, as shown.  Simply click on it to select it.  Otherwise,
+enter the full path in the top text entry box (or click on the 
+
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-fileselect.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+
+icon and browse to the file).  Once you have selected the file, the <guibutton>Next</guibutton>
+button will be enabled.  Click on it to proceed to the next page.  
+
+The following window will be displayed:
 </para>
 
 <screenshot>
@@ -295,37 +367,87 @@ following window will be displayed:
 </screenshot>
 
 <para>
-The fields available in <filename>gyrodata.dat</filename> are listed
-to the left.  You may filter the list of highlighted fields by
-entering a string to match (wildcards such as <literal>*</literal> are
-supported) into the text box above the list. Check the boxes for the
-<guilabel>1</guilabel>, <guilabel>2</guilabel> and
-<guilabel>3</guilabel> fields.
+Fields in <filename>gyrodata.dat</filename> available to be plotted are
+listed in the <guilabel>Available data</guilabel> box on the left. Fields 
+that have been selected for plotting are listed in the <guilabel>Selected data</guilabel>
+box on the right.  In the image shown, <guilabel>Column 1</guilabel> has been 
+selected for plotting.
 </para>
+
+<para>
+Select <guilabel>Column 1</guilabel>, <guilabel>Column 2</guilabel>, and 
+<guilabel>Column 3</guilabel> for plotting by moving them to the 
+<guilabel>Selected data</guilabel> box.
+</para>
+
+<para>
+To move a field from <guilabel>Available data</guilabel> to 
+<guilabel>Selected data</guilabel>, double click on it, or
+highlight it (with mouse or keyboard) and click on the 
+
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-right-arrow.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+
+icon.  As well as using the mouse or keyboard, you may highlight fields by 
+entering a string to match into the text box above the list.  Wildcards such as <literal>*</literal>, 
+<literal>?</literal> and <literal>[ ]</literal> are
+supported.
+</para>
+
+<para>
+Click <guibutton>Next</guibutton> once you have selected the three columns of data.
+</para>
+
+
+<screenshot>
+<screeninfo>Data Wizard Screen 3</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datawizard3.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Data Wizard Screen 2</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+The next tab is used to select the data range to be plotted, and whether to 
+create XY plots, spectrum plots, or both.
+</para>
+
 
 <para>
 The <guilabel>Data Range</guilabel> section is used to specify the
 range of data to read from the selected vectors in the input file. The
-following discussion assumes knowledge of <quote>frames</quote>.  In
-brief, a frame is simply a number of data samples, and each data file
-is composed of a number of frames.  For a detailed description of this
+following discussion assumes knowledge of <quote>frames</quote>.  For ASCII
+files such as <filename>gyrodata.dat</filename>, a frame is simply a row of
+data, though for other formats this can be more complicated.  For a detailed description of this
 concept, see <xref linkend="supportingadditionalfileformatsdatasourceconceptsframes"/>.
 </para>
 
 <variablelist>
 <varlistentry>
 <term>
-<guilabel>Start</guilabel>, <guilabel>Count from end</guilabel>,
+<guilabel>Start</guilabel>, <guilabel>End</guilabel>, <guilabel>Count from end</guilabel>,
 <guilabel>Range</guilabel>, and <guilabel>Read to end</guilabel>
 </term>
 <listitem>
 <para>
-Using these four settings, the lower and upper boundaries of the data
-range can be set. As an example, select <guilabel>Count from
-end</guilabel> and enter 10,000 for <guilabel>Range</guilabel> to read
-only the last 10,000 frames.  If <filename>gyrodata.dat</filename> was
-being updated in real-time, subsequent additions to the end of the
-file would be read.
+Using these five settings, the lower and upper boundaries of the data
+range can be set. The settings in the above image are set to read the
+entire data file (starting at frame 0, and reading to the end).  
+</para>
+
+<para>
+If new data were being appended to the end of the file in real time, then the range
+would be continuously increasing and &kst; would update to reflect this.  If instead
+one wanted to only display the last 1000 frames of the file, one would instead select
+<guilabel>Count from end</guilabel> and enter 1000 in <guilabel>Range</guilabel>.  
+&kst; would scroll the data along as new data were appended to the data file.
 </para>
 
 </listitem>
@@ -338,60 +460,37 @@ filter first</guilabel>
 </term>
 <listitem>
 <para>
-In addition to the lower and upper range boundaries, the samples to
-read from the selected range can be set.  If <guilabel>Read 1 sample
-per N frames</guilabel> (where N is the value entered) is not
-selected, all samples in the selected range will be read.
-Alternatively, frames in the data file can be skipped by selecting
-<guilabel>Read 1 sample per N frames</guilabel> For now, deselect
-<guilabel>Read 1 sample per N frames</guilabel>.
+The number of data points plotted can be reduced using this option.
+If <guilabel>Read 1 sample
+per N frames</guilabel> is not selected, all samples in the selected 
+range will be read.  Alternatively, frames in the data file can be 
+skipped by selecting <guilabel>Read 1 sample per N frames</guilabel>. 
+For now, read all of the data by deselecting <guilabel>Read 1 sample 
+per N frames</guilabel>, as shown.
 </para>
 </listitem>
 </varlistentry>
 </variablelist>
 
+
+
 <para>
-Power Spectrum and X axis settings can be specified within the
-<guilabel>Plot Types</guilabel> section.
+In this tutorial, we are only going to plot the gyroscope time series, and not spectra.
+To do this, select <guilabel>Create XY plots</guilabel> and deselect 
+<guilabel>Create Spectra Plots</guilabel> as shown.
 </para>
 
-<variablelist>
-
-<varlistentry>
-<term>
-<guilabel>XY</guilabel>, <guilabel>Power Spectrum</guilabel>, and
-<guilabel>XY and Power Spectrum</guilabel>
-</term>
-<listitem>
 <para>
-Select <guilabel>XY and Power Spectrum</guilabel> to produce plots of
-both the data itself and its power spectrum. For more information on
-the options available for power spectra, see <xref linkend="power-spectra"/>.
+Set the X axis vectors for the curves to be The vector to be <guilabel>INDEX</guilabel> 
+by selecting <guilabel>Create from field</guilabel> and selecting INDEX in 
+vector selector, as shown.
 </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>X Axis Vector</guilabel>
-</term>
-<listitem>
-<para>
-The vector to be used as the independent vector for the plots.  You
-may select a field from your data file, or the INDEX vector.  Since
-<filename>gyrodata.dat</filename> does not contain an X axis vector,
-leave the selection as INDEX.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
 
 <para>
 The <guilabel>FFT Options</guilabel> subsection in the <guilabel>Plot
 Types</guilabel> section is available only if a power spectrum is to
 be plotted.  This tutorial will not deal with the details of power
-spectra, so use the default settings for this subsection.
+spectra.
 </para>
 
 <para>
@@ -400,10 +499,10 @@ Once you are satisfied with all the settings, click
 </para>
 
 <screenshot>
-<screeninfo>Data Wizard Screen 3</screeninfo>
+<screeninfo>Data Wizard Screen 4</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-datawizard3.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-datawizard4.png" format="PNG" />
 </imageobject>
 <textobject>
 <phrase>Data Wizard Screen 3</phrase>
@@ -414,10 +513,7 @@ Once you are satisfied with all the settings, click
 <para>
 From here, you can change general plotting settings.  Most of the
 settings are self-explanatory.  Select <guilabel>1 new plot per
-curve</guilabel> for <guilabel>Curve Placement</guilabel> and
-<guilabel>In new window</guilabel> for <guilabel>Plot
-Placement</guilabel>.  This will place all six plots (three curves and
-three power spectra) in the same window.
+curve</guilabel> for <guilabel>Curve Placement</guilabel>.
 </para>
 
 
@@ -444,17 +540,6 @@ tutorial). Select <guimenuitem>Save As...</guimenuitem> from the
 <filename>mykstsession.kst</filename>:
 </para>
 
-<screenshot>
-<screeninfo>Saving a KST session</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-filesave.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Saving a KST session</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
 <para>
 Saving a &kst; session saves all the plots, data objects (you will learn about these later), and layouts that exist
 at the time of saving.
@@ -469,16 +554,36 @@ Once the file has been saved, you can exit &kst;.
 <para>
 Now that you are comfortable with creating plots in &kst;, we can explore some of the plot manipulation features
 available through the &kst; graphical user interface.
-Start &kst; from the command-line with the
-<filename>mykstsession.kst</filename> file you saved earlier:
+Start &kst; and load the <filename>mykstsession.kst</filename> file you saved earlier.
+This can be done one of three ways:
 </para>
-<screen><userinput><command>kst mykstsession.kst</command></userinput></screen>
+<itemizedlist>
+  <listitem>
+  From the command line: <userinput><command>kst mykstsession.kst</command></userinput>
+  </listitem>
+  <listitem>
+    Selecting <guimenuitem>Open</guimenuitem> from the toolbar or from the 
+    <guimenuitem>File</guimenuitem> menu and selecting <filename>mykstsession.kst</filename>
+    from wherever you saved it.
+  </listitem>
+  <listitem>
+  Selecting <filename>mykstsession.kst</filename>  from 
+  <guimenuitem>Recent Files</guimenuitem> in the <guimenuitem>File</guimenuitem> menu.
+  </listitem>
+</itemizedlist>
+
 <para>
 All the plots you created earlier should now be loaded in &kst;.
-Examine the plot with the y axis label of <literal>PSD
-[V/Hz^{1/2}]</literal>.  To take a closer look at the plot, right
-click on it and select the <guimenuitem>Maximize</guimenuitem> menu
-item, as shown below:
+Consider the plot of Column 1.
+To take a closer look at that plot, right
+click in it and select the <guimenuitem>Maximize</guimenuitem> menu
+item (see below).  Notice that the menu item shows that <guimenuitem>Z</guimenuitem>
+is a shortcut for this, so you could also just type 'Z' in the plot rather than
+using the context menu for this.  Selecting <guimenuitem>Maximize</guimenuitem> (either
+way) will cause the selected plot to fill the entire kst window.  Selecting 
+<guimenuitem>Maximize</guimenuitem> will restore it the plots to their previous
+arrangement.  This is especially valuable if you have a grid of many small plots
+and want to temporarily look at just one of them.
 </para>
 <screenshot>
 <screeninfo>Maximizing a plot</screeninfo>
@@ -493,48 +598,35 @@ item, as shown below:
 </screenshot>
 
 <para>
-The plot is now maximized within the current window.  Note that the
-high x end of this plot is almost completely flat, so it would be
-useful to view only the area of the plot that looks interesting.  To
-do so, make sure you are in XY Mouse Zoom mode (select <guimenuitem>XY
-Mouse Zoom</guimenuitem> from the <guimenu>Plots</guimenu> menu, or
-click the <inlinemediaobject><imageobject><imagedata
-fileref="Icon-kst-xymousezoom.png"
-format="PNG"/></imageobject></inlinemediaobject> toolbar
-button). Then, simply drag a rectangle around the interesting-looking
-area.  Note that the coordinates of the mouse cursor are displayed in
-the lower right corner of the &kst; window (if they are not, ensure
-that <guimenuitem>Show Statusbar</guimenuitem> is checked in the
-<guimenu>Settings</guimenu> menu).
-</para>
+In &kst;, it is very easy to zoom and scroll the data, using either the
+mouse of the keyboard.  To do this you should be in <guimenuitem>XY Zoom/Scroll</guimenuitem>
+mode, selected by selecting the 
 
-<para>
-The plot axes will change to <quote>zoom in</quote> on the selected
-area of the plot.  You may notice that there is a peak at the left end
-of the power spectrum that extends beyond the new upper y axis limit.
-Suppose that you wish to view the top of this peak. Right-click on the
-plot and select <guimenuitem>Up</guimenuitem> from the
-<guimenu>Scroll</guimenu> submenu.  The plot should scroll upwards. Of
-course, it is most likely easier to use the shortcut key associated
-with the menu item; this is true for most of the zooming and
-scrolling functions.  In this case, the shortcut key is <keysym>Up
-Arrow</keysym>, so the quickest way to scroll upwards would be to hold
-down the <keysym>Up Arrow</keysym> key.  To return to maximum zoom at
-any time, right-click on the plot and select <guimenuitem>Zoom
-Maximum</guimenuitem> from the <guisubmenu>Zoom</guisubmenu> submenu
-(or type <keycap>M</keycap>, the shortcut key associated with
-<guimenuitem>Zoom Maximum</guimenuitem>).
-</para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-datawizard.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
 
-<para>
-Restore the size of the power spectrum plot by right-clicking the plot
-and unchecking <guimenuitem>Maximize</guimenuitem>.
+icon in the tool bar.  This is the default mode.
 </para>
+<para>
+To zoom into a region of interest, left-click drag a box in the window with the mouse.
+When you release the mouse, the window will zoom in X and Y into the region you selected.
+Holding <quote>Shift</quote> when you do this will cause the plot to zoom only in Y.  
+Holding <quote>Ctrl</quote> when you do this will cause the plot to zoom only in X.
+</para>
+<para>
+Arrow keys scroll the plot. Arrow keys with <quote>Shift</quote> held down will change the scale.
+The <quote>M</quote> key auto-zooms the plots to view all of the data.  Play around with these
+options to become familier with the various options.
+</para>
+<para>
 
 <para>
 Now look at the plots with y axes labeled <literal>Column 2</literal>
 and <literal>Column 3</literal>.  These are plots of the pitch gyro
-and roll gyro, respectively, from the 1998 BOOMERANG flight.  Since
+and roll gyro, respectively, from a balloon flight.  Since
 these two plots are related, it can be useful to zoom and scroll them
 simultaneously.  Click on the squares located at the top right corners
 of the two plots.  They should turn dark in color to indicate that

@@ -8,14 +8,14 @@
 <itemizedlist>
 <listitem><para>Robust plotting of live "streaming" data.</para></listitem>
 <listitem><para>Powerful keyboard and mouse plot manipulation.</para></listitem>
-<listitem><para>Powerful plugins and extensions support.</para></listitem>
+<listitem><para>Plugin support.</para></listitem>
 <listitem><para>Large selection of built-in plotting and data manipulation functions,
 such as histograms, equations, and power spectra.</para></listitem>
 <listitem><para>Color mapping and contour mapping capabilities for three-dimensional data.</para></listitem>
-<listitem><para>Monitoring of events and notifications support.</para></listitem>
 <listitem><para>Built-in filtering and curve fitting capabilities.</para></listitem>
 <listitem><para>Convenient command-line interface.</para></listitem>
 <listitem><para>Powerful graphical user interface.</para></listitem>
+<listitem><para>Python bindings for scripting.</para></listitem>
 
 </itemizedlist>
 </para>
@@ -85,7 +85,7 @@ and save it as <filename>simpledata.dat</filename>:
 of this file an x vector, and the second column as a y vector, enter the following:
 </para>
 <para>
-<userinput><command>kst -x 1 -y 2 simpledata.dat</command></userinput>
+<userinput><command>kst2 simpledata.dat  -x 1 -y 2</command></userinput>
 </para>
 <para>
 &kst; should start with the plot displayed:
@@ -111,41 +111,13 @@ power spectra can be performed as well.  For a complete list of command-line opt
 
 
 <para>
-If &kst; is started without any command-line options, a QuickStart dialog is shown by default:
-</para>
-<screenshot>
-<screeninfo>The QuickStart dialog</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-quickstart.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>The QuickStart dialog</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>
-The QuickStart dialog provides both a convenient facility for opening previously saved &kst; sessions
-and a shortcut to the data wizard. To open an existing &kst; session, either select a file from the
-<guilabel>Recent files</guilabel> list, or enter a path in the textbox underneath, and click
-<guibutton>Open File</guibutton>.  Clicking the button
-to the right of the textbox displays a file browser dialog that can be used to graphically browse to a
-&kst; file.  If this is your first time using &kst;, you most likely will not have any saved sessions.
-In this case, the data wizard can be used to quickly import data and produce plots.
-To start the data wizard, click the <guimenuitem>Data Wizard...</guimenuitem> button.
-The data wizard walks through specification of a data file, selection of fields, and selection of plot options.
+If &kst; is started without any command-line options, an unfilled kst window is shown.  From there, a common
+first step is to create plots from the Data Wizard (click the <guimenuitem>Data Wizard...</guimenuitem> toolbar button
+or press 'w').
+The data wizard walks through the specification of a data file, selection of fields, and selection of plot options.
 For detailed descriptions of
 the data wizard options and settings, refer to the <link linkend="datawizard">Data Wizard</link> section.
 </para>
-<tip>
-<para>
-If you do not want the QuickStart dialog to be displayed at startup, simply uncheck
-<guilabel>Show this dialog at startup</guilabel> at the bottom of the QuickStart dialog.  The QuickStart
-dialog can also be toggled by selecting <guimenuitem>Configure Kst...</guimenuitem> from the
-<guimenu>Settings</guimenu> menu and clicking on <guilabel>Show QuickStart dialog on startup</guilabel>.
-</para>
-</tip>
 
 <para>
 Any plot displayed in &kst; can be manipulated.  For example, dragging a rectangle anywhere within a plot

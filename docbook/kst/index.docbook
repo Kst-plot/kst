@@ -1,8 +1,7 @@
 <?xml version="1.0" ?>
-  <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
 
- <!ENTITY kappname "kst">
- <!ENTITY package "kdeextragear-2">
+ <!ENTITY kappname "kst2">
  <!ENTITY kst "<application>Kst</application>">
  <!ENTITY % addindex "IGNORE">
  <!ENTITY % English "INCLUDE" > <!-- change language only here -->
@@ -44,6 +43,12 @@
 <affiliation><address><email>phil@kde.org</email></address>
 </affiliation>
 </author>
+<author>
+<firstname>Barth</firstname>
+<othername></othername>
+<surname>Netterfield</surname>
+<affiliation><address><email>netterfield@astro.utoronto.ca</email></address></affiliation>
+</author>
 </authorgroup>
 
 
@@ -57,6 +62,11 @@
 <copyright>
 <year>2005</year>
 <holder>The University of Toronto</holder>
+</copyright>
+
+<copyright>
+<year>2017</year>
+<holder>C. Barth Netterfield</holder>
 </copyright>
 
 <!-- Translators: put here the copyright notice of the translation -->
@@ -73,8 +83,8 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 (V.MM.LL), it could be used by automation scripts.
 Do NOT change these in the translation. -->
 
-<date>2005-04-14</date>
-<releaseinfo>1.2.0</releaseinfo>
+<date>2017-01-31</date>
+<releaseinfo>2.0.0</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -90,8 +100,6 @@ Please at least include KDE, the KDE package it is in, the name
 
 <keywordset>
 <keyword>KDE</keyword>
-<keyword>kdeextragear</keyword>
-<keyword>kdeextragear-2</keyword>
 <keyword>Kst</keyword>
 <keyword>plotting</keyword>
 <keyword>plot</keyword>
