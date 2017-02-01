@@ -190,6 +190,12 @@ Polynomial Fit
    :members:
    :inherited-members:
 
+Flag Filter
+--------------
+.. autoclass:: FlagFilter
+   :members:
+   :inherited-members:
+
 Relations
 *********
 Relations are objects which can be added to a plot.
