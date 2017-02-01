@@ -41,6 +41,8 @@ class FilterFlagSource : public Kst::BasicPlugin {
     virtual QStringList outputScalarList() const;
     virtual QStringList outputStringList() const;
 
+    virtual void setProperty(const QString &key, const QString &val);
+
     virtual void saveProperties(QXmlStreamWriter &s);
 
     unsigned long long mask() {return _mask;}

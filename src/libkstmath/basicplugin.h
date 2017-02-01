@@ -74,6 +74,9 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
     void setOutputScalar(const QString &type, const QString &name);
     void setOutputString(const QString &type, const QString &name);
 
+    // for setting non primitive properties
+    virtual void setProperty(const QString &key, const QString &val) {Q_UNUSED(key) Q_UNUSED(val);}
+
     void setPluginName(const QString &pluginName);
     QString pluginName() { return _pluginName; }
 

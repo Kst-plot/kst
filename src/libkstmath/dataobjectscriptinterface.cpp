@@ -37,7 +37,6 @@ QString DataObjectSI::setInputVector(QString& command) {
   }
 }
 
-
 QString DataObjectSI::setInputScalar(QString& command) {
   QStringList vars = getArgs(command);
 
@@ -96,7 +95,24 @@ PluginSI::PluginSI(BasicPluginPtr plugin) {
   _fnMap.insert("outputVector",&PluginSI::outputVector);
   _fnMap.insert("outputScalar",&PluginSI::outputScalar);
 
+  _fnMap.insert("setProperty",&PluginSI::setProperty);
+
 }
+
+
+QString PluginSI::setProperty(QString& command) {
+  QStringList vars = getArgs(command);
+
+  QString key = vars.at(0);
+  QString val = vars.at(1);
+
+  if (_plugin) {
+    _plugin->setProperty(key, val);
+  }
+
+  return "Done";
+}
+
 
 bool PluginSI::isValid() {
   return _plugin;

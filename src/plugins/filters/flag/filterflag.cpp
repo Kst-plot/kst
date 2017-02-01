@@ -283,6 +283,19 @@ QStringList FilterFlagSource::outputStringList() const {
   return QStringList( /*STRING_OUT*/ );
 }
 
+void FilterFlagSource::setProperty(const QString &key, const QString &val) {
+  if (key == "Mask") {
+    bool ok;
+    setMask(val.toLongLong(&ok, 0));
+  } else if (key == "ValidIsZero") {
+    if (val.toLower() == "true") {
+      setValidIsZero(true);
+    } else if (val.toLower() == "false") {
+      setValidIsZero(false);
+    }
+  }
+}
+
 
 void FilterFlagSource::saveProperties(QXmlStreamWriter &s) {
   s.writeAttribute("Mask", "0x"+QString::number( mask(), 16 ));

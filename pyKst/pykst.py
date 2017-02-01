@@ -521,12 +521,12 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
-  def new_flag_filter(self, y_vector, flag, name = ""):
+  def new_flag_filter(self, y_vector, flag, mask="0xffffff", valid_is_zero=True, name = ""):
     """ Create a flag filter inside kst.
 
     See :class:`FlagFilter`
     """
-    return FlagFilter(self, y_vector, flag, name)
+    return FlagFilter(self, y_vector, flag, mask, valid_is_zero, name)
 
   def flag_filter(self, name):
     """ Returns a flag_filter from kst given its name.
@@ -2171,7 +2171,7 @@ class FlagFilter(Filter) :
 
   The output is the input when flag == 0, or NaN if flag is non-0.
   """
-  def __init__(self, client, yvector, flag, name="", new=True) :
+  def __init__(self, client, yvector, flag, mask="0xffffff", valid_is_zero=True, name="", new=True) :
     Filter.__init__(self,client)
 
     if (new == True):
@@ -2179,6 +2179,12 @@ class FlagFilter(Filter) :
 
       self.client.send("setInputVector(Y Vector,"+yvector.handle+")")
       self.client.send("setInputVector(Flag Vector,"+flag.handle+")")
+      self.client.send("setProperty(Mask,"+mask+")")
+      if (valid_is_zero==True):
+        self.client.send("setProperty(ValidIsZero,true)")
+      else:
+        self.client.send("setProperty(ValidIsZero,false)")
+
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
       self.set_name(name)

@@ -60,6 +60,8 @@ public:
 
     static ScriptInterface* newPlugin(ObjectStore *store, QByteArray pluginName);
 
+    QString setProperty(QString& command);
+
   protected:
     QString noSuchFn(QString&) {return ""; }
 
