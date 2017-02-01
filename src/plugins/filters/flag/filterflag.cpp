@@ -90,11 +90,20 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
 
       bool validTag = true;
 
-//       QStringRef av;
-//       av = attrs.value("value");
-//       if (!av.isNull()) {
-//         _configValue = QVariant(av.toString()).toBool();
-//       }
+      QStringRef av;
+      av = attrs.value("Mask");
+      if (!av.isNull()) {
+        _mask->setText(av.toString());
+      } else {
+        _mask->setText("0xffff");
+      }
+
+      av = attrs.value("ValidIsZero");
+      if (!av.isNull()) {
+        setValidIsZero(QVariant(av.toString()).toBool());
+      } else {
+        setValidIsZero(true);
+      }
 
       return validTag;
     }
@@ -276,8 +285,8 @@ QStringList FilterFlagSource::outputStringList() const {
 
 
 void FilterFlagSource::saveProperties(QXmlStreamWriter &s) {
-  Q_UNUSED(s);
-//   s.writeAttribute("value", _configValue);
+  s.writeAttribute("Mask", "0x"+QString::number( mask(), 16 ));
+  s.writeAttribute("ValidIsZero", QString::number(validIsZero()));
 }
 
 
@@ -296,9 +305,10 @@ Kst::DataObject *FilterFlagPlugin::create(Kst::ObjectStore *store, Kst::DataObje
       object->setupOutputs();
       object->setInputVector(VECTOR_IN, config->selectedVector());
       object->setInputVector(VECTOR_FLAG_IN, config->selectedFlag());
-      object->setMask(config->mask());
-      object->setValidIsZero(config->validIsZero());
     }
+
+    object->setMask(config->mask());
+    object->setValidIsZero(config->validIsZero());
 
     object->setPluginName(pluginName());
 

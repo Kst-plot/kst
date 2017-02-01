@@ -282,7 +282,7 @@ void BasicPlugin::save(QXmlStreamWriter &stream) {
   stream.writeStartElement(staticTypeTag);
   stream.writeAttribute("type", _pluginName);
   saveNameInfo(stream, VECTORNUM|PLUGINNUM|SCALARNUM);
-
+  saveProperties(stream);
   writeVectors(_inputVectors, "inputvector", stream, &NamedObject::Name);
   writeVectors(_inputScalars, "inputscalar", stream, &NamedObject::Name);
   writeVectors(_inputStrings, "inputstring", stream, &NamedObject::Name);
