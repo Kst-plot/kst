@@ -74,7 +74,7 @@ Please at least include KDE, the KDE package it is in, the name
 <chapter id="RunningaKstScript">
 <title>Running a KstScript</title>
 <para>
-&kjs; is a JavaScript binding to &kst;.  There are three ways to to run a &kjs;
+&kjs; is a JavaScript binding to &kst;.  There are three ways to run a &kjs;
 </para>
 
 <itemizedlist>

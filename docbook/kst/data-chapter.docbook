@@ -1042,7 +1042,7 @@ Enter the total number of bins to use in the <guilabel>Num bins</guilabel> field
 <para>
 Instead of specifying values for <guilabel>From</guilabel>, <guilabel>to</guilabel>, and
 <guilabel>Num bins</guilabel>, you can click <guibutton>Auto Bin</guibutton> to automatically generate
-values for all three fields based based on the lowest and highest values, as well as the number
+values for all three fields based on the lowest and highest values, as well as the number
 of elements found in the source vector.
 </para>
 </listitem>

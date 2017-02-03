@@ -124,7 +124,7 @@ Spectra requested from the command line.
 <term><option>-l P</option></term>
 <listitem>
 <para>
-The length of the FFT used in power specra
+The length of the FFT used in power spectra
 estimation is 2^P.
 </para>
 </listitem>

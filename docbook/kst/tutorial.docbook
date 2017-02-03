@@ -309,7 +309,7 @@ To plot column 1 in one plot, and columns 2 and three in a second plot, displaye
 <title>A Quick Tour of the Data Wizard</title>
 <para>
 &kst; can also be completely controlled through the graphical user interface,
-whithout ever using the command line.  In this section, we will look at
+without ever using the command line.  In this section, we will look at
 the Data Wizard, which a quick and easy way of creating vectors,
 curves, and plots in &kst; from data files.  To launch the wizard,
 select <guimenuitem>Data Wizard...</guimenuitem> from the
@@ -338,7 +338,7 @@ following dialog:
 
 Select the <filename>gyrodata.dat</filename> file used in the
 command-line examples.  If you have completed the command-line exercises
-in in the previous sections, then the the file should be listed in the recent
+in the previous sections, then the file should be listed in the recent
 files list, as shown.  Simply click on it to select it.  Otherwise,
 enter the full path in the top text entry box (or click on the 
 
@@ -619,7 +619,7 @@ Holding <quote>Ctrl</quote> when you do this will cause the plot to zoom only in
 <para>
 Arrow keys scroll the plot. Arrow keys with <quote>Shift</quote> held down will change the scale.
 The <quote>M</quote> key auto-zooms the plots to view all of the data.  Play around with these
-options to become familier with the various options.
+options to become familiar with the various options.
 </para>
 <para>
 
