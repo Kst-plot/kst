@@ -559,16 +559,22 @@ This can be done one of three ways:
 </para>
 <itemizedlist>
   <listitem>
-  From the command line: <userinput><command>kst mykstsession.kst</command></userinput>
+    <para>
+        From the command line: <userinput><command>kst mykstsession.kst</command></userinput>
+    </para>
   </listitem>
   <listitem>
-    Selecting <guimenuitem>Open</guimenuitem> from the toolbar or from the 
-    <guimenuitem>File</guimenuitem> menu and selecting <filename>mykstsession.kst</filename>
-    from wherever you saved it.
+    <para>
+        Selecting <guimenuitem>Open</guimenuitem> from the toolbar or from the
+        <guimenuitem>File</guimenuitem> menu and selecting <filename>mykstsession.kst</filename>
+        from wherever you saved it.
+    </para>
   </listitem>
   <listitem>
-  Selecting <filename>mykstsession.kst</filename>  from 
-  <guimenuitem>Recent Files</guimenuitem> in the <guimenuitem>File</guimenuitem> menu.
+    <para>
+        Selecting <filename>mykstsession.kst</filename> from
+        <guimenuitem>Recent Files</guimenuitem> in the <guimenuitem>File</guimenuitem> menu.
+    </para>
   </listitem>
 </itemizedlist>
 
@@ -761,8 +767,9 @@ Then, from the <guimenu>Create</guimenu> menu select
   of fields you have loaded, 
   Save your session - we will be using it again in the next section of the tutorial.
 </para>
+</sect1>
 
-<sect1 id="conclusion">
+<sect1 id="filters">
 <title>Filters</title>
 <para>
 </para>

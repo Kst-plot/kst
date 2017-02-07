@@ -25,7 +25,7 @@
  <!ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook">
  ]>
 
-<book lang="&language;">
+<book id="kst" lang="&language;">
 
 <bookinfo>
 <title>The &kst; Handbook</title>
@@ -49,10 +49,8 @@
 <surname>Netterfield</surname>
 <affiliation><address><email>netterfield@astro.utoronto.ca</email></address></affiliation>
 </author>
-</authorgroup>
-
-
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
 
 <copyright>
 <year>2004</year>
