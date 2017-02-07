@@ -1483,14 +1483,13 @@ void MainWindow::createMenus() {
   _createMenu->addAction(_newStringAct);
   _createMenu->addSeparator();
   // Data objects
-  _createMenu->addAction(_newCurveAct);
   _createMenu->addAction(_newEquationAct);
-  _createMenu->addAction(_newPSDAct);
   _createMenu->addAction(_newHistogramAct);
-  _createMenu->addAction(_newImageAct);
+  _createMenu->addAction(_newPSDAct);
   _createMenu->addAction(_newSpectrogramAct);
   _createMenu->addAction(_newEventMonitorAct);
   _createMenu->addSeparator();
+
   // Now, create the dynamic plugin menus
   QMenu* _pluginsMenu = _createMenu->addMenu(tr("Standard P&lugin"));
   QMenu* _fitPluginsMenu = _createMenu->addMenu(tr("Fit Pl&ugin"));
@@ -1511,6 +1510,10 @@ void MainWindow::createMenus() {
     connect(action, SIGNAL(triggered(QString&)), this, SLOT(showPluginDialog(QString&)));
     _filterPluginsMenu->addAction(action);
   }
+  _createMenu->addSeparator();
+  // Relations
+  _createMenu->addAction(_newCurveAct);
+  _createMenu->addAction(_newImageAct);
   _createMenu->addSeparator();
   // Annotation objects
   QMenu* annotations = _createMenu->addMenu(tr("&Annotation"));

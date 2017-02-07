@@ -578,12 +578,13 @@ Consider the plot of Column 1.
 To take a closer look at that plot, right
 click in it and select the <guimenuitem>Maximize</guimenuitem> menu
 item (see below).  Notice that the menu item shows that <guimenuitem>Z</guimenuitem>
-is a shortcut for this, so you could also just type 'Z' in the plot rather than
+is a shortcut for this, so you could also just type <keycap>Z</keycap> in the plot rather than
 using the context menu for this.  Selecting <guimenuitem>Maximize</guimenuitem> (either
 way) will cause the selected plot to fill the entire kst window.  Selecting 
-<guimenuitem>Maximize</guimenuitem> will restore it the plots to their previous
+<guimenuitem>Maximize</guimenuitem> (or typing <keycap>Z</keycap> in the plot) again will restore it the plots to their previous
 arrangement.  This is especially valuable if you have a grid of many small plots
-and want to temporarily look at just one of them.
+and want to temporarily look at just one of them.  Obviously typing <keycap>Z</keycap> is going to be the most convienient way
+to do this, but the context menu is there in case you forget.
 </para>
 <screenshot>
 <screeninfo>Maximizing a plot</screeninfo>
@@ -599,12 +600,12 @@ and want to temporarily look at just one of them.
 
 <para>
 In &kst;, it is very easy to zoom and scroll the data, using either the
-mouse of the keyboard.  To do this you should be in <guimenuitem>XY Zoom/Scroll</guimenuitem>
+mouse or the keyboard.  To do this you should be in <guimenuitem>XY Zoom/Scroll</guimenuitem>
 mode, selected by selecting the 
 
 <inlinemediaobject>
 <imageobject>
-<imagedata fileref="Icon-kst-datawizard.png" format="PNG"/>
+<imagedata fileref="Icon-kst-xymousezoom.png" format="PNG"/>
 </imageobject>
 </inlinemediaobject>
 
@@ -613,22 +614,21 @@ icon in the tool bar.  This is the default mode.
 <para>
 To zoom into a region of interest, left-click drag a box in the window with the mouse.
 When you release the mouse, the window will zoom in X and Y into the region you selected.
-Holding <quote>Shift</quote> when you do this will cause the plot to zoom only in Y.  
-Holding <quote>Ctrl</quote> when you do this will cause the plot to zoom only in X.
+Holding <keycap>Shift</keycap> when you do this will cause the plot to zoom only in Y.  
+Holding <keycap>Ctrl</keycap> when you do this will cause the plot to zoom only in X.
 </para>
 <para>
-Arrow keys scroll the plot. Arrow keys with <quote>Shift</quote> held down will change the scale.
-The <quote>M</quote> key auto-zooms the plots to view all of the data.  Play around with these
-options to become familiar with the various options.
+Arrow keys scroll the plot. Arrow keys with <keycap>Shift</keycap> held down will change the scale.
+The <keycap>M</keycap> key auto-zooms the plots to view all of the data.  Play around with these
+options to become familier with the various options.
 </para>
-<para>
 
 <para>
 Now look at the plots with y axes labeled <literal>Column 2</literal>
 and <literal>Column 3</literal>.  These are plots of the pitch gyro
-and roll gyro, respectively, from a balloon flight.  Since
+and roll gyro, respectively, from an instrument.  Since
 these two plots are related, it can be useful to zoom and scroll them
-simultaneously.  Click on the squares located at the top right corners
+simultaneously.  Click on the circles located at the top right corners
 of the two plots.  They should turn dark in color to indicate that
 the two plots are now tied together:
 </para>
@@ -644,42 +644,36 @@ the two plots are now tied together:
 </textobject>
 </mediaobject>
 </screenshot>
-<para>
-Before we try zooming in, we should delete all plots other than the
-two we are working with.  Select <guimenuitem>Layout
-Mode</guimenuitem> from the <guimenu>Plots</guimenu> menu or click the
-<inlinemediaobject><imageobject><imagedata
-fileref="Icon-kst-layoutmode.png"
-format="PNG"/></imageobject></inlinemediaobject> toolbar button.  For
-each plot other than the two we want to keep, right-click on the plot
-and select <guimenuitem>Delete</guimenuitem>.  Then, right-click
-anywhere inside the current window and select <guimenuitem>Cleanup
-Layout</guimenuitem>.  Now the two plots should share maximal space
-inside the window.  Return to XY Mouse Zoom mode when you are done.
-</para>
 
 <para>
-Now try zooming in on any portion of the upper plot.  You will find
+Now try zooming in with the mouse on a portion of the green curve in 
+the middle plot.  You will find
 that the lower plot will become blank.  This is because the lower plot
 axes have changed to match the upper plot axes, and there is no data
 in that particular region of the lower plot. Type <keycap>M</keycap>
 while the mouse cursor is over either plot to return to maximum zoom
 on both plots.  Now hold down <keycap>Ctrl</keycap> (this is
 equivalent to selecting <guimenu>X Mouse Zoom Mode</guimenu> from the
-<guimenu>Plots</guimenu> menu or clicking the
+<guimenu>Mode</guimenu> menu or clicking the
 <inlinemediaobject><imageobject><imagedata
 fileref="Icon-kst-xmousezoom.png"
-format="PNG"/></imageobject></inlinemediaobject> toolbar button). The
-mouse cursor will change shape as visual feedback.  While keeping
-<keycap>Ctrl</keycap> held down, drag a rectangle in the upper plot.
-Note that the height of the dotted rectangle is restricted so that
-only the x axis will be zoomed.  Now both plots will display data when
-zoomed in, as the y axis for either plot was not changed.
+format="PNG"/></imageobject></inlinemediaobject> toolbar button). If you
+then move the mouse, you will see that it is now dragging a vertical line
+the heght of the plots in both of the plots that are tied to gether.  
+While keeping
+<keycap>Ctrl</keycap> held down, drag a rectangle in the middle plot.
+While dragging, the region you are selecting will be displayed in both 
+tied plots.  Both plots will rescale to the region you have selected.
+</para>
+
+<para>
+As with the mouse actions, the keyboard based zoom/scrolling actions
+described earlier will now be applied to both plots.
 </para>
 <tip>
 <para>
 You can quickly tie or untie all the plots in the window by selecting
-<guimenuitem>Tied Zoom</guimenuitem> from the <guimenu>Plots</guimenu>
+<guimenuitem>Toggle Tied Zoom</guimenuitem> from the <guimenu>Mode</guimenu>
 menu or by clicking the <inlinemediaobject><imageobject><imagedata
 fileref="Icon-kst-tiedzoom.png"
 format="PNG"/></imageobject></inlinemediaobject> toolbar button.
@@ -698,317 +692,87 @@ wish to).
 <sect1 id="overviewdataobjects">
 <title>A Brief Overview of Data Objects</title>
 <para>
-There is more to &kst; than simple plotting and viewing of data.  From
-the data wizard, you have already seen that &kst; has the ability to
-create power spectra of data. In fact, &kst; is also capable of
-creating other data objects such as histograms, equations, and
-plugins.  A utility called the Data Manager can help you keep track of
-all the data objects you create.
+In addition to simple plotting, &kst; has the ability to do real time analysis of
+data using a number of <quote>Data Objects</quote>, which include spectra, equations, 
+histograms, fits, and filters.
 </para>
 
 <para>
-Start &kst; with the file <filename>demo.kst</filename>, included in the demo package:
+As a quick demo of Data Objects, lets create a spectrum.  Start &kst; and re-load
+<filename>mykstsession.kst</filename> that you created in previous sections.
+Then, from the <guimenu>Create</guimenu> menu select 
+<guimenuitem>Power Spectrum</guimenuitem>.  The New Power Spectrum menu will appear.
 </para>
-<screen><userinput><command>kst demo.kst</command></userinput></screen>
+
 <screenshot>
-<screeninfo>Kst with demo.kst</screeninfo>
+<screeninfo>New Spectrum Dialog</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-demo.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-new-spectrum.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Kst with demo.kst</phrase>
+<phrase>The New Spectrum Dialog</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
-<para>
-This &kst; session contains vectors and other data objects created
-from data in <filename>gyrodata.dat</filename>.  The top plot contains
-the azimuth data, the middle plot contains the pitch data in blue, and
-the bottom plot shows the power spectrum of the pitch data in blue.
-Let us first examine the plots more closely.  Tie the top two plots
-together using the techniques you learned in the previous section.
-Then hold down <keycap>Ctrl</keycap> to enter X Mouse Zoom mode.  Now
-zoom in on a small region of the top plot (say from 50000 to 53000),
-to cause both tied plots to zoom.  You will notice that the blue
-pitch curve is negatively correlated with the red azimuth curve.  This
-is because the pitch gyro was slightly rotated relative to the azimuth
-axis (by -0.69 degrees).  The true pitch <literal>p'</literal> is:
 
-<informalequation>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Equation-kst-correctedpitch.png" format="PNG"/>
-</imageobject>
-</mediaobject>
-</informalequation>
-
-where <literal>p</literal> is the original pitch,
-<inlinemediaobject><imageobject><imagedata
-fileref="Symbol-kst-theta.png"
-format="PNG"/></imageobject></inlinemediaobject> is the rotation of
-the pitch gyro relative to the azimuth axis, and <literal>a</literal>
-is the azimuth gyro.  <literal>p'</literal> is plotted as the black
-curve in the middle plot.  The power spectrum of <literal>p'</literal>
-is the black curve in the bottom plot.
+<para>Fill out the dialog as shown.  Make sure you select <quote>Column 3 (V4)</quote> 
+  as the Data vector, set the FFT length to <quote>2^13</quote>, Sample rate to 
+  <quote>60</quote> and select <quote>In new tab</quote> under Placement.  Then select 
+  <guibutton>OK</guibutton>.  A plot of the spectrum of <quote>Column 3 (V4)</quote> 
+  will appear in a new tab.
 </para>
-
-<para>
-Now let us take a look at how the three plots were created.  To
-display the Data Manager, select <guimenuitem>Data
-Manager...</guimenuitem> from the <guimenu>Data</guimenu> menu, or
-click the <inlinemediaobject><imageobject><imagedata
-fileref="Icon-kst-datamanager.png"
-format="PNG"/></imageobject></inlinemediaobject> toolbar button:
-</para>
+  
 <screenshot>
-<screeninfo>The Data Manager</screeninfo>
+<screeninfo>Spectrum</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-datamanager.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-spectrum_linear.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>The Data Manager</phrase>
+<phrase>Spectrum</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
 <para>
-The Data Manager contains the definitive list of data objects in the
-current &kst; session.  It also allows you edit or create new data
-objects.  As you can see, there are six curves (each created from a
-pair of vectors), one equation, two power spectra, and four data
-vectors listed.  Right-click on C2-GY_PITCH and select
-<guimenuitem>W1-P1</guimenuitem> from the <guisubmenu>Remove From
-Plot</guisubmenu> submenu.  This removes the curve from plot P1 in
-window W1. Also remove C-PSD2-V3-GY_PITCH from plot P3 in window W1
-using the same procedure.  Now only the corrected curves should be
-displayed in the plots:
+  It is hard to see any details in this plot - a log-log plot would be
+  much easier. To convert the Y axis to log hit <keycap>L</keycap> and
+  to convert the X axis to log hit <keycap>G</keycap>.  (These options
+  are also available in the context menu under the 
+  <guimenuitem>Zoom</guimenuitem> submenu in case you forget the keyboard
+  commands).  The plot will now be log-log, as shown:
 </para>
 
 <screenshot>
-<screeninfo>Corrected Curves Only</screeninfo>
+<screeninfo>Spectrum</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-democorrected.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-spectrum_log.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Corrected Curves Only</phrase>
+<phrase>Spectrum</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
 <para>
-To see how the corrected pitch gyro was created, highlight
-C4-cleaned_pitch and click the <guibutton>Edit</guibutton> button.
-The Edit Equation dialog should be displayed:
-</para>
-<screenshot>
-<screeninfo>Edit Equation</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-editequation.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Edit Equation</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>
-Note that the equation used to calculate <literal>p'</literal> was
-entered in the <guilabel>Equation</guilabel> text box (an
-approximation of 1 was used for <literal>cos(-0.69)</literal>). Feel
-free to experiment with the settings in this dialog.  Click
-<guibutton>OK</guibutton> (to save any changes made) or
-<guibutton>Cancel</guibutton> when you are done.
+  From the <guimenu>Create</guimenu> you can similarly create histograms, equations
+  of fields you have loaded, 
+  Save your session - we will be using it again in the next section of the tutorial.
 </para>
 
+<sect1 id="conclusion">
+<title>Filters</title>
 <para>
-Note that all data objects have a number listed under the <guilabel>#
-Used</guilabel> column.  This number indicates the number of times the
-data object is either used by other data objects or by plots.  Since
-we removed a curve and a power spectrum, at least two data objects
-should have 0 listed under this column.  Click
-<guibutton>Purge</guibutton> to permanently remove all unused data
-objects.
-</para>
-
-<para>
-Click <guibutton>Close</guibutton> to close the Data Manager.  You can
-exit &kst; now if you wish.
 </para>
 </sect1>
-
-<sect1 id="pluginsandevents">
-<title>A Look at Plugins and Events</title>
-<para>
-We end our journey through &kst; by looking at two specific data
-types&mdash;plugins and event monitors.
-</para>
-
-<para>
-A plugin is a flexible data object whose behavior depends entirely on
-the specific plugin file selected.  The plugin file can be one that is
-included with the standard &kst; distribution, or it can be a
-third-party plugin file.  You can find instructions on how to write
-and compile custom plugin files in <xref linkend="creatingplugins"/>..
-Plugins allow &kst; to perform arbitrary operations on a set of data,
-as the only requirements for a plugin file are that they receive a set
-of input vectors and scalars, and output a set of vectors and scalars.
-</para>
-
-<para>
-As an example, we will try fitting a simple line to a small set of
-data points. Start &kst; with a plot of the first field of the
-<filename>maxima.dat</filename> data file included in the demo
-package:
-</para>
-
-<screen><userinput><command>kst -y 1 -d maxima.dat</command></userinput></screen>
-
-<para>
-The <option>d</option> option specifies that only points should be
-plotted, not lines. The plot of data points should now be displayed:
-</para>
-<screenshot>
-<screeninfo>Plot of Data Points</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-maxima-datapoints.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Plot of Data Points</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-<para>
-Now, open the Data Manager. Click <guibutton>Plugin...</guibutton> in
-the <guilabel>New</guilabel> section to create a new plugin
-object. Under <guilabel>Plugin Selection</guilabel>, select the
-<guimenuitem>Fit linear</guimenuitem> plugin.  This particular plugin
-requires two input vectors&mdash;one containing the x values and one
-containing the y values of the data points to be fitted.  Select
-<guimenuitem>INDEX</guimenuitem> for <guilabel>Input Vector - X
-Array</guilabel>, and <guimenuitem>1</guimenuitem> for
-<guilabel>Input Vector - Y Array</guilabel>.  Then, click
-<guibutton>OK</guibutton>.  You will notice that the new plugin object
-has created slave vectors to store its outputs.  Click on
-<guibutton>Curve...</guibutton> to create a new curve from the output
-vectors. Select <guimenuitem>V1-INDEX</guimenuitem> for <guilabel>X
-axis vector</guilabel> and <guimenuitem>P1-kstfit_linear_unweighted-Y
-Fitted</guimenuitem> for <guilabel>Y axis vector</guilabel>.  We want
-to place the curve on top of the data points in the existing plot, so
-under <guilabel>Curve Placement</guilabel>, select <guilabel>Place in
-existing plot</guilabel> and deselect <guilabel>Place in new
-plot</guilabel>.  Finally, click <guibutton>OK</guibutton> to create
-the curve.  Close the data manager to view the fitted line:
-</para>
-
-<screenshot>
-<screeninfo>Fitted Line</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-fittedline.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Fitted Line</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>
-A procedure similar to the one you have just followed will allow you
-to create and plot the outputs of any type of plugin object.  However,
-there is a shortcut for creating fit plugins. Right-clicking on a plot
-will display the context menu, which contains a
-<guisubmenu>Fit...</guisubmenu> submenu.  Selecting a curve from the
-submenu will bring up the Fit Function dialog with the x and y vectors
-preselected. After the fit plugin is selected, a click of the
-<guibutton>OK</guibutton> button will create the plugin object, create
-the curve from the plugin outputs, and place the curve on the existing
-plot.
-</para>
-
-<para>
-Let us now take a look at events.  Event objects usually monitor other
-vectors or scalars and perform specified actions when certain
-conditions involving those vectors or scalars are true.  Click
-<guibutton>Event Monitor...</guibutton> in the
-<guilabel>New</guilabel> section of the Data Manager to create a new
-event:
-</para>
-<screenshot>
-<screeninfo>Event Monitor</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-eventmonitor.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Event Monitor</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<!-- FIXME: This seems to be incorrect: the equation given doesn't work -->
-<para>
-Suppose that the pitch gyro data was being updated in real time, and
-that we wanted to be notified whenever the corrected pitch gyro falls
-outside the range <literal>[-0.60, -0.40]</literal>.  To set up the
-event in this manner, enter the following in the
-<guilabel>Expression</guilabel> textbox:
-</para>
-
-<para>
-<literal>[C4-cleaned_pitch-sv]&gt;(-0.40) | [C4-cleaned_pitch-sv]&lt;(-0.60)</literal>
-</para>
-
-<para>
-Note that anything entered as an expression must be a boolean
-expression.  This particular expression will evaluate to true whenever
-either of the inequalities is true.  Select both <guilabel>Log
-as</guilabel> and <guilabel>Notify</guilabel>, and enter in your email
-address to the right of the <guilabel>Notify</guilabel> checkbox.
-Click <guibutton>OK</guibutton>, and the event will be created.
-</para>
-
-<para>
-Now select <guimenuitem>Debug Kst...</guimenuitem> from the
-<guimenu>Help</guimenu> menu.  Click the <guilabel>Log</guilabel> tab
-to view the debug log.  If the event was set up correctly, you should
-see warnings indicating the x values for which the event was
-triggered.  Check that the values roughly match those you would expect
-from looking at the plot:
-</para>
-
-<screenshot>
-<screeninfo>Debug Log</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="Screenshot-kst-debuglog.png" format="PNG" />
-</imageobject>
-<textobject>
-<phrase>Debug Log</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
-
-<para>
-If the pitch gyro data was being updated in real-time, the event
-monitor would be triggered for any new data when appropriate as well.
-</para>
-
-<para>
-Once you are done, you can close &kst;.
-</para>
-</sect1>
-
 
 <sect1 id="conclusion">
 <title>Conclusion</title>
 
 <para>
-This concludes the &kst; tutorial.  Hopefully you have gained enough
+This concludes the &kst;  tutorial.  Hopefully you have gained enough
 knowledge to become comfortable with &kst;. Keep in mind that this
 tutorial does not cover all the functionality of &kst;&mdash;there is
 still much to explore and experiment with. The rest of this Handbook
