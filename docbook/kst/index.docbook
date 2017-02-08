@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
   <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
 
- <!ENTITY kappname "kst2">
  <!ENTITY kst "<application>Kst</application>">
  <!ENTITY % addindex "IGNORE">
  <!ENTITY % English "INCLUDE" > <!-- change language only here -->
@@ -82,7 +81,7 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 Do NOT change these in the translation. -->
 
 <date>2017-01-31</date>
-<releaseinfo>2.0.0</releaseinfo>
+<releaseinfo>Kst 2.0.0</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
