@@ -975,6 +975,17 @@ void MainWindow::createPlot() {
   }
 }
 
+void MainWindow::insertPlot() {
+  CreatePlotForCurve *cmd = new CreatePlotForCurve();
+  cmd->createItem();
+
+  PlotItem *plotItem = static_cast<PlotItem*>(cmd->item());
+  plotItem->view()->resetPlotFontSizes(plotItem);
+  plotItem->view()->configurePlotFontDefaults(plotItem); // copy plots already in window
+  plotItem->view()->appendToLayout(CurvePlacement::Auto, plotItem, 0);
+
+}
+
 #ifndef KST_NO_SVG
 void MainWindow::createSvg() {
   if (_createSvgAct->isChecked()) {
@@ -1153,10 +1164,17 @@ void MainWindow::createActions() {
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
   // ************************ Create Actions ************************** //
+  _insertPlotAct = new QAction(tr("&Plot"), this);
+  _insertPlotAct->setIcon(KstGetIcon("kst_newplot"));
+  _insertPlotAct->setShortcut(QString("F11"));
+  _insertPlotAct->setStatusTip(tr("Insert a plot in the current view (%1)").arg(_insertPlotAct->shortcut().toString()));
+  _insertPlotAct->setCheckable(false);
+  connect(_insertPlotAct, SIGNAL(triggered()), this, SLOT(insertPlot()));
+
   _createPlotAct = new QAction(tr("&Plot"), this);
   _createPlotAct->setIcon(KstGetIcon("kst_newplot"));
-  _createPlotAct->setShortcut(QString("F11"));
-  _createPlotAct->setStatusTip(tr("Create a plot for the current view (%1)").arg(_createPlotAct->shortcut().toString()));
+  //_createPlotAct->setShortcut(QString("F11"));
+  _createPlotAct->setStatusTip(tr("Create a plot for the current view"));
   _createPlotAct->setCheckable(true);
   connect(_createPlotAct, SIGNAL(triggered()), this, SLOT(createPlot()));
 
@@ -1473,7 +1491,8 @@ void MainWindow::createMenus() {
 
   _createMenu = menuBar()->addMenu(tr("&Create"));
   // Containers
-  _createMenu->addAction(_createPlotAct);
+  _createMenu->addAction(_insertPlotAct);
+  //_createMenu->addAction(_createPlotAct);
   _createMenu->addAction(_createSharedAxisBoxAct);
   _createMenu->addSeparator();
   // Primitives
@@ -1624,7 +1643,8 @@ void MainWindow::createToolBars() {
   _plotLayoutToolBar = addToolBar(tr("Plot Layout"));
   _plotLayoutToolBar->setObjectName("Plot Layout Toolbar");
   _plotLayoutToolBar->addAction(_createSharedAxisBoxAct);
-  _plotLayoutToolBar->addAction(_createPlotAct);
+  _plotLayoutToolBar->addAction(_insertPlotAct);
+  //_plotLayoutToolBar->addAction(_createPlotAct);
 
   _annotationToolBar = addToolBar(tr("Advanced Layout"));
   _annotationToolBar->setObjectName("Advanced Layout Toolbar");

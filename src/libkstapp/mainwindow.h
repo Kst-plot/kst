@@ -151,6 +151,7 @@ class MainWindow : public QMainWindow
     void createArrow();
     void createPicture();
     void createPlot();
+    void insertPlot();
 #ifndef KST_NO_SVG
     void createSvg();
 #endif
@@ -267,6 +268,7 @@ class MainWindow : public QMainWindow
     QAction *_createArrowAct;
     QAction *_createPictureAct;
     QAction *_createPlotAct;
+    QAction *_insertPlotAct;
 #ifndef KST_NO_SVG
     QAction *_createSvgAct;
 #endif
