@@ -28,6 +28,7 @@
 
 #include <QDebug>
 #include <cstdio>
+#include <time.h>
 
 const double subscript_scale = 0.60;
 const double subscript_drop = 0.16;
