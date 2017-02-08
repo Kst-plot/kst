@@ -121,7 +121,7 @@ the data wizard options and settings, refer to the <link linkend="datawizard">Da
 
 <para>
 Any plot displayed in &kst; can be manipulated.  For example, dragging a rectangle anywhere within a plot
-will zoom in to that section of the plot.  Holding <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while
+will zoom in to that section of the plot.  Holding &Ctrl; or &Shift; while
 dragging will zoom in on the x or y axis only, respectively, and tapping the arrow keys scrolls a plot.
 See
 <link linkend="workingwithplotsandwindows">Working with Plots and Window</link> for more details on

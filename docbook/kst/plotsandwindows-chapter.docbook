@@ -591,7 +591,7 @@ the plot dialog settings are applied.
 The list of existing plot markers for this plot are listed under <guilabel>Defined plot markers</guilabel>.
 To remove plot markers, highlight the desired markers in the list and click the <guibutton>Remove</guibutton> button.
 Multiple markers can be selected for removal by clicking and dragging within the list, or by holding down the
-<keycap>Shift</keycap> or <keycap>Ctrl</keycap> key and clicking on items in the list. To remove all plot markers
+&Shift; or &Ctrl; key and clicking on items in the list. To remove all plot markers
 for this plot, click the <guilabel>Remove All</guilabel> button.  Note that plot marker
 additions or removals made from the <guilabel>Markers</guilabel> tab are not applied unless
 the plot dialog settings are applied.
@@ -952,9 +952,9 @@ a certain time range, if the x axis happens to represent a time vector.
 </para>
 <tip>
 <para>
-You can quickly switch to X Mouse Zoom mode by holding down <keycap>Ctrl</keycap>.  The mouse
+You can quickly switch to X Mouse Zoom mode by holding down &Ctrl;.  The mouse
 cursor will change to indicate the new mode. Releasing
- <keycap>Ctrl</keycap> will return you to the previous mouse zoom mode.
+ &Ctrl; will return you to the previous mouse zoom mode.
 </para>
 </tip>
 
@@ -970,9 +970,9 @@ is concentrated around a horizontal line.
 </para>
 <tip>
 <para>
-You can quickly switch to Y Mouse Zoom mode by holding down <keycap>Shift</keycap>.  The mouse
+You can quickly switch to Y Mouse Zoom mode by holding down &Shift;.  The mouse
 cursor will change to indicate the new mode. Releasing
- <keycap>Shift</keycap> will return you to the previous mouse zoom mode.
+ &Shift; will return you to the previous mouse zoom mode.
 </para>
 </tip>
 </sect3>
@@ -1021,19 +1021,19 @@ The actual zoom level is not changed.</entry>
 </row>
 <row>
 <entry><guimenuitem>X-Zoom Maximum</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Ctrl</keycap><keycap>M</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo></entry>
 <entry>Sets the x axis scale such that the x values for all data points are between the
 minimum and maximum of the x axis.  The y axis scale is unaltered.</entry>
 </row>
 <row>
 <entry><guimenuitem>X-Zoom Out</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Right</keysym></keycombo></entry>
+<entry><keycombo action="simul">&Shift;<keysym>Right</keysym></keycombo></entry>
 <entry>For a non-logarithmic x axis, increases the length of the x axis by a factor of approximately 0.5, without changing the
 midpoint of the x axis.  The y axis scale is unaltered.</entry>
 </row>
 <row>
 <entry><guimenuitem>X-Zoom In</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Left</keysym></keycombo></entry>
+<entry><keycombo action="simul">&Shift;<keysym>Left</keysym></keycombo></entry>
 <entry>For a non-logarithmic x axis, decreases the length of the x axis by a factor of approximately 0.5, without changing the
 midpoint of the x axis. The y axis scale is unaltered.</entry>
 </row>
@@ -1044,19 +1044,19 @@ midpoint of the x axis. The y axis scale is unaltered.</entry>
 </row>
 <row>
 <entry><guimenuitem>Y-Zoom Maximum</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Shift</keycap><keycap>M</keycap></keycombo></entry>
+<entry><keycombo action="simul">&Shift;<keycap>M</keycap></keycombo></entry>
 <entry>Sets the y axis scale such that the y values for all data points are between the
 minimum and maximum of the y axis.  The x axis scale is unaltered.</entry>
 </row>
 <row>
 <entry><guimenuitem>Y-Zoom Out</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Up</keysym></keycombo></entry>
+<entry><keycombo action="simul">&Shift;<keysym>Up</keysym></keycombo></entry>
 <entry>For a non-logarithmic y axis, increases the length of the y axis by a factor of approximately 0.5, without changing the
 midpoint of the y axis.  The x axis scale is unaltered.</entry>
 </row>
 <row>
 <entry><guimenuitem>Y-Zoom In</guimenuitem></entry>
-<entry><keycombo action="simul"><keycap>Shift</keycap><keysym>Down</keysym></keycombo></entry>
+<entry><keycombo action="simul">&Shift;<keysym>Down</keysym></keycombo></entry>
 <entry>For a non-logarithmic y axis, decreases the length of the y axis by a factor of approximately 0.5, without changing the
 midpoint of the y axis.  The x axis scale is unaltered.</entry>
 </row>
@@ -1111,8 +1111,8 @@ You can also scroll left or right in a plot by using the mouse wheel (if availab
 <para>
 To quickly go forwards or backwards along the x axis, select <guimenuitem>Back 1 Screen</guimenuitem>
 or <guimenuitem>Advance 1 Screen</guimenuitem> from the <guimenu>Range</guimenu> menu.  The keyboard
-shortcuts, <keycombo action="simul"><keycap>Ctrl</keycap><keysym>Left</keysym></keycombo> and
-<keycombo action="simul"><keycap>Ctrl</keycap><keysym>Right</keysym></keycombo> respectively, can be
+shortcuts, <keycombo action="simul">&Ctrl;<keysym>Left</keysym></keycombo> and
+<keycombo action="simul">&Ctrl;<keysym>Right</keysym></keycombo> respectively, can be
 used as well.
 </para>
 </tip>
@@ -1309,7 +1309,7 @@ until the plot is the desired shape and size.
 <title>Selecting Multiple Plots and Grouping Plots</title>
 <para>
 Two or more plots can be selected together in layout mode.  To select the plots,
-hold down the <keycap>Shift</keycap> key and either sequentially click on each plot you wish to
+hold down the &Shift; key and either sequentially click on each plot you wish to
 select, or drag to draw a dotted rectangle around a group of plots.  The selected plots
 will be indicated by a gray border around each plot:
 </para>

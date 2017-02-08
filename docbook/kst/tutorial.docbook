@@ -239,7 +239,7 @@ special vector in &kst; that contains integers from 0 to N-1, where N
 is the number of frames read in the corresponding Y axis vector.
 Close &kst; by selecting <guimenuitem>Quit</guimenuitem> from the
 <guimenu>File</guimenu> menu, or by typing <keycombo
-action="simul"><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo>.
+action="simul">&Ctrl;<keycap>Q</keycap></keycombo>.
 </para>
 
 <para>
@@ -620,11 +620,11 @@ icon in the tool bar.  This is the default mode.
 <para>
 To zoom into a region of interest, left-click drag a box in the window with the mouse.
 When you release the mouse, the window will zoom in X and Y into the region you selected.
-Holding <keycap>Shift</keycap> when you do this will cause the plot to zoom only in Y.  
-Holding <keycap>Ctrl</keycap> when you do this will cause the plot to zoom only in X.
+Holding &Shift; when you do this will cause the plot to zoom only in Y.  
+Holding &Ctrl; when you do this will cause the plot to zoom only in X.
 </para>
 <para>
-Arrow keys scroll the plot. Arrow keys with <keycap>Shift</keycap> held down will change the scale.
+Arrow keys scroll the plot. Arrow keys with &Shift; held down will change the scale.
 The <keycap>M</keycap> key auto-zooms the plots to view all of the data.  Play around with these
 options to become familier with the various options.
 </para>
@@ -658,7 +658,7 @@ that the lower plot will become blank.  This is because the lower plot
 axes have changed to match the upper plot axes, and there is no data
 in that particular region of the lower plot. Type <keycap>M</keycap>
 while the mouse cursor is over either plot to return to maximum zoom
-on both plots.  Now hold down <keycap>Ctrl</keycap> (this is
+on both plots.  Now hold down &Ctrl; (this is
 equivalent to selecting <guimenu>X Mouse Zoom Mode</guimenu> from the
 <guimenu>Mode</guimenu> menu or clicking the
 <inlinemediaobject><imageobject><imagedata
@@ -667,7 +667,7 @@ format="PNG"/></imageobject></inlinemediaobject> toolbar button). If you
 then move the mouse, you will see that it is now dragging a vertical line
 the heght of the plots in both of the plots that are tied to gether.  
 While keeping
-<keycap>Ctrl</keycap> held down, drag a rectangle in the middle plot.
+&Ctrl; held down, drag a rectangle in the middle plot.
 While dragging, the region you are selecting will be displayed in both 
 tied plots.  Both plots will rescale to the region you have selected.
 </para>
