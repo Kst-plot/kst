@@ -415,6 +415,8 @@ bool NetcdfSource::initFile() {
     }
     delete att;
   }
+  setUpdateType(Timer);
+
   NETCDF_DBG qDebug() << "netcdf file initialized";
   // TODO update(); // necessary?  slows down initial loading
   return true;
