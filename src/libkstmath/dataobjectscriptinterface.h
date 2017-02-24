@@ -39,7 +39,6 @@ class KSTMATH_EXPORT DataObjectSI : public ScriptInterface
 
     QString outputVector(QString& command);
     QString outputScalar(QString& command);
-
   protected:
     DataObjectPtr _dataObject;
 
@@ -98,6 +97,8 @@ public:
 
     QString equation(QString &);
     QString setEquation(QString &eq);
+    QString interpolateVectors(QString& command);
+
 };
 
 

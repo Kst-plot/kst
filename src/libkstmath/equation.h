@@ -62,6 +62,7 @@ class KSTMATH_EXPORT Equation : public DataObject {
     VectorPtr vY() const { return _yOutVector; }
 
     bool doInterp() const { return _doInterp; }
+    void setDoInterp(bool interp) {_doInterp = interp;}
 
     bool isValid();
 

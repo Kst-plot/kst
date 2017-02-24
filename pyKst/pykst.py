@@ -409,12 +409,12 @@ class Client:
     """
     return Image(self, "", "", name, new=False)
 
-  def new_equation(self, x_vector, equation, name=""):
+  def new_equation(self, x_vector, equation, interpolate=True, name=""):
     """ Create a new Equation in kst.
     
     See :class:`Equation`
     """
-    return Equation(self, x_vector, equation, name)
+    return Equation(self, x_vector, equation, interpolate, name)
 
 
   def equation(self, name):
@@ -1814,7 +1814,7 @@ class Equation(Object) :
     
     Vectors inside kst are refered to as [vectorname] or [scalarname].
   """
-  def __init__(self, client, xvector, equation, name="", new=True) :
+  def __init__(self, client, xvector, equation, interpolate=True, name="", new=True) :
     Object.__init__(self,client)
     
     if (new == True):      
@@ -1822,6 +1822,7 @@ class Equation(Object) :
 
       self.client.send("setEquation(" + equation + ")")
       self.client.send("setInputVector(X,"+xvector.handle+")")
+      self.client.send("interpolateVectors("+b2str(interpolate)+")")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
       self.set_name(name)
@@ -1840,8 +1841,17 @@ class Equation(Object) :
     vec.handle = self.client.send_si(self.handle, "outputVector(XO)")
     return vec
 
-  def set_x(self, xvector): 
+  def set_x(self, xvector):
+    """ set the x vector of an existing equation.  xvector is a kst vector.  """
     self.client.send_si(self.handle, "setInputVector(X,"+xvector.handle+")")
+
+  def set_equation(self, equation):
+    """ set the equation of an existing equation  """
+    self.client.send_si(self.handle, "setEquation(" + equation + ")")
+
+  def set_inpterpolate(self, interpolate):
+    """ set whether all vectors are interpolated to the highest resolution vector. """
+    self.client.send_si(self.handle, "interpolateVectors(" + b2str(interpolate) + ")")
 
 # Histogram ############################################################
 class Histogram(Object) : 

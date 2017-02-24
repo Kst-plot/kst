@@ -78,6 +78,16 @@ QString DataObjectSI::outputScalar(QString& command) {
 
 }
 
+
+QString EquationSI::interpolateVectors(QString& command) {
+  QString key = getArg(command);
+
+  _equation->setDoInterp(key.toLower() == "true");
+
+  return("Done");
+}
+
+
 /***************************/
 /* PluginSI                */
 /***************************/
@@ -185,6 +195,7 @@ EquationSI::EquationSI(EquationPtr equation) {
   _fnMap.insert("setInputScalar",&EquationSI::setInputScalar);
   _fnMap.insert("outputVector",&EquationSI::outputVector);
   _fnMap.insert("outputScalar",&EquationSI::outputScalar);
+  _fnMap.insert("interpolateVectors",&EquationSI::interpolateVectors);
 
 }
 
