@@ -308,6 +308,8 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
     return;
   }
 
+  _doInterp = do_interp;
+
   VectorPtr v = _inputVectors[XINVECTOR];
   if (v == in_xv) {
     return;
@@ -318,7 +320,6 @@ void Equation::setExistingXVector(VectorPtr in_xv, bool do_interp) {
   _inputVectors.insert(XINVECTOR, in_xv);
 
   _ns = 2; // reset the updating
-  _doInterp = do_interp;
 }
 
 //FIXME: equations should not use ScalarsUsed and VectorsUsed:
