@@ -1,16 +1,23 @@
 <chapter id="workingwithdata">
 <title>Working With Data</title>
 
-<sect1 id="fileformats">
+<sect1 id="datasources">
+<title>Data Sources</title>
+
+<sect2 id="fileformats">
 <title>Supported File Formats</title>
 <para>
-Currently, Kst supports ASCII text files, BOOMERANG frame files, and BLAST dirfile
-files as data sources, as well as PIOLib and FITS files with the appropriate libraries.
-This section describes basic data source concepts common to all file types, and
-specifically details the ASCII and BLAST dirfile file types.
+Currently, Kst supports ASCII text files,
+<ulink url="http://getdata.sourceforge.net/">dirfiles</ulink>, and
+<ulink url="http://www.unidata.ucar.edu/software/netcdf/">NetCDF</ulink>,
+for vectors and scalars, and FITS images, BIT image streams,
+16 bit TIFF images, and any image format supported by 
+<ulink url="http://doc.qt.io/qt-5/qimage.html">QImage</ulink>,
+ (jpg, png, bmp, etc) for images.
 </para>
+</sect2>
 
-<sect2 id="supportingadditionalfileformatsdatasourceconcepts">
+<sect2 id="DataSourceConcepts">
 <title>Data Source Concepts</title>
 <para>
 A data source in &kst; is simply a supported data file.
@@ -19,36 +26,27 @@ different data sources.
 Some terminology is also introduced in this section.
 </para>
 
-<sect3 id="supportingadditionalfileformatsdatasourceconceptssamples">
-<title>Samples</title>
-<para>
-A sample is considered to be the fundamental unit with respect to data files.
-Each sample consists of one data value in the file.  Note, however, that one sample
-may not correspond to one value in a data vector in &kst;, due to the concept of
-<link linkend="supportingadditionalfileformatsdatasourceconceptsframes">frames</link>.
-</para>
-</sect3>
-
-<sect3 id="supportingadditionalfileformatsdatasourceconceptsfields">
+<sect3 id="DefineFields">
 <title>Fields</title>
 <para>
-A field usually corresponds to one vector in &kst;.  For example, a column in an
-ASCII data file is considered to be one field.  Each field can have an explicit
-or implicit name.  Datasource readers provide functions for reading and obtaining
-fields and field names.
+  Data in &kst; are accessed by field names.  A field name can refer to a single scalar or string, to a vector of values from a single sensor,
+  or to a matrix.  For example, a column in an ASCII data file can be read in 
+  as a vector.  An image in a png file can be read in as a matrix.  
+  Datasource readers provide functions for reading and obtaining fields and 
+  field names.
 </para>
 </sect3>
 
-<sect3 id="supportingadditionalfileformatsdatasourceconceptsframes">
+<sect3 id="Frames">
 <title>Frames</title>
 <para>
-A frame corresponds to a set number of samples, and each field in a data file
-can have its own ratio of samples per frame.  The size of a data file
-is measured by the number of frames it contains.  For ASCII data files, the number of samples
-per frame is 1, but for some data files, there may be multiple samples per frame.  In the below
-illustration, the first 3 frames of an imaginary data file are shown.  In this particular data
-file, Field 1 has a ratio of 5 samples per frame, Field 2 has a ratio of 2 samples per frame,
-Field 3 has a ratio of 3 samples per frame, and Field 4 has a ratio of 1 sample per frame.
+When reading in a vector from a data source field, data are addressed by their Frame number, not by their sample number.  Each field in a data source has its own fixed number of samples per frame.
+</para>
+<para>
+For some data sources (eg, ASCII files) every frame contains exactly one sample (ie, for ASCII files, a frame is a valid row of data, and every row has exactly one sample for each field).  
+</para>
+<para>
+However, for other data sources (eg, dirfiles), there may be multiple samples per frame.  In the illustration below, the first 3 frames of an imaginary dirfile are shown.  In this particular data file, Field1 has a 1 sample per frame, Field2 has 4 samples per frame, and Field3 has 2 samples per frame.  Every field must have a constant number of samples per frame throughout the file.
 </para>
 <para>
 <inlinemediaobject>
@@ -57,19 +55,16 @@ Field 3 has a ratio of 3 samples per frame, and Field 4 has a ratio of 1 sample 
 </imageobject>
 </inlinemediaobject>
 </para>
+
 <para>
-Depending on the specific data vector settings in &kst;, data from files may be read as
-frames instead of samples, with either the first sample in a frame or the mean of all the samples in a frame
-representing the value of the frame.
+  In the figure, imagine that time proceeds from top to bottom.  &kst; assumes that the first sample in a frame is simultaneous for every field in the data source, and that the rest of the samples are sampled evenly throughout the frame.  On the other hand, when plotting one vector agains another, &kst; assumes that the first and last samples of each vector are simultaneous, and interpolates the shorter vector up to the resolution of the longer vector.  Since only the first sample in a frame can be assumed to be simultaneous across fields, when &kst; reads data into a vector, it only reads up to the first sample of the last frame requested, so that plotting one vector against another will make sense.  The rest of the last frame will not be read.  So if the first three frames of Field1 and Field2 are read from the data source in the figure, 3 samples will be read from Field1, and 9 samples will be read from Field2 (ending at first sample of Frame 3) - not 12 as one might expect.
 </para>
 </sect3>
 
 <sect3 id="supportingadditionalfileformatsdatasourceconceptsindex">
 <title>INDEX Field</title>
 <para>
-Some data files may not have a field that represents the x axis of a plot. However, &kst;
-implicitly creates an INDEX field for all data sources.  The INDEX field simply contains
-integers from 0 to N-1, where N is the number of frames in the data file.
+As well as the explicit data fields in a data file, &kst; implicitly creates an INDEX field for all data sources.  The INDEX field is 1 sample per frame, and simply contains integers from 0 to N-1, where N is the number of frames in the data file.  It is common to plot vectors against INDEX.  This is convenient since  the INDEX of a sample or event is just the frame number, allowing easy identification and retrieval of events from a data file.
 </para>
 </sect3>
 
@@ -78,72 +73,54 @@ integers from 0 to N-1, where N is the number of frames in the data file.
 <sect2 id="creatingascii">
 <title>ASCII Input Files</title>
 <para>
-The simplest input file format is the ASCII text file.  These files are usually human-readable and
-can be easily created by hand or simple scripts if desired.  The following is an example of an ASCII input file.
+&kst; is capable of reading vectors from a wide range of ASCII formats.  As long as the data are in columns, and as long as each non-comment row has the same number of collumns, &kst; can probably read it.
+</para>
+<para>
+  Consider reading this simple ASCII csv file:  each comma separated column represents a field. 
 </para>
 
 <informalexample>
 <screen>
-112.5 3776 428
-187.5 5380 429
-262.5 5245 345
-337.5 2942 184
-412.5 1861 119
-487.5 2424 138
-567.5 2520 162
-637.5 1868 144
-712.5 1736 211
-787.5 1736 211
-862.5 2172 292
-937.5 1174 377
-1000.5 499 623
+Length,Width
+m,m
+1.1,6.2
+2.4,9.3
+4.3,4.7
+5.2,8.8
 </screen>
 </informalexample>
 
+
 <para>
-Each column of this file represents a field, while each row represents one frame.
-Columns are separated by tabs or spaces, and rows are separated by carriage returns.
-Note that due to their structure, ASCII files cannot have multiple samples per frame.
-Also, since the columns do not have labels, field names are assigned by &kst; based on the
-order of the columns (the leftmost column has a field name of <literal>1</literal>).
+  When you enter an ascii source into a data source selection widget (such as on the first page of the data wizard) the file will be identified as an ASCII file, and the <guibutton>Configure</guibutton> button will be enabled, as shown below.
+</para>
+
+
+<para>
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-datasource-selector.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
 </para>
 
 <para>
-Commented lines in ASCII files start with one of the characters in the set
-<literal>{#, !, /, ;, c}</literal>.  All commented lines and empty lines
-are ignored by &kst;.  Valid numbers include those with decimals, negative signs,
-or <literal>e</literal>, to indicate scientific notation. Invalid numbers (such as
-English words) are replaced with 0 by &kst;.
-</para>
-
-</sect2>
-
-
-<sect2 id="blastdirfiles">
-<title>BLAST Dirfiles</title>
-<para>
-BLAST dirfile data sources are actually directories of files.  Each directory represents
-one data source, and each file in the directory, with the exception of a file called
-<filename>format</filename>, represents a single field. The file named <filename>format</filename>
-lists each field and its properties.  Below is example of such a file:
-</para>
-<informalexample>
-<screen>scount RAW f 1
-fcount RAW f 20
-sine RAW f 20
-ssine RAW f 1
-cos RAW f 20</screen>
-</informalexample>
-<para>
-In this example, <literal>scount</literal>, <literal>fcount</literal>, <literal>sine</literal>,
-<literal>ssine</literal>, and <literal>cos</literal> are field names.  <literal>RAW</literal> indicates
-the file is written in raw format, and the last number in each row is the number of samples per frame.
+  Clicking on <guibutton>Configure</guibutton> will bring up the ASCII data source configuration dialog.
 </para>
 
 <para>
-When selecting a BLAST dirfile for use in &kst;, the directory containing the field files should be
-selected. &kst; will when automatically look for a <filename>format</filename> file, if it exists,
-to determine the fields and their properties.
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-ascii-config.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+</para>
+
+<para>
+  Note that the first few lines of the file are shown.  The dialog in the screen shot has been filled out to read this file: looking at the first lines of the file, we see that data starts at line 3, line 1 holds the field names, and line 2 holds the units (which will be used by &kst; in plot labels).  Additionally, as this is a csv file, a <literal>,</literal> has been selected as the Custom delimiter.  Selecting <guilabel>OK</guilabel> will permanently assign this configuration to this file, until it is changed again in this dialog, or until <guimenuitem>Clear datasource settings</guimenuitem> in the <guimenu>Settings</guimenu> menu is selected.
+</para>
+
+<para>
 </para>
 
 </sect2>

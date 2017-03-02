@@ -69,15 +69,14 @@ Monitor live streaming data using &kst;'s real-time plotting capabilities.
 </itemizedlist>
 <para>
 This tutorial covers the basics of installing, running, and working
-with &kst;. It is based on the &kst; Quick Tour by Barth
-Netterfield. You are invited to further investigate any features at
+with &kst;.  You are invited to further investigate any features at
 any time.  All features are documented in the rest of this
 Handbook.</para>
 
 </sect1>
 
 <sect1 id="commandline">
-<title>Starting &kst; from the Command-line</title>
+<title>Creating plots from the Command-line</title>
 <para>
 A common use of &kst; is to quickly produce plots of data from the
 command-line.  This method of producing plots requires almost no
@@ -306,7 +305,7 @@ To plot column 1 in one plot, and columns 2 and three in a second plot, displaye
 </sect1>
 
 <sect1 id="datawizard-tour">
-<title>A Quick Tour of the Data Wizard</title>
+<title>Creating plots with the Data Wizard</title>
 <para>
 &kst; can also be completely controlled through the graphical user interface,
 without ever using the command line.  In this section, we will look at
@@ -426,7 +425,7 @@ range of data to read from the selected vectors in the input file. The
 following discussion assumes knowledge of <quote>frames</quote>.  For ASCII
 files such as <filename>gyrodata.dat</filename>, a frame is simply a row of
 data, though for other formats this can be more complicated.  For a detailed description of this
-concept, see <xref linkend="supportingadditionalfileformatsdatasourceconceptsframes"/>.
+concept, see <xref linkend="Frames"/>.
 </para>
 
 <variablelist>
@@ -763,16 +762,86 @@ Then, from the <guimenu>Create</guimenu> menu select
 </screenshot>
 
 <para>
-  From the <guimenu>Create</guimenu> you can similarly create histograms, equations
-  of fields you have loaded, 
-  Save your session - we will be using it again in the next section of the tutorial.
+  From the <guimenu>Create</guimenu> you can similarly create histograms, spectograms,
+  and equations of fields you have loaded.
 </para>
 </sect1>
 
 <sect1 id="filters">
 <title>Filters</title>
 <para>
+With &kst;, we can apply a variety of fits and filters to vectors in kst.
+The results of these will be updated in real time as new data comes in.
+To demonstrate this, load in the first 1000 samples of second column of 
+<filename>gyrodata.dat</filename>
+using either the Data Wizard, as demonstrated earlier, or from the command line:
+
+<screen><userinput><command>kst2 gyrodata.dat -f 0 -n 1000 -y 2</command></userinput></screen>
+
 </para>
+<para>
+  Once it is loaded, right click in the plot and select <guimenuitem>Column 1 vs INDEX (C1)</guimenuitem>
+  from the <guimenu>Filter</guimenu> menu, as shown:
+</para>
+
+<screenshot>
+<screeninfo>Spectrum</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-filter-menu.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Spectrum</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+
+<para>
+This will bring up the New Filter Dialog:  
+</para>
+
+<screenshot>
+<screeninfo>Spectrum</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-filter-dialog.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Spectrum</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+  Fill out the dialog as shown.  In particular, 
+  select <guimenuitem>Low Pass Filter</guimenuitem> as the Plugin, set
+  <guilabel>Cutoff Frequency/Sample Rate</guilabel> to 0.05, and select 
+  <guilabel>Place in existing plot</guilabel>.  Here we have also set the
+  line to be red, and the <guilabel>Weight</guilabel> to 2, so the line will
+  be more visible.  When you are satisfied, select <guibutton>OK</guibutton>.
+</para>
+<para>
+  This will add a the the low-pass filtered data as a new curve in the plot:
+</para>
+
+<screenshot>
+<screeninfo>Filtered Curve</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-filtered-curve.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Filtered Curve</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
+<para>
+  In the same way you can fit a variety of functions to curves using the 
+  <guimenu>Fit</guimenu> submenu after right-clicking in a plot.
+</para>
+
 </sect1>
 
 <sect1 id="conclusion">
@@ -780,14 +849,9 @@ Then, from the <guimenu>Create</guimenu> menu select
 
 <para>
 This concludes the &kst;  tutorial.  Hopefully you have gained enough
-knowledge to become comfortable with &kst;. Keep in mind that this
+knowledge to begin to use &kst;. Keep in mind that this
 tutorial does not cover all the functionality of &kst;&mdash;there is
-still much to explore and experiment with. The rest of this Handbook
-is an in-depth guide to concepts ranging from window layout
-fundamentals to creation of custom plugins and data source readers.
-You are encouraged to use &kst; in interesting and innovative
-ways&mdash;you will most likely find that it not only meets, but
-exceeds your needs and requirements.
+still much to explore and experiment with. 
 </para>
 </sect1>
 

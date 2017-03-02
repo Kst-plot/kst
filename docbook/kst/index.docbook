@@ -31,6 +31,12 @@
 
 <authorgroup>
 <author>
+<firstname>Barth</firstname>
+<othername></othername>
+<surname>Netterfield</surname>
+<affiliation><address><email>netterfield@astro.utoronto.ca</email></address></affiliation>
+</author>
+<author>
 <firstname>Rick</firstname>
 <othername></othername>
 <surname>Chern</surname>
@@ -41,12 +47,6 @@
 <surname>Rodrigues</surname>
 <affiliation><address><email>phil@kde.org</email></address>
 </affiliation>
-</author>
-<author>
-<firstname>Barth</firstname>
-<othername></othername>
-<surname>Netterfield</surname>
-<affiliation><address><email>netterfield@astro.utoronto.ca</email></address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
@@ -111,9 +111,10 @@ the order. -->
 
 &tutorial;
 
+&data-chapter;
+
 &commontasks-chapter;
 
-&data-chapter;
 
 &plotsandwindows-chapter;
 
