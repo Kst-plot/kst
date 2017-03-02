@@ -53,11 +53,13 @@ protected:
     QByteArray noSuchFn(QByteArray& , QLocalSocket*,ObjectStore*) {return ""; }
 
     // ObjectStore
-    QByteArray getVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newDataVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newGeneratedVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
-
     QByteArray getEditableVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+
+    QByteArray getVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray getDataVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
+    QByteArray getGeneratedVectorList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
     QByteArray newEditableVector(QByteArray& command, QLocalSocket* s,ObjectStore*_store);
 
     QByteArray getMatrixList(QByteArray& command, QLocalSocket* s,ObjectStore*_store);

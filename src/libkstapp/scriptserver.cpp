@@ -100,12 +100,14 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     }
     connect(_server,SIGNAL(newConnection()),this,SLOT(procConnection()));
 
-    _fnMap.insert("getVectorList()",&ScriptServer::getVectorList);
     _fnMap.insert("newDataVector()",&ScriptServer::newDataVector);
     _fnMap.insert("newGeneratedVector()",&ScriptServer::newGeneratedVector);
-
-    _fnMap.insert("getEditableVectorList()",&ScriptServer::getEditableVectorList);
     _fnMap.insert("newEditableVector()",&ScriptServer::newEditableVector);
+
+    _fnMap.insert("getVectorList()",&ScriptServer::getVectorList);
+    _fnMap.insert("getDataVectorList()",&ScriptServer::getDataVectorList);
+    _fnMap.insert("getGeneratedVectorList()",&ScriptServer::getGeneratedVectorList);
+    _fnMap.insert("getEditableVectorList()",&ScriptServer::getEditableVectorList);
 
     _fnMap.insert("getMatrixList()",&ScriptServer::getMatrixList);
     _fnMap.insert("newDataMatrix()",&ScriptServer::newDataMatrix);
@@ -379,16 +381,15 @@ QByteArray ScriptServer::getVectorList(QByteArray&, QLocalSocket* s,ObjectStore*
     return outputObjectList<Vector>(s,_store);
 }
 
-/*
-QByteArray ScriptServer::newVector(QByteArray&, QLocalSocket* s,ObjectStore*,const int&ifMode,
+QByteArray ScriptServer::getDataVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
 
-    if(_interface) { return handleResponse("To access this function, first call endEdit()",s); }
-    else {
-        QByteArray vn; _interface = DialogLauncherSI::self->showVectorDialog(vn);
-        return handleResponse("Ok",s);
-    }
+    return outputObjectList<DataVector>(s,_store);
 }
-*/
+
+QByteArray ScriptServer::getGeneratedVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {
+
+    return outputObjectList<GeneratedVector>(s,_store);
+}
 
 
 QByteArray ScriptServer::getEditableVectorList(QByteArray&, QLocalSocket* s,ObjectStore*_store) {

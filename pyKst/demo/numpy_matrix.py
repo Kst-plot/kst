@@ -27,3 +27,9 @@ I = client.new_image(M)
 P = client.new_plot()
 P.add(I)
 
+# print out name and size of all matrixes
+matrixes = client.get_matrix_list()
+for matrix in matrixes :
+  print matrix.name(), matrix.width(), matrix.height()
+
+

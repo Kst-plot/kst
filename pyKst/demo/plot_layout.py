@@ -23,6 +23,13 @@ client.cleanup_layout(3)
 
 client.set_tab_text("First")
 
+plots = client.get_plot_list()
+
+# do something to every plot
+for plot in plots:
+  plot.set_top_label(plot.name())
+
+
 #p1.set_global_font(family = "Courier", font_size = 6)
 
 # manual grid

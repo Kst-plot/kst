@@ -222,10 +222,9 @@ class Client:
   def get_scalar_list(self):
     """ returns the scalar names from kst """
     
-    x = str(self.send("getScalarList()"))
-  
-    ret=x.split('|')
-    return ret
+    x = self.send("getScalarList()")
+    name_list=x.data().split('|')
+    return [Scalar(self, name=n) for n in name_list]
 
   def new_generated_string(self, string, name=""):
     """ Create a new generated string in kst.
@@ -343,12 +342,32 @@ class Client:
 
 
   def get_vector_list(self):
-    """ returns the vector names from kst """
-    
-    x = str(self.send("getVectorList()"))
-  
-    ret=x.split('|')
-    return ret
+    """ returns vectors from kst. """
+
+    x = self.send("getVectorList()")
+    name_list=x.data().split('|')
+    return [VectorBase(self, name=n) for n in name_list]
+
+  def get_data_vector_list(self):
+    """ returns data vectors from kst. """
+
+    x = self.send("getDataVectorList()")
+    name_list=x.data().split('|')
+    return [DataVector(self, "", "", name=n, new=False) for n in name_list]
+
+  def get_generated_vector_list(self):
+    """ returns generated vectors from kst. """
+
+    x = self.send("getGeneratedVectorList()")
+    name_list=x.data().split('|')
+    return [GeneratedVector(self, name=n, new=False) for n in name_list]
+
+  def get_editable_vector_list(self):
+    """ returns editable vectors from kst. """
+
+    x = self.send("getEditableVectorList()")
+    name_list=x.data().split('|')
+    return [EditableVector(self, name=n, new=False) for n in name_list]
 
   
   def new_data_matrix(self, filename, field, start_x=0, start_y=0, num_x=-1, num_y=-1, 
@@ -380,7 +399,15 @@ class Client:
     See :class:`EditableMatrix`
     """
     return EditableMatrix(self, None, name, new=False)
-  
+
+  def get_matrix_list(self):
+    """ returns matrixes from kst. """
+
+    x = self.send("getMatrixList()")
+    name_list=x.data().split('|')
+    return [Matrix(self, name=n) for n in name_list]
+
+
   def new_curve(self, x_vector, y_vector, name=""):
     """ Create a New Curve in kst.
     
@@ -552,8 +579,18 @@ class Client:
     See :class:`Label`
     """
     return Label(self, "", name=name, new=False)
-  
-  def new_box(self, pos=(0.1,0.1), size=(0.1,0.1), rot=0, 
+    
+  def get_label_list(self):
+    """ Get a list of all labels in kst.
+
+    See :class:`Label`
+    """
+    x=self.send("getLabelList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Label(self, name=n, new=False) for n in name_list]
+
+
+  def new_box(self, pos=(0.1,0.1), size=(0.1,0.1), rot=0,
           fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
           stroke_brush_color="black", stroke_brush_style=1, 
           strokeJoinStyle=1, stroke_cap_style=1, fix_aspect=False, name="") :
@@ -572,6 +609,16 @@ class Client:
     """
     return Box(self, name=name, new=False)
   
+  def get_box_list(self):
+    """ Get a list of all boxes in kst.
+
+    See :class:`Box`
+    """
+    x=self.send("getBoxList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Box(self, name=n, new=False) for n in name_list]
+
+
   def new_legend(self, plot, name = "") :
     """ Create a new Legend in a plot in kst.
 
@@ -585,6 +632,16 @@ class Client:
     See :class:`Legend`
     """
     return Legend(self, name=name, new=False)
+
+  def get_legend_list(self):
+    """ Get a list of all legends in kst.
+
+    See :class:`Legend`
+    """
+    x=self.send("getLegendList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Legend(self, name=n, new=False) for n in name_list]
+
 
   def new_circle(self, pos=(0.1, 0.1), diameter=0.1,
              fill_color="white",fill_style=1,stroke_style=1,
@@ -603,6 +660,15 @@ class Client:
     """
     return Circle(self, name=name, new=False)
   
+  def get_circle_list(self):
+    """ Get a list of all ciircles in kst.
+
+    See :class:`Circle`
+    """
+    x=self.send("getCircleList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Circle(self, name=n, new=False) for n in name_list]
+
   def new_ellipse(self,pos=(0.1,0.1), size=(0.1,0.1),
                rot=0, fill_color="white", fill_style=1, stroke_style=1,
                stroke_width=1, stroke_brush_color="black", stroke_brush_style=1,
@@ -622,6 +688,15 @@ class Client:
     """
     return Ellipse(self, name=name, new=False)
   
+  def get_ellipse_list(self):
+    """ Get a list of all ellipse in kst.
+
+    See :class:`Ellipse`
+    """
+    x=self.send("getEllipseList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Ellipse(self, name=n, new=False) for n in name_list]
+
   def new_line(self,start=(0,0),end = (1,1),
            stroke_style=1,stroke_width=1,stroke_brush_color="black",
            stroke_brush_style=1,stroke_cap_style=1, name="") :
@@ -638,6 +713,16 @@ class Client:
     See :class:`Line`
     """
     return Line(self, name=name, new=False)
+
+  def get_line_list(self):
+    """ Get a list of all lines in kst.
+
+    See :class:`Line`
+    """
+    x=self.send("getLineList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Line(self, name=n, new=False) for n in name_list]
+
 
   def new_arrow(self,start=(0,0),end = (1,1),
             arror_at_start = False, arrow_at_end = True, arrow_size = 12.0, 
@@ -658,6 +743,15 @@ class Client:
     """
     return Arrow(self, name=name, new=False)
     
+  def get_arrow_list(self):
+    """ Get a list of all arrows in kst.
+
+    See :class:`Arrow`
+    """
+    x=self.send("getArrowList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Arrow(self, name=n, new=False) for n in name_list]
+
   def new_picture(self,filename,pos=(0.1,0.1), width=0.1,rot=0, name="") :
     """ Create a New Picture in kst.
     
@@ -672,6 +766,15 @@ class Client:
     """
     return Picture(self, "", name = name, new=False)
   
+  def get_picture_list(self):
+    """ Get a list of all pictures in kst.
+
+    See :class:`Picture`
+    """
+    x=self.send("getPictureList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Picture(self, name=n, new=False) for n in name_list]
+
   def new_SVG(self, filename, pos=(0.1,0.1), width=0.1, rot=0, name="") :
     """ Create a New SVG in kst.
     
@@ -685,6 +788,15 @@ class Client:
     See :class:`SVG`
     """
     return SVG(self, "", name = name, new=False)
+
+  def get_SVG_list(self):
+    """ Get a list of all SVGs in kst.
+
+    See :class:`SVG`
+    """
+    x=self.send("getSVGList()")
+    name_list = x.data()[1:-1].split("][")
+    return [SVG(self, name=n, new=False) for n in name_list]
 
   def new_plot(self,pos=(0.1,0.1),size=(0,0),rot=0,font_size = 0, columns=0,
            fill_color="white", fill_style=1, stroke_style=1, stroke_width=1,
@@ -704,6 +816,15 @@ class Client:
     See :class:`Plot`
     """
     return Plot(self, name = name, new=False)
+
+  def get_plot_list(self):
+    """ Get a list of all plots in kst.
+
+    See :class:`Plot`
+    """
+    x=self.send("getPlotList()")
+    name_list = x.data()[1:-1].split("][")
+    return [Plot(self, name=n, new=False) for n in name_list]
 
   def set_datasource_option(self, option, value, filename, data_source="Ascii File"):
     """ Sets the value of a data source configuration option.
@@ -885,8 +1006,10 @@ class DataSourceString(String) :
 
 class Scalar(Object) :
   """ Convenience class. You should not use it directly."""
-  def __init__(self,client) :
+  def __init__(self,client, name="") :
     Object.__init__(self,client)
+
+    self.handle = name
 
   def value(self) :
     """ Returns the scalar. """
@@ -1029,8 +1152,9 @@ class VectorScalar(Scalar) :
 
 class VectorBase(Object):
   """ Convenience class. You should not use it directly."""
-  def __init__(self,client) :
+  def __init__(self,client,name="") :
     Object.__init__(self,client)
+    self.handle = name
 
   def value(self,index):
     """  Returns element i of this vector. """
@@ -1177,7 +1301,7 @@ class GeneratedVector(VectorBase):
     v = client.new_generated_vector(0, 1, 6) 
     
   """
-  def __init__(self, client, x0, x1, n, name="", new=True) :
+  def __init__(self, client, x0=0, x1=1, n=100, name="", new=True) :
     VectorBase.__init__(self,client)
 
     if (new == True):
@@ -1254,8 +1378,11 @@ class EditableVector(VectorBase):
 
 class Matrix(Object):
   """ Convenience class. You should not use it directly."""
-  def __init__(self,client) :
+  def __init__(self,client, name="") :
     Object.__init__(self,client)
+
+    self.handle = name
+
 
   def value(self,i_x, i_y):
     """  Returns element (i_x, i_y} of this matrix. """
@@ -2726,24 +2853,6 @@ class Label(ViewItem) :
     self.client.send_si(self.handle, b2str("setFontFamily("+b2str(family)+")"))
 
 
-class ExistingLabel(Label):
-  def  __init__(self,client,handle):
-    ViewItem.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getLabelList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingLabel(client,y))
-    return ret
-  
-
 class Legend(ViewItem) :
   """ A legend in a plot in kst.
 
@@ -2858,21 +2967,6 @@ class Box(ViewItem) :
     else:
       self.handle = name      
 
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getBoxList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingViewItem(client,y))
-    return ret
-
-
-
-
 
 class Circle(ViewItem) :
   """ A floating circle inside kst.
@@ -2926,18 +3020,7 @@ class Circle(ViewItem) :
     else:
       self.handle = name      
 
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getCircleList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingViewItem(client,y))
-    return ret
-    
+
   def set_diameter(self,diameter):
     """ set the diamter of the circle.
     
@@ -3004,21 +3087,6 @@ class Ellipse(ViewItem) :
     else:
       self.handle = name      
 
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getEllipseList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingViewItem(client,y))
-    return ret
-
-
-
-
 
 class Line(ViewItem) :
   """ A floating line inside kst.
@@ -3075,17 +3143,6 @@ class Line(ViewItem) :
     else:
       self.handle = name      
 
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getLineList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingViewItem(client,y))
-    return ret
 
   def set_length(self, length):
     """ set the length of the line.
@@ -3200,20 +3257,6 @@ class Arrow(ViewItem) :
     x2,y2 = end
     self.client.send_si(self.handle, "setLineEndpoints("+b2str(x1)+","+b2str(y1)+","+b2str(x2)+","+b2str(y2)+")")
 
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getArrowList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingViewItem(client,y))
-    return ret
-    
-    
-    
     
 class Picture(ViewItem) :
   """ A floating image inside kst.
@@ -3267,21 +3310,6 @@ class Picture(ViewItem) :
     """ BUG: aspect ratio is not changed. There is no parellel for this 
     function within the kst GUI. """
     self.client.send_si(self.handle, b2str("setPicture("+b2str(pic)+")"))
-    
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getPictureList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingPicture(client,y))
-    return ret
-
-
-
 
 
 class SVG(ViewItem) :
@@ -3329,21 +3357,6 @@ class SVG(ViewItem) :
     The width of the window is 1.0.
     """
     self.client.send_si(self.handle,"setSize("+b2str(width)+")")
-
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getSVGList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingSVG(client,y))
-    return ret
-
-
-
 
 
 class Plot(ViewItem) :
@@ -3613,26 +3626,6 @@ class Plot(ViewItem) :
        """
 
     self.client.send_si(self.handle,  "setXAxisDisplay("+display+")")
-
-class ExistingPlot(Plot):
-  def __init__(self,client,handle):
-    ViewItem.__init__(self,client)
-    self.handle=handle
-    
-  @classmethod
-  def getList(cls,client):
-    x=client.send("getPlotList()")
-    ret=[]
-    while x.contains('['):
-      y=x
-      y.remove(0,1)
-      y.remove(y.indexOf(']'),9999999)
-      x.remove(0,x.indexOf(']')+1)
-      ret.append(ExistingPlot(client,y))
-    return ret
-
-
-
 
 
 class Button(ViewItem) :

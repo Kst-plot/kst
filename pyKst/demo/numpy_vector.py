@@ -14,3 +14,36 @@ V2 = client.new_editable_vector(y, name="sin(X)")
 c1 = client.new_curve(V1, V2)
 p1 = client.new_plot()
 p1.add(c1)
+
+V3 = client.new_generated_vector(-10*180/3.1415926, 10*180/3.1415926, 100)
+c2 = client.new_curve(V3, V2)
+p2 = client.new_plot()
+p2.add(c2)
+
+
+# print out the name of every vector.
+vectors = client.get_vector_list()
+print "----- Vectors: ----------"
+for vector in vectors:
+  print vector.name()
+
+# print out the name of ediable vectors.
+vectors = client.get_editable_vector_list()
+print "----- Editable Vectors: ----------"
+for vector in vectors:
+  print vector.name()
+
+# print out the name of generated vectors.
+vectors = client.get_generated_vector_list()
+print "----- Generated Vectors: ----------"
+for vector in vectors:
+  print vector.name()
+  
+# print out every scalar name and value
+scalars = client.get_scalar_list()
+print "----- Scalars: ----------"
+for scalar in scalars:
+  print scalar.name(), scalar.value()
+  
+
+  
