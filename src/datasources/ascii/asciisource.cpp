@@ -337,7 +337,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
 
   QString msg("%1.\nTry without threads or use a different file buffer limit when using threads for reading.");
-  if (read == n) {
+  if (read == abs(n)) { // when reading only 1 sample, n could be -1 instead of 1 to signal 1 sample, not 1 frame.
     return read;
   } else if (read > 0) {
     if (!_haveWarned)
