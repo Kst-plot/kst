@@ -32,11 +32,9 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
     bool exportAll() { return _exportAll->isChecked();}
 
   public slots:
-//    void createFile();
     void enableWidthHeight();
     void OKClicked();
     void apply();
-//    void applyAutosave();
     void updateButtons();
     void updateFormats();
     void updateFilenameLabel();
@@ -45,7 +43,6 @@ class ExportGraphicsDialog : public QDialog, Ui::ExportGraphicsDialog
     void exportGraphics(const QString &filename, const QString &format, int w, int h, int display, bool export_all, int autosave_period);
 
   private:
-//    QTimer *_autoSaveTimer;
 };
 
 }

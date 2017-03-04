@@ -31,8 +31,6 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _saveLocation->setFile(dialogDefaults().value("export/filename",QDir::currentPath()).toString());
 
-  //_autoSaveTimer = new QTimer(this);
-
   _listVectorFormats->setChecked(dialogDefaults().value("export/useVectors",true).toBool());
   _listBitmapFormats->setChecked(dialogDefaults().value("export/useBitmaps",true).toBool());
 
@@ -46,7 +44,6 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
 
-  //connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(createFile()));
   connect(_comboBoxSizeOption, SIGNAL(currentIndexChanged(int)), this, SLOT(enableWidthHeight()));
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
@@ -151,25 +148,6 @@ void ExportGraphicsDialog::enableWidthHeight() {
   }
 }
 
-
-/*
-void ExportGraphicsDialog::applyAutosave() {
-  if (_autosave->isChecked()) {
-    _autoSaveTimer->start(_period->value()*1000);
-  } else {
-    _autoSaveTimer->stop();
-  }
-}
-
-
-void ExportGraphicsDialog::apply() {
-  applyAutosave();
-
-  if (!_autosave->isChecked()) {
-    createFile();
-  }
-}
-*/
 
 void ExportGraphicsDialog::apply() {
   int autosave_period = 0;
