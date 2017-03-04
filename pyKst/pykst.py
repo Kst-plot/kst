@@ -109,7 +109,7 @@ class Client:
     """ save a .kst file in kst. """
     self.send("fileSave("+b2str(filename)+")")
 
-  def export_graphics_file(self, filename, format=None, width=1280, height=1024, display = 2, all_tabs = False):
+  def export_graphics_file(self, filename, format=None, width=1280, height=1024, display = 2, all_tabs = False, autosave_period = 0):
       """
       export the kst session as a set of graphics files.
 
@@ -119,6 +119,7 @@ class Client:
       :param height: the height of the plot, in pixels, if required by the display setting.
       :param display: how the dimensions are interpreted.
       :param all_tabs: if True, all tabs are exported as <filename>_<tabname>.<ext>
+      :param autosave_period: save the image every <autosave_period> seconds.  If 0, only save once.
 
       *display* determines the shape of the plot.  Values are ::
 
@@ -133,7 +134,7 @@ class Client:
           format = os.path.splitext(filename)[1][1:].strip().lower()
 
       self.send("exportGraphics("+str(filename)+","+str(format)+","+str(width)+","+
-                str(height)+","+str(display)+","+str(all_tabs)+")")
+                str(height)+","+str(display)+","+str(all_tabs)+","+str(autosave_period) + ")")
 
 
   def screen_back(self):

@@ -101,10 +101,16 @@ MainWindow::MainWindow() :
     _aboutDialog(0),
     _viewVectorDialog(0),
     _highlightPoint(false),
-    _statusBarTimeout(0)
+    _statusBarTimeout(0),
 #if defined(__QNX__)
-  , _qnxToolbarsVisible(true)
+    qnxToolbarsVisible(true),
 #endif
+    _ae_width(1280),
+    _ae_height(1024),
+    _ae_display(2),
+    _ae_export_all(false),
+    _ae_autosave_period(0),
+    _ae_Timer(0)
 {
   _doc = new Document(this);
   _scriptServer = new ScriptServer(_doc->objectStore());
@@ -461,6 +467,10 @@ void MainWindow::checkRecentFilesOnExistence()
   }
 }
 
+void MainWindow::autoExportImage() {
+  exportGraphicsFile(_ae_filename, _ae_format, _ae_width, _ae_height, _ae_display, _ae_export_all, _ae_autosave_period);
+}
+
 
 
 bool MainWindow::initFromCommandLine() {
@@ -481,7 +491,7 @@ bool MainWindow::initFromCommandLine() {
     if (P.pngHeight()>1) {
       h = P.pngHeight();
     }
-    exportGraphicsFile(P.pngFile(), "png", w, h, 2, true);
+    exportGraphicsFile(P.pngFile(), "png", w, h, 2, true, 0);
     ok = false;
   }
   if (!P.printFile().isEmpty()) {
@@ -516,17 +526,26 @@ void MainWindow::openFile(const QString &file) {
 }
 
 
-void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display, bool command_line) {
+void MainWindow::exportGraphicsFile(const QString &filename, const QString &format, int width, int height, int display, bool export_all, int autosave_period) {
   int viewCount = 0;
   int n_views = _tabWidget->views().size();
   int i_startview, i_endview;
-  bool exportAll = command_line;
 
-  if (_exportGraphics) {
-    exportAll |= _exportGraphics->exportAll();
-  }
+  _ae_filename = filename;
+  _ae_format = format;
+  _ae_width = width;
+  _ae_height = height;
+  _ae_display = display;
+  _ae_export_all = export_all;
+  _ae_autosave_period = autosave_period;
 
-  if (exportAll) {
+  dialogDefaults().setValue("export/filename", filename);
+  dialogDefaults().setValue("export/format", format);
+  dialogDefaults().setValue("export/xsize", width);
+  dialogDefaults().setValue("export/ysize", height);
+  dialogDefaults().setValue("export/sizeOption", display);
+
+  if (export_all) {
     i_startview = 0;
     i_endview = n_views-1;
   } else {
@@ -636,6 +655,14 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
     viewCount++;
   }
 
+  if (_ae_autosave_period > 0) {
+    if (_ae_Timer == 0) { // create timer (only once)
+      _ae_Timer = new QTimer(this);
+      _ae_Timer->setSingleShot(true);
+      connect(_ae_Timer, SIGNAL(timeout()), this, SLOT(autoExportImage()));
+    }
+    _ae_Timer->start(_ae_autosave_period); // one shot timer...
+  }
 }
 
 void MainWindow::exportLog(const QString &imagename, QString &msgfilename, const QString &format, int x_size, int y_size,
@@ -2096,8 +2123,8 @@ void MainWindow::showDebugDialog() {
 void MainWindow::showExportGraphicsDialog() {
   if (!_exportGraphics) {
     _exportGraphics = new ExportGraphicsDialog(this);
-    connect(_exportGraphics, SIGNAL(exportGraphics(QString,QString,int,int,int)),
-            this, SLOT(exportGraphicsFile(QString,QString,int,int,int)));
+    connect(_exportGraphics, SIGNAL(exportGraphics(QString,QString,int,int,int,bool,int)),
+            this, SLOT(exportGraphicsFile(QString,QString,int,int,int,bool,int)));
   }
   if (_exportGraphics->isVisible()) {
     _exportGraphics->raise();

@@ -1025,15 +1025,16 @@ QByteArray ScriptServer::fileSave(QByteArray&command, QLocalSocket* s, ObjectSto
 QByteArray ScriptServer::exportGraphics(QByteArray&command, QLocalSocket* s, ObjectStore*) {
   QStringList args = ScriptInterface::getArgs(command);
 
-  if (args.length() == 6) {
+  if (args.length() == 7) {
     QString filename = args[0];
     QString format = args[1];
     int width = args[2].toInt();
     int height = args[3].toInt();
     int display = args[4].toInt();
     bool allTabs = (args[5].trimmed().toLower() == "true");
+    int autosave_period = args[6].toInt();
 
-    kstApp->mainWindow()->exportGraphicsFile(filename, format, width, height, display, allTabs);
+    kstApp->mainWindow()->exportGraphicsFile(filename, format, width, height, display, allTabs, autosave_period*1000);
   }
   return handleResponse("Done",s);
 }

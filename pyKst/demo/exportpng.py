@@ -16,4 +16,4 @@ p1 = client.new_plot()
 p1.add(c1)
 
 
-client.export_graphics_file("tmp.png", all_tabs = True)
+client.export_graphics_file("tmp.png", all_tabs = True, autosave_period = 5)

@@ -31,7 +31,7 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _saveLocation->setFile(dialogDefaults().value("export/filename",QDir::currentPath()).toString());
 
-  _autoSaveTimer = new QTimer(this);
+  //_autoSaveTimer = new QTimer(this);
 
   _listVectorFormats->setChecked(dialogDefaults().value("export/useVectors",true).toBool());
   _listBitmapFormats->setChecked(dialogDefaults().value("export/useBitmaps",true).toBool());
@@ -46,7 +46,7 @@ ExportGraphicsDialog::ExportGraphicsDialog(MainWindow *parent)
 
   _saveLocationLabel->setBuddy(_saveLocation->_fileEdit);
 
-  connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(createFile()));
+  //connect(_autoSaveTimer, SIGNAL(timeout()),      this, SLOT(createFile()));
   connect(_comboBoxSizeOption, SIGNAL(currentIndexChanged(int)), this, SLOT(enableWidthHeight()));
 
   connect(_buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(reject()));
@@ -152,6 +152,7 @@ void ExportGraphicsDialog::enableWidthHeight() {
 }
 
 
+/*
 void ExportGraphicsDialog::applyAutosave() {
   if (_autosave->isChecked()) {
     _autoSaveTimer->start(_period->value()*1000);
@@ -168,25 +169,24 @@ void ExportGraphicsDialog::apply() {
     createFile();
   }
 }
+*/
 
-
-void ExportGraphicsDialog::createFile() {
+void ExportGraphicsDialog::apply() {
+  int autosave_period = 0;
   QString filename = _saveLocation->file();
-  QString default_filename = filename;
   QString format = _comboBoxFormats->currentText();
   if (_autoExtension->isChecked()) {
     if (QFileInfo(filename).suffix().toLower() != format.toLower()) {
       filename += '.' + format;
     }
   }
-  dialogDefaults().setValue("export/filename", default_filename);
-  dialogDefaults().setValue("export/format", format);
-  dialogDefaults().setValue("export/xsize", _xSize->value());
-  dialogDefaults().setValue("export/ysize", _ySize->value());
-  dialogDefaults().setValue("export/sizeOption", _comboBoxSizeOption->currentIndex());
+  if (_autosave->isChecked()) {
+    autosave_period = _period->value()*1000;
+  }
+
   dialogDefaults().setValue("export/useVectors", _listVectorFormats->isChecked());
   dialogDefaults().setValue("export/useBitmaps", _listBitmapFormats->isChecked());
-  emit exportGraphics(filename, format, _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex());
+  emit exportGraphics(filename, format, _xSize->value(), _ySize->value(), _comboBoxSizeOption->currentIndex(), exportAll(), autosave_period);
 }
 
 

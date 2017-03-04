@@ -121,7 +121,7 @@ class MainWindow : public QMainWindow
     void printToPrinter(QPrinter *printer);
     void printFromCommandLine(const QString &printFileName);
 #endif
-    void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display, bool command_line = false);
+    void exportGraphicsFile(const QString &filename, const QString &format, int w, int h, int display, bool export_all, int autosave_period);
     void exportLog(const QString &imagename, QString &msgfilename, const QString &_format, int x_size, int y_size,
                    int size_option_index, const QString &message);
 
@@ -181,6 +181,8 @@ class MainWindow : public QMainWindow
     void openRecentKstFile();
     void openRecentDataFile();
     void checkRecentFilesOnExistence();
+
+    void autoExportImage();
 
   protected:
     void closeEvent(QCloseEvent *e);
@@ -351,6 +353,16 @@ class MainWindow : public QMainWindow
     bool _qnxToolbarsVisible;
     QDateTime _qnxLastToolbarEvent;
 #endif // defined(__QNX__)
+
+    // autoExportGraphics fields
+    QString _ae_filename;
+    QString _ae_format;
+    int _ae_width;
+    int _ae_height;
+    int _ae_display;
+    bool _ae_export_all;
+    int _ae_autosave_period;
+    QTimer *_ae_Timer;
 
     friend class ScriptServer;
 };
