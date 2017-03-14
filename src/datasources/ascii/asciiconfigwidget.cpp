@@ -201,7 +201,18 @@ void AsciiConfigWidgetInternal::setFilename(const QString& filename)
 void AsciiConfigWidgetInternal::setConfig(const AsciiSourceConfig& config)
 {
   _delimiters->setText(config._delimiters);
-  _fileNamePattern->setText(config._fileNamePattern);
+
+  // "Always accept files matching" is ... odd and currently worthless.
+  // Here is what it does:
+  // If _fileNamePattern, which is saved only associated with <filename>
+  // matches <filename> then assume <filename> is ascii and do no further
+  // checks.  Why one would want this is unclear to me.
+  // TODO: fix this!
+  // Here we hide the 'feature' until it is made into something useful.
+  //_fileNamePattern->setText(config._fileNamePattern);
+  _fileNamePattern->hide();
+  textLabel1_2->hide();
+
   _columnDelimiter->setText(config._columnDelimiter);
   _columnWidth->setValue(config._columnWidth);
   _colWidthConst->setChecked(config._columnWidthIsConst);

@@ -154,6 +154,11 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     return 0;
   }
 
+  // Apparently "Always accept files matching" is ... odd..
+  // If _fileNamePattern, which is saved only associated with <filename>
+  // matches <filename> then assume <filename> is ascii and do no further
+  // checks.  Why one would want this is unclear to me.
+  // TODO: fix this!
   if (!config._fileNamePattern.value().isEmpty()) {
     QRegExp filenamePattern(config._fileNamePattern);
     filenamePattern.setPatternSyntax(QRegExp::Wildcard);
