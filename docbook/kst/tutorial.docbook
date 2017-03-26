@@ -822,7 +822,7 @@ This will bring up the New Filter Dialog:
   be more visible.  When you are satisfied, select <guibutton>OK</guibutton>.
 </para>
 <para>
-  This will add a the the low-pass filtered data as a new curve in the plot:
+  This will add the low-pass filtered data as a new curve in the plot:
 </para>
 
 <screenshot>

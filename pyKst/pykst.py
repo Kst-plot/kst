@@ -1088,7 +1088,7 @@ class DataSourceScalar(Scalar) :
     self.client.send_si(self.handle, "change("+filename+","+field+")")
 
   def file(self) :
-    """ Returns the the data source file name. """
+    """ Returns the data source file name. """
     return self.client.send_si(self.handle, "file()")
 
   def field(self) :
@@ -1140,7 +1140,7 @@ class VectorScalar(Scalar) :
     self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+","+b2str(frame)+")"))
 
   def file(self) :
-    """ Returns the the data source file name. """
+    """ Returns the data source file name. """
     return self.client.send_si(self.handle, "file()")
 
   def field(self) :
@@ -2665,7 +2665,7 @@ class ViewItem(NamedObject):
 
       subplot(211)
 
-    place the plot in the the top grid location (i.e. the
+    place the plot in the top grid location (i.e. the
     first) in a 2 row by 1 column notional grid (no grid actually exists,
     but conceptually this is how the returned subplot has been positioned).
 
