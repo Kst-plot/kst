@@ -13,7 +13,7 @@
 
 #include "application.h"
 #include "dialogpage.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 #include "editmultiplewidget.h"
 
 #include "datavector.h"
@@ -306,7 +306,7 @@ void VectorTab::fileNameChanged(const QString &file) {
 
 
 void VectorTab::showConfigWidget() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(dataDialog()->editMode(), _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(dataDialog()->editMode(), _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     fileNameChanged(_dataSource->fileName());
   }

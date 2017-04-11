@@ -13,7 +13,7 @@
 #include <config.h>
 #include "baddatasourcedialog.h"
 #include "datasourcepluginmanager.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 
 
 #include <QDebug>
@@ -42,7 +42,7 @@ BadDatasourceDialog::~BadDatasourceDialog() {
 }
 
 void BadDatasourceDialog::showConfigWidget() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(DataDialog::New, _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(DataDialog::New, _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     fileNameChanged(_dataSource->fileName());
   }

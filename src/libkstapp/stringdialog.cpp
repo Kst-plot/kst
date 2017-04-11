@@ -12,7 +12,7 @@
 #include "stringdialog.h"
 
 #include "application.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 #include "enodes.h"
 #include "document.h"
 #include "objectstore.h"
@@ -188,7 +188,7 @@ void StringTab::fileNameChanged(const QString &file) {
 
 
 void StringTab::showConfigWidget() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(dataDialog()->editMode(), _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(dataDialog()->editMode(), _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     fileNameChanged(_dataSource->fileName());
   }

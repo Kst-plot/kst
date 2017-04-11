@@ -14,7 +14,7 @@
 #include "dialogdefaults.h"
 
 #include "datacollection.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 #include "datavector.h"
 #include "datamatrix.h"
 #include "datascalar.h"
@@ -91,7 +91,7 @@ void ChangeFileDialog::show() {
 }
 
 void ChangeFileDialog::showConfigWidget() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(DataDialog::New, _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(DataDialog::New, _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     fileNameChanged(_dataSource->fileName());
   }

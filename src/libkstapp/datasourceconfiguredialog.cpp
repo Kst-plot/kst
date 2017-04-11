@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -18,7 +18,7 @@
 
 namespace Kst {
 
-DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent)
+DataSourceConfigureDialog::DataSourceConfigureDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent)
   : QDialog(parent), _dataSource(dataSource) {
 
   setWindowTitle(QString("Configure %1").arg(_dataSource->fileType()));
@@ -54,15 +54,15 @@ DataSourceDialog::DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr data
 }
 
 
-DataSourceDialog::~DataSourceDialog() {
+DataSourceConfigureDialog::~DataSourceConfigureDialog() {
 }
 
 
-void DataSourceDialog::disableReuse() {
+void DataSourceConfigureDialog::disableReuse() {
   _dataSource->disableReuse();
 }
 
-void DataSourceDialog::buttonClicked(QAbstractButton *button) {
+void DataSourceConfigureDialog::buttonClicked(QAbstractButton *button) {
   QDialogButtonBox::StandardButton std = _buttonBox->standardButton(button);
   switch(std) {
   case QDialogButtonBox::Ok:

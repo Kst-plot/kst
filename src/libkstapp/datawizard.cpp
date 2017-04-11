@@ -21,7 +21,7 @@
 #include "colorsequence.h"
 #include "curve.h"
 #include "datacollection.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 #include "datavector.h"
 #include "dialogdefaults.h"
 #include "document.h"
@@ -156,7 +156,7 @@ QStringList DataWizardPageDataSource::dataSourceFieldList() const {
 
 
 void DataWizardPageDataSource::configureSource() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(DataDialog::New, _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(DataDialog::New, _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     sourceChanged(_dataSource->fileName());
   }

@@ -16,7 +16,7 @@
 #include "application.h"
 
 #include "dialogpage.h"
-#include "datasourcedialog.h"
+#include "datasourceconfiguredialog.h"
 #include "editmultiplewidget.h"
 
 #include "datamatrix.h"
@@ -576,7 +576,7 @@ void MatrixTab::fileNameChanged(const QString &file) {
 
 
 void MatrixTab::showConfigWidget() {
-  QPointer<DataSourceDialog> dialog = new DataSourceDialog(dataDialog()->editMode(), _dataSource, this);
+  QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(dataDialog()->editMode(), _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     fileNameChanged(_dataSource->fileName());
   }

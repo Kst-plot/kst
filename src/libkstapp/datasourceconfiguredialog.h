@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DATASOURCEDIALOG_H
-#define DATASOURCEDIALOG_H
+#ifndef DATASOURCECONFIGUREDIALOG_H
+#define DATASOURCECONFIGUREDIALOG_H
 
 #include <QDialog>
 
@@ -25,13 +25,13 @@ class QDialogButtonBox;
 
 namespace Kst {
 
-class DataSourceDialog : public QDialog
+class DataSourceConfigureDialog : public QDialog
 {
   Q_OBJECT
   public:
     friend class DialogSI;
-    DataSourceDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent = 0);
-    virtual ~DataSourceDialog();
+    DataSourceConfigureDialog(DataDialog::EditMode mode, DataSourcePtr dataSource, QWidget *parent = 0);
+    virtual ~DataSourceConfigureDialog();
 
     DataSourcePtr dataSource() const { return _dataSource; }
 
