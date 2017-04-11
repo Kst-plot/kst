@@ -408,6 +408,8 @@ void DataManager::deleteObject() {
     _doc->objectStore()->removeObject(dataObject);
   } else if (PrimitivePtr primitive = kst_cast<Primitive>(_currentObject)) {
     _doc->objectStore()->removeObject(primitive);
+  } else if (DataSourcePtr datasource = kst_cast<DataSource>(_currentObject)) {
+    _doc->objectStore()->removeObject(datasource);
   }
   _currentObject = 0;
   UpdateServer::self()->requestUpdateSignal();

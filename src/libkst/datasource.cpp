@@ -152,8 +152,6 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
 
   _initializeShortName();
 
-  setDescriptiveName(QFileInfo(_filename).fileName() + " (" + shortName() + ')');
-
   // Timer needs to be the default: File sometimes fails.
   startUpdating(Timer);
 }
@@ -261,7 +259,25 @@ void DataSource::checkUpdate() {
 
 
 void DataSource::deleteDependents() {
+
+  ObjectList<Primitive> primitiveList = _store->getObjects<Primitive>();
+  foreach (PrimitivePtr primitive, primitiveList) {
+    DataPrimitive* dp = qobject_cast<DataPrimitive*>(primitive);
+    if (dp && (dp->dataSource()->Name() == Name())) {
+      primitive->deleteDependents();
+      _store->removeObject(primitive);
+    }
+  }
+
+  QList<ObjectPtr> Objects = _store->objectList();
+
   foreach (const PrimitivePtr &p, slavePrimitives) {
+    ObjectPtr op = kst_cast<Object>(p);
+    foreach (ObjectPtr object, Objects) {
+      if (object->uses(op)) {
+        _store->removeObject(object);
+      }
+    }
     store()->removeObject(p);
   }
 }
@@ -548,7 +564,7 @@ void DataSource::disableReuse() {
 }
 
 QString DataSource::_automaticDescriptiveName() const {
-  return fileName();
+  return QFileInfo(_filename).fileName();
 }
 
 QString DataSource::descriptionTip() const {

@@ -23,6 +23,7 @@
 #include <generatedvector.h>
 #include <datamatrix.h>
 #include <generatedmatrix.h>
+#include <datasource.h>
 
 namespace Kst {
 
@@ -54,19 +55,24 @@ void SessionModel::generateObjectList() {
   ObjectList<Primitive> pol = _store->getObjects<Primitive>();
   ObjectList<Relation> rol = _store->getObjects<Relation>();
   ObjectList<DataObject> dol = _store->getObjects<DataObject>();
+  DataSourceList dsl = _store->dataSourceList();
   _objectList.clear();
-  foreach(Primitive* P, pol) {
+  foreach(PrimitivePtr P, pol) {
     if ((!P->provider()) && (!P->hidden())) {
       _objectList.append(P);
     }
   }
 
-  foreach(Relation* relation, rol) {
+  foreach(RelationPtr relation, rol) {
     _objectList.append(relation);
   }
 
-  foreach(DataObject* dataObject, dol) {
+  foreach(DataObjectPtr dataObject, dol) {
     _objectList.append(dataObject);
+  }
+
+  foreach(DataSourcePtr dataSource, dsl) {
+    _objectList.append(dataSource);
   }
 }
 
@@ -142,9 +148,12 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
     return relationData(p, index);
   } else if (PrimitivePtr p=kst_cast<Primitive>(_objectList.at(row))) {
     return primitiveData(p, index);
+  } else if (DataSourcePtr p=kst_cast<DataSource>(_objectList.at(row))) {
+    return dataSourceData(p, index);
   } else {
     return QVariant();
   }
+  return QVariant();
 }
 
 
@@ -191,6 +200,40 @@ QVariant SessionModel::primitiveData(PrimitivePtr p, const QModelIndex& index) c
       break;
     default:
       break;
+  }
+  p->unlock();
+  return rc;
+}
+
+QVariant SessionModel::dataSourceData(DataSourcePtr p, const QModelIndex& index) const {
+  QVariant rc;
+
+  if (!p) {
+    return rc;
+  }
+
+  p->readLock();
+  switch (index.column()) {
+  case 0:
+    rc.setValue(p->Name());
+    break;
+  case 1:
+    rc = p->typeString();
+    break;
+    //case 2:
+    //  rc = p->sizeString();
+    //  break;
+  case 3:
+    if (p->updateType() == DataSource::Timer) {
+      rc = "Timer update. " + p->fileName();
+    } else if (p->updateType() == DataSource::File) {
+      rc = "FileChange update. " + p->fileName();
+    } else if (p->updateType() == DataSource::None) {
+      rc = "No update. " + p->fileName();
+    }
+    break;
+  default:
+    break;
   }
   p->unlock();
   return rc;
