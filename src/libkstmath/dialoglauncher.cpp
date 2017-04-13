@@ -76,6 +76,11 @@ void DialogLauncher::showStringDialog(QString &scalarname, ObjectPtr objectPtr, 
   Q_UNUSED(modal);
 }
 
+void DialogLauncher::showDataSourceDialog(QString &datasourcename, ObjectPtr objectPtr, bool modal) {
+  Q_UNUSED(objectPtr);
+  Q_UNUSED(datasourcename);
+  Q_UNUSED(modal);
+}
 
 void DialogLauncher::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
   Q_UNUSED(objectPtr);

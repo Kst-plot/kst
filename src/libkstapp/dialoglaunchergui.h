@@ -24,6 +24,8 @@ class DialogLauncherGui : public DialogLauncher {
     DialogLauncherGui();
     virtual ~DialogLauncherGui();
 
+    virtual void showDataSourceDialog(QString &datasourcename, ObjectPtr datasource = 0, bool modal = false);
+
     //primitives
     virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0, bool modal = false);
 

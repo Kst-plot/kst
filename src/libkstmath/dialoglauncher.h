@@ -42,6 +42,7 @@ class KSTMATH_EXPORT DialogLauncher : public QObject {
     static DialogLauncher *self();
 
   public Q_SLOTS:
+    virtual void showDataSourceDialog(QString &datasourcename, ObjectPtr objectPtr = 0, bool modal = false)= 0;
     //primitives
     virtual void showVectorDialog(QString &vectorname, ObjectPtr objectPtr = 0, bool modal = false) = 0;
 

@@ -26,6 +26,7 @@
 #include "eventmonitordialog.h"
 #include "basicplugindialog.h"
 #include "filterfitdialog.h"
+#include "datasourcedialog.h"
 
 #include "curve.h"
 #include "equation.h"
@@ -96,6 +97,19 @@ void DialogLauncherGui::showStringDialog(QString &stringname, ObjectPtr objectPt
     dialog->setAttribute(Qt::WA_DeleteOnClose, false);
     dialog->exec();
     stringname = dialog->dataObjectName();
+    delete dialog;
+  } else {
+    dialog->show();
+  }
+}
+
+
+void DialogLauncherGui::showDataSourceDialog(QString &datasourcename, ObjectPtr datasource, bool modal) {
+  DataSourceDialog *dialog = new DataSourceDialog(datasource, kstApp->mainWindow());
+  if (modal) {
+    dialog->setAttribute(Qt::WA_DeleteOnClose, false);
+    dialog->exec();
+    //datasourcename = dialog->dataObjectName();
     delete dialog;
   } else {
     dialog->show();
@@ -240,6 +254,9 @@ void DialogLauncherGui::showObjectDialog(ObjectPtr objectPtr) {
   } else if (StringPtr string = kst_cast<String>(objectPtr)) {
     QString tmp;
     DialogLauncher::self()->showStringDialog(tmp, string);
+  } else if (DataSourcePtr datasource = kst_cast<DataSource>(objectPtr)) {
+    QString tmp;
+    DialogLauncher::self()->showDataSourceDialog(tmp, objectPtr);
   }
 }
 
