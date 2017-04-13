@@ -585,7 +585,7 @@ QString DirFilePlugin::getDirectory(QString filepath) {
     QFile file(filepath);
     if (file.open(QFile::ReadOnly)) {
       QTextStream stream(&file);
-      QString directoryName = stream.readLine();
+      QString directoryName = stream.readLine(1000);
       properDirPath += '/';
       properDirPath += directoryName;
     }
