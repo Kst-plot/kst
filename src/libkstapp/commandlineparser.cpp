@@ -434,6 +434,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
   *ok=true;
   bool new_fileList=true;
   bool dataPlotted = false;
+  DataVectorPtr xv = 0L;
+  bool use_old_xv = false;
 
 #ifndef KST_NO_PRINTER
   // set paper settings to match defaults.
@@ -513,6 +515,20 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _overrideStyle = true;
     } else if (arg == "-x") {
       *ok = _setStringArg(_xField,tr("Usage: -x <xfieldname>\n"));
+      for (int i_file=0; i_file<_fileNames.size(); i_file++) {
+        QString file = _fileNames.at(i_file);
+        QFileInfo info(file);
+        if (!info.exists()) {
+          printUsage(tr("file %1 does not exist\n").arg(file));
+          *ok = false;
+          break;
+        }
+
+        DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
+        xv = createOrFindDataVector(_xField, ds);
+        use_old_xv = false;
+      }
+      new_fileList = true;
     } else if (arg == "-e") {
       *ok = _setStringArg(_errorField,tr("Usage: -e <errorfieldname>\n"));
     } else if (arg == "-r") {
@@ -536,7 +552,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         }
 
         DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
-        DataVectorPtr xv = createOrFindDataVector(_xField, ds);
+        if (!xv || !use_old_xv) {
+          xv = createOrFindDataVector(_xField, ds);
+        }
         DataVectorPtr yv = createOrFindDataVector(field, ds);
 
         /*
@@ -744,6 +762,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         }
         _fileNames.clear();
         new_fileList = false;
+        use_old_xv = true;
       }
       _fileNames.append(arg);
       if (!arg.endsWith(".kst")) {
