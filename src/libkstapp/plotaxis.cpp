@@ -1304,6 +1304,10 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
   if (!av.isNull()) {
     setAxisDisplay((AxisDisplayType)QVariant(av.toString()).toInt());
   }
+  av = attrs.value("displayformatstring");
+  if (!av.isNull()) {
+    setAxisDisplayFormatString(av.toString());
+  }
   av = attrs.value("majortickmode");
   if (!av.isNull()) {
     setAxisMajorTickMode((MajorTickMode)QVariant(av.toString()).toInt());
