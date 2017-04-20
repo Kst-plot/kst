@@ -224,7 +224,7 @@ icon in the tool bar.
 <screenshot>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-datamanager.png" format="PNG"/>
+<imagedata fileref="Screenshot-kst-datamanager2.png" format="PNG"/>
 </imageobject>
 </mediaobject>
 </screenshot>
@@ -234,18 +234,21 @@ icon in the tool bar.
 </para>
 
 <para>
-Descriptions of each data type are provided below, along with overviews of the settings and options
-available when creating or editing each type of data object.
+Descriptions of each data type are provided below.
 </para>
 
 <sect2 id="vectors">
 <title>Vectors</title>
 <para>
-Vectors are ordered lists of numbers.  They are used as the inputs to Data Object or Curves, where they can be used to define the X or Y axis. 
+Vectors are ordered lists of numbers.  They are used as the inputs to Data Objects.  They are also used to define the X or Y axis for curves.  While different types of vectors are created in different ways, they can call be used in Data Objects or curves in the same way.
 </para>
 
 <para>
-  Vectors can come from several places.  Data Vectors aquire their data from Data Sources.  Generated Vectors are lists of equally spaced numbers.  Both Data Vectors and Generated Vectors can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
+  
+<itemizedlist>
+<listitem>
+<para>
+  Data Vectors aquire their data from Data Sources (aka, files).  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
   
 <inlinemediaobject>
 <imageobject>
@@ -253,8 +256,34 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 </imageobject>
 </inlinemediaobject>
 
+  icon in any vector selector.  
+</para>
+</listitem>
+<listitem>
+<para>
+  Generated Vectors are lists of equally spaced numbers whose range and spacing is defined in the GUI.  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
   
-  icon in any vector selector.  Editable Vectors have their data defined through the Python interface. Output Vectors are the output of data objects.
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-vectornew.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+
+  icon in any vector selector.  
+</para>
+</listitem>
+<listitem>
+<para>
+  Editable Vectors have their data defined through the Python interface.  They can not be created or edited in the GUI.
+</para>
+</listitem>
+<listitem>
+<para>
+   Output Vectors are the output of data objects, such as histograms or filters.  
+</para>
+</listitem>
+</itemizedlist>
+  
 </para>
 
 </sect2>
@@ -262,8 +291,7 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 <sect2 id="curves">
 <title>Curves</title>
 <para>
-Curves are primarily used to create plottable objects from vectors.  Curves are created from two vectors - an <quote>X axis vector</quote> and a <quote>Y axis vector</quote>, that presumably provide a set of data points.  Thus, a curve can be thought
-of as a set of data points and the lines that connect them (even though the points or lines may not be visible on plots).
+Curves used to create plottable objects from vectors.  Curves are created from two vectors - an <quote>X axis vector</quote> and a <quote>Y axis vector</quote>.  These two vectors are interpreted as a set of (X,Y) pairs to be plotted.  When the X and Y vectors have the same length, the interpretation is obvious.  If, however, the X vector is of a different length than the Y vector, then the first and last points of each are assumed to represent the first and last (X,Y) pair, and the shorter vector is resampled using linear interpolation to have the same number of samples as the longer vector.
 </para>
 <para>
 The following is a screenshot of the window displayed when creating or editing curves.  Explanations of the
