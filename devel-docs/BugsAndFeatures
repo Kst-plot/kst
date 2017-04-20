@@ -2,20 +2,9 @@ BUGS
 
 pykst: accept non-float64 numpy arrays.
 
-equations: interpolate to highest resolution... doesn't work.
-
-"another minor point: seems like you would nearly always have to do something like 
-name=tod_names[i].replace('_', '\_'))
-to get a properly formatted plot label, where e.g.  tod_names[0] = 'X5R02C00_DCCLEAN08'
-"
-
-what does "allways accept files matching" in ascii source dialog do?
-
 dirfile reader should recognise "format" if it is valid.
 
 FEATURES
-
-periodic update image export in pykst.
 
 F3. Text labels have no background fill properties.
 
