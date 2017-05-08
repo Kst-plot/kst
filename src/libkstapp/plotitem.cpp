@@ -91,6 +91,7 @@ PlotItem::PlotItem(View *parent)
   _zoomMenu(0),
   _filterMenu(0),
   _fitMenu(0),
+  _psdMenu(0),
   _editMenu(0),
   _sharedAxisBoxMenu(0),
   _copyMenu(0),
@@ -615,39 +616,41 @@ void PlotItem::createZoomMenu() {
   _zoomMenu = new QMenu;
   _zoomMenu->setTitle(tr("Zoom"));
 
-  _zoomMenu->addAction(_zoomMaximum);
-  _zoomMenu->addAction(_zoomMaxSpikeInsensitive);
+  QMenu *xyZoomMenu = _zoomMenu->addMenu(tr("XY Zoom", "menu title: zoom in both axis of a plot"));
+  QMenu *yZoomMenu = _zoomMenu->addMenu(tr("Y Zoom", "menu title: zoom in the horizontal axis of a plot"));
+  QMenu *xZoomMenu = _zoomMenu->addMenu(tr("X Zoom", "menu title: zoom in the vertical axis of a plot"));
+
   _zoomMenu->addAction(_zoomPrevious);
-  _zoomMenu->addAction(_zoomMeanCentered);
-  _zoomMenu->addAction(_zoomTied);
   _zoomMenu->addAction(_adjustImageColorscale);
 
-  _zoomMenu->addSeparator();
+  xyZoomMenu->addAction(_zoomMaximum);
+  xyZoomMenu->addAction(_zoomMaxSpikeInsensitive);
+  xyZoomMenu->addAction(_zoomMeanCentered);
+  xyZoomMenu->addAction(_zoomTied);
 
-  _zoomMenu->addAction(_zoomXTied);
-  _zoomMenu->addAction(_zoomXMaximum);
-  _zoomMenu->addAction(_zoomXAutoBorder);
-  _zoomMenu->addAction(_zoomXNoSpike);
-  _zoomMenu->addAction(_zoomXRight);
-  _zoomMenu->addAction(_zoomXLeft);
-  _zoomMenu->addAction(_zoomXOut);
-  _zoomMenu->addAction(_zoomXIn);
-  _zoomMenu->addAction(_zoomNormalizeXtoY);
-  _zoomMenu->addAction(_zoomLogX);
+  xZoomMenu->addAction(_zoomXTied);
+  xZoomMenu->addAction(_zoomXMaximum);
+  xZoomMenu->addAction(_zoomXAutoBorder);
+  xZoomMenu->addAction(_zoomXNoSpike);
+  xZoomMenu->addAction(_zoomXRight);
+  xZoomMenu->addAction(_zoomXLeft);
+  xZoomMenu->addAction(_zoomXOut);
+  xZoomMenu->addAction(_zoomXIn);
+  xZoomMenu->addAction(_zoomNormalizeXtoY);
+  xZoomMenu->addAction(_zoomLogX);
 
-  _zoomMenu->addSeparator();
 
-  _zoomMenu->addAction(_zoomYTied);
-  _zoomMenu->addAction(_zoomYLocalMaximum);
-  _zoomMenu->addAction(_zoomYMaximum);
-  _zoomMenu->addAction(_zoomYAutoBorder);
-  _zoomMenu->addAction(_zoomYNoSpike);
-  _zoomMenu->addAction(_zoomYUp);
-  _zoomMenu->addAction(_zoomYDown);
-  _zoomMenu->addAction(_zoomYOut);
-  _zoomMenu->addAction(_zoomYIn);
-  _zoomMenu->addAction(_zoomNormalizeYtoX);
-  _zoomMenu->addAction(_zoomLogY);
+  yZoomMenu->addAction(_zoomYTied);
+  yZoomMenu->addAction(_zoomYLocalMaximum);
+  yZoomMenu->addAction(_zoomYMaximum);
+  yZoomMenu->addAction(_zoomYAutoBorder);
+  yZoomMenu->addAction(_zoomYNoSpike);
+  yZoomMenu->addAction(_zoomYUp);
+  yZoomMenu->addAction(_zoomYDown);
+  yZoomMenu->addAction(_zoomYOut);
+  yZoomMenu->addAction(_zoomYIn);
+  yZoomMenu->addAction(_zoomNormalizeYtoX);
+  yZoomMenu->addAction(_zoomLogY);
 }
 
 
@@ -682,7 +685,7 @@ void PlotItem::createFilterMenu() {
   }
 
   _filterMenu = new QMenu;
-  _filterMenu->setTitle(tr("Filter"));
+  _filterMenu->setTitle(tr("Create Filter"));
 
   CurveList curves = curveList();
   foreach (const CurvePtr& curve, curves) {
@@ -714,7 +717,7 @@ void PlotItem::createFitMenu() {
   }
 
   _fitMenu = new QMenu;
-  _fitMenu->setTitle(tr("Fit"));
+  _fitMenu->setTitle(tr("Create Fit"));
 
   CurveList curves = curveList();
   foreach (const CurvePtr& curve, curves) {
@@ -723,6 +726,23 @@ void PlotItem::createFitMenu() {
 
   connect(_fitMenu, SIGNAL(triggered(QAction*)), this, SLOT(showFitDialog(QAction*)));
 }
+
+void PlotItem::createPSDMenu() {
+  if (_psdMenu) {
+    delete _psdMenu;
+  }
+
+  _psdMenu = new QMenu;
+  _psdMenu->setTitle(tr("Create Spectrum"));
+
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    _psdMenu->addAction(new QAction(curve->Name(), this));
+  }
+
+  connect(_psdMenu, SIGNAL(triggered(QAction*)), this, SLOT(showPSDDialog(QAction*)));
+}
+
 
 
 void PlotItem::createSharedAxisBoxMenu() {
@@ -740,6 +760,25 @@ void PlotItem::createSharedAxisBoxMenu() {
 
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
+  if (curveList().size()>0) {
+    menu.addSeparator();
+    if (!DataObject::filterPluginList().empty()) {
+      createFilterMenu();
+      menu.addMenu(_filterMenu);
+    }
+
+    if (!DataObject::fitsPluginList().empty()) {
+      createFitMenu();
+      menu.addMenu(_fitMenu);
+    }
+    createPSDMenu();
+    menu.addMenu(_psdMenu);
+
+    createEditMenu();
+    menu.addMenu(_editMenu);
+
+  }
+
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
     if (view()->viewMode() == View::Data) {
 
@@ -770,19 +809,7 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
 
   _zoomPrevious->setVisible(!isInSharedAxisBox());
   menu.addMenu(_zoomMenu);
-  if (!DataObject::filterPluginList().empty()) {
-    createFilterMenu();
-    menu.addMenu(_filterMenu);
-  }
 
-  if (!DataObject::fitsPluginList().empty()) {
-    createFitMenu();
-    menu.addMenu(_fitMenu);
-  }
-  if (curveList().size()>0) {
-    createEditMenu();
-    menu.addMenu(_editMenu);
-  }
   menu.addMenu(_copyMenu);
 
 }
@@ -810,6 +837,16 @@ void PlotItem::showFitFilterDialog(QAction* action, const QString& plugin) {
 }
 
 
+void PlotItem::showPSDDialog(QAction* action) {
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    if (curve->Name() == action->text()) {
+      DialogLauncher::self()->showPowerSpectrumDialog(0, curve->yVector());
+    }
+  }
+}
+
+
 void PlotItem::showFilterDialog(QAction* action) {
   showFitFilterDialog(action, DataObject::filterPluginList().first());
 }
@@ -817,7 +854,6 @@ void PlotItem::showFilterDialog(QAction* action) {
 void PlotItem::showFitDialog(QAction* action) {
   showFitFilterDialog(action, DataObject::fitsPluginList().first());
 }
-
 
 void PlotItem::redrawPlot() {
   update();

@@ -153,6 +153,7 @@ void PowerSpectrumDialog::editSingleMode() {
 
 void PowerSpectrumDialog::setVector(VectorPtr vector) {
   _powerSpectrumTab->setVector(vector);
+  _powerSpectrumTab->selectionChanged();
 }
 
 

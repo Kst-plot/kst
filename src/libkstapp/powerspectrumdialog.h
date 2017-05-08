@@ -46,7 +46,7 @@ class PowerSpectrumTab : public DataTab, Ui::PowerSpectrumTab {
     void hideCurveOptions();
     void clearTabValues();
 
-  private Q_SLOTS:    
+  public Q_SLOTS:
     void selectionChanged();
 
   Q_SIGNALS:

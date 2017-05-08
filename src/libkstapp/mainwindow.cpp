@@ -1112,7 +1112,6 @@ void MainWindow::createActions() {
   _newTabAct = new QAction(tr("&New Tab"), this);
   _newTabAct->setStatusTip(tr("Create a new tab"));
   _newTabAct->setIcon(KstGetIcon("tab-new"));
-  _newTabAct->setShortcuts(QKeySequence::AddTab);
 
   connect(_newTabAct, SIGNAL(triggered()), tabWidget(), SLOT(createView()));
 
@@ -1309,7 +1308,6 @@ void MainWindow::createActions() {
   _tiedZoomAct = new QAction(tr("&Toggle Tied Zoom"), this);
   _tiedZoomAct->setIcon(KstGetIcon("tied-zoom"));
   _tiedZoomAct->setCheckable(false);
-  _tiedZoomAct->setShortcut(QString("t"));
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom (%1)").arg(_tiedZoomAct->shortcut().toString()));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
