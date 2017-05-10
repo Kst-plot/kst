@@ -188,11 +188,8 @@ void BasicPlugin::internalUpdate() {
     return;
   }
 
-  //Perform update on the outputs
-  // this seems to have done nothing
-  // but if troubles crop up, consider
-  // looking here.
-  //updateOutput();
+  // Register that the outputs have been recalculated.
+  updateOutput();
 
   createScalars();
 
@@ -328,10 +325,7 @@ bool BasicPlugin::inputsExist() const {
 }
 
 
-#if 0
-// The code below appeared to have done nothing
-// So: removing it.  But if problems with plugin
-// updates crop up, consider looking here.
+// Register that the outputs have been recalculated.
 void BasicPlugin::updateOutput() const {
   //output vectors...
   //FIXME: _outputVectors should be used, not this string list!
@@ -340,12 +334,11 @@ void BasicPlugin::updateOutput() const {
   for (; ovI != ov.constEnd(); ++ovI) {
     if (VectorPtr o = outputVector(*ovI)) {
       Q_ASSERT(o->myLockStatus() == KstRWLock::WRITELOCKED);
-      vectorRealloced(o, o->value(), o->length()); // why here?
-      o->setNewAndShift(o->length(), o->numShift()); // why here?
+      //vectorRealloced(o, o->value(), o->length()); // why here?
+      o->setNewAndShift(o->length(), o->numShift());
     }
   }
 }
-#endif
 
 QString BasicPlugin::descriptionTip() const {
   return tr("Plugin: %1").arg(Name());

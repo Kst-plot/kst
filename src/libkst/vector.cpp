@@ -51,8 +51,8 @@ Vector::Vector(ObjectStore *store)
   _initializeShortName();
 
   _editable = false;
-  NumShifted = 0;
-  NumNew = 0;
+  _numShifted = 0;
+  _numNew = 0;
   _saveData = false;
   _isScalarList = false;
 
@@ -370,7 +370,7 @@ void Vector::setV(double *memptr, int newSize) {
   _v_raw = memptr;
   _v_out = _v_raw;
 
-  NumNew = newSize;
+  _numNew = newSize;
   _size = newSize;
 }
 
@@ -694,8 +694,8 @@ void Vector::save(QXmlStreamWriter &s) {
 }
 
 void Vector::setNewAndShift(int inNew, int inShift) {
-  NumNew = inNew;
-  NumShifted = inShift;
+  _numNew = inNew;
+  _numShifted = inShift;
 }
 
 double const *Vector::noNanValue() {
@@ -710,7 +710,7 @@ double const *Vector::noNanValue() {
 
 
 void Vector::newSync() {
-  NumNew = NumShifted = 0;
+  _numNew = _numShifted = 0;
 }
 
 int Vector::getUsage() const {

@@ -80,6 +80,7 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
   _scalars["min"]->setValue(x0);
   _scalars["max"]->setValue(x1);
 
+  _numNew = length();
   registerChange();
 }
 

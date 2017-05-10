@@ -117,10 +117,10 @@ class KSTCORE_EXPORT Vector : public Primitive
     inline double minPos() const { return _minPos; }
 
     /** Number of new samples in the vector since last newSync */
-    inline int numNew() const { return NumNew; }
+    inline int numNew() const { return _numNew; }
 
     /** Number of samples  shifted since last newSync */
-    inline int numShift() const { return NumShifted; }
+    inline int numShift() const { return _numShifted; }
 
     inline bool isRising() const { return _is_rising; }
 
@@ -222,10 +222,10 @@ class KSTCORE_EXPORT Vector : public Primitive
     int _v_no_nans_size;
 
     /** number of samples shifted since last newSync */
-    int NumShifted;
+    int _numShifted;
 
     /** number of new samples since last newSync */
-    int NumNew;
+    int _numNew;
 
     /** is the vector monotonically rising */
     bool _is_rising : 1;

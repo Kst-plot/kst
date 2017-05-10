@@ -575,7 +575,7 @@ void DataVector::internalUpdate() {
       }
     }
   }
-  NumNew = _size - _numSamples;
+  _numNew = _size - _numSamples;
   NF = new_nf;
   F0 = new_f0;
   _numSamples += n_read;
@@ -595,11 +595,11 @@ void DataVector::internalUpdate() {
     }
   }
 
-  if (NumNew > _size) {
-    NumNew = _size;
+  if (_numNew > _size) {
+    _numNew = _size;
   }
-  if (NumShifted > _size) {
-    NumShifted = _size;
+  if (_numShifted > _size) {
+    _numShifted = _size;
   }
 
   if (dataSource()) {
