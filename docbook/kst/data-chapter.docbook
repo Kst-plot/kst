@@ -248,7 +248,7 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 <itemizedlist>
 <listitem>
 <para>
-  Data Vectors aquire their data from Data Sources (aka, files).  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
+  Data Vectors aquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
   
 <inlinemediaobject>
 <imageobject>
@@ -291,368 +291,200 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 <sect2 id="curves">
 <title>Curves</title>
 <para>
-Curves used to create plottable objects from vectors.  Curves are created from two vectors - an <quote>X axis vector</quote> and a <quote>Y axis vector</quote>.  These two vectors are interpreted as a set of (X,Y) pairs to be plotted.  When the X and Y vectors have the same length, the interpretation is obvious.  If, however, the X vector is of a different length than the Y vector, then the first and last points of each are assumed to represent the first and last (X,Y) pair, and the shorter vector is resampled using linear interpolation to have the same number of samples as the longer vector.
+Curves are used to create plottable objects from vectors.  Curves are created from two vectors - an <quote>X axis vector</quote> and a <quote>Y axis vector</quote>.  These two vectors are interpreted as a set of (X,Y) pairs to be plotted.  When the X and Y vectors have the same length, the interpretation is obvious.  
 </para>
 <para>
-The following is a screenshot of the window displayed when creating or editing curves.  Explanations of the
-settings are listed below.
+If, however, the X vector is of a different length than the Y vector, then the first and last points of each are assumed to represent the first and last (X,Y) pair, and the shorter vector is resampled using linear interpolation to have the same number of samples as the longer vector.
+</para>
+<para>
+Curves are created by the data wizard, from the creation dialog from Data Objects (such as histograms) or by using the <guimenuitem>Curve</guimenuitem> option in the <guimenu>Create</guimenu> menu.  The latter produces the following:
 </para>
 
 <screenshot>
-<screeninfo>Edit Curves</screeninfo>
+<screeninfo>New Curve</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-curvewindow.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-newcurve.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Edit Curves</phrase>
+<phrase>New Curve</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
-<sect3 id="curvecontents">
-<title>Curve Contents</title>
 <para>
-The contents of the curve can be set from this section.
+  Here, in the <guilabel>Curve Contents</guilabel> box, the curve has been set up to use INDEX (V1) as the X axis vector and Column 2 (V3) as the Y axis vector.    Note that vectors holding X and Y axis error bars can also be selected.  The 
+  
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-vectornew.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+
+  icon in any of the vector selectors will bring up a new vector dialog.  The
+  
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-vectoredit.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+  icon will edit the selected vector.
 </para>
-<variablelist>
-<varlistentry>
-<term>
-<guilabel>X axis vector</guilabel>
-</term>
-<listitem>
+
 <para>
-The vector to use for the independent (horizontal) axis.
+  The appearance of curves is adjusted in the <guilabel>Appearance</guilabel> box.  Some of the flexability of curves in kst is shown in the next figure. 
+  Note that the options are not exclusive - for example, <guilabel>Lines</guilabel> and <guilabel>Points</guilabel> can both be selected.  The <guilabel>Size</guilabel> field specifies the dimensions of display elements such as points and error flags in points (the same way as font sizes are defined.)
+  The <guilabel>Weight</guilabel> field specifies the width of lines,
+  bar graph borders, and the strokes for points.  The color selector to the right of the example line sets the color of lines, points, and bargraph borders.  The color selector to the right of the <guilabel>Bargraph</guilabel> checkbox sets the fill color for bargraphs.  The last (most recent) point of a
+  curve can be indicated by slecting <guilabel>Head</guilabel> and specifying
+  a point type and color. The color selector to the right of the <guilabel>Head</guilabel> sets the color for this point.  
 </para>
-</listitem>
 
-</varlistentry>
+<screenshot>
+<screeninfo>Curve Demo</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-curvedemo.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Curve Demo</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
 
-<varlistentry>
-<term>
-<guilabel>Y axis vector</guilabel>
-</term>
-<listitem>
+
 <para>
-The vector to use for the dependent (vertical) axis.
+  The <guilabel>Placement</guilabel> box specifies what plot the curve will be displayed in.  Both the <guilabel>Placement</guilabel> and <guilabel>Appearance</guilabel> boxes appear in data object creation dialogs as well, and work the same way.
 </para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>
-<guilabel>+X error bar</guilabel> and <guilabel>+Y error bar</guilabel>
-</term>
-<listitem>
-<para>
-The vectors containing error values corresponding to the X axis vector and Y axis vector, respectively.
-The vectors should contain the sizes of the error bars in the same order as the data points.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Use +<replaceable>X/Y</replaceable> error bar for
--<replaceable>X/Y</replaceable></guilabel></term> <listitem><para>If
-this item is checked, the error bars are drawn symmetrically about the
-data point. To draw asymmetric error bars in the x or y direction,
-uncheck the box, and choose a vector for the length of the error bar
-below the data point in the <guilabel>-<replaceable>X/Y</replaceable>
-error bar</guilabel> combo box.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>-<replaceable>X/Y</replaceable> error
-bar</guilabel></term>
-<listitem><para>The vector to use for the error bar below the data
-point. See the previous entry for more detail on using asymmetric
-error bars.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-</sect3>
 </sect2>
 
 <sect2 id="equations">
 <title>Equations</title>
 <para>
-An equation data object consists of a mathematical expression and an independent variable.  The expression
-is built using a combination of scalars, vectors, and operators, and usually represents the values of the
-dependent variable.  The independent variable can be an existing vector or it can be generated when the equation
-object is created or edited.  Since an equation ultimately consists of a set of data points, an equation object
-is plottable.
-</para>
-<para>
-The following is a screenshot of the window displayed when creating or editing equations.  Explanations of the
-settings are listed below.
+  An equation data object, created by selecting <guimenuitem>Equation</guimenuitem> from the
+  <guimenu>Create</guimenu> menu, produces an output vector which is the function of one or 
+  more data vectors.  An example of creating an equation, and the resulting plot is shown below.
+  In this example, a Generated Vector consisting of 1000 points from -10 to 10 was selected for 
+  the x vector.  Recall that a Generated vector can be created by selecting the new vector icon, 
+
+  <inlinemediaobject>
+  <imageobject>
+  <imagedata fileref="Icon-kst-vectornew.png" format="PNG"/>
+  </imageobject>
+  </inlinemediaobject>
+
+  which appears to the right of the <guilabel>X Vector</guilabel> field.  The equation, sin(x)/x, 
+  was entered into the <guilabel>Equation</guilabel> field.  
 </para>
 
 <screenshot>
-<screeninfo>Edit Equation</screeninfo>
+<screeninfo>New Equation</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-equationwindow.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-newequation.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Edit Equation</phrase>
+<phrase>New Equation</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
-<sect3 id="equation">
-<title>Equation</title>
+<screenshot>
+<screeninfo>sin(x)/x</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-sinx_x.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>sin(x)/x</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
 <para>
-The mathematical expression representing the dependent variable can be modified from this section.
+  Equations can use any vector or scalar as their input vectors, not just the X vector.  In the next example,
+  the bottom right plot shows the signal in Column 2 with the signal in Column 1 regressed out of it.
+  This has been done by subtracting Column 1, scaled by the slope of a fit to Column 2 vs Column 1, 
+  from Column 2.  The fit had been created previously using the <guimenuitem>Fit</guimenuitem> option in the right 
+  mouse button menu of the top right plot.
 </para>
 
-<variablelist>
-<varlistentry>
-<term>
-<guilabel>Operators</guilabel>
-</term>
-<listitem>
+<screenshot>
+<screeninfo>Regression</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eq2Plots.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Regression</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
 <para>
-A list of available operators.  Choosing an operator from the list inserts the operator at the current
-insertion point in the <guilabel>Equation</guilabel> text box.
+  The <guilabel>New Equation</guilabel> dialog which created this plot is shown below.
+  Note that vectors are identified by enclosing their names in <literal>[  ]</literal>.   So Column 2
+  is indicated by <literal>[Column 2 (V2)]</literal>.  The <guilabel>Equation</guilabel> line widget
+  has a fairly powerful autocomplete mechanism with a scrollable list of all possible scalars (in 
+  its first colum) or vectors (in its second column) as you enter the name of the object.  Similarly,
+  the auto complete lists all valid functions and operators as relevant while you type.  The
+  <literal>Esc</literal> key hides the autocomplete widget.
 </para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>
-<guilabel>Vectors</guilabel>
-</term>
-<listitem>
 <para>
-A list of the current vector objects in &kst;.  Choosing a vector from the list inserts the vector at the current
-insertion point in the <guilabel>Equation</guilabel> text box.
+  If the vectors were set to <guilabel>Read to end</guilabel> mode, all elements would be updated real 
+  time as new data came in.
 </para>
-</listitem>
-</varlistentry>
 
-<varlistentry>
-<term>
-<guilabel>Scalars</guilabel>
-</term>
-<listitem>
-<para>
-A list of the available scalar values.  This list is composed of both the scalar values in the current &kst;
-session as well as some built-in constants.  Choosing a scalar from the list inserts the scalar at the current
-insertion point in the <guilabel>Equation</guilabel> text box.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Equation</guilabel>
-</term>
-<listitem>
-<para>
-The mathematical expression representing the independent variable.  You may manually type in this text box or
-you may select items to insert using the above drop-down lists.
-</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</sect3>
-
-
-<sect3 id="independentvariable">
-<title>Independent Variable</title>
-<para>
-<!-- TODO: Note that the independent variable is x. Maybe give some -->
-<!-- simple examples -->
-This section is used to specify the source of the values for the independent variable.
-</para>
-<variablelist>
-
-<varlistentry>
-<term>
-<guilabel>Use</guilabel>
-</term>
-<listitem>
-<para>
-Select this option to use an existing vector as the independent variable. Select a vector from the
-drop-down list, or quickly create a new one by clicking the button to the right.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Interpolate to highest resolution vector</guilabel>
-</term>
-<listitem>
-<para>
-Selecting this option interpolates the selected vector to the greatest number of samples possible.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Generate</guilabel>
-</term>
-<listitem>
-<para>
-Select this to generate a set of values to use as the independent variable. Specify the lowest value
-to generate in the <guilabel>From</guilabel> field, and the highest value to generate in the <guilabel>to</guilabel> field.
-Set the value for <guilabel>Number of samples</guilabel> to be the number of equally spaced values to generate between the
-lowest value and the highest value (inclusive).
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-</sect3>
+<screenshot>
+<screeninfo>Complex Equation</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-eq2.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Complex Equation</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
 
 </sect2>
 
 <sect2 id="Histograms">
 <title>Histograms</title>
 <para>
-A histogram data object simply represents a histogram of a particular vector.  Histogram objects are plottable.
-</para>
-<para>
-The following is a screenshot of the window displayed when creating or editing histograms.  Explanations of the
-settings are listed below.
+Histograms are data objects whose output vectors are the binned data, 
+and the locations of the center of the bins.  In the 
+<guilabel>New Histogram</guilabel> dialog, the bins can be set manually,
+can be preset once by selecting <guilabel>Auto Bin</guilabel> or can be
+set to be automatically reset with each data update by selecting
+<guilabel>Real-time auto bin</guilabel>.
 </para>
 
 <screenshot>
-<screeninfo>Edit Equation</screeninfo>
+<screeninfo>New Histogram</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-histogramwindow.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-new-histogram.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Edit Equation</phrase>
+<phrase>New Histogram</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
-<sect3 id="histogramproperties">
-<title>Histogram Properties</title>
-<para>
-The source vector, as well as basic histogram properties, can be modified from this section.
-You can either manually specify settings or use the <guibutton>Auto Bin</guibutton> button.
-</para>
-
-<variablelist>
-<varlistentry>
-<term>
-<guilabel>Data vector</guilabel>
-</term>
-<listitem>
-<para>
-The data vector to create the histogram from.  Although a vector is needed to create a histogram, the
-vector is treated as an unordered set for the purposes of creating a histogram.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>From</guilabel> and <guilabel>to</guilabel>
-</term>
-<listitem>
-<para>
-The <guilabel>From</guilabel> field contains the left bound for the leftmost bin in the histogram.
-The <guilabel>to</guilabel> field contains the right bound for the rightmost bin in the histogram.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Num bins</guilabel>
-</term>
-<listitem>
-<para>
-Enter the total number of bins to use in the <guilabel>Num bins</guilabel> field.
-
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guibutton>Auto Bin</guibutton>
-</term>
-<listitem>
-<para>
-Instead of specifying values for <guilabel>From</guilabel>, <guilabel>to</guilabel>, and
-<guilabel>Num bins</guilabel>, you can click <guibutton>Auto Bin</guibutton> to automatically generate
-values for all three fields based on the lowest and highest values, as well as the number
-of elements found in the source vector.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-</sect3>
-
-
-<sect3 id="yaxisnormalization">
-<title>Y Axis Normalization</title>
-<para>
-This section is used to specify the type of normalization used for the y axis of the histogram.
-</para>
-<variablelist>
-
-<varlistentry>
-<term>
-<guilabel>Number in bin</guilabel>
-</term>
-<listitem>
-<para>
-Selecting this option causes the y axis to represent the number of elements in each bin.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Fraction in bin</guilabel>
-</term>
-<listitem>
-<para>
-Selecting this option causes the y axis to represent the fraction of elements in each bin
-out of the total number of elements.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Percent in bin</guilabel>
-</term>
-<listitem>
-<para>
-Selecting this option causes the y axis to represent the percentage of elements (out of the total
-number of elements) in each bin.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Peak bin = 1.0</guilabel>
-</term>
-<listitem>
-<para>
-Selecting this option causes the y axis to represent the number of elements in each bin divided by
-the number of elements in the largest bin (the bin with the greatest number of elements).  In other words,
-the y axis is normalized to 1.0.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-</sect3>
-
+<screenshot>
+<screeninfo>Histogram</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-histogram.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Histogram</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
 
 </sect2>
 
