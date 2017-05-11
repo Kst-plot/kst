@@ -38,7 +38,8 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
 
   Q_ASSERT(store);
 
-  QString fileType, fileName;
+  //QString fileType;
+  QString fileName;
   QXmlStreamAttributes propertyAttributes;
   DataSource::UpdateCheckType updateCheckType = DataSource::Timer;
 
@@ -47,7 +48,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     if (xml.isStartElement()) {
       if (n == DataSource::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        fileType = attrs.value("reader").toString();
+        //fileType = attrs.value("reader").toString();
         fileName = DataPrimitive::readFilename(attrs);
         if (attrs.hasAttribute("updateType")) {
           updateCheckType = DataSource::UpdateCheckType(attrs.value("updateType").toString().toInt());
@@ -82,7 +83,7 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
   QString alternate_filename = fileName;
   do {
     dataSource = 0L;
-    dataSource = DataSourcePluginManager::loadSource(store, fileName, fileType);
+    dataSource = DataSourcePluginManager::loadSource(store, fileName); //, fileType);
     if (dataSource) {
       QObject::connect(dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
       dataSource->vector().prepareRead(0);
