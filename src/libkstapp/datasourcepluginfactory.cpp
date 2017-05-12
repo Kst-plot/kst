@@ -48,6 +48,8 @@ DataSourcePtr DataSourcePluginFactory::generateDataSource(ObjectStore *store, QX
     if (xml.isStartElement()) {
       if (n == DataSource::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
+        // Ignore "reader" and let kst figure out the file type based on whatever data source
+        // plugins are currently installed.
         //fileType = attrs.value("reader").toString();
         fileName = DataPrimitive::readFilename(attrs);
         if (attrs.hasAttribute("updateType")) {
