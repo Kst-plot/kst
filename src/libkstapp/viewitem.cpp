@@ -121,6 +121,8 @@ ViewItem::ViewItem(View *parentView) :
   connect(_lowerAction, SIGNAL(triggered()), this, SLOT(lower()));
 
   _autoLayoutAction = new QAction(tr("Automatic"), this);
+  _autoLayoutAction->setShortcut(Qt::Key_U);
+  registerShortcut(_autoLayoutAction);
   connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createAutoLayout()));
 
   _protectedLayoutAction = new QAction(tr("Protect Layout"), this);

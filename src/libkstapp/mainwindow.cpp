@@ -312,6 +312,7 @@ void MainWindow::newDoc(bool force) {
   }
 
   if (clearApproved) {
+    cleanup();
     delete _dataManager;
     _dataManager = 0;
     delete _doc;
@@ -1374,7 +1375,6 @@ void MainWindow::createActions() {
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setIcon(KstGetIcon("change-data-file"));
-  _changeFileDialogAct->setShortcut(QString("f"));
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog (%1)").arg(_changeFileDialogAct->shortcut().toString()));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 

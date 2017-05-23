@@ -551,19 +551,16 @@ void PlotItem::createActions() {
 
   
   _shareBoxShareX = new QAction(tr("Share Plots on X-Axis"), this);
-  _shareBoxShareX->setShortcut(Qt::Key_X);
   _shareBoxShareX->setCheckable(true);
   registerShortcut(_shareBoxShareX);
   connect(_shareBoxShareX, SIGNAL(triggered()), this, SIGNAL(shareXAxisTriggered()));
 
   _shareBoxShareY = new QAction(tr("Share Plots on Y-Axis"), this);
-  _shareBoxShareY->setShortcut(Qt::Key_Y);
   _shareBoxShareY->setCheckable(true);
   registerShortcut(_shareBoxShareY);
   connect(_shareBoxShareY, SIGNAL(triggered()), this, SIGNAL(shareYAxisTriggered()));
 
   _breakSharedBox = new QAction(tr("Break Shared Axis Box"), this);
-  _breakSharedBox->setShortcut(Qt::Key_B);
   registerShortcut(_breakSharedBox);
   connect(_breakSharedBox, SIGNAL(triggered()), this, SIGNAL(breakShareTriggered()));
 

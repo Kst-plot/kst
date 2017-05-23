@@ -48,7 +48,6 @@ SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
   setBrush(Qt::transparent);
 
   _breakAction = new QAction(tr("Break Shared Axis Box"), this);
-  _breakAction->setShortcut(Qt::Key_B);
   registerShortcut(_breakAction);
   connect(_breakAction, SIGNAL(triggered()), this, SLOT(breakShare()));
 

@@ -89,11 +89,13 @@ void View::init()
   loadSettings();
 
   _editAction = new QAction(tr("Edit"), this);
-  _editAction->setShortcut(Qt::Key_E);
+  //_editAction->setShortcut(Qt::Key_E);
 //   registerShortcut(_editAction);
   connect(_editAction, SIGNAL(triggered()), this, SLOT(edit()));
 
   _autoLayoutAction = new QAction(tr("Automatic"), this);
+  //_autoLayoutAction->setShortcut(Qt::Key_U);
+  //registerShortcut(_autoLayoutAction);
   connect(_autoLayoutAction, SIGNAL(triggered()), this, SLOT(createUnprotectedLayout()));
 
   _protectedLayoutAction = new QAction(tr("Protect Layout"), this);
