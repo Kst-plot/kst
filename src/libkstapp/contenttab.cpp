@@ -54,6 +54,8 @@ ContentTab::ContentTab(QWidget *parent, ObjectStore *store)
 
   connect(_editSelectedAvailable, SIGNAL(clicked()), this, SLOT(editSelectedAvailable()));
   connect(_editSelectedDisplayed, SIGNAL(clicked()), this, SLOT(editSelectedDisplayed()));
+  connect(_curveSearchEntry, SIGNAL(textChanged(QString)), this, SLOT(filterCurves(QString)));
+  connect(_curveSearch, SIGNAL(clicked()), this, SLOT(searchCurves()));
 
 }
 
@@ -224,6 +226,62 @@ void ContentTab::removeObject(QString x) {
             return;
         }
     }
+}
+
+void ContentTab::filterCurves(const QString &filter) {
+  _availableRelationList->clearSelection();
+
+  if (filter=="*") { // optimization
+    _availableRelationList->selectAll();
+    return;
+  }
+
+  QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
+  QStringList selected;
+
+  for (int i = 0; i < _availableRelationList->count(); i++) {
+    QListWidgetItem *item = _availableRelationList->item(i);
+    if (re.exactMatch(item->text())) {
+      item = _availableRelationList->takeItem(i);
+      selected.append(item->text());
+      i--;
+    }
+  }
+
+  _availableRelationList->insertItems(0, selected);
+
+  // special case optimization:
+  // selecting and unselecting individual items is expensive,
+  // but selecting all of them is fast,
+  // so either select or select all, then unselect, which ever is fewer.
+  if (selected.count() > _availableRelationList->count()/2) {
+    _availableRelationList->selectAll();
+    for (int i=selected.count(); i<_availableRelationList->count(); i++) {
+      _availableRelationList->item(i)->setSelected(false);
+    }
+  } else {
+    for (int i=0; i<selected.count(); i++) {
+      _availableRelationList->item(i)->setSelected(true);
+    }
+  }
+
+  if (selected.count()>0) {
+    _availableRelationList->scrollToTop();
+  }
+
+}
+
+void ContentTab::searchCurves() {
+  QString s = _curveSearchEntry->text();
+  if (!s.isEmpty()) {
+    if (s[0] != '*') {
+      s = '*' + s;
+    }
+    if (s[s.length()-1] != '*') {
+      s += '*';
+    }
+    _curveSearchEntry->setText(s);
+  }
 }
 
 }

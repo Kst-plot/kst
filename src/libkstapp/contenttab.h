@@ -48,6 +48,9 @@ class ContentTab : public DialogTab, Ui::ContentTab {
     void editSelectedDisplayed();
     void addObject(QString);
     void removeObject(QString);
+    void filterCurves(const QString&);
+    void searchCurves();
+
 };
 
 }
