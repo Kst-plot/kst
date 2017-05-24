@@ -405,7 +405,11 @@ void ChangeDataSampleDialog::apply() {
       matrix->writeLock();
       int from = f0_map.value(matrix->filename());
       int range = r_map.value(matrix->filename());
-      matrix->setFrame(from+range-1);
+      if (from < 0) {
+        matrix->setFrame(-1);
+      } else {
+        matrix->setFrame(from+range-1);
+      }
       matrix->setStartUnits(start_units);
       matrix->setRangeUnits(start_units);
       matrix->registerChange();
