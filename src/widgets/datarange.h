@@ -76,7 +76,8 @@ class  KSTWIDGETS_EXPORT DataRange : public QWidget, public Ui::DataRange {
 
     void setWidgetDefaults();
     void loadWidgetDefaults();
-    
+
+    bool rangeIsValid();
 
     enum ControlField {Start, Last, Range, None};
 

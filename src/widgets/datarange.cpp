@@ -359,6 +359,14 @@ void DataRange::loadWidgetDefaults() {
   setStartUnits(dialogDefaults().value("vector/startUnits",tr("frames")).toString());
 }
 
+bool DataRange::rangeIsValid() {
+  if (readToEnd()) {
+    return true;
+  } else {
+    return (range()>1);
+  }
+}
+
 }
 
 // vim: ts=2 sw=2 et

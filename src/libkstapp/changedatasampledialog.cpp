@@ -159,7 +159,7 @@ void ChangeDataSampleDialog::updateIndexEntries() {
 
 
 void ChangeDataSampleDialog::updateButtons() {
-  bool valid = _selectedVectorList->count() > 0;
+  bool valid = (_selectedVectorList->count() > 0) && (_dataRange->rangeIsValid());
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
   _add->setEnabled(_vectorList->selectedItems().count() > 0);

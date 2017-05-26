@@ -632,6 +632,7 @@ DataWizardPageDataPresentation::DataWizardPageDataPresentation(ObjectStore *stor
   connect(_xVectorExisting, SIGNAL(selectionChanged(QString)), this, SLOT(checkWarningLabel()));
   connect(_xAxisCreateFromField, SIGNAL(toggled(bool)), this, SLOT(checkWarningLabel()));
   connect(_DataRange, SIGNAL(modified()), this, SLOT(checkWarningLabel()));
+  connect(_DataRange, SIGNAL(modified()), this, SIGNAL(completeChanged()));
   connect(_xAxisGroup, SIGNAL(toggled(bool)), this, SLOT(checkWarningLabel()));
 
   _FFTOptions->GroupBoxFFTOptions->setCheckable(true);
@@ -769,7 +770,7 @@ void DataWizardPageDataPresentation::applyFilter(bool filter) {
 
 
 bool DataWizardPageDataPresentation::isComplete() const {
-  return _pageValid;
+  return _DataRange->rangeIsValid() && _pageValid;
 }
 
 

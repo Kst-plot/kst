@@ -339,6 +339,8 @@ VectorDialog::VectorDialog(ObjectPtr dataObject, QWidget *parent)
 
   connect(_vectorTab, SIGNAL(modified()), this, SLOT(modified()));
   connect(_vectorTab, SIGNAL(destroyed()), kstApp->mainWindow(), SLOT(cleanUpDataSourceList()));
+  connect(_vectorTab->dataRange(), SIGNAL(modified()), this, SLOT(updateButtons()));
+
   updateButtons();
 }
 
@@ -362,7 +364,9 @@ void VectorDialog::editSingleMode() {
 void VectorDialog::updateButtons() {
 
   bool valid = _vectorTab->vectorMode() == VectorTab::GeneratedVector || !_vectorTab->field().isEmpty();
-  // FIXME: add stricter validity testing.
+
+  valid &= _vectorTab->dataRange()->rangeIsValid();
+
   _buttonBox->button(QDialogButtonBox::Ok)->setEnabled(valid);
   _buttonBox->button(QDialogButtonBox::Apply)->setEnabled(valid);
 }

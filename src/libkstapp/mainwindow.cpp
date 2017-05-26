@@ -510,6 +510,7 @@ bool MainWindow::initFromCommandLine() {
 
 void MainWindow::openFile(const QString &file) {
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+  cleanup();
   newDoc(true); // Does all the init stuff, but does not ask for override as it's supposed to be done elsewhere
   bool ok = _doc->open(file);
   updateProgress(100, "");
