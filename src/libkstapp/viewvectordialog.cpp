@@ -17,6 +17,7 @@
 #include "editmultiplewidget.h"
 #include "updateserver.h"
 #include "geticon.h"
+#include "dialogdefaults.h"
 
 #include <datacollection.h>
 #include <objectstore.h>
@@ -112,7 +113,7 @@ void ViewVectorDialog::contextMenu(const QPoint& position) {
   QMenu* submenu = new QMenu(tr("Significant digits"));
   QAction* digitNb0Action = submenu->addAction(tr("Show as int"));
   QAction* digitNb3Action = submenu->addAction("3");
-  QAction* digitNb6Action = submenu->addAction(tr("6 (default)"));
+  QAction* digitNb6Action = submenu->addAction(tr("6"));
   QAction* digitNb12Action = submenu->addAction("12");
   QAction* digitNb17Action = submenu->addAction("17");
   menu.addMenu(submenu);
@@ -137,6 +138,9 @@ void ViewVectorDialog::contextMenu(const QPoint& position) {
   foreach (int column, selectedColumns()) {
     _model->setDigitNumber(column, digits);
   }
+  dialogDefaults().setValue("viewvector/digits", digits);
+
+  _vectors->resizeColumnsToContents();
 }
 
 void ViewVectorDialog::update()
@@ -166,6 +170,7 @@ void ViewVectorDialog::addSelected() {
       _model->addVector(vector);
     }
   }
+  _vectors->resizeColumnsToContents();
 }
 
 void ViewVectorDialog::removeSelected() {

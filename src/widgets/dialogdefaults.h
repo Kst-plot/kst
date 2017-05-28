@@ -101,3 +101,5 @@ namespace Kst {
 // wizard/plotCount     int      datawizard.cpp
 
 // changedatafile/newFileName  QString  changefiledialog.cpp
+
+// viewvector/digits    int     vectormodel.cpp, viewvectordialog.cpp

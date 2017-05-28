@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "vectormodel.h"
+#include "dialogdefaults.h"
 
 #include <assert.h>
 
@@ -33,8 +34,8 @@ bool VectorModel::addVector(VectorPtr v)
   if (!_vectorList.contains(v)) {
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
-    // Standard nb of digits after comma: 6
-    _digitNbList.append(6);
+    // Standard nb of digits:
+    _digitNbList.append(dialogDefaults().value("viewvector/digits",12).toInt());
     endInsertColumns();
     reset();
     _rows = rowCount();
