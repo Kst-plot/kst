@@ -265,18 +265,18 @@ void ViewItem::save(QXmlStreamWriter &xml) {
   }
 }
 
-void ViewItem::applyDialogDefaultsFill() {
+void ViewItem::applyDialogDefaultsFill(bool default_no_fill) {
   if (hasBrush()) {
     //set the brush
-    QBrush brush = dialogDefaultsBrush(defaultsGroupName());
+    QBrush brush = dialogDefaultsBrush(defaultsGroupName(), default_no_fill);
     setBrush(brush);
   }
 }
 
-void ViewItem::applyDialogDefaultsStroke() {
+void ViewItem::applyDialogDefaultsStroke(bool default_no_pen) {
   if (hasStroke()) {
     // set the pen
-    QPen pen = dialogDefaultsPen(defaultsGroupName());
+    QPen pen = dialogDefaultsPen(defaultsGroupName(), default_no_pen);
     storePen(pen);
   }
 }

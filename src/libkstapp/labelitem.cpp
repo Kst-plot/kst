@@ -73,8 +73,8 @@ void LabelItem::applyDefaults() {
   _color = dialogDefaults().value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
   _scale = dialogDefaults().value(defaultsGroupName()+"/fontScale",12).toDouble();
   _fixleft = dialogDefaults().value(defaultsGroupName()+"/fixLeft",true).toBool();
-  applyDialogDefaultsStroke();
-  applyDialogDefaultsFill();
+  applyDialogDefaultsStroke(true);
+  applyDialogDefaultsFill(true);
   applyDialogDefaultsLockPosToData();
 }
 

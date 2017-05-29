@@ -100,7 +100,7 @@ void saveDialogDefaultsPen(const QString &group_name, const QPen &p) {
 }
 
 
-QBrush dialogDefaultsBrush(const QString &group_name) {
+QBrush dialogDefaultsBrush(const QString &group_name, bool default_no_fill) {
   //set the brush
   QBrush brush;
   bool useGradient = dialogDefaults().value(group_name +"/fillBrushUseGradient", false).toBool();
@@ -117,17 +117,26 @@ QBrush dialogDefaultsBrush(const QString &group_name) {
   } else {
     QColor color = dialogDefaults().value(group_name +"/fillBrushColor",QColor(Qt::white)).value<QColor>();
     brush.setColor(color);
-    brush.setStyle((Qt::BrushStyle)dialogDefaults().value(group_name +"/fillBrushStyle",1).toInt());
+    if (default_no_fill) {
+      qDebug() << "setting default to no brush";
+      brush.setStyle((Qt::BrushStyle)dialogDefaults().value(group_name +"/fillBrushStyle",0).toInt());
+    } else {
+      brush.setStyle((Qt::BrushStyle)dialogDefaults().value(group_name +"/fillBrushStyle",1).toInt());
+    }
   }
 
   return brush;
 }
 
-QPen dialogDefaultsPen(const QString &group_name) {
+QPen dialogDefaultsPen(const QString &group_name, bool default_no_pen) {
   QPen pen;
   QColor color;
   QBrush brush;
-  pen.setStyle((Qt::PenStyle)dialogDefaults().value(group_name +"/strokeStyle", 1).toInt());
+  if (default_no_pen) {
+    pen.setStyle((Qt::PenStyle)dialogDefaults().value(group_name +"/strokeStyle", 0).toInt());
+  } else {
+    pen.setStyle((Qt::PenStyle)dialogDefaults().value(group_name +"/strokeStyle", 1).toInt());
+  }
   pen.setWidthF(dialogDefaults().value(group_name +"/strokeWidth",0).toDouble());
   pen.setJoinStyle((Qt::PenJoinStyle)dialogDefaults().value(group_name +"/strokeJoinStyle",64).toInt());
   pen.setCapStyle((Qt::PenCapStyle)dialogDefaults().value(group_name +"/strokeCapStyle",16).toInt());

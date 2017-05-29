@@ -246,8 +246,8 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
 
     void normalizePosition();
 
-    virtual void applyDialogDefaultsFill();
-    virtual void applyDialogDefaultsStroke();
+    virtual void applyDialogDefaultsFill(bool default_no_fill = false);
+    virtual void applyDialogDefaultsStroke(bool default_no_pen = false);
     void applyDialogDefaultsLockPosToData();
 
     virtual void applyDataLockedDimensions();
