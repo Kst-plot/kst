@@ -35,8 +35,8 @@ class LabelItem : public ViewItem {
     static QString staticDefaultsGroupName() { return QString("label");}
 
     // for view item dialogs
-    virtual bool hasStroke() const {return false;}
-    virtual bool hasBrush() const {return false;}
+    virtual bool hasStroke() const {return true;}
+    virtual bool hasBrush() const {return true;}
     virtual bool hasFont() const {return true;}
 
     virtual void save(QXmlStreamWriter &xml);

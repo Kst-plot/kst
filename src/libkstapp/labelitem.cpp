@@ -73,6 +73,8 @@ void LabelItem::applyDefaults() {
   _color = dialogDefaults().value(defaultsGroupName()+"/color",QColor(Qt::black)).value<QColor>();
   _scale = dialogDefaults().value(defaultsGroupName()+"/fontScale",12).toDouble();
   _fixleft = dialogDefaults().value(defaultsGroupName()+"/fixLeft",true).toBool();
+  applyDialogDefaultsStroke();
+  applyDialogDefaultsFill();
   applyDialogDefaultsLockPosToData();
 }
 
@@ -101,7 +103,6 @@ void LabelItem::generateLabel(QPainter *p) {
 
   Label::Parsed *parsed = Label::parse(_text, _color);
   if (parsed) {
-    //parsed->chunk->attributes.color = _color; // FIXME: this should be set in label::parse!
     _dirty = false;
     QFont font(_font);
 
@@ -118,6 +119,8 @@ void LabelItem::generateLabel(QPainter *p) {
     Label::renderLabel(*_labelRc, parsed->chunk, true, false);
 
     _height = _labelRc->fontHeight();
+    qreal x_margin = _height/8.0;
+
     // Make sure we have a rect for selection, movement, etc
     if (_resized) {
       _resized = false;
@@ -125,8 +128,8 @@ void LabelItem::generateLabel(QPainter *p) {
       double y0 = rect().y();
       double x1 = x0 + rect().width();
       double y1 = y0 + rect().height();
-      double w = _labelRc->xMax;
-      double h = (_labelRc->lines+1) * _height;
+      double w = _labelRc->xMax + 2*x_margin;
+      double h = (_labelRc->lines+1) * _height + x_margin;
       switch(_activeGrip) {
       case TopLeftGrip:
         setViewRect(QRectF(x1-w,y1-h,w,h));
@@ -145,16 +148,15 @@ void LabelItem::generateLabel(QPainter *p) {
       }
     } else {
       if (fixLeft()) {
-        setViewRect(QRectF(rect().left(), rect().bottom() - (_labelRc->lines+1) * _height,
-                    _labelRc->xMax, (_labelRc->lines+1) * _height),true);
+        setViewRect(QRectF(rect().left(), rect().bottom() - (_labelRc->lines+1) * _height - x_margin,
+                    _labelRc->xMax+2*x_margin, (_labelRc->lines+1) * _height+x_margin),true);
       } else {
-        setViewRect(QRectF(rect().right()-_labelRc->xMax, rect().bottom() - (_labelRc->lines+1) * _height,
-                    _labelRc->xMax, (_labelRc->lines+1) * _height),true);
+        setViewRect(QRectF(rect().right()-_labelRc->xMax-2*x_margin, rect().bottom() - (_labelRc->lines+1) * _height - x_margin,
+                    _labelRc->xMax+2*x_margin, (_labelRc->lines+1) * _height + x_margin),true);
       }
     }
     _paintTransform.reset();
-    _paintTransform.translate(rect().x(), rect().y() + _labelRc->fontAscent());
-
+    _paintTransform.translate(rect().x()+x_margin, rect().y() + _labelRc->fontAscent());
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(setDirty()));
     connect(_labelRc, SIGNAL(labelDirty()), this, SLOT(triggerUpdate()));
 
@@ -172,6 +174,9 @@ void LabelItem::paint(QPainter *painter) {
 
   if (_labelRc) {
     painter->save();
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawRect(rect());
     painter->setTransform(_paintTransform, true);
     Label::paintLabel(*_labelRc, painter);
     painter->restore();
