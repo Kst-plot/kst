@@ -23,6 +23,8 @@
 QString AsciiPlugin::pluginName() const { return tr("ASCII File Reader"); }
 QString AsciiPlugin::pluginDescription() const { return tr("ASCII File Reader"); }
 
+const int max_line_length = 1000000;
+
 
 Kst::DataSource *AsciiPlugin::create(Kst::ObjectStore *store, QSettings *cfg,
                                             const QString &filename,
@@ -183,7 +185,7 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
     int skip = config._dataLine;
     bool done = false;
     while (!done) {
-      const QByteArray line = f.readLine();
+      const QByteArray line = f.readLine(max_line_length);
       const int rc = line.size();
       if (skip > 0) {
         --skip;
