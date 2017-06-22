@@ -60,11 +60,11 @@ if(UNIX AND NOT APPLE)
 		install(FILES ${kst_dir}/src/images/128x128/kst.png DESTINATION share/icons/hicolor/128x128/apps)
 		install(FILES ${kst_dir}/src/images/svg_icons/kst.svg DESTINATION share/icons/hicolor/scalable/apps)
 
-		install(FILES ${kst_dir}/src/images/32x32/application-x-kst.png DESTINATION share/icons/hicolor/32x32/apps)
-		install(FILES ${kst_dir}/src/images/48x48/application-x-kst.png DESTINATION share/icons/hicolor/48x48/apps)
-		install(FILES ${kst_dir}/src/images/64x64/application-x-kst.png DESTINATION share/icons/hicolor/64x64/apps)
-		install(FILES ${kst_dir}/src/images/128x128/application-x-kst.png DESTINATION share/icons/hicolor/128x128/apps)
-		install(FILES ${kst_dir}/src/images/svg_icons/application-x-kst.svg DESTINATION share/icons/hicolor/scalable/apps)
+		install(FILES ${kst_dir}/src/images/32x32/application-x-kst.png DESTINATION share/icons/hicolor/32x32/mimetypes)
+		install(FILES ${kst_dir}/src/images/48x48/application-x-kst.png DESTINATION share/icons/hicolor/48x48/mimetypes)
+		install(FILES ${kst_dir}/src/images/64x64/application-x-kst.png DESTINATION share/icons/hicolor/64x64/mimetypes)
+		install(FILES ${kst_dir}/src/images/128x128/application-x-kst.png DESTINATION share/icons/hicolor/128x128/mimetypes)
+		install(FILES ${kst_dir}/src/images/svg_icons/application-x-kst.svg DESTINATION share/icons/hicolor/scalable/mimetypes)
 
 endif()
 
