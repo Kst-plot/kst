@@ -118,7 +118,6 @@ QBrush dialogDefaultsBrush(const QString &group_name, bool default_no_fill) {
     QColor color = dialogDefaults().value(group_name +"/fillBrushColor",QColor(Qt::white)).value<QColor>();
     brush.setColor(color);
     if (default_no_fill) {
-      qDebug() << "setting default to no brush";
       brush.setStyle((Qt::BrushStyle)dialogDefaults().value(group_name +"/fillBrushStyle",0).toInt());
     } else {
       brush.setStyle((Qt::BrushStyle)dialogDefaults().value(group_name +"/fillBrushStyle",1).toInt());
