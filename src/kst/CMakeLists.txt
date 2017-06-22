@@ -49,7 +49,7 @@ if(UNIX AND NOT APPLE)
 #	              ${k}/kstfilter.desktop
 #	              ${k}/kstextension.desktop
 #	                                 DESTINATION share/servicetypes/kst)
-	install(FILES ${k}/x-kst2.desktop DESTINATION share/mimelink/application)
+	install(FILES ${k}/x-kst.xml      DESTINATION share/mime/packages)
 	install(FILES ${k}/kst2.desktop   DESTINATION share/applications)
 
 #       icons
