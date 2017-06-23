@@ -65,7 +65,7 @@ Building without Xcode (out-of-source):
   qmake ../kst/kst.pro  -spec macx-g++ -config release
   make
 
-Fixing the link pathes (installs kst frameworks to /Library/Frameworks)
+Fixing the link paths (installs kst frameworks to /Library/Frameworks)
   ../kst/misc/macdeploykst
 
 Starting Kst from command line:

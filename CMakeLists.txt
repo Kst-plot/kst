@@ -503,7 +503,7 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
 
 if(APPLE)
     # We start from build/bin/kst2.app, all is build into the final bundle folder
-    # On the mac the pathes to needed shared libraries are hardcoded in the binary/library
+    # On the mac the paths to needed shared libraries are hardcoded in the binary/library
     # which could be changed by the macro 'fixup_bundle'
     # libs which are hardcoded are resolved automatically
     # but the plugins must be passed as extra argument because they are not hardcoded in the binary

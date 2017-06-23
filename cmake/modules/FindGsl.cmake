@@ -13,7 +13,7 @@
 # *                                                                         *
 # ***************************************************************************
 
-# use pkg to find the library name and pathes,
+# use pkg to find the library name and paths,
 # but use this iformation in find_* only
 if(NOT GSL_INCLUDEDIR)
 
