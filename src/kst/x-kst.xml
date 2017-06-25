@@ -2,6 +2,7 @@
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-kst">
     <comment>Kst Session File</comment>
+    <comment xml:lang="ca">Fitxer de sessió del Kst</comment>
     <comment xml:lang="es">Archivo de sesión de Kst</comment>
     <comment xml:lang="nl">Sessiebestand in Kst</comment>
     <comment xml:lang="pt">Ficheiro de Sessão do Kst</comment>
