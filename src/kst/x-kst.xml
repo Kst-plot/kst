@@ -3,6 +3,7 @@
   <mime-type type="application/x-kst">
     <comment>Kst Session File</comment>
     <comment xml:lang="ca">Fitxer de sessió del Kst</comment>
+    <comment xml:lang="ca@valencia">Fitxer de sessió del Kst</comment>
     <comment xml:lang="es">Archivo de sesión de Kst</comment>
     <comment xml:lang="nl">Sessiebestand in Kst</comment>
     <comment xml:lang="pt">Ficheiro de Sessão do Kst</comment>
