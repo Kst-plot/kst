@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Type=Application
-Exec=kst2
+Exec=kst2 %f
 Icon=kst
 X-DocPath=kst2/index.html
 MimeType=application/x-kst;
