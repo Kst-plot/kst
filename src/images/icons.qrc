@@ -34,6 +34,7 @@
         <file>document-save.png</file>
         <file>edit-redo.png</file>
         <file>edit-undo.png</file>
+        <file>edit-copy.png</file>
         <file>draw-bezier-curves.png</file>
         <file>document-save-as.png</file>
         <file>kbugbuster.png</file>
@@ -99,6 +100,7 @@
         <file>svg_icons/document-close.svgz</file>
         <file>svg_icons/edit-undo.svgz</file>
         <file>svg_icons/edit-redo.svgz</file>
+        <file>svg_icons/edit-copy.svgz</file>
         <file>svg_icons/document-save-as.svgz</file>
         <file>svg_icons/tab-close.svgz</file>
         <file>svg_icons/tab-new.svgz</file>

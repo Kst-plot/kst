@@ -328,7 +328,7 @@ void SharedAxisBoxItem::addToMenuForContextEvent(QMenu &menu) {
 
 
 void SharedAxisBoxItem::triggerContextEvent(QGraphicsSceneContextMenuEvent *event) {
-  contextMenuEvent(event);
+  ViewItem::contextMenuEvent(event);
 }
 
 

@@ -1228,13 +1228,13 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   addTitle(&menu);
 
 
-  if (!(lockParent() || (parentViewItem() && parentViewItem()->lockParent()))) {
-    QMenu *layoutMenu = menu.addMenu(tr("Cleanup Layout"));
-    layoutMenu->setTitle(tr("Cleanup Layout"));
-    layoutMenu->addAction(_autoLayoutAction);
-    layoutMenu->addAction(_protectedLayoutAction);
-    layoutMenu->addAction(_customLayoutAction);
-  }
+  //if (!(lockParent() || (parentViewItem() && parentViewItem()->lockParent()))) {
+  QMenu *layoutMenu = menu.addMenu(tr("Cleanup Layout"));
+  layoutMenu->setTitle(tr("Cleanup Layout"));
+  layoutMenu->addAction(_autoLayoutAction);
+  layoutMenu->addAction(_protectedLayoutAction);
+  layoutMenu->addAction(_customLayoutAction);
+  //}
 
   menu.addAction(_editAction);
 
@@ -1278,7 +1278,6 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   MimeDataViewItem* mimeData = new MimeDataViewItem;
   mimeData->item = this;
   mimeData->hotSpot = new_hotspot;
-  drag->setMimeData(mimeData);
 
   qreal theta = rotationAngle()*ONE_PI/180.0;
   qreal w = fabs(rect().width()*cos(theta)) + fabs(rect().height()*sin(theta));
@@ -1339,6 +1338,8 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   painter.end();
 
   drag->setPixmap(pixmap);
+  mimeData->setImageData(pixmap.toImage());
+  drag->setMimeData(mimeData);
 
   qreal hx = new_hotspot.toPoint().x()-rect().left();
   qreal hy = new_hotspot.toPoint().y()-rect().top();

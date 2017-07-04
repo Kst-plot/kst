@@ -75,6 +75,7 @@ class MainWindow : public QMainWindow
 
 
   public Q_SLOTS:
+    void copyTab();
     void showDataManager();
     void showDebugDialog();
     void showExportGraphicsDialog();
@@ -260,6 +261,7 @@ class MainWindow : public QMainWindow
 
     QAction *_undoAct;
     QAction *_redoAct;
+    QAction *_copyTabAct;
 
     // FIXME: move these into each object, along with the creation slot?
     QAction *_createLabelAct;

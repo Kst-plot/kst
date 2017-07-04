@@ -81,6 +81,7 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QSignalMapper>
+#include <QClipboard>
 
 namespace Kst {
 
@@ -363,6 +364,25 @@ QAction* MainWindow::createRecentFileAction(const QString& filename, int idx, co
 void MainWindow::updateRecentKstFiles(const QString& filename)
 {
   updateRecentFiles("recentKstFileList", _fileMenu, _bottomRecentKstActions, _recentKstFilesMenu, filename, SLOT(openRecentKstFile()));
+}
+
+void MainWindow::copyTab()
+{
+  View *view = _tabWidget->currentView();
+  QClipboard *clipboard = QApplication::clipboard();
+
+  QPainter painter;
+  QPixmap pixmap(view->size());
+
+  painter.begin(&pixmap);
+
+  view->setPrinting(true);
+  view->render(&painter);
+  view->setPrinting(false);
+
+  painter.end();
+
+  clipboard->setPixmap(pixmap);
 }
 
 
@@ -1137,6 +1157,11 @@ void MainWindow::createActions() {
   _redoAct->setShortcuts(QKeySequence::Redo);
   _redoAct->setIcon(KstGetIcon("edit-redo"));
 
+  _copyTabAct = new QAction(tr("Copy Current Tab"), this);
+  _copyTabAct->setStatusTip("Copy current tab to desktop clipboard");
+  _copyTabAct->setIcon(KstGetIcon("edit-copy"));
+  connect(_copyTabAct, SIGNAL(triggered()), this, SLOT(copyTab()));
+
   // ********************* View Actions ********************************** //
   _vectorEditorAct = new QAction(tr("&Vectors"), this);
   _vectorEditorAct->setStatusTip(tr("Show all vectors in a spreadsheet"));
@@ -1497,6 +1522,7 @@ void MainWindow::createMenus() {
   _editMenu = menuBar()->addMenu(tr("&Edit"));
   _editMenu->addAction(_undoAct);
   _editMenu->addAction(_redoAct);
+  _editMenu->addAction(_copyTabAct);
   // Cut/Copy/Paste will come here
 
   _viewMenu = menuBar()->addMenu(tr("&View"));
@@ -1640,6 +1666,7 @@ void MainWindow::createToolBars() {
   _editToolBar->setObjectName("Edit Toolbar");
   _editToolBar->addAction(_undoAct);
   _editToolBar->addAction(_redoAct);
+  _editToolBar->addAction(_copyTabAct);
 
   _toolsToolBar = addToolBar(tr("Tools"));
   _toolsToolBar->setObjectName("Tools Toolbar");
