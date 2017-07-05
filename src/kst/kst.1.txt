@@ -47,7 +47,7 @@ kst may be run entirely from within its GUI, in which case no
 command line arguments are needed.  kst has a powerful wizard for
 easily setting up new plots.  
 
-In the second invocation, kst loads pre\-saved plot specifications from the
+In the second invocation, kst loads pre-saved plot specifications from the
 file
 .I kstfile
 and optionally may override some of the settings in that file.
@@ -145,7 +145,7 @@ frames when plotting.
 .B \-x\ FIELD\fR
 use
 .I FIELD
-as the X\-axis vector.
+as the X-axis vector.
 .TP
 .B \-y\ FIELD\fR
 plot
@@ -198,6 +198,6 @@ Matthew Truch <matt@truch.net>
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2 or
 any later version published by the Free Software Foundation; with no
-Invariant Sections, with no Front\-Cover Texts, and with no Back\-Cover
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
 Texts.  A copy of the license is included in the `COPYING.DOC' file
 as part of the kst distribution.
