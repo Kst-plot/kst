@@ -110,6 +110,8 @@ class PlotRenderItem : public ViewItem
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+    void setCursorsMode(QPointF p, Qt::KeyboardModifiers modifiers=0);
+
     virtual QPainterPath shape() const;
 
   private Q_SLOTS:

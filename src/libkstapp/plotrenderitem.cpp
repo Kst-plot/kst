@@ -462,13 +462,16 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
     return;
   }
 
-  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-  if (modifiers & Qt::SHIFT) {
-    // show cursor as Qt::SizeVerCursor only on mouse events
-    // because shift is also used for arrow key controlled zooming
-  } else if (modifiers & Qt::CTRL) {
-    view()->setCursor(Qt::SizeHorCursor);
+  Qt::KeyboardModifiers modifiers = 0;
+
+
+  if (event->key()== Qt::Key_Shift) {
+    modifiers |= Qt::ShiftModifier;
+  } else if (event->key() == Qt::Key_Control) {
+    modifiers |= Qt::ControlModifier;
   }
+
+  setCursorsMode(_lastPos, modifiers);
 
   ViewItem::keyPressEvent(event);
 
@@ -483,9 +486,9 @@ void PlotRenderItem::keyReleaseEvent(QKeyEvent *event) {
   }
   const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
-    view()->setCursor(Qt::SizeVerCursor);
+    //view()->setCursor(Qt::SizeVerCursor);
   } else if (modifiers & Qt::CTRL || zoomOnlyMode() == View::ZoomOnlyX) {
-    view()->setCursor(Qt::SizeHorCursor);
+    //view()->setCursor(Qt::SizeHorCursor);
   } else {
     view()->setCursor(Qt::CrossCursor);
     QList<PlotItem*> plots = sharedOrTiedPlots(true, true);
@@ -762,11 +765,17 @@ void PlotRenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 
   QPointF p = event->pos();
 
+  setCursorsMode(p);
+}
+
+
+void PlotRenderItem::setCursorsMode(QPointF p, Qt::KeyboardModifiers modifiers_in) {
+
   double y = (p.y() - rect().bottom())/(rect().top()-rect().bottom())*(plotItem()->yMax()-plotItem()->yMin())+plotItem()->yMin();
   double x = (p.x() - rect().left())/(rect().right()-rect().left())*(plotItem()->xMax()-plotItem()->xMin())+plotItem()->xMin();
 
   _hoverPos = p;
-  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+  const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers() | modifiers_in;
   if (modifiers & Qt::SHIFT || zoomOnlyMode() == View::ZoomOnlyY) {
     _lastPos = p;
     view()->setCursor(Qt::SizeVerCursor);
