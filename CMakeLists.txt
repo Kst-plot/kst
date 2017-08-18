@@ -288,6 +288,10 @@ if(APPLE OR kst_clang)
     set(kst_pch 0 CACHE BOOL "Disable pch on Mac, not supported yet" FORCE)
 endif()
 
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH 1)
+endif()
+
 if(kst_merge_files)
     set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
 endif()
