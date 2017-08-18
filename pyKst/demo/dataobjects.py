@@ -13,6 +13,7 @@ P1=client.new_plot(font_size = 12);
 P2=client.new_plot(font_size = 12);
 P3=client.new_plot(font_size = 12);
 P4=client.new_plot(font_size = 12);
+P5=client.new_plot(font_size = 12);
 client.cleanup_layout(2)
 
 # plot a curve made from data vectors
@@ -74,3 +75,13 @@ c5 = client.new_curve(xs1.x(), xs1.y())
 c5.set_color("green")
 c5.set_line_width(1)
 P3.add(c5)
+
+# demo cumulative sum
+x1 = client.new_generated_scalar(1.0)
+sum1 = client.new_sum_filter(gv1, x1)
+print sum1.handle
+print sum1.output_sum().handle
+c6 = client.new_curve(gv1, sum1.output_sum())
+c6.set_color("green")
+c6.set_line_width(1)
+P5.add(c6)

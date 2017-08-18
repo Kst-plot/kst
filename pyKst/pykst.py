@@ -549,6 +549,14 @@ class Client:
     return PolynomialFit(self, 0, "", "", 0, name, new=False)
 
 
+  def new_sum_filter(self, y_vector, step_dX, name = ""):
+    """ Create a cumulative sum filter inside kst.
+
+    See :class:`SumFilter`
+    """
+    return SumFilter(self, y_vector, step_dX, name)
+
+
   def new_flag_filter(self, y_vector, flag, mask="0xffffff", valid_is_zero=True, name = ""):
     """ Create a flag filter inside kst.
 
@@ -953,7 +961,7 @@ class GeneratedString(String) :
   def __init__(self,client,string,name="", new=True) :
     String.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newGeneratedString()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -986,7 +994,7 @@ class DataSourceString(String) :
   def __init__(self,client,filename,field,name="", new=True) :
     String.__init__(self,client)
     
-    if (new == True):
+    if new:
       self.client.send("newDataString()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1034,7 +1042,7 @@ class GeneratedScalar(Scalar) :
   def __init__(self, client, value, name="", new=True) :
     Scalar.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newGeneratedScalar()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1068,7 +1076,7 @@ class DataSourceScalar(Scalar) :
   def __init__(self,client,filename,field,name="", new=True) :
     Scalar.__init__(self,client)
     
-    if (new == True):
+    if new:
       self.client.send("newDataScalar()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1118,7 +1126,7 @@ class VectorScalar(Scalar) :
   def __init__(self, client, filename, field, frame=-1, name="", new=True) :
     Scalar.__init__(self,client)
 
-    if (new == True):    
+    if new:
       self.client.send("newVectorScalar()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1218,7 +1226,7 @@ class DataVector(VectorBase):
                skip=0, boxcarFirst=False, name="", new=True) :
     VectorBase.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newDataVector()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1305,7 +1313,7 @@ class GeneratedVector(VectorBase):
   def __init__(self, client, x0=0, x1=1, n=100, name="", new=True) :
     VectorBase.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newGeneratedVector()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1344,9 +1352,9 @@ class EditableVector(VectorBase):
   def __init__(self, client, np_array = None, name="", new=True) :
     VectorBase.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newEditableVector()")
-      if (np_array != None) :
+      if (np_array is not None) :
         assert(np_array.dtype == float64)
         
         with tempfile.NamedTemporaryFile(delete=False) as f:
@@ -1470,7 +1478,7 @@ class DataMatrix(Matrix):
                min_x=0, min_y=0, dx=1, dy=1,name="", new=True) :
     Matrix.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newDataMatrix()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -1533,9 +1541,9 @@ class EditableMatrix(Matrix):
   def __init__(self, client, np_array = None, name="", new=True) :
     Matrix.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newEditableMatrix()")
-      if (np_array != None) :
+      if (np_array is not None) :
         assert(np_array.dtype == float64)
         nx = np_array.shape[0]
         ny = np_array.shape[1]
@@ -1614,7 +1622,7 @@ class Curve(Relation):
   def __init__(self,client, x_vector, y_vector, name="", new=True) :
     Relation.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newCurve()")
       self.client.send("setXVector("+x_vector.handle+")")
       self.client.send("setYVector("+y_vector.handle+")")
@@ -1680,28 +1688,28 @@ class Curve(Relation):
 
   def set_has_points(self,has=True):
     """ Set whether individual points are drawn on the curve """
-    if (has == True):
+    if has:
       self.client.send_si(self.handle, "setHasPoints(True)")
     else:
       self.client.send_si(self.handle, "setHasPoints(False)")
 
   def set_has_bars(self,has=True):
     """ Set whether histogram bars are drawn. """
-    if (has == True):
+    if has:
       self.client.send_si(self.handle, "setHasBars(True)")
     else:
       self.client.send_si(self.handle, "setHasBars(False)")
 
   def set_has_lines(self,has=True):
     """ Set whether lines are drawn. """
-    if (has == True):
+    if has:
       self.client.send_si(self.handle, "setHasLines(True)")
     else:
       self.client.send_si(self.handle, "setHasLines(False)")
 
   def set_has_head(self,has=True):
     """ Set whether a point at the head of the line is drawn """
-    if (has == True):
+    if has:
       self.client.send_si(self.handle, "setHasHead(True)")
     else:
       self.client.send_si(self.handle, "setHasHead(False)")
@@ -1879,7 +1887,7 @@ class Image(Relation):
   def __init__(self,client, matrix, name="", new=True) :
     Relation.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newImage()")
       self.client.send("setMatrix("+matrix.handle+")")
       self.handle=self.client.send("endEdit()")
@@ -1945,7 +1953,7 @@ class Equation(Object) :
   def __init__(self, client, xvector, equation, interpolate=True, name="", new=True) :
     Object.__init__(self,client)
     
-    if (new == True):      
+    if new:
       self.client.send("newEquation()")
 
       self.client.send("setEquation(" + equation + ")")
@@ -2003,7 +2011,7 @@ class Histogram(Object) :
                name="", new=True) :
     Object.__init__(self,client)
     
-    if (new == True):      
+    if new:
       self.client.send("newHistogram()")
 
       self.client.send("change(" + vector.handle + "," +
@@ -2127,7 +2135,7 @@ class Spectrum(Object) :
     
     Object.__init__(self,client)
     
-    if (new == True):      
+    if new:
       self.client.send("newSpectrum()")
 
       self.client.send("change(" + vector.handle + "," +
@@ -2248,7 +2256,7 @@ class CrossSpectrum(Object) :
   def __init__(self, client, V1, V2, fft_size, sample_rate, name="", new=True) :
     Object.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newPlugin(Cross Spectrum)")
 
       self.client.send("setInputVector(Vector In One,"+V1.handle+")")
@@ -2303,6 +2311,32 @@ class Filter(Object) :
     vec.handle = self.client.send_si(self.handle, "outputVector(Y)")
     return vec
 
+# SUM FILTER ############################################################
+class SumFilter(Filter) :
+  """ a cumulative sum filter inside kst
+
+  The output is the cumulative sum of the input vector
+  """
+  def __init__(self, client, yvector, step_dX, name="", new=True) :
+    Filter.__init__(self,client)
+
+    if new:
+      self.client.send("newPlugin(Cumulative Sum)")
+      self.client.send("setInputVector(Vector In,"+yvector.handle+")")
+      self.client.send("setInputScalar(Scale Scalar,"+step_dX.handle+")")
+      self.handle=self.client.send("endEdit()")
+      self.handle.remove(0,self.handle.indexOf("ing ")+4)
+      self.set_name(name)
+    else:
+      self.handle = name
+
+  def output_sum(self) :
+    """ a vector containing the output of the filter  """
+    vec = VectorBase(self.client)
+    vec.handle = self.client.send_si(self.handle, "outputVector(sum(Y)dX)")
+    return vec
+
+
 # FLAG FILTER ############################################################
 class FlagFilter(Filter) :
   """ a flagged vector inside kst
@@ -2312,7 +2346,7 @@ class FlagFilter(Filter) :
   def __init__(self, client, yvector, flag, mask="0xffffff", valid_is_zero=True, name="", new=True) :
     Filter.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newPlugin(Flag Filter)")
 
       self.client.send("setInputVector(Y Vector,"+yvector.handle+")")
@@ -2376,7 +2410,7 @@ class LinearFit(Fit) :
   def __init__(self, client, xvector, yvector, weightvector=0, name="", new=True) :
     Fit.__init__(self,client)
     
-    if (new == True):      
+    if new:
       if weightvector==0:
         self.client.send("newPlugin(Linear Fit)")
       else:
@@ -2412,7 +2446,7 @@ class PolynomialFit(Fit) :
   def __init__(self, client, order, xvector, yvector, weightvector=0, name="", new=True) :
     Fit.__init__(self,client)
     
-    if (new == True):      
+    if new:
       if weightvector==0:
         self.client.send("newPlugin(Polynomial Fit)")
       else:
@@ -2555,7 +2589,7 @@ class ViewItem(NamedObject):
     This is equivalent to checking Dimensions>Fix aspect ratio within a 
     view item dialog in kst.
     """
-    if fixed == True:
+    if fixed:
       self.client.send_si(self.handle, b2str("lockAspectRatio(True)"))
     else:
       self.client.send_si(self.handle, b2str("lockAspectRatio(False)"))
@@ -2775,7 +2809,7 @@ class Label(ViewItem) :
                font_family="Serif", name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newLabel()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -2832,14 +2866,14 @@ class Label(ViewItem) :
 
   def set_font_bold(self, bold = True):
     """ . . . """
-    if bold == True:
+    if bold:
       self.client.send_si(self.handle, b2str("checkLabelBold()"))
     else:
       self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
 
   def set_font_italic(self, italic = True):
     """ . . . """
-    if italic == True:
+    if italic:
       self.client.send_si(self.handle, b2str("checkLabelItalic()"))
     else:
       self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
@@ -2870,7 +2904,7 @@ class Legend(ViewItem) :
   def __init__(self,client, plot, name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newLegend("+plot.name()+")")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -2883,14 +2917,14 @@ class Legend(ViewItem) :
 
   def set_font_bold(self, bold = True):
     """ . . . """
-    if bold == True:
+    if bold:
       self.client.send_si(self.handle, b2str("checkLabelBold()"))
     else:
       self.client.send_si(self.handle, b2str("uncheckLabelBold()"))
 
   def set_font_italic(self, italic = True):
     """ . . . """
-    if italic == True:
+    if italic:
       self.client.send_si(self.handle, b2str("checkLabelItalic()"))
     else:
       self.client.send_si(self.handle, b2str("uncheckLabelItalic()"))
@@ -2944,7 +2978,7 @@ class Box(ViewItem) :
                name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newBox()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -3002,7 +3036,7 @@ class Circle(ViewItem) :
                name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newCircle()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -3063,7 +3097,7 @@ class Ellipse(ViewItem) :
                fix_aspect=False, name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newEllipse()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -3126,7 +3160,7 @@ class Line(ViewItem) :
                stroke_brush_style=1,stroke_cap_style=1, name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newLine()")
       self.handle=self.client.send("endEdit()")
 
@@ -3200,7 +3234,7 @@ class Arrow(ViewItem) :
                stroke_brush_style=1, stroke_cap_style=1, name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newArrow()")
       self.handle=self.client.send("endEdit()")
       self.handle.remove(0,self.handle.indexOf("ing ")+4)
@@ -3285,7 +3319,7 @@ class Picture(ViewItem) :
                name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newPicture("+b2str(filename)+")")
       self.handle=self.client.send("endEdit()")
 
@@ -3338,7 +3372,7 @@ class SVG(ViewItem) :
                name="", new=True) :
     ViewItem.__init__(self,client)
 
-    if (new == True):
+    if new:
       self.client.send("newSvgItem("+b2str(filename)+")")
       self.handle=self.client.send("endEdit()")
 
@@ -3409,11 +3443,11 @@ class Plot(ViewItem) :
     if (size != (0,0)):
         auto_position = False
 
-    if (new == True):
+    if new:
       self.client.send("newPlot()")
       if (columns>0):
         self.client.send("addToCurrentView(Columns,"+b2str(columns)+")")
-      elif (auto_position == True):
+      elif auto_position:
         self.client.send("addToCurrentView(Auto,2)")
       else:
         self.client.send("addToCurrentView(Protect,2)")
@@ -3554,14 +3588,14 @@ class Plot(ViewItem) :
 
   def set_y_axis_reversed(self, reversed=True) :
     """ set the Y axis to decreasing from bottom to top. """
-    if reversed == True:
+    if reversed:
       self.client.send_si(self.handle,  "setYAxisReversed()")
     else:
       self.client.send_si(self.handle,  "setYAxisNotReversed()")
 
   def set_x_axis_reversed(self, reversed=True) :
     """ set the X axis to decreasing from left to right. """
-    if reversed == True:
+    if reversed:
       self.client.send_si(self.handle,  "setXAxisReversed()")
     else:
       self.client.send_si(self.handle,  "setXAxisNotReversed()")
