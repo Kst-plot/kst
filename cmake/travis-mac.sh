@@ -6,7 +6,8 @@ IFS=$'\n\t'
 
 
 # Install dependencies
-brew install qt gsl netcdf cfitsio libgetdata
+brew cask uninstall oclint || true # conflicts with gcc
+brew install qt gsl netcdf cfitsio libgetdata cmake
 export PATH="/usr/local/opt/qt/bin:$PATH"
 
 
