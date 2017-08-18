@@ -63,6 +63,11 @@ popd
 
 
 # Deploy it
+cp ../cmake/kstdeploy.tar.gz ~
+pushd ~
+tar -xf kstdeploy.tar.gz
+popd
+
 kstbinary=kst-build
 rm -rf $kstbinary
 mkdir $kstbinary
