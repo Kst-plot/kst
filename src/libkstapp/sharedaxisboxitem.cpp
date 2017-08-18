@@ -41,6 +41,7 @@ SharedAxisBoxItem::SharedAxisBoxItem(View *parent)
       _dirty(false),
       _shareX(true),
       _shareY(true),
+      _serialOfLastChange(0),
       _xAxisZoomMode(PlotAxis::Auto),
       _yAxisZoomMode(PlotAxis::Auto),
       _sharedIsDirty(false) {

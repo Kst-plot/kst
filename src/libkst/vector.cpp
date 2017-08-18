@@ -65,6 +65,7 @@ Vector::Vector(ObjectStore *store)
   int size = INITSIZE;
 
   _v_raw = static_cast<double*>(malloc(size * sizeof(double)));
+  _v_raw_managed = true;
 
   if (!_v_raw) { // Malloc failed
     _v_raw = static_cast<double*>(malloc(sizeof(double)));
@@ -367,6 +368,10 @@ void Vector::updateScalars() {
 
 
 void Vector::setV(double *memptr, int newSize) {
+  if (_v_raw_managed) {
+    free(_v_raw);
+    _v_raw_managed = false;
+  }
   _v_raw = memptr;
   _v_out = _v_raw;
 

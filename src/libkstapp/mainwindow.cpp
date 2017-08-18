@@ -370,6 +370,7 @@ void MainWindow::copyTab()
 {
   View *view = _tabWidget->currentView();
   QClipboard *clipboard = QApplication::clipboard();
+  QMimeData *mimedata = new QMimeData();
 
   QPainter painter;
   QPixmap pixmap(view->size());
@@ -382,7 +383,10 @@ void MainWindow::copyTab()
 
   painter.end();
 
-  clipboard->setPixmap(pixmap);
+  //mimedata->setText("Some text from kst, just for you!");
+  mimedata->setImageData(pixmap.toImage());
+
+  clipboard->setMimeData(mimedata);
 }
 
 
@@ -1157,8 +1161,8 @@ void MainWindow::createActions() {
   _redoAct->setShortcuts(QKeySequence::Redo);
   _redoAct->setIcon(KstGetIcon("edit-redo"));
 
-  _copyTabAct = new QAction(tr("Copy Current Tab"), this);
-  _copyTabAct->setStatusTip("Copy current tab to desktop clipboard");
+  _copyTabAct = new QAction(tr("Copy Tab Image"), this);
+  _copyTabAct->setStatusTip("Copy image of the current tab to the desktop clipboard");
   _copyTabAct->setIcon(KstGetIcon("edit-copy"));
   connect(_copyTabAct, SIGNAL(triggered()), this, SLOT(copyTab()));
 

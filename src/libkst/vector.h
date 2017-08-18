@@ -209,6 +209,7 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** Where raw input data is held */
     double *_v_raw;
+    bool _v_raw_managed; // if the vector manages the memory for _v_raw;
 
     /** _v_raw with flagged data replaced with NaNs */
     double *_v_flagged;
