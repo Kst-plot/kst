@@ -38,7 +38,7 @@
 #include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
-// #define BENCHMARK
+//#define BENCHMARK
 
 // NOTE: on a modern (eg, sandybridge or later) cpu
 // the cpu's branch prediction is so good, this does
@@ -695,6 +695,13 @@ double Curve::lineDim(const QRectF &R, double linewidth) {
   return (int(lw+0.5));
 }
 
+void tmpPolyLine(const QPolygonF& poly, QPainter *p) {
+  int n = poly.count();
+  for (int i=0; i< n-1; i++) {
+    p->drawLine(poly[i], poly[i+1]);
+  }
+}
+
 void Curve::paintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
   QTime bench_time;
@@ -716,11 +723,13 @@ void Curve::paintObjects(const CurveRenderContext& context) {
         p->fillRect(rect, barFillColor());
     }
   }
-  p->setPen(QPen(color(), _width, style));
+  p->setPen(QPen(color(), _width, style)); //, Qt::RoundCap, Qt::RoundJoin));
 
   foreach(const QPolygonF& poly, _polygons) {
-    p->drawPolyline(poly);
+    tmpPolyLine(poly, p);
+    //p->drawPolyline(poly);
   }
+  //qDebug() << "E:" << bench_time.elapsed() << "ms w: " << p->viewport().width() << "h: " << p->viewport().height() << " a: " << p->viewport().width() * p->viewport().height();
   foreach(const QLineF& line, _lines) {
     p->drawLine(line);
   }
