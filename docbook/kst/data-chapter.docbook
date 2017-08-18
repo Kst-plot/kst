@@ -362,11 +362,39 @@ Curves are created by the data wizard, from the creation dialog from Data Object
 <sect2 id="equations">
 <title>Equations</title>
 <para>
-  An equation data object, created by selecting <guimenuitem>Equation</guimenuitem> from the
-  <guimenu>Create</guimenu> menu, produces an output vector which is the function of one or 
-  more data vectors.  An example of creating an equation, and the resulting plot is shown below.
-  In this example, a Generated Vector consisting of 1000 points from -10 to 10 was selected for 
-  the x vector.  Recall that a Generated vector can be created by selecting the new vector icon, 
+  Equations are data objects whose outputs are: 
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+      A vector (<literal>...:y</literal>) which is the function of one or more data vectors.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      A vector (<literal>...:x</literal>) which passes through the X input vector.  
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>
+  The inputs are: 
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+      A vector which is used as the <literal>x</literal> variable in equations.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Any vectors or scalars specified by name in the equation text.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>
+  Equations are used to produce vectors which are the point-by-point function of one or more input vectors and scalars.  They are created by selecting <guimenuitem>Equation</guimenuitem> from the <guimenu>Create</guimenu> menu.  An example of creating an equation, and the resulting plot is shown below. In this example, a Generated Vector consisting of 1000 points from -10 to 10 was selected for the x vector.  Recall that a Generated vector can be created by selecting the new vector icon, 
 
   <inlinemediaobject>
   <imageobject>
@@ -374,8 +402,7 @@ Curves are created by the data wizard, from the creation dialog from Data Object
   </imageobject>
   </inlinemediaobject>
 
-  which appears to the right of the <guilabel>X Vector</guilabel> field.  The equation, sin(x)/x, 
-  was entered into the <guilabel>Equation</guilabel> field.  
+  which appears to the right of the <guilabel>X Vector</guilabel> field.  The equation, <literal>sin(x)/x</literal>, was entered into the <guilabel>Equation</guilabel> field.  
 </para>
 
 <screenshot>
@@ -403,11 +430,52 @@ Curves are created by the data wizard, from the creation dialog from Data Object
 </screenshot>
 
 <para>
-  Equations can use any vector or scalar as their input vectors, not just the X vector.  In the next example,
-  the bottom right plot shows the signal in Column 2 with the signal in Column 1 regressed out of it.
-  This has been done by subtracting Column 1, scaled by the slope of a fit to Column 2 vs Column 1, 
-  from Column 2.  The fit had been created previously using the <guimenuitem>Fit</guimenuitem> option in the right 
-  mouse button menu of the top right plot.
+  Equations support the following operators:
+</para>  
+
+<itemizedlist>
+  <listitem>
+    <para>
+      Arithmetic operators: <literal>+</literal>, <literal>-</literal>, <literal>*</literal>, <literal>/</literal>, <literal>%</literal> (modulus operator) and <literal>^</literal> (power operator).  
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Bitwise operators: <literal>&amp;</literal>, <literal>|</literal>.  These operators assume the vector is comprised of integers.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Logical operators: <literal>!</literal>, <literal>&amp;&amp;</literal>, <literal>||</literal>, <literal>&lt;</literal>, <literal>&lt;=</literal>, <literal>==</literal>, <literal>&gt;=</literal>, <literal>&gt;</literal>, and <literal>!=</literal>.  These functions output 1 for True and 0 for False.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>
+  Functions supported by kst are: 
+</para>
+
+<literal>PLUGIN()</literal>
+<itemizedlist>
+  <listitem>
+    <para>
+      Trig functions working in Radians:  <literal>SIN()</literal>, <literal>COS()</literal>, <literal>TAN()</literal>, <literal>ASIN()</literal>, <literal>ACOS()</literal>, <literal>ATAN()</literal>, <literal>ATAN2()</literal>, <literal>SEC()</literal>, <literal>CSC()</literal> and <literal>COT()</literal>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Trig functions working in Degrees:  <literal>SIND()</literal>, <literal>COSD()</literal>, <literal>TAND()</literal>, <literal>ASIND()</literal>, <literal>ACOSD()</literal>, <literal>ATAND()</literal>, <literal>SECD()</literal>, <literal>CSCD()</literal> and <literal>COTD()</literal>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Other functions:  <literal>ABS()</literal>, <literal>SQRT()</literal>, <literal>CBRT()</literal>, <literal>SINH()</literal>, <literal>COSH()</literal>, <literal>TANH()</literal>, <literal>EXP()</literal>, <literal>LN()</literal>, <literal>LOG()</literal> and <literal>STEP()</literal>.  <literal>STEP()</literal> returns 1 if the argument is greater than 0, and 0 otherwise.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>
+  Equations can use any vector or scalar as their input vectors, not just the X vector.  In the next example, the bottom right plot shows the signal in Column 2 with the signal in Column 1 regressed out of it. This has been done by subtracting Column 1, scaled by the slope of a fit to Column 2 vs Column 1, from Column 2.  The fit had been created previously using the <guimenuitem>Fit</guimenuitem> option in the right mouse button menu of the top right plot.
 </para>
 
 <screenshot>
@@ -491,30 +559,46 @@ set to be automatically reset with each data update by selecting
 <sect2 id="power-spectra">
 <title>Power Spectra</title>
 <para>
-A power spectrum data object represents the power spectrum of a vector, defined as
-<quote>the square root of the absolute value of the
-mean of the interleaved Fast Fourier Transforms of length <literal>2^x</literal> of the vector</quote>, where x is the
-value entered in the <guilabel>FFT Length</guilabel> selection box. The below definitions assume
-basic knowledge of power spectra&mdash;for further details,
-refer to Numerical Recipes in C: The Art of Scientific Computing, published by Cambridge University Press.
+  Spectra are data objects whose outputs are a vector with the fft-based spectrum of the input
+  vector (<literal>...:psd</literal>), and a vector containing the centers of the corresponding
+  frequency bins (<literal>...:f</literal>).  
+</para>
+
+<para>
+  The following plot shows an example spectrum.  The plot has been converted to log-log mode (hit 'l' and 'g' in the plot window to toggle Y and X log axes respectvely).
 </para>
 
 <screenshot>
-<screeninfo>Power Spectra Window</screeninfo>
+<screeninfo>Spectrum</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-powerspectrawindow.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-spectrum_log.png" format="PNG" />
 </imageobject>
 <textobject>
-<phrase>Power Spectra Window</phrase>
+<phrase>Spectrum</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
 
-<sect3 id="powerspectracurvecontents">
-<title>Curve Contents</title>
+
 <para>
-The source vector, as well as basic power spectrum properties, can be modified from this section.
+  The spectrum dialog (select <guimenuitem>Power Spectrum</guimenuitem> from the <guimenu>Create</guimenu> menu) used to create this plot is shown below:
+</para>
+
+<screenshot>
+<screeninfo>New Spectrum Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-new-spectrum.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The New Spectrum Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>  
+
+<para> 
+  The dialog entries are as follows:
 </para>
 
 <variablelist>
@@ -531,36 +615,11 @@ The data vector to create a power spectrum from.
 
 <varlistentry>
 <term>
-<guilabel>Interleaved average</guilabel> and <guilabel>FFT Length</guilabel>
+<guilabel>Remove Mean</guilabel>
 </term>
 <listitem>
 <para>
-Selecting <guilabel>Interleaved average</guilabel> allows the length of the interleaved Fast Fourier
-Transforms to be specified.  The length is specified as a power of 2.
-  If <guilabel>Interleaved average</guilabel> is unchecked, &kst;
-will determine the length based on the length of the vector.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Data units</guilabel> and <guilabel>Rate units</guilabel>
-</term>
-<listitem>
-<para>
-The units specified in these textboxes are used for the purpose of auto-generating axes labels for the plots.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guibutton>Sample rate</guibutton>
-</term>
-<listitem>
-<para>
-The sample rate is used to generate the X axis of power spectrum plots.
+Remove a constant from the input vector to make it mean zero before calculating the spectrum.
 </para>
 </listitem>
 </varlistentry>
@@ -571,32 +630,59 @@ The sample rate is used to generate the X axis of power spectrum plots.
 </term>
 <listitem>
 <para>
-If this option is selected, the data is apodized using a Hanning window, to reduce bin-to-bin leakage.
+Apodize the data with the selected function before calculating the power spectrum to reduce
+bin to bin leackage.  The default is a Hanning Window.
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>
-<guilabel>Remove Mean</guilabel>
+<guilabel>Interleaved average</guilabel> and <guilabel>FFT Length</guilabel>
 </term>
 <listitem>
 <para>
-Select this option to remove the mean from the selected data (i.e. translate the data so that the mean is zero).
+  When <guilabel>Interleaved average</guilabel> is not set, the spectrum is based on an FFT 
+  whose lengh is power of two larger or equal to the length of the unput vector.  The remaining points are zero padded.  For cases like this, apodization and mean removal is quite important.
+</para>
+<para>
+  When <guilabel>Interleaved average</guilabel> is set, the spectrum is based on the average of FFTs of length <literal>2^x</literal> where <literal>x</literal> is specified by the <guilabel>FFT Length</guilabel> entry, interleaved such that no zero padding is required.  Choosing this option reduces the noise of the spectrum, at the cost of reduced resolution.
 </para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term>
+<guibutton>Sample rate</guibutton>
+</term>
+<listitem>
+<para>
+The frequency bin output vector (<literal>...:f</literal>) will be calculated assuming the input vector was uniformly sampled at this sample rate.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<guilabel>Data units</guilabel> and <guilabel>Rate units</guilabel>
+</term>
+<listitem>
+<para>
+Auto-generating axes labels for plots will be based on these units.
+</para>
+</listitem>
+</varlistentry>
+
+
 </variablelist>
-</sect3>
 
 </sect2>
 
 <sect2 id="plugins">
 <title>Plugins</title>
 <para>
-A plugin data object represents a &kst; plugin.  All plugins have a common format, and show up as type <quote>Plugin</quote>
-in the Data Manager.  For more information about plugins, please see <link linkend="pluginsandfilters">Plugins and Filters</link>
+A plugin data object represents a &kst; plugin.  All plugins have a common format, and show
+up as type <quote>Plugin</quote> in the Data Manager.  For more information about plugins,
+please see <link linkend="pluginsandfilters">Plugins and Filters</link>
 </para>
 </sect2>
 
@@ -612,10 +698,10 @@ An event monitor data object represents an instance of an event monitor.  For mo
 <sect2 id="arrays">
 <title>Matrices</title>
 <para>
-A matrix represents a set of three-dimensional data points (x, y, z) arranged in a two-dimensional grid.
-The z values of the matrix are obtained from a vector, and the grid structure is manually specified using
-the Edit or New Matrix dialog.  The descriptions below refer to the following diagram depicting
-&kst;'s matrix structure.
+A matrix represents a set of three-dimensional data points (x, y, z) arranged in a 
+two-dimensional grid. The z values of the matrix are obtained from a vector, and the 
+grid structure is manually specified using the Edit or New Matrix dialog.  The descriptions
+below refer to the following diagram depicting &kst;'s matrix structure.
 </para>
 <para>
 <inlinemediaobject>
