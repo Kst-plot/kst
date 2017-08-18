@@ -7,7 +7,7 @@ IFS=$'\n\t'
 
 # Install dependencies
 brew cask uninstall oclint || true # conflicts with gcc
-brew install qt gsl netcdf cfitsio libgetdata cmake
+brew install qt gsl netcdf cfitsio libgetdata
 export PATH="/usr/local/opt/qt/bin:$PATH"
 
 
@@ -18,7 +18,7 @@ mkdir -p build
 cd build
 rm -fr ./build  # to allow us to run this script multiple times
 cmake -Dkst_qt5=1 -Dkst_svnversion=1  -Dkst_dataobjects=1 -Dkst_3rdparty=1 -Dkst_release=1 ..
-make -j7
+make
 
 
 # Add Qt to kst2.app, and replace references to the Qt outside of kst2.app with references
