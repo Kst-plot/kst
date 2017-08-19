@@ -7,8 +7,15 @@ IFS=$'\n\t'
 
 # Install dependencies
 brew cask uninstall oclint || true # conflicts with gcc
-brew install qt gsl netcdf cfitsio libgetdata
-export PATH="/usr/local/opt/qt/bin:$PATH"
+brew install gsl netcdf cfitsio libgetdata
+
+
+# BUG: macdeployqt is broken in brew -- https://github.com/Homebrew/homebrew-core/issues/3219
+pushd ~
+curl -O http://hog.astro.utoronto.ca/kst/qt_5.9.1_mac.tar.bz2
+tar -xf ./qt_5.9.1_mac.tar.bz2
+popd
+export PATH="~/qt_5.9.1_mac/bin/:$PATH"
 
 
 # Build kst
