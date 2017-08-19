@@ -8,3 +8,5 @@ _build
 *.pyc
 build
 tmp*
+po
+po_all

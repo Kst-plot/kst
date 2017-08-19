@@ -1,0 +1,12 @@
+#! /bin/sh
+cd html
+make clean
+cd ..
+cd ..
+pwd
+tar cvfz pykst.tgz pyKst/INSTALL pyKst/README pyKst/pykst.py pyKst/pykstplot.py pyKst/demo pyKst/setup.py pyKst/html
+cp pykst.tgz /home/cbn/notes/kstweb/kst-plot
+cd pyKst/html
+make html
+cp -a _build/html/* /home/cbn/notes/kstweb/kst-plot/pykst
+
