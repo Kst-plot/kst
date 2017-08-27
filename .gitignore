@@ -1,5 +1,5 @@
 .svn
-CMakeLists.txt.user
+*.user
 *.dm
 dm
 dm.lnk
