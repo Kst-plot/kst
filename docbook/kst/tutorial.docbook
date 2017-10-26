@@ -767,7 +767,7 @@ Then, from the <guimenu>Create</guimenu> menu select
 </para>
 </sect1>
 
-<sect1 id="filters">
+<sect1 id="tutorial-filters">
 <title>Filters</title>
 <para>
 With &kst;, we can apply a variety of fits and filters to vectors in kst.

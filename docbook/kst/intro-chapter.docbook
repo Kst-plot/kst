@@ -115,8 +115,6 @@ If &kst; is started without any command-line options, an unfilled kst window is 
 first step is to create plots from the Data Wizard (click the <guimenuitem>Data Wizard...</guimenuitem> toolbar button
 or press 'w').
 The data wizard walks through the specification of a data file, selection of fields, and selection of plot options.
-For detailed descriptions of
-the data wizard options and settings, refer to the <link linkend="datawizard">Data Wizard</link> section.
 </para>
 
 <para>

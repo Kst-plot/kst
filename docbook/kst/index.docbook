@@ -14,14 +14,14 @@
  <!ENTITY install-chapter SYSTEM "install-chapter.docbook">
  <!ENTITY license-chapter SYSTEM "license-chapter.docbook">
  <!ENTITY saving-chapter SYSTEM "saving-chapter.docbook">
- <!ENTITY plotsandwindows-chapter SYSTEM "plotsandwindows-chapter.docbook">
+ <!--ENTITY plotsandwindows-chapter SYSTEM "plotsandwindows-chapter.docbook"-->
  <!ENTITY additionalformats-chapter SYSTEM "additionalformats-chapter.docbook">
  <!ENTITY creatingplugins-chapter SYSTEM "creatingplugins-chapter-new.docbook">
  <!ENTITY miscfeatures-chapter SYSTEM "miscfeatures-chapter.docbook">
  <!ENTITY debuglog-chapter SYSTEM "debuglog-chapter.docbook">
  <!ENTITY dcop-chapter SYSTEM "dcop-chapter.docbook">
  <!ENTITY commandline-chapter SYSTEM "commandline-chapter.docbook">
- <!ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook">
+ <!--ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook"-->
  ]>
 
 <book id="kst" lang="&language;">
@@ -116,11 +116,11 @@ the order. -->
 &commontasks-chapter;
 
 
-&plotsandwindows-chapter;
+<!--&plotsandwindows-chapter; -->
 
 &saving-chapter;
 
-&eventmonitoring-chapter;
+<!--&eventmonitoring-chapter;-->
 
 &plugins-chapter;
 
