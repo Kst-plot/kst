@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>423</width>
-    <height>75</height>
+    <height>78</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,6 +46,28 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="1">
+    <widget class="Kst::ScalarSelector" name="_scalarOrder" native="true"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Cutoff Frequency / Sample Rate:</string>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="Kst::ScalarSelector" name="_scalarCutoff" native="true"/>
+   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_4">
      <property name="sizePolicy">
@@ -65,28 +87,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="Kst::ScalarSelector" name="_scalarOrder" native="true"/>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Cutoff Frequency / Sample Rate:</string>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="Kst::ScalarSelector" name="_scalarCutoff" native="true"/>
-   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -100,6 +100,11 @@
    <class>Kst::ScalarSelector</class>
    <extends>QWidget</extends>
    <header>scalarselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::FOverSRSelector</class>
+   <extends>QWidget</extends>
+   <header>foversrselector.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

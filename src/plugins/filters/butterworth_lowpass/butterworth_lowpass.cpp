@@ -30,6 +30,8 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
     ConfigFilterButterworthLowPassPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthLowPassConfig() {
       _store = 0;
       setupUi(this);
+
+      _scalarCutoff->setIsFOverSR(true);
     }
 
     ~ConfigFilterButterworthLowPassPlugin() {}
@@ -102,6 +104,7 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Cutoff / Spacing Scalar", _scalarCutoff->selectedScalar()->Name());
+        _cfg->setValue("Sample Rate", _scalarCutoff->SR());
         _cfg->endGroup();
       }
     }
@@ -117,6 +120,10 @@ class ConfigFilterButterworthLowPassPlugin : public Kst::DataObjectConfigWidget,
         }
         QString scalarName = _cfg->value("Order Scalar").toString();
         _scalarOrder->setSelectedScalar(scalarName);
+
+
+        // set the SR before the cutoff/SampleRate so frequency is updated correctly.
+        _scalarCutoff->setSR(_cfg->value("Sample Rate", "1.0").toString());
 
         scalarName = _cfg->value("Cutoff / Spacing Scalar").toString();
         _scalarCutoff->setSelectedScalar(scalarName);
