@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>423</width>
+    <width>439</width>
     <height>78</height>
    </rect>
   </property>
@@ -100,11 +100,6 @@
    <class>Kst::ScalarSelector</class>
    <extends>QWidget</extends>
    <header>scalarselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Kst::FOverSRSelector</class>
-   <extends>QWidget</extends>
-   <header>foversrselector.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -58,7 +58,8 @@ ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
   connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(ratioChanged()));
   connect(_cutoff, SIGNAL(textEdited(QString)), this, SLOT(cutoffChanged()));
-  connect(_SR, SIGNAL(textEdited(QString)), this, SLOT(srChanged()));
+  connect(_SR, SIGNAL(textChanged(QString)), this, SLOT(srChanged()));
+  connect(_SR, SIGNAL(textChanged(QString)), this, SIGNAL(SRChanged(QString)));
 
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updateScalarList()));
 
@@ -82,12 +83,15 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
     _SRLabel->show();
     _SR->show();
 
-    int min_width = fontMetrics().maxWidth()*12;
     QSize size = _scalar->size();
-    size.setWidth(min_width);
+    size.setWidth(fontMetrics().width("000000000"));
     _SR->setMinimumSize(size);
     _cutoff->setMinimumSize(size);
+
+    size.setWidth(fontMetrics().width("0000000000000"));
     _scalar->setMinimumSize(size);
+
+    //setMinimumWidth(3*min_width + _cutoffLabel->width() + _SRLabel->width()+3*_newScalar->width());
 
   } else {
     _cutoffLabel->hide();
@@ -230,7 +234,7 @@ void ScalarSelector::setSelectedScalar(QString Name) {
   }
 }
 
-void ScalarSelector::setSR(QString SR) {
+void ScalarSelector::setSR(const QString &SR) {
   _SR->setText(SR);
 }
 

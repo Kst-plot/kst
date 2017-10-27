@@ -90,7 +90,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>f:</string>
+      <string>  f:</string>
      </property>
     </widget>
    </item>
@@ -103,7 +103,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>SR:</string>
+      <string> SR:</string>
      </property>
     </widget>
    </item>
