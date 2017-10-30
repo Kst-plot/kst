@@ -29,7 +29,10 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
   public:
     ConfigFilterButterworthBandStopPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthBandStopConfig() {
       _store = 0;
-      setupUi(this);
+      setupUi(this);      
+      _scalarRate->setIsFOverSR(true);
+      _scalarBandwidth->setIsFOverSR(true);
+
     }
 
     ~ConfigFilterButterworthBandStopPlugin() {}
@@ -51,6 +54,8 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
         connect(_scalarOrder, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_scalarRate, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_scalarBandwidth, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+        connect(_scalarRate, SIGNAL(SRChanged(QString)), _scalarBandwidth, SLOT(setSR(QString)));
+        connect(_scalarBandwidth, SIGNAL(SRChanged(QString)), _scalarRate, SLOT(setSR(QString)));
       }
     }
 
@@ -110,6 +115,7 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Central Frequency / Sample Rate Scalar", _scalarRate->selectedScalar()->Name());
         _cfg->setValue("Band width Scalar", _scalarBandwidth->selectedScalar()->Name());
+        _cfg->setValue("Sample Rate", _scalarRate->SR());
         _cfg->endGroup();
       }
     }
@@ -125,6 +131,9 @@ class ConfigFilterButterworthBandStopPlugin : public Kst::DataObjectConfigWidget
         }
         QString scalarName = _cfg->value("Order Scalar").toString();
         _scalarOrder->setSelectedScalar(scalarName);
+
+        _scalarRate->setSR(_cfg->value("Sample Rate", 1.0).toString());
+        _scalarBandwidth->setSR(_cfg->value("Sample Rate", 1.0).toString());
 
         scalarName = _cfg->value("Central Frequency / Sample Rate Scalar").toString();
         _scalarRate->setSelectedScalar(scalarName);
@@ -180,13 +189,13 @@ double filter_calculate( double dFreqValue, Kst::ScalarList scalars ) {
   double lowpass  = scalars.at(1)->value() + 0.5*scalars.at(2)->value();
   double highpass = scalars.at(1)->value() - 0.5*scalars.at(2)->value();
 
-  if( dFreqValue > 0.0 ) {
-    dValue = 1.0 / ( 1.0 + gsl_pow_int( dFreqValue / lowpass, order2) );
-    dValue *= 1.0 / ( 1.0 + gsl_pow_int( highpass / dFreqValue, order2) );
-    dValue = 1.0 - dValue;
-  } else {
-    dValue = 0.0;
-  }
+  //if( dFreqValue > 0.0 ) {
+  dValue = 1.0 / ( 1.0 + gsl_pow_int( dFreqValue / lowpass, order2) );
+  dValue *= 1.0 / ( 1.0 + gsl_pow_int( highpass / dFreqValue, order2) );
+  dValue = 1.0 - dValue;
+  //} else {
+  //  dValue = 0.0;
+  //}
 
   return dValue;
 }

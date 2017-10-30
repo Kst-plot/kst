@@ -29,6 +29,8 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
     ConfigFilterButterworthHighPassPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_FilterButterworthHighPassConfig() {
       _store = 0;
       setupUi(this);
+
+      _scalarCutoff->setIsFOverSR(true);
     }
 
     ~ConfigFilterButterworthHighPassPlugin() {}
@@ -101,6 +103,7 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
         _cfg->setValue("Order Scalar", _scalarOrder->selectedScalar()->Name());
         _cfg->setValue("Cutoff / Spacing Scalar", _scalarCutoff->selectedScalar()->Name());
+        _cfg->setValue("Sample Rate", _scalarCutoff->SR());
         _cfg->endGroup();
       }
     }
@@ -116,6 +119,9 @@ class ConfigFilterButterworthHighPassPlugin : public Kst::DataObjectConfigWidget
         }
         QString scalarName = _cfg->value("Order Scalar").toString();
         _scalarOrder->setSelectedScalar(scalarName);
+
+        // set the SR before the cutoff/SampleRate so frequency is updated correctly.
+        _scalarCutoff->setSR(_cfg->value("Sample Rate", "1.0").toString());
 
         scalarName = _cfg->value("Cutoff / Spacing Scalar").toString();
         _scalarCutoff->setSelectedScalar(scalarName);
@@ -167,16 +173,16 @@ int min_pad(Kst::ScalarList scalars) {
    }
 }
 
-double filter_calculate( double dFreqValue, Kst::ScalarList scalars ) {
-  double dValue;
+double filter_calculate( double f, Kst::ScalarList scalars ) {
+  double gain;
 
-  if( dFreqValue > 0.0 ) {
-    dValue = 1.0 / ( 1.0 + pow( scalars.at(1)->value() / dFreqValue, 2.0 * scalars.at(0)->value() ) );
+  if (f > 0.0) {
+    gain = 1.0 / ( 1.0 + pow( scalars.at(1)->value() / f, 2.0 * scalars.at(0)->value() ) );
   } else {
-    dValue = 0.0;
+    gain = 0.0;
   }
 
-  return dValue;
+  return gain;
 }
 
 

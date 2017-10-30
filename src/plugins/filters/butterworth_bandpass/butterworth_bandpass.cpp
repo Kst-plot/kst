@@ -198,12 +198,12 @@ double filter_calculate( double dFreqValue, Kst::ScalarList scalars ) {
   double lowpass  = scalars.at(1)->value() + 0.5*scalars.at(2)->value();
   double highpass = scalars.at(1)->value() - 0.5*scalars.at(2)->value();
 
-  if( dFreqValue > 0.0 ) {
-    dValue = 1.0 / ( 1.0 + gsl_pow_int( dFreqValue / lowpass, order2) );
-    dValue *= 1.0 / ( 1.0 + gsl_pow_int( highpass / dFreqValue, order2) );
-  } else {
-    dValue = 0.0;
-  }
+  //if( dFreqValue > 0.0 ) {
+  dValue = 1.0 / ( 1.0 + gsl_pow_int( dFreqValue / lowpass, order2) );
+  dValue *= 1.0 / ( 1.0 + gsl_pow_int( highpass / dFreqValue, order2) );
+  //} else {
+  //  dValue = 0.0;
+  //}
 
   return dValue;
 }
