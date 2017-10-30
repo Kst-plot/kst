@@ -429,9 +429,11 @@ void ScalarSelector::updateFields(ControlField control_field) {
   } else if (control_field == Cutoff) { // Ratio follows frequency: Keep SR fixed
     ratio = cutoff/frequency;
     _scalar->setCurrentText(QString::number(ratio, 'g', 12));
-  } else if (control_field == SampleRate) { // Ratio follows SR.  Keep frequency fixed
-    ratio = cutoff/frequency;
-    _scalar->setCurrentText(QString::number(ratio, 'g', 12));
+  } else if (control_field == SampleRate) { // Cutoff follows SR.  Keep ratio fixed
+    cutoff = ratio * frequency;
+    _cutoff->setText(QString::number(cutoff, 'g', 12));
+    //ratio = cutoff/frequency;
+    //_scalar->setCurrentText(QString::number(ratio, 'g', 12));
   }
 
 }
