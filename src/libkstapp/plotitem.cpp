@@ -92,6 +92,7 @@ PlotItem::PlotItem(View *parent)
   _filterMenu(0),
   _fitMenu(0),
   _psdMenu(0),
+  _histogramMenu(0),
   _editMenu(0),
   _sharedAxisBoxMenu(0),
   _copyMenu(0),
@@ -741,6 +742,23 @@ void PlotItem::createPSDMenu() {
 }
 
 
+void PlotItem::createHistogramMenu() {
+  if (_histogramMenu) {
+    delete _histogramMenu;
+  }
+
+  _histogramMenu = new QMenu;
+  _histogramMenu->setTitle(tr("Create Histogram"));
+
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    _histogramMenu->addAction(new QAction(curve->Name(), this));
+  }
+
+  connect(_histogramMenu, SIGNAL(triggered(QAction*)), this, SLOT(showHistogramDialog(QAction*)));
+}
+
+
 
 void PlotItem::createSharedAxisBoxMenu() {
   if (_sharedAxisBoxMenu) {
@@ -770,6 +788,9 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     }
     createPSDMenu();
     menu.addMenu(_psdMenu);
+
+    createHistogramMenu();
+    menu.addMenu(_histogramMenu);
 
     createEditMenu();
     menu.addMenu(_editMenu);
@@ -839,6 +860,16 @@ void PlotItem::showPSDDialog(QAction* action) {
   foreach (const CurvePtr& curve, curves) {
     if (curve->Name() == action->text()) {
       DialogLauncher::self()->showPowerSpectrumDialog(0, curve->yVector());
+    }
+  }
+}
+
+
+void PlotItem::showHistogramDialog(QAction* action) {
+  CurveList curves = curveList();
+  foreach (const CurvePtr& curve, curves) {
+    if (curve->Name() == action->text()) {
+      DialogLauncher::self()->showHistogramDialog(0, curve->yVector());
     }
   }
 }
