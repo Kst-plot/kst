@@ -699,7 +699,16 @@ void PlotItem::createEditMenu() {
   }
 
   _editMenu = new QMenu;
-  _editMenu->setTitle(tr("Edit Curve"));
+
+  int nc = curveList().size();
+  int nr = relationList().size();
+  if (nc == nr) {
+    _editMenu->setTitle(tr("Edit Curve"));
+  } else if (nc == 0) {
+    _editMenu->setTitle(tr("Edit Image"));
+  } else {
+    _editMenu->setTitle(tr("Edit Curve/Image"));
+  }
 
   RelationList relations = relationList();
   foreach (const RelationPtr& relation, relations) {
@@ -795,6 +804,10 @@ void PlotItem::addToMenuForContextEvent(QMenu &menu) {
     createEditMenu();
     menu.addMenu(_editMenu);
 
+  } else if (relationList().size()>0) {
+    menu.addSeparator();
+    createEditMenu();
+    menu.addMenu(_editMenu);
   }
 
   if (parentItem() && isInSharedAxisBox() && _sharedBox) {
