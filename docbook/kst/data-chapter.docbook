@@ -841,25 +841,188 @@ Auto-generating axes labels for plots will be based on these units.
   </listitem>
   <listitem>
     <para>
-      A number of scalars, unique to each filter, which are parameters for the filter.
+      A number of numbers or scalars which are parameters for the filter.
     </para>
   </listitem>
 </itemizedlist>
 
+<para>
+  A number of filters are available in kst.  The band pass, band stop, high pass and low pass filters are conventional zero phase shift fourier domain filters whose band edges follow the shape of a Butterworth filter.  A higher order filter is a steeper cutoff. 
+</para>
+
+<para>
+  Numerical Integrals can be created with the Cumulative Sum filter, and Numerical Derivatives with the Fixed Step Differentiation filter.  In both of these dX takes the size of the step between samples.
+</para>
+
+<para>
+  For fields such as angles which have (for example) a discontinuity at 360 degrees, the Unwind Fliter can be used to make the signal continuous.  So if the unfiltered signal goes from 359.5 degrees to 0.5 degrees in consecutive samples, the filtered signal will go from 359.5 degrees to 360.5 degrees.
+</para>
+
+<para>
+  The Flag filter can be used to mask a vector with NaNs whenever certain bit patters in the flag field are true.
+</para>
+
+<para>
+  The easiest way to create a filter is by selecting <guimenuitem>Create filter</guimenuitem> from the
+  plot context menu (right click in the plot, and then selecting the curve you would like to fit.
+</para>
+
+<para>
+  You can also create a filter plugin by selecting the appropriate filter from the <guimenu>Filter plugin</guimenu> submenu in the <guimenu>Create</guimenu> menu.  With this dialog you can select the input vectors, but it does not automatically create a curve.  You will have to create a curve by hand by selecting <guimenu>Curve</guimenu> in the <guimenu>Create</guimenu> menu.
+</para>
 
 </sect2>
 
 <sect2 id="plugins">
-<title>Other Plugins</title>
+<title>Standard Plugins</title>
+<para>
+  Plugins that do not fit the requirements of being either fits are filters can be created from the <guimenu>Standard Plugin</guimenu> submenu in the <guimenu>Create</guimenu> menu.  They are not well documented.
+</para>
 </sect2>
 
 
 <sect2 id="arrays">
 <title>Matrices</title>
+<para>
+Matrices are two dimensional tables of numbers.  They can be used as the inputs to Data Objects.  They are also used to define the values for Images.  While different types of Matrices are created in different ways, they can all be used in Data Objects or Images in the same way.
+</para>
+
+<para>
+  
+<itemizedlist>
+<listitem>
+<para>
+  Data Matrices aquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Matrix</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
+  
+<inlinemediaobject>
+<imageobject>
+<imagedata fileref="Icon-kst-matrixnew.png" format="PNG"/>
+</imageobject>
+</inlinemediaobject>
+
+  icon in any matrix selector (for example, in the Image dialog).
+</para>
+</listitem>
+<listitem>
+<para>
+  Editable Matrices have their data defined through the Python interface.  They can not be created or edited in the GUI.
+</para>
+</listitem>
+<listitem>
+<para>
+   Output Matrices are the output of data objects, such as Spectrograms.  
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<screenshot>
+<screeninfo>New Matrix Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-newmatrix.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The New Matrix Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>  
+
+<para>
+  Matrices can be read from:
+</para>
+
+<para>
+<itemizedlist>
+
+  <listitem>
+    <para>
+      Any data file compatible with QImage - (jpg, png, tiff, bmp, gif, etc).  For color images, four 
+      matrices can be read: RED, GREEN, BLUE, and GRAY.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      conventional 2D FITS images (if built with cfitsio).
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      BIT Image Streams (BIS) fiiles.
+    </para>
+  </listitem>
+</itemizedlist>
+</para>
+
+<para>
+The BIS data source can provide matrices from an image stream.  In these cases, the frame number can be selected when the Matrix is created.
+</para>
+
 </sect2>
 
 <sect2 id="images">
 <title>Images</title>
+
+<para>
+Images are used to create plottable objects from Matrices.  The pixels are directly mapped from the matrix.  ie, rows in the matrix are rows in the image.  Columns in the matrix are columns in the image.  The value of the Matrix sets the color of the pixel.
+</para>
+
+<para>
+  Images are typically created from selecting <guimenuitem>Image</guimenuitem> from the <guimenu>Create</guimenu> menu.  The Image dialog is shown below:
+</para>
+
+<screenshot>
+<screeninfo>New Image Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-new-image.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The New Image Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>  
+
+<para>
+  A matrix has been read from a png file, and selected in the Matrix selector (<literal>GRAY (M1)</literal>).  A color map rather than a contour map has been selected, and a grey scale color pallet has been selected.  With <guilabel>Real-time auto threshold</guilabel> selected, the maximum value in the matrix will be set to the maximum value of the color pallet, and the minimum value in the matrix will be set to the minimum value of the color pallet.  All other values will be linearly interpolated.  Alternatively, the maximum and minimum values can be set once, either using <guilabel>Smart</guilabel>/<guilabel>Percentile</guilabel> tool, or by manually setting the thresholds.
+</para>
+
+<para>
+  The resulting image is shown below.  Note that, by default, the image will automatically fill the plot window, and will not preserve aspect ratio.
+</para>
+
+<screenshot>
+<screeninfo>New Image Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-image1.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The New Image Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>  
+
+<para>
+  The aspect ratio can be normalized by selecting <guimenuitem>Normalize X-Axis to Y-Axis</guimenuitem> in the <guimenu>X Zoom</guimenu> submenu of the <guimenu>Zoom</guimenu> plot context menu, or by pressing the "n" key in a plot window.  The image will now have square pixels.
+</para>
+
+<screenshot>
+<screeninfo>New Image Dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-image2.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>The New Image Dialog</phrase>
+</textobject>
+</mediaobject>
+</screenshot>  
+
+<para>
+  The range of the color pallet can be adjusted from the curve edit dialog, or by pressing 'i' in an image.  This will cycle the color limits, allowing an increasing fraction of the pixels to be saturated at either end of the color scale before returning to full range.
+</para>
+
 </sect2>
 
 </sect1>
