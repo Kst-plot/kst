@@ -4,7 +4,41 @@
 &kst; provides various methods of saving and exporting data and plots.  These methods are described below.
 </para>
 
-<sect1 id="savingplotdefinitions">
+<itemizedlist>
+
+  <listitem>
+    <para>
+      <link linkend="save-sessions">Saving Sessions</link>: saves a capture of the entire &kst; session for future use.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      <link linkend="save-vectors">Exporting vectors</link>: export one or more Vectors to an ASCII file.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      <link linkend="print">Printing tabs</link>: Send one or more of the current tabs to a printer.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      <link linkend="Exporting">Exporting tabs</link>: Save one or more plots to an image file.
+    </para>
+  </listitem>
+
+    <listitem>
+    <para>
+      <link linkend="copy-tab">Copy tab: </link>:copy an image of the current tab to the clipbard for pasting in an other application.
+    </para>
+  </listitem>
+
+</itemizedlist>
+
+<sect2 id="savingplotdefinitions">
 <title>Saving Plot Definitions</title>
 <para>
 A plot definition is essentially a capture of a &kst; session.  It contains all the plots, data objects, and plot layouts
@@ -17,15 +51,15 @@ the location you wish to save the plot definition, enter a filename, and click <
 The plot definition will be saved as a <filename>*.kst</filename> file.
 </para>
 
-</sect1>
+</sect2>
 
-<sect1 id="exportingvectorsandgraphics">
+<sect2 id="exportingvectorsandgraphics">
 <title>Exporting Vectors and Plots</title>
 <para>
 Vectors and plots in &kst; can be exported to files.  This can be useful, for example, in capturing plots of live data
 or using generated vectors in a different application.
 </para>
-<sect2 id="exportingvectors">
+<sect3 id="exportingvectors">
 <title>Exporting Vectors</title>
 <para>
 To export or save a vector to a file, select <guimenuitem>Save Vectors to Disk...</guimenuitem>
@@ -48,10 +82,10 @@ of the file will contain the elements of the selected vector. See below for an e
 499
 </screen>
 </informalexample>
-</sect2>
+</sect3>
 
 
-<sect2 id="exportinggraphics">
+<sect3 id="exportinggraphics">
 <title>Exporting Plots</title>
 <para>
 To export a &kst; plot to a graphics file, select <guimenuitem>Export to Graphics File...</guimenuitem>
@@ -157,14 +191,14 @@ intervals, if selected).
 
 </para>
 
+</sect3>
+
+
 </sect2>
 
 
-</sect1>
 
-
-
-<sect1 id="savingandexportingprinting">
+<sect2 id="savingandexportingprinting">
 <title>Printing</title>
 <para>
 To print all the plots in the current window, select
@@ -210,7 +244,7 @@ curves in the print output.</para>
 </variablelist>
 
 </para>
-</sect1>
+</sect2>
 
 
 </chapter>
