@@ -8,7 +8,7 @@
 
   <listitem>
     <para>
-      <link linkend="save-sessions">Saving Sessions</link>: saves a capture of the entire &kst; session for future use.
+      <link linkend="save-sessions">Saving and loading Sessions</link>: A capture of the entire &kst; session can be saved for future use.
     </para>
   </listitem>
 
@@ -38,19 +38,74 @@
 
 </itemizedlist>
 
-<sect2 id="savingplotdefinitions">
-<title>Saving Plot Definitions</title>
+<sect2 id="save-sessions">
+<title>Saving Sessions</title>
 <para>
-A plot definition is essentially a capture of a &kst; session.  It contains all the plots, data objects, and plot layouts
-that are present at the time of saving.
-</para>
-<para>
-To save a plot definition, simply select <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As...</guimenuitem>
-(depending on whether or not you wish to save to a new file) from the <guimenu>File</guimenu> menu.  Browse to
-the location you wish to save the plot definition, enter a filename, and click <guibutton>Save</guibutton>.
-The plot definition will be saved as a <filename>*.kst</filename> file.
+  Selecting <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As</guimenuitem> from the <guimenu>File</guimenu> menu will save the state of the current kst session.  By default, these session files have the extentions <literal>.kst</literal>.  If this session file is opened later, the state of kst, including the loading of all data files, and the saving of all plots will be returned to the state when it was saved.
 </para>
 
+<para>
+  Session files are loaded by:
+</para>
+<itemizedlist>
+  <listitem>
+    <para>
+      Selecting <guimenuitem>Open</guimenuitem> from the <guimenu>File</guimenu> menu.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      Selecting one of the session files in the <guimenu>Recent Sessions</guimenu> submenu in the <guimenu>File</guimenu> menu.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      Selecting one of the sessions listed at the bottom of the <guimenu>File</guimenu> menu.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      using the commend line. For example:
+      <screen><userinput><command>kst2 sessionfile.kst</command></userinput></screen>
+    </para>
+  </listitem>
+</itemizedlist>
+
+
+<para>
+  There are a few details to be aware of with sessions files:
+</para>
+
+<itemizedlist>
+
+  <listitem>
+    <para>
+      Data read from data source files are not embedded in the kst session file.  Instead, the file name and frame ranges are stored, and when the session is loaded, the data files are re-loaded from disk.  If the the data source files have been moved or deleted, then loading will fail.  If the contents of the data source files have changed, then the data loaded will be whatever is now in the data file.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      Vectors which have been created from numpy arrays through the python interface are embedded in the data file, so reloading the session reloads the vectors that have been copied through pyKst.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      The undo stack is cleared when a session file is loaded.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      When a session file is loaded, the current session is cleared.
+    </para>
+  </listitem>
+
+</itemizedlist>
 </sect2>
 
 <sect2 id="exportingvectorsandgraphics">
