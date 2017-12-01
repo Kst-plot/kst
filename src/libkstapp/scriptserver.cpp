@@ -90,7 +90,8 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
       initial = "KstScript";
     }
 
-    serverName = false;
+    serverNameSet = false;
+
     // The command line hasn't been parsed yet, so
     // we can't rely on that to get the server name.
     QStringList args= qApp->arguments();
