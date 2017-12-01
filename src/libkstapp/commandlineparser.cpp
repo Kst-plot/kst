@@ -43,8 +43,8 @@ namespace Kst {
   static const char *usageMessage =
 "KST Command Line Usage\n"
 "************************\n"
-"*** Load a kst file: ***\n"
-"kst [OPTIONS] kstfile\n"
+"*** Load a kst session: ***\n"
+"kst [OPTIONS] <kstfile>\n"
 "\n"
 "[OPTIONS] will override the datasource parameters for all data sources in the kst file:\n"
 "      -F  <datasource>\n"
@@ -56,7 +56,7 @@ namespace Kst {
 
   static const char *usageDetailsMessage =
 "*** Read a data file ***\n"
-"kst datasource OPTIONS [datasource OPTIONS []]\n"
+"kst [<datasource> [OPTIONS]]\n"
 "\n"
 "OPTIONS are read and interpreted in order. Except for data object options, all are applied to all future data objects, unless later overridden.\n"
 "Output Options:\n"
@@ -107,6 +107,8 @@ namespace Kst {
 "      -p <field>               plot the spectrum of field.\n"
 "      -h <field>               plot a histogram of field.\n"
 "      -z <field>               plot an image of matrix field.\n"
+"Misc:\n"
+"      --clientName=<client name> Set the client name for connecting with a script.\n"
 "\n"
 "****************\n"
 "*** Examples ***\n"

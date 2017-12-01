@@ -42,8 +42,11 @@ class ScriptServer : public QObject
 public:
     explicit ScriptServer(ObjectStore*obj);
     ~ScriptServer();
-    //QByteArray checkPrimatives(QByteArray&command,QLocalSocket* s);
     void setStore(ObjectStore *obj) { _store = obj; vi.clear();}
+    QString serverName;
+    bool serverNameSet;
+    void setScriptServerName(QString server_name);
+
 public slots:
     void procConnection();
     void readSomething();

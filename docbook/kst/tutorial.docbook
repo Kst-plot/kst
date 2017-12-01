@@ -742,13 +742,13 @@ Then, from the <guimenu>Create</guimenu> menu select
 
 <para>
   It is hard to see any details in this plot - a log-log plot would be
-  much easier. To convert the Y axis to log hit <keycap>L</keycap> and
-  to convert the X axis to log hit <keycap>G</keycap>.  (These options
+  much easier. To toggle the Y axis to log hit <keycap>L</keycap> and
+  to toggle the X axis to log hit <keycap>G</keycap>.  (These options
   are also available in the context menu under the 
   <guimenuitem>Zoom</guimenuitem> submenu in case you forget the keyboard
   commands).  The plot will now be log-log, as shown:
 </para>
-
+ 
 <screenshot>
 <screeninfo>Spectrum</screeninfo>
 <mediaobject>
@@ -762,8 +762,16 @@ Then, from the <guimenu>Create</guimenu> menu select
 </screenshot>
 
 <para>
-  From the <guimenu>Create</guimenu> you can similarly create histograms, spectograms,
-  and equations of fields you have loaded.
+  Hitting <keycap>L</keycap> and <keycap>G</keycap> will toggle back to linear axis.
+</para>
+
+<para>
+  From the <guimenu>Create</guimenu> you can similarly create histograms, spectrograms and equations
+  of fields you have loaded.
+</para>
+  
+<para>
+  Save your session - we will be using it again in the next section of the tutorial.
 </para>
 </sect1>
 

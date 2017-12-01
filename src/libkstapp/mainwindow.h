@@ -73,6 +73,10 @@ class MainWindow : public QMainWindow
     static void setWidgetFlags(QWidget*);
     void updateRecentKstFiles(const QString& newfilename = QString());
 
+    void setKstWindowTitle();
+    QString scriptServerName();
+    bool scriptServerNameSet();
+    void setScriptServerName(QString server_name);
 
   public Q_SLOTS:
     void copyTab();
@@ -365,6 +369,7 @@ class MainWindow : public QMainWindow
     bool _ae_export_all;
     int _ae_autosave_period;
     QTimer *_ae_Timer;
+    QString _sessionFileName;
 
     friend class ScriptServer;
 };
