@@ -96,11 +96,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
     // we can't rely on that to get the server name.
     QStringList args= qApp->arguments();
     for(int i=0;i<args.size();i++) {
-        if(args.at(i).startsWith("--clientName=")) {
-            initial=args.at(i);
-            initial.remove("--clientName=");
-            serverNameSet = true;
-        } else if(args.at(i).startsWith("--serverName=")) {
+        if (args.at(i).startsWith("--serverName=")) {
           initial=args.at(i);
           initial.remove("--serverName=");
           serverNameSet = true;

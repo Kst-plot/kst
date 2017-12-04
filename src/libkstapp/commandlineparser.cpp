@@ -108,7 +108,7 @@ namespace Kst {
 "      -h <field>               plot a histogram of field.\n"
 "      -z <field>               plot an image of matrix field.\n"
 "Misc:\n"
-"      --clientName=<client name> Set the client name for connecting with a script.\n"
+"      --serverName=<server name> Set the server name for pyKst scrips connecting with this session.\n"
 "\n"
 "****************\n"
 "*** Examples ***\n"

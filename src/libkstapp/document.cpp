@@ -137,7 +137,7 @@ bool Document::save(const QString& to) {
     xml.writeAttribute("version", objectStore()->sessionVersionString);
   }
   if (_win->scriptServerNameSet()) {
-    xml.writeAttribute("clientName", _win->scriptServerName());
+    xml.writeAttribute("scriptServerName", _win->scriptServerName());
   }
 
   xml.writeStartElement("data");
@@ -274,7 +274,7 @@ bool Document::open(const QString& file) {
         if (version.size()>2) {
           objectStore()->sessionVersion += version[2].toInt();
         }
-        QString server_name = attrs.value("clientName").toString();
+        QString server_name = attrs.value("scriptServerName").toString();
         if (!server_name.isEmpty()) {
           _win->setScriptServerName(server_name);
         }
