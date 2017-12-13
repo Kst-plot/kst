@@ -26,7 +26,7 @@ print "----------"
 
 # change the name of the vector made from field "Column 1"
 for Vname in vectors:
-  Vr = client.data_vector(Vname)
+  Vr = client.data_vector(Vname.name())
   if Vr.field() == "Column 2":
     print "Changing name of ", Vr.name(), " to A Gyro" 
     Vr.set_name("A Gyro")

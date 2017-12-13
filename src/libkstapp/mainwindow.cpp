@@ -121,6 +121,7 @@ MainWindow::MainWindow() :
   _tabWidget = new TabWidget(this);
   _undoGroup = new QUndoGroup(this);
   _debugDialog = new DebugDialog(this);
+
   Debug::self()->setHandler(_debugDialog);
 
   setKstWindowTitle();
@@ -371,11 +372,19 @@ void MainWindow::updateRecentKstFiles(const QString& filename)
 void MainWindow::setKstWindowTitle()
 {
   QString title = "Kst";
+  QString server_name = _scriptServer->serverName;
+  QString user_name = "--"+kstApp->userName();
+
+  if (server_name.endsWith(user_name)) {
+    server_name.remove(server_name.lastIndexOf(user_name),10000);
+  }
 
   if (!_sessionFileName.isEmpty()) {
     title += " - " + _sessionFileName;
   }
-  title += " -- " + _scriptServer->serverName;
+  if (scriptServerNameSet()) {
+    title += " -- " + server_name;
+  }
   setWindowTitle(title);
 }
 

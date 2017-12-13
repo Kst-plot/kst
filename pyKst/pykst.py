@@ -6,40 +6,40 @@ import os
 import tempfile
 import time
 import subprocess
+import getpass
 from ast import literal_eval
 
 import numpy as np
 
 try:
-    from PySide import QtCore, QtNetwork, QtGui
+    from PySide import QtNetwork, QtGui
 except ImportError as err1:
     try:
-        from PyQt4 import QtCore, QtNetwork, QtGui
+        from PyQt4 import QtNetwork, QtGui
     except ImportError as err2:
-        print("ImportError: {} and {}. One of the two is required.".format(err1, err2))
+        print "ImportError: {} and {}. One of the two is required.".format(err1, err2)
         sys.exit()
 
 QtGui.QApplication([""])
 
 
-def clean_tmp_file(file):
-    os.remove(file.name)
+def clean_tmp_file(tmp_file):
+    os.remove(tmp_file.name)
 
 def b2str(val):
     if isinstance(val, bool):
         return "True" if val else "False"
-    else:
-        return str(val)
+    return str(val)
 
 
-class Client:
+class Client(object):
     """ An interface to a running kst session.
 
     A client provides a connection to a running kst session.
     The constructor creates a connection to either a running
     kst session with name <server_name>, or if none exists, a new one.
-    If server_name is not specified, it creates a connection to either the
-    kst session with the name ``kstScript``, or if none exists, a new one.
+    If server_name is not specified, it creates a connection with an
+    unnamed kst session, or if none exists, a new unnamed session.
 
     The Client provides functions which effect the entire kst session,
     provides convenience functions to create objects within kst (eg,
@@ -57,18 +57,25 @@ class Client:
 
     """
 
-    def __init__(self, server_name="kstScript"):
+    def __init__(self, server_name=""):
+
+        user_name = getpass.getuser()
+
+        if server_name:
+            self.server_name = server_name + "--" + user_name
+        else:
+            self.server_name = user_name
+
         self.local_socket = QtNetwork.QLocalSocket()
-        self.local_socket.connectToServer(server_name)
+        self.local_socket.connectToServer(self.server_name)
         self.local_socket.waitForConnected(300)
-        self.server_name = server_name
 
         if self.local_socket.state() == QtNetwork.QLocalSocket.UnconnectedState:
-            subprocess.Popen(["kst2", "--serverName="+str(server_name)])
+            subprocess.Popen(["kst2", "--serverName="+str(self.server_name)])
             time.sleep(.5)
 
             while self.local_socket.state() == QtNetwork.QLocalSocket.UnconnectedState:
-                self.local_socket.connectToServer(server_name)
+                self.local_socket.connectToServer(self.server_name)
                 self.local_socket.waitForConnected(300)
 
     def send(self, command):
@@ -82,14 +89,14 @@ class Client:
         self.local_socket.write(command)
         self.local_socket.flush()
         self.local_socket.waitForReadyRead(300000)
-        x = self.local_socket.readAll()
-        return x
+        return_message = self.local_socket.readAll()
+        return return_message
 
     def send_si(self, handle, command):
         self.send(b2str("beginEdit("+handle+")"))
-        x = self.send(command)
+        return_message = self.send(command)
         self.send(b2str("endEdit()"))
-        return x
+        return return_message
 
     def test_command(self):
         self.send("testCommand()")
@@ -109,14 +116,14 @@ class Client:
         """ save a .kst file in kst. """
         self.send("fileSave("+b2str(filename)+")")
 
-    def export_graphics_file(self, filename, format=None, width=1280, height=1024, display=2,
-                             all_tabs=False, autosave_period=0):
+    def export_graphics_file(self, filename, graphics_format=None, width=1280, height=1024,
+                             display=2, all_tabs=False, autosave_period=0):
         """
         export the kst session as a set of graphics files.
 
         :param filename: the name of the file to be saved
-        :param format: the format to be used.  if None, the format is determined from the filename
-                       extension.
+        :param graphics_format: the format to be used.  if None, the format is determined from
+                                the filename extension.
         :param width: width of the plot, in pixels, if required by the display setting.
         :param height: the height of the plot, in pixels, if required by the display setting.
         :param display: how the dimensions are interpreted.
@@ -133,10 +140,10 @@ class Client:
 
         """
 
-        if format is None:
-            format = os.path.splitext(filename)[1][1:].strip().lower()
+        if graphics_format is None:
+            graphics_format = os.path.splitext(filename)[1][1:].strip().lower()
 
-        self.send("exportGraphics("+str(filename)+","+str(format)+","+str(width)+","+
+        self.send("exportGraphics("+str(filename)+","+str(graphics_format)+","+str(width)+","+
                   str(height)+","+str(display)+","+str(all_tabs)+","+str(autosave_period) + ")")
 
 
@@ -226,8 +233,8 @@ class Client:
     def get_scalar_list(self):
         """ returns the scalar names from kst """
 
-        x = self.send("getScalarList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getScalarList()")
+        name_list = return_message.data().split('|')
         return [Scalar(self, name=n) for n in name_list]
 
     def new_generated_string(self, string, name=""):
@@ -348,29 +355,29 @@ class Client:
     def get_vector_list(self):
         """ returns vectors from kst. """
 
-        x = self.send("getVectorList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getVectorList()")
+        name_list = return_message.data().split('|')
         return [VectorBase(self, name=n) for n in name_list]
 
     def get_data_vector_list(self):
         """ returns data vectors from kst. """
 
-        x = self.send("getDataVectorList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getDataVectorList()")
+        name_list = return_message.data().split('|')
         return [DataVector(self, "", "", name=n, new=False) for n in name_list]
 
     def get_generated_vector_list(self):
         """ returns generated vectors from kst. """
 
-        x = self.send("getGeneratedVectorList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getGeneratedVectorList()")
+        name_list = return_message.data().split('|')
         return [GeneratedVector(self, name=n, new=False) for n in name_list]
 
     def get_editable_vector_list(self):
         """ returns editable vectors from kst. """
 
-        x = self.send("getEditableVectorList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getEditableVectorList()")
+        name_list = return_message.data().split('|')
         return [EditableVector(self, name=n, new=False) for n in name_list]
 
 
@@ -407,8 +414,8 @@ class Client:
     def get_matrix_list(self):
         """ returns matrixes from kst. """
 
-        x = self.send("getMatrixList()")
-        name_list = x.data().split('|')
+        return_message = self.send("getMatrixList()")
+        name_list = return_message.data().split('|')
         return [Matrix(self, name=n) for n in name_list]
 
 
@@ -597,8 +604,8 @@ class Client:
 
         See :class:`Label`
         """
-        x = self.send("getLabelList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getLabelList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Label(self, "", name=n, new=False) for n in name_list]
 
 
@@ -626,8 +633,8 @@ class Client:
 
         See :class:`Box`
         """
-        x = self.send("getBoxList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getBoxList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Box(self, name=n, new=False) for n in name_list]
 
 
@@ -650,8 +657,8 @@ class Client:
 
         See :class:`Legend`
         """
-        x = self.send("getLegendList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getLegendList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Legend(self, 0, name=n, new=False) for n in name_list]
 
 
@@ -677,8 +684,8 @@ class Client:
 
         See :class:`Circle`
         """
-        x = self.send("getCircleList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getCircleList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Circle(self, name=n, new=False) for n in name_list]
 
     def new_ellipse(self, pos=(0.1, 0.1), size=(0.1, 0.1),
@@ -705,8 +712,8 @@ class Client:
 
         See :class:`Ellipse`
         """
-        x = self.send("getEllipseList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getEllipseList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Ellipse(self, name=n, new=False) for n in name_list]
 
     def new_line(self, start=(0, 0), end=(1, 1),
@@ -731,8 +738,8 @@ class Client:
 
         See :class:`Line`
         """
-        x = self.send("getLineList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getLineList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Line(self, name=n, new=False) for n in name_list]
 
 
@@ -760,8 +767,8 @@ class Client:
 
         See :class:`Arrow`
         """
-        x = self.send("getArrowList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getArrowList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Arrow(self, name=n, new=False) for n in name_list]
 
     def new_picture(self, filename, pos=(0.1, 0.1), width=0.1, rot=0, name=""):
@@ -783,8 +790,8 @@ class Client:
 
         See :class:`Picture`
         """
-        x = self.send("getPictureList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getPictureList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Picture(self, "", name=n, new=False) for n in name_list]
 
     def new_SVG(self, filename, pos=(0.1, 0.1), width=0.1, rot=0, name=""):
@@ -806,8 +813,8 @@ class Client:
 
         See :class:`SVG`
         """
-        x = self.send("getSVGList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getSVGList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [SVG(self, "", name=n, new=False) for n in name_list]
 
     def new_plot(self, pos=(0.1, 0.1), size=(0, 0), rot=0, font_size=0, columns=0,
@@ -835,8 +842,8 @@ class Client:
 
         See :class:`Plot`
         """
-        x = self.send("getPlotList()")
-        name_list = x.data()[1:-1].split("][")
+        return_message = self.send("getPlotList()")
+        name_list = return_message.data()[1:-1].split("][")
         return [Plot(self, name=n, new=False) for n in name_list]
 
     def set_datasource_option(self, option, value, filename, data_source="Ascii File"):
@@ -910,10 +917,11 @@ class Client:
 
 
 
-class NamedObject:
+class NamedObject(object):
     """ Convenience class. You should not use it directly."""
     def __init__(self, client):
         self.client = client
+        self.handle = ""
 
     def set_name(self, name):
         """ Set the name of the object inside kst. """
@@ -2480,7 +2488,8 @@ class PolynomialFit(Fit):
 class ViewItem(NamedObject):
     """ Convenience class. You should not use it directly."""
     def __init__(self, client):
-        self.client = client
+        NamedObject.__init__(self, client)
+        #self.client = client
 
     def set_h_margin(self, margin):
         self.client.send_si(self.handle,
@@ -2607,16 +2616,16 @@ class ViewItem(NamedObject):
             self.client.send_si(self.handle, b2str("lockAspectRatio(False)"))
 
     def position(self):
-        x = str(self.client.send_si(self.handle, "position()"))
+        return_message = str(self.client.send_si(self.handle, "position()"))
 
-        ret = literal_eval(x)
+        ret = literal_eval(return_message)
 
         return ret
 
     def dimensions(self):
-        x = str(self.client.send_si(self.handle, "dimensions()"))
+        return_message = str(self.client.send_si(self.handle, "dimensions()"))
 
-        ret = literal_eval(x)
+        ret = literal_eval(return_message)
 
         return ret
 
@@ -2759,7 +2768,8 @@ class ViewItem(NamedObject):
 
 # LABELS ######################################################################
 class Label(ViewItem):
-    """ A floating label inside kst.
+    r"""
+    A label inside kst.
 
     :param text: the text of the label.  Supports scalars, equations, and a
                  LaTeX subset.
@@ -2841,7 +2851,7 @@ class Label(ViewItem):
             self.handle = name
 
     def set_text(self, text):
-        """ Set text displayed by the label.
+        r""" Set text displayed by the label.
 
         Scalars and scalar equations can be displayed live in labels.
         When the scalar is updated, the label is updated.
@@ -3298,9 +3308,9 @@ class Arrow(ViewItem):
     def set_endpoints(self, start=(0, 0), end=(1, 1)):
         """ set the endpoints of the arrow.
 
-        If lock_pos_to_data has been set True, and the item parent is a plot, then the coordinates are
-        in terms the data's coordinates.  Otherwise, the coordinates, between 0 and 1, are relative to
-        the dimensions of the parent object.
+        If lock_pos_to_data has been set True, and the item parent is a plot, then the
+        coordinates are in terms the data's coordinates.  Otherwise, the coordinates,
+        between 0 and 1, are relative to the dimensions of the parent object.
         """
         x1, y1 = start
         x2, y2 = end
@@ -3601,9 +3611,9 @@ class Plot(ViewItem):
         """ Set Y axis to log mode. """
         self.client.send_si(self.handle, "setLogY("+b2str(log_mode) + ")")
 
-    def set_y_axis_reversed(self, reversed=True):
+    def set_y_axis_reversed(self, axis_reversed=True):
         """ set the Y axis to decreasing from bottom to top. """
-        if reversed:
+        if axis_reversed:
             self.client.send_si(self.handle, "setYAxisReversed()")
         else:
             self.client.send_si(self.handle, "setYAxisNotReversed()")
@@ -3651,12 +3661,16 @@ class Plot(ViewItem):
 
           d         the day as number without a leading zero (1 to 31)
           dd        the day as number with a leading zero (01 to 31)
-          ddd       the abbreviated localized day name (e.g. 'Mon' to 'Sun'). Uses the system locale to localize the name, i.e. QLocale::system().
-          dddd      the long localized day name (e.g. 'Monday' to 'Qt::Sunday'). Uses the system locale to localize the name, i.e. QLocale::system().
+          ddd       the abbreviated localized day name (e.g. 'Mon' to 'Sun').
+                    Uses the system locale to localize the name, i.e. QLocale::system().
+          dddd      the long localized day name (e.g. 'Monday' to 'Qt::Sunday').
+                    Uses the system locale to localize the name, i.e. QLocale::system().
           M         the month as number without a leading zero (1-12)
           MM        the month as number with a leading zero (01-12)
-          MMM       the abbreviated localized month name (e.g. 'Jan' to 'Dec'). Uses the system locale to localize the name, i.e. QLocale::system().
-          MMMM      the long localized month name (e.g. 'January' to 'December'). Uses the system locale to localize the name, i.e. QLocale::system().
+          MMM       the abbreviated localized month name (e.g. 'Jan' to 'Dec').
+                    Uses the system locale to localize the name, i.e. QLocale::system().
+          MMMM      the long localized month name (e.g. 'January' to 'December').
+                    Uses the system locale to localize the name, i.e. QLocale::system().
           yy        the year as two digit number (00-99)
           yyyy      the year as four digit number
           h         the hour without a leading zero (0 to 23 or 1 to 12 if AM/PM display)
@@ -3679,10 +3693,11 @@ class Plot(ViewItem):
 
 
 class Button(ViewItem):
-    """ This represents a button inside a View. When the button is pressed, it sends a message via a socket.
+    """ This represents a button inside a View. When the button is pressed, it sends a
+    message via a socket.
 
-    socket is a QtNetwork.QLocalSocket that is not connected to anything. The message "clicked" will be sent
-    when the button is pressed. See the bonjourMonde example. """
+    socket is a QtNetwork.QLocalSocket that is not connected to anything. The message
+    "clicked" will be sent when the button is pressed. See the bonjourMonde example. """
     def __init__(self, client, text, socket, posX=0.1, posY=0.1, sizeX=0.1, sizeY=0.1, rot=0):
         ViewItem.__init__(self, client)
         self.client.send("newButton()")
@@ -3708,10 +3723,12 @@ class Button(ViewItem):
 
 
 class LineEdit(ViewItem):
-    """ This represents a line edit inside a View. When the lineedit's value is changed, it sends a message via a socket.
+    """ This represents a line edit inside a View. When the lineedit's value is changed,
+    it sends a message via a socket.
 
-    socket is a QtNetwork.QLocalSocket that is not connected to anything. The message "valueSet:VAL" where VAL is some text
-    will be sent when the text is changed. See the ksNspire example. """
+    socket is a QtNetwork.QLocalSocket that is not connected to anything. The message
+    "valueSet:VAL" where VAL is some text will be sent when the text is changed.
+    See the ksNspire example. """
     def __init__(self, client, text, socket, posX=0.1, posY=0.1, sizeX=0.1, sizeY=0.1, rot=0):
         ViewItem.__init__(self, client)
         self.client.send("newLineEdit()")

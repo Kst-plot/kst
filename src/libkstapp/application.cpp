@@ -40,6 +40,24 @@ Application::Application(int &argc, char **argv)
   QCoreApplication::setApplicationName("Kst");
   setWindowIcon(KstGetIcon("kst"));
 
+
+  // get the Username from the OS.  On windows this is USERNAME and on linux, USER.
+#ifdef Q_OS_WIN
+  _userName = qgetenv("USERNAME");
+  if (_userName.isEmpty())  {// hmmm... something odd.
+    _userName = qgetenv("USER");
+  }
+#else
+  _userName = qgetenv("USER");
+  if (_userName.isEmpty()) { // hmmm... something odd.
+    _userName = qgetenv("USERNAME");
+  }
+#endif
+  if (_userName.isEmpty()) {
+    _userName = "kst";
+  }
+
+
   Builtins::initPrimitives(); //libkst
   Builtins::initDataSources(); //libkstapp
   Builtins::initObjects();    //libkstmath

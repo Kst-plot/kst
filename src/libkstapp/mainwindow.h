@@ -78,7 +78,7 @@ class MainWindow : public QMainWindow
     bool scriptServerNameSet();
     void setScriptServerName(QString server_name);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void copyTab();
     void showDataManager();
     void showDebugDialog();

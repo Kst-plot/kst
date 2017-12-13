@@ -34,8 +34,10 @@ class Application : public QApplication
     MainWindow *mainWindow() const;
 
     void initMainWindow();
+    QString userName() {return _userName;}
 private:
     QPointer<MainWindow> _mainWindow;
+    QString _userName;
 };
 
 }

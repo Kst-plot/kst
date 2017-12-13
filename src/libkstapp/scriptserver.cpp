@@ -74,21 +74,7 @@ ScriptServer::ScriptServer(ObjectStore *obj) : _server(new QLocalServer(this)), 
 
     QString initial;
 
-    // get the Username from the OS.  On windows this is USERNAME and on linux, USER.
-#ifdef Q_OS_WIN
-    initial = qgetenv("USERNAME");
-    if (initial.isEmpty())  {// hmmm... something odd.
-      initial = qgetenv("USER");
-    }
-#else
-    initial = qgetenv("USER");
-    if (initial.isEmpty()) { // hmmm... something odd.
-      initial = qgetenv("USERNAME");
-    }
-#endif
-    if (initial.isEmpty()) {
-      initial = "KstScript";
-    }
+    initial = kstApp->userName();
 
     serverNameSet = false;
 

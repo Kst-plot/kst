@@ -90,8 +90,8 @@ void VectorTab::updateTypeActivated(int idx)
     _updateBox->setEnabled(false);
     return;
   }
+  //_updateBox->setEnabled(true);
   switch (idx) {
-    _updateBox->setEnabled(true);
     case 0: _dataSource->startUpdating(DataSource::Timer); break;
     case 1: _dataSource->startUpdating(DataSource::File);  break;
     case 2: _dataSource->startUpdating(DataSource::None);  break;
