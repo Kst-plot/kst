@@ -32,7 +32,7 @@
 
     <listitem>
     <para>
-      <link linkend="copy-tab">Copy tab: </link>:copy an image of the current tab to the clipbard for pasting in an other application.
+      <link linkend="copy-tab">Copy tab image: </link>:copy an image of the current tab contents to the clipbard for pasting in an other application.
     </para>
   </listitem>
 
@@ -83,7 +83,7 @@
 
   <listitem>
     <para>
-      Data read from data source files are not embedded in the kst session file.  Instead, the file name and frame ranges are stored, and when the session is loaded, the data files are re-loaded from disk.  If the the data source files have been moved or deleted, then loading will fail.  If the contents of the data source files have changed, then the data loaded will be whatever is now in the data file.
+      Data read from data source files are not embedded in the kst session file.  Instead, the file name and frame ranges are stored, and when the session is loaded, the data files are re-loaded from the data source file.  If the the data source files have been moved or deleted, then loading will fail.  If the contents of the data source files have changed, then the data loaded will be whatever is now in the data file.
     </para>
   </listitem>
 
@@ -108,15 +108,10 @@
 </itemizedlist>
 </sect2>
 
-<sect2 id="exportingvectorsandgraphics">
-<title>Exporting Vectors and Plots</title>
-<para>
-Vectors and plots in &kst; can be exported to files.  This can be useful, for example, in capturing plots of live data
-or using generated vectors in a different application.
-</para>
-<sect3 id="exportingvectors">
+<sect2 id="save-vectors">
 <title>Exporting Vectors</title>
 <para>
+Vectors in &kst; can be exported to ascii files.
 To export or save a vector to a file, select <guimenuitem>Save Vectors to Disk...</guimenuitem>
 from the <guimenu>File</guimenu> menu.  The vector will be saved as an ASCII data file.  The single column
 of the file will contain the elements of the selected vector. See below for an example of an exported vector.
