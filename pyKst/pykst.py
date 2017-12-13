@@ -36,9 +36,11 @@ class Client(object):
     """ An interface to a running kst session.
 
     A client provides a connection to a running kst session.
+
     The constructor creates a connection to either a running
     kst session with name <server_name>, or if none exists, a new one.
-    If server_name is not specified, it creates a connection with an
+
+    If <server_name> is not specified (the default), it creates a connection with an
     unnamed kst session, or if none exists, a new unnamed session.
 
     The Client provides functions which effect the entire kst session,
