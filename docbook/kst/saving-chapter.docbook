@@ -1,5 +1,6 @@
 <chapter id="savingandexporting">
 <title>Saving and Printing</title>
+<sect1>
 <para>
 &kst; provides various methods of saving and exporting data and plots.  These methods are described below.
 </para>
@@ -8,42 +9,51 @@
 
   <listitem>
     <para>
-      <link linkend="save-sessions">Saving and loading Sessions</link>: A capture of the entire &kst; session can be saved for future use.
+      <link linkend="save-sessions">Session Files</link>: A capture of the entire &kst; session can be saved for future use.
     </para>
   </listitem>
 
   <listitem>
     <para>
-      <link linkend="save-vectors">Exporting vectors</link>: export one or more Vectors to an ASCII file.
+      <link linkend="save-vectors">Exporting Vectors</link>: The numerical values of one or more vectors can be written out to an ASCII file.
     </para>
   </listitem>
 
   <listitem>
     <para>
-      <link linkend="print">Printing tabs</link>: Send one or more of the current tabs to a printer.
+      <link linkend="print">Printing Tabs</link>: One or more of the current tabs can be printed.
     </para>
   </listitem>
 
   <listitem>
     <para>
-      <link linkend="Exporting">Exporting tabs</link>: Save one or more plots to an image file.
+      <link linkend="exportinggraphics">Exporting Tabs</link>: One or more of the current tabs can be saved to an image file (eg, a png or svg file).
     </para>
   </listitem>
 
     <listitem>
     <para>
-      <link linkend="copy-tab">Copy tab image: </link>:copy an image of the current tab contents to the clipbard for pasting in an other application.
+      Copy Tab Image: A bitmap image of the current tab contents can be saved to the clipbard for pasting into an other application by Selecting <guimenuitem>Copy Tab Image</guimenuitem> from the <guimenu>Edit</guimenu>.  The image will have the dimensions (in pixels) of the tab in the kst window.
     </para>
   </listitem>
 
 </itemizedlist>
+</sect1>
 
-<sect2 id="save-sessions">
-<title>Saving Sessions</title>
+<sect1 id="save-sessions">
+<title>Session Files</title>
+
+<sect2>
+<title>Saving</title>
+
 <para>
   Selecting <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As</guimenuitem> from the <guimenu>File</guimenu> menu will save the state of the current kst session.  By default, these session files have the extentions <literal>.kst</literal>.  If this session file is opened later, the state of kst, including the loading of all data files, and the saving of all plots will be returned to the state when it was saved.
 </para>
 
+</sect2>
+
+<sect2>
+<title>Loading</title>
 <para>
   Session files are loaded by:
 </para>
@@ -75,6 +85,10 @@
 </itemizedlist>
 
 
+</sect2>
+
+<sect2>
+<title>Details</title>
 <para>
   There are a few details to be aware of with sessions files:
 </para>
@@ -95,50 +109,69 @@
 
   <listitem>
     <para>
-      The undo stack is cleared when a session file is loaded.
+      When a session file is loaded, the current session is cleared.
     </para>
   </listitem>
 
   <listitem>
     <para>
-      When a session file is loaded, the current session is cleared.
+      When a session file is loaded, the undo stack is cleared.
     </para>
   </listitem>
 
-</itemizedlist>
-</sect2>
 
-<sect2 id="save-vectors">
+</itemizedlist>
+
+</sect2>
+</sect1>
+
+<sect1 id="save-vectors">
 <title>Exporting Vectors</title>
 <para>
 Vectors in &kst; can be exported to ascii files.
 To export or save a vector to a file, select <guimenuitem>Save Vectors to Disk...</guimenuitem>
-from the <guimenu>File</guimenu> menu.  The vector will be saved as an ASCII data file.  The single column
-of the file will contain the elements of the selected vector. See below for an example of an exported vector.
+from the <guimenu>File</guimenu> menu.  From the <guilabel>Export Vectors</guilabel> dialog, select the
+vectors you want to export, and select the file name where you want to save it.  In the dialog example,
+below, <literal>gyro\_x</literal> and <literal>t\_rw</literal> have been selected.
 </para>
-<informalexample>
-<screen>
-3776
-5380
-5245
-2942
-1861
-2424
-2520
-1868
-1736
-1736
-1174
-499
-</screen>
-</informalexample>
-</sect3>
 
+<screenshot>
+<screeninfo>Export Vectors</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-exportvectors.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Export Vectors to an ASCII file</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
 
-<sect3 id="exportinggraphics">
-<title>Exporting Plots</title>
 <para>
-To export a &kst; plot to a graphics file, select <guimenuitem>Export to Graphics File...</guimenuitem>
+  The vectors will be saved to an ascii file.  Each field is in a separate column, and the first row lists the field names.  If the vectors are of different lengths, then the shorter ones will be linearly interpolated to be the same size as the largest one, with the first and last samples of each vector assumed to be simultaneous.
+</para>
+</sect1>
+
+<sect1 id="print">
+<title>Printing Tabs</title>
+<para>
+Printing works as expected.  
+</para>
+<para>
+To print, select <guimenuitem>Print...</guimenuitem> from the <guimenu>File</guimenu> menu.  A system print dialog will be displayed.  By default, all tabs will be printed.  
+</para>
+<para>
+If the OS supports it, the plots can be exported here to a pdf file.  Otherwise, you can use the <link linkend="exportinggraphics">Exporting Tabs</link> option described in the next section to export to a pdf file.
+</para>
+<para>
+  Each page will be rescaled to fit whatever page size and orientation has been selected.  The scaling and resizing rules are the same when a &kst; window is resized.  If the page is the same size as has been set as the <guilabel>Reference view size</guilabel> (under <guilabel>Scaling</guilabel> in the <guilabel>Kst Settings</guilabel> dialog, selected by <guimenuitem>Configure Kst</guimenuitem> from the <guimenu>Settings</guimenu> menu), then the fonts will all have the sizes they have been set to in the various dialogs.  If the selected print size is larger or smaller than this, then the fonts will be also be proportionaly larger or smaller.
+</para>
+</sect1>
+
+<sect1 id="exportinggraphics">
+<title>Exporting Tabs</title>
+<para>
+To export &kst; plots to a graphics file, select <guimenuitem>Export as Image(s)...</guimenuitem>
 from the <guimenu>File</guimenu> menu.  The following dialog box will appear.
 </para>
 <screenshot>
@@ -154,148 +187,30 @@ from the <guimenu>File</guimenu> menu.  The following dialog box will appear.
 </screenshot>
 
 <para>
-The following settings and options are available when saving:
+  The root file name is specified in the <guilabel>File name:</guilabel> entry.  If <guilabel>Automatic extension</guilabel> is selected, then the file name extension appropriate to the file type is automacially added to the file name.
 </para>
-<variablelist>
-
-<varlistentry>
-<term>
-<guilabel>Save location</guilabel>
-</term>
-<listitem>
-<para>
-The path to the graphics file.  Enter a location manually, or click the button to right of the
-text box to browse to a location.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>File Format</guilabel>
-</term>
-<listitem>
-<para>
-The format to use for the saved graphics file.  PNG is suggested if you are not sure which format to use.
-</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term>
-<guilabel>Size</guilabel>
-</term>
-<listitem>
-<para>
-Select the dimensions, in pixels, of the graphic.  Check the <guilabel>Square</guilabel>
-option if you wish for the length and width of the graphic to be equal.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Windows</guilabel>
-</term>
-<listitem>
-<para>
-Select whether to export only the plots in the current window, or all plots.  If <guilabel>All</guilabel>
-is selected, one graphics file will be created for each window, each with filename <filename>file_n.fmt</filename>,
-where <filename>file</filename> is the filename specified in <guilabel>Save location</guilabel>, <filename>n</filename>
-is an index number assigned to each window, and <guilabel>fmt</guilabel> is an extension representing the selected
-file format.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Autosave</guilabel>
-</term>
-<listitem>
-<para>
-Check this option if you want &kst; to automatically save the plot to the specified file
-on a specified time interval.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<guilabel>Save interval</guilabel>
-</term>
-<listitem>
-<para>
-The time interval used to perform autosave, in seconds.
-</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
 
 <para>
-Click <guibutton>Save Once</guibutton> to immediately perform a save with the specified options and settings.
-Click <guibutton>Close</guibutton> to close the dialog box (autosave will still be performed at the specified
-intervals, if selected).
-
+  If <guilabel>Export all tabs</guilabel> is selected, then all tabs will be saved in separate files using the rules suggested in the label.  So, for example, if the file name selected in <guilabel>File name:</guilabel> is "demo", the file type is png, and <guilabel>Automatic extension</guilabel> is selected, and there are three tabs, then the three tabs will be saved in "demo_View1.png", "demo_View2.png", and "demo_View3.png".
 </para>
 
-</sect3>
-
-
-</sect2>
-
-
-
-<sect2 id="savingandexportingprinting">
-<title>Printing</title>
 <para>
-To print all the plots in the current window, select
-<guimenuitem>Print...</guimenuitem> from the <guimenu>File</guimenu>
-menu.  A standard &kde; print dialog will be displayed. Some
-&kst;-specific options can be set by clicking on the
-<guibutton>Options >></guibutton> button, and selecting the
-<guilabel>Kst Options</guilabel> tab. The options are:
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Append plot information to each page</guilabel></term>
-<listitem><para>If selected, a footer showing page number, plot name
-and the date and time is printed on each page.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Maintain aspect ratio</guilabel></term>
-<listitem><para>If selected, the aspect ratio of the plots in the
-&kst; window is retained in the print output. If unselected, the plots
-are resized to fill the printed page in both directions.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Print in monochrome</guilabel></term>
-<listitem><para>If selected, the plot is printed in monochrome
-(black-and-white). If not, the colors of the on-screen plot are used.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Curve width adjustment</guilabel></term>
-<listitem><para>Adjusts the width of all curves in the printed output
-by this number of pixels relative to the width of the curve in the
-plot window. You can set a negative value to reduce the width of the
-curves in the print output.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
+  SVG images, as well all file types supported by QImage are supported by kst.  This includes most common output formats.  For vector formats, such as SVG, the output, including text, is in vector format.  The <guilabel>Include:</guilabel> <guilabel>Vector formats</guilabel> and <guilabel>Bitmap formats</guilabel> checkboxes select what file types are listed in the <guilabel>File format</guilabel> list to make selection easier.
 </para>
-</sect2>
 
+<para>
+  The size of the output image is specified in pixels.  The <guilabel>Specify</guilabel> selection has 4 options: In order to preserve the aspect ratio of the on-screen window, the <guilabel>Width and Maintain Aspect Ratio</guilabel> or <guilabel>Height and Maintain Aspect Ratio</guilabel> options can be chosen.  The other two options are to specify the <guilabel>Width and Height</guilabel> of the output files, or if you want the output to be a Square, to specify the <guilabel>Size of Square</guilabel>.
+</para>
+
+<para>
+  In the <guilabel>Save Options</guilabel> section, if <guibutton>Save Once</guibutton> is selected, the imaged will be saved with the specified options and settings when <guibutton>Ok</guibutton> or <guibutton>Apply</guibutton> are pressed. 
+</para>
+
+<para>
+  If, instead, you would like to output the image at repeated intervals, say for providing a dynamic image for a web page, then select <guibutton>Autosave every</guibutton> and input the desired time between images (note that this is the time to wait after the previous image is complete, and not a high precision timer).  Once either the <guibutton>Ok</guibutton> or <guibutton>Apply</guibutton> buttons are pressed, &kst; will begin performing an image export to the specified file names at the interval selected, silently overwriting the existing files.  This will continue until <guilabel>Save Once</guilabel> is selected and the tabs are exported, or &kst; is exited.  A web page based on this is, admittedly, a little hacky, as it can be subject to displaying partial images if the write is not complete, but it does make for a very quick and easy way of making a kst session viewable remotely.
+</para>
+
+</sect1>
 
 </chapter>
 

@@ -1,0 +1,3 @@
+#! /bin/sh
+meinproc5 --srcdir /home/cbn/programs/kst/docbook/common/ --stylesheet ../common/customization/kst-web.xsl index.docbook
+

@@ -11,16 +11,16 @@
  <!ENTITY commontasks-chapter SYSTEM "commontasks-chapter.docbook">
  <!ENTITY data-chapter SYSTEM "data-chapter.docbook">
  <!ENTITY plugins-chapter SYSTEM "plugins-chapter.docbook">
- <!ENTITY install-chapter SYSTEM "install-chapter.docbook">
+ <!--ENTITY install-chapter SYSTEM "install-chapter.docbook"-->
  <!ENTITY license-chapter SYSTEM "license-chapter.docbook">
  <!ENTITY saving-chapter SYSTEM "saving-chapter.docbook">
  <!--ENTITY plotsandwindows-chapter SYSTEM "plotsandwindows-chapter.docbook"-->
  <!ENTITY additionalformats-chapter SYSTEM "additionalformats-chapter.docbook">
  <!ENTITY creatingplugins-chapter SYSTEM "creatingplugins-chapter-new.docbook">
- <!ENTITY miscfeatures-chapter SYSTEM "miscfeatures-chapter.docbook">
+ <!--ENTITY miscfeatures-chapter SYSTEM "miscfeatures-chapter.docbook"-->
  <!ENTITY debuglog-chapter SYSTEM "debuglog-chapter.docbook">
- <!ENTITY dcop-chapter SYSTEM "dcop-chapter.docbook">
- <!ENTITY commandline-chapter SYSTEM "commandline-chapter.docbook">
+ <!--ENTITY dcop-chapter SYSTEM "dcop-chapter.docbook"-->
+ <!--ENTITY commandline-chapter SYSTEM "commandline-chapter.docbook"-->
  <!--ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook"-->
  ]>
 
@@ -34,36 +34,27 @@
 <firstname>Barth</firstname>
 <othername></othername>
 <surname>Netterfield</surname>
-<affiliation><address><email>netterfield@astro.utoronto.ca</email></address></affiliation>
+<affiliation><address><email>kst@kde.org</email></address></affiliation>
 </author>
 <author>
 <firstname>Rick</firstname>
 <othername></othername>
 <surname>Chern</surname>
-<affiliation><address><email>kst@kde.org</email></address></affiliation>
 </author>
 <author>
 <firstname>Philip</firstname>
 <surname>Rodrigues</surname>
-<affiliation><address><email>phil@kde.org</email></address>
-</affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
+<year>2004 - 2017</year>
+<holder>C. Barth Netterfield</holder>
+</copyright>
+<copyright>
 <year>2004</year>
 <holder>The University of British Columbia</holder>
-</copyright>
-
-<copyright>
-<year>2005</year>
-<holder>The University of Toronto</holder>
-</copyright>
-
-<copyright>
-<year>2017</year>
-<holder>C. Barth Netterfield</holder>
 </copyright>
 
 <!-- Translators: put here the copyright notice of the translation -->
@@ -81,13 +72,13 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 Do NOT change these in the translation. -->
 
 <date>2017-01-31</date>
-<releaseinfo>Kst 2.0.0</releaseinfo>
+<releaseinfo>Kst 2.0.x</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
 <abstract>
 <para>
-&kst; is a data plotting and manipulation program with powerful plugin support.
+&kst; is a data plotting, real time data viewing, and quick look analysis program.
 </para>
 </abstract>
 
@@ -124,22 +115,20 @@ the order. -->
 
 &plugins-chapter;
 
-&miscfeatures-chapter;
+<!--&miscfeatures-chapter;-->
 
 &license-chapter;
 
 <!--appendices start here-->
-&commandline-chapter;
+<!--&commandline-chapter;-->
 
 &creatingplugins-chapter;
 
 &additionalformats-chapter;
 
-&dcop-chapter;
-
 &debuglog-chapter;
 
-&install-chapter;
+<!--&install-chapter;-->
 
 </book>
 

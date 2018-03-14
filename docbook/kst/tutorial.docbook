@@ -1,37 +1,6 @@
 <chapter id="tutorial">
 
-<chapterinfo>
-<authorgroup>
-<author>
-<firstname>Barth</firstname>
-<othername></othername>
-<surname>Netterfield</surname>
-<affiliation><address><email>kst@kde.org</email></address></affiliation>
-</author>
-<author>
-<firstname>Rick</firstname>
-<othername></othername>
-<surname>Chern</surname>
-<affiliation><address><email>kst@kde.org</email></address></affiliation>
-</author>
-</authorgroup>
-
-
-
-<copyright>
-<year>2004</year>
-<holder>The University of British Columbia</holder>
-</copyright>
-
-<copyright>
-<year>2004 - 2017</year>
-<holder>C. Barth Netterfield</holder>
-</copyright>
-
-
-</chapterinfo>
 <title>The &kst; Tutorial</title>
-
 
 
 <sect1 id="Welcome">
@@ -584,12 +553,7 @@ To take a closer look at that plot, right
 click in it and select the <guimenuitem>Maximize</guimenuitem> menu
 item (see below).  Notice that the menu item shows that <guimenuitem>Z</guimenuitem>
 is a shortcut for this, so you could also just type <keycap>Z</keycap> in the plot rather than
-using the context menu for this.  Selecting <guimenuitem>Maximize</guimenuitem> (either
-way) will cause the selected plot to fill the entire kst window.  Selecting 
-<guimenuitem>Maximize</guimenuitem> (or typing <keycap>Z</keycap> in the plot) again will restore it the plots to their previous
-arrangement.  This is especially valuable if you have a grid of many small plots
-and want to temporarily look at just one of them.  Obviously typing <keycap>Z</keycap> is going to be the most convienient way
-to do this, but the context menu is there in case you forget.
+using the context menu for this.  Selecting <guimenuitem>Maximize</guimenuitem> (either with <keycap>Z</keycap> or with the menu) will cause the selected plot to fill the entire kst window.  
 </para>
 <screenshot>
 <screeninfo>Maximizing a plot</screeninfo>
@@ -602,6 +566,24 @@ to do this, but the context menu is there in case you forget.
 </textobject>
 </mediaobject>
 </screenshot>
+
+<screenshot>
+<screeninfo>A plot after Maximizing</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-zoomed.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Maximizing a plot</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+<para>
+Selecting <guimenuitem>Maximize</guimenuitem> (or typing <keycap>Z</keycap> in the plot) again will restore it the plots to their previous
+arrangement.  This is especially valuable if you have a grid of many small plots
+and want to temporarily look at just one of them.  Obviously typing <keycap>Z</keycap> is going to be the most convienient way
+to do this, but the context menu is there in case you forget.
+</para>
 
 <para>
 In &kst;, it is very easy to zoom and scroll the data, using either the
@@ -670,6 +652,19 @@ While keeping
 While dragging, the region you are selecting will be displayed in both 
 tied plots.  Both plots will rescale to the region you have selected.
 </para>
+
+<screenshot>
+<screeninfo>Tied Zoom</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="Screenshot-kst-tiedzooming.png" format="PNG" />
+</imageobject>
+<textobject>
+<phrase>Tied Zoom</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
+
 
 <para>
 As with the mouse actions, the keyboard based zoom/scrolling actions
@@ -742,8 +737,8 @@ Then, from the <guimenu>Create</guimenu> menu select
 
 <para>
   It is hard to see any details in this plot - a log-log plot would be
-  much easier. To toggle the Y axis to log hit <keycap>L</keycap> and
-  to toggle the X axis to log hit <keycap>G</keycap>.  (These options
+  much easier. To toggle the Y axis to log press <keycap>l</keycap> (that is, small <keycap>L</keycap>) and
+  to toggle the X axis to log press <keycap>g</keycap>.  (These options
   are also available in the context menu under the 
   <guimenuitem>Zoom</guimenuitem> submenu in case you forget the keyboard
   commands).  The plot will now be log-log, as shown:
@@ -762,16 +757,12 @@ Then, from the <guimenu>Create</guimenu> menu select
 </screenshot>
 
 <para>
-  Hitting <keycap>L</keycap> and <keycap>G</keycap> will toggle back to linear axis.
+  Hitting <keycap>l</keycap> (small <keycap>L</keycap>) and <keycap>g</keycap> will toggle back to linear axis.
 </para>
 
 <para>
   From the <guimenu>Create</guimenu> you can similarly create histograms, spectrograms and equations
   of fields you have loaded.
-</para>
-  
-<para>
-  Save your session - we will be using it again in the next section of the tutorial.
 </para>
 </sect1>
 
@@ -851,18 +842,6 @@ This will bring up the New Filter Dialog:
 </para>
 
 </sect1>
-
-<sect1 id="conclusion">
-<title>Conclusion</title>
-
-<para>
-This concludes the &kst;  tutorial.  Hopefully you have gained enough
-knowledge to begin to use &kst;. Keep in mind that this
-tutorial does not cover all the functionality of &kst;&mdash;there is
-still much to explore and experiment with. 
-</para>
-</sect1>
-
 
 </chapter>
 

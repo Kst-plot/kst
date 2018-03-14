@@ -4,9 +4,10 @@
 <sect1 id="datasources">
 <title>Data Sources</title>
 
-<sect2 id="fileformats">
-<title>Supported File Formats</title>
+<sect2 id="DataSourceConcepts">
+<title>Data Source Concepts</title>
 <para>
+A data source in &kst; is simply a supported data file.
 Currently, Kst supports ASCII text files,
 <ulink url="http://getdata.sourceforge.net/">dirfiles</ulink>, and
 <ulink url="http://www.unidata.ucar.edu/software/netcdf/">NetCDF</ulink>,
@@ -15,12 +16,8 @@ for vectors and scalars, and FITS images, BIT image streams,
 <ulink url="http://doc.qt.io/qt-5/qimage.html">QImage</ulink>,
  (jpg, png, bmp, etc) for images.
 </para>
-</sect2>
-
-<sect2 id="DataSourceConcepts">
-<title>Data Source Concepts</title>
 <para>
-A data source in &kst; is simply a supported data file.
+
 The following concepts are important in understanding how &kst; works with
 different data sources.
 Some terminology is also introduced in this section.
@@ -57,7 +54,13 @@ However, for other data sources (eg, dirfiles), there may be multiple samples pe
 </para>
 
 <para>
-  In the figure, imagine that time proceeds from top to bottom.  &kst; assumes that the first sample in a frame is simultaneous for every field in the data source, and that the rest of the samples are sampled evenly throughout the frame.  On the other hand, when plotting one vector agains another, &kst; assumes that the first and last samples of each vector are simultaneous, and interpolates the shorter vector up to the resolution of the longer vector.  Since only the first sample in a frame can be assumed to be simultaneous across fields, when &kst; reads data into a vector, it only reads up to the first sample of the last frame requested, so that plotting one vector against another will make sense.  The rest of the last frame will not be read.  So if the first three frames of Field1 and Field2 are read from the data source in the figure, 3 samples will be read from Field1, and 9 samples will be read from Field2 (ending at first sample of Frame 3) - not 12 as one might expect.
+  In the figure, imagine that time proceeds from top to bottom.  &kst; assumes that the first sample in a frame is simultaneous for every field in the data source, and that the rest of the samples are sampled evenly throughout the frame, as shown.  
+</para>
+<para>  
+  When plotting one vector agains another, &kst; assumes that the first and last samples of each vector are simultaneous, and interpolates the shorter vector up to the resolution of the longer vector.  Since only the first sample in a frame can be assumed to be simultaneous across fields, <emphasis>when &kst; reads data into a vector, it only reads up to the first sample of the last frame requested,</emphasis> so that plotting one vector against another will make sense.  The rest of the last frame will not be read.  
+</para>
+<para>
+  So if the first three frames of Field1 and Field2 are read from the data source in the figure, 3 samples will be read from Field1, and 9 samples will be read from Field2 (ending at first sample of Frame 3) - not 12 as one might expect.
 </para>
 </sect3>
 
@@ -117,7 +120,7 @@ m,m
 </para>
 
 <para>
-  Note that the first few lines of the file are shown.  The dialog in the screen shot has been filled out to read this file: looking at the first lines of the file, we see that data starts at line 3, line 1 holds the field names, and line 2 holds the units (which will be used by &kst; in plot labels).  Additionally, as this is a csv file, a <literal>,</literal> has been selected as the Custom delimiter.  Selecting <guilabel>OK</guilabel> will permanently assign this configuration to this file, until it is changed again in this dialog, or until <guimenuitem>Clear datasource settings</guimenuitem> in the <guimenu>Settings</guimenu> menu is selected.
+  Note that the first few lines of the file are shown.  The dialog in the screen shot has been filled out to read this file: looking at the first lines of the file, we see that data starts at line 3, line 1 holds the field names, and line 2 holds the units (which will be used by &kst; in plot labels).  Additionally, as this is a csv file, a "<literal>,</literal>" has been selected as the <guilabel>Custom delimiter</guilabel>.  Selecting <guilabel>OK</guilabel> will assign this configuration to this file.  &kst; will continue to use this configuration with this file until the configuration options are changed again in this dialog, or until <guimenuitem>Clear datasource settings</guimenuitem> in the <guimenu>Settings</guimenu> menu is selected.
 </para>
 
 <para>
@@ -150,14 +153,14 @@ icon in the tool bar.
 </screenshot>
 
 <para>
-  The window lists all data object currently loaded in kst, as well as their type and basic properties.  To edit an object, double click on it, or select it and click the <guibutton>Edit</guibutton> button.  It will bring up the appropriate edit dialog.  Items that have child-vectors can be expanded to list them.  Items also have right button context menus with common tasks for the items, such as making curves or power spectra from vectors, or adding curves to plots.
+  The window lists all data objects currently loaded in kst, as well as their type and basic properties.  To edit an object, double click on it, or select it and click the <guibutton>Edit</guibutton> button.  It will bring up the appropriate edit dialog.  Items that have child-vectors can be expanded to list them.  Items also have right button context menus with common tasks for the items, such as making curves or power spectra from vectors, or adding curves to plots.
 </para>
 
 <para>
   Items can also be deleted from this dialog by selecting them and clicking <guibutton>Delete</guibutton>.  This will delete the selected item and all items which depend on it.  So if you delete a vector, all curves, spectra, historgrams, or equations that depend on it will also be deleted.  Be careful, because this can not be undone.
 </para>
 <para>
-  Clicking the <guibutton>Purge</guibutton> will remove all undisplayed data objects.  If deleting an object (and everthing that depends on it) will not change any plots or labels, then it is deleted.  Nothing that is displayed is deleted.  This can not be undone.
+  Clicking <guibutton>Purge</guibutton> will remove all undisplayed data objects.  If deleting an object (and everthing that depends on it) will not change any plots or labels, then it is deleted.  Nothing that is displayed is deleted.  This can not be undone.
 </para>
 
 </sect1>
@@ -171,7 +174,7 @@ icon in the tool bar.
 <itemizedlist>
 <listitem>
 <para>
-  Data Sources: these provide Primitives with access to data files.
+  Data Sources: data files which are recognized by &kst;.
 </para>
 </listitem>
 <listitem>

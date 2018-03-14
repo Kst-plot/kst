@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<!--
+Compatibility catalog for old KDE DocBook XML, based on DocBook 4.2
+
+Copyright (C) 2001,2002 Frederik Fouvry
+ 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Send suggestions, comments, etc. to the KDE DocBook mailing list
+<kde-docbook@kde.org>.
+-->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+<!--
+OVERRIDE YES
+SGMLDECL "xml.dcl"
+-->
+
+  <!-- DocBook 4.2 KDE Variant V1.1 -->
+
+  <public publicId="-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+          uri="dtd/kdex.dtd"/>
+</catalog>

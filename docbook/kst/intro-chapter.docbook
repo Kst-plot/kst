@@ -79,8 +79,8 @@ and save it as <filename>simpledata.dat</filename>:
 
 <para>
 <filename>simpledata.dat</filename> is an example of an ASCII data file, one of the many file types
-&kst; is capable of reading. For further details on file types, see
-<link linkend="fileformats">Supported File Formats</link>.  To produce a simple plot using
+&kst; is capable of reading. For further details on file types, see the chapter on
+<link linkend="datasources">datasources</link>.  To produce a simple plot using
  the first column (or <quote>field</quote>)
 of this file an x vector, and the second column as a y vector, enter the following:
 </para>
@@ -105,8 +105,7 @@ of this file an x vector, and the second column as a y vector, enter the followi
 <para>
 Numerous other command-line options are available&mdash;using the command-line only, plots of data
 can be printed directly to files, and simple data manipulation such as creation of
-power spectra can be performed as well.  For a complete list of command-line options, see
-<link linkend="command-lineoptions">Command Line Usage and Examples</link>.
+power spectra can be performed as well.
 </para>
 
 
@@ -121,9 +120,6 @@ The data wizard walks through the specification of a data file, selection of fie
 Any plot displayed in &kst; can be manipulated.  For example, dragging a rectangle anywhere within a plot
 will zoom in to that section of the plot.  Holding &Ctrl; or &Shift; while
 dragging will zoom in on the x or y axis only, respectively, and tapping the arrow keys scrolls a plot.
-See
-<link linkend="workingwithplotsandwindows">Working with Plots and Window</link> for more details on
-manipulating plots and plot layout, as well as the different mouse modes.
 </para>
 
 

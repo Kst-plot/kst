@@ -1,5 +1,8 @@
 <appendix id="supportingadditionalfileformats">
 <title>Supporting Additional File Formats</title>
+<sect2>
+  <title>WARNING: This section was written for Kst version 1 and may be somewhat, or even totally obsolete. WARNING</title>
+</sect2>
 <para>
 This section describes
 how to create additional

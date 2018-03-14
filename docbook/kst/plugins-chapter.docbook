@@ -1,51 +1,11 @@
 <chapter id="pluginsandfilters">
 <title>Plugins, Fits, and Filters</title>
 <para>
-Plugins provide added functionality to &kst;.  By default, &kst; comes packaged with an
-extensive selection of built-in plugins.  In addition, a simple and consistent interface allows for easy creation
-of 3rd-party plugins.  Fits and Filters are simply subsets of the set of plugins, and thus behave identically to plugins,
-with the exception of additional convenience dialog functionality accessible from the
-<link linkend="theplotcontextmenu">plot context menu</link>.
-</para>
-
-<sect1 id="addingandremovingplugins">
-<title>Adding and Removing Plugins</title>
-<para>
-By default, the built-in plugins are stored in <filename>/usr/lib/kde3/kstplugins/</filename> (this directory
-may vary, depending on where you installed &kst;). The Plugin Manager can be used to add
-and remove plugins.  It can be accessed by selecting <guimenuitem>Plugins...</guimenuitem>
-from the <guimenu>Settings</guimenu> menu.  A list of the currently installed plugins is displayed in the
-Plugin Manager.
+Many of the mathematical data operators in &kst;, including fits and filters, are implemented as plugins.  Plugins are loaded at run time and use a stable API, so it is possible to write your own plugins and include them in your local installation without re-compiling &kst;.  Fits and Filters are simply subsets of the set of plugins, and thus behave identically to generic plugins, with the exception of additional convenience dialog functionality when selected from the plot contect menu.  See <link linkend="fits">here</link> for a general description of the creation of fits and filters.
 </para>
 
 <para>
-To add a plugin, click the <guibutton>Install...</guibutton> button.  Browse to the directory containing
-both the plugin specification file (<literal role="extension">*.xml</literal>) and the object file
-(<literal role="extension">*.o</literal>).  Click <guibutton>OK</guibutton>, and the plugin should be installed.
-</para>
-
-<para>
-To remove a plugin, simply highlight the plugin in the Plugin Manager and click <guibutton>Remove</guibutton>.
-You will be prompted for confirmation.
-</para>
-
-<para>
-To quickly refresh the list of plugins displayed in the Plugin Manager, click <guibutton>Rescan</guibutton>.  Doing
-so will remove any plugins no longer present in their specified paths, and add any new plugins in the default
-plugins directory.
-</para>
-
-</sect1>
-
-
-<sect1 id="builtinplugins">
-<title>Built-in Plugins</title>
-<para>
-To date, there are more than 25 built-in plugins available in &kst; that perform functions from taking cross correlations
-of two vectors to producing periodograms of a data set.  The settings window for every plugin consists of two
-main sections&mdash;an input section and an output section. Each section is composed of a set of scalars and/or vectors.
-The following screenshot shows the settings window for a typical plugin.  The only difference between the different plugins
-is the set of inputs and outputs, and the mechanism for deriving the outputs from the inputs.
+  To date, there are more than 25 built-in plugins available in &kst; that perform functions from taking cross correlations of two vectors to producing periodograms of a data set.  The following screenshot shows the settings window for a typical plugin, created by selecting the desired plugin from the <guimenu>Standard Plugin</guimenu>, <guimenu>Fit Plugin</guimenu> or <guimenu>Filter Plugin</guimenu> submenues in the <guimenu>Create</guimenu> toolbar menu.
 </para>
 
 
@@ -53,7 +13,7 @@ is the set of inputs and outputs, and the mechanism for deriving the outputs fro
 <screeninfo>Plugins Window</screeninfo>
 <mediaobject>
 <imageobject>
-<imagedata fileref="Screenshot-kst-pluginswindow.png" format="PNG" />
+<imagedata fileref="Screenshot-kst-plugin.png" format="PNG" />
 </imageobject>
 <textobject>
 <phrase>Plugins Windowpluginswindow</phrase>
@@ -2359,7 +2319,7 @@ The kurtosis of the data set.
 </sect2>
 
 <!-- End the long plugins section -->
-</sect1>
+
 
 </chapter>
 
