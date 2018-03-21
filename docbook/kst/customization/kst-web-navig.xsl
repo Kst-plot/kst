@@ -14,7 +14,7 @@
 		</tr>
 		<tr id="logo">
 		  <td valign="top">
-		    <img src="{$kde.common}kst.png" alt="Kst"
+		    <img src="kst.png" alt="Kst"
 		      width="128" height="128" border="0" />
 		  </td>
 		  <td valign="middle" align="center" id="location">

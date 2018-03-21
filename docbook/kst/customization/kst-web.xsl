@@ -39,7 +39,7 @@
 <xsl:param name="generate.component.toc">0</xsl:param>
 <xsl:param name="use.extensions">0</xsl:param>
 <xsl:param name="admon.graphics">0</xsl:param>
-<xsl:param name="kde.common">../common/</xsl:param>
+<xsl:param name="kde.common">./</xsl:param>
 <xsl:param name="html.stylesheet" select="concat($kde.common,'kde-default.css')"/>
 <xsl:param name="admon.graphics.path"><xsl:value-of select="kde.common"/></xsl:param>
 

@@ -54,20 +54,8 @@ useful results.
 </para>
 
 <para>
-The following instructions assume linux or osX.
+The following instructions assume you are working in a broadly bash-compatible shell, such as you would in linux or osX.
 </para>
-
-<para>
-  
-This tutorial uses a demo package of data files which are available online at <ulink
-url="http://omega.astro.utoronto.ca/kst/tutorial/kst_tutorialdata.tgz">http://omega.astro.utoronto.ca/kst/tutorial/kst_tutorialdata.tgz</ulink>.
-Download and untar the package, and change to the resulting directory:
-
-<screen><userinput><command>tar -zxvf kst_tutorialdata.tgz</command>
-<command>cd kst_tutorialdata</command></userinput></screen>
-
-</para>
-
 
 <para>
 To obtain an overview of all available &kst; command-line options, type:
@@ -178,8 +166,17 @@ Plot column 2 and column 3 in plot P1 and column 4 in plot P2
 </para>
 
 <para>
+  
+This tutorial uses a demo ascii data file which is available at <ulink
+url="gyrodata.dat.gz">gyrodata.dat.gz</ulink>.
+Download the file with your browser, and gunzip it.
+
+<screen><userinput><command>gunzip gyrodata.dat.gz</command></userinput></screen>
+</para>
+
+<para>
 We will first take a look at reading the ASCII file
-<filename>gyrodata.dat</filename>, included in the demo package.
+<filename>gyrodata.dat</filename> that we just downloaded.
 ASCII files are one of the many file types &kst; is capable of
 reading.  In ASCII files, data is arranged in columns, with each
 column corresponding to a field, and the column numbers (beginning

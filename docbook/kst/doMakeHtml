@@ -1,3 +1,7 @@
 #! /bin/sh
-meinproc5 --srcdir /home/cbn/programs/kst/docbook/common/ --stylesheet ../common/customization/kst-web.xsl index.docbook
+meinproc5 --srcdir . --stylesheet customization/kst-web.xsl index.docbook
+mv *.html build/html
+cp *png build/html
+cp gyrodata.dat.gz build/html
+cp kde-default.css build/html
 
