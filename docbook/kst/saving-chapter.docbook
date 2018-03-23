@@ -1,6 +1,7 @@
 <chapter id="savingandexporting">
 <title>Saving and Printing</title>
 <sect1>
+<title>Saving and Exporting</title>
 <para>
 &kst; provides various methods of saving and exporting data and plots.  These methods are described below.
 </para>

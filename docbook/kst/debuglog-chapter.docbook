@@ -4,7 +4,7 @@
 Unfortunately, things can sometimes go wrong with &kst;.  This section lists some things that can be useful to unbreak things.
 </para>
 
-<sect3>
+<sect1>
   <title>Clearing Defaults</title>
 
   <para>
@@ -14,9 +14,9 @@ Unfortunately, things can sometimes go wrong with &kst;.  This section lists som
   <para>
     If you find that &kst; has broken for you (that is, something that used to work no longer does), bad defaults is a pretty plausible explanation (though we do keep trying to track these situations down and remove them).  You can completely restore &kst; to it's default, just-installed configuration by selecting <guimenuitem>Clear datasource settings</guimenuitem> and <guimenuitem>Clear settings and defaults</guimenuitem> from the <guimenu>Settings</guimenu> menu.  Unfortunately, this will erase all of your settings and defaults, but it may be necessary in some cases.  If the problem seems to have something to do with data files, try <guimenuitem>Clear datasource settings</guimenuitem> first because it is generally less destructive and more likely to help.
   </para>
-</sect3>
+</sect1>
 
-<sect3>
+<sect1>
   <title>The Debug Dialog</title>
 
   <para>
@@ -26,7 +26,7 @@ Unfortunately, things can sometimes go wrong with &kst;.  This section lists som
   <para>
     The Log tab provides a log the loading of all data sources and data plugins, as well as logging some errors, such as out of memory errors.  This log tab can be a useful place to look if things are not working out well.
   </para>
-</sect3>
+</sect1>
 
 </appendix>
 

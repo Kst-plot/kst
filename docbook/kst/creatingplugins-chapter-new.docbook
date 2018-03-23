@@ -1,8 +1,8 @@
 <appendix id="creatingplugins">
 <title>Creating Additional Plugins</title>
-<sect2>
-  <title>WARNING: This section was written for Kst version 1 and may be somewhat, or even totally obsolete. WARNING</title>
-</sect2>
+<warning>
+  <para>WARNING: This section was written for Kst version 1 and may be somewhat, or even totally obsolete. WARNING</para>
+</warning>
 
 <para>
 &kst; has a simple and standardized interface that facilitates easy creation of additional plugins.

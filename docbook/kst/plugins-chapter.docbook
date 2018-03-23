@@ -1,5 +1,8 @@
 <chapter id="pluginsandfilters">
 <title>Plugins, Fits, and Filters</title>
+
+<sect1>
+<title>Using Plugins, Fits, and Filters</title>
 <para>
 Many of the mathematical data operators in &kst;, including fits and filters, are implemented as plugins.  Plugins are loaded at run time and use a stable API, so it is possible to write your own plugins and include them in your local installation without re-compiling &kst;.  Fits and Filters are simply subsets of the set of plugins, and thus behave identically to generic plugins, with the exception of additional convenience dialog functionality when selected from the plot context menu.  See <link linkend="fits">here</link> for a general description of the creation of fits and filters.
 </para>
@@ -2319,7 +2322,7 @@ The kurtosis of the data set.
 </sect2>
 
 <!-- End the long plugins section -->
-
+</sect1>
 
 </chapter>
 
