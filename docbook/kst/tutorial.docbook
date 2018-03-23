@@ -577,7 +577,7 @@ using the context menu for this.  Selecting <guimenuitem>Maximize</guimenuitem> 
 <para>
 Selecting <guimenuitem>Maximize</guimenuitem> (or typing <keycap>Z</keycap> in the plot) again will restore it the plots to their previous
 arrangement.  This is especially valuable if you have a grid of many small plots
-and want to temporarily look at just one of them.  Obviously typing <keycap>Z</keycap> is going to be the most convienient way
+and want to temporarily look at just one of them.  Obviously typing <keycap>Z</keycap> is going to be the most convenient way
 to do this, but the context menu is there in case you forget.
 </para>
 
@@ -642,7 +642,7 @@ equivalent to selecting <guimenu>X Mouse Zoom Mode</guimenu> from the
 fileref="Icon-kst-xmousezoom.png"
 format="PNG"/></imageobject></inlinemediaobject> toolbar button). If you
 then move the mouse, you will see that it is now dragging a vertical line
-the heght of the plots in both of the plots that are tied to gether.  
+the height of the plots in both of the plots that are tied together.
 While keeping
 &Ctrl; held down, drag a rectangle in the middle plot.
 While dragging, the region you are selecting will be displayed in both 

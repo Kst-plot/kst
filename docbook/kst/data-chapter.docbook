@@ -57,7 +57,7 @@ However, for other data sources (eg, dirfiles), there may be multiple samples pe
   In the figure, imagine that time proceeds from top to bottom.  &kst; assumes that the first sample in a frame is simultaneous for every field in the data source, and that the rest of the samples are sampled evenly throughout the frame, as shown.  
 </para>
 <para>  
-  When plotting one vector agains another, &kst; assumes that the first and last samples of each vector are simultaneous, and interpolates the shorter vector up to the resolution of the longer vector.  Since only the first sample in a frame can be assumed to be simultaneous across fields, <emphasis>when &kst; reads data into a vector, it only reads up to the first sample of the last frame requested,</emphasis> so that plotting one vector against another will make sense.  The rest of the last frame will not be read.  
+  When plotting one vector against another, &kst; assumes that the first and last samples of each vector are simultaneous, and interpolates the shorter vector up to the resolution of the longer vector.  Since only the first sample in a frame can be assumed to be simultaneous across fields, <emphasis>when &kst; reads data into a vector, it only reads up to the first sample of the last frame requested,</emphasis> so that plotting one vector against another will make sense.  The rest of the last frame will not be read.  
 </para>
 <para>
   So if the first three frames of Field1 and Field2 are read from the data source in the figure, 3 samples will be read from Field1, and 9 samples will be read from Field2 (ending at first sample of Frame 3) - not 12 as one might expect.
@@ -157,7 +157,7 @@ icon in the tool bar.
 </para>
 
 <para>
-  Items can also be deleted from this dialog by selecting them and clicking <guibutton>Delete</guibutton>.  This will delete the selected item and all items which depend on it.  So if you delete a vector, all curves, spectra, historgrams, or equations that depend on it will also be deleted.  Be careful, because this can not be undone.
+  Items can also be deleted from this dialog by selecting them and clicking <guibutton>Delete</guibutton>.  This will delete the selected item and all items which depend on it.  So if you delete a vector, all curves, spectra, histograms, or equations that depend on it will also be deleted.  Be careful, because this can not be undone.
 </para>
 <para>
   Clicking <guibutton>Purge</guibutton> will remove all undisplayed data objects.  If deleting an object (and everthing that depends on it) will not change any plots or labels, then it is deleted.  Nothing that is displayed is deleted.  This can not be undone.
@@ -217,7 +217,7 @@ icon in the tool bar.
 </para>
 
 <para>
-  The plot displays two curves.  One curve takes two data vectors (INDEX and Column 2) as inputs.  The other takes INDEX as its X vector, and the ouput vector of the Low Pass Filter as its Y vector.  The low pass filter takes the Column 2 vector, and two Scalars as its inputs.  The two data vectors get their data from the Data Source.
+  The plot displays two curves.  One curve takes two data vectors (INDEX and Column 2) as inputs.  The other takes INDEX as its X vector, and the output vector of the Low Pass Filter as its Y vector.  The low pass filter takes the Column 2 vector, and two Scalars as its inputs.  The two data vectors get their data from the Data Source.
 </para>
 
 <para>
@@ -335,11 +335,11 @@ Curves are created by the data wizard, from the creation dialog from Data Object
 </para>
 
 <para>
-  The appearance of curves is adjusted in the <guilabel>Appearance</guilabel> box.  Some of the flexability of curves in kst is shown in the next figure. 
+  The appearance of curves is adjusted in the <guilabel>Appearance</guilabel> box.  Some of the flexibility of curves in kst is shown in the next figure. 
   Note that the options are not exclusive - for example, <guilabel>Lines</guilabel> and <guilabel>Points</guilabel> can both be selected.  The <guilabel>Size</guilabel> field specifies the dimensions of display elements such as points and error flags in points (the same way as font sizes are defined.)
   The <guilabel>Weight</guilabel> field specifies the width of lines,
   bar graph borders, and the strokes for points.  The color selector to the right of the example line sets the color of lines, points, and bargraph borders.  The color selector to the right of the <guilabel>Bargraph</guilabel> checkbox sets the fill color for bargraphs.  The last (most recent) point of a
-  curve can be indicated by slecting <guilabel>Head</guilabel> and specifying
+  curve can be indicated by selecting <guilabel>Head</guilabel> and specifying
   a point type and color. The color selector to the right of the <guilabel>Head</guilabel> sets the color for this point.  
 </para>
 
@@ -497,7 +497,7 @@ Curves are created by the data wizard, from the creation dialog from Data Object
 </screenshot>
 
 <para>
-  The <guilabel>New Equation</guilabel> dialog which created this plot is shown below. Note that vectors are identified by enclosing their names in <literal>[  ]</literal>.   So Column 2 is indicated by <literal>[Column 2 (V2)]</literal>.  The <guilabel>Equation</guilabel> line widget has a fairly powerful autocomplete mechanism with a scrollable list of all possible scalars (in its first colum) or vectors (in its second column) as you enter the name of the object.  Similarly, the auto complete lists all valid functions and operators as relevant while you type.  The <literal>Esc</literal> key hides the autocomplete widget.
+  The <guilabel>New Equation</guilabel> dialog which created this plot is shown below. Note that vectors are identified by enclosing their names in <literal>[  ]</literal>.   So Column 2 is indicated by <literal>[Column 2 (V2)]</literal>.  The <guilabel>Equation</guilabel> line widget has a fairly powerful autocomplete mechanism with a scrollable list of all possible scalars (in its first column) or vectors (in its second column) as you enter the name of the object.  Similarly, the auto complete lists all valid functions and operators as relevant while you type.  The <literal>Esc</literal> key hides the autocomplete widget.
 </para>
 
 <para>
@@ -616,7 +616,7 @@ In the <guilabel>New Histogram</guilabel> dialog, the bins can be set manually, 
 
 
 <para>
-  The following plot shows an example spectrum.  The plot has been converted to log-log mode (hit 'l' and 'g' in the plot window to toggle Y and X log axes respectvely).
+  The following plot shows an example spectrum.  The plot has been converted to log-log mode (hit 'l' and 'g' in the plot window to toggle Y and X log axes respectively).
 </para>
 
 <screenshot>
@@ -682,7 +682,7 @@ Remove a constant from the input vector to make it mean zero before calculating 
 <listitem>
 <para>
 Apodize the data with the selected function before calculating the power spectrum to reduce
-bin to bin leackage.  The default is a Hanning Window.
+bin to bin leakage.  The default is a Hanning Window.
 </para>
 </listitem>
 </varlistentry>
@@ -858,7 +858,7 @@ Auto-generating axes labels for plots will be based on these units.
 </para>
 
 <para>
-  For fields such as angles which have (for example) a discontinuity at 360 degrees, the Unwind Fliter can be used to make the signal continuous.  So if the unfiltered signal goes from 359.5 degrees to 0.5 degrees in consecutive samples, the filtered signal will go from 359.5 degrees to 360.5 degrees.
+  For fields such as angles which have (for example) a discontinuity at 360 degrees, the Unwind Filter can be used to make the signal continuous.  So if the unfiltered signal goes from 359.5 degrees to 0.5 degrees in consecutive samples, the filtered signal will go from 359.5 degrees to 360.5 degrees.
 </para>
 
 <para>
@@ -951,7 +951,7 @@ Matrices are two dimensional tables of numbers.  They can be used as the inputs 
   </listitem>
   <listitem>
     <para>
-      BIT Image Streams (BIS) fiiles.
+      BIT Image Streams (BIS) files.
     </para>
   </listitem>
 </itemizedlist>

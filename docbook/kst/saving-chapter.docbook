@@ -47,7 +47,7 @@
 <title>Saving</title>
 
 <para>
-  Selecting <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As</guimenuitem> from the <guimenu>File</guimenu> menu will save the state of the current kst session.  By default, these session files have the extentions <literal>.kst</literal>.  If this session file is opened later, the state of kst, including the loading of all data files, and the saving of all plots will be returned to the state when it was saved.
+  Selecting <guimenuitem>Save</guimenuitem> or <guimenuitem>Save As</guimenuitem> from the <guimenu>File</guimenu> menu will save the state of the current kst session.  By default, these session files have the extensions <literal>.kst</literal>.  If this session file is opened later, the state of kst, including the loading of all data files, and the saving of all plots will be returned to the state when it was saved.
 </para>
 
 </sect2>
@@ -164,7 +164,7 @@ To print, select <guimenuitem>Print...</guimenuitem> from the <guimenu>File</gui
 If the OS supports it, the plots can be exported here to a pdf file.  Otherwise, you can use the <link linkend="exportinggraphics">Exporting Tabs</link> option described in the next section to export to a pdf file.
 </para>
 <para>
-  Each page will be rescaled to fit whatever page size and orientation has been selected.  The scaling and resizing rules are the same when a &kst; window is resized.  If the page is the same size as has been set as the <guilabel>Reference view size</guilabel> (under <guilabel>Scaling</guilabel> in the <guilabel>Kst Settings</guilabel> dialog, selected by <guimenuitem>Configure Kst</guimenuitem> from the <guimenu>Settings</guimenu> menu), then the fonts will all have the sizes they have been set to in the various dialogs.  If the selected print size is larger or smaller than this, then the fonts will be also be proportionaly larger or smaller.
+  Each page will be rescaled to fit whatever page size and orientation has been selected.  The scaling and resizing rules are the same when a &kst; window is resized.  If the page is the same size as has been set as the <guilabel>Reference view size</guilabel> (under <guilabel>Scaling</guilabel> in the <guilabel>Kst Settings</guilabel> dialog, selected by <guimenuitem>Configure Kst</guimenuitem> from the <guimenu>Settings</guimenu> menu), then the fonts will all have the sizes they have been set to in the various dialogs.  If the selected print size is larger or smaller than this, then the fonts will be also be proportionally larger or smaller.
 </para>
 </sect1>
 
@@ -187,7 +187,7 @@ from the <guimenu>File</guimenu> menu.  The following dialog box will appear.
 </screenshot>
 
 <para>
-  The root file name is specified in the <guilabel>File name:</guilabel> entry.  If <guilabel>Automatic extension</guilabel> is selected, then the file name extension appropriate to the file type is automacially added to the file name.
+  The root file name is specified in the <guilabel>File name:</guilabel> entry.  If <guilabel>Automatic extension</guilabel> is selected, then the file name extension appropriate to the file type is automatically added to the file name.
 </para>
 
 <para>
