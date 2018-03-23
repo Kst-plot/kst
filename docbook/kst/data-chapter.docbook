@@ -76,7 +76,7 @@ As well as the explicit data fields in a data file, &kst; implicitly creates an 
 <sect2 id="creatingascii">
 <title>ASCII Input Files</title>
 <para>
-&kst; is capable of reading vectors from a wide range of ASCII formats.  As long as the data are in columns, and as long as each non-comment row has the same number of collumns, &kst; can probably read it.
+&kst; is capable of reading vectors from a wide range of ASCII formats.  As long as the data are in columns, and as long as each non-comment row has the same number of columns, &kst; can probably read it.
 </para>
 <para>
   Consider reading this simple ASCII csv file:  each comma separated column represents a field. 
@@ -160,7 +160,7 @@ icon in the tool bar.
   Items can also be deleted from this dialog by selecting them and clicking <guibutton>Delete</guibutton>.  This will delete the selected item and all items which depend on it.  So if you delete a vector, all curves, spectra, histograms, or equations that depend on it will also be deleted.  Be careful, because this can not be undone.
 </para>
 <para>
-  Clicking <guibutton>Purge</guibutton> will remove all undisplayed data objects.  If deleting an object (and everthing that depends on it) will not change any plots or labels, then it is deleted.  Nothing that is displayed is deleted.  This can not be undone.
+  Clicking <guibutton>Purge</guibutton> will remove all undisplayed data objects.  If deleting an object (and everything that depends on it) will not change any plots or labels, then it is deleted.  Nothing that is displayed is deleted.  This can not be undone.
 </para>
 
 </sect1>
@@ -251,7 +251,7 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 <itemizedlist>
 <listitem>
 <para>
-  Data Vectors aquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
+  Data Vectors acquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Vector</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
   
 <inlinemediaobject>
 <imageobject>
@@ -895,7 +895,7 @@ Matrices are two dimensional tables of numbers.  They can be used as the inputs 
 <itemizedlist>
 <listitem>
 <para>
-  Data Matrices aquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Matrix</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
+  Data Matrices acquire their data from Data Sources (ie, data files).  They can be created from the <guimenuitem>Matrix</guimenuitem> option in the <guimenu>Create</guimenu> menu, or by selecting the
   
 <inlinemediaobject>
 <imageobject>

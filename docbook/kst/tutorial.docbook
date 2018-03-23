@@ -103,7 +103,7 @@ Ascii File Options - for ascii files only: these are all sticky
       --asciiReadUnits &lt;Line&gt;  Read units from line &lt;Line&gt;
       --asciiNoUnits           Do not read units
       --asciiSpaceDelim        Columns are Space/tab delimited
-      --asciiDelim &lt;char&gt;      Columns are dlimited with &lt;char&gt;
+      --asciiDelim &lt;char&gt;      Columns are delimited with &lt;char&gt;
       --asciiFixedWidth &lt;w&gt;    Columns have width &lt;w&gt;
       --asciiNoFixedWidth      Columns are delimited, not fixed width
       --asciiDecimalDot        Use a . as a decimal separator (ie, 10.1)

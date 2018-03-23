@@ -34,7 +34,7 @@
 
     <listitem>
     <para>
-      Copy Tab Image: A bitmap image of the current tab contents can be saved to the clipbard for pasting into an other application by Selecting <guimenuitem>Copy Tab Image</guimenuitem> from the <guimenu>Edit</guimenu>.  The image will have the dimensions (in pixels) of the tab in the kst window.
+      Copy Tab Image: A bitmap image of the current tab contents can be saved to the clipboard for pasting into an other application by Selecting <guimenuitem>Copy Tab Image</guimenuitem> from the <guimenu>Edit</guimenu>.  The image will have the dimensions (in pixels) of the tab in the kst window.
     </para>
   </listitem>
 
