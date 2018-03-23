@@ -390,8 +390,7 @@ The <guilabel>Data Range</guilabel> section is used to specify the
 range of data to read from the selected vectors in the input file. The
 following discussion assumes knowledge of <quote>frames</quote>.  For ASCII
 files such as <filename>gyrodata.dat</filename>, a frame is simply a row of
-data, though for other formats this can be more complicated.  For a detailed description of this
-concept, see <xref linkend="Frames"/>.
+data, though for other formats this can be more complicated.
 </para>
 
 <variablelist>
