@@ -1,7 +1,19 @@
 #! /bin/sh
-meinproc5 --srcdir . --stylesheet customization/kst-web.xsl index.docbook
+meinproc5 --srcdir /usr/share/kf5/kdoctools --stylesheet customization/kde-web.xsl index.docbook
+
+if [ ! -d build ]; then
+  mkdir -p build;
+fi
+if [ ! -d build/html ]; then
+  mkdir -p build/html;
+fi
+if [ ! -d build/common ]; then
+  mkdir -p build/common;
+fi
+
 mv *.html build/html
 cp *png build/html
 cp gyrodata.dat.gz build/html
-cp kde-default.css build/html
+cp /usr/share/doc/HTML/en/kdoctools5-common/kde-default.css build/common
+cp /usr/share/doc/HTML/en/kdoctools5-common/part_of_the_kde_family_horizontal_190.png build/common
 
