@@ -8,7 +8,7 @@ Many of the mathematical data operators in &kst;, including fits and filters, ar
 </para>
 
 <para>
-  To date, there are more than 25 built-in plugins available in &kst; that perform functions from taking cross correlations of two vectors to producing periodograms of a data set.  The following screenshot shows the settings window for a typical plugin, created by selecting the desired plugin from the <guimenu>Standard Plugin</guimenu>, <guimenu>Fit Plugin</guimenu> or <guimenu>Filter Plugin</guimenu> submenues in the <guimenu>Create</guimenu> toolbar menu.
+  To date, there are more than 25 built-in plugins available in &kst; that perform functions from taking cross correlations of two vectors to producing periodograms of a data set.  The following screenshot shows the settings window for a typical plugin, created by selecting the desired plugin from the <guimenu>Standard Plugin</guimenu>, <guimenu>Fit Plugin</guimenu> or <guimenu>Filter Plugin</guimenu> submenus in the <guimenu>Create</guimenu> toolbar menu.
 </para>
 
 

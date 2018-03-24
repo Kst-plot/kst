@@ -54,7 +54,7 @@ useful results.
 </para>
 
 <para>
-The following instructions assume you are working in a broadly bash-compatible shell, such as you would in linux or osX.
+The following instructions assume you are working in a broadly bash-compatible shell, such as you would in linux or MacOS.
 </para>
 
 <para>
@@ -603,7 +603,7 @@ Holding &Ctrl; when you do this will cause the plot to zoom only in X.
 <para>
 Arrow keys scroll the plot. Arrow keys with &Shift; held down will change the scale.
 The <keycap>M</keycap> key auto-zooms the plots to view all of the data.  Play around with these
-options to become familier with the various options.
+options to become familiar with the various options.
 </para>
 
 <para>
