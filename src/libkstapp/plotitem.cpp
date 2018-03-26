@@ -632,6 +632,8 @@ void PlotItem::createZoomMenu() {
   xZoomMenu->addAction(_zoomXNoSpike);
   xZoomMenu->addAction(_zoomXRight);
   xZoomMenu->addAction(_zoomXLeft);
+  xZoomMenu->addAction(_zoomXFarRight);
+  xZoomMenu->addAction(_zoomXFarLeft);
   xZoomMenu->addAction(_zoomXOut);
   xZoomMenu->addAction(_zoomXIn);
   xZoomMenu->addAction(_zoomNormalizeXtoY);
