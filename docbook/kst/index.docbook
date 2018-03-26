@@ -8,7 +8,6 @@
  <!-- Chapter Information -->
  <!ENTITY intro-chapter SYSTEM "intro-chapter.docbook">
  <!ENTITY tutorial SYSTEM "tutorial.docbook">
- <!ENTITY commontasks-chapter SYSTEM "commontasks-chapter.docbook">
  <!ENTITY data-chapter SYSTEM "data-chapter.docbook">
  <!ENTITY plugins-chapter SYSTEM "plugins-chapter.docbook">
  <!ENTITY license-chapter SYSTEM "license-chapter.docbook">
@@ -16,7 +15,6 @@
  <!ENTITY additionalformats-chapter SYSTEM "additionalformats-chapter.docbook">
  <!ENTITY creatingplugins-chapter SYSTEM "creatingplugins-chapter-new.docbook">
  <!ENTITY debuglog-chapter SYSTEM "debuglog-chapter.docbook">
- <!--ENTITY eventmonitoring-chapter SYSTEM "eventmonitoring-chapter.docbook"-->
  ]>
 
 <book id="kst" lang="&language;">
@@ -99,23 +97,13 @@ the order. -->
 
 &data-chapter;
 
-<!--&commontasks-chapter; -->
-
-
-<!--&plotsandwindows-chapter; -->
-
 &saving-chapter;
 
-<!--&eventmonitoring-chapter;-->
-
 &plugins-chapter;
-
-<!--&miscfeatures-chapter;-->
 
 &license-chapter;
 
 <!--appendices start here-->
-<!--&commandline-chapter;-->
 
 &creatingplugins-chapter;
 
