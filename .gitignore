@@ -10,3 +10,4 @@ build
 tmp*
 po
 po_all
+*~
