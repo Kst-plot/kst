@@ -66,8 +66,6 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
     tx = x0;
     x0 = x1;
     x1 = tx;
-  } else if (x0 == x1) {
-    x1 = x0 + 0.1;
   }
 
   for (int i = 0; i < n; i++) {
