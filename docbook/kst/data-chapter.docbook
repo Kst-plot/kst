@@ -291,6 +291,121 @@ Vectors are ordered lists of numbers.  They are used as the inputs to Data Objec
 
 </sect2>
 
+<sect2 id="scalars">
+  <title>Scalars</title>
+  <para>
+    Scalars are single numbers that can be used in labels and equations.
+  </para>
+  
+  <itemizedlist>
+    <listitem>
+      <para>
+        Generated Scalars are a single number whose value is defined by the user.  To create a Generated Scalar, select <guilabel>Generate</guilabel> in the <guilabel>New Scalar</guilabel> dialog, opened by selecting <guimenuitem>Scalar</guimenuitem> from the <guimenu>Create</guimenu> menu.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        Data Vector Field based Scalars are generated through Data Sources from the a single specified from a vector field on disk. To create a Data Vector Field based Scalar, select <guilabel>Read from data vector</guilabel> from the <guilabel>New Scalar</guilabel> dialog under <guimenuitem>Scalar</guimenuitem> in the <guimenu>Create</guimenu> menu.  You will specify the data file to read from, the Field name for the vector, and the index of the field you want to read from.  In real time applications, one might want to only read the most recent value.  In this case, select <guilabel>last frame</guilabel> rather than entering a frame number.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        Data Scalars are scalars output directly by data sources.  Most datasources provide <literal>FRAMES</literal> which gives the number of frames in the data file.  Some data sources (eg, dirfiles) also support user defined scalar values.  These are read by selecting <guilabel>Read from data source</guilabel> from the <guilabel>New Scalar</guilabel> dialog under <guimenuitem>Scalar</guimenuitem> in the <guimenu>Create</guimenu> menu. 
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        Slave scalars are created automatically by each vector which has been created in &kst;.  Many of these are particularly useful in text labels.  The automatically created slave scalars are:
+      </para>
+      <para>
+        <informaltable>
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Scalar Name</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            
+            <tbody>
+              
+              
+              <row>
+                <entry>NS</entry>
+                <entry>The number of data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>First</entry>
+                <entry>The first data point in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>Last</entry>
+                <entry>The last data point in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>Min</entry>
+                <entry>The minimum value in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>iMin</entry>
+                <entry>the index in the vector of the minimum value in the vector.  The first sample in the vector is index 0.</entry>
+              </row>
+              
+              <row>
+                <entry>Max</entry>
+                <entry>The maximum value in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>iMax</entry>
+                <entry>the index in the vector of the maximum value in the vector.  The first sample in the vector is index 0.</entry>
+              </row>
+              
+              <row>
+                <entry>Mean</entry>
+                <entry>The mean of the data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>Sigma</entry>
+                <entry>The standard deviation of the data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>Sum</entry>
+                <entry>The sum of the data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>SumSquared</entry>
+                <entry>The sum of the squares of the data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>Rms</entry>
+                <entry>The square root of the mean of the squares of the data points in the vector.</entry>
+              </row>
+              
+              <row>
+                <entry>MinPos</entry>
+                <entry>The smallest positive number in the vector.</entry>
+              </row>
+              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+      <para>
+        The names for Slave Scalars are &lt;Vector Name&gt;:&lt;Scalar Name&gt; (X&lt;N&gt;).  For example, the name of the scalar giving the last sample of the Vector <literal>Az (V2)</literal> would be <literal>Az:Last (X18)</literal>. 
+      </para>
+    </listitem>
+  </itemizedlist>
+</sect2>
+
 <sect2 id="curves">
 <title>Curves</title>
 <para>
