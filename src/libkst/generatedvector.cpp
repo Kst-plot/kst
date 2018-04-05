@@ -61,22 +61,21 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
   if (n != length()) {
     resize(n, false);
   }
-  if (x0 > x1) {
-    double tx;
-    tx = x0;
-    x0 = x1;
-    x1 = tx;
-  }
 
   for (int i = 0; i < n; i++) {
     _v_raw[i] = x0 + double(i) * (x1 - x0) / double(n - 1);
   }
 
-  _min = x0;
-  _max = x1;
+  if (x0 < x1) {
+    _min = x0;
+    _max = x1;
+  } else {
+    _min = x1;
+    _max = x0;
+  }
 
-  _scalars["min"]->setValue(x0);
-  _scalars["max"]->setValue(x1);
+  _scalars["min"]->setValue(_min);
+  _scalars["max"]->setValue(_max);
 
   _numNew = length();
   registerChange();
