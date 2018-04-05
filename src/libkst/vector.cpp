@@ -543,7 +543,7 @@ void Vector::internalUpdate() {
   int i, i0;
   double sum, sum2, last, first, v;
   double last_v;
-  const double epsilon=DBL_MIN; // FIXME: this is not the smallest positivie subnormal
+  const double epsilon=DBL_MIN; // FIXME: this is not the smallest positive subnormal
 
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
   _imax = _imin = 0;
