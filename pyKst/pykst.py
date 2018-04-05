@@ -17,8 +17,7 @@ except ImportError as err1:
     try:
         from PyQt4 import QtNetwork, QtGui
     except ImportError as err2:
-        print "ImportError: {} and {}. One of the two is required.".format(err1, err2)
-        sys.exit()
+        raise ImportError("{} and {}. One of the two is required.".format(err1, err2))
 
 QtGui.QApplication([""])
 
