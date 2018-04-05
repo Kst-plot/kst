@@ -543,7 +543,7 @@ void Vector::internalUpdate() {
   int i, i0;
   double sum, sum2, last, first, v;
   double last_v;
-  const double epsilon=1e-300;
+  const double epsilon=DBL_MIN; // FIXME: this is not the smallest positivie subnormal
 
   _max = _min = sum = sum2 = _minPos = last = first = NOPOINT;
   _imax = _imin = 0;
@@ -600,8 +600,6 @@ void Vector::internalUpdate() {
 
     if (_v_out[i0] > epsilon) {
       _minPos = _v_out[i0];
-    } else {
-      _minPos = 1.0E300;
     }
 
     last_v = _v_out[i0];
@@ -629,7 +627,7 @@ void Vector::internalUpdate() {
           _min = v;
           _imin = i;
         }
-        if (v < _minPos && v > epsilon) {
+        if ((isnan(_minPos) || v < _minPos) && v > epsilon) {
           _minPos = v;
         }
       } else {
