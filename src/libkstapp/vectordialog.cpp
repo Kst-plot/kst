@@ -376,8 +376,8 @@ void VectorDialog::configureTab(ObjectPtr vector) {
   if (!vector) {
     _vectorTab->dataRange()->loadWidgetDefaults();
     _vectorTab->setFile(dialogDefaults().value("vector/datasource",_vectorTab->file()).toString());
-    _vectorTab->setFrom(dialogDefaults().value("genVector/min",-10).toInt());
-    _vectorTab->setTo(dialogDefaults().value("genVector/max",10).toInt());
+    _vectorTab->setFrom(dialogDefaults().value("genVector/first",-10).toInt());
+    _vectorTab->setTo(dialogDefaults().value("genVector/last",10).toInt());
     _vectorTab->setNumberOfSamples(dialogDefaults().value("genVector/length",1000).toInt());
     _vectorTab->setVectorMode((VectorTab::VectorMode)dialogDefaults().value("genVector/vectorType",VectorTab::GeneratedVector).toInt()); // FIXME: should be sticky
   } else if (DataVectorPtr dataVector = kst_cast<DataVector>(vector)) {
@@ -421,8 +421,8 @@ void VectorDialog::configureTab(ObjectPtr vector) {
     }
   } else if (GeneratedVectorPtr generatedVector = kst_cast<GeneratedVector>(vector)) {
     _vectorTab->setVectorMode(VectorTab::GeneratedVector);
-    _vectorTab->setFrom(generatedVector->min());
-    _vectorTab->setTo(generatedVector->max());
+    _vectorTab->setFrom(generatedVector->value(0));
+    _vectorTab->setTo(generatedVector->value(generatedVector->length()-1));
     _vectorTab->setNumberOfSamples(generatedVector->length());
     _vectorTab->hideDataOptions();
     if (_editMultipleWidget) {

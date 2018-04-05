@@ -45,6 +45,8 @@ ScriptInterface* GeneratedVector::createScriptInterface() {
 
 void GeneratedVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("generatedvector");
+  s.writeAttribute("first", QString::number(value(0)));
+  s.writeAttribute("last", QString::number(value(length()-1)));
   s.writeAttribute("min", QString::number(min()));
   s.writeAttribute("max", QString::number(max()));
   s.writeAttribute("count", QString::number(length()));
@@ -76,6 +78,8 @@ void GeneratedVector::changeRange(double x0, double x1, int n) {
 
   _scalars["min"]->setValue(_min);
   _scalars["max"]->setValue(_max);
+  _scalars["first"]->setValue(x0);
+  _scalars["last"]->setValue(x1);
 
   _numNew = length();
   registerChange();

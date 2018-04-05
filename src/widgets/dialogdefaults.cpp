@@ -31,6 +31,8 @@ void setDataVectorDefaults(DataVectorPtr V) {
 }
 
 void setGenVectorDefaults(GeneratedVectorPtr V) {
+  dialogDefaults().setValue("genVector/first", V->value(V->value(0)));
+  dialogDefaults().setValue("genVector/last", V->value(V->length()-1));
   dialogDefaults().setValue("genVector/min", V->min());
   dialogDefaults().setValue("genVector/max", V->max());
   dialogDefaults().setValue("genVector/length", V->length());

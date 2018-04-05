@@ -100,7 +100,7 @@ GeneratedVectorFactory::~GeneratedVectorFactory() {
 
 
 PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlStreamReader& xml) {
-  double min=-1.0, max=1.0;
+  double first=-1.0, last=1.0;
   int count=0;
   QString descriptiveName;
 
@@ -109,8 +109,14 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
     if (xml.isStartElement()) {
       if (n == GeneratedVector::staticTypeTag) {
         QXmlStreamAttributes attrs = xml.attributes();
-        min = attrs.value("min").toString().toDouble();
-        max = attrs.value("max").toString().toDouble();
+        if (attrs.value("first").isEmpty()) {
+          // Legacy: assume the generated vector is increasing
+          first = attrs.value("min").toString().toDouble();
+          last = attrs.value("max").toString().toDouble();
+        } else {
+          first = attrs.value("first").toString().toDouble();
+          last = attrs.value("last").toString().toDouble();
+        }
         count = attrs.value("count").toString().toInt();
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
           descriptiveName = attrs.value("descriptiveName").toString();
@@ -135,7 +141,7 @@ PrimitivePtr GeneratedVectorFactory::generatePrimitive(ObjectStore *store, QXmlS
   }
 
   GeneratedVectorPtr vector = store->createObject<GeneratedVector>();
-  vector->changeRange(min, max, count);
+  vector->changeRange(first, last, count);
   vector->setDescriptiveName(descriptiveName);
 
   vector->writeLock();
