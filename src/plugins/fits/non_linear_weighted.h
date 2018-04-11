@@ -28,6 +28,9 @@ struct data {
   const double* pdWeight;
 };
 
+int n_params = NUM_PARAMS;
+double offset_ = 0.0;
+
 void function_initial_estimate( const double* pdX, const double* pdY, int iLength, double* pdParameterEstimates );
 double function_calculate( double dX, double* pdParameters );
 void function_derivative( double dX, double* pdParameters, double* pdDerivatives );
@@ -47,7 +50,7 @@ int function_f( const gsl_vector* pVectorX, void* pParams, gsl_vector* pVectorF 
   data*	 	pData	= (data*)pParams;
   size_t 	i;
 
-  for( i=0; i<NUM_PARAMS; i++ ) {
+  for( i=0; i<n_params; i++ ) {
     dParameters[i] = gsl_vector_get( pVectorX, i );
   }
 
@@ -67,14 +70,14 @@ int function_df( const gsl_vector* pVectorX, void* pParams, gsl_matrix* pMatrixJ
   size_t i;
   size_t j;
 
-  for( i=0; i<NUM_PARAMS; i++ ) {
+  for( i=0; i<n_params; i++ ) {
     dParameters[i] = gsl_vector_get( pVectorX, i );
   }
 
   for( i=0; i<pData->n; i++ ) {
     function_derivative( pData->pdX[i], dParameters, dDerivatives );
 
-    for( j=0; j<NUM_PARAMS; j++ ) {
+    for( j=0; j<n_params; j++ ) {
       gsl_matrix_set( pMatrixJ, i, j, dDerivatives[j] * pData->pdWeight[i] );
     }
   }
@@ -166,7 +169,7 @@ bool kstfit_nonlinear_weighted(
       vectorOutYCovariance->resize(NUM_PARAMS * NUM_PARAMS);
 
       pType   = gsl_multifit_fdfsolver_lmsder;
-      pSolver = gsl_multifit_fdfsolver_alloc( pType, iLength, NUM_PARAMS );
+      pSolver = gsl_multifit_fdfsolver_alloc( pType, iLength, n_params );
       if( pSolver != NULL ) {
         d.n        = iLength;
         d.pdX	     = pInputs[XVALUES];
@@ -177,13 +180,13 @@ bool kstfit_nonlinear_weighted(
         function.df  	  = function_df;
         function.fdf 	  = function_fdf;
         function.n   	  = iLength;
-        function.p   	  = NUM_PARAMS;
+        function.p   	  = n_params;
         function.params = &d;
 
-        pMatrixCovariance = gsl_matrix_alloc( NUM_PARAMS, NUM_PARAMS );
+        pMatrixCovariance = gsl_matrix_alloc( n_params, n_params );
         if( pMatrixCovariance != NULL ) {
           function_initial_estimate( pInputs[XVALUES], pInputs[YVALUES], iLength, dXInitial );
-          vectorViewInitial = gsl_vector_view_array( dXInitial, NUM_PARAMS );
+          vectorViewInitial = gsl_vector_view_array( dXInitial, n_params );
 
           gsl_multifit_fdfsolver_set( pSolver, &function, &vectorViewInitial.vector );
 
@@ -200,7 +203,7 @@ bool kstfit_nonlinear_weighted(
           while( iStatus == GSL_CONTINUE && iIterations < MAX_NUM_ITERATIONS );
 
 #if GSL_MAJOR_VERSION >= 2
-          pMatrixJacobian = gsl_matrix_alloc( iLength, NUM_PARAMS );
+          pMatrixJacobian = gsl_matrix_alloc( iLength, n_params );
 #else
           pMatrixJacobian = pSolver->J;
 #endif
@@ -214,7 +217,7 @@ bool kstfit_nonlinear_weighted(
             //
             // determine the fitted values...
             //
-            for( i=0; i<NUM_PARAMS; i++ ) {
+            for( i=0; i<n_params; i++ ) {
               dXInitial[i] = gsl_vector_get( pSolver->x, i );
             }
 
@@ -227,9 +230,17 @@ bool kstfit_nonlinear_weighted(
             // fill in the parameter values and covariance matrix...
             //
             for( i=0; i<NUM_PARAMS; i++ ) {
-              vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pSolver->x, i );
+              if (i<n_params) {
+                vectorOutYParameters->raw_V_ptr()[i] = gsl_vector_get( pSolver->x, i );
+              } else {
+                vectorOutYParameters->raw_V_ptr()[i] = offset_;
+              }
               for( j=0; j<NUM_PARAMS; j++ ) {
-                vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+                if ((i<n_params) && (j<n_params)) {
+                  vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = gsl_matrix_get( pMatrixCovariance, i, j );
+                } else {
+                  vectorOutYCovariance->raw_V_ptr()[(i*NUM_PARAMS)+j] = 0.0;
+                }
               }
             }
 

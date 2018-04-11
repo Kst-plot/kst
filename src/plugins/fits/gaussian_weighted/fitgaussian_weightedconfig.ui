@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>114</height>
+    <height>106</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -36,7 +36,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="1" colspan="2">
     <widget class="Kst::VectorSelector" name="_vectorX" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -65,7 +65,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="1" colspan="2">
     <widget class="Kst::VectorSelector" name="_vectorY" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -91,13 +91,36 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="1" colspan="2">
     <widget class="Kst::VectorSelector" name="_vectorWeights" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QCheckBox" name="_forceOffset">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Force Offset to:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="Kst::ScalarSelector" name="_scalarOffset" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>0</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -109,6 +132,11 @@
    <class>Kst::VectorSelector</class>
    <extends>QWidget</extends>
    <header>vectorselector.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Kst::ScalarSelector</class>
+   <extends>QWidget</extends>
+   <header>scalarselector.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

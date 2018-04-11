@@ -17,7 +17,7 @@
 #include "objectstore.h"
 #include "ui_fitgaussian_weightedconfig.h"
 
-#define NUM_PARAMS 3
+#define NUM_PARAMS 4
 #define MAX_NUM_ITERATIONS 500
 
 #include <gsl/gsl_fit.h>
@@ -46,6 +46,12 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
       _vectorX->setObjectStore(store);
       _vectorY->setObjectStore(store);
       _vectorWeights->setObjectStore(store);
+
+      _scalarOffset->setObjectStore(store);
+      _scalarOffset->setDefaultValue(0.0);
+      _forceOffset->setChecked(false);
+      _scalarOffset->setEnabled(false);
+
     }
 
     void setupSlots(QWidget* dialog) {
@@ -53,6 +59,9 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
         connect(_vectorX, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_vectorY, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_vectorWeights, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+        connect(_scalarOffset, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+        connect(_forceOffset, SIGNAL(toggled(bool)), dialog, SIGNAL(modified()));
+        connect(_forceOffset, SIGNAL(toggled(bool)), _scalarOffset, SLOT(setEnabled(bool)));
       }
     }
 
@@ -83,6 +92,8 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
         setSelectedVectorX(source->vectorX());
         setSelectedVectorY(source->vectorY());
         setSelectedVectorWeights(source->vectorWeights());
+        _forceOffset->setChecked(source->_forceOffset);
+        _scalarOffset->setSelectedScalar(source->_offset);
       }
     }
 
@@ -145,6 +156,7 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
 
 FitGaussianWeightedSource::FitGaussianWeightedSource(Kst::ObjectStore *store)
 : Kst::BasicPlugin(store) {
+  _forceOffset = false;
 }
 
 
@@ -162,6 +174,8 @@ void FitGaussianWeightedSource::change(Kst::DataObjectConfigWidget *configWidget
     setInputVector(VECTOR_IN_X, config->selectedVectorX());
     setInputVector(VECTOR_IN_Y, config->selectedVectorY());
     setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
+    _forceOffset = config->_forceOffset->isChecked();
+    _offset = config->_scalarOffset->selectedScalar();
   }
 }
 
@@ -174,50 +188,93 @@ void FitGaussianWeightedSource::setupOutputs() {
   setOutputScalar(SCALAR_OUT, "");
 }
 
+void function_initial_estimate( const double X[], const double Y[], int npts, double P[] ) {
+  double min_y = 1E300;
+  double max_y = -1E300;
+  double min_x = 1E300;
+  double max_x = -1E300;
+  double mean_y = 0.0;
+  double x_at_min_y=0;
+  double x_at_max_y=0;
 
-void function_initial_estimate( const double* pdX, const double* pdY, int iLength, double* pdParameterEstimates ) {
-  double dMin;
-  double dMax;
+  double A, C, D;
 
-  gsl_stats_minmax( &dMin, &dMax, pdX, 1, iLength );
+  // find peak, valley, and mean
+  for (int i = 0; i<npts; i++) {
+    if (min_y > Y[i]) {
+      min_y = Y[i];
+      x_at_min_y = X[i];
+    }
+    if (max_y < Y[i]) {
+      max_y = Y[i];
+      x_at_max_y = X[i];
+    }
+    mean_y += Y[i];
 
-  pdParameterEstimates[0] = gsl_stats_mean( pdX, 1, iLength );
-  pdParameterEstimates[1] = ( dMax - dMin ) / 2.0;
-  pdParameterEstimates[2] = gsl_stats_max( pdY, 1, iLength );
+    if (min_x > X[i]) {
+      min_x = X[i];
+    }
+    if (max_x < X[i]) {
+      max_x = X[i];
+    }
+  }
+  if (npts>0) {
+    mean_y /= double(npts);
+  }
+
+  // Heuristic for finding the sign of the : less time is spent in the peak than
+  // in background if the range covers more than ~+- 2 sigma.
+  // It will fail if you are
+  // really zoomed into the gaussian.  Not sure what happens then :-(
+  if (max_y - mean_y > mean_y - min_y) { // positive going gaussian
+    A = max_y - min_y;
+    D = min_y;
+    C = x_at_max_y;
+  } else { // negative going gaussian
+    A = min_y - mean_y;
+    D = max_y;
+    C = x_at_min_y;
+  }
+  // guess that the width of the gaussian is around 1/10 of the x range (?)
+
+  P[0] = A;
+  P[1] = (max_x - min_x)*0.1;
+  P[2] = C;
+  P[3] = D;
+
 }
 
 
-double function_calculate( double dX, double* pdParameters ) {
-  double dMean  = pdParameters[0];
-  double dSD    = pdParameters[1];
-  double dScale = pdParameters[2];
-  double dY;
+double function_calculate(double x, double P[]) {
+  double A = P[0];
+  double B = 0.5/(P[1]*P[1]);
+  double C = P[2];
+  double D = offset_;
 
-  dY  = ( dScale / ( dSD * M_SQRT2 * M_SQRTPI ) );
-  dY *= exp( -( ( dX - dMean ) * ( dX - dMean ) ) / ( 2.0 * dSD * dSD ) );
+  if (n_params == 4) {
+    D = P[3];
+  }
+  x -= C;
 
-  return dY;
+  return A*exp(-B*x*x) + D;
 }
 
+void function_derivative( double x, double P[], double dFdP[] ) {
+  double A = P[0];
+  double s = P[1];
+  double B = 0.5/(s*s);
+  double C = P[2];
+  //double D = P[3];
 
-void function_derivative( double dX, double* pdParameters, double* pdDerivatives ) {
-  double dMean  = pdParameters[0];
-  double dSD    = pdParameters[1];
-  double dScale = pdParameters[2];
-  double dExp;  
-  double ddMean;
-  double ddSD;
-  double ddScale;
+  x -= C;
 
-  dExp    = exp( -( ( dX - dMean ) * ( dX - dMean ) ) / ( 2.0 * dSD * dSD ) );
-  ddMean  = ( dX - dMean ) * dScale * dExp / ( dSD * dSD * dSD * M_SQRT2 * M_SQRTPI );
-  ddSD    = dScale * dExp / ( dSD * dSD * M_SQRT2 * M_SQRTPI );
-  ddSD   *= ( ( dX - dMean ) * ( dX - dMean ) / ( dSD * dSD ) ) - 1.0;
-  ddScale = dExp / ( dSD * M_SQRT2 * M_SQRTPI );
+  double E = exp(-B*x*x);
 
-  pdDerivatives[0] = ddMean;
-  pdDerivatives[1] = ddSD;
-  pdDerivatives[2] = ddScale;
+  dFdP[0] = E;
+  dFdP[1] = A*x*x*E/(s*s*s);
+  dFdP[2] = 2*A*B*x*E;
+  dFdP[3] = 1.0;
+
 }
 
 
@@ -231,6 +288,17 @@ bool FitGaussianWeightedSource::algorithm() {
   Kst::VectorPtr outputVectorYParameters = _outputVectors[VECTOR_OUT_Y_PARAMETERS];
   Kst::VectorPtr outputVectorYCovariance = _outputVectors[VECTOR_OUT_Y_COVARIANCE];
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
+
+  if (_forceOffset) {
+    if (_offset) {
+      offset_ = _offset->value();
+    } else {
+      offset_ = 0;
+    }
+    n_params = 3;
+  } else {
+    n_params = 4;
+  }
 
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
@@ -312,15 +380,21 @@ void FitGaussianWeightedSource::saveProperties(QXmlStreamWriter &s) {
 QString FitGaussianWeightedSource::parameterName(int index) const {
   QString parameter;
   switch (index) {
-    case 0:
-      parameter = "Mean";
-      break;
-    case 1:
-      parameter = "SD";
-      break;
-    case 2:
-      parameter = "Scale";
-      break;
+  case 0:
+    parameter = "Amplitude";
+    break;
+  case 1:
+    parameter = "\\sigma";
+    break;
+  case 2:
+    parameter = "x_o";
+    break;
+  case 3:
+    parameter = "Offset";
+    break;
+  default:
+    parameter = "";
+    break;
   }
 
   return parameter;
@@ -343,6 +417,8 @@ Kst::DataObject *FitGaussianWeightedPlugin::create(Kst::ObjectStore *store, Kst:
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
+      object->_forceOffset = config->_forceOffset->isChecked();
+      object->_offset = config->_scalarOffset->selectedScalar();
     }
 
     object->setPluginName(pluginName());

@@ -205,14 +205,14 @@ void Histogram::internalUpdate() {
       break;
   }
 
-  _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
-
-  label_info.quantity.clear();
   label_info.units.clear();
+  _bVector->setLabelInfo(_inputVectors[RAWVECTOR]->labelInfo());
   label_info.name = tr( "Histogram of %1").arg(_bVector->labelInfo().name);
   label_info.file = _bVector->labelInfo().file;
 
   _hVector->setTitleInfo(label_info);
+  _hVector->setLabelInfo(label_info);
+
 
   double *bins = _bVector->raw_V_ptr();
   double *hist = _hVector->raw_V_ptr();

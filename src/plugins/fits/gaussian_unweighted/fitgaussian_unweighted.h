@@ -42,6 +42,8 @@ class FitGaussianUnweightedSource : public Kst::BasicPlugin {
     virtual QStringList outputStringList() const;
 
     virtual void saveProperties(QXmlStreamWriter &s);
+    bool _forceOffset;
+    Kst::ScalarPtr _offset;
 
   protected:
     FitGaussianUnweightedSource(Kst::ObjectStore *store);
