@@ -86,7 +86,6 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
 
     virtual bool configurePropertiesFromXml(Kst::ObjectStore *store, QXmlStreamAttributes& attrs) {
       Q_UNUSED(store);
-      Q_UNUSED(attrs);
 
       bool validTag = true;
 

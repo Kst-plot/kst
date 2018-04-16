@@ -77,6 +77,9 @@ class ConfigWidgetFitGaussianUnweightedPlugin : public Kst::DataObjectConfigWidg
     Kst::VectorPtr selectedVectorX() { return _vectorX->selectedVector(); };
     void setSelectedVectorX(Kst::VectorPtr vector) { return _vectorX->setSelectedVector(vector); };
 
+    Kst::ScalarPtr scalarOffset() {return _scalarOffset->selectedScalar(); };
+    void setScalarOffset(Kst::ScalarPtr scalar) {_scalarOffset->setSelectedScalar(scalar);};
+
     Kst::VectorPtr selectedVectorY() { return _vectorY->selectedVector(); };
     void setSelectedVectorY(Kst::VectorPtr vector) { return _vectorY->setSelectedVector(vector); };
 
@@ -90,16 +93,27 @@ class ConfigWidgetFitGaussianUnweightedPlugin : public Kst::DataObjectConfigWidg
     }
 
     virtual bool configurePropertiesFromXml(Kst::ObjectStore *store, QXmlStreamAttributes& attrs) {
-      Q_UNUSED(store);
-      Q_UNUSED(attrs);
-
       bool validTag = true;
 
-//       QStringRef av;
-//       av = attrs.value("value");
-//       if (!av.isNull()) {
-//         _configValue = QVariant(av.toString()).toBool();
-//       }
+      setObjectStore(store);
+
+      QStringRef av;
+      bool force_offset = false;
+      av = attrs.value("ForceOffset");
+      if (!av.isNull()) {
+        force_offset = QVariant(av.toString()).toBool();
+      }
+      _forceOffset->setChecked(force_offset);
+      if (force_offset) {
+        av = attrs.value("Offset");
+        if (!av.isNull()) {
+          QString name = av.toString();
+          Kst::ObjectPtr object = store->retrieveObject(name);
+          Kst::ScalarPtr scalar = Kst::kst_cast<Kst::Scalar>(object);
+          setScalarOffset(scalar);
+        }
+
+      }
 
       return validTag;
     }
@@ -110,6 +124,10 @@ class ConfigWidgetFitGaussianUnweightedPlugin : public Kst::DataObjectConfigWidg
         _cfg->beginGroup("Fit Gaussian Plugin");
         _cfg->setValue("Input Vector X", _vectorX->selectedVector()->Name());
         _cfg->setValue("Input Vector Y", _vectorY->selectedVector()->Name());
+        _cfg->setValue("Force Offset", _forceOffset->isChecked());
+        if (_forceOffset->isChecked()) {
+          _cfg->setValue("Offset", _scalarOffset->selectedScalar()->Name());
+        }
         _cfg->endGroup();
       }
     }
@@ -128,6 +146,16 @@ class ConfigWidgetFitGaussianUnweightedPlugin : public Kst::DataObjectConfigWidg
         Kst::Vector* vectory = static_cast<Kst::Vector*>(object);
         if (vectory) {
           setSelectedVectorX(vectory);
+        }
+        bool force_offset = _cfg->value("Force Offset").toBool();
+        _forceOffset->setChecked(force_offset);
+        if (force_offset) {
+          QString scalarName = _cfg->value("Offset").toString();
+          object = _store->retrieveObject(scalarName);
+          Kst::Scalar* scalar = static_cast<Kst::Scalar*>(object);
+          if (scalar) {
+            _scalarOffset->setSelectedScalar(scalar);
+          }
         }
         _cfg->endGroup();
       }
@@ -348,8 +376,12 @@ QStringList FitGaussianUnweightedSource::outputStringList() const {
 
 
 void FitGaussianUnweightedSource::saveProperties(QXmlStreamWriter &s) {
-  Q_UNUSED(s);
-//   s.writeAttribute("value", _configValue);
+  QString force_offset;
+  force_offset.setNum(_forceOffset);
+  s.writeAttribute("ForceOffset", force_offset);
+  if (_forceOffset) {
+    s.writeAttribute("Offset", _offset->Name());
+  }
 }
 
 
@@ -385,12 +417,15 @@ Kst::DataObject *FitGaussianUnweightedPlugin::create(Kst::ObjectStore *store, Ks
 
     FitGaussianUnweightedSource* object = store->createObject<FitGaussianUnweightedSource>();
 
+    object->_forceOffset = config->_forceOffset->isChecked();
+    if (object->_forceOffset) {
+      object->_offset = config->scalarOffset();
+    }
+
     if (setupInputsOutputs) {
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
-      object->_forceOffset = config->_forceOffset->isChecked();
-      object->_offset = config->_scalarOffset->selectedScalar();
     }
 
     object->setPluginName(pluginName());
