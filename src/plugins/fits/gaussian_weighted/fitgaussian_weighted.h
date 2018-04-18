@@ -29,6 +29,7 @@ class FitGaussianWeightedSource : public Kst::BasicPlugin {
     Kst::VectorPtr vectorX() const;
     Kst::VectorPtr vectorY() const;
     Kst::VectorPtr vectorWeights() const;
+    Kst::ScalarPtr scalarOffset() const;
 
     virtual void change(Kst::DataObjectConfigWidget *configWidget);
 
@@ -44,7 +45,6 @@ class FitGaussianWeightedSource : public Kst::BasicPlugin {
 
     virtual void saveProperties(QXmlStreamWriter &s);
     bool _forceOffset;
-    Kst::ScalarPtr _offset;
 
   protected:
     FitGaussianWeightedSource(Kst::ObjectStore *store);

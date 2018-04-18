@@ -26,6 +26,8 @@
 static const QString& VECTOR_IN_X = "X Vector";
 static const QString& VECTOR_IN_Y = "Y Vector";
 static const QString& VECTOR_IN_WEIGHTS = "Weights Vector";
+static const QString& SCALAR_IN_OFFSET = "Offset";
+
 static const QString& VECTOR_OUT_Y_FITTED = "Fit";
 static const QString& VECTOR_OUT_Y_RESIDUALS = "Residuals";
 static const QString& VECTOR_OUT_Y_PARAMETERS = "Parameters Vector";
@@ -48,7 +50,6 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
       _vectorWeights->setObjectStore(store);
 
       _scalarOffset->setObjectStore(store);
-      _scalarOffset->setDefaultValue(0.0);
       _forceOffset->setChecked(false);
       _scalarOffset->setEnabled(false);
 
@@ -60,6 +61,7 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
         connect(_vectorY, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_vectorWeights, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
         connect(_scalarOffset, SIGNAL(selectionChanged(QString)), dialog, SIGNAL(modified()));
+        _scalarOffset->setDefaultValue(0.0);
         connect(_forceOffset, SIGNAL(toggled(bool)), dialog, SIGNAL(modified()));
         connect(_forceOffset, SIGNAL(toggled(bool)), _scalarOffset, SLOT(setEnabled(bool)));
       }
@@ -96,7 +98,7 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
         setSelectedVectorY(source->vectorY());
         setSelectedVectorWeights(source->vectorWeights());
         _forceOffset->setChecked(source->_forceOffset);
-        _scalarOffset->setSelectedScalar(source->_offset);
+        setScalarOffset(source->scalarOffset());
       }
     }
 
@@ -113,16 +115,15 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
         force_offset = QVariant(av.toString()).toBool();
       }
       _forceOffset->setChecked(force_offset);
-      if (force_offset) {
-        av = attrs.value("Offset");
-        if (!av.isNull()) {
-          QString name = av.toString();
-          Kst::ObjectPtr object = store->retrieveObject(name);
-          Kst::ScalarPtr scalar = Kst::kst_cast<Kst::Scalar>(object);
-          setScalarOffset(scalar);
-        }
-
-      }
+//      if (force_offset) {
+//        av = attrs.value("Offset");
+//        if (!av.isNull()) {
+//          QString name = av.toString();
+//          Kst::ObjectPtr object = store->retrieveObject(name);
+//          Kst::ScalarPtr scalar = Kst::kst_cast<Kst::Scalar>(object);
+//          setScalarOffset(scalar);
+//        }
+//      }
 
       return validTag;
     }
@@ -170,7 +171,7 @@ class ConfigWidgetFitGaussianWeightedPlugin : public Kst::DataObjectConfigWidget
           object = _store->retrieveObject(scalarName);
           Kst::Scalar* scalar = static_cast<Kst::Scalar*>(object);
           if (scalar) {
-            _scalarOffset->setSelectedScalar(scalar);
+            setScalarOffset(scalar);
           }
         }
 
@@ -204,8 +205,8 @@ void FitGaussianWeightedSource::change(Kst::DataObjectConfigWidget *configWidget
     setInputVector(VECTOR_IN_X, config->selectedVectorX());
     setInputVector(VECTOR_IN_Y, config->selectedVectorY());
     setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
+    setInputScalar(SCALAR_IN_OFFSET, config->scalarOffset());
     _forceOffset = config->_forceOffset->isChecked();
-    _offset = config->_scalarOffset->selectedScalar();
   }
 }
 
@@ -216,6 +217,11 @@ void FitGaussianWeightedSource::setupOutputs() {
   setOutputVector(VECTOR_OUT_Y_PARAMETERS, "");
   setOutputVector(VECTOR_OUT_Y_COVARIANCE, "");
   setOutputScalar(SCALAR_OUT, "");
+
+  int i=0;
+  for (QString paramName = parameterName(i); !paramName.isEmpty(); paramName = parameterName(++i)) {
+    setOutputScalar(paramName, "");
+  }
 }
 
 void function_initial_estimate( const double X[], const double Y[], int npts, double P[] ) {
@@ -312,6 +318,7 @@ bool FitGaussianWeightedSource::algorithm() {
   Kst::VectorPtr inputVectorX = _inputVectors[VECTOR_IN_X];
   Kst::VectorPtr inputVectorY = _inputVectors[VECTOR_IN_Y];
   Kst::VectorPtr inputVectorWeights = _inputVectors[VECTOR_IN_WEIGHTS];
+  Kst::ScalarPtr inputScalarOffset = _inputScalars[SCALAR_IN_OFFSET];
 
   Kst::VectorPtr outputVectorYFitted = _outputVectors[VECTOR_OUT_Y_FITTED];
   Kst::VectorPtr outputVectorYResiduals = _outputVectors[VECTOR_OUT_Y_RESIDUALS];
@@ -320,8 +327,8 @@ bool FitGaussianWeightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   if (_forceOffset) {
-    if (_offset) {
-      offset_ = _offset->value();
+    if (inputScalarOffset) {
+      offset_ = inputScalarOffset->value();
     } else {
       offset_ = 0;
     }
@@ -362,6 +369,9 @@ Kst::VectorPtr FitGaussianWeightedSource::vectorWeights() const {
   return _inputVectors[VECTOR_IN_WEIGHTS];
 }
 
+Kst::ScalarPtr FitGaussianWeightedSource::scalarOffset() const {
+  return _inputScalars[SCALAR_IN_OFFSET];
+}
 
 QStringList FitGaussianWeightedSource::inputVectorList() const {
   QStringList vectors(VECTOR_IN_X);
@@ -372,7 +382,8 @@ QStringList FitGaussianWeightedSource::inputVectorList() const {
 
 
 QStringList FitGaussianWeightedSource::inputScalarList() const {
-  return QStringList();
+  QStringList scalars(SCALAR_IN_OFFSET);
+  return scalars;
 }
 
 
@@ -405,9 +416,6 @@ void FitGaussianWeightedSource::saveProperties(QXmlStreamWriter &s) {
   QString force_offset;
   force_offset.setNum(_forceOffset);
   s.writeAttribute("ForceOffset", force_offset);
-  if (_forceOffset) {
-    s.writeAttribute("Offset", _offset->Name());
-  }
 }
 
 
@@ -446,17 +454,13 @@ Kst::DataObject *FitGaussianWeightedPlugin::create(Kst::ObjectStore *store, Kst:
 
     FitGaussianWeightedSource* object = store->createObject<FitGaussianWeightedSource>();
     object->_forceOffset = config->_forceOffset->isChecked();
-    if (object->_forceOffset) {
-      object->_offset = config->scalarOffset();
-    }
 
     if (setupInputsOutputs) {
       object->setupOutputs();
       object->setInputVector(VECTOR_IN_X, config->selectedVectorX());
       object->setInputVector(VECTOR_IN_Y, config->selectedVectorY());
       object->setInputVector(VECTOR_IN_WEIGHTS, config->selectedVectorWeights());
-      object->_forceOffset = config->_forceOffset->isChecked();
-      object->_offset = config->_scalarOffset->selectedScalar();
+      object->setInputScalar(SCALAR_IN_OFFSET, config->scalarOffset());
     }
 
     object->setPluginName(pluginName());
