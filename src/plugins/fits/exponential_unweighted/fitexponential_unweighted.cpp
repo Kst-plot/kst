@@ -313,7 +313,7 @@ bool FitExponentialUnweightedSource::algorithm() {
 
   _X0 = inputVectorX->noNanValue()[0];
 
-  label_info.name = tr("a e^{-b(x-x_o)} + c fit to %1").arg(label_info.name);
+  label_info.name = tr("A\\Cdotexp((x-x_o)/\\tau) + C fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
   label_info.name = tr("Exponential Fit Residuals");
@@ -324,6 +324,9 @@ bool FitExponentialUnweightedSource::algorithm() {
   bReturn = kstfit_nonlinear( inputVectorX, inputVectorY,
                               outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters,
                               outputVectorYCovariance, outputScalar );
+
+  outputVectorYParameters->raw_V_ptr()[1] = 1.0/outputVectorYParameters->raw_V_ptr()[1];
+
   return bReturn;
 }
 
@@ -385,13 +388,13 @@ QString FitExponentialUnweightedSource::parameterName(int index) const {
   QString parameter;
   switch (index) {
     case 0:
-      parameter = "a";
+      parameter = "A";
       break;
     case 1:
-      parameter = "b";
+      parameter = "\\tau";
       break;
     case 2:
-      parameter = "c";
+      parameter = "C";
       break;
   }
 
