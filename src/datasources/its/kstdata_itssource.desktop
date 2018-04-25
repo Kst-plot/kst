@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Source
+X-KDE-ModuleType=Plugin
+X-KDE-Library=itssource
+X-Kst-Plugin-Author=C. Barth Netterfield
+Name=Indexed Thumbnail Stream Reader
+Name[x-test]=xxIndexed Thumbnail Stream Readerxx
+
