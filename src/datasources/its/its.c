@@ -103,14 +103,15 @@ int isITSfile(char *filename) {
 int checkHeader(unsigned char *h) {
   unsigned char sw[] = {0xeb, 0x90, 0x14, 0x6f, 0x00};
   unsigned char crc = 0;
+  int i;
 
-  for (int i=0; i<5; i++) {
+  for (i=0; i<5; i++) {
     if (h[i] != sw[i]) {
       fprintf(stderr, "bad byte %d in checkHeader\n", i);
       return (0);
     }
   }
-  for (int i=0; i<14; i++) {
+  for (i=0; i<14; i++) {
     crc ^= h[i];
   }
   if (crc != h[14]) {
