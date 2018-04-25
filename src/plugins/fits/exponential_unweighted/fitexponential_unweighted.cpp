@@ -17,7 +17,7 @@
 #include "objectstore.h"
 #include "ui_fitexponential_unweightedconfig.h"
 
-#define NUM_PARAMS 3
+#define NUM_PARAMS 4
 #define MAX_NUM_ITERATIONS 500
 
 #include <gsl/gsl_fit.h>
@@ -312,6 +312,7 @@ bool FitExponentialUnweightedSource::algorithm() {
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
 
   _X0 = inputVectorX->noNanValue()[0];
+  n_params = 3;
 
   label_info.name = tr("A\\Cdotexp((x-x_o)/\\tau) + C fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
@@ -326,6 +327,7 @@ bool FitExponentialUnweightedSource::algorithm() {
                               outputVectorYCovariance, outputScalar );
 
   outputVectorYParameters->raw_V_ptr()[1] = 1.0/outputVectorYParameters->raw_V_ptr()[1];
+  outputVectorYParameters->raw_V_ptr()[3] = _X0;
 
   return bReturn;
 }
@@ -395,6 +397,12 @@ QString FitExponentialUnweightedSource::parameterName(int index) const {
       break;
     case 2:
       parameter = "C";
+      break;
+    case 3:
+      parameter = "X_o";
+      break;
+    default:
+      parameter = "";
       break;
   }
 
