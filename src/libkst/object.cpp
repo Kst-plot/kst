@@ -108,12 +108,11 @@ Object::UpdateType Object::objectUpdate(qint64 newSerial) {
     _serialOfLastChange = newSerial;
     _serial = newSerial;
     return Updated;
+  } else {
+    _serial = newSerial;
+    return NoChange;
   }
-  // else
-  _serial = newSerial;
-  return NoChange;
 }
-
 }
 
 // vim: ts=2 sw=2 et

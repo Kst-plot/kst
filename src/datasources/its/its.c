@@ -166,9 +166,6 @@ int ITSreadimage(ITSfile *its, int frame, int i_img, ITSimage *I) {
     return 0;
   }
 
-  // FIXME: INDEX is wrong! (?)
-  //index-=3;
-
   // Second: read the header in the data file
   offset = lseek(its->fp_data, index, SEEK_SET);
   if (offset != index) {

@@ -314,6 +314,7 @@ void ITSSource::reset() {
   if (_itsfile) {
     ITSclose(_itsfile);
   }
+  _nframes = 0;
   _valid = false;
   if (init()) {
     _valid = true;
@@ -329,6 +330,7 @@ bool ITSSource::init() {
   _itsfile = ITSopen(_filename.toAscii().data());
   if (_itsfile->status != ITS_OK) {
     ITSclose(_itsfile);
+    _nframes = 0;
     _itsfile = 0;
     return false;
   }
@@ -351,7 +353,7 @@ bool ITSSource::init() {
 }
 
 
-// Check if the data in the from the source has updated.  Typically done by checking the frame count of the datasource for 
+// Check if the data in the source has updated.  Typically done by checking the frame count of the datasource for
 // changes.
 Kst::Object::UpdateType ITSSource::internalDataSourceUpdate() {
   
