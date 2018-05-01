@@ -269,7 +269,9 @@ void function_initial_estimate( const double x[], const double y[], int npts, do
   fflush(stdout);
 }
 
-
+// It would be nice to fit exp(B*(x-_X0)) + C, and not have A,
+// but A is required to at least hold the sign.  We we just fix
+// _X0 to the first X value in the data set, and fit for A.
 double function_calculate( double x, double* P ) {
   double A = P[0];
   double B = P[1];

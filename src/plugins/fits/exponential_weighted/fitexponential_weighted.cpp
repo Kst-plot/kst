@@ -17,7 +17,7 @@
 #include "objectstore.h"
 #include "ui_fitexponential_weightedconfig.h"
 
-#define NUM_PARAMS 3
+#define NUM_PARAMS 4
 #define MAX_NUM_ITERATIONS 500
 
 #include <gsl/gsl_fit.h>
@@ -174,47 +174,147 @@ void FitExponentialWeightedSource::setupOutputs() {
   setOutputScalar(SCALAR_OUT, "");
 }
 
+double _X0 = 0; // this use of a global is a hack to inject the first sample into the function.
 
-void function_initial_estimate( const double* pdX, const double* pdY, int iLength, double* pdParameterEstimates ) {
-  Q_UNUSED( pdX )
-  Q_UNUSED( pdY )
-  Q_UNUSED( iLength )
+void swapDouble(double *A, double *B) {
+  double C;
 
-  pdParameterEstimates[0] =  1.0;
-  pdParameterEstimates[1] =  0.0;
-  pdParameterEstimates[2] =  0.0;
+  C = *A;
+  *A = *B;
+  *B = C;
 }
 
 
-double function_calculate( double dX, double* pdParameters ) {
-  double dScale  = pdParameters[0];
-  double dLambda = pdParameters[1];
-  double dOffset = pdParameters[2];
-  double dY;
+void function_initial_estimate( const double x[], const double y[], int npts, double P0[] ) {
+  Q_UNUSED( x )
+  Q_UNUSED( y )
+  Q_UNUSED( npts )
 
-  dY  = ( dScale * exp( -dLambda * dX ) ) + dOffset;
+  _X0 = x[0];
 
-  return dY;
+  // determine the signs of the terms.
+  // get the average of the first 5%, last 5% and middle 5% of points
+  int n_ave = npts/20;
+  if (n_ave < 1) n_ave = 1;
+  if (n_ave > 100) n_ave = 100;
+
+  double y0 = 0;
+  double x0 = 0;
+  double x1 = 0;
+  double y1 = 0;
+  double x2 = 0;
+  double y2 = 0;
+  int d1 = npts/2 - n_ave/2;
+  int d2 = npts-n_ave;
+
+  if ((d1 + n_ave > npts) || (d2 + n_ave > npts)) { // bail if not enough points.
+    P0[0] =  1.0;
+    P0[1] =  0.0;
+    P0[2] =  0.0;
+    return;
+  }
+
+  for (int i=0; i<n_ave; i++) {
+    x0+=x[i];
+    y0+=y[i];
+    x1+=x[i+d1];
+    y1+=y[i+d1];
+    x2+=x[i+d2];
+    y2+=y[i+d2];
+  }
+  x0 /= (double)n_ave;
+  y0 /= (double)n_ave;
+  x1 /= (double)n_ave;
+  y1 /= (double)n_ave;
+  x2 /= (double)n_ave;
+  y2 /= (double)n_ave;
+
+  // Make sure x0, x1, x2 are monotonic.
+  if (x2 > x0) {
+    if (x1 > x2) {
+      swapDouble(&x1, &x2);
+      swapDouble(&y1, &y2);
+    }
+    if (x1 < x0) {
+      swapDouble(&x1, &x0);
+      swapDouble(&y1, &y0);
+    }
+  } else {
+    if (x1 < x2) {
+      swapDouble(&x1, &x2);
+      swapDouble(&y1, &y2);
+    }
+    if (x1 > x0) {
+      swapDouble(&x1, &x0);
+      swapDouble(&y1, &y0);
+    }
+  }
+
+  if ((x1 == x0) || (x2 == x0) || (x1 == x2)) { // bail if no x range
+    P0[0] =  1.0;
+    P0[1] =  0.0;
+    P0[2] =  0.0;
+    return;
+  }
+
+  P0[0] =  fabs(y2 - y0)/M_E;
+  P0[1] =  M_E/fabs(x2 - x0);
+  P0[2] =  y0;
+
+  double m = (y2 - y0)/(x2 - x0);
+  if (m > 0) { // rising
+    if ((x1-x0)*m + y0 > y1) { // neg curvature +A, +B
+      //P0[0] *= -1;
+      //P0[1] *= -1.0;
+    } else {   // -A, -B
+      P0[0] *= -1;
+      P0[1] *= -1.0;
+    }
+  } else { // falling
+    if ((x1-x0)*m + y0 > y1) { // Curving down +A, -B
+      //P0[0] *= -1;
+      P0[1] *= -1.0;
+    } else { // -A, +B
+      P0[0] *= -1;
+      //P0[1] *= -1.0;
+    }
+  }
+
+  fflush(stdout);
+}
+
+// It would be nice to fit exp(B*(x-_X0)) + C, and not have A,
+// but A is required to at least hold the sign.  We we just fix
+// _X0 to the first X value in the data set, and fit for A.
+double function_calculate( double x, double* P ) {
+  double A = P[0];
+  double B = P[1];
+  double C = P[2];
+  double y;
+
+  y  = ( A*exp( B*(x - _X0) ) ) + C;
+
+  return y;
 }
 
 
-void function_derivative( double dX, double* pdParameters, double* pdDerivatives ) {
-  double dScale  = pdParameters[0];
-  double dLambda = pdParameters[1];
-  double dExp;  
-  double ddScale;
-  double ddLambda;
-  double ddOffset;
+void function_derivative( double x, double* P, double* dFdP ) {
+  double A  = P[0];
+  double B = P[1];
+  double exp_BxXo;
 
-  dExp     = exp( -dLambda * dX );
-  ddScale  = dExp;
-  ddLambda = -dX * dScale * dExp;
-  ddOffset = 1.0;
+  // dFdA = exp(b*(x-_X0)
+  // dFdB = A*(x-_X0)*exp(b*(x-_X0))
 
-  pdDerivatives[0] = ddScale;
-  pdDerivatives[1] = ddLambda;
-  pdDerivatives[2] = ddOffset;
+  exp_BxXo = exp( B * (x-_X0) );
+
+  dFdP[0]   = exp_BxXo;
+  dFdP[1]   = (x-_X0) * A * exp_BxXo;
+  dFdP[2]   = 1.0;
+
 }
+
+
 
 
 bool FitExponentialWeightedSource::algorithm() {
@@ -229,7 +329,11 @@ bool FitExponentialWeightedSource::algorithm() {
   Kst::ScalarPtr outputScalar = _outputScalars[SCALAR_OUT];
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = tr("Exponential Fit to %1").arg(label_info.name);
+
+  _X0 = inputVectorX->noNanValue()[0];
+  n_params = 3;
+
+  label_info.name = tr("A\\Cdotexp((x-x_o)/\\tau) + C fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
   label_info.name = tr("Exponential Fit Residuals");
@@ -241,6 +345,10 @@ bool FitExponentialWeightedSource::algorithm() {
   bReturn = kstfit_nonlinear_weighted( inputVectorX, inputVectorY, inputVectorWeights,
                               outputVectorYFitted, outputVectorYResiduals, outputVectorYParameters,
                               outputVectorYCovariance, outputScalar );
+
+  outputVectorYParameters->raw_V_ptr()[1] = 1.0/outputVectorYParameters->raw_V_ptr()[1];
+  outputVectorYParameters->raw_V_ptr()[3] = _X0;
+
   return bReturn;
 }
 
@@ -308,13 +416,19 @@ QString FitExponentialWeightedSource::parameterName(int index) const {
   QString parameter;
   switch (index) {
     case 0:
-      parameter = "Scale";
+      parameter = "A";
       break;
     case 1:
-      parameter = "Lambda";
+      parameter = "\\tau";
       break;
     case 2:
-      parameter = "Offset";
+      parameter = "C";
+      break;
+    case 3:
+      parameter = "X_o";
+      break;
+    default:
+      parameter = "";
       break;
   }
 

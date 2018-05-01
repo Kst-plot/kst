@@ -339,7 +339,7 @@ bool FitGaussianWeightedSource::algorithm() {
 
 
   Kst::LabelInfo label_info = inputVectorY->labelInfo();
-  label_info.name = tr("Gaussian Fit to %1").arg(label_info.name);
+  label_info.name = tr("A\\cdotexp((x-x_o)^2/2\\sigma^2) + C fit to %1").arg(label_info.name);
   outputVectorYFitted->setLabelInfo(label_info);
 
   label_info.name = tr("Gaussian Fit Residuals");
@@ -423,7 +423,7 @@ QString FitGaussianWeightedSource::parameterName(int index) const {
   QString parameter;
   switch (index) {
   case 0:
-    parameter = "Amplitude";
+    parameter = "A";
     break;
   case 1:
     parameter = "\\sigma";
@@ -432,7 +432,7 @@ QString FitGaussianWeightedSource::parameterName(int index) const {
     parameter = "x_o";
     break;
   case 3:
-    parameter = "Offset";
+    parameter = "C";
     break;
   default:
     parameter = "";
