@@ -391,7 +391,14 @@ LabelInfo Curve::yLabelInfo() const {
 
 
 LabelInfo Curve::titleInfo() const {
-  return yVector()->titleInfo();
+
+  LabelInfo label_info = yVector()->titleInfo();
+
+  if (!_manualDescriptiveName.isEmpty()) {
+    label_info.name = _manualDescriptiveName;
+  }
+
+  return label_info;
 }
 
 

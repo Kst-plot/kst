@@ -439,7 +439,7 @@ LabelInfo DataMatrix::titleInfo() const {
     label_info.units.clear();
   }
 
-  label_info.name = _field;
+  label_info.name = descriptiveName();
 
   return label_info;
 }

@@ -78,6 +78,9 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientX, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
+  connect(_frame, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_lastFrame, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+  connect(_field, SIGNAL(activated(int)), this, SIGNAL(modified()));
 }
 
 
@@ -955,6 +958,11 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
 
       dataMatrix->writeLock();
       dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, frame, minX, minY, stepX, stepY);
+      if (DataDialog::tagStringAuto()) {
+         dataMatrix->setDescriptiveName(QString());
+      } else {
+         dataMatrix->setDescriptiveName(DataDialog::tagString());
+      }
       dataMatrix->registerChange();
       dataMatrix->unlock();
       setDataMatrixDefaults(dataMatrix);

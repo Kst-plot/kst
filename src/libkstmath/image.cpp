@@ -403,11 +403,18 @@ LabelInfo Image::yLabelInfo() const {
 
 
 LabelInfo Image::titleInfo() const {
+  LabelInfo label_info;
   if (_inputMatrices.contains(THEMATRIX)) {
-    return (_inputMatrices[THEMATRIX]->titleInfo());
+    label_info = _inputMatrices[THEMATRIX]->titleInfo();
   } else {
-    return LabelInfo();
+    label_info.name = descriptiveName();
   }
+  if (!_manualDescriptiveName.isEmpty()) {
+    label_info.name = _manualDescriptiveName;
+  }
+
+  return label_info;
+
 }
 
 double Image::distanceToPoint(double xpos, double dx, double ypos) const {
