@@ -240,7 +240,7 @@ endmacro()
 macro(kst_link)
 	target_link_libraries(${kst_name} ${ARGV})
 	if(kst_qt5)
-                qt5_use_modules(${kst_name} Widgets Xml Network PrintSupport Svg)
+                target_link_libraries(${kst_name} Qt5::Widgets Qt5::Xml Qt5::Network Qt5::PrintSupport Qt5::Svg)
 	else()
 		target_link_libraries(${kst_name}
 		${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${QT_QTNETWORK_LIBRARY})
