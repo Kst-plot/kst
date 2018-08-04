@@ -1,0 +1,82 @@
+Before I forget about this, here's some notes on string vector fields in
+GetData-0.10, in case you're still interested in adding support for them
+into kst:
+
+
+- A scalar string array (SARRAY) is declared like this:
+
+  sarray_field SARRAY string0 string1 string2 string3 ...
+
+
+
+- A string vector field (SINDIR) is declared like this:
+
+  field SINDIR index_field sarray_field
+
+  Where "index_field" is interpreted as an integer.  If
+  index_field[i] = n, then field[i] = sarray_field[n].  The SINDIR has
+  the same number of samples-per-frame as index_field.  SARRAY indices
+  start from zero.
+
+
+
+- The dirfile->VectorList() function doesn't include SINDIRs in the
+  list it returns (just numeric vector fields), which means no changes
+  should be needed in kst to use GetData-0.10 as-is.
+
+  Use _dirfile->FieldListByType(SindirEntryType) to get a list of
+  SINDIRs.
+
+
+
+- In C++, to retrieve SINDIR data, there's an alternate function signature
+  for _dirfile->GetData lacking the DataType field:
+
+  size_t GetData(const char *field_code, gd_off64_t first_frame,
+            gd_off64_t first_sample, size_t num_frames, size_t
+            num_samples, const char** data_out) const;
+
+  It fills data_out[] with pointers to immutable C strings.  The
+  pointers point directly into the SARRAY data store, so don't call
+  free() on them.
+
+
+
+- Internally, GetData doesn't think of SINDIR data as strings, but as
+  integers of width sizeof(const char*).  It treats the SARRAY field as
+  a non-interpolated lookup table to map values of the index field
+  into pointers values (=integers) which it returns.
+  
+  As a result, if two samples of the index_field are equal, then the
+  pointers returned for those two samples are equal as well.  (This is
+  stronger than just saying that the two string values on those samples
+  are the same.)
+
+
+
+- On samples where the index_field is out of range of the SARRAY, NULL
+  is returned.
+
+
+
+- Calling _dirfile->SamplesPerFrame() on a SINDIR works (you get the SPF
+  of the index field).
+
+
+
+- Calling _dirfile->NativeType() on a SINDIR will return
+  GetData::String (which it also does for SARRAY and STRING fields).
+
+
+
+- For backwards compatibility, you can use the GD_GETDATA_INT_VERSION CPP
+  macro, introduced in GetData-0.9, for conditional compilation of
+  GetData-0.10 features:
+
+    #if defined GD_GETDATA_INT_VERSION && GD_GETDATA_INT_VERSION >= 1000
+    ...
+    #endif
+
+-don
+
+

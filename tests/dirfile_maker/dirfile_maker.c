@@ -15,7 +15,7 @@ struct DFEntryType {
   char type;
 };
 
-#define NDF 16
+#define NDF 17
 #define SCOUNT 0
 #define FCOUNT 1
 #define SINE 2
@@ -23,7 +23,8 @@ struct DFEntryType {
 #define COS 4
 #define TIME 5
 #define HASNANS 6
-#define EXTRA 7
+#define STRIDX 7
+#define EXTRA 8
 
 struct DFEntryType df[NDF] = {
   {"scount", 1, -1, 'f'},
@@ -33,6 +34,7 @@ struct DFEntryType df[NDF] = {
   {"cos", 20, -1, 'f'},
   {"time", 20, -1, 'd'},
   {"hasnans", 20, -1, 'f'},
+  {"stridx", 1, -1, 'u'},
   {"E0", 20, -1, 'f'},
   {"E1", 20, -1, 'f'},
   {"E2", 20, -1, 'f'},
@@ -51,6 +53,7 @@ int main() {
   int i, count = 0;
   int j;
   float x;
+  unsigned short idx;
   double dx;
   
   struct timeval tv;
@@ -92,8 +95,17 @@ int main() {
   "META cos metaS STRING Test_String\n");
 
   fprintf(fpf, "cos/units STRING ^o\ncos/quantity STRING Angle\n");
+
+  // SARRAY type
+  fprintf(fpf, "namearray SARRAY ");
+  for (i=0; i<20; i++) {
+    fprintf(fpf, " LABEL%02d", i);
+  }
+  fprintf(fpf, "\n");
   fclose(fpf);
 
+  // SINDIR type
+  fprintf(fpf, "label SINDIR stridx namearray\n");
 
   printf("starting loop\n");
   while (1) {
@@ -162,8 +174,16 @@ int main() {
       }
     }
 
+    /* write 'stridx' */
+    idx = (count/10)%20;
+    nw = write(df[STRIDX].fp, &idx, sizeof(unsigned short));
+    if (nw<0) {
+      fprintf(stderr, "error writing stridx\n");
+    }
+
+
     /* write extras */
-    for (j=6; j<NDF; j++) {
+    for (j=EXTRA; j<NDF; j++) {
       for (i=0; i<df[j].spf; i++) {
         x = (double)rand()/(double)RAND_MAX;
         nw = write(df[j].fp, &x, sizeof(float));
