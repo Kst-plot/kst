@@ -37,8 +37,11 @@ StringTab::StringTab(ObjectStore *store, QWidget *parent)
   connect(_dataStringGroup, SIGNAL(toggled(bool)), this, SLOT(readFromSourceClicked()));
   connect(_stringValue, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
   connect(_fileName, SIGNAL(changed(QString)), this, SLOT(fileNameChanged(QString)));
+  connect(_field, SIGNAL(currentTextChanged(QString)), this, SLOT(fieldChanged(QString)));
   connect(_configure, SIGNAL(clicked()), this, SLOT(showConfigWidget()));
   connect(_field, SIGNAL(currentIndexChanged(int)), this, SLOT(textChanged()));
+  connect(_frame, SIGNAL(valueChanged(int)), this, SLOT(textChanged()));
+  connect(_lastFrame, SIGNAL(clicked(bool)), this, SLOT(enableFrames()));
 }
 
 
@@ -77,6 +80,27 @@ void StringTab::setValue(const QString &value) {
 
 void StringTab::textChanged() {
   emit valueChanged();
+}
+
+
+int StringTab::frame() const {
+  if (_lastFrame->isChecked()) {
+    return (-1);
+  } else {
+    return _frame->value();
+  }
+}
+
+
+void StringTab::setFrame(int frame) {
+  if (frame<0) {
+    _lastFrame->setChecked(true);
+    _frame->setEnabled(false);
+  } else {
+    _lastFrame->setChecked(false);
+    _frame ->setValue(frame);
+    _frame->setEnabled(true);
+  }
 }
 
 
@@ -166,11 +190,21 @@ void StringTab::sourceValid(QString filename, int requestID) {
   setField(_current_field);
   _field->setEditable(!_dataSource->string().isListComplete());
   _configure->setEnabled(_dataSource->hasConfigWidget());
+
+  bool isStringStream = _dataSource->isStringStream(_field->currentText());
+  _frame->setVisible(isStringStream);
+  _frameLabel->setVisible(isStringStream);
+  _lastFrame->setVisible(isStringStream);
+
   _dataSource->unlock();
 
   _store->cleanUpDataSourceList();
 
   emit sourceChanged();
+}
+
+void StringTab::enableFrames() {
+  _frame->setEnabled(!_lastFrame->isChecked());
 }
 
 
@@ -184,6 +218,13 @@ void StringTab::fileNameChanged(const QString &file) {
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
   connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
+}
+
+void StringTab::fieldChanged(const QString &field) {
+  bool isImageStream = _dataSource->isStringStream(field);
+  _frame->setVisible(isImageStream);
+  _frameLabel->setVisible(isImageStream);
+  _lastFrame->setVisible(isImageStream);
 }
 
 
@@ -235,6 +276,7 @@ void StringDialog::configureTab(ObjectPtr object) {
     _stringTab->setDataSource(dataString->dataSource());
     _stringTab->setField(dataString->field());
     _stringTab->hideGeneratedOptions();
+    _stringTab->setFrame(dataString->frame());
   } else if (StringPtr string = kst_cast<String>(object)) { // edit value string
     _stringTab->hideDataOptions();
     _stringTab->setValue(string->value());
@@ -310,7 +352,7 @@ ObjectPtr StringDialog::createNewDataString() {
   DataStringPtr string = _document->objectStore()->createObject<DataString>();
 
   string->writeLock();
-  string->change(dataSource, field);
+  string->change(dataSource, field, _stringTab->frame());
 
   if (DataDialog::tagStringAuto()) {
      string->setDescriptiveName(QString());
@@ -360,7 +402,7 @@ ObjectPtr StringDialog::editExistingDataObject() const {
       } else {
         string->setDescriptiveName(DataDialog::tagString());
       }
-      string->change(dataSource, field);
+      string->change(dataSource, field, _stringTab->frame());
       string->registerChange();
       string->unlock();
       dialogDefaults().setValue("String/datasource", _stringTab->file());

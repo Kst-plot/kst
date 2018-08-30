@@ -67,6 +67,9 @@ class KSTCORE_EXPORT VScalar : public Scalar, public DataPrimitive {
     /** return sample number */
     int F0() const;
 
+    /** return file length */
+    int fileLength();
+
     /** Save scalar information */
     virtual void save(QXmlStreamWriter &s);
 

@@ -45,7 +45,7 @@ class ITSSource : public Kst::DataSource {
 
     class Config;
 
-    virtual bool hasImageStream() { return true;}
+    virtual bool isImageStream(QString field) {Q_UNUSED(field) return true;}
 
   private:
     mutable Config *_config;

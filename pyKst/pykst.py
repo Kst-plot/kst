@@ -1018,15 +1018,16 @@ class DataSourceString(String):
         else:
             self.handle = name
 
-    def change(self, filename, field):
+    def change(self, filename, field, frame = 0):
         """ Change a DataSource String.
 
         Change the file and field of a DataSourceString in kst.
 
         :param filename: The name of the file/data source to read the string from.
         :param field: the name of the field in the data source.
+        :param frame: the frame number if the string is a function of frame number.
         """
-        self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+")"))
+        self.client.send_si(self.handle, b2str("change("+b2str(filename)+","+b2str(field)+","+b2str(frame)+")"))
 
 
 class Scalar(Object):

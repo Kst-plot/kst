@@ -549,10 +549,10 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
   _field->setEditable(!_dataSource->matrix().isListComplete() && !_dataSource->matrix().list().empty());
   _configure->setEnabled(_dataSource->hasConfigWidget());
 
-  bool hasImageStream = _dataSource->hasImageStream();
-  _frame->setVisible(hasImageStream);
-  _frameLabel->setVisible(hasImageStream);
-  _lastFrame->setVisible(hasImageStream);
+  bool isImageStream = _dataSource->isImageStream(_field->currentText());
+  _frame->setVisible(isImageStream);
+  _frameLabel->setVisible(isImageStream);
+  _lastFrame->setVisible(isImageStream);
 
   _dataSource->unlock();
 

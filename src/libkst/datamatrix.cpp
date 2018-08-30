@@ -668,8 +668,8 @@ int DataMatrix::skip() const {
 }
 
 
-bool DataMatrix::hasStream() {
-  return dataSource()->hasImageStream();
+bool DataMatrix::isStream() {
+  return dataSource()->isImageStream(_field);
 }
 
 

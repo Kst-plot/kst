@@ -27,6 +27,7 @@
 #include "datastring.h"
 #include "datavector.h"
 #include "datamatrix.h"
+#include "vscalar.h"
 
 #include <QRunnable>
 #include <QDialog>
@@ -195,9 +196,11 @@ class KSTCORE_EXPORT DataSource : public Object
 
     QMap<QString, QString> fileMetas() const;
 
-    /** return true if the data source contains an indexable list of
-     * matrices */
-    virtual bool hasImageStream() { return false;}
+    /** return true if <field> is an indexable list of matrices */
+    virtual bool isImageStream(QString field) {Q_UNUSED(field) return false;}
+
+    /** return true if <field> is an indexable list of strings */
+    virtual bool isStringStream(QString field) {Q_UNUSED(field) return false;}
 
     /** Returns the file type or an error message in a static string
       The string is stored in a separate static variable, so changes

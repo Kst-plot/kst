@@ -49,6 +49,10 @@ class StringTab : public DataTab, Ui::StringTab {
     QString field() const;
     void setField(const QString &field);
 
+    int frame() const;
+    bool frameDirty() const;
+    void setFrame(int frame);
+
     void setFieldList(const QStringList &fieldList);
 
     void hideGeneratedOptions();
@@ -62,8 +66,10 @@ class StringTab : public DataTab, Ui::StringTab {
     void generateClicked();
     void textChanged();
     void fileNameChanged(const QString &file);
+    void fieldChanged(const QString &field);
     void showConfigWidget();
     void sourceValid(QString filename, int requestID);
+    void enableFrames();
 
   private:
     void updateDataSource();

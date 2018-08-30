@@ -96,7 +96,7 @@ public:
   bool isValid(const QString& field) const { return dir._stringList.contains( field ); }
 
   // T specific: not used for Strings
-  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
+  virtual const DataString::DataInfo dataInfo(const QString&, int frame=0) const;
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -109,7 +109,21 @@ public:
 
 int DataInterfaceDirFileString::read(const QString& field, DataString::ReadInfo& p)
 {
-  return dir.readString(*p.value, field);
+  if (dir.isStringStream(field)) {
+    return dir.readSindir(*p.value, field, p.frame);
+  } else {
+    return dir.readString(*p.value, field);
+  }
+}
+
+const DataString::DataInfo DataInterfaceDirFileString::dataInfo(const QString &, int frame) const
+{
+  Q_UNUSED(frame)
+
+  DataString::DataInfo info;
+  info.frameCount = dir.frameCount();
+
+  return info;
 }
 
 
@@ -248,6 +262,7 @@ bool DirFileSource::init() {
   _fieldList.clear();
   _scalarList.clear();
   _stringList.clear();
+  _sindirList.clear();
 
   _frameCount = 0;
 
@@ -270,6 +285,12 @@ bool DirFileSource::init() {
     const char **tl = _dirfile->FieldListByType(StringEntryType);
     for (int i = 0; tl[i]!=NULL; i++) {
       _stringList.append(QString::fromUtf8(tl[i]));
+    }
+
+    const char **nl = _dirfile->FieldListByType(SindirEntryType);
+    for (int i = 0; nl[i]!=NULL; i++) {
+      _sindirList.append(QString::fromUtf8(nl[i]));
+      _stringList.append(QString::fromUtf8(nl[i])); // _stringList contains both
     }
 
     _writable = true;
@@ -385,6 +406,18 @@ int DirFileSource::readString(QString &S, const QString& string) {
   return 0;
 }
 
+int DirFileSource::readSindir(QString &S, const QString &field, int frame) {
+  const char *tmpstr[1];
+
+  _dirfile->GetData(field.toUtf8().constData(), frame, 0, 0, 1, tmpstr);
+  if (_dirfile->Error() == GD_E_OK) {
+    S = QString::fromUtf8(tmpstr[0]);
+    return 1;
+  }
+
+  return 0;
+}
+
 //QStringList fieldScalars(const QString& field);
 
 QStringList DirFileSource::fieldScalars(const QString& field) {
@@ -475,6 +508,15 @@ QStringList DirFilePlugin::matrixList(QSettings *cfg,
 
 const QString& DirFileSource::typeString() const {
   return dirfileTypeString;
+}
+
+bool DirFileSource::isStringStream(QString field)
+{
+  if (_sindirList.contains(field)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 

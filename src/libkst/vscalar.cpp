@@ -100,6 +100,17 @@ int VScalar::F0() const {
   return _f0;
 }
 
+
+int VScalar::fileLength() {
+
+  if (dataSource()) {
+    return dataSource()->vector().dataInfo(_field).frameCount-1;
+  }
+
+  return 0;
+}
+
+
 /** Save data scalar information */
 void VScalar::save(QXmlStreamWriter &s) {
   if (dataSource()) {

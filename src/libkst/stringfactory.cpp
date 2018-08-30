@@ -96,6 +96,7 @@ PrimitivePtr DataStringFactory::generatePrimitive(ObjectStore *store, QXmlStream
   Q_ASSERT(store);
 
   QString file, field;
+  int frame=0;
 
   while (!xml.atEnd()) {
     const QString n = xml.name().toString();
@@ -105,6 +106,7 @@ PrimitivePtr DataStringFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
         file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
+        frame = attrs.value("frame").toString().toInt();
 
         if (!store->override.fileName.isEmpty()) {
           file = store->override.fileName;
@@ -141,7 +143,7 @@ PrimitivePtr DataStringFactory::generatePrimitive(ObjectStore *store, QXmlStream
   DataStringPtr dataString = store->createObject<DataString>();
 
   dataString->writeLock();
-  dataString->change(dataSource, field);
+  dataString->change(dataSource, field, frame);
 
   dataString->setDescriptiveName(descriptiveName);
   dataString->registerChange();

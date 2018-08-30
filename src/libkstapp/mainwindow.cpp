@@ -1863,6 +1863,24 @@ void MainWindow::readFromEnd() {
     v->unlock();
   }
 
+  VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
+  foreach (VScalarPtr s, vScalars) {
+    s->readLock();
+    s->changeFrame(-1);
+    s->registerChange();
+    s->unlock();
+  }
+
+  DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
+  foreach (DataStringPtr s, dataStrings) {
+    if (s->isStream()) {
+      s->readLock();
+      s->setFrame(-1);
+      s->registerChange();
+      s->unlock();
+    }
+  }
+
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
   foreach (DataMatrixPtr m, dataMatrices) {
     m->readLock();
@@ -1897,6 +1915,24 @@ void MainWindow::readToEnd() {
     v->changeFrames(f0, -1, skip, do_skip, do_filter);
     v->registerChange();
     v->unlock();
+  }
+
+  VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
+  foreach (VScalarPtr s, vScalars) {
+    s->readLock();
+    s->changeFrame(-1);
+    s->registerChange();
+    s->unlock();
+  }
+
+  DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
+  foreach (DataStringPtr s, dataStrings) {
+    if (s->isStream()) {
+      s->readLock();
+      s->setFrame(-1);
+      s->registerChange();
+      s->unlock();
+    }
   }
 
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
@@ -1936,7 +1972,8 @@ void MainWindow::forward() {
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
-
+  VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
+  DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
   QHash<int,int> lastframehash;
 
   foreach (DataVectorPtr v, dataVectors) {
@@ -1977,8 +2014,59 @@ void MainWindow::forward() {
     }
   }
 
+  foreach (VScalarPtr vs, vScalars) {
+    int  new_frame;
+    int filelength = vs->fileLength();
+    if (most_popular_lastF>=0) {
+      if (most_popular_lastF < filelength) {
+        new_frame = most_popular_lastF;
+      } else {
+        new_frame = filelength-1;
+      }
+    } else {
+      if (vs->F0() < 0) {
+        new_frame = -1;
+      } else if (vs->F0()+1 <= filelength) {
+        new_frame = vs->F0()+1;
+      } else {
+        new_frame = filelength-1;
+      }
+    }
+    vs->writeLock();
+    vs->changeFrame(new_frame);
+    vs->registerChange();
+    vs->unlock();
+  }
+
+  foreach (DataStringPtr s, dataStrings) {
+    if (s->isStream()) {
+      int  new_frame;
+      int filelength = s->fileLength();
+      if (most_popular_lastF>=0) {
+        if (most_popular_lastF < filelength) {
+          new_frame = most_popular_lastF;
+        } else {
+          new_frame = filelength-1;
+        }
+      } else {
+        if (s->frame() < 0) {
+          new_frame = -1;
+        } else if (s->frame()+1 < filelength) {
+          new_frame = s->frame()+1;
+        } else {
+          new_frame = filelength-1;
+        }
+      }
+      s->writeLock();
+      s->setFrame(new_frame);
+      s->registerChange();
+      s->unlock();
+    }
+  }
+
+
   foreach (DataMatrixPtr m, dataMatrices) {
-    if (m->hasStream()) {
+    if (m->isStream()) {
       int  new_frame;
       int filelength = m->fileLength();
       if (most_popular_lastF>=0) {
@@ -1988,7 +2076,9 @@ void MainWindow::forward() {
           new_frame = filelength-1;
         }
       } else {
-        if (m->frame()+1 < filelength) {
+        if (m->frame() < 0) {
+          new_frame = -1;
+        } else if (m->frame()+1 < filelength) {
           new_frame = m->frame()+1;
         } else {
           new_frame = filelength-1;
@@ -2023,6 +2113,8 @@ void MainWindow::back() {
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
+  VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
+  DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
 
   QHash<int,int> lastframehash;
 
@@ -2071,8 +2163,58 @@ void MainWindow::back() {
     }
   }
 
+  foreach (VScalarPtr vs, vScalars) {
+    int  new_frame;
+    int filelength = vs->fileLength();
+    if (most_popular_lastF>=0) {
+      if (most_popular_lastF < filelength) {
+        new_frame = most_popular_lastF;
+      } else {
+        new_frame = filelength-1;
+      }
+    } else {
+      if (vs->F0() < 0) {
+        new_frame = filelength-1;
+      } else if (vs->F0()-1 >= 0) {
+        new_frame = vs->F0()-1;
+      } else {
+        new_frame = 0;
+      }
+    }
+    vs->writeLock();
+    vs->changeFrame(new_frame);
+    vs->registerChange();
+    vs->unlock();
+  }
+
+  foreach (DataStringPtr s, dataStrings) {
+    if (s->isStream()) {
+      int  new_frame;
+      int filelength = s->fileLength();
+      if (most_popular_lastF>=0) {
+        if (most_popular_lastF < filelength) {
+          new_frame = most_popular_lastF;
+        } else {
+          new_frame = filelength-1;
+        }
+      } else {
+        if (s->frame() < 0) {
+          new_frame = filelength-1;
+        } else if (s->frame()-1 >= 0) {
+          new_frame = s->frame()-1;
+        } else {
+          new_frame = 0;
+        }
+      }
+      s->writeLock();
+      s->setFrame(new_frame);
+      s->registerChange();
+      s->unlock();
+    }
+  }
+
   foreach (DataMatrixPtr m, dataMatrices) {
-    if (m->hasStream()) {
+    if (m->isStream()) {
       int  new_frame;
       int filelength = m->fileLength();
       if (most_popular_lastF>=0) {
@@ -2082,7 +2224,9 @@ void MainWindow::back() {
           new_frame = filelength-1;
         }
       } else {
-        if (m->frame()-1 >= 0) {
+        if (m->frame() < 0) {
+          new_frame = filelength-1;
+        } else if (m->frame()-1 >= 0) {
           new_frame = m->frame()-1;
         } else {
           new_frame = filelength-2;

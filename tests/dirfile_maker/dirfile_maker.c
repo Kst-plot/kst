@@ -102,10 +102,12 @@ int main() {
     fprintf(fpf, " LABEL%02d", i);
   }
   fprintf(fpf, "\n");
+
+  fprintf(fpf, "label SINDIR stridx namearray\n");
+
   fclose(fpf);
 
   // SINDIR type
-  fprintf(fpf, "label SINDIR stridx namearray\n");
 
   printf("starting loop\n");
   while (1) {

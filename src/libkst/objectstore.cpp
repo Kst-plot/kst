@@ -217,6 +217,7 @@ const PrimitiveList ObjectStore::getFramePrimitives() const {
   DataVectorList data_vectors = getObjects<DataVector>();
   VScalarList vscalars = getObjects<VScalar>();
   DataMatrixList data_matrixes = getObjects<DataMatrix>();
+  DataStringList data_strings = getObjects<DataString>();
 
 
   foreach (DataVectorPtr dv, data_vectors) {
@@ -225,8 +226,13 @@ const PrimitiveList ObjectStore::getFramePrimitives() const {
   foreach (VScalarPtr vs, vscalars) {
     primitives.append(vs);
   }
+  foreach (DataStringPtr ds, data_strings) {
+    if (ds->isStream()) {
+      primitives.append(ds);
+    }
+  }
   foreach (DataMatrixPtr dm, data_matrixes) {
-    if (dm->hasStream()) {
+    if (dm->isStream()) {
       primitives.append(dm);
     }
   }

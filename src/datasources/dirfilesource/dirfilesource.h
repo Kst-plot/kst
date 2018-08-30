@@ -62,6 +62,7 @@ class DirFileSource : public Kst::DataSource {
     int readScalar(double &S, const QString& scalar);
 
     int readString(QString &S, const QString& string);
+    int readSindir(QString &S, const QString& string, int frame);
 
     virtual QStringList fieldScalars(const QString& field);
 
@@ -75,6 +76,8 @@ class DirFileSource : public Kst::DataSource {
     //static const QString staticTypeString;
     //static const QString staticTypeTag;
 
+    /** return true if <field> is an indexable list of strings */
+    virtual bool isStringStream(QString field);
 
 
   private:
@@ -83,6 +86,7 @@ class DirFileSource : public Kst::DataSource {
 
     QStringList _scalarList;
     QStringList _stringList;
+    QStringList _sindirList; // string stream
     QStringList _fieldList;
 
     int _frameCount;

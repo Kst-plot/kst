@@ -44,6 +44,17 @@ ScriptInterface* DataString::createScriptInterface() {
   return new StringDataSI(this);
 }
 
+int DataString::fileLength() const {
+
+  if (dataSource()) {
+    const DataInfo info = dataSource()->string().dataInfo(_field);
+
+    return info.frameCount;
+  }
+
+  return 0;
+}
+
 
 QString DataString::_automaticDescriptiveName() const {
   QString name = _field;
@@ -85,10 +96,11 @@ bool DataString::checkValidity(const DataSourcePtr& ds) const {
 }
 
 
-void DataString::change(DataSourcePtr in_file, const QString &in_field) {
+void DataString::change(DataSourcePtr in_file, const QString &in_field, int in_frame) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _field = in_field;
+  _frame = in_frame;
   setDataSource(in_file);
 
   registerChange();
@@ -103,6 +115,11 @@ void DataString::changeFile(DataSourcePtr in_file) {
   setDataSource(in_file);
 
   registerChange();
+}
+
+bool DataString::isStream()
+{
+  return dataSource()->isStringStream(_field);
 }
 
 
@@ -120,10 +137,18 @@ void DataString::save(QXmlStreamWriter &s) {
 
 
 /** Update a data String */
-void DataString::internalUpdate() {
+void DataString::internalUpdate() {  
   if (dataSource()) {
+    int frame;
+    const DataInfo info = dataSource()->string().dataInfo(_field);
+    if ((_frame < 0) || (_frame >= info.frameCount)) {
+      frame = info.frameCount-1;
+    } else {
+      frame = _frame;
+    }
+
     dataSource()->writeLock();
-    ReadInfo readInfo(&_value);
+    ReadInfo readInfo(&_value, frame);
     dataSource()->string().read(_field, readInfo);
     dataSource()->unlock();
   }
@@ -150,7 +175,7 @@ PrimitivePtr DataString::makeDuplicate() const {
   DataStringPtr string = store()->createObject<DataString>();
 
   string->writeLock();
-  string->change(dataSource(), _field);
+  string->change(dataSource(), _field, _frame);
   if (descriptiveNameIsManual()) {
     string->setDescriptiveName(descriptiveName());
   }
@@ -191,8 +216,13 @@ void DataString::reload() {
 }
 
 void DataString::reset() {
-  ReadInfo readInfo(&_value);
+  ReadInfo readInfo(&_value, _frame);
   dataSource()->string().read(_field, readInfo);
+}
+
+DataString::DataInfo::DataInfo() :
+  frameCount(-1)
+{
 }
 
 }

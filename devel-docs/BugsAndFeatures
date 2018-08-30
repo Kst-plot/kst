@@ -1,5 +1,52 @@
 BUGS
 
+What I did:
+- Create three plots A, B, C, and put two of them in a shared axis box (A, B)
+- Tie the x-zoom for all three plots (Ctrl-t)
+- Click on plot C to select it, then zomm right (push arrow right key)
+
+What I expected to happen:
+- All three plots should shift synchronously
+
+What happened instead:
+- While C shifts as desired, the plots A, B, with shared Axis, get shifted twice. 
+
+I looked at the code, and found the problem dissapears, when I delete the following lines in method void ZoomCommand::redo():
+foreach (ViewItem* item, _viewItems) {
+  applyZoomTo(item, tiedX, tiedY);
+}
+Or equally, if I delete following from method ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool forced):
+_viewItems << plotItem->sharedAxisBox();
+
+
+Possibly easy to fix, because_viewItems is not used in other locations. But I'm still not familiar enough with the code.
+
+Manuel
+ ---------------
+
+What I did:
+- create three plots, and place two in a shared axis box
+- tie x-zoom for all three plots (Ctrl-t)
+- click on one plot in the shared axis box to select it, and press e-key
+- in "edit plot item" dialog, goto "Range/Zoom" page, check "Y Zoom Mode" = fixed and change the range values, click ok
+
+What I expected to happen:
+- the y-axis range of the selected plot should change to the new values
+
+What actually happened:
+- the y-axis range of all three plots changed to the new values
+
+
+The problem seems to dissapear if I remove following lines from method 
+void SharedAxisBoxItem::zoomYRange(const QRectF &projection, PlotItem* originPlotItem):
+foreach(PlotItem* plotItem, plotTied) {
+  plotItem->zoomYRange(projection, true);
+}
+
+I would like to use the shared axis box for plotting 10 to 20 binary signals in one box, and have another plot on the tab showing signals with wider range, so the shared axis is really good to save a lot of space!
+
+----------------
+
 pykst: accept non-float64 numpy arrays.
 
 dirfile reader should recognise "format" if it is valid.

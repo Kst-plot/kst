@@ -105,7 +105,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     // for image streams
     int frame() const {return _frame;}
     void setFrame(int f) {_frame = f;}
-    bool hasStream();
+    bool isStream();
 
     // labels for this matrix
     virtual QString label() const;

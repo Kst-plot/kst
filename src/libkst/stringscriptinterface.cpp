@@ -80,7 +80,7 @@ QString StringDataSI::doCommand(QString x) {
     DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                          str->store(), p.at(0));
     str->writeLock();
-    str->change(ds,p.at(1));
+    str->change(ds,p.at(1), p.at(2).toInt());
     str->unlock();
     return "Done";
   } else if (x.startsWith(QLatin1String("value()"))) {
