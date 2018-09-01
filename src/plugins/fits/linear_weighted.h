@@ -10,6 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef LINEAR_WEIGHTED_H
+#define LINEAR_WEIGHTED_H
+
 #include <stdlib.h>
 #include <math.h>
 #include <gsl/gsl_multifit.h>
@@ -133,3 +136,5 @@ bool kstfit_linear_weighted(
 
   return bReturn;
 }
+
+#endif

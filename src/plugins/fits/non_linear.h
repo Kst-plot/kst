@@ -10,6 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef NON_LINEAR_H
+#define NON_LINEAR_H
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -249,3 +252,5 @@ bool kstfit_nonlinear(
 
   return bReturn;
 }
+
+#endif

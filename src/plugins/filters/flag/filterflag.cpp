@@ -233,7 +233,7 @@ bool FilterFlagSource::algorithm() {
 
 
   Kst::LabelInfo label_info = inputVector->labelInfo();
-  label_info.name = tr("Flaged %1").arg(label_info.name);
+  label_info.name = tr("Flagged %1").arg(label_info.name);
   outputVector->setLabelInfo(label_info);
 
   return true;

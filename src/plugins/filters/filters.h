@@ -17,6 +17,9 @@
  *  Released under the terms of the GPL 
  */
 
+#ifndef FILTERS_H
+#define FILTERS_H
+
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -166,3 +169,5 @@ bool kst_pass_filter(
   }
   return bReturn;
 }
+
+#endif

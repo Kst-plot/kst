@@ -12,6 +12,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef INTERPOLATIONS_H
+#define INTERPOLATIONS_H
+
 #include <vector.h>
 
 bool interpolate(Kst::VectorPtr xVector,
@@ -79,3 +82,5 @@ bool interpolate(Kst::VectorPtr xVector,
 
   return bReturn;
 }
+
+#endif

@@ -36,7 +36,6 @@
 
 #include "updatemanager.h"
 #include "dialogdefaults.h"
-#include "datasourcepluginmanager.h"
 
 namespace Kst {
 

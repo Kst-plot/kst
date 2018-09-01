@@ -11,8 +11,8 @@
  ***************************************************************************/
 
 
-#ifndef ITSSOURCE_H
-#define ITSSOURCE_H
+#ifndef ITSDATASOURCE_H
+#define ITSDATASOURCE_H
 
 #include <datasource.h>
 #include <dataplugin.h>

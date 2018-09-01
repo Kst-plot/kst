@@ -10,6 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef NON_LINEAR_WEIGHTED_H
+#define NON_LINEAR_WEIGHTED_H
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -264,3 +267,5 @@ bool kstfit_nonlinear_weighted(
   }
   return bReturn;
 }
+
+#endif

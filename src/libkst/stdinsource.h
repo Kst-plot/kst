@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef STDINSRC_H
-#define STDINSRC_H
+#ifndef STDINSOURCE_H
+#define STDINSOURCE_H
 
 #include "datasource.h"
 

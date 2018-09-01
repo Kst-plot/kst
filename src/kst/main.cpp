@@ -44,8 +44,8 @@ int main(int argc, char *argv[]) {
     QApplication::setGraphicsSystem("raster");
   } else {
     // this must be actually set, since raster is now the
-    // default under linux.  Native is strongly prefered
-    // for remote X, and raster mildly prefered otherwise.
+    // default under linux.  Native is strongly preferred
+    // for remote X, and raster mildly preferred otherwise.
     // Note: for QT5, "native" is gone.  Which is bad for
     // remote X users.  Sigh...
     QApplication::setGraphicsSystem("native");

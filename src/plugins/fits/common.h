@@ -10,6 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifndef FITS_COMMON_H
+#define FITS_COMMON_H
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -148,3 +151,5 @@ void postcursor( bool bWeighted, double* pInputs[]) {
     }
   }
 }
+
+#endif

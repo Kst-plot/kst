@@ -142,7 +142,7 @@ QString SamplePluginSource::_automaticDescriptiveName() const {
 
 
 // Change is used to configure the DataObject and will be run immediately after initial creation as well as 
-// when modifications have occured.
+// when modifications have occurred.
 void SamplePluginSource::change(Kst::DataObjectConfigWidget *configWidget) {
   if (ConfigWidgetSamplePlugin* config = static_cast<ConfigWidgetSamplePlugin*>(configWidget)) {
     setInputVector(VECTOR_IN, config->selectedVector());

@@ -11,8 +11,8 @@
  ***************************************************************************/
 
 
-#ifndef BISSOURCE_H
-#define BISSOURCE_H
+#ifndef BISDATASOURCE_H
+#define BISDATASOURCE_H
 
 #include <datasource.h>
 #include <dataplugin.h>

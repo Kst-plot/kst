@@ -25,7 +25,6 @@
 #include "debug.h"
 #include "objectstore.h"
 #include "updatemanager.h"
-#include "vscalar.h"
 #include "scalarscriptinterface.h"
 
 namespace Kst {
