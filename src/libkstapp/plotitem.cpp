@@ -4020,8 +4020,9 @@ ZoomCommand::ZoomCommand(PlotItem *item, const QString &text, bool forced)
         if (!_viewItems.contains(plotItem->sharedAxisBox())) {
           _viewItems << plotItem->sharedAxisBox();
         }
+      } else { // plots already in a shared box are going to get zoomed anyway, so don't re-add them.
+        _originalStates << plotItem->currentZoomState();
       }
-      _originalStates << plotItem->currentZoomState();
     }
   }
 }
@@ -4042,6 +4043,7 @@ void ZoomCommand::undo() {
 void ZoomCommand::redo() {
   bool tiedX = _plotItem->isXTiedZoom();
   bool tiedY = _plotItem->isYTiedZoom();
+
   foreach (const ZoomState &state, _originalStates) {
     if (state.item == _plotItem) {
       applyZoomTo(state.item, true, true);
@@ -4049,7 +4051,7 @@ void ZoomCommand::redo() {
       applyZoomTo(state.item, state.item->isXTiedZoom() && tiedX, state.item->isYTiedZoom() && tiedY);
     }
   }
-  foreach (ViewItem* item, _viewItems) {
+  foreach (ViewItem* item, _viewItems) { // _viewItems is the list of shared axis boxes tied in somehow.
     applyZoomTo(item, tiedX, tiedY);
   }
 
