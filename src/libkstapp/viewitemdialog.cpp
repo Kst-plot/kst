@@ -271,7 +271,7 @@ void ViewItemDialog::strokeChanged() {
   } else {
     saveStroke(_item);
     if (_saveAsDefault->isChecked()) {
-      saveDialogDefaultsPen(_item->defaultsGroupName(), _item->pen());
+      saveDialogDefaultsPen(_item->defaultsGroupName(), _item->storedPen());
     }
   }
   kstApp->mainWindow()->document()->setChanged(true);
@@ -280,7 +280,7 @@ void ViewItemDialog::strokeChanged() {
 
 void ViewItemDialog::saveStroke(ViewItem *item) {
   if (_item->hasStroke()) {
-    item->setItemPen(_strokeTab->pen(item->pen()));
+    item->setItemPen(_strokeTab->pen(item->storedPen()));
   }
 }
 
