@@ -938,7 +938,7 @@ void ViewItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   _dpi = painter->device()->logicalDpiX();
 
   QPen rescaled_pen(_storedPen);
-  rescaled_pen.setWidth(Curve::lineDim(painter->window(),rescaled_pen.widthF()));
+  rescaled_pen.setWidthF(Curve::lineDim(painter->window(),rescaled_pen.widthF()));
   setPen(rescaled_pen);
 
   painter->save();

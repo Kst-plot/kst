@@ -56,6 +56,8 @@ class StrokeTab : public DialogTab, Ui::StrokeTab {
     bool capStyleDirty() const;
     void setCapStyle(Qt::PenCapStyle style);
 
+    bool strokeDirty() const {return styleDirty() || widthDirty() || brushColorDirty() || brushStyleDirty() || joinStyleDirty() || capStyleDirty();}
+
     void clearTabValues();
 };
 

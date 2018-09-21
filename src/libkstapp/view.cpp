@@ -652,7 +652,7 @@ void View::configurePlotFontDefaults(PlotItem *plot) {
         plot->numberLabelDetails()->setFontScale(plotItem->numberLabelDetails()->fontScale());
         plot->numberLabelDetails()->setFontColor(plotItem->numberLabelDetails()->fontColor());
 
-        plot->setItemPen(plotItem->pen());
+        plot->setItemPen(plotItem->storedPen());
         plot->setItemBrush(plotItem->brush());
         plot->xAxis()->copyProperties(plotItem->xAxis());
         plot->yAxis()->copyProperties(plotItem->yAxis());

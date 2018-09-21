@@ -263,8 +263,10 @@ void ViewItemDialog::saveFill(ViewItem *item) {
 void ViewItemDialog::strokeChanged() {
   Q_ASSERT(_item);
   if (_mode == Multiple) {
-    foreach(ViewItem* item, selectedMultipleEditObjects()) {
-      saveStroke(item);
+    if (_strokeTab->strokeDirty()) {
+      foreach(ViewItem* item, selectedMultipleEditObjects()) {
+        saveStroke(item);
+      }
     }
   } else {
     saveStroke(_item);

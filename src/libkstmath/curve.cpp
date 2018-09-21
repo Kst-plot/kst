@@ -692,6 +692,7 @@ double Curve::pointDim(QRectF w) const {
   return qMax(double(1.01), PointSize * ((w.width() + w.height()) * (1.0 / 4000.0)));
 }
 
+
 double Curve::lineDim(const QRectF &R, double linewidth) {
   qreal lw = qMax(qreal(1.01), qreal(linewidth)*(R.width()+R.height())*qreal(1.0/2000.0));
   // if you ask for a thicker line, make sure it is at least 2 px wide
