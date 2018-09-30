@@ -383,6 +383,10 @@ void PlotItem::edit(PlotClickEditRegion region) {
 
 
 void PlotItem::createActions() {
+
+  _createCurve = new QAction(tr("Create Curve"), this);
+  connect(_createCurve, SIGNAL(triggered()), this, SLOT(showCurveDialog()));
+
   _zoomMaximum = new QAction(tr("Zoom Maximum"), this);
   _zoomMaximum->setShortcut(Qt::Key_M);
   registerShortcut(_zoomMaximum);
@@ -788,6 +792,9 @@ void PlotItem::createSharedAxisBoxMenu() {
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
   if (curveList().size()>0) {
     menu.addSeparator();
+
+    menu.addAction(_createCurve);
+
     if (!DataObject::filterPluginList().empty()) {
       createFilterMenu();
       menu.addMenu(_filterMenu);
@@ -869,7 +876,6 @@ void PlotItem::showFitFilterDialog(QAction* action, const QString& plugin) {
   }
 }
 
-
 void PlotItem::showPSDDialog(QAction* action) {
   CurveList curves = curveList();
   foreach (const CurvePtr& curve, curves) {
@@ -877,6 +883,10 @@ void PlotItem::showPSDDialog(QAction* action) {
       DialogLauncher::self()->showPowerSpectrumDialog(0, curve->yVector());
     }
   }
+}
+
+void PlotItem::showCurveDialog() {
+  DialogLauncher::self()->showCurveDialog(0,0,this);
 }
 
 

@@ -15,6 +15,7 @@
 
 #include "datadialog.h"
 #include "datatab.h"
+#include "plotitem.h"
 
 #include "ui_curvetab.h"
 
@@ -70,6 +71,7 @@ class CurveTab : public DataTab, Ui::CurveTab {
 
     void setToLastX() {_xVector->setToLastX();}
 
+    void setPlotMode(PlotItem *plot);
   Q_SIGNALS:
     void vectorsChanged();
 
@@ -88,6 +90,7 @@ class CurveDialog : public DataDialog {
     virtual ~CurveDialog();
 
     void setVector(VectorPtr vector);
+    void setPlotMode(PlotItem *plot);
 
   protected:
     virtual ObjectPtr createNewDataObject();

@@ -36,7 +36,7 @@ class DialogLauncherGui : public DialogLauncher {
     virtual void showStringDialog(QString &stringname, ObjectPtr objectPtr = 0, bool modal = false);
 
     //standard objects
-    virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0);
+    virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0, PlotItemInterface *plotItem = 0);
     virtual void showMultiCurveDialog(QList<ObjectPtr> curves);
 
     virtual void showImageDialog(ObjectPtr objectPtr = 0, MatrixPtr matrix = 0);

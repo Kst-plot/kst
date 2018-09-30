@@ -271,6 +271,19 @@ void CurveTab::clearTabValues() {
   _curveAppearance->clearValues();
 }
 
+void CurveTab::setPlotMode(PlotItem *plot) {
+
+  _curvePlacement->setPlace(CurvePlacement::ExistingPlot);
+  _curvePlacement->setExistingPlots(Data::self()->plotList());
+  if (plot) {
+    _curvePlacement->setCurrentPlot(plot);
+  }
+  _curveAppearance->setVisible(true);
+  _curvePlacement->setVisible(true);
+  _ignoreAutoScale->setVisible(true);
+
+}
+
 void CurveTab::updateVectorCombos() {
   _xVector->fillVectors();
   _yVector->fillVectors();
@@ -372,6 +385,11 @@ void CurveDialog::configureTab(ObjectPtr object) {
 
 void CurveDialog::setVector(VectorPtr vector) {
   _curveTab->setYVector(vector);
+}
+
+void CurveDialog::setPlotMode(PlotItem *plot) {
+  _curveTab->setPlotMode(plot);
+
 }
 
 

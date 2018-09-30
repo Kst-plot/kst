@@ -53,7 +53,7 @@ class KSTMATH_EXPORT DialogLauncher : public QObject {
     virtual void showStringDialog(QString &scalarname, ObjectPtr objectPtr = 0, bool modal = false) = 0;
 
     //standard objects
-    virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0) = 0;
+    virtual void showCurveDialog(ObjectPtr objectPtr = 0, VectorPtr vector = 0, PlotItemInterface *plotItem = 0) = 0;
     virtual void showMultiCurveDialog(QList<ObjectPtr> curves) = 0;
 
     virtual void showImageDialog(ObjectPtr objectPtr = 0, MatrixPtr matrix = 0) = 0;

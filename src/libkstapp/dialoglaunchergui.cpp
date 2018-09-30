@@ -117,10 +117,13 @@ void DialogLauncherGui::showDataSourceDialog(QString &datasourcename, ObjectPtr 
 }
 
 
-void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
+void DialogLauncherGui::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector, PlotItemInterface *plotItem) {
   CurveDialog *dialog = new CurveDialog(objectPtr, kstApp->mainWindow());
   if (vector) {
     dialog->setVector(vector);
+  }
+  if (plotItem) {
+    dialog->setPlotMode((PlotItem*)plotItem);
   }
   dialog->show();
 }

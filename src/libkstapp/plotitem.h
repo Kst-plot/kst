@@ -359,6 +359,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     void showFilterDialog(QAction*);
     void showFitDialog(QAction*);
     void showPSDDialog(QAction*);
+    void showCurveDialog();
     void showHistogramDialog(QAction*);
     void showEditDialog(QAction *action);
 
@@ -527,6 +528,7 @@ class PlotItem : public ViewItem, public PlotItemInterface
     //QMenu *_xZoomMenu;
     //QMenu *_yZoomMenu;
     //QMenu *_xyZoomMenu;
+    QAction *_createCurve;
     QAction *_zoomMaximum;
     QAction *_zoomMaxSpikeInsensitive;
     QAction *_zoomPrevious;

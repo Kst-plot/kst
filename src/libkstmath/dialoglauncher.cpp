@@ -82,9 +82,10 @@ void DialogLauncher::showDataSourceDialog(QString &datasourcename, ObjectPtr obj
   Q_UNUSED(modal);
 }
 
-void DialogLauncher::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector) {
+void DialogLauncher::showCurveDialog(ObjectPtr objectPtr, VectorPtr vector, PlotItemInterface *plotItem) {
   Q_UNUSED(objectPtr);
   Q_UNUSED(vector);
+  Q_UNUSED(plotItem);
 }
 
 void DialogLauncher::showMultiCurveDialog(QList<ObjectPtr> curves) {
