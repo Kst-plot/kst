@@ -790,11 +790,11 @@ void PlotItem::createSharedAxisBoxMenu() {
 
 
 void PlotItem::addToMenuForContextEvent(QMenu &menu) {
+
+  menu.addSeparator();
+  menu.addAction(_createCurve);
+
   if (curveList().size()>0) {
-    menu.addSeparator();
-
-    menu.addAction(_createCurve);
-
     if (!DataObject::filterPluginList().empty()) {
       createFilterMenu();
       menu.addMenu(_filterMenu);
