@@ -57,6 +57,8 @@ void Relation::commonConstructor() {
   _contextDetails.xLogBase = 0.0;
   _contextDetails.yLogBase = 0.0;
   _contextDetails.penWidth = 0;
+
+  _manualLegendName.clear();
 }
 
 
@@ -162,10 +164,20 @@ qint64 Relation::maxInputSerialOfLastChange() const {
   return maxSerial;
 }
 
+QString Relation::manualLegendName() const
+{
+  return _manualLegendName;
+}
+
+void Relation::setManualLegendName(const QString &manualLegendName)
+{
+  _manualLegendName = manualLegendName;
+}
+
 void Relation::writeLockInputsAndOutputs() const {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
-  #ifdef LOCKTRACE
+#ifdef LOCKTRACE
   qDebug() << (void*)this << this->Name() << ") Relation::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
   #endif
 
@@ -463,6 +475,40 @@ PrimitiveList Relation::inputPrimitives() const {
 
   return primitive_list;
 }
+
+
+QString Relation::legendName(bool sameX, bool sameYUnits) const {
+  if (_manualLegendName.isEmpty()) {
+    QString label = titleInfo().singleRenderItemLabel();
+    if (label.isEmpty()) {
+      LabelInfo label_info = yLabelInfo();
+      QString y_label = label_info.name;
+      if (!sameYUnits) {
+        if (!label_info.units.isEmpty()) {
+          y_label = tr("%1 \\[%2\\]", "axis labels.  %1 is quantity, %2 is units.  eg Time [s].  '[' must be escaped.").arg(y_label).arg(label_info.units);
+        }
+      }
+      if (!y_label.isEmpty()) {
+        LabelInfo xlabel_info = xLabelInfo();
+        if (!sameX) {
+          label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
+        } else if (xlabel_info.quantity.isEmpty()) {
+          label = y_label;
+        } else if (xlabel_info.quantity != xlabel_info.name) {
+          label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
+        } else {
+          label = y_label;
+        }
+      } else {
+        label = descriptiveName();
+      }
+    }
+    return label;
+  } else {
+    return _manualLegendName;
+  }
+}
+
 
 void Relation::replaceInput(PrimitivePtr p, PrimitivePtr new_p) {
   if (VectorPtr v = kst_cast<Vector>(p) ) {

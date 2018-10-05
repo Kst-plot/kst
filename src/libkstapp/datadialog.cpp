@@ -36,7 +36,7 @@
 namespace Kst {
 
 DataDialog::DataDialog(Kst::ObjectPtr dataObject, QWidget *parent, bool edit_multiple)
-  : Dialog(parent), _dataObject(dataObject), _modified(false) {
+  : Dialog(parent), _dataObject(dataObject), _modified(false), _coreWindowWidth(0) {
 
   _dataObjectName.clear();
 
@@ -216,13 +216,21 @@ void DataDialog::slotEditMultiple() {
   int extensionWidth = extensionWidget()->width();
   if (extensionWidth<charWidth*20) extensionWidth = charWidth*25; // FIXME: magic number hack...
   extensionWidget()->setVisible(!extensionWidget()->isVisible());
+  if (_coreWindowWidth == 0) {
+    _coreWindowWidth = currentWidth;
+  }
   if (!extensionWidget()->isVisible()) {
     _tagString->setVisible(true);
     _shortName->setVisible(true);
     _tagStringAuto->setVisible(true);
     _nameLabel->setVisible(true);
-    setMinimumWidth(currentWidth - extensionWidth);
-    resize(currentWidth - extensionWidth, height());
+    //setMinimumWidth(currentWidth - extensionWidth);
+    if (_coreWindowWidth > currentWidth - extensionWidth) {
+      resize(_coreWindowWidth, height());
+    } else {
+      resize(currentWidth - extensionWidth, height());
+      _coreWindowWidth = currentWidth - extensionWidth;
+    }
     _mode = Edit;
     _editMultipleButton->setText(tr("Edit Multiple >>"));
     emit editSingleMode();
@@ -232,7 +240,8 @@ void DataDialog::slotEditMultiple() {
     _shortName->setVisible(false);
     _tagStringAuto->setVisible(false);
     _nameLabel->setVisible(false);
-    setMinimumWidth(currentWidth + extensionWidth);
+    _coreWindowWidth = currentWidth;
+    //setMinimumWidth(currentWidth + extensionWidth);
     resize(currentWidth + extensionWidth, height());
     _mode = EditMultiple;
     _editMultipleButton->setText(tr("<< Edit one %1").arg(_shortName->text()));

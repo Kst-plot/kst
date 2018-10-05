@@ -2,7 +2,49 @@
 <ui version="4.0">
  <class>CurveTab</class>
  <widget class="QWidget" name="CurveTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>443</width>
+    <height>250</height>
+   </rect>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="_legendLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Legend Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="_manualLegendName">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="_autoLegend">
+       <property name="text">
+        <string>Auto</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QGroupBox" name="GroupBox">
      <property name="title">
@@ -251,5 +293,22 @@
   <tabstop>_curvePlacement</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_autoLegend</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_manualLegendName</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>397</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>31</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

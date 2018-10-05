@@ -168,7 +168,12 @@ class KSTMATH_EXPORT Relation : public Object {
     virtual LabelInfo yLabelInfo() const = 0;
     virtual LabelInfo titleInfo() const = 0;
 
-  protected:
+    virtual QString legendName(bool sameX, bool sameYUnits) const;
+
+    QString manualLegendName() const;
+    void setManualLegendName(const QString &manualLegendName);
+
+protected:
     virtual void writeLockInputsAndOutputs() const;
     virtual void unlockInputsAndOutputs() const;
 
@@ -200,6 +205,8 @@ class KSTMATH_EXPORT Relation : public Object {
 
     CurveContextDetails _contextDetails;
     bool _redrawRequired;
+
+    QString _manualLegendName;
 
   private:
     void commonConstructor();

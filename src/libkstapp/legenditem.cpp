@@ -115,52 +115,32 @@ void LegendItem::paint(QPainter *painter) {
     }
   }
 
-  if (!allAuto) {
-    for (int i = 0; i<count; i++) {
-      names.append(legendItems.at(i)->descriptiveName());
-    }
-  } else {
-    for (int i = 0; i<count; i++) {
-      RelationPtr relation = legendItems.at(i);
-      QString label = relation->titleInfo().singleRenderItemLabel();
-      if (label.isEmpty()) {
-        label_info = relation->yLabelInfo();
-        QString y_label = label_info.name;
-        if (!sameYUnits) {
-          if (!label_info.units.isEmpty()) {
-            y_label = tr("%1 \\[%2\\]", "axis labels.  %1 is quantity, %2 is units.  eg Time [s].  '[' must be escaped.").arg(y_label).arg(label_info.units);
-          }
-        }
-        if (!y_label.isEmpty()) {
-          LabelInfo xlabel_info = relation->xLabelInfo();
-          if (!sameX) {
-            label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
-          } else if (xlabel_info.quantity.isEmpty()) {
-            label = y_label;
-          } else if (xlabel_info.quantity != xlabel_info.name) {
-            label = tr("%1 vs %2", "describes a plot. %1 is X axis.  %2 is Y axis").arg(y_label).arg(xlabel_info.name);
-          } else {
-            label = y_label;
-          }
-        } else {
-          label = relation->descriptiveName();
-        }
+//  if (!allAuto) {
+  //    for (int i = 0; i<count; i++) {
+  //      names.append(legendItems.at(i)->descriptiveName());
+  //    }
+  //  } else {
+
+  // FIXME: move most of this into a new function, relation->legend_name
+  //        then create separate [legend_name] and Auto in the relation dialog.
+  //        show relation->legend_name in dialog when [x] Auto
+  for (int i = 0; i<count; i++) {
+    RelationPtr relation = legendItems.at(i);
+    QString label = relation->legendName(sameX, sameYUnits);
+
+    int i_dup = names.indexOf(label);
+    if (i_dup<0) {
+      names.append(label);
+    } else {
+      RelationPtr dup_relation = legendItems.at(i_dup);
+      if (!dup_relation->yLabelInfo().file.isEmpty()) {
+        names.replace(i_dup, label + " (" + dup_relation->yLabelInfo().escapedFile() + ')');
       }
-      int i_dup = names.indexOf(label);
-      if (i_dup<0) {
-        names.append(label);
-      } else {
-        RelationPtr dup_relation = legendItems.at(i_dup);
-        if (!dup_relation->yLabelInfo().file.isEmpty()) {
-          names.replace(i_dup, label + " (" + dup_relation->yLabelInfo().escapedFile() + ')');
-        }
-        if (!relation->yLabelInfo().file.isEmpty()) {
-          names.append(label + " (" + relation->yLabelInfo().escapedFile() + ')');
-        }
+      if (!relation->yLabelInfo().file.isEmpty()) {
+        names.append(label + " (" + relation->yLabelInfo().escapedFile() + ')');
       }
     }
   }
-
 
   QSize legendSize(0, 0);
   QSize titleSize(0,0);

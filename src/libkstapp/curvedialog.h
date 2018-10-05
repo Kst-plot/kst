@@ -72,6 +72,12 @@ class CurveTab : public DataTab, Ui::CurveTab {
     void setToLastX() {_xVector->setToLastX();}
 
     void setPlotMode(PlotItem *plot);
+
+    QString manualLegendName() const;
+    void setManualLegendNameText(const QString &name);
+    void setLegendAuto(bool is_auto);
+    void setLegendNameVisible(bool visible);
+
   Q_SIGNALS:
     void vectorsChanged();
 

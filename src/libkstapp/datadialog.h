@@ -87,6 +87,7 @@ class DataDialog : public Dialog {
     ObjectPtr _dataObject;
     EditMode _mode;
     bool _modified;
+    int _coreWindowWidth;
 };
 
 }

@@ -83,7 +83,8 @@ CurveTab::CurveTab(QWidget *parent)
   connect(_ignoreAutoScale, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_xMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
   connect(_yMinusSameAsPlus, SIGNAL(stateChanged(int)), this, SIGNAL(modified()));
-
+  connect(_manualLegendName, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_autoLegend, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
 }
 
 
@@ -284,6 +285,28 @@ void CurveTab::setPlotMode(PlotItem *plot) {
 
 }
 
+QString CurveTab::manualLegendName() const {
+  if (_autoLegend->isChecked()) {
+    return QString();
+  } else {
+    return _manualLegendName->text();
+  }
+}
+
+void CurveTab::setManualLegendNameText(const QString &name) {
+  _manualLegendName->setText(name);
+}
+
+void CurveTab::setLegendAuto(bool is_auto) {
+  _autoLegend->setChecked(is_auto);
+}
+
+void CurveTab::setLegendNameVisible(bool visible) {
+  _autoLegend->setVisible(visible);
+  _manualLegendName->setVisible(visible);
+  _legendLabel->setVisible(visible);
+}
+
 void CurveTab::updateVectorCombos() {
   _xVector->fillVectors();
   _yVector->fillVectors();
@@ -329,13 +352,14 @@ CurveDialog::~CurveDialog() {
 // 
 
 void CurveDialog::editMultipleMode() {
+  _curveTab->setLegendNameVisible(false);
   _curveTab->clearTabValues();
 }
 
 void CurveDialog::editSingleMode() {
+  _curveTab->setLegendNameVisible(true);
    configureTab(dataObject());
 }
-
 
 void CurveDialog::configureTab(ObjectPtr object) {
   if (!object) {
@@ -371,6 +395,8 @@ void CurveDialog::configureTab(ObjectPtr object) {
     _curveTab->curveAppearance()->setPointDensity(curve->pointDensity());
     _curveTab->curveAppearance()->setBarFillColor(curve->barFillColor());
     _curveTab->curveAppearance()->setHeadType(curve->headType());
+    _curveTab->setManualLegendNameText(curve->legendName(true, true));
+    _curveTab->setLegendAuto(curve->manualLegendName().isEmpty());
     _curveTab->hidePlacementOptions();
     if (_editMultipleWidget) {
       CurveList objects = _document->objectStore()->getObjects<Curve>();
@@ -430,6 +456,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
   curve->setBarFillColor(_curveTab->curveAppearance()->barFillColor());
   curve->setHeadType(_curveTab->curveAppearance()->headType());
   curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
+  curve->setManualLegendName(_curveTab->manualLegendName());
 
   if (DataDialog::tagStringAuto()) {
      curve->setDescriptiveName(QString());
@@ -595,6 +622,8 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->setPointDensity(_curveTab->curveAppearance()->pointDensity());
       curve->setHeadType(_curveTab->curveAppearance()->headType());
       curve->setIgnoreAutoScale(_curveTab->ignoreAutoScale());
+      curve->setManualLegendName(_curveTab->manualLegendName());
+
       if (DataDialog::tagStringAuto()) {
          curve->setDescriptiveName(QString());
       } else {
