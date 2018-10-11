@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AboutDialog</class>
- <widget class="QDialog" name="AboutDialog">
+ <class>ShortcutDialog</class>
+ <widget class="QDialog" name="ShortcutDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>386</width>
-    <height>283</height>
+    <width>476</width>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string comment="kst is the name of the app.">About Kst</string>
+   <string comment="kst is the name of the app.">Kst keyboard shortcuts</string>
   </property>
-  <layout class="QGridLayout">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QHBoxLayout">
      <item>
@@ -34,7 +34,7 @@
         </font>
        </property>
        <property name="text">
-        <string comment="the name of the app, but no other meaning.">Kst</string>
+        <string comment="the name of the app, but no other meaning.">Kst shortcuts</string>
        </property>
       </widget>
      </item>
@@ -54,16 +54,9 @@
     </spacer>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QTextBrowser" name="text">
-     <property name="openExternalLinks">
-      <bool>true</bool>
-     </property>
-     <property name="openLinks">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <widget class="QTextEdit" name="text"/>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="2" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -82,7 +75,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>clicked(QAbstractButton*)</signal>
-   <receiver>AboutDialog</receiver>
+   <receiver>ShortcutDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

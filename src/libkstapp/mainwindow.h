@@ -46,6 +46,7 @@ class BugReportWizard;
 class ApplicationSettingsDialog;
 class ThemeDialog;
 class AboutDialog;
+class ShortcutDialog;
 class TabWidget;
 class View;
 class ScriptServer;
@@ -145,6 +146,7 @@ public Q_SLOTS:
   private Q_SLOTS:
     void aboutToQuit();
     void about();
+    void showShortcutDialog();
     void currentViewChanged();
     void currentViewModeChanged();
 
@@ -234,6 +236,7 @@ public Q_SLOTS:
     ApplicationSettingsDialog *_applicationSettingsDialog;
     ThemeDialog *_themeDialog;
     AboutDialog* _aboutDialog;
+    ShortcutDialog* _shortcutDialog;
     ViewVectorDialog* _viewVectorDialog;
     QSignalMapper* _videoMapper;
     QPointer<QProgressBar> _progressBar;
@@ -283,6 +286,7 @@ public Q_SLOTS:
     QAction *_createSharedAxisBoxAct;
 
     QAction *_aboutAct;
+    QAction *_showShortcutAct;
     QAction *_dataManagerAct;
     QAction *_debugDialogAct;
     QAction *_video1Act;

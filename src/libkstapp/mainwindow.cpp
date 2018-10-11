@@ -54,6 +54,7 @@
 #include "bugreportwizard.h"
 #include "datawizard.h"
 #include "aboutdialog.h"
+#include "shortcutdialog.h"
 #include "datavector.h"
 #include "commandlineparser.h"
 #include "dialogdefaults.h"
@@ -100,6 +101,7 @@ MainWindow::MainWindow() :
     _applicationSettingsDialog(0),
     _themeDialog(0),
     _aboutDialog(0),
+    _shortcutDialog(0),
     _viewVectorDialog(0),
     _highlightPoint(false),
     _statusBarTimeout(0),
@@ -920,6 +922,20 @@ void MainWindow::about() {
 }
 
 
+void MainWindow::showShortcutDialog() {
+  if (!_shortcutDialog) {
+    _shortcutDialog = new ShortcutDialog(this);
+  } else if (_shortcutDialog->isVisible()) {
+    _shortcutDialog->raise();
+    _shortcutDialog->activateWindow();
+  }
+  _shortcutDialog->show();
+
+  _shortcutDialog->resetWidth();
+
+}
+
+
 void MainWindow::clearDrawingMarker() {
   _createBoxAct->setChecked(false);
   _createSharedAxisBoxAct->setChecked(false);
@@ -1500,6 +1516,10 @@ void MainWindow::createActions() {
   _aboutAct->setIcon(KstGetIcon("dialog-information"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
+  _showShortcutAct = new QAction(tr("Keyboard Shortcuts"), this);
+  _showShortcutAct->setStatusTip(tr("Show a list of keyboard shortcuts"));
+  connect(_showShortcutAct, SIGNAL(triggered()), this, SLOT(showShortcutDialog()));
+
   _video1Act = new QAction(tr("#&1: Quick Start"), this);
   _video1Act->setStatusTip(tr("Kst presentation #1: The shortest tutorial to the fastest plotting tool"));
   connect(_video1Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
@@ -1690,6 +1710,7 @@ void MainWindow::createMenus() {
   _helpMenu->addAction(_debugDialogAct);
   _helpMenu->addAction(_bugReportWizardAct);
   _helpMenu->addSeparator();
+  _helpMenu->addAction(_showShortcutAct);
   _helpMenu->addAction(_aboutAct);
 
 }

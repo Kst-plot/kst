@@ -56,7 +56,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     << "Zongyi Zang";
 #endif
 
-  authors.sort();
+  //authors.sort();
   authors.replaceInStrings("<", "&lt;");
   authors.replaceInStrings(">", "&gt;");
   authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
@@ -71,7 +71,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   << tr("Copyright &copy; 2000-2017 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst-plot.kde.org/\">http://kst-plot.kde.org/</a><br>")
   << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")
-  << tr("<br>Authors and contributors (sorted alphabetically):")
+  << tr("<br>Authors and contributors:")
   << QString("<ul>")
   << authors
   << QString("</ul>");

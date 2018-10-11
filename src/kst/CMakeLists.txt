@@ -17,6 +17,7 @@ if(WIN32)
 endif()
 
 kst_add_resources(src/images/icons.qrc)
+kst_add_resources(src/kst/helppages.qrc)
 
 kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/*)
 kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/modules/*)
