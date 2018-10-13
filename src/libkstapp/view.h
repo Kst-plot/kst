@@ -19,7 +19,7 @@
 
 #include "curveplacement.h"
 
-
+class QMenu;
 class QUndoStack;
 class QXmlStreamWriter;
 
