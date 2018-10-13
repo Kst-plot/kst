@@ -101,7 +101,7 @@ void View::init()
   _protectedLayoutAction = new QAction(tr("Protect Layout"), this);
   connect(_protectedLayoutAction, SIGNAL(triggered()), this, SLOT(createLayout()));
 
-  _customLayoutAction = new QAction(tr("Custom"), this);
+  _customLayoutAction = new QAction(tr("Columns"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
   connect(this, SIGNAL(viewModeChanged(View::ViewMode)), PlotItemManager::self(), SLOT(clearFocusedPlots()));
@@ -673,7 +673,7 @@ void View::viewContextMenuEvent() {
   QMenu layoutMenu;
   layoutMenu.setTitle(tr("Cleanup Layout"));
   layoutMenu.addAction(_autoLayoutAction);
-  layoutMenu.addAction(_protectedLayoutAction);
+  //layoutMenu.addAction(_protectedLayoutAction);
   layoutMenu.addAction(_customLayoutAction);
   menu.addMenu(&layoutMenu);
 

@@ -1242,24 +1242,29 @@ void MainWindow::createActions() {
   // ************************ Data Range 1 click Actions ************************** //
   _backAct = new QAction(tr("&Back One Screen"), this);
   _backAct->setStatusTip(tr("Back one screen (Page Up)"));
+  _backAct->setToolTip(tr("Back one screen (Page Up)"));
   _backAct->setIcon(KstGetIcon("page-previous"));
   _backAct->setShortcut(Qt::Key_PageUp);
+
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
   _forwardAct = new QAction(tr("&Forward One Screen"), this);
   _forwardAct->setStatusTip(tr("Forward one screen (Page Down)"));
+  _forwardAct->setToolTip(tr("Forward one screen (Page Down)"));
   _forwardAct->setIcon(KstGetIcon("page-next"));
   _forwardAct->setShortcut(Qt::Key_PageDown);
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
   _readFromEndAct->setStatusTip(tr("Count from end mode (End)"));
+  _readFromEndAct->setToolTip(tr("Count from end mode (End)"));
   _readFromEndAct->setIcon(KstGetIcon("count-from-end"));
   _readFromEndAct->setShortcut(Qt::Key_End);
   connect(_readFromEndAct, SIGNAL(triggered()), this, SLOT(readFromEnd()));
 
   _readToEndAct = new QAction(tr("&Read to End"), this);
   _readToEndAct->setStatusTip(tr("Read to end mode"));
+  _readToEndAct->setToolTip(tr("Read to end mode (shift+end)"));
   _readToEndAct->setIcon(KstGetIcon("read-to-end"));
   _readToEndAct->setShortcut(Qt::ShiftModifier+Qt::Key_End);
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
@@ -1269,10 +1274,13 @@ void MainWindow::createActions() {
   _pauseAct->setCheckable(true);
   _pauseAct->setShortcut(tr("p", "shortcut for pause"));
   _pauseAct->setStatusTip(tr("Toggle pause updates of data sources (%1)").arg(_pauseAct->shortcut().toString()));
+  _pauseAct->setToolTip(tr("Toggle \"Pause Data Sources\" (%1)").arg(_pauseAct->shortcut().toString()));
   connect(_pauseAct, SIGNAL(toggled(bool)), this, SLOT(pause(bool)));
 
   _changeDataSampleDialogAct = new QAction(tr("Change Data &Sample Range..."), this);
-  _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog"));
+  _changeDataSampleDialogAct->setShortcut(tr("J", "shortcut change data sample dialog"));
+  _changeDataSampleDialogAct->setStatusTip(tr("Show Kst's Change Data Sample Range Dialog (%1)").arg(_changeDataSampleDialogAct->shortcut().toString()));
+  _changeDataSampleDialogAct->setToolTip(tr("Change Data Sample Range (%1)").arg(_changeDataSampleDialogAct->shortcut().toString()));
   _changeDataSampleDialogAct->setIcon(KstGetIcon("kst_changenpts"));
   connect(_changeDataSampleDialogAct, SIGNAL(triggered()), this, SLOT(showChangeDataSampleDialog()));
 
@@ -1281,6 +1289,7 @@ void MainWindow::createActions() {
   _insertPlotAct->setIcon(KstGetIcon("kst_newplot"));
   _insertPlotAct->setShortcut(QString("F11"));
   _insertPlotAct->setStatusTip(tr("Insert a plot in the current view (%1)").arg(_insertPlotAct->shortcut().toString()));
+  _insertPlotAct->setToolTip(tr("New plot (%1)").arg(_insertPlotAct->shortcut().toString()));
   _insertPlotAct->setCheckable(false);
   connect(_insertPlotAct, SIGNAL(triggered()), this, SLOT(insertPlot()));
 
@@ -1329,6 +1338,7 @@ void MainWindow::createActions() {
   _createLabelAct->setIcon(KstGetIcon("kst_gfx_label"));
   _createLabelAct->setShortcut(QString("F3"));
   _createLabelAct->setStatusTip(tr("Create a label for the current view (%1)").arg(_createLabelAct->shortcut().toString()));
+  _createLabelAct->setToolTip(tr("Create label (%1)").arg(_createLabelAct->shortcut().toString()));
   _createLabelAct->setCheckable(true);
   connect(_createLabelAct, SIGNAL(triggered()), this, SLOT(createLabel()));
 
@@ -1336,6 +1346,7 @@ void MainWindow::createActions() {
   _createBoxAct->setIcon(KstGetIcon("kst_gfx_rectangle"));
   _createBoxAct->setShortcut(QString("F4"));
   _createBoxAct->setStatusTip(tr("Create a box for the current view (%1)").arg(_createBoxAct->shortcut().toString()));
+  _createBoxAct->setToolTip(tr("Create box (%1)").arg(_createBoxAct->shortcut().toString()));
   _createBoxAct->setCheckable(true);
   connect(_createBoxAct, SIGNAL(triggered()), this, SLOT(createBox()));
 
@@ -1343,6 +1354,7 @@ void MainWindow::createActions() {
   _createCircleAct->setIcon(KstGetIcon("kst_gfx_circle"));
   _createCircleAct->setShortcut(QString("F5"));
   _createCircleAct->setStatusTip(tr("Create a circle for the current view (%1)").arg(_createCircleAct->shortcut().toString()));
+  _createCircleAct->setToolTip(tr("Create circle (%1)").arg(_createCircleAct->shortcut().toString()));
   _createCircleAct->setCheckable(true);
   connect(_createCircleAct, SIGNAL(triggered()), this, SLOT(createCircle()));
 
@@ -1350,6 +1362,7 @@ void MainWindow::createActions() {
   _createEllipseAct->setIcon(KstGetIcon("kst_gfx_ellipse"));
   _createEllipseAct->setShortcut(QString("F6"));
   _createEllipseAct->setStatusTip(tr("Create an ellipse for the current view (%1)").arg(_createEllipseAct->shortcut().toString()));
+  _createEllipseAct->setToolTip(tr("Create ellipse (%1)").arg(_createEllipseAct->shortcut().toString()));
   _createEllipseAct->setCheckable(true);
   connect(_createEllipseAct, SIGNAL(triggered()), this, SLOT(createEllipse()));
 
@@ -1357,6 +1370,7 @@ void MainWindow::createActions() {
   _createLineAct->setIcon(KstGetIcon("kst_gfx_line"));
   _createLineAct->setShortcut(QString("F7"));
   _createLineAct->setStatusTip(tr("Create a line for the current view (%1)").arg(_createLineAct->shortcut().toString()));
+  _createLineAct->setToolTip(tr("Create line (%1)").arg(_createLineAct->shortcut().toString()));
   _createLineAct->setCheckable(true);
   connect(_createLineAct, SIGNAL(triggered()), this, SLOT(createLine()));
 
@@ -1364,6 +1378,7 @@ void MainWindow::createActions() {
   _createArrowAct->setIcon(KstGetIcon("kst_gfx_arrow"));
   _createArrowAct->setShortcut(QString("F8"));
   _createArrowAct->setStatusTip(tr("Create a arrow for the current view (%1)").arg(_createArrowAct->shortcut().toString()));
+  _createArrowAct->setToolTip(tr("Create arrow (%1)").arg(_createArrowAct->shortcut().toString()));
   _createArrowAct->setCheckable(true);
   connect(_createArrowAct, SIGNAL(triggered()), this, SLOT(createArrow()));
 
@@ -1371,6 +1386,7 @@ void MainWindow::createActions() {
   _createPictureAct->setIcon(KstGetIcon("insert-image"));
   _createPictureAct->setShortcut(QString("F9"));
   _createPictureAct->setStatusTip(tr("Create a picture for the current view (%1)").arg(_createPictureAct->shortcut().toString()));
+  _createPictureAct->setToolTip(tr("Create picture (%1)").arg(_createPictureAct->shortcut().toString()));
   _createPictureAct->setCheckable(true);
   connect(_createPictureAct, SIGNAL(triggered()), this, SLOT(createPicture()));
 
@@ -1379,6 +1395,7 @@ void MainWindow::createActions() {
   _createSvgAct->setIcon(KstGetIcon("draw-bezier-curves"));
   _createSvgAct->setShortcut(QString("F10"));
   _createSvgAct->setStatusTip(tr("Create a svg for the current view (%1)").arg(_createSvgAct->shortcut().toString()));
+  _createSvgAct->setToolTip(tr("Create embedded svg image (%1)").arg(_createSvgAct->shortcut().toString()));
   _createSvgAct->setCheckable(true);
   connect(_createSvgAct, SIGNAL(triggered()), this, SLOT(createSvg()));
 #endif
@@ -1387,7 +1404,6 @@ void MainWindow::createActions() {
   _createSharedAxisBoxAct->setStatusTip(tr("Create a shared axis box for the current item"));
   _createSharedAxisBoxAct->setIcon(KstGetIcon("kst_gfx_sharedaxisbox"));
   _createSharedAxisBoxAct->setCheckable(true);
-  //_createSharedAxisBoxAct->setEnabled(false);
   connect(_createSharedAxisBoxAct, SIGNAL(triggered()), this, SLOT(createSharedAxisBox()));
 
   // ************************** Mode Actions ******************************* //
@@ -1395,7 +1411,9 @@ void MainWindow::createActions() {
   _tiedZoomAct = new QAction(tr("&Toggle Tied Zoom"), this);
   _tiedZoomAct->setIcon(KstGetIcon("tied-zoom"));
   _tiedZoomAct->setCheckable(false);
+  _tiedZoomAct->setShortcut(Qt::Key_O);
   _tiedZoomAct->setStatusTip(tr("Toggle the current view's tied zoom (%1)").arg(_tiedZoomAct->shortcut().toString()));
+  _tiedZoomAct->setToolTip(tr("Toggle tied zoom (%1)").arg(_tiedZoomAct->shortcut().toString()));
   connect(_tiedZoomAct, SIGNAL(triggered()), this, SLOT(toggleTiedZoom()));
 
   _tabTiedAct = new QAction(tr("Tie &Across All Tabs"), this);
@@ -1406,7 +1424,9 @@ void MainWindow::createActions() {
 
 
   _highlightPointAct = new QAction(tr("&Highlight Data Points"), this);
-  _highlightPointAct->setStatusTip(tr("Highlight closest data point"));
+  _highlightPointAct->setShortcut(QString("h"));
+  _highlightPointAct->setStatusTip(tr("Highlight closest data point (%1)").arg(_highlightPointAct->shortcut().toString()));
+  _highlightPointAct->setToolTip(tr("Highlight closest data point (%1)").arg(_highlightPointAct->shortcut().toString()));
   _highlightPointAct->setIcon(KstGetIcon("kst_datamode"));
   _highlightPointAct->setCheckable(true);
   connect(_highlightPointAct, SIGNAL(toggled(bool)), this, SLOT(setHighlightPoint(bool)));
@@ -1415,23 +1435,26 @@ void MainWindow::createActions() {
   // Then, exclusive interaction modes
   QActionGroup* _interactionModeGroup = new QActionGroup(this);
 
-  _standardZoomAct = _interactionModeGroup->addAction(tr("X-Y &Zoom/Scroll"));
+  _standardZoomAct = _interactionModeGroup->addAction(tr("X-Y Zoom/Scroll"));
   _standardZoomAct->setStatusTip(tr("Zoom arbitrarily in X- or Y-direction"));
-  //TODO _standardZoomAct->setShortcut(QString("a"));
+  _standardZoomAct->setShortcut(Qt::Key_K);
+  _standardZoomAct->setToolTip(tr("X-Y Zoom mode (%1)").arg(_standardZoomAct->shortcut().toString()));
   _standardZoomAct->setCheckable(true);
   _standardZoomAct->setData(View::ZoomOnlyDisabled);
   _standardZoomAct->setIcon(KstGetIcon("xy-zoom"));
 
   _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
   _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  //TODO _xOnlyZoomAct->setShortcut(QString("x"));
+  _xOnlyZoomAct->setShortcut(Qt::CTRL + Qt::Key_K);
+  _xOnlyZoomAct->setToolTip(tr("X Zoom mode (%1)").arg(_xOnlyZoomAct->shortcut().toString()));
   _xOnlyZoomAct->setCheckable(true);
   _xOnlyZoomAct->setData(View::ZoomOnlyX);
   _xOnlyZoomAct->setIcon(KstGetIcon("x-zoom"));
 
   _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
-  _yOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  //TODO _yOnlyZoomAct->setShortcut(QString("y"));
+  _yOnlyZoomAct->setStatusTip(tr("Zoom only in Y direction"));
+  _yOnlyZoomAct->setShortcut(Qt::SHIFT + Qt::Key_K);
+  _yOnlyZoomAct->setToolTip(tr("Y Zoom mode (%1)").arg(_yOnlyZoomAct->shortcut().toString()));
   _yOnlyZoomAct->setData(View::ZoomOnlyY);
   _yOnlyZoomAct->setCheckable(true);
   _yOnlyZoomAct->setIcon(KstGetIcon("y-zoom"));
@@ -1441,27 +1464,32 @@ void MainWindow::createActions() {
   _layoutModeAct->setCheckable(true);
   _layoutModeAct->setShortcut(QString("F2"));
   _layoutModeAct->setStatusTip(tr("Toggle the current view's layout mode (%1)").arg(_layoutModeAct->shortcut().toString()));
+  _layoutModeAct->setToolTip(tr("Layout mode (%1)").arg(_layoutModeAct->shortcut().toString()));
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
   _interactionModeGroup->setExclusive(true);
   connect(_interactionModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeZoomOnlyMode(QAction*)));
 
   // *********************** Tools actions ************************************** //
-  _dataManagerAct = new QAction(tr("Data &Manager"), this);
+  _dataManagerAct = new QAction(tr("Data Manager"), this);
   _dataManagerAct->setIcon(KstGetIcon("data-manager"));
   _dataManagerAct->setShortcut(QString("d"));
   _dataManagerAct->setStatusTip(tr("Show Kst's data manager window (%1)").arg(_dataManagerAct->shortcut().toString()));
+  _dataManagerAct->setToolTip(tr("Show Data Manager (%1)").arg(_dataManagerAct->shortcut().toString()));
   connect(_dataManagerAct, SIGNAL(triggered()), this, SLOT(showDataManager()));
 
   _dataWizardAct = new QAction(tr("&Data Wizard"), this);
   _dataWizardAct->setIcon(KstGetIcon("tools-wizard"));
   _dataWizardAct->setShortcut(QString("w"));
   _dataWizardAct->setStatusTip(tr("Show Kst's Data Wizard (%1)").arg(_dataWizardAct->shortcut().toString()));
+  _dataWizardAct->setToolTip(tr("Show Data Wizard (%1)").arg(_dataWizardAct->shortcut().toString()));
   connect(_dataWizardAct, SIGNAL(triggered()), this, SLOT(showDataWizard()));
 
   _changeFileDialogAct = new QAction(tr("Change Data &File"), this);
   _changeFileDialogAct->setIcon(KstGetIcon("change-data-file"));
   _changeFileDialogAct->setStatusTip(tr("Show Kst's Change Data File Dialog (%1)").arg(_changeFileDialogAct->shortcut().toString()));
+  _changeFileDialogAct->setShortcut(QString("f"));
+  _changeFileDialogAct->setToolTip(tr("Show Change Data File Dialog (%1)").arg(_changeFileDialogAct->shortcut().toString()));
   connect(_changeFileDialogAct, SIGNAL(triggered()), this, SLOT(showChangeFileDialog()));
 
   _chooseColorDialogAct = new QAction(tr("Assign Curve &Color per File"), this);

@@ -131,6 +131,21 @@ ViewItem::ViewItem(View *parentView) :
   _customLayoutAction = new QAction(tr("Columns"), this);
   connect(_customLayoutAction, SIGNAL(triggered()), this, SLOT(createCustomLayout()));
 
+  _oneColumnLayoutAction = new QAction(tr("1 Column"), this);
+  _oneColumnLayoutAction->setShortcut(Qt::Key_1);
+  registerShortcut(_oneColumnLayoutAction);
+  connect(_oneColumnLayoutAction, SIGNAL(triggered()), this, SLOT(createOneColLayout()));
+
+  _twoColumnLayoutAction = new QAction(tr("2 Columns"), this);
+  _twoColumnLayoutAction->setShortcut(Qt::Key_2);
+  registerShortcut(_twoColumnLayoutAction);
+  connect(_twoColumnLayoutAction, SIGNAL(triggered()), this, SLOT(createTwoColLayout()));
+
+  _threeColumnLayoutAction = new QAction(tr("3 Column"), this);
+  _threeColumnLayoutAction->setShortcut(Qt::Key_3);
+  registerShortcut(_threeColumnLayoutAction);
+  connect(_threeColumnLayoutAction, SIGNAL(triggered()), this, SLOT(createThreeColLayout()));
+
   _lockPosToDataAction = new QAction(tr("&Lock Position to Data"),this);
   _lockPosToDataAction->setCheckable(true);
   connect(_lockPosToDataAction, SIGNAL(toggled(bool)), this, SLOT(setLockPosToData(bool)));
@@ -1232,8 +1247,11 @@ void ViewItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
   QMenu *layoutMenu = menu.addMenu(tr("Cleanup Layout"));
   layoutMenu->setTitle(tr("Cleanup Layout"));
   layoutMenu->addAction(_autoLayoutAction);
-  layoutMenu->addAction(_protectedLayoutAction);
+  //layoutMenu->addAction(_protectedLayoutAction);
   layoutMenu->addAction(_customLayoutAction);
+  layoutMenu->addAction(_oneColumnLayoutAction);
+  layoutMenu->addAction(_twoColumnLayoutAction);
+  layoutMenu->addAction(_threeColumnLayoutAction);
   //}
 
   menu.addAction(_editAction);

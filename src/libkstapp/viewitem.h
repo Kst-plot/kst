@@ -277,6 +277,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     virtual void createAutoLayout();
     virtual void createProtectedLayout();
     virtual void createCustomLayout(int columns = 0);
+    virtual void createOneColLayout() {createCustomLayout(1);}
+    virtual void createTwoColLayout() {createCustomLayout(2);}
+    virtual void createThreeColLayout() {createCustomLayout(3);}
     virtual void sharePlots(QPainter *painter, bool creation);
     virtual void remove();
     void resizeTopLeft(const QPointF &offset);
@@ -344,6 +347,9 @@ class ViewItem : public QObject, public NamedObject, public QGraphicsRectItem
     QAction *_autoLayoutAction;
     QAction *_protectedLayoutAction;
     QAction *_customLayoutAction;
+    QAction *_oneColumnLayoutAction;
+    QAction *_twoColumnLayoutAction;
+    QAction *_threeColumnLayoutAction;
     QAction *_lockPosToDataAction;
 
     bool _isXTiedZoom;
