@@ -141,7 +141,7 @@ ViewItem::ViewItem(View *parentView) :
   registerShortcut(_twoColumnLayoutAction);
   connect(_twoColumnLayoutAction, SIGNAL(triggered()), this, SLOT(createTwoColLayout()));
 
-  _threeColumnLayoutAction = new QAction(tr("3 Column"), this);
+  _threeColumnLayoutAction = new QAction(tr("3 Columns"), this);
   _threeColumnLayoutAction->setShortcut(Qt::Key_3);
   registerShortcut(_threeColumnLayoutAction);
   connect(_threeColumnLayoutAction, SIGNAL(triggered()), this, SLOT(createThreeColLayout()));
