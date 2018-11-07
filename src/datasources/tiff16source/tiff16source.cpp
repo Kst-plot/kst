@@ -51,7 +51,7 @@ class Tiff16Source::Config {
 class DataInterfaceTiff16Vector : public DataSource::DataInterface<DataVector>
 {
 public:
-  DataInterfaceTiff16Vector(unsigned short **z) : _z(z) {}
+  DataInterfaceTiff16Vector(unsigned short **z) : _z(z), _frameCount(0) {}
 
   // read one element
   int read(const QString&, DataVector::ReadInfo&);

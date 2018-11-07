@@ -102,7 +102,8 @@ void DataSource::_initializeShortName() {
   _datasourcenum++;
 }
 
-bool DataSource::isValid() const {
+bool Kst::DataSource::isValid() const
+{
   return _valid;
 }
 

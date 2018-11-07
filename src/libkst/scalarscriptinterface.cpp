@@ -25,8 +25,8 @@ namespace Kst {
 /******************************************************/
 /* Generated Scalars                                  */
 /******************************************************/
-ScalarGenSI::ScalarGenSI(ScalarPtr it) {
-    scalar=it;
+ScalarGenSI::ScalarGenSI(ScalarPtr it) : scalar(it) {
+    //scalar=it;
 }
 
 QString ScalarGenSI::doCommand(QString x) {
@@ -68,8 +68,8 @@ QByteArray ScalarGenSI::endEditUpdate() {
 /******************************************************/
 /* Data Scalars                                       */
 /******************************************************/
-ScalarDataSI::ScalarDataSI(DataScalarPtr it) {
-    scalar=it;
+ScalarDataSI::ScalarDataSI(DataScalarPtr it) : scalar(it) {
+    //scalar=it;
 }
 
 QString ScalarDataSI::doCommand(QString x) {
@@ -118,8 +118,8 @@ QByteArray ScalarDataSI::endEditUpdate() {
 /******************************************************/
 /* Vector Scalars                                       */
 /******************************************************/
-ScalarVectorSI::ScalarVectorSI(VScalarPtr it) {
-    scalar=it;
+ScalarVectorSI::ScalarVectorSI(VScalarPtr it) : scalar(it) {
+    //scalar=it;
 }
 
 QString ScalarVectorSI::doCommand(QString x) {

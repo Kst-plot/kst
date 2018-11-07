@@ -91,8 +91,8 @@ QString MatrixCommonSI::store(QString & command) {
 /******************************************************/
 /* Data Matrix                                        */
 /******************************************************/
-DataMatrixSI::DataMatrixSI(DataMatrixPtr it) {
-    _datamatrix = it;
+DataMatrixSI::DataMatrixSI(DataMatrixPtr it) : _datamatrix(it) {
+    //_datamatrix = it;
     _matrix = it;
 
     _fnMap.insert("change",&DataMatrixSI::change);
@@ -207,8 +207,8 @@ QString DataMatrixSI::startY(QString& command) {
 /******************************************************/
 /* Editable Matrix                                        */
 /******************************************************/
-EditableMatrixSI::EditableMatrixSI(EditableMatrixPtr it) {
-    _editablematrix = it;
+EditableMatrixSI::EditableMatrixSI(EditableMatrixPtr it) : _editablematrix(it) {
+    //_editablematrix = it;
     _matrix = it;
 
     _fnMap.insert("load", &EditableMatrixSI::load);

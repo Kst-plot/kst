@@ -25,7 +25,7 @@
 #include "common.h"
 
 struct data {
-  size_t	n;
+  int	n;
   const double*	pdX;
   const double* pdY;
 };
@@ -50,7 +50,7 @@ int function_f( const gsl_vector* pVectorX, void* pParams, gsl_vector* pVectorF 
   double 	dParameters[NUM_PARAMS];
   double	dY;
   data*	 	pData	= (data*)pParams;
-  size_t 	i;
+  int 	    i;
 
   for( i=0; i<n_params; i++ ) {
     dParameters[i] = gsl_vector_get( pVectorX, i );
@@ -69,8 +69,8 @@ int function_df( const gsl_vector* pVectorX, void* pParams, gsl_matrix* pMatrixJ
   double dParameters[NUM_PARAMS];
   double dDerivatives[NUM_PARAMS];
   data*	 pData	= (data*)pParams;
-  size_t i;
-  size_t j;
+  int i;
+  int j;
 
   for( i=0; i<n_params; i++ ) {
     dParameters[i] = gsl_vector_get( pVectorX, i );

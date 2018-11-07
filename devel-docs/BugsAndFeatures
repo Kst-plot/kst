@@ -1,5 +1,41 @@
 BUGS
 
+Bug 394448
+
+What I did:
+1. Load a small ASCII data file with the data wizard, and create a plot
+2. Save to new .kst file and close kst
+3. Start kst and open this .kst file again
+4. Go to change data file dialog and select a different ASCII file, click ok
+5. Go to change data file dialog again, select the ASCII file from step 1.
+
+What I expected: The data file from step 1 should be accepted and plotted, because the file is ok and still in its location.
+
+What happened: The file is not accepted, the program returns: "The file could not be loaded or contains no data."
+
+I downloaded the latest source code and traced the message back to method ChangeFileDialog::apply(), where the message box is created upon !_dataSource->isValid().
+
+The _isValid attribute is false, because it is set to false by call to method reset() in AsciiSource::parseProperties. This method is called when the .kst file is loaded, after creation of the AsciiSource.
+
+I removed the call to reset() and the problem dissapeared. I did not create a patch because I'm not sure about side effects.
+
+
+---------------
+342904
+
+We have a data source file where we log temperatures. The unit in this case is °C (alt-167).
+
+When plotting this, the axis labels get a ? in a black box. When adding an Annotation or changing the ? black box in the label dialogue, we can enter alt-167 and get the correct º Symbol.
+
+---------------
+
+Bug 318141
+
+When double clicking on an element in the available or selected list in the "Differentiate Curves" dialog nothing happens. It should trigger an add or remove action depending on the list in which the item resides. This is a bug because the behavior is inconsistent with other dialogs, which have the same layout (e.g. Data Wizard)
+
+Reproducible: Always
+
+
 Manuel
  ---------------
 

@@ -51,7 +51,7 @@ class QImageSource::Config {
 class DataInterfaceQImageVector : public DataSource::DataInterface<DataVector>
 {
 public:
-  DataInterfaceQImageVector(QImage* img) : _image(img) {}
+  DataInterfaceQImageVector(QImage* img) : _image(img), _frameCount(0) {}
 
   // read one element
   int read(const QString&, DataVector::ReadInfo&);

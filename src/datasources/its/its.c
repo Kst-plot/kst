@@ -40,10 +40,12 @@ ITSfile *ITSopen(char *filename) {
   its->fp_data = open(filename, O_RDONLY);
   if (its->fp_data<0) {
     its->status = ITS_NOOPEN;
-    return (its);
+  free(index_filename);
+  return (its);
   }
 
   its->fp_index = open(index_filename, O_RDONLY);
+  free(index_filename);
   if (its->fp_index<0) {
     its->status = ITS_NOOPEN;
     return (its);
@@ -135,7 +137,7 @@ int ITSnframes(ITSfile *its) {
 
 int ITSreadimage(ITSfile *its, int frame, int i_img, ITSimage *I) {
   int nframes;
-  unsigned offset;
+  off_t offset;
   int nr;
   uint64_t index;
   unsigned char buf_in[1024];
@@ -201,11 +203,12 @@ int ITSreadimage(ITSfile *its, int frame, int i_img, ITSimage *I) {
 
   // Now read in the actual image
   offset = lseek(its->fp_data, i_img*(img_size + 4), SEEK_CUR);
-  nr  = read(its->fp_data, &(I->x), 2);
-  nr += read(its->fp_data, &(I->y), 2);
-  nr += read(its->fp_data, I->img, img_size);
-
-  if (nr != img_size + 4) {
+  if (offset>=0) {
+    nr  = read(its->fp_data, &(I->x), 2);
+    nr += read(its->fp_data, &(I->y), 2);
+    nr += read(its->fp_data, I->img, img_size);
+  }
+  if ((offset<0) || (nr != img_size + 4)) {
     I->w = I->h = I->x = I->y = 0;
     return 0;
   }

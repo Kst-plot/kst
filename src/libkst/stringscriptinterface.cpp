@@ -21,8 +21,8 @@
 
 namespace Kst {
 
-StringGenSI::StringGenSI(StringPtr it) {
-    str=it;
+StringGenSI::StringGenSI(StringPtr it) : str(it) {
+    //str=it;
 }
 
 QString StringGenSI::doCommand(QString x) {
@@ -63,8 +63,8 @@ QByteArray StringGenSI::endEditUpdate() {
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-StringDataSI::StringDataSI(DataStringPtr it) {
-    str=it;
+StringDataSI::StringDataSI(DataStringPtr it) : str(it) {
+    //str=it;
 }
 
 QString StringDataSI::doCommand(QString x) {

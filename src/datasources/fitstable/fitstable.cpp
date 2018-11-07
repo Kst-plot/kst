@@ -358,6 +358,7 @@ bool FitsTableSource::init() {
       fits_close_file( _fptr, &status );
       _fptr = 0L;
       _valid = false;
+      free(naxes);
       return false;
    }
    _scalars.clear();
@@ -386,6 +387,7 @@ bool FitsTableSource::init() {
       fits_report_error(stderr,status);
       _fptr = 0L;
       _valid = false;
+      free(naxes);
       return false;
    } /* can't read number of HDUs, so quit */
 

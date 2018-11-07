@@ -406,7 +406,7 @@ class KSTCORE_EXPORT ValidateDataSourceThread : public QObject, public QRunnable
     void dataSourceInvalid(int requestID);
 
   private:
-    ObjectStore *_store;
+    //ObjectStore *_store;
     QString _file;
     int _requestID;
 };

@@ -90,7 +90,7 @@ void LegendItem::paint(QPainter *painter) {
 
   // generate string list of relation names
   QStringList names;
-  bool allAuto = true;
+  //bool allAuto = true;
   bool sameX = true;
   bool sameYUnits = true;
 
@@ -100,7 +100,7 @@ void LegendItem::paint(QPainter *painter) {
   for (int i = 0; i<count; i++) {
     RelationPtr relation = legendItems.at(i);
     if (relation->descriptiveNameIsManual()) {
-      allAuto = false;
+      //allAuto = false;
     }
     if (relation->xLabelInfo() != label_info) {
       sameX = false;
