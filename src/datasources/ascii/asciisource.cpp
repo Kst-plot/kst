@@ -113,7 +113,7 @@ void AsciiSource::reset()
   _reader.clear();
   _haveWarned = false;
 
-  _valid = false;
+  //_valid = false;
   _fileSize = 0;
   _lastFileSize = 0;
   _haveHeader = false;
