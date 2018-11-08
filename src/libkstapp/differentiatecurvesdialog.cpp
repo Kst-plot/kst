@@ -47,6 +47,8 @@ DifferentiateCurvesDialog::DifferentiateCurvesDialog(QWidget *parent)
   connect(_down, SIGNAL(clicked()), this, SLOT(downButtonClicked()));
   connect(_availableListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
   connect(_selectedListBox, SIGNAL(itemSelectionChanged()), this, SLOT(updateButtons()));
+  connect(_availableListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(addButtonClicked()));
+  connect(_selectedListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeButtonClicked()));
 
   // Use the standard icons
   _up->setIcon(KstGetIcon("kst_uparrow"));
