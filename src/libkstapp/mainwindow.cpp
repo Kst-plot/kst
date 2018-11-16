@@ -1245,7 +1245,6 @@ void MainWindow::createActions() {
   _backAct->setToolTip(tr("Back one screen (Page Up)"));
   _backAct->setIcon(KstGetIcon("page-previous"));
   _backAct->setShortcut(Qt::Key_PageUp);
-
   connect(_backAct, SIGNAL(triggered()), this, SLOT(back()));
 
   _forwardAct = new QAction(tr("&Forward One Screen"), this);
@@ -1254,6 +1253,20 @@ void MainWindow::createActions() {
   _forwardAct->setIcon(KstGetIcon("page-next"));
   _forwardAct->setShortcut(Qt::Key_PageDown);
   connect(_forwardAct, SIGNAL(triggered()), this, SLOT(forward()));
+
+  _backSmallAct = new QAction(tr("&Back 1/5th Screen"), this);
+  _backSmallAct->setStatusTip(tr("Back 1/5th screen (Shift + Page Up)"));
+  _backSmallAct->setToolTip(tr("Back 1/5th screen (Shift + Page Up)"));
+  _backSmallAct->setIcon(KstGetIcon("page-previous"));
+  _backSmallAct->setShortcut(Qt::SHIFT + Qt::Key_PageDown);
+  connect(_backSmallAct, SIGNAL(triggered()), this, SLOT(backSmall()));
+
+  _forwardSmallAct = new QAction(tr("&Forward 1/5th Screen"), this);
+  _forwardSmallAct->setStatusTip(tr("Forward 1/5th screen (Page Down)"));
+  _forwardSmallAct->setToolTip(tr("Forward 1/5th screen (Page Down)"));
+  _forwardSmallAct->setIcon(KstGetIcon("page-next"));
+  _forwardSmallAct->setShortcut(Qt::SHIFT + Qt::Key_PageUp);
+  connect(_forwardSmallAct, SIGNAL(triggered()), this, SLOT(forwardSmall()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
   _readFromEndAct->setStatusTip(tr("Count from end mode (End)"));
@@ -1625,7 +1638,9 @@ void MainWindow::createMenus() {
 
   _rangeMenu = menuBar()->addMenu(tr("&Range"));
   _rangeMenu->addAction(_backAct);
+  _rangeMenu->addAction(_backSmallAct);  
   _rangeMenu->addAction(_forwardAct);
+  _rangeMenu->addAction(_forwardSmallAct);
   _rangeMenu->addSeparator();
   _rangeMenu->addAction(_readFromEndAct);
   _rangeMenu->addAction(_readToEndAct);
@@ -2008,7 +2023,7 @@ void MainWindow::pause(bool pause) {
   //}
 }
 
-void MainWindow::forward() {
+void MainWindow::forward(double scale) {
   int f0 = 0;
   int nf = 0;
   int lastF = -1;
@@ -2039,7 +2054,7 @@ void MainWindow::forward() {
     v->unlock();
 
     if ((!count_from_end) && (!read_to_end)) {
-      f0 += nf;
+      f0 += ceil(scale*nf);
       if (f0+nf>=filelength) {
         f0 = filelength - nf;
       }
@@ -2148,7 +2163,7 @@ void MainWindow::forward() {
   UpdateManager::self()->doUpdates(true);
 }
 
-void MainWindow::back() {
+void MainWindow::back(double scale) {
   int f0 = 0;
   int nf = 0;
   int skip;
@@ -2158,7 +2173,6 @@ void MainWindow::back() {
   bool do_skip;
   bool do_filter;
   int lastF = -1;
-
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
@@ -2188,7 +2202,7 @@ void MainWindow::back() {
         nf = filelength - f0;
       }
 
-      f0 -= nf;
+      f0 -= ceil(scale*nf);
       if (f0<0) {
         f0 = 0;
       }

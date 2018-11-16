@@ -107,8 +107,10 @@ public Q_SLOTS:
     void readFromEnd();
     void readToEnd();
     void pause(bool pause);
-    void back();
-    void forward();
+    void back(double scale = 1.0);
+    void forward(double scale = 1.0);
+    void backSmall() {back(0.2);}
+    void forwardSmall() {forward(0.2);}
     void reload();
 
     void updateViewItems(qint64 serial);
@@ -339,6 +341,8 @@ public Q_SLOTS:
     QAction *_pauseAct;
     QAction *_backAct;
     QAction *_forwardAct;
+    QAction *_backSmallAct;
+    QAction *_forwardSmallAct;
     QAction *_reloadAct;
 
     QAction *_newScalarAct;
