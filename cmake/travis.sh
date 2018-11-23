@@ -298,6 +298,7 @@ fi
 
 $cmakebin ../kst \
     -Dkst_release=1  \
+    -Dkst_merg_files=1 \
     -Dkst_version_string=$versionname \
     -Dkst_install_prefix=./$versionname \
     -Dkst_cross=$compiler \

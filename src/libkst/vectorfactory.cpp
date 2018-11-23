@@ -23,7 +23,7 @@
 
 namespace Kst {
 
-VectorFactory::VectorFactory()
+VectorFactory::VectorFactory() 
 : PrimitiveFactory() {
   registerFactory(Vector::staticTypeTag, this);
 }

@@ -13,11 +13,6 @@
 #include <config.h>
 #include "shortcutdialog.h"
 
-#ifdef KST_HAVE_REVISION_H
-#include "kstrevision.h"
-#include "authors.h"
-#endif
-
 #include <QDesktopServices>
 #include <QDebug>
 #include <QTextEdit>

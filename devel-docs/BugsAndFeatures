@@ -1,4 +1,78 @@
+329684
 
+When saving a kst session the fileRelative paths for the data files are always
+saved relative to the current working directory rather than relative to the kst
+session file itself.
+
+When kst is started from the start menu the current working directory is the
+directory in which the kst bin directory is located and does not change when
+the kst session file is saved.
+
+When kst is started by double clicking on a kst session file the current
+working directory is the same as the kst session file so all fileRelative paths
+appear to be relative to the kst session file.
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Start Kst from icon in start menu
+2. Save empty session in same directory as data file
+3. Import data file using wizard or any other method
+4. Save session again
+
+Actual Results:  
+If I have a data file located at "C:\David\Visualisation\KST Tests\formatted
+date times\data1.csv" and then save a kst session file that uses that data as
+"C:\David\Visualisation\KST Tests\formatted date times\kst.kst" then the
+fileRelative path is stored as "../../David/Visualisation/KST Tests/formatted
+date times/data1.csv".
+
+This means that if you move the files (session & data) to another location or
+transfer to another computer then the relative path is incorrect and when the
+session is loaded the user gets prompted that Kst cannot find the files and
+they need to locate the correct path.
+
+
+Expected Results:  
+I would have expected the fileRelative path to be stored as "data1.csv",
+meaning that the data is relative to the kst session file and that moving those
+files together would still allow them to be found.
+
+---------------
+334701
+
+Interpolation crashes whenever there are NaN's in a vector.  Tested on Windows
+8.1, 2.0.8rc2 and Ubuntu 12.04, 2.
+
+
+
+Reproducible: Always
+
+Steps to Reproduce:
+1. Use the following as input (without sample skipping)
+a b bi
+112.5 428 0
+187.5
+262.5 345 2
+337.5
+412.5 119 4
+487.5
+567.5 162 6
+637.5
+712.5 211 8
+787.5
+862.5 292 10
+937.5
+100.5 623 12
+
+2. Create -> Standard Plugins -> <any interpolation>
+
+3. Select bi for X, b for Y, and INDEX for X'
+
+4. System will crash.
+Actual Results:  
+Program crashes
 ---------------
 342904
 
@@ -6,44 +80,9 @@ We have a data source file where we log temperatures. The unit in this case is ย
 
 When plotting this, the axis labels get a ? in a black box. When adding an Annotation or changing the ? black box in the label dialogue, we can enter alt-167 and get the correct ยบ Symbol.
 
----------------
-
-Bug 318141
-
-When double clicking on an element in the available or selected list in the "Differentiate Curves" dialog nothing happens. It should trigger an add or remove action depending on the list in which the item resides. This is a bug because the behavior is inconsistent with other dialogs, which have the same layout (e.g. Data Wizard)
-
-Reproducible: Always
-
-
-Manuel
- ---------------
-
-What I did:
-- create three plots, and place two in a shared axis box
-- tie x-zoom for all three plots (Ctrl-t)
-- click on one plot in the shared axis box to select it, and press e-key
-- in "edit plot item" dialog, goto "Range/Zoom" page, check "Y Zoom Mode" = fixed and change the range values, click ok
-
-What I expected to happen:
-- the y-axis range of the selected plot should change to the new values
-
-What actually happened:
-- the y-axis range of all three plots changed to the new values
-
-
-The problem seems to dissapear if I remove following lines from method 
-void SharedAxisBoxItem::zoomYRange(const QRectF &projection, PlotItem* originPlotItem):
-foreach(PlotItem* plotItem, plotTied) {
-  plotItem->zoomYRange(projection, true);
-}
-
-I would like to use the shared axis box for plotting 10 to 20 binary signals in one box, and have another plot on the tab showing signals with wider range, so the shared axis is really good to save a lot of space!
-
 ----------------
 
 pykst: accept non-float64 numpy arrays.
-
-dirfile reader should recognise "format" if it is valid.
 
 FEATURES
 
@@ -67,4 +106,3 @@ F12. For fits, provide an (optional?) vector to evaluate over.
 
 F13. Set sample range defaults from scripting
 
-F14. Verify that meta scalars work in dirfiles.

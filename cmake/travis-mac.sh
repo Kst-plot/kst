@@ -24,7 +24,7 @@ export PATH="~/qt_5.9.1_mac/bin/:$PATH"
 mkdir -p build
 cd build
 rm -fr ./build  # to allow us to run this script multiple times
-cmake -Dkst_qt5=1 -Dkst_svnversion=1  -Dkst_dataobjects=1 -Dkst_3rdparty=1 -Dkst_release=1 ..
+cmake -Dkst_qt5=1 -Dkst_svnversion=1  -Dkst_dataobjects=1 -Dkst_3rdparty=1 -Dkst_release=1 -Dkst_merge_files=1 ..
 make
 
 

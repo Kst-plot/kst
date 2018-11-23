@@ -2327,7 +2327,8 @@ void MainWindow::showDataManager() {
 }
 
 
-void MainWindow::updateViewItems(qint64 serial) {
+void Kst::MainWindow::updateViewItems(qint64 serial)
+{
 
   QList<PlotItem *> plots = ViewItem::getItems<PlotItem>();
 
