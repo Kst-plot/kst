@@ -92,6 +92,7 @@ namespace Kst {
 "Appearance\n"
 "      -d:                      use points for the next curve\n"
 "      -l:                      use lines for the next curve\n"
+"      --ld:                    use lines and points for the next curve\n"
 "      -b:                      use bargraph for the next curve\n"
 "      --xlabel <X Label>       Set X label of all future plots.\n"
 "      --ylabel <Y Label>       Set Y label of all future plots.\n"
@@ -509,7 +510,12 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _useLines = true;
       _usePoints = false;
       _overrideStyle = true;
-    } else if (arg == "-b") {
+    } else if (arg == "--ld") { 
+      _useBargraph=false;
+      _useLines = true;
+      _usePoints = true;
+      _overrideStyle = true;
+    }else if (arg == "-b") {
       _useBargraph=true;
       _useLines = false;
       _usePoints = false;
