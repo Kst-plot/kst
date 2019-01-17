@@ -142,18 +142,17 @@ namespace Kst {
 static void printText(const QString& text, const QString& detailText = QString(), const QString& t = QString())
 {
 #ifdef Q_OS_WIN
-  // No console on Windows.
+  // Not always console on Windows.
   QMessageBox box(QMessageBox::Information, "Kst", text + t);
   if (!detailText.isEmpty()) {
     box.setDetailedText(detailText);
   }
   box.exec();
-#else
+#endif
   QString displayText = QString(text) + QString(detailText) + t;
 
   fprintf(stderr,"%s\n", qPrintable(displayText));
   //qWarning("%s", qPrintable(displayText));
-#endif
 }
 
 
