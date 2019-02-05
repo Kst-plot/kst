@@ -61,6 +61,20 @@ required librqries to make it conditional (check [root]/cmake/modules)
 - Once the output of cmake is as wished, the data source will be compiled: start 
 filling out the contents of the actual code files
 
+**** UPDATE 2019 ****
+Some further pointers on the build system from someone who has actually done this since this howto was written (I wrote the Hdf module):
+
+- The current build system uses cmake, so ignore the qmake options 
+- If your datasource has no library dependancies, (unlikely) this will be an easy process, otherwise I really hope you know cmake
+- You will need to update both the root CMakeLists.txt to include a find_package line for your package (this is easy, just look at the existing code)
+- You will then need to write a FindLibname.txt file in [root]/cmake/modules
+- You will also need to include that module in [root]/src/datasources/CMakeLists.txt
+- As far as I know, what happens is the FindLibname module is called first, and then the CMakeLists in datasources is run to actually include and link the library, which means that it can fail if your FindLibname module doesn't work. Libraries at the bottom of the CMakeLists file use a conditional to avoid this problem and still build kst in the absence of the require plugin
+- The FindLibname.txt module is the hardest part of this process. Look at the others for a model. This file locates the required headers as well as the required libraries to link against, so if either of those cannot be found your datasource will not work
+- The header files (and libraries) are found with find_path (or find_library), which is a cmake command. You need to specify a guess (HINTS or PATHS) as to where it should look, so most of the examples use environment variables to specify the library install path
+- if the libraries or header files are not found, they are set to LIBNAME-NOTFOUND. The build system will complain if it tries to compile any NOTFOUND libraries, so make sure you check for this if that could happen
+- cmake uses a local variable cache that persists between runs (CMakeCache.txt in your build directory). This means that if you re-run the build a second time, most variables will already be defined (so for instance if(NOT VARNAME) will likely not be executed). This means that if a variable gets badly defined because you didn't get the cmake files exactly right, you probably want to remove the CMakeCache before re-running to get output that makes any sense
+
 ** Step 2: Implement the important classes **
 To get your datasource to work, you have to:
   1a) Implement the MatlabSourcePlugin::provides() (trivial)
@@ -98,6 +112,11 @@ other types progressively.
 Hints: you can use qDebug() as a stream to produce debug output, and the 
 Help->Debug Dialog also provides some interesting information, in particular 
 plugin loading errors.
+
+**** UPDATE 2019 ****
+As far as I can tell, the Plugin class contains a bunch of list functions that you do not need to implement. IDK what they are there for but I left them blank and everything seems to work fine. No one was adequately able to tell me what they were for, so it seems like this whole process could be made clearer by getting rid of them (or at least documenting them properly)
+
+Kst also cannot determine where on disk a piece of data came from once it has been loaded into memory. This means that if you want to be able to plot your data against INDEX in some way (ie. the array index of the original data), you need to provide this index, either by making sure it is always stored in your data format, or by generating it when KST tries to read from it. 
 
 ** Step 3: Polish **
 This step is important, don't neglect it! It is important to check:

@@ -73,3 +73,8 @@ if(tiff)
         kst_link(${TIFF_LIBRARIES})
 endif()
 
+if(hdf5)
+        include_directories(${HDF5_INCLUDEDIR})
+        kst_add_plugin(. hdf5)
+        kst_link(${HDF5_LIBRARIES})
+endif()
