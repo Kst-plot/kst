@@ -255,8 +255,9 @@ checkExitCode
 #
 # download 3rdparty
 #
+altserver=http://toolshed.sourceforge.net/kst
 if [ ! -d $dep/$extlib ]; then
-    wget $server/$extlib.zip
+    wget $altserver/$extlib.zip
     checkExitCode
     cd $dep
     unzip -q $builddir/$extlib.zip
