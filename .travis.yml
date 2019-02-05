@@ -14,6 +14,7 @@ matrix:
 
 
       install:
+       - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157
        - sudo apt-get -y update
        - sudo apt-get -y install cmake g++-mingw-w64-i686 g++-mingw-w64-x86-64
        #- sudo apt-get update
