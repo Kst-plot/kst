@@ -61,7 +61,7 @@ travis=travis
 echo ---------------------------------------------------------
 echo
 
-if [ "$iam" = "$travis" && "$(git rev-parse --abbrev-ref HEAD)" = "master" ]; then
+if [ "$iam" = "$travis" -a "$(git rev-parse --abbrev-ref HEAD)" = "master" ]; then
     deploybinary=1
 else
     deploybinary=0
