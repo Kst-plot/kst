@@ -158,7 +158,6 @@ else
     mingwdir=mingw32$exc
     extlib=kst-3rdparty-win32-gcc$exc-4.7.2
     extlib=kst-3rdparty-win32-gcc4.7
-    extlib=kst-3rdparty-win32-gcc4.7-tv
     useext=
     useext="-Dkst_3rdparty=1 -Dkst_3rdparty_dir=$dep/"$extlib
 fi
