@@ -138,7 +138,7 @@ mkdir $build
 builddir=$PWD/$build
 cd $builddir
 
-cmake --version
+/usr/bin/cmake --version
 checkExitCode
 
 server=http://sourceforge.net/projects/kst/files/3rdparty
@@ -266,14 +266,14 @@ else
     noinstaller=-Dkst_noinstaller=1
 fi
 
-#cmake ../kst \
+#/usr/bin/cmake ../kst \
 #    -Dkst_release=1  \
 #    -Dkst_version_string=$versionname \
 #    -Dkst_install_prefix=./$versionname \
 #    -Dkst_cross=$dep/$mingwdir/bin/$mingw \
 #    $rev $qtopt $useext $console $noinstaller $generator
 
-cmake ../kst \
+/usr/bin/cmake ../kst \
     -Dkst_release=1  \
     -Dkst_merge_files=1 \
     -Dkst_version_string=$versionname \
