@@ -61,7 +61,7 @@ travis=travis
 echo ---------------------------------------------------------
 echo
 
-if [ "$iam" = "$travis" ]; then
+if [ "$iam" = "$travis" -a "$(git rev-parse --abbrev-ref HEAD)" = "master" ]; then
     deploybinary=1
 else
     deploybinary=0
@@ -138,31 +138,7 @@ mkdir $build
 builddir=$PWD/$build
 cd $builddir
 
-
-
-# ---------------------------------------------------------
-#
-# get actual cmake
-#
-cmakever=cmake-3.4.1-Linux-x86_64
-
-if [ "$iam" = "$travis" ]; then
-    if [ ! -d $dep/$cmakever ]; then
-          cmakebin=x
-          if [ ! -d $dep/$cmakever ]; then
-              wget --no-check-certificate http://www.cmake.org/files/v3.4/$cmakever.tar.gz
-              checkExitCode
-              cd $dep
-              tar xf $builddir/$cmakever.tar.gz
-              checkExitCode
-              cd $builddir
-          fi
-    fi
-    cmakebin=$dep/$cmakever/bin/cmake
-else
-    cmakebin=cmake
-fi
-$cmakebin --version
+/usr/bin/cmake --version
 checkExitCode
 
 server=http://sourceforge.net/projects/kst/files/3rdparty
@@ -255,8 +231,9 @@ checkExitCode
 #
 # download 3rdparty
 #
+altserver=http://toolshed.sourceforge.net/kst
 if [ ! -d $dep/$extlib ]; then
-    wget $server/$extlib.zip
+    wget $altserver/$extlib.zip
     checkExitCode
     cd $dep
     unzip -q $builddir/$extlib.zip
@@ -289,14 +266,14 @@ else
     noinstaller=-Dkst_noinstaller=1
 fi
 
-#$cmakebin ../kst \
+#/usr/bin/cmake ../kst \
 #    -Dkst_release=1  \
 #    -Dkst_version_string=$versionname \
 #    -Dkst_install_prefix=./$versionname \
 #    -Dkst_cross=$dep/$mingwdir/bin/$mingw \
 #    $rev $qtopt $useext $console $noinstaller $generator
 
-$cmakebin ../kst \
+/usr/bin/cmake ../kst \
     -Dkst_release=1  \
     -Dkst_merge_files=1 \
     -Dkst_version_string=$versionname \
