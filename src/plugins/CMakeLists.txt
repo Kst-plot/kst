@@ -19,6 +19,7 @@ kst_add_plugin(dataobject activitylevel)
 
 kst_add_plugin(filters cumulativesum)
 kst_add_plugin(filters cumulativeaverage)
+kst_add_plugin(filters movingaverage)
 kst_add_plugin(filters despike)
 kst_add_plugin(filters flag)
 kst_add_plugin(filters unwind)
