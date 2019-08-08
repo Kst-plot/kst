@@ -9,6 +9,7 @@ SUBDIRS += \
     differentiation \
     cumulativeaverage \
     movingaverage \
+    movingmedian \
     unwind \
     window
 
