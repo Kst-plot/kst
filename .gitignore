@@ -11,3 +11,6 @@ tmp*
 po
 po_all
 *~
+build-kst-Qt*
+.idea/
+cmake-build*

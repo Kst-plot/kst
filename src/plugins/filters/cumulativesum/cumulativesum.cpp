@@ -55,11 +55,11 @@ class ConfigCumulativeSumPlugin : public Kst::DataObjectConfigWidget, public Ui_
       _vector->setEnabled(!locked);
     }
 
-    Kst::VectorPtr selectedVector() { return _vector->selectedVector(); };
-    void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); };
+    Kst::VectorPtr selectedVector() { return _vector->selectedVector(); }
+    void setSelectedVector(Kst::VectorPtr vector) { return _vector->setSelectedVector(vector); }
 
-    Kst::ScalarPtr selectedScalar() { return _scalarStep->selectedScalar(); };
-    void setSelectedScalar(Kst::ScalarPtr scalar) { return _scalarStep->setSelectedScalar(scalar); };
+    Kst::ScalarPtr selectedScalar() { return _scalarStep->selectedScalar(); }
+    void setSelectedScalar(Kst::ScalarPtr scalar) { return _scalarStep->setSelectedScalar(scalar); }
 
     virtual void setupFromObject(Kst::Object* dataObject) {
       if (CumulativeSumSource* source = static_cast<CumulativeSumSource*>(dataObject)) {
