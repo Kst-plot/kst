@@ -7,6 +7,7 @@ X-Kst-Plugin-Author=The University of Toronto
 Name=HDF5 Reader
 Name[ca]=Lector de HDF5
 Name[ca@valencia]=Lector de HDF5
+Name[cs]=Čtečka HDF5
 Name[en_GB]=HDF5 Reader
 Name[es]=Lector HDF5
 Name[gl]=Cabeceira de HDF5
