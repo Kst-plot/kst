@@ -149,7 +149,7 @@ int ITSreadimage(ITSfile *its, int frame, int i_img, ITSimage *I) {
   if (frame < 0) { // last frame
     frame = nframes - 1;
   }
-  
+
   if ((frame >= nframes) || (nframes<1)) { // can't read past end;
     I->w = I->h = I->x = I->y = 0;
     return 0;

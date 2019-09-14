@@ -1,3 +1,18 @@
+kst seems to crash with zero sized data files.
+
+------------
+
+Save a kst session.  File dialog recent files doesn't include ".kst" if it was
+automatically added on save.
+
+------------------
+When you open up kst file, opening another one tends to crash kst.
+
+------------------
+No way to check matrix slave vector names in data manager.
+And slave scalar names are similarly not there.
+
+-----------------
 329684
 
 When saving a kst session the fileRelative paths for the data files are always

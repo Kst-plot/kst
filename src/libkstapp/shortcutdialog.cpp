@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <QTextEdit>
 #include <QFile>
+#include <QStyle>
 
 #include <QStringList>
 
