@@ -22,6 +22,7 @@
     <comment xml:lang="sk">Súbor sedenia Kst</comment>
     <comment xml:lang="sv">Kst-sessionsfil</comment>
     <comment xml:lang="uk">файл сеансу Kst</comment>
+    <comment xml:lang="zh_TW">Kst 工作階段檔案</comment>
     <glob pattern="*.kst"/>
   </mime-type>
 </mime-info>
