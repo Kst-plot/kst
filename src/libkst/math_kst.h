@@ -31,6 +31,13 @@ inline double pow(float a, double b) { return pow((double)a, b); }
 inline double pow(int a, qreal b) { return pow((double)a, (double)b); }
 #endif
 
+#if defined(__OpenBSD__) && !defined(__clang__)
+#include <cmath>
+using std::isnan;
+using std::isinf;
+using std::isfinite;
+#endif
+
 namespace Kst {
 /*
 ** For systems without NAN, this is a NAN in IEEE double format.
