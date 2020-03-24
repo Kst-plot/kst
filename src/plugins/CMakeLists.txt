@@ -24,6 +24,7 @@ kst_add_plugin(filters flag)
 kst_add_plugin(filters unwind)
 kst_add_plugin(filters window)
 kst_add_plugin(filters differentiation)
+kst_add_plugin(filters exponential)
 
 if(gsl)
 	include_directories(${GSL_INCLUDE_DIR})
