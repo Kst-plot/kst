@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=movingaverage
+X-Kst-Plugin-Author=Jonathan Liu
+Name=Moving Average Data Object Plugin
+Name[en_GB]=Moving Average Data Object Plugin
+Comment=Implements a Moving Averge Data Object Plugin for Kst.
+Comment[en_GB]=Implements a Moving Averge Data Object Plugin for Kst.
