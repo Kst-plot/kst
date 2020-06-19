@@ -119,6 +119,8 @@ void DataSourceSelector::chooseFile() {
   QString file;
   QPointer<DataSourceSelectorDialog> dialog = new DataSourceSelectorDialog( _file, this );
 
+  dialog->setFileMode(QFileDialog::ExistingFile);
+
   if (dialog->exec() == QDialog::Accepted) {
     file = dialog->selectedDataSource();
 
