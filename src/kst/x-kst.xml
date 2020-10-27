@@ -4,28 +4,11 @@
     <comment>Kst Session File</comment>
     <comment xml:lang="ca">Fitxer de sessió del Kst</comment>
     <comment xml:lang="ca@valencia">Fitxer de sessió del Kst</comment>
-    <comment xml:lang="cs">Soubor sezení Kst</comment>
-    <comment xml:lang="de">Kst-Sitzungsdatei</comment>
-    <comment xml:lang="en_GB">Kst Session File</comment>
-    <comment xml:lang="es">Archivo de sesión de Kst</comment>
-    <comment xml:lang="et">Kst seansifail</comment>
-    <comment xml:lang="fi">Kst-istuntotiedosto</comment>
-    <comment xml:lang="fr">Fichier de session Kst</comment>
-    <comment xml:lang="gl">Ficheiro de sesión de Kst</comment>
-    <comment xml:lang="it">File di sessione Kst</comment>
-    <comment xml:lang="ko">Kst 세션 파일</comment>
     <comment xml:lang="lt">Kst seanso failas</comment>
-    <comment xml:lang="nl">Sessiebestand in Kst</comment>
-    <comment xml:lang="nn">Kst-øktfil</comment>
-    <comment xml:lang="pl">Plik sesji Kst</comment>
+    <comment xml:lang="nl">Sessiebestand Kst</comment>
     <comment xml:lang="pt">Ficheiro de Sessão do Kst</comment>
-    <comment xml:lang="pt_BR">Arquivo de sessão Kst</comment>
-    <comment xml:lang="ru">Файл сеанса Kst</comment>
-    <comment xml:lang="sk">Súbor sedenia Kst</comment>
-    <comment xml:lang="sl">Datoteka seje Kst</comment>
     <comment xml:lang="sv">Kst-sessionsfil</comment>
     <comment xml:lang="uk">файл сеансу Kst</comment>
-    <comment xml:lang="zh_TW">Kst 工作階段檔案</comment>
     <glob pattern="*.kst"/>
   </mime-type>
 </mime-info>
