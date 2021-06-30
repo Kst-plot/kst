@@ -81,6 +81,7 @@ class MainWindow : public QMainWindow
 
 public Q_SLOTS:
     void copyTab();
+    void toggleStatusBar();
     void showDataManager();
     void showDebugDialog();
     void showExportGraphicsDialog();
@@ -327,6 +328,7 @@ public Q_SLOTS:
 
     QAction *_clearUISettings;
     QAction *_clearDataSourceSettings;
+    QAction *_toggleStatusBar;
 
     QAction *_differentiateCurvesDialogAct;
     QAction *_filterMultipleDialogAct;

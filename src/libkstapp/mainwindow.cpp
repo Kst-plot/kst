@@ -1541,6 +1541,11 @@ void MainWindow::createActions() {
   //_clearDataSourceSettings->setIcon(KstGetIcon("configure"));   // FIXME: pick an icon (broom?)
   connect(_clearDataSourceSettings, SIGNAL(triggered()), this, SLOT(clearDataSourceSettings()));
 
+  _toggleStatusBar =  new QAction(tr("Show status bar"), this);
+  _toggleStatusBar->setCheckable(true);
+  _toggleStatusBar->setChecked(_settings.value("showstatusbar", true).toBool());
+  connect(_toggleStatusBar, SIGNAL(triggered()), this, SLOT(toggleStatusBar()));
+
   // *********************** Help actions ************************************** //
   _debugDialogAct = new QAction(tr("&Debug Dialog"), this);
   _debugDialogAct->setStatusTip(tr("Show the Kst debugging dialog"));
@@ -1737,6 +1742,7 @@ void MainWindow::createMenus() {
   _settingsMenu->addAction(_themeDialogAct);
   _settingsMenu->addAction(_clearUISettings);
   _settingsMenu->addAction(_clearDataSourceSettings);
+  _settingsMenu->addAction(_toggleStatusBar);
 
   menuBar()->addSeparator();
 
@@ -1837,6 +1843,10 @@ void MainWindow::createStatusBar() {
   connect(_debugDialog, SIGNAL(notifyOfError()), dn, SLOT(reanimate()));
   connect(_debugDialog, SIGNAL(notifyAllClear()), dn, SLOT(close()));
   statusBar()->addPermanentWidget(dn);
+
+  bool statusBarVisible = _settings.value("showstatusbar", true).toBool();
+  statusBar()->setVisible( statusBarVisible );
+
 }
 
 /** set the status bar message.  If you are doing this inside a view
@@ -2531,6 +2541,16 @@ void MainWindow::filterMultipleDialog() {
   _filterMultipleDialog->show();
 }
 
+void MainWindow::toggleStatusBar() {
+  bool statusBarVisible = _settings.value("showstatusbar", true).toBool();
+
+  statusBarVisible = !statusBarVisible;
+
+  statusBar()->setVisible(statusBarVisible);
+  _toggleStatusBar->setChecked(statusBarVisible);
+
+  _settings.setValue("showstatusbar",statusBarVisible);
+}
 
 
 void MainWindow::showChooseColorDialog() {
@@ -2625,6 +2645,7 @@ void MainWindow::readSettings() {
 
   restoreState(_settings.value("toolbarState").toByteArray());
   _tabTiedAct->setChecked(_settings.value("tieTabs").toBool());
+
 }
 
 
