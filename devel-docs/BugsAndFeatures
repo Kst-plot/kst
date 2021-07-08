@@ -18,10 +18,6 @@ Icons are very small by default in UHD ubuntu 20.04
 
 --------------
 
-kst seems to crash with zero sized data files.
-
-------------
-
 Save a kst session.  File dialog recent files doesn't include ".kst" if it was
 automatically added on save.
 

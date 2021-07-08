@@ -35,6 +35,7 @@ public:
   ~CommandLineParser();
 
   bool processCommandLine(bool *ok);
+  bool checkFile(QString filename);
   QString kstFileName();
   QString pngFile() const {return _pngFile;}
   int pngWidth() const {return _pngWidth;}

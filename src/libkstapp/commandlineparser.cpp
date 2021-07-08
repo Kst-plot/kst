@@ -432,6 +432,21 @@ QString CommandLineParser::kstFileName() {
   }
 }
 
+bool CommandLineParser::checkFile(QString filename) {
+  QFileInfo info(filename);
+  if (!info.exists()) {
+    printUsage(tr("file %1 does not exist.\n").arg(filename));
+    return false;
+  }
+  if (info.isFile()) {
+    if (info.size() == 0) {
+      printUsage(tr("file %1 is empty.\n").arg(filename));
+      return false;
+    }
+  }
+  return true;
+}
+
 bool CommandLineParser::processCommandLine(bool *ok) {
   QString arg, param;
   *ok=true;
@@ -520,10 +535,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = _setStringArg(_xField,tr("Usage: -x <xfieldname>\n"));
       for (int i_file=0; i_file<_fileNames.size(); i_file++) {
         QString file = _fileNames.at(i_file);
-        QFileInfo info(file);
-        if (!info.exists()) {
-          printUsage(tr("file %1 does not exist\n").arg(file));
-          *ok = false;
+        *ok = checkFile(file);
+        if (*ok ==  false) {
           break;
         }
 
@@ -547,10 +560,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       }
       for (int i_file=0; i_file<_fileNames.size(); i_file++) { 
         QString file = _fileNames.at(i_file);
-        QFileInfo info(file);
-        if (!info.exists()) {
-          printUsage(tr("file %1 does not exist\n").arg(file));
-          *ok = false;
+        *ok = checkFile(file);
+        if (*ok ==  false) {
           break;
         }
 
@@ -601,10 +612,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       if (*ok) {
         for (int i_file=0; i_file<_fileNames.size(); i_file++) {
           QString file = _fileNames.at(i_file);
-          QFileInfo info(file);
-          if (!info.exists()) {
-            printUsage(tr("file %1 does not exist\n").arg(file));
-            *ok = false;
+          *ok = checkFile(file);
+          if (*ok ==  false) {
             break;
           }
 
@@ -650,10 +659,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       if (*ok) {
         for ( int i_file=0; i_file<_fileNames.size(); i_file++ ) {
           QString file = _fileNames.at ( i_file );
-          QFileInfo info ( file );
-          if ( !info.exists() || !info.isFile() ) {
-            printUsage ( tr ( "file %1 does not exist\n" ).arg ( file ) );
-            *ok = false;
+          *ok = checkFile(file);
+          if (*ok ==  false) {
             break;
           }
 
@@ -690,10 +697,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       if (*ok) {
         for (int i_file=0; i_file<_fileNames.size(); i_file++) {
           QString file = _fileNames.at(i_file);
-          QFileInfo info(file);
-          if (!info.exists() || !info.isFile()) {
-            printUsage(tr("file %1 does not exist\n").arg(file));
-            *ok = false;
+          *ok = checkFile(file);
+          if (*ok ==  false) {
             break;
           }
 
