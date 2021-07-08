@@ -1,3 +1,23 @@
+White border around plot for black themes shouldn't be there.
+
+-------------
+
+Equations could allow matrixes
+  - Treated like vectors
+  - size of output matrix based on input matrix size.
+  - Issue: how to treat inconsistent sized things
+
+-----------
+
+Should error out with no valid curves/matrixes displayed for non-empty command line?
+or specifying a file/limits should instead set defaults for wizard, etc?
+
+-------------
+
+Icons are very small by default in UHD ubuntu 20.04
+
+--------------
+
 kst seems to crash with zero sized data files.
 
 ------------

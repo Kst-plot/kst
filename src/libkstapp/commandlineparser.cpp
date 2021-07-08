@@ -252,7 +252,10 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     if (ds->fileType() == "ASCII file") {
       QRegExp num("^[0-9]{1,2}$");
       if (num.exactMatch(field)) {
-        field = ds->vector().list()[field.toInt()];
+        int field_num = field.toInt();
+        if (field_num < ds->vector().list().size()) {
+          field = ds->vector().list()[field.toInt()];
+        }
       }
     }
     // check to see if an identical vector already exists.  If so, use it.
