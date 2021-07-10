@@ -74,6 +74,7 @@ private:
   PlotItem *_plotItem;
   QString _xlabel;
   QString _ylabel;
+  int _legendMode;
     
   // lists of command line named plot items (and their names).
   QList<PlotItem*> _plotItems;

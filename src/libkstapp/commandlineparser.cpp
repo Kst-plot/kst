@@ -93,10 +93,13 @@ namespace Kst {
 "      -d:                      Use points for the next curve.\n"
 "      -l:                      Use lines for the next curve.\n"
 "      -b:                      Use bargraph for the next curve.\n"
-"      --xlabel <X Label>       Set X label of all future plots.\n"
-"      --ylabel <Y Label>       Set Y label of all future plots.\n"
-"      --xlabelauto             AutoSet X label of all future plots.\n"
-"      --ylabelauto             AutoSet Y label of all future plots.\n"
+"      --xlabel <X Label>       Set X label of all subsequent plots.\n"
+"      --ylabel <Y Label>       Set Y label of all subsequent plots.\n"
+"      --xlabelauto             AutoSet X label of all subsequent plots.\n"
+"      --ylabelauto             AutoSet Y label of all subsequent plots.\n"
+"      --showLegend             Show legends for all subsequent plots."
+"      --hideLegend             Hide legends for all subsequent plots."
+"      --autoLegend             Auto legends for all subsequent plots."
 "Data Object Modifiers\n"
 "      -x <field>:              Create vector and use as X vector for curves.\n"
 "      -e <field>:              Create vector and use as Y-error vector for next -y.\n"
@@ -169,6 +172,7 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
       _numFrames(-1), _startFrame(-1),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
       _pngFile(QString()), _pngWidth(-1), _pngHeight(-1), _printFile(QString()), _landscape(false), _plotItem(0),
+      _legendMode(2),
       _num_cols(0), _asciiFirstLine(-1), _asciiFieldLine(-1), _asciiNoFieldNames(false),
       _asciiUnitsLine(-1), _asciiNoUnits(false), _asciiSpaceDelim(false),
       _asciiDelim('\0'), _asciiFixedWidth(-1), _asciiNoFixedWidth(false),
@@ -333,8 +337,14 @@ void CommandLineParser::addCurve(CurvePtr curve)
     }
     PlotRenderItem *renderItem = _plotItem->renderItem(PlotRenderItem::Cartesian);
     renderItem->addRelation(kst_cast<Relation>(curve));
-    if (renderItem->relationList().size()>1) {
+    if (_legendMode == 2 ) { // auto legened
+      if (renderItem->relationList().size()>1) {
+        _plotItem->setShowLegend(true,true);
+      }
+    } else if (_legendMode == 1) {
       _plotItem->setShowLegend(true,true);
+    } else {
+      _plotItem->setShowLegend(false, false);
     }
     _plotItem->update();
 }
@@ -652,6 +662,12 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       _xlabel.clear();
     } else if (arg == "--ylabelauto") {
       _ylabel.clear();
+    } else if (arg == "--showLegend") {
+      _legendMode = 1;
+    } else if (arg == "--hideLegend") {
+      _legendMode = 0;
+    } else if (arg == "--autoLegend") {
+      _legendMode = 2;
     } else if (arg == "-h") {
       QString field;
       *ok = _setStringArg(field,tr("Usage: -h <fieldname>\n"));
