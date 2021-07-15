@@ -444,13 +444,12 @@ void View::forceChildResize(QRectF oldRect, QRectF newRect) {
 
 
 void View::drawBackground(QPainter *painter, const QRectF &rect) {
-  if (isPrinting()) {
-    QBrush currentBrush(backgroundBrush());
-    setBackgroundBrush(Qt::white);
-    QGraphicsView::drawBackground(painter, rect);
-    setBackgroundBrush(currentBrush);
-    return;
-  }
+//  if (isPrinting()) {
+//    QBrush currentBrush(backgroundBrush());
+//    QGraphicsView::drawBackground(painter, rect);
+//    setBackgroundBrush(currentBrush);
+//    return;
+//  }
 
   QGraphicsView::drawBackground(painter, rect);
 
