@@ -289,7 +289,16 @@ void PlotRenderItem::paint(QPainter *painter) {
 
   if (!view()->isPrinting()) {
     if (_selectionRect.isValid()) {
-      painter->setPen(QPen(QBrush(Qt::black), 1.0, Qt::DotLine));
+      QColor bgcolor = plotItem()->brush().color();
+      qreal r = bgcolor.redF();
+      qreal g = bgcolor.greenF();
+      qreal b = bgcolor.blueF();
+      qreal L = 0.2126*r*r + 0.7152*g*g + 0.022*b*b;
+      if (L>0.25) {
+        painter->setPen(QPen(QBrush(Qt::black), 2.0, Qt::DotLine));
+      } else {
+        painter->setPen(QPen(QBrush(Qt::white), 2.0, Qt::DotLine));
+      }
       painter->drawRect(_selectionRect.rect());
     }
   }

@@ -1,6 +1,3 @@
-White border around plot for black themes shouldn't be there.
-
--------------
 
 Equations could allow matrixes
   - Treated like vectors
@@ -9,22 +6,10 @@ Equations could allow matrixes
 
 -----------
 
-Should error out with no valid curves/matrixes displayed for non-empty command line?
-or specifying a file/limits should instead set defaults for wizard, etc?
-
--------------
-
-Icons are very small by default in UHD ubuntu 20.04
-
---------------
-
-Save a kst session.  File dialog recent files doesn't include ".kst" if it was
-automatically added on save.
-
-------------------
 When you open up kst file, opening another one tends to crash kst.
 
 ------------------
+
 No way to check matrix slave vector names in data manager.
 And slave scalar names are similarly not there.
 
@@ -117,19 +102,9 @@ pykst: accept non-float64 numpy arrays.
 
 FEATURES
 
-F3. Text labels have no background fill properties.
-
 F4. Nicer date tick marks.
 
-F5. Vector-choosing boxes should autocomplete.  i.e., if I have only one vector
-    derived from AZ_MAG (called, say, "AZ_MAG (V21)"), then I want to be able to
-    select that by typing "AZ_MAG" in the vector box, and not all of "AZ_MAG
-    (V21)".  (This is because users don't have any clue what the vector number
-    of the vector they want is.)
-
 F6. Non-integer curve stroke width.
-
-F9. Forward and back in smaller steps than whole screen.
 
 F11. Listfile subset
 
