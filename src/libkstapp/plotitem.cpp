@@ -1925,7 +1925,7 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
     setAllowedGripModes(0);
     setFlags(0);
     setParentViewItem(parent);
-    setBrush(Qt::transparent);
+    //setBrush(Qt::transparent);
 
     _sharedBox = parent;
     createSharedAxisBoxMenu();
@@ -1935,7 +1935,7 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
     setAllowedGripModes(Move | Resize | Rotate);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
     setParentViewItem(0);
-    setBrush(Qt::white);
+    //setBrush(Qt::white);
 
     _sharedBox = 0;
   }

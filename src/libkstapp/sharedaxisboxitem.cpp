@@ -83,7 +83,7 @@ void SharedAxisBoxItem::paint(QPainter *painter) {
     _dirty = false;
 
   }
-  painter->drawRect(rect());
+  //painter->drawRect(rect());
 }
 
 
@@ -293,7 +293,7 @@ void SharedAxisBoxItem::lockItems() {
   }
   if (!list.isEmpty()) {
     storePen(QPen(Qt::white));
-    setBrush(Qt::white);
+    //setBrush(Qt::white);
   }
 }
 
