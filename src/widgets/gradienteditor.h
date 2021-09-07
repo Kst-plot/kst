@@ -16,6 +16,7 @@
 #include <QHash>
 #include <QWidget>
 #include <QGradient>
+#include <QPainterPath>
 
 #include "kstwidgets_export.h"
 
