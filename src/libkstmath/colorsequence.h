@@ -26,17 +26,8 @@ namespace Kst {
 class KSTMATH_EXPORT ColorSequence : public NextColor
 {
   public:
-    enum ColorMode { MonoChrome, GrayScale, Color };
-    void createPalette();
     QColor next();
     QColor current();
-    QColor next(const QColor& badColor);
-    QColor next(const CurveList& Curves, const QColor& badColor);
-    bool colorsTooClose(const QColor& color, const QColor& badColor);
-    ColorMode colorMode();
-    void setColorMode(ColorMode mode);
-    int count();
-    void reset();
     QColor entry(int ptr);
 
     static ColorSequence& self();
@@ -47,12 +38,10 @@ class KSTMATH_EXPORT ColorSequence : public NextColor
 
     static ColorSequence* _self;
     static void cleanup();
+    QVector<QColor> _colors;
 
-    QHash<int, QColor> _pal;
-    int _count;
     int _ptr;  // pointer to the next color
-    ColorMode _mode;
-    QString _palette;
+    int _count;
 };
 
 }
