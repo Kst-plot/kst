@@ -1163,9 +1163,13 @@ void DataWizard::finished() {
     QColor color;
     int ptype = 0;
     int i_plot = 0;
+
     for (DataVectorList::Iterator it = vectors.begin(); it != vectors.end(); ++it) {
       if (_pageDataPresentation->plotData()) {
-        color = ColorSequence::self().next();
+        Q_ASSERT(plotList[i_plot]);
+
+        color = plotList[i_plot]->nextColor();
+
         colors.append(color);
 
         DataVectorPtr vector = kst_cast<DataVector>(*it);
@@ -1191,7 +1195,6 @@ void DataWizard::finished() {
         curve->registerChange();
         curve->unlock();
 
-        Q_ASSERT(plotList[i_plot]);
 
         PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
         renderItem->addRelation(kst_cast<Relation>(curve));
@@ -1263,8 +1266,10 @@ void DataWizard::finished() {
           curve->setPointSize(dialogDefaults().value("curves/pointSize",CURVE_DEFAULT_POINT_SIZE).toDouble());
           curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
+          Q_ASSERT(plotList[i_plot]);
+
           if (!_pageDataPresentation->plotDataPSD() || colors.count() <= indexColor) {
-            color = ColorSequence::self().next();
+            color = plotList[i_plot]->nextColor();
           } else {
             color = colors[indexColor];
             indexColor++;
@@ -1274,8 +1279,6 @@ void DataWizard::finished() {
           curve->writeLock();
           curve->registerChange();
           curve->unlock();
-
-          Q_ASSERT(plotList[i_plot]);
 
           PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
           plotList[i_plot]->xAxis()->setAxisLog(_pagePlot->PSDLogX());

@@ -19,16 +19,31 @@
 #include "curve.h"
 
 
-class KPalette;
+// Inrement Index:        IncIndex()
+// Set index:             SetIndex(i)
+// Index:                 Index()
+// Current primary Color: Current(Background)
+// Current Bar color:     CurrentBar(Background)
+// Current Head Color:    CurrentHead(Background)
+
+//class KPalette;
 
 namespace Kst {
 
 class KSTMATH_EXPORT ColorSequence : public NextColor
 {
   public:
-    QColor next();
-    QColor current();
+    QColor next();         // increment and return next color
+    QColor current();      // current entry
+
     QColor entry(int ptr);
+
+    void incIndex() { _ptr++; _ptr  %= _count;};
+    void setIndex(int ptr) {_ptr = abs(ptr)%_count;};
+
+    int index() {return _ptr;};
+
+    int count() {return _count;};
 
     static ColorSequence& self();
     

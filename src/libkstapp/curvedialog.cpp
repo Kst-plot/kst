@@ -468,7 +468,7 @@ ObjectPtr CurveDialog::createNewDataObject() {
   curve->registerChange();
   curve->unlock();
 
-  _curveTab->curveAppearance()->setWidgetDefaults();
+  _curveTab->curveAppearance()->setWidgetDefaults(true);
 
   if(editMode()==New) {
       PlotItem *plotItem = 0;
@@ -633,7 +633,7 @@ ObjectPtr CurveDialog::editExistingDataObject() const {
       curve->registerChange();
       curve->unlock();
 
-      _curveTab->curveAppearance()->setWidgetDefaults(false);
+      _curveTab->curveAppearance()->setWidgetDefaults();
     }
   }
 

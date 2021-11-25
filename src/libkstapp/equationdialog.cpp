@@ -363,7 +363,7 @@ ObjectPtr EquationDialog::createNewDataObject() {
   curve->registerChange();
   curve->unlock();
 
-  _equationTab->curveAppearance()->setWidgetDefaults();
+  _equationTab->curveAppearance()->setWidgetDefaults(true);
   _lastXVectorName =  equation->vXIn()->Name();
 
   if(editMode()==New) {

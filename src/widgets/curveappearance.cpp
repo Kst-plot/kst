@@ -16,6 +16,8 @@
 #include "linestyle.h"
 #include <QPainter>
 #include "dialogdefaults.h"
+#include <QColorDialog>
+
 #include "colorsequence.h"
 
 namespace Kst {
@@ -64,6 +66,25 @@ CurveAppearance::CurveAppearance(QWidget *parent)
   connect(_spinBoxLineWidth, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_spinBoxPointSize, SIGNAL(valueChanged(double)), this, SIGNAL(modified()));
   connect(_showBars, SIGNAL(clicked()), this, SIGNAL(modified()));
+
+  // Set default colors for the color selection dialog.
+  for (int i=0; i< 6*8; i++) {
+    // the display is a 8x6 grid, but is numbered row first, then col.
+    // so flip it, so the colors go across
+    int ix = i%8;
+    int iy = i/8;
+    int j = ix*6 + iy;
+
+    if (i < ColorSequence::self().count()) {
+      QColorDialog::setStandardColor(j, ColorSequence::self().entry(i));
+    } else if (i == ColorSequence::self().count()) {
+      QColorDialog::setStandardColor(j, Qt::black);
+    } else if (i == ColorSequence::self().count() + 1) {
+      QColorDialog::setStandardColor(j, Qt::white);
+    } else {
+      QColorDialog::setStandardColor(j, Qt::gray);
+    }
+  }
 }
 
 
@@ -532,7 +553,7 @@ void CurveAppearance::drawSampleLine() {
 // store the current state of the widget as the default 
 void CurveAppearance::setWidgetDefaults(bool nextColor) {
   if (nextColor) {
-    ColorSequence::self().next();
+    ColorSequence::self().incIndex();
   }
   dialogDefaults().setValue("curves/showPoints",showPoints());
   dialogDefaults().setValue("curves/showLines", showLines());
@@ -548,11 +569,10 @@ void CurveAppearance::setWidgetDefaults(bool nextColor) {
 
 // set the widget to the stored default values
 void CurveAppearance::loadWidgetDefaults() {
-  setColor(ColorSequence::self().current());
-  ColorSequence::self().next();
-  setHeadColor(ColorSequence::self().current());
-  ColorSequence::self().next();
-  setBarFillColor(ColorSequence::self().current());
+  int i_color = ColorSequence::self().index();
+  setColor(ColorSequence::self().entry(i_color));
+  setHeadColor(ColorSequence::self().entry(i_color+1));
+  setBarFillColor(ColorSequence::self().entry(i_color+2));
 
   setShowPoints(dialogDefaults().value("curves/showPoints",false).toBool());
   setShowLines(dialogDefaults().value("curves/showLines",true).toBool());

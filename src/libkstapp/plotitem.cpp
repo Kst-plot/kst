@@ -11,6 +11,7 @@
  ***************************************************************************/
 
 #include "plotitem.h"
+#include "colorsequence.h"
 
 #include "plotitemmanager.h"
 #include "plotrenderitem.h"
@@ -157,6 +158,12 @@ PlotItem::PlotItem(View *parent)
 
 ScriptInterface* PlotItem::createScriptInterface() {
   return new PlotSI(this);
+}
+
+
+QColor PlotItem::nextColor() {
+    ColorSequence::self().setIndex(curveList().count());
+    return ColorSequence::self().current();
 }
 
 

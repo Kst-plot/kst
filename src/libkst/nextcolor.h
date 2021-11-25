@@ -26,6 +26,7 @@ class KSTCORE_EXPORT NextColor
   public:
     virtual ~NextColor();
     virtual QColor next() = 0;
+    virtual QColor current() = 0;
     static NextColor& self();
 
   protected:

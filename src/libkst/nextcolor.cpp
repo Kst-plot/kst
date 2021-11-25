@@ -29,7 +29,11 @@ QColor NextColor::next() {
   return QColor();
 }
 
-NextColor& NextColor::self() { 
+QColor NextColor::current() {
+  return QColor();
+}
+
+NextColor& NextColor::self() {
   Q_ASSERT(NextColor::_instance);
   return *NextColor::_instance;
 }

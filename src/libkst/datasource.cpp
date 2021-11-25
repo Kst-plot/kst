@@ -141,7 +141,7 @@ DataSource::DataSource(ObjectStore *store, QSettings *cfg, const QString& filena
   interf_vector(new NotSupportedImp<DataVector>),
   interf_matrix(new NotSupportedImp<DataMatrix>),
   _watcher(0),
-  _color(NextColor::self().next())
+  _color(NextColor::self().current())
 {
   Q_UNUSED(type)
   Q_UNUSED(store)

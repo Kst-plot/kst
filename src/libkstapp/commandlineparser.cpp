@@ -304,12 +304,17 @@ void CommandLineParser::createCurveInPlot(VectorPtr xv, VectorPtr yv, VectorPtr 
     curve->setYVector(yv);
     curve->setXError(0);
     curve->setXMinusError(0);
-    curve->setColor(ColorSequence::self().next());
+    if (_doConsecutivePlots) {
+      ColorSequence::self().setIndex(0);
+    }
+    curve->setColor(ColorSequence::self().current());
+    if (!_doConsecutivePlots) {
+      ColorSequence::self().incIndex();
+    }
     curve->setHasPoints(_usePoints);
     curve->setHasLines(_useLines);
     curve->setHasBars(_useBargraph);
     curve->setLineWidth(dialogDefaults().value("curves/lineWidth",0).toInt());
-    //curve->setPointType(ptype++ % KSTPOINT_MAXTYPE);
 
     if (ev) {
       curve->setYError(ev);
@@ -938,7 +943,13 @@ Kst::ObjectList<Kst::Object> CommandLineParser::autoCurves(DataSourcePtr ds)
       curve->setXError(0);
       curve->setXMinusError(0);
       curve->setYMinusError(0);
-      curve->setColor(Kst::ColorSequence::self().next());
+      if (_doConsecutivePlots) {
+        ColorSequence::self().setIndex(0);
+      }
+      curve->setColor(Kst::ColorSequence::self().current());
+      if (!_doConsecutivePlots) {
+        ColorSequence::self().incIndex();
+      }
       curve->setLineWidth(1); 
 
       curve->writeLock();

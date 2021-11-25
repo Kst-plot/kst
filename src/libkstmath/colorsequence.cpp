@@ -12,17 +12,15 @@
 
 // delivers new colors...
 //
-// Consideratoins
-//  Don't increment if not used
-//  Enforce contrast
-//  increment if asked?
 
-// Mark a color used: MarkUsed();
+// Inrement Index:        IncIndex()
+// Set index:             SetIndex(i)
+// Index:                 Index()
 // Current primary Color: Current(Background)
-// Current Bar color: CurrentBar(Background)
-// Current Head Color: CurrentHead(Background)
+// Current Bar color:     CurrentBar(Background)
+// Current Head Color:    CurrentHead(Background)
 
-//
+// Only increment if there are multiple curves in a plot.
 
 // application specific includes
 #include "colorsequence.h"
@@ -58,7 +56,6 @@ ColorSequence::ColorSequence() {
   _colors.append(QColor::fromRgb(  0, 166, 255));
   _colors.append(QColor::fromRgb( 95, 154,   0));
   _colors.append(QColor::fromRgb(178,  24, 255));
-  _colors.append(QColor::fromRgb(209,   0,   0));
   _colors.append(QColor::fromRgb(255, 200,   0));
   _colors.append(QColor::fromRgb(172, 172, 172));
   _colors.append(QColor::fromRgb( 89, 220, 205));
@@ -74,68 +71,13 @@ ColorSequence::ColorSequence() {
 
 }
 
-//ColorSequence::ColorSequence() {
-//  int n_hues = 7;
-//  double hues[7];
-
-//  for (int i = 0; i < n_hues-1; i++) {
-//    double step = 1.0/(double)(n_hues-1);
-//    double h = (double)i/(double)n_hues;
-//    if (i==2) {
-//      h -= 0.8*step;
-//    }
-//    if (i==3) {
-//      h -= 0.3*step;
-//    }
-//    if (i==5) {
-//      h += 0.3*step;
-//    }
-//    hues[i] = h;
-//  }
-//  hues[n_hues-1] = 0.0;
-
-
-//  // Saturated/Bright
-//  for (int i = 0; i < n_hues-1; i++) {
-//    if (i!=1) {
-//      _colors.append(QColor::fromHsvF(hues[i], 1.0, 1.0));
-//    }
-//  }
-//  _colors.append(QColor::fromRgb(255,255,255)); // White
-
-//  // Saturated/darker
-//  for (int i = 0; i < n_hues-1; i++) {
-//    if (i!=1) {
-//      _colors.append(QColor::fromHsvF(hues[i], 1.0, 0.6));
-//    }
-//  }
-//  _colors.append(QColor::fromRgb(0,0,0)); // Black
-
-//  // Less Saturated/bright
-//  for (int i = 0; i < n_hues-1; i++) {
-//    if (i!=1) {
-//      _colors.append(QColor::fromHsvF(hues[i], 0.3, 1.0));
-//    }
-//  }
-//  _colors.append(QColor::fromRgb(190,190,190)); // Grey
-
-//  _count = _colors.size();
-//  _ptr = 0;
-//}
-
-
 ColorSequence::~ColorSequence() {
 }
 
 
-
 QColor ColorSequence::next() {
-
-  QColor current_color = entry(_ptr);
-
-  _ptr++;
-  _ptr  %= _count;
-  return current_color;
+  incIndex();
+    return entry(_ptr);
 }
 
 
@@ -144,30 +86,13 @@ QColor ColorSequence::current() {
 }
 
 
+
 QColor ColorSequence::entry(int i) {
   // makes sure 0<=i<count.
   i = abs(i)%_count;
 
   return _colors.at(i);
 }
-
-
-//void ColorSequence::createPalette( ) {
-//  if (_palette != KstColorSequenceName) {
-//    _pal.clear();
-//    _palette = KstColorSequenceName;
-
-//    for (int i = 0; i < colorcnt; i++) {
-//      _pal.insert(i, QColor(colors[i]));
-//    }
-
-//    _count = _pal.count();
-//    _ptr = 0;
-//  }
-//}
-
-
-
 
 
 //QColor ColorSequence::next_c_bc(const CurveList& curves, const QColor& badColor) {

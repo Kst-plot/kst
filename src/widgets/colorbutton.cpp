@@ -80,6 +80,7 @@ void ColorButton::chooseColor() {
   if (_color == Qt::transparent) {
     _color = Qt::black;
   }
+
   QColor color = QColorDialog::getColor(_color, parentWidget(), "Choose Color", QColorDialog::ShowAlphaChannel);
 
   if (color.isValid()) {

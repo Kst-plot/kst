@@ -250,7 +250,7 @@ ObjectPtr PowerSpectrumDialog::createNewDataObject() {
   curve->registerChange();
   curve->unlock();
 
-  _powerSpectrumTab->curveAppearance()->setWidgetDefaults();
+  _powerSpectrumTab->curveAppearance()->setWidgetDefaults(true);
 
   if(editMode()==New) {
       PlotItem *plotItem = 0;

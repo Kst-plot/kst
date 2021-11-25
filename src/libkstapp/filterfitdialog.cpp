@@ -280,7 +280,7 @@ ObjectPtr FilterFitDialog::createNewDataObject() {
           curve->registerChange();
           curve->unlock();
 
-          _filterFitTab->curveAppearance()->setWidgetDefaults();
+          _filterFitTab->curveAppearance()->setWidgetDefaults(true);
 
           PlotRenderItem *renderItem = plotItem->renderItem(PlotRenderItem::Cartesian);
           renderItem->addRelation(kst_cast<Relation>(curve));

@@ -80,7 +80,7 @@ class KSTWIDGETS_EXPORT CurveAppearance : public QWidget, public Ui::CurveAppear
 
     void clearValues();
 
-    void setWidgetDefaults(bool nextColor = true);
+    void setWidgetDefaults(bool nextColor = false);
     void loadWidgetDefaults();
 
   private slots:

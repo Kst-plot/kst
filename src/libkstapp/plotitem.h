@@ -283,6 +283,8 @@ class PlotItem : public ViewItem, public PlotItemInterface
 
     virtual ScriptInterface *createScriptInterface();
 
+    QColor nextColor();
+
   protected:
     virtual QString _automaticDescriptiveName() const;
     virtual void _initializeShortName();
