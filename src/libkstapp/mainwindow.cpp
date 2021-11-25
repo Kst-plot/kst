@@ -58,6 +58,7 @@
 #include "datavector.h"
 #include "commandlineparser.h"
 #include "dialogdefaults.h"
+#include "colorsequence.h"
 #include "settings.h"
 
 #include "dialoglauncher.h"
@@ -2646,6 +2647,9 @@ void MainWindow::readSettings() {
   restoreState(_settings.value("toolbarState").toByteArray());
   _tabTiedAct->setChecked(_settings.value("tieTabs").toBool());
 
+  // read default curve color and set the color sequence.
+  int color_offset = dialogDefaults().value("curves/default_color", 0).toInt();
+  ColorSequence::self().setOffset(color_offset);
 }
 
 

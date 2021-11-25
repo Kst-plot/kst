@@ -13,15 +13,6 @@
 // delivers new colors...
 //
 
-// Inrement Index:        IncIndex()
-// Set index:             SetIndex(i)
-// Index:                 Index()
-// Current primary Color: Current(Background)
-// Current Bar color:     CurrentBar(Background)
-// Current Head Color:    CurrentHead(Background)
-
-// Only increment if there are multiple curves in a plot.
-
 // application specific includes
 #include "colorsequence.h"
 #include <QVector>
@@ -68,6 +59,7 @@ ColorSequence::ColorSequence() {
 
   _count = _colors.size();
   _ptr = 0;
+  _offset = 0;
 
 }
 
@@ -77,7 +69,7 @@ ColorSequence::~ColorSequence() {
 
 QColor ColorSequence::next() {
   incIndex();
-    return entry(_ptr);
+  return entry(_ptr);
 }
 
 
@@ -85,11 +77,9 @@ QColor ColorSequence::current() {
   return entry(_ptr);
 }
 
-
-
 QColor ColorSequence::entry(int i) {
   // makes sure 0<=i<count.
-  i = abs(i)%_count;
+  i = abs(i+_offset)%_count;
 
   return _colors.at(i);
 }

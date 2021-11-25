@@ -35,13 +35,14 @@ class KSTMATH_EXPORT ColorSequence : public NextColor
   public:
     QColor next();         // increment and return next color
     QColor current();      // current entry
-
     QColor entry(int ptr);
 
     void incIndex() { _ptr++; _ptr  %= _count;};
     void setIndex(int ptr) {_ptr = abs(ptr)%_count;};
-
     int index() {return _ptr;};
+
+    void setOffset(int offset) {_offset = offset;};
+    int offset() { return _offset;};
 
     int count() {return _count;};
 
@@ -57,6 +58,7 @@ class KSTMATH_EXPORT ColorSequence : public NextColor
 
     int _ptr;  // pointer to the next color
     int _count;
+    int _offset;
 };
 
 }

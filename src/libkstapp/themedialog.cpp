@@ -24,6 +24,7 @@
 #include "stroketab.h"
 #include "labelpropertiestab.h"
 #include "dialogdefaults.h"
+#include "colorsequence.h"
 
 #include "plotitem.h"
 #include "boxitem.h"
@@ -64,6 +65,18 @@ ThemeDialog::ThemeDialog(QWidget *parent) : QDialog(parent) {
   _labelColor->setFixedWidth(h);
   _labelColor->setFixedHeight(h);
 
+  // fill color combobox
+  int color_offset = ColorSequence::self().offset();
+  ColorSequence::self().setOffset(0);
+
+  for (int i_color = 0; i_color < ColorSequence::self().count(); i_color++) {
+    QPixmap pm = QPixmap(32,32);
+    pm.fill(ColorSequence::self().entry(i_color));
+    QIcon icon = QIcon(pm);
+    _curveColor->addItem(icon, "");
+  }
+  ColorSequence::self().setOffset(color_offset);
+
   _applyToExisting->setChecked(true);
   _saveAsDefault->setChecked(true);
 }
@@ -76,6 +89,12 @@ void ThemeDialog::reset() {
   setFillTab();
   setStrokeTab();
   setFontTab();
+
+  // reset the curve color combobox
+  int i_color = dialogDefaults().value("curves/default_color", 0).toInt();
+  if (i_color > _curveColor->count()) i_color = 0;
+  _curveColor->setCurrentIndex(i_color);
+
 }
 
 void ThemeDialog::apply() {
@@ -105,40 +124,62 @@ void ThemeDialog::apply() {
 
   typesWithFill.append(View::staticDefaultsGroupName());
 
+  if (_curveBox->isChecked()) {
+    ColorSequence::self().setOffset(_curveColor->currentIndex());
+  }
+
   if (_saveAsDefault->isChecked()) {
-    foreach(const QString &type, typesWithFill) {
-      saveDialogDefaultsBrush(type,b);
+    if (_fillBox->isChecked()) {
+      foreach(const QString &type, typesWithFill) {
+        saveDialogDefaultsBrush(type,b);
+      }
     }
-    foreach(const QString &type, typesWithStroke) {
-      saveDialogDefaultsPen(type,p);
+    if (_strokeBox->isChecked()) {
+      foreach(const QString &type, typesWithStroke) {
+        saveDialogDefaultsPen(type,p);
+      }
     }
-    // FIXME: save font defaults
-    QFont F = font();
-    QColor C = _labelColor->color();
-    PlotItem::saveDialogDefaultsFont(F, C);
-    LabelItem::saveDialogDefaultsFont(F, C);
-    LegendItem::saveDialogDefaultsFont(F, C);
+
+    if (_fontBox->isChecked()) {
+      QFont F = font();
+      QColor C = _labelColor->color();
+      PlotItem::saveDialogDefaultsFont(F, C);
+      LabelItem::saveDialogDefaultsFont(F, C);
+      LegendItem::saveDialogDefaultsFont(F, C);
+    }
+
+    if (_curveBox->isChecked()) {
+      dialogDefaults().setValue("curves/default_color", _curveColor->currentIndex());
+    }
   }
 
   if (_applyToExisting->isChecked()) {
     QList<ViewItem *> view_items = ViewItem::getItems<ViewItem>();
 
     foreach (ViewItem *item, view_items) {
-      if (item->hasStroke()) {
-        item->storePen(p); // fixme: plots don't get repainted
+      if (_strokeBox->isChecked()) {
+        if (item->hasStroke()) {
+          item->storePen(p); // fixme: plots don't get repainted
+        }
       }
-      if (item->hasBrush()) {
-        item->setBrush(b);
+      if (_fillBox->isChecked()) {
+        if (item->hasBrush()) {
+          item->setBrush(b);
+        }
       }
-      QFont F = font();
-      QColor C = _labelColor->color();
-      if (item->hasFont()) {
-        item->setFont(F,C);
+      if (_fontBox->isChecked()) {
+        QFont F = font();
+        QColor C = _labelColor->color();
+        if (item->hasFont()) {
+          item->setFont(F,C);
+        }
       }
     }
-    QList<View*> views = kstApp->mainWindow()->tabWidget()->views();
-    foreach (View *view, views) {
-      view->setBackgroundBrush(b);
+    if (_fillBox->isChecked()) {
+      QList<View*> views = kstApp->mainWindow()->tabWidget()->views();
+      foreach (View *view, views) {
+        view->setBackgroundBrush(b);
+      }
     }
   }
 }
