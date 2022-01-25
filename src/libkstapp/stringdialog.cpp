@@ -272,12 +272,14 @@ StringDialog::~StringDialog() {
 
 void StringDialog::configureTab(ObjectPtr object) {
   if (DataStringPtr dataString = kst_cast<DataString>(object)) {
+    _stringTab->setStringMode(StringTab::DataString);
     _stringTab->setFile(dataString->dataSource()->fileName());
     _stringTab->setDataSource(dataString->dataSource());
     _stringTab->setField(dataString->field());
     _stringTab->hideGeneratedOptions();
     _stringTab->setFrame(dataString->frame());
   } else if (StringPtr string = kst_cast<String>(object)) { // edit value string
+    _stringTab->setStringMode(StringTab::GeneratedString);
     _stringTab->hideDataOptions();
     _stringTab->setValue(string->value());
   } else { // new string
