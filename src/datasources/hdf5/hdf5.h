@@ -11,8 +11,8 @@
  ***************************************************************************/
 
 
-#ifndef HDF5_H
-#define HDF5_H
+#ifndef KST_HDF5_H
+#define KST_HDF5_H
 
 #include <datasource.h>
 #include <dataplugin.h>
