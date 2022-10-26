@@ -21,6 +21,7 @@ Name[pt]='Plugin' de Objecto de Dados Compartimentados
 Name[pt_BR]=Plugin de objeto de dados compartimentados
 Name[sl]=Vtičnik predmeta bin podatka
 Name[sv]=Intervalldataobjekt-insticksprogram
+Name[tr]=İkili Veri Nesnesi Eklentisi
 Name[uk]=Додаток для об’єктів комбінування даних
 Name[x-test]=xxBin Data Object Pluginxx
 Comment=Implements a Bin Data Object Plugin for Kst.
