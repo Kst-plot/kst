@@ -21,6 +21,7 @@
     <comment xml:lang="pt_BR">Arquivo de sessão Kst</comment>
     <comment xml:lang="sl">Datoteka seje Kst</comment>
     <comment xml:lang="sv">Kst-sessionsfil</comment>
+    <comment xml:lang="tr">Kst Oturum Dosyası</comment>
     <comment xml:lang="uk">файл сеансу Kst</comment>
     <glob pattern="*.kst"/>
   </mime-type>
