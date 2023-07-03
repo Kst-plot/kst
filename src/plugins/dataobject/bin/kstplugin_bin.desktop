@@ -41,6 +41,6 @@ Comment[pt]=Implementa um 'plugin' de objecto de dados compartimentados para o K
 Comment[pt_BR]=Implementa um plugin de objeto de dados compartimentados para o Kst.
 Comment[sl]=Izvaja vtičnik predmeta Bin Data Object za Kst.
 Comment[sv]=Implementerar ett Kst intervalldataobjekt-insticksprogram.
-Comment[tr]=Kst için bir İkili Veri Nesnesi Eklentisi ekler.
+Comment[tr]=Kst için bir İkili Veri Nesnesi Eklentisi uygular.
 Comment[uk]=Реалізує додаток для роботи з об’єктами комбінування даних у Kst.
 Comment[x-test]=xxImplements a Bin Data Object Plugin for Kst.xx

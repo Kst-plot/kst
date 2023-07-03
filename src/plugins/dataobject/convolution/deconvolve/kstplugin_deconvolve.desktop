@@ -41,6 +41,6 @@ Comment[pt]=Implementa um 'plugin' de objectos de dados de desconvolução para 
 Comment[pt_BR]=Implementa um plugin de objeto de dados de desconvolução para o Kst.
 Comment[sl]=Izvaja vtičnik za podatkovni predmet dekonvolucije za Kst.
 Comment[sv]=Implementerar ett Kst dataobjekt-insticksprogram för dekonvolution.
-Comment[tr]=Kst için bir Deconvolve Veri Nesnesi Eklentisi ekler.
+Comment[tr]=Kst için bir Deconvolve Veri Nesnesi Eklentisi uygular.
 Comment[uk]=Реалізує додаток для роботи з об’єктами розгорнутих даних у Kst.
 Comment[x-test]=xxImplements a Deconvolve Data Object Plugin for Kst.xx

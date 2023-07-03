@@ -46,6 +46,6 @@ Comment[pt]=Um modelo de código para um 'plugin' de leitura de ficheiros.
 Comment[pt_BR]=Modelo de código para um plugin de leitura de arquivos.
 Comment[sl]=Predloga kode za vtičnik bralnika datotek.
 Comment[sv]=Kodmall för ett insticksprogram för filläsning.
-Comment[tr]=Bir dosya okuyucu eklentisi için kod şablonu.
+Comment[tr]=Bir dosya okuyucusu eklentisi için kod şablonu.
 Comment[uk]=Шаблон коду додатка для читання файлів.
 Comment[x-test]=xxCode template for a file reader plugin.xx

@@ -41,6 +41,6 @@ Comment[pt]=Implementa um 'plugin' de objecto de dados com recorte para o Kst.
 Comment[pt_BR]=Implementa um plugin de objeto de dados com recorte para o Kst.
 Comment[sl]=Izvaja vtičnik predmeta Chop podatkov za Kst.
 Comment[sv]=Implementerar ett Kst dataobjekt-insticksprogram för uppdelning.
-Comment[tr]=Kst için bir Chop Veri Nesnesi Eklentisi ekler.
+Comment[tr]=Kst için bir Chop Veri Nesnesi Eklentisi uygular.
 Comment[uk]=Реалізує додаток для роботи з об’єктами розрізаних даних у Kst.
 Comment[x-test]=xxImplements a Chop Data Object Plugin for Kst.xx

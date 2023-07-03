@@ -41,5 +41,6 @@ Comment[pt]=Implementa um 'plugin' de objectos de dados de correlação automát
 Comment[pt_BR]=Implementa um plugin de objetos de dados de correlação automática para o Kst.
 Comment[sl]=Izvede vtičnik podatkovnega predmeta avtokorelacije za Kst.
 Comment[sv]=Implementerar ett Kst dataobjekt-insticksprogram för autokorrelation.
+Comment[tr]=Kst için bir Otomatik Bağlılık Veri Nesnesi Eklentisi uygular.
 Comment[uk]=Реалізує додаток для роботи з об’єктами автокореляції даних у Kst.
 Comment[x-test]=xxImplements a Auto Correlation Data Object Plugin for Kst.xx
