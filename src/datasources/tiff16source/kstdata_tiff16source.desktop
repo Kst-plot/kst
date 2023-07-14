@@ -30,6 +30,7 @@ Comment[de]=Modul zum Lesen von TIFF-Bildern mit 16-Bit-Graustufen
 Comment[en_GB]=Plugin to read a 16 bit greyscale tiff image.
 Comment[es]=Complemento para leer una imagen TIFF en escala de grises de 16 bits.
 Comment[et]=Plugin 16-bitiste halltoonis TIFF-piltide lugemiseks.
+Comment[fi]=16-bittisiä TIFF-harmaasävykuvia lukeva liitännäinen.
 Comment[fr]=Module externe pour la lecture d'une image « TIFF », en nuances de gris sur 16 bits.
 Comment[gl]=Complemento para ler imaxes TIFF de 16 bits en escala de grises.
 Comment[it]=Estensione per leggere un'immagine tiff con scala di grigi a 16 bit.
