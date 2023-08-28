@@ -26,6 +26,7 @@
     <comment xml:lang="sv">Kst-sessionsfil</comment>
     <comment xml:lang="tr">Kst Oturum Dosyası</comment>
     <comment xml:lang="uk">файл сеансу Kst</comment>
+    <comment xml:lang="zh_CN">Kst 会话文件</comment>
     <glob pattern="*.kst"/>
   </mime-type>
 </mime-info>
