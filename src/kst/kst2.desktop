@@ -33,6 +33,7 @@ Name[sl]=Kst2
 Name[sv]=Kst2
 Name[tr]=Kst2
 Name[uk]=Kst2
+Name[x-test]=xxKst2xx
 GenericName=Data Viewer
 GenericName[bs]=Preglednik podataka
 GenericName[ca]=Visualitzador de dades
@@ -58,4 +59,5 @@ GenericName[sl]=Vpogledovalnik podatkov
 GenericName[sv]=Datavisning
 GenericName[tr]=Veri Görüntüleyicisi
 GenericName[uk]=Засіб перегляду даних
+GenericName[x-test]=xxData Viewerxx
 
