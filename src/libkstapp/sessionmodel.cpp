@@ -46,8 +46,9 @@ int SessionModel::columnCount(const QModelIndex& parent) const {
 
 
 void SessionModel::triggerReset() {
+  beginResetModel();
   generateObjectList();
-  reset();
+  endResetModel();
 }
 
 
@@ -113,15 +114,15 @@ QVariant SessionModel::data(const QModelIndex& index, int role) const {
       const int vectorCount = parent->outputVectors().count();
       if (index.row() < vectorCount) {
         if (VectorPtr v = parent->outputVectors().values()[index.row()]) {
-          return qVariantFromValue(v.data());
+          return QVariant::fromValue(v.data());
         }
       } else if (MatrixPtr m = parent->outputMatrices().values()[index.row() - vectorCount]) {
-        return qVariantFromValue(m.data());
+        return QVariant::fromValue(m.data());
       }
     } else {
       Q_ASSERT(_store);
       DataObjectPtr p = kst_cast<DataObject>(_objectList.at(index.row()));
-      return qVariantFromValue(p.data());
+      return QVariant::fromValue(p.data());
     }
   }
 

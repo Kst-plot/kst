@@ -96,7 +96,7 @@ bool findNextEdgeLocation(QList<AutoFormatEdges> &edges, QList<qreal> &locations
 void convertEdgeLocationsToGrid(const QList<qreal> &locations, QList<int> &grid_locations) {
 
   QList<qreal> sorted_locations(locations);
-  qSort(sorted_locations);
+  std::sort(sorted_locations.begin(), sorted_locations.end());
 
   int n_loc = locations.size();
   for (int i_unsorted = 0; i_unsorted<n_loc; i_unsorted++) {

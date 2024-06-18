@@ -122,7 +122,7 @@ double LexicalCast::fromDouble(const char* signedp) const
   fl = ldexp(fl, negexp*bexp);
   if (neg<0)
     fl = -fl;
-    _previousValue = fl;
+  _previousValue = fl;
   return(fl);
 }
 #endif

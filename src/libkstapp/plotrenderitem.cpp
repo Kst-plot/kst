@@ -43,8 +43,8 @@ PlotRenderItem::PlotRenderItem(PlotItem *parentItem)
   setTypeName(tr("Plot Render"));
   setParentViewItem(parentItem);
   setHasStaticGeometry(true);
-  setAllowedGripModes(0);
-  setAllowedGrips(0);
+  setAllowedGripModes(QFlag(0));
+  setAllowedGrips(QFlag(0));
 
   connect(parentItem, SIGNAL(geometryChanged()),
           this, SLOT(updateGeometry()));
@@ -471,7 +471,7 @@ void PlotRenderItem::keyPressEvent(QKeyEvent *event) {
     return;
   }
 
-  Qt::KeyboardModifiers modifiers = 0;
+  Qt::KeyboardModifiers modifiers = QFlag(0);
 
 
   if (event->key()== Qt::Key_Shift) {
@@ -631,7 +631,7 @@ void PlotRenderItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     return;
   }
 
-  if (event->button() == Qt::MidButton) {
+  if (event->button() == Qt::MiddleButton) {
     plotItem()->zoomPrevious();
     event->ignore();
   }

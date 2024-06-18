@@ -109,7 +109,7 @@ QBrush dialogDefaultsBrush(const QString &group_name, bool default_no_fill) {
   if (useGradient) {
     QStringList stopInfo =
         dialogDefaults().value(group_name +"/fillBrushGradient", "0,#000000,1,#ffffff,").
-        toString().split(',', QString::SkipEmptyParts);
+        toString().split(',', Qt::SkipEmptyParts);
     QLinearGradient gradient(1,0,0,0);
     gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
     for (int i = 0; i < stopInfo.size(); i+=2) {

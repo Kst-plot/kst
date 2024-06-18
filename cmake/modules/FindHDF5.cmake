@@ -19,7 +19,7 @@ if(NOT HDF5_INCLUDEDIR OR HDF5_INCLUDEDIR STREQUAL "HDF5_INCLUDEDIR-NOTFOUND")
 
 if(NOT kst_cross)
 	include(FindPkgConfig)
-	pkg_check_modules(PKGHDF5 QUIET hdf5 hdf5-serial hdf5-cpp)
+        pkg_check_modules(PKGHDF5 QUIET hdf5 hdf5-cpp)
 endif()
 
 if(NOT PKGHDF5_LIBRARIES)

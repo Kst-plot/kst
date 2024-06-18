@@ -579,8 +579,8 @@ void DataObject::writeLockInputsAndOutputs() const {
     outputs += (*i).data();
   }
 
-  qSort(inputs);
-  qSort(outputs);
+  std::sort(inputs.begin(), inputs.end());
+  std::sort(outputs.begin(), outputs.end());
 
   QList<PrimitivePtr>::ConstIterator inputIt = inputs.constBegin();
   QList<PrimitivePtr>::ConstIterator outputIt = outputs.constBegin();

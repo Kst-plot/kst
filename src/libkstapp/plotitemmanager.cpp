@@ -176,7 +176,7 @@ QList<PlotItem*> PlotItemManager::plotsForView(View *view) {
     }
   }
 
-  qSort(plot_items.begin(), plot_items.end(), shortNameLessThan);
+  std::sort(plot_items.begin(), plot_items.end(), shortNameLessThan);
 
   return plot_items;
 }
@@ -203,7 +203,7 @@ QList<ViewItem*> PlotItemManager::tieableItemsForView(View *view) {
     }
   }
 
-  qSort(view_items.begin(), view_items.end(), shortNameLessThan);
+  std::sort(view_items.begin(), view_items.end(), shortNameLessThan);
 
   return view_items;
 

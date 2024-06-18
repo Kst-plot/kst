@@ -285,8 +285,8 @@ void SharedAxisBoxItem::lockItems() {
       continue;
 
     if (PlotItem *plotItem = qobject_cast<PlotItem*>(viewItem)) {
-      plotItem->setAllowedGripModes(0);
-      plotItem->setFlags(0);
+      plotItem->setAllowedGripModes(QFlag(0));
+      plotItem->setFlags(QFlag(0));
 
       _sharedPlots << plotItem;
     }

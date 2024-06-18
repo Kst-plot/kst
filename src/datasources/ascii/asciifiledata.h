@@ -54,7 +54,7 @@ public:
   qint64 read(QFile&, qint64 start, qint64 numberOfBytes, qint64 maximalBytes = -1);
 
   char* data();
-  const char* const constPointer() const;
+  const char* constPointer() const;
   const Array& constArray() const;
 
   bool resize(qint64 size);

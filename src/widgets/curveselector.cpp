@@ -57,7 +57,7 @@ bool CurveSelector::selectedCurveDirty() const {
 void CurveSelector::setSelectedCurve(CurvePtr selectedCurve) {
   //FIXME: findData doesn't work, but the loop here - which is supposed
   // to do exactly the same thing - does.  WHY???
-  //int i = _curve->findData(qVariantFromValue(selectedVector.data()));
+  //int i = _curve->findData(QVariant::fromValue(selectedVector.data()));
   int i=-1;
   for (int j=0; j<_curve->count() ; j++) {
     if (selectedCurve.data() == _curve->itemData(j).value<Curve*>()) {
@@ -88,7 +88,7 @@ void CurveSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _curve->removeItem(i);
 
   if (_allowEmptySelection) {
-    _curve->insertItem(0, tr("<None>"), qVariantFromValue(0));
+    _curve->insertItem(0, tr("<None>"), QVariant::fromValue(0));
     _curve->setCurrentIndex(0);
   }
 }
@@ -114,14 +114,14 @@ void CurveSelector::fillCurves() {
 
   QStringList list = curves.keys();
 
-  qSort(list);
+  std::sort(list.begin(), list.end());
 
   CurvePtr current = selectedCurve();
 
   _curve->clear();
   foreach (const QString &string, list) {
     CurvePtr r = curves.value(string);
-    _curve->addItem(string, qVariantFromValue(r.data()));
+    _curve->addItem(string, QVariant::fromValue(r.data()));
   }
 
   if (_allowEmptySelection) //reset the <None>

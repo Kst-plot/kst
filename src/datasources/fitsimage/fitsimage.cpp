@@ -280,7 +280,12 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   n_elements = n_axes[0]*n_axes[1];
   buffer = (double*)malloc(n_elements*sizeof(double));
 
-  fits_read_pix( *_fitsfileptr,  TDOUBLE, fpixel, n_elements, &nullval, buffer, &anynull,  &status );
+  if (fits_read_pix( *_fitsfileptr,  TDOUBLE, fpixel, n_elements, &nullval, buffer, &anynull,  &status )) {
+      char errmsg[80];
+      fits_get_errstatus(status, errmsg);
+      fprintf(stderr, "cannot read pixel data: %s\n", errmsg);
+      fflush(stderr);
+  }
 
   // Check to see if the file is using the BLANK keyword
   // to indicate the NULL value for the image.  This is
@@ -306,7 +311,6 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   double* z = p.data->z;
 
   int ni = p.xNumSteps * p.yNumSteps - 1;
-
   // set the suggested matrix transform params: pixel index....
   double x, y, dx, dy, cx, cy;
   char charCRVal1[] = "CRVAL1";
@@ -321,6 +325,11 @@ int DataInterfaceFitsImageMatrix::read(const QString& field, DataMatrix::ReadInf
   fits_read_key(*_fitsfileptr, TDOUBLE, charCDelt2, &dy, NULL, &status);
   fits_read_key(*_fitsfileptr, TDOUBLE, charCRPix1, &cx, NULL, &status);
   fits_read_key(*_fitsfileptr, TDOUBLE, charCRPix2, &cy, NULL, &status);
+
+  if (status) {
+    dx = 1;
+    dy = 1;
+  }
 
   int i = 0;
 

@@ -151,7 +151,7 @@ void CurvePlacement::updatePlotListCombo() {
 
   _plotList->clear();
   foreach (PlotItemInterface *plot, _plots) {
-    _plotList->addItem(plot->plotCleanedName(), qVariantFromValue(plot));
+    _plotList->addItem(plot->plotCleanedName(), QVariant::fromValue(plot));
   }
 
   if ((xi>0) && (xi<_plotList->count())) {

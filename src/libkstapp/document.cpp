@@ -339,7 +339,7 @@ bool Document::open(const QString& file) {
                 QBrush brush;
                 QStringRef av = attrs.value("gradient");
                 if (!av.isNull()) {
-                  QStringList stopInfo = av.toString().split(',', QString::SkipEmptyParts);
+                  QStringList stopInfo = av.toString().split(',', Qt::SkipEmptyParts);
                   QLinearGradient gradient(1,0,0,0);
                   gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
                   for (int i = 0; i < stopInfo.size(); i+=2) {

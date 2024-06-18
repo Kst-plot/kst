@@ -543,7 +543,7 @@ void DataWizardPagePlot::updatePlotBox() {
   }
 
   foreach (PlotItemInterface *plot, Data::self()->plotList()) {
-    _existingPlotName->addItem(plot->plotName(), qVariantFromValue(plot));
+    _existingPlotName->addItem(plot->plotName(), QVariant::fromValue(plot));
   }
   bool havePlots = _existingPlotName->count() > 0;
   _cycleExisting->setEnabled(havePlots);
@@ -874,7 +874,7 @@ QStringList DataWizard::dataSourceIndexList() const {
 void DataWizard::finished() {
   DataVectorList vectors;
   uint n_curves = 0;
-  uint n_steps = 0;
+  //  uint n_steps = 0;
 
   dialogDefaults().setValue("wizard/updateType", _pageDataSource->updateType());
   dialogDefaults().setValue("wizard/doPSD", _pageDataPresentation->plotPSD());
@@ -986,15 +986,15 @@ void DataWizard::finished() {
     return;
   }
 
-  n_steps += _pageVectors->plotVectors()->count();
-  if (_pageDataPresentation->plotPSD()) {
-    n_steps += _pageVectors->plotVectors()->count();
-  }
+//  n_steps += _pageVectors->plotVectors()->count();
+//  if (_pageDataPresentation->plotPSD()) {
+//    n_steps += _pageVectors->plotVectors()->count();
+//  }
 
   VectorPtr xv;
   // only create x vector if needed
   if (_pageDataPresentation->createXAxisFromField()) {
-    n_steps += 1; // for the creation of the x-vector
+    //n_steps += 1; // for the creation of the x-vector
 
     const QString field = _pageDataPresentation->vectorField();
 

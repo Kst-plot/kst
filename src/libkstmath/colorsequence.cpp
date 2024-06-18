@@ -21,7 +21,7 @@
 
 namespace Kst {
 
-static const QLatin1String& KstColorSequenceName = QLatin1String("KstColors");
+//static const QLatin1String& KstColorSequenceName = QLatin1String("KstColors");
 
 
 ColorSequence *ColorSequence::_self = &ColorSequence::self();

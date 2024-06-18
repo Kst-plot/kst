@@ -75,7 +75,7 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _session->header()->setResizeMode(QHeaderView::ResizeToContents);
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
   _session->setSortingEnabled(true);
-  _session->sortByColumn(1); // Sort by type by default
+  _session->sortByColumn(1, Qt::AscendingOrder); // Sort by type by default
   _session->setUniformRowHeights(true);
   connect(_session, SIGNAL(customContextMenuRequested(QPoint)),
           this, SLOT(showContextMenu(QPoint)));
@@ -158,7 +158,7 @@ void DataManager::showContextMenu(const QPoint &position) {
 
           foreach (PlotItemInterface *plot, Data::self()->plotList()) {
             action = new QAction(plot->plotName(), this);
-            action->setData(qVariantFromValue(plot));
+            action->setData(QVariant::fromValue(plot));
             addMenu->addAction(action);
 
             PlotItem* plotItem = static_cast<PlotItem*>(plot);
@@ -166,7 +166,7 @@ void DataManager::showContextMenu(const QPoint &position) {
               foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
                 if (renderItem->relationList().contains(r)) {
                   action = new QAction(plot->plotName(), this);
-                  action->setData(qVariantFromValue(plot));
+                  action->setData(QVariant::fromValue(plot));
                   removeMenu->addAction(action);
                   break;
                 }

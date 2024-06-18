@@ -145,8 +145,12 @@ void LogDialog::ok() {
 void LogDialog::runScript() {
   QString script = _script->text().simplified().replace("$imagefile",_imagename).
                    replace("$messagefile", _msgfilename).replace("$user", _username);
-
-  _proc->start(script);
+  QStringList args = QProcess::splitCommand(script);
+  if (!args.isEmpty()) {
+    QString cmd = args.first();
+    args.removeFirst();
+    _proc->start(cmd, args);
+  }
 }
 
 

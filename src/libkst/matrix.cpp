@@ -247,7 +247,7 @@ void Matrix::calcNoSpikeRange(double per) {
       n_checked++;
     }
   }
-  qSort(pixels);
+  std::sort(pixels.begin(), pixels.end());
 
   // FIXME: this needs a z spike insensitive algorithm...
   _minNoSpike = pixels[size_t(n_check*per)];

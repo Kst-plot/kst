@@ -58,12 +58,14 @@ BugReportWizard::~BugReportWizard() {
 
 void BugReportWizard::reportBug() {
   QUrl url("http://bugs.kde.org/wizard.cgi");
-  url.addQueryItem("os", _OS->text());
-  url.addQueryItem("appVersion", _kstVersion->text());
-  url.addQueryItem("package", "kst");
-  url.addQueryItem("kbugreport", "1");
-  url.addQueryItem("kdeVersion", "unspecified");
+  QUrlQuery query;
 
+  query.addQueryItem("os", _OS->text());
+  query.addQueryItem("appVersion", _kstVersion->text());
+  query.addQueryItem("package", "kst");
+  query.addQueryItem("kbugreport", "1");
+  query.addQueryItem("kdeVersion", "unspecified");
+  url.setQuery(query);
   QDesktopServices::openUrl(url);
 }
 

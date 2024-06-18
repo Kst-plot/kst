@@ -485,7 +485,7 @@ bool Vector::saveToTmpFile(QFile &fp) {
 double Vector::ns_max(int ns_zoom_level) {
   if (!_ns_stats_sorted) {
     if (_n_ns_stats>4) {
-      qSort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
+      std::sort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
       _ns_stats_sorted = true;
     }
   }
@@ -514,7 +514,7 @@ double Vector::ns_max(int ns_zoom_level) {
 
 double Vector::ns_min(int ns_zoom_level) {
   if (_n_ns_stats>2) {
-    qSort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
+    std::sort(_v_ns_stats, _v_ns_stats+_n_ns_stats);
     _ns_stats_sorted = true;
   }
   if (_n_ns_stats <= 4 ) {

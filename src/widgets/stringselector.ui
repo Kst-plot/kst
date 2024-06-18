@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>296</width>
-    <height>35</height>
+    <height>38</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,16 @@
    <string>Select a string to utilize.  If you wish to create a new string, select the icon to the right.</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -32,7 +41,7 @@
       </sizepolicy>
      </property>
      <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
     </widget>
    </item>

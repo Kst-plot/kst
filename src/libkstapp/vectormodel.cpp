@@ -32,12 +32,13 @@ bool VectorModel::addVector(VectorPtr v)
 {
   assert(v);
   if (!_vectorList.contains(v)) {
+    beginResetModel();
     beginInsertColumns(QModelIndex(), columnCount(), columnCount());
     _vectorList.append(v);
     // Standard nb of digits:
     _digitNbList.append(dialogDefaults().value("viewvector/digits",12).toInt());
     endInsertColumns();
-    reset();
+    endResetModel();
     _rows = rowCount();
     return true;
   }
@@ -154,7 +155,7 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
     return false;
   }
 
-  qDebug() << "UGLY!! Add setData API to KstVector!";
+  //qDebug() << "UGLY!! Add setData API to KstVector!";
   double *d = const_cast<double*>(_vectorList.at(index.column())->value());
   d[index.row()] = v;
   return true;
@@ -162,7 +163,8 @@ bool VectorModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 void VectorModel::resetIfChanged() {
   if (_rows!=rowCount()) {
-    reset();
+    beginResetModel();
+    endResetModel();
     _rows = rowCount();
   }
 }

@@ -84,11 +84,11 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
     _SR->show();
 
     QSize size = _scalar->size();
-    size.setWidth(fontMetrics().width("000000000"));
+    size.setWidth(fontMetrics().horizontalAdvance("000000000"));
     _SR->setMinimumSize(size);
     _cutoff->setMinimumSize(size);
 
-    size.setWidth(fontMetrics().width("0000000000000"));
+    size.setWidth(fontMetrics().horizontalAdvance("0000000000000"));
     _scalar->setMinimumSize(size);
 
     //setMinimumWidth(3*min_width + _cutoffLabel->width() + _SRLabel->width()+3*_newScalar->width());
@@ -103,7 +103,7 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
 }
 
 QSize ScalarSelector::minimumSizeHint() const {
-  return QSize(15*fontMetrics().width("m")+ 3 * iconWidth(), iconWidth());
+  return QSize(15*fontMetrics().horizontalAdvance("m")+ 3 * iconWidth(), iconWidth());
 }
 
 
@@ -129,7 +129,7 @@ void ScalarSelector::setDefaultValue(double value) {
  QString string = QString::number(value);
  int index = _scalar->findText(string);
  if (index<0) {
-   _scalar->addItem(string, qVariantFromValue(0));
+   _scalar->addItem(string, QVariant::fromValue(0));
    _scalar->setCurrentIndex(_scalar->findText(string));
  } else {
    _scalar->setCurrentIndex(index);
@@ -312,7 +312,7 @@ void ScalarSelector::fillScalars() {
 
   QStringList list = scalars.keys();
 
-  qSort(list);
+  std::sort(list.begin(), list.end());
 
   QString current_text = _scalar->currentText();
   ScalarPtr current = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();
@@ -320,7 +320,7 @@ void ScalarSelector::fillScalars() {
   _scalar->clear();
   foreach (const QString &string, list) {
     ScalarPtr v = scalars.value(string);
-    _scalar->addItem(string, qVariantFromValue(v.data()));
+    _scalar->addItem(string, QVariant::fromValue(v.data()));
   }
 
   _scalarListSelector->clear();
@@ -329,7 +329,7 @@ void ScalarSelector::fillScalars() {
   if (current) {
     setSelectedScalar(current);
   } else {
-    _scalar->addItem(current_text, qVariantFromValue(0));
+    _scalar->addItem(current_text, QVariant::fromValue(0));
     _scalar->setCurrentIndex(_scalar->findText(current_text));
     _defaultsSet = true;
   }
@@ -430,7 +430,7 @@ void ScalarSelector::updateFields(ControlField control_field) {
     ratio = cutoff/frequency;
     setDefaultValue(ratio);
     //QString string = QString::number(ratio, 'g', 12);
-    //_scalar->addItem(string, qVariantFromValue(0));
+    //_scalar->addItem(string, QVariant::fromValue(0));
     //_scalar->setCurrentIndex(_scalar->findText(string));
     //_scalar->setCurrentText(QString::number(ratio, 'g', 12));
   } else if (control_field == SampleRate) { // Cutoff follows SR.  Keep ratio fixed

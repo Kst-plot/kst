@@ -68,7 +68,7 @@ bool kstrealloc(T* &ptr, size_t size)
 {
   // don't overwrite old pointer when resize fails
   // it doesn't free the old pointer
-  void* newptr = qRealloc(static_cast<void*>(ptr), size);
+  void* newptr = realloc(static_cast<void*>(ptr), size);
   if (!newptr)
     return false;
   ptr = static_cast<T*>(newptr);

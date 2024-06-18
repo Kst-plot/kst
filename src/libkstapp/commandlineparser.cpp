@@ -755,7 +755,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     } else if (arg == "--asciiDelim") {
       QString arg;
       *ok = _setStringArg(arg, tr("Usage: --asciiDelim <delimiter>\n"));
-      _asciiDelim = arg.at(0).toAscii();
+      _asciiDelim = arg.at(0).toLatin1();
     } else if (arg == "--asciiFixedWidth") {
       *ok = _setIntArg(&_asciiFixedWidth, tr("Usage: --asciiFixedWidth <width>\n"));
     } else if (arg == "--asciiNoFixedWidth") {

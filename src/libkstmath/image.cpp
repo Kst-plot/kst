@@ -521,7 +521,6 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
       }
 
       // color map
-      QColor thisPixel;
       MatrixPtr m = _inputMatrices.value(THEMATRIX);
 
       if (image->hasColorMap()) {

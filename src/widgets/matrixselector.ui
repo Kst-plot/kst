@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>271</width>
-    <height>26</height>
+    <height>38</height>
    </rect>
   </property>
   <property name="whatsThis">
@@ -17,13 +17,22 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
     <widget class="Kst::ComboBox" name="_matrix">
      <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
     </widget>
    </item>

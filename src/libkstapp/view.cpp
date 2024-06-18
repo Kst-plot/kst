@@ -281,8 +281,8 @@ bool View::event(QEvent *event) {
 
         // Qt bug: http://bugreports.qt.nokia.com/browse/QTBUG-8188
         // also see PlotRenderItem::hoverEnterEvent, there is a workaround.
-        //if (viewItem                         && viewItem->tryShortcut(e->key())) {
-        if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key())) {
+        //if (viewItem                       && viewItem->tryShortcut(e->key())) {
+        if (viewItem && viewItem->hasFocus() && viewItem->tryShortcut(e->key().toString())) {
           return true;
         }
       }
@@ -722,7 +722,7 @@ QList<ViewItem*> View::layoutableViewItems() {
     }
   }
 
-  qSort(layoutable_view_items.begin(), layoutable_view_items.end(), shortNameLessThan);
+  std::sort(layoutable_view_items.begin(), layoutable_view_items.end(), shortNameLessThan);
 
   return layoutable_view_items;
 

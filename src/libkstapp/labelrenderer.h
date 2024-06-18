@@ -128,9 +128,9 @@ class RenderContext : public QObject {
 
   inline int fontWidth(const QString& txt) const {
     if (p) {
-      return p->fontMetrics().width(txt);
+      return p->fontMetrics().horizontalAdvance(txt);
     } else {
-      return _fm.width(txt);
+      return _fm.horizontalAdvance(txt);
     }
   }
 

@@ -268,7 +268,7 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
     }
   }
 
-  qSort(bestPlugins);
+  std::sort(bestPlugins.begin(), bestPlugins.end());
 
   return bestPlugins;
 }

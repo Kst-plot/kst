@@ -224,6 +224,7 @@ int DataInterfaceHDF5String::read(const QString& field, DataString::ReadInfo& p)
 const DataString::DataInfo DataInterfaceHDF5String::dataInfo(const QString & name, int frame) const
 {
   Q_UNUSED(frame)
+  Q_UNUSED(name)
   //Debug::self()->log(QString("Getting data info for string ") + name);
 
   DataString::DataInfo info;
@@ -296,6 +297,7 @@ void HDF5Source::reset() {
 }
 
 herr_t HDF5Source::visitFunc(hid_t id, const char* name, const H5L_info_t* info, void* opData){
+    Q_UNUSED(info)
 
     //Debug::self()->log(QString("Visiting ") + name);
     HDF5Source* h5Source = static_cast<HDF5Source*> (opData);
@@ -381,7 +383,7 @@ herr_t HDF5Source::visitFunc(hid_t id, const char* name, const H5L_info_t* info,
 
 //this function should be called once per attribute
 herr_t HDF5Source::attrIterFunc(hid_t id, const char* name, const H5A_info_t* info, void* opData){
-
+  Q_UNUSED(info)
   HDF5Source* h5Source = static_cast<HDF5Source*> (opData);
   //Debug::self()->log(QString("iterating through attribute: ") + QString(name));
 
@@ -484,6 +486,8 @@ bool HDF5Source::init() {
 
 //TODO: make this do something
 unsigned HDF5Source::samplesPerFrame(const QString& field){
+  Q_UNUSED(field)
+
   return 1;
 }
 

@@ -124,14 +124,14 @@ void StringSelector::fillStrings() {
 
   QStringList list = strings.keys();
 
-  qSort(list);
+  std::sort(list.begin(), list.end());
 
   StringPtr current = selectedString();
 
   _string->clear();
   foreach (const QString &string, list) {
     StringPtr s = strings.value(string);
-    _string->addItem(string, qVariantFromValue(s.data()));
+    _string->addItem(string, QVariant::fromValue(s.data()));
   }
 
   if (_allowEmptySelection) //reset the <None>
@@ -157,7 +157,7 @@ void StringSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _string->removeItem(i);
 
   if (_allowEmptySelection) {
-    _string->insertItem(0, tr("<None>"), qVariantFromValue(0));
+    _string->insertItem(0, tr("<None>"), QVariant::fromValue(0));
     _string->setCurrentIndex(0);
   }
 }

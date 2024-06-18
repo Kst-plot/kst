@@ -151,7 +151,7 @@ bool AsciiSource::initRowIndex()
       }
       --left;
       if (header_row != _config._fieldsLine && header_row != _config._unitsLine) {
-        _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromAscii(line).trimmed();
+        _strings[QString("Header %1").arg(header_row, 2, 10, QChar('0'))] = QString::fromLatin1(line).trimmed();
       }
       header_row++;
     }
@@ -227,7 +227,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     force_update = false;
   }
 
-  _fileCreationTime_t = QFileInfo(file).created().toTime_t();
+  _fileCreationTime_t = QFileInfo(file).birthTime().toTime_t();
 
   int col_count = _fieldList.size() - 1; // minus INDEX
 
@@ -643,7 +643,7 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
   const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg._columnDelimiter.value())));
 
   if (cfg._columnType == AsciiSourceConfig::Custom && !cfg._columnDelimiter.value().isEmpty()) {
-    parts += QString(line).trimmed().split(regexColumnDelimiter, QString::SkipEmptyParts);
+    parts += QString(line).trimmed().split(regexColumnDelimiter, Qt::SkipEmptyParts);
   } else if (cfg._columnType == AsciiSourceConfig::Fixed) {
     int cnt = line.length() / cfg._columnWidth;
     for (int i = 0; i < cnt; ++i) {
@@ -657,15 +657,15 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
 
       // The following assert crashes (sometimes?) when kst is pointed at an
       // executable.  So... rather than crashing, lets just bail.
-      if (columns != QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts).size()) {
+      if (columns != QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts).size()) {
         return 0;
       }
-      Q_ASSERT(columns == QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts).size());
+      Q_ASSERT(columns == QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts).size());
       return columns;
     } else {
       //MeasureTime t("AsciiDataReader::countColumns(parts)");
       AsciiDataReader::splitColumns(line, AsciiCharacterTraits::IsWhiteSpace(), &parts);
-      Q_ASSERT(parts == QString(line).trimmed().split(QRegExp("\\s"), QString::SkipEmptyParts));
+      Q_ASSERT(parts == QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts));
     }
   }
   return parts.count();

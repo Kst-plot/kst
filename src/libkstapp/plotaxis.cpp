@@ -103,7 +103,7 @@ double PlotAxis::convertJDtoCTime(double jdIn) {
   jdIn *= 24.0*3600.0;
 
   if (jdIn > double(std::numeric_limits<time_t>::max())-1.0) {
-    jdIn = std::numeric_limits<time_t>::max()-1;
+    jdIn = double(std::numeric_limits<time_t>::max())-1.0;
   }
   if (jdIn<0) {
     jdIn = 0.0;
@@ -241,7 +241,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   if (accuracy > 0) {
     QString strSecond;
 
-    strSecond.sprintf("%02.*f", accuracy, second);
+    strSecond.asprintf("%02.*f", accuracy, second);
     for (int i=strSecond.length()-1; i>0; i--) {
       if (strSecond.at(i) == '0') {
         accuracy--;
@@ -257,15 +257,15 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
 
   QString seconds;
   QString hourminute;
-  hourminute.sprintf(" %02d:%02d:", hour, minute);
-  seconds.sprintf("%02.*f", accuracy, second);
+  hourminute.asprintf(" %02d:%02d:", hour, minute);
+  seconds.asprintf("%02.*f", accuracy, second);
   switch (_axisDisplay) {
     case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-      label.sprintf("%d/%02d/%02d", year, month, day);
+      label.asprintf("%d/%02d/%02d", year, month, day);
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-      label.sprintf("%02d/%02d/%d", day, month, year);
+      label.asprintf("%02d/%02d/%d", day, month, year);
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
@@ -275,7 +275,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
       break;
     case AXIS_DISPLAY_QTLOCALDATEHHMMSS_SS:
       date.setDate(year, month, day);
-      label = date.toString(Qt::LocalDate).toLatin1();
+      label = QLocale::system().toString(date, QLocale::ShortFormat); //date.toString(Qt::LocalDate).toLatin1();
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_QTDATETIME_FORMAT:

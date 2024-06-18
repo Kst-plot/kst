@@ -1569,10 +1569,10 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
       base_mantisa[1].remove(']');
       base_mantisa.append(QString(']'));
     }
-    qreal w = painter->fontMetrics().width(base_mantisa[0] + base) +
-        painter->fontMetrics().width(base_mantisa[1])*superscript_scale;
+    qreal w = painter->fontMetrics().horizontalAdvance(base_mantisa[0] + base) +
+        painter->fontMetrics().horizontalAdvance(base_mantisa[1])*superscript_scale;
     if (base_mantisa.size()>2) {
-      w += painter->fontMetrics().width(base_mantisa[2]);
+      w += painter->fontMetrics().horizontalAdvance(base_mantisa[2]);
     }
     if (flags & Qt::AlignRight) {
       qreal right = r.right();
@@ -1586,17 +1586,17 @@ static void PaintNumber(QPainter *painter, const QRectF rec, int flags, const QS
     QPointF p = QPointF(r.topLeft().x(), r.center().y()+painter->fontMetrics().boundingRect('0').height()/2);
     //painter->drawRect(r);
     painter->drawText(p, base_mantisa[0]);
-    p.setX(p.x() + painter->fontMetrics().width(base_mantisa[0]));
+    p.setX(p.x() + painter->fontMetrics().horizontalAdvance(base_mantisa[0]));
     painter->drawText(p,base);
     qreal ly = p.y();
-    p.setX(p.x() + painter->fontMetrics().width(base));
+    p.setX(p.x() + painter->fontMetrics().horizontalAdvance(base));
     p.setY(p.y() - superscript_raise * painter->fontMetrics().height());
     painter->save();
     QFont f = painter->font();
     f.setPointSizeF(f.pointSizeF()*superscript_scale);
     painter->setFont(f);
     painter->drawText(p,base_mantisa[1]);
-    p.setX(p.x() + painter->fontMetrics().width(base_mantisa[1]));
+    p.setX(p.x() + painter->fontMetrics().horizontalAdvance(base_mantisa[1]));
     painter->restore();
     if (base_mantisa.size()>2) {
       p.setY(ly);
@@ -1929,8 +1929,8 @@ void PlotItem::setSharedAxisBox(SharedAxisBoxItem* parent) {
       setTiedZoom(false, false);
     }
     setInSharedAxisBox(true);
-    setAllowedGripModes(0);
-    setFlags(0);
+    setAllowedGripModes(QFlag(0));
+    setFlags(QFlag(0));
     setParentViewItem(parent);
     //setBrush(Qt::transparent);
 

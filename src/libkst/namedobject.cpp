@@ -93,7 +93,7 @@ QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const 
     }
 
     _sizeCache->name = Name();
-    _sizeCache->nameWidthPixels = fontMetrics.width(_sizeCache->name);
+    _sizeCache->nameWidthPixels = fontMetrics.horizontalAdvance(_sizeCache->name);
     _sizeCache->fontSize = font.pointSize();
 
     if (_sizeCache->nameWidthPixels < width - mw) {
@@ -105,12 +105,12 @@ QString NamedObject::sizeLimitedName(const QFont& font, const int& width) const 
 
     QString name = lengthLimitedName(combo_chars);
     while ((combo_chars <= nameLength+1) &&
-           (fontMetrics.width(name) < width - mw)) {
+           (fontMetrics.horizontalAdvance(name) < width - mw)) {
       combo_chars++;
       name = lengthLimitedName(combo_chars);
     }
     while ((combo_chars>0) &&
-           (fontMetrics.width(name) > width  - mw)) {
+           (fontMetrics.horizontalAdvance(name) > width  - mw)) {
       combo_chars--;
       name = lengthLimitedName(combo_chars);
     }

@@ -89,7 +89,7 @@ ViewItem::ViewItem(View *parentView) :
 {
   _initializeShortName();
   setZValue(DRAWING_ZORDER);
-  setAcceptsHoverEvents(true);
+  setAcceptHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemIsFocusable);
   connect(parentView, SIGNAL(mouseModeChanged(View::MouseMode)),
           this, SLOT(viewMouseModeChanged(View::MouseMode)));
@@ -395,7 +395,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
       QBrush brush;
       av = attrs.value("gradient");
       if (!av.isNull()) {
-        QStringList stopInfo = av.toString().split(',', QString::SkipEmptyParts);
+        QStringList stopInfo = av.toString().split(',', Qt::SkipEmptyParts);
         QLinearGradient gradient(1,0,0,0);
         gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
         for (int i = 0; i < stopInfo.size(); i+=2) {
@@ -2368,7 +2368,7 @@ void ViewItem::viewMouseModeChanged(View::MouseMode oldMode) {
 void ViewItem::registerShortcut(QAction *action) {
   Q_ASSERT(action->parent() == this);
   view()->grabShortcut(action->shortcut());
-  _shortcutMap.insert(action->shortcut(), action);
+  _shortcutMap.insert(action->shortcut().toString(), action);
 }
 
 

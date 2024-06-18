@@ -57,7 +57,7 @@ int function_f( const gsl_vector* pVectorX, void* pParams, gsl_vector* pVectorF 
     dParameters[i] = gsl_vector_get( pVectorX, i );
   }
 
-  for( i=0; i<pData->n; i++ ) {
+  for( i=0; (unsigned long)i<pData->n; i++ ) {
     dY  = function_calculate( pData->pdX[i], dParameters );
     gsl_vector_set( pVectorF, i, (dY - pData->pdY[i])*pData->pdWeight[i] );
   }
@@ -77,7 +77,7 @@ int function_df( const gsl_vector* pVectorX, void* pParams, gsl_matrix* pMatrixJ
     dParameters[i] = gsl_vector_get( pVectorX, i );
   }
 
-  for( i=0; i<pData->n; i++ ) {
+  for( i=0; (unsigned long)i<pData->n; i++ ) {
     function_derivative( pData->pdX[i], dParameters, dDerivatives );
 
     for( j=0; j<n_params; j++ ) {

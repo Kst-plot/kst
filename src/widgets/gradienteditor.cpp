@@ -90,9 +90,8 @@ void GradientEditor::mouseReleaseEvent(QMouseEvent *event) {
     return;
   }
 
-  bool ok;
-  QRgb color = QColorDialog::getRgba(Qt::white, &ok, parentWidget());
-  if (ok) {
+  QColor color = QColorDialog::getColor(Qt::white, parentWidget());
+  if (color.isValid()) {
     int position = event->pos().x();
     Stop stop;
     stop.pos = position;

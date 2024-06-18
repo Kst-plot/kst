@@ -23,16 +23,17 @@
 __declspec(dllexport)
 #endif
 
-void nullMessageOutput(QtMsgType type, const char *msg)
+void nullMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
   Q_UNUSED(type)
+  Q_UNUSED(context)
   Q_UNUSED(msg)
 }
 
 int main(int argc, char *argv[]) {
 
 #ifdef QT_NO_WARNING_OUTPUT
-  qInstallMsgHandler(nullMessageOutput);
+  qInstallMessageHandler(nullMessageOutput);
 #endif
 
 
@@ -61,12 +62,12 @@ int main(int argc, char *argv[]) {
                     QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   app.installTranslator(&qtTranslator);
 
-  QLatin1String localeSuffix("/locale/");
   QString localeName(QLatin1String("kst_common_") + QLocale::system().name());
 
   // The "installed to system" localization:
   // FIXME: see https://bugs.kde.org/show_bug.cgi?id=323197
 #ifdef PKGDATADIR
+  QLatin1String localeSuffix("/locale/");
   QTranslator appSystemTranslator;
   appSystemTranslator.load(localeName, PKGDATADIR + localeSuffix);
   app.installTranslator(&appSystemTranslator);

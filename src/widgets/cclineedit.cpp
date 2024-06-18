@@ -61,7 +61,7 @@ CategoricalCompleter::CategoricalCompleter(QLineEdit *lineEdit, QList<Completion
     setCompletionMode(PopupCompletion);
     setCaseSensitivity(Qt::CaseInsensitive);
     setWrapAround(false);
-    qSort(_data.begin(),_data.end());
+    std::sort(_data.begin(),_data.end());
     connect(_tableView,SIGNAL(activateHint(QString)),this,SIGNAL(activated(QString)));
 }
 
@@ -74,7 +74,7 @@ CategoricalCompleter::CategoricalCompleter(QTextEdit *textEdit, QList<Completion
     setCompletionMode(PopupCompletion);
     setCaseSensitivity(Qt::CaseInsensitive);
     setWrapAround(false);
-    qSort(_data.begin(),_data.end());
+    std::sort(_data.begin(),_data.end());
     connect(_tableView,SIGNAL(activateHint(QString)),this,SIGNAL(activated(QString)));
 }
 

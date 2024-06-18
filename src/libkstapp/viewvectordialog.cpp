@@ -43,7 +43,7 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
 
   _vectors->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
   // Allow reorganizing the columns per drag&drop
-  _vectors->horizontalHeader()->setMovable(true);
+  _vectors->horizontalHeader()->setSectionsMovable(true);
 
   // Custom context menu for the remove action and display format
   setContextMenuPolicy(Qt::CustomContextMenu);
@@ -106,6 +106,7 @@ void ViewVectorDialog::show() {
 }
 
 void ViewVectorDialog::contextMenu(const QPoint& position) {
+  Q_UNUSED(position)
   QMenu menu;
   QPoint cursor = QCursor::pos();
   QAction* removeAction = menu.addAction(tr("Remove"));
@@ -213,7 +214,7 @@ QList<int> ViewVectorDialog::selectedColumns() {
     }
   }
   // Sort the columns in descending order
-  qSort(columns.begin(), columns.end(), qGreater<int>());
+  std::sort(columns.begin(), columns.end(), std::greater<int>());
   return columns;
 }
 

@@ -79,7 +79,7 @@ void ApplicationSettings::_readFromQSettings() {
 
   QString stopList = _settings.value("fill/gradient", QString()).toString();
   if (!stopList.isEmpty()) {
-    QStringList stopInfo = stopList.split(',', QString::SkipEmptyParts);
+    QStringList stopInfo = stopList.split(',', Qt::SkipEmptyParts);
     QLinearGradient gradient(0.0, 0.0, 0.0, 1.0);
     for (int i = 0; i < stopInfo.size(); i+=2) {
       gradient.setColorAt(stopInfo.at(i).toDouble(), QColor(stopInfo.at(i+1)));

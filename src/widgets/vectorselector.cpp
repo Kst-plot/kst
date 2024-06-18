@@ -53,7 +53,7 @@ int VectorSelector::iconWidth() const {
 }
 
 QSize VectorSelector::minimumSizeHint() const {
-  return QSize(15*fontMetrics().width("m")+ 2 * iconWidth(), iconWidth());
+  return QSize(15*fontMetrics().horizontalAdvance("m")+ 2 * iconWidth(), iconWidth());
 }
 
 
@@ -110,7 +110,7 @@ void VectorSelector::setSelectedVector(VectorPtr selectedVector) {
     return;
   }
   // "findData can't work here" says the trolls... so we do it 'manually'.
-  //int i = _vector->findData(qVariantFromValue(selectedVector.data()));
+  //int i = _vector->findData(QVariant::fromValue(selectedVector.data()));
   int i=-1;
   for (int j=0; j<_vector->count() ; ++j) {
     if (selectedVector.data() == _vector->itemData(j).value<Vector*>()) {
@@ -141,7 +141,7 @@ void VectorSelector::setAllowEmptySelection(bool allowEmptySelection) {
     _vector->removeItem(i);
 
   if (_allowEmptySelection) {
-    _vector->insertItem(0, tr("<None>"), qVariantFromValue(0));
+    _vector->insertItem(0, tr("<None>"), QVariant::fromValue(0));
     _vector->setCurrentIndex(0);
     _editVector->setEnabled(false);
   }
@@ -229,12 +229,12 @@ void VectorSelector::fillVectors() {
 
   QStringList list = vectors.keys();
 
-  qSort(list);
+  std::sort(list.begin(), list.end());
 
   _vector->clear();
   foreach (const QString &string, list) {
     VectorPtr v = vectors.value(string);
-    _vector->addItem(string, qVariantFromValue(v.data()));
+    _vector->addItem(string, QVariant::fromValue(v.data()));
   }
   _editVector->setEnabled(_vector->count() > 0);
 

@@ -379,16 +379,16 @@ bool MatlabSource::init() {
   while (matvar) {
     switch (matvar->class_type) {
     // All array types = matrix, scalar or vector - check rank and sizes to determine which
-    case DOUBLE_PRECISION_ARRAY_CT:
-    case SINGLE_PRECISION_ARRAY_CT:
-    case EIGHT_BIT_SIGNED_INT_ARRAY_CT:
-    case EIGHT_BIT_UNSIGNED_INT_ARRAY_CT:
-    case SIXTEEN_BIT_SIGNED_INT_ARRAY_CT:
-    case SIXTEEN_BIT_UNSIGNED_INT_ARRAY_CT:
-    case THIRTYTWO_BIT_SIGNED_INT_ARRAY_CT:
-    case THIRTYTWO_BIT_UNSIGNED_INT_ARRAY_CT:
-    case MATLAB_ARRAY_CT:
-    case COMPRESSED_DATA_CT:
+    case MAT_C_DOUBLE:
+    case MAT_C_SINGLE:
+    case MAT_C_INT8:
+    case MAT_C_UINT8:
+    case MAT_C_INT16:
+    case MAT_C_UINT16:
+    case MAT_C_INT32:
+    case MAT_C_UINT32:
+    case MAT_C_INT64:
+    case MAT_C_UINT64:
       // Scalar
       if ( (matvar->rank == 1 && matvar->dims[0] == 1) ||
            (matvar->rank == 2 && matvar->dims[0] == 1 && matvar->dims[1] == 1) ) {
@@ -412,7 +412,7 @@ bool MatlabSource::init() {
       }
       break;
 
-    case CHARACTER_ARRAY_CT: { // String
+    case MAT_C_CHAR: { // String
       matvar_t *string = Mat_VarRead(_matfile, matvar->name);
       _strings[QString(matvar->name)] = QString((char*)string->data);
       Mat_VarFree(string);
