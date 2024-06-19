@@ -12,7 +12,7 @@
 
 #include "datasourceselectordialog.h"
 
-#include "datasource.h"
+//#include "datasource.h"
 #include "datasourcepluginmanager.h"
 
 #include <QMessageBox>
@@ -23,11 +23,13 @@ namespace Kst {
 DataSourceSelectorDialog::DataSourceSelectorDialog(QString &file, QWidget *parent)
   : QFileDialog(parent) {
 
-  setFileMode(QFileDialog::Directory);
+  setFileMode(QFileDialog::ExistingFile);
   selectFile(file);
   currentChanged(file);
 
   connect(this, SIGNAL(currentChanged(QString)), this, SLOT(currentChanged(QString)));
+  connect(this, SIGNAL(directoryEntered(QString)), this, SLOT(directoryEntered(QString)));
+  // connect(this, SIGNAL(fileSelected(QString)), this, SLOT(currentChanged(QString)));
 }
 
 
@@ -40,28 +42,17 @@ QString DataSourceSelectorDialog::selectedDataSource() {
 }
 
 
-void DataSourceSelectorDialog::currentChanged(const QString &current) {
-  //qDebug() << "currentChanged" << current;
-  if (current.isEmpty()) {
-    setFileMode(QFileDialog::Directory);
-  } else {
-    QFileInfo fileInfo(current);
-    if (fileInfo.isDir()) {
-      //qDebug() << "Directory Selected - valid?" << DataSourcePluginManager::validSource(current);
-      if (DataSourcePluginManager::validSource(current)) {
-        setFileMode(QFileDialog::Directory);
-      } else {
-        setFileMode(QFileDialog::ExistingFile);
-      }
-    } else if (fileInfo.exists()) {
-      //qDebug() << "File Selected - valid?" << DataSourcePluginManager::validSource(current);
-      if (DataSourcePluginManager::validSource(current)) {
-        setFileMode(QFileDialog::ExistingFile);
-      } else {
-        setFileMode(QFileDialog::Directory);
-      }
+void DataSourceSelectorDialog::directoryEntered(const QString &current) {
+  QFileInfo fileInfo(current);
+  if (fileInfo.isDir()) {
+    if (DataSourcePluginManager::validSource(current)) {
+      selectFile("format");
+      setDirectory(current);
     }
   }
+}
+
+void DataSourceSelectorDialog::currentChanged(const QString &current) {
   QStringList filters;
   filters << "Any files (*)";
   setNameFilters(filters);
