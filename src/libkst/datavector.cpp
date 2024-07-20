@@ -48,7 +48,7 @@ namespace Kst {
 const QString DataVector::staticTypeString = "Data Vector";
 const QString DataVector::staticTypeTag = "datavector";
 
-const int INVALIDS_PER_RESET = 5;
+//const int INVALIDS_PER_RESET = 5;
 
 DataVector::DataInfo::DataInfo() :
     frameCount(-1),
@@ -374,16 +374,16 @@ bool DataVector::checkIntegrity() {
   // file has been over-written, and re-read it.
   // this is a hack to handle glitchy file system situations.
   // TODO: there has to be a better way.
-  const DataInfo info = dataInfo(_field);
-  if (dataSource() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
-    _invalidCount++;
-    if (_invalidCount>INVALIDS_PER_RESET) {
+  // const DataInfo info = dataInfo(_field);
+  // if (dataSource() && (SPF != info.samplesPerFrame || info.frameCount < NF)) {
+  //   _invalidCount++;
+  //   if (_invalidCount>INVALIDS_PER_RESET) {
 
-      reset();
-      _invalidCount=0;
-    }
-    return false;
-  }
+  //     reset();
+  //     _invalidCount=0;
+  //   }
+  //   return false;
+  // }
 
   // check for illegal NF and F0 values
   if (ReqNF < 1 && ReqF0 < 0) {
@@ -444,7 +444,6 @@ void DataVector::internalUpdate() {
     DoSkip = false;
   }
 
-
   // set new_nf and new_f0
   int fc = info.frameCount;
   if (ReqNF < 1) { // read to end of file
@@ -479,7 +478,7 @@ void DataVector::internalUpdate() {
   }
 
   // shift vector if necessary
-  if (new_f0 < F0 || new_f0 >= F0 + NF) { // No useful data around.
+  if ((NF>new_nf) || new_f0 < F0 || new_f0 >= F0 + NF) { // No useful data around.
     reset();
   } else { // shift stuff rather than re-read
     if (DoSkip) {

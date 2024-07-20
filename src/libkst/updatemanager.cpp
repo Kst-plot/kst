@@ -12,10 +12,10 @@
 
 #include "updatemanager.h"
 
-#include "primitive.h"
+//#include "primitive.h"
 #include "datasource.h"
 #include "objectstore.h"
-#include "measuretime.h"
+//#include "measuretime.h"
 #include <QCoreApplication>
 #include <QTimer>
 #include <QDebug>
@@ -91,21 +91,22 @@ void UpdateManager::doUpdates(bool forceImmediate) {
   _serial++;
 
   int n_updated=0, n_deferred=0, n_unchanged = 0;
-  qint64 retval;
+  qint64 retval = 0;
 
   // update the datasources
   foreach (DataSourcePtr ds, _store->dataSourceList()) {
     ds->writeLock();
-    retval = ds->objectUpdate(_serial);
+    ds->objectUpdate(_serial);
     ds->unlock();
-    if (retval == Object::Updated) n_updated++;
-    else if (retval == Object::Deferred) n_deferred++;
-    else if (retval == Object::NoChange) n_unchanged++;
   }
+
+  // We are going to check all data objects regardless of whether
+  // files have been changed, because the necessity of an update
+  // may have been triggered by something else.
 
   //MeasureTime t(" UpdateManager::doUpdates loop");
 
-  int i_loop = retval = 0;
+  int i_loop = 0;
   int maxloop = _store->objectList().size();
   do {
     n_updated = n_unchanged = n_deferred = 0;
@@ -115,9 +116,13 @@ void UpdateManager::doUpdates(bool forceImmediate) {
       retval = p->objectUpdate(_serial);
       p->unlock();
 
-      if (retval == Object::Updated) n_updated++;
-      else if (retval == Object::Deferred) n_deferred++;
-      else if (retval == Object::NoChange) n_unchanged++;
+      if (retval == Object::Updated) {
+        n_updated++;
+      } else if (retval == Object::Deferred) {
+        n_deferred++;
+      } else if (retval == Object::NoChange) {
+        n_unchanged++;
+      }
     }
     maxloop = qMin(maxloop,n_deferred);
     i_loop++;

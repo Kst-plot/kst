@@ -36,7 +36,7 @@ class AsciiSource : public Kst::DataSource
     AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
     ~AsciiSource();
 
-    bool initRowIndex();
+    bool initRowIndex(QFile *file);
 
     UpdateType internalDataSourceUpdate(bool read_completely);
 

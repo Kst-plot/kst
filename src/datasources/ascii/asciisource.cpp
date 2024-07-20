@@ -13,14 +13,14 @@
 #include "asciisource.h"
 #include "asciidatainterfaces.h"
 
-#include "curve.h"
-#include "colorsequence.h"
+//#include "curve.h"
+//#include "colorsequence.h"
 #include "objectstore.h"
 
-#include "math_kst.h"
+//#include "math_kst.h"
 
 #include "kst_atof.h"
-#include "measuretime.h"
+//#include "measuretime.h"
 #include "debug.h"
 
 #include <QFile>
@@ -35,7 +35,7 @@
 #include <QProgressBar>
 
 
-#include <ctype.h>
+//#include <ctype.h>
 #include <stdlib.h>
 
 
@@ -77,7 +77,7 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   setInterface(is);
   setInterface(iv);
 
-  reset();
+  AsciiSource::reset();
 
   _source = asciiTypeString;
   if (!type.isEmpty() && type != asciiTypeString) {
@@ -90,11 +90,11 @@ AsciiSource::AsciiSource(Kst::ObjectStore *store, QSettings *cfg, const QString&
   }
 
   // TODO only works for local files
-  setUpdateType((UpdateCheckType)_config._updateType.value());
+  AsciiSource::setUpdateType((UpdateCheckType)_config._updateType.value());
 
   _valid = true;
   registerChange();
-  internalDataSourceUpdate();
+  AsciiSource::internalDataSourceUpdate();
   _progressTimer.restart();
 }
 
@@ -132,21 +132,21 @@ void AsciiSource::reset()
 }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::initRowIndex()
+bool AsciiSource::initRowIndex(QFile *file)
 {
   _reader.clear();
-  _fileSize = 0;
+  //_fileSize = 0;
 
   if (_config._dataLine > 0) {
-    QFile file(_filename);
-    if (!AsciiFileBuffer::openFile(file)) {
+    //QFile file(_filename);
+    if (!AsciiFileBuffer::openFile(*file)) {
       return false;
     }
     qint64 header_row = 0;
     qint64 left = _config._dataLine;
     while (left > 0) {
-      QByteArray line = file.readLine();
-      if (line.isEmpty() || file.atEnd()) {
+      QByteArray line = file->readLine();
+      if (line.isEmpty() || file->atEnd()) {
         return false;
       }
       --left;
@@ -155,7 +155,7 @@ bool AsciiSource::initRowIndex()
       }
       header_row++;
     }
-    _reader.setRow0Begin(file.pos());
+    _reader.setRow0Begin(file->pos());
   }
 
   return true;
@@ -195,37 +195,47 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate()
 //-------------------------------------------------------------------------------------------
 Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_completely)
 {
+
   //MeasureTime t("AsciiSource::internalDataSourceUpdate: " + _filename);
   if (_busy)
     return NoChange;
 
-  // forget about cached data
-  _fileBuffer.clear();
-
-  if (!_haveHeader) {
-    _haveHeader = initRowIndex();
-    if (!_haveHeader) {
-      return NoChange;
-    }
-  }
-  updateLists();
-
+  // verify the file exists, and see if it has shrunk (so it needs a reset)
   QFile file(_filename);
+
   if (!AsciiFileBuffer::openFile(file)) {
     // Qt: If the device is closed, the size returned will not reflect the actual size of the device.
     return NoChange;
   }
 
+  bool force_update = false;
   if (_updatesDisabled) {
     _fileSize = 0;
+    force_update = true;
   } else {
     _fileSize = file.size();
+    if (_fileSize < _lastFileSize) { // file has shrunk!
+      if (!AsciiFileBuffer::reOpenFile(file)) {
+         return NoChange;
+      }
+      AsciiSource::reset();
+      _fileSize = file.size();
+    } else {
+      force_update=false;
+    }
   }
 
-  bool force_update = true;
-  if (_fileSize == file.size()) {
-    force_update = false;
+  // forget about cached data
+  _fileBuffer.clear();
+
+  if (!_haveHeader) {
+    _haveHeader = initRowIndex(&file);
+
+    if (!_haveHeader) {
+      return NoChange;
+    }
   }
+  updateLists();
 
   _fileCreationTime_t = QFileInfo(file).birthTime().toTime_t();
 
@@ -261,7 +271,14 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
 
   _lastFileSize = _fileSize;
 
-  return (!new_data && !force_update ? NoChange : Updated);
+  Kst::Object::UpdateType update_type;
+  if (new_data || force_update) {
+    update_type = Updated;
+  } else {
+    update_type = NoChange;
+  }
+
+  return (update_type);
 }
 
 
@@ -896,6 +913,7 @@ QString AsciiSource::timeFormat() const
 //-------------------------------------------------------------------------------------------
 Kst::ObjectList<Kst::Object> AsciiSource::autoCurves(ObjectStore& objectStore)
 {
+  (void)objectStore; // removed unused parameter warning.
   // here we could do more sophisticated stuff when generating a list of curves
   return ObjectList<Kst::Object>();
 }

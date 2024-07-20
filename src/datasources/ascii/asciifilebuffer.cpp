@@ -50,6 +50,15 @@ bool AsciiFileBuffer::openFile(QFile &file)
 }
 
 //-------------------------------------------------------------------------------------------
+bool AsciiFileBuffer::reOpenFile(QFile &file)
+{
+  // Don't use 'QIODevice::Text'!
+  // Because CR LF line ending breaks row offset calculation
+  file.close();
+  return file.open(QIODevice::ReadOnly);
+}
+
+//-------------------------------------------------------------------------------------------
 void AsciiFileBuffer::clear()
 {
   _fileData.clear();

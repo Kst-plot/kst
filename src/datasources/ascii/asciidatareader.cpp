@@ -13,11 +13,11 @@
 #include "asciidatareader.h"
 #include "asciisourceconfig.h"
 
-#include "math_kst.h"
+//#include "math_kst.h"
 #include "kst_inf.h"
 
 #include "kst_atof.h"
-#include "measuretime.h"
+//#include "measuretime.h"
 
 #include <QFile>
 #include <QDebug>
@@ -258,6 +258,7 @@ qint64 AsciiDataReader::progressRows()
 //-------------------------------------------------------------------------------------------
 int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, const QString& field, int s, int n)
 {
+  (void)field; // remove unused parameter warning.  This reads by column number (int col), not field name.
   if (_config._columnType == AsciiSourceConfig::Fixed) {
     //MeasureTime t("AsciiSource::readField: same width for all columns");
     const LexicalCast& lexc = LexicalCast::instance();

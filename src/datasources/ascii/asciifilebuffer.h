@@ -41,6 +41,7 @@ public:
   QVector<QVector<AsciiFileData> >& fileData() { return _fileData; }
 
   static bool openFile(QFile &file);
+  static bool reOpenFile(QFile &file);
 
 private:
   QFile* _file;
