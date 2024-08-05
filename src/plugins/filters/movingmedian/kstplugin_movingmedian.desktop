@@ -5,6 +5,4 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=movingmedian
 X-Kst-Plugin-Author=Jonathan Liu
 Name=Moving Median Data Object Plugin
-Name[en_GB]=Moving Median Data Object Plugin
 Comment=Implements a Moving Median Data Object Plugin for Kst.
-Comment[en_GB]=Implements a Moving Median Data Object Plugin for Kst.
