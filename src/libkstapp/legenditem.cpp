@@ -138,6 +138,8 @@ void LegendItem::paint(QPainter *painter) {
       }
       if (!relation->yLabelInfo().file.isEmpty()) {
         names.append(label + " (" + relation->yLabelInfo().escapedFile() + ')');
+      } else {
+        names.append(label);
       }
     }
   }

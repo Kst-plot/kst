@@ -1199,6 +1199,8 @@ void DataWizard::finished() {
         PlotRenderItem *renderItem = plotList[i_plot]->renderItem(PlotRenderItem::Cartesian);
         renderItem->addRelation(kst_cast<Relation>(curve));
 
+        plotList[i_plot]->xAxis()->setAxisInterpret(xAxisIsTime);
+
         // increment i_plot, as appropriate;
         if (_pagePlot->curvePlacement() != DataWizardPagePlot::OnePlot) {
           ++i_plot;
@@ -1337,7 +1339,6 @@ void DataWizard::finished() {
       }
       foreach (PlotItem* plot, plotList) {
         if (xAxisIsTime) {
-          plot->xAxis()->setAxisInterpret(true);
           // For ASCII, we can get the time/date format string from the datasource config
           DataSourcePtr ds = _pageDataSource->dataSource();
           if (ds->typeString() == "ASCII file") {
