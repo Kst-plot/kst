@@ -1,0 +1,11 @@
+ITS Format
+The data are in <filename>.
+The indexes for each frame are in <filename>.its
+The program 'its' reads <filename> and produces <filename>.its
+
+The indexs are a u64 which points to the start of a frame in <filename>.
+Each frame starts with the sync word sw[] = {0xeb, 0x90, 0x14, 0x6f, 0x00}
+Then 
+width: u16
+height: u16
+num images: u16
