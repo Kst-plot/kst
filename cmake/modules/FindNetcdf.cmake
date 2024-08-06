@@ -17,7 +17,7 @@ if(NOT NETCDF_INCLUDEDIR)
 
 if(NOT kst_cross)
 	include(FindPkgConfig)
-	pkg_check_modules(NETCDF QUIET netcdf)
+  pkg_check_modules(NETCDF QUIET netcdf)
 endif()
 
 if(NETCDF_INCLUDEDIR AND NETCDF_LIBRARIES)
@@ -29,7 +29,7 @@ else()
 	FIND_PATH(NETCDF_INCLUDEDIR netcdf.h
 		HINTS
 		ENV NETCDF_DIR
-		PATH_SUFFIXES include
+    PATH_SUFFIXES include
 		PATHS 
 		${kst_3rdparty_dir}
 		~/Library/Frameworks

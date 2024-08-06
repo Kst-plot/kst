@@ -17,7 +17,7 @@ if(NOT CFITSIO_INCLUDEDIR)
 
 if(NOT kst_cross)
 	include(FindPkgConfig)
-	pkg_check_modules(cfitsio QUIET cfitsio)
+  pkg_check_modules(cfitsio QUIET cfitsio)
 endif()
 
 if(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
