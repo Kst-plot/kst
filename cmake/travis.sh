@@ -12,7 +12,7 @@ startdir=$PWD
 
 #versionname=Kst-2.0.8-rc2
 
-ver=2.0.x
+ver=2.1
 date=`date --utc '+%Y.%m.%d-%H.%M'`
 if [ -z $versionname ]; then
     buildinstaller=0

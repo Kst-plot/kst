@@ -105,7 +105,7 @@ Options
 	Available options will be listed on each cmake run.
 	Here the options with their default value:
 
-    -- kst_version_string       = 2.0.x   : Version string. 
+    -- kst_version_string       = 2.1   : Version string.
     -- kst_release              = OFF   : Build release version: optimize for speed, don't embedded debug symbols. Toggle with '-Dkst_release=1'
     -- kst_deploy               = OFF   : Deploy into install dir. Toggle with '-Dkst_deploy=1'
     -- kst_merge_files          = OFF   : Merge files to speedup build about factor 5. Toggle with '-Dkst_merge_files=1'

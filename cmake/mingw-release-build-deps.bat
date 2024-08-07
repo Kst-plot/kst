@@ -6,7 +6,7 @@ cd         mingw-release-build-deps
 
 
 if "%1" == "" (
-    set ver=2.0.x
+    set ver=2.1
 ) else (
     set ver=%1
 )

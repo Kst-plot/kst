@@ -12,19 +12,26 @@
 
 find_program(KST_GIT git)
 if(KST_GIT)
-    execute_process(COMMAND ${KST_GIT} rev-parse -q --short HEAD
-                    WORKING_DIRECTORY "${kst_dir}"
-                    OUTPUT_VARIABLE _revision
-                    ERROR_VARIABLE _error
-                    RESULT_VARIABLE _result
-                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND ${KST_GIT} log -1 --format="%as"
+                  WORKING_DIRECTORY "${kst_dir}"
+                  OUTPUT_VARIABLE _date
+                  ERROR_VARIABLE _error
+                  RESULT_VARIABLE _result
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  # execute_process(COMMAND ${KST_GIT} rev-parse -q --short HEAD
+  #                   WORKING_DIRECTORY "${kst_dir}"
+  #                   OUTPUT_VARIABLE _revision
+  #                   ERROR_VARIABLE _error
+  #                   RESULT_VARIABLE _result
+  #                   OUTPUT_STRIP_TRAILING_WHITESPACE)
     # write a file with the KST_REVISION define
-    file(WRITE ${header_file}.tmp "#define KST_REVISION \"${_revision}\"\n")
+    file(WRITE ${header_file}.tmp "#define KST_REVISION ${_date}\n")
 else()
     file(WRITE ${header_file}.tmp "#define KST_REVISION \"unknown\"\n")
 endif()
 
-message(STATUS "Revision: ${_revision}")
+message(STATUS "Revision: ${_date}")
 
 # copy the file to the final header only if the version changes reduces needless rebuilds
 execute_process(COMMAND ${CMAKE_COMMAND}
