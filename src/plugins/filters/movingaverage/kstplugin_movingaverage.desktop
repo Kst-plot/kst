@@ -16,6 +16,7 @@ Name[uk]=Додаток для роботи з об’єктами рухомо�
 Name[x-test]=xxMoving Average Data Object Pluginxx
 Comment=Implements a Moving Average Data Object Plugin for Kst.
 Comment[ca]=Implementa un connector d'objecte de dades de mtjana mòbil per al Kst.
+Comment[ca@valencia]=Implementa un connector d'objecte de dades de mtjana mòbil per a Kst.
 Comment[es]=Implementa un complemento de objeto de datos de media móvil para Kst.
 Comment[nl]=Implementeert een plug-in voor een gegevensobject in Kst voor lopend gemiddelde
 Comment[sl]=Implementira vtičnik drsečega povprečja podatkovnega predmeta za Kst.
