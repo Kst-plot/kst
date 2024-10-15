@@ -221,6 +221,7 @@ class KSTMATH_EXPORT DataObjectConfigWidget : public QWidget
   public slots:
     virtual void load();
     virtual void save();
+    virtual void updateLabels();
 
   protected:
     QSettings *_cfg;

@@ -139,9 +139,10 @@ bool AsciiSource::initRowIndex(QFile *file)
 
   if (_config._dataLine > 0) {
     //QFile file(_filename);
-    if (!AsciiFileBuffer::openFile(*file)) {
-      return false;
-    }
+    // if (!AsciiFileBuffer::openFile(*file)) {
+    //   qDebug() << "could not open file in initRowIndex";
+    //   return false;
+    // }
     qint64 header_row = 0;
     qint64 left = _config._dataLine;
     while (left > 0) {

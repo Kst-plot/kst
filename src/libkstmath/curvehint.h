@@ -13,7 +13,7 @@
 #ifndef CURVEHINT_H
 #define CURVEHINT_H
 
-#include <qstring.h>
+#include <QString>
 #include <qcolor.h>
 
 #include "vector.h"

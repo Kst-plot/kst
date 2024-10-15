@@ -68,7 +68,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 #endif
   << tr("</h2>")
   << tr("<h2>A data viewing program.</h2>")
-  << tr("Copyright &copy; 2000-2017 Barth Netterfield<br><hr>")
+  << tr("Copyright &copy; 2000-2024 Barth Netterfield<br><hr>")
   << tr("Homepage: <a href=\"http://kst-plot.kde.org/\">http://kst-plot.kde.org/</a><br>")
   << tr("Please report bugs with the 'Bug Report Wizard' of the 'Help' menu.<br>")
   << tr("<br>Authors and contributors:")

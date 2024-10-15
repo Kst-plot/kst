@@ -17,6 +17,15 @@
 #include <QSemaphore>
 #include <QDebug>
 
+// Supress GCC 13's (apparently) over-agressive warnings about use of this class.
+// If you are a 22nd level C++ mage (or higher) feel free to remove this, and see
+// if there really is a problem here.
+#ifdef __GNUC__
+  #ifndef __clang__
+    #pragma GCC diagnostic ignored "-Wfree-nonheap-object"
+  #endif
+#endif
+
 //#define KST_DEBUG_SHARED
 #ifdef KST_DEBUG_SHARED
 #define KST_DBG if (true)

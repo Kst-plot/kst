@@ -1,7 +1,7 @@
 /***************************************************************************
  *                                                                         *
- *   copyright : (C) 2019 Jonathan Liu                                     *
- *                   net147@gmail.com                                      *
+ *   copyright : (C) 2024 C. Barth Netterfield                             *
+ *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -10,15 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MOVINGAVERAGEPLUGIN_H
-#define MOVINGAVERAGEPLUGIN_H
+#ifndef BOXCARPLUGIN_H
+#define BOXCARPLUGIN_H
 
 #include <QFile>
 
 #include <basicplugin.h>
 #include <dataobjectplugin.h>
 
-class MovingAverageSource : public Kst::BasicPlugin {
+class BoxcarSource : public Kst::BasicPlugin {
   Q_OBJECT
 
   public:
@@ -45,15 +45,23 @@ class MovingAverageSource : public Kst::BasicPlugin {
 
     virtual void saveProperties(QXmlStreamWriter &s);
 
-    bool weighted() const { return _weighted; }
-    void setWeighted(bool value) { _weighted = value; }
+    // bool weighted() const { return _weighted; }
+    // void setWeighted(bool value) { _weighted = value; }
+    int stages() const {return _stages;}
+    void setStages(int stages) { if (stages < 1) _stages = 1; else if (stages>100) _stages=100; else _stages=stages;}
+    double sampleRate() const {return _sample_rate;}
+    void setSampleRate(double sample_rate) { if (sample_rate <= 0.0) _sample_rate = 1.0; else _sample_rate=sample_rate;}
 
   protected:
-    MovingAverageSource(Kst::ObjectStore *store);
-    ~MovingAverageSource();
-    bool _weighted;
-    bool _accuracy;
+    BoxcarSource(Kst::ObjectStore *store);
+    ~BoxcarSource();
+    // bool _weighted;
+    // bool _accuracy;
     int _stages;
+    double _sample_rate;
+
+  private:
+    void SingleStageBoxcar(double *v_out, const double *v_in, int vec_len, int box_len);
 
   friend class Kst::ObjectStore;
 
@@ -61,12 +69,12 @@ class MovingAverageSource : public Kst::BasicPlugin {
 };
 
 
-class MovingAveragePlugin : public QObject, public Kst::DataObjectPluginInterface {
+class BoxcarPlugin : public QObject, public Kst::DataObjectPluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataObjectPluginInterface)
     Q_PLUGIN_METADATA(IID "com.kst.DataObjectPluginInterface/2.0")
   public:
-    virtual ~MovingAveragePlugin() {}
+    virtual ~BoxcarPlugin() {}
 
     virtual QString pluginName() const;
     virtual QString pluginDescription() const;

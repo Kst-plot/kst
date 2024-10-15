@@ -10,6 +10,7 @@ SUBDIRS += \
     cumulativeaverage \
     movingaverage \
     movingmedian \
+    boxcar \
     unwind \
     window
 

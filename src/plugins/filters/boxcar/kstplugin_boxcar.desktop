@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kst Data Object
+X-KDE-ModuleType=Plugin
+X-KDE-Library=boxcar
+X-Kst-Plugin-Author=Barth Netterfield
+Name=Boxcar Data Object Plugin
+Comment=Implements a boxcar lowpass filter Data Object Plugin for Kst.

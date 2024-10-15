@@ -67,11 +67,11 @@ class DataManager : public QDialog, Ui::DataManager
   private:
     Document *_doc;
 
-    QToolBar *_primitives;
-    QToolBar *_dataObjects;
-    QToolBar *_plugins;
-    QToolBar *_fits;
-    QToolBar *_filters;
+    //QToolBar *_primitives;
+    // QToolBar *_dataObjects;
+    // QToolBar *_plugins;
+    // QToolBar *_fits;
+    // QToolBar *_filters;
 
     ObjectPtr _currentObject;
     QShortcut *_deleteShortcut;

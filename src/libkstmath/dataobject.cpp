@@ -855,6 +855,8 @@ void DataObjectConfigWidget::save() {
 void DataObjectConfigWidget::load() {
 }
 
+void DataObjectConfigWidget::updateLabels() {
+}
 
 void DataObjectConfigWidget::setObjectStore(ObjectStore* store) {
   Q_UNUSED(store);
