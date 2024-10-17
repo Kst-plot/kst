@@ -1,0 +1,64 @@
+Source: kst
+Section: science
+Priority: optional
+Maintainer: Ruben Molina <rmolina@udea.edu.co>
+Build-Depends: debhelper (>= 9), cmake (>=2.8),
+ kdoctools5, qtbase5-dev, libqt5svg5-dev,
+ libgsl-dev,
+ libcfitsio-dev, libgetdata-dev, libtiff-dev, libmatio-dev, libhdf5-dev
+Standards-Version: 3.9.3
+Homepage: http://kst.kde.org
+
+Package: kst
+Architecture: any
+Replaces: kst2, kst-data
+Conflicts: kst2, kst-data
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libkst2core2 (= ${binary:Version}), libkst2math2 (= ${binary:Version}),
+ libkst2widgets2 (= ${binary:Version})
+Recommends: kst-doc
+Description: scientific data plotting tool
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+
+Package: kst-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: set of tutorials for kst
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+ .
+ This package contains documentation files for kst.
+
+Package: libkst2core2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: kst core library
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+ .
+ This package contains the core library for kst.
+
+Package: libkst2math2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: kst math library
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+ .
+ This package contains the math library for kst.
+
+Package: libkst2widgets2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: kst widgets library
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+ .
+ This package contains the widgets library for kst.

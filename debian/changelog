@@ -1,0 +1,240 @@
+kst (2.0.8-3) UNRELEASED; urgency=low
+
+  * Non-maintainer upload.
+  * New upstream release.
+  * Remove patches that have been resolved upstream:
+    - desktop-entry-contains-encoding-key.diff
+    - desktop-entry-lacks-main-category.diff
+      - upstream uses Education category rather than Graphics
+    - fix-qreal-vs-double-for-arm.diff
+  * Remove kst-data package that no longer contains anything useful
+    - add Replaces and Conflicts relations in kst package
+  * kst package Replaces and Conflicts with kst2 -- for old PPA users only
+  * Change debhelper version back to 9. Older versions no longer suported
+  * change cmake sourcedirectory to match upstream change
+  * set kst_release in cmake configure for better optimization
+  * require libkst versions to match kst package
+  * Switch to using Qt5
+  * add libtiff Build-Depends to include that plugin by default
+  * add libnetcdf-cxx-legacy-dev to Build-Depends
+  * change libcfitsio-dev Build-Depends package for 17.04 and newer
+  * delete hyphen-as-minus sign patch fixed upstream
+  * update to new XDG mime type XML file
+  * update Build-Depends for 22.04 and newer
+  * add libmatio-dev and libhdf5-dev for more data sources
+  * remove netcdf from Build-Depends, as the legacy bindings are no
+    longer available in 24.04
+
+ -- Steven Benton <stevebenton@rogers.com>  Sun, 04 Nov 2012 17:40:05 -0500
+
+kst (2.0.3-1.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add Build-depends: libgetdata-dev (Closes: #556990)
+  * Bump Standards-Version to 3.9.3 (no changes)
+  * Bump debhelper compat level to 9
+  * Drop fragile *.symbols files
+  * debian/rules updated to ensure dpkg-buildflags (e.g. hardening) works
+  * debian/copyright updated to fully comply with
+    http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+ -- Michael Milligan <mmilligan@astro.umn.edu>  Wed, 13 Jun 2012 21:39:58 -0500
+
+kst (2.0.3-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add debian/patches/fix-qreal-vs-double-for-arm.diff from Peter Green to
+    fix FTBFS on armel and armhf (Closes: #646423)
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 23 Dec 2011 00:45:25 -0500
+
+kst (2.0.3-1) unstable; urgency=low
+
+  * New upstream release (Closes: #604335)
+  * New maintainer (Closes: #589685)
+  * Reworked debian/copyright using DEP-5 and adding missing entries
+  * Reworked debian/rules using dh and 3.0 (quilt) source format
+    Tested with binutils-gold (Closes: #615738)
+  * Bump compat level to 7
+  * Change Section from x11 to science
+  * Bump Standards-Version to 3.9.2 (add Homepage field)
+  * Update descriptions
+  * Add Build-Depends on cmake
+  * Remove Build-Depends on libncurses5-dev (Closes: #553793)
+  * Remove Build-Depends on kdelibs4-dev, libqt3-mt-dev, libx11-dev, 
+    zlib1g-dev, g++, autoconf, autotools-dev, automake1.9, libtool, 
+    libncurses5-dev, doxygen, qt3-doc
+  * Remove packages: kst-bin, kst-plugins, libkst1c2, libkst1-dev
+  * New packages: kst-data, libkst2core2, libkst2math2, libkst2widgets2
+  * Update version and url for debian/watch
+  * Add *.symbols files
+  * Update debian/examples/example.kst (kst2 is can not read kst1 files)
+  * New patches solving lintian warnings:
+    + desktop-entry-contains-encoding-key.diff
+    + desktop-entry-lacks-main-category.diff
+    + hyphen-used-as-minus-sign.diff
+
+ -- Ruben Molina <rmolina@udea.edu.co>  Mon, 27 Jun 2011 17:28:28 -0500
+
+kst (1.7.0-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Apply patch for FTBFS (Closes: 543018). Thanks to Ilya Barygin
+    <barygin@gmail.com> for the patch.
+  * Bump debian/compat to 5.
+
+ -- Serafeim Zanikolas <sez@debian.org>  Fri, 14 May 2010 23:51:22 +0200
+
+kst (1.7.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Mark Hymers <mhy@debian.org>  Sun, 20 Jul 2008 10:18:48 +0100
+
+kst (1.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Change B-D to libnetcdf-dev.
+  * Add dh_icons call.  Closes: #457853.
+  * Bump Standards-Version to 3.8.0.
+  * Bump debhelper dependency for dh_icons.
+
+ -- Mark Hymers <mhy@debian.org>  Sat, 28 Jun 2008 15:16:16 +0100
+
+kst (1.5.0-2) unstable; urgency=low
+
+  * Remove dpatch support and merge changes into main tree.  This package is
+    now maintained in git.
+
+ -- Mark Hymers <mhy@debian.org>  Sat, 10 May 2008 22:02:07 +0100
+
+kst (1.5.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update Standard-Version to 3.7.3.
+  * Change menu file to use Applications/Science/Data Analysis instead
+    of Apps/Science
+
+ -- Mark Hymers <mhy@debian.org>  Mon, 10 Dec 2007 20:35:38 +0000
+
+kst (1.4.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Remove spurious Build-Dep on g77.  Closes: #430180.
+
+ -- Mark Hymers <mhy@debian.org>  Mon, 23 Jul 2007 18:08:57 +0100
+
+kst (1.3.1-2) unstable; urgency=low
+
+  * Change to use libcfitsio3 instead of libcfitsio2.  Closes: #413123.
+  * The "I'm bound to screw up my first non-sponsored upload" release.
+
+ -- Mark Hymers <mhy@debian.org>  Sat,  7 Apr 2007 22:58:05 +0100
+
+kst (1.3.1-1) unstable; urgency=low
+
+  * New upstream release. 
+
+ -- Mark Hymers <mark@hymers.org.uk>  Fri,  3 Nov 2006 23:07:26 +0000
+
+kst (1.3.0-1) unstable; urgency=low
+
+  * New upstream release.  Closes: #389955.
+
+ -- Mark Hymers <mark@hymers.org.uk>  Sun,  8 Oct 2006 14:10:19 +0100
+
+kst (1.2.1-2) unstable; urgency=low
+
+  * Update upstream homepage address in debian/control.
+  * Add a kst.desktop file
+  * Update README.Debian documentation location to reflect reality.
+  * Don't compress .docbook files otherwise khelpcentre becomes really
+    unhappy.  Closes: #368725.
+  * Bump standards version to 3.7.2; no changes needed.
+  * Add dpatch to make build with autoconf 2.60. 
+  * Stop using --enable-new-ldflags as it breaks linking with libgsl and
+    libgslcblas with newer versions of gsl. 
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Sun, 16 Jul 2006 15:01:42 +0100
+
+kst (1.2.1-1) unstable; urgency=low
+
+  * New upstream release.  (Closes: #361115)
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Sun, 16 Apr 2006 15:13:25 +0100
+
+kst (1.1.1-3) unstable; urgency=low
+
+  * Make libkst-dev Replace libkst0 and libkst1 due to file moves
+    (Closes: #353316)
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Tue, 28 Feb 2006 21:49:38 +0000
+
+kst (1.1.1-2) unstable; urgency=low
+
+  * Update admin/ files so that we can build on GNU/k*BSD (Closes: #347187)
+  * Use -Wl,--as-needed by using --enable-new-ldflags at configure time
+  * Remove gyrodata.dat in clean target
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Sat, 14 Jan 2006 16:56:13 +0000
+
+kst (1.1.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Acknowledge NMU.  Thanks to LaMont Jones.
+  * Bump standards version to 3.6.2; no changes needed.
+  * Update FSF address in debian/copyright to satisfy lintian.
+  * Correct typo in d2asc manpage.
+  * Remove g++-3.4 Build-Depends for [arm hppa m68k] and replace with a
+    general one on  g++ >= 4:4.0.2-2 which is supposed to fix the FTBFS
+    on these architectures.  Closes: #342998.
+  * Introduce dpatch into the package.
+  * Fix buffer creation. Many thanks to Josh Metzler who was the person who
+    finally managed to track this down.  Closes: #329231.
+  * Make sure we ship the .so symlinks and .la files in the -dev package.
+    This means that the -dev packages has to be Architecture: any and
+    necessitates a Conflicts/Replaces pair with older versions (due to the .la
+    files moving from libkst1 to libkst1-dev).  Also fix up the -dev package
+    in general.
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Thu, 29 Dec 2005 13:39:49 +0000
+
+kst (1.1.0-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * work around gcc-4.0 FTBFS on some architectures
+
+ -- LaMont Jones <lamont@debian.org>  Fri, 14 Oct 2005 19:28:35 +0000
+
+kst (1.1.0-2) unstable; urgency=low
+
+  * Recompile for the G++ ABI transition
+  * Rename libkst1 to libkst1c2
+  * Move the libkst1 and libkst1-dev README.Debian files so that the
+    right ones are in the right packages
+  * Correct section for libkst1-dev to be libdevel
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Tue, 23 Aug 2005 21:57:53 +0100
+
+kst (1.1.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Ship all translations.  Closes: #310430
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Sun, 29 May 2005 10:14:32 +0100
+
+kst (1.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * As kst is now stable, allow to progress into testing when ready
+     Closes: #273602
+  * Update example file to new kst-1.0.0 format (PSD changes)
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Mon, 27 Dec 2004 10:47:34 +0000
+
+kst (0.99-1) unstable; urgency=low
+
+  * Initial Debian Release.  Closes: #246538
+
+ -- Mark Hymers <mark.hymers@ncl.ac.uk>  Thu, 26 Aug 2004 15:45:52 +0100
+
