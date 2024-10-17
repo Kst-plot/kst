@@ -1,2 +1,12 @@
 https://code.launchpad.net/~kst-plot/kst/trunk-git
+https://launchpad.net/~kst-plot
+* look at view_git_repositories near top right.
+  ( the bzr repos are now dead )
+* select the lp:kst repo
+* select X recipes using this repository.
+
+There you can edit the recipes or request builds.
+
+The instructions for building live in the UBUNTU-NOBLE, etc
+branches in github in the ./debian directory.
 
