@@ -27,13 +27,21 @@ if(KST_GIT)
   #                   OUTPUT_STRIP_TRAILING_WHITESPACE)
     # write a file with the KST_REVISION define
     file(WRITE ${header_file}.tmp "#define KST_REVISION \"-\"${_date}\n")
+
+    # copy the file to the final header only if the version changes reduces needless rebuilds
+    execute_process(COMMAND ${CMAKE_COMMAND}
+                      -E copy_if_different
+                      ${header_file}.tmp ${header_file})
 else()
-    file(WRITE ${header_file}.tmp "#define KST_REVISION \"unknown\"\n")
+    #file(WRITE ${header_file}.tmp "#define KST_REVISION \"unknown\"\n")
+    execute_process(COMMAND ${CMAKE_COMMAND}
+                      -E copy_if_different
+                      ${kst_dir}/src/libkstapp/kstrevision.h.cached ${header_file})
 endif()
 
-message(STATUS "Revision: ${_date}")
+message(STATUS "******************************  Revision: ${_date}")
 
 # copy the file to the final header only if the version changes reduces needless rebuilds
-execute_process(COMMAND ${CMAKE_COMMAND}
-                -E copy_if_different
-                ${header_file}.tmp ${header_file})
+# execute_process(COMMAND ${CMAKE_COMMAND}
+#                 -E copy_if_different
+#                 ${header_file}.tmp ${header_file})

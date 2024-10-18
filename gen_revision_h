@@ -1,0 +1,3 @@
+#!/bin/sh
+git log -1 --format="%as" | awk '{printf "#define KST_REVISION \"-%s\"\n", $1}' > src/libkstapp/kstrevision.h.cached
+
