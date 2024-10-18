@@ -26,7 +26,7 @@ if(KST_GIT)
   #                   RESULT_VARIABLE _result
   #                   OUTPUT_STRIP_TRAILING_WHITESPACE)
     # write a file with the KST_REVISION define
-    file(WRITE ${header_file}.tmp "#define KST_REVISION ${_date}\n")
+    file(WRITE ${header_file}.tmp "#define KST_REVISION \"-\"${_date}\n")
 else()
     file(WRITE ${header_file}.tmp "#define KST_REVISION \"unknown\"\n")
 endif()

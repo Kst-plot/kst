@@ -61,11 +61,14 @@ AboutDialog::AboutDialog(QWidget *parent)
   authors.replaceInStrings(">", "&gt;");
   authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
 
-  QStringList msg = QStringList()
-  << tr("<qt><h2>Kst %1").arg(KSTVERSION)
+  QString version = QString(KSTVERSION)
 #ifdef KST_REVISION
-  << tr(" Revision %1").arg(KST_REVISION)
+      +KST_REVISION
 #endif
+      ;
+
+  QStringList msg = QStringList()
+  << tr("<qt><h2>Kst %1").arg(version)
   << tr("</h2>")
   << tr("<h2>A data viewing program.</h2>")
   << tr("Copyright &copy; 2000-2024 Barth Netterfield<br><hr>")
