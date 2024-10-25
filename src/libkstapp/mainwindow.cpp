@@ -1558,6 +1558,11 @@ void MainWindow::createActions() {
   _bugReportWizardAct->setIcon(KstGetIcon("kbugbuster"));
   connect(_bugReportWizardAct, SIGNAL(triggered()), this, SLOT(showBugReportWizard()));
 
+  _docBookStarterAct = new QAction(tr("Kst User's &Guide"), this);
+  _docBookStarterAct->setStatusTip(tr("Open Kst User's Guide in browser."));
+  //_docBookStarterAct->setIcon(KstGetIcon("kbugbuster"));
+  connect(_docBookStarterAct, SIGNAL(triggered()), this, SLOT(docBookStarter()));
+
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show Kst's About box"));
   _aboutAct->setIcon(KstGetIcon("dialog-information"));
@@ -1748,6 +1753,8 @@ void MainWindow::createMenus() {
   menuBar()->addSeparator();
 
   _helpMenu = menuBar()->addMenu(tr("&Help"));
+  _helpMenu->addAction(_docBookStarterAct);
+
   QMenu* _videoTutorialsMenu = _helpMenu->addMenu(tr("&Video tutorials"));
   _videoTutorialsMenu->addAction(_video1Act);
   _videoTutorialsMenu->addAction(_video2Act);
@@ -2598,6 +2605,11 @@ void MainWindow::openRecentDataFile()
     connect(dataWizard, SIGNAL(dataSourceLoaded(QString)), this, SLOT(updateRecentDataFiles(QString)));
     dataWizard->show();
   }
+}
+
+void MainWindow::docBookStarter() {
+  QString link = "https://kst-plot.kde.org/docbook/html/index.html";
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 
