@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>532</width>
+    <width>640</width>
     <height>197</height>
    </rect>
   </property>
@@ -66,9 +66,9 @@
    <item>
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>To submit a bug click on the button below.
-This will open a web browser window on http://bugs.kde.org where you will find a form to fill in.
-The information displayed above will be transferred to that server.</string>
+      <string>To submit a bug click on the button below which will open
+http://bugs.kde.org where you can submit the bug.
+You will have to create a KDE Bugs account if you don't have one.</string>
      </property>
     </widget>
    </item>
