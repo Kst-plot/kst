@@ -1,3 +1,5 @@
+*** NOTE: there is an issue with plugin names.  Appending characters to a name which already exists will prevent the new plugin from being picked up.  For example myplugin will prevent myplugin_new from working (!). ***
+
 This file summarizes the steps needed to add a plugin to Kst.
 
 Note that in Kst 1.x times it was easier as one could compile a plugin outside of the source tree. At the moment, this is not possible with Kst 2.x.
