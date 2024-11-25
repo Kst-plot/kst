@@ -9,24 +9,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "boxcar.h"
+
+#include "boxcarhighpass.h"
 #include "objectstore.h"
-#include "ui_boxcarconfig.h"
+#include "ui_boxcarhighpassconfig.h"
 
 static const QString& VECTOR_IN = "Y Vector";
 static const QString& SCALAR_IN = "Samples Scalar";
 static const QString& VECTOR_OUT = "Y";
 
-class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarConfig {
+class ConfigBoxcarHPPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarHighpassConfig {
 
 
     public:
-    ConfigBoxcarPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_BoxcarConfig() {
+    ConfigBoxcarHPPlugin(QSettings* cfg) : DataObjectConfigWidget(cfg), Ui_BoxcarHighpassConfig() {
       _store = 0;
       setupUi(this);
     }
 
-    ~ConfigBoxcarPlugin() {}
+    ~ConfigBoxcarHPPlugin() {}
 
     void setObjectStore(Kst::ObjectStore* store) {
       _store = store;
@@ -72,7 +73,7 @@ class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarC
     void setSampleRateSpin(double sr) {_sampleRateSpin->setValue(sr);}
 
     virtual void setupFromObject(Kst::Object* dataObject) {
-      if (BoxcarSource* source = static_cast<BoxcarSource*>(dataObject)) {
+      if (BoxcarHPSource* source = static_cast<BoxcarHPSource*>(dataObject)) {
         setSelectedVector(source->vector());
         setSelectedScalar(source->scalarSamples());
         setStagesSpin(source->stages());
@@ -203,35 +204,35 @@ class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarC
 };
 
 
-BoxcarSource::BoxcarSource(Kst::ObjectStore *store)
+BoxcarHPSource::BoxcarHPSource(Kst::ObjectStore *store)
 : Kst::BasicPlugin(store) {
 }
 
 
-BoxcarSource::~BoxcarSource() {
+BoxcarHPSource::~BoxcarHPSource() {
 }
 
 
-QString BoxcarSource::_automaticDescriptiveName() const {
+QString BoxcarHPSource::_automaticDescriptiveName() const {
   if (vector()) {
-    return tr("%1 Boxcar Low Pass").arg(vector()->descriptiveName());
+    return tr("%1 Boxcar High Pass").arg(vector()->descriptiveName());
   } else {
-    return tr("Boxcar Low Pass");
+    return tr("Boxcar High Pass");
   }
 }
 
-QString BoxcarSource::descriptionTip() const {
+QString BoxcarHPSource::descriptionTip() const {
   QString tip;
 
-  tip = tr("Boxcar Lowpass: %1\n").arg(Name());
+  tip = tr("Boxcar Highpass: %1\n").arg(Name());
 
   tip += tr("\nInput: %1").arg(vector()->descriptionTip());
   return tip;
 }
 
 
-void BoxcarSource::change(Kst::DataObjectConfigWidget *configWidget) {
-  if (ConfigBoxcarPlugin* config = static_cast<ConfigBoxcarPlugin*>(configWidget)) {
+void BoxcarHPSource::change(Kst::DataObjectConfigWidget *configWidget) {
+  if (ConfigBoxcarHPPlugin* config = static_cast<ConfigBoxcarHPPlugin*>(configWidget)) {
     setInputVector(VECTOR_IN, config->selectedVector());
     setInputScalar(SCALAR_IN, config->selectedScalar());
     setStages(config->stagesSpin());
@@ -240,11 +241,11 @@ void BoxcarSource::change(Kst::DataObjectConfigWidget *configWidget) {
 }
 
 
-void BoxcarSource::setupOutputs() {
+void BoxcarHPSource::setupOutputs() {
   setOutputVector(VECTOR_OUT, "");
 }
 
-void BoxcarSource::SingleStageBoxcar(double *v_out, const double *v_in, int vec_len, int box_len) {
+void BoxcarHPSource::SingleStageBoxcar(double *v_out, const double *v_in, int vec_len, int box_len) {
   // the box len must be shorter than the length of the vector.
   box_len = qMin(box_len, vec_len);
   // In order to maintain 0 phase shift,. box_len must be odd.
@@ -304,7 +305,7 @@ void BoxcarSource::SingleStageBoxcar(double *v_out, const double *v_in, int vec_
 }
 
 
-bool BoxcarSource::algorithm() {
+bool BoxcarHPSource::algorithm() {
   Kst::VectorPtr inputVector = _inputVectors[VECTOR_IN];
   Kst::ScalarPtr inputScalar = _inputScalars[SCALAR_IN];
   Kst::VectorPtr outputVector;
@@ -325,6 +326,7 @@ bool BoxcarSource::algorithm() {
   int box_len = int(inputScalar->value());
   double scaled_boxlen = box_len;
 
+  // first calculate the low pass filtered vector
   SingleStageBoxcar(v_out, v_in, vec_len, box_len);
 
   if (stages() == 1) {
@@ -358,49 +360,54 @@ bool BoxcarSource::algorithm() {
 
     delete[] v_scratch;
   }
+  // now convert the low passed out vector to a high pass out vector
+  for (int i=0; i<vec_len; i++) {
+    v_out[i] = v_in[i]-v_out[i];
+  }
+
   return true;
 }
 
 
-Kst::VectorPtr BoxcarSource::vector() const {
+Kst::VectorPtr BoxcarHPSource::vector() const {
   return _inputVectors[VECTOR_IN];
 }
 
-Kst::ScalarPtr BoxcarSource::scalarSamples() const {
+Kst::ScalarPtr BoxcarHPSource::scalarSamples() const {
   return _inputScalars[SCALAR_IN];
 }
 
 
-QStringList BoxcarSource::inputVectorList() const {
+QStringList BoxcarHPSource::inputVectorList() const {
   return QStringList( VECTOR_IN );
 }
 
 
-QStringList BoxcarSource::inputScalarList() const {
+QStringList BoxcarHPSource::inputScalarList() const {
   return QStringList( SCALAR_IN );
 }
 
 
-QStringList BoxcarSource::inputStringList() const {
+QStringList BoxcarHPSource::inputStringList() const {
   return QStringList( /*STRING_IN*/ );
 }
 
 
-QStringList BoxcarSource::outputVectorList() const {
+QStringList BoxcarHPSource::outputVectorList() const {
   return QStringList( VECTOR_OUT );
 }
 
 
-QStringList BoxcarSource::outputScalarList() const {
+QStringList BoxcarHPSource::outputScalarList() const {
   return QStringList( /*SCALAR_OUT*/ );
 }
 
 
-QStringList BoxcarSource::outputStringList() const {
+QStringList BoxcarHPSource::outputStringList() const {
   return QStringList( /*STRING_OUT*/ );
 }
 
-void BoxcarSource::setProperty(const QString &key, const QString &val) {
+void BoxcarHPSource::setProperty(const QString &key, const QString &val) {
     if (key == "Stages") {
       setStages(val.toDouble());
     }
@@ -410,21 +417,21 @@ void BoxcarSource::setProperty(const QString &key, const QString &val) {
     }
 }
 
-void BoxcarSource::saveProperties(QXmlStreamWriter &s) {
+void BoxcarHPSource::saveProperties(QXmlStreamWriter &s) {
    s.writeAttribute("Stages", QString::number(stages()));
    s.writeAttribute("SampleRate", QString::number(sampleRate()));
 }
 
 
-QString BoxcarPlugin::pluginName() const { return tr("Boxcar Lowpass Filter"); }
-QString BoxcarPlugin::pluginDescription() const { return tr("Computes the boxcar lowpass of the input vector."); }
+QString BoxcarHPPlugin::pluginName() const { return tr("Boxcar Highpass Filter"); }
+QString BoxcarHPPlugin::pluginDescription() const { return tr("Computes the boxcar highpass of the input vector."); }
 
 
-Kst::DataObject *BoxcarPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
+Kst::DataObject *BoxcarHPPlugin::create(Kst::ObjectStore *store, Kst::DataObjectConfigWidget *configWidget, bool setupInputsOutputs) const {
 
-  if (ConfigBoxcarPlugin* config = static_cast<ConfigBoxcarPlugin*>(configWidget)) {
+  if (ConfigBoxcarHPPlugin* config = static_cast<ConfigBoxcarHPPlugin*>(configWidget)) {
 
-    BoxcarSource* object = store->createObject<BoxcarSource>();
+    BoxcarHPSource* object = store->createObject<BoxcarHPSource>();
 
     if (setupInputsOutputs) {
       object->setInputScalar(SCALAR_IN, config->selectedScalar());
@@ -446,13 +453,13 @@ Kst::DataObject *BoxcarPlugin::create(Kst::ObjectStore *store, Kst::DataObjectCo
 }
 
 
-Kst::DataObjectConfigWidget *BoxcarPlugin::configWidget(QSettings *settingsObject) const {
-  ConfigBoxcarPlugin *widget = new ConfigBoxcarPlugin(settingsObject);
+Kst::DataObjectConfigWidget *BoxcarHPPlugin::configWidget(QSettings *settingsObject) const {
+  ConfigBoxcarHPPlugin *widget = new ConfigBoxcarHPPlugin(settingsObject);
   return widget;
 }
 
 #ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, BoxcarPlugin)
+Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, BoxcarHPPlugin)
 #endif
 
 // vim: ts=2 sw=2 et

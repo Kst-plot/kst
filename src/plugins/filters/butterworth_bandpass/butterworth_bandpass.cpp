@@ -12,7 +12,6 @@
  *                                                                         *
  ***************************************************************************/
 
-
 #include "butterworth_bandpass.h"
 #include "objectstore.h"
 #include "ui_filterbutterworthbandpassconfig.h"

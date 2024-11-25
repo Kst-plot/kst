@@ -5,21 +5,18 @@ CCBUG: bugnumber
 
 ------------------
 
+The report bug action is broken.
+-New versions are not listed on bugzilla.  How do you add them?
+
+------------------
+
 Bug 268893
 -w (like "wizard" switch, as we had in kst 1.x) to open the datafile directly in the wizard.
 Maybe a first-time dialog?
 
 ------------------
 
-Get git web site working.
-
-------------------
-
-port website to new site (?)
-
-------------------
-
-Access docbook from help menu.
+port website to framework (?)
 
 ------------------
 
