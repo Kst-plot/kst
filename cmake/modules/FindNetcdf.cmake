@@ -17,11 +17,11 @@ if(NOT NETCDF_INCLUDEDIR)
 
 if(NOT kst_cross)
 	include(FindPkgConfig)
-  pkg_check_modules(NETCDF QUIET netcdf)
+  pkg_check_modules(NETCDF netcdf netcdf-cxx4)
 endif()
 
 if(NETCDF_INCLUDEDIR AND NETCDF_LIBRARIES)
-	FIND_LIBRARY(NETCDF_LIBRARY_CPP netcdf_c++ 
+	FIND_LIBRARY(NETCDF_LIBRARY_CPP netcdf_c++4
 		HINTS ${NETCDF_LIBRARY_DIRS})	
 	set(NETCDF_LIBRARY_C -L${NETCDF_LIBRARY_DIRS} ${NETCDF_LIBRARIES} CACHE STRING "" FORCE)
 else()
@@ -46,9 +46,9 @@ else()
 	
 	find_netcdf_lib(netcdf_c         netcdf)
 	find_netcdf_lib(netcdf_c_debug   netcdfd)
-	find_netcdf_lib(netcdf_cpp       netcdf_c++)
-	find_netcdf_lib(netcdf_cpp_debug netcdf_c++d)
-	
+	find_netcdf_lib(netcdf_cpp       netcdf_c++4)
+	find_netcdf_lib(netcdf_cpp_debug netcdf_c++4d)
+
 	if(netcdf_c AND netcdf_c_debug)
 		set(NETCDF_LIBRARY_C optimized ${netcdf_c} debug ${netcdf_c_debug} CACHE STRING "" FORCE)
 	endif()

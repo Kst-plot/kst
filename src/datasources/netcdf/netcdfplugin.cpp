@@ -126,13 +126,11 @@ int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
       return 0;
     }
 
-    NcFile *ncfile = new NcFile(filename.toUtf8().data());
-    if (ncfile->is_valid()) {
+    netCDF::NcFile ncfile(filename.toUtf8().data(), netCDF::NcFile::read);
+    if (!ncfile.isNull()) {
       KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
-      delete ncfile;
       return 80;
     } else {
-      delete ncfile;
       return 0;
     }
   }

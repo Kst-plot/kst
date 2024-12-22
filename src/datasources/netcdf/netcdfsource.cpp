@@ -38,6 +38,7 @@
 
 
 using namespace Kst;
+using namespace netCDF;
 
 static const QString netCdfTypeString = "netCDF Files";
 
@@ -192,50 +193,72 @@ bool DataInterfaceNetCdfVector::isValid(const QString& field) const
 
 QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& field)
 {
-  NcVar *var = 0;
+  NcVar var;
   if (field != "INDEX") {
-    var = netcdf._ncfile->get_var((NcToken) field.toLatin1().constData());
+    var = netcdf._ncfile->getVar(field.toLatin1().constData());
   }
-  if (!var) {
+  if (var.isNull()) {
     NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return QMap<QString, double>();
   }
   QMap<QString, double> fieldScalars;
-  fieldScalars["NbAttributes"] = var->num_atts();
-  for (int i=0; i<var->num_atts(); ++i) {
-    NcAtt *att = var->get_att(i);
+  fieldScalars["NbAttributes"] = var.getAttCount();
+  for (auto att: var.getAtts()) {
+    size_t n = att.second.getAttLength();
+    std::vector<double> data(n);
     // Only handle char attributes as fieldStrings, the others as fieldScalars
-    if (att->type() == ncByte || att->type() == ncShort || att->type() == ncInt
-        || att->type() == ncLong || att->type() == ncFloat || att->type() == ncDouble) {
-      // Some attributes may have multiple values => load the first as is, and for the others
-      // add a -2, -3, etc... suffix as obviously we can have only one value per scalar.
-      // Do it in two steps to avoid a test in the loop while keeping a "clean" name for the first one
-      fieldScalars[QString(att->name())] = att->values()->as_double(0);
-      for (int j=1; j<att->values()->num(); ++j) {
-        fieldScalars[QString(att->name()) + QString("-") + QString::number(j+1)] = att->values()->as_double(j);
-      }
+    switch (att.second.getType().getTypeClass()) {
+    case NC_BYTE:
+    case NC_UBYTE:
+    case NC_SHORT:
+    case NC_USHORT:
+    case NC_INT:
+    case NC_UINT:
+    case NC_INT64:
+    case NC_UINT64:
+    case NC_FLOAT:
+    case NC_DOUBLE:
+      att.second.getValues((double *)&data[0]);
+      break;
+    default:
+      break;
     }
+    // Some attributes may have multiple values => load the first as is, and for the others
+    // add a -2, -3, etc... suffix as obviously we can have only one value per scalar.
+    // Do it in two steps to avoid a test in the loop while keeping a "clean" name for the first one
+    QString name(att.first.c_str());
+    fieldScalars[name] = data[0];
+    for (size_t j=1; j<n; j++)
+      fieldScalars[name + QString("-") + QString::number(j+1)] = data[j];
   }
   return fieldScalars;
 }
 
 QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& field)
 {
-  NcVar *var = 0;
+  NcVar var;
   if (field != "INDEX") {
-    var = netcdf._ncfile->get_var(field.toLatin1().constData());
+    var = netcdf._ncfile->getVar(field.toLatin1().constData());
   }
-  if (!var) {
+  if (var.isNull()) {
     NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return QMap<QString, QString>();
   }
   QMap<QString, QString> fieldStrings;
   QString tmpString;
-  for (int i=0; i<var->num_atts(); ++i) {
-    NcAtt *att = var->get_att(i);
+  for (auto att: var.getAtts()) {
     // Only handle char/unspecified attributes as fieldStrings, the others as fieldScalars
-    if (att->type() == ncChar || att->type() == ncNoType) {
-      fieldStrings[att->name()] = QString(att->values()->as_string(0));
+    switch (att.second.getType().getTypeClass()) {
+    case NC_CHAR:
+    case NC_STRING:
+      {
+	std::string s;
+	att.second.getValues(s);
+	fieldStrings[QString(att.first.c_str())] = QString(s.c_str());
+      }
+      break;
+    default:
+      break;
     }
     // qDebug() << att->name() << ": " << att->values()->num() << endl;
   }
@@ -282,20 +305,19 @@ const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& ma
     return DataMatrix::DataInfo();
   }
 
-  QByteArray bytes = matrix.toLatin1();
-  NcVar *var = netcdf._ncfile->get_var(bytes.constData());  // var is owned by _ncfile
-  if (!var) {
+  NcVar var = netcdf._ncfile->getVar(matrix.toLatin1().constData());  // var is owned by _ncfile
+  if (var.isNull()) {
     return DataMatrix::DataInfo();
   }
 
-  if (var->num_dims() != 2) {
+  if (var.getDimCount() != 2) {
     return DataMatrix::DataInfo();
   }
 
   DataMatrix::DataInfo info;
   // TODO is this right?
-  info.xSize = var->get_dim(0)->size();
-  info.ySize = var->get_dim(1)->size();
+  info.xSize = var.getDim(0).getSize();
+  info.ySize = var.getDim(1).getSize();
 
   return info;
 }
@@ -326,7 +348,6 @@ bool DataInterfaceNetCdfMatrix::isValid(const QString& field) const {
 NetcdfSource::NetcdfSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement &element) :
   Kst::DataSource(store, cfg, filename, type),
   _ncfile(0L),
-  _ncErr(NcError::silent_nonfatal),
   is(new DataInterfaceNetCdfScalar(*this)),
   it(new DataInterfaceNetCdfString(*this)),
   iv(new DataInterfaceNetCdfVector(*this)),
@@ -367,8 +388,8 @@ void NetcdfSource::reset() {
 
 
 bool NetcdfSource::initFile() {
-  _ncfile = new NcFile(_filename.toUtf8().data(), NcFile::ReadOnly);
-  if (!_ncfile->is_valid()) {
+  _ncfile = new NcFile(_filename.toUtf8().data(), NcFile::read);
+  if (_ncfile->isNull()) {
       qDebug() << _filename << ": failed to open in initFile()" << endl;
       return false;
     }
@@ -377,43 +398,38 @@ bool NetcdfSource::initFile() {
   _fieldList.clear();
   _fieldList += "INDEX";
 
-  int nb_vars = _ncfile->num_vars();
-  NETCDF_DBG qDebug() << nb_vars << " vars found in total" << endl;
+  NETCDF_DBG qDebug() << _ncfile->getVarCount() << " vars found in total" << endl;
 
   _maxFrameCount = 0;
 
-  for (int i = 0; i < nb_vars; i++) {
-    NcVar *var = _ncfile->get_var(i);
-    if (!var) {
+  for (auto var: _ncfile->getVars()) {
+    if (var.second.isNull()) {
       continue;
     }
-    if (var->num_dims() == 0) {
-      _scalarList += var->name();
-    } else if (var->num_dims() == 1) {
-      _fieldList += var->name();
-      int fc = var->num_vals() / var->rec_size();
+    if (var.second.getDimCount() == 0) {
+      _scalarList += var.first.c_str();
+    } else if (var.second.getDimCount() == 1) {
+      _fieldList += var.first.c_str();
+      int fc = var.second.getDim(0).getSize();
       _maxFrameCount = qMax(_maxFrameCount, fc);
-      _frameCounts[var->name()] = fc;
-    } else if (var->num_dims() == 2) {
-      _matrixList += var->name();
+      _frameCounts[QString(var.first.c_str())] = fc;
+    } else if (var.second.getDimCount() == 2) {
+      _matrixList += var.first.c_str();
     }
   }
 
   // Get strings
-  int globalAttributesNb = _ncfile->num_atts();
-  for (int i = 0; i < globalAttributesNb; ++i) {
+  for (auto att: _ncfile->getAtts()) {
     // Get only first value, should be enough for a start especially as strings are complete
-    NcAtt *att = _ncfile->get_att(i);
-    if (att) {
-      QString attrName = QString(att->name());
-      char *attString = att->as_string(0);
-      QString attrValue = QString(att->as_string(0));
-      delete[] attString;
+    if (!att.second.isNull()) {
+      QString attrName = QString(att.first.c_str());
+      std::string s;
+      att.second.getValues(s);
+      QString attrValue = QString(s.c_str());
       //TODO port
       //KstString *ms = new KstString(KstObjectTag(attrName, tag()), this, attrValue);
       _strings[attrName] = attrValue;
     }
-    delete att;
   }
   setUpdateType(Timer);
 
@@ -437,16 +453,17 @@ Kst::Object::UpdateType NetcdfSource::internalDataSourceUpdate() {
   bool updated = false;
   /* Update member variables _ncfile, _maxFrameCount, and _frameCounts
      and indicate that an update is needed */
-  int nb_vars = _ncfile->num_vars();
-  for (int j = 0; j < nb_vars; j++) {
-    NcVar *var = _ncfile->get_var(j);
-    if (!var) {
+  for (auto var: _ncfile->getVars()) {
+    if (var.second.isNull()) {
       continue;
     }
-    int fc = var->num_vals() / var->rec_size();
-    _maxFrameCount = qMax(_maxFrameCount, fc);
-    updated = updated || (_frameCounts[var->name()] != fc);
-    _frameCounts[var->name()] = fc;
+    if (var.second.getDimCount() == 1) {
+      int fc = var.second.getDim(0).getSize();
+      _maxFrameCount = qMax(_maxFrameCount, fc);
+      QString name(var.first.c_str());
+      updated = updated || (_frameCounts[name] != fc);
+      _frameCounts[name] = fc;
+    }
   }
   return updated ? Object::Updated : Object::NoChange;
 }
@@ -455,10 +472,9 @@ Kst::Object::UpdateType NetcdfSource::internalDataSourceUpdate() {
 int NetcdfSource::readScalar(double *v, const QString& field)
 {
   // TODO error handling
-  QByteArray bytes = field.toLatin1();
-  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
-  if (var) {
-    var->get(v);
+  NcVar var = _ncfile->getVar(field.toLatin1().constData());  // var is owned by _ncfile
+  if (!var.isNull()) {
+    var.getVar(v);
     return 1;
   }
   return 0;
@@ -467,20 +483,17 @@ int NetcdfSource::readScalar(double *v, const QString& field)
 int NetcdfSource::readString(QString *stringValue, const QString& stringName)
 {
   // TODO more error handling?
-  NcAtt *att = _ncfile->get_att((NcToken) stringName.toLatin1().data());
-  if (att) {
-    *stringValue = QString(att->as_string(0));
-    delete att;
+  NcGroupAtt att = _ncfile->getAtt(stringName.toLatin1().constData());
+  if (!att.isNull()) {
+    std::string s;
+    att.getValues(s);
+    *stringValue = QString(s.c_str());
     return 1;
   }
   return 0;
 }
 
 int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
-  NcType dataType = ncNoType; /* netCDF data type */
-  /* Values for one record */
-  NcValues *record = 0;// = new NcValues(dataType,numFrameVals);
-
   NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
 
   /* For INDEX field */
@@ -496,24 +509,24 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   /* For a variable from the netCDF file */
-  QByteArray bytes = field.toLatin1();
-  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
-  if (!var) {
+  NcVar var = _ncfile->getVar(field.toLatin1().constData());  // var is owned by _ncfile
+  if (var.isNull()) {
     NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
-  dataType = var->type();
-
-  if (s >= var->num_vals() / var->rec_size()) {
+  if (s >= (int) var.getDim(0).getSize()) {
     return 0;
   }
 
   bool oneSample = n < 0;
-  int recSize = var->rec_size();
   double add_offset = 1.0, scale_factor = 1.0;
-  switch (dataType) {
-    case ncShort:
+  std::vector<size_t> sv(1);
+  sv[0] = s;
+  std::vector<size_t> nv(1);
+  nv[0] = n;
+  switch (var.getType().getTypeClass()) {
+    case NC_SHORT:
       {
         // Check for special attributes add_offset and scale_factor indicating the use of the convention described in
         // <http://www.unidata.ucar.edu/software/netcdf/docs/netcdf/Attribute-Conventions.html>
@@ -524,83 +537,37 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
             scale_factor = iv->metaScalars(field)["scale_factor"];
         }
         if (oneSample) {
-          record = var->get_rec(s);
-          v[0] = packed ? record->as_short(0)*scale_factor+add_offset : record->as_short(0);
-          delete record;
+	  short record;
+	  var.getVar(sv, &record);
+          v[0] = packed ? record*scale_factor+add_offset : record;
         } else {
-            for (int i = 0; i < n; i++) {
-              record = var->get_rec(i+s);
-              if (packed) {
-                for (int j = 0; j < recSize; j++) {
-                  v[i*recSize + j] = record->as_short(j)*scale_factor+add_offset;
-                }
-              }
-              else {
-                for (int j = 0; j < recSize; j++) {
-                  v[i*recSize + j] = record->as_short(j);
-                }
-              }
-            delete record;
+	  std::vector<short> record(n);
+	  var.getVar(sv, nv, (short *)&record[0]);
+	  for (int i = 0; i < n; i++) {
+	    if (packed) {
+	      v[i] = record[i]*scale_factor+add_offset;
+	    } else {
+	      v[i] = record[i];
+	    }
           }
         }
       }
       break;
 
-    case ncInt:
+    case NC_INT:
+    case NC_UINT:
+    case NC_INT64:
+    case NC_UINT64:
+    case NC_FLOAT:
+    case NC_DOUBLE:
       {
         if (oneSample) {
-          record = var->get_rec(s);
-          v[0] = record->as_int(0);
-          delete record;
+	  var.getVar(sv, v);
         } else {
-          for (int i = 0; i < n; i++) {
-            record = var->get_rec(i+s);
-            NETCDF_DBG qDebug() << "Read record " << i+s << endl;
-            for (int j = 0; j < recSize; j++) {
-              v[i*recSize + j] = record->as_int(j);
-            }
-            delete record;
-          }
+	  var.getVar(sv, nv, v);
         }
       }
       break;
-
-    case ncFloat:
-      {
-        if (oneSample) {
-          record = var->get_rec(s);
-          v[0] = record->as_float(0);
-          delete record;
-        } else {
-          for (int i = 0; i < n; i++) {
-            record = var->get_rec(i+s);
-            for (int j = 0; j < recSize; j++) {
-              v[i*recSize + j] = record->as_float(j);
-            }
-            delete record;
-          }
-        }
-      }
-      break;
-
-    case ncDouble:
-      {
-        if (oneSample) {
-          record = var->get_rec(s);
-          v[0] = record->as_double(0);
-          delete record;
-        } else {
-          for (int i = 0; i < n; i++) {
-            record = var->get_rec(i+s);
-            for (int j = 0; j < recSize; j++) {
-              v[i*recSize + j] = record->as_double(j);
-            }
-            delete record;
-          }
-        }
-      }
-      break;
-
     default:
       NETCDF_DBG qDebug() << field << ": wrong datatype for kst, no values read" << endl;
       return -1;
@@ -610,7 +577,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
   NETCDF_DBG qDebug() << "Finished reading " << field << endl;
 
-  return oneSample ? 1 : n * recSize;
+  return oneSample ? 1 : n;
 }
 
 
@@ -620,19 +587,17 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 int NetcdfSource::readMatrix(double *v, const QString& field) 
 {
   /* For a variable from the netCDF file */
-  QByteArray bytes = field.toLatin1();
-  NcVar *var = _ncfile->get_var(bytes.constData());  // var is owned by _ncfile
-  if (!var) {
+  NcVar var = _ncfile->getVar(field.toLatin1().constData());  // var is owned by _ncfile
+  if (var.isNull()) {
     NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return -1;
   }
 
-  int xSize = var->get_dim(0)->size();
-  int ySize = var->get_dim(1)->size();
+  int xSize = var.getDim(0).getSize();
+  int ySize = var.getDim(1).getSize();
 
-  var->get(v, xSize, ySize);
+  var.getVar(v);
 
- 
   return  xSize * ySize;
 }
 
@@ -647,13 +612,12 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
   if (field.toLower() == "index") {
     return 1;
   }
-  QByteArray bytes = field.toLatin1();
-  NcVar *var = _ncfile->get_var(bytes.constData());
-  if (!var) {
+  NcVar var = _ncfile->getVar(field.toLatin1().constData());
+  if (var.isNull()) {
     NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
     return 0;
   }
-  return var->rec_size();
+  return 1;
 }
 
 
