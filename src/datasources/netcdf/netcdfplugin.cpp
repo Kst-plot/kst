@@ -126,13 +126,18 @@ int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
       return 0;
     }
 
-    NcFile *ncfile = new NcFile(filename.toUtf8().data());
-    if (ncfile->is_valid()) {
-      KST_DBG qDebug() << filename << " looks like netCDF !" << Qt::endl;
-      delete ncfile;
+// <<<<<<< HEAD
+//     NcFile *ncfile = new NcFile(filename.toUtf8().data());
+//     if (ncfile->is_valid()) {
+//       KST_DBG qDebug() << filename << " looks like netCDF !" << Qt::endl;
+//       delete ncfile;
+// =======
+    netCDF::NcFile ncfile(filename.toUtf8().data(), netCDF::NcFile::read);
+    if (!ncfile.isNull()) {
+      KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
+// >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
       return 80;
     } else {
-      delete ncfile;
       return 0;
     }
   }
