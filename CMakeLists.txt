@@ -1,17 +1,24 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16)
+
+set(kst_version_major 2)
+if(kst_version_string)
+    set(kst_version ${kst_version_string})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${kst_version}")
+else()
+    set(kst_version_minor 1)
+    #set(kst_version_patch x)
+    set(kst_version ${kst_version_major}.${kst_version_minor})
+    #set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
+    set(kst_version_string ${kst_version})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
+endif()
+
+project(Kst VERSION ${kst_version})
 
 if(kst_clang)
     set(CMAKE_C_COMPILER    "clang")
     SET (CMAKE_CXX_COMPILER "clang++")
     message(STATUS "Using clang  ${CMAKE_CXX_COMPILER}")
-endif()
-
-if(POLICY CMP0020)
-    cmake_policy(SET CMP0020 OLD)
-endif()
-
-if(${CMAKE_MAJOR_VERSION} EQUAL 3)
-    cmake_policy(SET CMP0043 OLD)
 endif()
 
 # figure out if we use MinGW with Ninja: call with -DCC=gcc
@@ -69,9 +76,6 @@ if(kst_cross)
 endif()
 
 
-project(Kst)
-
-
 if(kst_release)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_WARNING_OUTPUT")
@@ -86,19 +90,6 @@ if(kst_sanitize)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${clang_flags}")
 endif()
 
-
-set(kst_version_major 2)
-if(kst_version_string)
-    set(kst_version ${kst_version_string})
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${kst_version}")
-else()
-    set(kst_version_minor 1)
-    #set(kst_version_patch x)
-    set(kst_version ${kst_version_major}.${kst_version_minor})
-    #set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
-    set(kst_version_string ${kst_version})
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
-endif()
 
 if(CMAKE_COMPILER_IS_GNUCC)
     execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
