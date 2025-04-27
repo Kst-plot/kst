@@ -11,10 +11,6 @@
  ***************************************************************************/
 #include "generaltab.h"
 
-#if !defined(Q_OS_WIN) &&  QT_VERSION < 0x050000
-#define HAVE_SWITCHABLE_RASTER
-#endif
-
 namespace Kst {
 
 GeneralTab::GeneralTab(QWidget *parent)
@@ -34,21 +30,13 @@ GeneralTab::~GeneralTab() {
 }
 
 bool GeneralTab::useRaster() const {
-#ifdef HAVE_SWITCHABLE_RASTER
-  return _useRaster->isChecked();
-#else
   return false;
-#endif
 }
 
 
 void GeneralTab::setUseRaster(bool useRaster) {
-#ifdef HAVE_SWITCHABLE_RASTER
-  _useRaster->setChecked(useRaster);
-#else
   _useRaster->setCheckState(Qt::Checked);
   _useRaster->hide();
-#endif
 }
 
 bool GeneralTab::transparentDrag() const {

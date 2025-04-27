@@ -12,23 +12,6 @@
 
 #include "asciifiledata.h"
 
-#ifndef QT5
-// needed to track memeory usage
-#include "qplatformdefs.h"
-#include <stdlib.h>
-void* fileBufferMalloc(size_t bytes);
-void fileBufferFree(void* ptr);
-#define malloc fileBufferMalloc
-#define qMalloc fileBufferMalloc
-#define free fileBufferFree
-#define qFree fileBufferFree
-#include <QVarLengthArray>
-#undef malloc
-#undef qMalloc
-#undef free
-#undef qFree
-#endif
-
 #include "debug.h"
 
 #include <QFile>

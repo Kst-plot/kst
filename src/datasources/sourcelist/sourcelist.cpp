@@ -517,8 +517,4 @@ Kst::DataSourceConfigWidget *SourceListPlugin::configWidget(QSettings *cfg, cons
 
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstdata_SourceList, SourceListPlugin)
-#endif
-
 // vim: ts=2 sw=2 et

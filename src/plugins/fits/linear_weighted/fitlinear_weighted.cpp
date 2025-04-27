@@ -355,8 +355,4 @@ Kst::DataObjectConfigWidget *FitLinearWeightedPlugin::configWidget(QSettings *se
   return widget;
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_FitLinearWeightedPlugin, FitLinearWeightedPlugin)
-#endif
-
 // vim: ts=2 sw=2 et

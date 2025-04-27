@@ -189,7 +189,7 @@ use_qt5lib(Qt5Xml)
 use_qt5lib(Qt5PrintSupport)
 use_qt5lib(Qt5Svg)
 
-add_definitions(-DQT5=1 -DQT_DISABLE_DEPRECATED_BEFORE)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
 include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS}) # Qt5 bug?
 

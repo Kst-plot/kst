@@ -674,11 +674,7 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
     } else if (format == QString("eps")) {
 #ifndef KST_NO_PRINTER
       QPrinter printer(QPrinter::ScreenResolution);
-#ifdef QT5
       printer.setOutputFormat(QPrinter::PdfFormat);
-#else
-      printer.setOutputFormat(QPrinter::PostScriptFormat);
-#endif
       printer.setOutputFileName(file);
       printer.setOrientation(QPrinter::Portrait);
 
@@ -875,11 +871,9 @@ void MainWindow::print() {
   printer.setOutputFileName(dialogDefaults().value("print/path", "./print.pdf").toString());
 #endif
   QPointer<QPrintDialog> pd = new QPrintDialog(&printer, this);
-#if QT_VERSION >= 0x040500
   pd->setOption(QPrintDialog::PrintToFile);
   pd->setOption(QPrintDialog::PrintPageRange, true);
   pd->setOption(QAbstractPrintDialog::PrintShowPageSize,true);
-#endif
 
   if (pd->exec() == QDialog::Accepted) {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -2676,9 +2670,7 @@ void MainWindow::setWidgetFlags(QWidget* widget)
   if (widget) {
     // Make sure the dialog gets maximize and minimize buttons under Windows
     widget->QWidget::setWindowFlags((Qt::WindowFlags) Qt::Dialog |     Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint
-#if QT_VERSION >= 0x040500
         | Qt::WindowCloseButtonHint
-#endif
 );
   }
 }

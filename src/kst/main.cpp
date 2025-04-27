@@ -37,22 +37,6 @@ int main(int argc, char *argv[]) {
 #endif
 
 
-#if !defined(Q_OS_WIN) && QT_VERSION < 0x050000 && QT_VERSION >= 0x040500
-  // The GraphicsSystem needs to be set before the instantiation of the QApplication.
-  // Therefore we need to parse the current setting in this unusual place :-/
-  QSettings& settings = Kst::createSettings("application");
-  if (settings.value("general/raster", false).toBool()) {
-    QApplication::setGraphicsSystem("raster");
-  } else {
-    // this must be actually set, since raster is now the
-    // default under linux.  Native is strongly preferred
-    // for remote X, and raster mildly preferred otherwise.
-    // Note: for QT5, "native" is gone.  Which is bad for
-    // remote X users.  Sigh...
-    QApplication::setGraphicsSystem("native");
-  }
-#endif
-
   srand(time(NULL));
   Kst::Application app(argc, argv);
 
@@ -80,11 +64,9 @@ int main(int argc, char *argv[]) {
   // qDebug() << "Dir = " + app.applicationDirPath() + "/../share/kst" + localeSuffix;
   app.installTranslator(&kstDirectoryTranslator);
 
-#ifdef QT5
   // use high res pixmaps if pixel-doubling is in effect.
   // But there is are still odd bugs, so don;t get too excited.
   app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-#endif
 
 
   app.initMainWindow();

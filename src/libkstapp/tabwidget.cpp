@@ -74,10 +74,8 @@ TabWidget::TabWidget(QWidget *parent)
   tabBar()->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(tabBar(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
   _cnt = 0;
-#if QT_VERSION >= 0x040500
   tabBar()->setMovable(true);
   tabBar()->setExpanding(true);
-#endif
 }
 
 
