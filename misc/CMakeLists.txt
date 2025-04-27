@@ -1,52 +1,31 @@
 # install runtime files
 
 if(WIN32)
-	if (kst_qt5)
-		install(FILES
-			${QT_BINARY_DIR}/Qt5Core.dll
-			${QT_BINARY_DIR}/Qt5Gui.dll
-			${QT_BINARY_DIR}/Qt5Widgets.dll
-			${QT_BINARY_DIR}/Qt5Xml.dll
-			${QT_BINARY_DIR}/Qt5Network.dll				
-			${QT_BINARY_DIR}/Qt5PrintSupport.dll
-                        ${QT_BINARY_DIR}/Qt5Svg.dll
-                        DESTINATION bin
-			CONFIGURATIONS Release)
-		install(FILES
-			${QT_BINARY_DIR}/../plugins/platforms/qminimal.dll
-			${QT_BINARY_DIR}/../plugins/platforms/qwindows.dll			
-			DESTINATION bin/platforms
-			CONFIGURATIONS Release)
-		install(FILES
-			${QT_BINARY_DIR}/../plugins/printsupport/windowsprintersupport.dll		
-			DESTINATION bin/printsupport
-			CONFIGURATIONS Release)
-		install(FILES
-			${QT_BINARY_DIR}/../plugins/imageformats/qgif.dll
-			${QT_BINARY_DIR}/../plugins/imageformats/qjpeg.dll				
-                        ${QT_BINARY_DIR}/../plugins/imageformats/qsvg.dll
-                        DESTINATION bin/imageformats
-			CONFIGURATIONS Release)
-	else()
-		install(FILES
-			${QT_BINARY_DIR}/QtCore4.dll
-			${QT_BINARY_DIR}/QtGui4.dll
-			${QT_BINARY_DIR}/QtXml4.dll
-			${QT_BINARY_DIR}/QtOpenGL4.dll
-			${QT_BINARY_DIR}/QtSvg4.dll
-			${QT_BINARY_DIR}/QtNetwork4.dll
-			DESTINATION bin
-			CONFIGURATIONS Release)
-		install(FILES
-			${QT_BINARY_DIR}/QtCored4.dll
-			${QT_BINARY_DIR}/QtGuid4.dll
-			${QT_BINARY_DIR}/QtXmld4.dll
-			${QT_BINARY_DIR}/QtOpenGLd4.dll
-			${QT_BINARY_DIR}/QtSvgd4.dll
-			${QT_BINARY_DIR}/QtNetworkd4.dll
-			DESTINATION bin
-			CONFIGURATIONS Debug)
-	endif()
+	install(FILES
+		${QT_BINARY_DIR}/Qt5Core.dll
+		${QT_BINARY_DIR}/Qt5Gui.dll
+		${QT_BINARY_DIR}/Qt5Widgets.dll
+		${QT_BINARY_DIR}/Qt5Xml.dll
+		${QT_BINARY_DIR}/Qt5Network.dll
+		${QT_BINARY_DIR}/Qt5PrintSupport.dll
+					${QT_BINARY_DIR}/Qt5Svg.dll
+					DESTINATION bin
+		CONFIGURATIONS Release)
+	install(FILES
+		${QT_BINARY_DIR}/../plugins/platforms/qminimal.dll
+		${QT_BINARY_DIR}/../plugins/platforms/qwindows.dll
+		DESTINATION bin/platforms
+		CONFIGURATIONS Release)
+	install(FILES
+		${QT_BINARY_DIR}/../plugins/printsupport/windowsprintersupport.dll
+		DESTINATION bin/printsupport
+		CONFIGURATIONS Release)
+	install(FILES
+		${QT_BINARY_DIR}/../plugins/imageformats/qgif.dll
+		${QT_BINARY_DIR}/../plugins/imageformats/qjpeg.dll
+					${QT_BINARY_DIR}/../plugins/imageformats/qsvg.dll
+					DESTINATION bin/imageformats
+		CONFIGURATIONS Release)
 endif()
 
 if(MINGW)
