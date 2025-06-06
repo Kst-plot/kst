@@ -115,9 +115,7 @@ endmacro()
 
 
 macro(kst_install_executable)
-	install(TARGETS ${kst_name}
-		RUNTIME DESTINATION bin COMPONENT Runtime
-		BUNDLE  DESTINATION .   COMPONENT Runtime)
+	install(TARGETS ${kst_name} ${KF6_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
 
@@ -163,7 +161,7 @@ macro(kst_add_library type)
 			install(TARGETS ${kst_name} RUNTIME DESTINATION bin)
 		endif()
 	elseif(NOT APPLE)
-		install(TARGETS ${kst_name} DESTINATION ${kst_install_libdir})
+		install(TARGETS ${kst_name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 	endif()
 endmacro()
 
@@ -203,7 +201,7 @@ macro(kst_add_plugin folder name)
 	kst_add_plugin_internal(${folder} ${name} MODULE "")
     kst_link(${libcore} ${libmath} ${libwidgets})
 	if(NOT APPLE)
-		install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
+		install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 	endif()
 endmacro()
 
@@ -225,7 +223,7 @@ endmacro()
 macro(kst_find_install_desktop_file folder)
 	if(UNIX)
 		file(GLOB _desktop_file ${kst_dir}/${folder}/*.desktop)
-		install(FILES  ${_desktop_file} DESTINATION ${kst_install_plugin_desktop_file_path})
+		install(FILES  ${_desktop_file} DESTINATION ${KDE_INSTALL_APPDIR})
 	endif()
 endmacro()
 

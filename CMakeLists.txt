@@ -3,14 +3,12 @@ cmake_minimum_required(VERSION 3.16)
 set(kst_version_major 2)
 if(kst_version_string)
     set(kst_version ${kst_version_string})
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${kst_version}")
 else()
     set(kst_version_minor 1)
     #set(kst_version_patch x)
     set(kst_version ${kst_version_major}.${kst_version_minor})
     #set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
     set(kst_version_string ${kst_version})
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kst ${kst_version}")
 endif()
 
 project(Kst VERSION ${kst_version})
@@ -28,9 +26,20 @@ if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
     set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
 endif()
 
+include(FeatureSummary)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+find_package(ECM ${KF_MIN_VERSION} NO_MODULE)
+set_package_properties(ECM PROPERTIES
+    TYPE REQUIRED
+    URL "https://api.kde.org/ecm/"
+    DESCRIPTION "extra cmake modules")
+
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
 include(KstMacros)
+include(KDEInstallDirs)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR} ABSOLUTE)
 get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
@@ -41,12 +50,9 @@ set(kst_binary_name kst2)
 kst_option_init()
 kst_option(string ""  all version_string    "Version string")
 kst_option(bool   ON  all release           "Build release version: optimize for speed, don't embedded debug symbols")
-kst_option(bool   OFF gcc deploy            "Deploy into install dir")
 kst_option(bool   OFF all merge_files       "Merge files to speedup build about factor 5")
 kst_option(bool   OFF all merge_rebuild     "Rebuild generated files from merged files build")
 kst_option(bool   OFF all verbose           "Make verbose CMake run and Makefiles")
-kst_option(string ""  all install_prefix    "Install path for Kst, using a default if not set")
-kst_option(string ""  all install_libdir    "Install directory name for libraries")
 kst_option(bool   ON  all 3rdparty          "Build plugins depending on 3rd party libraries")
 kst_option(bool   ON  all dataobjects       "Build dataobject plugins")
 kst_option(bool   OFF all test              "Build unit tests")
@@ -211,32 +217,6 @@ else()
     set(CMAKE_VERBOSE_MAKEFILE 0)
 endif()
 
-if(kst_install_prefix)
-    set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "User's choice for install prefix" FORCE)
-    set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-else()
-    set(kst_install_prefix ${CMAKE_BINARY_DIR}/INSTALLED)
-    set(CMAKE_INSTALL_PREFIX ${kst_install_prefix} CACHE PATH "Kst's default install prefix" FORCE)
-endif()
-
-if(NOT kst_install_libdir)
-  set(kst_install_libdir lib${LIB_SUFFIX})
-endif()
-
-if(NOT kst_install_plugins)
-    set(kst_install_plugins ${kst_install_libdir}/${kst_binary_name}/plugins)
-endif()
-
-if(kst_rpath)
-    # the RPATH to be used when installing
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${kst_install_libdir}")
-endif()
-
-#path to install the .desktop files
-set(kst_install_plugin_desktop_file_path share/services/kst)
-
-
-
 if(NOT kst_console)
     set(kst_win32 WIN32)
     if(WIN32)
@@ -317,11 +297,6 @@ message(STATUS "Build summary----------------------------------")
 message(STATUS)
 message(STATUS "Version       : ${kst_version}")
 message(STATUS "Path to source: ${kst_dir}")
-message(STATUS "Installation  :")
-message(STATUS "        ${kst_install_prefix}/bin")
-message(STATUS "        ${kst_install_prefix}/${kst_install_libdir}")
-message(STATUS "        ${kst_install_prefix}/${kst_install_plugins}")
-message(STATUS)
 message(STATUS "Used options:")
 kst_option_list_all()
 message(STATUS "-----------------------------------------------")
@@ -341,19 +316,6 @@ endif()
 
 if(kst_python)
     add_subdirectory(pyKst)
-endif()
-
-# CPack packaging
-#
-# http://cmake.org/cmake/help/cmake-2-8-docs.html#module:CPack
-
-if(WIN32)
-    if(kst_noinstaller)
-        set(CPACK_GENERATOR ZIP)
-        set(CPACK_BINARY_ZIP 1)
-    else()
-        set(CPACK_GENERATOR NSIS)
-    endif()
 endif()
 
 #adapted from [trojita.git] / CMakeLists.txt
@@ -378,121 +340,3 @@ if(Qt5LinguistForKst_FOUND)
 else()
     message(STATUS "Qt Linguist (lupdate/lrelease/lconvert) not found, disabling localization support")
 endif()
-
-if(kst_install_prefix)
-    if(WIN32)
-        if(x64)
-            set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win64)
-        else()
-            set(CPACK_PACKAGE_FILE_NAME ${kst_install_prefix}-win32)
-        endif()
-    else()
-        set(CPACK_PACKAGE_FILE_NAME kst-${kst_version_string}-binary)
-    endif()
-    set(CPACK_SOURCE_PACKAGE_FILE_NAME ${kst_install_prefix})
-else()
-    set(CPACK_SOURCE_PACKAGE_FILE_NAME Kst-${kst_version})
-endif()
-set(CPACK_INSTALL_PREFIX "")
-
-
-set(CPACK_PACKAGE_NAME   Kst)
-set(CPACK_PACKAGE_EXECUTABLES ${kst_binary_name} Kst2)
-set(CPACK_PACKAGE_VENDOR "The Kst Team")
-set(CPACK_PACKAGE_VERSION_MAJOR ${kst_version_major})
-set(CPACK_PACKAGE_VERSION_MINOR ${kst_version_minor})
-set(CPACK_PACKAGE_VERSION_PATCH ${kst_version_patch})
-
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Kst 2")
-set(CPACK_PACKAGE_DESCRIPTION_FILE    ${kst_dir}/README)
-set(CPACK_PACKAGE_CONTACT "http://bugs.kde.org}")
-set(CPACK_STRIP_FILES 1)
-
-
-
-# cmake bug, problems with the quotes in the gpl, fixed in 2.8.4
-set(CPACK_RESOURCE_FILE_LICENSE "${kst_dir}/COPYING")
-
-
-
-# sources
-set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${kst_dir};/") # http://www.mail-archive.com/cmake@cmake.org/msg33720.html
-if(WIN32)
-    set(CPACK_SOURCE_GENERATOR ZIP)
-else()
-    set(CPACK_SOURCE_GENERATOR TGZ)
-endif()
-
-
-# rpm
-if(UNIX)
-    set(CPACK_SET_DESTDIR "ON")
-endif()
-FILE(READ ${CPACK_RESOURCE_FILE_LICENSE} CPACK_RPM_PACKAGE_LICENSE)
-set(CPACK_RPM_PACKAGE_GROUP "Applications/Science")
-set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
-
-# deb
-# This is experimental
-# check also for plugin's 3rdparty libraries?
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.4.3-0)")
-
-
-
-
-# Usage
-#
-# Source only .targz, .tar.bz2, .zip:
-#   make package_source
-#
-# Binary .tar.gz and install .sh:
-#   make package
-#
-# Binary .deb:
-# create : cpack -G DEB --config CPackConfig.cmake
-# list   : dpkg-deb -c Kst-*.deb
-# install: dpkg -i Kst-*.deb
-#
-# Binary .rpm:
-# create : cpack -G RPM --config CPackConfig.cmake
-# list   : rpm -qlp Kst-*.rpm
-# install: rpm -U Kst-*.rpm
-
-
-# CPack and Ubuntu
-# Found this:
-# http://www.purplekarrot.net/blog/dputCMake.html
-
-
-if(APPLE)
-    # We start from build/bin/kst2.app, all is build into the final bundle folder
-    # On the mac the paths to needed shared libraries are hardcoded in the binary/library
-    # which could be changed by the macro 'fixup_bundle'
-    # libs which are hardcoded are resolved automatically
-    # but the plugins must be passed as extra argument because they are not hardcoded in the binary
-
-    set(bundle_dir ${kst_build_dir}/bin)
-    set(contents_dir ${kst_binary_name}.app/Contents)
-
-    set(app ${bundle_dir}/${kst_binary_name}.app)
-    install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${bundle_dir}/${contents_dir}/plugins COMPONENT Runtime)
-
-    install(CODE
-        "file(GLOB qt_plugins \"${bundle_dir}/${contents_dir}/plugins/imageformats/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-        file(GLOB kst_plugins \"${bundle_dir}/${contents_dir}/plugins/*${CMAKE_SHARED_MODULE_SUFFIX}\")
-        set(libs \${qt_plugins} \${kst_plugins})
-        include(BundleUtilities)
-        fixup_bundle(\"${app}\" \"\${libs}\" \"${dir}\") "
-        COMPONENT RUNTIME)
-
-    file(WRITE ${CMAKE_BINARY_DIR}/qt.conf "")
-    install(FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION ${contents_dir}/Resources COMPONENT Runtime)
-
-    set(CPACK_GENERATOR DragNDrop)
-endif()
-
-
-include(CPack)
-
-
