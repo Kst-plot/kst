@@ -115,7 +115,7 @@ endmacro()
 
 
 macro(kst_install_executable)
-	install(TARGETS ${kst_name} ${KF6_INSTALL_TARGETS_DEFAULT_ARGS})
+    install(TARGETS ${kst_name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
 
