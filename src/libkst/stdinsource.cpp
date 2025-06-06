@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "kst_i18n.h"
 #include "config.h"
 #include "stdinsource.h"
 
@@ -38,7 +37,7 @@
 
 namespace Kst {
 
-const QString StdinSource::staticTypeString = I18N_NOOP("Stdin Data Source");
+const KLazyLocalizedString StdinSource::staticTypeString = kli18n("Stdin Data Source");
 
 StdinSource::StdinSource(ObjectStore *store, QSettings *cfg)
 : DataSource(store, cfg, "stdin", "stdin") {
@@ -60,8 +59,8 @@ StdinSource::~StdinSource() {
 }
 
 
-const QString& StdinSource::typeString() const {
-  return staticTypeString;
+QString StdinSource::typeString() const {
+  return staticTypeString.toString();
 }
 
 
@@ -156,7 +155,7 @@ QString StdinSource::fileType() const {
   if (isValid()) {
     return _src->fileType();
   }
-  return QString::null;
+  return {};
 }
 
 

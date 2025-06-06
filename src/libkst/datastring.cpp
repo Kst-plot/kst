@@ -68,7 +68,7 @@ QString DataString::_automaticDescriptiveName() const {
 }
 
 
-const QString& DataString::typeString() const {
+QString DataString::typeString() const {
   return staticTypeString;
 }
 

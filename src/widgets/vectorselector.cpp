@@ -20,6 +20,8 @@
 #include "updateserver.h"
 #include "geticon.h"
 
+#include <QRegularExpression>
+
 namespace Kst {
 
 VectorSelector::VectorSelector(QWidget *parent, ObjectStore *store)
@@ -82,9 +84,9 @@ void VectorSelector::emitSelectionChanged() {
 
 VectorPtr VectorSelector::selectedVector() const {
     QString shortName;
-    QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-    rx.indexIn(_vector->currentText());
-    shortName = '('+rx.cap(2)+')';
+    QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+    const auto match = rx.match(_vector->currentText());
+    shortName = '('+match.captured(2)+')';
 
 
     for(int i=0;i<_vector->count();i++) {

@@ -36,7 +36,7 @@ class KSTMATH_EXPORT PSD : public DataObject {
   public:
     static const QString staticTypeString;
     static const QString staticTypeTag;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
 
     virtual void save(QXmlStreamWriter &s);
     virtual QString propertyString() const;

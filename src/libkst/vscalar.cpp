@@ -51,7 +51,7 @@ QString VScalar::_automaticDescriptiveName() const {
 }
 
 
-const QString& VScalar::typeString() const {
+QString VScalar::typeString() const {
   return staticTypeString;
 }
 

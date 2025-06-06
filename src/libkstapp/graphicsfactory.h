@@ -17,7 +17,7 @@
 #include <QStringList>
 
 #include "dataobject.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "view.h"
 
 namespace Kst {

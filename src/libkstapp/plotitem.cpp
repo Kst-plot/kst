@@ -1092,7 +1092,7 @@ void PlotItem::paint(QPainter *painter) {
   }
 #if BENCHMARK
   int i = bench_time.elapsed();
-  qDebug() << "Total Time to paint " << (void *)this << ": " << i << "ms" << endl;
+  qDebug() << "Total Time to paint " << (void *)this << ": " << i << "ms" << Qt::endl;
 #endif
 }
 

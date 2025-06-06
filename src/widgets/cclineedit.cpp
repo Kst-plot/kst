@@ -27,7 +27,6 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScrollBar>
 #include <QTableWidget>
 #include <QHeaderView>

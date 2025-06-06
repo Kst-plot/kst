@@ -56,10 +56,10 @@ macro(kst_files_find folder)
 	kst_files_remove(_sources_cpp ${kst_${kst_name}_ignore})
 	kst_files_remove(_headers     ${kst_${kst_name}_ignore})
 	set(_mocs)
-	qt5_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
-	qt5_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
+	qt_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
+	qt_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
 	set(_uis)
-	qt5_wrap_ui(_uis ${_ui_files})
+	qt_wrap_ui(_uis ${_ui_files})
 	set(kst_${kst_name}_sources_not_generated ${_sources} ${_sources_cpp})
 	set(kst_${kst_name}_sources ${_sources} ${_sources_cpp} ${_mocs} ${_uis})
 	set(kst_${kst_name}_headers ${_headers})
@@ -230,7 +230,7 @@ endmacro()
 
 macro(kst_link)
 	target_link_libraries(${kst_name} ${ARGV})
-	target_link_libraries(${kst_name} Qt5::Widgets Qt5::Xml Qt5::Network Qt5::PrintSupport Qt5::Svg)
+	target_link_libraries(${kst_name} Qt6::Widgets Qt6::Xml Qt6::Network Qt6::PrintSupport Qt6::Svg)
 endmacro()
 
 
@@ -255,7 +255,7 @@ endmacro()
 
 
 macro(kst_add_resources filepath)
-	qt5_add_resources(_rcc ${kst_dir}/${filepath})
+	qt_add_resources(_rcc ${kst_dir}/${filepath})
 	kst_add_files(${_rcc})
 endmacro()
 

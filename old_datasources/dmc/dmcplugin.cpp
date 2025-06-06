@@ -198,12 +198,12 @@ int DmcPlugin::understands( QSettings *cfg,
   /* old code
 int understands_dmc(KConfig*, const QString& filename) {
   bool rc = DMC::validDatabase(filename);
-  qDebug() << "-> Valid dmc database? " << rc << endl;
+  qDebug() << "-> Valid dmc database? " << rc << Qt::endl;
   return rc ? 100 : 0;
 }*/
 
   bool rc = DMC::validDatabase(filename);
-  qDebug() << "-> Valid dmc database? " << rc << endl;
+  qDebug() << "-> Valid dmc database? " << rc << Qt::endl;
   return rc ? 100 : 0;
 }
 

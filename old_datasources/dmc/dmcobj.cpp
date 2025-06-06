@@ -122,7 +122,7 @@ double Object::fetchTimePoint(PIOLONG idx) {
 
 Object::Object() : Source() {
 #ifdef PIOLIBDEBUG
-  kdDebug() << ">>>>>>>>>  Object created " << (void*)this << endl;
+  kdDebug() << ">>>>>>>>>  Object created " << (void*)this << Qt::endl;
 #endif
   _tt = Undetermined;
 }
@@ -131,7 +131,7 @@ Object::Object() : Source() {
 Object::~Object() {
   reset();
 #ifdef PIOLIBDEBUG
-  kdDebug() << "<<<<<<<<<  Object deleted " << (void*)this << endl;
+  kdDebug() << "<<<<<<<<<  Object deleted " << (void*)this << Qt::endl;
 #endif
 }
 
@@ -153,7 +153,7 @@ bool Object::updated() const {
 
 void Object::reset() {
 #ifdef PIOLIBDEBUG
-  kdDebug() << ">>>>>>>>>  Object reset" << endl;
+  kdDebug() << ">>>>>>>>>  Object reset" << Qt::endl;
 #endif
   for (QMap<QString,ObjectGroup*>::Iterator i = _groupInfo.begin(); i != _groupInfo.end(); ++i) {
     delete (*i);
@@ -165,7 +165,7 @@ void Object::reset() {
 
 bool Object::setGroup(const QString& group) {
 #ifdef PIOLIBDEBUG
-  kdDebug() << ">>>>>>>>>  Object set group - " << group << endl;
+  kdDebug() << ">>>>>>>>>  Object set group - " << group << Qt::endl;
 #endif
   // FIXME: verify the source
   if (group != _group) {
@@ -207,7 +207,7 @@ QSize Object::range(const QString& object) const {
 
     if (i == g->objectListSize) {
 #ifdef PIOLIBDEBUG
-      kdDebug() << "Error finding object " << object << endl;
+      kdDebug() << "Error finding object " << object << Qt::endl;
 #endif
       return QSize(0, 0);
     }
@@ -220,7 +220,7 @@ return QSize(0, 0);
 
 int Object::readObject(const QString& object, double *buf, long start, long end) {
 #ifdef PIOLIBDEBUG
-  kdDebug() << ">>>>>>>>>  Object read object - " << _group << ":" << object << " from " << start << " to " << end << endl;
+  kdDebug() << ">>>>>>>>>  Object read object - " << _group << ":" << object << " from " << start << " to " << end << Qt::endl;
 #endif
   if (isValid()) {
     ObjectGroup *g = findGroup(_group);
@@ -240,7 +240,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
     }
 
 #ifdef PIOLIBDEBUG
-    kdDebug() << "Found object " << object << " in group " << _group << " , type is " << g->objTypes[i] << ", data type is " << g->Datatypes[i] << endl;
+    kdDebug() << "Found object " << object << " in group " << _group << " , type is " << g->objTypes[i] << ", data type is " << g->Datatypes[i] << Qt::endl;
 #endif
 
     QString range("");
@@ -272,7 +272,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
           &MyGroup, &MyObject, &MyData, &MyDataFlag);
 
 #ifdef PIOLIBDEBUG
-      kdDebug() << "READ " << n << " flags." << endl;
+      kdDebug() << "READ " << n << " flags." << Qt::endl;
 #endif
       if (n < 0) { // error
         // FIXME - might have to reset() here
@@ -319,7 +319,7 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
           &MyGroup, &MyObject, &MyData, &MyDataFlag);
 
 #ifdef PIOLIBDEBUG
-    kdDebug() << "READ " << n << " doubles." << endl;
+    kdDebug() << "READ " << n << " doubles." << Qt::endl;
 #endif
       if (n < 0) { // error
         // FIXME - might have to reset() here
@@ -356,10 +356,10 @@ int Object::readObject(const QString& object, double *buf, long start, long end)
       }
     }
 #ifdef PIOLIBDEBUG
-    kdDebug() << "Read " << n << " samples of data.  Range = [" << range << "]" << endl;
+    kdDebug() << "Read " << n << " samples of data.  Range = [" << range << "]" << Qt::endl;
     if (n > 0) {
-      kdDebug() << "this = " << (void*)this << endl;
-      kdDebug() << "buf = " << (void*)buf << endl;
+      kdDebug() << "this = " << (void*)this << Qt::endl;
+      kdDebug() << "buf = " << (void*)buf << Qt::endl;
     }
 #endif
     return int(n);
@@ -383,7 +383,7 @@ ObjectGroup *Object::findGroup(const QString& group) const {
 
 #ifdef PIOLIBDEBUG
   if (!grp) {
-    kdDebug() << "Error finding group " << group << endl;
+    kdDebug() << "Error finding group " << group << Qt::endl;
   }
 #endif
   return grp;
@@ -525,7 +525,7 @@ ObjectGroup::~ObjectGroup() {
 
 
 void ObjectGroup::close() {
-  //kdDebug() << "Close group" << endl;
+  //kdDebug() << "Close group" << Qt::endl;
   if (_valid) {
     _PIOFREE(objNames);
     objNames = 0L;
@@ -577,8 +577,8 @@ bool ObjectGroup::updateObjectList() {
     _valid = true;
 
 #ifdef PIOLIBDEBUG
-    kdDebug() << "               -> info acquired." << endl;
-    kdDebug() << "                  -> objects: " << e << endl;
+    kdDebug() << "               -> info acquired." << Qt::endl;
+    kdDebug() << "                  -> objects: " << e << Qt::endl;
 #endif  
     /* there are two solution:
        - get directly only the group maximal size,
@@ -595,7 +595,7 @@ bool ObjectGroup::updateObjectList() {
       PIOSTRING author, date;
       PIOErr ret = PIOInfoObject(TOItypes[i], Datatypes[i], &beginIdx, &endIdx, author, date, objNames[i], _group);
 #ifdef PIOLIBDEBUG
-      kdDebug() << "  PIOInfoObject(" << TOItypes[i] << "," << Datatypes[i] << "," << beginIdx << "," << endIdx << "," << author << "," << date << "," << objNames[i] << ") returned " << ret << endl;
+      kdDebug() << "  PIOInfoObject(" << TOItypes[i] << "," << Datatypes[i] << "," << beginIdx << "," << endIdx << "," << author << "," << date << "," << objNames[i] << ") returned " << ret << Qt::endl;
 #endif  
       if (ret != 0) {
         _valid = false;
@@ -608,7 +608,7 @@ bool ObjectGroup::updateObjectList() {
 
 bool ObjectGroup::open(const QString& groupURL) {
 #ifdef PIOLIBDEBUG
-  kdDebug() << ">>>>>>>>>  ObjectGroup open - " << groupURL << endl;
+  kdDebug() << ">>>>>>>>>  ObjectGroup open - " << groupURL << Qt::endl;
 #endif
 
   close();
@@ -618,7 +618,7 @@ bool ObjectGroup::open(const QString& groupURL) {
 
   if (_group) {
 #ifdef PIOLIBDEBUG
-    kdDebug() << "               -> opened." << endl;
+    kdDebug() << "               -> opened." << Qt::endl;
 #endif
     if (!updateObjectList()) {
       PIOCloseVoidGrp(&_group);

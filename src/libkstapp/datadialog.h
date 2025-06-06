@@ -15,7 +15,7 @@
 
 #include "dialog.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "dataobject.h"
 

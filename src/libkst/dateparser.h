@@ -16,7 +16,7 @@
 #include <QTime>
 #include <QDate>
 #include <QDateTime>
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 /* This is a public header */
 namespace Kst {

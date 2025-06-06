@@ -19,7 +19,7 @@
 
 #include "ui_datamanager.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 class QToolBar;
 class QSortFilterProxyModel;

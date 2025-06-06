@@ -37,7 +37,7 @@ class DmcSource : public Kst::DataSource {
 
     Kst::Object::UpdateType internalDataSourceUpdate();
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
 
     static const QString dmcTypeKey();
 

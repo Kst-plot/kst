@@ -25,7 +25,7 @@ class KSTMATH_EXPORT BasicPlugin : public DataObject {
 
   public:
     static const QString staticTypeString;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
     //The implementation of the algorithm the plugin provides.

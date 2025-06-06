@@ -84,7 +84,7 @@ void Matrix::deleteDependents() {
 }
 
 
-const QString& Matrix::typeString() const {
+QString Matrix::typeString() const {
   return staticTypeString;
 }
 
@@ -445,7 +445,7 @@ void Matrix::updateScalars() {
 
 
 bool Matrix::resizeZ(int sz, bool reinit) {
-//   qDebug() << "resizing to: " << sz << endl;
+//   qDebug() << "resizing to: " << sz << Qt::endl;
   if (sz >= 1) {
     if (!kstrealloc(_z, sz*sizeof(double))) {
       qCritical() << "Matrix resize failed";

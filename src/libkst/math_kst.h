@@ -24,7 +24,7 @@
 #include <ieeefp.h>
 #endif
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #ifdef _MSC_VER
 inline double pow(float a, double b) { return pow((double)a, b); }

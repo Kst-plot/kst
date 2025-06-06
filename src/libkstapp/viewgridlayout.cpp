@@ -279,7 +279,7 @@ void ViewGridLayout::apply() {
   qDebug() << "layouting" << _items.count()
            << "itemWidth:" << itemWidth
            << "itemHeight:" << itemHeight
-           << endl;
+           << Qt::endl;
 #endif
 
   PlotItem *plot = 0;
@@ -334,7 +334,7 @@ void ViewGridLayout::apply() {
              << "rowSpan:" << item.rowSpan
              << "columnSpan:" << item.columnSpan
              << "itemRect:" << itemRect
-             << endl;
+             << Qt::endl;
 #endif
   }
   if (plot) {
@@ -556,7 +556,7 @@ void ViewGridLayout::shareAxis(QPainter *painter, bool creation) {
              << "row:" << item.row
              << "column:" << item.column
              << "itemRect:" << itemRect
-             << endl;
+             << Qt::endl;
 #endif
   }
 }

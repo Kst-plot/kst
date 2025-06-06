@@ -823,7 +823,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
 //            << "\n\tskip:" << skip
 //            << "\n\tdoSkip:" << doSkip
 //            << "\n\tdoAve:" << doAve
-//            << endl;
+//            << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
 
@@ -873,7 +873,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
 //             << "\n\tgradZMin:" << gradZMin
 //             << "\n\tgradZMax:" << gradZMax
 //             << "\n\txDirection:" << xDirection
-//             << endl;
+//             << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
   GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>();

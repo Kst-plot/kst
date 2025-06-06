@@ -748,11 +748,11 @@ void Image::updatePaintObjects(const CurveRenderContext& context) {
 #ifdef BENCHMARK
   b_2 = benchtmp.elapsed();
   int i = bench_time.elapsed();
-  qDebug() << endl << "Plotting image " << (void *)this << ": " << i << "ms";
+  qDebug() << Qt::endl << "Plotting image " << (void *)this << ": " << i << "ms";
   qDebug() << "         Without locks: " << b_2 << "ms";
   qDebug() << " Number of lines drawn: " << numberOfLinesDrawn;
   if (b_1 > 0)       qDebug() << "             Color Map: " << b_1 << "ms";
-  if (b_2 - b_1 > 0) qDebug() << "         Coutour Lines: " << (b_2 - b_1) << "ms" << endl;
+  if (b_2 - b_1 > 0) qDebug() << "         Coutour Lines: " << (b_2 - b_1) << "ms" << Qt::endl;
 #endif
 }
 

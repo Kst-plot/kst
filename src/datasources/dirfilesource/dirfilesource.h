@@ -72,7 +72,7 @@ class DirFileSource : public Kst::DataSource {
 
     virtual int readFieldStrings(QStringList &v, const QString& field, bool init);
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     //static const QString staticTypeString;
     //static const QString staticTypeTag;
 

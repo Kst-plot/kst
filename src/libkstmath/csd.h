@@ -29,7 +29,7 @@ class KSTMATH_EXPORT CSD : public DataObject {
 
   public:
     static const QString staticTypeString;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
     virtual void save(QXmlStreamWriter &s);

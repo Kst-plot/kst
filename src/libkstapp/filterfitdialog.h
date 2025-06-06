@@ -18,7 +18,7 @@
 #include "dataobjectplugin.h"
 #include "plotitem.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_filterfittab.h"
 

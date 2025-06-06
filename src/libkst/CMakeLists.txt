@@ -1,21 +1,156 @@
-kst_init(${kst_binary_name} core)
+# SPDX-FileCopyrightText: 2025 Carl Schwan <carl@carlschwan.eu>
+# SPDX-License-Identifier: BSD-2-Clause
 
-kst_include_directories(widgets)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-kst_files_ignore(stdinsource timezones)
+add_library(${kst_binary_name}core SHARED)
 
-if(WIN32 OR APPLE OR QNX OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
-	kst_files_ignore(sysinfo psversion)
-else()
-    if(NOT kst_clang AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lrt")
-    endif()
-endif()
+add_library(Kst6Core ALIAS ${kst_binary_name}core)
 
-kst_files_find(src/libkst)
+message(${PROJECT_VERSION})
 
-kst_dont_merge(sysinfo.c psversion.c)
+ecm_generate_export_header(${kst_binary_name}core
+    BASE_NAME KSTCORE
+    VERSION ${PROJECT_VERSION}
+    USE_VERSION_HEADER kst_version.h
+)
 
-kst_add_library(SHARED)
+target_include_directories(${kst_binary_name}core
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6}>"
+)
 
-kst_link()
+target_sources(${kst_binary_name}core PRIVATE
+    builtinprimitives.h
+    coredocument.h
+    datacollection.h
+    datamatrix.h
+    dataplugin.h
+    dataprimitive.h
+    datascalar.h
+    datasource.h
+    datasourcefactory.h
+    datasourcepluginmanager.h
+    datastring.h
+    datavector.h
+    dateparser.h
+    debug.h
+    editablematrix.h
+    editablevector.h
+    events.h
+    extension.h
+    generatedmatrix.h
+    generatedvector.h
+    index_kst.h
+    kst_export.h
+    kst_inf.h
+    ksttimers.h
+    ksttimezone.h
+    labelinfo.h
+    logevents.h
+    math_kst.h
+    matrix.h
+    matrixfactory.h
+    matrixscriptinterface.h
+    measuretime.h
+    namedobject.h
+    nextcolor.h
+    object.h
+    objectlist.h
+    objectmap.h
+    objectstore.h
+    plotiteminterface.h
+    primitive.h
+    primitivefactory.h
+    procps.h
+    psversion.h
+    rwlock.h
+    scalar.h
+    scalarfactory.h
+    scalarscriptinterface.h
+    scriptinterface.h
+    settings.h
+    #stdinsource.h
+    string_kst.h
+    stringfactory.h
+    stringscriptinterface.h
+    sysinfo.h
+    updatemanager.h
+    updateserver.h
+    vector.h
+    vectorfactory.h
+    vectorscriptinterface.h
+    vscalar.h
+    psversion.c
+    sysinfo.c
+    builtinprimitives.cpp
+    coredocument.cpp
+    datacollection.cpp
+    datamatrix.cpp
+    dataprimitive.cpp
+    datascalar.cpp
+    datasource.cpp
+    datasourcefactory.cpp
+    datasourcepluginmanager.cpp
+    datastring.cpp
+    datavector.cpp
+    dateparser.cpp
+    debug.cpp
+    editablematrix.cpp
+    editablevector.cpp
+    extension.cpp
+    generatedmatrix.cpp
+    generatedvector.cpp
+    ksttimezone.cpp
+    labelinfo.cpp
+    math_kst.cpp
+    matrix.cpp
+    matrixfactory.cpp
+    matrixscriptinterface.cpp
+    measuretime.cpp
+    namedobject.cpp
+    nextcolor.cpp
+    object.cpp
+    objectlist.cpp
+    objectmap.cpp
+    objectstore.cpp
+    plotiteminterface.cpp
+    primitive.cpp
+    primitivefactory.cpp
+    rwlock.cpp
+    scalar.cpp
+    scalarfactory.cpp
+    scalarscriptinterface.cpp
+    scriptinterface.cpp
+    settings.cpp
+    shortnameindex.cpp
+    #stdinsource.cpp
+    string_kst.cpp
+    stringfactory.cpp
+    stringscriptinterface.cpp
+    updatemanager.cpp
+    updateserver.cpp
+    vector.cpp
+    vectorfactory.cpp
+    vectorscriptinterface.cpp
+    vscalar.cpp
+)
+
+target_link_libraries(${kst_binary_name}core PUBLIC
+    Qt6::Widgets
+    Qt6::Xml
+    Qt6::Network
+    Qt6::PrintSupport
+    Qt6::Svg
+    KF6::I18n
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kstcore_export.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6Core
+    COMPONENT Devel
+)
+
+install(TARGETS ${kst_binary_name}core EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

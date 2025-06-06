@@ -113,12 +113,12 @@ template<class T> IIRFilter<T>::IIRFilter(unsigned int order)
 template<class T> T IIRFilter<T>::operator() (T x)
 {
   T y = b[0]*x;
-  //cerr << "y = (" << b[0] << ")*x[n]" << endl;
+  //cerr << "y = (" << b[0] << ")*x[n]" << Qt::endl;
   for (unsigned int i=0; i<order; i++) {
     y += b[i+1] * x0[i];
     y -= a[i]   * y0[i];
     //cerr << "    + (" << b[i+1] << ")*x[n-" << i+1 << "]";
-    //cerr << " - (" << a[i] << ")*y[n-" << i+1 << "]" << endl;
+    //cerr << " - (" << a[i] << ")*y[n-" << i+1 << "]" << Qt::endl;
   }
 
   x0.pop_back();
@@ -150,12 +150,12 @@ template<class T> int IIRFilter<T>::FilterResponse(const char* out,  double max_
 {
   std::ofstream oo(out);
   if (!oo) {
-    cerr << "Couldn't open FilterResponse output file" << endl;
+    cerr << "Couldn't open FilterResponse output file" << Qt::endl;
     return 1;
   }
   this->clear();
 
-  oo << "INDEX\timpulse\tfreq\tgain\tphase" << endl;
+  oo << "INDEX\timpulse\tfreq\tgain\tphase" << Qt::endl;
   for (unsigned int i=0; i<n; i++) {
     oo << i+1 << "\t";				//INDEX
     oo << (*this)((i==0)?1.0:0.0) << "\t";	//impulse response
@@ -175,7 +175,7 @@ template<class T>
 void IIRFilter<T>::setCoefficients(vector<double> na, vector<double> nb)
 {
   if (na.size() != order || nb.size() != order+1) {
-    cerr << "Invalid size of coefficient vector\n" << endl;
+    cerr << "Invalid size of coefficient vector\n" << Qt::endl;
     return;
   }
   a = na;
@@ -244,10 +244,10 @@ template<class T> BesselLP4<T>::BesselLP4(double f) : IIRFilter<T>(4)
   b[4] = 1.0/denom;
 
   /*
-  cerr << "y = (" << b[0] << ")*x[n]" << endl;
+  cerr << "y = (" << b[0] << ")*x[n]" << Qt::endl;
   for (unsigned int i=0; i<4; i++) {
     cerr << "    + (" << b[i+1] << ")*x[n-" << i+1 << "]";
-    cerr << " - (" << a[i] << ")*y[n-" << i+1 << "]" << endl;
+    cerr << " - (" << a[i] << ")*y[n-" << i+1 << "]" << Qt::endl;
   }
   */
 

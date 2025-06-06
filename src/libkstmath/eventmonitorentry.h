@@ -32,7 +32,7 @@ class KSTMATH_EXPORT EventMonitorEntry : public DataObject {
   Q_OBJECT
   public:
     static const QString staticTypeString;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
     void save(QXmlStreamWriter &s);

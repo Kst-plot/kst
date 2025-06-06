@@ -65,9 +65,9 @@ Debug::Debug()
 
 Debug::~Debug() {
 #ifdef BENCHMARK
-  qDebug() << "DRAW COUNTS ---------------------------------------" << endl;
+  qDebug() << "DRAW COUNTS ---------------------------------------" << Qt::endl;
   for (QMap<QString,int>::ConstIterator i = _drawCounter.begin(); i != _drawCounter.end(); ++i) {
-    qDebug() << i.key() << ": " << i.value() << endl;
+    qDebug() << i.key() << ": " << i.value() << Qt::endl;
   }
 #endif
 }

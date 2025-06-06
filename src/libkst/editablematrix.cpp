@@ -38,7 +38,7 @@ EditableMatrix::EditableMatrix(ObjectStore *store)
 }
 
 
-const QString& EditableMatrix::typeString() const {
+QString EditableMatrix::typeString() const {
   return staticTypeString;
 }
 

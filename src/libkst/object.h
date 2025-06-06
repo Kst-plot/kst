@@ -28,7 +28,7 @@
 #include <QXmlStreamWriter>
 
 #include "namedobject.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "sharedptr.h"
 #include "rwlock.h"
 
@@ -60,7 +60,7 @@ class KSTCORE_EXPORT Object : public QObject, public Shared, public KstRWLock, p
     qint64 serial() const {return _serial;}
     qint64 serialOfLastChange() const {return _serialOfLastChange;}
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
 
     ObjectStore *store() const;

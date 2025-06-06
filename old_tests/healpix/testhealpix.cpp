@@ -80,25 +80,25 @@ void doTests() {
   // use the C functions to test for healpix support
   int verstehen = understands_healpix(cfg, datafile);
   if (verstehen) {
-    kstdDebug() << "Data file " << datafile << " is supported" << endl;
+    kstdDebug() << "Data file " << datafile << " is supported" << Qt::endl;
     QString suggestion;
     bool complete;
     
     QStringList matrices = matrixList_healpix(cfg, datafile, "HEALPIX", &suggestion, &complete);
-    kstdDebug() << "Available matrices are:" << endl;
+    kstdDebug() << "Available matrices are:" << Qt::endl;
     for ( QStringList::Iterator it = matrices.begin(); it != matrices.end(); ++it ) {
-      kstdDebug() << "  " << *it << endl;
+      kstdDebug() << "  " << *it << Qt::endl;
     }
-    kstdDebug() << "  suggestion = " << suggestion << endl;
-    kstdDebug() << "  complete = " << complete << endl;
+    kstdDebug() << "  suggestion = " << suggestion << Qt::endl;
+    kstdDebug() << "  complete = " << complete << Qt::endl;
 
     QStringList fields = fieldList_healpix(cfg, datafile, "HEALPIX", &suggestion, &complete);
-    kstdDebug() << "Available fields are:" << endl;
+    kstdDebug() << "Available fields are:" << Qt::endl;
     for ( QStringList::Iterator it = fields.begin(); it != fields.end(); ++it ) {
-      kstdDebug() << "  " << *it << endl;
+      kstdDebug() << "  " << *it << Qt::endl;
     }
-    kstdDebug() << "  suggestion = " << suggestion << endl;
-    kstdDebug() << "  complete = " << complete << endl;
+    kstdDebug() << "  suggestion = " << suggestion << Qt::endl;
+    kstdDebug() << "  complete = " << complete << Qt::endl;
     
     // actually create HealpixSource
     HealpixSource *hpx = new HealpixSource(cfg, datafile, "HEALPIX");
@@ -112,22 +112,22 @@ void doTests() {
     StringMap chkmap = chk->entryMap(datafile);
     
     /*
-    kstdDebug() << cfgmap["Matrix X Dimension"] << " " << chkmap["Matrix X Dimension"] << endl;
-    kstdDebug() << cfgmap["Matrix Y Dimension"] << " " << chkmap["Matrix Y Dimension"] << endl;
-    kstdDebug() << cfgmap["Theta Autoscale"] << " " << chkmap["Theta Autoscale"] << endl;
-    kstdDebug() << cfgmap["Theta Units"] << " " << chkmap["Theta Units"] << endl;
-    kstdDebug() << cfgmap["Theta Min"] << " " << chkmap["Theta Min"] << endl;
-    kstdDebug() << cfgmap["Theta Max"] << " " << chkmap["Theta Max"] << endl;
-    kstdDebug() << cfgmap["Phi Autoscale"] << " " << chkmap["Phi Autoscale"] << endl;
-    kstdDebug() << cfgmap["Phi Units"] << " " << chkmap["Phi Units"] << endl;
-    kstdDebug() << cfgmap["Phi Min"] << " " << chkmap["Phi Min"] << endl;
-    kstdDebug() << cfgmap["Phi Max"] << " " << chkmap["Phi Max"] << endl;
-    kstdDebug() << cfgmap["Vector Theta"] << " " << chkmap["Vector Theta"] << endl;
-    kstdDebug() << cfgmap["Vector Phi"] << " " << chkmap["Vector Phi"] << endl;
-    kstdDebug() << cfgmap["Vector Degrade Factor"] << " " << chkmap["Vector Degrade Factor"] << endl;
-    kstdDebug() << cfgmap["Vector Magnitude Autoscale"] << " " << chkmap["Vector Magnitude Autoscale"] << endl;
-    kstdDebug() << cfgmap["Vector Max Magnitude"] << " " << chkmap["Vector Max Magnitude"] << endl;
-    kstdDebug() << cfgmap["Vector is QU"] << " " << chkmap["Vector is QU"] << endl;
+    kstdDebug() << cfgmap["Matrix X Dimension"] << " " << chkmap["Matrix X Dimension"] << Qt::endl;
+    kstdDebug() << cfgmap["Matrix Y Dimension"] << " " << chkmap["Matrix Y Dimension"] << Qt::endl;
+    kstdDebug() << cfgmap["Theta Autoscale"] << " " << chkmap["Theta Autoscale"] << Qt::endl;
+    kstdDebug() << cfgmap["Theta Units"] << " " << chkmap["Theta Units"] << Qt::endl;
+    kstdDebug() << cfgmap["Theta Min"] << " " << chkmap["Theta Min"] << Qt::endl;
+    kstdDebug() << cfgmap["Theta Max"] << " " << chkmap["Theta Max"] << Qt::endl;
+    kstdDebug() << cfgmap["Phi Autoscale"] << " " << chkmap["Phi Autoscale"] << Qt::endl;
+    kstdDebug() << cfgmap["Phi Units"] << " " << chkmap["Phi Units"] << Qt::endl;
+    kstdDebug() << cfgmap["Phi Min"] << " " << chkmap["Phi Min"] << Qt::endl;
+    kstdDebug() << cfgmap["Phi Max"] << " " << chkmap["Phi Max"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector Theta"] << " " << chkmap["Vector Theta"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector Phi"] << " " << chkmap["Vector Phi"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector Degrade Factor"] << " " << chkmap["Vector Degrade Factor"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector Magnitude Autoscale"] << " " << chkmap["Vector Magnitude Autoscale"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector Max Magnitude"] << " " << chkmap["Vector Max Magnitude"] << Qt::endl;
+    kstdDebug() << cfgmap["Vector is QU"] << " " << chkmap["Vector is QU"] << Qt::endl;
     */
     
     if (cfgmap["Matrix X Dimension"] != chkmap["Matrix X Dimension"]) {
@@ -194,7 +194,7 @@ void doTests() {
       QString msg = "Vector is QU integrity";
       testAssert(false, msg);
     }
-    kstdDebug() << "Save/Load config is consistent." << endl;
+    kstdDebug() << "Save/Load config is consistent." << Qt::endl;
     
     // print _metaData and compute NSIDE and number
     // of samples in the vectors
@@ -202,34 +202,34 @@ void doTests() {
     int nvec;
     QString key;
     QString data;
-    kstdDebug() << "Checking metaData:" << endl;
+    kstdDebug() << "Checking metaData:" << Qt::endl;
     StringMap metamap = hpx->metaData();
     for ( StringMap::Iterator it = metamap.begin(); it != metamap.end(); ++it ) {
       key = it.key();
       data = it.data();
-      kstdDebug() << "  " << key.latin1() << " = " << data.latin1() << endl;
+      kstdDebug() << "  " << key.latin1() << " = " << data.latin1() << Qt::endl;
       if (key == "NSIDE") {
         nside = data.toInt();
       }
     }
-    kstdDebug() << "Data file has nside = " << nside << endl;
+    kstdDebug() << "Data file has nside = " << nside << Qt::endl;
     testAssert(nside != 0, "data file NSIDE");
     for (int i = 0; i < DEGRADE; i++) {
       nside = (int)(nside/2);
     }
     nvec = 12*nside*nside;
-    kstdDebug() << "Degraded vectorfield has nside = " << nside << " and " << nvec << " full-sphere pixels" << endl;
+    kstdDebug() << "Degraded vectorfield has nside = " << nside << " and " << nvec << " full-sphere pixels" << Qt::endl;
     
     // check that all returned fields are valid, and that
     // optionally field number names are valid.
-    kstdDebug() << "Checking matrix validity:" << endl;
+    kstdDebug() << "Checking matrix validity:" << Qt::endl;
     int num = 1;
     int xdim, ydim, nframe, sampframe;
     for ( QStringList::Iterator it = matrices.begin(); it != matrices.end(); ++it ) {
       if (hpx->isValidMatrix(*it)) {
-        kstdDebug() << "  \"" << *it << "\" is VALID" << endl;
+        kstdDebug() << "  \"" << *it << "\" is VALID" << Qt::endl;
         hpx->matrixDimensions(*it, &xdim, &ydim);
-        kstdDebug() << "    and has dimensions " << xdim << "x" << ydim << endl;
+        kstdDebug() << "    and has dimensions " << xdim << "x" << ydim << Qt::endl;
         testAssert((xdim == XDIM)&&(ydim == YDIM), "dimension integrity");
       } else {
         QString msg = (*it);
@@ -238,9 +238,9 @@ void doTests() {
       }
       QString numfield = QString("%1").arg(num);
       if (hpx->isValidMatrix(numfield)) {
-        kstdDebug() << "  \"" << numfield << "\" is VALID" << endl;
+        kstdDebug() << "  \"" << numfield << "\" is VALID" << Qt::endl;
         hpx->matrixDimensions(numfield, &xdim, &ydim);
-        kstdDebug() << "    and has dimensions " << xdim << "x" << ydim << endl;
+        kstdDebug() << "    and has dimensions " << xdim << "x" << ydim << Qt::endl;
         testAssert((xdim == XDIM)&&(ydim == YDIM), "dimension integrity");
       } else {
         QString msg = numfield;
@@ -249,14 +249,14 @@ void doTests() {
       }
       num++;
     }
-    kstdDebug() << "Checking field validity:" << endl;
+    kstdDebug() << "Checking field validity:" << Qt::endl;
     num = 1;
     for ( QStringList::Iterator it = fields.begin(); it != fields.end(); ++it ) {
       if (hpx->isValidField(*it)) {
-        kstdDebug() << "  \"" << *it << "\" is VALID" << endl;
+        kstdDebug() << "  \"" << *it << "\" is VALID" << Qt::endl;
         nframe = hpx->frameCount(*it);
         sampframe = hpx->samplesPerFrame(*it);
-        kstdDebug() << "    and has " << nframe << " frames of " << sampframe << " sample(s) each" << endl;
+        kstdDebug() << "    and has " << nframe << " frames of " << sampframe << " sample(s) each" << Qt::endl;
         testAssert(sampframe == 1, "samples per frame");
         testAssert(nframe == nvec, "number of frames");
       } else {
@@ -266,10 +266,10 @@ void doTests() {
       }
       QString numfield = QString("%1").arg(num);
       if (hpx->isValidField(numfield)) {
-        kstdDebug() << "  \"" << numfield << "\" is VALID" << endl;
+        kstdDebug() << "  \"" << numfield << "\" is VALID" << Qt::endl;
         nframe = hpx->frameCount(numfield);
         sampframe = hpx->samplesPerFrame(numfield);
-        kstdDebug() << "    and has " << nframe << " frames of " << sampframe << " sample(s) each" << endl;
+        kstdDebug() << "    and has " << nframe << " frames of " << sampframe << " sample(s) each" << Qt::endl;
         testAssert(sampframe == 1, "samples per frame");
         testAssert(nframe == nvec, "number of frames");
       } else {
@@ -282,7 +282,7 @@ void doTests() {
     
     // check reset function
     if (hpx->reset()) {
-      kstdDebug() << "Reset function is implemented." << endl;
+      kstdDebug() << "Reset function is implemented." << Qt::endl;
     } else {
       testAssert(false, "reset");
     }

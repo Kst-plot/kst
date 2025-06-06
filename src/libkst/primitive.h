@@ -20,7 +20,7 @@
 
 #include <QPointer>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "object.h"
 #include "objectlist.h"
 #include "objectmap.h"
@@ -39,7 +39,7 @@ class KSTCORE_EXPORT Primitive : public Object
     Q_PROPERTY(bool hidden READ hidden WRITE setHidden)
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
 
     // Must not be a ObjectPtr!

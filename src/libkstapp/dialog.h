@@ -15,7 +15,7 @@
 
 #include <QDialog>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_dialog.h"
 

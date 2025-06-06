@@ -865,7 +865,7 @@ int AsciiSource::sampleForTime(double ms, bool *ok)
 
 
 //-------------------------------------------------------------------------------------------
-const QString& AsciiSource::typeString() const
+QString AsciiSource::typeString() const
 {
   return asciiTypeString;
 }

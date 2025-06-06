@@ -22,7 +22,7 @@
 #include <QMimeData>
 
 #include "namedobject.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "viewcommand.h"
 #include "view.h"
 #include "curveplacement.h"

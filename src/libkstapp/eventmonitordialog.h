@@ -18,7 +18,7 @@
 
 #include "debug.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_eventmonitortab.h"
 

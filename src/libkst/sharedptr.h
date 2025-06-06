@@ -67,7 +67,7 @@ public:
     */
    void _KShared_ref() const {
      sem.acquire(1);
-     KST_DBG qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << endl;
+     KST_DBG qDebug() << "KShared_ref: " << (void*)this << " -> " << _KShared_count() << Qt::endl;
    }
 
    /**
@@ -76,7 +76,7 @@ public:
     */
    void _KShared_unref() const {
      sem.release(1);
-     KST_DBG qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << endl;
+     KST_DBG qDebug() << "KShared_unref: " << (void*)this << " -> " << _KShared_count() << Qt::endl;
      if (SEMAPHORE_COUNT == sem.available()) delete this;
    }
 

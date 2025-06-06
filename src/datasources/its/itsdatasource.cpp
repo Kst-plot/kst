@@ -327,7 +327,7 @@ void ITSSource::reset() {
 bool ITSSource::init() {
 
 
-  _itsfile = ITSopen(_filename.toAscii().data());
+  _itsfile = ITSopen(_filename.toLatin1().data());
   if (_itsfile->status != ITS_OK) {
     ITSclose(_itsfile);
     _nframes = 0;
@@ -541,7 +541,7 @@ int ITSSourcePlugin::understands(QSettings *cfg, const QString& filename) const 
     return 0;
   }
 
-  if (isITSfile(filename.toAscii().data())) {
+  if (isITSfile(filename.toLatin1().data())) {
     return (99);
   }
   return 0;

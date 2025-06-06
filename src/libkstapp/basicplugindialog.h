@@ -16,7 +16,7 @@
 #include "datadialog.h"
 #include "datatab.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_basicplugintab.h"
 

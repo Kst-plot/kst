@@ -18,7 +18,7 @@
 #ifndef DATASTRING_H
 #define DATASTRING_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "dataprimitive.h"
 #include "string_kst.h"
 
@@ -67,7 +67,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
 
     virtual void reset();
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

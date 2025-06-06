@@ -20,13 +20,14 @@
 
 #include "datasource.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
+#include <KLazyLocalizedString>
 
 class QTemporaryFile;
 
 namespace Kst {
 
-class KST_EXPORT StdinSource : public DataSource {
+class KSTCORE_EXPORT StdinSource : public DataSource {
   Q_OBJECT
 
   public:
@@ -34,8 +35,8 @@ class KST_EXPORT StdinSource : public DataSource {
 
     virtual ~StdinSource();
 
-    virtual const QString& typeString() const;
-    static const QString staticTypeString;
+    virtual QString typeString() const;
+    static const KLazyLocalizedString staticTypeString;
 
     virtual Object::UpdateType internalDataSourceUpdate();
 
@@ -45,7 +46,7 @@ class KST_EXPORT StdinSource : public DataSource {
 
     virtual int samplesPerFrame(const QString &field);
 
-    virtual int frameCount(const QString& field = QString::null) const;
+    virtual int frameCount(const QString& field = {}) const;
 
     virtual QString fileType() const;
 

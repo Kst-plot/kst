@@ -16,7 +16,7 @@
 #define GENERATEDMATRIX_H
 
 #include "matrix.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 
@@ -24,7 +24,7 @@ class KSTCORE_EXPORT GeneratedMatrix : public Matrix {
   Q_OBJECT
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

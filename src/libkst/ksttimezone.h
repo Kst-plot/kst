@@ -13,7 +13,7 @@
 #ifndef KSTTIMEZONE_H
 #define KSTTIMEZONE_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include <QStringList>
 #include <time.h>

@@ -49,7 +49,7 @@ Scalar::~Scalar() {
 }
 
 
-const QString& Scalar::typeString() const {
+QString Scalar::typeString() const {
   return staticTypeString;
 }
 

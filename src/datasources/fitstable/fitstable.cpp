@@ -49,14 +49,14 @@ class DataInterfaceFitsTableScalar : public DataSource::DataInterface<DataScalar
 
 int DataInterfaceFitsTableScalar::read(const QString& scalar, DataScalar::ReadInfo& p){
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableScalar::read() with scalar: " << scalar << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableScalar::read() with scalar: " << scalar << Qt::endl;
    return source.readScalar(p.value, scalar);
 }
 
 
 bool DataInterfaceFitsTableScalar::isValid(const QString& scalar) const{
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableScalar::isValid() with scalar: " << scalar << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableScalar::isValid() with scalar: " << scalar << Qt::endl;
    return  source._scalars.contains( scalar );
 }
 
@@ -89,7 +89,7 @@ class DataInterfaceFitsTableString : public DataSource::DataInterface<DataString
 
 int DataInterfaceFitsTableString::read(const QString& string, DataString::ReadInfo& p){
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableString::read() with string: " << string << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableString::read() with string: " << string << Qt::endl;
    if (isValid(string) && p.value) {
       *p.value = source._strings[string];
       return 1;
@@ -100,7 +100,7 @@ int DataInterfaceFitsTableString::read(const QString& string, DataString::ReadIn
 
 bool DataInterfaceFitsTableString::isValid(const QString& string) const{
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableString::isValid() with string: " << string << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableString::isValid() with string: " << string << Qt::endl;
    return source._strings.contains( string );
 }
 
@@ -133,7 +133,7 @@ class DataInterfaceFitsTableVector : public DataSource::DataInterface<DataVector
 
 const DataVector::DataInfo DataInterfaceFitsTableVector::dataInfo(const QString &field) const{
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableVector::dataInfo() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableVector::dataInfo() with field: " << field << Qt::endl;
    if (!source._fieldList.contains(field))
       return DataVector::DataInfo();
 
@@ -142,14 +142,14 @@ const DataVector::DataInfo DataInterfaceFitsTableVector::dataInfo(const QString 
 
 int DataInterfaceFitsTableVector::read(const QString& field, DataVector::ReadInfo& p){
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableVector::read() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableVector::read() with field: " << field << Qt::endl;
    return source.readField(p.data, field, p.startingFrame, p.numberOfFrames);
 }
 
 
 bool DataInterfaceFitsTableVector::isValid(const QString& field) const{
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableVector::isValid() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableVector::isValid() with field: " << field << Qt::endl;
    return  source._fieldList.contains(field);
 }
 
@@ -157,14 +157,14 @@ QMap<QString, double> DataInterfaceFitsTableVector::metaScalars(const QString& f
    Q_UNUSED(field);
    QMap<QString, double> fieldScalars;
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableVector::metaScalars() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableVector::metaScalars() with field: " << field << Qt::endl;
    return fieldScalars;
 }
 
 QMap<QString, QString> DataInterfaceFitsTableVector::metaStrings(const QString& field){
 
    QMap<QString, QString> fieldStrings;
-   DBG qDebug() << "Entering DataInterfaceFitsTableVector::metaStrings() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableVector::metaStrings() with field: " << field << Qt::endl;
    return fieldStrings;
 }
 
@@ -198,7 +198,7 @@ class DataInterfaceFitsTableMatrix : public DataSource::DataInterface<DataMatrix
 
 const DataMatrix::DataInfo DataInterfaceFitsTableMatrix::dataInfo(const QString& matrix) const{
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::dataInfo() with matrix: " << matrix << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::dataInfo() with matrix: " << matrix << Qt::endl;
    if (!source._matrixList.contains( matrix ) ) {
       return DataMatrix::DataInfo();
    }
@@ -214,7 +214,7 @@ const DataMatrix::DataInfo DataInterfaceFitsTableMatrix::dataInfo(const QString&
 
 int DataInterfaceFitsTableMatrix::read(const QString& field, DataMatrix::ReadInfo& p){
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::read() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::read() with field: " << field << Qt::endl;
    int count = source.readMatrix(p.data->z, field);
 
    p.data->xMin = 0;
@@ -228,7 +228,7 @@ int DataInterfaceFitsTableMatrix::read(const QString& field, DataMatrix::ReadInf
 
 bool DataInterfaceFitsTableMatrix::isValid(const QString& field) const {
 
-   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::isValid() with field: " << field << endl;
+   DBG qDebug() << "Entering DataInterfaceFitsTableMatrix::isValid() with field: " << field << Qt::endl;
    return source._matrixList.contains(field);
 }
 
@@ -246,7 +246,7 @@ FitsTableSource::FitsTableSource(Kst::ObjectStore *store, QSettings *cfg,
    iv(new DataInterfaceFitsTableVector(*this)),
    im(new DataInterfaceFitsTableMatrix(*this)){
 
-   DBG qDebug() << "Entering FitsTableSource::FitsTableSource() with filename: " << filename << endl;
+   DBG qDebug() << "Entering FitsTableSource::FitsTableSource() with filename: " << filename << Qt::endl;
    setInterface(is);
    setInterface(it);
    setInterface(iv);
@@ -352,9 +352,9 @@ bool FitsTableSource::init() {
    maxdim = 2;
    naxes = (long *) malloc(maxdim*sizeof(long));
 
-   DBG qDebug() << "Entering FitsTableSource::init() with filename: " << _filename.toAscii() << endl;
+   DBG qDebug() << "Entering FitsTableSource::init() with filename: " << _filename.toLatin1() << Qt::endl;
    // First, try to open the file
-   if(fits_open_file( &_fptr, _filename.toAscii(), READONLY, &status )){
+   if(fits_open_file( &_fptr, _filename.toLatin1(), READONLY, &status )){
       fits_close_file( _fptr, &status );
       _fptr = 0L;
       _valid = false;
@@ -541,14 +541,14 @@ Kst::Object::UpdateType FitsTableSource::internalDataSourceUpdate() {
 }
 
 int FitsTableSource::readScalar(double *v, const QString& field){
-   DBG qDebug() << "Entering FitsTableSource::readScalar() with field: " << field << endl;
+   DBG qDebug() << "Entering FitsTableSource::readScalar() with field: " << field << Qt::endl;
 
    *v = _scalars[field];
    return 1;
 }
 
 int FitsTableSource::readString(QString *stringValue, const QString& stringName){
-   DBG qDebug() << "Entering FitsTableSource::readString() with field: " << stringName << endl;
+   DBG qDebug() << "Entering FitsTableSource::readString() with field: " << stringName << Qt::endl;
    *stringValue = _strings[stringName];
    return 1;
 }
@@ -579,7 +579,7 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                       s, the offset from the beginning of data */
    QByteArray ba;  /* needed to convert a QString to char array */
 
-   DBG qDebug() << "Entering FitsTableSource::readField() with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+   DBG qDebug() << "Entering FitsTableSource::readField() with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
 
    /* For INDEX field */
    if (field.toLower() == "index") {
@@ -754,8 +754,8 @@ int FitsTableSource::readMatrix(double *v, const QString& field){
 
    /* TODO: The code in this function is probably all wrong.  Since fitstable
       does not currently implement matrices, this function never gets called */
-   DBG qDebug() << "Entering FitsTableSource::readMatrix() with field: " << field << endl;
-   if (fits_get_colnum(_fptr, CASEINSEN, field.toAscii().data(), &colnum, &status))
+   DBG qDebug() << "Entering FitsTableSource::readMatrix() with field: " << field << Qt::endl;
+   if (fits_get_colnum(_fptr, CASEINSEN, field.toLatin1().data(), &colnum, &status))
       fits_report_error(stderr,status);
    if (fits_get_coltype(_fptr, colnum, &typecode, &repeat, &width, &status))
       fits_report_error(stderr,status);
@@ -795,7 +795,7 @@ int FitsTableSource::readMatrix(double *v, const QString& field){
 
 int FitsTableSource::frameCount(const QString& field) const {
 
-   DBG qDebug() << "Entering FitsTableSource::frameCount() with field: " << field << endl;
+   DBG qDebug() << "Entering FitsTableSource::frameCount() with field: " << field << Qt::endl;
    if (field.isEmpty() || field.toLower() == "index") {
       return _maxFrameCount;
    } else {
@@ -970,7 +970,7 @@ int FitsTableSourcePlugin::understands(QSettings *cfg, const QString& filename) 
    long nrow;         /* number of rows in table */
 
    DBG qDebug() << "Entering FitsTableSourcePlugin::understands()\n";
-   if(fits_open_file(&ff, filename.toAscii(), READONLY, &status)){
+   if(fits_open_file(&ff, filename.toLatin1(), READONLY, &status)){
       fits_close_file(ff,&status);
       return 0;
    }

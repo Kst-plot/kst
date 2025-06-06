@@ -18,7 +18,7 @@
 #ifndef DATASOURCE_H
 #define DATASOURCE_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "object.h"
 #include "dateparser.h"
 #include "objectlist.h"
@@ -96,7 +96,7 @@ class KSTCORE_EXPORT DataSource : public Object
     /************************************************************/
     /* Dynamic type system                                      */
     /************************************************************/
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

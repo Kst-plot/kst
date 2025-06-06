@@ -16,7 +16,7 @@
 #include <qdom.h>
 #include <qobject.h>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 class QMainWindow;
 

@@ -456,13 +456,13 @@ double *DataObject::vectorRealloced(VectorPtr v, double *memptr, int newSize) co
 #endif
 
 void DataObject::load(const QXmlStreamReader &e) {
-  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << endl;
+  qDebug() << QString("FIXME! Loading of %1 is not implemented yet.").arg(typeString()) << Qt::endl;
   Q_UNUSED(e)
 }
 
 
 void DataObject::save(QXmlStreamWriter& ts) {
-  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << endl;
+  qDebug() << QString("FIXME! Saving of %1 is not implemented yet.").arg(typeString()) << Qt::endl;
   Q_UNUSED(ts)
 }
 
@@ -508,7 +508,7 @@ void DataObject::showDialog(bool isNew) {
 
 void DataObject::readLock() const {
   #ifdef LOCKTRACE
-  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::readLock() by tid=" << (int)QThread::currentThread() << ": read locking myself" << endl;
+  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::readLock() by tid=" << (int)QThread::currentThread() << ": read locking myself" << Qt::endl;
   #endif
 
   Object::readLock();
@@ -517,7 +517,7 @@ void DataObject::readLock() const {
 
 void DataObject::writeLock() const {
   #ifdef LOCKTRACE
-  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLock() by tid=" << (int)QThread::currentThread() << ": write locking myself" << endl;
+  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLock() by tid=" << (int)QThread::currentThread() << ": write locking myself" << Qt::endl;
   #endif
 
   Object::writeLock();
@@ -526,7 +526,7 @@ void DataObject::writeLock() const {
 
 void DataObject::unlock() const {
   #ifdef LOCKTRACE
-  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlock() by tid=" << (int)QThread::currentThread() << ": unlocking myself" << endl;
+  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlock() by tid=" << (int)QThread::currentThread() << ": unlocking myself" << Qt::endl;
   #endif
 
   Object::unlock();
@@ -537,7 +537,7 @@ void DataObject::writeLockInputsAndOutputs() const {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   #ifdef LOCKTRACE
-  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << Qt::endl;
   #endif
 
   QList<PrimitivePtr> inputs;
@@ -589,20 +589,20 @@ void DataObject::writeLockInputsAndOutputs() const {
     if (inputIt != inputs.constEnd() && (outputIt == outputs.constEnd() || (void*)(*inputIt) < (void*)(*outputIt))) {
       // do input
       if (!(*inputIt)) {
-        qWarning() << "Input for data object " << this->Name() << " is invalid." << endl;
+        qWarning() << "Input for data object " << this->Name() << " is invalid." << Qt::endl;
       }
 #ifdef LOCKTRACE
-      qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking input \"" << (*inputIt)->Name() << "\" (" << (void*)((KstRWLock*)*inputIt) << ")" << endl;
+      qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking input \"" << (*inputIt)->Name() << "\" (" << (void*)((KstRWLock*)*inputIt) << ")" << Qt::endl;
 #endif
       (*inputIt)->writeLock();
       ++inputIt;
     } else {
       // do output
       if (!(*outputIt)) {
-        qWarning() << "Output for data object " << this->Name() << " is invalid." << endl;
+        qWarning() << "Output for data object " << this->Name() << " is invalid." << Qt::endl;
       }
 #ifdef LOCKTRACE
-      qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->Name() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << endl;
+      qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->Name() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << Qt::endl;
 #endif
       if ((*outputIt)->provider() != this) {
         Debug::self()->log(tr("(%1) DataObject::writeLockInputsAndOutputs() by tid=%2: write locking output %3 (not provider) -- this is probably an error. Please email kst@kde.org with details.").arg(this->type()).arg(reinterpret_cast<qint64>(QThread::currentThread())).arg((*outputIt)->Name()), Debug::Error);
@@ -617,85 +617,85 @@ void DataObject::writeLockInputsAndOutputs() const {
 
 void DataObject::unlockInputsAndOutputs() const {
   #ifdef LOCKTRACE
-  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << Qt::endl;
   #endif
 
   for (MatrixMap::ConstIterator i = _outputMatrices.constBegin(); i != _outputMatrices.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output matrix for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Output matrix for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (MatrixMap::ConstIterator i = _inputMatrices.constBegin(); i != _inputMatrices.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input matrix for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Input matrix for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (VectorMap::ConstIterator i = _outputVectors.constBegin(); i != _outputVectors.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output vector for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Output vector for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (VectorMap::ConstIterator i = _inputVectors.constBegin(); i != _inputVectors.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input vector for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Input vector for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (ScalarMap::ConstIterator i = _outputScalars.constBegin(); i != _outputScalars.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output scalar for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Output scalar for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (ScalarMap::ConstIterator i = _inputScalars.constBegin(); i != _inputScalars.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input scalar for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Input scalar for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (StringMap::ConstIterator i = _outputStrings.constBegin(); i != _outputStrings.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output string for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Output string for data object " << this->Name() << " is invalid." << Qt::endl;
     }
    #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
 
   for (StringMap::ConstIterator i = _inputStrings.constBegin(); i != _inputStrings.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input string for data object " << this->Name() << " is invalid." << endl;
+      qWarning() << "Input string for data object " << this->Name() << " is invalid." << Qt::endl;
     }
     #ifdef LOCKTRACE
-    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << endl;
+    qDebug() << (void*)this << " (" << this->type() << ": " << this->Name() << ") DataObject::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
     #endif
     (*i)->unlock();
   }
@@ -900,7 +900,7 @@ QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
     if (c.size()==2) {
       QString c1 = QString(c[1]).trimmed();
       if (_outputVectors.contains(c1)) {
-        return _outputVectors[c1]->Name().toAscii();
+        return _outputVectors[c1]->Name().toLatin1();
       } else {
         return QByteArray("vector not found: ").append(c[1]);
       }
@@ -911,7 +911,7 @@ QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
     if (c.size()==2) {
       QString c1 = QString(c[1]).trimmed();
       if (_outputScalars.contains(c1)) {
-        return _outputScalars[c1]->Name().toAscii();
+        return _outputScalars[c1]->Name().toLatin1();
       } else {
         return QByteArray("scalar not found: ").append(c[1]);
       }
@@ -922,7 +922,7 @@ QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
     if (c.size()==2) {
       QString c1 = QString(c[1]).trimmed();
       if (_outputMatrices.contains(c1)) {
-        return _outputMatrices[c1]->Name().toAscii();
+        return _outputMatrices[c1]->Name().toLatin1();
       } else {
         return QByteArray("Matrix not found: ").append(c[1]);
       }
@@ -933,7 +933,7 @@ QByteArray DataObject::scriptInterface(QList<QByteArray> &c) {
     if (c.size()==2) {
       QString c1 = QString(c[1]).trimmed();
       if (_outputStrings.contains(c1)) {
-        return _outputStrings[c1]->Name().toAscii();
+        return _outputStrings[c1]->Name().toLatin1();
       } else {
         return QByteArray("String not found: ").append(c[1]);
       }

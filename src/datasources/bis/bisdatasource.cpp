@@ -323,7 +323,7 @@ void BISSource::reset() {
 // If the datasource has any predefined fields they should be populated here.
 bool BISSource::init() {
 
-  _bisfile = BISopen(_filename.toAscii().data());
+  _bisfile = BISopen(_filename.toLatin1().data());
   if (_bisfile->status != BIS_OK) {
     BISclose(_bisfile);
     _bisfile = 0;
@@ -538,7 +538,7 @@ int BISSourcePlugin::understands(QSettings *cfg, const QString& filename) const 
     return 0;
   }
 
-  if (isBISfile(filename.toAscii().data())) {
+  if (isBISfile(filename.toLatin1().data())) {
     return (99);
   }
   return 0;

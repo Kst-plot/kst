@@ -37,7 +37,7 @@ EditableVector::EditableVector(ObjectStore *store)
 }
 
 
-const QString& EditableVector::typeString() const {
+QString EditableVector::typeString() const {
   return staticTypeString;
 }
 

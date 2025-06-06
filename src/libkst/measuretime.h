@@ -13,7 +13,7 @@
 #ifndef KST_MEASURE_TIME
 #define KST_MEASURE_TIME
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include <QString>
 

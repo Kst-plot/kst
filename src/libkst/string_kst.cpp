@@ -53,7 +53,7 @@ String::~String() {
 }
 
 
-const QString& String::typeString() const {
+QString String::typeString() const {
   return staticTypeString;
 }
 

@@ -17,7 +17,7 @@
 #include "datatab.h"
 #include "equation.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_equationtab.h"
 

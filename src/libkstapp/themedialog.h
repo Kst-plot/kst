@@ -23,7 +23,7 @@
 #include "dialog.h"
 #include "editmultiplewidget.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_themedialog.h"
 

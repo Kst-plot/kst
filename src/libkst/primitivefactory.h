@@ -17,7 +17,7 @@
 #include <QStringList>
 
 #include "primitive.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

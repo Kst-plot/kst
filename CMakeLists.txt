@@ -1,30 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(kst_version_major 2)
-if(kst_version_string)
-    set(kst_version ${kst_version_string})
-else()
-    set(kst_version_minor 1)
-    #set(kst_version_patch x)
-    set(kst_version ${kst_version_major}.${kst_version_minor})
-    #set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
-    set(kst_version_string ${kst_version})
-endif()
+set(QT_MIN_VERSION "6.8.0")
+set(KF_MIN_VERSION "6.5.0")
+
+set(kst_version_major 3)
+set(kst_version_minor 0)
+set(kst_version_patch 0)
+set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
+set(kst_version_string ${kst_version})
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Kst VERSION ${kst_version})
-
-if(kst_clang)
-    set(CMAKE_C_COMPILER    "clang")
-    SET (CMAKE_CXX_COMPILER "clang++")
-    message(STATUS "Using clang  ${CMAKE_CXX_COMPILER}")
-endif()
-
-# figure out if we use MinGW with Ninja: call with -DCC=gcc
-if(WIN32 AND CMAKE_GENERATOR MATCHES Ninja AND CC MATCHES gcc)
-    find_file(mingw_make mingw32-make.exe)
-    get_filename_component(mingw_bin_dir ${mingw_make} PATH)
-    set(CMAKE_RC_COMPILER ${mingw_bin_dir}/windres.exe)
-endif()
 
 include(FeatureSummary)
 
@@ -41,18 +29,27 @@ feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAG
 include(KstMacros)
 include(KDEInstallDirs)
 
+include(KDEInstallDirs)
+
+include(ECMGenerateExportHeader)
+include(ECMSetupVersion)
+include(ECMEnableSanitizers)
+
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR} ABSOLUTE)
 get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 set(kst_binary_name kst2)
 
+ecm_setup_version(PROJECT
+    VARIABLE_PREFIX KST
+    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kst_version.h"
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KstConfigVersion.cmake"
+    SOVERSION "3"
+)
 
 kst_option_init()
-kst_option(string ""  all version_string    "Version string")
-kst_option(bool   ON  all release           "Build release version: optimize for speed, don't embedded debug symbols")
 kst_option(bool   OFF all merge_files       "Merge files to speedup build about factor 5")
 kst_option(bool   OFF all merge_rebuild     "Rebuild generated files from merged files build")
-kst_option(bool   OFF all verbose           "Make verbose CMake run and Makefiles")
 kst_option(bool   ON  all 3rdparty          "Build plugins depending on 3rd party libraries")
 kst_option(bool   ON  all dataobjects       "Build dataobject plugins")
 kst_option(bool   OFF all test              "Build unit tests")
@@ -66,40 +63,11 @@ kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Vi
 kst_option(bool   OFF all python            "Install Python support")
 kst_option(bool   OFF all python_depend     "Download and build NumPy/SciPy then install Python support")
 kst_option(string ""  all python_prefix     "Path for installing python bindings")
-kst_option(string OFF all cross             "Cross-compile on Linux for Windows")
-kst_option(bool   OFF  all qt5base_only      "Only use Qt5 features available in qtbase")
-kst_option(bool   OFF all clang             "Use Clang compiler")
-kst_option(bool   OFF all sanitize          "Use Clang's sanitizers")
+kst_option(bool   OFF  all qt6base_only      "Only use Qt5 features available in qtbase")
 kst_option(bool   OFF all dbgsym            "Build with debug symbols enabled")
 kst_option(bool   OFF win noinstaller       "Don't build installer")
 
 message(STATUS)
-
-if(kst_cross)
-    include(KstCrossCompile)
-endif()
-
-
-if(kst_release)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_WARNING_OUTPUT")
-else()
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
-endif()
-
-
-if(kst_sanitize)
-    include(Clang-sanitize)
-    set(clang_flags "${clang_flags}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${clang_flags}")
-endif()
-
-
-if(CMAKE_COMPILER_IS_GNUCC)
-    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-    message(STATUS "Using GCC version ${GCC_VERSION}")
-endif()
-
 
 if(kst_3rdparty_build)
     set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
@@ -168,59 +136,37 @@ else()
 endif()
 message(STATUS)
 
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT")
+find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS
+    Core
+    Concurrent
+    Widgets
+    Network
+    Xml
+    PrintSupport
+    Svg
+    LinguistTools
+)
+set_package_properties(Qt6 PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Required application components"
+)
 
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS I18n)
+set_package_properties(KF6 PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Required application components"
+)
 
-# Find 3rd party libraries
-# http://doc-snapshot.qt-project.org/5.0/cmake-manual.htm
-if(kst_cross)
-    # Cross-compiled Qt(?)
-    set(QT_MINGW_DIR ${kst_qt5} CACHE PATH "Qt for Mingw" FORCE)
-    set(CMAKE_FIND_ROOT_PATH /usr/${TOOLNAME} ${QT_MINGW_DIR} CACHE PATH "Mingw find root path" FORCE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
-endif()
-macro(use_qt5lib qt5lib)
-    find_package(${qt5lib} REQUIRED)
-    include_directories(${${qt5lib}_INCLUDE_DIRS})
-endmacro()
-use_qt5lib(Qt5Core)
-get_target_property(qmakebin Qt5::qmake IMPORTED_LOCATION)
-get_filename_component(QT_BINARY_DIR ${qmakebin} PATH)
-message(STATUS "Using Qt5 from ${QT_BINARY_DIR}")
-set(CMAKE_PREFIX_PATH ${QT_BINARY_DIR}/..)
-use_qt5lib(Qt5Concurrent)
-use_qt5lib(Qt5Widgets)
-use_qt5lib(Qt5Network)
-use_qt5lib(Qt5Xml)
-use_qt5lib(Qt5PrintSupport)
-use_qt5lib(Qt5Svg)
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
-include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS}) # Qt5 bug?
-
-#linguist tools
-find_package(Qt5LinguistTools)
-if(Qt5LinguistTools_FOUND)
-    find_package(Qt5LinguistForKst)
-endif()
-
-message(STATUS)
-
 
 # React on options
-
-
-if(kst_verbose)
-    set(CMAKE_VERBOSE_MAKEFILE 1)
-else()
-    set(CMAKE_VERBOSE_MAKEFILE 0)
-endif()
 
 if(NOT kst_console)
     set(kst_win32 WIN32)
     if(WIN32)
-        set(kst_qtmain_library Qt5::WinMain)
+        set(kst_qtmain_library Qt6::WinMain)
     endif()
 endif()
 
@@ -238,31 +184,6 @@ endif()
 
 if(kst_merge_files)
     set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
-endif()
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(x64 TRUE)
-endif()
-
-
-if(WIN32)
-    add_definitions(-D_WIN32_WINNT=0x0501) # Windows XP
-    # on 32 bit Windows we must explicitly enable >2GB support
-    # maybe you have to ' 4-gigabyte tune' your Windows XP 32 bit system:
-    # http://msdn.microsoft.com/en-us/library/windows/desktop/aa366778%28v=vs.85%29.aspx
-    macro(large_address var flag)
-        set(${var} "${${var}} ${flag}")
-    endmacro()
-    macro(link_large_address flag)
-        large_address(CMAKE_EXE_LINKER_FLAGS    ${flag})
-        large_address(CMAKE_SHARED_LINKER_FLAGS ${flag})
-        large_address(CMAKE_MODULE_LINKER_FLAGS ${flag})
-    endmacro()
-    if(MSVC)
-        link_large_address(/LARGEADDRESSAWARE)
-    elseif(NOT x64)
-        link_large_address(-Wl,--large-address-aware)
-    endif()
 endif()
 
 if(MSVC)
@@ -283,29 +204,13 @@ if(MSVC_IDE AND kst_edit_cont)
     endif()
 endif()
 
-
-
-if(MSVC)
-    set(kst_debug_postfix d)
-endif()
-
 configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
-include_directories(${CMAKE_BINARY_DIR} ${QT_INCLUDES})
-
-message(STATUS "Build summary----------------------------------")
-message(STATUS)
-message(STATUS "Version       : ${kst_version}")
-message(STATUS "Path to source: ${kst_dir}")
-message(STATUS "Used options:")
-kst_option_list_all()
-message(STATUS "-----------------------------------------------")
-message(STATUS)
-
+include_directories(${CMAKE_BINARY_DIR})
 
 add_subdirectory(src)
 
-if(kst_test)
+if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(tests)
 endif()
@@ -319,9 +224,9 @@ if(kst_python)
 endif()
 
 #adapted from [trojita.git] / CMakeLists.txt
-if(Qt5LinguistForKst_FOUND)
+if(Qt6LinguistForKst_FOUND)
     file(GLOB_RECURSE kst_PO "${CMAKE_SOURCE_DIR}/po/kst_common_*.po")
-    qt5_wrap_po(kst_QM ${kst_PO})
+    qt6_wrap_po(kst_QM ${kst_PO})
     set(language_summary "")
     foreach(po ${kst_PO})
         string(REGEX REPLACE "^(.*)/kst_common_(.*).po" "\\2" lang ${po})

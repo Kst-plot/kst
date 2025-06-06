@@ -19,6 +19,7 @@
 #include <QHash>
 #include <QList>
 #include <QString>
+#include <QRegularExpression>
 
 #include "object.h"
 #include "datavector.h"
@@ -89,9 +90,11 @@ ObjectPtr ObjectStore::retrieveObject(const QString& name, bool enforceUnique) c
   }
 
   QString shortName;
-  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-  rx.indexIn(name);
-  shortName = rx.cap(2);
+  QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  QRegularExpressionMatch match2;
+  name.indexOf(rx, 0, &match2);
+
+  shortName = match2.captured(2);
 
   // 1) search for short names
   int size = _list.size();

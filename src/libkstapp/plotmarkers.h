@@ -13,7 +13,7 @@
 #ifndef PLOTMARKERS_H
 #define PLOTMARKERS_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "vector.h"
 #include "curve.h"

@@ -99,7 +99,7 @@ QMap<QString, double> DataInterfaceDmcVector::metaScalars(const QString&)
 
 static QString dmcTypeString = I18N_NOOP("PLANCK DMC I/O");
 
-const QString& DmcSource::typeString() const
+QString DmcSource::typeString() const
 {
   return dmcTypeString;
 }
@@ -128,12 +128,12 @@ DmcSource::DmcSource(Kst::ObjectStore *store, QSettings *cfg, const QString& fil
     update();
     _valid = true;
   }
-  //qDebug() << "Planck source " << (void*)this << " created" << endl;
+  //qDebug() << "Planck source " << (void*)this << " created" << Qt::endl;
 }
 
 
 DmcSource::~DmcSource() {
-  //qDebug() << "Planck source " << (void*)this << " destroyed" << endl;
+  //qDebug() << "Planck source " << (void*)this << " destroyed" << Qt::endl;
 }
 
 
@@ -168,7 +168,7 @@ Object::UpdateType DmcSource::internalDataSourceUpdate() {
 
 
 int DmcSource::readField(double *v, const QString& field, int s, int n) {
-  //qDebug() << "Planck read field " << field << " - " << n << " samples from " << s << endl;
+  //qDebug() << "Planck read field " << field << " - " << n << " samples from " << s << Qt::endl;
   if (field.toLower() == "index") {
     if (n < 0) {
       v[0] = double(s);
@@ -181,9 +181,9 @@ int DmcSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   if (!_valid || !_dmcObject || !_dmcObject->isValid()) {
-    qDebug() << "tried to read from an invalid planck dmc source" << endl;
-    qDebug() << "plugin is valid? " << _valid << endl;
-    qDebug() << "Object object is non-null? " << (_dmcObject.data() != 0) << endl;
+    qDebug() << "tried to read from an invalid planck dmc source" << Qt::endl;
+    qDebug() << "plugin is valid? " << _valid << Qt::endl;
+    qDebug() << "Object object is non-null? " << (_dmcObject.data() != 0) << Qt::endl;
     return -1;
   }
 
@@ -204,7 +204,7 @@ int DmcSource::readField(double *v, const QString& field, int s, int n) {
   }
 
   if (s + start > end) {
-    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
+    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << Qt::endl;
     return 0;
   }
 
@@ -252,18 +252,18 @@ int DmcSource::readField(double *v, const QString& field, int s, int n, int skip
   }
 
   if (s + (n-1)*skip >= count) { // trying to read past the end
-    qDebug() << "TRYING TO READ PAST END.  n=" << n << endl;
+    qDebug() << "TRYING TO READ PAST END.  n=" << n << Qt::endl;
     // n = ceil((count-s)/skip)
     if ((count - s) % skip == 0) {
       n = (count - s) / skip;
     } else {
       n = (count - s) / skip + 1;
     }
-    qDebug() << "N IS NOW=" << n << endl;
+    qDebug() << "N IS NOW=" << n << Qt::endl;
   }
 
   if (s + start > end) {
-    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << endl;
+    qDebug() << "Nothing to read: (" << start << "," << end << ") " << s << Qt::endl;
     return 0;
   }
 
@@ -271,7 +271,7 @@ int DmcSource::readField(double *v, const QString& field, int s, int n, int skip
   // later.  For now, we read into a temp buffer, then extract what we need.
   double *tmp = new double[(n - 1) * skip + 1];
   int rc = _dmcObject->readObject(field, tmp, start + s, start + s + (n - 1) * skip);
-  //qDebug() << "readObject rc=" << rc << " from=" << start+s << " to=" << start + s + (n - 1) * skip << endl;
+  //qDebug() << "readObject rc=" << rc << " from=" << start+s << " to=" << start + s + (n - 1) * skip << Qt::endl;
   int i = 0;
   while (i < n && i*skip < rc) {
     v[i] = tmp[i * skip];

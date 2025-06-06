@@ -78,7 +78,7 @@ class KSTMATH_EXPORT Relation : public Object {
 
   public:
     static const QString staticTypeString;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
 
     explicit Relation(ObjectStore *store);
     virtual ~Relation();

@@ -15,7 +15,7 @@
 #ifndef DATAMATRIX_H
 #define DATAMATRIX_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "dataprimitive.h"
 #include "matrix.h"
 
@@ -69,7 +69,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     };
 
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

@@ -1044,7 +1044,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
     if (uNextTick > uMax)
       break;    
     double nextTick = uNextTick * drdu + rOffset;
-    if (lastTick == uNextTick) // prevent endless loop
+    if (lastTick == uNextTick) // prevent Qt::endless loop
       break;
     lastTick = nextTick;
     ticks << nextTick;

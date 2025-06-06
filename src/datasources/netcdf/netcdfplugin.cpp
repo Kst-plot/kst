@@ -122,13 +122,13 @@ int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
     QFile f(filename);
 
     if (!f.open(QFile::ReadOnly)) {
-      KST_DBG qDebug() << "Unable to read file !" << endl;
+      KST_DBG qDebug() << "Unable to read file !" << Qt::endl;
       return 0;
     }
 
     NcFile *ncfile = new NcFile(filename.toUtf8().data());
     if (ncfile->is_valid()) {
-      KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
+      KST_DBG qDebug() << filename << " looks like netCDF !" << Qt::endl;
       delete ncfile;
       return 80;
     } else {

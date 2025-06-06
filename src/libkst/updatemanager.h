@@ -17,6 +17,7 @@
 
 #include <QGraphicsRectItem>
 #include <QTime>
+#include <QElapsedTimer>
 
 namespace Kst {
 class ObjectStore;

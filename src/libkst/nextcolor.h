@@ -15,7 +15,7 @@
 
 #include <QColor>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 class KPalette;
 

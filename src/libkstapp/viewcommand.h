@@ -15,7 +15,7 @@
 
 #include <QPointer>
 #include <QUndoCommand>
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 class View;

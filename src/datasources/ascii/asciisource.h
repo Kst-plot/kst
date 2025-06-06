@@ -65,7 +65,7 @@ class AsciiSource : public Kst::DataSource
     virtual void reset();
     void updateLists();
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
 
     static const QString asciiTypeKey();
 

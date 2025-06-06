@@ -18,7 +18,7 @@
 #ifndef DATAVECTOR_H
 #define DATAVECTOR_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "dataprimitive.h"
 #include "vector.h"
 
@@ -63,7 +63,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
 
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

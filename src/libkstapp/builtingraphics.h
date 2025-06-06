@@ -13,7 +13,7 @@
 #ifndef BUILTINGRAPHICS_H
 #define BUILTINGRAPHICS_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
   namespace Builtins {
