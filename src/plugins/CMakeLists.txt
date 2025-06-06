@@ -30,11 +30,11 @@ kst_add_plugin(filters window)
 kst_add_plugin(filters differentiation)
 kst_add_plugin(filters exponential)
 
-if(gsl)
+if(TARGET GSL::gsl)
 	include_directories(${GSL_INCLUDE_DIR})
 	macro(kst_add_gsl_plugin dir name)
 		kst_add_plugin(${dir} ${name})
-		kst_link(${GSL_LIBRARIES})
+		kst_link(GSL::gsl)
 	endmacro()
 	
 	kst_add_gsl_plugin(dataobject/convolution    convolve)
