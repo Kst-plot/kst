@@ -1268,7 +1268,7 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av = attrs.value("visible");
+  QStringView av = attrs.value("visible");
   if (!av.isNull()) {
     setAxisVisible(QVariant(av.toString()).toBool());
   }

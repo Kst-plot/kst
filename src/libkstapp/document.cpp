@@ -337,7 +337,7 @@ bool Document::open(const QString& file) {
                 loadedView = new Kst::View(0);
 
                 QBrush brush;
-                QStringRef av = attrs.value("gradient");
+                QStringView av = attrs.value("gradient");
                 if (!av.isNull()) {
                   QStringList stopInfo = av.toString().split(',', Qt::SkipEmptyParts);
                   QLinearGradient gradient(1,0,0,0);

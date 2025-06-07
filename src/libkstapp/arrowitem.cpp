@@ -185,7 +185,7 @@ ViewItem* ArrowItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore 
           rc->setParentViewItem(parent);
         }
         QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
+        QStringView av;
         av = attrs.value("startarrowhead");
         if (!av.isNull()) {
           rc->setStartArrowHead(QVariant(av.toString()).toBool());

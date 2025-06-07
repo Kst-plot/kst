@@ -110,7 +110,7 @@ bool PlotMarkers::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av;
+  QStringView av;
   av = attrs.value("xaxis");
   if (!av.isNull()) {
     _xAxis = QVariant(av.toString()).toBool();

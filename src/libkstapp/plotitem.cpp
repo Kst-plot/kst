@@ -3752,7 +3752,7 @@ bool PlotLabel::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av = attrs.value("visible");
+  QStringView av = attrs.value("visible");
   if (!av.isNull()) {
     setVisible(QVariant(av.toString()).toBool());
   }
@@ -3844,7 +3844,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         Q_ASSERT(!rc);
 
         QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
+        QStringView av;
 
         Object::processShortNameIndexAttributes(attrs);
 
@@ -3933,7 +3933,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         // Add any new specialized PlotItem Properties here.
       } else if (xml.name().toString() == "projectionrect") {
         QXmlStreamAttributes attrs = xml.attributes();
-        QStringRef av;
+        QStringView av;
         av = attrs.value("width");
         if (!av.isNull()) {
           w = av.toString().toDouble();
@@ -3954,7 +3954,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
       } else if (xml.name().toString() == "plotaxis") {
         Q_ASSERT(rc);
         QXmlStreamAttributes subattrs = xml.attributes();
-        QStringRef av = subattrs.value("id");
+        QStringView av = subattrs.value("id");
         if (!av.isNull()) {
           if (av == "xaxis") {
             rc->xAxis()->configureFromXml(xml, store);
@@ -3966,7 +3966,7 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
       } else if (xml.name().toString() == "plotlabel") {
         Q_ASSERT(rc);
         QXmlStreamAttributes subattrs = xml.attributes();
-        QStringRef av = subattrs.value("id");
+        QStringView av = subattrs.value("id");
         if (!av.isNull()) {
           if (av == "leftlabel") {
             rc->leftLabelDetails()->configureFromXml(xml, store);

@@ -199,7 +199,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av;
+  QStringView av;
   av = attrs.value("type");
   if (!av.isNull()) {
     setRenderType((RenderType)av.toString().toInt());

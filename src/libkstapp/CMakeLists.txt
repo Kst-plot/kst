@@ -1,12 +1,22 @@
-kst_init(${kst_binary_name} app)
+# SPDX-FileCopyrightText: 2025 Carl Schwan <carl@carlschwan.eu>
+# SPDX-License-Identifier: BSD-2-Clause
 
-if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-kst_files_find(src/libkstapp)
+add_library(Kst6App SHARED)
 
-kst_include_directories(core math widgets)
+ecm_generate_export_header(Kst6App
+    BASE_NAME KSTAPP
+    VERSION ${PROJECT_VERSION}
+    USE_VERSION_HEADER kst_version.h
+)
+
+target_include_directories(Kst6App
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6App}>"
+)
 
 set(AUTHORS ${kst_dir}/AUTHORS)
 set_source_files_properties(${AUTHORS} PROPERTIES GENERATED TRUE HEADER_FILE_ONLY TRUE)
@@ -15,9 +25,347 @@ string(REPLACE "\n" ";" kst_authors ${data})
 file(WRITE ${CMAKE_BINARY_DIR}/authors.h.tmp "static const char* kst_authors = \"${kst_authors}\";\n")
 
 execute_process(COMMAND ${CMAKE_COMMAND}
-		-E copy_if_different
-		${CMAKE_BINARY_DIR}/authors.h.tmp ${CMAKE_BINARY_DIR}/authors.h)
-		
-kst_add_library(STATIC ${CMAKE_BINARY_DIR}/authors.h ${AUTHORS})
+    -E copy_if_different
+    ${CMAKE_BINARY_DIR}/authors.h.tmp ${CMAKE_BINARY_DIR}/authors.h
+)
 
-kst_link(${libcore} ${libmath} ${libwidgets})
+target_sources(Kst6App PRIVATE
+    aboutdialog.h
+    application.h
+    applicationsettings.h
+    applicationsettingsdialog.h
+    arrowitem.h
+    arrowitemdialog.h
+    arrowpropertiestab.h
+    arrowscriptinterface.h
+    axis.h
+    axistab.h
+    baddatasourcedialog.h
+    basicplugindialog.h
+    boxitem.h
+    bugreportwizard.h
+    builtindatasources.h
+    builtingraphics.h
+    buttonitem.h
+    cartesianrenderitem.h
+    changedatasampledialog.h
+    changefiledialog.h
+    choosecolordialog.h
+    circledimensionstab.h
+    circleitem.h
+    circleitemdialog.h
+    commandlineparser.h
+    contenttab.h
+    csddialog.h
+    curvedialog.h
+    databutton.h
+    databuttonaction.h
+    datadialog.h
+    datagui.h
+    datamanager.h
+    dataref.h
+    datasourceconfiguredialog.h
+    datasourcedialog.h
+    datasourcepluginfactory.h
+    datatab.h
+    datawizard.h
+    debugdialog.h
+    debugnotifier.h
+    defaultlabelpropertiestab.h
+    dialog.h
+    dialoglaunchergui.h
+    dialogpage.h
+    dialogtab.h
+    differentiatecurvesdialog.h
+    dimensionstab.h
+    document.h
+    editmultiplewidget.h
+    ellipseitem.h
+    equationdialog.h
+    eventmonitordialog.h
+    exportgraphicsdialog.h
+    exportvectorsdialog.h
+    filltab.h
+    filterfitdialog.h
+    filtermultipledialog.h
+    formatgridhelper.h
+    generaltab.h
+    graphicsfactory.h
+    gridtab.h
+    histogramdialog.h
+    imagedialog.h
+    labelcreator.h
+    labeldimensionstab.h
+    labelitem.h
+    labelitemdialog.h
+    labelpropertiestab.h
+    labelrenderer.h
+    labelscriptinterface.h
+    labeltab.h
+    layoutboxitem.h
+    layouttab.h
+    legenditem.h
+    legenditemdialog.h
+    legendscriptinterface.h
+    legendtab.h
+    linedimensionstab.h
+    lineedititem.h
+    lineitem.h
+    lineitemdialog.h
+    logdialog.h
+    logwidget.h
+    mainwindow.h
+    markerstab.h
+    matrixdialog.h
+    matrixmodel.h
+    memorywidget.h
+    overridelabeltab.h
+    pictureitem.h
+    plotaxis.h
+    plotitem.h
+    plotitemdialog.h
+    plotitemmanager.h
+    plotmarkers.h
+    plotrenderitem.h
+    plotscriptinterface.h
+    pluginmenuitemaction.h
+    powerspectrumdialog.h
+    primitivemodel.h
+    rangetab.h
+    scalardialog.h
+    scalarmodel.h
+    scene.h
+    scriptserver.h
+    selectionrect.h
+    sessionmodel.h
+    sharedaxisboxitem.h
+    shortcutdialog.h
+    stringdialog.h
+    stringmodel.h
+    stroketab.h
+    svgitem.h
+    tabwidget.h
+    themedialog.h
+    vectordialog.h
+    vectormodel.h
+    view.h
+    viewcommand.h
+    viewdialog.h
+    viewgridlayout.h
+    viewitem.h
+    viewitemdialog.h
+    viewitemscriptinterface.h
+    viewmatrixdialog.h
+    viewprimitivedialog.h
+    viewvectordialog.h
+    aboutdialog.cpp
+    application.cpp
+    applicationsettings.cpp
+    applicationsettingsdialog.cpp
+    arrowitem.cpp
+    arrowitemdialog.cpp
+    arrowpropertiestab.cpp
+    arrowscriptinterface.cpp
+    axis.cpp
+    axistab.cpp
+    baddatasourcedialog.cpp
+    basicplugindialog.cpp
+    boxitem.cpp
+    bugreportwizard.cpp
+    builtindatasources.cpp
+    builtingraphics.cpp
+    buttonitem.cpp
+    cartesianrenderitem.cpp
+    changedatasampledialog.cpp
+    changefiledialog.cpp
+    choosecolordialog.cpp
+    circledimensionstab.cpp
+    circleitem.cpp
+    circleitemdialog.cpp
+    commandlineparser.cpp
+    contenttab.cpp
+    csddialog.cpp
+    curvedialog.cpp
+    databutton.cpp
+    databuttonaction.cpp
+    datadialog.cpp
+    datagui.cpp
+    datamanager.cpp
+    datasourceconfiguredialog.cpp
+    datasourcedialog.cpp
+    datasourcepluginfactory.cpp
+    datatab.cpp
+    datawizard.cpp
+    debugdialog.cpp
+    debugnotifier.cpp
+    defaultlabelpropertiestab.cpp
+    dialog.cpp
+    dialoglaunchergui.cpp
+    dialogpage.cpp
+    dialogtab.cpp
+    differentiatecurvesdialog.cpp
+    dimensionstab.cpp
+    document.cpp
+    editmultiplewidget.cpp
+    ellipseitem.cpp
+    equationdialog.cpp
+    eventmonitordialog.cpp
+    exportgraphicsdialog.cpp
+    exportvectorsdialog.cpp
+    filltab.cpp
+    filterfitdialog.cpp
+    filtermultipledialog.cpp
+    formatgridhelper.cpp
+    generaltab.cpp
+    graphicsfactory.cpp
+    gridtab.cpp
+    histogramdialog.cpp
+    imagedialog.cpp
+    labelcreator.cpp
+    labeldimensionstab.cpp
+    labelitem.cpp
+    labelitemdialog.cpp
+    labelpropertiestab.cpp
+    labelrenderer.cpp
+    labelscriptinterface.cpp
+    labeltab.cpp
+    layoutboxitem.cpp
+    layouttab.cpp
+    legenditem.cpp
+    legenditemdialog.cpp
+    legendscriptinterface.cpp
+    legendtab.cpp
+    linedimensionstab.cpp
+    lineedititem.cpp
+    lineitem.cpp
+    lineitemdialog.cpp
+    logdialog.cpp
+    logwidget.cpp
+    mainwindow.cpp
+    markerstab.cpp
+    matrixdialog.cpp
+    matrixmodel.cpp
+    memorywidget.cpp
+    overridelabeltab.cpp
+    pictureitem.cpp
+    plotaxis.cpp
+    plotitem.cpp
+    plotitemdialog.cpp
+    plotitemmanager.cpp
+    plotmarkers.cpp
+    plotrenderitem.cpp
+    plotscriptinterface.cpp
+    pluginmenuitemaction.cpp
+    powerspectrumdialog.cpp
+    primitivemodel.cpp
+    rangetab.cpp
+    scalardialog.cpp
+    scalarmodel.cpp
+    scene.cpp
+    scriptserver.cpp
+    selectionrect.cpp
+    sessionmodel.cpp
+    sharedaxisboxitem.cpp
+    shortcutdialog.cpp
+    stringdialog.cpp
+    stringmodel.cpp
+    stroketab.cpp
+    svgitem.cpp
+    tabwidget.cpp
+    themedialog.cpp
+    vectordialog.cpp
+    vectormodel.cpp
+    view.cpp
+    viewcommand.cpp
+    viewdialog.cpp
+    viewgridlayout.cpp
+    viewitem.cpp
+    viewitemdialog.cpp
+    viewitemscriptinterface.cpp
+    viewmatrixdialog.cpp
+    viewprimitivedialog.cpp
+    viewvectordialog.cpp
+    aboutdialog.ui
+    arrowpropertiestab.ui
+    axistab.ui
+    baddatasourcedialog.ui
+    basicplugintab.ui
+    bugreportwizard.ui
+    changedatasampledialog.ui
+    changefiledialog.ui
+    choosecolordialog.ui
+    circledimensionstab.ui
+    contenttab.ui
+    csdtab.ui
+    curvetab.ui
+    datamanager.ui
+    datasourcedialog.ui
+    datawizardpagedatapresentation.ui
+    datawizardpagedatasource.ui
+    datawizardpagefilters.ui
+    datawizardpageplot.ui
+    datawizardpagevectors.ui
+    debugdialog.ui
+    defaultlabelpropertiestab.ui
+    dialog.ui
+    dialogpage.ui
+    differentiatecurvesdialog.ui
+    dimensionstab.ui
+    editmultiplewidget.ui
+    equationtab.ui
+    eventmonitortab.ui
+    exportgraphicsdialog.ui
+    exportvectorsdialog.ui
+    filltab.ui
+    filterfittab.ui
+    filtermultipledialog.ui
+    generaltab.ui
+    gridtab.ui
+    histogramtab.ui
+    imagetab.ui
+    kstapp_pch
+    kstrevision.h.cached
+    labelcreator.ui
+    labeldimensionstab.ui
+    labelpropertiestab.ui
+    labeltab.ui
+    layouttab.ui
+    legendtab.ui
+    libkstapp.pro
+    linedimensionstab.ui
+    logdialog.ui
+    markerstab.ui
+    matrixtab.ui
+    overridelabeltab.ui
+    powerspectrumtab.ui
+    rangetab.ui
+    scalartab.ui
+    shortcutdialog.ui
+    stringtab.ui
+    stroketab.ui
+    themedialog.ui
+    vectortab.ui
+    viewmatrixdialog.ui
+    viewprimitivedialog.ui
+    viewvectordialog.ui
+)
+
+target_link_libraries(Kst6App PUBLIC
+    Qt6::Widgets
+    Qt6::Xml
+    Qt6::Network
+    Qt6::PrintSupport
+    Qt6::Svg
+    KF6::I18n
+    Kst6Core
+    Kst6Math
+    Kst6Widgets
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kstapp_export.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6App
+    COMPONENT Devel
+)
+
+install(TARGETS Kst6App EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -21,6 +21,7 @@
 #include <QDesktopServices>
 #include <QDebug>
 #include <QTextEdit>
+#include <QRegularExpression>
 
 #include <QStringList>
 
@@ -59,7 +60,7 @@ AboutDialog::AboutDialog(QWidget *parent)
   //authors.sort();
   authors.replaceInStrings("<", "&lt;");
   authors.replaceInStrings(">", "&gt;");
-  authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
+  authors.replaceInStrings(QRegularExpression("^(.*)"), "<li>\\1</li>");
 
   QString version = QString(KSTVERSION)
 #ifdef KST_REVISION

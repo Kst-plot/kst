@@ -93,7 +93,7 @@ ViewItem* ButtonItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore
         if (parent) {
           rc->setParentViewItem(parent);
         }
-        QStringRef av = attrs.value("text");
+        QStringView av = attrs.value("text");
         if (!av.isNull()) {
           rc->_pushButton->setText(av.toString());
         }

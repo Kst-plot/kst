@@ -383,7 +383,7 @@ bool LegendItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av;
+  QStringView av;
   av = attrs.value("auto");
   if (!av.isNull()) {
     setAutoContents(QVariant(av.toString()).toBool());
