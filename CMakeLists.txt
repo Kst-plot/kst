@@ -145,6 +145,7 @@ find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS
     PrintSupport
     Svg
     LinguistTools
+    Designer
 )
 set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED

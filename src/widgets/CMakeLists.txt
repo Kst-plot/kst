@@ -91,6 +91,7 @@ target_link_libraries(Kst6Widgets PUBLIC
     Qt6::Network
     Qt6::PrintSupport
     Qt6::Svg
+    Qt6::Designer
     KF6::I18n
     Kst6Core
     Kst6Math
