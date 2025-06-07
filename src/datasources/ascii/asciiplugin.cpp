@@ -162,8 +162,7 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   // checks.  Why one would want this is unclear to me.
   // TODO: fix this!
   if (!config._fileNamePattern.value().isEmpty()) {
-    QRegExp filenamePattern(config._fileNamePattern);
-    filenamePattern.setPatternSyntax(QRegExp::Wildcard);
+    const auto filenamePattern = QRegularExpression::fromWildcard(config._fileNamePattern);
     if (filenamePattern.exactMatch(filename)) {
       return 100;
     }
@@ -172,11 +171,11 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   QFile f(filename);
   if (f.open(QIODevice::ReadOnly)) {    
 
-    QRegExp commentRE;
-    QRegExp dataRE;
+    QRegularExpression commentRE;
+    QRegularExpression dataRE;
     if (config._columnType == AsciiSourceConfig::Custom && !config._columnDelimiter.value().isEmpty()) {
-      commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(config._columnDelimiter)).arg(config._delimiters));
-      dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegExp::escape(config._columnDelimiter)));
+      commentRE.setPattern(QString("^[%1]*[%2].*").arg(QRegularExpression::escape(config._columnDelimiter)).arg(config._delimiters));
+      dataRE.setPattern(QString("^[%1]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+").arg(QRegularExpression::escape(config._columnDelimiter)));
     } else {
       commentRE.setPattern(QString("^\\s*[%1].*").arg(config._delimiters));
       dataRE.setPattern(QString("^[\\s]*(([Nn][Aa][Nn]|(\\-\\+)?[Ii][Nn][Ff]|[0-9\\+\\-\\.eE]+)[\\s]*)+"));

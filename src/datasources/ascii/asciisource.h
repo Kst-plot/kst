@@ -20,6 +20,7 @@
 #include "dataplugin.h"
 
 #include <QTime>
+#include <QElapsedTimer>
 
 
 class QFile;
