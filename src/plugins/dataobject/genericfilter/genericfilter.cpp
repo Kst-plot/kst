@@ -81,7 +81,7 @@ class ConfigGenericFilterPlugin : public Kst::DataObjectConfigWidget, public Ui_
 
       bool validTag = true;
 
-//       QStringRef av;
+//       QStringView av;
 //       av = attrs.value("value");
 //       if (!av.isNull()) {
 //         _configValue = QVariant(av.toString()).toBool();
@@ -194,8 +194,8 @@ bool GenericFilterSource::algorithm() {
   int length = inputVector->length();
 
   // Extract polynom coefficients and instantiate polynoms
-  QStringList numCoeffs = inputStringNumerator->value().split(QRegExp("\\s*(,|;|:)\\s*"));
-  QStringList denCoeffs = inputStringDenominator->value().split(QRegExp("\\s*(,|;|:)\\s*"));
+  const QStringList numCoeffs = inputStringNumerator->value().split(QRegularExpression("\\s*(,|;|:)\\s*"));
+  const QStringList denCoeffs = inputStringDenominator->value().split(QRegularExpression("\\s*(,|;|:)\\s*"));
   int numDegree = numCoeffs.count() - 1, denDegree = denCoeffs.count() - 1;
   polynom<double> Num(numDegree), Den(denDegree);
   double tmpDouble = 0.0;

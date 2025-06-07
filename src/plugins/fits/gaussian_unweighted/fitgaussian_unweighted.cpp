@@ -99,7 +99,7 @@ class ConfigWidgetFitGaussianUnweightedPlugin : public Kst::DataObjectConfigWidg
 
       setObjectStore(store);
 
-      QStringRef av;
+      QStringView av;
       bool force_offset = false;
       av = attrs.value("ForceOffset");
       if (!av.isNull()) {

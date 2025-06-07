@@ -78,7 +78,7 @@ class ConfigWidgetShiftPlugin : public Kst::DataObjectConfigWidget, public Ui_Sh
 
       bool validTag = true;
 
-//       QStringRef av;
+//       QStringView av;
 //       av = attrs.value("value");
 //       if (!av.isNull()) {
 //         _configValue = QVariant(av.toString()).toBool();
