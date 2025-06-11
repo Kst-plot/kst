@@ -13,6 +13,7 @@
   <name xml:lang="ca-valencia">Kst</name>
   <name xml:lang="es">Kst</name>
   <name xml:lang="nl">Kst</name>
+  <name xml:lang="sl">Kst</name>
   <name xml:lang="sv">Kst</name>
   <name xml:lang="uk">Kst</name>
   <name xml:lang="x-test">xxKstxx</name>
@@ -21,6 +22,7 @@
   <summary xml:lang="ca-valencia">Visor de dades</summary>
   <summary xml:lang="es">Visor de datos</summary>
   <summary xml:lang="nl">Bekijken van gegevens</summary>
+  <summary xml:lang="sl">Ogledovalnik podatkov</summary>
   <summary xml:lang="sv">Datavisning</summary>
   <summary xml:lang="uk">Засіб перегляду даних</summary>
   <summary xml:lang="x-test">xxData Viewerxx</summary>
@@ -30,6 +32,7 @@
     <p xml:lang="ca-valencia">Esta aplicació s'utilitza per a mostrar dades científiques.</p>
     <p xml:lang="es">Esta aplicación se usa para mostrar datos científicos.</p>
     <p xml:lang="nl">Deze toepassing wordt gebruikt om wetenschappelijke gegevens te tonen.</p>
+    <p xml:lang="sl">Ta aplikacija se uporablja za prikaz znanstvenih podatkov.</p>
     <p xml:lang="sv">Programmet används för att visa vetenskaplig data.</p>
     <p xml:lang="uk">Цю програму призначено для показу наукових даних.</p>
     <p xml:lang="x-test">xxThis application is used to display scientific data.xx</p>
