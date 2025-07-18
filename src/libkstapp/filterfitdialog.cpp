@@ -12,7 +12,7 @@
 
 #include "filterfitdialog.h"
 
-#include "dialogpage.h"
+// #include "dialogpage.h"
 
 #include "datacollection.h"
 #include "document.h"
