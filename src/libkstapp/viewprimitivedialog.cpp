@@ -20,10 +20,6 @@
 #include <datacollection.h>
 #include <QHeaderView>
 
-#ifdef QT5
-#define setResizeMode setSectionResizeMode
-#endif
-
 namespace Kst {
 
 ViewPrimitiveDialog::ViewPrimitiveDialog(QWidget *parent, Document *doc)
@@ -53,10 +49,10 @@ void ViewPrimitiveDialog::update() {
   _model = createModel(_doc->objectStore());
   _tree->setModel(_model);
 
-  _tree->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
   _tree->header()->setStretchLastSection(false);
   QApplication::processEvents();
-  _tree->header()->setResizeMode(QHeaderView::Interactive);
+  _tree->header()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 

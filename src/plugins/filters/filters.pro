@@ -11,6 +11,7 @@ SUBDIRS += \
     movingaverage \
     movingmedian \
     boxcar \
+    boxcar_highpass \
     unwind \
     window
 

@@ -48,11 +48,7 @@ public:
       QDateTime t = QDateTime::fromString(time, fmt);
       if (t.isValid()) {
         t.setTimeSpec(Qt::UTC);
-  #if QT_VERSION >= 0x040700
         return t.toMSecsSinceEpoch() / 1000.0;
-  #else
-        return t.toTime_t();
-  #endif
       }
       return 0;
     }

@@ -1301,17 +1301,11 @@ void ViewItem::startDragging(QWidget *widget, const QPointF& hotspot) {
   qreal w = fabs(rect().width()*cos(theta)) + fabs(rect().height()*sin(theta));
   qreal h = fabs(rect().width()*sin(theta)) + fabs(rect().height()*cos(theta));
 
-#ifdef QT5
   int device_pixel_ratio = view()->devicePixelRatio();
-#else
-  int device_pixel_ratio = 1;
-#endif
 
   QPixmap pixmap(device_pixel_ratio*(w+2), device_pixel_ratio*(h+2));
 
-#ifdef QT5
   pixmap.setDevicePixelRatio(device_pixel_ratio);
-#endif
 
   if (ApplicationSettings::self()->transparentDrag()) {
     pixmap.fill(Qt::transparent);

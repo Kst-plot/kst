@@ -1,4 +1,40 @@
+NOTE: https://community.kde.org/Policies/Commit_Policy
+BUG: bugnumber
+Feature: [bugnumber]
+CCBUG: bugnumber
 
+------------------
+
+The report bug action is broken.
+-New versions are not listed on bugzilla.  How do you add them?
+
+------------------
+
+Bug 268893
+-w (like "wizard" switch, as we had in kst 1.x) to open the datafile directly in the wizard.
+Maybe a first-time dialog?
+
+------------------
+
+port website to framework (?)
+
+------------------
+
+Document boxcar lowpass in docbook
+
+------------------
+
+Add boxcar highpass and bandpass.
+
+------------------
+
+shift - button click for 1/5 screen moving.
+
+------------------
+
+autoarrange can bug out.
+
+------------------
 Equations could allow matrixes
   - Treated like vectors
   - size of output matrix based on input matrix size.
@@ -13,7 +49,21 @@ When you open up kst file, opening another one tends to crash kst.
 No way to check matrix slave vector names in data manager.
 And slave scalar names are similarly not there.
 
+----------------
+
+data manager: slave vectors don't show up when you filter for Vector on type.
+
 -----------------
+
+filter dialogs appear ~off screen in multi-screen setups.
+
+-----------------
+
+Changing filter type when editing crashes kst.
+
+-----------------
+
+
 329684
 
 When saving a kst session the fileRelative paths for the data files are always

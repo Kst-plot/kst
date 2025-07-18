@@ -43,10 +43,6 @@
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 
-#ifdef QT5
-#define setResizeMode setSectionResizeMode
-#endif
-
 namespace Kst {
 
 DataManager::DataManager(QWidget *parent, Document *doc)
@@ -63,16 +59,14 @@ DataManager::DataManager(QWidget *parent, Document *doc)
   _proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
   _session->setModel(_proxyModel);
 
-#if QT_VERSION >= 0x040700
   _filterText->setPlaceholderText(tr("Enter your filter here (wildcards allowed)"));
-#endif
 
   connect(_filterText, SIGNAL(textChanged(QString)), _proxyModel, SLOT(setFilterWildcard(QString)));
   connect(_caseSensitive, SIGNAL(stateChanged(int)), this, SLOT(setCaseSensitivity(int)));
   connect(_filterColumn, SIGNAL(currentIndexChanged(int)), this, SLOT(setFilterColumn(int)));
 
 
-  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _session->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
   _session->setContextMenuPolicy(Qt::CustomContextMenu);
   _session->setSortingEnabled(true);
   _session->sortByColumn(1, Qt::AscendingOrder); // Sort by type by default
@@ -102,10 +96,10 @@ DataManager::~DataManager() {
 
 void DataManager::showEvent(QShowEvent*)
 {
-  _session->header()->setResizeMode(QHeaderView::ResizeToContents);
+  _session->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
   _session->header()->setStretchLastSection(false);
   QApplication::processEvents();
-  _session->header()->setResizeMode(QHeaderView::Interactive);
+  _session->header()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 

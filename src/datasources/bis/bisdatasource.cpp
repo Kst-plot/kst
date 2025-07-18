@@ -568,8 +568,4 @@ Kst::DataSourceConfigWidget *BISSourcePlugin::configWidget(QSettings *cfg, const
 
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstdata_bissource, BISSourcePlugin)
-#endif
-
 // vim: ts=2 sw=2 et

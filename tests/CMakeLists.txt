@@ -19,7 +19,7 @@ foreach(header ${test_headers})
     kst_init(${testname} "")
 
     set(moc_file)
-    qt4_wrap_cpp(moc_file ${header} OPTIONS "-nw")
+    qt5_wrap_cpp(moc_file ${header} OPTIONS "-nw")
 
     kst_add_executable(
         ${kst_dir}/tests/ksttest.h

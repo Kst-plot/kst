@@ -355,8 +355,4 @@ Kst::DataObjectConfigWidget *FitPolynomialUnweightedPlugin::configWidget(QSettin
   return widget;
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_FitPolynomialUnweightedPlugin, FitPolynomialUnweightedPlugin)
-#endif
-
 // vim: ts=2 sw=2 et

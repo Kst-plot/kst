@@ -1026,8 +1026,4 @@ Kst::DataSourceConfigWidget *FitsTableSourcePlugin::configWidget(QSettings *cfg,
 }
 
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstdata_fitstable, FitsTableSourcePlugin)
-#endif
-
 // vim: ts=2 sw=2 et

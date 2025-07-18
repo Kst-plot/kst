@@ -985,8 +985,4 @@ Kst::DataSourceConfigWidget *HDF5Plugin::configWidget(QSettings *cfg, const QStr
 
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstdata_hdf5, HDF5Plugin)
-#endif
-
 // vim: ts=2 sw=2 et

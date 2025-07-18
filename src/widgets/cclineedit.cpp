@@ -36,10 +36,6 @@
 #include <QTimer>
 #include <QLabel>
 
-#ifdef QT5
-#define setResizeMode setSectionResizeMode
-#endif
-
 namespace Kst {
 
 QList<CCCommonEdit*> CCCommonEdit::_u;
@@ -1107,7 +1103,7 @@ void CCTableView::mousePressEvent(QMouseEvent *event)
 
 void CCTableView::showEvent(QShowEvent *)
 {
-    horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
     horizontalHeader()->setStretchLastSection(1);
 }
 

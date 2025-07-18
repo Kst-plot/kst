@@ -41,7 +41,7 @@ DebugDialog::DebugDialog(QWidget *parent)
   connect(_clearDSSettings, SIGNAL(clicked()), this, SLOT(clearDSSettings()));
 
   if (!Debug::self()->kstRevision().isEmpty())
-    _buildInfo->setText(tr("<h1>Kst</h1> Version %1 (%2)").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
+    _buildInfo->setText(tr("<h1>Kst</h1> Version %1%2").arg(KSTVERSION).arg(Debug::self()->kstRevision()));
   else
     _buildInfo->setText(tr("<h1>Kst</h1> Version %1").arg(KSTVERSION));
 }
