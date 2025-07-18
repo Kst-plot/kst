@@ -257,8 +257,8 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
 
   QString seconds;
   QString hourminute;
-  hourminute.asprintf(" %02d:%02d:", hour, minute);
-  seconds.asprintf("%02.*f", accuracy, second);
+  hourminute = QString::asprintf(" %02d:%02d:", hour, minute);
+  seconds = QString::asprintf("%02.*f", accuracy, second);
   switch (_axisDisplay) {
     case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
       label.asprintf("%d/%02d/%02d", year, month, day);
