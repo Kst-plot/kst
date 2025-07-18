@@ -67,10 +67,9 @@ if(matio)
 	kst_link(${MATIO_LIBRARIES})
 endif()
 
-if(tiff)
-        include_directories(${TIFF_INCLUDEDIR})
+if(TARGET TIFF::TIFF)
         kst_add_plugin(. tiff16source) # Directory named after the file format, not the lib
-        kst_link(${TIFF_LIBRARIES})
+        kst_link(TIFF::TIFF)
 endif()
 
 if(hdf5)

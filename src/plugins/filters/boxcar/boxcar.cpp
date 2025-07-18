@@ -9,8 +9,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-
 #include "boxcar.h"
 #include "objectstore.h"
 #include "ui_boxcarconfig.h"
@@ -452,9 +450,5 @@ Kst::DataObjectConfigWidget *BoxcarPlugin::configWidget(QSettings *settingsObjec
   ConfigBoxcarPlugin *widget = new ConfigBoxcarPlugin(settingsObject);
   return widget;
 }
-
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, BoxcarPlugin)
-#endif
 
 // vim: ts=2 sw=2 et

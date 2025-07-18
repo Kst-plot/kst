@@ -13,7 +13,9 @@
 
 #include "bugreportwizard.h"
 
-
+#ifdef KST_HAVE_REVISION_H
+#include "kstrevision.h"
+#endif
 
 #include <QUrl>
 #include <QDesktopServices>
@@ -32,7 +34,13 @@ BugReportWizard::BugReportWizard(QWidget *parent)
   QString win64 = QT_TR_NOOP("Windows 64-Bit");
   QString lin = QT_TR_NOOP("Linux");
 
-  _kstVersion->setText(KSTVERSION);
+  QString version = QString(KSTVERSION)
+#ifdef KST_REVISION
+      +KST_REVISION
+#endif
+      ;
+
+  _kstVersion->setText(version);
 
 #if defined(Q_OS_MAC9)
   os_en = mac_os9;
@@ -57,14 +65,17 @@ BugReportWizard::~BugReportWizard() {
 
 
 void BugReportWizard::reportBug() {
-  QUrl url("http://bugs.kde.org/wizard.cgi");
+  QUrl url("https://bugs.kde.org/enter_bug.cgi");
   QUrlQuery query;
 
-  query.addQueryItem("os", _OS->text());
-  query.addQueryItem("appVersion", _kstVersion->text());
-  query.addQueryItem("package", "kst");
-  query.addQueryItem("kbugreport", "1");
-  query.addQueryItem("kdeVersion", "unspecified");
+  query.addQueryItem("product", "kst");
+  query.addQueryItem("op_sys", _OS->text());
+
+  // query.addQueryItem("os", _OS->text());
+  // query.addQueryItem("appVersion", _kstVersion->text());
+  // query.addQueryItem("package", "kst");
+  // query.addQueryItem("kbugreport", "1");
+  // query.addQueryItem("kdeVersion", "unspecified");
   url.setQuery(query);
   QDesktopServices::openUrl(url);
 }

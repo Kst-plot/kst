@@ -300,8 +300,4 @@ Kst::DataObjectConfigWidget *FilterWindowPlugin::configWidget(QSettings *setting
   return widget;
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_FilterWindowPlugin, FilterWindowPlugin)
-#endif
-
 // vim: ts=2 sw=2 et

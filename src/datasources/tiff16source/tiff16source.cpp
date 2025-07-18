@@ -553,8 +553,4 @@ Kst::DataSourceConfigWidget *Tiff16SourcePlugin::configWidget(QSettings *cfg, co
 
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstdata_tiff16source, Tiff16SourcePlugin)
-#endif
-
 // vim: ts=2 sw=2 et

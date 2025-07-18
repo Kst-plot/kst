@@ -99,11 +99,7 @@ void CurveAppearance::populateSymbolCombos() {
 
 
 void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) {
-#ifdef QT5
   int pixel_ratio = combo->devicePixelRatio();
-#else
-  int pixel_ratio = 1;
-#endif
 
   if (symbolColor == Qt::transparent) {
     symbolColor = Qt::black;
@@ -115,9 +111,7 @@ void CurveAppearance::populateSymbolCombo(QComboBox *combo, QColor symbolColor) 
   // fill the point type dialog with point types
   QPixmap ppix( 4*h*pixel_ratio, h*pixel_ratio );
 
-#ifdef QT5
   ppix.setDevicePixelRatio(pixel_ratio);
-#endif
 
   int pix_w = ppix.width()/pixel_ratio;
   int pix_h = ppix.height()/pixel_ratio;
@@ -474,20 +468,14 @@ void CurveAppearance::drawSampleLine() {
   // logical pixels are not physical pixels.  However, not all Qt functions
   // seem to play well in this universe, requiring some... entertainment.
 
-#ifdef QT5
   int pixel_ratio = _label->devicePixelRatio();
-#else
-  int pixel_ratio = 1;
-#endif
 
   int h = fontMetrics().lineSpacing()*3/2;
   _label->resize(h*5, h);
   QPixmap pix(_label->contentsRect().width()*pixel_ratio,
               _label->contentsRect().height()*pixel_ratio);
 
-#ifdef QT5
   pix.setDevicePixelRatio(pixel_ratio);
-#endif
 
   int pix_w = pix.width()/pixel_ratio;
   int pix_h = pix.height()/pixel_ratio;

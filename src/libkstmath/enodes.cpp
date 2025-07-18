@@ -724,11 +724,7 @@ DataNode::DataNode(ObjectStore *store, char *name)
     _tagName = QString(name).trimmed();
     QRegExp re("(.*)\\[(.*)\\]");
     int hit = re.indexIn(_tagName);
-#ifdef QT5
     if (hit > -1 && re.captureCount() == 2) {
-#else
-    if (hit > -1 && re.numCaptures() == 2) {
-#endif
       _vector = kst_cast<Vector>(store->retrieveObject(re.cap(1)));
       if (_vector) {
         _vectorIndex = re.cap(2);

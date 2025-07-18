@@ -24,10 +24,6 @@
 #include <QHeaderView>
 #include <QMenu>
 
-#ifdef QT5
-#define setResizeMode setSectionResizeMode
-#endif
-
 namespace Kst {
 
 ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
@@ -41,7 +37,7 @@ ViewVectorDialog::ViewVectorDialog(QWidget *parent, Document *doc)
   _showVectorList->setFixedSize(size + 8, size + 8);
   _hideVectorList->setFixedSize(size + 8, size + 8);
 
-  _vectors->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+  _vectors->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
   // Allow reorganizing the columns per drag&drop
   _vectors->horizontalHeader()->setSectionsMovable(true);
 

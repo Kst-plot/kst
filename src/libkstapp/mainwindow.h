@@ -103,6 +103,7 @@ public Q_SLOTS:
     void showDataWizard();
     void showDataWizard(const QString &dataFile);
     void showBugReportWizard();
+    void docBookStarter();
     void showPluginDialog(QString &pluginName);
 
     void readFromEnd();
@@ -337,6 +338,7 @@ public Q_SLOTS:
     QAction *_changeFileDialogAct;
     QAction *_dataWizardAct;
     QAction *_bugReportWizardAct;
+    QAction *_docBookStarterAct;
 
     QAction *_readFromEndAct;
     QAction *_readToEndAct;

@@ -18,7 +18,7 @@
 #include <dataplugin.h>
 
 #include <QFileInfo>
-#include <hdf5/serial/H5Cpp.h>
+#include <H5Cpp.h>
 #include <exception>
 
 #include "debug.h"

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  - SPDX-License-Identifier: CC0-1.0
+  - SPDX-FileCopyrightText: 2025 Carl Schwan <carlschwan@kde.org>
+ -->
+<component type="desktop">
+  <id>org.kde.kst</id>
+  <provides>
+    <binary>kst2</binary>
+  </provides>
+  <name>Kst</name>
+  <name xml:lang="ca">Kst</name>
+  <name xml:lang="ca-valencia">Kst</name>
+  <name xml:lang="es">Kst</name>
+  <name xml:lang="fr">Kst</name>
+  <name xml:lang="gl">Kst</name>
+  <name xml:lang="it">Kst</name>
+  <name xml:lang="nl">Kst</name>
+  <name xml:lang="sl">Kst</name>
+  <name xml:lang="sv">Kst</name>
+  <name xml:lang="tr">Kst</name>
+  <name xml:lang="uk">Kst</name>
+  <name xml:lang="x-test">xxKstxx</name>
+  <summary>Data Viewer</summary>
+  <summary xml:lang="ca">Visualitzador de dades</summary>
+  <summary xml:lang="ca-valencia">Visor de dades</summary>
+  <summary xml:lang="es">Visor de datos</summary>
+  <summary xml:lang="fr">Afficheur de données</summary>
+  <summary xml:lang="gl">Visor de datos</summary>
+  <summary xml:lang="it">Visore dati</summary>
+  <summary xml:lang="nl">Bekijken van gegevens</summary>
+  <summary xml:lang="sl">Ogledovalnik podatkov</summary>
+  <summary xml:lang="sv">Datavisning</summary>
+  <summary xml:lang="tr">Veri Görüntüleyicisi</summary>
+  <summary xml:lang="uk">Засіб перегляду даних</summary>
+  <summary xml:lang="x-test">xxData Viewerxx</summary>
+  <description>
+    <p>This application is used to display scientific data.</p>
+    <p xml:lang="ca">Aquesta aplicació es fa servir per a mostrar dades científiques.</p>
+    <p xml:lang="ca-valencia">Esta aplicació s'utilitza per a mostrar dades científiques.</p>
+    <p xml:lang="es">Esta aplicación se usa para mostrar datos científicos.</p>
+    <p xml:lang="fr">Cette application est utilisée pour l'affichage de données scientifiques.</p>
+    <p xml:lang="gl">Aplicación para amosar datos científicos.</p>
+    <p xml:lang="it">Questa applicazione è utilizzata per visualizzare dati scientifici.</p>
+    <p xml:lang="nl">Deze toepassing wordt gebruikt om wetenschappelijke gegevens te tonen.</p>
+    <p xml:lang="sl">Ta aplikacija se uporablja za prikaz znanstvenih podatkov.</p>
+    <p xml:lang="sv">Programmet används för att visa vetenskaplig data.</p>
+    <p xml:lang="tr">Bu uygulama, bilimsel verileri görüntülemek için kullanılır.</p>
+    <p xml:lang="uk">Цю програму призначено для показу наукових даних.</p>
+    <p xml:lang="x-test">xxThis application is used to display scientific data.xx</p>
+  </description>
+  <url type="homepage">https://apps.kde.org/kst/</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=kst</url>
+  <categories>
+    <category>Education</category>
+  </categories>
+  <developer id="kde.org">
+    <name translate="no">KDE</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <branding>
+    <color type="primary" scheme_preference="light">#cdecfc</color>
+    <color type="primary" scheme_preference="dark">#17a3ea</color>
+  </branding>
+  <launchable type="desktop-id">org.kde.kst.desktop</launchable>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="2.0.8" date="2014-07-20"/>
+  </releases>
+</component>

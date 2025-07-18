@@ -493,7 +493,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
       printText(QString("Kst ") + KSTVERSION
 #ifdef KST_REVISION
-+ " Revision " + KST_REVISION
++ KST_REVISION
 #endif
 );
 

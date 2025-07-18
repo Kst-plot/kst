@@ -20,10 +20,6 @@
 #include "sharedptr.h"
 #include "datasource.h"
 
-#ifndef QT5
-#define Q_PLUGIN_METADATA(x)
-#endif
-
 namespace Kst {
 
 class ObjectStore;

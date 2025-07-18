@@ -298,8 +298,4 @@ Kst::DataObjectConfigWidget *MovingAveragePlugin::configWidget(QSettings *settin
   return widget;
 }
 
-#ifndef QT5
-Q_EXPORT_PLUGIN2(kstplugin_BinPlugin, MovingAveragePlugin)
-#endif
-
 // vim: ts=2 sw=2 et
