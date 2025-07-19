@@ -1,3 +1,43 @@
+How to update the packages on launchpad for UBUNTU
+i) generate new version tags
+ii) push your changes to the UBUNTU-JAMMY and UBUNTU-NOBLE branches on github
+iii) request an build
+
+i) Generate new version tags
+in the kst directory:
+-> ./gen_revision_h
+
+ii) push changes to the UBUNTU-JAMMY and UBUNTU-NOBLE branches on github
+The launchpad build system pulls a branch of kst from github that includes a ./debian directory
+appropriate for the series you are compiling for.
+
+The branches we have as of writing this are UBUNTU-JAMMY for 22.04, and UBUNTU-NOBLE, for 24.04 and later.
+There will be more as things continue to change.
+
+To switch to a branch:
+-> git switch UBUNTU-NOBLE
+
+If there are changes you need to make to the build system, you probably
+need to edit ./debian/control.  Good luck :-)
+
+To update your branch to kst's master branch, so you get the latest changes:
+-> git merge master # pull master's changes into this branch
+
+probably try to build it to make sure all is well.
+
+Then push it
+-> git push github UBUNTU-NOBLE
+
+iii) request a build:
+go to https://code.launchpad.net/~kst-plot/+recipes
+log in
+select the branch you want to build (eg kst-noble2) on the left hand side.
+select request builds (green, near bottom left)
+
+Note that you can only do this once per day given the current configuration :-(
+
+----------
+
 https://code.launchpad.net/~kst-plot/kst/trunk-git
 https://launchpad.net/~kst-plot
 * look at view_git_repositories near top right.
