@@ -86,6 +86,8 @@ signals:
     void signalRowProgress();
 
 private:
+    mutable AsciiSourceConfig _config;
+
     AsciiDataReader _reader;
     AsciiFileBuffer _fileBuffer;
     bool _busy;
@@ -93,7 +95,6 @@ private:
     int _read_count;
 
     friend class AsciiConfigWidget;
-    mutable AsciiSourceConfig _config;
 
     qint64 _fileSize;
     qint64 _lastFileSize;
