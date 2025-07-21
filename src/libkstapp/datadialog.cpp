@@ -25,12 +25,12 @@
 
 #include "editmultiplewidget.h"
 
-#include "dataobject.h"
+// #include "dataobject.h"
 #include "document.h"
 #include "mainwindow.h"
 #include "application.h"
 #include "updatemanager.h"
-#include "sessionmodel.h"
+// #include "sessionmodel.h"
 #include "updateserver.h"
 
 namespace Kst {

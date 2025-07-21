@@ -13,7 +13,7 @@
 #ifndef ASCII_PLUGIN_H
 #define ASCII_PLUGIN_H
 
-#include "asciisource.h"
+// #include "asciisource.h"
 #include "dataplugin.h"
 
 
