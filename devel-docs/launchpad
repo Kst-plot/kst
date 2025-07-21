@@ -28,7 +28,12 @@ probably try to build it to make sure all is well.
 Then push it
 -> git push github UBUNTU-NOBLE
 
-iii) request a build:
+iii) make sure launchpad updates git
+goto 
+https://code.launchpad.net/~kst-plot/kst/+git/kstgithub
+and make sure it is up to date, or request an import otherwise.
+
+iv) request a build:
 go to https://code.launchpad.net/~kst-plot/+recipes
 log in
 select the branch you want to build (eg kst-noble2) on the left hand side.
