@@ -15,7 +15,7 @@ project(Kst VERSION ${kst_version})
 
 if(kst_clang)
     set(CMAKE_C_COMPILER    "clang")
-    SET (CMAKE_CXX_COMPILER "clang++")
+    SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
     message(STATUS "Using clang  ${CMAKE_CXX_COMPILER}")
 endif()
 

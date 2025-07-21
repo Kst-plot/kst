@@ -463,7 +463,7 @@ bool HDF5Source::init() {
   H5::Exception::dontPrint();
   try{
      _hdfFile = new H5::H5File(qPrintable(_directoryName), H5F_ACC_RDONLY);
-  }catch(H5::Exception e){
+  }catch(const H5::Exception &e){
     //dump to debug log somewhere
     Debug::self()->log(QString("Failed to open HDF5 file with name ") + _directoryName +QString(" ") + QString(e.getCDetailMsg()));
     _hdfFile = NULL;
@@ -510,7 +510,7 @@ unsigned HDF5Source::frameCount(const QString& field){
         //Debug::self()->log(QString("Returning attr vec len ") + QString::number((int)size));
 
         return size;
-      }catch(H5::Exception e){
+      }catch(const H5::Exception &e){
         Debug::self()->log(QString("Problem reading dataset ") + field + QString(" ") + QString(e.getCDetailMsg()));
         return 0;
       }
@@ -523,7 +523,7 @@ unsigned HDF5Source::frameCount(const QString& field){
         space.getSimpleExtentDims(&size, NULL);
         //Debug::self()->log(QString("Returning vec len ") + QString::number((int)size));
         return size;
-      }catch(H5::Exception e){
+      }catch(const H5::Exception &e){
         Debug::self()->log(QString("Failed to get frame count of ") + field);
 
       }
@@ -570,7 +570,7 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
 
       delete[] temp;
       return numFrames;
-    }catch (H5::Exception e){
+    }catch (const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
     }
 
@@ -601,7 +601,7 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
   
     try{ 
       dataset.read((void*)dataVec, H5::PredType::NATIVE_DOUBLE, memspace, dataspace);
-    }catch(H5::Exception e){
+    }catch(const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
       numFrames = 0;
     }catch(const std::exception& e1){
@@ -636,7 +636,7 @@ int HDF5Source::readScalar(double& scalar, const QString& field){
           attr.read(type, &i);
           scalar = i;
         }
-      }catch(H5::FileIException e){
+      }catch(const H5::Exception &e){
         Debug::self()->log(QString("Trouble opening group ") + fieldName + QString(" in readScalar, attribute: ") + attrName);
       }
     }else{
@@ -675,7 +675,7 @@ int HDF5Source::readString(QString &data, const QString& field){
       attr.read(attr.getDataType(), h5data);
       data = QString(h5data.c_str());
       return 1;
-    }catch(H5::Exception e){
+    }catch(const H5::Exception &e){
       Debug::self()->log(QString("Problem reading attribute ") + field + QString(" ") + QString(e.getCDetailMsg()));
       return 0;
     }
@@ -685,7 +685,7 @@ int HDF5Source::readString(QString &data, const QString& field){
       H5::StrType datatype(dataset);
       dataset.read(h5data, datatype);
       data=QString(h5data.c_str());
-    }catch(H5::Exception e){
+    }catch(const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + field + QString(" ") + QString(e.getCDetailMsg()));
       return 0;
     }
@@ -720,7 +720,7 @@ int HDF5Source::readMatrix(DataMatrix::ReadInfo& data, const QString& name){
 
       delete[] dims;
       delete[] temp;
-      }catch (H5::Exception e){
+      }catch (const H5::Exception &e){
         Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
         dataSize = 0;
       }
@@ -755,7 +755,7 @@ int HDF5Source::readMatrix(DataMatrix::ReadInfo& data, const QString& name){
   
     try{
       dataset.read((void*)data.data->z, H5::PredType::NATIVE_DOUBLE, memspace, dataspace);
-    }catch(H5::Exception e){
+    }catch(const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
       dataSize = 0;
     }catch(const std::exception& e1){

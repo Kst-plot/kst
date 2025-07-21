@@ -19,7 +19,7 @@
 #define VSCALAR_H
 
 #include "scalar.h"
-#include "datasource.h"
+// #include "datasource.h"
 #include "kst_export.h"
 
 class QXmlStreamWriter;
