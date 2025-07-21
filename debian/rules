@@ -17,7 +17,7 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	cd docbook/kst/ && meinproc5 --srcdir /usr/share/kf5/kdoctools index.docbook
-	dh_auto_build -Scmake
+	dh_auto_build -Scmake -- -j$(nproc)
 
 override_dh_auto_clean:
 	find docbook/kst/ -name '*.html' -exec rm {} \;
