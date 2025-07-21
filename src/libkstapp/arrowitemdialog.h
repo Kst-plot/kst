@@ -15,7 +15,7 @@
 
 #include "lineitemdialog.h"
 
-#include "kstcore_export.h"
+// #include "kst_export.h"
 
 namespace Kst {
 

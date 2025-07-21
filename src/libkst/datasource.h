@@ -20,7 +20,7 @@
 
 #include "kstcore_export.h"
 #include "object.h"
-#include "dateparser.h"
+// #include "dateparser.h"
 #include "objectlist.h"
 
 #include "datascalar.h"
@@ -63,7 +63,7 @@ class KSTCORE_EXPORT DataSource : public Object
       virtual ~DataInterface() {}
       // read data.  The buffer and range info are in ReadInfo
       virtual int read(const QString& name, typename T::ReadInfo&) = 0;
-      virtual void prepareRead(int number_of_read_calls) {}
+      virtual void prepareRead(int number_of_read_calls) {Q_UNUSED(number_of_read_calls)}
       virtual void readingDone() {}
 
       // named elements

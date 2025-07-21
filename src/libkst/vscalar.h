@@ -20,7 +20,7 @@
 
 #include "scalar.h"
 #include "datasource.h"
-#include "kstcore_export.h"
+// #include "kst_export.h"
 
 class QXmlStreamWriter;
 

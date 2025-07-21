@@ -15,10 +15,11 @@
 
 #include "datasource.h"
 #include "dataplugin.h"
+#include "asciisource.h"
 
-#include "curve.h"
-#include "colorsequence.h"
-#include "objectstore.h"
+// #include "curve.h"
+// #include "colorsequence.h"
+// #include "objectstore.h"
 
 
 using namespace Kst;

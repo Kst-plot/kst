@@ -24,18 +24,18 @@
 
 // application specific includes
 #include "dialoglauncher.h"
-#include "colorsequence.h"
+// #include "colorsequence.h"
 #include "datacollection.h"
-#include "debug.h"
+// #include "debug.h"
 #include "linestyle.h"
 #include "math_kst.h"
 #include "datavector.h"
-#include "ksttimers.h"
+// #include "ksttimers.h"
 #include "objectstore.h"
 #include "relationscriptinterface.h"
 
-#include <time.h>
-#include <iostream>
+// #include <time.h>
+// #include <iostream>
 
 // #define DEBUG_VECTOR_CURVE
 //#define BENCHMARK
@@ -734,10 +734,17 @@ void Curve::paintObjects(const CurveRenderContext& context) {
   p->setPen(QPen(color(), _width, style)); //, Qt::RoundCap, Qt::RoundJoin));
 
   foreach(const QPolygonF& poly, _polygons) {
-    tmpPolyLine(poly, p);
-    //p->drawPolyline(poly);
+    // Note: this existed to fix a performance bug in an older version of qt.  It seems to
+    // no longer be an issue.  tmpPolyLine is still a little faster, but prevents line types.
+    // so disable it, and use drawPolyLine again.
+    // tmpPolyLine(poly, p);
+    p->drawPolyline(poly);
   }
-  //qDebug() << "E:" << bench_time.elapsed() << "ms w: " << p->viewport().width() << "h: " << p->viewport().height() << " a: " << p->viewport().width() * p->viewport().height();
+
+#ifdef BENCHMARK
+  qDebug() << "E:" << bench_time.elapsed() << "ms w: " << p->viewport().width() << "h: " << p->viewport().height() << " a: " << p->viewport().width() * p->viewport().height();
+#endif
+
   foreach(const QLineF& line, _lines) {
     p->drawLine(line);
   }

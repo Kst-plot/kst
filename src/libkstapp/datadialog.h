@@ -15,9 +15,10 @@
 
 #include "dialog.h"
 
-#include "kstcore_export.h"
+// #include "kst_export.h"
 
 #include "dataobject.h"
+// #include "object.h"
 
 class QLineEdit;
 class QCheckBox;
