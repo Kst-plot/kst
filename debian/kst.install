@@ -1,5 +1,5 @@
 usr/bin
-usr/lib/kst2
+usr/lib/x86_64-linux-gnu/libkst2_*.so
 usr/share/man
 usr/share/applications
 usr/share/mime/packages
