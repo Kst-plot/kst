@@ -1,3 +1,12 @@
+kst (2.1.x) UNRELEASED; urgency=low
+
+  * This file has not been updated in years.
+  * There are a lot of improvements that are not documented.
+  * They do live in git log, however.  We could try to 
+  * Parse it and put them here.
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 21 Jul 2025 13:21:05 -0500
+
 kst (2.0.8-3) UNRELEASED; urgency=low
 
   * Non-maintainer upload.
