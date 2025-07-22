@@ -46,6 +46,7 @@ get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 set(kst_binary_name kst2)
 
+set(kst_install_plugins "${CMAKE_INSTALL_LIBDIR}/kst2" CACHE PATH "Kst plugin installation directory")
 
 kst_option_init()
 kst_option(string ""  all version_string    "Version string")
