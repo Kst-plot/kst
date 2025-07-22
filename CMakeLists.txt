@@ -41,12 +41,7 @@ get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
 
 set(kst_binary_name kst2)
 
-ecm_setup_version(PROJECT
-    VARIABLE_PREFIX KST
-    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kst_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KstConfigVersion.cmake"
-    SOVERSION "3"
-)
+set(kst_install_plugins "${CMAKE_INSTALL_LIBDIR}/kst2" CACHE PATH "Kst plugin installation directory")
 
 kst_option_init()
 kst_option(bool   OFF all merge_files       "Merge files to speedup build about factor 5")
