@@ -106,9 +106,9 @@ class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarC
   public slots:
     virtual void save() {
       if (_cfg) {
-        _cfg->beginGroup("Moving Average DataObject Plugin");
+        _cfg->beginGroup("Moving Average Lowpass Plugin");
         _cfg->setValue("Input Vector", _vector->selectedVector()->Name());
-        _cfg->setValue("Input Scalar", _scalarSamples->selectedScalar()->Name());
+        _cfg->setValue("Filter Length", _scalarSamples->selectedScalar()->Name());
         _cfg->setValue("Stages", stagesSpin());
         _cfg->setValue("SampleRate", sampleRateSpin());
         _cfg->endGroup();
@@ -117,16 +117,16 @@ class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarC
 
     virtual void load() {
       if (_cfg && _store) {
-        _cfg->beginGroup("Boxcar DataObject Plugin");
+        _cfg->beginGroup("Moving Average Lowpass Plugin");
         QString vectorName = _cfg->value("Input Vector").toString();
         Kst::Object* object = _store->retrieveObject(vectorName);
         Kst::Vector* vector = static_cast<Kst::Vector*>(object);
         if (vector) {
           setSelectedVector(vector);
         }
-        QString scalarName = _cfg->value("Input Scalar").toString();
+        QString scalarName = _cfg->value("Filter Length", "10").toString();
         _scalarSamples->setSelectedScalar(scalarName);
-        setStagesSpin(_cfg->value("Stages", 1).toInt());
+        setStagesSpin(_cfg->value("Stages", 4).toInt());
         setSampleRateSpin(_cfg->value("SampleRate", 1.0).toDouble());
 
         _cfg->endGroup();
