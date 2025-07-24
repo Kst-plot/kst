@@ -828,13 +828,13 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   const double stepY = _matrixTab->stepY();
   const int frame = _matrixTab->frame();
 
-  qDebug() << "Creating new data matrix ===>"
-           << "\n\tfileName:" << dataSource->fileName()
-           << "\n\tfileType:" << dataSource->fileType()
-           << "\n\tfield:" << field
-           << "\n\tminX:" << minX
-           << "\n\tminY:" << minY
-           // << "\n\ttag:" << tag.tag()
+  // qDebug() << "Creating new data matrix ===>"
+  //          << "\n\tfileName:" << dataSource->fileName()
+  //          << "\n\tfileType:" << dataSource->fileType()
+  //          << "\n\tfield:" << field
+  //          << "\n\tminX:" << minX
+  //          << "\n\tminY:" << minY
+  //          // << "\n\ttag:" << tag.tag()
            // << "\n\txStart:" << xStart
            // << "\n\tyStart:" << yStart
            // << "\n\txNumSteps:" << xNumSteps
@@ -842,7 +842,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
            // << "\n\tskip:" << skip
            // << "\n\tdoSkip:" << doSkip
            // << "\n\tdoAve:" << doAve
-           << endl;
+           // << endl;
 
   Q_ASSERT(_document && _document->objectStore());
 
