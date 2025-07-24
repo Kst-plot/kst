@@ -28,11 +28,14 @@
    </property>
    <item row="4" column="0">
     <widget class="QGroupBox" name="_scalingGroup">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="title">
-      <string>Scaling and Translation</string>
+      <string>Override Scaling and Translation</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
      <layout class="QGridLayout">
       <property name="topMargin">
