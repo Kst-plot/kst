@@ -74,10 +74,11 @@ void DataMatrix::save(QXmlStreamWriter &xml) {
     xml.writeAttribute("doskip", QVariant(_doSkip).toString());
     xml.writeAttribute("skip", QString::number(_skip));
     xml.writeAttribute("frame", QString::number(_frame));
-    xml.writeAttribute("xmin", QString::number(minX()));
-    xml.writeAttribute("ymin", QString::number(minY()));
-    xml.writeAttribute("xstep", QString::number(xStepSize()));
-    xml.writeAttribute("ystep", QString::number(yStepSize()));
+    xml.writeAttribute("overridescale", QVariant(_override_scale).toString());
+    xml.writeAttribute("xmin", QString::number(_override_minX));
+    xml.writeAttribute("ymin", QString::number(_override_minY));
+    xml.writeAttribute("xstep", QString::number(_override_stepX));
+    xml.writeAttribute("ystep", QString::number(_override_stepY));
     saveNameInfo(xml, VECTORNUM|MATRIXNUM|SCALARNUM);
 
     xml.writeEndElement();
@@ -96,22 +97,24 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
                         bool doAve, bool doSkip, int skip, int frame,
+                        bool overrideScale,
                         double minX, double minY,
                         double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
+  commonConstructor(file, field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
 }
 
 
 void DataMatrix::changeFrames(int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
                         bool doAve, bool doSkip, int skip, int frame,
+                        bool overrideScale,
                         double minX, double minY,
                         double stepX, double stepY) {
   KstWriteLocker l(this);
 
-  commonConstructor(dataSource(), _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
+  commonConstructor(dataSource(), _field, xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
 }
 
 
@@ -210,6 +213,23 @@ bool DataMatrix::checkValidity(const DataSourcePtr& ds) const {
   return false;
 }
 
+void DataMatrix::applyScaling(const MatrixData matData) {
+  if (_override_scale) {
+    _minX = _override_minX;
+    _minY = _override_minY;
+    _stepX = _override_stepX;
+    _stepY = _override_stepY;
+  } else {
+    _minX = matData.xMin;
+    _minY = matData.yMin;
+    _stepX = matData.xStepSize;
+    _stepY = matData.yStepSize;
+    _override_minX = matData.xMin;
+    _override_minY = matData.yMin;
+    _override_stepX = matData.xStepSize;
+    _override_stepY = matData.yStepSize;
+  }
+}
 
 void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
 
@@ -241,10 +261,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
     // -9999 means the skipping function is not supported by datasource
     if (_NS != -9999) {
       // set the recommended translate and scaling, and return
-      _minX = matData.xMin;
-      _minY = matData.yMin;
-      _stepX = matData.xStepSize;
-      _stepY = matData.yStepSize;
+      applyScaling(matData);
     }
   }
 
@@ -275,10 +292,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
         zPos++;
         _NS++;
         if (first) {
-          _minX = matData.xMin;
-          _minY = matData.yMin;
-          _stepX = matData.xStepSize * _skip;
-          _stepY = matData.yStepSize * _skip;
+          applyScaling(matData);
           first = false;
         }
       }
@@ -294,10 +308,9 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
         matData.z += samples;
         _NS += samples;
         if (first) {
-          _minX = matData.xMin;
-          _minY = matData.yMin;
-          _stepX = matData.xStepSize * _skip;
-          _stepY = matData.yStepSize * _skip;
+          applyScaling(matData);
+          _stepX *= _skip;
+          _stepY *= _skip;
           first = false;
         }
       }
@@ -325,10 +338,7 @@ void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, int frame) {
   _NS = readMatrix(&matData, _field, realXStart, realYStart, _nX, _nY, -1, frame);
 
   // set the recommended translate and scaling
-  _minX = matData.xMin;
-  _minY = matData.yMin;
-  _stepX = matData.xStepSize;
-  _stepY = matData.yStepSize;
+  applyScaling(matData);
 }
 
 qint64 DataMatrix::minInputSerial() const {
@@ -579,7 +589,7 @@ PrimitivePtr DataMatrix::makeDuplicate() const {
   DataMatrixPtr matrix = store()->createObject<DataMatrix>();
 
   matrix->writeLock();
-  matrix->change(dataSource(), _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _frame, _minX, _minY, _stepX, _stepY);
+  matrix->change(dataSource(), _field, _reqXStart, _reqYStart, _reqNX, _reqNY, _doAve, _doSkip, _skip, _frame, _override_scale, _minX, _minY, _stepX, _stepY);
   if (descriptiveNameIsManual()) {
     matrix->setDescriptiveName(descriptiveName());
   }
@@ -592,8 +602,9 @@ PrimitivePtr DataMatrix::makeDuplicate() const {
 
 void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
-                                   bool doAve, bool doSkip, int skip, int frame, double minX, double minY,
-                                   double stepX, double stepY) {
+                                   bool doAve, bool doSkip, int skip, int frame,
+                                   bool overrideScale,
+                                   double minX, double minY, double stepX, double stepY) {
   _reqXStart = reqXStart;
   _reqYStart = reqYStart;
   _reqNX = reqNX;
@@ -604,10 +615,15 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   _doSkip = doSkip;
   _skip = skip;
   _frame = frame;
+  _override_scale = overrideScale;
   _minX = minX;
   _minY = minY;
   _stepX = stepX;
   _stepY = stepY;
+  _override_minX = minX;
+  _override_minY = minY;
+  _override_stepX = stepX;
+  _override_stepY = stepY;
   _invertXHint = false;
   _invertYHint = false;
 

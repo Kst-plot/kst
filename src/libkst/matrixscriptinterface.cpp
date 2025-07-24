@@ -173,7 +173,7 @@ QString DataMatrixSI::change(QString& command) {
                  vars.at(5).toInt(), // num y steps
 
                  false, false, 0, 0, // FIXME: image streams!
-
+                 false,
                  vars.at(6).toDouble(), // min x
                  vars.at(7).toDouble(), // min y
                  vars.at(8).toDouble(), // step x

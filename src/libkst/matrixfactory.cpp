@@ -177,6 +177,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   Q_ASSERT(store);
 
   bool doAve=false, doSkip=false;
+  bool overrideScale = false;
   int requestedXStart=0, requestedYStart=0, requestedXCount=-1, requestedYCount=-1, skip=0;
   double minX=0, minY=0, stepX=1, stepY=1;
   int frame=0;
@@ -203,6 +204,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
         doSkip = attrs.value("doskip").toString() == "true" ? true : false;
         skip = attrs.value("skip").toString().toInt();
         frame = attrs.value("frame").toString().toInt();
+        overrideScale = attrs.value("overridescale").toString() == "true" ? true : false;
         minX = attrs.value("xmin").toString().toDouble();
         minY = attrs.value("ymin").toString().toDouble();
         stepX = attrs.value("xstep").toString().toDouble();
@@ -237,7 +239,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   }
 
   DataMatrixPtr matrix = store->createObject<DataMatrix>();
-  matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
+  matrix->change(dataSource, field, requestedXStart, requestedYStart, requestedXCount, requestedYCount, doAve, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
   matrix->setDescriptiveName(descriptiveName);
 
   matrix->writeLock();

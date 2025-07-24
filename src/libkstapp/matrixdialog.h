@@ -20,9 +20,9 @@
 
 #include <QPointer>
 
-#include "kst_export.h"
+// #include "kst_export.h"
 
-#include "datasource.h"
+// #include "datasource.h"
 
 namespace Kst {
 
@@ -59,6 +59,9 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     uint nY() const;
     bool nYDirty() const;
     void setNY(uint nY);
+
+    bool overrideScale() const;
+    void setOverrideScale(bool override);
 
     double minX() const;
     bool minXDirty() const;
