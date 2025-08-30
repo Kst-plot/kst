@@ -15,9 +15,8 @@ set_target_properties(kst PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CM
 if(UNIX AND NOT APPLE)
 	set(man ${CMAKE_BINARY_DIR}/${kst_binary_name}.1)
 	configure_file(${kst_dir}/src/kst/kst.1.txt ${man})
-	install(CODE "execute_process(COMMAND gzip ${man})")
-	set_source_files_properties(${man}.gz PROPERTIES GENERATED TRUE)
-	install(FILES ${man}.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+	set_source_files_properties(${man} PROPERTIES GENERATED TRUE)
+	install(FILES ${man} DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 	set(k ${kst_dir}/src/kst)
 #	install(FILES ${k}/kstplugin.desktop
