@@ -1,5 +1,11 @@
 kst (2.1.x) UNRELEASED; urgency=low
 
+  * Update dependencies for new libnetcdf-c++ libraries
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  , Wed Sep  3 19:15:13 UTC 2025
+
+kst (2.1.x) UNRELEASED; urgency=low
+
   * This file has not been updated in years.
   * There are a lot of improvements that are not documented.
   * They do live in git log, however.  We could try to 
