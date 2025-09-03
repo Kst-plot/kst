@@ -1,4 +1,9 @@
 kst (2.1.x) UNRELEASED; urgency=low
+  * add libnetcdf-c++4 to build requirements.
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 03 Sep 2025 14:43:05 -0500
+
+kst (2.1.x) UNRELEASED; urgency=low
 
   * This file has not been updated in years.
   * There are a lot of improvements that are not documented.
