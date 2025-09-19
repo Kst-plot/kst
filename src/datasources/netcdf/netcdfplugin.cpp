@@ -114,24 +114,17 @@ Kst::DataSourceConfigWidget *NetCdfPlugin::configWidget(QSettings *cfg, const QS
 }
 
 
-/** understands_netcdf: returns true if:
-  - the file is readable (!)
+/** understands_netcdf: returns 80 if:
+  - the file is readable (!) and
   - the file can be opened by the netcdf library **/
+
 int NetCdfPlugin::understands(QSettings *cfg, const QString& filename) const
 {
-    QFile f(filename);
-
-    if (!f.open(QFile::ReadOnly)) {
-      KST_DBG qDebug() << "Unable to read file !" << endl;
-      return 0;
-    }
-
+  try {
     netCDF::NcFile ncfile(filename.toUtf8().data(), netCDF::NcFile::read);
-    if (!ncfile.isNull()) {
-      KST_DBG qDebug() << filename << " looks like netCDF !" << endl;
-      return 80;
-    } else {
-      return 0;
-    }
+    return 80; // a valid netcdf file
+  } catch (...) {
+    return 0; // not a valid netcdf file: different format, access issues, etc.
   }
+}
 
