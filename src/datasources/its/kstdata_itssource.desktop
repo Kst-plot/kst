@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=itssource
 X-Kst-Plugin-Author=C. Barth Netterfield
 Name=Indexed Thumbnail Stream Reader
+Name[ar]=قارئ دفق صورة مصغرة مفهرس
 Name[ca]=Lector de fluxos de miniatures indexades
 Name[ca@valencia]=Lector de fluxos de miniatures indexades
 Name[en_GB]=Indexed Thumbnail Stream Reader
