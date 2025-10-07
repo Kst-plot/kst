@@ -5,6 +5,7 @@ X-KDE-ModuleType=Plugin
 X-KDE-Library=sourcelist
 X-Kst-Plugin-Author=C. Barth Netterfield
 Name=Data Source List
+Name[ar]=قائمة مصادر البيانات
 Name[bs]=Lista izvora podataka
 Name[ca]=Llista de fonts de les dades
 Name[ca@valencia]=Llista de fonts de les dades
