@@ -9,6 +9,7 @@
     <binary>kst2</binary>
   </provides>
   <name>Kst</name>
+  <name xml:lang="ar">كاست</name>
   <name xml:lang="ca">Kst</name>
   <name xml:lang="ca-valencia">Kst</name>
   <name xml:lang="es">Kst</name>
@@ -22,6 +23,7 @@
   <name xml:lang="tr">Kst</name>
   <name xml:lang="uk">Kst</name>
   <summary>Data Viewer</summary>
+  <summary xml:lang="ar">عارض بيانات</summary>
   <summary xml:lang="ca">Visualitzador de dades</summary>
   <summary xml:lang="ca-valencia">Visor de dades</summary>
   <summary xml:lang="es">Visor de datos</summary>
@@ -36,6 +38,7 @@
   <summary xml:lang="uk">Засіб перегляду даних</summary>
   <description>
     <p>This application is used to display scientific data.</p>
+    <p xml:lang="ar">هذا التطبيق يستخدم لعرض البيانات العلمية</p>
     <p xml:lang="ca">Aquesta aplicació es fa servir per a mostrar dades científiques.</p>
     <p xml:lang="ca-valencia">Esta aplicació s'utilitza per a mostrar dades científiques.</p>
     <p xml:lang="es">Esta aplicación se usa para mostrar datos científicos.</p>
