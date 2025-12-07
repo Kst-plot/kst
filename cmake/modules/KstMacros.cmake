@@ -33,11 +33,6 @@ macro(kst_init prefix name_base)
 endmacro()
 
 
-macro(kst_revision_project_name name)
-	set(kst_revision_project ${name})
-endmacro()
-
-
 macro(kst_revision_add_dependency)
 	if(kst_revision_project)
 		add_dependencies(${kst_name} ${kst_revision_project})
@@ -100,7 +95,7 @@ macro(kst_add_test _source_file)
 	else()
 	set(_moced moc_${_file_name})
 	endif()
-	qt4_generate_moc(${_source_file} ${_moced})
+	qt_generate_moc(${_source_file} ${_moced})
 	set_source_files_properties(${_source_file} PROPERTIES OBJECT_DEPENDS ${_moced}) # moc on source file changes
 	add_executable(${kst_name} ${_source_file})
 	set_target_properties(${kst_name} PROPERTIES DEPEND ${_moced})

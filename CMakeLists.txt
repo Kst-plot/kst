@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
 set(QT_MIN_VERSION "6.8.0")
 set(KF_MIN_VERSION "6.5.0")
@@ -27,12 +27,13 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 include(KstMacros)
-include(KDEInstallDirs)
 
 include(KDEInstallDirs)
+include(KDECMakeSettings NO_POLICY_SCOPE)
 
 include(ECMGenerateExportHeader)
 include(ECMSetupVersion)
+include(ECMAddTests)
 include(ECMEnableSanitizers)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR} ABSOLUTE)
@@ -103,20 +104,6 @@ elseif(kst_3rdparty_download)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xfj ${CMAKE_BINARY_DIR}/${_file})
     endif()
     set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/${_deps})
-endif()
-
-
-kst_revision_project_name(Revision)
-add_definitions(-DKST_HAVE_REVISION_H)
-if(kst_revision)
-    file(WRITE ${CMAKE_BINARY_DIR}/kstrevision.h.tmp "#define KST_REVISION \"${kst_revision}\"\n")
-    configure_file(${CMAKE_BINARY_DIR}/kstrevision.h.tmp ${CMAKE_BINARY_DIR}/kstrevision.h COPYONLY)
-elseif(kst_svnversion)
-    include(KstRevisionHeader)
-    KstRevisionHeader(${kst_dir} ${kst_revision_project} ${CMAKE_BINARY_DIR}/kstrevision.h _modified)
-else()
-    file(WRITE ${CMAKE_BINARY_DIR}/kstrevision.h.tmp "#define KST_REVISION \"unknown\"\n")
-    configure_file(${CMAKE_BINARY_DIR}/kstrevision.h.tmp ${CMAKE_BINARY_DIR}/kstrevision.h COPYONLY)
 endif()
 
 

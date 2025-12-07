@@ -69,20 +69,23 @@ target_sources(Kst6Widgets PRIVATE
     stringselector.cpp
     vectorselector.cpp
     widgets.cpp
-    colorpalette.ui
-    curveappearance.ui
-    curveplacement.ui
-    curveselector.ui
-    datarange.ui
-    fftoptions.ui
-    kstwidgets_pch
-    labelbuilder.ui
-    matrixselector.ui
-    modelessinfobox.ui
-    scalarlistselector.ui
-    scalarselector.ui
-    stringselector.ui
-    vectorselector.ui
+)
+
+qt_add_ui(Kst6Widgets
+    SOURCES
+        colorpalette.ui
+        curveappearance.ui
+        curveplacement.ui
+        curveselector.ui
+        datarange.ui
+        fftoptions.ui
+        labelbuilder.ui
+        matrixselector.ui
+        modelessinfobox.ui
+        scalarlistselector.ui
+        scalarselector.ui
+        stringselector.ui
+        vectorselector.ui
 )
 
 target_link_libraries(Kst6Widgets PUBLIC

@@ -119,7 +119,7 @@ void TestCSD::testCSD() {
   }
 
   Kst::CSDPtr csd = Kst::kst_cast<Kst::CSD>(_store.createObject<Kst::CSD>());
-  csd->change(vp, 1.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, QString::null, QString::null);
+  csd->change(vp, 1.0, false, false, false, WindowUndefined, 0, 0, 0.0, PSDUndefined, {}, {});
 
   QCOMPARE(csd->vector()->descriptiveName(), QLatin1String("tempVector"));
   QCOMPARE(csd->output(), PSDUndefined);
@@ -238,6 +238,4 @@ void TestCSD::testCSD() {
 
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestCSD)
-#endif

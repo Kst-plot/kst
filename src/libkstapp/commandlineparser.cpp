@@ -18,9 +18,6 @@
 #include "datasourcepluginmanager.h"
 #include "objectstore.h"
 #include "colorsequence.h"
-#ifdef KST_HAVE_REVISION_H
-#include "kstrevision.h"
-#endif
 
 #include <iostream>
 #include <QCoreApplication>
@@ -491,11 +488,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
       *ok = false;
     } else if (arg == "--version" || arg == "-version") {
 
-      printText(QString("Kst ") + KSTVERSION
-#ifdef KST_REVISION
-+ KST_REVISION
-#endif
-);
+      printText(QString("Kst ") + KSTVERSION);
 
       *ok = false;
     } else if (arg == "-f") {

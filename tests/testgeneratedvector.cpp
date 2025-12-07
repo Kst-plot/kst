@@ -54,8 +54,6 @@ void TestGeneratedVector::testGeneratedVector() {
   QCOMPARE(m1->value(99), 100.0);
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestGeneratedVector)
-#endif
 
 // vim: ts=2 sw=2 et

@@ -107,8 +107,6 @@ void WidgetPlugin::initialize(QDesignerFormEditorInterface *) {
   _initialized = true;
 }
 
-Q_EXPORT_PLUGIN2(widgets, Widgets)
-
 }
 
 #endif // __QNX__

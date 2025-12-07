@@ -3,26 +3,24 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_library(${kst_binary_name}core SHARED)
-
-add_library(Kst6Core ALIAS ${kst_binary_name}core)
+add_library(Kst6Core SHARED)
 
 message(${PROJECT_VERSION})
 
-ecm_generate_export_header(${kst_binary_name}core
+ecm_generate_export_header(Kst6Core
     BASE_NAME KSTCORE
     VERSION ${PROJECT_VERSION}
     USE_VERSION_HEADER kst_version.h
 )
 
-target_include_directories(${kst_binary_name}core
+target_include_directories(Kst6Core
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
         "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6}>"
 )
 
-target_sources(${kst_binary_name}core PRIVATE
+target_sources(Kst6Core PRIVATE
     builtinprimitives.h
     coredocument.h
     datacollection.h
@@ -44,7 +42,6 @@ target_sources(${kst_binary_name}core PRIVATE
     generatedmatrix.h
     generatedvector.h
     index_kst.h
-    kst_export.h
     kst_inf.h
     ksttimers.h
     ksttimezone.h
@@ -138,7 +135,7 @@ target_sources(${kst_binary_name}core PRIVATE
     vscalar.cpp
 )
 
-target_link_libraries(${kst_binary_name}core PUBLIC
+target_link_libraries(Kst6Core PUBLIC
     Qt6::Widgets
     Qt6::Xml
     Qt6::Network
@@ -153,4 +150,4 @@ install(FILES
     COMPONENT Devel
 )
 
-install(TARGETS ${kst_binary_name}core EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Kst6Core EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

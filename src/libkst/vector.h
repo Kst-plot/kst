@@ -90,6 +90,7 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** these might be modified for output */
     /** eg - by masking */
     double const *value() const { return _v_out;}
+    double *value() { return _v_out;}
     double const *noNanValue();
 
     /** raw pointer for writing */

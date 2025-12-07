@@ -324,7 +324,6 @@ target_sources(Kst6App PRIVATE
     histogramtab.ui
     imagetab.ui
     kstapp_pch
-    kstrevision.h.cached
     labelcreator.ui
     labeldimensionstab.ui
     labelpropertiestab.ui
