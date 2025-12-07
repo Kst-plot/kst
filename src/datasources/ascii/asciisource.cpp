@@ -254,7 +254,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     while (_busy) {
       if (future.isFinished()) {
         try {
-          new_data = future;
+          new_data = future.result();
         } catch ( const std::exception&) {
           // TODO out of memory?
         }
@@ -758,7 +758,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     }
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
-        if (r > 1 && !regex.match(line)) {
+        if (r > 1 && !regex.match(line).hasMatch()) {
           cnt = splitHeaderLine(line, cfg);
           if (cnt > maxcnt) {
             maxcnt = cnt;

@@ -1,39 +1,13 @@
-kst_init(${kst_binary_name} "")
+# SPDX-FileCopyrightText: 2025 Carl Schwan <carl@carlschwan.eu>
+# SPDX-License-Identifier: BSD-2-Clause
 
-kst_files_ignore(main-vld)
-
-kst_files_find(src/kst)
-
-if(WIN32)
-	if(MINGW)
-		add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o
-						   COMMAND ${CMAKE_RC_COMPILER} -I${CMAKE_CURRENT_BINARY_DIR}
-						   -i${kst_dir}/src/kst/kst_icon.rc
-						   -o ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o)
-		set(rc_file ${CMAKE_CURRENT_BINARY_DIR}/kst_icon.o)
-	else()
-		set(rc_file ${kst_dir}/src/kst/kst_icon.rc)
-	endif()
-endif()
-
-kst_add_resources(src/images/icons.qrc)
-kst_add_resources(src/kst/helppages.qrc)
-
-kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/*)
-kst_find_info_files(KstCMakeFiles ${kst_dir}/cmake/modules/*)
-
-kst_add_info_files(KstInfoFiles
-	${kst_dir}/INSTALL
-	${kst_dir}/NEWS
-	${kst_dir}/README)
-
-kst_include_directories(app core)
-
-kst_add_executable(${kst_win32} ${rc_file})
-
-kst_link(${libcore} ${libmath} ${libapp} ${libwidgets})
-
-kst_install_executable()
+add_executable(kst main.cpp)
+target_link_libraries(kst
+   Kst6App
+   Kst6Math
+   Kst6Widgets
+   Kst6Core
+)
 
 if(UNIX AND NOT APPLE)
 	set(man ${CMAKE_BINARY_DIR}/${kst_binary_name}.1)
@@ -65,27 +39,5 @@ if(UNIX AND NOT APPLE)
     install(FILES ${kst_dir}/src/images/64x64/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/64x64/mimetypes)
     install(FILES ${kst_dir}/src/images/128x128/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/128x128/mimetypes)
     install(FILES ${kst_dir}/src/images/svg_icons/application-x-kst.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/mimetypes)
-endif()
-
-
-if(UNIX AND kst_deploy)
-	set(app "${CMAKE_INSTALL_PREFIX}/bin/${kst_binary_name}")
-	set(dirs ${QT_LIBRARY_DIR} ${kst_build_dir}/lib)
-	install(CODE "
-		include(DeployQt4)
-		fixup_qt4_executable(${app} \"\" \"\" \"${dirs}\")"
-		COMPONENT RUNTIME)
-
-	set(kst_renamed kst${kst_version})
-	set(start_script ${CMAKE_BINARY_DIR}/kst2_start.sh)
-	configure_file(${kst_dir}/src/kst/kst2.sh.cmake ${start_script} @ONLY)
-	file(WRITE ${CMAKE_BINARY_DIR}/delpoy.sh "#!/bin/bash
-	mv ${CMAKE_INSTALL_PREFIX}/bin/*.so* ${CMAKE_INSTALL_PREFIX}/lib
-	mv ${CMAKE_INSTALL_PREFIX}/bin/${kst_binary_name} ${CMAKE_INSTALL_PREFIX}/bin/${kst_renamed}
-	cp ${start_script} ${CMAKE_INSTALL_PREFIX}/bin/${kst_binary_name}
-	")
-	install(CODE "
-		execute_process(COMMAND bash ${CMAKE_BINARY_DIR}/delpoy.sh) "
-		COMPONENT RUNTIME)
 endif()
 

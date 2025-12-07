@@ -87,28 +87,6 @@ macro(kst_add_executable)
 endmacro()
 
 
-macro(kst_add_test _source_file)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${kst_build_dir}/bin)
-	get_filename_component(_file_name ${_source_file} NAME)
-	if(CMAKE_GENERATOR MATCHES Ninja) 
-	set(_moced ${CMAKE_CURRENT_BINARY_DIR}/moc_${_file_name}) # ninja generator bug
-	else()
-	set(_moced moc_${_file_name})
-	endif()
-	qt_generate_moc(${_source_file} ${_moced})
-	set_source_files_properties(${_source_file} PROPERTIES OBJECT_DEPENDS ${_moced}) # moc on source file changes
-	add_executable(${kst_name} ${_source_file})
-	set_target_properties(${kst_name} PROPERTIES DEPEND ${_moced})
-	target_link_libraries(${kst_name} ${QT_QTTEST_LIBRARY})
-	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	kst_link(Kst6Core Kst6Math Kst6App Kst6Widgets ${QT_QTTEST_LIBRARY})
-	if(kst_debug_postfix)
-		set_target_properties(${kst_name} PROPERTIES DEBUG_POSTFIX ${kst_debug_postfix})
-	endif()
-	add_test(NAME ${kst_name} COMMAND ${kst_name})
-endmacro()
-
-
 macro(kst_install_executable)
     install(TARGETS ${kst_name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
@@ -177,11 +155,7 @@ endmacro()
 
 
 macro(kst_add_plugin_internal folder name libtype postfix)
-	set(_name _${kst_plugin_prefix}_${folder}_${name})
-	string(REPLACE . _  _name ${_name})
-	string(REPLACE / _  _name ${_name})
-	string(REPLACE __ _ _name ${_name})
-	string(REPLACE __ _ _name ${_name})
+
 	kst_init(${kst_binary_name} ${_name})
 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
 	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
@@ -192,17 +166,37 @@ macro(kst_add_plugin_internal folder name libtype postfix)
 	endif()
 endmacro()
 
-macro(kst_add_plugin folder name)
-	kst_add_plugin_internal(${folder} ${name} MODULE "")
-    kst_link(Kst6Core Kst6Math Kst6Widgets Qt6::Concurrent)
-	if(NOT APPLE)
-		install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-	endif()
-endmacro()
+function (kst_add_plugin folder name)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs LINK_LIBRARIES)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-macro(kst_add_plugin_lib folder name)
-	kst_add_plugin_internal(${folder} ${name} STATIC _lib)
-endmacro()
+    set(_name _${kst_plugin_prefix}_${folder}_${name})
+    string(REPLACE . _  _name ${_name})
+    string(REPLACE / _  _name ${_name})
+    string(REPLACE __ _ _name ${_name})
+    string(REPLACE __ _ _name ${_name})
+
+    set(_folder ${folder}/${name})
+    file(GLOB _sources     ${_folder}/*.c)
+    file(GLOB _sources_cpp ${_folder}/*.cpp)
+    file(GLOB _headers     ${_folder}/*.h)
+    file(GLOB _ui_files    ${_folder}/*.ui)
+
+    kcoreaddons_add_plugin(${_name}
+        SOURCES
+            ${_sources} ${_sources_cpp} ${_sources_h}
+        INSTALL_NAMESPACE kst-plot/${kst_plugin_prefix}
+    )
+    target_link_libraries(${_name} PUBLIC
+        Kst6Core
+	Kst6Math
+	Kst6Widgets
+	Qt6::Concurrent
+	${ARGS_LINK_LIBRARIES}
+    )
+endfunction()
 
 macro(kst_add_dependency name)
 	add_dependencies(${kst_name} ${name})

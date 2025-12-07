@@ -139,7 +139,7 @@ set_package_properties(Qt6 PROPERTIES
     PURPOSE "Required application components"
 )
 
-find_package(KF6 ${KF_MIN_VERSION} COMPONENTS I18n)
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS I18n CoreAddons)
 set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required application components"

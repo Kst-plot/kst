@@ -64,5 +64,6 @@ typedef ObjectList<DataObjectPluginInterface> DataObjectPluginList;
 #define BasicPluginInterface_iid "com.kst.BasicPluginInterface/2.0"
 
 Q_DECLARE_INTERFACE(Kst::DataObjectPluginInterface, DataObjectPluginInterface_iid)
+Q_DECLARE_INTERFACE(Kst::BasicPluginInterface, BasicPluginInterface_iid)
 
 #endif

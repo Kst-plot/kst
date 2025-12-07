@@ -101,6 +101,7 @@ target_link_libraries(Kst6Widgets PUBLIC
 )
 
 install(FILES
+    ${KSTWIDGETS_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kstwidgets_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6Widgets
     COMPONENT Devel

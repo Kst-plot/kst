@@ -16,6 +16,7 @@
 #include "datacollection.h"
 #include "objectstore.h"
 #include "updateserver.h"
+#include "ui_scalarselector.h"
 
 #include "enodes.h"
 #include "geticon.h"
@@ -23,43 +24,45 @@
 namespace Kst {
 
 ScalarSelector::ScalarSelector(QWidget *parent, ObjectStore *store)
-  : QWidget(parent), _store(store) {
-
+  : QWidget(parent)
+  , _store(store)
+  , ui(new Ui::ScalarSelector)
+{
   _defaultsSet = false;
-  setupUi(this);
+  ui->setupUi(this);
   if (property("isFOverSR").toBool()) {
-    _cutoffLabel->show();
-    _cutoff->show();
-    _SRLabel->show();
-    _SR->show();
+    ui->_cutoffLabel->show();
+    ui->_cutoff->show();
+    ui->_SRLabel->show();
+    ui->_SR->show();
 
   } else {
-    _cutoffLabel->hide();
-    _cutoff->hide();
-    _SRLabel->hide();
-    _SR->hide();
+    ui->_cutoffLabel->hide();
+    ui->_cutoff->hide();
+    ui->_SRLabel->hide();
+    ui->_SR->hide();
   }
 
-  _newScalar->setIcon(KstGetIcon("kst_scalarnew"));
-  _editScalar->setIcon(KstGetIcon("kst_scalaredit"));
+  ui->_newScalar->setIcon(KstGetIcon("kst_scalarnew"));
+  ui->_editScalar->setIcon(KstGetIcon("kst_scalaredit"));
 
-  _newScalar->setFixedSize(iconWidth(), iconWidth());
-  _editScalar->setFixedSize(iconWidth(), iconWidth());
-  _selectScalar->setFixedSize(iconWidth(), iconWidth());
+  ui->_newScalar->setFixedSize(iconWidth(), iconWidth());
+  ui->_editScalar->setFixedSize(iconWidth(), iconWidth());
+  ui->_selectScalar->setFixedSize(iconWidth(), iconWidth());
 
   _scalarListSelector = new ScalarListSelector(this);
 
 
   //_scalar->resize(10,5);
-  connect(_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
-  connect(_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
-  connect(_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
-  connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
-  connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
-  connect(_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(ratioChanged()));
-  connect(_cutoff, SIGNAL(textEdited(QString)), this, SLOT(cutoffChanged()));
-  connect(_SR, SIGNAL(textChanged(QString)), this, SLOT(srChanged()));
-  connect(_SR, SIGNAL(textChanged(QString)), this, SIGNAL(SRChanged(QString)));
+  connect(ui->_newScalar, SIGNAL(pressed()), this, SLOT(newScalar()));
+  connect(ui->_editScalar, SIGNAL(pressed()), this, SLOT(editScalar()));
+  connect(ui->_selectScalar, SIGNAL(pressed()), this, SLOT(selectScalar()));
+  connect(ui->_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(emitSelectionChanged()));
+  connect(ui->_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(updateDescriptionTip()));
+  connect(ui->_scalar, SIGNAL(editTextChanged(QString)), this, SLOT(ratioChanged()));
+  connect(ui->_cutoff, SIGNAL(textEdited(QString)), this, SLOT(cutoffChanged()));
+  connect(ui->_SR, SIGNAL(textChanged(QString)), this, SLOT(srChanged()));
+  connect(ui->_SR, SIGNAL(textChanged(QString)), this, SIGNAL(SRChanged(QString)));
 
   connect(UpdateServer::self(), SIGNAL(objectListsChanged()), this, SLOT(updateScalarList()));
 
@@ -78,26 +81,26 @@ void ScalarSelector::setIsFOverSR(bool is_f_over_sr)
   setProperty("isFOVerSR", is_f_over_sr);
 
   if (is_f_over_sr) {
-    _cutoffLabel->show();
-    _cutoff->show();
-    _SRLabel->show();
-    _SR->show();
+    ui->_cutoffLabel->show();
+    ui->_cutoff->show();
+    ui->_SRLabel->show();
+    ui->_SR->show();
 
-    QSize size = _scalar->size();
+    QSize size = ui->_scalar->size();
     size.setWidth(fontMetrics().horizontalAdvance("000000000"));
-    _SR->setMinimumSize(size);
-    _cutoff->setMinimumSize(size);
+    ui->_SR->setMinimumSize(size);
+    ui->_cutoff->setMinimumSize(size);
 
     size.setWidth(fontMetrics().horizontalAdvance("0000000000000"));
-    _scalar->setMinimumSize(size);
+    ui->_scalar->setMinimumSize(size);
 
     //setMinimumWidth(3*min_width + _cutoffLabel->width() + _SRLabel->width()+3*_newScalar->width());
 
   } else {
-    _cutoffLabel->hide();
-    _cutoff->hide();
-    _SRLabel->hide();
-    _SR->hide();
+    ui->_cutoffLabel->hide();
+    ui->_cutoff->hide();
+    ui->_SRLabel->hide();
+    ui->_SR->hide();
   }
 
 }
@@ -116,23 +119,23 @@ void ScalarSelector::setObjectStore(ObjectStore *store) {
 void ScalarSelector::updateDescriptionTip() {
   bool editable;
   setToolTip(selectedScalarString(&editable));
-  _editScalar->setEnabled(editable);
+  ui->_editScalar->setEnabled(editable);
 }
 
 
 void ScalarSelector::emitSelectionChanged() {
-  emit selectionChanged(_scalar->currentText());
+  emit selectionChanged(ui->_scalar->currentText());
 }
 
 
 void ScalarSelector::setDefaultValue(double value) {
  QString string = QString::number(value);
- int index = _scalar->findText(string);
+ int index = ui->_scalar->findText(string);
  if (index<0) {
-   _scalar->addItem(string, QVariant::fromValue(0));
-   _scalar->setCurrentIndex(_scalar->findText(string));
+   ui->_scalar->addItem(string, QVariant::fromValue(0));
+   ui->_scalar->setCurrentIndex(ui->_scalar->findText(string));
  } else {
-   _scalar->setCurrentIndex(index);
+   ui->_scalar->setCurrentIndex(index);
  }
  _defaultsSet = true;
 }
@@ -140,11 +143,11 @@ void ScalarSelector::setDefaultValue(double value) {
 
 ScalarPtr ScalarSelector::selectedScalar() {
   bool existingScalar;
-  if (_scalar->findText(_scalar->currentText(), Qt::MatchExactly) == -1) {
+  if (ui->_scalar->findText(ui->_scalar->currentText(), Qt::MatchExactly) == -1) {
     // Value typed in.
     existingScalar = false;
   } else {
-    if (_scalar->itemData(_scalar->findText(_scalar->currentText())).value<Scalar*>()) {
+    if (ui->_scalar->itemData(ui->_scalar->findText(ui->_scalar->currentText())).value<Scalar*>()) {
       existingScalar = true;
     } else {
       // Default Value.  Doesn't exist as scalar yet.
@@ -155,9 +158,9 @@ ScalarPtr ScalarSelector::selectedScalar() {
   if (!existingScalar) {
     // Create the Scalar.
     bool ok = false;
-    double value = _scalar->currentText().toDouble(&ok);
+    double value = ui->_scalar->currentText().toDouble(&ok);
     if (!ok) {
-      value = Equations::interpret(_store, _scalar->currentText().toLatin1(), &ok);
+      value = Equations::interpret(_store, ui->_scalar->currentText().toLatin1(), &ok);
     }
 
     if (!ok) {
@@ -180,7 +183,7 @@ ScalarPtr ScalarSelector::selectedScalar() {
     scalar->setOrphan(true);
     scalar->setHidden(true);
 
-    _scalar->clearEditText();
+    ui->_scalar->clearEditText();
     fillScalars();
 
     scalar->writeLock();
@@ -191,19 +194,19 @@ ScalarPtr ScalarSelector::selectedScalar() {
 
     return scalar;
   }
-  return _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();;
+  return ui->_scalar->itemData(ui->_scalar->currentIndex()).value<Scalar*>();;
 }
 
 
 QString ScalarSelector::selectedScalarString(bool *editable) {
-  if (_scalar->findText(_scalar->currentText(),Qt::MatchExactly) == -1) {
+  if (ui->_scalar->findText(ui->_scalar->currentText(),Qt::MatchExactly) == -1) {
     if (editable) {
       *editable = false;
     }
-    return _scalar->currentText();
+    return ui->_scalar->currentText();
   }
 
-  Scalar* scalar = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();;
+  Scalar* scalar = ui->_scalar->itemData(ui->_scalar->currentIndex()).value<Scalar*>();;
   if (scalar) {
     if (editable) {
       *editable = scalar->editable();
@@ -235,18 +238,18 @@ void ScalarSelector::setSelectedScalar(QString Name) {
 }
 
 void ScalarSelector::setSR(const QString &SR) {
-  _SR->setText(SR);
+  ui->_SR->setText(SR);
 }
 
 QString ScalarSelector::SR() {
-  return _SR->text();
+  return ui->_SR->text();
 }
 
 
 void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   int i=-1;
-  for (int j=0; j<_scalar->count() ; ++j) {
-    if (selectedScalar.data() == _scalar->itemData(j).value<Scalar*>()) {
+  for (int j=0; j<ui->_scalar->count() ; ++j) {
+    if (selectedScalar.data() == ui->_scalar->itemData(j).value<Scalar*>()) {
       i=j;
       break;
     }
@@ -255,7 +258,7 @@ void ScalarSelector::setSelectedScalar(ScalarPtr selectedScalar) {
   if (i==-1) {
     setDefaultValue(selectedScalar->value());
   } else {
-    _scalar->setCurrentIndex(i);
+    ui->_scalar->setCurrentIndex(i);
     _defaultsSet = false;
   }
 }
@@ -285,7 +288,7 @@ void ScalarSelector::editScalar() {
 
 void ScalarSelector::selectScalar() {
   if (_scalarListSelector->exec() == QDialog::Accepted) {
-    _scalar->setCurrentIndex(_scalar->findText(_scalarListSelector->selectedScalar()));
+    ui->_scalar->setCurrentIndex(ui->_scalar->findText(_scalarListSelector->selectedScalar()));
   }
 }
 
@@ -314,13 +317,13 @@ void ScalarSelector::fillScalars() {
 
   std::sort(list.begin(), list.end());
 
-  QString current_text = _scalar->currentText();
-  ScalarPtr current = _scalar->itemData(_scalar->currentIndex()).value<Scalar*>();
+  QString current_text = ui->_scalar->currentText();
+  ScalarPtr current = ui->_scalar->itemData(ui->_scalar->currentIndex()).value<Scalar*>();
 
-  _scalar->clear();
+  ui->_scalar->clear();
   foreach (const QString &string, list) {
     ScalarPtr v = scalars.value(string);
-    _scalar->addItem(string, QVariant::fromValue(v.data()));
+    ui->_scalar->addItem(string, QVariant::fromValue(v.data()));
   }
 
   _scalarListSelector->clear();
@@ -329,19 +332,19 @@ void ScalarSelector::fillScalars() {
   if (current) {
     setSelectedScalar(current);
   } else {
-    _scalar->addItem(current_text, QVariant::fromValue(0));
-    _scalar->setCurrentIndex(_scalar->findText(current_text));
+    ui->_scalar->addItem(current_text, QVariant::fromValue(0));
+    ui->_scalar->setCurrentIndex(ui->_scalar->findText(current_text));
     _defaultsSet = true;
   }
 
-  _editScalar->setEnabled(_scalar->count() > 0);
-  _selectScalar->setEnabled(_scalar->count() > 0);
+  ui->_editScalar->setEnabled(ui->_scalar->count() > 0);
+  ui->_selectScalar->setEnabled(ui->_scalar->count() > 0);
   updateDescriptionTip();
 }
 
 void ScalarSelector::updateScalarList() {
   if (_defaultsSet) {
-    QString defaultText = _scalar->currentText();
+    QString defaultText = ui->_scalar->currentText();
     fillScalars();
     setDefaultValue(defaultText.toDouble());
   } else {
@@ -374,13 +377,13 @@ void ScalarSelector::updateFields(ControlField control_field) {
   bool ok = false;
 
   // set ratio: the value of the selected scalar, or evaluate as equation, or convert to double.
-  if (_scalar->itemData(_scalar->findText(_scalar->currentText())).value<Scalar*>()) {
-    ratio = ScalarPtr(_scalar->itemData(_scalar->findText(_scalar->currentText())).value<Scalar*>())->value();
+  if (ui->_scalar->itemData(ui->_scalar->findText(ui->_scalar->currentText())).value<Scalar*>()) {
+    ratio = ScalarPtr(ui->_scalar->itemData(ui->_scalar->findText(ui->_scalar->currentText())).value<Scalar*>())->value();
   } else {
     ok = false;
-    ratio = _scalar->currentText().toDouble(&ok);
+    ratio = ui->_scalar->currentText().toDouble(&ok);
     if (!ok) {
-      ratio = Equations::interpret(_store, _scalar->currentText().toLatin1(), &ok);
+      ratio = Equations::interpret(_store, ui->_scalar->currentText().toLatin1(), &ok);
     }
 
     if (!ok) {
@@ -390,9 +393,9 @@ void ScalarSelector::updateFields(ControlField control_field) {
 
   // set cutoff: either evaluate as equation, or convert to double.
   ok = false;
-  cutoff = _cutoff->text().toDouble(&ok);
+  cutoff = ui->_cutoff->text().toDouble(&ok);
   if (!ok) {
-    cutoff = Equations::interpret(_store, _cutoff->text().toLatin1(), &ok);
+    cutoff = Equations::interpret(_store, ui->_cutoff->text().toLatin1(), &ok);
   }
 
   if (!ok) {
@@ -401,9 +404,9 @@ void ScalarSelector::updateFields(ControlField control_field) {
 
   // set frequency: either evaluate as equation, or convert to double.
   ok = false;
-  frequency = _SR->text().toDouble(&ok);
+  frequency = ui->_SR->text().toDouble(&ok);
   if (!ok) {
-    frequency = Equations::interpret(_store, _SR->text().toLatin1(), &ok);
+    frequency = Equations::interpret(_store, ui->_SR->text().toLatin1(), &ok);
   }
 
   if (!ok) {
@@ -425,7 +428,7 @@ void ScalarSelector::updateFields(ControlField control_field) {
 
   if (control_field == Ratio) { // Frequency follows ratio: Keep SR fixed
     cutoff = ratio * frequency;
-    _cutoff->setText(QString::number(cutoff, 'g', 12));
+    ui->_cutoff->setText(QString::number(cutoff, 'g', 12));
   } else if (control_field == Cutoff) { // Ratio follows frequency: Keep SR fixed
     ratio = cutoff/frequency;
     setDefaultValue(ratio);
@@ -435,7 +438,7 @@ void ScalarSelector::updateFields(ControlField control_field) {
     //_scalar->setCurrentText(QString::number(ratio, 'g', 12));
   } else if (control_field == SampleRate) { // Cutoff follows SR.  Keep ratio fixed
     cutoff = ratio * frequency;
-    _cutoff->setText(QString::number(cutoff, 'g', 12));
+    ui->_cutoff->setText(QString::number(cutoff, 'g', 12));
     //ratio = cutoff/frequency;
     //_scalar->setCurrentText(QString::number(ratio, 'g', 12));
   }

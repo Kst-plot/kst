@@ -285,6 +285,10 @@ target_sources(Kst6App PRIVATE
     viewmatrixdialog.cpp
     viewprimitivedialog.cpp
     viewvectordialog.cpp
+)
+
+qt_add_ui(Kst6App
+    SOURCES
     aboutdialog.ui
     arrowpropertiestab.ui
     axistab.ui
@@ -323,7 +327,6 @@ target_sources(Kst6App PRIVATE
     gridtab.ui
     histogramtab.ui
     imagetab.ui
-    kstapp_pch
     labelcreator.ui
     labeldimensionstab.ui
     labelpropertiestab.ui
