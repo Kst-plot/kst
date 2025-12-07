@@ -771,7 +771,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       curscan++;
       continue;
     }
-    if (r > 1 && !regex.match(line)) { //at desired line, find count
+    if (r > 1 && !regex.match(line).hasMatch()) { // at desired line, find count
       maxcnt = splitHeaderLine(line, cfg);
       done = true;
     } else if (r < 0) {
