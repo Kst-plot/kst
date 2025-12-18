@@ -974,13 +974,20 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
   _highlightPointActive = false;
 
+  QList<PlotItem*> allPlots = PlotItemManager::plotsForView(view());
+  foreach(PlotItem* plot, allPlots) {
+    if (plot->renderItem()) {
+      plot->renderItem()->resetSelectionRect();
+      plot->renderItem()->_highlightPointActive = false;
+    }
+  }
+
   if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
 
   clearFocus();
-  resetSelectionRect();
 
   updateCursor(event->pos());
 
