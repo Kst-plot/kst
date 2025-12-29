@@ -333,7 +333,6 @@ qt_add_ui(Kst6App
     labeltab.ui
     layouttab.ui
     legendtab.ui
-    libkstapp.pro
     linedimensionstab.ui
     logdialog.ui
     markerstab.ui
