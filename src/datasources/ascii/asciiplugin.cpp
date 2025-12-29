@@ -162,8 +162,8 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
   // checks.  Why one would want this is unclear to me.
   // TODO: fix this!
   if (!config._fileNamePattern.value().isEmpty()) {
-    const auto filenamePattern = QRegularExpression::fromWildcard(config._fileNamePattern);
-    if (filenamePattern.exactMatch(filename)) {
+    const auto filenamePattern = QRegularExpression::fromWildcard(config._fileNamePattern.value());
+    if (filenamePattern.match(filename).hasMatch()) {
       return 100;
     }
   }
@@ -197,9 +197,9 @@ int AsciiPlugin::understands(QSettings *cfg, const QString& filename) const {
         done = true;
       } else if (rc == 1) {
         // empty line; do nothing
-      } else if (commentRE.exactMatch(line)) {
+      } else if (commentRE.match(line).hasMatch()) {
         // comment; do nothing
-      } else if (dataRE.exactMatch(line)) {
+      } else if (dataRE.match(line).hasMatch()) {
         // a number - this may be an ascii file - assume that it is
         // This line checks for an indirect file and gives that a chance too.
         // Indirect files look like ascii files.
