@@ -189,6 +189,12 @@ function (kst_add_plugin folder name)
             ${_sources} ${_sources_cpp} ${_sources_h}
         INSTALL_NAMESPACE kst-plot/${kst_plugin_prefix}
     )
+    if(_ui_files)
+	qt_add_ui(${_name}
+		SOURCES
+		${_ui_files}
+	)
+    endif()
     target_link_libraries(${_name} PUBLIC
         Kst6Core
 	Kst6Math
