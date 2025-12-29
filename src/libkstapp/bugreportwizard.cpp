@@ -14,6 +14,7 @@
 #include "bugreportwizard.h"
 
 #include <QUrl>
+#include <QUrlQuery>
 #include <QDesktopServices>
 #include <QDebug>
 
