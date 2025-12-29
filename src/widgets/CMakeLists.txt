@@ -15,7 +15,7 @@ target_include_directories(Kst6Widgets
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6Widgets}>"
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6Widgets>"
 )
 
 target_sources(Kst6Widgets PRIVATE
