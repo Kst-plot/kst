@@ -72,7 +72,7 @@ class Client(object):
         self.local_socket.waitForConnected(300)
 
         if self.local_socket.state() == QtNetwork.QLocalSocket.UnconnectedState:
-            subprocess.Popen(["kst2", "--serverName="+str(self.server_name)])
+            subprocess.Popen(["kst", "--serverName="+str(self.server_name)])
             time.sleep(.5)
 
             while self.local_socket.state() == QtNetwork.QLocalSocket.UnconnectedState:

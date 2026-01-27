@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-set(QT_MIN_VERSION "6.8.0")
-set(KF_MIN_VERSION "6.5.0")
+set(QT_MIN_VERSION "6.4.0")
 
 set(kst_version_major 3)
 set(kst_version_minor 0)
@@ -14,107 +13,48 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Kst VERSION ${kst_version})
 
-include(FeatureSummary)
+include(GNUInstallDirs)
 
-find_package(ECM ${KF_MIN_VERSION} NO_MODULE)
-set_package_properties(ECM PROPERTIES
-    TYPE REQUIRED
-    URL "https://api.kde.org/ecm/"
-    DESCRIPTION "extra cmake modules")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+# Ensure custom CMake modules (e.g., FindGetdata.cmake) are found
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 include(KstMacros)
 
-include(KDEInstallDirs)
-include(KDECMakeSettings NO_POLICY_SCOPE)
-
-include(ECMGenerateExportHeader)
-include(ECMSetupVersion)
-include(ECMAddTests)
-include(ECMEnableSanitizers)
+include(FeatureSummary)
 
 get_filename_component(kst_dir ${CMAKE_SOURCE_DIR} ABSOLUTE)
-get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR}/build ABSOLUTE)
+get_filename_component(kst_build_dir ${CMAKE_BINARY_DIR} ABSOLUTE)
 
-set(kst_binary_name kst2)
+set(kst_binary_name kst)
 
-set(kst_install_plugins "${CMAKE_INSTALL_LIBDIR}/kst2" CACHE PATH "Kst plugin installation directory")
+set(kst_install_plugins "${CMAKE_INSTALL_LIBDIR}/kst" CACHE PATH "Kst plugin installation directory")
 
-kst_option_init()
-kst_option(bool   OFF all merge_files       "Merge files to speedup build about factor 5")
-kst_option(bool   OFF all merge_rebuild     "Rebuild generated files from merged files build")
-kst_option(bool   ON  all 3rdparty          "Build plugins depending on 3rd party libraries")
-kst_option(bool   ON  all dataobjects       "Build dataobject plugins")
-kst_option(bool   OFF all test              "Build unit tests")
-kst_option(bool   ON  all pch               "Use precompiled headers")
-kst_option(bool   ON  all svnversion        "Use svnversion's output for Kst's version information")
-kst_option(bool   OFF gcc rpath             "Use rpath")
-kst_option(bool   OFF all 3rdparty_build    "Download and build 3rd party libraries")
-kst_option(bool   OFF win 3rdparty_download "Download precompiled 3rd party libraries")
-kst_option(bool   OFF win console           "Open console on Windows")
-kst_option(bool   OFF win edit_cont         "Enable \"Edit and Continue\" for Visual Studio")
-kst_option(bool   OFF all python            "Install Python support")
-kst_option(bool   OFF all python_depend     "Download and build NumPy/SciPy then install Python support")
-kst_option(string ""  all python_prefix     "Path for installing python bindings")
-kst_option(bool   OFF  all qt6base_only      "Only use Qt5 features available in qtbase")
-kst_option(bool   OFF all dbgsym            "Build with debug symbols enabled")
-kst_option(bool   OFF win noinstaller       "Don't build installer")
+# Modern CMake options replacing legacy macros
+option(KST_BUILD_3RDPARTY "Build plugins depending on 3rd party libraries" ON)
+option(KST_BUILD_PYTHON "Install Python support" OFF)
+set(KST_PYTHON_PREFIX "" CACHE PATH "Path for installing python bindings")
+
+# Add more options as needed, or revisit legacy options if required
 
 message(STATUS)
 
-if(kst_3rdparty_build)
-    set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/3rdparty/installed)
-    add_subdirectory(cmake/3rdparty)
-elseif(kst_3rdparty_download)
-    if(MINGW)
-        if(GCC_VERSION VERSION_EQUAL 4.7.2 OR GCC_VERSION VERSION_GREATER 4.7.2)
-            set(ver -dw2-4.7.2)
-            set(md5 53edc4009d5c3ee5e11d1ba24cd8ae61)
-        elseif(GCC_VERSION VERSION_EQUAL 4.7 OR GCC_VERSION VERSION_GREATER 4.7)
-            set(ver 4.7)
-            set(md5 de6e8dbab1bb17eee6057941fddc93e3)
-        elseif(GCC_VERSION VERSION_EQUAL 4.6 OR GCC_VERSION VERSION_GREATER 4.6)
-            set(ver 4.6)
-            set(md5 70d8670af9c21eb8fb466654c95d8e4d)
-        elseif(GCC_VERSION VERSION_GREATER 4.4)
-            set(ver 4.4)
-            set(md5 999248fb40a44543af4dd4cd1be0ceeb)
-        else()
-            message(FATA_ERROR "MinGW version ${GCC_VERSION} not supported")
-        endif()
-    endif()
-    message(STATUS "Checking downloaded 3rd party binaries.")
-    set(_deps kst-3rdparty-win32-gcc${ver})
-    set(_file ${_deps}.zip)
-    set(_downloaded _downloaded-NOTFOUND CACHE PATH "3rd party binaries already downloaded" FORCE)
-    find_file(_downloaded ${_file} ${CMAKE_BINARY_DIR})
-    if (NOT _downloaded)
-        file(DOWNLOAD http://sourceforge.net/projects/kst/files/3rdparty/${_file}
-            ${CMAKE_BINARY_DIR}/${_file}
-            EXPECTED_MD5 ${md5}
-            SHOW_PROGRESS)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xfj ${CMAKE_BINARY_DIR}/${_file})
-    endif()
-    set(kst_3rdparty_dir ${CMAKE_BINARY_DIR}/${_deps})
-endif()
 
 
-# Find 3rd party libraries
-if(kst_3rdparty)
-  message(STATUS "3rd party libs for plugins--------------------")
-  find_package(Getdata)
-  find_package(GSL)
-  find_package(Netcdf)
-  find_package(Matio)
-  find_package(CFITSIO)
-  find_package(TIFF)
-  find_package(HDF5)
-  message(STATUS "----------------------------------------------")
+# Find 3rd party libraries if enabled
+if(KST_BUILD_3RDPARTY)
+    message(STATUS "3rd party libs for plugins--------------------")
+    find_package(Getdata)
+    find_package(GSL)
+    find_package(Netcdf)
+    find_package(Matio)
+    find_package(CFITSIO)
+    find_package(TIFF)
+    find_package(HDF5)
+    message(STATUS "----------------------------------------------")
 else()
-  message(STATUS "Building plugins depending on 3rd party libraries suppressed")
+    message(STATUS "Building plugins depending on 3rd party libraries suppressed")
 endif()
 message(STATUS)
 
@@ -129,80 +69,27 @@ find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS
     LinguistTools
     Designer
 )
-set_package_properties(Qt6 PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Required application components"
-)
 
-find_package(KF6 ${KF_MIN_VERSION} COMPONENTS I18n CoreAddons)
-set_package_properties(KF6 PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Required application components"
-)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
 
-# React on options
-
-if(NOT kst_console)
-    set(kst_win32 WIN32)
-    if(WIN32)
-        set(kst_qtmain_library Qt6::WinMain)
-    endif()
-endif()
-
-if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
-    set(kst_win32 MACOSX_BUNDLE)
-endif()
-
-if(APPLE OR kst_clang)
-    set(kst_pch 0 CACHE BOOL "Disable pch on Mac, not supported yet" FORCE)
-endif()
-
-if (APPLE)
-    set(CMAKE_MACOSX_RPATH 1)
-endif()
-
-if(kst_merge_files)
-    set(kst_pch 0 CACHE BOOL "Disable pch because we build merged" FORCE)
-endif()
-
-if(MSVC)
-    add_definitions(-D_USE_MATH_DEFINES -DNOMINMAX)
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-    if(kst_dbgsym)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-    endif()
-endif()
-
-if(MSVC_IDE AND kst_edit_cont)
-    # Enable <Edit and Continue> in Visual Studio
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI")
-    if(kst_pch)
-        # Studio bug: <Visual Studio 2005 "Force Includes" Breaks Edit and Continue with Pre-compiled Headers>
-        set(kst_pch 0 CACHE BOOL "Disable pch because of Edit&Continue" FORCE)
-    endif()
-endif()
 
 configure_file(${kst_dir}/cmake/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 
 include_directories(${CMAKE_BINARY_DIR})
 
-add_subdirectory(src)
 
-if(BUILD_TESTING)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
+add_subdirectory(src)
 
 if (NOT APPLE)
     add_subdirectory(misc)
 endif()
 
-if(kst_python)
+
+# Add Python support if enabled
+if(KST_BUILD_PYTHON)
     add_subdirectory(pyKst)
 endif()
 

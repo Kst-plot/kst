@@ -198,7 +198,7 @@ QMap<QString, double> DataInterfaceNetCdfVector::metaScalars(const QString& fiel
     var = netcdf._ncfile->getVar(field.toLatin1().constData());
   }
   if (var.isNull()) {
-    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read";
     return QMap<QString, double>();
   }
   QMap<QString, double> fieldScalars;
@@ -241,7 +241,7 @@ QMap<QString, QString> DataInterfaceNetCdfVector::metaStrings(const QString& fie
     var = netcdf._ncfile->getVar(field.toLatin1().constData());
   }
   if (var.isNull()) {
-    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read";
     return QMap<QString, QString>();
   }
   QMap<QString, QString> fieldStrings;
@@ -390,7 +390,7 @@ void NetcdfSource::reset() {
 bool NetcdfSource::initFile() {
   _ncfile = new NcFile(_filename.toUtf8().data(), NcFile::read);
   if (_ncfile->isNull()) {
-      qDebug() << _filename << ": failed to open in initFile()" << endl;
+      qDebug() << _filename << ": failed to open in initFile()";
       return false;
     }
 
@@ -398,7 +398,7 @@ bool NetcdfSource::initFile() {
   _fieldList.clear();
   _fieldList += "INDEX";
 
-  NETCDF_DBG qDebug() << _ncfile->getVarCount() << " vars found in total" << endl;
+  NETCDF_DBG qDebug() << _ncfile->getVarCount() << " vars found in total";
 
   _maxFrameCount = 0;
 
@@ -501,7 +501,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
 //   NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
 // =======
-  NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+  NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames";
 // >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
 
   /* For INDEX field */
@@ -525,7 +525,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 // =======
   NcVar var = _ncfile->getVar(field.toLatin1().constData());  // var is owned by _ncfile
   if (var.isNull()) {
-    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read";
 // >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
     return -1;
   }
@@ -621,7 +621,7 @@ int NetcdfSource::readMatrix(double *v, const QString& field)
 // =======
   NcVar var = _ncfile->getVar(field.toLatin1().constData());  // var is owned by _ncfile
   if (var.isNull()) {
-    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read";
 // >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
     return -1;
   }
@@ -653,7 +653,7 @@ int NetcdfSource::samplesPerFrame(const QString& field) {
 // =======
   NcVar var = _ncfile->getVar(field.toLatin1().constData());
   if (var.isNull()) {
-    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read" << endl;
+    NETCDF_DBG qDebug() << "Queried field " << field << " which can't be read";
 // >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
     return 0;
   }

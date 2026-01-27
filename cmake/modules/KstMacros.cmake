@@ -94,7 +94,7 @@ endmacro()
 
 macro(kst_add_library type)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${kst_build_dir}/bin)
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_libdir})
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/lib/kst)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	string(TOUPPER BUILD_kst${kst_name_base} _build_macro)
 	add_definitions(-D${_build_macro})
@@ -143,8 +143,8 @@ macro(kst_init_plugin dir)
 	if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
 		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/bin/${kst_binary_name}.app/Contents/plugins)
 	else()
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_plugins})
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_plugins})
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/kst)
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/kst)
 	endif()
 	include_directories(${CMAKE_BINARY_DIR}/${dir})
 	include_directories(${CMAKE_BINARY_DIR}/cmake/${dir})
@@ -154,29 +154,33 @@ macro(kst_init_plugin dir)
 endmacro()
 
 
-macro(kst_add_plugin_internal folder name libtype postfix)
+# macro(kst_add_plugin_internal folder name libtype postfix)
 
-	kst_init(${kst_binary_name} ${_name})
-	kst_files_find(${kst_plugin_dir}/${folder}/${name})
-	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
-	add_dependencies(${kst_binary_name} ${kst_name})
-	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-	if(kst_verbose)
-		message(STATUS "Building plugin ${kst_name}")
-	endif()
-endmacro()
+# 	kst_init(${kst_binary_name} ${_name})
+# 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
+# 	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
+# 	add_dependencies(${kst_binary_name} ${kst_name})
+# 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
+# 	if(kst_verbose)
+# 		message(STATUS "Building plugin ${kst_name}")
+# 	endif()
+# endmacro()
 
-macro(kst_add_plugin folder name)
-	kst_add_plugin_internal(${folder} ${name} MODULE "")
-    kst_link(${libcore} ${libmath} ${libwidgets})
-	if(NOT APPLE)
-    # install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-    install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
-    #message(STATUS "plugin: ${kst_name} KDE_INSTALL_TARGETS_DEFAULT_ARGS: ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}")
-	endif()
-endmacro()
+# macro(kst_add_plugin folder name)
+# 	kst_add_plugin_internal(${folder} ${name} MODULE "")
+#     kst_link(${libcore} ${libmath} ${libwidgets})
+# 	if(NOT APPLE)
+#     # install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+#     install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
+#     #message(STATUS "plugin: ${kst_name} KDE_INSTALL_TARGETS_DEFAULT_ARGS: ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}")
+# 	endif()
+# endmacro()
 
-    set(_name _${kst_plugin_prefix}_${folder}_${name})
+function(kst_add_plugin folder name)
+    cmake_parse_arguments(ARG "" "" "LINK_LIBRARIES" ${ARGN})
+
+	message("Building plugin ${folder}/${name}")
+    set(_name ${kst_plugin_prefix}${folder}_${name})
     string(REPLACE . _  _name ${_name})
     string(REPLACE / _  _name ${_name})
     string(REPLACE __ _ _name ${_name})
@@ -188,24 +192,31 @@ endmacro()
     file(GLOB _headers     ${_folder}/*.h)
     file(GLOB _ui_files    ${_folder}/*.ui)
 
-    kcoreaddons_add_plugin(${_name}
-        SOURCES
-            ${_sources} ${_sources_cpp} ${_sources_h}
-        INSTALL_NAMESPACE kst-plot/${kst_plugin_prefix}
-    )
+	# message("Sources: ${_sources} ${_sources_cpp} ${_headers} ${_ui_files}")
+
+    # Replace kcoreaddons_add_plugin with standard CMake
+    add_library(${_name} MODULE ${_sources} ${_sources_cpp} ${_headers})
+    
+    set_target_properties(${_name} PROPERTIES AUTOMOC ON)
+    target_include_directories(${_name} PRIVATE ${CMAKE_SOURCE_DIR}/src/libkst)
+    
     if(_ui_files)
-	qt_add_ui(${_name}
-		SOURCES
-		${_ui_files}
-	)
+        qt6_wrap_ui(UI_SOURCES ${_ui_files})
+        target_sources(${_name} PRIVATE ${UI_SOURCES})
     endif()
+    
     target_link_libraries(${_name} PUBLIC
         Kst6Core
-	Kst6Math
-	Kst6Widgets
-	Qt6::Concurrent
-	${ARGS_LINK_LIBRARIES}
+        Kst6Math
+        Kst6Widgets
+        Qt6::Concurrent
+        ${ARG_LINK_LIBRARIES}
     )
+    
+    # Install the plugin
+    if(NOT APPLE)
+        install(TARGETS ${_name} LIBRARY DESTINATION ${kst_install_plugins})
+    endif()
 endfunction()
 
 macro(kst_add_dependency name)

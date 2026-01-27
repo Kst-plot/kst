@@ -3,19 +3,27 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
+file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
+qt6_wrap_ui(UI_HEADERS ${UI_FILES})
+
+file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+
+qt6_add_resources(RESOURCE_SOURCES ${CMAKE_SOURCE_DIR}/src/images/icons.qrc)
+
+include(GenerateExportHeader)
+
 add_library(Kst6App SHARED)
 
-ecm_generate_export_header(Kst6App
+generate_export_header(Kst6App
     BASE_NAME KSTAPP
-    VERSION ${PROJECT_VERSION}
-    USE_VERSION_HEADER kst_version.h
 )
 
 target_include_directories(Kst6App
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6App}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Kst6App}>"
 )
 
 set(AUTHORS ${kst_dir}/AUTHORS)
@@ -30,6 +38,9 @@ execute_process(COMMAND ${CMAKE_COMMAND}
 )
 
 target_sources(Kst6App PRIVATE
+    ${UI_HEADERS}
+    ${MOC_SOURCES}
+    ${RESOURCE_SOURCES}
     aboutdialog.h
     application.h
     applicationsettings.h
@@ -357,7 +368,6 @@ target_link_libraries(Kst6App PUBLIC
     Qt6::Network
     Qt6::PrintSupport
     Qt6::Svg
-    KF6::I18n
     Kst6Core
     Kst6Math
     Kst6Widgets
@@ -365,8 +375,13 @@ target_link_libraries(Kst6App PUBLIC
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kstapp_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6App
-    COMPONENT Devel
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Kst6App
 )
 
-install(TARGETS Kst6App EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Kst6App
+    EXPORT KstTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

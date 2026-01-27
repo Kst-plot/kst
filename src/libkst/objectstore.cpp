@@ -18,38 +18,34 @@
 
 #include <QHash>
 #include <QList>
-#include <QString>
 #include <QRegularExpression>
+#include <QString>
 
-#include "object.h"
-#include "datavector.h"
-#include "datastring.h"
-#include "datascalar.h"
 #include "datamatrix.h"
+#include "datascalar.h"
+#include "datastring.h"
+#include "datavector.h"
+#include "object.h"
 #include "vscalar.h"
 
-// NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all debug
+// NAMEDEBUG: 0 for no debug, 1 for some debug, 2 for more debug, 3 for all
+// debug
 #define NAMEDEBUG 0
 
 namespace Kst {
 
-ObjectStore::ObjectStore()
-{
+ObjectStore::ObjectStore() {
   override.fileName.clear();
   override.f0 = override.N = override.skip = override.doAve = -5;
   sessionVersion = 9999999;
 }
 
-
-ObjectStore::~ObjectStore()
-{
-}
-
+ObjectStore::~ObjectStore() {}
 
 bool ObjectStore::removeObject(Object *o) {
   // clang says, 'this' pointer cannot be null in well-defiened C++ code;
   // pointer may be assumed to always convert to true.
-  //if (!this) {
+  // if (!this) {
   //  return false;
   //}
 
@@ -81,9 +77,11 @@ bool ObjectStore::removeObject(Object *o) {
   return true;
 }
 
-ObjectPtr ObjectStore::retrieveObject(const QString& name, bool enforceUnique) const {
+ObjectPtr ObjectStore::retrieveObject(const QString &name,
+                                      bool enforceUnique) const {
 
   int match = -1;
+  qsizetype idx = 0;
 
   if (name.isEmpty()) {
     return NULL;
@@ -92,15 +90,17 @@ ObjectPtr ObjectStore::retrieveObject(const QString& name, bool enforceUnique) c
   QString shortName;
   QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
   QRegularExpressionMatch match2;
-  name.indexOf(rx, 0, &match2);
-
-  shortName = match2.captured(2);
-
-  // 1) search for short names
+  idx = name.indexOf(rx, 0, &match2);
   int size = _list.size();
-  for (int i = 0; i < size; ++i) {
-    if (_list.at(i)->shortName()==shortName)
-      return _list.at(i);
+
+  if (idx != -1) { // we found the short name pattern
+    shortName = match2.captured(2);
+
+    // 1) search for short names
+    for (int i = 0; i < size; ++i) {
+      if (_list.at(i)->shortName() == shortName)
+        return _list.at(i);
+    }
   }
   // 3) search for descriptive names: must be unique
   for (int i = 0; i < size; ++i) {
@@ -112,7 +112,7 @@ ObjectPtr ObjectStore::retrieveObject(const QString& name, bool enforceUnique) c
     }
   }
 
-  if (match >-1) 
+  if (match > -1)
     return _list.at(match);
 
   return NULL;
@@ -122,7 +122,7 @@ void ObjectStore::resetDataSourceDependents(QString filename) {
   PrimitiveList allPrimitives = getObjects<Primitive>();
 
   foreach (PrimitivePtr P, allPrimitives) {
-    DataPrimitive* dp = qobject_cast<DataPrimitive*>(P);
+    DataPrimitive *dp = qobject_cast<DataPrimitive *>(P);
     if (dp) {
       if (filename == dp->filename()) {
         P->writeLock();
@@ -153,12 +153,15 @@ void ObjectStore::cleanUpDataSourceList() {
   currentSourceList.clear();
   currentSourceList.append(_dataSourceList);
   // clean up unused data sources
-  for (DataSourceList::Iterator it = currentSourceList.begin(); it != currentSourceList.end(); ++it) {
+  for (DataSourceList::Iterator it = currentSourceList.begin();
+       it != currentSourceList.end(); ++it) {
     if ((*it)->getUsage() <= 1) {
       removeObject(*it);
-      //qDebug() << "remove" << (*it)->fileName() << "usage" << (*it)->getUsage();
+      // qDebug() << "remove" << (*it)->fileName() << "usage" <<
+      // (*it)->getUsage();
     } else {
-      //qDebug() << "  keep" << (*it)->fileName() << "usage" << (*it)->getUsage();
+      // qDebug() << "  keep" << (*it)->fileName() << "usage" <<
+      // (*it)->getUsage();
     }
   }
   currentSourceList.clear();
@@ -169,23 +172,21 @@ bool ObjectStore::isEmpty() const {
   return _list.isEmpty();
 }
 
-
 void ObjectStore::clear() {
   KstWriteLocker l(&_lock);
 #if NAMEDEBUG > 0
-  qDebug () << "Clearing object store " << (void*) this;
+  qDebug() << "Clearing object store " << (void *)this;
 #endif
-  foreach(DataSource *ds, _dataSourceList) {
+  foreach (DataSource *ds, _dataSourceList) {
     removeObject(ds);
   }
-  foreach(Object *o, _list) {
+  foreach (Object *o, _list) {
     removeObject(o);
   }
 
   // Reset the named objects id's.
   NamedObject::resetNameIndex();
 }
-
 
 DataSourceList ObjectStore::dataSourceList() const {
   KstReadLocker l(&_lock);
@@ -222,7 +223,6 @@ const PrimitiveList ObjectStore::getFramePrimitives() const {
   DataMatrixList data_matrixes = getObjects<DataMatrix>();
   DataStringList data_strings = getObjects<DataString>();
 
-
   foreach (DataVectorPtr dv, data_vectors) {
     primitives.append(dv);
   }
@@ -243,6 +243,5 @@ const PrimitiveList ObjectStore::getFramePrimitives() const {
   return primitives;
 }
 
-
-}
+} // namespace Kst
 // vim: ts=2 sw=2 et

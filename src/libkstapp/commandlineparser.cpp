@@ -23,6 +23,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QRegularExpression>
 
 #include "curve.h"
 #include "psd.h"
@@ -251,8 +252,8 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     // Column xx.  This allows "-y 2" but prevents ascii files with fields
     // actually named "0 to 99" from being read from the command line.
     if (ds->fileType() == "ASCII file") {
-      QRegExp num("^[0-9]{1,2}$");
-      if (num.exactMatch(field)) {
+      QRegularExpression num("^[0-9]{1,2}$");
+      if (num.match(field).hasMatch()) {
         int field_num = field.toInt();
         if (field_num < ds->vector().list().size()) {
           field = ds->vector().list()[field.toInt()];
@@ -469,7 +470,7 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
 #ifndef KST_NO_PRINTER
   // set paper settings to match defaults.
-  _paperSize = QPrinter::PaperSize(dialogDefaults().value("print/paperSize", QPrinter::Letter).toInt());
+  _paperSize = static_cast<QPageSize::PageSizeId>(dialogDefaults().value("print/paperSize", static_cast<int>(QPageSize::Letter)).toInt());
   if (dialogDefaults().value("print/landscape",true).toBool()) {
     _landscape = true;
   } else {
@@ -771,9 +772,9 @@ bool CommandLineParser::processCommandLine(bool *ok) {
     } else if (arg == "--portrait") {
       _landscape = false;
     } else if (arg == "--A4") {
-      _paperSize = QPrinter::A4;
+      _paperSize = QPageSize::A4;
     } else if (arg == "--letter") {
-      _paperSize = QPrinter::Letter;
+      _paperSize = QPageSize::Letter;
 #endif
     } else if (arg.startsWith("--serverName=")) {
       /* scriptServer has already handled this.  Skip it. */

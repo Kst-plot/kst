@@ -24,15 +24,15 @@ if(UNIX AND NOT APPLE)
 #	              ${k}/kstfilter.desktop
 #	              ${k}/kstextension.desktop
 #	                                 DESTINATION share/servicetypes/kst)
-    install(FILES ${k}/x-kst.xml      DESTINATION ${KDE_INSTALL_MIMEDIR})
+    install(FILES ${k}/x-kst.xml      DESTINATION share/mime/packages)
 
-    install(FILES org.kde.kst.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-    install(FILES org.kde.kst.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-    install(FILES ${kst_dir}/src/images/32x32/kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/32x32/apps)
-    install(FILES ${kst_dir}/src/images/48x48/kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/48x48/apps)
-    install(FILES ${kst_dir}/src/images/64x64/kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/64x64/apps)
-    install(FILES ${kst_dir}/src/images/128x128/kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/128x128/apps)
-    install(FILES ${kst_dir}/src/images/svg_icons/kst.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
+    install(FILES org.kde.kst.metainfo.xml DESTINATION share/metainfo)
+    install(FILES org.kde.kst.desktop DESTINATION share/applications)
+    install(FILES ${kst_dir}/src/images/32x32/kst.png DESTINATION share/icons/hicolor/32x32/apps)
+    install(FILES ${kst_dir}/src/images/48x48/kst.png DESTINATION share/icons/hicolor/48x48/apps)
+    install(FILES ${kst_dir}/src/images/64x64/kst.png DESTINATION share/icons/hicolor/64x64/apps)
+    install(FILES ${kst_dir}/src/images/128x128/kst.png DESTINATION share/icons/hicolor/128x128/apps)
+    install(FILES ${kst_dir}/src/images/svg_icons/kst.svg DESTINATION share/icons/hicolor/scalable/apps)
 
     install(FILES ${kst_dir}/src/images/32x32/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/32x32/mimetypes)
     install(FILES ${kst_dir}/src/images/48x48/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/48x48/mimetypes)

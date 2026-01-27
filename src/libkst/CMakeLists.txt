@@ -3,24 +3,26 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+
+include(GenerateExportHeader)
+
 add_library(Kst6Core SHARED)
 
-message(${PROJECT_VERSION})
-
-ecm_generate_export_header(Kst6Core
+generate_export_header(Kst6Core
     BASE_NAME KSTCORE
-    VERSION ${PROJECT_VERSION}
-    USE_VERSION_HEADER kst_version.h
 )
 
 target_include_directories(Kst6Core
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Kst6}>"
 )
 
 target_sources(Kst6Core PRIVATE
+    ${MOC_SOURCES}
     builtinprimitives.h
     coredocument.h
     datacollection.h
@@ -69,7 +71,6 @@ target_sources(Kst6Core PRIVATE
     scalarscriptinterface.h
     scriptinterface.h
     settings.h
-    #stdinsource.h
     string_kst.h
     stringfactory.h
     stringscriptinterface.h
@@ -123,7 +124,6 @@ target_sources(Kst6Core PRIVATE
     scriptinterface.cpp
     settings.cpp
     shortnameindex.cpp
-    #stdinsource.cpp
     string_kst.cpp
     stringfactory.cpp
     stringscriptinterface.cpp
@@ -141,13 +141,17 @@ target_link_libraries(Kst6Core PUBLIC
     Qt6::Network
     Qt6::PrintSupport
     Qt6::Svg
-    KF6::I18n
 )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kstcore_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6Core
-    COMPONENT Devel
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Kst6Core
 )
 
-install(TARGETS Kst6Core EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Kst6Core
+    EXPORT KstTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

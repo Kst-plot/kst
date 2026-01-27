@@ -10,6 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
+/* Commented out for Qt6 compatibility - Qt Designer interfaces removed
 #ifndef __QNX__
 #include "widgets.h"
 
@@ -110,5 +111,7 @@ void WidgetPlugin::initialize(QDesignerFormEditorInterface *) {
 }
 
 #endif // __QNX__
+*/
+
 
 // vim: ts=2 sw=2 et

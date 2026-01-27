@@ -16,6 +16,8 @@
 #include "arrowitemdialog.h"
 #include "dialogdefaults.h"
 
+#include <QTransform>
+
 #include "math_kst.h"
 
 #include "arrowscriptinterface.h"
@@ -77,10 +79,12 @@ void ArrowItem::paint(QPainter *painter) {
     qreal cosa = cos(theta);
     qreal yin = sqrt(3.0) * deltax;
     qreal x1, y1, x2, y2;
-    QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
+    QTransform m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
-    m.map( deltax, yin, &x1, &y1);
-    m.map(-deltax, yin, &x2, &y2);
+    QPointF p1 = m.map(QPointF(deltax, yin));
+    x1 = p1.x(); y1 = p1.y();
+    QPointF p2 = m.map(QPointF(-deltax, yin));
+    x2 = p2.x(); y2 = p2.y();
 
     QPolygonF pts;
     pts.append(line().p1());
@@ -101,10 +105,12 @@ void ArrowItem::paint(QPainter *painter) {
     qreal cosa = cos(theta);
     qreal yin = sqrt(3.0) * deltax;
     qreal x1, y1, x2, y2;
-    QMatrix m(cosa, sina, -sina, cosa, 0.0, 0.0);
+    QTransform m(cosa, sina, -sina, cosa, 0.0, 0.0);
 
-    m.map( deltax, yin, &x1, &y1);
-    m.map(-deltax, yin, &x2, &y2);
+    QPointF p1 = m.map(QPointF(deltax, yin));
+    x1 = p1.x(); y1 = p1.y();
+    QPointF p2 = m.map(QPointF(-deltax, yin));
+    x2 = p2.x(); y2 = p2.y();
 
     QPolygonF pts;
     pts.append(line().p2());

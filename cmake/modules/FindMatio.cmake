@@ -1,10 +1,7 @@
 # ***************************************************************************
 # *                                                                         *
-# *   Copyright : (C) 2010 The University of Toronto                        *
+# *   Copyright : (C) 2026 C. Barth Netterfield  						    *
 # *   email     : netterfield@astro.utoronto.ca                             *
-# *                                                                         *
-# *   Copyright : (C) 2010 Peter Kümmel                                     *
-# *   email     : syntheticpp@gmx.net                                       *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU General Public License as published by  *
@@ -13,56 +10,49 @@
 # *                                                                         *
 # ***************************************************************************
 
-# copied from FindGsl.cmake
+# Modern FindMatio.cmake
+# Usage: find_package(Matio)
+# Sets: MATIO_FOUND, MATIO_INCLUDE_DIR, MATIO_LIBRARIES
 
-if(NOT MATIO_INCLUDEDIR)
+include(FindPackageHandleStandardArgs)
 
-if(NOT kst_cross)
-	include(FindPkgConfig)
-	pkg_check_modules(PKGMATIO QUIET matio)
+# Try pkg-config first
+find_package(PkgConfig QUIET)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(MATIO_PKG QUIET matio)
 endif()
 
-if(NOT PKGMATIO_LIBRARIES)
-	set(PKGMATIO_LIBRARIES matio)
-	if (UNIX)
-		set(PKGMATIO_LIBRARIES ${PKGMATIO_LIBRARIES})
-	endif()
+# Find headers
+find_path(MATIO_INCLUDE_DIR
+    NAMES matio.h
+    HINTS ${MATIO_PKG_INCLUDE_DIRS}
+    PATHS ENV MATIO_DIR
+    PATH_SUFFIXES include
+)
+
+# Find libraries
+find_library(MATIO_LIBRARY
+    NAMES matio
+    HINTS ${MATIO_PKG_LIBRARY_DIRS}
+    PATHS ENV MATIO_DIR
+    PATH_SUFFIXES lib
+)
+
+set(MATIO_LIBRARIES)
+if(MATIO_LIBRARY)
+    list(APPEND MATIO_LIBRARIES ${MATIO_LIBRARY})
 endif()
 
-set(MATIO_INCLUDEDIR MATIO_INCLUDEDIR-NOTFOUND CACHE STRING "" FORCE)
-find_path(MATIO_INCLUDEDIR matio.h
-	HINTS
-	ENV MATIO_DIR
-	PATH_SUFFIXES include
-	PATHS ${kst_3rdparty_dir} ${PKGMATIO_INCLUDEDIR})
+# Handle standard args and set _FOUND variable
+find_package_handle_standard_args(Matio
+    REQUIRED_VARS MATIO_INCLUDE_DIR MATIO_LIBRARIES
+    HANDLE_COMPONENTS
+)
 
-set(MATIO_LIBRARY_LIST)
-if(kst_3rdparty_dir)
-    list(APPEND PKGMATIO_LIBRARIES zlibstatic)
+if(Matio_FOUND)
+    add_library(Matio::Matio UNKNOWN IMPORTED)
+    set_target_properties(Matio::Matio PROPERTIES
+        IMPORTED_LOCATION "${MATIO_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${MATIO_INCLUDE_DIR}"
+    )
 endif()
-foreach(it ${PKGMATIO_LIBRARIES})
-	set(lib lib-NOTFOUND CACHE STRING "" FORCE)
-	FIND_LIBRARY(lib ${it} 
-		HINTS
-		ENV MATIO_DIR
-		PATH_SUFFIXES lib
-		PATHS ${kst_3rdparty_dir} ${PKGMATIO_LIBRARY_DIRS})
-	list(APPEND MATIO_LIBRARY_LIST ${lib})
-endforeach()
-set(MATIO_LIBRARIES ${MATIO_LIBRARY_LIST} CACHE STRING "" FORCE)
-
-endif()
-
-
-if(MATIO_INCLUDEDIR AND MATIO_LIBRARIES)
-	set(MATIO_INCLUDE_DIR ${MATIO_INCLUDEDIR} ${MATIO_INCLUDEDIR}/..)
-	set(matio 1)
-	message(STATUS "Found matio (for Matlab .mat support):")
-	message(STATUS "     includes : ${MATIO_INCLUDE_DIR}")
-	message(STATUS "     libraries: ${MATIO_LIBRARIES}")
-else()
-	message(STATUS "Not found: matio, set MATIO_DIR")
-endif()
-
-message(STATUS "")
-

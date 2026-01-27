@@ -21,6 +21,7 @@
 #include <QStringList>
 #ifndef KST_NO_PRINTER
 #include <QPrinter>
+#include <QPageSize>
 #endif
 
 namespace Kst {
@@ -66,7 +67,7 @@ private:
   QString _printFile;
   bool _landscape;
 #ifndef KST_NO_PRINTER
-  QPrinter::PaperSize _paperSize;
+  QPageSize::PageSizeId _paperSize;
 #endif
 
   QStringList _fileNames;

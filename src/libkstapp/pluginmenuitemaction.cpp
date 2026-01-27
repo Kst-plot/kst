@@ -14,11 +14,10 @@
 
 namespace Kst {
 
-PluginMenuItemAction::PluginMenuItemAction(const QString &text, QWidget *parent)
-  : QAction(parent),
+PluginMenuItemAction::PluginMenuItemAction(const QString &text, QObject *parent)
+  : QAction(text, parent),
     m_text(text) {
   connect(this, SIGNAL(triggered()), this, SLOT(triggerWithName()));
-  this->setText(text);
 }
 
 void PluginMenuItemAction::triggerWithName() {

@@ -148,7 +148,8 @@ inline QColor parseColor(const QString& txt, int *skip) {
       int base = 10;
 
       // assume the colors are given as decimal numbers unless we have a hex value in the string
-      if (endPart.find(QRegExp("[A-F]", false)) != -1) {
+      QRegularExpression rx("[A-F]", QRegularExpression::CaseInsensitiveOption);
+      if (rx.match(endPart).hasMatch()) {
         base = 16;
       }
 

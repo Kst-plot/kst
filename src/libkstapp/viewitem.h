@@ -20,6 +20,7 @@
 #include <QHash>
 #include <QAction>
 #include <QMimeData>
+#include <QRegularExpression>
 
 #include "namedobject.h"
 #include "kstcore_export.h"
@@ -632,9 +633,11 @@ T* ViewItem::retrieveItem(const QString &name) {
   }
 
   QString shortName;
-  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-  rx.indexIn(name);
-  shortName = rx.cap(2);
+  QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  auto regexMatch = rx.match(name);
+  if (regexMatch.hasMatch()) {
+    shortName = regexMatch.captured(2);
+  }
 
   // 1) search for short names
   int size = tItems.size();

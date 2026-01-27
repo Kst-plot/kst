@@ -9,14 +9,14 @@ endif()
 include_directories(${kst_dir}/src/datasources/ascii)
 
 kst_add_plugin_lib(. ascii)
-set_target_properties(kst2_datasource_ascii_lib PROPERTIES COMPILE_DEFINITIONS KST_SMALL_PRREALLOC)
+set_target_properties(kst_datasource_ascii_lib PROPERTIES COMPILE_DEFINITIONS KST_SMALL_PRREALLOC)
 kst_init(test_asciisource "")
 kst_add_test(${kst_dir}/tests/datasources/ascii/asciifilebuffertest.cpp)
-kst_link(kst2_datasource_ascii_lib ${libcore} ${libmath} ${libwidgets})
+kst_link(kst_datasource_ascii_lib ${libcore} ${libmath} ${libwidgets})
 
 kst_init(test_asciiatof "")
 kst_add_test(${kst_dir}/tests/datasources/ascii/asciiatoftest.cpp)
-kst_link(kst2_datasource_ascii_lib ${libcore} ${libmath} ${libwidgets})
+kst_link(kst_datasource_ascii_lib ${libcore} ${libmath} ${libwidgets})
 
 kst_init(asciifilegenerator "")
 kst_add_files(${kst_dir}/tests/datasources/ascii/asciifilegenerator.cpp)

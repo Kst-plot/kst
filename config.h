@@ -6,9 +6,9 @@
 //#define QT_NO_STL
 //#define QT_NO_KEYWORDS
 
-#define KSTVERSION  "2.0.x"
+#define KSTVERSION  "3.0.x"
 #define KST_INSTALL_LIBDIR  "lib"
-#define KST_INSTALL_PLUGINS "lib/kst2/plugins"
+#define KST_INSTALL_PLUGINS "lib/kst/plugins"
 
 
 #endif

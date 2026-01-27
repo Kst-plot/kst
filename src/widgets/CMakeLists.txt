@@ -3,22 +3,30 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
+file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
+qt6_wrap_ui(UI_HEADERS ${UI_FILES})
+
+file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+
+include(GenerateExportHeader)
+
 add_library(Kst6Widgets SHARED)
 
-ecm_generate_export_header(Kst6Widgets
+generate_export_header(Kst6Widgets
     BASE_NAME KSTWIDGETS
-    VERSION ${PROJECT_VERSION}
-    USE_VERSION_HEADER kst_version.h
 )
 
 target_include_directories(Kst6Widgets
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Kst6Widgets>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Kst6Widgets>"
 )
 
 target_sources(Kst6Widgets PRIVATE
+    ${UI_HEADERS}
+    ${MOC_SOURCES}
     cclineedit.h
     cclineedit_p.h
     colorbutton.h
@@ -44,7 +52,6 @@ target_sources(Kst6Widgets PRIVATE
     scalarselector.h
     stringselector.h
     vectorselector.h
-    widgets.h
     cclineedit.cpp
     colorbutton.cpp
     colorpalette.cpp
@@ -68,7 +75,6 @@ target_sources(Kst6Widgets PRIVATE
     scalarselector.cpp
     stringselector.cpp
     vectorselector.cpp
-    widgets.cpp
 )
 
 qt_add_ui(Kst6Widgets
@@ -95,7 +101,6 @@ target_link_libraries(Kst6Widgets PUBLIC
     Qt6::PrintSupport
     Qt6::Svg
     Qt6::Designer
-    KF6::I18n
     Kst6Core
     Kst6Math
 )
@@ -103,8 +108,13 @@ target_link_libraries(Kst6Widgets PUBLIC
 install(FILES
     ${KSTWIDGETS_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/kstwidgets_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6Widgets
-    COMPONENT Devel
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Kst6Widgets
 )
 
-install(TARGETS Kst6Widgets EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Kst6Widgets
+    EXPORT KstTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)

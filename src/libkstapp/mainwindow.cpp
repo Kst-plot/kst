@@ -12,6 +12,8 @@
 
 #include "mainwindow.h"
 #include "boxitem.h"
+#include <QActionGroup>
+#include <QPageLayout>
 #include "datamanager.h"
 #include "debugdialog.h"
 #include "debugnotifier.h"
@@ -676,12 +678,12 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
       QPrinter printer(QPrinter::ScreenResolution);
       printer.setOutputFormat(QPrinter::PdfFormat);
       printer.setOutputFileName(file);
-      printer.setOrientation(QPrinter::Portrait);
+      printer.setPageOrientation(QPageLayout::Portrait);
 
       printer.setPrintRange(QPrinter::PageRange);
       printer.setFromTo(i_view+1, i_view+1);
 
-      printer.setPaperSize(size, QPrinter::DevicePixel);
+      printer.setPageSize(QPageSize(size, QPageSize::Point));
       printToPrinter(&printer);
 
     } else if (format == QString("pdf")) {
@@ -689,12 +691,12 @@ void MainWindow::exportGraphicsFile(const QString &filename, const QString &form
       printer.setOutputFormat(QPrinter::PdfFormat);
       printer.setOutputFileName(file);
       //setPrinterDefaults(&printer);
-      printer.setOrientation(QPrinter::Portrait);
+      printer.setPageOrientation(QPageLayout::Portrait);
 
       printer.setPrintRange(QPrinter::PageRange);
       printer.setFromTo(i_view+1, i_view+1);
 
-      printer.setPaperSize(size, QPrinter::DevicePixel);
+      printer.setPageSize(QPageSize(size, QPageSize::Point));
       printToPrinter(&printer);
 #endif
     } else {
@@ -802,8 +804,8 @@ void MainWindow::printToPrinter(QPrinter *printer) {
     break;
   }
 
-  QSize printerPageSize = printer->pageRect().size();
-  for (int i = 0; i < printer->numCopies(); ++i) {
+  QSize printerPageSize = printer->pageRect(QPrinter::DevicePixel).size().toSize();
+  for (int i = 0; i < 1; ++i) {  // Qt6: numCopies removed, default to 1
     for (int i_page = 0; i_page<pages.count(); i_page++) {
       View *view = pages.at(i_page);
       QSize currentSize(view->size());
@@ -833,30 +835,29 @@ void MainWindow::printFromCommandLine(const QString &printFileName) {
 
 void MainWindow::setPrinterDefaults(QPrinter *printer) {
   if (dialogDefaults().value("print/landscape",true).toBool()) {
-    printer->setOrientation(QPrinter::Landscape);
+    printer->setPageOrientation(QPageLayout::Landscape);
   } else {
-    printer->setOrientation(QPrinter::Portrait);
+    printer->setPageOrientation(QPageLayout::Portrait);
   }
 
-  printer->setPaperSize(QPrinter::PaperSize(dialogDefaults().value("print/paperSize", QPrinter::Letter).toInt()));
+  printer->setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(dialogDefaults().value("print/paperSize", static_cast<int>(QPageSize::Letter)).toInt())));
 
   QPointF topLeft =dialogDefaults().value("print/topLeftMargin", QPointF(15.0,15.0)).toPointF();
   QPointF bottomRight =dialogDefaults().value("print/bottomRightMargin", QPointF(15.0,15.0)).toPointF();
 
-  printer->setPageMargins(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y(), QPrinter::Millimeter);
+  printer->setPageMargins(QMarginsF(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y()), QPageLayout::Millimeter);
   // Apparent Qt bug: setting the page margins here doesn't set the correspoding values in the print
   // dialog->printer-options sub-dialog under linux.  If you don't open the printer-options sub-dialog,
   // the values here are honored.
 }
 
 void MainWindow::savePrinterDefaults(QPrinter *printer) {
-  dialogDefaults().setValue("print/landscape", printer->orientation() == QPrinter::Landscape);
-  dialogDefaults().setValue("print/paperSize", int(printer->paperSize()));
+  dialogDefaults().setValue("print/landscape", printer->pageLayout().orientation() == QPageLayout::Landscape);
+  dialogDefaults().setValue("print/paperSize", int(printer->pageLayout().pageSize().id()));
 
-  qreal left, top, right, bottom;
-  printer->getPageMargins(&left, &top, &right, &bottom, QPrinter::Millimeter);
-  dialogDefaults().setValue("print/topLeftMargin", QPointF(left, top));
-  dialogDefaults().setValue("print/bottomRightMargin", QPointF(right, bottom));
+  QMarginsF margins = printer->pageLayout().margins(QPageLayout::Millimeter);
+  dialogDefaults().setValue("print/topLeftMargin", QPointF(margins.left(), margins.top()));
+  dialogDefaults().setValue("print/bottomRightMargin", QPointF(margins.right(), margins.bottom()));
 
 }
 
@@ -1253,14 +1254,14 @@ void MainWindow::createActions() {
   _backSmallAct->setStatusTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setToolTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setIcon(KstGetIcon("page-previous"));
-  _backSmallAct->setShortcut(Qt::SHIFT + Qt::Key_PageDown);
+  _backSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageDown);
   connect(_backSmallAct, SIGNAL(triggered()), this, SLOT(backSmall()));
 
   _forwardSmallAct = new QAction(tr("&Forward 1/5th Screen"), this);
   _forwardSmallAct->setStatusTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setToolTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setIcon(KstGetIcon("page-next"));
-  _forwardSmallAct->setShortcut(Qt::SHIFT + Qt::Key_PageUp);
+  _forwardSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageUp);
   connect(_forwardSmallAct, SIGNAL(triggered()), this, SLOT(forwardSmall()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
@@ -1274,7 +1275,7 @@ void MainWindow::createActions() {
   _readToEndAct->setStatusTip(tr("Read to end mode"));
   _readToEndAct->setToolTip(tr("Read to end mode (shift+end)"));
   _readToEndAct->setIcon(KstGetIcon("read-to-end"));
-  _readToEndAct->setShortcut(Qt::ShiftModifier+Qt::Key_End);
+  _readToEndAct->setShortcut(Qt::ShiftModifier | Qt::Key_End);
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("&Pause"), this);
@@ -1453,7 +1454,7 @@ void MainWindow::createActions() {
 
   _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
   _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  _xOnlyZoomAct->setShortcut(Qt::CTRL + Qt::Key_K);
+  _xOnlyZoomAct->setShortcut(Qt::CTRL | Qt::Key_K);
   _xOnlyZoomAct->setToolTip(tr("X Zoom mode (%1)").arg(_xOnlyZoomAct->shortcut().toString()));
   _xOnlyZoomAct->setCheckable(true);
   _xOnlyZoomAct->setData(View::ZoomOnlyX);
@@ -1461,7 +1462,7 @@ void MainWindow::createActions() {
 
   _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
   _yOnlyZoomAct->setStatusTip(tr("Zoom only in Y direction"));
-  _yOnlyZoomAct->setShortcut(Qt::SHIFT + Qt::Key_K);
+  _yOnlyZoomAct->setShortcut(Qt::SHIFT | Qt::Key_K);
   _yOnlyZoomAct->setToolTip(tr("Y Zoom mode (%1)").arg(_yOnlyZoomAct->shortcut().toString()));
   _yOnlyZoomAct->setData(View::ZoomOnlyY);
   _yOnlyZoomAct->setCheckable(true);
@@ -1476,7 +1477,7 @@ void MainWindow::createActions() {
   connect(_layoutModeAct, SIGNAL(toggled(bool)), this, SLOT(setLayoutMode(bool)));
 
   _interactionModeGroup->setExclusive(true);
-  connect(_interactionModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeZoomOnlyMode(QAction*)));
+  connect(_interactionModeGroup, &QActionGroup::triggered, this, &MainWindow::changeZoomOnlyMode);
 
   // *********************** Tools actions ************************************** //
   _dataManagerAct = new QAction(tr("Data Manager"), this);
@@ -1594,7 +1595,7 @@ void MainWindow::createActions() {
   _video7Act->setStatusTip(tr("Kst presentation #7: Matrices, images and metadata"));
   connect(_video7Act, SIGNAL(triggered()), _videoMapper, SLOT(map()));
   _videoMapper->setMapping(_video7Act, 7);
-  connect(_videoMapper, SIGNAL(mapped(int)), this, SLOT(videoTutorial(int)));
+  connect(_videoMapper, SIGNAL(mappedInt(int)), this, SLOT(videoTutorial(int)));
 }
 
 

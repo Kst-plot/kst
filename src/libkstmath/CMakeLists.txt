@@ -3,22 +3,26 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+
+include(GenerateExportHeader)
+
 add_library(Kst6Math SHARED)
 
-ecm_generate_export_header(Kst6Math
+generate_export_header(Kst6Math
     BASE_NAME KSTMATH
-    VERSION ${PROJECT_VERSION}
-    USE_VERSION_HEADER kst_version.h
 )
 
 target_include_directories(Kst6Math
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KstMath6}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/KstMath6}>"
 )
 
 target_sources(Kst6Math PRIVATE
+    ${MOC_SOURCES}
     basicplugin.h
     basicpluginfactory.h
     builtinobjects.h
@@ -110,14 +114,18 @@ target_link_libraries(Kst6Math PUBLIC
     Qt6::Network
     Qt6::PrintSupport
     Qt6::Svg
-    KF6::I18n
     Kst6Core
 )
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kstmath_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/Kst6Math
-    COMPONENT Devel
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Kst6Math
 )
 
-install(TARGETS Kst6Math EXPORT KstTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS Kst6Math
+    EXPORT KstTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
