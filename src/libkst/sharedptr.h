@@ -156,7 +156,8 @@ public:
 
   bool operator== ( const SharedPtr<T>& p ) const { isPtrValid(); return ( ptr == p.ptr ); }
   bool operator!= ( const SharedPtr<T>& p ) const { isPtrValid(); return ( ptr != p.ptr ); }
-  bool operator== ( const T* p ) const { isPtrValid(); return ( ptr == p ); }
+  // bool operator== ( const T* p ) const { isPtrValid(); return ( ptr == p ); }
+  bool operator== ( T* p ) const { isPtrValid(); return ( ptr == p ); }
   bool operator!= ( const T* p ) const { isPtrValid(); return ( ptr != p ); }
   bool operator!() const { isPtrValid(); return ( ptr == 0 ); }
   operator T*() const { isPtrValid(); return ptr; }

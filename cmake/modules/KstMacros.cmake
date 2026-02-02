@@ -1,6 +1,6 @@
 # ***************************************************************************
 # *                                                                         *
-# *   Copyright : (C) 2010 The University of Toronto                        *
+# *   Copyright : (C) 2026 The University of Toronto                        *
 # *   email     : netterfield@astro.utoronto.ca                             *
 # *                                                                         *
 # *   Copyright : (C) 2010 Peter Kümmel                                     *
@@ -153,29 +153,6 @@ macro(kst_init_plugin dir)
 	set(kst_plugin_prefix ${ARGN})
 endmacro()
 
-
-# macro(kst_add_plugin_internal folder name libtype postfix)
-
-# 	kst_init(${kst_binary_name} ${_name})
-# 	kst_files_find(${kst_plugin_dir}/${folder}/${name})
-# 	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
-# 	add_dependencies(${kst_binary_name} ${kst_name})
-# 	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-# 	if(kst_verbose)
-# 		message(STATUS "Building plugin ${kst_name}")
-# 	endif()
-# endmacro()
-
-# macro(kst_add_plugin folder name)
-# 	kst_add_plugin_internal(${folder} ${name} MODULE "")
-#     kst_link(${libcore} ${libmath} ${libwidgets})
-# 	if(NOT APPLE)
-#     # install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-#     install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
-#     #message(STATUS "plugin: ${kst_name} KDE_INSTALL_TARGETS_DEFAULT_ARGS: ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}")
-# 	endif()
-# endmacro()
-
 function(kst_add_plugin folder name)
     cmake_parse_arguments(ARG "" "" "LINK_LIBRARIES" ${ARGN})
 
@@ -192,9 +169,6 @@ function(kst_add_plugin folder name)
     file(GLOB _headers     ${_folder}/*.h)
     file(GLOB _ui_files    ${_folder}/*.ui)
 
-	# message("Sources: ${_sources} ${_sources_cpp} ${_headers} ${_ui_files}")
-
-    # Replace kcoreaddons_add_plugin with standard CMake
     add_library(${_name} MODULE ${_sources} ${_sources_cpp} ${_headers})
     
     set_target_properties(${_name} PROPERTIES AUTOMOC ON)

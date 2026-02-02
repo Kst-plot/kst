@@ -31,31 +31,23 @@ set(kst_binary_name kst)
 
 set(kst_install_plugins "${CMAKE_INSTALL_LIBDIR}/kst" CACHE PATH "Kst plugin installation directory")
 
-# Modern CMake options replacing legacy macros
-option(KST_BUILD_3RDPARTY "Build plugins depending on 3rd party libraries" ON)
-option(KST_BUILD_PYTHON "Install Python support" OFF)
-set(KST_PYTHON_PREFIX "" CACHE PATH "Path for installing python bindings")
-
 # Add more options as needed, or revisit legacy options if required
 
 message(STATUS)
 
 
 
-# Find 3rd party libraries if enabled
-if(KST_BUILD_3RDPARTY)
-    message(STATUS "3rd party libs for plugins--------------------")
-    find_package(Getdata)
-    find_package(GSL)
-    find_package(Netcdf)
-    find_package(Matio)
-    find_package(CFITSIO)
-    find_package(TIFF)
-    find_package(HDF5)
-    message(STATUS "----------------------------------------------")
-else()
-    message(STATUS "Building plugins depending on 3rd party libraries suppressed")
-endif()
+# Find 3rd party libraries for plugins
+message(STATUS "3rd party libs for plugins--------------------")
+find_package(Getdata)
+find_package(GSL)
+find_package(Netcdf)
+find_package(Matio)
+find_package(CFITSIO)
+find_package(TIFF)
+find_package(HDF5)
+message(STATUS "----------------------------------------------")
+
 message(STATUS)
 
 find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS
@@ -87,11 +79,6 @@ if (NOT APPLE)
     add_subdirectory(misc)
 endif()
 
-
-# Add Python support if enabled
-if(KST_BUILD_PYTHON)
-    add_subdirectory(pyKst)
-endif()
 
 #adapted from [trojita.git] / CMakeLists.txt
 if(Qt6LinguistForKst_FOUND)

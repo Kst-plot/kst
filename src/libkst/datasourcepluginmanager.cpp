@@ -160,6 +160,8 @@ static void scanPlugins() {
   foreach (const QString& pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (const QString &fileName, d.entryList(QDir::Files)) {
+        if (!fileName.startsWith(QLatin1String("libdatasource")))
+            continue;
 #ifdef Q_OS_WIN
         if (!fileName.endsWith(QLatin1String(".dll")))
             continue;
