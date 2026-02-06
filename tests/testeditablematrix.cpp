@@ -314,6 +314,4 @@ void TestEditableMatrix::testEditableMatrix() {
   QVERIFY(sm->maxValueNoSpike() <= -1E+300);
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestEditableMatrix)
-#endif

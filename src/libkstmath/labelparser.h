@@ -21,7 +21,7 @@
 #include "string_kst.h"
 #include "kstmath_export.h"
 
-#include <qcolor.h>
+#include <QColor>
 
 typedef quint16 KstLJustifyType;
 typedef quint8  KstLHJustifyType;

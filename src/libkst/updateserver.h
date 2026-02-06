@@ -17,7 +17,7 @@
 #ifndef UPDATESERVER_H
 #define UPDATESERVER_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include <QObject>
 

@@ -21,13 +21,13 @@ namespace Kst {
 
 QDateTime millisecondsToQDateTime(double ms) {
   QDateTime edt;
-  edt.setTime_t(0);
+  edt.setSecsSinceEpoch(0);
   if (ms > 0.0) {
     double milli = fmod(ms, 1000.0);
     ms = (ms - milli) / 1000.0;
     assert(ms < 60*365*24*60*60); // we can't handle big dates yet
     // this will have to change when we do
-    edt.setTime_t(int(ms));
+    edt.setSecsSinceEpoch(int(ms));
     QTime t = edt.time();
     t.setHMS(t.hour(), t.minute(), t.second(), int(milli));
     edt.setTime(t);
@@ -46,7 +46,7 @@ double extDateTimeToMilliseconds(const QDateTime& edt) {
 
   int year = edt.date().year();
   if (year > 1969 && year < 2030) { // fix later
-    rc = 1000.0 * edt.toTime_t() + edt.time().msec();
+    rc = 1000.0 * edt.toSecsSinceEpoch() + edt.time().msec();
   } else {
     // Manually construct rc
     abort();
@@ -68,7 +68,7 @@ QDateTime parsePlanckDate(const QString& dateString) {
 
   QStringList mainSplit = secondSplit[0].split(':');
   QDateTime edt = QDateTime::currentDateTime();
-  int offset = QDateTime::currentDateTime().toUTC().toTime_t() - edt.toTime_t();
+  int offset = QDateTime::currentDateTime().toUTC().toSecsSinceEpoch() - edt.toSecsSinceEpoch();
   QDate d = edt.date();
   QTime t = edt.time();
   int i = 0;

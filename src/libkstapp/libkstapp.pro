@@ -220,7 +220,6 @@ HEADERS += aboutdialog.h \
     legenditemdialog.h \
     legendtab.h \
     lineitem.h \
-    logdialog.cpp\
     logwidget.h \
     mainwindow.h \
     markerstab.h \

@@ -86,7 +86,7 @@ class ConfigBoxcarPlugin : public Kst::DataObjectConfigWidget, public Ui_BoxcarC
 
       bool validTag = true;
 
-      QStringRef av = attrs.value("Stages");
+      QStringView av = attrs.value("Stages");
       if (!av.isNull()) {
         setStagesSpin(QVariant(av.toString()).toInt());
       } else {

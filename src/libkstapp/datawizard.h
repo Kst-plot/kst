@@ -16,7 +16,7 @@
 #include <QWizard>
 #include <QThread>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "ui_datawizardpagedatasource.h"
 #include "ui_datawizardpagevectors.h"

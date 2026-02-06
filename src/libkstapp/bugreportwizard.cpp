@@ -13,11 +13,8 @@
 
 #include "bugreportwizard.h"
 
-#ifdef KST_HAVE_REVISION_H
-#include "kstrevision.h"
-#endif
-
 #include <QUrl>
+#include <QUrlQuery>
 #include <QDesktopServices>
 #include <QDebug>
 
@@ -34,11 +31,7 @@ BugReportWizard::BugReportWizard(QWidget *parent)
   QString win64 = QT_TR_NOOP("Windows 64-Bit");
   QString lin = QT_TR_NOOP("Linux");
 
-  QString version = QString(KSTVERSION)
-#ifdef KST_REVISION
-      +KST_REVISION
-#endif
-      ;
+  QString version = QString(KSTVERSION);
 
   _kstVersion->setText(version);
 

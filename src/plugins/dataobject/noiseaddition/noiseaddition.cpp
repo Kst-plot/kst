@@ -66,7 +66,7 @@ class ConfigNoiseAdditionPlugin : public Kst::DataObjectConfigWidget, public Ui_
 
       bool validTag = true;
 
-//       QStringRef av;
+//       QStringView av;
 //       av = attrs.value("value");
 //       if (!av.isNull()) {
 //         _configValue = QVariant(av.toString()).toBool();

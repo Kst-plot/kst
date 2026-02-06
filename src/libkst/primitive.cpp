@@ -43,7 +43,7 @@ Primitive::~Primitive() {
 }
 
 
-const QString& Primitive::typeString() const {
+QString Primitive::typeString() const {
   return staticTypeString;
 }
 

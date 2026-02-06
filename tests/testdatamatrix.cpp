@@ -64,7 +64,7 @@ void TestDataMatrix::testDataMatrix() {
   QVERIFY(dsp);
   QVERIFY(dsp->isValid());
 
-  m1->change(dsp, "GRAY", 0, 0, -1, -1, false, false, 1, 0, 0, 1, 1);
+  m1->change(dsp, "GRAY", 0, 0, -1, -1, false, false, 1, 0, 0.0, 0.0, 1.0, 1.0);
 
   m1->writeLock();
   m1->internalUpdate();
@@ -90,8 +90,6 @@ void TestDataMatrix::testDataMatrix() {
   QVERIFY(ok);
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestDataMatrix)
-#endif
 
 // vim: ts=2 sw=2 et

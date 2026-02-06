@@ -1,10 +1,7 @@
 # ***************************************************************************
 # *                                                                         *
-# *   Copyright : (C) 2010 The University of Toronto                        *
+# *   Copyright : (C) 2026 C. Barth Netterfield  						    *
 # *   email     : netterfield@astro.utoronto.ca                             *
-# *                                                                         *
-# *   Copyright : (C) 2010 Peter Kümmel                                     *
-# *   email     : syntheticpp@gmx.net                                       *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU General Public License as published by  *
@@ -13,47 +10,49 @@
 # *                                                                         *
 # ***************************************************************************
 
-if(NOT CFITSIO_INCLUDEDIR)
+# Modern FindCFITSIO.cmake
+# Usage: find_package(CFITSIO)
+# Sets: CFITSIO_FOUND, CFITSIO_INCLUDE_DIR, CFITSIO_LIBRARIES
 
-if(NOT kst_cross)
-	include(FindPkgConfig)
-  pkg_check_modules(cfitsio QUIET cfitsio)
+include(FindPackageHandleStandardArgs)
+
+# Try pkg-config first
+find_package(PkgConfig QUIET)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(CFITSIO_PKG QUIET cfitsio)
 endif()
 
-if(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
-	set(CFITSIO_LIBRARY -L${CFITSIO_LIBRARY_DIRS} ${CFITSIO_LIBRARIES})
-else()
-	set(CFITSIO_INCLUDEDIR CFITSIO_INCLUDEDIR-NOTFOUND CACHE STRING "" FORCE)
-	FIND_PATH(CFITSIO_INCLUDEDIR fitsio.h
-		HINTS
-		ENV CFITSIO_DIR
-		PATH_SUFFIXES include include/cfitsio include/libcfitsio0
-		PATHS ${kst_3rdparty_dir}
-		)
-	FIND_LIBRARY(CFITSIO_LIBRARIES cfitsio 
-		HINTS
-		ENV CFITSIO_DIR
-		PATH_SUFFIXES lib
-		PATHS ${kst_3rdparty_dir}
-		)
+# Find headers
+find_path(CFITSIO_INCLUDE_DIR
+    NAMES fitsio.h
+    HINTS ${CFITSIO_PKG_INCLUDE_DIRS}
+    PATHS ENV CFITSIO_DIR
+    PATH_SUFFIXES include
+)
+
+# Find libraries
+find_library(CFITSIO_LIBRARY
+    NAMES cfitsio
+    HINTS ${CFITSIO_PKG_LIBRARY_DIRS}
+    PATHS ENV CFITSIO_DIR
+    PATH_SUFFIXES lib
+)
+
+set(CFITSIO_LIBRARIES)
+if(CFITSIO_LIBRARY)
+    list(APPEND CFITSIO_LIBRARIES ${CFITSIO_LIBRARY})
 endif()
+
+# Handle standard args and set _FOUND variable
+find_package_handle_standard_args(CFITSIO
+    REQUIRED_VARS CFITSIO_INCLUDE_DIR CFITSIO_LIBRARIES
+    HANDLE_COMPONENTS
+)
+
+if(CFITSIO_FOUND)
+    add_library(CFITSIO::CFITSIO UNKNOWN IMPORTED)
+    set_target_properties(CFITSIO::CFITSIO PROPERTIES
+        IMPORTED_LOCATION "${CFITSIO_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${CFITSIO_INCLUDE_DIR}"
+    )
 endif()
-
-#message(STATUS "CFITSIO: ${CFITSIO_INCLUDEDIR}")
-#message(STATUS "CFITSIO: ${CFITSIO_LIBRARIES}")
-IF(CFITSIO_INCLUDEDIR AND CFITSIO_LIBRARIES)
-	SET(CFITSIO_INCLUDE_DIR ${CFITSIO_INCLUDEDIR} ${CFITSIO_INCLUDEDIR}/..)
-	if (UNIX)
-		SET(CFITSIO_LIBRARIES ${CFITSIO_LIBRARIES} m)
-	endif()
-	SET(CFITSIO 1)
-	SET(cfitsio 1)
-	message(STATUS "Found CFITSIO:")
-	message(STATUS "     includes : ${CFITSIO_INCLUDE_DIR}")
-	message(STATUS "     libraries: ${CFITSIO_LIBRARIES}")
-ELSE()
-	MESSAGE(STATUS "Not found: CFITSIO, set CFITSIO_DIR")
-ENDIF()
-message(STATUS "")
-
-

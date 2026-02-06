@@ -1,6 +1,6 @@
 To manually install pyKst:
 i) install requirements
-     -the latest kst2
+     -the latest kst
      -python2 (not python3), because of the following requirement
      -numpy >= 1.6 (1.6.1 is known to work) 
      -scipy >= 0.9 (0.9.0 is known to work)
@@ -15,7 +15,7 @@ iii) To test it, go into the demo directory, and try one.
 ======
 Example for ubuntu:
 
-0) make sure you have the absolute latest kst2 from the kst-plot ppa.  See kst.kde.org
+0) make sure you have the absolute latest kst from the kst-plot ppa.  See kst.kde.org
 
 1) install dependencies for numpy and scipy
 sudo apt-get install python-numpy python-scipy python python-dev python-qt4 libatlas-base-dev gcc gfortran g++

@@ -47,7 +47,7 @@ TabBar::TabBar()
 void TabBar::dragEnterEvent(QDragEnterEvent* event)
 {
   if (MimeDataViewItem::downcast(event->mimeData())) {
-    setCurrentIndex(tabAt(event->pos()));
+    setCurrentIndex(tabAt(event->position().toPoint()));
     event->acceptProposedAction();
   }
 }
@@ -55,7 +55,7 @@ void TabBar::dragEnterEvent(QDragEnterEvent* event)
 void TabBar::dragMoveEvent(QDragMoveEvent* event)
 {  
   if (MimeDataViewItem::downcast(event->mimeData())) {
-    setCurrentIndex(tabAt(event->pos()));
+    setCurrentIndex(tabAt(event->position().toPoint()));
     event->acceptProposedAction();
    }
 }

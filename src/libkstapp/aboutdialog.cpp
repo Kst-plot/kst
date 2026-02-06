@@ -13,14 +13,10 @@
 #include <config.h>
 #include "aboutdialog.h"
 
-#ifdef KST_HAVE_REVISION_H
-#include "kstrevision.h"
-#include "authors.h"
-#endif
-
 #include <QDesktopServices>
 #include <QDebug>
 #include <QTextEdit>
+#include <QRegularExpression>
 
 #include <QStringList>
 
@@ -30,15 +26,6 @@ AboutDialog::AboutDialog(QWidget *parent)
   : QDialog(parent) {
    setupUi(this);
 
-#ifdef KST_HAVE_REVISION_H
-   QStringList utf8Authors = QString::fromUtf8(kst_authors).trimmed().split(';');
-   QStringList authors;
-   foreach(const QString& a, utf8Authors) {
-     if (!a.startsWith('#')) {
-      authors << a;
-     }
-   }
-#else
 // qmake support
   QStringList authors = QStringList()
     << "Barth Netterfield"
@@ -54,18 +41,13 @@ AboutDialog::AboutDialog(QWidget *parent)
     << "Andrew Walker"
     << "Peter Kümmel"
     << "Zongyi Zang";
-#endif
 
   //authors.sort();
   authors.replaceInStrings("<", "&lt;");
   authors.replaceInStrings(">", "&gt;");
-  authors.replaceInStrings(QRegExp("^(.*)"), "<li>\\1</li>");
+  authors.replaceInStrings(QRegularExpression("^(.*)"), "<li>\\1</li>");
 
-  QString version = QString(KSTVERSION)
-#ifdef KST_REVISION
-      +KST_REVISION
-#endif
-      ;
+  QString version = QString(KSTVERSION);
 
   QStringList msg = QStringList()
   << tr("<qt><h2>Kst %1").arg(version)

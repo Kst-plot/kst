@@ -16,6 +16,8 @@
 #include "asciisource.h"
 #include "dataplugin.h"
 
+#include <QPlainTextEdit>
+
 #include "ui_asciiconfig.h"
 
 class QTextStream;

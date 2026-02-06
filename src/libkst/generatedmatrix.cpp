@@ -32,7 +32,7 @@ GeneratedMatrix::GeneratedMatrix(ObjectStore *store) : Matrix(store) {
 }
 
 
-const QString& GeneratedMatrix::typeString() const {
+QString GeneratedMatrix::typeString() const {
   return staticTypeString;
 }
 

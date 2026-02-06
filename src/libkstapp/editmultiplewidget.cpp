@@ -12,7 +12,6 @@
 
 #include "editmultiplewidget.h"
 
-#include <QRegExp>
 #include <QDebug>
 
 namespace Kst {
@@ -42,11 +41,11 @@ void EditMultipleWidget::applyFilter(const QString& filter) {
   _objectList->clearSelection();
 
   // case insensitive and wildcards
-  QRegExp re('*' + filter + '*', Qt::CaseInsensitive, QRegExp::Wildcard);
+  QRegularExpression re(QRegularExpression::wildcardToRegularExpression('*' + filter + '*'), QRegularExpression::CaseInsensitiveOption);
 
   uint c = _objectList->count();
   for (uint i = 0; i < c; ++i) {
-    if (re.exactMatch(_objectList->item(i)->text())) {
+    if (re.match(_objectList->item(i)->text()).hasMatch()) {
       _objectList->item(i)->setSelected(true);
     }
   }

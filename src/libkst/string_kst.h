@@ -32,7 +32,7 @@ class KSTCORE_EXPORT String : public Primitive
   Q_PROPERTY(bool orphan READ orphan WRITE setOrphan)
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

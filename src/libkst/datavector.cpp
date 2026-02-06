@@ -85,7 +85,7 @@ DataVector::DataVector(ObjectStore *store)
 }
 
 
-const QString& DataVector::typeString() const {
+QString DataVector::typeString() const {
   return staticTypeString;
 }
 

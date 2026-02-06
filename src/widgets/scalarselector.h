@@ -14,7 +14,6 @@
 #define SCALARSELECTOR_H
 
 #include <QWidget>
-#include "ui_scalarselector.h"
 
 #include "scalarlistselector.h"
 
@@ -22,11 +21,16 @@
 
 #include "kstwidgets_export.h"
 
+namespace Ui {
+  class ScalarSelector;
+}
+
 namespace Kst {
 
 class ObjectStore;
 
-class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelector {
+class KSTWIDGETS_EXPORT ScalarSelector : public QWidget
+{
   Q_OBJECT
   public:
     explicit ScalarSelector(QWidget *parent = 0, ObjectStore *store = 0);
@@ -73,6 +77,7 @@ class KSTWIDGETS_EXPORT ScalarSelector : public QWidget, public Ui::ScalarSelect
     ScalarListSelector* _scalarListSelector;
     ObjectStore *_store;
     bool _defaultsSet;
+    Ui::ScalarSelector *ui;
 
     enum ControlField {Ratio, Cutoff, SampleRate, None};
 

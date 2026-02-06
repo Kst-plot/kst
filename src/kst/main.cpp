@@ -35,15 +35,15 @@ int main(int argc, char *argv[]) {
 #ifdef QT_NO_WARNING_OUTPUT
   qInstallMessageHandler(nullMessageOutput);
 #endif
-
+  bool translator_loaded = false;
 
   srand(time(NULL));
   Kst::Application app(argc, argv);
 
   //--------
   QTranslator qtTranslator;
-  qtTranslator.load(QLatin1String("qt_") + QLocale::system().name(),
-                    QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+  translator_loaded = qtTranslator.load(QLatin1String("qt_") + QLocale::system().name(),
+                    QLibraryInfo::path(QLibraryInfo::TranslationsPath));
   app.installTranslator(&qtTranslator);
 
   QString localeName(QLatin1String("kst_common_") + QLocale::system().name());
@@ -63,10 +63,6 @@ int main(int argc, char *argv[]) {
   // qDebug() << "Translation file " + localeName + " loaded:" << ok;
   // qDebug() << "Dir = " + app.applicationDirPath() + "/../share/kst" + localeSuffix;
   app.installTranslator(&kstDirectoryTranslator);
-
-  // use high res pixmaps if pixel-doubling is in effect.
-  // But there is are still odd bugs, so don;t get too excited.
-  app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 
 
   app.initMainWindow();

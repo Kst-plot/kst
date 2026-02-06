@@ -121,7 +121,7 @@ void Vector::deleteDependents() {
 }
 
 
-const QString& Vector::typeString() const {
+QString Vector::typeString() const {
   return staticTypeString;
 }
 

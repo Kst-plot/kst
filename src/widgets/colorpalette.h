@@ -10,17 +10,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef COLORPALETTE_H
-#define COLORPALETTE_H
+#pragma once
 
 #include <QWidget>
-#include "ui_colorpalette.h"
 
 #include "kstwidgets_export.h"
 
+namespace Ui {
+class ColorPalette;
+}
+
 namespace Kst {
 
-class KSTWIDGETS_EXPORT ColorPalette : public QWidget, public Ui::ColorPalette 
+class KSTWIDGETS_EXPORT ColorPalette : public QWidget
 {
     Q_OBJECT
 
@@ -42,8 +44,8 @@ class KSTWIDGETS_EXPORT ColorPalette : public QWidget, public Ui::ColorPalette
   Q_SIGNALS:
     void selectionChanged();
 
+private:
+    Ui::ColorPalette *ui;
 };
 
 }
-#endif
-// vim: ts=2 sw=2 et

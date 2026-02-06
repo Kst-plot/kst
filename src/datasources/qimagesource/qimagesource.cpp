@@ -328,7 +328,7 @@ QImageSource::~QImageSource() {
 }
 
 
-const QString& QImageSource::typeString() const {
+QString QImageSource::typeString() const {
   return qimageTypeString;
 }
 

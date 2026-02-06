@@ -19,7 +19,7 @@
 
 #include "vector.h"
 //
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 
@@ -30,7 +30,7 @@ class KSTCORE_EXPORT GeneratedVector : public Vector {
   Q_OBJECT
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

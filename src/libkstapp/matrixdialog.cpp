@@ -828,21 +828,19 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   const double stepY = _matrixTab->stepY();
   const int frame = _matrixTab->frame();
 
-  // qDebug() << "Creating new data matrix ===>"
-  //          << "\n\tfileName:" << dataSource->fileName()
-  //          << "\n\tfileType:" << dataSource->fileType()
-  //          << "\n\tfield:" << field
-  //          << "\n\tminX:" << minX
-  //          << "\n\tminY:" << minY
-  //          // << "\n\ttag:" << tag.tag()
-           // << "\n\txStart:" << xStart
-           // << "\n\tyStart:" << yStart
-           // << "\n\txNumSteps:" << xNumSteps
-           // << "\n\tyNumSteps:" << yNumSteps
-           // << "\n\tskip:" << skip
-           // << "\n\tdoSkip:" << doSkip
-           // << "\n\tdoAve:" << doAve
-           // << endl;
+//   qDebug() << "Creating new data matrix ===>"
+//            << "\n\tfileName:" << dataSource->fileName()
+//            << "\n\tfileType:" << dataSource->fileType()
+//            << "\n\tfield:" << field
+//            << "\n\ttag:" << tag.tag()
+//            << "\n\txStart:" << xStart
+//            << "\n\tyStart:" << yStart
+//            << "\n\txNumSteps:" << xNumSteps
+//            << "\n\tyNumSteps:" << yNumSteps
+//            << "\n\tskip:" << skip
+//            << "\n\tdoSkip:" << doSkip
+//            << "\n\tdoAve:" << doAve
+//            << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
 
@@ -894,7 +892,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
 //             << "\n\tgradZMin:" << gradZMin
 //             << "\n\tgradZMax:" << gradZMax
 //             << "\n\txDirection:" << xDirection
-//             << endl;
+//             << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
   GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>();

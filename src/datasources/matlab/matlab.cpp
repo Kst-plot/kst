@@ -469,7 +469,7 @@ int MatlabSource::readString(QString *stringValue, const QString& stringName)
 
 int MatlabSource::readField(double *v, const QString& field, int s, int n) {
 
-  KST_DBG qDebug() << "Entering MatlabSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << endl;
+  KST_DBG qDebug() << "Entering MatlabSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
 
   /* For INDEX field */
   if (field.toLower() == "index") {
@@ -487,7 +487,7 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   matio_data_type dataType;
   matvar_t *matvar = Mat_VarRead(_matfile, field.toLatin1().data());
   if (!matvar) {
-    KST_DBG qDebug() << "MatlabSource: queried field " << field << " which can't be read" << endl;
+    KST_DBG qDebug() << "MatlabSource: queried field " << field << " which can't be read" << Qt::endl;
     return -1;
   }
 
@@ -588,12 +588,12 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
     break;
 
   default:
-      KST_DBG qDebug() << "MatlabSource, field " << field << ": wrong datatype for kst, no values read" << endl;
+      KST_DBG qDebug() << "MatlabSource, field " << field << ": wrong datatype for kst, no values read" << Qt::endl;
       return -1;
       break;
   }
 
-  KST_DBG qDebug() << "Finished reading " << field << endl;
+  KST_DBG qDebug() << "Finished reading " << field << Qt::endl;
   Mat_VarFree(matvar);
   return n;
 }
@@ -604,7 +604,7 @@ int MatlabSource::readMatrix(double *v, const QString& field)
   /* For a variable from the Matlab file */
   matvar_t *matvar = Mat_VarRead(_matfile, field.toLatin1().data());
   if (!matvar) {
-    KST_DBG qDebug() << "MatlabSource: queried matrix " << field << " which can't be read" << endl;
+    KST_DBG qDebug() << "MatlabSource: queried matrix " << field << " which can't be read" << Qt::endl;
     return -1;
   }
 
@@ -706,7 +706,7 @@ int MatlabSource::readMatrix(double *v, const QString& field)
     break;
 
   default:
-      KST_DBG qDebug() << "MatlabSource, field " << field << ": wrong datatype for kst, no values read" << endl;
+      KST_DBG qDebug() << "MatlabSource, field " << field << ": wrong datatype for kst, no values read" << Qt::endl;
       return -1;
       break;
   }

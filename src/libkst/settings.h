@@ -17,7 +17,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include <QSettings>
 

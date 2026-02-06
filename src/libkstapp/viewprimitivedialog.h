@@ -17,7 +17,7 @@
 
 #include "ui_viewprimitivedialog.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

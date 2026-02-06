@@ -13,7 +13,7 @@
 #ifndef BUILTINPRIMITIVES_H
 #define BUILTINPRIMITIVES_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
   class ObjectStore;

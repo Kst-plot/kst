@@ -21,9 +21,10 @@
 #define DATAPRIMITIVE_H
 
 #include "sharedptr.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include <QString>
+#include <QVariant>
 
 class QXmlStreamWriter;
 class QXmlStreamAttributes;

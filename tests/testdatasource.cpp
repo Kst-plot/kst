@@ -58,14 +58,14 @@ void TestDataSource::testAscii() {
     QTemporaryFile tf;
     tf.open();
     QTextStream ts(&tf);
-    ts << ";" << endl;
-    ts << " ;" << endl;
-    ts << "#;" << endl;
-    ts << "c comment comment" << endl;
-    ts << "\t!\t!\t!\t!" << endl;
-    ts << "2.0" << endl;
-    ts << "1" << endl;
-    ts << ".2" << endl;
+    ts << ";" << Qt::endl;
+    ts << " ;" << Qt::endl;
+    ts << "#;" << Qt::endl;
+    ts << "c comment comment" << Qt::endl;
+    ts << "\t!\t!\t!\t!" << Qt::endl;
+    ts << "2.0" << Qt::endl;
+    ts << "1" << Qt::endl;
+    ts << ".2" << Qt::endl;
     ts.flush();
 
     Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
@@ -121,10 +121,10 @@ void TestDataSource::testAscii() {
     QTemporaryFile tf;
     tf.open();
     QTextStream ts(&tf);
-    ts << "2e-1 \t .1415" << endl;
-    ts << "nan -.4e-2" << endl;
-    ts << "inf\t1" << endl;
-    ts << "0.000000000000000000000000000000000000000000000000 0" << endl;
+    ts << "2e-1 \t .1415" << Qt::endl;
+    ts << "nan -.4e-2" << Qt::endl;
+    ts << "inf\t1" << Qt::endl;
+    ts << "0.000000000000000000000000000000000000000000000000 0" << Qt::endl;
 
     Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
@@ -186,7 +186,7 @@ void TestDataSource::testAscii() {
     QTemporaryFile tf;
     tf.open();
     QTextStream ts(&tf);
-    ts << "2 4" << endl;
+    ts << "2 4" << Qt::endl;
 
     Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
@@ -240,7 +240,7 @@ void TestDataSource::testAscii() {
     QTemporaryFile tf;
     tf.open();
     QTextStream ts(&tf);
-    ts << ";" << endl;
+    ts << ";" << Qt::endl;
 
     Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
 
@@ -255,7 +255,7 @@ void TestDataSource::testAscii() {
     tf.open();
     QTextStream ts(&tf);
     for (int i = 0; i < 39000; ++i) {
-      ts << i << " " <<  i + 100 << " " << i + 1000 << endl;
+      ts << i << " " <<  i + 100 << " " << i + 1000 << Qt::endl;
     }
 
     Kst::DataSourcePtr dsp = Kst::DataSourcePluginManager::loadSource(&_store, tf.fileName());
@@ -718,8 +718,6 @@ void TestDataSource::testFITSImage() {
   }
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestDataSource)
-#endif
 
 // vim: ts=2 sw=2 et

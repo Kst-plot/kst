@@ -27,7 +27,7 @@
 #include "scalar.h"
 #include "string_kst.h"
 #include "labelinfo.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 class QXmlStreamWriter;
 
@@ -56,7 +56,7 @@ class KSTCORE_EXPORT Vector : public Primitive
     Q_OBJECT
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
@@ -90,6 +90,7 @@ class KSTCORE_EXPORT Vector : public Primitive
     /** these might be modified for output */
     /** eg - by masking */
     double const *value() const { return _v_out;}
+    double *value() { return _v_out;}
     double const *noNanValue();
 
     /** raw pointer for writing */

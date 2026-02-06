@@ -54,7 +54,7 @@ DataMatrix::DataMatrix(ObjectStore *store)
 }
 
 
-const QString& DataMatrix::typeString() const {
+QString DataMatrix::typeString() const {
   return staticTypeString;
 }
 

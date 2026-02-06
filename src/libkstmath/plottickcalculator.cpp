@@ -75,7 +75,7 @@ void computeMajorTickSpacing(double *major_spacing, int *minor_count, MajorTickM
   int *minorlist;
   double n;
 
-  if (R <= majorTickCount) {
+  if (R <= static_cast<double>(majorTickCount)) {
     computeMajorTickSpacing(major_spacing, minor_count, majorTickCount, R);
     return;
   }

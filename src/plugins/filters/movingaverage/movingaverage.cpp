@@ -78,7 +78,7 @@ class ConfigMovingAveragePlugin : public Kst::DataObjectConfigWidget, public Ui_
 
       bool validTag = true;
 
-      QStringRef av = attrs.value("Weighted");
+      QStringView av = attrs.value("Weighted");
       if (!av.isNull()) {
         setWeighted(QVariant(av.toString()).toBool());
       } else {

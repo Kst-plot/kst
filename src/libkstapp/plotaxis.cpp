@@ -1044,7 +1044,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
     if (uNextTick > uMax)
       break;    
     double nextTick = uNextTick * drdu + rOffset;
-    if (lastTick == uNextTick) // prevent endless loop
+    if (lastTick == uNextTick) // prevent Qt::endless loop
       break;
     lastTick = nextTick;
     ticks << nextTick;
@@ -1268,7 +1268,7 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av = attrs.value("visible");
+  QStringView av = attrs.value("visible");
   if (!av.isNull()) {
     setAxisVisible(QVariant(av.toString()).toBool());
   }

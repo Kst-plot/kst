@@ -1,9 +1,9 @@
 
 
-kst_init_plugin(src/plugins)
+kst_init_plugin(src/plugins "")
 
 
-
+message(STATUS "Building dataobject plugins-------------------")
 kst_add_plugin(dataobject bin)
 kst_add_plugin(dataobject chop)
 kst_add_plugin(dataobject linefit)
@@ -33,8 +33,7 @@ kst_add_plugin(filters exponential)
 if(TARGET GSL::gsl)
 	include_directories(${GSL_INCLUDE_DIR})
 	macro(kst_add_gsl_plugin dir name)
-		kst_add_plugin(${dir} ${name})
-		kst_link(GSL::gsl)
+		kst_add_plugin(${dir} ${name} LINK_LIBRARIES GSL::gsl)
 	endmacro()
 	
 	kst_add_gsl_plugin(dataobject/convolution    convolve)

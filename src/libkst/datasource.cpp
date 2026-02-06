@@ -30,6 +30,7 @@
 #include <QUrl>
 #include <QXmlStreamWriter>
 #include <QTimer>
+#include <QRegularExpression>
 #include <QFileSystemWatcher>
 
 
@@ -170,7 +171,7 @@ QString DataSource::cleanPath(QString abs_path) {
 
   // qdir::cleanpath doesn't seem to remove leading /.. from paths (!)
   while (name.startsWith("/..")) {
-    name.remove(QRegExp("^/.."));
+    name.remove(QRegularExpression("^/.."));
   }
 
   return name;
@@ -284,7 +285,7 @@ void DataSource::deleteDependents() {
 }
 
 
-const QString& DataSource::typeString() const {
+QString DataSource::typeString() const {
   return staticTypeString;
 }
 

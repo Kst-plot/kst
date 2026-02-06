@@ -24,6 +24,7 @@
 #include <QTime>
 #include <QDateTime>
 #include <QDebug>
+#include <QTimeZone>
 
 #define LOGHUGE 39
 
@@ -223,7 +224,8 @@ double LexicalCast::fromTime(const char* p) const
     if (!t.isValid()) {
       return nanValue();
     }
-    t.setTimeSpec(Qt::UTC);
+    t.setTimeZone(QTimeZone::UTC);            
+
     sec = t.toMSecsSinceEpoch() / 1000.0;
   } else {
     const QTime t = QTime::fromString(time, _timeFormat);

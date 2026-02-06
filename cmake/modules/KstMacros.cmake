@@ -1,6 +1,6 @@
 # ***************************************************************************
 # *                                                                         *
-# *   Copyright : (C) 2010 The University of Toronto                        *
+# *   Copyright : (C) 2026 The University of Toronto                        *
 # *   email     : netterfield@astro.utoronto.ca                             *
 # *                                                                         *
 # *   Copyright : (C) 2010 Peter Kümmel                                     *
@@ -33,11 +33,6 @@ macro(kst_init prefix name_base)
 endmacro()
 
 
-macro(kst_revision_project_name name)
-	set(kst_revision_project ${name})
-endmacro()
-
-
 macro(kst_revision_add_dependency)
 	if(kst_revision_project)
 		add_dependencies(${kst_name} ${kst_revision_project})
@@ -56,10 +51,10 @@ macro(kst_files_find folder)
 	kst_files_remove(_sources_cpp ${kst_${kst_name}_ignore})
 	kst_files_remove(_headers     ${kst_${kst_name}_ignore})
 	set(_mocs)
-	qt5_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
-	qt5_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
+	qt_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
+	qt_wrap_cpp(_mocs ${_headers} OPTIONS "-nw")
 	set(_uis)
-	qt5_wrap_ui(_uis ${_ui_files})
+	qt_wrap_ui(_uis ${_ui_files})
 	set(kst_${kst_name}_sources_not_generated ${_sources} ${_sources_cpp})
 	set(kst_${kst_name}_sources ${_sources} ${_sources_cpp} ${_mocs} ${_uis})
 	set(kst_${kst_name}_headers ${_headers})
@@ -92,28 +87,6 @@ macro(kst_add_executable)
 endmacro()
 
 
-macro(kst_add_test _source_file)
-	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${kst_build_dir}/bin)
-	get_filename_component(_file_name ${_source_file} NAME)
-	if(CMAKE_GENERATOR MATCHES Ninja) 
-	set(_moced ${CMAKE_CURRENT_BINARY_DIR}/moc_${_file_name}) # ninja generator bug
-	else()
-	set(_moced moc_${_file_name})
-	endif()
-	qt4_generate_moc(${_source_file} ${_moced})
-	set_source_files_properties(${_source_file} PROPERTIES OBJECT_DEPENDS ${_moced}) # moc on source file changes
-	add_executable(${kst_name} ${_source_file})
-	set_target_properties(${kst_name} PROPERTIES DEPEND ${_moced})
-	target_link_libraries(${kst_name} ${QT_QTTEST_LIBRARY})
-	set_property(TARGET ${kst_name} PROPERTY DEBUG_POSTFIX ${kst_debug_postfix})
-	kst_link(${libcore} ${libmath} ${libapp} ${libwidgets} ${QT_QTTEST_LIBRARY})
-	if(kst_debug_postfix)
-		set_target_properties(${kst_name} PROPERTIES DEBUG_POSTFIX ${kst_debug_postfix})
-	endif()
-	add_test(NAME ${kst_name} COMMAND ${kst_name})
-endmacro()
-
-
 macro(kst_install_executable)
     install(TARGETS ${kst_name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
@@ -121,7 +94,7 @@ endmacro()
 
 macro(kst_add_library type)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${kst_build_dir}/bin)
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_libdir})
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/lib/kst)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	string(TOUPPER BUILD_kst${kst_name_base} _build_macro)
 	add_definitions(-D${_build_macro})
@@ -170,8 +143,8 @@ macro(kst_init_plugin dir)
 	if(APPLE AND NOT CMAKE_GENERATOR STREQUAL Xcode)
 		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/bin/${kst_binary_name}.app/Contents/plugins)
 	else()
-		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_plugins})
-		set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${kst_build_dir}/${kst_install_plugins})
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/kst)
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/kst)
 	endif()
 	include_directories(${CMAKE_BINARY_DIR}/${dir})
 	include_directories(${CMAKE_BINARY_DIR}/cmake/${dir})
@@ -180,36 +153,45 @@ macro(kst_init_plugin dir)
 	set(kst_plugin_prefix ${ARGN})
 endmacro()
 
+function(kst_add_plugin folder name)
+    cmake_parse_arguments(ARG "" "" "LINK_LIBRARIES" ${ARGN})
 
-macro(kst_add_plugin_internal folder name libtype postfix)
-	set(_name _${kst_plugin_prefix}_${folder}_${name})
-	string(REPLACE . _  _name ${_name})
-	string(REPLACE / _  _name ${_name})
-	string(REPLACE __ _ _name ${_name})
-	string(REPLACE __ _ _name ${_name})
-	kst_init(${kst_binary_name} ${_name})
-	kst_files_find(${kst_plugin_dir}/${folder}/${name})
-	add_library(${kst_name}${postfix} ${libtype} ${kst_${kst_name}_sources} ${kst_${kst_name}_headers})
-	add_dependencies(${kst_binary_name} ${kst_name})
-	kst_flat_source_group(${kst_${kst_name}_headers} ${kst_${kst_name}_sources_not_generated})
-	if(kst_verbose)
-		message(STATUS "Building plugin ${kst_name}")
-	endif()
-endmacro()
+	message("Building plugin ${folder}/${name}")
+    set(_name ${kst_plugin_prefix}${folder}_${name})
+    string(REPLACE . _  _name ${_name})
+    string(REPLACE / _  _name ${_name})
+    string(REPLACE __ _ _name ${_name})
+    string(REPLACE __ _ _name ${_name})
 
-macro(kst_add_plugin folder name)
-	kst_add_plugin_internal(${folder} ${name} MODULE "")
-    kst_link(${libcore} ${libmath} ${libwidgets})
-	if(NOT APPLE)
-    # install(TARGETS ${kst_name} LIBRARY ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-    install(TARGETS ${kst_name} LIBRARY DESTINATION ${kst_install_plugins})
-    #message(STATUS "plugin: ${kst_name} KDE_INSTALL_TARGETS_DEFAULT_ARGS: ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}")
-	endif()
-endmacro()
+    set(_folder ${folder}/${name})
+    file(GLOB _sources     ${_folder}/*.c)
+    file(GLOB _sources_cpp ${_folder}/*.cpp)
+    file(GLOB _headers     ${_folder}/*.h)
+    file(GLOB _ui_files    ${_folder}/*.ui)
 
-macro(kst_add_plugin_lib folder name)
-	kst_add_plugin_internal(${folder} ${name} STATIC _lib)
-endmacro()
+    add_library(${_name} MODULE ${_sources} ${_sources_cpp} ${_headers})
+    
+    set_target_properties(${_name} PROPERTIES AUTOMOC ON)
+    target_include_directories(${_name} PRIVATE ${CMAKE_SOURCE_DIR}/src/libkst)
+    
+    if(_ui_files)
+        qt6_wrap_ui(UI_SOURCES ${_ui_files})
+        target_sources(${_name} PRIVATE ${UI_SOURCES})
+    endif()
+    
+    target_link_libraries(${_name} PUBLIC
+        Kst6Core
+        Kst6Math
+        Kst6Widgets
+        Qt6::Concurrent
+        ${ARG_LINK_LIBRARIES}
+    )
+    
+    # Install the plugin
+    if(NOT APPLE)
+        install(TARGETS ${_name} LIBRARY DESTINATION ${kst_install_plugins})
+    endif()
+endfunction()
 
 macro(kst_add_dependency name)
 	add_dependencies(${kst_name} ${name})
@@ -232,7 +214,7 @@ endmacro()
 
 macro(kst_link)
 	target_link_libraries(${kst_name} ${ARGV})
-	target_link_libraries(${kst_name} Qt5::Widgets Qt5::Xml Qt5::Network Qt5::PrintSupport Qt5::Svg)
+	target_link_libraries(${kst_name} Qt6::Widgets Qt6::Xml Qt6::Network Qt6::PrintSupport Qt6::Svg)
 endmacro()
 
 
@@ -257,7 +239,7 @@ endmacro()
 
 
 macro(kst_add_resources filepath)
-	qt5_add_resources(_rcc ${kst_dir}/${filepath})
+	qt_add_resources(_rcc ${kst_dir}/${filepath})
 	kst_add_files(${_rcc})
 endmacro()
 

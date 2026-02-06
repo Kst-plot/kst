@@ -14,10 +14,6 @@
 
 #include <config.h>
 
-#ifdef KST_HAVE_REVISION_H
-#include "kstrevision.h"
-#endif
-
 #include "datasource.h"
 #include "logevents.h"
 
@@ -54,20 +50,15 @@ Debug::Debug()
 : QObject() {
   _applyLimit = false;
   _limit = 10000;
-#ifdef KST_REVISION
-  _kstRevision = QString::fromLatin1(KST_REVISION);
-#else
-  _kstRevision = -1;
-#endif
   _hasNewError = false;
 }
 
 
 Debug::~Debug() {
 #ifdef BENCHMARK
-  qDebug() << "DRAW COUNTS ---------------------------------------" << endl;
+  qDebug() << "DRAW COUNTS ---------------------------------------" << Qt::endl;
   for (QMap<QString,int>::ConstIterator i = _drawCounter.begin(); i != _drawCounter.end(); ++i) {
-    qDebug() << i.key() << ": " << i.value() << endl;
+    qDebug() << i.key() << ": " << i.value() << Qt::endl;
   }
 #endif
 }

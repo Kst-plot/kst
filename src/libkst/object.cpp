@@ -44,7 +44,7 @@ void Object::reset() {
   _serial = _serialOfLastChange = Forced;
 }
 
-const QString& Object::typeString() const {
+QString Object::typeString() const {
   return staticTypeString;
 }
 

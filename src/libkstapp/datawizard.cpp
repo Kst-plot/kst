@@ -14,6 +14,7 @@
 
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QRegularExpression>
 #include <psversion.h>
 #include <sysinfo.h>
 #include <QThreadPool>
@@ -329,12 +330,12 @@ void DataWizardPageVectors::filterVectors(const QString& filter) {
     return;
   }
 
-  QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
+  QRegularExpression re = QRegularExpression::fromWildcard(filter, Qt::CaseSensitive);
   QStringList selected;
 
   for (int i = 0; i < _vectors->count(); i++) {
     QListWidgetItem *item = _vectors->item(i);
-    if (re.exactMatch(item->text())) {
+    if (re.match(item->text()).hasMatch()) {
       item = _vectors->takeItem(i);
       selected.append(item->text());
       i--;

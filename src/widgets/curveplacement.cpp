@@ -14,6 +14,8 @@
 
 #include "plotiteminterface.h"
 
+#include <QRegularExpression>
+
 namespace Kst {
 
 CurvePlacement::CurvePlacement(QWidget *parent)
@@ -110,9 +112,9 @@ void CurvePlacement::setLayout(CurvePlacement::Layout layout) {
 
 PlotItemInterface *CurvePlacement::existingPlot() const {
   QString shortName;
-  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-  rx.indexIn(_plotList->currentText());
-  shortName = rx.cap(2);
+  QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  const auto match = rx.match(_plotList->currentText());
+  shortName = match.captured(2);
 
   int xi=-1;
   for(int i=0;i<_plotList->count();i++) {
@@ -136,9 +138,9 @@ void CurvePlacement::setExistingPlots(const QList<PlotItemInterface*> &existingP
 
 void CurvePlacement::updatePlotListCombo() {
   QString shortName;
-  QRegExp rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
-  rx.indexIn(_plotList->currentText());
-  shortName = rx.cap(2);
+  QRegularExpression rx("(\\(|^)([A-Z]\\d+)(\\)$|$)");
+  const auto match = rx.match(_plotList->currentText());
+  shortName = match.captured(2);
 
   int xi=-1;
   for(int i=0;i<_plotList->count();i++) {

@@ -17,7 +17,7 @@
 
 #include "ui_debugdialog.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "objectstore.h"
 
 namespace Kst {

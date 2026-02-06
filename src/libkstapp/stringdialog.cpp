@@ -316,7 +316,7 @@ ObjectPtr StringDialog::createNewGeneratedString(){
 //   qDebug() << "Creating new string  ===>"
 //            << "\n\ttag:" << DataDialog::tagString()
 //            << "\n\tvalue:" << value
-//            << endl;
+//            << Qt::endl;
 
   StringPtr string = _document->objectStore()->createObject<String>();
   string->setValue(value);

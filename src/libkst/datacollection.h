@@ -22,7 +22,7 @@
 #include "string_kst.h"
 #include "vector.h"
 #include "matrix.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 class QFile;
 

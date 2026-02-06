@@ -5,10 +5,7 @@ add_subdirectory(libkstapp)
 add_subdirectory(kst)
 
 add_subdirectory(datasources)
-
-if(kst_dataobjects)
-	add_subdirectory(plugins)
-endif()
+add_subdirectory(plugins)
 
 #add_subdirectory(d2asc)
 #add_subdirectory(d2d)

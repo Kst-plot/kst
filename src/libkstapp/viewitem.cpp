@@ -364,7 +364,7 @@ bool ViewItem::parse(QXmlStreamReader &xml, bool &validChildTag) {
   if (xml.isStartElement()) {
     expectedTag = xml.name().toString();
     QXmlStreamAttributes attrs = xml.attributes();
-    QStringRef av;
+    QStringView av;
     if (xml.name().toString() == "name") {
       knownTag = true;
       av = attrs.value("name");

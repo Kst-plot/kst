@@ -633,8 +633,6 @@ void TestEqParser::testEqParser() {
   QVERIFY(validateParserFailures("2*sin(x)()"));
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestEqParser)
-#endif
 
 // vim: ts=2 sw=2 et

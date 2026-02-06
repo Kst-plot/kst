@@ -44,7 +44,7 @@ class KSTMATH_EXPORT Image : public Relation {
 
   public:
     static const QString staticTypeString;
-    const QString& typeString() const { return staticTypeString; }
+    QString typeString() const { return staticTypeString; }
     static const QString staticTypeTag;
 
     virtual void showNewDialog();

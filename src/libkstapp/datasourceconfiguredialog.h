@@ -15,7 +15,7 @@
 
 #include <QDialog>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "datadialog.h"
 #include "datasource.h"

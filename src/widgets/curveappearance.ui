@@ -326,7 +326,7 @@
   <tabstop>_barFillColor</tabstop>
  </tabstops>
  <includes>
-  <include location="global">kst_export.h</include>
+  <include location="global">kstwidgets_export.h</include>
  </includes>
  <resources/>
  <connections/>

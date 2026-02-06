@@ -33,7 +33,7 @@ GeneratedVector::GeneratedVector(ObjectStore *store)
 }
 
 
-const QString& GeneratedVector::typeString() const {
+QString GeneratedVector::typeString() const {
   return staticTypeString;
 }
 

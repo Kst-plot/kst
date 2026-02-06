@@ -195,7 +195,7 @@ const AsciiSourceConfig& AsciiSourceConfig::readGroup(QSettings& cfg, const QStr
     read(cfg);
     cfg.endGroup();
   }
-  _delimiters = QRegExp::escape(_delimiters).toLatin1();
+  _delimiters = QRegularExpression::escape(_delimiters).toLatin1();
   cfg.endGroup();
   return *this;
 }
