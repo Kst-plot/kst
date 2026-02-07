@@ -1,17 +1,21 @@
 How to update the packages on launchpad for UBUNTU
-i) generate new version tags
-ii) push your changes to the UBUNTU-JAMMY and UBUNTU-NOBLE branches on github
+i) Update the version numbers
+ii) push your changes to the UBUNTU-NOBLE branches on github
 iii) request an build
 
-i) Generate new version tags
-in the kst directory:
--> ./gen_revision_h
+i) Update the version numbers
+edit ./CMakeLists.txt
+Change the lines
+set(kst_version_major 3)
+set(kst_version_minor 0)
+set(kst_version_patch 0)
+You have to bump at least one of these numbers to generate a new package.
 
-ii) push changes to the UBUNTU-JAMMY and UBUNTU-NOBLE branches on github
+ii) push changes to the UBUNTU-NOBLE branches on github
 The launchpad build system pulls a branch of kst from github that includes a ./debian directory
 appropriate for the series you are compiling for.
 
-The branches we have as of writing this are UBUNTU-JAMMY for 22.04, and UBUNTU-NOBLE, for 24.04 and later.
+The branches we have as of writing this are UBUNTU-JAMMY for 22.04 (which doesn't work since we upgraded to qt6), and UBUNTU-NOBLE, for 24.04 and later.
 There will be more as things continue to change.
 
 To switch to a branch:
@@ -39,7 +43,7 @@ log in
 select the branch you want to build (eg kst-noble2) on the left hand side.
 select request builds (green, near bottom left)
 
-Note that you can only do this once per day given the current configuration :-(
+Note that generate a new package, you must increase the version.
 
 ----------
 
