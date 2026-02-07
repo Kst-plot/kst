@@ -7,7 +7,6 @@
 //#define QT_NO_KEYWORDS
 
 #define KSTVERSION  "${kst_version}"
-#define KST_INSTALL_LIBDIR  "${kst_install_libdir}"
 #define KST_INSTALL_PLUGINS "${kst_install_plugins}"
 
 
