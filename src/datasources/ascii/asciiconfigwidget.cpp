@@ -33,6 +33,7 @@ AsciiConfigWidgetInternal::AsciiConfigWidgetInternal(QWidget *parent) :
     _index_offset(1)
 {
   setupUi(this);
+  _dateTimeOffset->setTimeZone(QTimeZone("UTC"));
 
   QButtonGroup* bgroup = new QButtonGroup(this);
   bgroup->addButton(_whitespace, AsciiSourceConfig::Whitespace);

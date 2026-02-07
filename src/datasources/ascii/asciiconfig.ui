@@ -895,9 +895,9 @@ own constant width</string>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
-               <property name="timeZone">
-                <timezone>UTC</timezone>
-               </property>
+               <!-- <property name="timeZone">
+                <string>UTC</string>
+               </property> -->
               </widget>
              </item>
             </layout>
