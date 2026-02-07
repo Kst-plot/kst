@@ -27,7 +27,6 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScrollBar>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -691,7 +690,10 @@ void SVCCTextEdit::fillKstObjects()
 
 void SVCCLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::NoButton,Qt::NoButton,Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::NoButton,Qt::NoButton,Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier, QPointingDevice::primaryPointingDevice());
+    QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), QPointF(event->globalPos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier, QPointingDevice::primaryPointingDevice());
     mousePressEvent(&fake); //update cursor
     QMenu *menu = createStandardContextMenu();
     QAction* newVectorAction=new QAction(tr("Insert New &Vector"),this);
@@ -745,7 +747,10 @@ void SVCCLineEdit::contextMenuEvent(QContextMenuEvent *event)
 
 void SVCCTextEdit::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress,event->pos(),Qt::LeftButton,Qt::LeftButton,Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier);
+    // QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier, QPointingDevice::primaryPointingDevice());
+    QMouseEvent fake(QEvent::MouseButtonPress, QPointF(event->pos()), QPointF(event->globalPos()), Qt::LeftButton, Qt::MouseButtons(Qt::LeftButton), Qt::NoModifier, QPointingDevice::primaryPointingDevice());
     mousePressEvent(&fake); //update cursor
     QMenu *menu = createStandardContextMenu();
     /*QAction* newVectorAction=new QAction(tr("Insert New &Vector"),this);

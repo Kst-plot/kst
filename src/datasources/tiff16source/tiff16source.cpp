@@ -286,7 +286,7 @@ Tiff16Source::~Tiff16Source() {
 }
 
 
-const QString& Tiff16Source::typeString() const {
+QString Tiff16Source::typeString() const {
   return tiff16TypeString;
 }
 
@@ -308,7 +308,7 @@ bool Tiff16Source::init()
   iv->clear();
   im->clear();
 
-  TIFF *tif=TIFFOpen(_filename.toAscii(), "r");
+  TIFF *tif=TIFFOpen(_filename.toLatin1(), "r");
   if (tif) {
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &_width);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &_height);
@@ -510,7 +510,7 @@ int Tiff16SourcePlugin::understands(QSettings *cfg, const QString& filename) con
   if (filename.toLower().endsWith(".tiff") ||
       filename.toLower().endsWith(".tif")) {
 
-    TIFF *tif=TIFFOpen(filename.toAscii(), "r");
+    TIFF *tif=TIFFOpen(filename.toLatin1(), "r");
 
     if (tif) {
       TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bpp);

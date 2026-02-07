@@ -42,7 +42,7 @@ class FitsImageSource : public Kst::DataSource {
 
     void save(QXmlStreamWriter &streamWriter);
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
 
     class Config;
 

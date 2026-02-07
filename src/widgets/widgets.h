@@ -14,7 +14,8 @@
 #define WIDGETS_H
 
 #include <QObject>
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 
 #include <QtPlugin>
 
@@ -38,6 +39,8 @@
 
 #ifndef QNX // Qt for QNX doesn't include the designer interfaces by default
 
+// Commented out for Qt6 compatibility - Qt Designer interfaces removed
+/*
 namespace Kst {
 class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface {
   Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
@@ -300,6 +303,7 @@ class LabelLineEditPlugin : public WidgetPlugin {
 }
 
 #endif // __QNX__
+*/
 
 #endif
 

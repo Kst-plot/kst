@@ -895,9 +895,9 @@ own constant width</string>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
-               <property name="timeSpec">
-                <enum>Qt::UTC</enum>
-               </property>
+               <!-- <property name="timeZone">
+                <string>UTC</string>
+               </property> -->
               </widget>
              </item>
             </layout>

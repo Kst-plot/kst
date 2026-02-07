@@ -47,7 +47,7 @@ class KSTCORE_EXPORT Scalar : public Primitive
     /** Update the scalar.*/
     virtual void internalUpdate();
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

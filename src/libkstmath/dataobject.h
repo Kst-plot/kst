@@ -68,7 +68,7 @@ class KSTMATH_EXPORT DataObject : public Object
     static QString pluginDescription(const QString &name);
     static int pluginType(const QString &name);
 
-    virtual const QString& typeString() const { return _typeString; }
+    virtual QString typeString() const { return _typeString; }
     virtual QString propertyString() const = 0;
     virtual const QString& type() const { return _type; }
 

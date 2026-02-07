@@ -50,7 +50,7 @@ void DataSourceSelector::setup() {
 
 
   QHBoxLayout * layout = new QHBoxLayout(this);
-  layout->setMargin(0);
+  layout->setContentsMargins({});
   layout->addWidget(_fileEdit);
   layout->addWidget(_fileButton);
 

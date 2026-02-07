@@ -18,7 +18,7 @@
 #ifndef DATASCALAR_H
 #define DATASCALAR_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "dataprimitive.h"
 #include "scalar.h"
 
@@ -58,7 +58,7 @@ class KSTCORE_EXPORT DataScalar : public Scalar, public DataPrimitive
     };
 
     virtual void internalUpdate();
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

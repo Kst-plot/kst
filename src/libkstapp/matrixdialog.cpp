@@ -15,7 +15,7 @@
 #include "matrixdialog.h"
 #include "application.h"
 
-#include "dialogpage.h"
+// #include "dialogpage.h"
 #include "datasourceconfiguredialog.h"
 #include "editmultiplewidget.h"
 
@@ -23,7 +23,7 @@
 #include "generatedmatrix.h"
 #include "editablematrix.h"
 
-#include "datacollection.h"
+// #include "datacollection.h"
 
 #include "document.h"
 #include "objectstore.h"
@@ -65,6 +65,7 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_nY, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
   connect(_gradientZAtMin, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_gradientZAtMax, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
+  connect(_scalingGroup, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_minX, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_minY, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_xStep, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
@@ -142,11 +143,12 @@ void MatrixTab::hideDataOptions() {
   _sourceGroup->setVisible(false);
   _dataSourceGroup->setVisible(false);
   _partialMatrixGroup->setVisible(false);
+  _scalingGroup->setVisible(false);
 }
 
 void MatrixTab::hideUnused() {
   _partialMatrixGroup->setVisible(false);
-  _scalingGroup->setVisible(false);
+  // _scalingGroup->setVisible(false);
 }
 
 DataSourcePtr MatrixTab::dataSource() const {
@@ -215,6 +217,13 @@ void MatrixTab::setNY(uint nY) {
   _nY->setValue(nY);
 }
 
+bool MatrixTab::overrideScale() const {
+  return _scalingGroup->isChecked();
+}
+
+void MatrixTab::setOverrideScale(bool override) {
+  _scalingGroup->setChecked(override);
+}
 
 double MatrixTab::minX() const {
   return _minX->text().toDouble();
@@ -705,6 +714,13 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setDoSkip(dataMatrix->doSkip());
     _matrixTab->setDoAverage(dataMatrix->doAverage());
     _matrixTab->setFrame(dataMatrix->frame());
+
+    _matrixTab->setOverrideScale(dataMatrix->_override_scale);
+    _matrixTab->setMinX(dataMatrix->_override_minX);
+    _matrixTab->setMinY(dataMatrix->_override_minY);
+    _matrixTab->setStepX(dataMatrix->_override_stepX);
+    _matrixTab->setStepY(dataMatrix->_override_stepY);
+
     _matrixTab->hideGeneratedOptions();
     if (_editMultipleWidget) {
       DataMatrixList objects = _document->objectStore()->getObjects<DataMatrix>();
@@ -805,6 +821,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
   const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
   const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+  const bool overrideScale = _matrixTab->overrideScale();
   const double minX = _matrixTab->minX();
   const double minY = _matrixTab->minY();
   const double stepX = _matrixTab->stepX();
@@ -823,7 +840,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
 //            << "\n\tskip:" << skip
 //            << "\n\tdoSkip:" << doSkip
 //            << "\n\tdoAve:" << doAve
-//            << endl;
+//            << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
 
@@ -831,7 +848,9 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   matrix->change(dataSource, field,
       xStart, yStart,
       xNumSteps, yNumSteps, doAverage,
-      doSkip, skip, frame, minX, minY, stepX, stepY);
+      doSkip, skip, frame,
+      overrideScale,
+      minX, minY, stepX, stepY);
 
   if (DataDialog::tagStringAuto()) {
      matrix->setDescriptiveName(QString());
@@ -873,7 +892,7 @@ ObjectPtr MatrixDialog::createNewGeneratedMatrix() {
 //             << "\n\tgradZMin:" << gradZMin
 //             << "\n\tgradZMax:" << gradZMax
 //             << "\n\txDirection:" << xDirection
-//             << endl;
+//             << Qt::endl;
 
   Q_ASSERT(_document && _document->objectStore());
   GeneratedMatrixPtr matrix = _document->objectStore()->createObject<GeneratedMatrix>();
@@ -908,6 +927,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           int yStart = _matrixTab->yStartDirty() ? _matrixTab->yStart() : matrix->reqYStart();
           int xNumSteps = _matrixTab->xNumStepsDirty() ? _matrixTab->xNumSteps() : matrix->xNumSteps();
           int yNumSteps = _matrixTab->yNumStepsDirty() ? _matrixTab->yNumSteps() : matrix->yNumSteps();
+          const bool overrideScale = _matrixTab->overrideScale();
           const double minX = _matrixTab->minXDirty() ? _matrixTab->minX() : matrix->minX();
           const double minY = _matrixTab->minYDirty() ? _matrixTab->minY() : matrix->minY();
           const double stepX = _matrixTab->stepXDirty() ? _matrixTab->stepX() : matrix->xStepSize();
@@ -929,7 +949,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           int frame = _matrixTab->frame();
 
           matrix->writeLock();
-          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, minX, minY, stepX, stepY);
+          matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
           matrix->registerChange();
           matrix->unlock();
         }
@@ -949,15 +969,15 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       const int yStart = _matrixTab->yStartCountFromEnd() ? -1 : _matrixTab->yStart();
       const int xNumSteps = _matrixTab->xReadToEnd() ? -1 : _matrixTab->xNumSteps();
       const int yNumSteps = _matrixTab->yReadToEnd() ? -1 : _matrixTab->yNumSteps();
+      const bool overrideScale = _matrixTab->overrideScale();
       const double minX = _matrixTab->minX();
       const double minY = _matrixTab->minY();
       const double stepX = _matrixTab->stepX();
       const double stepY = _matrixTab->stepY();
       const int frame = _matrixTab->frame();
 
-
       dataMatrix->writeLock();
-      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, frame, minX, minY, stepX, stepY);
+      dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
       if (DataDialog::tagStringAuto()) {
          dataMatrix->setDescriptiveName(QString());
       } else {

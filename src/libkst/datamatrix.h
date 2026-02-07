@@ -15,7 +15,7 @@
 #ifndef DATAMATRIX_H
 #define DATAMATRIX_H
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "dataprimitive.h"
 #include "matrix.h"
 
@@ -68,8 +68,14 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
       int frameCount; // only used for image streams
     };
 
+    bool _override_scale;
+    double _override_minX;
+    double _override_minY;
+    double _override_stepX;
+    double _override_stepY;
 
-    virtual const QString& typeString() const;
+
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 
@@ -81,10 +87,12 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip, int frame,
+                bool doOverrideScale,
                 double minX, double minY, double stepX, double stepY);
     void changeFrames(int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
                 bool doAve, bool doSkip, int skip, int frame,
+                bool doOverrideScale,
                 double minX, double minY, double stepX, double stepY);
 
     // return properties of DataMatrix
@@ -151,8 +159,10 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY,
                            bool doAve, bool doSkip, int skip, int frame,
+                           bool overrideScale,
                            double minX, double minY, double stepX, double stepY);
 
+    void applyScaling(const MatrixData M);
     void doUpdateSkip(int realXStart, int realYStart, int frame);
     void doUpdateNoSkip(int realXStart, int realYStart, int frame);
 

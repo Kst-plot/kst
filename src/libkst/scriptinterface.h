@@ -22,7 +22,7 @@
 #include <QList>
 #include <QObject>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "object.h"
 
 typedef QList<QByteArray> QByteArrayList;

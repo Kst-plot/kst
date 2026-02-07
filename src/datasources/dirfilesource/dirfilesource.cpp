@@ -421,7 +421,7 @@ int DirFileSource::readSindir(QString &S, const QString &field, int frame) {
 //QStringList fieldScalars(const QString& field);
 
 QStringList DirFileSource::fieldScalars(const QString& field) {
-  const char **mflist = _dirfile->MFieldListByType(field.toAscii(), ConstEntryType);
+  const char **mflist = _dirfile->MFieldListByType(field.toLatin1(), ConstEntryType);
   if (!mflist) {
     return QStringList();
   }
@@ -436,8 +436,8 @@ int DirFileSource::readFieldScalars(QList<double> &v, const QString& field, bool
   int nc=0;
   if (init) { // only update if we need to initialize.  Otherwise preserve old values.
     v.clear();
-    nc = _dirfile->NMFieldsByType(field.toAscii(),ConstEntryType);
-    double *vin = (double *)_dirfile->MConstants(field.toAscii(), Float64);
+    nc = _dirfile->NMFieldsByType(field.toLatin1(),ConstEntryType);
+    double *vin = (double *)_dirfile->MConstants(field.toLatin1(), Float64);
     for (int i=0; i<nc; i++) {
       v.append(vin[i]);
     }
@@ -447,7 +447,7 @@ int DirFileSource::readFieldScalars(QList<double> &v, const QString& field, bool
 
 
 QStringList DirFileSource::fieldStrings(const QString& field) {
-  const char **mflist = _dirfile->MFieldListByType(field.toAscii(), StringEntryType);
+  const char **mflist = _dirfile->MFieldListByType(field.toLatin1(), StringEntryType);
   if (!mflist) {
     return QStringList();
   }
@@ -462,8 +462,8 @@ int DirFileSource::readFieldStrings(QStringList &v, const QString& field, bool i
   int nc=0;
   if (init) { // only update if we need to initialize.  Otherwise preserve old values.
     v.clear();
-    nc = _dirfile->NMFieldsByType(field.toAscii(),StringEntryType);
-    char **str_in = (char **)_dirfile->MStrings(field.toAscii());
+    nc = _dirfile->NMFieldsByType(field.toLatin1(),StringEntryType);
+    char **str_in = (char **)_dirfile->MStrings(field.toLatin1());
     for (int i=0; i<nc; i++) {
       v.append(str_in[i]);
     }
@@ -506,7 +506,7 @@ QStringList DirFilePlugin::matrixList(QSettings *cfg,
   return QStringList();
 }
 
-const QString& DirFileSource::typeString() const {
+QString DirFileSource::typeString() const {
   return dirfileTypeString;
 }
 

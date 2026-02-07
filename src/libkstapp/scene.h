@@ -15,7 +15,7 @@
 
 #include <QGraphicsScene>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

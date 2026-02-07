@@ -24,15 +24,16 @@
 #include "debug.h"
 
 #include <QFile>
+#include <QRegularExpression>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QThread>
-#include <QtConcurrentRun>
 #include <QFutureSynchronizer>
 #include <QLabel>
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QProgressBar>
+#include <QtConcurrent>
 
 
 //#include <ctype.h>
@@ -239,7 +240,7 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
   }
   updateLists();
 
-  _fileCreationTime_t = QFileInfo(file).birthTime().toTime_t();
+  _fileCreationTime_t = QFileInfo(file).birthTime().toSecsSinceEpoch();
 
   int col_count = _fieldList.size() - 1; // minus INDEX
 
@@ -249,12 +250,12 @@ Kst::Object::UpdateType AsciiSource::internalDataSourceUpdate(bool read_complete
     _showFieldProgress = true;
     emitProgress(1, tr("Parsing '%1' ...").arg(_filename));
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-    QFuture<bool> future = QtConcurrent::run(&_reader, &AsciiDataReader::findAllDataRows, read_completely, &file, _fileSize, col_count);
+    QFuture<bool> future = QtConcurrent::run(&AsciiDataReader::findAllDataRows, &_reader, read_completely, &file, _fileSize, col_count);
     _busy = true;
     while (_busy) {
       if (future.isFinished()) {
         try {
-          new_data = future;
+          new_data = future.result();
         } catch ( const std::exception&) {
           // TODO out of memory?
         }
@@ -342,7 +343,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
     double dT = 0.0;
     if (_config._offsetDateTime.value()) {
-      dT = (double)_config._dateTimeOffset.value().toTime_t();
+      dT = (double)_config._dateTimeOffset.value().toSecsSinceEpoch();
     } else if (_config._offsetRelative.value()) {
       dT = _config._relativeOffset.value();
     } else if (_config._offsetFileDate.value()) {
@@ -562,7 +563,7 @@ int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int co
   updateFieldProgress(tr("parsing ..."));
   QFutureSynchronizer<int> readFutures;
   foreach (const AsciiFileData& chunk, window) {
-    QFuture<int> future = QtConcurrent::run(&_reader, &AsciiDataReader::readFieldFromChunk, chunk, col, v, start, field);
+    QFuture<int> future = QtConcurrent::run(&AsciiDataReader::readFieldFromChunk, &_reader, chunk, col, v, start, field);
     readFutures.addFuture(future);
   }
   readFutures.waitForFinished();
@@ -659,7 +660,7 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
   QStringList dummy;
   QStringList& parts(stringList ? *stringList : dummy);
   parts.clear();
-  const QRegExp regexColumnDelimiter(QString("[%1]").arg(QRegExp::escape(cfg._columnDelimiter.value())));
+  const QRegularExpression regexColumnDelimiter(QString("[%1]").arg(QRegularExpression::escape(cfg._columnDelimiter.value())));
 
   if (cfg._columnType == AsciiSourceConfig::Custom && !cfg._columnDelimiter.value().isEmpty()) {
     parts += QString(line).trimmed().split(regexColumnDelimiter, Qt::SkipEmptyParts);
@@ -676,15 +677,15 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
 
       // The following assert crashes (sometimes?) when kst is pointed at an
       // executable.  So... rather than crashing, lets just bail.
-      if (columns != QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts).size()) {
+      if (columns != QString(line).trimmed().split(QRegularExpression("\\s"), Qt::SkipEmptyParts).size()) {
         return 0;
       }
-      Q_ASSERT(columns == QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts).size());
+      Q_ASSERT(columns == QString(line).trimmed().split(QRegularExpression("\\s"), Qt::SkipEmptyParts).size());
       return columns;
     } else {
       //MeasureTime t("AsciiDataReader::countColumns(parts)");
       AsciiDataReader::splitColumns(line, AsciiCharacterTraits::IsWhiteSpace(), &parts);
-      Q_ASSERT(parts == QString(line).trimmed().split(QRegExp("\\s"), Qt::SkipEmptyParts));
+      Q_ASSERT(parts == QString(line).trimmed().split(QRegularExpression("\\s"), Qt::SkipEmptyParts));
     }
   }
   return parts.count();
@@ -724,11 +725,11 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
   }
 
 
-  QRegExp regex;
+  QRegularExpression regex;
   if (cfg._columnType == AsciiSourceConfig::Custom && !cfg._columnDelimiter.value().isEmpty()) {
-    regex.setPattern(QString("^[%1]*[%2].*").arg(QRegExp::escape(cfg._columnDelimiter.value())).arg(cfg._delimiters));
+    regex.setPattern(QRegularExpression::anchoredPattern(QString("^[%1]*[%2].*").arg(QRegularExpression::escape(cfg._columnDelimiter.value())).arg(cfg._delimiters)));
   } else {
-    regex.setPattern(QString("^\\s*[%1].*").arg(cfg._delimiters));
+    regex.setPattern(QRegularExpression::anchoredPattern(QString("^\\s*[%1].*").arg(cfg._delimiters)));
   }
 
   bool done = false;
@@ -758,7 +759,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
     }
     if (maxcnt >= 0) { //original skip value == 0, so scan some lines
       if (curscan >= nextscan) {
-        if (r > 1 && !regex.exactMatch(line)) {
+        if (r > 1 && !regex.match(line).hasMatch()) {
           cnt = splitHeaderLine(line, cfg);
           if (cnt > maxcnt) {
             maxcnt = cnt;
@@ -771,7 +772,7 @@ QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig
       curscan++;
       continue;
     }
-    if (r > 1 && !regex.exactMatch(line)) { //at desired line, find count
+    if (r > 1 && !regex.match(line).hasMatch()) { // at desired line, find count
       maxcnt = splitHeaderLine(line, cfg);
       done = true;
     } else if (r < 0) {
@@ -866,7 +867,7 @@ int AsciiSource::sampleForTime(double ms, bool *ok)
 
 
 //-------------------------------------------------------------------------------------------
-const QString& AsciiSource::typeString() const
+QString AsciiSource::typeString() const
 {
   return asciiTypeString;
 }
@@ -881,13 +882,13 @@ int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
     if (ok) {
       *ok = true;
     }
-    return time.toTime_t();
+    return time.toSecsSinceEpoch();
   case AsciiSourceConfig::CTime:
     // FIXME: make sure "time" exists in _indexVector (different than above?)
     if (ok) {
       *ok = true;
     }
-    return time.toTime_t();
+    return time.toSecsSinceEpoch();
   default:
     return Kst::DataSource::sampleForTime(time, ok);
   }

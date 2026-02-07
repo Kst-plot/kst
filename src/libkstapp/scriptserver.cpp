@@ -302,7 +302,7 @@ template<class T> QByteArray outputObjectList(
           a += '|';
         }
         first = false;
-        a+=v->Name();
+        a += v->Name().toUtf8();
         v->unlock();
     }
     if(a.size()) {

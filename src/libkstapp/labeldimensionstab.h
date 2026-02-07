@@ -17,7 +17,7 @@
 #include "labelitem.h"
 #include "ui_labeldimensionstab.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

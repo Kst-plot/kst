@@ -19,7 +19,7 @@
 #include "plotdefines.h"
 #include "ui_axistab.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

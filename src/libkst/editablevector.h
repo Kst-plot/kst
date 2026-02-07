@@ -15,7 +15,7 @@
 #define EDITABLEVECTOR_H
 
 #include "vector.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 //#include <QFile>
 
@@ -29,7 +29,7 @@ class KSTCORE_EXPORT EditableVector : public Vector {
   Q_OBJECT
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

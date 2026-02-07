@@ -31,7 +31,7 @@
 
 
 #include <QMutex>
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include "datacollection.h"
 #include "debug.h"
@@ -722,12 +722,13 @@ DataNode::DataNode(ObjectStore *store, char *name)
     _isEquation = true;
   } else if (strchr(name, '[')) {
     _tagName = QString(name).trimmed();
-    QRegExp re("(.*)\\[(.*)\\]");
-    int hit = re.indexIn(_tagName);
+    QRegularExpression re("(.*)\\[(.*)\\]");
+    QRegularExpressionMatch match;
+    int hit = _tagName.indexOf(re, 0, &match);
     if (hit > -1 && re.captureCount() == 2) {
-      _vector = kst_cast<Vector>(store->retrieveObject(re.cap(1)));
+      _vector = kst_cast<Vector>(store->retrieveObject(match.captured(1)));
       if (_vector) {
-        _vectorIndex = re.cap(2);
+        _vectorIndex = match.captured(2);
       }
     }
   } else {

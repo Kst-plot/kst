@@ -22,8 +22,7 @@
 #include "datasource.h"
 #include "dataplugin.h"
 
-#include <netcdf.h>
-#include <netcdfcpp.h>
+#include <netcdf>
 
 
 class DataInterfaceNetCdfScalar;
@@ -42,7 +41,7 @@ class NetcdfSource : public Kst::DataSource {
     Kst::Object::UpdateType internalDataSourceUpdate();
 
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
 
     static const QString netcdfTypeKey();
 
@@ -71,10 +70,7 @@ class NetcdfSource : public Kst::DataSource {
     QMap<QString, int> _frameCounts;
 
     int _maxFrameCount;
-    NcFile *_ncfile;
-
-    // we must hold an NcError to overwrite the exit-on-error behaviour of netCDF
-    NcError _ncErr;
+    netCDF::NcFile *_ncfile;
 
     QMap<QString, QString> _strings;
 

@@ -1088,14 +1088,14 @@ qDebug() << "x not in bounds"
          << "X2:" << X2
          << "Lx:" << Lx
          << "Hx:" << Hx
-         << endl;
+         << Qt::endl;
 if (!yInBounds)
 qDebug() << "y not in bounds"
          << "Y1:" << Y1
          << "Y2:" << Y2
          << "Ly:" << Ly
          << "Hy:" << Hy
-         << endl;
+         << Qt::endl;
 #endif
 
               if (X1 >= Lx && X1 <= Hx && X2 >= Lx && X2 <= Hx &&
@@ -1497,7 +1497,7 @@ qDebug() << "y not in bounds"
 
 #ifdef BENCHMARK
   int i = bench_time.elapsed();
-  //qDebug() << endl << "Plotting curve " << (void *)this << ": " << i << "ms";
+  //qDebug() << Qt::endl << "Plotting curve " << (void *)this << ": " << i << "ms";
   //qDebug() << "    Without locks: " << b_4 << "ms";
   //qDebug() << "    Number of lines drawn:" << numberOfLinesDrawn;
   //qDebug() << "    Number of points drawn:" << numberOfPointsDrawn;

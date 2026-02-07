@@ -30,7 +30,7 @@
 #include "vector.h"
 #include "scalar.h"
 #include "string.h"
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Label {
 

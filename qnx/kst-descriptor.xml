@@ -27,7 +27,7 @@
         <asset path="deploy/pbsplash.png">pbsplash.png</asset>
         <asset path="deploy/pbicon.png">pbicon.png</asset>
         <asset path="kst/lib">lib</asset>
-        <asset path="kst/lib/kst2/plugins">plugins</asset>
+        <asset path="kst/lib/kst/plugins">plugins</asset>
         <icon><image>pbicon.png</image></icon>
         <splashscreen>pbsplash.png</splashscreen>
     </qnx>

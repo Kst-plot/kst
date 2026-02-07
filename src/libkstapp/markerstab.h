@@ -17,7 +17,7 @@
 #include "plotitem.h"
 #include "ui_markerstab.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

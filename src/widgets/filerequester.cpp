@@ -40,7 +40,7 @@ void FileRequester::setup() {
   _fileButton = new QToolButton(this);
 
   QHBoxLayout * layout = new QHBoxLayout(this);
-  layout->setMargin(0);
+  layout->setContentsMargins({});
   layout->addWidget(_fileEdit);
   layout->addWidget(_fileButton);
   setLayout(layout);

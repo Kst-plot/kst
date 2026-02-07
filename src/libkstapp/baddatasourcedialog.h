@@ -18,7 +18,7 @@
 #include "ui_baddatasourcedialog.h"
 #include "datasource.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

@@ -24,10 +24,6 @@ Document boxcar lowpass in docbook
 
 ------------------
 
-Add boxcar highpass and bandpass.
-
-------------------
-
 shift - button click for 1/5 screen moving.
 
 ------------------
@@ -52,10 +48,6 @@ And slave scalar names are similarly not there.
 ----------------
 
 data manager: slave vectors don't show up when you filter for Vector on type.
-
------------------
-
-filter dialogs appear ~off screen in multi-screen setups.
 
 -----------------
 

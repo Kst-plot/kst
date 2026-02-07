@@ -65,7 +65,7 @@ FilterMultipleDialog::FilterMultipleDialog(QWidget *parent) :
   connect(ui->_availableVectors, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(availableDoubleClicked(QListWidgetItem*)));
   connect(ui->_selectedVectors, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(selectedDoubleClicked(QListWidgetItem*)));
 
-  connect(ui->_pluginCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(pluginChanged(QString)));
+  connect(ui->_pluginCombo, SIGNAL(currentTextChanged(QString)), this, SLOT(pluginChanged(QString)));
 
   connect(ui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
   connect(ui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(OKClicked()));
@@ -277,7 +277,7 @@ void FilterMultipleDialog::apply() {
             foreach (PlotItemInterface *plot, plots) {
               PlotItem* plotItem = static_cast<PlotItem*>(plot);
               foreach (PlotRenderItem* renderItem, plotItem->renderItems()) {
-                if (renderItem->relationList().contains(curve)) {
+                if (renderItem->relationList().contains(kst_cast<Relation>(curve))) {
                   renderItem->addRelation(new_curve);
                 }
               }

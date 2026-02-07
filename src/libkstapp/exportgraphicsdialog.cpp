@@ -15,7 +15,6 @@
 
 #include "mainwindow.h"
 #include <QDir>
-#include <QPictureIO>
 #include <QDebug>
 #include <QImageWriter>
 #include <QTimer>

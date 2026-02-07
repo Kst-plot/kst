@@ -197,8 +197,6 @@ void TestPSD::testPSD() {
 //   Kst::VectorPtr vpVY = psdDOM->vY();
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestPSD)
-#endif
 
 // vim: ts=2 sw=2 et

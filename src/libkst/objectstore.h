@@ -20,7 +20,7 @@
 
 #include <QDebug>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 #include "object.h"
 #include "objectlist.h"
 #include "rwlock.h"

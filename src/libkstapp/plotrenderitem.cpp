@@ -199,7 +199,7 @@ bool PlotRenderItem::configureFromXml(QXmlStreamReader &xml, ObjectStore *store)
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av;
+  QStringView av;
   av = attrs.value("type");
   if (!av.isNull()) {
     setRenderType((RenderType)av.toString().toInt());
@@ -974,13 +974,20 @@ void PlotRenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 
   _highlightPointActive = false;
 
+  QList<PlotItem*> allPlots = PlotItemManager::plotsForView(view());
+  foreach(PlotItem* plot, allPlots) {
+    if (plot->renderItem()) {
+      plot->renderItem()->resetSelectionRect();
+      plot->renderItem()->_highlightPointActive = false;
+    }
+  }
+
   if (view()->viewMode() != View::Data) {
     event->ignore();
     return;
   }
 
   clearFocus();
-  resetSelectionRect();
 
   updateCursor(event->pos());
 

@@ -54,7 +54,7 @@ RelationPtr CurveHint::makeCurve(const QString& tag, const QColor& color) const 
   VectorPtr x = xVector();
   VectorPtr y = yVector();
   if (!x || !y) {
-    qDebug() << "Couldn't find either " << _xVectorName << " or " << _yVectorName << endl;
+    qDebug() << "Couldn't find either " << _xVectorName << " or " << _yVectorName << Qt::endl;
     return 0L;
   }
 

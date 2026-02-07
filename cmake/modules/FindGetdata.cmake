@@ -1,10 +1,7 @@
 # ***************************************************************************
 # *                                                                         *
-# *   Copyright : (C) 2010 The University of Toronto                        *
+# *   Copyright : (C) 2026 C. Barth Netterfield  						    *
 # *   email     : netterfield@astro.utoronto.ca                             *
-# *                                                                         *
-# *   Copyright : (C) 2010 Peter Kümmel                                     *
-# *   email     : syntheticpp@gmx.net                                       *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU General Public License as published by  *
@@ -13,71 +10,68 @@
 # *                                                                         *
 # ***************************************************************************
 
-if(NOT GETDATA_INCLUDEDIR)
 
-if(NOT kst_cross)
-	include(FindPkgConfig)
-	pkg_check_modules(PKGGETDATA QUIET getdata>=0.6.0)
-#message(STATUS "GD inc: ${PKGGETDATA_INCLUDEDIR}")
-#message(STATUS "GD libs: ${PKGGETDATA_LIBRARIES}")
+# Modern FindGetdata.cmake
+# Usage: find_package(Getdata)
+# Sets: GETDATA_FOUND, GETDATA_INCLUDE_DIR, GETDATA_LIBRARIES
+
+include(FindPackageHandleStandardArgs)
+
+# Try pkg-config first
+find_package(PkgConfig QUIET)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(GETDATA_PKG QUIET getdata)
 endif()
 
-# Apple: install getdata with --prefix /opt/local
+# Find headers
+find_path(GETDATA_INCLUDE_DIR
+    NAMES getdata.h
+    HINTS ${GETDATA_PKG_INCLUDE_DIRS}
+    PATHS ENV GETDATA_DIR
+    PATH_SUFFIXES include/getdata include
+)
 
-# FIXME: GETDATA_INCLUDEDIR AND GETDATA_LIBRARIES are set by pkg_check_modules, but
-# GETDATA_LIBRARY_C and GETDATA_LIBRARY_CPP are not.
-# Ubuntu: maybe /usr/local/lib/pkgconfig/getdata.pc is not correct
-#if(NOT PKGGETDATA_LIBRARIES)
-	set(PKGGETDATA_LIBRARIES getdata++ getdata)
-	if (UNIX)
-		SET(PKGGETDATA_LIBRARIES ${PKGGETDATA_LIBRARIES} m)
-	endif()
-#endif()
+# Find libraries
+find_library(GETDATA_LIBRARY
+    NAMES getdata
+    HINTS ${GETDATA_PKG_LIBRARY_DIRS}
+    PATHS ENV GETDATA_DIR
+    PATH_SUFFIXES lib
+)
+find_library(GETDATA_LIBRARY_CPP
+    NAMES getdata++
+    HINTS ${GETDATA_PKG_LIBRARY_DIRS}
+    PATHS ENV GETDATA_DIR
+    PATH_SUFFIXES lib
+)
 
-
-set(GETDATA_INCLUDEDIR GETDATA_INCLUDEDIR-NOTFOUND CACHE STRING "" FORCE)
-FIND_PATH(GETDATA_INCLUDEDIR getdata.h
-	HINTS
-	ENV GETDATA_DIR
-	PATH_SUFFIXES include/getdata include
-	PATHS ${kst_3rdparty_dir} ${GETDATA_INCLUDEDIR})
-
-foreach(it ${PKGGETDATA_LIBRARIES})
-	set(lib_release lib_release-NOTFOUND CACHE STRING "" FORCE)
-	FIND_LIBRARY(lib_release ${it}
-		HINTS ENV GETDATA_DIR PATH_SUFFIXES lib
-		PATHS ${kst_3rdparty_dir} ${PKGGETDATA_LIBRARY_DIRS})
-	list(APPEND GETDATA_LIBRARIES_RELEASE ${lib_release})
-	list(APPEND GETDATA_LIBRARIES_BOTH optimized ${lib_release})
-	set(lib_debug lib_debug-NOTFOUND CACHE STRING "" FORCE)
-	FIND_LIBRARY(lib_debug ${it}d
-		HINTS ENV GETDATA_DIR PATH_SUFFIXES lib
-		PATHS ${kst_3rdparty_dir} ${PKGGETDATA_LIBRARY_DIRS})
-	list(APPEND GETDATA_LIBRARIES_DEBUG ${lib_debug})
-	list(APPEND GETDATA_LIBRARIES_BOTH debug ${lib_debug})
-endforeach()
-
-if(GETDATA_LIBRARIES_DEBUG AND GETDATA_LIBRARIES_RELEASE)
-	set(GETDATA_LIBRARIES ${GETDATA_LIBRARIES_BOTH} CACHE STRING "" FORCE)
-else()
-	set(GETDATA_LIBRARIES ${GETDATA_LIBRARIES_RELEASE} CACHE STRING "" FORCE)
+set(GETDATA_LIBRARIES)
+if(GETDATA_LIBRARY)
+    list(APPEND GETDATA_LIBRARIES ${GETDATA_LIBRARY})
+endif()
+if(GETDATA_LIBRARY_CPP)
+    list(APPEND GETDATA_LIBRARIES ${GETDATA_LIBRARY_CPP})
 endif()
 
+# Handle standard args and set _FOUND variable
+find_package_handle_standard_args(Getdata
+    REQUIRED_VARS GETDATA_INCLUDE_DIR GETDATA_LIBRARIES
+    HANDLE_COMPONENTS
+)
+
+# Create imported targets
+if(Getdata_FOUND)
+    add_library(Getdata::getdata UNKNOWN IMPORTED)
+    set_target_properties(Getdata::getdata PROPERTIES
+        IMPORTED_LOCATION "${GETDATA_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${GETDATA_INCLUDE_DIR}"
+    )
+    if(GETDATA_LIBRARY_CPP)
+        add_library(Getdata::getdata++ UNKNOWN IMPORTED)
+        set_target_properties(Getdata::getdata++ PROPERTIES
+            IMPORTED_LOCATION "${GETDATA_LIBRARY_CPP}"
+            INTERFACE_INCLUDE_DIRECTORIES "${GETDATA_INCLUDE_DIR}"
+        )
+    endif()
 endif()
-
-
-IF(GETDATA_INCLUDEDIR AND GETDATA_INCLUDEDIR)
-	SET(GETDATA_INCLUDE_DIR ${GETDATA_INCLUDEDIR})
-	SET(getdata 1)
-	message(STATUS "Found GetData:")
-	message(STATUS "     includes : ${GETDATA_INCLUDE_DIR}")
-	message(STATUS "     libraries: ${GETDATA_LIBRARIES}")
-ELSE()
-    MESSAGE(STATUS "Not found: GetData.")
-    MESSAGE(STATUS "      If GetData is installed outside the CMake search path,")
-    MESSAGE(STATUS "      set the environmental variable GETDATA_DIR to the")
-    MESSAGE(STATUS "      GetData install prefix.")
-ENDIF()
-
-message(STATUS "")
 

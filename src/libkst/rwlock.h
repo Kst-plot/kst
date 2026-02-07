@@ -24,7 +24,7 @@
 #include <qwaitcondition.h>
 
 #include <config.h>
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 // NOTE: In order to preserve binary compatibility with plugins, you must
 //       update the plugin keys whenever you add, remove, or change member

@@ -31,7 +31,7 @@ class KSTCORE_EXPORT Matrix : public Primitive
   Q_OBJECT
 
   public:
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
 
     virtual QString descriptionTip() const;

@@ -89,7 +89,7 @@ class ConfigWidgetFilterFlagPlugin : public Kst::DataObjectConfigWidget, public 
 
       bool validTag = true;
 
-      QStringRef av;
+      QStringView av;
       av = attrs.value("Mask");
       if (!av.isNull()) {
         _mask->setText(av.toString());

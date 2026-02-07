@@ -17,7 +17,7 @@
 
 #include "ui_exportgraphicsdialog.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

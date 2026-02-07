@@ -236,12 +236,13 @@ void ContentTab::filterCurves(const QString &filter) {
     return;
   }
 
-  QRegExp re(filter, Qt::CaseSensitive, QRegExp::Wildcard);
+  QRegularExpression re(QRegularExpression::wildcardToRegularExpression(filter),
+                        QRegularExpression::NoPatternOption);
   QStringList selected;
 
   for (int i = 0; i < _availableRelationList->count(); i++) {
     QListWidgetItem *item = _availableRelationList->item(i);
-    if (re.exactMatch(item->text())) {
+    if (re.match(item->text()).hasMatch()) {
       item = _availableRelationList->takeItem(i);
       selected.append(item->text());
       i--;

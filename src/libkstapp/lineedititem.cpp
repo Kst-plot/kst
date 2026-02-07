@@ -92,7 +92,7 @@ ViewItem* LineEditItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectSto
         if (parent) {
           rc->setParentViewItem(parent);
         }
-        QStringRef av = attrs.value("text");
+        QStringView av = attrs.value("text");
         if (!av.isNull()) {
           rc->_lineEdit->setText(av.toString());
         }

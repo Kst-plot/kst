@@ -9,6 +9,7 @@
     <binary>kst2</binary>
   </provides>
   <name>Kst</name>
+  <name xml:lang="ar">كاست</name>
   <name xml:lang="ca">Kst</name>
   <name xml:lang="ca-valencia">Kst</name>
   <name xml:lang="es">Kst</name>
@@ -16,12 +17,14 @@
   <name xml:lang="gl">Kst</name>
   <name xml:lang="it">Kst</name>
   <name xml:lang="nl">Kst</name>
+  <name xml:lang="pl">Kst</name>
+  <name xml:lang="pt-BR">Kst</name>
   <name xml:lang="sl">Kst</name>
   <name xml:lang="sv">Kst</name>
   <name xml:lang="tr">Kst</name>
   <name xml:lang="uk">Kst</name>
-  <name xml:lang="x-test">xxKstxx</name>
   <summary>Data Viewer</summary>
+  <summary xml:lang="ar">عارض بيانات</summary>
   <summary xml:lang="ca">Visualitzador de dades</summary>
   <summary xml:lang="ca-valencia">Visor de dades</summary>
   <summary xml:lang="es">Visor de datos</summary>
@@ -29,13 +32,15 @@
   <summary xml:lang="gl">Visor de datos</summary>
   <summary xml:lang="it">Visore dati</summary>
   <summary xml:lang="nl">Bekijken van gegevens</summary>
+  <summary xml:lang="pl">Przeglądarka danych</summary>
+  <summary xml:lang="pt-BR">Visualizador de dados</summary>
   <summary xml:lang="sl">Ogledovalnik podatkov</summary>
   <summary xml:lang="sv">Datavisning</summary>
   <summary xml:lang="tr">Veri Görüntüleyicisi</summary>
   <summary xml:lang="uk">Засіб перегляду даних</summary>
-  <summary xml:lang="x-test">xxData Viewerxx</summary>
   <description>
     <p>This application is used to display scientific data.</p>
+    <p xml:lang="ar">هذا التطبيق يستخدم لعرض البيانات العلمية</p>
     <p xml:lang="ca">Aquesta aplicació es fa servir per a mostrar dades científiques.</p>
     <p xml:lang="ca-valencia">Esta aplicació s'utilitza per a mostrar dades científiques.</p>
     <p xml:lang="es">Esta aplicación se usa para mostrar datos científicos.</p>
@@ -43,11 +48,12 @@
     <p xml:lang="gl">Aplicación para amosar datos científicos.</p>
     <p xml:lang="it">Questa applicazione è utilizzata per visualizzare dati scientifici.</p>
     <p xml:lang="nl">Deze toepassing wordt gebruikt om wetenschappelijke gegevens te tonen.</p>
+    <p xml:lang="pl">Ta aplikacja służy do wyświetlania danych naukowych.</p>
+    <p xml:lang="pt-BR">Este aplicativo é usado para exibir dados científicos.</p>
     <p xml:lang="sl">Ta aplikacija se uporablja za prikaz znanstvenih podatkov.</p>
     <p xml:lang="sv">Programmet används för att visa vetenskaplig data.</p>
     <p xml:lang="tr">Bu uygulama, bilimsel verileri görüntülemek için kullanılır.</p>
     <p xml:lang="uk">Цю програму призначено для показу наукових даних.</p>
-    <p xml:lang="x-test">xxThis application is used to display scientific data.xx</p>
   </description>
   <url type="homepage">https://apps.kde.org/kst/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=kst</url>

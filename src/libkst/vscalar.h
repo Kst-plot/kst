@@ -19,8 +19,8 @@
 #define VSCALAR_H
 
 #include "scalar.h"
-// #include "datasource.h"
-#include "kst_export.h"
+#include "datasource.h"
+// #include "kst_export.h"
 
 class QXmlStreamWriter;
 
@@ -49,7 +49,7 @@ class KSTCORE_EXPORT VScalar : public Scalar, public DataPrimitive {
     /** Update the scalar. */
     virtual void internalUpdate();
 
-    virtual const QString& typeString() const;
+    virtual QString typeString() const;
     static const QString staticTypeString;
     static const QString staticTypeTag;
 

@@ -54,7 +54,7 @@ QString DataScalar::_automaticDescriptiveName() const {
 }
 
 
-const QString& DataScalar::typeString() const {
+QString DataScalar::typeString() const {
   return staticTypeString;
 }
 

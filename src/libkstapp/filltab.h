@@ -16,7 +16,7 @@
 #include "dialogtab.h"
 #include "ui_filltab.h"
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 namespace Kst {
 

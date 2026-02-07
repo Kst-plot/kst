@@ -200,68 +200,68 @@ void NamedObject::saveNameInfo(QXmlStreamWriter &s, unsigned I) {
 }
 
 void NamedObject::processShortNameIndexAttributes(QXmlStreamAttributes &attrs) {
-  QStringRef R;
+  QStringView R;
 
   R = attrs.value("initialVNum");
   if (!R.isEmpty()) 
-    _vectornum = R.toString().toInt();
+    _vectornum = R.toInt();
 
   R = attrs.value("initialXNum");
   if (!R.isEmpty()) {
-      _scalarnum = R.toString().toInt();
+      _scalarnum = R.toInt();
   }
 
   R = attrs.value("initialPNum");
   if (!R.isEmpty()) 
-    _pluginnum = R.toString().toInt();
+    _pluginnum = R.toInt();
 
   R = attrs.value("initialCSDNum");
   if (!R.isEmpty()) 
-    _csdnum = R.toString().toInt();
+    _csdnum = R.toInt();
 
   R = attrs.value("initialCNum");
   if (!R.isEmpty()) 
-    _curvecnum = R.toString().toInt();
+    _curvecnum = R.toInt();
 
   R = attrs.value("initialENum");
   if (!R.isEmpty()) 
-    _equationnum = R.toString().toInt();
+    _equationnum = R.toInt();
 
   R = attrs.value("initialHNum");
   if (!R.isEmpty()) 
-    _histogramnum = R.toString().toInt();
+    _histogramnum = R.toInt();
 
   R = attrs.value("initialINum");
   if (!R.isEmpty()) 
-    _imagenum = R.toString().toInt();
+    _imagenum = R.toInt();
 
   R = attrs.value("initialPSDNum");
   if (!R.isEmpty()) 
-    _psdnum = R.toString().toInt();
+    _psdnum = R.toInt();
 
   R = attrs.value("initialTNum");
   if (!R.isEmpty()) 
-    _stringnum = R.toString().toInt();
+    _stringnum = R.toInt();
 
   R = attrs.value("initialMNum");
   if (!R.isEmpty()) 
-    _matrixnum = R.toString().toInt();
+    _matrixnum = R.toInt();
 
   R = attrs.value("initialPlotNum");
   if (!R.isEmpty())
-    _plotnum = R.toString().toInt();
+    _plotnum = R.toInt();
 
   R = attrs.value("initialLNum");
   if (!R.isEmpty())
-    _legendnum = R.toString().toInt();
+    _legendnum = R.toInt();
 
   R = attrs.value("initialDNum");
   if (!R.isEmpty())
-    _viewitemnum = R.toString().toInt();
+    _viewitemnum = R.toInt();
 
   R = attrs.value("initialDSNum");
   if (!R.isEmpty())
-    _datasourcenum = R.toString().toInt();
+    _datasourcenum = R.toInt();
 }
 
 

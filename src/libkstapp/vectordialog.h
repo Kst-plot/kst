@@ -20,7 +20,7 @@
 
 #include <QPointer>
 
-#include "kst_export.h"
+#include "kstcore_export.h"
 
 #include "datasource.h"
 

@@ -15,11 +15,9 @@
 
 #include <QVector>
 #include <QSharedPointer>
+#include <QVarLengthArray>
 
 class QFile;
-template<class T, int Prealloc>
-class QVarLengthArray;
-
 
 class AsciiFileData
 {

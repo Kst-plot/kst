@@ -57,13 +57,13 @@ QStringList Kst::pluginSearchPaths()
   pluginPaths << "app/native/plugins";
 #endif
 
-  rootDir.cdUp();
-  path = rootDir.canonicalPath() + '/';
-  path += QLatin1String(KST_INSTALL_PLUGINS);
-  // Visal Studio paths
-  pluginPaths << path + QLatin1String("/Release");
-  pluginPaths << path + QLatin1String("/Debug");
-  pluginPaths << path + QLatin1String("/RelWithDebInfo");
+  // rootDir.cdUp();
+  // path = rootDir.canonicalPath() + '/';
+  // path += QLatin1String(KST_INSTALL_PLUGINS);
+  // // Visal Studio paths
+  // pluginPaths << path + QLatin1String("/Release");
+  // pluginPaths << path + QLatin1String("/Debug");
+  // pluginPaths << path + QLatin1String("/RelWithDebInfo");
 
   Debug::self()->log(DataSource::tr("\nPlugin Search Paths:"));
   foreach(const QString& p, pluginPaths) {
@@ -129,26 +129,13 @@ QString DataSourcePluginManager::obtainFile(const QString& source) {
     url = QUrl(source);
   }
 
-//   if (url.isLocalFile() || url.protocol().isEmpty() || url.protocol().toLower() == "nad") {
-    return source;
-//   }
+  return source;
 
   if (url_map.contains(source)) {
     return url_map[source];
   }
 
-  // FIXME: come up with a way to indicate the "widget" and fill it in here so
-  //        that KIO dialogs are associated with the proper window
-//   if (!KIO::NetAccess::exists(url, true, 0L)) {
-//     return QString();
-//   }
-
   QString tmpFile;
-  // FIXME: come up with a way to indicate the "widget" and fill it in here so
-  //        that KIO dialogs are associated with the proper window
-//   if (!KIO::NetAccess::download(url, tmpFile, 0L)) {
-//     return QString();
-//   }
 
   url_map[source] = tmpFile;
 
@@ -173,6 +160,8 @@ static void scanPlugins() {
   foreach (const QString& pluginPath, pluginPaths) {
     QDir d(pluginPath);
     foreach (const QString &fileName, d.entryList(QDir::Files)) {
+        if (!fileName.startsWith(QLatin1String("libdatasource")))
+            continue;
 #ifdef Q_OS_WIN
         if (!fileName.endsWith(QLatin1String(".dll")))
             continue;
@@ -187,6 +176,7 @@ static void scanPlugins() {
           }
         } else {
             Debug::self()->log(DataSource::tr("instance failed for %1 (%2)").arg(fileName).arg(loader.errorString()));
+            qDebug() << "Plugin load failed for" << fileName << ":" << loader.errorString();
         }
     }
   }

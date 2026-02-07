@@ -429,7 +429,7 @@ FitsImageSource::~FitsImageSource() {
   _config = 0L;
 }
 
-const QString& FitsImageSource::typeString() const {
+QString FitsImageSource::typeString() const {
   return fitsTypeString;
 }
 
@@ -442,7 +442,7 @@ void FitsImageSource::reset() {
 
 bool FitsImageSource::init() {
   int status = 0;
-  fits_open_image( &_fptr, _filename.toAscii(), READONLY, &status );
+  fits_open_image( &_fptr, _filename.toLatin1(), READONLY, &status );
 
   im->clear();
   _strings = fileMetas();
@@ -521,7 +521,7 @@ QStringList FitsImagePlugin::matrixList(QSettings *cfg,
     char tmpstr[1024];
 
 
-    fits_open_image( &ffits, filename.toAscii(), READONLY, &status );
+    fits_open_image( &ffits, filename.toLatin1(), READONLY, &status );
     matrixList.append( DefaultMatrixName );
 
     fits_get_num_hdus(ffits, &nhdu, &status);
@@ -624,7 +624,7 @@ int FitsImagePlugin::understands(QSettings *cfg, const QString& filename) const 
   int ret_val = 0;
   int naxis;
 
-  fits_open_image( &ffits, filename.toAscii(), READONLY, &status );
+  fits_open_image( &ffits, filename.toLatin1(), READONLY, &status );
   fits_get_img_dim( ffits, &naxis,  &status);
 
   if ((status == 0) && (naxis > 1)) {

@@ -57,8 +57,6 @@ void TestGeneratedMatrix::testGeneratedMatrix() {
   QVERIFY(ok);
 }
 
-#ifdef KST_USE_QTEST_MAIN
 QTEST_MAIN(TestGeneratedMatrix)
-#endif
 
 // vim: ts=2 sw=2 et

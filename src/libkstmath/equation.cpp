@@ -27,6 +27,7 @@
 
 #include <QTextDocument>
 #include <QXmlStreamWriter>
+#include <QRegularExpression>
 
 #include "dialoglauncher.h"
 #include "enodes.h"
@@ -179,7 +180,7 @@ QByteArray Equation::parseableEquation() const {
   eq.replace("atan2(", "atanx(", Qt::CaseInsensitive);
   eq.replace("atan2d(", "atanxd(", Qt::CaseInsensitive);
 
-  return eq.toAscii();
+  return eq.toLatin1();
 }
 QString Equation::readableEquation(const QString &equation) const {
   QString eq = equation;
@@ -288,7 +289,7 @@ void Equation::updateVectorLabels() {
 
   QString yl;
   QString xl;
-  QRegExp sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
+  static QRegularExpression sn("(\\(V(\\d{1,2})\\))|\\[|\\]"); // short name
   yl = reparsedEquation();
   yl.remove(sn);
 

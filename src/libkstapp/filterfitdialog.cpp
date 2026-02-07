@@ -45,7 +45,7 @@ FilterFitTab::FilterFitTab(QString& pluginName, QWidget *parent)
   _curvePlacement->setPlace(CurvePlacement::NoPlot);
 
   pluginChanged(pluginName);
-  connect(_pluginCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(pluginChanged(QString)));
+  connect(_pluginCombo, SIGNAL(currentTextChanged(QString)), this, SLOT(pluginChanged(QString)));
   connect(_curvePlacement->_noPlot, SIGNAL(toggled(bool)), _curveAppearance, SLOT(setDisabled(bool)));
 }
 

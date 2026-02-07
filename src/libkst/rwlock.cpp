@@ -39,8 +39,8 @@ void KstRWLock::readLock() const {
   QMutexLocker lock(&_mutex);
   
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::readLock() by tid=" << (int)QThread::currentThreadId() << endl;
-//  qDebug() << kstdBacktrace(6) << endl;
+  qDebug() << (void*)this << " KstRWLock::readLock() by tid=" << (int)QThread::currentThreadId() << Qt::endl;
+//  qDebug() << kstdBacktrace(6) << Qt::endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -48,7 +48,7 @@ void KstRWLock::readLock() const {
   if (_writeCount > 0 && _writeLocker == me) {
     // thread already has a write lock
 #ifdef LOCKTRACE
-    qDebug() << "Thread " << (int)QThread::currentThreadId() << " has a write lock on KstRWLock " << (void*)this << ", getting a read lock" << endl;
+    qDebug() << "Thread " << (int)QThread::currentThreadId() << " has a write lock on KstRWLock " << (void*)this << ", getting a read lock" << Qt::endl;
 #endif
   } else {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
@@ -67,7 +67,7 @@ void KstRWLock::readLock() const {
   ++_readCount;
 
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::readLock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::readLock() done by tid=" << (int)QThread::currentThread() << Qt::endl;
 #endif
 #else
   _mutex.lock();
@@ -80,8 +80,8 @@ void KstRWLock::writeLock() const {
   QMutexLocker lock(&_mutex);
 
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::writeLock() by tid=" << (int)QThread::currentThreadId() << endl;
-//  qDebug() << kstdBacktrace(6) << endl;
+  qDebug() << (void*)this << " KstRWLock::writeLock() by tid=" << (int)QThread::currentThreadId() << Qt::endl;
+//  qDebug() << kstdBacktrace(6) << Qt::endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -90,7 +90,7 @@ void KstRWLock::writeLock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it != _readLockers.end() && it.value() > 0) {
       // cannot acquire a write lock if I already have a read lock -- ERROR
-      qDebug() << "Thread " << QThread::currentThread() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to write lock KstRWLock " << (void*)this << " while holding a read lock" << Qt::endl;
       return;
     }
   }
@@ -104,7 +104,7 @@ void KstRWLock::writeLock() const {
   ++_writeCount;
 
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::writeLock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::writeLock() done by tid=" << (int)QThread::currentThread() << Qt::endl;
 #endif
 #else
   _mutex.lock();
@@ -117,7 +117,7 @@ void KstRWLock::unlock() const {
   QMutexLocker lock(&_mutex);
 
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::unlock() by tid=" << (int)QThread::currentThreadId() << endl;
+  qDebug() << (void*)this << " KstRWLock::unlock() by tid=" << (int)QThread::currentThreadId() << Qt::endl;
 #endif
 
   Qt::HANDLE me = QThread::currentThreadId();
@@ -126,7 +126,7 @@ void KstRWLock::unlock() const {
     QMap<Qt::HANDLE, int>::Iterator it = _readLockers.find(me);
     if (it == _readLockers.end()) {
       // read locked but not by me -- ERROR
-      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (read locked) without holding the lock" << Qt::endl;
       return;
     } else {
       --_readCount;
@@ -139,14 +139,14 @@ void KstRWLock::unlock() const {
   } else if (_writeCount > 0) {
     if (_writeLocker != me) {
       // write locked but not by me -- ERROR
-      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << endl;
+      qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (write locked) without holding the lock" << Qt::endl;
       return;
     } else {
       --_writeCount;
     }
   } else if (_readCount == 0 && _writeCount == 0) {
     // not locked -- ERROR
-    qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << endl;
+    qDebug() << "Thread " << QThread::currentThread() << " tried to unlock KstRWLock " << (void*)this << " (unlocked) without holding the lock" << Qt::endl;
     return;
   }
 
@@ -160,7 +160,7 @@ void KstRWLock::unlock() const {
   }
 
 #ifdef LOCKTRACE
-  qDebug() << (void*)this << " KstRWLock::unlock() done by tid=" << (int)QThread::currentThread() << endl;
+  qDebug() << (void*)this << " KstRWLock::unlock() done by tid=" << (int)QThread::currentThread() << Qt::endl;
 #endif
 #else
   _mutex.unlock();

@@ -193,8 +193,8 @@ void AsciiFileData::logData() const
   QString this_str;
   QString data_str;
 
-  this_str.asprintf("%p", this);
-  data_str.asprintf("%p", _array.data());
+  this_str = QString::asprintf("%p", this);
+  data_str = QString::asprintf("%p", _array.data());
   qDebug() << QString("AsciiFileData %1, array %2, byte %3 ... %4 (%8), row %5 ... %6 (%9), lazy: %7")
     .arg(this_str)
     .arg(data_str)

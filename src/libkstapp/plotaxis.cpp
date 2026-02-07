@@ -241,7 +241,7 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   if (accuracy > 0) {
     QString strSecond;
 
-    strSecond.asprintf("%02.*f", accuracy, second);
+    strSecond = QString::asprintf("%02.*f", accuracy, second);
     for (int i=strSecond.length()-1; i>0; i--) {
       if (strSecond.at(i) == '0') {
         accuracy--;
@@ -261,11 +261,11 @@ QString PlotAxis::convertJDToDateString(double jd, double range_jd) {
   seconds = QString::asprintf("%02.*f", accuracy, second);
   switch (_axisDisplay) {
     case AXIS_DISPLAY_YYMMDDHHMMSS_SS:
-      label.asprintf("%d/%02d/%02d", year, month, day);
+      label = QString::asprintf("%d/%02d/%02d", year, month, day);
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_DDMMYYHHMMSS_SS:
-      label.asprintf("%02d/%02d/%d", day, month, year);
+      label = QString::asprintf("%02d/%02d/%d", day, month, year);
       label += hourminute + seconds;
       break;
     case AXIS_DISPLAY_QTTEXTDATEHHMMSS_SS:
@@ -1044,7 +1044,7 @@ void PlotAxis::updateLinearTicks(MajorTickMode tickMode) {
     if (uNextTick > uMax)
       break;    
     double nextTick = uNextTick * drdu + rOffset;
-    if (lastTick == uNextTick) // prevent endless loop
+    if (lastTick == uNextTick) // prevent Qt::endless loop
       break;
     lastTick = nextTick;
     ticks << nextTick;
@@ -1268,7 +1268,7 @@ bool PlotAxis::configureFromXml(QXmlStreamReader &xml, ObjectStore *store) {
 
   QString primaryTag = xml.name().toString();
   QXmlStreamAttributes attrs = xml.attributes();
-  QStringRef av = attrs.value("visible");
+  QStringView av = attrs.value("visible");
   if (!av.isNull()) {
     setAxisVisible(QVariant(av.toString()).toBool());
   }
