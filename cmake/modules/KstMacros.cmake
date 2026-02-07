@@ -14,8 +14,7 @@
 # ***************************************************************************
 
 include(MergedFilesBuild)
-include(KstPchSupport)
-
+# include(KstPchSupport)
 
 macro(kst_dbg)
 	foreach(it ${ARGN})
@@ -98,12 +97,6 @@ macro(kst_add_library type)
 	include_directories(${kst_${kst_name}_folder} ${CMAKE_CURRENT_BINARY_DIR})
 	string(TOUPPER BUILD_kst${kst_name_base} _build_macro)
 	add_definitions(-D${_build_macro})
-	if(kst_pch)
-		set(pch kst${kst_name_base}_pch)
-		configure_file(${kst_${kst_name}_folder}/${pch} ${CMAKE_CURRENT_BINARY_DIR}/${pch}.h COPYONLY)
-		#add_definitions(-DKST_PCH_RECURSIVE) # only some percents faster
-		kst_add_pch_rule(${CMAKE_CURRENT_BINARY_DIR}/${pch}.h kst_${kst_name}_sources ${type})
-	endif()
 	if(kst_merge_files)
 		if(kst_merge_rebuild)
 			set(merged_files_rebuild 1)
