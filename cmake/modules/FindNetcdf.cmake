@@ -19,7 +19,7 @@ include(FindPackageHandleStandardArgs)
 # Try pkg-config first
 find_package(PkgConfig QUIET)
 if(PKG_CONFIG_FOUND)
-    pkg_check_modules(NETCDF_PKG QUIET netcdf netcdf-cxx4)
+    pkg_check_modules(NETCDF_PKG netcdf-cxx4)
 endif()
 
 # Find headers
