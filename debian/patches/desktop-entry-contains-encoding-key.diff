@@ -1,0 +1,16 @@
+Description: desktop-entry-contains-encoding-key
+ The Encoding key is now deprecated by the FreeDesktop standard and all 
+ strings are required to be encoded in UTF-8.
+Author: Ruben Molina <rmolina@udea.edu.co>
+Forwarded: not-needed
+Last-Update: 2011-06-25
+
+Index: kst-2.0.3/src/kst/kst.desktop
+===================================================================
+--- kst-2.0.3.orig/src/kst/kst.desktop	2011-06-25 18:30:55.102870741 -0500
++++ kst-2.0.3/src/kst/kst.desktop	2011-06-25 18:31:28.399035843 -0500
+@@ -41,4 +41,3 @@
+ GenericName[xx]=xxData Viewerxx
+ GenericName[zh_CN]=数据查看器
+ 
+-Encoding=UTF-8
