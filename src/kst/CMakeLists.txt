@@ -8,6 +8,9 @@ target_link_libraries(kst
    Kst6Widgets
    Kst6Core
 )
+install(TARGETS kst RUNTIME DESTINATION bin)
+
+set_target_properties(kst PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/kst")
 
 if(UNIX AND NOT APPLE)
 	set(man ${CMAKE_BINARY_DIR}/${kst_binary_name}.1)
@@ -34,10 +37,10 @@ if(UNIX AND NOT APPLE)
     install(FILES ${kst_dir}/src/images/128x128/kst.png DESTINATION share/icons/hicolor/128x128/apps)
     install(FILES ${kst_dir}/src/images/svg_icons/kst.svg DESTINATION share/icons/hicolor/scalable/apps)
 
-    install(FILES ${kst_dir}/src/images/32x32/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/32x32/mimetypes)
-    install(FILES ${kst_dir}/src/images/48x48/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/48x48/mimetypes)
-    install(FILES ${kst_dir}/src/images/64x64/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/64x64/mimetypes)
-    install(FILES ${kst_dir}/src/images/128x128/application-x-kst.png DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/128x128/mimetypes)
-    install(FILES ${kst_dir}/src/images/svg_icons/application-x-kst.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/mimetypes)
+    install(FILES ${kst_dir}/src/images/32x32/application-x-kst.png DESTINATION share/icons/hicolor/32x32/mimetypes)
+    install(FILES ${kst_dir}/src/images/48x48/application-x-kst.png DESTINATION share/icons/hicolor/48x48/mimetypes)
+    install(FILES ${kst_dir}/src/images/64x64/application-x-kst.png DESTINATION share/icons/hicolor/64x64/mimetypes)
+    install(FILES ${kst_dir}/src/images/128x128/application-x-kst.png DESTINATION share/icons/hicolor/128x128/mimetypes)
+    install(FILES ${kst_dir}/src/images/svg_icons/application-x-kst.svg DESTINATION share/icons/hicolor/scalable/mimetypes)
 endif()
 

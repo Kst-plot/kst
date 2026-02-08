@@ -11,3 +11,22 @@ tmp*
 po
 po_all
 *~
+# Debian build artefacts
+debian/.debhelper/
+debian/*.debhelper.log
+debian/*.substvars
+debian/files
+debian/kst/
+debian/kst-doc/
+debian/debhelper-build-stamp
+
+# Build directories
+obj-*/
+obj-*/
+build/
+build-*/
+cmake-build-*/
+*.o
+
+# Generated headers
+*kst*_export.h

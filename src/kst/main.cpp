@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
   Kst::Application app(argc, argv);
 
-  //--------
+  Q_INIT_RESOURCE(icons);
   QTranslator qtTranslator;
   translator_loaded = qtTranslator.load(QLatin1String("qt_") + QLocale::system().name(),
                     QLibraryInfo::path(QLibraryInfo::TranslationsPath));

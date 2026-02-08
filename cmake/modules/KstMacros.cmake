@@ -180,6 +180,11 @@ function(kst_add_plugin folder name)
         ${ARG_LINK_LIBRARIES}
     )
     
+    # Set RPATH so plugins can find private libraries
+    set_target_properties(${_name} PROPERTIES
+        INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/kst"
+    )
+    
     # Install the plugin
     if(NOT APPLE)
         install(TARGETS ${_name} LIBRARY DESTINATION ${kst_install_plugins})

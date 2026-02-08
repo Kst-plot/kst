@@ -1,3 +1,11 @@
+kst (3.0.0) UNRELEASED; urgency=low
+
+  * Port application to Qt6, update build system, and modernize codebase.
+  * Bundle private libraries into main package for simplified distribution.
+  * Update Debian packaging for Qt6 compatibility.
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 07 Feb 2026 12:00:00 -0500
+
 kst (2.1.x) UNRELEASED; urgency=low
   * add libnetcdf-c++4 to build requirements.
 

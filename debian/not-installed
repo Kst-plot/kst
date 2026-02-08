@@ -1,0 +1,5 @@
+usr/include/Kst6App/kstapp_export.h
+usr/include/Kst6Core/kstcore_export.h
+usr/include/Kst6Math/kstmath_export.h
+usr/include/Kst6Widgets/kstwidgets_export.h
+usr/lib/x86_64-linux-gnu/kst/libKst6App.a
