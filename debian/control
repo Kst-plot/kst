@@ -3,7 +3,7 @@ Section: science
 Priority: optional
 Maintainer: Barth Netterfield <netterfield@astro.utoronto.ca>
 Build-Depends: debhelper-compat (= 13), cmake (>=3.22),
- qt6-base-dev, qt6-svg-dev, qt6-tools-dev,
+ qt6-base-dev, qt6-svg-dev, qt6-tools-dev, kdoctools5,
  libnetcdf-c++4-dev, libgsl-dev, extra-cmake-modules,
  libcfitsio-dev, libgetdata-dev, libtiff-dev, libmatio-dev, libhdf5-dev
 Standards-Version: 4.7.0
