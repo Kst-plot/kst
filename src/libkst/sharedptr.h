@@ -18,8 +18,13 @@
 #include <QDebug>
 
 // Supress GCC 13's (apparently) over-agressive warnings about use of this class.
-// If you are a 22nd level C++ mage (or higher) feel free to remove this, and see
-// if there really is a problem here.
+// Claude Opus 4.6 says:
+// The warning is a GCC false positive. Shared is the second base class of Object
+// (after QObject), so its this pointer sits at offset +16 from the allocation base. 
+// When GCC aggressively inlines SharedPtr::~SharedPtr → _KShared_unref → delete this, 
+// it sees a delete on an offset pointer and warns. This is actually safe because 
+// Shared has a virtual destructor (sharedptr.h line 94), so delete this correctly 
+// dispatches through the vtable and frees from the true base.
 #ifdef __GNUC__
   #ifndef __clang__
     #pragma GCC diagnostic ignored "-Wfree-nonheap-object"

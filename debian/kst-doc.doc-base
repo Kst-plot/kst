@@ -1,9 +1,0 @@
-Document: tutorial
-Title: The KST Tutorial
-Author: Barth Netterfield and Rick Chern
-Abstract: KST is a data plotting and manipulation program with powerful plugin support
-Section: Science/Data Analysis
-
-Format: HTML
-Index: /usr/share/doc/kst-doc/tutorial/index.html
-Files: /usr/share/doc/kst-doc/tutorial/*.html
