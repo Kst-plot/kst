@@ -1,0 +1,32 @@
+Source: kst
+Section: science
+Priority: optional
+Maintainer: Barth Netterfield <netterfield@astro.utoronto.ca>
+Build-Depends: debhelper-compat (= 13), cmake (>=3.22),
+ qt6-base-dev, qt6-svg-dev, qt6-tools-dev,
+ libnetcdf-c++4-dev, libgsl-dev, extra-cmake-modules,
+ libcfitsio-dev, libgetdata-dev, libtiff-dev, libmatio-dev, libhdf5-dev
+Standards-Version: 4.7.0
+Homepage: http://kst.kde.org
+
+Package: kst
+Architecture: any
+Replaces: kst2, libkst2core2, libkst2math2, libkst2widgets2
+Conflicts: kst2, libkst2core2, libkst2math2, libkst2widgets2
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: kst-doc
+Description: scientific data plotting tool
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+
+Package: kst-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: set of tutorials for kst
+ Kst is a fast real-time large-dataset viewing and plotting tool. 
+ It has basic data analysis functionality, contains many powerful 
+ built-in features and is expandable with plugins and extensions.
+ .
+ This package contains documentation files for kst.
