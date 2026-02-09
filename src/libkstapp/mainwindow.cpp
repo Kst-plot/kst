@@ -1254,14 +1254,14 @@ void MainWindow::createActions() {
   _backSmallAct->setStatusTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setToolTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setIcon(KstGetIcon("page-previous"));
-  _backSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageDown);
+  _backSmallAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_PageDown));
   connect(_backSmallAct, SIGNAL(triggered()), this, SLOT(backSmall()));
 
   _forwardSmallAct = new QAction(tr("&Forward 1/5th Screen"), this);
   _forwardSmallAct->setStatusTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setToolTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setIcon(KstGetIcon("page-next"));
-  _forwardSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageUp);
+  _forwardSmallAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_PageUp));
   connect(_forwardSmallAct, SIGNAL(triggered()), this, SLOT(forwardSmall()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
@@ -1275,7 +1275,7 @@ void MainWindow::createActions() {
   _readToEndAct->setStatusTip(tr("Read to end mode"));
   _readToEndAct->setToolTip(tr("Read to end mode (shift+end)"));
   _readToEndAct->setIcon(KstGetIcon("read-to-end"));
-  _readToEndAct->setShortcut(Qt::ShiftModifier | Qt::Key_End);
+  _readToEndAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_End));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("&Pause"), this);
@@ -1454,7 +1454,7 @@ void MainWindow::createActions() {
 
   _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
   _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  _xOnlyZoomAct->setShortcut(Qt::CTRL | Qt::Key_K);
+  _xOnlyZoomAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_K));
   _xOnlyZoomAct->setToolTip(tr("X Zoom mode (%1)").arg(_xOnlyZoomAct->shortcut().toString()));
   _xOnlyZoomAct->setCheckable(true);
   _xOnlyZoomAct->setData(View::ZoomOnlyX);
@@ -1462,7 +1462,7 @@ void MainWindow::createActions() {
 
   _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
   _yOnlyZoomAct->setStatusTip(tr("Zoom only in Y direction"));
-  _yOnlyZoomAct->setShortcut(Qt::SHIFT | Qt::Key_K);
+  _yOnlyZoomAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_K));
   _yOnlyZoomAct->setToolTip(tr("Y Zoom mode (%1)").arg(_yOnlyZoomAct->shortcut().toString()));
   _yOnlyZoomAct->setData(View::ZoomOnlyY);
   _yOnlyZoomAct->setCheckable(true);

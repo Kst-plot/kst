@@ -427,13 +427,13 @@ void PlotItem::createActions() {
   connect(_zoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
 
   _zoomXTied = new QAction(tr("Zoom X Tied"), this);
-  _zoomXTied->setShortcut(Qt::CTRL | Qt::Key_T);
+  _zoomXTied->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_T));
   _zoomXTied->setCheckable(true);
   registerShortcut(_zoomXTied);
   connect(_zoomXTied, SIGNAL(triggered()), this, SLOT(zoomXTied()));
 
   _zoomYTied = new QAction(tr("Zoom Y Tied"), this);
-  _zoomYTied->setShortcut(Qt::SHIFT | Qt::Key_T);
+  _zoomYTied->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_T));
   _zoomYTied->setCheckable(true);
   registerShortcut(_zoomYTied);
   connect(_zoomYTied, SIGNAL(triggered()), this, SLOT(zoomYTied()));
@@ -444,17 +444,17 @@ void PlotItem::createActions() {
   connect(_zoomMeanCentered, SIGNAL(triggered()), this, SLOT(zoomMeanCentered()));
 
   _zoomXMaximum = new QAction(tr("X-Zoom Maximum"), this);
-  _zoomXMaximum->setShortcut(Qt::CTRL | Qt::Key_M);
+  _zoomXMaximum->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_M));
   registerShortcut(_zoomXMaximum);
   connect(_zoomXMaximum, SIGNAL(triggered()), this, SLOT(zoomXMaximum()));
 
   _zoomXAutoBorder = new QAction(tr("X-Zoom Auto Border"), this);
-  _zoomXAutoBorder->setShortcut(Qt::CTRL | Qt::Key_B);
+  _zoomXAutoBorder->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_B));
   registerShortcut(_zoomXAutoBorder);
   connect(_zoomXAutoBorder, SIGNAL(triggered()), this, SLOT(zoomXAutoBorder()));
 
   _zoomXNoSpike = new QAction(tr("X-Zoom Spike Insensitive"), this);
-  //_zoomXNoSpike->setShortcut(Qt::CTRL | Qt::Key_S);
+  //_zoomXNoSpike->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
   registerShortcut(_zoomXNoSpike);
   connect(_zoomXNoSpike, SIGNAL(triggered()), this, SLOT(zoomXNoSpike()));
 
@@ -464,7 +464,7 @@ void PlotItem::createActions() {
   connect(_zoomXRight, SIGNAL(triggered()), this, SLOT(zoomXRight()));
 
   _zoomXFarRight = new QAction(tr("X-Zoom Right by one screen"), this);
-  _zoomXFarRight->setShortcut(Qt::CTRL | Qt::Key_Right);
+  _zoomXFarRight->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right));
   registerShortcut(_zoomXFarRight);
   connect(_zoomXFarRight, SIGNAL(triggered()), this, SLOT(zoomXFarRight()));
 
@@ -474,17 +474,17 @@ void PlotItem::createActions() {
   connect(_zoomXLeft, SIGNAL(triggered()), this, SLOT(zoomXLeft()));
 
   _zoomXFarLeft= new QAction(tr("X-Zoom Left by one screen"), this);
-  _zoomXFarLeft->setShortcut(Qt::CTRL | Qt::Key_Left);
+  _zoomXFarLeft->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left));
   registerShortcut(_zoomXFarLeft);
   connect(_zoomXFarLeft, SIGNAL(triggered()), this, SLOT(zoomXFarLeft()));
 
   _zoomXOut = new QAction(tr("X-Zoom Out"), this);
-  _zoomXOut->setShortcut(Qt::SHIFT | Qt::Key_Right);
+  _zoomXOut->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_Right));
   registerShortcut(_zoomXOut);
   connect(_zoomXOut, SIGNAL(triggered()), this, SLOT(zoomXOut()));
 
   _zoomXIn = new QAction(tr("X-Zoom In"), this);
-  _zoomXIn->setShortcut(Qt::SHIFT | Qt::Key_Left);
+  _zoomXIn->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_Left));
   registerShortcut(_zoomXIn);
   connect(_zoomXIn, SIGNAL(triggered()), this, SLOT(zoomXIn()));
 
@@ -500,22 +500,22 @@ void PlotItem::createActions() {
   connect(_zoomLogX, SIGNAL(triggered()), this, SLOT(zoomLogX()));
 
   _zoomYLocalMaximum = new QAction(tr("Y-Zoom Local Maximum"), this);
-  _zoomYLocalMaximum->setShortcut(Qt::SHIFT | Qt::Key_L);
+  _zoomYLocalMaximum->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_L));
   registerShortcut(_zoomYLocalMaximum);
   connect(_zoomYLocalMaximum, SIGNAL(triggered()), this, SLOT(zoomYLocalMaximum()));
 
   _zoomYMaximum = new QAction(tr("Y-Zoom Maximum"), this);
-  _zoomYMaximum->setShortcut(Qt::SHIFT | Qt::Key_M);
+  _zoomYMaximum->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_M));
   registerShortcut(_zoomYMaximum);
   connect(_zoomYMaximum, SIGNAL(triggered()), this, SLOT(zoomYMaximum()));
 
   _zoomYAutoBorder = new QAction(tr("Y-Zoom Auto Border"), this);
-  _zoomYAutoBorder->setShortcut(Qt::SHIFT | Qt::Key_B);
+  _zoomYAutoBorder->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_B));
   registerShortcut(_zoomYAutoBorder);
   connect(_zoomYAutoBorder, SIGNAL(triggered()), this, SLOT(zoomYAutoBorder()));
 
   _zoomYNoSpike = new QAction(tr("Y-Zoom Spike Insensitive"), this);
-  _zoomYNoSpike->setShortcut(Qt::SHIFT | Qt::Key_S);
+  _zoomYNoSpike->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_S));
   registerShortcut(_zoomYNoSpike);
   connect(_zoomYNoSpike, SIGNAL(triggered()), this, SLOT(zoomYNoSpike()));
 
@@ -530,17 +530,17 @@ void PlotItem::createActions() {
   connect(_zoomYDown, SIGNAL(triggered()), this, SLOT(zoomYDown()));
 
   _zoomYOut = new QAction(tr("Y-Zoom Out"), this);
-  _zoomYOut->setShortcut(Qt::SHIFT | Qt::Key_Up);
+  _zoomYOut->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_Up));
   registerShortcut(_zoomYOut);
   connect(_zoomYOut, SIGNAL(triggered()), this, SLOT(zoomYOut()));
 
   _zoomYIn = new QAction(tr("Y-Zoom In"), this);
-  _zoomYIn->setShortcut(Qt::SHIFT | Qt::Key_Down);
+  _zoomYIn->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_Down));
   registerShortcut(_zoomYIn);
   connect(_zoomYIn, SIGNAL(triggered()), this, SLOT(zoomYIn()));
 
   _zoomNormalizeYtoX = new QAction(tr("Normalize Y-axis to X-axis"), this);
-  _zoomNormalizeYtoX->setShortcut(Qt::SHIFT | Qt::Key_N);
+  _zoomNormalizeYtoX->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_N));
   registerShortcut(_zoomNormalizeYtoX);
   connect(_zoomNormalizeYtoX, SIGNAL(triggered()), this, SLOT(zoomNormalizeYtoX()));
 
@@ -579,7 +579,7 @@ void PlotItem::createActions() {
   connect(_breakSharedBox, SIGNAL(triggered()), this, SIGNAL(breakShareTriggered()));
 
   _copyStatus = new QAction(tr("Copy Coordinates"), this);
-  _copyStatus->setShortcut(Qt::CTRL | Qt::Key_C);
+  _copyStatus->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_C));
   registerShortcut(_copyStatus);
   connect(_copyStatus, SIGNAL(triggered()), this, SLOT(copyStatus()));
 
@@ -600,7 +600,7 @@ void PlotItem::createActions() {
   registerShortcut(referenceMode);
 
   referenceModeDisabled = new QAction(tr("Remove Reference Marker"), this);
-  referenceModeDisabled->setShortcut(Qt::SHIFT | Qt::Key_C);
+  referenceModeDisabled->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_C));
   registerShortcut(referenceModeDisabled);
 
 }
