@@ -8,6 +8,7 @@ MimeType=application/x-kst;
 Categories=Qt;KDE;Science;DataVisualization;
 Name=kst
 Name[ca]=kst
+Name[ca@valencia]=kst
 Name[es]=kst
 Name[nl]=kst
 Name[pt_BR]=kst
