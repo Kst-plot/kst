@@ -54,7 +54,7 @@ endif()
 
 # Handle standard args and set _FOUND variable
 find_package_handle_standard_args(Netcdf
-    REQUIRED_VARS NETCDF_INCLUDE_DIR NETCDF_LIBRARIES
+    REQUIRED_VARS NETCDF_INCLUDE_DIR NETCDF_LIBRARIES NETCDF_LIBRARY_CPP
     HANDLE_COMPONENTS
 )
 
