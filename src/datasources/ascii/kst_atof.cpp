@@ -224,7 +224,12 @@ double LexicalCast::fromTime(const char* p) const
     if (!t.isValid()) {
       return nanValue();
     }
+#if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
     t.setTimeZone(QTimeZone::UTC);            
+#else
+    t.setTimeSpec(Qt::UTC);
+#endif
+
 
     sec = t.toMSecsSinceEpoch() / 1000.0;
   } else {
