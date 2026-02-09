@@ -3,14 +3,6 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
-qt6_wrap_ui(UI_HEADERS ${UI_FILES})
-
-file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
-qt6_add_resources(RESOURCE_SOURCES ${CMAKE_SOURCE_DIR}/src/images/icons.qrc)
-
 include(GenerateExportHeader)
 
 add_library(Kst6App STATIC)
@@ -38,9 +30,7 @@ target_include_directories(Kst6App
 # )
 
 target_sources(Kst6App PRIVATE
-    ${UI_HEADERS}
-    ${MOC_SOURCES}
-    ${RESOURCE_SOURCES}
+    ${CMAKE_SOURCE_DIR}/src/images/icons.qrc
     aboutdialog.h
     application.h
     applicationsettings.h
@@ -296,10 +286,6 @@ target_sources(Kst6App PRIVATE
     viewmatrixdialog.cpp
     viewprimitivedialog.cpp
     viewvectordialog.cpp
-)
-
-qt_add_ui(Kst6App
-    SOURCES
     aboutdialog.ui
     arrowpropertiestab.ui
     axistab.ui

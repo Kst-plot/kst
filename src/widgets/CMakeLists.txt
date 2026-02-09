@@ -3,12 +3,6 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-file(GLOB UI_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
-qt6_wrap_ui(UI_HEADERS ${UI_FILES})
-
-file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
 include(GenerateExportHeader)
 
 add_library(Kst6Widgets SHARED)
@@ -21,12 +15,11 @@ target_include_directories(Kst6Widgets
     INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/Kst6Widgets_autogen/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Kst6Widgets>"
 )
 
 target_sources(Kst6Widgets PRIVATE
-    ${UI_HEADERS}
-    ${MOC_SOURCES}
     cclineedit.h
     cclineedit_p.h
     colorbutton.h
@@ -75,23 +68,19 @@ target_sources(Kst6Widgets PRIVATE
     scalarselector.cpp
     stringselector.cpp
     vectorselector.cpp
-)
-
-qt_add_ui(Kst6Widgets
-    SOURCES
-        colorpalette.ui
-        curveappearance.ui
-        curveplacement.ui
-        curveselector.ui
-        datarange.ui
-        fftoptions.ui
-        labelbuilder.ui
-        matrixselector.ui
-        modelessinfobox.ui
-        scalarlistselector.ui
-        scalarselector.ui
-        stringselector.ui
-        vectorselector.ui
+    colorpalette.ui
+    curveappearance.ui
+    curveplacement.ui
+    curveselector.ui
+    datarange.ui
+    fftoptions.ui
+    labelbuilder.ui
+    matrixselector.ui
+    modelessinfobox.ui
+    scalarlistselector.ui
+    scalarselector.ui
+    stringselector.ui
+    vectorselector.ui
 )
 
 target_link_libraries(Kst6Widgets PUBLIC

@@ -15,6 +15,10 @@ project(Kst VERSION ${kst_version})
 
 include(GNUInstallDirs)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Ensure custom CMake modules (e.g., FindGetdata.cmake) are found

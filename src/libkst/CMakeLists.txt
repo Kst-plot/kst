@@ -3,9 +3,6 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
 include(GenerateExportHeader)
 
 add_library(Kst6Core SHARED)
@@ -22,7 +19,6 @@ target_include_directories(Kst6Core
 )
 
 target_sources(Kst6Core PRIVATE
-    ${MOC_SOURCES}
     builtinprimitives.h
     coredocument.h
     datacollection.h

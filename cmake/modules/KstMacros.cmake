@@ -162,15 +162,9 @@ function(kst_add_plugin folder name)
     file(GLOB _headers     ${_folder}/*.h)
     file(GLOB _ui_files    ${_folder}/*.ui)
 
-    add_library(${_name} MODULE ${_sources} ${_sources_cpp} ${_headers})
+    add_library(${_name} MODULE ${_sources} ${_sources_cpp} ${_headers} ${_ui_files})
     
-    set_target_properties(${_name} PROPERTIES AUTOMOC ON)
     target_include_directories(${_name} PRIVATE ${CMAKE_SOURCE_DIR}/src/libkst)
-    
-    if(_ui_files)
-        qt6_wrap_ui(UI_SOURCES ${_ui_files})
-        target_sources(${_name} PRIVATE ${UI_SOURCES})
-    endif()
     
     target_link_libraries(${_name} PUBLIC
         Kst6Core

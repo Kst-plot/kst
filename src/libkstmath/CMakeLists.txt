@@ -3,9 +3,6 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
 include(GenerateExportHeader)
 
 add_library(Kst6Math SHARED)
@@ -22,7 +19,6 @@ target_include_directories(Kst6Math
 )
 
 target_sources(Kst6Math PRIVATE
-    ${MOC_SOURCES}
     basicplugin.h
     basicpluginfactory.h
     builtinobjects.h
