@@ -3956,9 +3956,9 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         QXmlStreamAttributes subattrs = xml.attributes();
         QStringView av = subattrs.value("id");
         if (!av.isNull()) {
-          if (av == "xaxis") {
+          if (av == QLatin1String("xaxis")) {
             rc->xAxis()->configureFromXml(xml, store);
-          } else if (av == "yaxis") {
+          } else if (av == QLatin1String("yaxis")) {
             rc->yAxis()->configureFromXml(xml, store);
           }
         }
@@ -3968,15 +3968,15 @@ ViewItem* PlotItemFactory::generateGraphics(QXmlStreamReader& xml, ObjectStore *
         QXmlStreamAttributes subattrs = xml.attributes();
         QStringView av = subattrs.value("id");
         if (!av.isNull()) {
-          if (av == "leftlabel") {
+          if (av == QLatin1String("leftlabel")) {
             rc->leftLabelDetails()->configureFromXml(xml, store);
-          } else if (av == "rightlabel") {
+          } else if (av == QLatin1String("rightlabel")) {
             rc->rightLabelDetails()->configureFromXml(xml, store);
-          } else if (av == "toplabel") {
+          } else if (av == QLatin1String("toplabel")) {
             rc->topLabelDetails()->configureFromXml(xml, store);
-          } else if (av == "bottomlabel") {
+          } else if (av == QLatin1String("bottomlabel")) {
             rc->bottomLabelDetails()->configureFromXml(xml, store);
-          } else if (av == "numberlabel") {
+          } else if (av == QLatin1String("numberlabel")) {
             rc->numberLabelDetails()->configureFromXml(xml, store);         }
         }
         xml.readNext();
