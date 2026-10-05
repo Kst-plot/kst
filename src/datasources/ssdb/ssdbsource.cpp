@@ -768,21 +768,23 @@ bool SsdbSource::selectValue(scalar_token_t *token, qint64 time, double *value) 
 // Read frame-aligned vectors: synthesize INDEX/TIME or query scalar samples.
 int SsdbSource::readVector(double *data, const QString &name, const DataVector::ReadInfo &info) {
   if (!data || !std::isfinite(info.startingFrame) ||
-      info.startingFrame < 0 || std::floor(info.startingFrame) != info.startingFrame) return -1;
+      info.startingFrame < 0) return -1;
   const bool one = info.singleSample || info.numberOfFrames < 0;
   if (!one && (!std::isfinite(info.numberOfFrames) || info.numberOfFrames <= 0 ||
                std::floor(info.numberOfFrames) != info.numberOfFrames)) return -1;
   if (info.startingFrame >= _frameCount) return 0;
-  const double frames = one ? 1 : qMin(info.numberOfFrames, _frameCount - info.startingFrame);
+  // SSDB samples live on integer frame boundaries. Truncate fractional starts
+  // to the preceding frame so time/index synthesis and field reads stay aligned.
+  const qint64 first = qint64(info.startingFrame);
+  const double frames = one ? 1 : qMin(info.numberOfFrames, double(_frameCount - first));
 
   // INDEX and TIME share frame boundaries and need no database requests.
   if (name == indexFieldString || name == timeFieldString) {
     if (frames > INT_MAX) return -1;
     const int count = int(frames);
     if (name == indexFieldString) {
-      for (int i = 0; i < count; ++i) data[i] = info.startingFrame + i;
+      for (int i = 0; i < count; ++i) data[i] = first + i;
     } else {
-      const qint64 first = qint64(info.startingFrame);
       if (first > (LLONG_MAX - _originNs) / _framePeriodNs - (count - 1)) return -1;
       for (int i = 0; i < count; ++i)
         data[i] = double(_originNs + (first + i) * _framePeriodNs) / 1.0e9;
@@ -794,9 +796,8 @@ int SsdbSource::readVector(double *data, const QString &name, const DataVector::
   if (!_consumer || !f) return -1;
   const double values = one ? 1 : frames * f->samplesPerFrame;
   if (values > INT_MAX ||
-      info.startingFrame > double(LLONG_MAX / _framePeriodNs) - frames) return -1;
+      double(first) > double(LLONG_MAX / _framePeriodNs) - frames) return -1;
 
-  const qint64 first = qint64(info.startingFrame);
   const int spf = f->samplesPerFrame;
   const qint64 step = _framePeriodNs / spf;
   if (!step) return -1;
