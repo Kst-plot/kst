@@ -20,6 +20,9 @@
 #include <QTimeZone>
 #include <QtMath>
 
+#include <cmath>
+#include <limits>
+
 namespace Kst {
 
 DataRange::DataRange(QWidget *parent) : QWidget(parent) {
@@ -81,6 +84,7 @@ DataRange::DataRange(QWidget *parent) : QWidget(parent) {
 
   _controlField0 = Range;
   _controlField1 = Start;
+  _canonicalFrameRangeValid = false;
 }
 
 DataRange::~DataRange() {}
@@ -92,6 +96,8 @@ static QString secondsToDurationString(double totalSeconds);
 static QString ctimeToISOString(double ctime);
 
 void DataRange::clearValues() {
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEndValid = false;
   _start->clear();
   _range->clear();
   _skip->clear();
@@ -119,7 +125,7 @@ void DataRange::setStart(qreal start, bool callUpdateFields) {
   } else if (lastIsDuration() && startIsSeconds()) {
     _start->setText(secondsToDurationString(start));
   } else {
-    _start->setText(QString::number(start, 'g', 12));
+    _start->setText(QString::number(start, 'g', 17));
   }
   if (callUpdateFields) {
     updateFields(None);
@@ -145,7 +151,7 @@ void DataRange::setLast(qreal last, bool callUpdateFields) {
   } else if (startIsDuration() && startIsSeconds()) {
     _last->setText(secondsToDurationString(last));
   } else {
-    _last->setText(QString::number(last, 'g', 12));
+    _last->setText(QString::number(last, 'g', 17));
   }
   if (callUpdateFields) {
     updateFields(None);
@@ -153,10 +159,13 @@ void DataRange::setLast(qreal last, bool callUpdateFields) {
 }
 
 void DataRange::clearIndexList() {
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEndValid = false;
   _startUnits->clear();
   _rangeUnits->clear();
   _indexFieldProps.clear();
   _dataSource = DataSourcePtr();
+  _referenceField.clear();
 }
 
 void DataRange::updateIndexList(
@@ -186,6 +195,19 @@ void DataRange::updateIndexList(
   _displayedRangeUnits = rangeUnits();
 
   updateFields(None);
+  if (_canonicalFrameRangeValid) {
+    displayCanonicalFrameRange();
+  }
+  if (_canonicalCountFromEndValid && !displayCanonicalCountFromEnd()) {
+    for (const IndexFieldProperties &field : indexFields) {
+      if (field.is_frame) {
+        setRangeUnits(field.name);
+        _displayedRangeUnits = rangeUnits();
+        displayCanonicalCountFromEnd();
+        break;
+      }
+    }
+  }
 }
 
 QString DataRange::startUnits() const { return _startUnits->currentText(); }
@@ -197,6 +219,16 @@ QString DataRange::startUnits() const { return _startUnits->currentText(); }
 void DataRange::setStartUnits(const QString &startUnits) {
   _requestedStartUnits = startUnits;
   int i = _startUnits->findText(startUnits);
+  if (i < 0 && startUnits.compare("frames", Qt::CaseInsensitive) == 0) {
+    for (const IndexFieldProperties &field : _indexFieldProps) {
+      if (field.is_frame) {
+        i = _startUnits->findText(field.name);
+        if (i >= 0) {
+          break;
+        }
+      }
+    }
+  }
   if (i >= 0) {
     _startUnits->setCurrentIndex(i);
   }
@@ -351,7 +383,7 @@ qreal DataRange::range() const {
 bool DataRange::rangeDirty() const { return !_range->text().isEmpty(); }
 
 void DataRange::setRange(qreal range, bool callUpdateFields) {
-  _range->setText(QString::number(range));
+  _range->setText(QString::number(range, 'g', 17));
   if (callUpdateFields) {
     updateFields(None);
   }
@@ -362,6 +394,16 @@ QString DataRange::rangeUnits() const { return _rangeUnits->currentText(); }
 void DataRange::setRangeUnits(const QString &rangeUnits) {
   _requestedRangeUnits = rangeUnits;
   int i = _rangeUnits->findText(rangeUnits);
+  if (i < 0 && rangeUnits.compare("frames", Qt::CaseInsensitive) == 0) {
+    for (const IndexFieldProperties &field : _indexFieldProps) {
+      if (field.is_frame) {
+        i = _rangeUnits->findText(field.name);
+        if (i >= 0) {
+          break;
+        }
+      }
+    }
+  }
   if (i >= 0) {
     _rangeUnits->setCurrentIndex(i);
   } else {
@@ -416,11 +458,222 @@ bool DataRange::rangeIsCTime() const {
 }
 
 void DataRange::setDataSource(const DataSourcePtr &dataSource) {
+  if (_dataSource != dataSource) {
+    _canonicalFrameRangeValid = false;
+    _canonicalCountFromEndValid = false;
+  }
   _dataSource = dataSource;
   updateFields(None);
 }
 
 DataSourcePtr DataRange::dataSource() const { return _dataSource; }
+
+void DataRange::setReferenceField(const QString &field) {
+  if (_referenceField != field) {
+    _referenceField = field;
+    _canonicalFrameRangeValid = false;
+    _canonicalCountFromEndValid = false;
+  }
+}
+
+bool DataRange::setFrameRange(qint64 startFrame, qint64 endFrameExclusive) {
+  if (startFrame < 0 || endFrameExclusive <= startFrame || countFromEnd() ||
+      readToEnd()) {
+    return false;
+  }
+
+  _canonicalStartFrame = startFrame;
+  _canonicalEndFrameExclusive = endFrameExclusive;
+  _canonicalFrameRangeValid = true;
+  _canonicalCountFromEndValid = false;
+  return displayCanonicalFrameRange();
+}
+
+qint64 DataRange::availableFramesForReferenceField() {
+  if (!_dataSource) {
+    return -1;
+  }
+
+  DataSource *ds = _dataSource.data();
+  ds->readLock();
+  QStringList candidates;
+  if (!_referenceField.isEmpty()) {
+    candidates.append(_referenceField);
+  }
+  if (!rangeUnits().isEmpty() && !isFrameUnits(rangeUnits()) &&
+      !candidates.contains(rangeUnits())) {
+    candidates.append(rangeUnits());
+  }
+  candidates.append(ds->vector().list());
+
+  qint64 availableFrames = -1;
+  for (const QString &field : candidates) {
+    if (ds->vector().isValid(field)) {
+      const DataVector::DataInfo info = ds->vector().dataInfo(field);
+      if (info.frameCount > 0.0 &&
+          static_cast<long double>(info.frameCount) <=
+              static_cast<long double>(std::numeric_limits<qint64>::max())) {
+        availableFrames = qint64(std::floor(info.frameCount));
+        break;
+      }
+    }
+  }
+  ds->unlock();
+  return availableFrames;
+}
+
+bool DataRange::setCountFromEndFrameCount(qint64 frameCount) {
+  if (!countFromEnd() || readToEnd() || frameCount < 0) {
+    return false;
+  }
+
+  const qint64 availableFrames = availableFramesForReferenceField();
+  if (availableFrames >= 0) {
+    frameCount = qMin(frameCount, availableFrames);
+    if (availableFrames >= 2 && frameCount < 2) {
+      frameCount = qMin(qint64(2), availableFrames);
+    }
+  }
+
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEnd = frameCount;
+  _canonicalCountFromEndValid = true;
+  return displayCanonicalCountFromEnd();
+}
+
+bool DataRange::displayCanonicalCountFromEnd() {
+  if (!_canonicalCountFromEndValid || !countFromEnd() || readToEnd()) {
+    return false;
+  }
+
+  const qint64 availableFrames = availableFramesForReferenceField();
+  if (availableFrames < 0) {
+    if (!isFrameUnits(rangeUnits())) {
+      return false;
+    }
+    _range->setText(QString::number(_canonicalCountFromEnd, 'g', 17));
+    return true;
+  }
+
+  qint64 frameCount = qMin(_canonicalCountFromEnd, availableFrames);
+  if (availableFrames >= 2 && frameCount < 2) {
+    frameCount = 2;
+  }
+  _canonicalCountFromEnd = frameCount;
+  if (isFrameUnits(rangeUnits()) || frameCount == 0) {
+    _range->setText(QString::number(frameCount, 'g', 17));
+    return true;
+  }
+
+  const qint64 startFrame = availableFrames - frameCount;
+  double startValue = 0.0;
+  double endValue = 0.0;
+  if (!unitsFromFrame(startFrame, rangeUnits(), &startValue) ||
+      !unitsFromFrame(availableFrames, rangeUnits(), &endValue) ||
+      !std::isfinite(startValue) || !std::isfinite(endValue) ||
+      endValue < startValue) {
+    return false;
+  }
+
+  const double displayedRange = endValue - startValue;
+  if (!std::isfinite(displayedRange) || displayedRange <= 0.0) {
+    return false;
+  }
+  _range->setText(QString::number(displayedRange, 'g', 17));
+  return true;
+}
+
+bool DataRange::frameCountFromEndRange(double value, const QString &units,
+                                       qint64 *frameCountOut) {
+  if (!frameCountOut || !std::isfinite(value) || value < 0.0) {
+    return false;
+  }
+
+  qint64 frameCount = 0;
+  if (isFrameUnits(units)) {
+    frameCount = static_cast<long double>(value) >=
+                         static_cast<long double>(std::numeric_limits<qint64>::max())
+                     ? std::numeric_limits<qint64>::max()
+                     : qint64(std::floor(value));
+  } else {
+    const qint64 availableFrames = availableFramesForReferenceField();
+    if (availableFrames < 0) {
+      return false;
+    }
+    if (availableFrames == 0) {
+      *frameCountOut = 0;
+      return true;
+    }
+
+    double endValue = 0.0;
+    if (!unitsFromFrame(availableFrames, units, &endValue)) {
+      return false;
+    }
+    const double requestedStartValue = endValue - value;
+    double firstValue = 0.0;
+    if (!unitsFromFrame(0, units, &firstValue)) {
+      return false;
+    }
+
+    qint64 startFrame = 0;
+    if (requestedStartValue > firstValue &&
+        !frameFromUnits(requestedStartValue, units, false, &startFrame)) {
+      return false;
+    }
+    startFrame = qBound(qint64(0), startFrame, availableFrames);
+    frameCount = availableFrames - startFrame;
+  }
+
+  const qint64 availableFrames = availableFramesForReferenceField();
+  if (availableFrames >= 0) {
+    frameCount = qMin(frameCount, availableFrames);
+    if (availableFrames >= 2 && frameCount < 2) {
+      frameCount = qMin(qint64(2), availableFrames);
+    }
+  }
+
+  *frameCountOut = frameCount;
+  return true;
+}
+
+bool DataRange::displayCanonicalFrameRange() {
+  if (!_canonicalFrameRangeValid || countFromEnd() || readToEnd()) {
+    return false;
+  }
+
+  double startValue = 0.0;
+  double lastValue = 0.0;
+  double rangeStartValue = 0.0;
+  double rangeEndValue = 0.0;
+  if (!unitsFromFrame(_canonicalStartFrame, startUnits(), &startValue) ||
+      !unitsFromFrame(_canonicalEndFrameExclusive - 1, startUnits(),
+                      &lastValue) ||
+      !unitsFromFrame(_canonicalStartFrame, rangeUnits(), &rangeStartValue) ||
+      !unitsFromFrame(_canonicalEndFrameExclusive, rangeUnits(),
+                      &rangeEndValue)) {
+    return false;
+  }
+
+  const QString startText = QString::number(startValue, 'g', 17);
+  const QString lastText = QString::number(lastValue, 'g', 17);
+  const QString rangeText = QString::number(
+      isFrameUnits(rangeUnits())
+          ? double(_canonicalEndFrameExclusive - _canonicalStartFrame)
+          : qMax(0.0, rangeEndValue - rangeStartValue),
+      'g', 17);
+  _start->setText(startText);
+  _last->setText(lastText);
+  _range->setText(rangeText);
+  _controlField0 = Start;
+  _controlField1 = Last;
+  updateFields(None);
+  // updateFields() also solves range from the displayed endpoints. Restore the
+  // duration calculated from the canonical boundaries in the selected units.
+  _start->setText(startText);
+  _last->setText(lastText);
+  _range->setText(rangeText);
+  return true;
+}
 
 bool DataRange::isFrameUnits(const QString &units) {
   const Kst::IndexFieldProperties *ifp = findField(_indexFieldProps, units);
@@ -501,15 +754,22 @@ bool DataRange::canConvertUnits(const QString &units) {
 // }
 
 bool DataRange::frameFromUnits(double value, const QString &units, bool roundUp,
-                               int *frameOut) {
+                               qint64 *frameOut) {
   if (!frameOut) {
     return false;
   }
 
-  int frame = 0;
+  const auto toFrame = [](double frameValue, bool ceiling) -> qint64 {
+    if (!std::isfinite(frameValue) || frameValue <= 0) return 0;
+    if (static_cast<long double>(frameValue) >=
+        static_cast<long double>(std::numeric_limits<qint64>::max()))
+      return std::numeric_limits<qint64>::max();
+    return qint64(ceiling ? std::ceil(frameValue) : std::floor(frameValue));
+  };
+
+  qint64 frame = 0;
   if (isFrameUnits(units)) {
-    frame = roundUp ? qCeil(value) : qFloor(value);
-    frame = qMax(0, frame);
+    frame = toFrame(value, roundUp);
     *frameOut = frame;
     return true;
   }
@@ -532,7 +792,7 @@ bool DataRange::frameFromUnits(double value, const QString &units, bool roundUp,
   }
 
   const DataVector::DataInfo info = ds->vector().dataInfo(units);
-  const int maxFrame = qMax(0, int(info.frameCount) - 1);
+  const qint64 maxFrame = qMax(qint64(0), qint64(info.frameCount) - 1);
 
   const double minValue = ds->frameToIndex(0, units);
   const double maxValue = ds->frameToIndex(maxFrame, units);
@@ -551,8 +811,7 @@ bool DataRange::frameFromUnits(double value, const QString &units, bool roundUp,
 
     const double extrapolated = double(maxFrame) + (value - maxValue) * fps;
     ds->unlock();
-    *frameOut =
-        qMax(0, roundUp ? int(qCeil(extrapolated)) : int(qFloor(extrapolated)));
+    *frameOut = toFrame(extrapolated, roundUp);
     return true;
   }
 
@@ -568,13 +827,13 @@ bool DataRange::frameFromUnits(double value, const QString &units, bool roundUp,
     }
   }
 
-  frame = qBound(0, frame, maxFrame);
+  frame = qBound(qint64(0), frame, maxFrame);
   ds->unlock();
   *frameOut = frame;
   return true;
 }
 
-bool DataRange::unitsFromFrame(int frame, const QString &units,
+bool DataRange::unitsFromFrame(qint64 frame, const QString &units,
                                double *valueOut) {
   if (!valueOut) {
     return false;
@@ -597,15 +856,18 @@ bool DataRange::unitsFromFrame(int frame, const QString &units,
   }
 
   const DataVector::DataInfo info = ds->vector().dataInfo(units);
-  const int maxFrame = qMax(0, int(info.frameCount) - 1);
+  const qint64 maxFrame = qMax(qint64(0), qint64(info.frameCount) - 1);
   if (frame <= maxFrame) {
     *valueOut = ds->frameToIndex(frame, units);
   } else {
     // Extrapolate past end of file using average frames-per-index
     const double fps = ds->framePerIndex(units);
+    if (fps <= 0.0) {
+      ds->unlock();
+      return false;
+    }
     const double valueAtMax = ds->frameToIndex(maxFrame, units);
-    *valueOut =
-        (fps > 0.0) ? valueAtMax + double(frame - maxFrame) / fps : valueAtMax;
+    *valueOut = valueAtMax + double(frame - maxFrame) / fps;
   }
   ds->unlock();
   return true;
@@ -620,7 +882,10 @@ void DataRange::setSkip(int skip) { _skip->setValue(skip); }
 bool DataRange::countFromEnd() const { return _countFromEnd->isChecked(); }
 
 void DataRange::setCountFromEnd(bool countFromEnd) {
+  const bool wasSettingMode = _settingRangeModeProgrammatically;
+  _settingRangeModeProgrammatically = true;
   _countFromEnd->setChecked(countFromEnd);
+  _settingRangeModeProgrammatically = wasSettingMode;
   updateFields(None);
 }
 
@@ -635,7 +900,10 @@ bool DataRange::readToEndDirty() const {
 }
 
 void DataRange::setReadToEnd(bool readToEnd) {
+  const bool wasSettingMode = _settingRangeModeProgrammatically;
+  _settingRangeModeProgrammatically = true;
   _readToEnd->setChecked(readToEnd);
+  _settingRangeModeProgrammatically = wasSettingMode;
   updateFields(None);
 }
 
@@ -656,6 +924,107 @@ bool DataRange::doFilterDirty() const {
 void DataRange::setDoFilter(bool doFilter) { _doFilter->setChecked(doFilter); }
 
 void DataRange::countFromEndChanged() {
+  if (_settingRangeModeProgrammatically) {
+    _canonicalFrameRangeValid = false;
+    _canonicalCountFromEndValid = false;
+    if (countFromEnd() && readToEnd()) {
+      setReadToEnd(false);
+    }
+    updateFields(None);
+    return;
+  }
+
+  if (!countFromEnd()) {
+    const QString oldRangeText = _range->text();
+    const QString oldStartUnits = startUnits();
+    const QString oldRangeUnits = rangeUnits();
+    bool unitsChangedForDisplay = false;
+    qint64 frameCount = _canonicalCountFromEnd;
+    bool haveFrameCount = _canonicalCountFromEndValid;
+    if (!haveFrameCount) {
+      haveFrameCount =
+          frameCountFromEndRange(range(), rangeUnits(), &frameCount);
+    }
+
+    const qint64 availableFrames = availableFramesForReferenceField();
+    if (!haveFrameCount || availableFrames <= 0) {
+      QSignalBlocker countFromEndBlocker(_countFromEnd);
+      _countFromEnd->setChecked(true);
+      updateFields(None);
+      return;
+    }
+
+    frameCount = qMin(frameCount, availableFrames);
+    if (availableFrames >= 2 && frameCount < 2) {
+      frameCount = qMin(qint64(2), availableFrames);
+    }
+    const qint64 startFrame = availableFrames - frameCount;
+    const qint64 endFrameExclusive = availableFrames;
+
+    auto canDisplayInterval = [&](const QString &startUnit,
+                                  const QString &rangeUnit) {
+      double startValue = 0.0;
+      double lastValue = 0.0;
+      double rangeStartValue = 0.0;
+      double rangeEndValue = 0.0;
+            return unitsFromFrame(startFrame, startUnit, &startValue) &&
+              unitsFromFrame(endFrameExclusive - 1, startUnit, &lastValue) &&
+              unitsFromFrame(startFrame, rangeUnit, &rangeStartValue) &&
+              unitsFromFrame(endFrameExclusive, rangeUnit, &rangeEndValue) &&
+              std::isfinite(startValue) && std::isfinite(lastValue) &&
+              std::isfinite(rangeStartValue) && std::isfinite(rangeEndValue) &&
+              rangeEndValue >= rangeStartValue;
+    };
+
+    QString frameUnits;
+    for (const IndexFieldProperties &field : _indexFieldProps) {
+      if (field.is_frame) {
+        frameUnits = field.name;
+        break;
+      }
+    }
+
+    bool canDisplay = canDisplayInterval(startUnits(), rangeUnits());
+    if (!canDisplay && !frameUnits.isEmpty()) {
+      QSignalBlocker startUnitsBlocker(_startUnits);
+      QSignalBlocker rangeUnitsBlocker(_rangeUnits);
+      setStartUnits(frameUnits);
+      setRangeUnits(frameUnits);
+      _displayedStartUnits = startUnits();
+      _displayedRangeUnits = rangeUnits();
+      unitsChangedForDisplay = oldStartUnits != startUnits() ||
+               oldRangeUnits != rangeUnits();
+      canDisplay = canDisplayInterval(startUnits(), rangeUnits());
+    }
+
+    if (!canDisplay || !setFrameRange(startFrame, endFrameExclusive)) {
+      _canonicalFrameRangeValid = false;
+      _canonicalCountFromEnd = frameCount;
+      _canonicalCountFromEndValid = true;
+      _range->setText(oldRangeText);
+      {
+        QSignalBlocker startUnitsBlocker(_startUnits);
+        QSignalBlocker rangeUnitsBlocker(_rangeUnits);
+        setStartUnits(oldStartUnits);
+        setRangeUnits(oldRangeUnits);
+        _displayedStartUnits = startUnits();
+        _displayedRangeUnits = rangeUnits();
+      }
+      QSignalBlocker countFromEndBlocker(_countFromEnd);
+      _countFromEnd->setChecked(true);
+      updateFields(None);
+      return;
+    }
+
+    updateFields(None);
+    if (unitsChangedForDisplay) {
+      emit indexUnitsChanged();
+    }
+    return;
+  }
+
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEndValid = false;
   if (countFromEnd()) {
     setReadToEnd(false);
   }
@@ -664,6 +1033,8 @@ void DataRange::countFromEndChanged() {
 }
 
 void DataRange::readToEndChanged() {
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEndValid = false;
   if (readToEnd()) {
     setCountFromEnd(false);
   }
@@ -683,6 +1054,9 @@ void DataRange::unitsChanged() {
   if (_displayedRangeUnits.isEmpty()) {
     _displayedRangeUnits = newRangeUnits;
   }
+
+  _requestedStartUnits = newStartUnits;
+  _requestedRangeUnits = newRangeUnits;
 
   // When start/last hold duration or ISO strings and the start units change,
   // resolve them to plain numbers in the OLD units before the translation block
@@ -706,13 +1080,67 @@ void DataRange::unitsChanged() {
     }
   }
 
+  if (_canonicalFrameRangeValid && displayCanonicalFrameRange()) {
+    _displayedStartUnits = newStartUnits;
+    _displayedRangeUnits = newRangeUnits;
+    emit indexUnitsChanged();
+    return;
+  }
+
+  if (countFromEnd() && rangeUnitsChanged &&
+      _displayedRangeUnits != newRangeUnits) {
+    if (!_canonicalCountFromEndValid) {
+      bool ok = false;
+      double enteredRange = _range->text().toDouble(&ok);
+      QString enteredUnits = _displayedRangeUnits;
+      if (rangeIsDuration()) {
+        enteredRange = parseTimeDuration(_range->text());
+        bool durationUnitsFound = false;
+        const Kst::IndexFieldProperties *newField =
+            findField(_indexFieldProps, newRangeUnits);
+        if (newField && newField->is_seconds) {
+          enteredUnits = newRangeUnits;
+          durationUnitsFound = true;
+        } else {
+          for (const Kst::IndexFieldProperties &field : _indexFieldProps) {
+            if (field.is_seconds) {
+              enteredUnits = field.name;
+              durationUnitsFound = true;
+              break;
+            }
+          }
+        }
+        ok = durationUnitsFound;
+      }
+      qint64 frameCount = 0;
+      if (ok && frameCountFromEndRange(enteredRange, enteredUnits,
+                                       &frameCount)) {
+        _canonicalCountFromEnd = frameCount;
+        _canonicalCountFromEndValid = true;
+      }
+    }
+
+    if (_canonicalCountFromEndValid && displayCanonicalCountFromEnd()) {
+      _displayedStartUnits = newStartUnits;
+      _displayedRangeUnits = newRangeUnits;
+      updateFields(None);
+      emit indexUnitsChanged();
+      return;
+    }
+
+    QSignalBlocker rangeUnitsBlocker(_rangeUnits);
+    setRangeUnits(_displayedRangeUnits);
+    updateFields(None);
+    return;
+  }
+
   if (startUnitsChanged && (_displayedStartUnits != newStartUnits) &&
       !countFromEnd() && !readToEnd() && !_start->text().isEmpty() &&
       !_last->text().isEmpty() && canConvertUnits(_displayedStartUnits) &&
       canConvertUnits(newStartUnits)) {
 
-    int startFrame = 0;
-    int lastFrame = 0;
+    qint64 startFrame = 0;
+    qint64 lastFrame = 0;
     if (frameFromUnits(start(), _displayedStartUnits, false, &startFrame) &&
         frameFromUnits(last(), _displayedStartUnits, true, &lastFrame)) {
       if (lastFrame < startFrame) {
@@ -740,8 +1168,8 @@ void DataRange::unitsChanged() {
       canConvertUnits(startUnits()) && canConvertUnits(_displayedRangeUnits) &&
       canConvertUnits(newRangeUnits)) {
 
-    int startFrame = 0;
-    int lastFrame = 0;
+    qint64 startFrame = 0;
+    qint64 lastFrame = 0;
     if (frameFromUnits(start(), startUnits(), false, &startFrame) &&
         frameFromUnits(last(), startUnits(), true, &lastFrame)) {
       if (lastFrame < startFrame) {
@@ -777,7 +1205,7 @@ void DataRange::unitsChanged() {
       // in the old units, then convert that frame count to the new units.
       double originInOldUnits = 0.0;
       unitsFromFrame(0, _displayedRangeUnits, &originInOldUnits);
-      int endFrame = 0;
+      qint64 endFrame = 0;
       if (frameFromUnits(originInOldUnits + secs, _displayedRangeUnits, false,
                          &endFrame)) {
         double originInNewUnits = 0.0;
@@ -794,6 +1222,7 @@ void DataRange::unitsChanged() {
   _displayedStartUnits = newStartUnits;
   _displayedRangeUnits = newRangeUnits;
   updateFields(None);
+  emit indexUnitsChanged();
 }
 
 void DataRange::doSkipChanged() {
@@ -810,6 +1239,7 @@ void DataRange::doSkipChanged() {
 // R F0 -> L
 
 void DataRange::startChanged() {
+  _canonicalFrameRangeValid = false;
   // If the user typed a duration string and the current start units are not
   // seconds-compatible, auto-switch to the first seconds-compatible unit.
   if (startIsDuration() && !startIsSeconds()) {
@@ -852,6 +1282,7 @@ void DataRange::startChanged() {
 }
 
 void DataRange::lastChanged() {
+  _canonicalFrameRangeValid = false;
   // If the user typed a duration string and the current start units are not
   // seconds-compatible, auto-switch to the first seconds-compatible unit.
   if (lastIsDuration() && !startIsSeconds()) {
@@ -894,6 +1325,8 @@ void DataRange::lastChanged() {
 }
 
 void DataRange::rangeChanged() {
+  _canonicalFrameRangeValid = false;
+  _canonicalCountFromEndValid = false;
   // If the user typed a duration string and the current range units are not
   // seconds-compatible, auto-switch to the first seconds-compatible unit.
   if (rangeIsDuration() && !rangeIsSeconds()) {
@@ -1149,17 +1582,17 @@ void DataRange::updateFields(ControlField cf) {
       (_controlField0 != Range) && (_controlField1 != Range);
 
   if (solveStart) {
-    int lastFrame = 0;
+    qint64 lastFrame = 0;
     if (!frameFromUnits(last(), startUnits(), true, &lastFrame)) {
       return;
     }
 
-    int startFrame = 0;
-    int adjustedEndFrame =
+    qint64 startFrame = 0;
+    qint64 adjustedEndFrame =
         -1; // >=0 when start was clamped and last must be updated
     if (isFrameUnits(rangeUnits())) {
-      const int spanFrames = qMax(1, int(qRound64(range())));
-      const int rawStart = lastFrame - spanFrames + 1;
+      const qint64 spanFrames = qMax(qint64(1), qint64(qRound64(range())));
+      const qint64 rawStart = lastFrame - spanFrames + 1;
       startFrame = qMax(0, rawStart);
       if (rawStart < 0) {
         // Start would be before the beginning; push last forward instead.
@@ -1178,7 +1611,7 @@ void DataRange::updateFields(ControlField cf) {
       if (haveMin && startInRangeUnits < minRangeUnit) {
         // Start would be before the beginning of the file.
         startFrame = 0;
-        int exclusiveEndFrame = 0;
+        qint64 exclusiveEndFrame = 0;
         if (frameFromUnits(minRangeUnit + range(), rangeUnits(), true,
                            &exclusiveEndFrame)) {
           adjustedEndFrame = qMax(startFrame, exclusiveEndFrame - 1);
@@ -1209,14 +1642,14 @@ void DataRange::updateFields(ControlField cf) {
   }
 
   if (solveLast) {
-    int startFrame = 0;
+    qint64 startFrame = 0;
     if (!frameFromUnits(start(), startUnits(), false, &startFrame)) {
       return;
     }
 
-    int endFrame = startFrame;
+    qint64 endFrame = startFrame;
     if (isFrameUnits(rangeUnits())) {
-      const int spanFrames = qMax(1, int(qRound64(range())));
+      const qint64 spanFrames = qMax(qint64(1), qint64(qRound64(range())));
       // Do NOT clamp endFrame to maxFrame: it is valid and desirable for last
       // to be past the current end of file (file may still be growing).
       endFrame = qMax(0, startFrame + spanFrames - 1);
@@ -1226,7 +1659,7 @@ void DataRange::updateFields(ControlField cf) {
         return;
       }
 
-      int exclusiveEndFrame = 0;
+      qint64 exclusiveEndFrame = 0;
       if (!frameFromUnits(startInRangeUnits + range(), rangeUnits(), true,
                           &exclusiveEndFrame)) {
         return;
@@ -1243,8 +1676,8 @@ void DataRange::updateFields(ControlField cf) {
   }
 
   if (solveRange) {
-    int startFrame = 0;
-    int endFrame = 0;
+    qint64 startFrame = 0;
+    qint64 endFrame = 0;
     if (!frameFromUnits(start(), startUnits(), false, &startFrame)) {
       return;
     }
@@ -1347,6 +1780,12 @@ void DataRange::loadWidgetDefaults() {
 bool DataRange::rangeIsValid() {
   if (readToEnd()) {
     return true;
+  } else if (countFromEnd()) {
+    if (_canonicalCountFromEndValid) {
+      return _canonicalCountFromEnd > 0;
+    }
+    const qreal requestedRange = range();
+    return std::isfinite(requestedRange) && requestedRange > 0.0;
   } else {
     return (range() > 1);
   }

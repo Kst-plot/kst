@@ -14,11 +14,30 @@
 
 #include <QtMath>
 
+#include <cmath>
+#include <limits>
+
 #include "datarange.h"
 #include "datasource.h"
 
 namespace Kst {
 namespace DataRangeConversion {
+
+inline qint64 floorFrame(double value) {
+  if (!std::isfinite(value) || value <= 0) return 0;
+  if (static_cast<long double>(value) >=
+      static_cast<long double>(std::numeric_limits<qint64>::max()))
+    return std::numeric_limits<qint64>::max();
+  return qint64(std::floor(value));
+}
+
+inline qint64 ceilFrame(double value) {
+  if (!std::isfinite(value) || value <= 0) return 0;
+  if (static_cast<long double>(value) >=
+      static_cast<long double>(std::numeric_limits<qint64>::max()))
+    return std::numeric_limits<qint64>::max();
+  return qint64(std::ceil(value));
+}
 
 // Determine if index field refered to by label are frame units
 inline bool isFrameUnits(const DataRange *dataRange, const QString &label) {
@@ -37,11 +56,23 @@ inline bool isFrameUnits(const DataRange *dataRange, const QString &label) {
   return label.compare("frames", Qt::CaseInsensitive) == 0;
 }
 
+inline bool isFrameUnits(DataSource *dataSource, const QString &label) {
+  if (!dataSource) {
+    return false;
+  }
+  for (const IndexFieldProperties &field : dataSource->indexFieldProperties()) {
+    if (field.name == label) {
+      return field.is_frame;
+    }
+  }
+  return label.compare("frames", Qt::CaseInsensitive) == 0;
+}
+
 // determines the length of the data source by checking, in order, 
 // the length of the reference field, the units field, and any frame-counted field
-inline int maxFrameLocked(DataSource *ds, const DataRange *dataRange,
-                          const QString &referenceField,
-                          const QString &unitsHint) {
+inline qint64 maxFrameLocked(DataSource *ds, const DataRange *dataRange,
+                             const QString &referenceField,
+                             const QString &unitsHint) {
   if (!ds) {
     return -1;
   }
@@ -50,15 +81,15 @@ inline int maxFrameLocked(DataSource *ds, const DataRange *dataRange,
   if (!field.isEmpty() && ds->vector().isValid(field)) {
     const DataVector::DataInfo info = ds->vector().dataInfo(field);
     if (info.frameCount > 0) {
-      return int(info.frameCount) - 1;
+      return qint64(info.frameCount) - 1;
     }
   }
 
-  if (!unitsHint.isEmpty() && !isFrameUnits(dataRange, unitsHint) &&
+  if (!unitsHint.isEmpty() && !isFrameUnits(ds, unitsHint) &&
       ds->vector().isValid(unitsHint)) {
     const DataVector::DataInfo info = ds->vector().dataInfo(unitsHint);
     if (info.frameCount > 0) {
-      return int(info.frameCount) - 1;
+      return qint64(info.frameCount) - 1;
     }
   }
 
@@ -67,7 +98,7 @@ inline int maxFrameLocked(DataSource *ds, const DataRange *dataRange,
     if (ds->vector().isValid(name)) {
       const DataVector::DataInfo info = ds->vector().dataInfo(name);
       if (info.frameCount > 0) {
-        return int(info.frameCount) - 1;
+        return qint64(info.frameCount) - 1;
       }
     }
   }
@@ -77,13 +108,13 @@ inline int maxFrameLocked(DataSource *ds, const DataRange *dataRange,
 
 inline bool floorFrameLocked(DataSource *ds, const DataRange *dataRange,
                              double value, const QString &units,
-                             const QString &referenceField, int *frameOut) {
+                             const QString &referenceField, qint64 *frameOut) {
   if (!frameOut) {
     return false;
   }
 
-  if (isFrameUnits(dataRange, units)) {
-    int frame = qMax(0, qFloor(value));
+  if (isFrameUnits(ds, units)) {
+    const qint64 frame = floorFrame(value);
     *frameOut = frame;
     return true;
   }
@@ -92,12 +123,15 @@ inline bool floorFrameLocked(DataSource *ds, const DataRange *dataRange,
     return false;
   }
 
-  int frame = ds->indexToFrame(value, units);
+  const qint64 maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
+  if (maxFrame < 0) {
+    return false;
+  }
+  qint64 frame = ds->indexToFrame(value, units);
   if (frame < 0) {
     return false;
   }
 
-  const int maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
   const double minValue = ds->frameToIndex(0, units);
   const double maxValue = ds->frameToIndex(maxFrame, units);
 
@@ -107,13 +141,7 @@ inline bool floorFrameLocked(DataSource *ds, const DataRange *dataRange,
   }
 
   if (value > maxValue) {
-    const double fps = ds->framePerIndex(units);
-    if (fps <= 0.0) {
-      return false;
-    }
-
-    *frameOut =
-        qMax(0, int(qFloor(double(maxFrame) + (value - maxValue) * fps)));
+    *frameOut = maxFrame;
     return true;
   }
 
@@ -123,7 +151,7 @@ inline bool floorFrameLocked(DataSource *ds, const DataRange *dataRange,
   }
 
   if (maxFrame >= 0) {
-    frame = qBound(0, frame, maxFrame);
+    frame = qBound(qint64(0), frame, maxFrame);
   }
 
   *frameOut = frame;
@@ -132,13 +160,13 @@ inline bool floorFrameLocked(DataSource *ds, const DataRange *dataRange,
 
 inline bool ceilFrameLocked(DataSource *ds, const DataRange *dataRange,
                             double value, const QString &units,
-                            const QString &referenceField, int *frameOut) {
+                            const QString &referenceField, qint64 *frameOut) {
   if (!frameOut) {
     return false;
   }
 
-  if (isFrameUnits(dataRange, units)) {
-    int frame = qMax(0, qCeil(value));
+  if (isFrameUnits(ds, units)) {
+    const qint64 frame = ceilFrame(value);
     *frameOut = frame;
     return true;
   }
@@ -147,12 +175,15 @@ inline bool ceilFrameLocked(DataSource *ds, const DataRange *dataRange,
     return false;
   }
 
-  int frame = ds->indexToFrame(value, units);
+  const qint64 maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
+  if (maxFrame < 0) {
+    return false;
+  }
+  qint64 frame = ds->indexToFrame(value, units);
   if (frame < 0) {
     return false;
   }
 
-  const int maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
   const double minValue = ds->frameToIndex(0, units);
   const double maxValue = ds->frameToIndex(maxFrame, units);
 
@@ -162,13 +193,10 @@ inline bool ceilFrameLocked(DataSource *ds, const DataRange *dataRange,
   }
 
   if (value > maxValue) {
-    const double fps = ds->framePerIndex(units);
-    if (fps <= 0.0) {
+    if (maxFrame == std::numeric_limits<qint64>::max()) {
       return false;
     }
-
-    *frameOut =
-        qMax(0, int(qCeil(double(maxFrame) + (value - maxValue) * fps)));
+    *frameOut = maxFrame + 1;
     return true;
   }
 
@@ -178,7 +206,7 @@ inline bool ceilFrameLocked(DataSource *ds, const DataRange *dataRange,
   }
 
   if (maxFrame >= 0) {
-    frame = qBound(0, frame, maxFrame);
+    frame = qBound(qint64(0), frame, maxFrame + 1);
   }
 
   *frameOut = frame;
@@ -186,17 +214,20 @@ inline bool ceilFrameLocked(DataSource *ds, const DataRange *dataRange,
 }
 
 inline bool unitsFromFrameLocked(DataSource *ds, const DataRange *dataRange,
-                                 int frame, const QString &units,
+                                 qint64 frame, const QString &units,
                                  const QString &referenceField,
                                  double *valueOut) {
   if (!valueOut) {
     return false;
   }
 
-  const int maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
-  frame = qMax(0, frame);
+  const qint64 maxFrame = maxFrameLocked(ds, dataRange, referenceField, units);
+  if (maxFrame < 0) {
+    return false;
+  }
+  frame = qMax(qint64(0), frame);
 
-  if (isFrameUnits(dataRange, units)) {
+  if (isFrameUnits(ds, units)) {
     *valueOut = frame;
     return true;
   }
@@ -212,8 +243,10 @@ inline bool unitsFromFrameLocked(DataSource *ds, const DataRange *dataRange,
 
   const double fps = ds->framePerIndex(units);
   const double valueAtMax = ds->frameToIndex(maxFrame, units);
-  *valueOut =
-      (fps > 0.0) ? valueAtMax + double(frame - maxFrame) / fps : valueAtMax;
+  if (fps <= 0.0) {
+    return false;
+  }
+  *valueOut = valueAtMax + double(frame - maxFrame) / fps;
   return true;
 }
 
@@ -239,7 +272,7 @@ inline bool resolveToFrameRange(const DataRange *dataRange,
   bool localCustomStart = false;
   bool localCustomRange = false;
 
-  int startFrame = qFloor(dataRange->start());
+  qint64 startFrame = floorFrame(dataRange->start());
   if (!dataRange->countFromEnd()) {
     if (!floorFrameLocked(ds, dataRange, dataRange->start(), startUnits,
                           referenceField, &startFrame)) {
@@ -247,15 +280,19 @@ inline bool resolveToFrameRange(const DataRange *dataRange,
       return false;
     }
     *startOffset = startFrame;
-    localCustomStart = !isFrameUnits(dataRange, startUnits);
+    localCustomStart = !isFrameUnits(ds, startUnits);
   }
 
   if (!dataRange->readToEnd()) {
     if (dataRange->countFromEnd()) {
-      if (!isFrameUnits(dataRange, rangeUnits)) {
-        const int endFrame =
+      if (!isFrameUnits(ds, rangeUnits)) {
+        const qint64 endFrame =
             maxFrameLocked(ds, dataRange, referenceField, rangeUnits);
         if (endFrame < 0) {
+          ds->unlock();
+          return false;
+        }
+        if (endFrame == std::numeric_limits<qint64>::max()) {
           ds->unlock();
           return false;
         }
@@ -269,7 +306,7 @@ inline bool resolveToFrameRange(const DataRange *dataRange,
 
         const double startInRangeUnits =
             endExclusiveInRangeUnits - dataRange->range();
-        int computedStartFrame = 0;
+        qint64 computedStartFrame = 0;
         if (!floorFrameLocked(ds, dataRange, startInRangeUnits, rangeUnits,
                               referenceField, &computedStartFrame)) {
           ds->unlock();
@@ -280,9 +317,9 @@ inline bool resolveToFrameRange(const DataRange *dataRange,
         localCustomRange = true;
       }
     } else {
-      int endFrame = startFrame;
-      if (isFrameUnits(dataRange, rangeUnits)) {
-        const int span = qMax(1, int(qRound64(dataRange->range())));
+      qint64 endFrame = startFrame;
+      if (isFrameUnits(ds, rangeUnits)) {
+        const qint64 span = qMax(qint64(1), floorFrame(dataRange->range()));
         endFrame = qMax(0, startFrame + span - 1);
       } else {
         double startInRangeUnits = 0;
@@ -292,7 +329,7 @@ inline bool resolveToFrameRange(const DataRange *dataRange,
           return false;
         }
 
-        int exclusiveEndFrame = 0;
+        qint64 exclusiveEndFrame = 0;
         if (!ceilFrameLocked(ds, dataRange,
                              startInRangeUnits + dataRange->range(), rangeUnits,
                              referenceField, &exclusiveEndFrame)) {

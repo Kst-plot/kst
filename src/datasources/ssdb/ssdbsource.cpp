@@ -770,13 +770,14 @@ int SsdbSource::readVector(double *data, const QString &name, const DataVector::
   if (!data || !std::isfinite(info.startingFrame) ||
       info.startingFrame < 0) return -1;
   const bool one = info.singleSample || info.numberOfFrames < 0;
-  if (!one && (!std::isfinite(info.numberOfFrames) || info.numberOfFrames <= 0 ||
-               std::floor(info.numberOfFrames) != info.numberOfFrames)) return -1;
+  if (!one && (!std::isfinite(info.numberOfFrames) || info.numberOfFrames <= 0)) return -1;
   if (info.startingFrame >= _frameCount) return 0;
   // SSDB samples live on integer frame boundaries. Truncate fractional starts
-  // to the preceding frame so time/index synthesis and field reads stay aligned.
+  // and lengths to whole frames so reads stay aligned to the shared grid.
   const qint64 first = qint64(info.startingFrame);
-  const double frames = one ? 1 : qMin(info.numberOfFrames, double(_frameCount - first));
+  const double frames = one ? 1 : qMin(std::trunc(info.numberOfFrames),
+                                       double(_frameCount - first));
+  if (frames <= 0) return 0;
 
   // INDEX and TIME share frame boundaries and need no database requests.
   if (name == indexFieldString || name == timeFieldString) {

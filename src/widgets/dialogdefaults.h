@@ -48,8 +48,8 @@ namespace Kst {
 // As you add defaults, add them here!
 // Name                   Type    Where used
 // vector/datasource      QString vectordialog datawizard
-// vector/range           int     datarange 
-// vector/start           int     datarange  
+// vector/range           double  datarange
+// vector/start           double  datarange
 // vector/countFromEnd    bool    datarange 
 // vector/readToEnd       bool    datarange 
 // vector/skip            int     datarange 

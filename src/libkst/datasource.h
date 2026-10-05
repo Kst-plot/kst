@@ -175,9 +175,9 @@ class KSTCORE_EXPORT DataSource : public Object
     /* in the base class.                                       */
     /************************************************************/
     /** returns the frame number corresponding to an index value from a frame */
-    virtual int indexToFrame(double index, const QString &field);
-    virtual double frameToIndex(int frame, const QString &field);
-    virtual double readDespikedIndex(int frame, const QString &field);
+    virtual qint64 indexToFrame(double index, const QString &field);
+    virtual double frameToIndex(qint64 frame, const QString &field);
+    virtual double readDespikedIndex(qint64 frame, const QString &field);
     virtual double framePerIndex(const QString &field);
     virtual const QList<IndexFieldProperties>& indexFieldProperties();
 

@@ -57,6 +57,9 @@ class ChangeDataSampleDialog : public QDialog, Ui::ChangeDataSampleDialog
     void updateIndexEntries();
 
     ObjectStore *_store;
+    QString _rangeSourceName;
+    DataSourcePtr _rangeSourceDataSource;
+    QString _rangeSourceField;
 
 
 };

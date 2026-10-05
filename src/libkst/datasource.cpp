@@ -403,18 +403,18 @@ QString DataSource::timeFormat() const {
 // }
 
 
-double DataSource::frameToIndex(int frame, const QString &field) {
+double DataSource::frameToIndex(qint64 frame, const QString &field) {
   return readDespikedIndex(frame+1, field);
 }
 
 
-int DataSource::indexToFrame(double X, const QString &field) {
+qint64 DataSource::indexToFrame(double X, const QString &field) {
   const DataVector::DataInfo info = vector().dataInfo(field);
-  int Fmin = 0;
-  int Fmax = info.frameCount-1;
+  qint64 Fmax = qint64(info.frameCount) - 1;
+  qint64 Fmin = 0;
   double Xmin = readDespikedIndex(Fmin, field);
   double Xmax = readDespikedIndex(Fmax, field);
-  int F0 = (Fmin + Fmax)/2;
+  qint64 F0 = Fmin + (Fmax - Fmin) / 2;
   double X0;
 
   if (X>=Xmax) {
@@ -437,7 +437,7 @@ int DataSource::indexToFrame(double X, const QString &field) {
       Xmin = X0;
       Fmin = F0;
     }
-    F0 = (Fmin + Fmax)/2;
+    F0 = Fmin + (Fmax - Fmin) / 2;
   }
   return F0;
 }
@@ -453,8 +453,8 @@ int DataSource::indexToFrame(double X, const QString &field) {
 double DataSource::framePerIndex(const QString &field) {
   // FIXME: for now, calculate the sample rate, but later allow us to define it
   const DataVector::DataInfo info = vector().dataInfo(field);
-  int fn = info.frameCount-2;
-  int f0 = fn-1000.0; //FIXME: not general (but maybe nothing is...)
+  qint64 fn = qint64(info.frameCount) - 2;
+  qint64 f0 = fn - 1000; //FIXME: not general (but maybe nothing is...)
   if (f0<0) {
     f0 = 0;
   }
@@ -471,11 +471,11 @@ double DataSource::framePerIndex(const QString &field) {
   return double(fn-f0)/(xn - x0);
 }
 
-double DataSource::readDespikedIndex(int frame_in, const QString &field) {
+double DataSource::readDespikedIndex(qint64 frame_in, const QString &field) {
 
   // we want a despike buffer which is an integer number of frames and
   // at least 5 samples on each side of our desired sample
-  int frame = frame_in;
+  qint64 frame = frame_in;
   const int min_despike_margin = 5; // samples
   const DataVector::DataInfo info = vector().dataInfo(field);
   int margin_frames = qMax(1,min_despike_margin/info.samplesPerFrame);
@@ -488,11 +488,11 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
     frame = 0;
   }
   if (frame + 2*margin_frames >= info.frameCount) {
-    frame = info.frameCount - 2*margin_frames;
+    frame = qint64(info.frameCount) - 2*margin_frames;
   }
   DataVector::ReadInfo par;
   par.data = data;
-  par.startingFrame = (double)frame;
+  par.startingFrame = double(frame);
   par.numberOfFrames = (double)(2*margin_frames);
   par.skipFrame = -1;
   par.singleSample = false;
