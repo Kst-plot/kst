@@ -1058,6 +1058,61 @@ void DataRange::unitsChanged() {
   _requestedStartUnits = newStartUnits;
   _requestedRangeUnits = newRangeUnits;
 
+  // Read-to-End keeps Start as a requested boundary, so translate that value
+  // when its display units change. Do this independently of finite-range and
+  // Count-from-End handling so those modes retain their existing semantics.
+  if (startUnitsChanged && _displayedStartUnits != newStartUnits &&
+      readToEnd() && !_start->text().isEmpty()) {
+    const QString oldUnits = _displayedStartUnits;
+    const QString oldText = _start->text();
+    const bool startWasDuration = startIsDuration();
+    const bool startWasISOTime = startIsISOTime();
+    const Kst::IndexFieldProperties *oldField =
+        findField(_indexFieldProps, oldUnits);
+    const Kst::IndexFieldProperties *newField =
+        findField(_indexFieldProps, newStartUnits);
+
+    bool valueOk = false;
+    double oldValue = 0.0;
+    if (startWasDuration && oldField && oldField->is_seconds) {
+      oldValue = parseTimeDuration(oldText);
+      valueOk = std::isfinite(oldValue);
+    } else if (startWasISOTime && oldField && oldField->is_ctime) {
+      oldValue = parseISOTime(oldText);
+      valueOk = std::isfinite(oldValue);
+    } else {
+      oldValue = oldText.toDouble(&valueOk);
+      valueOk = valueOk && std::isfinite(oldValue);
+    }
+
+    qint64 startFrame = 0;
+    double translatedStart = 0.0;
+    const bool converted = valueOk &&
+        frameFromUnits(oldValue, oldUnits, false, &startFrame) &&
+        unitsFromFrame(startFrame, newStartUnits, &translatedStart) &&
+        std::isfinite(translatedStart);
+    if (!converted) {
+      QSignalBlocker startUnitsBlocker(_startUnits);
+      setStartUnits(oldUnits);
+      _displayedStartUnits = oldUnits;
+      _requestedStartUnits = oldUnits;
+      updateFields(None);
+      return;
+    }
+
+    if (startWasISOTime && newField && newField->is_ctime) {
+      _start->setText(ctimeToISOString(translatedStart));
+    } else if (startWasDuration && newField && newField->is_seconds) {
+      _start->setText(secondsToDurationString(translatedStart));
+    } else {
+      _start->setText(QString::number(translatedStart, 'g', 17));
+    }
+    _displayedStartUnits = newStartUnits;
+    updateFields(None);
+    emit indexUnitsChanged();
+    return;
+  }
+
   // When start/last hold duration or ISO strings and the start units change,
   // resolve them to plain numbers in the OLD units before the translation block
   // converts those numbers to the new units.

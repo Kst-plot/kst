@@ -400,37 +400,71 @@ void ChangeDataSampleDialog::apply() {
   bool custom_start_index = (!_dataRange->startIsFrame()) && (!_dataRange->countFromEnd());
 
   bool custom_range_index = (!_dataRange->rangeIsFrame()) && (!_dataRange->readToEnd());
-  if (!custom_start_index && !custom_range_index) { // FIXME: also for custom index.
+  if (_dataRange->readToEnd() ||
+      (!custom_start_index && !custom_range_index)) {
     start_units.clear();
 
     // see if we have enough memory
     //FIXME: doesn't consider data objects that depend on this, and it should
     //FIXME: doesn't work under windows or mac
-    double current_memory_used = 0.0;
-    double memory_needed = 0.0;
+    long double current_memory_used = 0.0L;
+    long double memory_needed = 0.0L;
     for (int i = 0; i < selectedItems.size(); ++i) {
       if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
-        current_memory_used += double(vector->length())*sizeof(double);
-        long ns=0;
+        current_memory_used +=
+            static_cast<long double>(vector->length()) * sizeof(double);
         if (_dataRange->readToEnd()) {
-          ns = vector->fileLength() - (int)_dataRange->start();
+          double startOffset = 0.0;
+          double unusedRange = 0.0;
+          if (!DataRangeConversion::resolveToFrameRange(
+                  _dataRange, vector->dataSource(), vector->field(),
+                  &startOffset, &unusedRange, nullptr, nullptr)) {
+            // Apply will report this vector's conversion failure and leave it
+            // unchanged, so it contributes no additional allocation.
+            continue;
+          }
+
+          const qint64 availableFrames =
+              DataRangeConversion::floorFrame(vector->fileLength());
+          qint64 startFrame = DataRangeConversion::floorFrame(startOffset);
+          startFrame = qBound(qint64(0), startFrame, availableFrames);
+          const qint64 remainingFrames = availableFrames - startFrame;
+          long double samples = 0.0L;
+          if (_dataRange->doSkip()) {
+            samples = remainingFrames / qMax(1, _dataRange->skip());
+          } else {
+            samples = static_cast<long double>(remainingFrames) *
+                      qMax(1, vector->samplesPerFrame());
+          }
+
+          const long double bytes =
+              samples * static_cast<long double>(sizeof(double));
+          const long double maxMemory =
+              std::numeric_limits<long double>::max();
+          memory_needed = bytes > maxMemory - memory_needed
+                              ? maxMemory
+                              : memory_needed + bytes;
         } else {
+          long ns = 0;
           ns = (int)_dataRange->range();
+          if (_dataRange->doSkip()) {
+            ns /= _dataRange->skip();
+          } else {
+            ns *= vector->samplesPerFrame();
+          }
+          memory_needed += static_cast<long double>(ns) * sizeof(double);
         }
-        if (_dataRange->doSkip()) {
-          ns/=_dataRange->skip();
-        } else {
-          ns *= vector->samplesPerFrame();
-        }
-        memory_needed += double(ns)*sizeof(double);
       }
     }
 
-    double memory_available = Data::AvailableMemory();
-    if (memory_needed-current_memory_used > memory_available) {
+    const long double memory_available = Data::AvailableMemory();
+    if (memory_needed - current_memory_used > memory_available) {
       //QApplication::restoreOverrideCursor();
-      QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
-                                                                   ).arg((memory_needed-current_memory_used)/(1024*1024)).arg(memory_available/(1024*1024)));
+      QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data.")
+          .arg(static_cast<double>((memory_needed - current_memory_used) /
+                                   (1024.0L * 1024.0L)))
+          .arg(static_cast<double>(memory_available /
+                                   (1024.0L * 1024.0L))));
       return;
     }
   }
