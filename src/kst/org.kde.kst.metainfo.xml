@@ -23,6 +23,7 @@
   <name xml:lang="nl">Kst</name>
   <name xml:lang="pl">Kst</name>
   <name xml:lang="pt-BR">Kst</name>
+  <name xml:lang="ru">Kst</name>
   <name xml:lang="sk">Kst</name>
   <name xml:lang="sl">Kst</name>
   <name xml:lang="sv">Kst</name>
@@ -43,6 +44,7 @@
   <summary xml:lang="nl">Bekijken van gegevens</summary>
   <summary xml:lang="pl">Przeglądarka danych</summary>
   <summary xml:lang="pt-BR">Visualizador de dados</summary>
+  <summary xml:lang="ru">Просмотр данных</summary>
   <summary xml:lang="sk">Prehliadač údajov</summary>
   <summary xml:lang="sl">Ogledovalnik podatkov</summary>
   <summary xml:lang="sv">Datavisning</summary>
@@ -64,6 +66,7 @@
     <p xml:lang="nl">Deze toepassing wordt gebruikt om wetenschappelijke gegevens te tonen.</p>
     <p xml:lang="pl">Ta aplikacja służy do wyświetlania danych naukowych.</p>
     <p xml:lang="pt-BR">Este aplicativo é usado para exibir dados científicos.</p>
+    <p xml:lang="ru">Приложение предназначено для показа научных данных.</p>
     <p xml:lang="sk">Táto aplikácia sa používa na zobrazovanie vedeckých údajov.</p>
     <p xml:lang="sl">Ta aplikacija se uporablja za prikaz znanstvenih podatkov.</p>
     <p xml:lang="sv">Programmet används för att visa vetenskaplig data.</p>
@@ -85,6 +88,7 @@
       <caption xml:lang="ka">მუშაობა მატრიცებთან და გამოსახულებებთან</caption>
       <caption xml:lang="nl">Werken met matrixen en afbeeldingen</caption>
       <caption xml:lang="pt-BR">Trabalhar com matrizes e imagens</caption>
+      <caption xml:lang="ru">Работа с матрицами и изображениями</caption>
       <caption xml:lang="sk">Práca s maticami a obrázkami</caption>
       <caption xml:lang="sl">Delo z matricami in slikami</caption>
       <caption xml:lang="sv">Arbetar med matriser och bilder</caption>
@@ -105,6 +109,7 @@
       <caption xml:lang="ka">არამოდალური დიალოგები ერთდროულად მრავალი ხელსაწყოს გამოყენების საშუალებას გაძლევთ</caption>
       <caption xml:lang="nl">Niet-modale dialogen bieden u het tegelijk gebruiken van vele hulpmiddelen</caption>
       <caption xml:lang="pt-BR">Diálogos não modais permitem que você use várias ferramentas simultaneamente</caption>
+      <caption xml:lang="ru">Немодальные диалоговые окна позволяют одновременно использовать несколько инструментов</caption>
       <caption xml:lang="sk">Nemodálne dialógy umožňujú používať mnoho nástrojov súčasne</caption>
       <caption xml:lang="sl">Nemodalna pogovorna okna omogočajo hkratno uporabo več orodij</caption>
       <caption xml:lang="sv">Dialogrutor låter dig använda många verktyg samtidigt</caption>
@@ -125,6 +130,7 @@
       <caption xml:lang="ka">გრაფიკის კონტექსტური მენიუ გადიდების პარამეტრებით</caption>
       <caption xml:lang="nl">Contextmenu van plot met opties voor zoomen</caption>
       <caption xml:lang="pt-BR">Menu de contexto do gráfico com opções de zoom</caption>
+      <caption xml:lang="ru">Контекстное меню графика с параметрами масштабирования</caption>
       <caption xml:lang="sk">Kontextové menu grafu s možnosťami priblíženia</caption>
       <caption xml:lang="sl">Kontekstni meni za risanje z možnostmi povečave</caption>
       <caption xml:lang="sv">Sammanhangsberoende meny för diagram med zoomalternativ</caption>
