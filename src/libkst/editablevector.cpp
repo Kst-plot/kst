@@ -68,7 +68,7 @@ void EditableVector::setValue(const int &i, const double &val) { //sa Vector::ch
     _v_raw[i]=val;
     unlock();
 }
-
+  
 /** Save vector information */
 void EditableVector::save(QXmlStreamWriter &s) {
   s.writeStartElement("editablevector");

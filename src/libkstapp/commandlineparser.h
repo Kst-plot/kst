@@ -54,8 +54,10 @@ private:
   bool _usePoints;
   bool _overrideStyle;
   double _sampleRate;
-  int _numFrames;
-  int _startFrame;
+  double _numFrames;
+  double _startFrame;
+  bool _countFromEnd;
+  bool _readToEnd;
   int _skip;
   QString _plotName;
   QString _errorField;
@@ -100,6 +102,7 @@ private:
 
   bool _setIntArg(int *arg, QString Message, bool accept_end=false);
   bool _setDoubleArg(double *arg, QString Message);
+  bool _setDoubleArg(double *arg, QString Message, bool accept_end);
   bool _setStringArg(QString &arg, QString Message);
   DataVectorPtr createOrFindDataVector(QString field, DataSourcePtr ds);
   void createOrFindPlot(const QString name);

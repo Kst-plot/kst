@@ -67,7 +67,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -92,7 +92,7 @@ void DataInterfaceITSMatrix::init()
 
 
 
-const DataMatrix::DataInfo DataInterfaceITSMatrix::dataInfo(const QString& matrix, int frame) const
+const DataMatrix::DataInfo DataInterfaceITSMatrix::dataInfo(const QString& matrix, double frame) const
 {
   if (_its._itsfile->status != ITS_OK) {
     return DataMatrix::DataInfo();
@@ -190,7 +190,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -214,7 +214,7 @@ void DataInterfaceITSVector::init()
 
 
 
-const DataVector::DataInfo DataInterfaceITSVector::dataInfo(const QString& vector, int) const
+const DataVector::DataInfo DataInterfaceITSVector::dataInfo(const QString& vector, double) const
 {
   if (_its._itsfile->status != ITS_OK) {
     return DataVector::DataInfo();
@@ -231,9 +231,9 @@ const DataVector::DataInfo DataInterfaceITSVector::dataInfo(const QString& vecto
 int DataInterfaceITSVector::read(const QString& field, DataVector::ReadInfo& p)
 {
 
-  int f0 = p.startingFrame;
-  int nr = p.numberOfFrames;
-  int nf = _its._nframes;
+  qint64 f0 = (qint64)p.startingFrame;
+  qint64 nr = (qint64)p.numberOfFrames;
+  qint64 nf = _its._nframes;
 
   if (f0>nf) {
     return 0;
@@ -248,10 +248,10 @@ int DataInterfaceITSVector::read(const QString& field, DataVector::ReadInfo& p)
   }
 
   if ( field=="INDEX" ) {
-    for (int i=0; i<nr; ++i ) {
+    for (qint64 i=0; i<nr; ++i ) {
       p.data[i] = i + f0;
     }
-    return nr;
+    return (int)nr;
   }
 
   return 0;

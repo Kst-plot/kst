@@ -23,8 +23,11 @@
 #include "dialogdefaults.h"
 #include "updatemanager.h"
 #include "updateserver.h"
+#include "datarangeconversion.h"
 
 #include <QMessageBox>
+
+#include <limits>
 
 namespace Kst {
 
@@ -71,8 +74,11 @@ ChangeDataSampleDialog::~ChangeDataSampleDialog() {
 
 
 void ChangeDataSampleDialog::show() {
+  _rangeSourceName.clear();
   updateCurveListDialog();
   initializeEntries();
+  _rangeSourceName.clear();
+  updateIndexEntries();
   updateButtons();
   QDialog::show();
 }
@@ -122,6 +128,24 @@ void ChangeDataSampleDialog::availableDoubleClicked(QListWidgetItem * item) {
 
 void ChangeDataSampleDialog::updateIndexEntries() {
 
+  const QString preferredStartUnits = _dataRange->startUnits();
+  const QString preferredRangeUnits = _dataRange->rangeUnits();
+  QListWidgetItem *firstTarget = _selectedVectorList->item(0);
+  const QString newRangeSourceName = firstTarget ? firstTarget->text() : QString();
+  DataSourcePtr newRangeSourceDataSource;
+  QString newRangeSourceField;
+  if (firstTarget) {
+    if (DataVectorPtr vector =
+            kst_cast<DataVector>(_store->retrieveObject(firstTarget->text()))) {
+      newRangeSourceDataSource = vector->dataSource();
+      newRangeSourceField = vector->field();
+    }
+  }
+  const bool rangeSourceChanged =
+      _rangeSourceName != newRangeSourceName ||
+      _rangeSourceDataSource != newRangeSourceDataSource ||
+      _rangeSourceField != newRangeSourceField;
+
   // Make a list of all the data sources for all of the vectors which have been selected.
   QList<DataSourcePtr> data_sources;
 
@@ -139,22 +163,49 @@ void ChangeDataSampleDialog::updateIndexEntries() {
     }
   }
 
-  QStringList index_fields;
+  QList<IndexFieldProperties> index_fields;
 
   // make a list of fields which are provided by all data sources...
   if (data_sources.size()>0) {
-    foreach (const QString &field, data_sources[0]->indexFields()) {
+    foreach (const IndexFieldProperties &ifp, data_sources[0]->indexFieldProperties()) {
       bool in_all = true;
       for (int i=1; i<data_sources.size(); i++) {
-        in_all = in_all && (data_sources[i]->indexFields().contains(field));
+        bool found = false;
+        for (const IndexFieldProperties &other : data_sources[i]->indexFieldProperties()) {
+          if (other.name == ifp.name) { found = true; break; }
+        }
+        in_all = in_all && found;
       }
       if (in_all) {
-        index_fields.append(field);
+        index_fields.append(ifp);
       }
     }
   }
 
+  DataSourcePtr displayDataSource;
+  if (firstTarget) {
+    if (DataVectorPtr vector =
+            kst_cast<DataVector>(_store->retrieveObject(firstTarget->text()))) {
+      displayDataSource = vector->dataSource();
+    }
+  }
+  _dataRange->setDataSource(displayDataSource);
+  _dataRange->setReferenceField(newRangeSourceField);
+  _dataRange->setStartUnits(preferredStartUnits);
+  _dataRange->setRangeUnits(preferredRangeUnits);
   _dataRange->updateIndexList(index_fields);
+
+  if (rangeSourceChanged) {
+    _rangeSourceName = newRangeSourceName;
+    _rangeSourceDataSource = newRangeSourceDataSource;
+    _rangeSourceField = newRangeSourceField;
+    if (firstTarget) {
+      updateDefaults(firstTarget);
+    } else {
+      _dataRange->clearValues();
+    }
+  }
+  updateButtons();
 }
 
 
@@ -237,6 +288,7 @@ void ChangeDataSampleDialog::updateCurveListDialog() {
     }
   }
   _vectorList->blockSignals(false);
+  updateIndexEntries();
 }
 
 
@@ -253,10 +305,9 @@ void ChangeDataSampleDialog::removeAll() {
 
 
 void ChangeDataSampleDialog::initializeEntries() {
+  _dataRange->clearValues();
   _dataRange->setCountFromEnd(dialogDefaults().value("vector/countFromEnd",false).toBool());
-  _dataRange->setStart(dialogDefaults().value("vector/start", 0).toInt());
   _dataRange->setReadToEnd(dialogDefaults().value("vector/readToEnd",true).toBool());
-  _dataRange->setRange(dialogDefaults().value("vector/range", 1).toInt());
   _dataRange->setSkip(dialogDefaults().value("vector/skip", 0).toInt());
   _dataRange->setDoSkip(dialogDefaults().value("vector/doSkip", false).toBool());
   _dataRange->setDoFilter(dialogDefaults().value("vector/doAve",false).toBool());
@@ -273,15 +324,59 @@ void ChangeDataSampleDialog::updateDefaults(QListWidgetItem* item) {
   if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(item->text()))) {
     vector->readLock();
 
-    _dataRange->setCountFromEnd(vector->countFromEOF());
-    _dataRange->setStart(vector->countFromEOF() ? 0 : vector->reqStartFrame());
-    _dataRange->setReadToEnd(vector->readToEOF());
-    _dataRange->setRange(vector->readToEOF() ? 0 : vector->reqNumFrames());
+    const bool countFromEnd = vector->reqCountFromEnd();
+    const bool readToEnd = vector->reqReadToEnd();
+    const qint64 startFrame = DataRangeConversion::floorFrame(vector->reqStartFrame());
+    const qint64 frameCount = DataRangeConversion::floorFrame(vector->reqNumFrames());
     _dataRange->setSkip(vector->skip());
     _dataRange->setDoSkip(vector->doSkip());
     _dataRange->setDoFilter(vector->doAve());
 
     vector->unlock();
+
+    _dataRange->setCountFromEnd(countFromEnd);
+    _dataRange->setReadToEnd(readToEnd);
+    if (countFromEnd) {
+      _dataRange->setStart(0);
+      if (!_dataRange->setCountFromEndFrameCount(frameCount)) {
+        QString frameUnits = QStringLiteral("frames");
+        for (const IndexFieldProperties &properties :
+             _dataRange->indexFieldProperties()) {
+          if (properties.is_frame) {
+            frameUnits = properties.name;
+            break;
+          }
+        }
+        _dataRange->setRangeUnits(frameUnits);
+        if (!_dataRange->setCountFromEndFrameCount(frameCount)) {
+          _dataRange->setRange(frameCount);
+        }
+      }
+    } else if (readToEnd) {
+      _dataRange->setStart(startFrame);
+      _dataRange->setRange(0);
+    } else if (frameCount > 0 &&
+               startFrame <= std::numeric_limits<qint64>::max() - frameCount) {
+      if (!_dataRange->setFrameRange(startFrame, startFrame + frameCount)) {
+        QString frameUnits = QStringLiteral("frames");
+        for (const IndexFieldProperties &properties :
+             _dataRange->indexFieldProperties()) {
+          if (properties.is_frame) {
+            frameUnits = properties.name;
+            break;
+          }
+        }
+        _dataRange->setStartUnits(frameUnits);
+        _dataRange->setRangeUnits(frameUnits);
+        if (!_dataRange->setFrameRange(startFrame, startFrame + frameCount)) {
+          _dataRange->setStart(startFrame);
+          _dataRange->setRange(frameCount);
+        }
+      }
+    } else {
+      _dataRange->setStart(startFrame);
+      _dataRange->setRange(frameCount);
+    }
   }
 }
 
@@ -298,60 +393,99 @@ void ChangeDataSampleDialog::apply() {
 
   QString start_units;
   QString range_units;
-  QHash<QString, int> f0_map;
-  QHash<QString, int> r_map;
-  bool custom_start_index = (_dataRange->_startUnits->currentIndex() != 0) && (!_dataRange->countFromEnd());
+  QHash<QString, double> f0_map;
+  QHash<QString, double> r_map;
+  QHash<QString, bool> countFromEnd_map;
+  QHash<QString, bool> readToEnd_map;
+  bool custom_start_index = (!_dataRange->startIsFrame()) && (!_dataRange->countFromEnd());
 
-  bool custom_range_index = (_dataRange->_rangeUnits->currentIndex() != 0) && (!_dataRange->readToEnd());
-
-  if (!custom_start_index && !custom_range_index) { // FIXME: also for custom index.
+  bool custom_range_index = (!_dataRange->rangeIsFrame()) && (!_dataRange->readToEnd());
+  if (_dataRange->readToEnd() ||
+      (!custom_start_index && !custom_range_index)) {
     start_units.clear();
 
     // see if we have enough memory
     //FIXME: doesn't consider data objects that depend on this, and it should
     //FIXME: doesn't work under windows or mac
-    double current_memory_used = 0.0;
-    double memory_needed = 0.0;
+    long double current_memory_used = 0.0L;
+    long double memory_needed = 0.0L;
     for (int i = 0; i < selectedItems.size(); ++i) {
       if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
-        current_memory_used += double(vector->length())*sizeof(double);
-        long ns=0;
+        current_memory_used +=
+            static_cast<long double>(vector->length()) * sizeof(double);
         if (_dataRange->readToEnd()) {
-          ns = vector->fileLength() - (int)_dataRange->start();
+          double startOffset = 0.0;
+          double unusedRange = 0.0;
+          if (!DataRangeConversion::resolveToFrameRange(
+                  _dataRange, vector->dataSource(), vector->field(),
+                  &startOffset, &unusedRange, nullptr, nullptr)) {
+            // Apply will report this vector's conversion failure and leave it
+            // unchanged, so it contributes no additional allocation.
+            continue;
+          }
+
+          const qint64 availableFrames =
+              DataRangeConversion::floorFrame(vector->fileLength());
+          qint64 startFrame = DataRangeConversion::floorFrame(startOffset);
+          startFrame = qBound(qint64(0), startFrame, availableFrames);
+          const qint64 remainingFrames = availableFrames - startFrame;
+          long double samples = 0.0L;
+          if (_dataRange->doSkip()) {
+            samples = remainingFrames / qMax(1, _dataRange->skip());
+          } else {
+            samples = static_cast<long double>(remainingFrames) *
+                      qMax(1, vector->samplesPerFrame());
+          }
+
+          const long double bytes =
+              samples * static_cast<long double>(sizeof(double));
+          const long double maxMemory =
+              std::numeric_limits<long double>::max();
+          memory_needed = bytes > maxMemory - memory_needed
+                              ? maxMemory
+                              : memory_needed + bytes;
         } else {
+          long ns = 0;
           ns = (int)_dataRange->range();
+          if (_dataRange->doSkip()) {
+            ns /= _dataRange->skip();
+          } else {
+            ns *= vector->samplesPerFrame();
+          }
+          memory_needed += static_cast<long double>(ns) * sizeof(double);
         }
-        if (_dataRange->doSkip()) {
-          ns/=_dataRange->skip();
-        } else {
-          ns *= vector->samplesPerFrame();
-        }
-        memory_needed += double(ns)*sizeof(double);
       }
     }
 
-    double memory_available = Data::AvailableMemory();
-    if (memory_needed-current_memory_used > memory_available) {
+    const long double memory_available = Data::AvailableMemory();
+    if (memory_needed - current_memory_used > memory_available) {
       //QApplication::restoreOverrideCursor();
-      QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data."
-                                                                   ).arg((memory_needed-current_memory_used)/(1024*1024)).arg(memory_available/(1024*1024)));
+      QMessageBox::warning(this, tr("Insufficient Memory"), tr("You requested to read in %1 MB of data but it seems that you only have approximately %2 MB of usable memory available.  You cannot load this much data.")
+          .arg(static_cast<double>((memory_needed - current_memory_used) /
+                                   (1024.0L * 1024.0L)))
+          .arg(static_cast<double>(memory_available /
+                                   (1024.0L * 1024.0L))));
       return;
     }
   }
 
-  start_units = _dataRange->_startUnits->currentText();
-  range_units = _dataRange->_rangeUnits->currentText();
+  start_units = _dataRange->startUnits();
+  range_units = _dataRange->rangeUnits();
 
   for (int i = 0; i < selectedItems.size(); ++i) {
     QString filename;
     DataSourcePtr datasource;
+    QString field;
     bool valid = false;
+    bool isVector = false;
     bool use_custom_start_index = false;
     bool use_custom_range_index = false;
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       filename = vector->filename();
       datasource = vector->dataSource();
+      field = vector->field();
       valid = true;
+      isVector = true;
       use_custom_range_index = custom_range_index;
       use_custom_start_index = custom_start_index;
     } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems.at(i)->text()))) {
@@ -363,71 +497,181 @@ void ChangeDataSampleDialog::apply() {
       datasource = vscalar->dataSource();
       valid = true;
     }
+
     if (valid) {
+      if (isVector) {
+        continue;
+      }
       if (!f0_map.contains(filename)) {
-        int f0;
-        int r;
-        if (use_custom_start_index) {
-          f0 = datasource->indexToFrame(_dataRange->start(), start_units);
-        } else if (_dataRange->countFromEnd()) {
-          f0 = -1;
-        } else {
-          f0 = _dataRange->start();
+        double f0;
+        double r;
+        bool cfe = false; // countFromEnd
+        bool rte = false; // readToEnd
+
+        bool converted = false;
+
+        if (isVector && (use_custom_start_index || use_custom_range_index)) {
+          double startOffset = _dataRange->start();
+          double rangeCount = _dataRange->range();
+          converted = DataRangeConversion::resolveToFrameRange(_dataRange,
+                                                               datasource,
+                                                               field,
+                                                               &startOffset,
+                                                               &rangeCount,
+                                                               0,
+                                                               0);
+          if (converted) {
+            f0 = _dataRange->countFromEnd() ? -1 : startOffset;
+            r = _dataRange->readToEnd() ? -1 : rangeCount;
+            cfe = _dataRange->countFromEnd();
+            rte = _dataRange->readToEnd();
+          }
         }
-        if (use_custom_range_index) {
-          r = _dataRange->range()*datasource->framePerIndex(range_units);
-        } else if (_dataRange->readToEnd()) {
-          r = -1;
-        } else {
-          r = (int)_dataRange->range();
+
+
+        if (!converted) {
+          if (use_custom_start_index) {
+
+            f0 = datasource->indexToFrame(_dataRange->start(), start_units);
+          } else if (_dataRange->countFromEnd()) {
+            f0 = -1; // keep -1 for matrix/vscalar backward compat
+            cfe = true;
+          } else {
+            f0 = _dataRange->start();
+          }
+          if (use_custom_range_index) {
+            r = _dataRange->range()*datasource->framePerIndex(range_units);
+          } else if (_dataRange->readToEnd()) {
+            r = -1; // keep -1 for matrix/vscalar backward compat
+            rte = true;
+          } else {
+            r = _dataRange->range();
+          }
         }
+
         f0_map.insert(filename, f0);
         r_map.insert(filename, r);
+        countFromEnd_map.insert(filename, cfe);
+        readToEnd_map.insert(filename, rte);
       }
     }
   }
 
+  bool anyChanges = false;
+  QStringList conversionFailures;
   for (int i = 0; i < selectedItems.size(); ++i) {
     if (DataVectorPtr vector = kst_cast<DataVector>(_store->retrieveObject(selectedItems.at(i)->text()))) {
+          vector->readLock();
+          const QString field = vector->field();
+          const double currentStartValue = vector->reqStartFrame();
+          const double currentCountValue = vector->reqNumFrames();
+          const bool currentCountFromEnd = vector->reqCountFromEnd();
+          const bool currentReadToEnd = vector->reqReadToEnd();
+          const bool currentDoSkip = vector->doSkip();
+          const int currentSkip = vector->skip();
+          const bool currentDoAve = vector->doAve();
+          vector->unlock();
+
+      double startOffset = _dataRange->start();
+      double rangeCount = _dataRange->range();
+      if (!DataRangeConversion::resolveToFrameRange(
+            _dataRange, vector->dataSource(), field,
+              &startOffset, &rangeCount, nullptr, nullptr)) {
+        conversionFailures.append(vector->Name());
+        continue;
+      }
+
+      const bool countFromEnd = _dataRange->countFromEnd();
+      const bool readToEnd = _dataRange->readToEnd();
+      qint64 desiredStart = DataRangeConversion::floorFrame(startOffset);
+      qint64 desiredCount = DataRangeConversion::floorFrame(rangeCount);
+
+      const qint64 availableFrames =
+          DataRangeConversion::floorFrame(vector->fileLength());
+      if (availableFrames > 0 && !readToEnd) {
+        if (countFromEnd) {
+          desiredCount = qMin(desiredCount, availableFrames);
+        } else {
+          desiredStart = qMin(desiredStart, availableFrames - 1);
+          desiredCount = qMin(desiredCount, availableFrames - desiredStart);
+        }
+        if (availableFrames >= 2 && desiredCount < 2) {
+          desiredCount = qMin(qint64(2), countFromEnd
+                                                ? availableFrames
+                                                : availableFrames - desiredStart);
+        }
+      } else if (!readToEnd) {
+        desiredCount = 0;
+      }
+
+      const qint64 currentStart =
+          DataRangeConversion::floorFrame(currentStartValue);
+      const qint64 currentCount =
+          DataRangeConversion::floorFrame(currentCountValue);
+      const bool desiredSkip = _dataRange->doSkip();
+      const int desiredSkipCount = desiredSkip ? qMax(1, _dataRange->skip()) : 0;
+      const bool unchanged =
+          (countFromEnd || currentStart == desiredStart) &&
+          (readToEnd || currentCount == desiredCount) &&
+          currentCountFromEnd == countFromEnd &&
+          currentReadToEnd == readToEnd &&
+          currentDoSkip == desiredSkip &&
+          currentSkip == desiredSkipCount &&
+          currentDoAve == _dataRange->doFilter();
+      if (unchanged) {
+        continue;
+      }
+
       vector->writeLock();
-      int from = f0_map.value(vector->filename());
-      int range = r_map.value(vector->filename());
-      vector->changeFrames( from, 
-                            range,
+      vector->changeFrames(countFromEnd ? 0 : desiredStart,
+                            countFromEnd,
+                            readToEnd ? 0 : desiredCount,
+                            readToEnd,
                             _dataRange->skip(),
                             _dataRange->doSkip(),
                             _dataRange->doFilter());
       vector->setStartUnits(start_units);
-      vector->setRangeUnits(start_units);
-      vector->registerChange();
+      vector->setRangeUnits(range_units);
       vector->unlock();
+      anyChanges = true;
     } else if (DataMatrixPtr matrix = kst_cast<DataMatrix>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       matrix->writeLock();
-      int from = f0_map.value(matrix->filename());
-      int range = r_map.value(matrix->filename());
+      double from = f0_map.value(matrix->filename());
+      double range = r_map.value(matrix->filename());
       if (from < 0) {
         matrix->setFrame(-1);
       } else {
-        matrix->setFrame(from+range-1);
+        matrix->setFrame((int)(from+range-1));
       }
       matrix->setStartUnits(start_units);
-      matrix->setRangeUnits(start_units);
+      matrix->setRangeUnits(range_units);
       matrix->registerChange();
       matrix->unlock();
+      anyChanges = true;
     } else if (VScalarPtr vscalar = kst_cast<VScalar>(_store->retrieveObject(selectedItems.at(i)->text()))) {
       vscalar->writeLock();
-      int from = f0_map.value(vscalar->filename());
-      int range = r_map.value(vscalar->filename());
-      vscalar->changeFrame(from+range-1);
+      double from = f0_map.value(vscalar->filename());
+      double range = r_map.value(vscalar->filename());
+      vscalar->changeFrame((int)(from+range-1));
       //vscalar->setStartUnits(start_units);
-      //vscalar->setRangeUnits(start_units);
+      //vscalar->setRangeUnits(range_units);
       vscalar->registerChange();
       vscalar->unlock();
+      anyChanges = true;
     }
   }
 
-  UpdateManager::self()->doUpdates(true);
-  UpdateServer::self()->requestUpdateSignal();
+  if (anyChanges) {
+    UpdateManager::self()->doUpdates(true);
+    UpdateServer::self()->requestUpdateSignal();
+  }
+
+  if (!conversionFailures.isEmpty()) {
+    QMessageBox::warning(
+        this, tr("Unable to Convert Range"),
+        tr("The selected index range could not be converted for these vectors; they were left unchanged:\n%1")
+            .arg(conversionFailures.join(QLatin1Char('\n'))));
+  }
 
   dialogDefaults().setValue("vector/range", _dataRange->range());
   dialogDefaults().setValue("vector/start", _dataRange->start());
@@ -436,11 +680,13 @@ void ChangeDataSampleDialog::apply() {
   dialogDefaults().setValue("vector/skip", _dataRange->skip());
   dialogDefaults().setValue("vector/doSkip", _dataRange->doSkip());
   dialogDefaults().setValue("vector/doAve", _dataRange->doFilter());
-  dialogDefaults().setValue("vector/startUnits", _dataRange->_startUnits->currentText());
-  dialogDefaults().setValue("vector/rangeUnits", _dataRange->_rangeUnits->currentText());
+  dialogDefaults().setValue("vector/startUnits", _dataRange->startUnits());
+  dialogDefaults().setValue("vector/rangeUnits", _dataRange->rangeUnits());
 
   updateCurveListDialog();
-  kstApp->mainWindow()->document()->setChanged(true);
+  if (anyChanges) {
+    kstApp->mainWindow()->document()->setChanged(true);
+  }
 }
 
 

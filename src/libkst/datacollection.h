@@ -58,7 +58,7 @@ class KSTCORE_EXPORT Data
       */
     virtual int columns() const;
 
-    static double AvailableMemory();
+    static double AvailableMemory(bool log = true);
 };
 
 

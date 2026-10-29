@@ -128,6 +128,7 @@ void AsciiSource::reset()
 
   Object::reset();
 
+  _indexFieldProps.clear();
   _strings = fileMetas();
 
   prepareRead(0);
@@ -314,7 +315,7 @@ bool AsciiSource::useSlidingWindow(qint64 bytesToRead)  const
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::readField(double *v, const QString& field, int s, int n)
+int AsciiSource::readField(double *v, const QString& field, double s, double n)
 {
   _actualField = field;
   if (n>BIG_READ) {
@@ -327,7 +328,15 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
 
   int read = tryReadField(v, field, s, n);
 
-  if (isTime(field)) {
+  bool field_is_time = false;
+  for (const IndexFieldProperties& ifp : indexFieldProperties()) {
+    if (ifp.name == field && ifp.isTime()) {
+      field_is_time = true;
+      break;
+    }
+  }
+
+  if (field_is_time) {
     if (_config._indexInterpretation == AsciiSourceConfig::FixedRate ) {
       double rate = _config._dataRate.value();
       if (rate>0) {
@@ -357,7 +366,7 @@ int AsciiSource::readField(double *v, const QString& field, int s, int n)
   }
 
   QString msg("%1.\nTry without threads or use a different file buffer limit when using threads for reading.");
-  if (read == abs(n)) { // when reading only 1 sample, n could be -1 instead of 1 to signal 1 sample, not 1 frame.
+  if (read == abs((qint64)n)) { // when reading only 1 sample, n could be -1 instead of 1 to signal 1 sample, not 1 frame.
     return read;
   } else if (read > 0) {
     if (!_haveWarned)
@@ -405,20 +414,22 @@ void AsciiSource::readingDone()
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
+int AsciiSource::tryReadField(double *v, const QString& field, double s, double n)
 {
-  if (n < 0) {
-    n = 1; /* n < 0 means read one sample, not frame - irrelevent here */
+  const qint64 s64 = (qint64)s;
+  qint64 n64 = (qint64)n;
+  if (n64 < 0) {
+    n64 = 1; /* n < 0 means read one sample, not frame - irrelevent here */
   }
 
   if (field == "INDEX") {
-    for (int i = 0; i < n; i++) {
-      v[i] = double(s + i);
+    for (qint64 i = 0; i < n64; i++) {
+      v[i] = double(s64 + i);
     }
-    if (n>BIG_READ) {
+    if (n64>BIG_READ) {
       updateFieldMessage(tr("INDEX created"));
     }
-    return n;
+    return (int)n64;
   }
 
   int col = columnOfField(field);
@@ -428,8 +439,8 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
   }
 
   // check if the already in buffer
-  const qint64 begin = _reader.beginOfRow(s);
-  const qint64 bytesToRead = _reader.beginOfRow(s + n) - begin;
+  const qint64 begin = _reader.beginOfRow(s64);
+  const qint64 bytesToRead = _reader.beginOfRow(s64 + n64) - begin;
   if ((begin != _fileBuffer.begin()) || (bytesToRead != _fileBuffer.bytesRead())) {
     QFile* file = new QFile(_filename);
     if (!AsciiFileBuffer::openFile(*file)) {
@@ -503,9 +514,9 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
     int read;
     if (useThreads())
-      read = parseWindowMultithreaded(slidingWindow[i], col, v, s, field);
+      read = parseWindowMultithreaded(slidingWindow[i], col, v, s64, field);
     else
-      read = parseWindowSinglethreaded(slidingWindow[i], col, v, s, field, sampleRead);
+      read = parseWindowSinglethreaded(slidingWindow[i], col, v, s64, field, sampleRead);
 
     // something went wrong abort reading
     if (read == 0) {
@@ -520,7 +531,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
     _fileBuffer.clear();
   }
 
-  if (n>BIG_READ) {
+  if (n64>BIG_READ) {
     updateFieldMessage(tr("Finished reading: "));
   }
 
@@ -533,7 +544,7 @@ int AsciiSource::tryReadField(double *v, const QString& field, int s, int n)
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field, int sRead)
+int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int col, double* v, qint64 start, const QString& field, int sRead)
 {
   int read = 0;
   for (int i = 0; i < window.size(); i++) {
@@ -549,7 +560,7 @@ int AsciiSource::parseWindowSinglethreaded(QVector<AsciiFileData>& window, int c
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, int start, const QString& field)
+int AsciiSource::parseWindowMultithreaded(QVector<AsciiFileData>& window, int col, double* v, qint64 start, const QString& field)
 {
   updateFieldProgress(tr("reading ..."));
   for (int i = 0; i < window.size(); i++) {
@@ -691,6 +702,25 @@ int AsciiSource::splitHeaderLine(const QByteArray& line, const AsciiSourceConfig
   return parts.count();
 }
 
+const QList<Kst::IndexFieldProperties>& AsciiSource::indexFieldProperties() {
+  if (_indexFieldProps.isEmpty()) {
+    _indexFieldProps.append({tr("rows"), true, false, false});
+
+    if (!_config._indexVector.value().isEmpty()) {
+      switch (_config._indexInterpretation.value()) {
+      case AsciiSourceConfig::CTime:
+      case AsciiSourceConfig::Seconds:
+      case AsciiSourceConfig::FormattedTime:
+      case AsciiSourceConfig::FixedRate:
+        _indexFieldProps.append({_config._indexVector, false, true, true});
+        break;
+      default:
+        break; // Unknown / NoInterpretation: no index field added
+      }
+    }
+  }
+  return _indexFieldProps;
+}
 
 //-------------------------------------------------------------------------------------------
 QStringList AsciiSource::fieldListFor(const QString& filename, AsciiSourceConfig cfg)
@@ -838,32 +868,32 @@ void AsciiSource::parseProperties(QXmlStreamAttributes &properties)
 
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::supportsTimeConversions() const
-{
-  return false; //fieldList().contains(_config._indexVector) && _config._indexInterpretation != AsciiSourceConfig::Unknown && _config._indexInterpretation != AsciiSourceConfig::INDEX;
-}
+// bool AsciiSource::supportsTimeConversions() const
+// {
+//   return false; //fieldList().contains(_config._indexVector) && _config._indexInterpretation != AsciiSourceConfig::Unknown && _config._indexInterpretation != AsciiSourceConfig::INDEX;
+// }
 
 
-//-------------------------------------------------------------------------------------------
-int AsciiSource::sampleForTime(double ms, bool *ok)
-{
-  switch (_config._indexInterpretation) {
-  case AsciiSourceConfig::Seconds:
-    // FIXME: make sure "seconds" exists in _indexVector
-    if (ok) {
-      *ok = true;
-    }
-    return 0;
-  case AsciiSourceConfig::CTime:
-    // FIXME: make sure "seconds" exists in _indexVector (different than above?)
-    if (ok) {
-      *ok = true;
-    }
-    return 0;
-  default:
-    return Kst::DataSource::sampleForTime(ms, ok);
-  }
-}
+// //-------------------------------------------------------------------------------------------
+// int AsciiSource::sampleForTime(double ms, bool *ok)
+// {
+//   switch (_config._indexInterpretation) {
+//   case AsciiSourceConfig::Seconds:
+//     // FIXME: make sure "seconds" exists in _indexVector
+//     if (ok) {
+//       *ok = true;
+//     }
+//     return 0;
+//   case AsciiSourceConfig::CTime:
+//     // FIXME: make sure "seconds" exists in _indexVector (different than above?)
+//     if (ok) {
+//       *ok = true;
+//     }
+//     return 0;
+//   default:
+//     return Kst::DataSource::sampleForTime(ms, ok);
+//   }
+// }
 
 
 //-------------------------------------------------------------------------------------------
@@ -874,35 +904,28 @@ QString AsciiSource::typeString() const
 
 
 //-------------------------------------------------------------------------------------------
-int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
-{
-  switch (_config._indexInterpretation) {
-  case AsciiSourceConfig::Seconds:
-    // FIXME: make sure "time" exists in _indexVector
-    if (ok) {
-      *ok = true;
-    }
-    return time.toSecsSinceEpoch();
-  case AsciiSourceConfig::CTime:
-    // FIXME: make sure "time" exists in _indexVector (different than above?)
-    if (ok) {
-      *ok = true;
-    }
-    return time.toSecsSinceEpoch();
-  default:
-    return Kst::DataSource::sampleForTime(time, ok);
-  }
-}
+// int AsciiSource::sampleForTime(const QDateTime& time, bool *ok)
+// {
+//   switch (_config._indexInterpretation) {
+//   case AsciiSourceConfig::Seconds:
+//     // FIXME: make sure "time" exists in _indexVector
+//     if (ok) {
+//       *ok = true;
+//     }
+//     return time.toSecsSinceEpoch();
+//   case AsciiSourceConfig::CTime:
+//     // FIXME: make sure "time" exists in _indexVector (different than above?)
+//     if (ok) {
+//       *ok = true;
+//     }
+//     return time.toSecsSinceEpoch();
+//   default:
+//     return Kst::DataSource::sampleForTime(time, ok);
+//   }
+// }
 
 //-------------------------------------------------------------------------------------------
-bool AsciiSource::isTime(const QString &field) const
-{
-  return (_config._indexInterpretation.value() != AsciiSourceConfig::NoInterpretation) &&
-      (_config._indexInterpretation.value() != AsciiSourceConfig::Unknown) &&
-      (field == _config._indexVector);
-}
 
-//-------------------------------------------------------------------------------------------
 QString AsciiSource::timeFormat() const
 {
   if (_config._indexInterpretation.value() != AsciiSourceConfig::FormattedTime) {

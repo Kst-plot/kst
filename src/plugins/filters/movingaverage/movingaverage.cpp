@@ -249,7 +249,7 @@ QStringList MovingAverageSource::outputStringList() const {
 }
 
 void MovingAverageSource::setProperty(const QString &key, const QString &val) {
-    qDebug() << "setProperty" << key << val;
+    // qDebug() << "setProperty" << key << val;
   if (key == "Weighted") {
     if (val.toLower() == "true") {
       setWeighted(true);

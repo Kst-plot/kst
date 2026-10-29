@@ -87,12 +87,32 @@ class DataSourcePluginInterface : public PluginInterface {
     virtual DataSourceConfigWidget *configWidget(QSettings *cfg, const QString& filename) const = 0;
 };
 
+// Optional capability for datasource plugins whose identifiers are not paths.
+// This is separate from DataSourcePluginInterface to preserve its plugin ABI.
+class NonFileDataSourcePluginInterface {
+  public:
+    virtual ~NonFileDataSourcePluginInterface() {}
+
+    // Return true only when this plugin accepts the identifier as a non-file source.
+    virtual bool isNonFileSource(const QString &identifier) const = 0;
+};
+
 
 }
 
 
+// Data source plugin ABI identifier. Plugins use it in Q_PLUGIN_METADATA, and
+// Qt refuses to load a plugin whose IID differs. Bump it (a plain counter,
+// independent of the app version) whenever a change would break plugins built
+// against the old headers: adding, removing or reordering virtual methods in
+// DataSource, DataSourcePluginInterface or the classes they use, changing class
+// layouts, or changing signatures plugins call or override. Keep the
+// kst-datasource-abi-N Provides in debian/control in sync.
+#define KST_DATASOURCE_IID "com.kst.DataSourcePluginInterface/3"
+
 Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/2.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/2.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, KST_DATASOURCE_IID)
+Q_DECLARE_INTERFACE(Kst::NonFileDataSourcePluginInterface, "com.kst.NonFileDataSourcePluginInterface/1.0")
 
 
 #endif

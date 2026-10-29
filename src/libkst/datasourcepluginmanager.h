@@ -47,6 +47,7 @@ class KSTCORE_EXPORT DataSourcePluginManager
     //static SharedPtr<DataSource> loadSource(ObjectStore *store, QDomElement& e, bool updatesDisabled = false);
     static SharedPtr<DataSource> findOrLoadSource(ObjectStore *store, const QString& filename, bool updatesDisabled = false);
     static bool validSource(const QString& filename);
+    static bool isNonFileSource(const QString& filename, const QString& type = QString());
 
     static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
     static DataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
@@ -63,6 +64,8 @@ class KSTCORE_EXPORT DataSourcePluginManager
   private:
     static QMap<QString,QString> url_map;
     static QString obtainFile(const QString& source);
+    static bool pluginRecognizesNonFileSource(const QString& identifier, const QString& normalized,
+                          const QString& type);
 
     struct PluginSortContainer {
       SharedPtr<DataSourcePluginInterface> plugin;

@@ -553,7 +553,7 @@ int FitsTableSource::readString(QString *stringValue, const QString& stringName)
    return 1;
 }
 
-int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
+int FitsTableSource::readField(double *v, const QString& field, double s, double n) {
    int status = 0; /* cfitsio status flag */
    int colnum;     /* column number in table */
    int anynul;     /* Number of null values read by fits_read_col() */
@@ -578,19 +578,21 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
                       containing data for a field.  Necessary to keep track of
                       s, the offset from the beginning of data */
    QByteArray ba;  /* needed to convert a QString to char array */
+   long s_l = (long)s;  /* cast to long for CFITSIO */
+   long n_l = (long)n;
 
-   DBG qDebug() << "Entering FitsTableSource::readField() with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
+   DBG qDebug() << "Entering FitsTableSource::readField() with params: " << field << ", from " << s_l << " for " << n_l << " frames" << Qt::endl;
 
    /* For INDEX field */
    if (field.toLower() == "index") {
-      if (n < 0) {
-         v[0] = double(s);
+      if (n_l < 0) {
+         v[0] = double(s_l);
          return 1;
       }
-      for (int i = 0; i < n; ++i) {
-         v[i] = double(s + i);
+      for (long i2 = 0; i2 < n_l; ++i2) {
+         v[i2] = double(s_l + i2);
       }
-      return n;
+      return (int)n_l;
    }
 
    idx       = _fieldList.indexOf(field); /* get index of field in list */
@@ -618,7 +620,7 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
 
    totalidx = 0;
    for (i=0; i < tableHDU.size(); i++){ /* loop over table HDUs */
-      if (totalidx >= n) /* quit when we have read all data requested */
+      if (totalidx >= n_l) /* quit when we have read all data requested */
          break;
       if (fits_movabs_hdu(_fptr, tableHDU[i], &hdutype, &status)){
          fits_report_error(stderr,status);
@@ -630,9 +632,9 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
          continue;
       }
       if (firstHDU == 1){
-         maxrow = tableRow[i] - s;
+         maxrow = tableRow[i] - s_l;
          firstHDU = 0;
-         currow = s + 1; /* FITS starts counting from row 1 */
+         currow = s_l + 1; /* FITS starts counting from row 1 */
       } else{
          maxrow = tableRow[i];
          currow = 1; /* FITS starts counting from row 1 */
@@ -645,15 +647,15 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
       else
          idx = (maxrow*repeat)/nelements + 1;
       for (j=0; j < idx; j++){ /* loop over row chunks */
-         if (totalidx >= n) /* quit when we have read all data requested */
+         if (totalidx >= n_l) /* quit when we have read all data requested */
             break;
          if (j == (idx - 1)) /* last iteration */
             nrow = (maxrow*repeat - j*nelements)/repeat;
          else
             nrow = nelements/repeat;
          /* check to make sure we don't read more data than requested */
-         if (totalidx + nrow > n)
-            nrow = n - totalidx;
+         if (totalidx + nrow > n_l)
+            nrow = n_l - totalidx;
          if (typecode == TINT){
             if (fits_read_col(_fptr, typecode, colnum, currow, 1,
                nrow*repeat, NULL, &(((int *)data)[0]), &anynul, &status)){
@@ -735,10 +737,10 @@ int FitsTableSource::readField(double *v, const QString& field, int s, int n) {
       } /* end loop over row chunks */
    } /* end loop over HDUs */
 
-   for (i=totalidx; i< n; i++) /* fill remainder with NaNs */
+   for (i=totalidx; i< n_l; i++) /* fill remainder with NaNs */
       v[i] = sqrt(-1);
    free(data);
-   return n;
+   return (int)n_l;
 }
 
 int FitsTableSource::readMatrix(double *v, const QString& field){

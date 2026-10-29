@@ -40,24 +40,25 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
       data points to allocated array which should be filled
       startingFrame is the starting frame
       numberOfFrames is the number of frames to read
-        if numberOfFrames is -1, it means to read 1 -sample- from startingFrame.
+      singleSample: when true, read exactly 1 sample at startingFrame (numberOfFrames ignored)
       skipFrame: currently ignored by all data sources
       lastFrameRead: currently ignored
      */
     struct KSTCORE_EXPORT ReadInfo {
       double*  data;
-      int startingFrame;
-      int numberOfFrames;
-      int skipFrame;
+      double startingFrame;
+      double numberOfFrames;
+      double skipFrame;
+      bool singleSample;
     };
 
 
     struct KSTCORE_EXPORT DataInfo
     {
       DataInfo();
-      DataInfo(int frameCount, int samplesPerFrame);
+      DataInfo(double frameCount, int samplesPerFrame);
 
-      int frameCount;
+      double frameCount;
       int samplesPerFrame;
     };
 
@@ -71,25 +72,33 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
 
     /** change the properties of a DataVector */
     void change(DataSourcePtr file, const QString &field,
-                int f0, int n, int skip,
-                bool in_doSkip, bool in_doAve);
+                double f0, bool countFromEnd,
+                double n, bool readToEnd,
+                int skip, bool in_doSkip, bool in_doAve);
 
     void changeFile(DataSourcePtr file);
 
-    void changeFrames(int f0, int n, int skip,
-                      bool in_doSkip, bool in_doAve);           //si
+    void changeFrames(double f0, bool countFromEnd,
+                      double n, bool readToEnd,
+                      int skip, bool in_doSkip, bool in_doAve); //si
 
     /** Return frames held in Vector */
-    int numFrames() const;                                      //si
+    double numFrames() const;                                   //si
 
     /** Return the requested number of frames in the vector */
-    int reqNumFrames() const;
+    double reqNumFrames() const;
 
     /** Return Starting Frame of Vector */
-    int startFrame() const;                                     //si
+    double startFrame() const;                                  //si
 
     /** Return the requested starting frame of the Vector */
-    int reqStartFrame() const;
+    double reqStartFrame() const;
+
+    /** Return whether count-from-end mode is requested */
+    bool reqCountFromEnd() const;
+
+    /** Return whether read-to-end mode is requested */
+    bool reqReadToEnd() const;
 
     /** Return frames to skip per read */
     bool doSkip() const;                                        //si^3
@@ -109,7 +118,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     virtual LabelInfo labelInfo() const;
 
     /** return the length of the file */
-    int fileLength() const;                                     //si
+    double fileLength() const;                                  //si
 
     /** return whether the vector is suppose to read to end of file */
     bool readToEOF() const;                                     //si
@@ -130,8 +139,8 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     //implemented in Vector too but must not be virtual.
     QByteArray scriptInterface(QList<QByteArray> &command);
 
-    /** does the vector represent time? */
-    virtual bool isTime() const;
+    /** does the vector represent ctime? */
+    virtual bool isCTime() const;
 
     virtual ScriptInterface* createScriptInterface();
 
@@ -158,10 +167,10 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     int SPF;
 
     /** current number of frames */
-    int NF;
+    double NF;
 
     /** current starting frame */
-    int F0;
+    double F0;
 
     /** frames to skip per read */
     bool DoSkip;
@@ -169,12 +178,16 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     int Skip;
 
     /** max number of frames */
-    int ReqNF;
+    double ReqNF;
 
     int _invalidCount;
 
     /** Requested Starting Frame */
-    int ReqF0;
+    double ReqF0;
+
+    /** Explicit mode flags (replace -1 sentinel convention) */
+    bool _countFromEnd;
+    bool _readToEnd;
 
     /** Number of Samples allocated to the vector */
     int _numSamples;
@@ -185,7 +198,7 @@ class KSTCORE_EXPORT DataVector : public Vector, public DataPrimitive
     bool checkIntegrity(); // must be called with a lock
 
     // wrappers around DataSource interface functions
-    int readField(double *v, const QString& field, int s, int n, int skip = -1);
+    int readField(double *v, const QString& field, double s, double n, double skip = -1, bool singleSample = false);
     const DataInfo dataInfo(const QString& field) const;
 
     QHash<QString, ScalarPtr> _fieldScalars;

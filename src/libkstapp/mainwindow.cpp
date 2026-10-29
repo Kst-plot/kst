@@ -451,10 +451,9 @@ QStringList MainWindow::recentDataFiles() {
 }
 
 void MainWindow::cleanupRecentDataFilesList() {
-  QStringList recentFiles = _settings.value("recentDataFileList").toStringList();
-  recentFiles.removeDuplicates();
+  QStringList recentFiles = recentDataFiles();
   foreach(const QString& it, recentFiles) {
-    if (!QFileInfo(it).exists()) {
+    if (!DataSource::isNonFileUrl(it) && !QFileInfo(it).exists()) {
       recentFiles.removeOne(it);
     }
   }
@@ -468,7 +467,8 @@ void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QActio
 {
   // Always add absolute paths to the recent file lists, otherwise they are not very reusable
   QString absoluteFilePath = DataSource::cleanPath(newfilename);
-  if (!newfilename.isEmpty() && !QDir::isAbsolutePath(newfilename)) { // If it's not empty and not absolute either, add the dir
+  if (!newfilename.isEmpty() && !DataSource::isNonFileUrl(newfilename) &&
+      !QDir::isAbsolutePath(newfilename)) { // Relative filesystem path only.
     absoluteFilePath = DataSource::cleanPath(QDir::currentPath() + '/' + newfilename);
   }
   foreach(QAction* it, actions) {
@@ -500,7 +500,8 @@ void MainWindow::updateRecentFiles(const QString& key ,QMenu* menu, QList<QActio
     i++;
     if (i <= 5) {
       // don't make file menu too wide, show complete path in statusbar
-      QAction* action = createRecentFileAction(it, i, QFileInfo(it).fileName(), openslot);
+      QAction* action = createRecentFileAction(it, i,
+        DataSource::isNonFileUrl(it) ? it : QFileInfo(it).fileName(), openslot);
       actions << action;
       menu->addAction(action);
     }
@@ -522,14 +523,16 @@ void MainWindow::checkRecentFilesOnExistence()
 {
   QAction *action = qobject_cast<QAction *>(sender());
   if (action) {
-    QStringList recentFiles = _settings.value(action->data().toString()).toStringList();
+    const QString key = action->data().toString();
+    const bool dataFiles = key == QLatin1String("recentDataFileList");
+    QStringList recentFiles = _settings.value(key).toStringList();
     recentFiles.removeDuplicates();
     foreach(const QString& it, recentFiles) {
-      if (!QFileInfo(it).exists()) {
+      if (!(dataFiles && DataSource::isNonFileUrl(it)) && !QFileInfo(it).exists()) {
         recentFiles.removeOne(it);
       }
     }
-    _settings.setValue(action->data().toString(), recentFiles);
+    _settings.setValue(key, recentFiles);
     updateRecentKstFiles();
     updateRecentDataFiles();
   }
@@ -1254,14 +1257,14 @@ void MainWindow::createActions() {
   _backSmallAct->setStatusTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setToolTip(tr("Back 1/5th screen (Shift + Page Up)"));
   _backSmallAct->setIcon(KstGetIcon("page-previous"));
-  _backSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageDown);
+  _backSmallAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_PageDown));
   connect(_backSmallAct, SIGNAL(triggered()), this, SLOT(backSmall()));
 
   _forwardSmallAct = new QAction(tr("&Forward 1/5th Screen"), this);
   _forwardSmallAct->setStatusTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setToolTip(tr("Forward 1/5th screen (Page Down)"));
   _forwardSmallAct->setIcon(KstGetIcon("page-next"));
-  _forwardSmallAct->setShortcut(Qt::SHIFT | Qt::Key_PageUp);
+  _forwardSmallAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_PageUp));
   connect(_forwardSmallAct, SIGNAL(triggered()), this, SLOT(forwardSmall()));
 
   _readFromEndAct = new QAction(tr("&Count from End"), this);
@@ -1275,7 +1278,7 @@ void MainWindow::createActions() {
   _readToEndAct->setStatusTip(tr("Read to end mode"));
   _readToEndAct->setToolTip(tr("Read to end mode (shift+end)"));
   _readToEndAct->setIcon(KstGetIcon("read-to-end"));
-  _readToEndAct->setShortcut(Qt::ShiftModifier | Qt::Key_End);
+  _readToEndAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_End));
   connect(_readToEndAct, SIGNAL(triggered()), this, SLOT(readToEnd()));
 
   _pauseAct = new QAction(tr("&Pause"), this);
@@ -1454,7 +1457,7 @@ void MainWindow::createActions() {
 
   _xOnlyZoomAct = _interactionModeGroup->addAction(tr("&X-only Zoom"));
   _xOnlyZoomAct->setStatusTip(tr("Zoom only in X direction"));
-  _xOnlyZoomAct->setShortcut(Qt::CTRL | Qt::Key_K);
+  _xOnlyZoomAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_K));
   _xOnlyZoomAct->setToolTip(tr("X Zoom mode (%1)").arg(_xOnlyZoomAct->shortcut().toString()));
   _xOnlyZoomAct->setCheckable(true);
   _xOnlyZoomAct->setData(View::ZoomOnlyX);
@@ -1462,7 +1465,7 @@ void MainWindow::createActions() {
 
   _yOnlyZoomAct = _interactionModeGroup->addAction(tr("&Y-only Zoom"));
   _yOnlyZoomAct->setStatusTip(tr("Zoom only in Y direction"));
-  _yOnlyZoomAct->setShortcut(Qt::SHIFT | Qt::Key_K);
+  _yOnlyZoomAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_K));
   _yOnlyZoomAct->setToolTip(tr("Y Zoom mode (%1)").arg(_yOnlyZoomAct->shortcut().toString()));
   _yOnlyZoomAct->setData(View::ZoomOnlyY);
   _yOnlyZoomAct->setCheckable(true);
@@ -1916,7 +1919,7 @@ void MainWindow::updateProgress(int percent, const QString& message)
 }
 
 void MainWindow::readFromEnd() {
-  int nf = 0;
+  double nf = 0;
   int skip;
   bool do_skip;
   bool do_filter;
@@ -1935,7 +1938,7 @@ void MainWindow::readFromEnd() {
     v->unlock();
 
     v->writeLock();
-    v->changeFrames(-1, nf, skip, do_skip, do_filter);
+    v->changeFrames(0, true, nf, false, skip, do_skip, do_filter);
     v->registerChange();
     v->unlock();
   }
@@ -1973,7 +1976,7 @@ void MainWindow::readFromEnd() {
 }
 
 void MainWindow::readToEnd() {
-  int f0 = 0;
+  double f0 = 0;
   int skip;
   bool do_skip;
   bool do_filter;
@@ -1989,7 +1992,7 @@ void MainWindow::readToEnd() {
     v->unlock();
 
     v->writeLock();
-    v->changeFrames(f0, -1, skip, do_skip, do_filter);
+    v->changeFrames(f0, false, 0, true, skip, do_skip, do_filter);
     v->registerChange();
     v->unlock();
   }
@@ -2037,11 +2040,11 @@ void MainWindow::pause(bool pause) {
 }
 
 void MainWindow::forward(double scale) {
-  int f0 = 0;
-  int nf = 0;
-  int lastF = -1;
+  double f0 = 0;
+  double nf = 0;
+  double lastF = -1;
   int skip;
-  int filelength;
+  double filelength;
   bool count_from_end;
   bool read_to_end;
   bool do_skip;
@@ -2051,8 +2054,7 @@ void MainWindow::forward(double scale) {
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
   VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
   DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
-  QHash<int,int> lastframehash;
-
+  QHash<double,int> lastframehash;
   foreach (DataVectorPtr v, dataVectors) {
     v->readLock();
     f0 = v->startFrame();
@@ -2075,15 +2077,15 @@ void MainWindow::forward(double scale) {
       ++lastframehash[lastF];
 
       v->writeLock();
-      v->changeFrames(f0, nf, skip, do_skip, do_filter);
+      v->changeFrames(f0, false, nf, false, skip, do_skip, do_filter);
       v->registerChange();
       v->unlock();
     }
   }
 
-  int most_popular_lastF = -1;
+  double most_popular_lastF = -1;
   int n_most_popular_lastF = -1;
-  foreach (int key, lastframehash.keys()) {
+  foreach (double key, lastframehash.keys()) {
     int n = lastframehash[key] ;
     if (n > n_most_popular_lastF) {
       n_most_popular_lastF = n;
@@ -2144,11 +2146,11 @@ void MainWindow::forward(double scale) {
 
   foreach (DataMatrixPtr m, dataMatrices) {
     if (m->isStream()) {
-      int  new_frame;
-      int filelength = m->fileLength();
+      qint64 new_frame;
+      qint64 filelength = m->fileLength();
       if (most_popular_lastF>=0) {
         if (most_popular_lastF < filelength) {
-          new_frame = most_popular_lastF;
+          new_frame = qint64(most_popular_lastF);
         } else {
           new_frame = filelength-1;
         }
@@ -2177,22 +2179,22 @@ void MainWindow::forward(double scale) {
 }
 
 void MainWindow::back(double scale) {
-  int f0 = 0;
-  int nf = 0;
+  double f0 = 0;
+  double nf = 0;
   int skip;
-  int filelength;
+  double filelength;
   bool count_from_end;
   bool read_to_end;
   bool do_skip;
   bool do_filter;
-  int lastF = -1;
+  double lastF = -1;
 
   DataVectorList dataVectors = document()->objectStore()->getObjects<DataVector>();
   DataMatrixList dataMatrices = document()->objectStore()->getObjects<DataMatrix>();
   VScalarList vScalars = document()->objectStore()->getObjects<VScalar>();
   DataStringList dataStrings = document()->objectStore()->getObjects<DataString>();
 
-  QHash<int,int> lastframehash;
+  QHash<double,int> lastframehash;
 
   foreach (DataVectorPtr v, dataVectors) {
     v->readLock();
@@ -2223,15 +2225,15 @@ void MainWindow::back(double scale) {
       ++lastframehash[lastF];
 
       v->writeLock();
-      v->changeFrames(f0, nf, skip, do_skip, do_filter);
+      v->changeFrames(f0, false, nf, false, skip, do_skip, do_filter);
       v->registerChange();
       v->unlock();
     }
   }
 
-  int most_popular_lastF = -1;
+  double most_popular_lastF = -1;
   int n_most_popular_lastF = -1;
-  foreach (int key, lastframehash.keys()) {
+  foreach (double key, lastframehash.keys()) {
     int n = lastframehash[key] ;
     if (n > n_most_popular_lastF) {
       n_most_popular_lastF = n;
@@ -2291,11 +2293,11 @@ void MainWindow::back(double scale) {
 
   foreach (DataMatrixPtr m, dataMatrices) {
     if (m->isStream()) {
-      int  new_frame;
-      int filelength = m->fileLength();
+      qint64 new_frame;
+      qint64 filelength = m->fileLength();
       if (most_popular_lastF>=0) {
         if (most_popular_lastF < filelength) {
-          new_frame = most_popular_lastF;
+          new_frame = qint64(most_popular_lastF);
         } else {
           new_frame = filelength-1;
         }

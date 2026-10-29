@@ -15,8 +15,6 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QRegularExpression>
-#include <psversion.h>
-#include <sysinfo.h>
 #include <QThreadPool>
 
 #include "colorsequence.h"
@@ -37,6 +35,7 @@
 #include "boxitem.h"
 #include "updateserver.h"
 #include "geticon.h"
+#include "datarangeconversion.h"
 
 
 namespace Kst {
@@ -171,6 +170,16 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   }
   _pageValid = true;
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename, true);
+  // FIXME: TIME indexing requires that the file be fully indexable at data source
+  // initialization time.  The lines below make sure this is true.  However,
+  // this is extremely expensive for very large ascii files, so we don't do it - 
+  // instead waiting for finished() to do it.  Data sources that are fully indexable
+  // at creation (eg, dirfiles) don't need this, and so Time indexing works.
+  // Not sure what to do about this. :-/
+  // if (_dataSource) {
+    // _dataSource->enableUpdates();
+    // _dataSource->internalDataSourceUpdate();
+  // }
   connect(_dataSource, SIGNAL(progress(int,QString)), kstApp->mainWindow(), SLOT(updateProgress(int,QString)));
   _fileType->setText(_dataSource->fileType());  
 
@@ -745,9 +754,23 @@ void DataWizardPageDataPresentation::checkWarningLabel()
 }
 
 
+void DataWizardPageDataPresentation::initializePage() {
+  updateVectors();
+}
+
 void DataWizardPageDataPresentation::updateVectors() {
   _xVector->clear();
-  _xVector->addItems(((DataWizard*)wizard())->dataSourceFieldList());
+  DataWizard *dw = static_cast<DataWizard*>(wizard());
+  const DataSourcePtr dataSource = dw->dataSource();
+
+  QStringList fieldList;
+  QList<Kst::IndexFieldProperties> indexFields;
+  if (dataSource) {
+    fieldList = dw->dataSourceFieldList();
+    indexFields = dw->dataSourceIndexList();
+  }
+
+  _xVector->addItems(fieldList);
   _pageValid = validOptions();
 
   int x_index = _xVector->findText(dialogDefaults().value("curve/xvectorfield","INDEX").toString());
@@ -759,7 +782,8 @@ void DataWizardPageDataPresentation::updateVectors() {
   }
   _xVector->setCurrentIndex(x_index);
 
-  dataRange()->updateIndexList(((DataWizard*)wizard())->dataSourceIndexList());
+  dataRange()->setDataSource(dataSource);
+  dataRange()->updateIndexList(indexFields);
 
   emit completeChanged();
 }
@@ -867,8 +891,17 @@ QStringList DataWizard::dataSourceFieldList() const {
   return _pageDataSource->dataSourceFieldList();
 }
 
-QStringList DataWizard::dataSourceIndexList() const {
-  return _pageDataSource->dataSource()->indexFields();
+QList<Kst::IndexFieldProperties> DataWizard::dataSourceIndexList() const {
+  DataSourcePtr ds = _pageDataSource->dataSource();
+  if (!ds) {
+    return QList<Kst::IndexFieldProperties>();
+  }
+  return ds->indexFieldProperties();
+}
+
+
+DataSourcePtr DataWizard::dataSource() const {
+  return _pageDataSource->dataSource();
 }
 
 
@@ -906,6 +939,7 @@ void DataWizard::finished() {
   }
 
   ds->enableUpdates();
+  ds->internalDataSourceUpdate();
 
   emit dataSourceLoaded(ds->fileName());
 
@@ -919,17 +953,27 @@ void DataWizard::finished() {
   double startOffset = _pageDataPresentation->dataRange()->start();
   double rangeCount = _pageDataPresentation->dataRange()->range();
 
-  bool customStartIndex = (_pageDataPresentation->dataRange()->_startUnits->currentIndex() != 0) &&
-                          (!_pageDataPresentation->dataRange()->countFromEnd());
-  bool customRangeCount = (_pageDataPresentation->dataRange()->_rangeUnits->currentIndex() != 0) &&
-                          (!_pageDataPresentation->dataRange()->readToEnd());
+  bool customStartIndex = false;
+  bool customRangeCount = false;
+  if (!DataRangeConversion::resolveToFrameRange(_pageDataPresentation->dataRange(),
+                                                ds,
+                                                _pageDataPresentation->vectorField(),
+                                                &startOffset,
+                                                &rangeCount,
+                                                &customStartIndex,
+                                                &customRangeCount)) {
+    customStartIndex = (!_pageDataPresentation->dataRange()->startIsFrame()) &&
+                       (!_pageDataPresentation->dataRange()->countFromEnd());
+    customRangeCount = (!_pageDataPresentation->dataRange()->rangeIsFrame()) &&
+                       (!_pageDataPresentation->dataRange()->readToEnd());
+    if (customStartIndex) {
+      startOffset = ds->indexToFrame(_pageDataPresentation->dataRange()->start(), _pageDataPresentation->dataRange()->startUnits());
+    }
 
-  if (customStartIndex) {
-    startOffset = ds->indexToFrame(_pageDataPresentation->dataRange()->start(), _pageDataPresentation->dataRange()->startUnits());
-  }
-
-  if (customRangeCount) {
-    rangeCount = _pageDataPresentation->dataRange()->range()*ds->framePerIndex(_pageDataPresentation->dataRange()->rangeUnits());
+    if (customRangeCount) {
+      double framesPerIndex = ds->framePerIndex(_pageDataPresentation->dataRange()->rangeUnits());
+      rangeCount = _pageDataPresentation->dataRange()->range()*framesPerIndex;
+    }
   }
 
   bool separate_tabs =
@@ -1006,18 +1050,18 @@ void DataWizard::finished() {
 
     dxv->writeLock();
     dxv->change(ds, field,
-        _pageDataPresentation->dataRange()->countFromEnd() ? -1 : startOffset,
-        _pageDataPresentation->dataRange()->readToEnd() ? -1 : rangeCount,
+        startOffset, _pageDataPresentation->dataRange()->countFromEnd(),
+        rangeCount, _pageDataPresentation->dataRange()->readToEnd(),
         _pageDataPresentation->dataRange()->skip(),
         _pageDataPresentation->dataRange()->doSkip(),
         _pageDataPresentation->dataRange()->doFilter());
 
     if (customStartIndex) {
-      dxv->setStartUnits(_pageDataPresentation->dataRange()->_startUnits->currentText());
+      dxv->setStartUnits(_pageDataPresentation->dataRange()->startUnits());
     }
 
     if (customRangeCount) {
-      dxv->setRangeUnits(_pageDataPresentation->dataRange()->_rangeUnits->currentText());
+      dxv->setRangeUnits(_pageDataPresentation->dataRange()->rangeUnits());
     }
 
     dxv->registerChange();
@@ -1027,7 +1071,7 @@ void DataWizard::finished() {
     xv = kst_cast<Vector>(_pageDataPresentation->selectedVector());
   }
 
-  bool xAxisIsTime = xv->isTime();
+  bool xAxisIsTime = xv->isCTime();
 
   {
     DataVectorPtr vector;
@@ -1040,18 +1084,18 @@ void DataWizard::finished() {
 
       vector->writeLock();
       vector->change(ds, field,
-          _pageDataPresentation->dataRange()->countFromEnd() ? -1 : startOffset,
-          _pageDataPresentation->dataRange()->readToEnd() ? -1 : rangeCount,
+          startOffset, _pageDataPresentation->dataRange()->countFromEnd(),
+          rangeCount, _pageDataPresentation->dataRange()->readToEnd(),
           _pageDataPresentation->dataRange()->skip(),
           _pageDataPresentation->dataRange()->doSkip(),
           _pageDataPresentation->dataRange()->doFilter());
 
       if (customStartIndex) {
-        vector->setStartUnits(_pageDataPresentation->dataRange()->_startUnits->currentText());
+        vector->setStartUnits(_pageDataPresentation->dataRange()->startUnits());
       }
 
       if (customRangeCount) {
-        vector->setRangeUnits(_pageDataPresentation->dataRange()->_rangeUnits->currentText());
+        vector->setRangeUnits(_pageDataPresentation->dataRange()->rangeUnits());
       }
 
       vector->registerChange();

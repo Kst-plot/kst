@@ -39,13 +39,15 @@ class AsciiSource : public Kst::DataSource
 
     bool initRowIndex(QFile *file);
 
+    virtual const QList<Kst::IndexFieldProperties>& indexFieldProperties() override;
+
     UpdateType internalDataSourceUpdate(bool read_completely);
 
     virtual UpdateType internalDataSourceUpdate();
 
     void prepareRead(int count);
     void readingDone();
-    int readField(double *v, const QString &field, int s, int n);
+    int readField(double *v, const QString &field, double s, double n);
 
     QString fileType() const;
     void setUpdateType(UpdateCheckType);
@@ -57,11 +59,9 @@ class AsciiSource : public Kst::DataSource
 
     bool supportsTimeConversions() const;
 
-    int sampleForTime(double ms, bool *ok);
+    // int sampleForTime(double ms, bool *ok);
 
-    int sampleForTime(const QDateTime& time, bool *ok);
-
-    bool isTime(const QString &field) const;
+    // int sampleForTime(const QDateTime& time, bool *ok);
 
     virtual void reset();
     void updateLists();
@@ -121,9 +121,9 @@ private:
     bool useThreads() const;
     bool useSlidingWindow(qint64 bytesToRead)  const;
 
-    int tryReadField(double *v, const QString &field, int s, int n);
-    int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, int start, const QString& field, int sRead);
-    int parseWindowMultithreaded(QVector<AsciiFileData>& fileData, int col, double* v, int start, const QString& field);
+    int tryReadField(double *v, const QString &field, double s, double n);
+    int parseWindowSinglethreaded(QVector<AsciiFileData>& fileData, int col, double* v, qint64 start, const QString& field, int sRead);
+    int parseWindowMultithreaded(QVector<AsciiFileData>& fileData, int col, double* v, qint64 start, const QString& field);
 
     int columnOfField(const QString& field) const;
     static int splitHeaderLine(const QByteArray& line, const AsciiSourceConfig& cfg, QStringList* parts = 0);

@@ -118,9 +118,9 @@ class MatrixTab : public DataTab, Ui::MatrixTab {
     bool skipDirty() const;
     void setSkip(int skip);
 
-    int frame() const;
+    qint64 frame() const;
     bool frameDirty() const;
-    void setFrame(int frame);
+    void setFrame(qint64 frame);
 
     bool xStartCountFromEnd() const;
     bool xStartCountFromEndDirty() const;

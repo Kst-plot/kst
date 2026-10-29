@@ -61,7 +61,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataScalar::DataInfo dataInfo(const QString&, int frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
+  const DataScalar::DataInfo dataInfo(const QString&, double frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
   void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
@@ -104,7 +104,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, double frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -156,7 +156,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -169,7 +169,7 @@ private:
 };
 
 
-const DataVector::DataInfo DataInterfaceNetCdfVector::dataInfo(const QString &field, int frame) const
+const DataVector::DataInfo DataInterfaceNetCdfVector::dataInfo(const QString &field, double frame) const
 {
   Q_UNUSED(frame)
   if (!netcdf._fieldList.contains(field))
@@ -285,7 +285,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo	(const QString&, int frame) const;
+  const DataMatrix::DataInfo dataInfo	(const QString&, double frame) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -298,7 +298,7 @@ private:
 };
 
 
-const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& matrix, int frame) const
+const DataMatrix::DataInfo DataInterfaceNetCdfMatrix::dataInfo(const QString& matrix, double frame) const
 {
   Q_UNUSED(frame)
   if (!netcdf._matrixList.contains( matrix ) ) {
@@ -493,7 +493,9 @@ int NetcdfSource::readString(QString *stringValue, const QString& stringName)
   return 0;
 }
 
-int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
+int NetcdfSource::readField(double *v, const QString& field, double s, double n) {
+  qint64 s64 = (qint64)s;
+  qint64 n64 = (qint64)n;
 // <<<<<<< HEAD
 //   NcType dataType = ncNoType; /* netCDF data type */
 //   /* Values for one record */
@@ -501,19 +503,19 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
 //   NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
 // =======
-  NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s << " for " << n << " frames";
+  NETCDF_DBG qDebug() << "Entering NetcdfSource::readField with params: " << field << ", from " << s64 << " for " << n64 << " frames";
 // >>>>>>> c2b585fb (Update netCDF datasource plugin to work with modern netCDF4 C++ bindings)
 
   /* For INDEX field */
   if (field.toLower() == "index") {
-    if (n < 0) {
-      v[0] = double(s);
+    if (n64 < 0) {
+      v[0] = double(s64);
       return 1;
     }
-    for (int i = 0; i < n; ++i) {
-      v[i] = double(s + i);
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = double(s64 + i);
     }
-    return n;
+    return (int)n64;
   }
 
   /* For a variable from the netCDF file */
@@ -530,16 +532,16 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
     return -1;
   }
 
-  if (s >= (int) var.getDim(0).getSize()) {
+  if (s64 >= (qint64) var.getDim(0).getSize()) {
     return 0;
   }
 
-  bool oneSample = n < 0;
+  bool oneSample = n64 < 0;
   double add_offset = 1.0, scale_factor = 1.0;
   std::vector<size_t> sv(1);
-  sv[0] = s;
+  sv[0] = s64;
   std::vector<size_t> nv(1);
-  nv[0] = n;
+  nv[0] = n64;
   switch (var.getType().getTypeClass()) {
     case NC_SHORT:
       {
@@ -556,9 +558,9 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 	  var.getVar(sv, &record);
           v[0] = packed ? record*scale_factor+add_offset : record;
         } else {
-	  std::vector<short> record(n);
+	  std::vector<short> record(n64);
 	  var.getVar(sv, nv, (short *)&record[0]);
-	  for (int i = 0; i < n; i++) {
+	  for (qint64 i = 0; i < n64; i++) {
 	    if (packed) {
 	      v[i] = record[i]*scale_factor+add_offset;
 	    } else {
@@ -603,7 +605,7 @@ int NetcdfSource::readField(double *v, const QString& field, int s, int n) {
 
   NETCDF_DBG qDebug() << "Finished reading " << field << Qt::endl;
 
-  return oneSample ? 1 : n;
+  return oneSample ? 1 : (int)n64;
 }
 
 

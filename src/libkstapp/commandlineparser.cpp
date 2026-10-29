@@ -167,7 +167,7 @@ CommandLineParser::CommandLineParser(Document *doc, MainWindow* mw) :
       _mainWindow(mw),
       _doAve(false), _doSkip(false), _doConsecutivePlots(true), _useBargraph(false), 
       _useLines(true), _usePoints(false), _overrideStyle(false), _sampleRate(1.0), 
-      _numFrames(-1), _startFrame(-1),
+      _numFrames(0), _startFrame(0), _countFromEnd(false), _readToEnd(true),
       _skip(0), _plotName(), _errorField(), _fileName(), _xField(QString("INDEX")),
       _pngFile(QString()), _pngWidth(-1), _pngHeight(-1), _printFile(QString()), _landscape(false), _plotItem(0),
       _legendMode(2),
@@ -229,6 +229,25 @@ bool CommandLineParser::_setDoubleArg(double *arg, QString Message) {
 }
 
 
+bool CommandLineParser::_setDoubleArg(double *arg, QString Message, bool accept_end) {
+  QString param;
+  bool ok = true;
+
+  if (_arguments.count() > 0) {
+    param = _arguments.takeFirst();
+    if ((param == tr("end") || param == "end") && accept_end) {
+      *arg = -1;
+    } else {
+      *arg = param.toDouble(&ok);
+    }
+  } else {
+    ok = false;
+  }
+  if (!ok) printUsage(Message);
+  return ok;
+}
+
+
 bool CommandLineParser::_setStringArg(QString &arg, QString Message) {
   bool ok = true;
   if (_arguments.count()> 0) {
@@ -245,9 +264,6 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
     DataVectorPtr xv;
     bool found = false;
 
-    if ((_startFrame==-1) && (_numFrames==-1)) { // count from end and read to end
-      _startFrame = 0;
-    }
     // Flaky magic: if ds is an ascii file, change fields named 0 to 99 to
     // Column xx.  This allows "-y 2" but prevents ascii files with fields
     // actually named "0 to 99" from being read from the command line.
@@ -265,7 +281,9 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
       xv = _vectors.at(i);
       if (field == xv->field()) {
         if ((xv->reqStartFrame() == _startFrame) &&
+            (xv->reqCountFromEnd() == _countFromEnd) &&
             (xv->reqNumFrames() == _numFrames) &&
+            (xv->reqReadToEnd() == _readToEnd) &&
             (xv->skip() == _skip) &&
             (xv->doSkip() == (_skip>0)) &&
             (xv->doAve() == _doAve) ){
@@ -283,7 +301,7 @@ DataVectorPtr CommandLineParser::createOrFindDataVector(QString field, DataSourc
       xv = _document->objectStore()->createObject<DataVector>();
 
       xv->writeLock();
-      xv->change(ds, field, _startFrame, _numFrames, _skip, _skip>0, _doAve);
+      xv->change(ds, field, _startFrame, _countFromEnd, _numFrames, _readToEnd, _skip, _skip>0, _doAve);
 
       xv->registerChange();
       xv->unlock();
@@ -446,18 +464,24 @@ QString CommandLineParser::kstFileName() {
 }
 
 bool CommandLineParser::checkFile(QString filename) {
-  QFileInfo info(filename);
-  if (!info.exists()) {
-    printUsage(tr("file %1 does not exist.\n").arg(filename));
+  const bool sourceValid = DataSourcePluginManager::validSource(filename);
+  const QString resolved = DataSourcePluginManager::urlMap().value(filename, filename);
+  const bool nonFileSource = DataSourcePluginManager::isNonFileSource(filename);
+  QFileInfo info(resolved);
+  if (!nonFileSource && info.isFile() && info.size() == 0) {
+    printUsage(tr("file %1 is empty.\n").arg(filename));
     return false;
   }
-  if (info.isFile()) {
-    if (info.size() == 0) {
-      printUsage(tr("file %1 is empty.\n").arg(filename));
-      return false;
+
+  if (!sourceValid) {
+    if (!info.exists()) {
+      printUsage(tr("file %1 does not exist or is not a recognized data source.\n").arg(filename));
+    } else {
+      printUsage(tr("file %1 is not a recognized data source.\n").arg(filename));
     }
+    return false;
   }
-  return true;
+  return nonFileSource || info.exists();
 }
 
 bool CommandLineParser::processCommandLine(bool *ok) {
@@ -493,16 +517,26 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
       *ok = false;
     } else if (arg == "-f") {
-      *ok = _setIntArg(&_startFrame, tr("Usage: -f <startframe>\n"), true);
+      *ok = _setDoubleArg(&_startFrame, tr("Usage: -f <startframe>\n"), true);
+      if (_startFrame < 0) { _countFromEnd = true; _startFrame = 0; }
+      else { _countFromEnd = false; }
+      _document->objectStore()->override.hasF0 = true;
       _document->objectStore()->override.f0 = _startFrame;
+      _document->objectStore()->override.countFromEnd = _countFromEnd;
     } else if (arg == "-n") {
-      *ok = _setIntArg(&_numFrames, tr("Usage: -n <numframes>\n"), true);
+      *ok = _setDoubleArg(&_numFrames, tr("Usage: -n <numframes>\n"), true);
+      if (_numFrames < 0) { _readToEnd = true; _numFrames = 0; }
+      else { _readToEnd = false; }
+      _document->objectStore()->override.hasN = true;
       _document->objectStore()->override.N = _numFrames;
+      _document->objectStore()->override.readToEnd = _readToEnd;
     } else if (arg == "-s") {
       *ok = _setIntArg(&_skip, tr("Usage: -s <frames per sample>\n"));
+      _document->objectStore()->override.hasSkip = true;
       _document->objectStore()->override.skip = _skip;
     } else if (arg == "-a") {
       _doAve = true;
+      _document->objectStore()->override.hasDoAve = true;
       _document->objectStore()->override.doAve = _doAve;
     } else if (arg == "-P") {
       QString plot_name;
@@ -550,6 +584,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         }
 
         DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
+        if (!ds) {
+          printText(tr("Could not load data source %1.\n").arg(file));
+          *ok = false;
+          break;
+        }
         xv = createOrFindDataVector(_xField, ds);
         use_old_xv = false;
       }
@@ -575,6 +614,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
         }
 
         DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
+        if (!ds) {
+          printText(tr("Could not load data source %1.\n").arg(file));
+          *ok = false;
+          break;
+        }
         if (!xv || !use_old_xv) {
           xv = createOrFindDataVector(_xField, ds);
         }
@@ -627,6 +671,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           }
 
           DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
+          if (!ds) {
+            printText(tr("Could not load data source %1.\n").arg(file));
+            *ok = false;
+            break;
+          }
 
           DataVectorPtr pv = createOrFindDataVector(field, ds);
 
@@ -680,6 +729,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           }
 
           DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource ( _document->objectStore(), file );
+          if (!ds) {
+            printText(tr("Could not load data source %1.\n").arg(file));
+            *ok = false;
+            break;
+          }
 
           DataVectorPtr hv = createOrFindDataVector ( field, ds );
           Q_ASSERT ( _document && _document->objectStore() );
@@ -718,6 +772,11 @@ bool CommandLineParser::processCommandLine(bool *ok) {
           }
 
           DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(_document->objectStore(), file);
+          if (!ds) {
+            printText(tr("Could not load data source %1.\n").arg(file));
+            *ok = false;
+            break;
+          }
 
           DataMatrixPtr dm = _document->objectStore()->createObject<DataMatrix>();
 
@@ -885,8 +944,8 @@ bool CommandLineParser::processCommandLine(bool *ok) {
 
     dialogDefaults().setValue("vector/range", _numFrames);
     dialogDefaults().setValue("vector/start", _startFrame);
-    dialogDefaults().setValue("vector/countFromEnd", (_startFrame<0));
-    dialogDefaults().setValue("vector/readToEnd", (_numFrames<0));
+    dialogDefaults().setValue("vector/countFromEnd", _countFromEnd);
+    dialogDefaults().setValue("vector/readToEnd", _readToEnd);
     dialogDefaults().setValue("vector/skip", _skip);
     dialogDefaults().setValue("vector/doSkip", (_skip>0));
     dialogDefaults().setValue("vector/doAve", _doAve);
@@ -919,7 +978,7 @@ Kst::ObjectList<Kst::Object> CommandLineParser::autoCurves(DataSourcePtr ds)
 
   DataVectorPtr xv = _document->objectStore()->createObject<DataVector>();
   xv->writeLock();
-  xv->change(ds, "INDEX", 0, -1, 0, false, false);
+  xv->change(ds, "INDEX", 0, false, 0, true, 0, false, false);
   xv->registerChange();
   xv->unlock();
 
@@ -927,7 +986,7 @@ Kst::ObjectList<Kst::Object> CommandLineParser::autoCurves(DataSourcePtr ds)
     if (field != "INDEX") {
       DataVectorPtr yv= _document->objectStore()->createObject<DataVector>();
       yv->writeLock();
-      yv->change(ds, field, 0, -1, 0, false, false);
+      yv->change(ds, field, 0, false, 0, true, 0, false, false);
       yv->registerChange();
       yv->unlock();
 

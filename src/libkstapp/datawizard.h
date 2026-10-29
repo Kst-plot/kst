@@ -150,6 +150,7 @@ class DataWizardPageDataPresentation : public QWizardPage, Ui::DataWizardPageDat
     DataWizardPageDataPresentation(ObjectStore *store, DataWizard *parent);
     virtual ~DataWizardPageDataPresentation();
 
+    void initializePage() override;
     int nextId() const;
     bool isComplete() const;
 
@@ -190,7 +191,8 @@ class DataWizard : public QWizard
     virtual ~DataWizard();
 
     QStringList dataSourceFieldList() const;
-    QStringList dataSourceIndexList() const;
+    QList<Kst::IndexFieldProperties> dataSourceIndexList() const;
+    DataSourcePtr dataSource() const;
 
     DataWizardPageDataSource *_pageDataSource;
   private:

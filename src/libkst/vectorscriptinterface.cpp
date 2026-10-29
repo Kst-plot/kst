@@ -197,11 +197,13 @@ QString DataVectorSI::changeFrames(QString &command) {
 
   _datavector->writeLock();
   _datavector->changeFrames(
-        vars.at(0).toInt(), // f0
-        vars.at(1).toInt(), // n
-        vars.at(2).toInt(), // skip
-        vars.at(2).toInt() > 0, // do skip
-        vars.at(3) == "True" // do average
+        vars.at(0).toDouble(),          // f0
+        vars.at(1) == "True",           // countFromEnd
+        vars.at(2).toDouble(),          // n
+        vars.at(3) == "True",           // readToEnd
+        vars.at(4).toInt(),             // skip
+        vars.at(4).toInt() > 0,         // do skip
+        vars.at(5) == "True"            // do average
         );
   _datavector->unlock();
   return "Done";
@@ -215,12 +217,14 @@ QString DataVectorSI::change(QString& command) {
                        _datavector->store(), vars.at(0));
   _datavector->writeLock();
   _datavector->change(ds,
-                      vars.at(1),         // field
-                      vars.at(2).toInt(), // f0
-                      vars.at(3).toInt(), // n
-                      vars.at(4).toInt(), // skip
-                      vars.at(4).toInt() > 0, // do skip
-                      vars.at(5) == "True" // do average
+                      vars.at(1),            // field
+                      vars.at(2).toDouble(), // f0
+                      vars.at(3) == "True",  // countFromEnd
+                      vars.at(4).toDouble(), // n
+                      vars.at(5) == "True",  // readToEnd
+                      vars.at(6).toInt(),    // skip
+                      vars.at(6).toInt() > 0, // do skip
+                      vars.at(7) == "True"    // do average
                       );
   _datavector->unlock();
   return "Done";

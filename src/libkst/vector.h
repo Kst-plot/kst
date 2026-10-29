@@ -192,6 +192,8 @@ class KSTCORE_EXPORT Vector : public Primitive
 
     /** does the vector represent time? */
     virtual bool isTime() const {return false;}
+    /** does the vector represent ctime specifically? */
+    virtual bool isCTime() const {return false;}
 
     virtual ScriptInterface* createScriptInterface();
 

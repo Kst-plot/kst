@@ -44,6 +44,16 @@ class DataSourceConfigWidget;
 //class DataSourcePlugin;
 
 
+struct KSTCORE_EXPORT IndexFieldProperties {
+  QString name;
+  bool is_frame;    // true if this field is a plain frame counter (rows/frames)
+  bool is_ctime;    // true if this field represents Unix epoch time (ctime / formatted time)
+  bool is_seconds;  // true if this field represents seconds (possibly with an epoch offset)
+
+  bool isTime() const { return is_ctime || is_seconds; }
+};
+
+
 class KSTCORE_EXPORT DataSource : public Object
 {
   Q_OBJECT
@@ -72,7 +82,7 @@ class KSTCORE_EXPORT DataSource : public Object
       virtual bool isValid(const QString& name) const = 0;
 
       // T specific
-      virtual const typename T::DataInfo dataInfo(const QString& name, int frame=0) const = 0;
+      virtual const typename T::DataInfo dataInfo(const QString& name, double frame=0) const = 0;
       virtual void setDataInfo(const QString& name, const typename T::DataInfo&) = 0;
 
       // meta data
@@ -91,6 +101,17 @@ class KSTCORE_EXPORT DataSource : public Object
     const DataInterface<DataVector>& vector() const {Q_ASSERT(interf_vector); return *interf_vector; }
     const DataInterface<DataMatrix>& matrix() const {Q_ASSERT(interf_matrix); return *interf_matrix; }
 
+    // Preserve exact large frame indices for indexed matrix streams. The default
+    // adapter keeps existing datasource interfaces source-compatible.
+    virtual DataMatrix::DataInfo matrixDataInfo(const QString& field, qint64 frame) const {
+      return matrix().dataInfo(field, double(frame));
+    }
+
+    // Stream length need not require selecting a sample or reading its dimensions.
+    // Existing datasources retain their dataInfo-based implementation by default.
+    virtual qint64 matrixFrameCount(const QString& field) const {
+      return matrix().dataInfo(field).frameCount;
+    }
 
 
     /************************************************************/
@@ -123,6 +144,10 @@ class KSTCORE_EXPORT DataSource : public Object
       It must be implemented by the datasource. */
     virtual UpdateType internalDataSourceUpdate() = 0;
 
+    /** Frames at the end of a field that must be reread after this update.
+      Streaming sources can use this to repair samples that arrived late. */
+    virtual int framesToRecheck(const QString &field) const { Q_UNUSED(field) return 0; }
+
     /** some constructors create their datasource with their updates disabled
         because it may be expensive to parse the whole file.
         Call this function before actually using the data source (eg,
@@ -130,29 +155,23 @@ class KSTCORE_EXPORT DataSource : public Object
     virtual void enableUpdates() {return;}
     /************************************************************/
     /* Methods for handling time in vectors.                    */
-    /* not currently used - may be reworked (remove this note   */
-    /* if you use it)                                           */
     /************************************************************/
     static bool supportsTime(const QString& plugin, const QString& type = QString());
     virtual QString timeFormat() const;
 
     /** Does it support time conversion of sample numbers, in general? */
-    virtual bool supportsTimeConversions() const;
+    // virtual bool supportsTimeConversions() const;
 
-    virtual int sampleForTime(const QDateTime& time, bool *ok = 0L);
+    // virtual int sampleForTime(const QDateTime& time, bool *ok = 0L);
 
-    virtual int sampleForTime(double milliseconds, bool *ok = 0L);
+    // virtual int sampleForTime(double milliseconds, bool *ok = 0L);
 
-    virtual QDateTime timeForSample(int sample, bool *ok = 0L);
+    // virtual QDateTime timeForSample(int sample, bool *ok = 0L);
 
     // in (ms)
-    virtual double relativeTimeForSample(int sample, bool *ok = 0L);
+    // virtual double relativeTimeForSample(int sample, bool *ok = 0L);
 
-    /************************************************************/
-    /* Methods for handling time in vectors. These are used.    */
-    /************************************************************/
-    virtual bool isTime(const QString &field) const;
-
+    
 
     /************************************************************/
     /* Methods for using custom lookup vectors, like TIME.      */
@@ -161,12 +180,11 @@ class KSTCORE_EXPORT DataSource : public Object
     /* in the base class.                                       */
     /************************************************************/
     /** returns the frame number corresponding to an index value from a frame */
-    virtual int indexToFrame(double index, const QString &field);
-    virtual double frameToIndex(int frame, const QString &field);
-    virtual double readDespikedIndex(int frame, const QString &field);
+    virtual qint64 indexToFrame(double index, const QString &field);
+    virtual double frameToIndex(qint64 frame, const QString &field);
+    virtual double readDespikedIndex(qint64 frame, const QString &field);
     virtual double framePerIndex(const QString &field);
-    virtual QStringList &timeFields();
-    virtual QStringList &indexFields();
+    virtual const QList<IndexFieldProperties>& indexFieldProperties();
 
 
     /************************************************************/
@@ -233,6 +251,7 @@ class KSTCORE_EXPORT DataSource : public Object
     PrimitiveList slavePrimitives;
 
 
+    static bool isNonFileUrl(const QString &path);
     static QString cleanPath(QString abs_path);
 
   public Q_SLOTS:
@@ -276,8 +295,7 @@ class KSTCORE_EXPORT DataSource : public Object
     void setInterface(DataInterface<DataVector>*);
     void setInterface(DataInterface<DataMatrix>*);
 
-    QStringList _frameFields;
-    QStringList _timeFields;
+    QList<IndexFieldProperties> _indexFieldProps;
   private:
     DataSource();
 

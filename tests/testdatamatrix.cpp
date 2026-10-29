@@ -45,6 +45,11 @@ void TestDataMatrix::testDataMatrix() {
   QVERIFY(!ok);
   QCOMPARE(m1->meanValue(), 0.0);
 
+  const qint64 largeFrame = qint64(1) << 40;
+  m1->setFrame(largeFrame);
+  QCOMPARE(m1->frame(), largeFrame);
+  m1->setFrame(0);
+
   if (!_plugins.contains("QImage Source Reader"))
     QSKIP("...couldn't find plugin.", SkipAll);
 

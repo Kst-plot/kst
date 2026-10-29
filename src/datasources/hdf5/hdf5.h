@@ -58,7 +58,7 @@ class HDF5Source : public Kst::DataSource {
 
     unsigned frameCount(const QString& field);
 
-    int readField(double *v, const QString& field, int start, int numFrames);
+    int readField(double *v, const QString& field, double start, double numFrames);
 
     int readScalar(double& s, const QString& field);
 
@@ -98,7 +98,7 @@ class HDF5Source : public Kst::DataSource {
 class HDF5Plugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+    Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     virtual ~HDF5Plugin() {}
 

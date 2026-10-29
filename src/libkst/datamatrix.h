@@ -53,7 +53,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
       int xNumSteps;
       int yNumSteps;
       int skip;
-      int frame; // only used for image streams
+      qint64 frame; // only used for image streams
     };
 
 
@@ -65,7 +65,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
       int ySize;
       bool invertXHint;
       bool invertYHint;
-      int frameCount; // only used for image streams
+      qint64 frameCount; // only used for image streams
     };
 
     bool _override_scale;
@@ -86,12 +86,12 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     void change(DataSourcePtr file, const QString &field,
                 int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip, int frame,
+                bool doAve, bool doSkip, int skip, qint64 frame,
                 bool doOverrideScale,
                 double minX, double minY, double stepX, double stepY);
     void changeFrames(int xStart, int yStart,
                 int xNumSteps, int yNumSteps,
-                bool doAve, bool doSkip, int skip, int frame,
+                bool doAve, bool doSkip, int skip, qint64 frame,
                 bool doOverrideScale,
                 double minX, double minY, double stepX, double stepY);
 
@@ -111,8 +111,8 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     int skip() const;
 
     // for image streams
-    int frame() const {return _frame;}
-    void setFrame(int f) {_frame = f;}
+    qint64 frame() const {return _frame;}
+    void setFrame(qint64 f) {_frame = f;}
     bool isStream();
 
     // labels for this matrix
@@ -139,7 +139,7 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
 
     virtual ScriptInterface* createScriptInterface();
 
-    int fileLength() const;
+    qint64 fileLength() const;
 
   protected:
     DataMatrix(ObjectStore *store);
@@ -158,13 +158,13 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
   private:
     void commonConstructor(DataSourcePtr file, const QString &field,
                            int reqXStart, int reqYStart, int reqNX, int reqNY,
-                           bool doAve, bool doSkip, int skip, int frame,
+                           bool doAve, bool doSkip, int skip, qint64 frame,
                            bool overrideScale,
                            double minX, double minY, double stepX, double stepY);
 
     void applyScaling(const MatrixData M);
-    void doUpdateSkip(int realXStart, int realYStart, int frame);
-    void doUpdateNoSkip(int realXStart, int realYStart, int frame);
+    void doUpdateSkip(int realXStart, int realYStart, qint64 frame);
+    void doUpdateNoSkip(int realXStart, int realYStart, qint64 frame);
 
     virtual void _resetFieldScalars();
     virtual void _resetFieldStrings();
@@ -187,9 +187,9 @@ class KSTCORE_EXPORT DataMatrix : public Matrix, public DataPrimitive
     bool _doAve : 1;
     bool _doSkip : 1;
     int _skip;
-    int _frame;
+    qint64 _frame;
 
-    int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, int frame);
+    int readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, qint64 frame);
 
     QHash<QString, ScalarPtr> _fieldScalars;
     QHash<QString, StringPtr> _fieldStrings;

@@ -128,14 +128,20 @@ void VScalar::save(QXmlStreamWriter &s) {
 /** Update a data Scalar */
 void VScalar::internalUpdate() {
   if (dataSource()) {
-    int f0;
+    double f0;
     if (_f0<0) { 
       f0 = dataSource()->vector().dataInfo(_field).frameCount-1;
     } else {
       f0 = _f0;
     }
     dataSource()->writeLock();
-    DataVector::ReadInfo p = {&_value, f0, -1, -1};
+    DataVector::ReadInfo p;
+    p.data = &_value;
+    p.startingFrame = f0;
+    // Legacy datasource readers use a negative frame count to request one sample.
+    p.numberOfFrames = -1;
+    p.skipFrame = -1;
+    p.singleSample = true;
     dataSource()->vector().read(_field, p);
     dataSource()->unlock();
   }

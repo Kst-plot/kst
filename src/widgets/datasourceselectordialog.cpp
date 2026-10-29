@@ -66,6 +66,9 @@ void DataSourceSelectorDialog::accept() {
   }
 
   for (int i = 0; i < files.count(); ++i) {
+      if (DataSourcePluginManager::isNonFileSource(files.at(i))) {
+          continue;
+      }
       QFileInfo info(files.at(i));
       if (!info.exists()) {
 #ifndef QT_NO_MESSAGEBOX

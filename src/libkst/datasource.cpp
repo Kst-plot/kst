@@ -63,7 +63,7 @@ struct NotSupportedImp : public DataSource::DataInterface<T>
   bool isValid(const QString&) const { return false; }
 
   // T specific
-  const typename T::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return typename T::DataInfo(); }
+  const typename T::DataInfo dataInfo(const QString&, double frame=0) const { Q_UNUSED(frame) return typename T::DataInfo(); }
   void setDataInfo(const QString&, const typename T::DataInfo&) {}
 
   // meta data
@@ -166,7 +166,17 @@ DataSource::~DataSource() {
   delete interf_matrix;
 }
 
+bool DataSource::isNonFileUrl(const QString &path) {
+  const QUrl url(path);
+  return path.contains(QLatin1String("://")) && url.isValid() &&
+      !url.scheme().isEmpty() && url.scheme() != QLatin1String("file");
+}
+
 QString DataSource::cleanPath(QString abs_path) {
+  // Filesystem normalization collapses "ssdb://" (and other URL schemes).
+  if (isNonFileUrl(abs_path)) {
+    return abs_path;
+  }
   QString name = QDir::cleanPath(abs_path);
 
   // qdir::cleanpath doesn't seem to remove leading /.. from paths (!)
@@ -356,69 +366,55 @@ void DataSource::reset() {
 }
 
 
-bool DataSource::supportsTimeConversions() const {
-  return false;
-}
+// bool DataSource::supportsTimeConversions() const {
+//   return false;
+// }
 
 QString DataSource::timeFormat() const {
   return QString();
 }
 
-int DataSource::sampleForTime(const QDateTime& time, bool *ok) {
-  Q_UNUSED(time)
-  if (ok) {
-    *ok = false;
-  }
-  return 0;
-}
+// int DataSource::sampleForTime(const QDateTime& time, bool *ok) {
+//   Q_UNUSED(time)
+//   if (ok) {
+//     *ok = false;
+//   }
+//   return 0;
+// }
 
 
 
-int DataSource::sampleForTime(double ms, bool *ok) {
-  Q_UNUSED(ms)
-  if (ok) {
-    *ok = false;
-  }
-  return 0;
-}
+// int DataSource::sampleForTime(double ms, bool *ok) {
+//   Q_UNUSED(ms)
+//   if (ok) {
+//     *ok = false;
+//   }
+//   return 0;
+// }
 
 
 
-QDateTime DataSource::timeForSample(int sample, bool *ok) {
-  Q_UNUSED(sample)
-  if (ok) {
-    *ok = false;
-  }
-  return QDateTime::currentDateTime();
-}
+// QDateTime DataSource::timeForSample(int sample, bool *ok) {
+//   Q_UNUSED(sample)
+//   if (ok) {
+//     *ok = false;
+//   }
+//   return QDateTime::currentDateTime();
+// }
 
 
-bool DataSource::isTime(const QString& field) const {
-  return (_timeFields.contains(field));
-}
-
-
-double DataSource::relativeTimeForSample(int sample, bool *ok) {
-  Q_UNUSED(sample)
-  if (ok) {
-    *ok = false;
-  }
-  return 0;
-}
-
-
-double DataSource::frameToIndex(int frame, const QString &field) {
+double DataSource::frameToIndex(qint64 frame, const QString &field) {
   return readDespikedIndex(frame+1, field);
 }
 
 
-int DataSource::indexToFrame(double X, const QString &field) {
+qint64 DataSource::indexToFrame(double X, const QString &field) {
   const DataVector::DataInfo info = vector().dataInfo(field);
-  int Fmin = 0;
-  int Fmax = info.frameCount-1;
+  qint64 Fmax = qint64(info.frameCount) - 1;
+  qint64 Fmin = 0;
   double Xmin = readDespikedIndex(Fmin, field);
   double Xmax = readDespikedIndex(Fmax, field);
-  int F0 = (Fmin + Fmax)/2;
+  qint64 F0 = Fmin + (Fmax - Fmin) / 2;
   double X0;
 
   if (X>=Xmax) {
@@ -441,7 +437,7 @@ int DataSource::indexToFrame(double X, const QString &field) {
       Xmin = X0;
       Fmin = F0;
     }
-    F0 = (Fmin + Fmax)/2;
+    F0 = Fmin + (Fmax - Fmin) / 2;
   }
   return F0;
 }
@@ -457,8 +453,8 @@ int DataSource::indexToFrame(double X, const QString &field) {
 double DataSource::framePerIndex(const QString &field) {
   // FIXME: for now, calculate the sample rate, but later allow us to define it
   const DataVector::DataInfo info = vector().dataInfo(field);
-  int fn = info.frameCount-2;
-  int f0 = fn-1000.0; //FIXME: not general (but maybe nothing is...)
+  qint64 fn = qint64(info.frameCount) - 2;
+  qint64 f0 = fn - 1000; //FIXME: not general (but maybe nothing is...)
   if (f0<0) {
     f0 = 0;
   }
@@ -468,7 +464,6 @@ double DataSource::framePerIndex(const QString &field) {
 
   double x0 = readDespikedIndex(f0, field);
   double xn = readDespikedIndex(fn, field);
-
   if (xn == x0) {
     return 1.0;
   }
@@ -476,11 +471,11 @@ double DataSource::framePerIndex(const QString &field) {
   return double(fn-f0)/(xn - x0);
 }
 
-double DataSource::readDespikedIndex(int frame_in, const QString &field) {
+double DataSource::readDespikedIndex(qint64 frame_in, const QString &field) {
 
   // we want a despike buffer which is an integer number of frames and
   // at least 5 samples on each side of our desired sample
-  int frame = frame_in;
+  qint64 frame = frame_in;
   const int min_despike_margin = 5; // samples
   const DataVector::DataInfo info = vector().dataInfo(field);
   int margin_frames = qMax(1,min_despike_margin/info.samplesPerFrame);
@@ -493,9 +488,14 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
     frame = 0;
   }
   if (frame + 2*margin_frames >= info.frameCount) {
-    frame = info.frameCount - 2*margin_frames;
+    frame = qint64(info.frameCount) - 2*margin_frames;
   }
-  DataVector::ReadInfo par = {data, frame, 2*margin_frames, -1};
+  DataVector::ReadInfo par;
+  par.data = data;
+  par.startingFrame = double(frame);
+  par.numberOfFrames = (double)(2*margin_frames);
+  par.skipFrame = -1;
+  par.singleSample = false;
 
   vector().read(field, par);
 
@@ -523,37 +523,23 @@ double DataSource::readDespikedIndex(int frame_in, const QString &field) {
 }
 
 
-QStringList &DataSource::timeFields() {
-  if (_timeFields.size() == 0) {
-    // FIXME: this must be created by the UI somehow.
-    // or by the datasource itself.  Or something
-    // different than this!
-    QStringList requestedFields;
-    requestedFields.append("TIME");
-    requestedFields.append("Time");
-    requestedFields.append("time");
-    requestedFields.append("Temps");
-    requestedFields.append("TEMPS");
-    requestedFields.append("temps");
+const QList<IndexFieldProperties>& DataSource::indexFieldProperties() {
+  if (_indexFieldProps.isEmpty()) {
+    _indexFieldProps.append({tr("frames"), true, false, false});
 
-    // Make sure the requested fields actually exist.
+    // Heuristic: auto-detect time fields by well-known names.
+    // FIXME: these should ideally be declared by the datasource itself.
+    const QStringList requestedFields = {
+      "TIME", "Time", "time", "Temps", "TEMPS", "temps"
+    };
     foreach (const QString &field, requestedFields) {
       if (vector().list().contains(field)) {
-        _timeFields.append(field);
+        // treat any auto-detected time field as both ctime and seconds
+        _indexFieldProps.append({field, false, true, true});
       }
     }
   }
-
-  return(_timeFields);
-}
-
-QStringList &DataSource::indexFields() {
-  if (_frameFields.size() == 0) {
-    _frameFields.append(tr("frames"));
-    _frameFields.append(timeFields());
-  }
-
-  return(_frameFields);
+  return _indexFieldProps;
 }
 
 bool DataSource::reusable() const {
@@ -622,22 +608,14 @@ ValidateDataSourceThread::ValidateDataSourceThread(const QString& file, const in
 
 static QMutex _mutex;
 void ValidateDataSourceThread::run() {
-
-  QFileInfo info(_file);
-  if (!info.exists()) {
-    emit dataSourceInvalid(_requestID);
-    return;
-  }
-
-  // FIXME validSource(_file) is not thread safe, so wait
-  // if there is another one running
+  // The manager applies plugin-aware admission for both files and opaque sources.
   QMutexLocker locker(&_mutex);
   if (!DataSourcePluginManager::validSource(_file)) {
     emit dataSourceInvalid(_requestID);
     return;
   }
-
-  emit dataSourceValid(_file, _requestID);
+  const QString fn = DataSourcePluginManager::urlMap().value(_file, _file);
+  emit dataSourceValid(fn, _requestID);
 }
 
 

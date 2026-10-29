@@ -51,9 +51,9 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
 
     struct KSTCORE_EXPORT ReadInfo 
     {
-      ReadInfo(QString* s, int f=0) : value(s), frame(f) {}
+      ReadInfo(QString* s, double f=0) : value(s), frame(f) {}
       QString* value;
-      int frame; // used for fields that have <string>s as a function of index
+      double frame; // used for fields that have <string>s as a function of index
     };
 
     struct KSTCORE_EXPORT DataInfo 
@@ -72,12 +72,12 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
     static const QString staticTypeTag;
 
     /** change the properties of a DataString */
-    void change(DataSourcePtr file, const QString &field, int frame);
+    void change(DataSourcePtr file, const QString &field, double frame);
     void changeFile(DataSourcePtr file);
 
     // used for fields that have <string>s as a function of index
-    int frame() const {return _frame;}
-    void setFrame(int f) {_frame = f;}
+    double frame() const {return _frame;}
+    void setFrame(double f) {_frame = f;}
     bool isStream();
 
     /** Save data string to kst session file */
@@ -98,7 +98,7 @@ class KSTCORE_EXPORT DataString : public String, public DataPrimitive
     virtual PrimitivePtr makeDuplicate() const;
     virtual bool checkValidity(const DataSourcePtr& ds) const;
 
-    int _frame;
+    double _frame;
 
 };
 

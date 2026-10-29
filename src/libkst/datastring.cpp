@@ -96,7 +96,7 @@ bool DataString::checkValidity(const DataSourcePtr& ds) const {
 }
 
 
-void DataString::change(DataSourcePtr in_file, const QString &in_field, int in_frame) {
+void DataString::change(DataSourcePtr in_file, const QString &in_field, double in_frame) {
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   _field = in_field;
@@ -139,7 +139,7 @@ void DataString::save(QXmlStreamWriter &s) {
 /** Update a data String */
 void DataString::internalUpdate() {  
   if (dataSource()) {
-    int frame;
+    double frame;
     const DataInfo info = dataSource()->string().dataInfo(_field);
     if ((_frame < 0) || (_frame >= info.frameCount)) {
       frame = info.frameCount-1;

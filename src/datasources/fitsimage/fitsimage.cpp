@@ -1,6 +1,7 @@
 /***************************************************************************
  *                                                                         *
  *   copyright : (C) 2007 The University of Toronto                        *
+ *               (C) 2026 C. Barth Netterfield                             *
  *                   netterfield@astro.utoronto.ca                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -64,7 +65,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, double frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -117,7 +118,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -168,7 +169,7 @@ void DataInterfaceFitsImageMatrix::init()
   }
 }
 
-const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix, int frame) const
+const DataMatrix::DataInfo DataInterfaceFitsImageMatrix::dataInfo(const QString& matrix, double frame) const
 {
   Q_UNUSED(frame)
   long n_axes[3];
@@ -386,14 +387,254 @@ bool DataInterfaceFitsImageMatrix::isValid(const QString& field) const {
 }
 
 
+//
+// Vector interface
+//
+
+class DataInterfaceFitsImageVector : public DataSource::DataInterface<DataVector> {
+public:
+  DataInterfaceFitsImageVector(fitsfile **fitsfileptr) : _fitsfileptr(fitsfileptr) {}
+
+  // read one element
+  int read(const QString&, DataVector::ReadInfo&);
+
+  // named elements
+  QStringList list() const { return _vectorList; }
+  bool isListComplete() const { return true; }
+  bool isValid(const QString&) const;
+
+  // T specific
+  const DataVector::DataInfo dataInfo(const QString&, double frame=0) const;
+  void setDataInfo(const QString&, const DataVector::DataInfo&) {}
+
+  // meta data
+  QMap<QString, double> metaScalars(const QString& m);
+  QMap<QString, QString> metaStrings(const QString& m) { Q_UNUSED(m) return QMap<QString, QString>(); }
+
+  // no interface
+  fitsfile **_fitsfileptr;
+  QHash<QString,int> _matrixHash;
+  QStringList _vectorList;
+
+  void init();
+  void clear();
+};
+
+
+void DataInterfaceFitsImageVector::clear()
+{
+  _matrixHash.clear();
+  _vectorList.clear();
+}
+
+
+void DataInterfaceFitsImageVector::init()
+{
+  int hdu;
+  int nhdu;
+  int status=0;
+  int type;
+  QString name;
+  char instr[32];
+  char tmpstr[1024];
+
+  fits_get_hdu_num(*_fitsfileptr, &hdu);
+
+  _matrixHash.insert(DefaultMatrixName, hdu);
+  _vectorList.append(DefaultMatrixName);
+  // provide a generic INDEX field similar to QImageSource
+  _vectorList.prepend("INDEX");
+
+
+  fits_get_num_hdus(*_fitsfileptr, &nhdu, &status);
+  for (hdu = 1; hdu <= nhdu; ++hdu) {
+    fits_movabs_hdu(*_fitsfileptr, hdu, &type, &status);
+    fits_get_hdu_type(*_fitsfileptr, &type, &status);
+    if (type == IMAGE_HDU) {
+      fits_read_key_str(*_fitsfileptr, "EXTNAME", instr, tmpstr, &status);
+      if (status) {
+        name = QString("HDU%1").arg(hdu);
+      } else {
+        name = QString(instr).trimmed();
+      }
+      _matrixHash.insert(name, hdu);
+      _vectorList.append(name);
+    }
+  }
+}
+
+
+const DataVector::DataInfo DataInterfaceFitsImageVector::dataInfo(const QString& field, double frame) const
+{
+  Q_UNUSED(frame)
+  long n_axes[3];
+  int status = 0;
+
+  if ( !*_fitsfileptr ) {
+    return DataVector::DataInfo();
+  }
+
+  int type = 0;
+  int hdu = 0;
+  if (field == "INDEX") {
+    if (!_matrixHash.contains(DefaultMatrixName)) return DataVector::DataInfo();
+    hdu = _matrixHash[DefaultMatrixName];
+  } else {
+    if (!_matrixHash.contains(field)) return DataVector::DataInfo();
+    hdu = _matrixHash[field];
+  }
+  fits_movabs_hdu(*_fitsfileptr, hdu, &type, &status);
+
+  fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
+
+  if (status) {
+    return DataVector::DataInfo();
+  }
+
+  long n_elements = n_axes[0] * n_axes[1];
+  DataVector::DataInfo info;
+  info.frameCount = (int)n_elements;
+  info.samplesPerFrame = 1;
+  return info;
+}
+
+
+QMap<QString, double> DataInterfaceFitsImageVector::metaScalars(const QString &matrix)
+{
+  QMap<QString,double> m;
+  if (!*_fitsfileptr) return m;
+
+  int hdu = 0;
+  if (matrix == "INDEX") {
+    if (!_matrixHash.contains(DefaultMatrixName)) return m;
+    hdu = _matrixHash[DefaultMatrixName];
+  } else {
+    if (!_matrixHash.contains(matrix)) return m;
+    hdu = _matrixHash[matrix];
+  }
+
+  long n_axes[3];
+  int status = 0;
+  int type = 0;
+  fits_movabs_hdu(*_fitsfileptr, hdu, &type, &status);
+  fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
+  if (!status) {
+    m.insert("FRAMES", (double)(n_axes[0]*n_axes[1]));
+  }
+  return m;
+}
+
+
+bool DataInterfaceFitsImageVector::isValid(const QString& field) const {
+  return (field == "INDEX") || _matrixHash.contains( field );
+}
+
+
+int DataInterfaceFitsImageVector::read(const QString& field, DataVector::ReadInfo& p)
+{
+  if (!*_fitsfileptr) {
+    return 0;
+  }
+
+  // INDEX is a synthetic field representing linear pixel indices
+  if (field == "INDEX") {
+    qint64 s = (qint64)p.startingFrame;
+    qint64 n = p.singleSample ? 1 : (qint64)p.numberOfFrames;
+    if (n < 0) return 0;
+    for (qint64 i = 0; i < n; ++i) {
+      p.data[i] = i + s;
+    }
+    return (int)n;
+  }
+
+  if (!_matrixHash.contains(field)) {
+    return 0;
+  }
+
+  int status = 0, type;
+  fits_movabs_hdu(*_fitsfileptr, _matrixHash[field], &type, &status);
+
+  long n_axes[2];
+  long fpixel[2] = {1,1};
+  double nullval = NAN;
+  double blank = 0.0;
+  long n_elements;
+  int anynull;
+  double *buffer;
+
+  fits_get_img_size( *_fitsfileptr,  2,  n_axes,  &status );
+  if (status) return 0;
+
+  n_elements = n_axes[0]*n_axes[1];
+  if (n_elements <= 0) return 0;
+  buffer = (double*)malloc((size_t)n_elements * sizeof(double));
+  if (!buffer) return 0;
+
+  if (fits_read_pix( *_fitsfileptr,  TDOUBLE, fpixel, n_elements, &nullval, buffer, &anynull,  &status )) {
+      char errmsg[80];
+      fits_get_errstatus(status, errmsg);
+      fprintf(stderr, "cannot read pixel data: %s\n", errmsg);
+      fflush(stderr);
+      free(buffer);
+      return 0;
+  }
+
+  // BLANK handling (same as matrix)
+  char charBlank[] = "BLANK";
+  fits_read_key(*_fitsfileptr, TDOUBLE, charBlank, &blank, NULL, &status);
+  if (status) { //keyword does not exist, ignore it
+    status = 0;
+  } else { //keyword is used, replace pixels with this value
+    double epsilon = fabs(1e-4 * blank);
+    for (long j = 0; j < n_elements; j++) {
+      if (fabs(buffer[j]-blank) < epsilon) {
+        buffer[j] = NAN;
+      }
+    }
+  }
+
+  qint64 s = (qint64)p.startingFrame;
+  qint64 n = p.singleSample ? 1 : (qint64)p.numberOfFrames;
+  if (n <= 0) {
+    free(buffer);
+    return 0;
+  }
+  // cap n to available pixels
+  long maxAvail = n_elements - (long)s;
+  if (s < 0) {
+    // negative start not supported here
+    s = 0;
+  }
+  if (maxAvail < 0) maxAvail = 0;
+  if ((long)n > maxAvail) n = (qint64)maxAvail;
+  int xSize = (int)n_axes[0];
+
+  for (qint64 i = 0; i < n; ++i) {
+    long idx = (long)(s + i);
+    if (idx < 0 || idx >= n_elements) {
+      p.data[i] = NAN;
+    } else {
+      int px = idx % xSize;
+      int py = idx / xSize;
+      p.data[i] = buffer[px + py * xSize];
+    }
+  }
+
+  free(buffer);
+  return n;
+}
+
+
 FitsImageSource::FitsImageSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename, const QString& type, const QDomElement& e)
 : Kst::DataSource(store, cfg, filename, type),
   _config(0L),
   is(new DataInterfaceFitsImageString(*this)),
-  im(new DataInterfaceFitsImageMatrix(&_fptr))
+  im(new DataInterfaceFitsImageMatrix(&_fptr)),
+  iv(new DataInterfaceFitsImageVector(&_fptr))
 {
   setInterface(is);
   setInterface(im);
+  setInterface(iv);
 
   setUpdateType(None);
 
@@ -443,11 +684,12 @@ void FitsImageSource::reset() {
 bool FitsImageSource::init() {
   int status = 0;
   fits_open_image( &_fptr, _filename.toLatin1(), READONLY, &status );
-
   im->clear();
+  iv->clear();
   _strings = fileMetas();
   if (status == 0) {
     im->init();
+    iv->init();
 
     registerChange();
     return true;
@@ -501,7 +743,6 @@ QStringList FitsImagePlugin::matrixList(QSettings *cfg,
                                              bool *complete) const {
   Q_UNUSED(type)
   QStringList matrixList;
-
   if (complete) {
     *complete = true;
   }

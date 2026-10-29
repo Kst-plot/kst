@@ -36,7 +36,11 @@ namespace Kst {
 
 ObjectStore::ObjectStore() {
   override.fileName.clear();
-  override.f0 = override.N = override.skip = override.doAve = -5;
+  override.hasF0 = override.hasN = override.hasSkip = override.hasDoAve = false;
+  override.f0 = override.N = 0;
+  override.skip = override.doAve = 0;
+  override.countFromEnd = false;
+  override.readToEnd = false;
   sessionVersion = 9999999;
 }
 

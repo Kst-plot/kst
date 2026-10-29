@@ -3,9 +3,6 @@
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-file(GLOB MOC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-qt6_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
 include(GenerateExportHeader)
 
 add_library(Kst6Core SHARED)
@@ -22,7 +19,6 @@ target_include_directories(Kst6Core
 )
 
 target_sources(Kst6Core PRIVATE
-    ${MOC_SOURCES}
     builtinprimitives.h
     coredocument.h
     datacollection.h
@@ -63,8 +59,6 @@ target_sources(Kst6Core PRIVATE
     plotiteminterface.h
     primitive.h
     primitivefactory.h
-    procps.h
-    psversion.h
     rwlock.h
     scalar.h
     scalarfactory.h
@@ -74,15 +68,12 @@ target_sources(Kst6Core PRIVATE
     string_kst.h
     stringfactory.h
     stringscriptinterface.h
-    sysinfo.h
     updatemanager.h
     updateserver.h
     vector.h
     vectorfactory.h
     vectorscriptinterface.h
     vscalar.h
-    psversion.c
-    sysinfo.c
     builtinprimitives.cpp
     coredocument.cpp
     datacollection.cpp

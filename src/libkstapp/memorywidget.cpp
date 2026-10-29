@@ -14,8 +14,7 @@
 
 #include "memorywidget.h"
 
-#include <psversion.h>
-#include <sysinfo.h>
+#include "datacollection.h"
 
 namespace Kst {
 
@@ -32,11 +31,8 @@ MemoryWidget::~MemoryWidget() {
 
 
 void MemoryWidget::updateFreeMemory() {
-#ifdef __linux__
-  meminfo();
-  unsigned long mi = S(kb_main_free + kb_main_cached);
-  setText(tr("%1 MB available").arg(mi / (1024 * 1024)));
-#endif
+  double mi = Data::AvailableMemory(false);
+  setText(tr("%1 MB available").arg(qint64(mi / (1024 * 1024))));
 }
 
 }

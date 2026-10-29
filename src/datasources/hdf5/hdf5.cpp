@@ -62,7 +62,7 @@ public:
   bool isListComplete() const { return true; }
   bool isValid(const QString& field) const { return hdf._fieldList.contains( field ); }
 
-  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   QMap<QString, double> metaScalars(const QString&) { return QMap<QString, double>(); }
@@ -71,7 +71,7 @@ public:
   HDF5Source& hdf;
 };
 
-const DataVector::DataInfo DataInterfaceHDF5Vector::dataInfo(const QString &field, int frame) const {
+const DataVector::DataInfo DataInterfaceHDF5Vector::dataInfo(const QString &field, double frame) const {
   Q_UNUSED(frame)
 
   if(!isValid(field)){
@@ -103,7 +103,7 @@ public:
   bool isValid(const QString& field) const { return hdf._matrixList.contains( field ); }
 
   // T Specific: still don't know what that means
-  const DataMatrix::DataInfo dataInfo(const QString&, int frame = 0) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -118,7 +118,7 @@ int DataInterfaceHDF5Matrix::read(const QString& field, DataMatrix::ReadInfo& p)
   return hdf.readMatrix(p, field);
 }
 
-const DataMatrix::DataInfo DataInterfaceHDF5Matrix::dataInfo(const QString &field, int frame) const {
+const DataMatrix::DataInfo DataInterfaceHDF5Matrix::dataInfo(const QString &field, double frame) const {
 
   Q_UNUSED(frame)
   if (!isValid(field)){
@@ -173,7 +173,7 @@ public:
   bool isValid(const QString& field) const { return hdf._scalarList.contains( field ); }
 
  //T specific: not used for scalars
- const DataScalar::DataInfo dataInfo(const QString&, int frame=0) const {Q_UNUSED(frame) return DataScalar::DataInfo(); }
+ const DataScalar::DataInfo dataInfo(const QString&, double frame=0) const {Q_UNUSED(frame) return DataScalar::DataInfo(); }
  void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   //meta data
@@ -205,7 +205,7 @@ public:
   bool isValid(const QString& field) const { return hdf._stringList.contains( field ); }
 
   // T specific: not used for Strings
-  virtual const DataString::DataInfo dataInfo(const QString&name, int frame=0) const;
+  virtual const DataString::DataInfo dataInfo(const QString&name, double frame=0) const;
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -221,7 +221,7 @@ int DataInterfaceHDF5String::read(const QString& field, DataString::ReadInfo& p)
     return hdf.readString(*p.value, field);
 }
 
-const DataString::DataInfo DataInterfaceHDF5String::dataInfo(const QString & name, int frame) const
+const DataString::DataInfo DataInterfaceHDF5String::dataInfo(const QString & name, double frame) const
 {
   Q_UNUSED(frame)
   Q_UNUSED(name)
@@ -544,16 +544,18 @@ unsigned HDF5Source::frameCount(const QString& field){
   return 0;
 }
 
-int HDF5Source::readField(double* dataVec, const QString& name, int start, int numFrames){
+int HDF5Source::readField(double* dataVec, const QString& name, double start, double numFrames){
+  qint64 start64 = (qint64)start;
+  qint64 numFrames64 = (qint64)numFrames;
 
-  //Debug::self()->log(QString("Into readField, name: ") + name + QString(" start: ") + QString::number(start) + QString(" numFrames: ") + QString::number(numFrames));
+  //Debug::self()->log(QString("Into readField, name: ") + name + QString(" start: ") + QString::number(start64) + QString(" numFrames: ") + QString::number(numFrames64));
   
   //Populate the index field provided by the plugin 
   if(_indexList.contains(name)){
-    for(int i = start; i<numFrames + start; i++){
-      dataVec[i-start] = i;
+    for(qint64 i = start64; i<numFrames64 + start64; i++){
+      dataVec[i-start64] = i;
     }
-    return numFrames;
+    return (int)numFrames64;
   }else if(name.contains("->")){//attribute vector
     QStringList list = name.split("->");
 
@@ -566,10 +568,10 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
 
       double* temp = new double[frameCount(name)];
       attr.read(attr.getDataType(), temp);//can only read the whole attribute
-      memcpy(dataVec, &temp[start], numFrames*samplesPerFrame(name)*sizeof(double));
+      memcpy(dataVec, &temp[start64], numFrames64*samplesPerFrame(name)*sizeof(double));
 
       delete[] temp;
-      return numFrames;
+      return (int)numFrames64;
     }catch (const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
     }
@@ -581,10 +583,10 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
 
     H5::DataSpace dataspace = dataset.getSpace();
 
-    hsize_t dataSize = numFrames*samplesPerFrame(name);
+    hsize_t dataSize = numFrames64*samplesPerFrame(name);
 
     hsize_t offsetOut = 0;
-    hsize_t memsize = (numFrames + 1)*samplesPerFrame(name);//this better not work
+    hsize_t memsize = (numFrames64 + 1)*samplesPerFrame(name);//this better not work
     //ugh this worked. No idea why, but memsize must be strictly larger than numframes
     //or else data offsets don't work. Really feels like an off-by-one in the hdf library
 
@@ -592,8 +594,8 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
 
     memspace.selectHyperslab( H5S_SELECT_SET, &dataSize, &offsetOut);
 
-    hsize_t startSize = start*samplesPerFrame(name);
-    hsize_t framesSize = numFrames*samplesPerFrame(name);
+    hsize_t startSize = start64*samplesPerFrame(name);
+    hsize_t framesSize = numFrames64*samplesPerFrame(name);
 
     //Debug::self()->log(QString("Going to read, datasize = ") + QString::number(dataSize));
 
@@ -603,16 +605,16 @@ int HDF5Source::readField(double* dataVec, const QString& name, int start, int n
       dataset.read((void*)dataVec, H5::PredType::NATIVE_DOUBLE, memspace, dataspace);
     }catch(const H5::Exception &e){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" ") + QString(e.getCDetailMsg()));
-      numFrames = 0;
+      numFrames64 = 0;
     }catch(const std::exception& e1){
       Debug::self()->log(QString("Problem reading dataset ") + name + QString(" " ) + QString(e1.what()));
-      numFrames = 0;
+      numFrames64 = 0;
     }catch(...){
       Debug::self()->log(QString("Unknown problem reading dataset ") + name);
-      numFrames = 0;
+      numFrames64 = 0;
     }
   }
-  return numFrames;
+  return (int)numFrames64;
 }
 
 int HDF5Source::readScalar(double& scalar, const QString& field){

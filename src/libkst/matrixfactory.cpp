@@ -180,7 +180,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
   bool overrideScale = false;
   int requestedXStart=0, requestedYStart=0, requestedXCount=-1, requestedYCount=-1, skip=0;
   double minX=0, minY=0, stepX=1, stepY=1;
-  int frame=0;
+  qint64 frame=0;
   QString provider, file, field;
 
   while (!xml.atEnd()) {
@@ -203,7 +203,7 @@ PrimitivePtr DataMatrixFactory::generatePrimitive(ObjectStore *store, QXmlStream
         doAve = attrs.value("doave").toString() == "true" ? true : false;
         doSkip = attrs.value("doskip").toString() == "true" ? true : false;
         skip = attrs.value("skip").toString().toInt();
-        frame = attrs.value("frame").toString().toInt();
+        frame = attrs.value("frame").toString().toLongLong();
         overrideScale = attrs.value("overridescale").toString() == "true" ? true : false;
         minX = attrs.value("xmin").toString().toDouble();
         minY = attrs.value("ymin").toString().toDouble();

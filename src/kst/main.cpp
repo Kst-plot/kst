@@ -14,6 +14,7 @@
 #include "settings.h"
 
 #include <QLibraryInfo>
+#include <QLoggingCategory>
 #include <QTranslator>
 #include <QLocale>
 #include <QDebug>
@@ -31,6 +32,8 @@ void nullMessageOutput(QtMsgType type, const QMessageLogContext &context, const 
 }
 
 int main(int argc, char *argv[]) {
+
+  QLoggingCategory::setFilterRules(QStringLiteral("qt.svg.draw.warning=false"));
 
 #ifdef QT_NO_WARNING_OUTPUT
   qInstallMessageHandler(nullMessageOutput);

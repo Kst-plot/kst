@@ -230,7 +230,10 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
   //QString provider;
   QString file, field;
   QString descriptiveName;
-  int start=0, count=0, skip = -1;
+  double start=0, count=0;
+  bool countFromEnd = false;
+  bool readToEnd = true; // default: read to end
+  int skip = -1;
   bool doAve=false;
   QString start_units;
   QString range_units;
@@ -244,8 +247,22 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         //provider = attrs.value("provider").toString();
         file = DataPrimitive::readFilename(attrs);
         field = attrs.value("field").toString();
-        start = attrs.value("start").toString().toInt();
-        count = attrs.value("count").toString().toInt();
+        start = attrs.value("start").toString().toDouble();
+        count = attrs.value("count").toString().toDouble();
+        // read explicit bool flags; fall back to old negative-sentinel inference
+        if (attrs.hasAttribute("countFromEnd")) {
+          countFromEnd = attrs.value("countFromEnd").toString() == "true";
+        } else {
+          countFromEnd = (start < 0);
+        }
+        if (attrs.hasAttribute("readToEnd")) {
+          readToEnd = attrs.value("readToEnd").toString() == "true";
+        } else {
+          readToEnd = (count <= 0);
+        }
+        // normalize: ensure stored values are non-negative for old files
+        if (countFromEnd && start < 0) { start = 0; }
+        if (readToEnd && count <= 0) { count = 0; }
         skip = attrs.value("skip").toString().toInt();
         doAve = attrs.value("doAve").toString() == "true" ? true : false;
         start_units = attrs.value("startUnits").toString();
@@ -255,16 +272,18 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
         if (!store->override.fileName.isEmpty()) {
           file = store->override.fileName;
         }
-        if (store->override.f0 != -5) {
+        if (store->override.hasF0) {
           start = store->override.f0;
+          countFromEnd = store->override.countFromEnd;
         }
-        if (store->override.N != -5) {
+        if (store->override.hasN) {
           count = store->override.N;
+          readToEnd = store->override.readToEnd;
         }
-        if (store->override.skip != -5 ) {
+        if (store->override.hasSkip) {
           skip = store->override.skip;
         }
-        if (store->override.doAve != -5) {
+        if (store->override.hasDoAve) {
           doAve = store->override.doAve;
         }
         if (attrs.value("descriptiveNameIsManual").toString() == "true") {
@@ -307,8 +326,8 @@ PrimitivePtr DataVectorFactory::generatePrimitive(ObjectStore *store, QXmlStream
 
   vector->writeLock();
   vector->change(dataSource, field,
-      start,
-      count,
+      start, countFromEnd,
+      count, readToEnd,
       skip,
       (skip != -1),
       doAve);

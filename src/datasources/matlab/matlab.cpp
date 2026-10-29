@@ -82,7 +82,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataScalar::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
+  const DataScalar::DataInfo dataInfo(const QString&, double frame=0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
   void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
@@ -125,7 +125,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataString::DataInfo dataInfo(const QString&, int frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
+  const DataString::DataInfo dataInfo(const QString&, double frame=0) const { Q_UNUSED(frame) return DataString::DataInfo(); }
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -174,7 +174,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -187,7 +187,7 @@ private:
 };
 
 
-const DataVector::DataInfo DataInterfaceMatlabVector::dataInfo(const QString &field, int) const
+const DataVector::DataInfo DataInterfaceMatlabVector::dataInfo(const QString &field, double) const
 {
   if (!matlab._fieldList.contains(field))
     return DataVector::DataInfo();
@@ -242,7 +242,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo	(const QString&, int frame = 0) const;
+  const DataMatrix::DataInfo dataInfo	(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -255,7 +255,7 @@ private:
 };
 
 
-const DataMatrix::DataInfo DataInterfaceMatlabMatrix::dataInfo(const QString& matrix, int) const
+const DataMatrix::DataInfo DataInterfaceMatlabMatrix::dataInfo(const QString& matrix, double) const
 {
   if (!matlab._matrixList.contains( matrix ) ) {
     return DataMatrix::DataInfo();
@@ -467,20 +467,22 @@ int MatlabSource::readString(QString *stringValue, const QString& stringName)
   return 0;
 }
 
-int MatlabSource::readField(double *v, const QString& field, int s, int n) {
+int MatlabSource::readField(double *v, const QString& field, double s, double n) {
+  qint64 s64 = (qint64)s;
+  qint64 n64 = (qint64)n;
 
-  KST_DBG qDebug() << "Entering MatlabSource::readField with params: " << field << ", from " << s << " for " << n << " frames" << Qt::endl;
+  KST_DBG qDebug() << "Entering MatlabSource::readField with params: " << field << ", from " << s64 << " for " << n64 << " frames" << Qt::endl;
 
   /* For INDEX field */
   if (field.toLower() == "index") {
-    if (n < 0) {
-      v[0] = double(s);
+    if (n64 < 0) {
+      v[0] = double(s64);
       return 1;
     }
-    for (int i = 0; i < n; ++i) {
-      v[i] = double(s + i);
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = double(s64 + i);
     }
-    return n;
+    return (int)n64;
   }
 
   /* For a variable from the Matlab file */
@@ -491,7 +493,7 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
     return -1;
   }
 
-  if (s >= _frameCounts[field]) {
+  if (s64 >= _frameCounts[field]) {
     return 0;
   }
 
@@ -500,8 +502,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case EIGHT_BIT_SIGNED_INT_DT:
   {
     int8_t *dataPointer = (int8_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -509,8 +511,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case EIGHT_BIT_UNSIGNED_INT_DT:
   {
     uint8_t *dataPointer = (uint8_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -518,8 +520,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case SIXTEEN_BIT_SIGNED_INT_DT:
   {
     int16_t *dataPointer = (int16_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -527,8 +529,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case SIXTEEN_BIT_UNSIGNED_INT_DT:
   {
     uint16_t *dataPointer = (uint16_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -536,8 +538,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case THIRTYTWO_BIT_SIGNED_INT_DT:
   {
     int32_t *dataPointer = (int32_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -545,8 +547,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case THIRTYTWO_BIT_UNSIGNED_INT_DT:
   {
     uint32_t *dataPointer = (uint32_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -554,8 +556,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case IEEE_754_SINGLE_PRECISION_DT:
   {
     float *dataPointer = (float*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -563,8 +565,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case IEEE_754_DOUBLE_PRECISION_DT:
   {
     double *dataPointer = (double*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -572,8 +574,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case SIXTYFOUR_BIT_SIGNED_INT_DT:
   {
     int64_t *dataPointer = (int64_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -581,8 +583,8 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
   case SIXTYFOUR_BIT_UNSIGNED_INT_DT:
   {
     uint64_t *dataPointer = (uint64_t*)matvar->data;
-    for (int i = 0; i < n; ++i) {
-      v[i] = (double)dataPointer[i+s];
+    for (qint64 i = 0; i < n64; ++i) {
+      v[i] = (double)dataPointer[i+s64];
     }
   }
     break;
@@ -595,7 +597,7 @@ int MatlabSource::readField(double *v, const QString& field, int s, int n) {
 
   KST_DBG qDebug() << "Finished reading " << field << Qt::endl;
   Mat_VarFree(matvar);
-  return n;
+  return (int)n64;
 }
 
 

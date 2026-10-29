@@ -62,7 +62,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -95,7 +95,7 @@ void DataInterfaceTiff16Vector::init()
 }
 
 
-const DataVector::DataInfo DataInterfaceTiff16Vector::dataInfo(const QString &field, int frame) const
+const DataVector::DataInfo DataInterfaceTiff16Vector::dataInfo(const QString &field, double frame) const
 {
   Q_UNUSED(frame)
   if (!_vectorList.contains(field))
@@ -108,9 +108,9 @@ const DataVector::DataInfo DataInterfaceTiff16Vector::dataInfo(const QString &fi
 
 int DataInterfaceTiff16Vector::read(const QString& field, DataVector::ReadInfo& p)
 {
-  int i = 0;
-  int s = p.startingFrame;
-  int n = p.numberOfFrames;
+  qint64 i = 0;
+  qint64 s = (qint64)p.startingFrame;
+  qint64 n = (qint64)p.numberOfFrames;
 
   if ( field=="INDEX" ) {
     for ( i=0; i<n; ++i ) {
@@ -122,7 +122,7 @@ int DataInterfaceTiff16Vector::read(const QString& field, DataVector::ReadInfo& 
     }
   }
 
-  return i;
+  return (int)i;
 }
 
 
@@ -158,7 +158,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -189,7 +189,7 @@ void DataInterfaceTiff16Matrix::init()
 
 
 
-const DataMatrix::DataInfo DataInterfaceTiff16Matrix::dataInfo(const QString& matrix, int frame) const
+const DataMatrix::DataInfo DataInterfaceTiff16Matrix::dataInfo(const QString& matrix, double frame) const
 {
   Q_UNUSED(frame)
   if ( !*_image || (*_width * *_height == 0) || !_matrixList.contains( matrix ) ) {

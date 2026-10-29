@@ -121,25 +121,32 @@ void DataSourcePluginManager::cleanupForExit() {
 
 
 QString DataSourcePluginManager::obtainFile(const QString& source) {
-  QUrl url;
-
-  if (QFile::exists(source) && QFileInfo(source).isRelative()) {
-    url.setPath(source);
-  } else {
-    url = QUrl(source);
+  if (source.isEmpty()) {
+    return QString();
   }
-
-  return source;
 
   if (url_map.contains(source)) {
     return url_map[source];
   }
 
-  QString tmpFile;
+  // Normalize only explicit file URLs and existing relative paths. A missing
+  // identifier belongs to datasource plugins; do not reinterpret it globally.
+  const QUrl url(source);
+  if (url.isValid() && url.scheme().compare("file", Qt::CaseInsensitive) == 0) {
+    const QString localFile = url.toLocalFile();
+    url_map[source] = localFile;
+    return localFile;
+  }
+  const QFileInfo info(source);
+  if (info.exists() && info.isRelative()) {
+    const QString localFile = info.absoluteFilePath();
+    url_map[source] = localFile;
+    return localFile;
+  }
 
-  url_map[source] = tmpFile;
-
-  return tmpFile;
+  // Opaque identifiers, plain paths, and non-file URLs are returned unchanged.
+  url_map[source] = source;
+  return source;
 }
 
 
@@ -264,6 +271,25 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
 }
 
 
+bool DataSourcePluginManager::pluginRecognizesNonFileSource(const QString& identifier,
+                                                             const QString& normalized,
+                                                             const QString& type) {
+  const QUrl inputUrl(identifier);
+  if (inputUrl.scheme().compare("file", Qt::CaseInsensitive) == 0) return false;
+  DataSourcePluginManager::init();
+
+  for (PluginList::Iterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+    DataSourcePluginInterface *plugin = it->plugin.data();
+    if (!plugin || (!type.isEmpty() && !plugin->provides(type)) ||
+        plugin->understands(&settingsObject(), normalized) <= 0) continue;
+    QObject *pluginObject = dynamic_cast<QObject *>(plugin);
+    auto *nonFilePlugin = qobject_cast<NonFileDataSourcePluginInterface *>(pluginObject);
+    if (nonFilePlugin && nonFilePlugin->isNonFileSource(identifier)) return true;
+  }
+  return false;
+}
+
+
 DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e) {
 
   QList<PluginSortContainer> bestPlugins = bestPluginsForSource(filename, type);
@@ -323,7 +349,7 @@ DataSourcePtr DataSourcePluginManager::loadSource(ObjectStore *store, const QStr
     return 0;
   }
 
-  if (!QFileInfo(fn).exists()) {
+  if (!QFileInfo(fn).exists() && !pluginRecognizesNonFileSource(filename, fn, type)) {
     Debug::self()->log(QObject::tr("File '%1' does not exist.").arg(fn), Debug::Warning);
     return 0;
   }
@@ -367,18 +393,28 @@ bool DataSourcePluginManager::validSource(const QString& filename) {
   }
 
   DataSourcePluginManager::init();
+  const bool exists = QFileInfo(fn).exists();
 
   PluginList info = _pluginList;
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {
-      if ((p->understands(&settingsObject(), filename)) > 0) {
-        return true;
+      if ((p->understands(&settingsObject(), fn)) > 0) {
+        if (exists) return true;
+        QObject *pluginObject = dynamic_cast<QObject *>(p);
+        auto *nonFilePlugin = qobject_cast<NonFileDataSourcePluginInterface *>(pluginObject);
+        if (nonFilePlugin && nonFilePlugin->isNonFileSource(filename)) return true;
       }
     }
   }
 
   return false;
+}
+
+
+bool DataSourcePluginManager::isNonFileSource(const QString& filename, const QString& type) {
+  const QString fn = obtainFile(filename);
+  return !fn.isEmpty() && pluginRecognizesNonFileSource(filename, fn, type);
 }
 
 

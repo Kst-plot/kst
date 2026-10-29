@@ -42,7 +42,7 @@ class FitsTableSource : public Kst::DataSource {
 
     int readString(QString *stringValue, const QString& stringName);
 
-    int readField(double *v, const QString& field, int s, int n);
+    int readField(double *v, const QString& field, double s, double n);
 
     int readMatrix(double *v, const QString& field);
 
@@ -93,7 +93,7 @@ class FitsTableSource : public Kst::DataSource {
 class FitsTableSourcePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+    Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     virtual ~FitsTableSourcePlugin() {}
 

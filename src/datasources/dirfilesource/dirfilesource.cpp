@@ -63,7 +63,7 @@ public:
   bool isValid(const QString& field) const { return dir._scalarList.contains( field ); }
 
   // T specific: not used for scalars
-  const DataScalar::DataInfo dataInfo(const QString&, int frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
+  const DataScalar::DataInfo dataInfo(const QString&, double frame = 0) const { Q_UNUSED(frame) return DataScalar::DataInfo(); }
   void setDataInfo(const QString&, const DataScalar::DataInfo&) {}
 
   // meta data
@@ -96,7 +96,7 @@ public:
   bool isValid(const QString& field) const { return dir._stringList.contains( field ); }
 
   // T specific: not used for Strings
-  virtual const DataString::DataInfo dataInfo(const QString&, int frame=0) const;
+  virtual const DataString::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataString::DataInfo&) {}
 
   // meta data
@@ -116,7 +116,7 @@ int DataInterfaceDirFileString::read(const QString& field, DataString::ReadInfo&
   }
 }
 
-const DataString::DataInfo DataInterfaceDirFileString::dataInfo(const QString &, int frame) const
+const DataString::DataInfo DataInterfaceDirFileString::dataInfo(const QString &, double frame) const
 {
   Q_UNUSED(frame)
 
@@ -145,7 +145,7 @@ public:
   bool isValid(const QString& field) const { return dir._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -158,7 +158,7 @@ public:
 
 
 
-const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &field, int frame) const
+const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &field, double frame) const
 {
   Q_UNUSED(frame)
   if (!dir._fieldList.contains(field))
@@ -170,7 +170,8 @@ const DataVector::DataInfo DataInterfaceDirFileVector::dataInfo(const QString &f
 
 int DataInterfaceDirFileVector::read(const QString& field, DataVector::ReadInfo& p)
 {
-  return dir.readField(p.data, field, p.startingFrame, p.numberOfFrames);
+  return dir.readField(p.data, field, p.startingFrame,
+                       p.singleSample ? -1 : p.numberOfFrames);
 }
 
 
@@ -322,17 +323,19 @@ Kst::Object::UpdateType DirFileSource::internalDataSourceUpdate() {
   return (isnew ? Updated : NoChange);
 }
 
-int DirFileSource::readField(double *v, const QString& field, int s, int n) {
+int DirFileSource::readField(double *v, const QString& field, double s, double n) {
+  qint64 s64 = (qint64)s;
+  qint64 n64 = (qint64)n;
 
-  if (n < 0) {
+  if (n64 < 0) {
     return _dirfile->GetData(field.toUtf8().constData(),
-                   s, 0, /* 1st sframe, 1st samp */
+                   s64, 0, /* 1st sframe, 1st samp */
                    0, 1, /* num sframes, num samps */
                    Float64, (void*)v);
   } else {
     return _dirfile->GetData(field.toUtf8().constData(),
-                   s, 0, /* 1st sframe, 1st samp */
-                   n, 0, /* num sframes, num samps */
+                   s64, 0, /* 1st sframe, 1st samp */
+                   n64, 0, /* num sframes, num samps */
                    Float64, (void*)v);
   }
 }

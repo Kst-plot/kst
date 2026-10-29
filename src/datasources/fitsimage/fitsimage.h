@@ -22,6 +22,7 @@
 
 class DataInterfaceFitsImageMatrix;
 class DataInterfaceFitsImageString;
+class DataInterfaceFitsImageVector;
 
 
 class FitsImageSource : public Kst::DataSource {
@@ -55,6 +56,7 @@ class FitsImageSource : public Kst::DataSource {
 
     DataInterfaceFitsImageString* is;
     DataInterfaceFitsImageMatrix* im;
+    DataInterfaceFitsImageVector* iv;
 
     friend class DataInterfaceFitsImageString;
 };
@@ -63,7 +65,7 @@ class FitsImageSource : public Kst::DataSource {
 class FitsImagePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+    Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     virtual ~FitsImagePlugin() {}
 

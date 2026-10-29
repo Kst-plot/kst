@@ -41,8 +41,8 @@ class AsciiDataReader
     void detectLineEndingType(QFile& file);
 
     bool findAllDataRows(bool read_completely, QFile* file, qint64 _byteLength, int col_count);
-    int readField(const AsciiFileData &buf, int col, double *v, const QString& field, int start, int n);
-    int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field);
+    int readField(const AsciiFileData &buf, int col, double *v, const QString& field, qint64 start, qint64 n);
+    int readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, qint64 start, const QString& field);
 
     template<typename ColumnDelimiter>
     static int splitColumns(const QByteArray& line, const ColumnDelimiter& column_del, QStringList* cols = 0);
@@ -69,15 +69,15 @@ class AsciiDataReader
     bool resizeBuffer(T& buffer, qint64 bytes);
 
     template<class Buffer, typename ColumnDelimiter>
-    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                     const AsciiCharacterTraits::LineEndingType&, const ColumnDelimiter&) const;
 
     template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                     const AsciiCharacterTraits::LineEndingType&, const ColumnDelimiter&, const CommentDelimiter&) const;
 
     template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+    int readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                     const IsLineBreak&, const ColumnDelimiter&, const CommentDelimiter&, const ColumnWidthsAreConst&) const;
 
     template<class Buffer, typename IsLineBreak, typename CommentDelimiter>

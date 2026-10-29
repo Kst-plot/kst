@@ -33,6 +33,8 @@
 
 #include <QTimer>
 #include <QDir>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QThreadPool>
 
 namespace Kst {
@@ -41,6 +43,8 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   : DataTab(parent), validating(false), _mode(DataMatrix), _store(store), _initField(QString()), _requestID(0) {
 
   setupUi(this);
+  _frame->setValidator(new QRegularExpressionValidator(
+      QRegularExpression(QStringLiteral("-?[0-9]{1,19}")), _frame));
   setTabTitle(tr("Matrix"));
 
   connect(_readFromSource, SIGNAL(toggled(bool)), this, SLOT(readFromSourceChanged()));
@@ -79,7 +83,7 @@ MatrixTab::MatrixTab(ObjectStore *store, QWidget *parent)
   connect(_gradientX, SIGNAL(clicked()), this, SIGNAL(modified()));
   connect(_gradientY, SIGNAL(clicked()), this, SIGNAL(modified()));
 
-  connect(_frame, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_frame, SIGNAL(textChanged(QString)), this, SIGNAL(modified()));
   connect(_lastFrame, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
   connect(_field, SIGNAL(activated(int)), this, SIGNAL(modified()));
 }
@@ -216,6 +220,7 @@ bool MatrixTab::nYDirty() const {
 void MatrixTab::setNY(uint nY) {
   _nY->setValue(nY);
 }
+
 
 bool MatrixTab::overrideScale() const {
   return _scalingGroup->isChecked();
@@ -360,26 +365,30 @@ void MatrixTab::setSkip(int skip) {
 }
 
 
-int MatrixTab::frame() const {
+qint64 MatrixTab::frame() const {
   if (_lastFrame->isChecked()) {
     return (-1);
   } else {
-    return _frame->value();
+    bool ok = false;
+    const qint64 value = _frame->text().toLongLong(&ok);
+    return ok ? value : -1;
   }
 }
 
 
 bool MatrixTab::frameDirty() const {
-  return (!_frame->text().isEmpty());
+  bool ok = false;
+  _frame->text().toLongLong(&ok);
+  return ok;
 }
 
 
-void MatrixTab::setFrame(int frame) {
+void MatrixTab::setFrame(qint64 frame) {
   if (frame<0) {
     _lastFrame->setChecked(true);
   } else {
     _lastFrame->setChecked(false);
-    _frame ->setValue(frame);
+    _frame->setText(QString::number(frame));
   }
 }
 
@@ -686,7 +695,7 @@ void MatrixDialog::configureTab(ObjectPtr matrix) {
     _matrixTab->setYReadToEnd(true);
     // END FIXME
 
-    _matrixTab->setFrame(dialogDefaults().value("matrix/frame",-1).toInt());
+    _matrixTab->setFrame(dialogDefaults().value("matrix/frame", qint64(-1)).toLongLong());
 
 #ifdef NO_GENERATED_OPTIONS
     _matrixTab->hideGeneratedOptions();
@@ -826,7 +835,7 @@ ObjectPtr MatrixDialog::createNewDataMatrix() {
   const double minY = _matrixTab->minY();
   const double stepX = _matrixTab->stepX();
   const double stepY = _matrixTab->stepY();
-  const int frame = _matrixTab->frame();
+  const qint64 frame = _matrixTab->frame();
 
 //   qDebug() << "Creating new data matrix ===>"
 //            << "\n\tfileName:" << dataSource->fileName()
@@ -946,7 +955,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
           bool doSkip = _matrixTab->doSkipDirty() ?  _matrixTab->doSkip() : matrix->doSkip();
           bool doAve = _matrixTab->doAverageDirty() ?  _matrixTab->doAverage() : matrix->doAverage();
 
-          int frame = _matrixTab->frame();
+          qint64 frame = _matrixTab->frame();
 
           matrix->writeLock();
           matrix->changeFrames(xStart, yStart, xNumSteps, yNumSteps, doAve, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);
@@ -974,7 +983,7 @@ ObjectPtr MatrixDialog::editExistingDataObject() const {
       const double minY = _matrixTab->minY();
       const double stepX = _matrixTab->stepX();
       const double stepY = _matrixTab->stepY();
-      const int frame = _matrixTab->frame();
+      const qint64 frame = _matrixTab->frame();
 
       dataMatrix->writeLock();
       dataMatrix->change(dataSource, field, xStart, yStart, xNumSteps, yNumSteps, doAverage, doSkip, skip, frame, overrideScale, minX, minY, stepX, stepY);

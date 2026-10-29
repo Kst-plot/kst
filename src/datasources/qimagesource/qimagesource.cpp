@@ -62,7 +62,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -97,7 +97,7 @@ void DataInterfaceQImageVector::init()
 }
 
 
-const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &field, int frame) const
+const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &field, double frame) const
 {
   Q_UNUSED(frame)
   if (!_vectorList.contains(field))
@@ -110,9 +110,9 @@ const DataVector::DataInfo DataInterfaceQImageVector::dataInfo(const QString &fi
 
 int DataInterfaceQImageVector::read(const QString& field, DataVector::ReadInfo& p)
 {
-  int i = 0;
-  int s = p.startingFrame;
-  int n = p.numberOfFrames;
+  qint64 i = 0;
+  qint64 s = (qint64)p.startingFrame;
+  qint64 n = (qint64)p.numberOfFrames;
 
   if ( field=="INDEX" ) {
     for ( i=0; i<n; ++i ) {
@@ -120,31 +120,31 @@ int DataInterfaceQImageVector::read(const QString& field, DataVector::ReadInfo& 
     }
   } else if ( field=="GRAY" ) {
     for ( i = s; i<s+n; ++i ) {
-      int px = i%_image->width();
-      int py = i/_image->width();
+      int px = (int)(i%_image->width());
+      int py = (int)(i/_image->width());
       p.data[i-s] = qGray( _image->pixel( px, py ) );
     }
   } else if ( field=="RED" ) {
     for ( i=s; i<s+n; ++i ) {
-      int px = i%_image->width();
-      int py = i/_image->width();
+      int px = (int)(i%_image->width());
+      int py = (int)(i/_image->width());
       p.data[i-s] = qRed( _image->pixel( px, py ) );
     }
   } else if ( field=="GREEN" ) {
     for ( i=s; i<s+n; ++i ) {
-      int px = i%_image->width();
-      int py = i/_image->width();
+      int px = (int)(i%_image->width());
+      int py = (int)(i/_image->width());
       p.data[i-s] = qGreen( _image->pixel( px, py ) );
     }
   } else if ( field=="BLUE" ) {
     for ( i=s; i<s+n; ++i ) {
-      int px = i%_image->width();
-      int py = i/_image->width();
+      int px = (int)(i%_image->width());
+      int py = (int)(i/_image->width());
       p.data[i-s] = qBlue( _image->pixel( px, py ) );
     }
   }
 
-  return i;
+  return (int)i;
 }
 
 
@@ -180,7 +180,7 @@ public:
   bool isValid(const QString&) const;
 
   // T specific
-  const DataMatrix::DataInfo dataInfo(const QString&, int frame=0) const;
+  const DataMatrix::DataInfo dataInfo(const QString&, double frame=0) const;
   void setDataInfo(const QString&, const DataMatrix::DataInfo&) {}
 
   // meta data
@@ -211,7 +211,7 @@ void DataInterfaceQImageMatrix::init()
 
 
 
-const DataMatrix::DataInfo DataInterfaceQImageMatrix::dataInfo(const QString& matrix, int frame) const
+const DataMatrix::DataInfo DataInterfaceQImageMatrix::dataInfo(const QString& matrix, double frame) const
 {
   Q_UNUSED(frame)
   if ( !_image || _image->isNull() || !_matrixList.contains( matrix ) ) {

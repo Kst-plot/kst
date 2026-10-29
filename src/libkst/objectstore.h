@@ -88,9 +88,15 @@ class KSTCORE_EXPORT ObjectStore
     // from the command line when opening a .kst file
     struct {
       QString fileName;
-      int f0;
-      int N;
+      bool hasF0;       // true when f0 is overridden from CLI
+      double f0;
+      bool countFromEnd; // meaning of f0 override
+      bool hasN;        // true when N is overridden from CLI
+      double N;
+      bool readToEnd;   // meaning of N override
+      bool hasSkip;     // true when skip is overridden from CLI
       int skip;
+      bool hasDoAve;    // true when doAve is overridden from CLI
       int doAve;
     } override;
 

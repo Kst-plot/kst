@@ -96,7 +96,7 @@ ScriptInterface* DataMatrix::createScriptInterface() {
 void DataMatrix::change(DataSourcePtr file, const QString &field,
                         int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip, int frame,
+                        bool doAve, bool doSkip, int skip, qint64 frame,
                         bool overrideScale,
                         double minX, double minY,
                         double stepX, double stepY) {
@@ -108,7 +108,7 @@ void DataMatrix::change(DataSourcePtr file, const QString &field,
 
 void DataMatrix::changeFrames(int xStart, int yStart,
                         int xNumSteps, int yNumSteps,
-                        bool doAve, bool doSkip, int skip, int frame,
+                        bool doAve, bool doSkip, int skip, qint64 frame,
                         bool overrideScale,
                         double minX, double minY,
                         double stepX, double stepY) {
@@ -231,7 +231,7 @@ void DataMatrix::applyScaling(const MatrixData matData) {
   }
 }
 
-void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
+void DataMatrix::doUpdateSkip(int realXStart, int realYStart, qint64 frame) {
 
   // since we are skipping, we don't need all the pixels
   // also, samples per frame is always 1 with skipping
@@ -319,7 +319,7 @@ void DataMatrix::doUpdateSkip(int realXStart, int realYStart, int frame) {
 }
 
 
-void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, int frame) {
+void DataMatrix::doUpdateNoSkip(int realXStart, int realYStart, qint64 frame) {
 
   // resize _z if necessary
   int requiredSize = _nX*_nY;
@@ -455,12 +455,10 @@ LabelInfo DataMatrix::titleInfo() const {
 }
 
 
-int DataMatrix::fileLength() const {
+qint64 DataMatrix::fileLength() const {
 
   if (dataSource()) {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field);
-
-    return info.frameCount;
+    return dataSource()->matrixFrameCount(_field);
   }
 
   return 0;
@@ -484,11 +482,11 @@ void DataMatrix::internalUpdate() {
   int realXStart;
   int realYStart;
 
-  const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
+  const DataInfo info = dataSource()->matrixDataInfo(_field, _frame);
   int xSize = info.xSize;
   int ySize = info.ySize;
-  int fc = info.frameCount;
-  int frame;
+  qint64 fc = info.frameCount;
+  qint64 frame;
 
   if (_frame<0) {
     frame = fc-1;
@@ -602,7 +600,7 @@ PrimitivePtr DataMatrix::makeDuplicate() const {
 
 void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
                                    int reqXStart, int reqYStart, int reqNX, int reqNY,
-                                   bool doAve, bool doSkip, int skip, int frame,
+                                   bool doAve, bool doSkip, int skip, qint64 frame,
                                    bool overrideScale,
                                    double minX, double minY, double stepX, double stepY) {
   _reqXStart = reqXStart;
@@ -633,7 +631,7 @@ void DataMatrix::commonConstructor(DataSourcePtr in_file, const QString &field,
   if (!dataSource()) {
     Debug::self()->log(tr("Data file for matrix %1 was not opened.").arg(Name()), Debug::Warning);
   } else {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
+    const DataInfo info = dataSource()->matrixDataInfo(_field, _frame);
     _invertXHint = info.invertXHint;
     _invertYHint = info.invertYHint;
   }
@@ -657,7 +655,7 @@ void DataMatrix::reset() { // must be called with a lock
   Q_ASSERT(myLockStatus() == KstRWLock::WRITELOCKED);
 
   if (dataSource()) {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field, _frame);
+    const DataInfo info = dataSource()->matrixDataInfo(_field, _frame);
     _invertXHint = info.invertXHint;
     _invertYHint = info.invertYHint;
   }
@@ -733,7 +731,7 @@ QString DataMatrix::propertyString() const {
 }
 
 
-int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, int frame)
+int DataMatrix::readMatrix(MatrixData* data, const QString& matrix, int xStart, int yStart, int xNumSteps, int yNumSteps, int skip, qint64 frame)
 {
   ReadInfo p = { data, xStart, yStart, xNumSteps, yNumSteps, skip, frame};
   return dataSource()->matrix().read(matrix, p);

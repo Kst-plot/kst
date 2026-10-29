@@ -44,7 +44,7 @@ public:
   bool isValid(const QString& field) const { return sourcelist._fieldList.contains( field ); }
 
   // T specific
-  const DataVector::DataInfo dataInfo(const QString&, int frame = 0) const;
+  const DataVector::DataInfo dataInfo(const QString&, double frame = 0) const;
   void setDataInfo(const QString&, const DataVector::DataInfo&) {}
 
   // meta data
@@ -58,7 +58,7 @@ public:
 };
 
 
-const DataVector::DataInfo DataInterfaceSourceListVector::dataInfo(const QString &field, int frame) const
+const DataVector::DataInfo DataInterfaceSourceListVector::dataInfo(const QString &field, double frame) const
 {
   Q_UNUSED(frame)
   if (!sourcelist._fieldList.contains(field))
@@ -275,12 +275,13 @@ void SourceListSource::save(QXmlStreamWriter &streamWriter) {
 // 0 1    2    3
 
 int SourceListSource::readField(const QString& field, DataVector::ReadInfo& p) {
-  int f0 = p.startingFrame;
-  int nf = p.numberOfFrames;
+  qint64 f0 = (qint64)p.startingFrame;
+  qint64 nf = (qint64)p.numberOfFrames;
   int i_file = 0;
   DataVector::ReadInfo ri;
+  ri.singleSample = p.singleSample;
   int samp_read = 0;
-  int f_offset = 0;
+  qint64 f_offset = 0;
   //if (f0<0 && nf >0) {
   //  f0 = qMax(_frameCount - nf, 0);
   //} else if (nf<0 && f0>=0) {
@@ -295,16 +296,16 @@ int SourceListSource::readField(const QString& field, DataVector::ReadInfo& p) {
     }
     if (nf>0) {
       while ((nf>0) && (i_file < _sizeList.size())) {
-        int nr = qMin(nf, _sizeList.at(i_file)-f0);
+        qint64 nr = qMin(nf, (qint64)_sizeList.at(i_file)-f0);
         ri = p;
         ri.startingFrame = f0;
         ri.numberOfFrames = nr;
         ri.data = p.data+samp_read;
         if (field == "INDEX") {
-          for (int i=0; i<nr; i++) {
+          for (qint64 i=0; i<nr; i++) {
             ri.data[i] = i+f_offset + f0;
           }
-          samp_read += nr;
+          samp_read += (int)nr;
         } else {
           samp_read += _sources[i_file]->vector().read(field, ri);
         }
@@ -313,7 +314,7 @@ int SourceListSource::readField(const QString& field, DataVector::ReadInfo& p) {
         f_offset += _sizeList.at(i_file);
         i_file++;
       }
-    } else if (nf == -1) { // read one sample
+    } else if (p.singleSample) { // read one sample
       ri = p;
       ri.startingFrame = f0;
       ri.numberOfFrames = nf;

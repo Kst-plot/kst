@@ -23,6 +23,7 @@
 #include <QFileSystemModel>
 #include <QCompleter>
 #include <QPointer>
+#include <QUrl>
 
 #include <QDebug>
 #include <QLabel>
@@ -42,6 +43,7 @@ DataSourceSelector::~DataSourceSelector() {
 void DataSourceSelector::setup() {
 
   _fileEdit = new QLineEdit(this);
+  _fileEdit->setPlaceholderText(tr("File or datasource address (ssdb://host:port)"));
   _fileButton = new QToolButton(this);
 
   int h = fontMetrics().lineSpacing()*4/3;
@@ -80,6 +82,11 @@ void DataSourceSelector::setup() {
 
 
 QString DataSourceSelector::file() const {
+  QUrl url(_file);
+  if (_file.contains(QLatin1String("://")) && url.isValid() &&
+      !url.scheme().isEmpty() && url.scheme() != QLatin1String("file")) {
+    return _file;
+  }
   return QDir::cleanPath(_file);
 }
 

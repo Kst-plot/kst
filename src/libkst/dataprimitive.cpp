@@ -39,6 +39,10 @@ struct DataPrimitive::Private
 
 void DataPrimitive::Private::saveFilename(const QString& fn, QXmlStreamWriter& s) {
   if (!fn.isEmpty()) {
+    if (DataSource::isNonFileUrl(fn)) {
+      s.writeAttribute("file", fn);
+      return;
+    }
     // QDir::current is set to *.kst's file path in mainwindow.cpp
     QDir current = QDir::current();
     QString relFn = current.relativeFilePath(fn);
@@ -123,13 +127,16 @@ QString DataPrimitive::readFilename(const QXmlStreamAttributes& attrs)
     QDir current = QDir::current();
 
     QString fnRel = attrs.value("fileRelative").toString();    
+    const QString fn = attrs.value("file").toString();
+
+    if (DataSource::isNonFileUrl(fn)) return fn;
 
     if (!fnRel.isEmpty() && current.exists(fnRel)) {
         // internally only use absolute paths
         name = DataSource::cleanPath(current.absoluteFilePath(fnRel));
     } else {
 
-      name = DataSource::cleanPath(attrs.value("file").toString());
+      name = DataSource::cleanPath(fn);
     }
 
     return(name);

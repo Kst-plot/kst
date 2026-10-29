@@ -235,7 +235,7 @@ bool AsciiDataReader::findDataRows(const Buffer& buffer, qint64 bufstart, qint64
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, int start, const QString& field)
+int AsciiDataReader::readFieldFromChunk(const AsciiFileData& chunk, int col, double *v, qint64 start, const QString& field)
 {
   Q_ASSERT(chunk.rowBegin() >= start);
   return readField(chunk, col, v + chunk.rowBegin() - start, field, chunk.rowBegin(), chunk.rowsRead());
@@ -256,7 +256,7 @@ qint64 AsciiDataReader::progressRows()
 }
 
 //-------------------------------------------------------------------------------------------
-int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, const QString& field, int s, int n)
+int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, const QString& field, qint64 s, qint64 n)
 {
   (void)field; // remove unused parameter warning.  This reads by column number (int col), not field name.
   if (_config._columnType == AsciiSourceConfig::Fixed) {
@@ -264,10 +264,10 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
     const LexicalCast& lexc = LexicalCast::instance();
     // buf[0] points to some row start, _rowIndex[i] is absolute, so we have to subtract buf.begin().
     const char*const col_start = &buf.checkedData()[0] + _config._columnWidth * (col - 1) - buf.begin();
-    for (int i = 0; i < n; ++i) {
+    for (qint64 i = 0; i < n; ++i) {
       v[i] = lexc.toDouble(col_start + _rowIndex[i + s] );
     }
-    return n;
+    return (int)n;
   } else if (_config._columnType == AsciiSourceConfig::Custom) {
     if (_config._columnDelimiter.value().size() == 1) {
       //MeasureTime t("AsciiSource::readField: 1 custom column delimiter");
@@ -292,7 +292,7 @@ int AsciiDataReader::readField(const AsciiFileData& buf, int col, double *v, con
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                                  const LineEndingType& lineending, const ColumnDelimiter& column_del) const
 {
   if (_config._delimiters.value().size() == 0) {
@@ -310,7 +310,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename ColumnDelimiter, typename CommentDelimiter>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                                  const LineEndingType& lineending, const ColumnDelimiter& column_del, const CommentDelimiter& comment_del) const
 {
   if (_config._columnWidthIsConst) {
@@ -332,7 +332,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
 
 //-------------------------------------------------------------------------------------------
 template<class Buffer, typename IsLineBreak, typename ColumnDelimiter, typename CommentDelimiter, typename ColumnWidthsAreConst>
-int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, int s, int n,
+int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstart, qint64 bufread, int col, qint64 s, qint64 n,
                                  const IsLineBreak& isLineBreak,
                                  const ColumnDelimiter& column_del, const CommentDelimiter& comment_del,
                                  const ColumnWidthsAreConst& are_column_widths_const) const
@@ -344,7 +344,7 @@ int AsciiDataReader::readColumns(double* v, const Buffer& buffer, qint64 bufstar
   bool is_custom = (_config._columnType.value() == AsciiSourceConfig::Custom);
 
   qint64 col_start = -1;
-  for (int i = 0; i < n; i++, ++s) {
+  for (qint64 i = 0; i < n; i++, ++s) {
     bool incol = false;
     int i_col = 0;
 

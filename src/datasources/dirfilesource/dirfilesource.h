@@ -41,7 +41,7 @@ class DirFileSource : public Kst::DataSource {
 
     virtual UpdateType internalDataSourceUpdate();
 
-    int readField(double *v, const QString &field, int s, int n);
+    int readField(double *v, const QString &field, double s, double n);
 
 //     int writeField(const double *v, const QString &field, int s, int n);
 
@@ -106,7 +106,7 @@ class DirFileSource : public Kst::DataSource {
 class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+    Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     virtual ~DirFilePlugin() {}
 

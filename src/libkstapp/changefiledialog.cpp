@@ -141,6 +141,12 @@ void ChangeFileDialog::sourceValid(QString filename, int requestID) {
     return;
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
+  if (!_dataSource || !_dataSource->isValid()) {
+    _dataSource = nullptr;
+    _fileType->clear();
+    updateButtons();
+    return;
+  }
   _fileType->setText(_dataSource->fileType());
   updateButtons();
   _configure->setEnabled(_dataSource->hasConfigWidget());
