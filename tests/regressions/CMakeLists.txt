@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 C. Barth Netterfield <netterfield@astro.utoronto.ca>
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Test)
 
 add_executable(testmatrixframecount testmatrixframecount.cpp)
