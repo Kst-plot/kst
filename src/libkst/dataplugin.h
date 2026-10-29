@@ -101,8 +101,17 @@ class NonFileDataSourcePluginInterface {
 }
 
 
+// Data source plugin ABI identifier. Plugins use it in Q_PLUGIN_METADATA, and
+// Qt refuses to load a plugin whose IID differs. Bump it (a plain counter,
+// independent of the app version) whenever a change would break plugins built
+// against the old headers: adding, removing or reordering virtual methods in
+// DataSource, DataSourcePluginInterface or the classes they use, changing class
+// layouts, or changing signatures plugins call or override. Keep the
+// kst-datasource-abi-N Provides in debian/control in sync.
+#define KST_DATASOURCE_IID "com.kst.DataSourcePluginInterface/3"
+
 Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/2.0")
-Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, "com.kst.DataSourcePluginInterface/2.0")
+Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, KST_DATASOURCE_IID)
 Q_DECLARE_INTERFACE(Kst::NonFileDataSourcePluginInterface, "com.kst.NonFileDataSourcePluginInterface/1.0")
 
 

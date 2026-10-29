@@ -107,6 +107,11 @@ class KSTCORE_EXPORT DataSource : public Object
       return matrix().dataInfo(field, double(frame));
     }
 
+    // Stream length need not require selecting a sample or reading its dimensions.
+    // Existing datasources retain their dataInfo-based implementation by default.
+    virtual qint64 matrixFrameCount(const QString& field) const {
+      return matrix().dataInfo(field).frameCount;
+    }
 
 
     /************************************************************/

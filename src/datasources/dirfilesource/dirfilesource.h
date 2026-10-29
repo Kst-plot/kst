@@ -106,7 +106,7 @@ class DirFileSource : public Kst::DataSource {
 class DirFilePlugin : public QObject, public Kst::DataSourcePluginInterface {
     Q_OBJECT
     Q_INTERFACES(Kst::DataSourcePluginInterface)
-    Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+    Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     virtual ~DirFilePlugin() {}
 

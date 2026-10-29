@@ -458,9 +458,7 @@ LabelInfo DataMatrix::titleInfo() const {
 qint64 DataMatrix::fileLength() const {
 
   if (dataSource()) {
-    const DataInfo info = dataSource()->matrix().dataInfo(_field);
-
-    return info.frameCount;
+    return dataSource()->matrixFrameCount(_field);
   }
 
   return 0;

@@ -703,6 +703,10 @@ DataMatrix::DataInfo SsdbSource::matrixDataInfo(const QString &name, qint64 fram
   return matrixInfo(name, frame);
 }
 
+qint64 SsdbSource::matrixFrameCount(const QString &name) const {
+  return isMatrixField(name) ? _frameCount : 0;
+}
+
 int SsdbSource::readMatrix(MatrixData *data, const QString &name,
                            const DataMatrix::ReadInfo &info) {
   if (info.skip > 0) return -9999;

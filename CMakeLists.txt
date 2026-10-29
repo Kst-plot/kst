@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22)
 set(QT_MIN_VERSION "6.4.0")
 
 set(kst_version_major 3)
-set(kst_version_minor 0)
+set(kst_version_minor 1)
 set(kst_version_patch 0)
 set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 set(kst_version_string ${kst_version})
@@ -78,6 +78,13 @@ include_directories(${CMAKE_BINARY_DIR})
 
 
 add_subdirectory(src)
+
+# We currently don't have any formal testing framework, so leave this commented out for now. 
+# # Standalone Qt6 regression tests; the legacy test suite still uses ECM.
+# include(CTest)
+# if(BUILD_TESTING)
+#     add_subdirectory(tests/regressions)
+# endif()
 
 if (NOT APPLE)
     add_subdirectory(misc)

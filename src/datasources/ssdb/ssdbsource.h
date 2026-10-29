@@ -52,6 +52,7 @@ class SsdbSource : public Kst::DataSource {
     bool isEmpty() const override;
     bool isImageStream(QString field) override { return isMatrixField(field); }
     Kst::DataMatrix::DataInfo matrixDataInfo(const QString &field, qint64 frame) const override;
+    qint64 matrixFrameCount(const QString &field) const override;
 
     QStringList vectorList() const;
     bool isVectorField(const QString &name) const;
@@ -108,7 +109,7 @@ class SsdbSourcePlugin : public QObject, public Kst::DataSourcePluginInterface,
                          public Kst::NonFileDataSourcePluginInterface {
   Q_OBJECT
   Q_INTERFACES(Kst::DataSourcePluginInterface Kst::NonFileDataSourcePluginInterface)
-  Q_PLUGIN_METADATA(IID "com.kst.DataSourcePluginInterface/2.0")
+  Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     ~SsdbSourcePlugin() override = default;
     QString pluginName() const override;

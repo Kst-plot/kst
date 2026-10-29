@@ -11,7 +11,8 @@ The synthetic Kst vector `INDEX` has one sample per frame, equal to that
 frame's number, and can be used as an X axis. Reads extending past the last
 frame return only the available frames. The name `INDEX` is reserved and takes
 precedence over an SSDB field of the same name.
-SSDB vector and matrix streams are not supported yet. `FRAMES` is a Kst
+SSDB matrix streams are available as indexed Kst matrices; SSDB vector streams
+are not supported yet. `FRAMES` is a Kst
 scalar, and `FILE` is the server address string. Field units, quantity, nominal
 rate and samples-per-frame are available as vector metadata.
 
@@ -22,6 +23,13 @@ connection time to round(nominal field rate / frame rate), at least one. All
 fields share the same frame boundaries. The latest frame is the last boundary
 not later than the latest timestamp **across all SSDB streams** minus the end
 delay. New field registrations become visible on reopening the datasource.
+
+Matrix samples use zero-order hold at the requested frame boundary. A missing
+matrix is represented as an empty (0x0) matrix, not a matrix filled with zeros.
+Retrieval failures are logged separately. Stream-length queries use the cached
+frame count without fetching an epoch-time matrix; navigation does not need a
+sample at frame 0. Actual frame-specific dimension and data requests still read
+the selected sample.
 
 **Choose a recent starting frame or count from the end.** Reading from epoch
 frame 0 to the present would require billions of frames; Kst rejects such a
@@ -61,3 +69,9 @@ The linked `telemetry_c` must return typed scalar tokens from
 `consumer_register_scalar`; older builds boxed a generic token instead,
 causing scalar reads to return zeros. Rebuild the plugin when updating the
 Rust library and restart Kst to load the new module.
+
+Matrix reads also require the hardened `consumer_get_selected_matrix`: successful
+reads return exactly the requested number of valid entries (including empty
+matrices for missing samples), while failures return NULL. Rebuild Kst and all
+datasource plugins together after updating: the datasource interface key is now
+2.1, and older binary plugins are not compatible with the new frame-count method.
