@@ -1,3 +1,31 @@
+kst (3.1.0) UNRELEASED; urgency=medium
+
+  * New upstream release 3.1.0.
+  * New datasources and features:
+    - Add ssdb datasource for StarSpec telemetry databases (vectors,
+      matrices, TIME field, command-line use). Built only when the
+      cmd-tlm Rust workspace is available; not part of this package.
+    - Support time-based indexing of data vectors when the datasource
+      provides a Time field.
+    - FITS image datasource can also export images as vectors.
+    - Re-enable the Image Thumbnail Stream (its) datasource.
+  * Fixes:
+    - Build with Qt 6.4 (Ubuntu 24.04); replace qt_add_ui with autouic.
+    - Fix "read to end" mode in the change data samples dialog.
+    - Use 64-bit data indexes to support very large data files.
+    - Modernize free memory estimation.
+    - Do not build the netcdf datasource without the C++ library.
+  * Datasource plugin ABI change: DataSource gains matrixFrameCount() and
+    the datasource plugin IID is now com.kst.DataSourcePluginInterface/3.
+    Plugins built for 3.0 will not load.
+  * Build system: use GNUInstallDirs consistently, drop config.h and
+    KST_INSTALL_LIBDIR, stop compressing man pages, use
+    qt_add_translations, update AppStream metadata (release info,
+    screenshots, VCS URL). Thanks to Andreas Sturmlechner and
+    Matthias Mailänder.
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Thu, 29 Oct 2026 12:00:00 -0400
+
 kst (3.0.0) UNRELEASED; urgency=low
 
   * Port application to Qt6, update build system, and modernize codebase.
