@@ -1,9 +1,9 @@
-kst (3.1.1) noble; urgency=medium
+kst (3.1.0+ppa1) noble; urgency=medium
 
   * Provide kst-datasource-abi-3 so separately built datasource
     packages (kst-datasource-ssdb) can depend on the plugin ABI.
 
- -- Barth Netterfield <netterfield@astro.utoronto.ca>  <date -R>
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 02 Nov 2026 12:52:35 -0500
 
 kst (3.1.0) UNRELEASED; urgency=medium
 
@@ -39,19 +39,18 @@ kst (3.0.0) UNRELEASED; urgency=low
   * Bundle private libraries into main package for simplified distribution.
   * Update Debian packaging for Qt6 compatibility.
 
- -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 07 Feb 2026 12:00:00 -0500
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Sat, 07 Feb 2026 12:00:00 -0500
 
 kst (2.1.x) UNRELEASED; urgency=low
   * add libnetcdf-c++4 to build requirements.
 
- -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 03 Sep 2025 14:43:05 -0500
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Wed, 03 Sep 2025 14:43:05 -0500
 
 kst (2.1.x) UNRELEASED; urgency=low
 
   * This file has not been updated in years.
   * There are a lot of improvements that are not documented.
-  * They do live in git log, however.  We could try to 
-  * Parse it and put them here.
+  * They do live in git log, however. 
 
  -- Barth Netterfield <netterfield@astro.utoronto.ca>  Mon, 21 Jul 2025 13:21:05 -0500
 
