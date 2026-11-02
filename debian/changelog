@@ -1,3 +1,10 @@
+kst (3.1.1) noble; urgency=medium
+
+  * Provide kst-datasource-abi-3 so separately built datasource
+    packages (kst-datasource-ssdb) can depend on the plugin ABI.
+
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  <date -R>
+
 kst (3.1.0) UNRELEASED; urgency=medium
 
   * New upstream release 3.1.0.
