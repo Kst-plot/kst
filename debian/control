@@ -11,6 +11,8 @@ Homepage: http://kst.kde.org
 
 Package: kst
 Architecture: any
+# Bump together with KST_DATASOURCE_IID in src/libkst/dataplugin.h
+Provides: kst-datasource-abi-3
 Replaces: kst2, libkst2core2, libkst2math2, libkst2widgets2
 Conflicts: kst2, libkst2core2, libkst2math2, libkst2widgets2
 Depends: ${shlibs:Depends}, ${misc:Depends}
