@@ -1,9 +1,14 @@
 How to update the packages on launchpad for UBUNTU
 i) Update the version numbers
-ii) push your changes to the UBUNTU-NOBLE branches on github
-iii) request an build
+ii) Merge into the UBUNTU-NOBLE branch on github
+iii) Update debian/changelog on the UBUNTU-NOBLE branch on github and push
+iv) request an build
+v) Announce a release on invent.kde.org
 
 i) Update the version numbers
+We won't be making new packages unless something has changed.  If something has changed,
+it should get a new version!
+
 edit ./CMakeLists.txt
 Change the lines0
 set(kst_version_major 3)
@@ -11,7 +16,7 @@ set(kst_version_minor 0)
 set(kst_version_patch 0)
 You have to bump at least one of these numbers to generate a new package.
 
-ii) push changes to the UBUNTU-NOBLE branches on github
+ii) Merge into the UBUNTU-NOBLE branch on github
 The launchpad build system pulls a branch of kst from github that includes a ./debian directory
 appropriate for the series you are compiling for.
 
@@ -21,31 +26,44 @@ There will be more as things continue to change.
 To switch to a branch:
 -> git switch UBUNTU-NOBLE
 
-If there are changes you need to make to the build system, you probably
-need to edit ./debian/control.  Good luck :-)
-
-To update your branch to kst's master branch, so you get the latest changes:
+Update the branch to kst's master branch, so you get the latest changes:
 -> git merge master # pull master's changes into this branch
 
 probably try to build it to make sure all is well.
 
+iii) Update debian/changelog on the UBUNTU-NOBLE branch and push
+
+Edit debian/changelog with a new entry.  The format needs to be exactly right - take what is there as an example.
+
+If there is something else wrong with the build, it probably means editing debian/control.  Good luck :-)
+
 Then push it
 -> git push github UBUNTU-NOBLE
 
-iii) make sure launchpad updates git
+iv) Request a build
+
+make sure launchpad updates git
 goto 
 https://code.launchpad.net/~kst-plot/kst/+git/kstgithub
 and make sure it is up to date, or request an import otherwise.
 
-iv) request a build:
+Then request build:
 go to https://code.launchpad.net/~kst-plot/+recipes
 log in
 select the branch you want to build (eg kst-noble2) on the left hand side.
 select request builds (green, near bottom left)
 
-Note that generate a new package, you must increase the version.
+
+v) announce a release on invent.kde.org
+go to https://invent.kde.org/graphics/kst-plot and log in.
+
+On the right select Tags and create a new tag with the new version number.
+Then, on the right, select Releases and create a new release.
+
 
 ----------
+
+Old notes:
 
 https://code.launchpad.net/~kst-plot/kst/trunk-git
 https://launchpad.net/~kst-plot
