@@ -45,6 +45,7 @@ CSDTab::CSDTab(QWidget *parent)
   connect(_FFTOptions, SIGNAL(modified()), this, SIGNAL(modified()));
   connect(_vector, SIGNAL(selectionChanged(QString)), this, SIGNAL(modified()));
   connect(_windowSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
+  connect(_overlapSize, SIGNAL(valueChanged(int)), this, SIGNAL(modified()));
 
 
 }
@@ -103,6 +104,20 @@ void CSDTab::setWindowSize(const int windowSize) {
   _windowSize->setValue(windowSize);
 }
 
+int CSDTab::overlapSize() const {
+  return _overlapSize->value();
+}
+
+
+bool CSDTab::overlapSizeDirty() const {
+  return !_overlapSize->text().isEmpty();
+}
+
+
+void CSDTab::setOverlapSize(const int overlapSize) {
+  _overlapSize->setValue(overlapSize);
+}
+
 
 void CSDTab::setObjectStore(ObjectStore *store) {
   _vector->setObjectStore(store);
@@ -118,6 +133,7 @@ void CSDTab::hideImageOptions() {
 void CSDTab::clearTabValues() {
   _vector->clearSelection();
   _windowSize->clear();
+  _overlapSize->clear();
   _FFTOptions->clearValues();
 }
 
@@ -179,6 +195,7 @@ void CSDDialog::configureTab(ObjectPtr object) {
   if (CSDPtr csd = kst_cast<CSD>(object)) {
     _CSDTab->setVector(csd->vector());
     _CSDTab->setWindowSize(csd->windowSize());
+    _CSDTab->setOverlapSize(csd->overlapSize());
     _CSDTab->FFTOptionsWidget()->setSampleRate(csd->frequency());
     _CSDTab->FFTOptionsWidget()->setInterleavedAverage(csd->average());
     _CSDTab->FFTOptionsWidget()->setFFTLength(csd->length());
@@ -211,6 +228,7 @@ ObjectPtr CSDDialog::createNewDataObject() {
               _CSDTab->FFTOptionsWidget()->apodize(),
               _CSDTab->FFTOptionsWidget()->apodizeFunction(),
               _CSDTab->windowSize(), 
+              _CSDTab->overlapSize(),
               _CSDTab->FFTOptionsWidget()->FFTLength(), 
               _CSDTab->FFTOptionsWidget()->sigma(),
               _CSDTab->FFTOptionsWidget()->output(), 
@@ -298,6 +316,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
           const QString vectorUnits = options->vectorUnitsDirty() ? options->vectorUnits() : csd->vectorUnits();
           const QString rateUnits = options->rateUnitsDirty() ? options->rateUnits() : csd->rateUnits();
           const int windowSize = _CSDTab->windowSizeDirty() ? _CSDTab->windowSize() : csd->windowSize();
+          const int overlapSize = _CSDTab->overlapSizeDirty() ? _CSDTab->overlapSize() : csd->overlapSize();
 
           csd->writeLock();
           csd->change(vector,
@@ -307,6 +326,7 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                       apodize,
                       apodizeFunction,
                       windowSize,
+                      overlapSize,
                       FFTLength,
                       sigma,
                       output,
@@ -325,7 +345,8 @@ ObjectPtr CSDDialog::editExistingDataObject() const {
                   _CSDTab->FFTOptionsWidget()->removeMean(),
                   _CSDTab->FFTOptionsWidget()->apodize(),
                   _CSDTab->FFTOptionsWidget()->apodizeFunction(),
-                  _CSDTab->windowSize(), 
+                  _CSDTab->windowSize(),
+                  _CSDTab->overlapSize(), 
                   _CSDTab->FFTOptionsWidget()->FFTLength(), 
                   _CSDTab->FFTOptionsWidget()->sigma(),
                   _CSDTab->FFTOptionsWidget()->output(), 

@@ -42,6 +42,10 @@ class CSDTab : public DataTab, Ui::CSDTab {
     bool windowSizeDirty() const;
     void setWindowSize(const int windowSize);
 
+    int overlapSize() const;
+    bool overlapSizeDirty() const;
+    void setOverlapSize(const int overlapSize);
+
     CurvePlacement* curvePlacement() const;
     FFTOptions* FFTOptionsWidget() const;
     ColorPalette* colorPalette() const;
@@ -64,7 +68,7 @@ class CSDDialog : public DataDialog {
 
     void setVector(VectorPtr vector);
 
-    virtual bool dialogValid() const {return bool(_CSDTab->vector()) || (editMode() == EditMultiple);}
+    virtual bool dialogValid() const {return (_CSDTab->overlapSize() < _CSDTab->windowSize()) && (bool(_CSDTab->vector()) || (editMode() == EditMultiple));}
 
   protected:
     virtual ObjectPtr createNewDataObject();

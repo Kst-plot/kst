@@ -64,6 +64,9 @@ class KSTMATH_EXPORT CSD : public DataObject {
     int windowSize() const;
     void setWindowSize(int in_size);
 
+    int overlapSize() const;
+    void setOverlapSize(int in_overlap_size);
+
     int length() const;
     void setLength(int in_length);
 
@@ -82,7 +85,7 @@ class KSTMATH_EXPORT CSD : public DataObject {
 
     void change(VectorPtr in_V, double in_freq, bool in_average,
         bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,
-        int in_windowSize, int in_length, double in_gaussianSigma,
+        int in_windowSize, int in_overlap_size, int in_length, double in_gaussianSigma,
         PSDType in_outputType, const QString& in_vectorUnits,
         const QString& in_rateUnits);
     virtual QString descriptionTip() const;
@@ -108,6 +111,7 @@ class KSTMATH_EXPORT CSD : public DataObject {
     PSDType _outputType;
     double _gaussianSigma;
     int _windowSize;
+    int _overlapSize;
     int _averageLength;
     int _length;
     QString _vectorUnits;

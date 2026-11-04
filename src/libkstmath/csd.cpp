@@ -66,7 +66,7 @@ void CSD::_initializeShortName() {
 
 void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
     bool in_removeMean, bool in_apodize, ApodizeFunction in_apodizeFxn,
-    int in_windowSize, int in_length, double in_gaussianSigma,
+    int in_windowSize, int in_overlap_size, int in_length, double in_gaussianSigma,
     PSDType in_outputType, const QString& in_vectorUnits,
     const QString& in_rateUnits) {
 
@@ -79,6 +79,7 @@ void CSD::change(VectorPtr in_V, double in_freq, bool in_average,
   _apodizeFxn = in_apodizeFxn;
   _gaussianSigma = in_gaussianSigma;
   _removeMean = in_removeMean;
+  _overlapSize = in_overlap_size;
   _averageLength = in_length;
   _vectorUnits = in_vectorUnits;
   _rateUnits = in_rateUnits;
@@ -110,7 +111,7 @@ void CSD::internalUpdate() {
   double const *input = inVector->noNanValue();
 
   int xSize = 0;
-  for (int i=0; i < inVector->length(); i+= _windowSize) {
+  for (int i=0; i < inVector->length(); i+= _windowSize-_overlapSize) {
     //ensure there is enough data left.
     if (i + _windowSize >= inVector->length()) {
         break; //If there isn't enough left for a complete window.
@@ -138,7 +139,7 @@ void CSD::internalUpdate() {
 
   double frequencyStep = .5*_frequency/(double)(tempOutputLen-1);
 
-  _outMatrix->change(xSize, tempOutputLen, 0, 0, _windowSize/_frequency, frequencyStep);
+  _outMatrix->change(xSize, tempOutputLen, 0, 0, (_windowSize-_overlapSize)/_frequency, frequencyStep);
 
   unlockInputsAndOutputs();
 
@@ -282,10 +283,19 @@ int CSD::windowSize() const {
   return _windowSize;
 }
 
-
 void CSD::setWindowSize(int in_size) {
   _windowSize = in_size;
 }
+
+
+int CSD::overlapSize() const {
+  return _overlapSize;
+}
+
+void CSD::setOverlapSize(int in_overlap_size) {
+  _overlapSize = in_overlap_size;
+}
+
 
 double CSD::gaussianSigma() const {
   return _gaussianSigma;
@@ -331,6 +341,7 @@ DataObjectPtr CSD::makeDuplicate() const{
               _apodize,
               _apodizeFxn,
               _windowSize,
+              _overlapSize,
               _averageLength,
               _gaussianSigma,
               _outputType,

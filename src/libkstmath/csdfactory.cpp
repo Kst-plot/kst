@@ -33,7 +33,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
   Q_ASSERT(store);
 
   double frequency=1.0, gaussianSigma=1.0;
-  int length=8, windowSize=8, apodizeFunction=0, outputType=0;
+  int length=8, windowSize=8, overlapSize=0, apodizeFunction=0, outputType=0;
   QString vectorName, vectorUnits, rateUnits, descriptiveName;
   bool average=false, removeMean=false, apodize=false;
 
@@ -51,6 +51,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
 
         length = attrs.value("fftlength").toString().toInt();
         windowSize = attrs.value("windowsize").toString().toInt();
+        overlapSize = attrs.value("overlapsize").toString().toInt();
         apodizeFunction = attrs.value("apodizefunction").toString().toInt();
         outputType = attrs.value("outputtype").toString().toInt();
 
@@ -97,6 +98,7 @@ DataObjectPtr CSDFactory::generateObject(ObjectStore *store, QXmlStreamReader& x
               apodize,
               (ApodizeFunction)apodizeFunction,
               windowSize,
+              overlapSize,
               length,
               gaussianSigma,
               (PSDType)outputType,
