@@ -79,8 +79,8 @@ include_directories(${CMAKE_BINARY_DIR})
 
 add_subdirectory(src)
 
-# We currently don't have any formal testing framework, so leave this commented out for now. 
-# # Standalone Qt6 regression tests; the legacy test suite still uses ECM.
+# Tests are not part of the Kst build system.
+# option(BUILD_TESTING "Build standalone regression tests" OFF)
 # include(CTest)
 # if(BUILD_TESTING)
 #     add_subdirectory(tests/regressions)

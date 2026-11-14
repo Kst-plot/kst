@@ -24,6 +24,7 @@
 #include <QFileInfo>
 #include <QLibraryInfo>
 #include <QPluginLoader>
+#include <QRecursiveMutex>
 #include <QTextDocument>
 #include <QUrl>
 #include <QXmlStreamWriter>
@@ -43,6 +44,8 @@
 
 using namespace Kst;
 
+// Protect shared plugin admission/cache state, never the network preparation.
+static QRecursiveMutex managerMutex;
 
 QStringList Kst::pluginSearchPaths()
 {
@@ -84,6 +87,7 @@ QMap<QString,QString> DataSourcePluginManager::url_map;
 
 
 const QMap<QString,QString> DataSourcePluginManager::urlMap() {
+  QMutexLocker locker(&managerMutex);
   return url_map;
 }
 
@@ -111,6 +115,7 @@ static PluginList _pluginList;
 
 
 void DataSourcePluginManager::cleanupForExit() {
+  QMutexLocker locker(&managerMutex);
   _pluginList.clear();
   qDebug() << "cleaning up for exit in datasource";
 //   for (QMap<QString,QString>::Iterator i = urlMap.begin(); i != urlMap.end(); ++i) {
@@ -121,6 +126,7 @@ void DataSourcePluginManager::cleanupForExit() {
 
 
 QString DataSourcePluginManager::obtainFile(const QString& source) {
+  QMutexLocker locker(&managerMutex);
   if (source.isEmpty()) {
     return QString();
   }
@@ -195,18 +201,25 @@ static void scanPlugins() {
 }
 
 void DataSourcePluginManager::initPlugins() {
+  QMutexLocker locker(&managerMutex);
   if (_pluginList.isEmpty()) {
       scanPlugins();
   }
 }
 
+static PluginList pluginSnapshot() {
+  QMutexLocker locker(&managerMutex);
+  DataSourcePluginManager::initPlugins();
+  return _pluginList;
+}
 
 QStringList DataSourcePluginManager::pluginList() {
     // Ensure state.  When using kstapp MainWindow calls init.
   init();
 
   QStringList plugins;
-  for (PluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
+  const PluginList info = pluginSnapshot();
+  for (PluginList::ConstIterator it = info.constBegin(); it != info.constEnd(); ++it) {
     plugins += (*it).plugin->pluginName();
   }
 
@@ -216,7 +229,8 @@ QStringList DataSourcePluginManager::pluginList() {
 
 QString DataSourcePluginManager::pluginFileName(const QString& pluginName)
 {
-  for (PluginList::ConstIterator it = _pluginList.constBegin(); it != _pluginList.constEnd(); ++it) {
+  const PluginList info = pluginSnapshot();
+  for (PluginList::ConstIterator it = info.constBegin(); it != info.constEnd(); ++it) {
     if (it->plugin->pluginName() == pluginName) {
       return it->filePath;
     }
@@ -239,7 +253,7 @@ QList<DataSourcePluginManager::PluginSortContainer> DataSourcePluginManager::bes
   QList<PluginSortContainer> bestPlugins;
   DataSourcePluginManager::init();
 
-  PluginList info = _pluginList;
+  PluginList info = pluginSnapshot();
 
   if (!type.isEmpty()) {
     for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
@@ -278,7 +292,8 @@ bool DataSourcePluginManager::pluginRecognizesNonFileSource(const QString& ident
   if (inputUrl.scheme().compare("file", Qt::CaseInsensitive) == 0) return false;
   DataSourcePluginManager::init();
 
-  for (PluginList::Iterator it = _pluginList.begin(); it != _pluginList.end(); ++it) {
+  PluginList info = pluginSnapshot();
+  for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     DataSourcePluginInterface *plugin = it->plugin.data();
     if (!plugin || (!type.isEmpty() && !plugin->provides(type)) ||
         plugin->understands(&settingsObject(), normalized) <= 0) continue;
@@ -297,42 +312,67 @@ DataSourcePtr DataSourcePluginManager::findPluginFor(ObjectStore *store, const Q
   // we don't actually iterate here, unless the first plugin fails.  (Not sure this helps at all.)
   for (QList<PluginSortContainer>::Iterator i = bestPlugins.begin(); i != bestPlugins.end(); ++i) {
     DataSourcePtr plugin = (*i).plugin->create(store, &settingsObject(), filename, QString(), e);
-    if (plugin) {
-
-      // add strings
-      const QStringList strings = plugin->string().list();
-      if (!strings.isEmpty()) {
-        foreach(const QString& key, strings) {
-          QString value;
-          DataString::ReadInfo readInfo(&value);
-          plugin->string().read(key, readInfo);
-          StringPtr s = store->createObject<String>();
-          s->setProvider(plugin);
-          s->setSlaveName(key);
-          s->setValue(value);
-          plugin->slavePrimitives.append(s);
-        }
-      }
-
-      // add scalars
-      const QStringList scalars = plugin->scalar().list();
-      if (!scalars.isEmpty()) {
-        foreach(const QString& key, scalars) {
-          double value;
-          DataScalar::ReadInfo readInfo(&value);
-          plugin->scalar().read(key, readInfo);
-          ScalarPtr s = store->createObject<Scalar>();
-          s->setProvider(plugin);
-          s->setSlaveName(key);
-          plugin->slavePrimitives.append(s);
-          s->setValue(value);
-        }
-      }
-
-      return plugin;
-    }
+    if (addSourcePrimitives(store, plugin)) return plugin;
   }
   return 0L;
+}
+
+bool DataSourcePluginManager::addSourcePrimitives(ObjectStore *store, DataSourcePtr plugin) {
+  // Failed constructors must not publish a source or any slave primitives.
+  if (!plugin || !plugin->isValid()) return false;
+  const QStringList strings = plugin->string().list();
+  foreach(const QString& key, strings) {
+    QString value;
+    DataString::ReadInfo readInfo(&value);
+    plugin->string().read(key, readInfo);
+    StringPtr s = store->createObject<String>();
+    s->setProvider(plugin);
+    s->setSlaveName(key);
+    s->setValue(value);
+    plugin->slavePrimitives.append(s);
+  }
+  const QStringList scalars = plugin->scalar().list();
+  foreach(const QString& key, scalars) {
+    double value = 0;
+    DataScalar::ReadInfo readInfo(&value);
+    plugin->scalar().read(key, readInfo);
+    ScalarPtr s = store->createObject<Scalar>();
+    s->setProvider(plugin);
+    s->setSlaveName(key);
+    plugin->slavePrimitives.append(s);
+    s->setValue(value);
+  }
+  return true;
+}
+
+SharedPtr<DataSourcePluginInterface> DataSourcePluginManager::preparationPlugin(const QString &filename) {
+  // Do not reinterpret explicit local file URLs as remote identifiers.
+  if (QUrl(filename).scheme().compare("file", Qt::CaseInsensitive) == 0) return nullptr;
+  init();
+  auto info = pluginSnapshot();
+  for (auto &entry : info) {
+    auto *object = dynamic_cast<QObject *>(entry.plugin.data());
+    auto *prepared = qobject_cast<PreparedDataSourcePluginInterface *>(object);
+    auto *nonFile = qobject_cast<NonFileDataSourcePluginInterface *>(object);
+    if (prepared && nonFile && nonFile->isNonFileSource(filename)) return entry.plugin;
+  }
+  return nullptr;
+}
+
+DataSourcePtr DataSourcePluginManager::adoptPreparedSource(ObjectStore *store,
+    const QString &filename, SharedPtr<DataSourcePluginInterface> plugin,
+    const PreparedDataSourceOptions &options, PreparedDataSourcePtr prepared,
+    bool updatesDisabled) {
+  if (!store || !plugin || !prepared) return nullptr;
+  auto reused = store->dataSourceList().findReusableFileName(filename);
+  if (reused && reused->isValid()) return reused;
+  auto *capability = qobject_cast<PreparedDataSourcePluginInterface *>(dynamic_cast<QObject *>(plugin.data()));
+  if (!capability) return nullptr;
+  DataSourcePtr source = capability->createPrepared(store, &settingsObject(), filename, options, std::move(prepared));
+  if (!addSourcePrimitives(store, source)) return nullptr;
+  store->addObject<DataSource>(source);
+  if (!updatesDisabled) source->enableUpdates();
+  return source;
 }
 
 
@@ -368,6 +408,8 @@ DataSourcePtr DataSourcePluginManager::findOrLoadSource(ObjectStore *store, cons
 
   DataSourcePtr dataSource = store->dataSourceList().findReusableFileName(filename);
 
+  if (dataSource && !dataSource->isValid()) dataSource = nullptr;
+
   if (!dataSource) {
     dataSource = DataSourcePluginManager::loadSource(store, filename);
     if (!updatesDisabled) {
@@ -395,7 +437,7 @@ bool DataSourcePluginManager::validSource(const QString& filename) {
   DataSourcePluginManager::init();
   const bool exists = QFileInfo(fn).exists();
 
-  PluginList info = _pluginList;
+  PluginList info = pluginSnapshot();
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {
@@ -422,7 +464,7 @@ bool DataSourcePluginManager::isNonFileSource(const QString& filename, const QSt
 bool DataSourcePluginManager::pluginHasConfigWidget(const QString& plugin) {
   initPlugins();
 
-  PluginList info = _pluginList;
+  PluginList info = pluginSnapshot();
 
   for (PluginList::ConstIterator it = info.constBegin(); it != info.constEnd(); ++it) {
     if ((*it).plugin->pluginName() == plugin) {
@@ -437,7 +479,7 @@ bool DataSourcePluginManager::pluginHasConfigWidget(const QString& plugin) {
 DataSourceConfigWidget* DataSourcePluginManager::configWidgetForPlugin(const QString& plugin) {
   initPlugins();
 
-  PluginList info = _pluginList;
+  PluginList info = pluginSnapshot();
 
   for (PluginList::Iterator it = info.begin(); it != info.end(); ++it) {
     if (DataSourcePluginInterface *p = (*it).plugin.data()) {

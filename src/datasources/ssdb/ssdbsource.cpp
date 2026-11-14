@@ -15,6 +15,8 @@ extern "C" {
 #include <QDomElement>
 #include <QElapsedTimer>
 #include <QFormLayout>
+#include <QHostAddress>
+#include <QHostInfo>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QUrl>
@@ -49,8 +51,7 @@ void freeMetadata(metadata_t *meta, uint32_t count) {
 
 // Report a failing C API call without allocating an error string on success.
 void logError(const QString &operation) {
-  // telemetry_get_last_error currently allocates a new string on each call;
-  // avoid calling it on the routine success path.
+  // The client's last-error string is borrowed and thread-local.
   const char *error = telemetry_get_last_error();
   qWarning() << "SSDB:" << operation << (error ? error : "unknown error");
 }
@@ -308,6 +309,92 @@ bool available(const QString &name, const QString &type, QString *suggestion, bo
   if (complete) *complete = ok;
   return ok;
 }
+
+// This is not a QObject: a worker may own it until exclusive GUI-thread adoption.
+struct SsdbPreparedState : PreparedDataSource {
+  consumer_t *consumer = nullptr;
+  QMap<QString, SsdbSource::Field> fields;
+  QMap<QString, SsdbSource::MatrixField> matrices;
+  qint64 latest = 0;
+  ~SsdbPreparedState() override {
+    for (auto &field : fields) scalar_token_destroy(field.token);
+    for (auto &field : matrices) matrix_token_destroy(field.token);
+    consumer_destroy(consumer);
+  }
+};
+
+PreparedDataSourcePtr prepareConnection(const PreparedDataSourceOptions &options,
+    const QString &numericEndpoint, qint64 remainingMs,
+    const std::atomic_bool &cancelled, QString &error) {
+  auto state = std::make_shared<SsdbPreparedState>();
+  const auto failed = [&](const QString &operation) -> PreparedDataSourcePtr {
+    const char *message = telemetry_get_last_error();
+    error = operation + ": " + (message ? QString::fromUtf8(message) : QString("unknown error"));
+    return {};
+  };
+  if (cancelled || remainingMs <= 0) {
+    error = "Opening cancelled or deadline expired";
+    return {};
+  }
+  state->consumer = consumer_new_numeric("kst ssdb reader",
+      numericEndpoint.toUtf8().constData(), uint64_t(remainingMs), 5000);
+  if (!state->consumer) return failed("connecting");
+  uint32_t count = 0;
+  metadata_t *metadata = consumer_get_field_list(state->consumer, &count);
+  if (!metadata) return failed("listing fields");
+  // The zero-field sentinel is valid and is handled by freeMetadata().
+  const auto releaseMetadata = std::shared_ptr<metadata_t>(metadata,
+      [count](metadata_t *value) { freeMetadata(value, count); });
+  const double rate = options.settings.value("frameRateHz", 5.0).toDouble();
+  for (uint32_t i = 0; i < count; ++i) {
+    if (cancelled) { error = "Opening cancelled"; return {}; }
+    const metadata_t &meta = metadata[i];
+    if (!meta.name) continue;
+    const QString name = QString::fromUtf8(meta.name);
+    if (meta.structure == 0) {
+      if (name == indexFieldString || name == timeFieldString || state->fields.contains(name)) continue;
+      SsdbSource::Field field;
+      field.token = consumer_register_scalar(state->consumer, meta.name);
+      if (!field.token) return failed("registering " + name);
+      field.rate = meta.rate;
+      field.lastTime = meta.last_time;
+      field.units = meta.units ? QString::fromUtf8(meta.units) : QString();
+      field.quantity = meta.quantity ? QString::fromUtf8(meta.quantity) : QString();
+      if (std::isfinite(meta.rate) && meta.rate > 0)
+        field.samplesPerFrame = int(qBound(1.0, std::round(meta.rate / rate), 1000000.0));
+      state->fields.insert(name, field);
+    } else if (meta.structure == 2 && !state->matrices.contains(name)) {
+      SsdbSource::MatrixField field;
+      field.token = consumer_register_matrix(state->consumer, meta.name);
+      if (!field.token) return failed("registering matrix " + name);
+      field.lastTime = meta.last_time;
+      field.units = meta.units ? QString::fromUtf8(meta.units) : QString();
+      field.quantity = meta.quantity ? QString::fromUtf8(meta.quantity) : QString();
+      state->matrices.insert(name, field);
+    }
+  }
+  int64_t latest = 0;
+  if (!consumer_get_latest_time_checked(state->consumer, &latest)) return failed("reading latest time");
+  state->latest = latest;
+  if (cancelled) { error = "Opening cancelled"; return {}; }
+  if (!consumer_finish_opening(state->consumer)) return failed("finishing opening");
+  return state;
+}
+
+// Legacy synchronous callers share the bounded transport. The wizard resolves
+// asynchronously and never calls this helper or performs GUI-thread DNS.
+QString numericAddress(const QString &endpoint) {
+  const QUrl url("ssdb://" + endpoint);
+  QHostAddress address;
+  if (!address.setAddress(url.host())) {
+    const auto info = QHostInfo::fromName(url.host());
+    if (info.error() != QHostInfo::NoError || info.addresses().isEmpty()) return {};
+    address = info.addresses().first();
+  }
+  QString host = address.toString();
+  if (host.contains(':')) host = '[' + host + ']';
+  return host + ':' + QString::number(url.port());
+}
 } // namespace
 
 // Normalize URL or host:port syntax for the Rust consumer.
@@ -345,6 +432,11 @@ bool SsdbSource::validRate(double rate) {
 // Restore per-address/session settings before connecting and discovering fields.
 SsdbSource::SsdbSource(ObjectStore *store, QSettings *cfg, const QString &filename,
                        const QString &type, const QDomElement &element)
+  : SsdbSource(store, cfg, filename, type, element, PreparedDataSourceOptions{}, {}) {}
+
+SsdbSource::SsdbSource(ObjectStore *store, QSettings *cfg, const QString &filename,
+             const QString &type, const QDomElement &element,
+             const PreparedDataSourceOptions &options, PreparedDataSourcePtr prepared)
     : DataSource(store, cfg, filename, type), _address(endpoint(filename)) {
   setInterface(new SsdbVector(*this));
   setInterface(new SsdbMatrix(*this));
@@ -352,7 +444,7 @@ SsdbSource::SsdbSource(ObjectStore *store, QSettings *cfg, const QString &filena
   setInterface(new SsdbString(*this));
   _valid = false;
   if (!validType(type) || _address.isEmpty()) return;
-  if (cfg) {
+  if (cfg && !prepared) {
     cfg->beginGroup("SSDB");
     cfg->beginGroup(_address);
     const double rate = cfg->value("frameRateHz", 5.0).toDouble();
@@ -371,7 +463,14 @@ SsdbSource::SsdbSource(ObjectStore *store, QSettings *cfg, const QString &filena
     attrs.append("repairWindowMs", element.attribute("repairWindowMs"));
     parseProperties(attrs);
   }
-  _valid = init();
+  if (prepared) {
+    setGrid(options.settings.value("frameRateHz", 5.0).toDouble(),
+            options.settings.value("endDelayMs", 100.0).toDouble());
+    setRepairWindow(options.settings.value("repairWindowMs", 2000.0).toDouble());
+    _valid = adoptPrepared(std::move(prepared));
+  } else {
+    _valid = init();
+  }
   registerChange();
 }
 
@@ -380,13 +479,13 @@ SsdbSource::~SsdbSource() { close(); }
 
 // Drop the current connection and cached field registration state.
 void SsdbSource::close() {
-  for (auto &field : _fields) free(field.token);
-  for (auto &field : _matrixFields) free(field.token);
+  for (auto &field : _fields) scalar_token_destroy(field.token);
+  for (auto &field : _matrixFields) matrix_token_destroy(field.token);
   _fields.clear();
   _matrixFields.clear();
   _matrixCache.clear();
   _changedFields.clear();
-  free(_consumer);
+  consumer_destroy(_consumer);
   _consumer = nullptr;
   _frameCount = 0;
   _latestTime = 0;
@@ -395,67 +494,31 @@ void SsdbSource::close() {
 // Connect and register supported scalar and matrix fields.
 bool SsdbSource::init() {
   close();
-  _consumer = consumer_new("kst ssdb reader", _address.toUtf8().constData());
-  if (!_consumer) {
-    logError("connecting to " + _address);
+  QElapsedTimer timer;
+  timer.start();
+  const QString numeric = numericAddress(_address);
+  PreparedDataSourceOptions options;
+  options.endpoint = _address;
+  options.settings.insert("frameRateHz", _frameRate);
+  QString error;
+  const std::atomic_bool cancelled(false);
+  auto prepared = prepareConnection(options, numeric, 5000 - timer.elapsed(), cancelled, error);
+  if (!prepared) {
+    qWarning() << "SSDB:" << _address << error;
     return false;
   }
+  return adoptPrepared(std::move(prepared));
+}
 
-  uint32_t count = 0;
-  metadata_t *metadata = consumer_get_field_list(_consumer, &count);
-  if (!metadata) {
-    logError("listing fields");
-    close();
-    return false;
-  }
-
-  for (uint32_t i = 0; i < count; ++i) {
-    const metadata_t &meta = metadata[i];
-    if (!meta.name) continue;
-    QString name = QString::fromUtf8(meta.name);
-    if (meta.structure == 0) {
-      if (name == indexFieldString || name == timeFieldString) {
-        qWarning() << "SSDB: field" << name << "is reserved for Kst's synthetic vectors";
-        continue;
-      }
-      if (_fields.contains(name)) continue;
-      scalar_token_t *token = consumer_register_scalar(_consumer, meta.name);
-      if (!token) {
-        logError("registering " + name);
-        continue;
-      }
-
-      Field field;
-      field.token = token;
-      field.rate = meta.rate;
-      // Write-time statistics drive field-change detection, not sample age.
-      field.lastTime = meta.last_time;
-      field.units = meta.units ? QString::fromUtf8(meta.units) : QString();
-      field.quantity = meta.quantity ? QString::fromUtf8(meta.quantity) : QString();
-      if (std::isfinite(meta.rate) && meta.rate > 0) {
-        // Match nominal field density to the common frame grid.
-        const double spf = std::round(meta.rate / _frameRate);
-        field.samplesPerFrame = int(qBound(1.0, spf, 1000000.0));
-      }
-      _fields.insert(name, field);
-    } else if (meta.structure == 2 && !_matrixFields.contains(name)) {
-      matrix_token_t *token = consumer_register_matrix(_consumer, meta.name);
-      if (!token) {
-        logError("registering matrix " + name);
-        continue;
-      }
-      MatrixField field;
-      field.token = token;
-      field.lastTime = meta.last_time;
-      field.units = meta.units ? QString::fromUtf8(meta.units) : QString();
-      field.quantity = meta.quantity ? QString::fromUtf8(meta.quantity) : QString();
-      _matrixFields.insert(name, field);
-    }
-  }
-  freeMetadata(metadata, count);
-
-  const qint64 latest = consumer_get_latest_time(_consumer);
-  if (latest > 0) updateFrameCount(latest);
+bool SsdbSource::adoptPrepared(PreparedDataSourcePtr prepared) {
+  auto state = std::dynamic_pointer_cast<SsdbPreparedState>(prepared);
+  if (!state || !state->consumer) return false;
+  close();
+  _consumer = state->consumer;
+  state->consumer = nullptr;
+  _fields.swap(state->fields);
+  _matrixFields.swap(state->matrices);
+  updateFrameCount(state->latest);
   return true;
 }
 
@@ -877,10 +940,17 @@ int SsdbSource::readVector(double *data, const QString &name, const DataVector::
 namespace {
 
 QStringList fieldsAtStructure(const QString &source, uint8_t structure,
-                              bool includeSyntheticVectors) {
+                bool includeSyntheticVectors, bool *complete = nullptr) {
+  if (complete) *complete = false;
   QString addr = SsdbSource::endpoint(source);
   if (addr.isEmpty()) return {};
-  consumer_t *consumer = consumer_new("kst ssdb field discovery", addr.toUtf8().constData());
+  QElapsedTimer timer;
+  timer.start();
+  const QString numeric = numericAddress(addr);
+  const qint64 budget = 5000 - timer.elapsed();
+  if (numeric.isEmpty() || budget <= 0) return {};
+  consumer_t *consumer = consumer_new_numeric("kst ssdb field discovery",
+    numeric.toUtf8().constData(), uint64_t(budget), 5000);
   if (!consumer) {
     logError("connecting to " + addr);
     return {};
@@ -889,6 +959,7 @@ QStringList fieldsAtStructure(const QString &source, uint8_t structure,
   uint32_t count = 0;
   metadata_t *meta = consumer_get_field_list(consumer, &count);
   if (!meta) logError("listing fields at " + addr);
+  if (complete) *complete = meta != nullptr;
   QStringList fields;
   for (uint32_t i = 0; meta && i < count; ++i)
     if (meta[i].structure == structure && meta[i].name &&
@@ -901,7 +972,7 @@ QStringList fieldsAtStructure(const QString &source, uint8_t structure,
   }
 
   freeMetadata(meta, count);
-  free(consumer);
+  consumer_destroy(consumer);
   return fields;
 }
 
@@ -934,14 +1005,14 @@ DataSource *SsdbSourcePlugin::create(ObjectStore *store, QSettings *cfg,
 
 QStringList SsdbSourcePlugin::matrixList(QSettings *, const QString &name, const QString &type,
                                          QString *suggestion, bool *complete) const {
-  return available(name, type, suggestion, complete) ? SsdbSource::matrixFieldsAt(name)
+  return available(name, type, suggestion, complete) ? fieldsAtStructure(name, 2, false, complete)
                                                      : QStringList();
 }
 
 // Discover scalar fields and synthetic vectors for Kst's field chooser.
 QStringList SsdbSourcePlugin::fieldList(QSettings *, const QString &name, const QString &type,
                                         QString *suggestion, bool *complete) const {
-  return available(name, type, suggestion, complete) ? SsdbSource::fieldsAt(name) : QStringList();
+  return available(name, type, suggestion, complete) ? fieldsAtStructure(name, 0, true, complete) : QStringList();
 }
 
 // Advertise the FRAMES scalar for recognized SSDB endpoints.
@@ -974,4 +1045,35 @@ QStringList SsdbSourcePlugin::provides() const { return {ssdbTypeString}; }
 // Open the endpoint-specific configuration controls when settings are available.
 DataSourceConfigWidget *SsdbSourcePlugin::configWidget(QSettings *cfg, const QString &name) const {
   return cfg ? new SsdbConfigWidget(*cfg, SsdbSource::endpoint(name)) : nullptr;
+}
+
+PreparedDataSourceOptions SsdbSourcePlugin::prepareOptions(QSettings *cfg, const QString &name) const {
+  PreparedDataSourceOptions options;
+  options.endpoint = SsdbSource::endpoint(name);
+  // Distinct QSettings instances are reentrant; sharing a grouped instance with
+  // legacy validation workers is not. Snapshot through a separate reader.
+  std::unique_ptr<QSettings> saved;
+  if (cfg) saved = std::make_unique<QSettings>(cfg->fileName(), cfg->format());
+  const QString prefix = "SSDB/" + options.endpoint + '/';
+  double rate = saved ? saved->value(prefix + "frameRateHz", 5.0).toDouble() : 5.0;
+  double delay = saved ? saved->value(prefix + "endDelayMs", 100.0).toDouble() : 100.0;
+  double repair = saved ? saved->value(prefix + "repairWindowMs", 2000.0).toDouble() : 2000.0;
+  if (!SsdbSource::validRate(rate)) rate = 5.0;
+  if (!std::isfinite(delay) || delay < 0 || delay > 3600000) delay = 100.0;
+  if (!std::isfinite(repair) || repair < 0 || repair > 60000) repair = 2000.0;
+  options.settings = {{"frameRateHz", rate}, {"endDelayMs", delay}, {"repairWindowMs", repair}};
+  return options;
+}
+
+PreparedDataSourcePtr SsdbSourcePlugin::prepare(const PreparedDataSourceOptions &options,
+    const QString &numeric, qint64 remainingMs, const std::atomic_bool &cancelled,
+    QString &error) const {
+  return prepareConnection(options, numeric, remainingMs, cancelled, error);
+}
+
+DataSource *SsdbSourcePlugin::createPrepared(ObjectStore *store, QSettings *cfg,
+    const QString &name, const PreparedDataSourceOptions &options, PreparedDataSourcePtr prepared) const {
+  auto state = std::dynamic_pointer_cast<SsdbPreparedState>(prepared);
+  if (!state || !state->consumer) return nullptr;
+  return new SsdbSource(store, cfg, name, QString(), QDomElement(), options, std::move(prepared));
 }

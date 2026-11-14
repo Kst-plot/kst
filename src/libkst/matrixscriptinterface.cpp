@@ -164,6 +164,7 @@ QString DataMatrixSI::change(QString& command) {
 
   DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                        _datamatrix->store(), vars.at(0));
+  if (!ds) return "Could not load data source";
   _datamatrix->writeLock();
   _datamatrix->change(ds,
                  vars.at(1),         // field

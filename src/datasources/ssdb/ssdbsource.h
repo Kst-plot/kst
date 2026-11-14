@@ -39,6 +39,9 @@ class SsdbSource : public Kst::DataSource {
 
     SsdbSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename,
                const QString& type, const QDomElement& element);
+    SsdbSource(Kst::ObjectStore *store, QSettings *cfg, const QString& filename,
+           const QString& type, const QDomElement& element,
+           const Kst::PreparedDataSourceOptions &, Kst::PreparedDataSourcePtr);
     ~SsdbSource() override;
 
     bool init();
@@ -80,6 +83,7 @@ class SsdbSource : public Kst::DataSource {
 
   private:
     void close();
+    bool adoptPrepared(Kst::PreparedDataSourcePtr);
     void updateFrameCount(qint64 latest);
     bool selectValue(scalar_token_t *token, qint64 time, double *value);
     bool selectMatrix(const QString &field, qint64 frame, MatrixSample *sample) const;
@@ -106,9 +110,10 @@ class SsdbSource : public Kst::DataSource {
 };
 
 class SsdbSourcePlugin : public QObject, public Kst::DataSourcePluginInterface,
-                         public Kst::NonFileDataSourcePluginInterface {
+                         public Kst::NonFileDataSourcePluginInterface,
+                         public Kst::PreparedDataSourcePluginInterface {
   Q_OBJECT
-  Q_INTERFACES(Kst::DataSourcePluginInterface Kst::NonFileDataSourcePluginInterface)
+  Q_INTERFACES(Kst::DataSourcePluginInterface Kst::NonFileDataSourcePluginInterface Kst::PreparedDataSourcePluginInterface)
   Q_PLUGIN_METADATA(IID KST_DATASOURCE_IID)
   public:
     ~SsdbSourcePlugin() override = default;
@@ -126,6 +131,11 @@ class SsdbSourcePlugin : public QObject, public Kst::DataSourcePluginInterface,
     bool supportsTime(QSettings *, const QString&) const override;
     QStringList provides() const override;
     Kst::DataSourceConfigWidget *configWidget(QSettings *, const QString&) const override;
+    Kst::PreparedDataSourceOptions prepareOptions(QSettings *, const QString &) const override;
+    Kst::PreparedDataSourcePtr prepare(const Kst::PreparedDataSourceOptions &,
+      const QString &, qint64, const std::atomic_bool &, QString &) const override;
+    Kst::DataSource *createPrepared(Kst::ObjectStore *, QSettings *, const QString &,
+      const Kst::PreparedDataSourceOptions &, Kst::PreparedDataSourcePtr) const override;
 };
 
 #endif

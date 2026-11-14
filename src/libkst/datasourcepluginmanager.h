@@ -49,6 +49,12 @@ class KSTCORE_EXPORT DataSourcePluginManager
     static bool validSource(const QString& filename);
     static bool isNonFileSource(const QString& filename, const QString& type = QString());
 
+    // Select an optional preparation capability without doing network I/O.
+    static SharedPtr<DataSourcePluginInterface> preparationPlugin(const QString& filename);
+    static DataSourcePtr adoptPreparedSource(ObjectStore *, const QString &,
+      SharedPtr<DataSourcePluginInterface>, const PreparedDataSourceOptions &,
+      PreparedDataSourcePtr, bool updatesDisabled = false);
+
     static bool sourceHasConfigWidget(const QString& filename, const QString& type = QString());
     static DataSourceConfigWidget *configWidgetForSource(const QString& filename, const QString& type = QString());
 
@@ -75,6 +81,7 @@ class KSTCORE_EXPORT DataSourcePluginManager
     };
     static QList<PluginSortContainer> bestPluginsForSource(const QString& filename, const QString& type);
     static DataSourcePtr findPluginFor(ObjectStore *store, const QString& filename, const QString& type, const QDomElement& e = QDomElement());
+    static bool addSourcePrimitives(ObjectStore *, DataSourcePtr);
 };
 
 }

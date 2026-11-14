@@ -16,6 +16,21 @@ are not supported yet. `FRAMES` is a Kst
 scalar, and `FILE` is the server address string. Field units, quantity, nominal
 rate and samples-per-frame are available as vector metadata.
 
+## Opening a source in the data wizard
+
+The data wizard opens SSDB connections in the background after a short input
+debounce. Hostname resolution, connection, registration, field discovery, and
+the initial timestamp share a five-second opening budget. Connection refusal
+or timeout leaves the page incomplete, with Next and configuration disabled,
+just like entering a missing local filename. Diagnostics are logged without a
+popup on each edit. An empty but healthy database is a valid source.
+
+Editing the address or closing the wizard cancels acceptance of the old request;
+late replies cannot publish a datasource or change the wizard. A successful
+connection is transferred to the GUI thread without reconnecting. Subsequent
+client operations have finite five-second budgets, but ordinary plotting and
+legacy dialogs have not been converted to asynchronous I/O.
+
 Frame 0 is the Unix epoch. The datasource configuration dialog sets the frame
 rate (default 5 Hz) and an end delay (default 100 ms); both are saved in the
 Kst session and per-server settings. Each field's samples per frame is fixed at
@@ -65,6 +80,9 @@ To build the optional plugin, configure Kst with `SSDB_WORKSPACE_ROOT` set to
 the cmd-tlm workspace containing the `telemetry_c` crate. By default Kst
 looks for a sibling `ss/cmd-tlm` workspace. The build uses Cargo and the
 corresponding generated C header from that workspace.
+Opening also requires the additive `consumer_new_numeric`,
+`consumer_finish_opening`, `consumer_get_latest_time_checked`, and consumer/token
+destruction APIs. Rebuild the client library and plugin together.
 The linked `telemetry_c` must return typed scalar tokens from
 `consumer_register_scalar`; older builds boxed a generic token instead,
 causing scalar reads to return zeros. Rebuild the plugin when updating the
@@ -73,5 +91,6 @@ Rust library and restart Kst to load the new module.
 Matrix reads also require the hardened `consumer_get_selected_matrix`: successful
 reads return exactly the requested number of valid entries (including empty
 matrices for missing samples), while failures return NULL. Rebuild Kst and all
-datasource plugins together after updating: the datasource interface key is now
-2.1, and older binary plugins are not compatible with the new frame-count method.
+datasource plugins together after updating the shared datasource API. The current
+datasource ABI IID is `com.kst.DataSourcePluginInterface/3`; asynchronous opening
+adds a separate optional preparation interface and does not change that base ABI.

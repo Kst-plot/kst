@@ -29,6 +29,7 @@ target_sources(Kst6Core PRIVATE
     datasource.h
     datasourcefactory.h
     datasourcepluginmanager.h
+    datasourcepreparation.h
     datastring.h
     datavector.h
     dateparser.h
@@ -83,6 +84,7 @@ target_sources(Kst6Core PRIVATE
     datasource.cpp
     datasourcefactory.cpp
     datasourcepluginmanager.cpp
+    datasourcepreparation.cpp
     datastring.cpp
     datavector.cpp
     dateparser.cpp
@@ -133,6 +135,7 @@ target_link_libraries(Kst6Core PUBLIC
     Qt6::PrintSupport
     Qt6::Svg
 )
+target_link_libraries(Kst6Core PRIVATE Qt6::Concurrent)
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kstcore_export.h

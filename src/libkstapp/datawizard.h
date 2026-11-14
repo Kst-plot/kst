@@ -15,6 +15,7 @@
 
 #include <QWizard>
 #include <QThread>
+#include <QTimer>
 
 #include "kstcore_export.h"
 
@@ -34,6 +35,7 @@ class ObjectStore;
 class PlotItemInterface;
 class ValidateDataSourceThread;
 class DataWizard;
+class DataSourcePreparationController;
 
 class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSource
 {
@@ -67,7 +69,11 @@ class DataWizardPageDataSource : public QWizardPage, Ui::DataWizardPageDataSourc
     ObjectStore *_store;
     DataSourcePtr _dataSource;
     int _requestID;
+    DataSourcePreparationController *_preparation;
+    QTimer *_sourceDebounce;
     void updateUpdateBox();
+    void startSourceValidation();
+    void sourceLoaded(DataSourcePtr);
 };
 
 class DataWizardPageVectors : public QWizardPage, Ui::DataWizardPageVectors

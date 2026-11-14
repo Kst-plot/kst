@@ -16,6 +16,9 @@
 #include <QtPlugin>
 #include <QSettings>
 #include <QDomElement>
+#include <QVariantMap>
+#include <atomic>
+#include <memory>
 
 #include "sharedptr.h"
 #include "datasource.h"
@@ -97,6 +100,31 @@ class NonFileDataSourcePluginInterface {
     virtual bool isNonFileSource(const QString &identifier) const = 0;
 };
 
+// Additive capability: existing datasource/plugin layouts and vtables are unchanged.
+// Options are captured on the GUI thread. Only prepare() runs on a worker, and
+// must not access QSettings, widgets, ObjectStore or mutable plugin QObject state.
+struct PreparedDataSourceOptions {
+    QString endpoint;
+    QVariantMap settings;
+};
+
+class PreparedDataSource {
+  public:
+    virtual ~PreparedDataSource() = default;
+};
+using PreparedDataSourcePtr = std::shared_ptr<PreparedDataSource>;
+
+class PreparedDataSourcePluginInterface {
+  public:
+    virtual ~PreparedDataSourcePluginInterface() = default;
+    virtual PreparedDataSourceOptions prepareOptions(QSettings *, const QString &) const = 0;
+    virtual PreparedDataSourcePtr prepare(const PreparedDataSourceOptions &,
+        const QString &numericEndpoint, qint64 remainingMs,
+        const std::atomic_bool &cancelled, QString &error) const = 0;
+    // Adoption is GUI-thread-only and must not perform any network I/O.
+    virtual DataSource *createPrepared(ObjectStore *, QSettings *, const QString &,
+        const PreparedDataSourceOptions &, PreparedDataSourcePtr) const = 0;
+};
 
 }
 
@@ -113,6 +141,7 @@ class NonFileDataSourcePluginInterface {
 Q_DECLARE_INTERFACE(Kst::PluginInterface, "com.kst.PluginInterface/2.0")
 Q_DECLARE_INTERFACE(Kst::DataSourcePluginInterface, KST_DATASOURCE_IID)
 Q_DECLARE_INTERFACE(Kst::NonFileDataSourcePluginInterface, "com.kst.NonFileDataSourcePluginInterface/1.0")
+Q_DECLARE_INTERFACE(Kst::PreparedDataSourcePluginInterface, "com.kst.PreparedDataSourcePluginInterface/1.0")
 
 
 #endif

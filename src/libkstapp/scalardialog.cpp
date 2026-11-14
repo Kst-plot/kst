@@ -194,6 +194,15 @@ void ScalarTab::sourceValid(QString filename, int requestID) {
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
 
+  if (!_dataSource || !_dataSource->isValid()) {
+    _dataSource = nullptr;
+    _field->setEnabled(false);
+    _fieldRV->setEnabled(false);
+    _configure->setEnabled(false);
+    emit sourceChanged();
+    return;
+  }
+
   _field->setEnabled(true);
   _fieldRV->setEnabled(true);
 

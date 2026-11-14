@@ -79,6 +79,7 @@ QString StringDataSI::doCommand(QString x) {
     QStringList p = x.split(',');
     DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                          str->store(), p.at(0));
+    if (!ds) return "Could not load data source";
     str->writeLock();
     str->change(ds,p.at(1), p.at(2).toInt());
     str->unlock();

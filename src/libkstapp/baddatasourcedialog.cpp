@@ -67,6 +67,13 @@ void BadDatasourceDialog::sourceValid(QString filename, int requestID) {
     return;
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
+  if (!_dataSource || !_dataSource->isValid()) {
+    _dataSource = nullptr;
+    _fileType->clear();
+    _configureSource->setEnabled(false);
+    _change->setEnabled(false);
+    return;
+  }
   _fileType->setText(_dataSource->fileType());
   _configureSource->setEnabled(_dataSource->hasConfigWidget());
   _change->setEnabled(true);

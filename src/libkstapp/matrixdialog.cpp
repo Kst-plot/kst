@@ -556,6 +556,15 @@ void MatrixTab::sourceValid(QString filename, int requestID) {
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
 
+  if (!_dataSource || !_dataSource->isValid()) {
+    _dataSource = nullptr;
+    _field->setEnabled(false);
+    _configure->setEnabled(false);
+    validating = false;
+    emit sourceChanged();
+    return;
+  }
+
   _field->setEnabled(true);
 
   _dataSource->readLock();

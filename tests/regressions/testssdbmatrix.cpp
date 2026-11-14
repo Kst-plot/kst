@@ -17,6 +17,9 @@
 
 #include "objectstore.h"
 #include "ssdbsource.h"
+#include "datasourcepluginmanager.h"
+#include "scalar.h"
+#include "string_kst.h"
 #include "testnextcolor.h"
 
 extern "C" {
@@ -28,6 +31,14 @@ int selectCalls = 0;
 int matrixCalls = 0;
 int64_t selectedTime = 0;
 bool failRead = false;
+bool failConnect = false;
+bool failList = false;
+bool failLatest = false;
+bool failRegister = false;
+bool emptyList = false;
+int connections = 0;
+int consumers = 0;
+int tokens = 0;
 constexpr int64_t latestTime = 10000000000LL;
 }
 
@@ -35,9 +46,30 @@ constexpr int64_t latestTime = 10000000000LL;
 extern "C" {
 const char *telemetry_get_last_error() { return "injected read failure"; }
 consumer_t *consumer_new(const char *, const char *) {
+  ++connections;
+  if (failConnect) return nullptr;
+  ++consumers;
   return static_cast<consumer_t *>(std::malloc(1));
 }
+consumer_t *consumer_new_numeric(const char *name, const char *address, uint64_t opening, uint64_t operation) {
+  if (!opening || !operation) return nullptr;
+  return consumer_new(name, address);
+}
+void consumer_destroy(consumer_t *consumer) {
+  if (consumer) { --consumers; std::free(consumer); }
+}
+void scalar_token_destroy(scalar_token_t *token) { if (token) { --tokens; std::free(token); } }
+void matrix_token_destroy(matrix_token_t *token) { if (token) { --tokens; std::free(token); } }
+int32_t consumer_finish_opening(consumer_t *) { return 1; }
+int32_t consumer_get_latest_time_checked(consumer_t *, int64_t *value) {
+  if (failLatest) return 0;
+  *value = emptyList ? 0 : latestTime;
+  return 1;
+}
 metadata_t *consumer_get_field_list(consumer_t *, uint32_t *count) {
+  if (failList) { *count = 0; return nullptr; }
+  // Same non-allocatable, non-null sentinel as an empty Rust Vec.
+  if (emptyList) { *count = 0; return reinterpret_cast<metadata_t *>(alignof(metadata_t)); }
   *count = 1;
   auto *metadata = static_cast<metadata_t *>(std::calloc(1, sizeof(metadata_t)));
   metadata->name = ::strdup("image");
@@ -46,6 +78,8 @@ metadata_t *consumer_get_field_list(consumer_t *, uint32_t *count) {
   return metadata;
 }
 matrix_token_t *consumer_register_matrix(consumer_t *, const char *) {
+  if (failRegister) return nullptr;
+  ++tokens;
   return static_cast<matrix_token_t *>(std::malloc(1));
 }
 scalar_token_t *consumer_register_scalar(consumer_t *, const char *) { return nullptr; }
@@ -73,6 +107,15 @@ matrix_t *consumer_get_selected_matrix(consumer_t *, matrix_token_t *, uintptr_t
 }
 }
 
+class InvalidPreparedPlugin : public SsdbSourcePlugin {
+public:
+  Kst::DataSource *createPrepared(Kst::ObjectStore *store, QSettings *cfg,
+      const QString &, const Kst::PreparedDataSourceOptions &, Kst::PreparedDataSourcePtr) const override {
+    // Interfaces still advertise FILE/FRAMES, but construction is invalid.
+    return new SsdbSource(store, cfg, "invalid endpoint", QString(), QDomElement());
+  }
+};
+
 class TestSsdbMatrix : public QObject {
   Q_OBJECT
   TestNextColor colors;
@@ -81,6 +124,115 @@ private Q_SLOTS:
     selectCalls = matrixCalls = 0;
     selectedTime = 0;
     failRead = false;
+    failConnect = failList = failLatest = failRegister = emptyList = false;
+    connections = 0;
+    QCOMPARE(consumers, 0);
+    QCOMPARE(tokens, 0);
+  }
+
+  void cleanup() {
+    QCOMPARE(consumers, 0);
+    QCOMPARE(tokens, 0);
+  }
+
+  void failedOpening_data() {
+    QTest::addColumn<int>("failure");
+    QTest::newRow("connection") << 0;
+    QTest::newRow("field list") << 1;
+    QTest::newRow("registration") << 2;
+    QTest::newRow("latest timestamp") << 3;
+  }
+
+  void failedOpening() {
+    QFETCH(int, failure);
+    failConnect = failure == 0;
+    failList = failure == 1;
+    failRegister = failure == 2;
+    failLatest = failure == 3;
+    SsdbSourcePlugin plugin;
+    const auto options = plugin.prepareOptions(nullptr, "127.0.0.1:43234");
+    QString error;
+    std::atomic_bool cancelled(false);
+    auto prepared = plugin.prepare(options, options.endpoint, 5000, cancelled, error);
+    QVERIFY(!prepared);
+    QVERIFY(!error.isEmpty());
+    QCOMPARE(consumers, 0);
+    QCOMPARE(tokens, 0);
+    Kst::ObjectStore store;
+    SsdbSource source(&store, nullptr, options.endpoint, QString(), QDomElement());
+    QVERIFY(!source.isValid());
+  }
+
+  void preparedAdoptionDoesNotReconnect() {
+    Kst::ObjectStore store;
+    Kst::SharedPtr<Kst::DataSourcePluginInterface> plugin(new SsdbSourcePlugin);
+    auto *capability = dynamic_cast<SsdbSourcePlugin *>(plugin.data());
+    auto options = capability->prepareOptions(nullptr, "127.0.0.1:43234");
+    options.settings["frameRateHz"] = 10.0;
+    QString error;
+    std::atomic_bool cancelled(false);
+    auto prepared = capability->prepare(options, options.endpoint, 5000, cancelled, error);
+    QVERIFY(prepared);
+    QCOMPARE(connections, 1);
+    // Any accidental GUI-thread reconnect would fail this adoption.
+    failConnect = true;
+    auto source = Kst::DataSourcePluginManager::adoptPreparedSource(&store,
+        options.endpoint, plugin, options, std::move(prepared), true);
+    QVERIFY(source);
+    QVERIFY(source->isValid());
+    QCOMPARE(source->matrixFrameCount("image"), qint64(100));
+    QCOMPARE(connections, 1);
+    QCOMPARE(store.dataSourceList().count(), 1);
+    QVERIFY(!capability->createPrepared(&store, nullptr, options.endpoint, options, {}));
+  }
+
+  void emptyDatabaseIsValidAndCancellationReleasesState() {
+    Kst::ObjectStore store;
+    SsdbSourcePlugin plugin;
+    const auto options = plugin.prepareOptions(nullptr, "127.0.0.1:43234");
+    QString error;
+    std::atomic_bool cancelled(false);
+    emptyList = true;
+    auto prepared = plugin.prepare(options, options.endpoint, 5000, cancelled, error);
+    QVERIFY(prepared);
+    Kst::DataSourcePtr source(plugin.createPrepared(&store, nullptr, options.endpoint, options, std::move(prepared)));
+    QVERIFY(source->isValid());
+    QVERIFY(source->isEmpty());
+    QCOMPARE(source->vector().list(), QStringList({"INDEX", "TIME"}));
+    source = nullptr;
+    QCOMPARE(consumers, 0);
+    cancelled = true;
+    QVERIFY(!plugin.prepare(options, options.endpoint, 5000, cancelled, error));
+    QCOMPARE(consumers, 0);
+  }
+
+  void invalidAdoptionPublishesNoSourceOrSlaveObjects() {
+    Kst::ObjectStore store;
+    Kst::SharedPtr<Kst::DataSourcePluginInterface> plugin(new InvalidPreparedPlugin);
+    auto *capability = dynamic_cast<SsdbSourcePlugin *>(plugin.data());
+    const auto options = capability->prepareOptions(nullptr, "127.0.0.1:43234");
+    QString error;
+    std::atomic_bool cancelled(false);
+    auto prepared = capability->prepare(options, options.endpoint, 5000, cancelled, error);
+    QVERIFY(prepared);
+    QVERIFY(!Kst::DataSourcePluginManager::adoptPreparedSource(&store, options.endpoint,
+        plugin, options, std::move(prepared), true));
+    QVERIFY(store.dataSourceList().isEmpty());
+    QVERIFY(store.getObjects<Kst::Scalar>().isEmpty());
+    QVERIFY(store.getObjects<Kst::String>().isEmpty());
+  }
+
+  void fieldDiscoveryDistinguishesFailureFromEmptyDatabase() {
+    SsdbSourcePlugin plugin;
+    bool complete = true;
+    failList = true;
+    QVERIFY(plugin.fieldList(nullptr, "127.0.0.1:43234", {}, nullptr, &complete).isEmpty());
+    QVERIFY(!complete);
+    failList = false;
+    emptyList = true;
+    QCOMPARE(plugin.fieldList(nullptr, "127.0.0.1:43234", {}, nullptr, &complete),
+        QStringList({"INDEX", "TIME"}));
+    QVERIFY(complete);
   }
 
   void fileLengthNeverReadsEpochSample() {

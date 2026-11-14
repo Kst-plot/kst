@@ -84,6 +84,7 @@ QString ScalarDataSI::doCommand(QString x) {
     QStringList p = x.split(',');
     DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                          scalar->store(), p.at(0));
+    if (!ds) return "Could not load data source";
     scalar->writeLock();
     scalar->change(ds,p.at(1));
     scalar->unlock();
@@ -134,6 +135,7 @@ QString ScalarVectorSI::doCommand(QString x) {
     QStringList p = x.split(',');
     DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                          scalar->store(), p.at(0));
+    if (!ds) return "Could not load data source";
     scalar->writeLock();
     scalar->change(ds,p.at(1), p.at(2).toInt());
     scalar->unlock();

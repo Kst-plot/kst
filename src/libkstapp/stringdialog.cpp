@@ -182,6 +182,14 @@ void StringTab::sourceValid(QString filename, int requestID) {
   }
   _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename);
 
+  if (!_dataSource || !_dataSource->isValid()) {
+    _dataSource = nullptr;
+    _field->setEnabled(false);
+    _configure->setEnabled(false);
+    emit sourceChanged();
+    return;
+  }
+
   _field->setEnabled(true);
 
   _dataSource->readLock();
@@ -221,7 +229,7 @@ void StringTab::fileNameChanged(const QString &file) {
 }
 
 void StringTab::fieldChanged(const QString &field) {
-  bool isImageStream = _dataSource->isStringStream(field);
+  bool isImageStream = _dataSource && _dataSource->isStringStream(field);
   _frame->setVisible(isImageStream);
   _frameLabel->setVisible(isImageStream);
   _lastFrame->setVisible(isImageStream);

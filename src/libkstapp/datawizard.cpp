@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QThreadPool>
+#include <QTimer>
 
 #include "colorsequence.h"
 #include "curve.h"
@@ -31,6 +32,7 @@
 #include "applicationsettings.h"
 #include "updatemanager.h"
 #include "datasourcepluginmanager.h"
+#include "datasourcepreparation.h"
 #include "sharedaxisboxitem.h"
 #include "boxitem.h"
 #include "updateserver.h"
@@ -49,6 +51,30 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
   : QWizardPage(parent), _pageValid(false), _store(store), _requestID(0)
 {
   setupUi(this);
+
+  _preparation = new DataSourcePreparationController(this);
+  _sourceDebounce = new QTimer(this);
+  _sourceDebounce->setSingleShot(true);
+  _sourceDebounce->setInterval(250);
+  connect(_sourceDebounce, &QTimer::timeout, this, &DataWizardPageDataSource::startSourceValidation);
+  if (auto *dialog = qobject_cast<QDialog *>(parent)) {
+    connect(dialog, &QDialog::finished, this, [this] {
+      ++_requestID;
+      _sourceDebounce->stop();
+      _preparation->cancel();
+    });
+  }
+  connect(_preparation, &DataSourcePreparationController::finished, this,
+      [this](DataSourcePreparationPtr job) {
+    if (job->requestId != _requestID) return;
+    if (!job->prepared) {
+      qWarning() << "Source opening:" << job->filename << job->error;
+      sourceLoaded(nullptr);
+      return;
+    }
+    sourceLoaded(DataSourcePluginManager::adoptPreparedSource(_store, job->filename,
+        job->plugin, job->options, std::move(job->prepared), true));
+  });
 
   MainWindow::setWidgetFlags(this);
 
@@ -82,6 +108,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
 
 
 DataWizardPageDataSource::~DataWizardPageDataSource() {
+  _preparation->cancel();
 }
 
 
@@ -151,11 +178,12 @@ DataSourcePtr DataWizardPageDataSource::dataSource() const {
 
 
 QStringList DataWizardPageDataSource::dataSourceFieldList() const {
-  return _dataSource->vector().list();
+  return _dataSource ? _dataSource->vector().list() : QStringList();
 }
 
 
 void DataWizardPageDataSource::configureSource() {
+  if (!_dataSource) return;
   QPointer<DataSourceConfigureDialog> dialog = new DataSourceConfigureDialog(DataDialog::New, _dataSource, this);
   if ( dialog->exec() == QDialog::Accepted ) {
     sourceChanged(_dataSource->fileName());
@@ -168,8 +196,21 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
   if (_requestID != requestID) {
     return;
   }
-  _pageValid = true;
-  _dataSource = DataSourcePluginManager::findOrLoadSource(_store, filename, true);
+  sourceLoaded(DataSourcePluginManager::findOrLoadSource(_store, filename, true));
+}
+
+void DataWizardPageDataSource::sourceLoaded(DataSourcePtr source) {
+  _dataSource = source;
+  _pageValid = _dataSource && _dataSource->isValid();
+  if (!_pageValid) {
+    _dataSource = nullptr;
+    _fileType->clear();
+    _configureSource->setEnabled(false);
+    _updateBox->setEnabled(false);
+    emit completeChanged();
+    emit dataSourceChanged();
+    return;
+  }
   // FIXME: TIME indexing requires that the file be fully indexable at data source
   // initialization time.  The lines below make sure this is true.  However,
   // this is extremely expensive for very large ascii files, so we don't do it - 
@@ -199,13 +240,38 @@ void DataWizardPageDataSource::sourceValid(QString filename, int requestID) {
 
 
 void DataWizardPageDataSource::sourceChanged(const QString& file) {
+  Q_UNUSED(file)
+  _requestID += 1;
+  _preparation->cancel();
+  _dataSource = nullptr;
   _pageValid = false;
   _fileType->setText(QString());
   _configureSource->setEnabled(false);
   _updateBox->setEnabled(false);
   emit completeChanged();
+  emit dataSourceChanged();
+  _sourceDebounce->start();
+}
 
-  _requestID += 1;
+void DataWizardPageDataSource::startSourceValidation() {
+  const QString file = _url->file();
+  auto plugin = DataSourcePluginManager::preparationPlugin(file);
+  if (plugin) {
+    auto reused = _store->dataSourceList().findReusableFileName(file);
+    if (reused && reused->isValid()) {
+      sourceLoaded(reused);
+      return;
+    }
+    auto job = std::make_shared<DataSourcePreparation>();
+    job->filename = file;
+    job->requestId = _requestID;
+    job->plugin = plugin;
+    auto *capability = qobject_cast<PreparedDataSourcePluginInterface *>(dynamic_cast<QObject *>(plugin.data()));
+    job->options = capability->prepareOptions(&DataSourcePluginManager::settingsObject(), file);
+    _preparation->start(job);
+    return;
+  }
+
   ValidateDataSourceThread *validateDSThread = new ValidateDataSourceThread(file, _requestID);
   connect(validateDSThread, SIGNAL(dataSourceValid(QString,int)), this, SLOT(sourceValid(QString,int)));
   QThreadPool::globalInstance()->start(validateDSThread);
@@ -259,6 +325,8 @@ void DataWizardPageVectors::updateVectors() {
 
   _vectors->addItems(((DataWizard*)wizard())->dataSourceFieldList());
   _availableLabel->setText(tr("%1 vector(s) available").arg(_vectors->count()));
+  _selectedLabel->setText(tr("%1 vector(s) selected").arg(0));
+  emit completeChanged();
 }
 
 

@@ -1,7 +1,14 @@
 # SPDX-FileCopyrightText: 2026 C. Barth Netterfield <netterfield@astro.utoronto.ca>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
+# Test definitions are retained for reference, but excluded from the Kst build.
+#[[
 find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Test)
+
+add_executable(testdatasourcepreparation testdatasourcepreparation.cpp)
+target_link_libraries(testdatasourcepreparation PRIVATE Kst6Core Qt6::Test)
+add_test(NAME testdatasourcepreparation COMMAND testdatasourcepreparation)
+set_tests_properties(testdatasourcepreparation PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 
 add_executable(testmatrixframecount testmatrixframecount.cpp)
 target_link_libraries(testmatrixframecount PRIVATE Kst6Core Qt6::Test)
@@ -17,6 +24,12 @@ foreach(test_name testmatrix testeditablematrix testgeneratedmatrix)
 endforeach()
 
 if(TARGET ssdb_rust_lib)
+    add_executable(testwizardssdb testwizardssdb.cpp)
+    target_link_libraries(testwizardssdb PRIVATE Kst6App Qt6::Test)
+    add_dependencies(testwizardssdb datasource_ssdb datasource_ascii)
+    add_test(NAME testwizardssdb COMMAND testwizardssdb)
+    set_tests_properties(testwizardssdb PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
+
     # Compile the actual adapter against a deterministic C API stub, not a live DB.
     add_executable(testssdbmatrix
         testssdbmatrix.cpp
@@ -30,3 +43,4 @@ if(TARGET ssdb_rust_lib)
     add_test(NAME testssdbmatrix COMMAND testssdbmatrix)
     set_tests_properties(testssdbmatrix PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endif()
+#]]

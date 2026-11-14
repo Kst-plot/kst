@@ -215,6 +215,7 @@ QString DataVectorSI::change(QString& command) {
 
   DataSourcePtr ds = DataSourcePluginManager::findOrLoadSource(
                        _datavector->store(), vars.at(0));
+  if (!ds) return "Could not load data source";
   _datavector->writeLock();
   _datavector->change(ds,
                       vars.at(1),            // field
