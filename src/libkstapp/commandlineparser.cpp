@@ -153,7 +153,6 @@ static void printText(const QString& text, const QString& detailText = QString()
   QString displayText = QString(text) + QString(detailText) + t;
 
   fprintf(stderr,"%s\n", qPrintable(displayText));
-  //qWarning("%s", qPrintable(displayText));
 }
 
 

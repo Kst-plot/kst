@@ -14,7 +14,7 @@
 #include "formatgridhelper.h"
 #include "viewitem.h"
 
-#include <QDebug>
+#include "debug.h"
 
 namespace Kst {
 
@@ -82,7 +82,7 @@ bool findNextEdgeLocation(QList<AutoFormatEdges> &edges, QList<qreal> &locations
     }
     best_edge = sum_edge/qreal(n_this_edge);
     if (n_this_edge != best_edge_count) {
-      qWarning() << "edge counting error in findNextEdgeLocation()";
+      Kst::Debug::warning("edge counting error in findNextEdgeLocation()");
     }
     locations.append(best_edge);
     return true;

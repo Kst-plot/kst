@@ -5,6 +5,7 @@
 // synthetic vectors and never request sample data from the database.
 #include "ssdbsource.h"
 #include "objectstore.h"
+#include "debug.h"
 
 extern "C" {
 #include <flightapi.h>
@@ -53,7 +54,8 @@ void freeMetadata(metadata_t *meta, uint32_t count) {
 void logError(const QString &operation) {
   // The client's last-error string is borrowed and thread-local.
   const char *error = telemetry_get_last_error();
-  qWarning() << "SSDB:" << operation << (error ? error : "unknown error");
+  Kst::Debug::warning(QString("SSDB: %1: %2")
+      .arg(operation, QString::fromUtf8(error ? error : "unknown error")));
 }
 
 class SsdbVector : public DataSource::DataInterface<DataVector> {
@@ -504,7 +506,7 @@ bool SsdbSource::init() {
   const std::atomic_bool cancelled(false);
   auto prepared = prepareConnection(options, numeric, 5000 - timer.elapsed(), cancelled, error);
   if (!prepared) {
-    qWarning() << "SSDB:" << _address << error;
+    Kst::Debug::warning(QString("SSDB: %1: %2").arg(_address, error));
     return false;
   }
   return adoptPrepared(std::move(prepared));

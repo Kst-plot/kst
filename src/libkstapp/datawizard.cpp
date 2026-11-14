@@ -21,6 +21,7 @@
 #include "colorsequence.h"
 #include "curve.h"
 #include "datacollection.h"
+#include "debug.h"
 #include "datasourceconfiguredialog.h"
 #include "datavector.h"
 #include "dialogdefaults.h"
@@ -68,7 +69,7 @@ DataWizardPageDataSource::DataWizardPageDataSource(ObjectStore *store, QWidget *
       [this](DataSourcePreparationPtr job) {
     if (job->requestId != _requestID) return;
     if (!job->prepared) {
-      qWarning() << "Source opening:" << job->filename << job->error;
+      Kst::Debug::warning(QString("Source opening: %1: %2").arg(job->filename, job->error));
       sourceLoaded(nullptr);
       return;
     }

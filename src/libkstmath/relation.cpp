@@ -230,7 +230,7 @@ void Relation::writeLockInputsAndOutputs() const {
     if (inputIt != inputs.constEnd() && (outputIt == outputs.constEnd() || (void*)(*inputIt) < (void*)(*outputIt))) {
       // do input
       if (!(*inputIt)) {
-        qWarning() << "Input for data object " << this->Name() << " is invalid." << Qt::endl;
+        Kst::Debug::warning(QString("Input for data object %1 is invalid.").arg(this->Name()));
       }
 #ifdef LOCKTRACE
       qDebug() << (void*)this << this->Name() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking input \"" << (*inputIt)->Name() << "\" (" << (void*)((KstRWLock*)*inputIt) << ")" << Qt::endl;
@@ -240,7 +240,7 @@ void Relation::writeLockInputsAndOutputs() const {
     } else {
       // do output
       if (!(*outputIt)) {
-        qWarning() << "Output for data object " << this->Name() << " is invalid." << Qt::endl;
+        Kst::Debug::warning(QString("Output for data object %1 is invalid.").arg(this->Name()));
       }
 #ifdef LOCKTRACE
       qDebug() << (void*)this << this->Name() << ") KstDataObject::writeLockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": write locking output \"" << (*outputIt)->Name() << "\" (" << (void*)((KstRWLock*)*outputIt) << ")" << Qt::endl;
@@ -261,7 +261,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (MatrixMap::ConstIterator i = _outputMatrices.constBegin(); i != _outputMatrices.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output matrix for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Output matrix for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -271,7 +271,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (MatrixMap::ConstIterator i = _inputMatrices.constBegin(); i != _inputMatrices.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input matrix for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Input matrix for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input matrix \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -281,7 +281,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (VectorMap::ConstIterator i = _outputVectors.constBegin(); i != _outputVectors.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output vector for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Output vector for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -291,7 +291,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (VectorMap::ConstIterator i = _inputVectors.constBegin(); i != _inputVectors.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input vector for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Input vector for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input vector \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -301,7 +301,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (ScalarMap::ConstIterator i = _outputScalars.constBegin(); i != _outputScalars.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output scalar for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Output scalar for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -311,7 +311,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (ScalarMap::ConstIterator i = _inputScalars.constBegin(); i != _inputScalars.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input scalar for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Input scalar for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input scalar \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -321,7 +321,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (StringMap::ConstIterator i = _outputStrings.constBegin(); i != _outputStrings.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Output string for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Output string for data object %1 is invalid.").arg(this->Name()));
     }
    #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking output string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
@@ -331,7 +331,7 @@ void Relation::unlockInputsAndOutputs() const {
 
   for (StringMap::ConstIterator i = _inputStrings.constBegin(); i != _inputStrings.constEnd(); ++i) {
     if (!(*i)) {
-      qWarning() << "Input string for data object " << this->Name() << " is invalid." << Qt::endl;
+      Kst::Debug::warning(QString("Input string for data object %1 is invalid.").arg(this->Name()));
     }
     #ifdef LOCKTRACE
     qDebug() << (void*)this << this->Name() << ") Relation::unlockInputsAndOutputs() by tid=" << (int)QThread::currentThread() << ": unlocking input string \"" << (*i)->Name() << "\" (" << (void*)((KstRWLock*)*i) << ")" << Qt::endl;
