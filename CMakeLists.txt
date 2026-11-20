@@ -4,7 +4,7 @@ set(QT_MIN_VERSION "6.4.0")
 
 set(kst_version_major 3)
 set(kst_version_minor 1)
-set(kst_version_patch 0)
+set(kst_version_patch 1)
 set(kst_version ${kst_version_major}.${kst_version_minor}.${kst_version_patch})
 set(kst_version_string ${kst_version})
 
