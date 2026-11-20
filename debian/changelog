@@ -1,3 +1,9 @@
+kst (3.3.3) noble; urgency=medium
+
+  * Keep Datawizard responsive with unavailable sources
+  
+ -- Barth Netterfield <netterfield@astro.utoronto.ca>  Fri 20 Nov 2026 02:55:00 PM EST
+
 kst (3.1.0+ppa1) noble; urgency=medium
 
   * Provide kst-datasource-abi-3 so separately built datasource
